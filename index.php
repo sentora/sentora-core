@@ -12,6 +12,12 @@ require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 
 /**
+ * Whilst in development lets turn on PHP error reporting!
+ */
+error_reporting(E_ALL);
+ini_set('error_reporting', E_ALL);
+
+/**
  * Register a logger object to handle all base logging within the application.
  * @todo Move this block into an include file? - Doesn't need to clutter up the index.
  */
@@ -29,7 +35,7 @@ try {
     $zdbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     $zlo->method = "text";
-    $zlo->logcode = 0100;
+    $zlo->logcode = "0100";
     $zlo->detail = "Unable to connect/authenticate against the database supplied!";
     $zlo->mextra = $e;
 }
@@ -42,6 +48,11 @@ if ($zlo->hasInfo()) {
     $zlo->writeLog();
     $zlo->reset();
 }
+echo "Script finished running!";
+
+# Set the error reporting to use the database...
+$zlo->method = "database";
+
 
 /**
  * Done all that we NEED too, now we just continue on...

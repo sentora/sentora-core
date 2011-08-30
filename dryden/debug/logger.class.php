@@ -49,10 +49,9 @@ class debug_logger {
              * @todo Finalise the SQL query string and also use a 'prepared' statement for SQL injection protection.
              */
             try {
-                $dbdl = new db_driver("mysql");
-                $dbdl->query("INSERT INTO Logs");
-                $dbdl->exec($statement);
-                if ($dbdl->exec($statement) > 0) {
+                $zdbh = new db_driver("mysql");
+                $statment = "INSERT INTO Logs";
+                if ($zdbh->exec($statement) > 0) {
                     $retval = true;
                 } else {
                     $retval = false;
@@ -60,11 +59,11 @@ class debug_logger {
             } catch (Exception $e) {
                 /**
                  *  Error accessing database, need to plain write out to the screen as database logging cannot be completed!
-                 */
-                $temp_log_obj = new debug_logger();
+                */
                 $temp_log_obj->method = "text";
                 $temp_log_obj->logcode = "012";
-                $temp_log_obj->detail = $e;
+                $temp_log_obj->detail = "Unable to log infomation to the required place (in the database)";
+                $temp_log_obj->mextra = $e;
                 $temp_log_obj->writeLog();
             }
             return true;
@@ -73,7 +72,7 @@ class debug_logger {
              * This is the default error reporting option, if no option is set or an unsupported option is choosen the default reporting mode will fall back to 'text' only!
              * @todo Maybe change the 'ZPEC' gimic? (Z)(P)anel (E)rror (C)ode??
              */
-            echo "ZPEC: " . $this->logcode . " - " . $this->detail;
+            echo "ZPEC: " . $this->logcode . " - " . $this->detail . " - " .$this->mextra;
             $retval = true;
         }
         return $retval;
@@ -94,7 +93,7 @@ class debug_logger {
      * @desc Checks and returns true if there is infomation in the object to be reported on.
      */
     function hasInfo() {
-        if ($this->detail)
+        if ($this->detail != null)
             return true;
         return false;
     }
