@@ -24,6 +24,8 @@ ini_set('error_reporting', E_ALL);
 global $zlo;
 $zlo = new debug_logger();
 
+$modulerunner = new ui_module();
+
 /**
  * Lets register the global database handle we will use throughout the code.
  * $zdbh (Zpanel database handle) is the global database access handle!
@@ -52,6 +54,19 @@ echo "Script finished running!";
 
 # Set the error reporting to use the database...
 $zlo->method = "database";
+
+
+
+
+/**
+ * This needs to be added to a class (the main controller class)
+ * Idea here is to set URL variables as an include file and then detect URL variables and if found call on certain classes eg. the ui_module::getModule or ui_panelview::getAll for if no URL parameter is found etc.
+ */
+if(isset($_GET['module'])){
+    
+    ui_module::getModule($_GET['module']);
+    
+}
 
 
 /**

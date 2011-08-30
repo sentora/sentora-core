@@ -32,6 +32,8 @@ class ui_module {
          * This is where it outputs the module code to the view.
          * @var $module (string) is the folder path to the requested module.
          */
+        
+        echo "Loading module: " .$module. "";
     }
     
     
