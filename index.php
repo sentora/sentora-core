@@ -59,15 +59,16 @@ $zlo->method = "database";
 
 
 /**
- * This needs to be added to a class (the main controller class)
- * Idea here is to set URL variables as an include file and then detect URL variables and if found call on certain classes eg. the ui_module::getModule or ui_panelview::getAll for if no URL parameter is found etc.
+ * A module has been requested, we need to load in the module's model and process it...
  */
-if(isset($_GET['module'])){
-    
-    ui_module::getModule($_GET['module']);
-    
-}
+if (ctrl_director::getCurrentModule())
+    ui_module::getModule(ctrl_director::getCurrentModule());
 
+/**
+ * No module has been requested, we should display all the avaliable modules...
+ */
+if (!ctrl_director::getCurrentModule())
+        ui_modulelist::getOutput();
 
 /**
  * Done all that we NEED too, now we just continue on...
