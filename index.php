@@ -62,8 +62,7 @@ $zlo->method = "database";
 /**
  * @todo We need to implement an authentication check here to ensure that the user is a valid user otherwise we need to redirect them to the login screen!
  */
-$set_it = new ctrl_auth();
-$set_it->SetUserSession(445);
+ctrl_auth::SetUserSession(488);
 ctrl_auth::RequireUser();
 
 echo $_SESSION['zpuid'];
