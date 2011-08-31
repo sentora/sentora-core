@@ -63,9 +63,11 @@ $zlo->method = "database";
 /**
  * @todo We need to implement an authentication check here to ensure that the user is a valid user otherwise we need to redirect them to the login screen!
  */
+ctrl_auth::KillSession();
+
 $zpauth = new ctrl_auth;
 $zpauth->username = "test";
-$zpauth->password = "fix";
+$zpauth->password = "asdasdadx";
 $zpauth->Authenticate();
 
 

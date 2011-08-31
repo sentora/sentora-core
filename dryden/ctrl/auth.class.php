@@ -54,7 +54,7 @@ class ctrl_auth {
         }
     }
 
-    function KillSession() {
+    static function KillSession() {
         /**
          * Destroy the user's session.
          */
