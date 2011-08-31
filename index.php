@@ -36,6 +36,7 @@ global $zdbh;
 try {
     $zdbh = new db_driver("mysql:host=$host;dbname=$dbname", $user, $pass);
     $zdbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
 } catch (PDOException $e) {
     $zlo->method = "text";
     $zlo->logcode = "0100";
@@ -62,9 +63,17 @@ $zlo->method = "database";
 /**
  * @todo We need to implement an authentication check here to ensure that the user is a valid user otherwise we need to redirect them to the login screen!
  */
-ctrl_auth::SetUserSession(488);
+$zpauth = new ctrl_auth;
+$zpauth->username = "test";
+$zpauth->password = "fix";
+$zpauth->Authenticate();
+
+
 ctrl_auth::RequireUser();
 
+/**
+ * Testing display of Zpanel UID. - If no output, user has not been authenticated!
+ */
 echo $_SESSION['zpuid'];
 
 /**

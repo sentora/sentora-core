@@ -10,6 +10,9 @@
  */
 class ctrl_auth {
 
+    var $username;
+    var $password;
+
     /**
      * Checks that the server has a valid session for the user if not it will
      * redirect to a given page/URL.
@@ -25,8 +28,7 @@ class ctrl_auth {
         return true;
     }
 
-    
-    function SetUserSession($zpuid=0) {
+    static function SetUserSession($zpuid=0) {
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
             return true;
@@ -36,6 +38,37 @@ class ctrl_auth {
              */
             return false;
         }
+    }
+
+    function Authenticate() {
+        /**
+         * Authetnicate against the database with the supplied user credentials.
+         */
+        global $zdbh;
+        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$this->username' AND ac_pass_vc = '$this->password'")->fetch();
+        if ($rows) {
+            $this->SetUserSession($rows['ac_id_pk']);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function KillSession() {
+        /**
+         * Destroy the user's session.
+         */
+        $_SESSION['zpuid'] = null;
+        return true;
+    }
+
+    function ResetCredentials() {
+        /**
+         * Used to clean out the username and password variables for security reasons!
+         */
+        $this->username = null;
+        $this->password = null;
+        return true;
     }
 
 }
