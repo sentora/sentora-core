@@ -27,6 +27,10 @@ class debug_logger {
         $this->logcode = 0;
     }
 
+    /**
+     * Writes an error log/debug entry into the configued logging medium.
+     * @return boolean 
+     */
     function writeLog() {
         if ($this->method == "screen") {
             /**
@@ -79,8 +83,9 @@ class debug_logger {
     }
 
     /**
-     * @desc reset Resets debug infomation - be careful to not use before writeLog() as it will clear the log!
+     * Resets debug infomation - be careful to not use before writeLog() as it will clear the log!
      * @todo Maybe  handle this differently?
+     * @return type 
      */
     function reset() {
         $this->mextra = null;
@@ -90,7 +95,8 @@ class debug_logger {
     }
 
     /**
-     * @desc Checks and returns true if there is infomation in the object to be reported on.
+     * Checks and returns true if there is infomation in the object to be reported on (If some debug/error message is pending).
+     * @return boolean 
      */
     function hasInfo() {
         if ($this->detail != null)
