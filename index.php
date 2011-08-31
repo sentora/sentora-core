@@ -8,6 +8,7 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
+session_start();
 require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 
@@ -50,27 +51,27 @@ if ($zlo->hasInfo()) {
     $zlo->writeLog();
     $zlo->reset();
 }
-echo "Script finished running!";
 
-# Set the error reporting to use the database...
+
+/**
+ * @todo Set the reporting method as per system configration for now however lets use "database".
+ */
 $zlo->method = "database";
 
 
+/**
+ * @todo We need to implement an authentication check here to ensure that the user is a valid user otherwise we need to redirect them to the login screen!
+ */
+$set_it = new ctrl_auth();
+$set_it->SetUserSession(445);
+ctrl_auth::RequireUser();
 
+echo $_SESSION['zpuid'];
 
 /**
- * A module has been requested, we need to load in the module's model and process it...
+ * Load the module or list all module icons if a module has not been requested to be loaded!
  */
 if (ctrl_director::getCurrentModule())
     ui_module::getModule(ctrl_director::getCurrentModule());
-
-/**
- * No module has been requested, we should display all the avaliable modules...
- */
-if (!ctrl_director::getCurrentModule())
-        ui_modulelist::getOutput();
-
-/**
- * Done all that we NEED too, now we just continue on...
- */
+#ui_modulelist::getOutput();
 ?>
