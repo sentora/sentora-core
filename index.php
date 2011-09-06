@@ -22,6 +22,6 @@ ini_set('error_reporting', E_ALL);
 require_once 'inc/dbc.inc.php';
 require_once 'inc/init.inc.php';
 
-ui_templateparser::Generate("tpl/example");
+ui_templateparser::Generate("etc/styles/example");
 
 ?>
