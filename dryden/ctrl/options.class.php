@@ -17,11 +17,11 @@ class ctrl_options {
      * @param string $name
      * @return array 
      */
-    static function GetSystemOption($name) {
+    static function GetOption($name) {
         global $zdbh;
         $result = $zdbh->query("SELECT so_value_tx FROM x_settings WHERE so_name_vc = '$name'")->Fetch();
         if ($result) {
-            return $result;
+            return $result['so_value_tx'];
         } else {
             return false;
         }
@@ -38,10 +38,9 @@ class ctrl_options {
     static function SetSystemOption($name, $value) {
         global $zdbh;
         if ($zdbh->exec("UPDATE x_settings SET so_value_tx = '$value' WHERE so_name_vc = '$name'")) {
-            return 0;
+            return true;
         } else {
-            $zdbh->exec("INSERT INTO x_settings (so_name_vc, so_value_tx) VALUES ('$name', '$value')");
-            return 1;
+            return false;
         }
     }
 

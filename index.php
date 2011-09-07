@@ -23,4 +23,13 @@ require_once 'inc/init.inc.php';
 
 ui_templateparser::Generate("etc/styles/example");
 
+
+/**
+ * Testing adding some test system options.
+ */
+
+ctrl_options::SetSystemOption('install_path', 'E:/ZPanel/beta');
+ctrl_options::SetSystemOption('install_path2', 'C:/ZPanel/beta2');
+
+echo ctrl_options::GetOption('install_path');
 ?>
