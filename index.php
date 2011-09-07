@@ -16,8 +16,7 @@ require_once 'cnf/db.php';
 /**
  * Whilst in development lets turn on PHP error reporting!
  */
-error_reporting(E_ALL);
-ini_set('error_reporting', E_ALL);
+debug_phperrors::SetMode('dev');
 
 require_once 'inc/dbc.inc.php';
 require_once 'inc/init.inc.php';
