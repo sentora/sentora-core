@@ -10,6 +10,20 @@
  */
 
 class db_builder {
+
+	function moduledb_commit() {
+    	$mod_db_dir = ctrl_options::GetOption('zpanel_root')."modules/*/*/{dbs.xml}";  
+    	try
+		{
+			foreach(glob($mod_db_dir, GLOB_BRACE) as $mod_db_file){
+			echo "Filename: " . $mod_db_file . "<br />"; 
+			}
+		}
+		catch (Exception $e){
+		// handle error
+		}
+	}
+ 
 	
 }
 
