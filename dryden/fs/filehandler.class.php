@@ -1,6 +1,6 @@
 <?php
 
-class fs_fh {
+class fs_filehandler {
 
     /**
     * Create blank or preformatted file with permissions.
@@ -29,6 +29,15 @@ class fs_fh {
 		}
 	return $retval;
 	}
+        
+        /**
+         * Returns the contents of a file in a string.
+         * @param string $file
+         * @return type 
+         */
+        static function ReadFileContents($file){
+            return file_get_contents($file);
+        }
 	
 }
 

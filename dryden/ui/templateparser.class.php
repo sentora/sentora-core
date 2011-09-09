@@ -46,6 +46,7 @@ class ui_templateparser {
         $tplp->addItemValue('server_ipaddress', sys_monitoring::ServerIPAddress());
         $tplp->addItemValue('uptime', sys_monitoring::ServerUptime());
         $tplp->addItemValue('version_zpanel', ctrl_options::GetOption('dbversion'));
+        $tplp->addItemValue('module', ui_module::getModule(ctrl_director::getCurrentModule()));
 
         foreach ($tplp->getDataObject() as $placeholder => $replace) {
             $raw = str_replace("<% " . $placeholder . " %>", $replace, $raw);
