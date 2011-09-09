@@ -8,7 +8,6 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-
 session_start();
 require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
@@ -16,11 +15,10 @@ require_once 'cnf/db.php';
 /**
  * Whilst in development lets turn on PHP error reporting!
  */
-debug_phperrors::SetMode('prod');
+debug_phperrors::SetMode('dev');
 
 require_once 'inc/dbc.inc.php';
 require_once 'inc/init.inc.php';
 
 ui_templateparser::Generate("etc/styles/zpanel6");
-
 ?>

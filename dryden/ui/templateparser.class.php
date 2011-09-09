@@ -32,6 +32,10 @@ class ui_templateparser {
          * for now the below is just a test!
          */
         $tplp = new runtime_dataobject;
+
+        /*
+         * Register some 'core' template place holders!
+         */
         $tplp->addItemValue('assetfolderpath', 'etc/styles/zpanel6/');
         $tplp->addItemValue('version_apache', sys_versions::ShowApacheVersion());
         $tplp->addItemValue('version_php', sys_versions::ShowPHPVersion());
@@ -39,15 +43,22 @@ class ui_templateparser {
         $tplp->addItemValue('version_platform', sys_versions::ShowOSPlatformVersion());
         $tplp->addItemValue('version_kernal', sys_versions::ShowOSKernalVersion(''));
 
-        /*
-         * Add PHP execution protection!
-         */
-        $tplp->addItemValue('<?', "<<");
-        $tplp->addItemValue('?>', ">>");
-
         foreach ($tplp->getDataObject() as $placeholder => $replace) {
             $raw = str_replace("<% " . $placeholder . " %>", $replace, $raw);
         }
+
+        /*
+         * Load class template holders (if the class exists) - If it does it will __construct
+         */
+        preg_match_all("'<#\s(.*?)\s#>'si", $raw, $match);
+        if ($match) {
+            foreach ($match[1] as $classes) {
+                if (class_exists('' . $classes . '')) {
+                    new $classes;
+                }
+            }
+        }
+
         return $raw;
     }
 

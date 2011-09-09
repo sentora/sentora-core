@@ -23,7 +23,7 @@
                     <A title="Change Password" href="?c=account&p=password_assistant"><img src="<% assetfolderpath %>/images/pass.png"/></A>
                     <A title="Log off ZPanel" href="login.php?logout"><img src="<% assetfolderpath %>/images/logout.png"/></A>
                     <br>
-                    <div id="time">Server time is: <b></b><div id="jclock"><div class="jclock"></div></div></div>
+                    <div id="time">Server time is: <b><# runtime_haystack #></b><div id="jclock"><div class="jclock"></div></div></div>
                 </div>
             </div>
         </div>
@@ -171,7 +171,7 @@
                                                                 <td nowrap="nowrap">{{server:verzpanel}}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap" colspan="2"><img src="<% assetfolderpath %>/images/raquo.png" border="0"> <strong><?php echo ucwords($lang['35']); ?>:</strong> {{server:uptime}}</td>
+                                                                <td nowrap="nowrap" colspan="2"><img src="<% assetfolderpath %>/images/raquo.png" border="0"> <strong><?php echo ucwords($lang['35']); ?>:</strong> <% sys_monitoring::ServerUptime %></td>
                                                             </tr>
                                                         </tbody></table>
                                                 </div>
