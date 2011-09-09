@@ -23,13 +23,40 @@ class ui_module {
          */
     }
 
-    static function getModule($module) {
+    /**
+     * Checks that the module exists.
+     * @param string $name
+     * @return boolean 
+     */
+    static function CheckModuleExists($name) {
+        if (file_exists("modules/" . $name . "/module.zpm"))
+            return true;
+        return false;
+    }
+    
+    /**
+     * Returns the module code.
+     * @param string $name
+     * @return string 
+     */
+    static function GetModuleContent($name){
+        if(self::CheckModuleExists($name)){
+            return fs_filehandler::ReadFileContents("modules/" .$name."/module.zpm");
+        }
+    }
+
+    /**
+     * Handles the GetModule control, if unable to load the module will handle the error too!
+     * @param string $module
+     * @return string 
+     */
+    static function GetModule($module) {
         /**
          * This is where it outputs the module code to the view.
          * @var $module (string) is the folder path to the requested module.
          */
-        if (file_exists("modules/" . $module. "/module.zpm")) {
-            $retval = file_get_contents("modules/" . $module. "/module.zpm");
+        if (self::CheckModuleExists($module)) {
+            $retval = self::GetModuleContent($module);
         } else {
             $retval = "Unable to find requested module!";
         }
