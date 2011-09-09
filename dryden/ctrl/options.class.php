@@ -35,12 +35,20 @@ class ctrl_options {
      * @param string $value
      * @return int (0 = record updated, 1 = record inserted)
      */
-    static function SetSystemOption($name, $value) {
+    static function SetSystemOption($name, $value, $create = false) {
         global $zdbh;
-        if ($zdbh->exec("UPDATE x_settings SET so_value_tx = '$value' WHERE so_name_vc = '$name'")) {
-            return true;
+        if ($create == false) {
+            if ($zdbh->exec("UPDATE x_settings SET so_value_tx = '$value' WHERE so_name_vc = '$name'")) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            if ($zdbh->exec("INSERT INTO x_settings (so_name_vc, so_value_tx) VALUES ('$name', '$value')")) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

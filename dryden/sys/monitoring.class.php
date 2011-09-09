@@ -51,7 +51,7 @@ class sys_monitoring {
             $minutes = fs_director::CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
             $retval = $days . ", " . $hours . ", " . $minutes . "";
         } elseif (sys_versions::ShowOSPlatformVersion() == "Windows") {
-            $pagefile = "" . ctrl_options::GetOption('windows_drive') . ":\pagefile.sys";
+            $pagefile = "C:\pagefile.sys";
             $upsince = filemtime($pagefile);
             $gettime = (time() - filemtime($pagefile));
             $days = floor($gettime / (24 * 3600));
@@ -82,6 +82,22 @@ class sys_monitoring {
             $retval = "Unsupported O/S";
         }
         return $retval;
+    }
+    
+    /**
+     * Returns the client's IP address.
+     * @return type 
+     */
+    static function ClientIPAddress(){
+        return $_SERVER['REMOTE_ADDR'];
+    }
+    
+    /**
+     * Returns the server IP address.
+     * @return type 
+     */
+    static function ServerIPAddress(){
+        return $_SERVER['SERVER_ADDR'];
     }
 
 }

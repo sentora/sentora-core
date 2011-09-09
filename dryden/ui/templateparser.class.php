@@ -42,6 +42,10 @@ class ui_templateparser {
         #$tplp->addItemValue('version_mysql', sys_versions::ShowMySQLVersion());
         #$tplp->addItemValue('version_platform', sys_versions::ShowOSPlatformVersion());
         #$tplp->addItemValue('version_kernal', sys_versions::ShowOSKernalVersion(''));
+        $tplp->addItemValue('client_ipaddress', sys_monitoring::ClientIPAddress());
+        $tplp->addItemValue('server_ipaddress', sys_monitoring::ServerIPAddress());
+        $tplp->addItemValue('uptime', sys_monitoring::ServerUptime());
+        $tplp->addItemValue('version_zpanel', ctrl_options::GetOption('dbversion'));
 
         foreach ($tplp->getDataObject() as $placeholder => $replace) {
             $raw = str_replace("<% " . $placeholder . " %>", $replace, $raw);

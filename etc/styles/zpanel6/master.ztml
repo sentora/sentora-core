@@ -144,11 +144,11 @@
                                                     <table width="100%" border="0" cellspacing="0">
                                                         <tbody><tr>
                                                                 <td nowrap="nowrap"><img src="<% assetfolderpath %>/images/raquo.png" border="0"> <strong>Your IP:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info">{{server:userip}}</span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><% client_ipaddress %></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<% assetfolderpath %>/images/raquo.png" border="0"> <strong>Server IP:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info">{{server:serverip}}</span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><% server_ipaddress %></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<% assetfolderpath %>/images/raquo.png" border="0"> <strong>OS:</strong></td>
@@ -168,10 +168,10 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<% assetfolderpath %>/images/raquo.png" border="0"> <strong>ZPanel version:</strong></td>
-                                                                <td nowrap="nowrap">{{server:verzpanel}}</td>
+                                                                <td nowrap="nowrap"><% version_zpanel %></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap" colspan="2"><img src="<% assetfolderpath %>/images/raquo.png" border="0"></strong> <% sys_monitoring::ServerUptime %></td>
+                                                                <td nowrap="nowrap" colspan="2"><img src="<% assetfolderpath %>/images/raquo.png" border="0"></strong> <% uptime %></td>
                                                             </tr>
                                                         </tbody></table>
                                                 </div>
