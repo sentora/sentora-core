@@ -39,13 +39,15 @@ class ui_templateparser {
         $tplp->addItemValue('assetfolderpath', 'etc/styles/zpanel6/');
         $tplp->addItemValue('version_apache', sys_versions::ShowApacheVersion());
         $tplp->addItemValue('version_php', sys_versions::ShowPHPVersion());
-        #$tplp->addItemValue('version_mysql', sys_versions::ShowMySQLVersion());
-        #$tplp->addItemValue('version_platform', sys_versions::ShowOSPlatformVersion());
-        #$tplp->addItemValue('version_kernal', sys_versions::ShowOSKernalVersion(''));
+        $tplp->addItemValue('version_mysql', sys_versions::ShowMySQLVersion());
+        $tplp->addItemValue('version_zpanel', ctrl_options::GetOption('dbversion'));
+        $tplp->addItemValue('version_platform', sys_versions::ShowOSPlatformVersion());
+        $tplp->addItemValue('version_kernal', sys_versions::ShowOSKernalVersion(sys_versions::ShowOSPlatformVersion()));
+        $tplp->addItemValue('version_osname', sys_versions::ShowOSName());
         $tplp->addItemValue('client_ipaddress', sys_monitoring::ClientIPAddress());
         $tplp->addItemValue('server_ipaddress', sys_monitoring::ServerIPAddress());
         $tplp->addItemValue('uptime', sys_monitoring::ServerUptime());
-        $tplp->addItemValue('version_zpanel', ctrl_options::GetOption('dbversion'));
+
         $tplp->addItemValue('module', ui_module::getModule(ctrl_director::getCurrentModule()));
 
         foreach ($tplp->getDataObject() as $placeholder => $replace) {
