@@ -34,10 +34,9 @@ class sys_versions {
      * @return string MySQL version number 
      */
     static function ShowMySQLVersion() {
-        /**
-         * @todo Add removal of anything else except for version numbers (such as 'community')
-         */
-        return mysql_get_server_info();
+        global $zdbh;
+        $retval = $zdbh->query("SHOW VARIABLES LIKE \"version\"")->Fetch();
+        return $retval['Value'];
     }
 
     /**
@@ -74,6 +73,54 @@ class sys_versions {
             $retval = "Other";
         }
         return $retval;
+    }
+
+    /**
+     * Returns in human readable form the operating system name (eg. Windows, Ubuntu, CentOS, MacOSX, FreeBSD, Other)
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @return string Human readable OS name.
+     */
+    static function ShowOSName() {
+        $uname = strtolower(php_uname());
+        $os = "";
+        if (strpos($uname, "darwin") !== false) {
+            $os = "MacOSX";
+        } else if (strpos($uname, "win") !== false) {
+            $os = "Windows";
+        } else if (strpos($uname, "freebsd") !== false) {
+            $os = "FreeBSD";
+        } else if (strpos($uname, "openbsd") !== false) {
+            $os = "OpenBSD";
+        } else {
+            /**
+             * @todo convert the bottom bit to read from a list of OS's.
+             */
+            /*
+            $list = @parse_ini_file("lib/zpanel/os.ini", true);
+            foreach ($list as $section => $distribution) {
+                if (!isset($distribution["Files"])) {
+                    
+                } else {
+                    $intBytes = 4096;
+                    $intLines = 0;
+                    $intCurLine = 0;
+                    $strFile = "";
+                    foreach (preg_split("/;/", $distribution["Files"], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
+                        if (file_exists($filename)) {
+                            if (isset($distribution["Name"])) {
+                                $os = $distribution["Name"];
+                            }
+                        }
+                    }
+                    if ($os == null) {
+                        $os = "Unknown";
+                    }
+                }
+            } 
+             */
+        }
+        return $os;
     }
 
 }
