@@ -41,11 +41,6 @@ $zpauth->Authenticate();
 ctrl_auth::RequireUser();
 
 /**
- * Testing display of Zpanel UID. - If no output, user has not been authenticated!
- */
-echo $_SESSION['zpuid'];
-
-/**
  * Load the module or list all module icons if a module has not been requested to be loaded!
  */
 if (ctrl_director::getCurrentModule())

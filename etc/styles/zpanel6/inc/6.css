@@ -1,0 +1,432 @@
+body {
+	text-align:left;
+	height:100%;
+	background:url(../images/bkg-texture.png) #F3F3F3;
+	font-size: 62.5%;
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+h3{
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	
+	
+	font-size: 14pt;
+	color: #ECF5F9;
+	font-weight: bold;
+	border-width: 2px;
+	border-bottom-style: solid;
+	border-color: #ECF5F9;
+	margin-bottom:10px;
+	margin-right:20px;
+	line-height:40px;
+}
+h1{
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	font-size: 24pt;
+	color: #006699;
+	font-weight: lighter;
+	line-height:50px;
+}
+h2{
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	font-size: 14pt;
+	color: #999999;
+	font-weight: lighter;
+	line-height:50px;
+}
+hr{
+	color:#E5F0F1;
+}
+a img{
+	border: none;
+}
+td{
+	text-align:left;
+	border: none;
+	padding: 0px;
+	border-spacing:0px;
+}
+th{
+	text-align:left;
+	padding:0px;
+	border: none;
+	border-spacing:0px;
+}
+table{
+	text-align:left;
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	
+}
+fieldset {
+  padding: 10px;
+  font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+  font-size: 9pt;
+  border:solid 2px #E5F0F1;
+  background-color:#F3F3F3;
+  }
+label {
+  color:#1587CA;
+  float:left;
+  width:25%;
+  margin-right:10px;
+  padding-top:10px;
+  text-align:left;
+  font-weight:bold;
+  }
+ .legendhead{
+color:#1587CA;
+font-weight:bold;
+font-size:14px;
+}
+.statsdata{
+	font-size: 8pt;
+	text-align:center;
+	margin:0px;
+	padding:0px;
+	background-color: #FFF;
+	border-left:1px solid #E5F0F1;
+	border-right:1px solid #E5F0F1;
+	border-spacing:0px;
+}
+.statsdata td{
+	text-align:left;
+	width:100%;
+	margin:0px;
+	padding:5px;
+	background-color: #FFF;
+	border-spacing:0px;
+	background:#F4F9FA;
+	vertical-align:top;
+	border-top:0px;
+	border-left:0px solid #E5F0F1;
+	border-right:0px solid #E5F0F1;
+	border-bottom:1px solid #E5F0F1;
+}
+.statsdata th{
+	height:41px;
+	margin:0px;
+	padding:0px;
+	background:#ffffff url(../images/statsdata_th_center.png) left top repeat-x;
+	color: #FFFFFF;
+	font-weight:bold;
+	text-align: left;
+	border-spacing:0px;
+	border-top:0px;
+	border-left:solid 1px #CCC;
+	border-right:solid 1px #CCC;
+	border-bottom:0px;
+	text-indent:10px;
+}
+#none {
+background:none;
+background-image:none;
+border:none;
+}
+#none th{
+background:none;
+background-image:none;
+border:none;
+}
+#none td{
+background:none;
+background-image:none;
+border:none;
+}
+
+/** THEME RELATED CSS ATTRIBUTES!! **/
+
+.copypower {
+text-align:left;
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	font-size: 8pt;
+	color: #333333;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-top-color: #888888;
+	border-right-color: #888888;
+	border-bottom-color: #888888;
+	border-left-color: #888888;
+	padding: 10px;
+}
+.copypower a {
+	color: #1587CA;
+	text-decoration:none;
+}
+.copypower a:link {
+	color: #1587CA;
+	text-decoration:none;
+}
+.copypower a:hover {
+	color: #1587CA;
+	text-decoration:none;
+}
+.copypower a:active {
+	color: #1587CA;
+	text-decoration:none;
+}
+.main {
+	padding: 10px;
+	background-color: #FFFFFF;
+}
+#header {
+	background: url(../images/bg_top.jpg) #dddddd repeat-x center top;
+	height: 81px;
+	width: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index:9999;
+}
+#header_overlay {
+	background: url(../images/bg_top_overlay.png) no-repeat center top;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	padding-right: 0px;
+	padding-top: 15px;
+	padding-left: 0px;
+	width:100%;
+}
+.mainlayout {
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	font-size: 9pt;
+	color: #333333;
+	padding:0px;
+	margin: 0px;
+	border-spacing:0px;
+}
+.mainlayout_content td{
+	margin: 0px;
+	padding-right: 12px;
+	border-spacing:0px;
+}
+.mainlayout a {
+	color:#006699;
+	text-decoration: none;
+}
+.mainlayout a:visited {
+	color:#006699;
+	text-decoration: none;
+}
+.mainlayout a:hover {
+	color:#006699;
+	text-decoration: underline;
+}
+#content {
+margin-top: 81px;
+}
+.center {
+	padding-bottom: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-left: 0px;
+	margin: 0px;
+	width: 960px;
+	height: 100%;
+}
+* {
+	padding-bottom: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-left: 0px;
+	margin: 0px;
+}
+#status{
+    width:50%;
+    padding:10px;
+    outline:none;
+    height:36px;
+}
+.focusField{
+    border:solid 1px #55A7C8;
+    background:#ECF5F9;
+    color:#000;
+}
+.idleField{
+    background:#FFFFFF;
+    color: #6F6F6F;
+    border: solid 1px #DFDFDF;
+}
+#links{
+	float:right;
+	text-align:right;
+	color:#333333;
+	line-height:5px;
+	padding-right:15px;
+	padding-left:0px;
+	padding-top:0px;
+	padding-bottom:0px;
+}
+#time{
+	float:right;
+	color:#333333;
+	text-shadow:1px 1px 5px #E5F0F1;
+	line-height:12px;
+	padding-right:0px;
+	padding-left:0px;
+	padding-top:20px;
+	padding-bottom:0px;
+}
+#jclock{
+	float:right;
+	color:#333333;
+	font-size:14px;
+	text-shadow:1px 1px 5px #E5F0F1;
+	font-weight:bold;
+	padding-left:5px;
+}
+
+/** ZPANEL SPECIFIC CSS ATTRIBUTES!! **/
+.zmodule{
+	text-align:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+	background-color: #FFF;
+	border-spacing:0px;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
+}
+.zmodule th{
+	height:41px;
+	margin:0px;
+	padding:0px;
+	background:#ffffff url(../images/zmodule_th_center.png) left top repeat-x;
+	color: #333;
+	font-weight:bold;
+	text-align: left;
+	border-spacing:0px;
+	border-top:0px;
+	border-left:solid 1px #CCC;
+	border-right:solid 1px #CCC;
+	border-bottom:0px;
+	text-indent:10px;
+}
+.zmodule td{
+	margin:0px;
+	padding:0px;
+	background:#ffffff url(../images/zmodule_td.png) left top repeat-x;
+	vertical-align:top;
+	border-top:0px;
+	border-left:1px solid #E5F0F1;
+	border-right:1px solid #E5F0F1;
+	border-bottom:1px solid #E5F0F1;
+}
+.zmodulecontent{
+	text-align:left;
+	margin:0px;
+	padding:0px;
+	padding-left:10px;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
+}
+.zmodulecontent td{
+	margin:0px;
+	padding:0px;
+	background: url(../) left top repeat-x;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
+	padding-right:15px;
+	padding-top:2px;
+	padding-bottom:8px;
+}
+.zform{
+	text-align:left;
+	background-color: #FFF;
+	border-bottom:0px solid #CCCCCC;
+	border-left:1px solid #CCCCCC;
+	border-right:1px solid #CCCCCC;
+	border-top:1px solid #CCCCCC;
+	border-spacing:0px;
+	
+}
+.zform td{
+	padding:5px;
+	background-color: #F7F7F7;
+	background:#F7F7F7 url(../images/td_back.png) left top repeat-x;
+	border-top:1px solid #FFFFFF;
+	border-bottom:1px solid #CCCCCC;
+	border-spacing:0px;
+}
+
+.zform th{
+	padding:5px;
+	background-color: #ECECEC;
+	/*background:#FFFFFF url(../images/zmodule_td.png) left top repeat-x;*/
+	/* background:#ECECEC url(../images/th_back.png) left top repeat-x;*/
+	color: #333;
+	font-weight:bold;
+	text-align: left;
+	border-top:1px solid #FFFFFF;
+	border-bottom:1px solid #CCCCCC;
+	border-spacing:0px;
+}
+.zgrid{
+	
+	text-align:left;
+	background-color: #FFF;
+	border-bottom:0px solid #CCCCCC;
+	border-left:1px solid #CCCCCC;
+	border-right:1px solid #CCCCCC;
+	border-top:1px solid #CCCCCC;
+	border-spacing:0px;
+}
+.zgrid td{
+	padding:5px;
+	background-color: #F7F7F7;
+	background:#F7F7F7 url(../images/td_back.png) left top repeat-x;
+	border-top:1px solid #FFFFFF;
+	border-bottom:1px solid #CCCCCC;
+	border-spacing:0px;
+	
+}
+
+.zgrid th{
+	padding:5px;
+	background-color: #ECECEC;
+	/*background:#FFFFFF url(../images/zmodule_td.png) left top repeat-x;*/
+	/* background:#ECECEC url(../images/th_back.png) left top repeat-x; */
+	color: #333;
+	font-weight:bold;
+	text-align: left;
+	border-top:1px solid #FFFFFF;
+	border-bottom:1px solid #CCCCCC;
+	border-spacing:0px;
+}
+.zannouce{
+	background-color: #ECF5F9;
+	border:solid 1px #55A7C8;
+	font-weight:normal;
+	text-align: left;
+	padding:10px;
+	color:#2266AA;
+}
+a.zmodule{
+	background: url(../images/udarrows.png) no-repeat;
+	border:none;
+	float:right;
+	width:36px; height:14px;
+	display:block;
+	cursor:pointer;
+	padding-right:10px; 
+}

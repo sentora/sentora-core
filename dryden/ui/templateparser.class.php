@@ -17,7 +17,7 @@ class ui_templateparser {
      * @return sting 
      */
     static function Generate($template_path){
-        $template_raw = file_get_contents($template_path."/main.ztf");
+        $template_raw = file_get_contents($template_path."/master.ztml");
         $template_html = ui_templateparser::Process($template_raw);
         return eval('?>' .$template_html);
     }
@@ -35,6 +35,8 @@ class ui_templateparser {
         $html = str_replace("[place]","it worked",$raw);
         return $html;
     }
+    
+    
     
 }
 
