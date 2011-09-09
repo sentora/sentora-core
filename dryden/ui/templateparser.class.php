@@ -40,8 +40,8 @@ class ui_templateparser {
         $tplp->addItemValue('version_apache', sys_versions::ShowApacheVersion());
         $tplp->addItemValue('version_php', sys_versions::ShowPHPVersion());
         #$tplp->addItemValue('version_mysql', sys_versions::ShowMySQLVersion());
-        $tplp->addItemValue('version_platform', sys_versions::ShowOSPlatformVersion());
-        $tplp->addItemValue('version_kernal', sys_versions::ShowOSKernalVersion(''));
+        #$tplp->addItemValue('version_platform', sys_versions::ShowOSPlatformVersion());
+        #$tplp->addItemValue('version_kernal', sys_versions::ShowOSKernalVersion(''));
 
         foreach ($tplp->getDataObject() as $placeholder => $replace) {
             $raw = str_replace("<% " . $placeholder . " %>", $replace, $raw);
