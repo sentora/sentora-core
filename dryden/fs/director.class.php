@@ -102,6 +102,21 @@ class fs_director {
         return $retval;
     }
 
+    /**
+    * Checks and converts a given value.
+    * @author Bobby Allen (ballen@zpanel.co.uk) 
+    * @version 10.0.0
+    * @param string $value, string $true, string $false
+    * @return boolean 
+	*/
+	static function CheckForNullValue($value, $true, $false) {
+		if ($value == 0) {
+			return $false;
+		} else {
+			return $true;
+		}
+	}
+	
 }
 
 ?>

@@ -34,7 +34,7 @@ class sys_monitoring {
      * @todo Remove and replace old ZP6 functions with the new eqivilents.
      */
     static function ServerUptime() {
-        if (system_versions::ShowOSPlatformVersion() == "Linux") {
+        if (sys_versions::ShowOSPlatformVersion() == "Linux") {
             $uptime = trim(exec("cat /proc/uptime"));
             $uptime = explode(" ", $uptime);
             $uptime = $uptime[0];
@@ -46,12 +46,12 @@ class sys_monitoring {
             $utdelta-=$hours * $hour;
             $minute = 60;
             $minutes = floor($utdelta / $minute);
-            $days = CheckForNullValue($days != 1, $days . ' days', $days . ' day');
-            $hours = CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
-            $minutes = CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
+            $days = fs_director::CheckForNullValue($days != 1, $days . ' days', $days . ' day');
+            $hours = fs_director::CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
+            $minutes = fs_director::CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
             $retval = $days . ", " . $hours . ", " . $minutes . "";
-        } elseif (system_versions::ShowOSPlatformVersion() == "Windows") {
-            $pagefile = "" . GetSystemOption('windows_drive') . ":\pagefile.sys";
+        } elseif (sys_versions::ShowOSPlatformVersion() == "Windows") {
+            $pagefile = "" . ctrl_options::GetOption('windows_drive') . ":\pagefile.sys";
             $upsince = filemtime($pagefile);
             $gettime = (time() - filemtime($pagefile));
             $days = floor($gettime / (24 * 3600));
@@ -61,11 +61,11 @@ class sys_monitoring {
             $minutes = floor($gettime / (60));
             $gettime = $gettime - ($minutes * 60);
             $seconds = $gettime;
-            $days = CheckForNullValue($days != 1, $days . ' days', $days . ' day');
-            $hours = CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
-            $minutes = CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
+            $days = fs_director::CheckForNullValue($days != 1, $days . ' days', $days . ' day');
+            $hours = fs_director::CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
+            $minutes = fs_director::CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
             $retval = $days . ", " . $hours . ", " . $minutes . "";
-        } elseif (system_versions::ShowOSPlatformVersion() == "FreeBSD") {
+        } elseif (sys_versions::ShowOSPlatformVersion() == "FreeBSD") {
             $uptime = explode(" ", exec("/sbin/sysctl -n kern.boottime"));
             $uptime = str_replace(",", "", $uptime[3]);
             $uptime = time() - $uptime;
@@ -74,9 +74,9 @@ class sys_monitoring {
             $days = floor($hours / 24);
             $hours = floor($hours - ($days * 24));
             $minutes = floor($min - ($days * 60 * 24) - ($hours * 60));
-            $days = CheckForNullValue($days != 1, $days . ' days', $days . ' day');
-            $hours = CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
-            $minutes = CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
+            $days = fs_director::CheckForNullValue($days != 1, $days . ' days', $days . ' day');
+            $hours = fs_director::CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
+            $minutes = fs_director::CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
             $retval = $days . ", " . $hours . ", " . $minutes . "";
         } else {
             $retval = "Unsupported O/S";
