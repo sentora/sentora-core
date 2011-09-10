@@ -1,0 +1,5 @@
+<div id="contentwrapper_phpinfo" style="width:600px">
+<br>&raquo; <a href="apps/phpinfo/" target="_blank" title="Launch PHPInfo()">Launch PHPInfo()</a>
+<br>
+<?php echo mod_phpinfo::phpinfo_show(); ?>
+</div>
