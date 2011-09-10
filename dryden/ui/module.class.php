@@ -33,15 +33,15 @@ class ui_module {
             return true;
         return false;
     }
-    
+
     /**
      * Returns the module code.
      * @param string $name
      * @return string 
      */
-    static function GetModuleContent($name){
-        if(self::CheckModuleExists($name)){
-            return fs_filehandler::ReadFileContents("modules/" .$name."/module.zpm");
+    static function GetModuleContent($name) {
+        if (self::CheckModuleExists($name)) {
+            return fs_filehandler::ReadFileContents("modules/" . $name . "/module.zpm");
         }
     }
 
@@ -61,6 +61,28 @@ class ui_module {
             $retval = "Unable to find requested module!";
         }
         return $retval;
+    }
+
+    /**
+     * Gathers module infomation from the FS and adds the detail to the DB.
+     * @var $module Name of the module (folder name)
+     * @return boolean
+     */
+    static function ModuleInfoToDB($module) {
+        global $zdbh;
+        global $zlo;
+        $mod_xml = "modules/$module/module.xml";
+        try {
+            $mod_config = new xml_reader(fs_filehandler::ReadFileContents($mod_xml));
+            $mod_config->Parse();
+            $module_name = $mod_config->document->name[0]->tagData;
+            $module_version = $mod_config->document->version[0]->tagData;
+            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_version_in, mo_folder_vc, mo_installed_ts) VALUES ('$module_name', $module_version, '$module_name', " . time() . ")");
+            $sql->execute();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
 }
