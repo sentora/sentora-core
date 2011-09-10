@@ -27,7 +27,7 @@ class db_builder {
 
 				foreach($db_config->document->table_structure as $table){
 					$table_name = $table->table_name[0]->tagData;
-					echo $table_name;
+
 					#Check if table exists, if not then create it.
 					$sql = $zdbh->prepare("SHOW TABLES FROM $database LIKE '$table_name'");
 					$sql->execute();
@@ -37,15 +37,18 @@ class db_builder {
 						$sql->execute();
 					}
 					
-	
 					//Loop through columnns for selected table
 					foreach($table->column as $data){
 						$column_name = $data->column_name[0]->tagData;
 						$column_structure = $data->column_structure[0]->tagData;
-						$sql = $zdbh->prepare("ALTER TABLE $database.$table_name ADD $column_name $column_structure");
+						$sql = $zdbh->prepare("SHOW COLUMNS FROM $database.$table_name LIKE '$column_name'");
 						$sql->execute();
+						$column_exists = $sql->fetch();
+						if (!$column_exists){
+							$sql = $zdbh->prepare("ALTER TABLE $database.$table_name ADD $column_name $column_structure");
+							$sql->execute();
+						}
 					}
-		
 		
 					//Loop through inserts for selected table
 					foreach($table->data as $data){
@@ -60,23 +63,7 @@ class db_builder {
 							$sql->execute();		
 						}
 					}
-		
-				
 				}
-				
-				
-				echo "END\n";
-				
-				
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			}
 		}
 		catch (Exception $e){
