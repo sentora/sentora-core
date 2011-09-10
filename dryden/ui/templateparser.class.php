@@ -55,13 +55,13 @@ class ui_templateparser {
         }
 
         /*
-         * Load class template holders (if the class exists) - If it does it will __construct
+         * Load class template holders (if the class exists) - It will execute 'Template()' method from the class.
          */
         preg_match_all("'<#\s(.*?)\s#>'si", $raw, $match);
         if ($match) {
             foreach ($match[1] as $classes) {
                 if (class_exists('' . $classes . '')) {
-                    new $classes;
+                    $raw = str_replace("<# " . $classes . " #>", call_user_func(array($classes, 'Template')), $raw);
                 }
             }
         }

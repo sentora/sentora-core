@@ -83,15 +83,15 @@ class sys_versions {
      */
     static function ShowOSName() {
         $uname = strtolower(php_uname());
-        $os = "";
+        $retval = "";
         if (strpos($uname, "darwin") !== false) {
-            $os = "MacOSX";
+            $retval = "MacOSX";
         } else if (strpos($uname, "win") !== false) {
-            $os = "Windows";
+            $retval = "Windows";
         } else if (strpos($uname, "freebsd") !== false) {
-            $os = "FreeBSD";
+            $retval = "FreeBSD";
         } else if (strpos($uname, "openbsd") !== false) {
-            $os = "OpenBSD";
+            $retval = "OpenBSD";
         } else {
             /**
              * @todo convert the bottom bit to read from a list of OS's.
@@ -120,7 +120,7 @@ class sys_versions {
             } 
              */
         }
-        return $os;
+        return $retval;
     }
 
 }
