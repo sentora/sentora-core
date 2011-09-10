@@ -56,18 +56,23 @@ class db_builder {
 						}
 					}
 		
-					//Loop through inserts for selected table
-					foreach($table->data as $data){
-						if (!empty($data->insert[0])){
-							$insert = $data->insert[0]->tagData;
-							$sql = $zdbh->prepare("INSERT INTO $database.$table_name $insert");
-							$sql->execute();
-						}
-						if (!empty($data->update[0])){
-							$update = $data->update[0]->tagData;
-							$sql = $zdbh->prepare("UPDATE $database.$table_name SET $update");
-							$sql->execute();		
-						}
+					$sql = $zdbh->prepare("SELECT COUNT(*) FROM $database.$table_name");
+					$sql->execute();
+					$empty = $sql->fetch();
+					if ($empty[0] == 0){
+						//Loop through inserts for selected table
+						foreach($table->data as $data){
+							if (!empty($data->insert[0])){
+								$insert = $data->insert[0]->tagData;
+								$sql = $zdbh->prepare("INSERT INTO $database.$table_name $insert");
+								$sql->execute();
+							}
+							if (!empty($data->update[0])){
+								$update = $data->update[0]->tagData;
+								$sql = $zdbh->prepare("UPDATE $database.$table_name SET $update");
+								$sql->execute();		
+							}
+						}				
 					}
 				}
 			}
