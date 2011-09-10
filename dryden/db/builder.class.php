@@ -11,7 +11,13 @@
 
 class db_builder {
 
-	function moduledb_commit() {
+
+    /**
+     * Builds database from XML
+     * @author RusTus (rustus@zpanelcp.com)
+     * @version 10.0.0
+     */
+	static function moduledb_commit() {
 		global $zdbh;
     	$mod_db_dir = ctrl_options::GetOption('zpanel_root')."modules/*/*/{dbs.xml}";  
     	try
@@ -70,7 +76,16 @@ class db_builder {
 		echo $e;
 		}
 	}
- 
+
+    /**
+     * Drops database from XML
+     * @author RusTus (rustus@zpanelcp.com)
+     * @version 10.0.0
+     */
+	static function moduledb_drop() {
+		global $zdbh;
+		
+	}
 	
 }
 

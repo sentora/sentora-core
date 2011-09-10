@@ -13,7 +13,7 @@ class db_xapi {
 
     /**
      * Builds new cron file from databsae
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author RusTus (rustus@zpanelcp.com)
      * @version 10.0.0
      */
 	static function cronjob_commit() {
@@ -24,7 +24,7 @@ class db_xapi {
 		
 		$sql = $zdbh->prepare( "SELECT * FROM x_cronjobs");
 		$sql->execute();
-		fs_fh::ResetFile();
+		fs_filehandler::ResetFile(ctrl_options::GetOption('cron_file'));
 		
 		while($row = $sql->fetch()) {
 			$new_file  = "#################################################################################".fs_filehandler::NewLine();
@@ -34,10 +34,11 @@ class db_xapi {
 			$new_file .= "#################################################################################".fs_filehandler::NewLine();
 			$new_file .= "# WE DO NOT RECOMMEND YOU MODIFY THIS FILE DIRECTLY, PLEASE USE ZPANEL INSTEAD! #".fs_filehandler::NewLine();
 			$new_file .= "#################################################################################".fs_filehandler::NewLine();
-			$new_file .= "# CronW Debug infomation can be found in this file here:-                       #".fs_filehandler::NewLine();
-			$new_file .= "# C:\WINDOWS\System32\crontab.txt                                               #".fs_filehandler::NewLine();
+			$new_file .= "# Cron Debug infomation can be found in this file here:-                        #".fs_filehandler::NewLine();
+			$new_file .= "# WINDOWS:- C:\WINDOWS\System32\crontab.txt                                     #".fs_filehandler::NewLine();
+			$new_file .= "# LINUX:- /var/log/syslog                                                       #".fs_filehandler::NewLine();
 			$new_file .= "#################################################################################".fs_filehandler::NewLine();
-			$new_file .= "0 * * * * ".ctrl_options::GetOption('php_exer')." C:\ZPanel\panel\daemon.php".fs_filehandler::NewLine();
+			$new_file .= "0 * * * * ".ctrl_options::GetOption('php_exer')." ".ctrl_options::GetOption('zpanel_root')."daemon.php".fs_filehandler::NewLine();
 			$new_file .= "#################################################################################".fs_filehandler::NewLine();
 			$new_file .= "# DO NOT MANUALLY REMOVE ANY OF THE CRON ENTRIES FROM THIS FILE, USE ZPANEL     #".fs_filehandler::NewLine();
 			$new_file .= "# INSTEAD! THE ABOVE ENTRIES ARE USED FOR ZPANEL TASKS, DO NOT REMOVE THEM!     #".fs_filehandler::NewLine();
@@ -53,7 +54,7 @@ class db_xapi {
 
     /**
      * Builds new Apache Vhosts file from databsae
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author RusTus (rustus@zpanelcp.com)
      * @version 10.0.0
      */
 	static function vhosts_commit() {
@@ -61,7 +62,7 @@ class db_xapi {
 
 		$sql = $zdbh->prepare( "SELECT * FROM x_vhosts" );
 		$sql->execute();
-		fs_fh::ResetFile();
+		fs_filehandler::ResetFile(ctrl_options::GetOption('apache_vhosts'));
 		
 		$new_file  = "################################################################".fs_filehandler::NewLine();;
 		$new_file .= "# Apache VHOST configuration file".fs_filehandler::NewLine();
@@ -130,13 +131,13 @@ class db_xapi {
 
     /**
      * Builds new FTP file from databsae
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author RusTus (rustus@zpanelcp.com)
      * @version 10.0.0
      */
 	 static function ftp_commit(){
 	 	$sql = $zdbh->prepare( "SELECT * FROM x_vhosts" );
 		$sql->execute();
-		fs_fh::ResetFile();
+		fs_filehandler::ResetFile(ctrl_options::GetOption('ftp'));
 		
 	 	if (ShowServerPlatform() == "Windows") {
 		

@@ -4,7 +4,7 @@ class fs_filehandler {
 
     /**
     * Create blank or preformatted file with permissions.
-    * @author Bobby Allen (ballen@zpanel.co.uk) 
+    * @author RusTus (rustus@zpanel.co.uk) 
     * @version 10.0.0
 	*/
 	static function ResetFile($value) {
@@ -18,7 +18,7 @@ class fs_filehandler {
 	
     /**
     * Create proper line ending based on server version.
-    * @author Bobby Allen (ballen@zpanel.co.uk) 
+    * @author RusTus (rustus@zpanel.co.uk) 
     * @version 10.0.0
 	*/	
 	static function NewLine() {
@@ -30,14 +30,14 @@ class fs_filehandler {
 	return $retval;
 	}
         
-        /**
-         * Returns the contents of a file in a string.
-         * @param string $file
-         * @return type 
-         */
-        static function ReadFileContents($file){
-            return file_get_contents($file);
-        }
+    /**
+    * Returns the contents of a file in a string.
+    * @param string $file
+    * @return type 
+    */
+    static function ReadFileContents($file){
+    	return file_get_contents($file);
+    }
 	
 }
 
