@@ -84,6 +84,15 @@ class ui_module {
             return false;
         }
     }
+    
+    /**
+     * This class scans the module directory and will return an array of new modules that are not yet in the database.
+     */
+    static function ScanForNewModules(){
+        $new_module_list = array();
+        
+        return $new_module_list;
+    }
 
 }
 
