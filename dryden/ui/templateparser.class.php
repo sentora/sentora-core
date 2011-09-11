@@ -31,7 +31,9 @@ class ui_templateparser {
          * @todo Add dynamic place holders which relate to class methods (for easy extending) - All place holders will be placed in an XML file.
          * for now the below is just a test!
          */
+        global $controller;
         $tplp = new runtime_dataobject;
+        
 
         /*
          * Register some 'core' template place holders!
@@ -48,7 +50,7 @@ class ui_templateparser {
         $tplp->addItemValue('server_ipaddress', sys_monitoring::ServerIPAddress());
         $tplp->addItemValue('uptime', sys_monitoring::ServerUptime());
 
-        $tplp->addItemValue('module', ui_module::getModule(ctrl_director::getCurrentModule()));
+        $tplp->addItemValue('module', ui_module::getModule($controller->getCurrentModule()));
 
         foreach ($tplp->getDataObject() as $placeholder => $replace) {
             $raw = str_replace("<% " . $placeholder . " %>", $replace, $raw);
