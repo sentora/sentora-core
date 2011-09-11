@@ -8,7 +8,9 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-$modulerunner = new ui_module();
+
+global $controller;
+$controller = new runtime_controller();
 
 /**
  * There is debug infomation avaliable! - Lets write the info out and then reset the debug object!
@@ -41,9 +43,7 @@ $zpauth->Authenticate();
 ctrl_auth::RequireUser();
 
 /**
- * Load the module or list all module icons if a module has not been requested to be loaded!
+ * Initiate the controller to handle all requests and pass infomation to the reuired places etc.
  */
-if (ctrl_director::getCurrentModule())
-    ui_module::getModule(ctrl_director::getCurrentModule());
-#ui_modulelist::getOutput();
+$controller->Init();
 ?>

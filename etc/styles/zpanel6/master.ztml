@@ -195,11 +195,9 @@
 
             <table align="center" class="footer" width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr class="copypower">
-                    <td class="copypower">Copyright &copy; 2004-2011 <a href="http://www.zpanelcp.com/" target="_blank">ZPanel Project</a>.<br><# ui_getzpversion #></td>
+                    <td class="copypower">Copyright &copy; 2004-2011 <a href="http://www.zpanelcp.com/" target="_blank">ZPanel Project</a>.</td>
                 </tr>
             </table>
-			<!-- BEGIN DEBUG -->
-			<div class="zdebug" id="zdebug">This is a test debug footer</div>
-			<!-- END DEBUG -->
+			<# ui_controllerdebug #>
         </div>
     </body></html>
