@@ -34,6 +34,11 @@ class runtime_controller {
         if (!isset($this->vars_get[0]['module'])) {
             
         }
+        if (isset($this->vars_get[0]['action'])) {
+            if (class_exists('module_controller', FALSE)) {
+                call_user_func(array('module_controller', $this->vars_get[0]['action']));
+            }
+        }
         return;
     }
 
@@ -60,7 +65,7 @@ class runtime_controller {
                 return false;
             }
         } else {
-           if (isset($this->vars_cookie[0][$name])) {
+            if (isset($this->vars_cookie[0][$name])) {
                 return $this->vars_cookie[0][$name];
             } else {
                 return false;
@@ -97,6 +102,7 @@ class runtime_controller {
     }
 
     public function OutputControllerDebug() {
+        global $script_memory;
         if (isset($this->vars_get[0]['debug'])) {
             ob_start();
             var_dump($this->GetAllControllerRequests('URL'));
@@ -114,10 +120,19 @@ class runtime_controller {
             var_dump($this->GetAllControllerRequests('COOKIE'));
             $set_cookies = ob_get_contents();
             ob_end_clean();
-            return "<strong>URL Variables set:</strong><br><pre>" . $set_urls . "</pre><strong>POST Variables set:</strong><br><pre>" . $set_forms . "</pre><strong>SESSION Variables set:</strong><br><pre>" . $set_sessions . "</pre><strong>COOKIE Variables set:</strong><br><pre>" . $set_cookies . "</pre>";
+            return "<strong>PHP Script Memory Usage:</strong> " .  debug_execution::ScriptMemoryUsage($script_memory). "<br><strong>URL Variables set:</strong><br><pre>" . $set_urls . "</pre><strong>POST Variables set:</strong><br><pre>" . $set_forms . "</pre><strong>SESSION Variables set:</strong><br><pre>" . $set_sessions . "</pre><strong>COOKIE Variables set:</strong><br><pre>" . $set_cookies . "</pre>";
         } else {
             return false;
         }
+    }
+    
+    public function ControllerResponse(){
+        /**
+         * @todo Response getting directed fine but infomation still needs to be sent back to the controller.
+         */
+        header("location: ./?module=" .$this->GetCurrentModule(). "&options=" .$this->vars_get[0]['options']. "&debug");
+        exit;
+        return;
     }
 
 }

@@ -1,9 +1,15 @@
 If this displays then module content is being displayed correctly!<br><br>
 
 <p>
-<?php echo "This is an example showing a module specific class being called -> " .mymodule::EchoTest(); ?>
+    <?php echo "This is an example showing a module specific class being called -> " . mymodule::EchoTest(); ?>
 
-<?php 
-$test = new helloworld();
-echo $test->GetHello(); ?>
+    <?php
+    $test = new helloworld();
+    echo $test->GetHello();
+    ?>
+
+<form action="./?module=test&action=SubmitName" method="post">
+    <input type="text" name="MyName"></input>
+    <input type="submit" name="submit" value="Read back">
+</form>
 </p>

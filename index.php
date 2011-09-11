@@ -19,6 +19,7 @@ debug_phperrors::SetMode('dev');
 
 
 require_once 'inc/dbc.inc.php';
+
 require_once 'inc/init.inc.php';
 
 #ctrl_options::SetSystemOption('dbversion', '10.0.0 dev');
