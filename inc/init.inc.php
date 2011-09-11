@@ -12,6 +12,7 @@
 global $controller;
 $controller = new runtime_controller();
 
+
 /**
  * There is debug infomation avaliable! - Lets write the info out and then reset the debug object!
  */

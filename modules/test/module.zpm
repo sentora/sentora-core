@@ -3,5 +3,7 @@ If this displays then module content is being displayed correctly!<br><br>
 <p>
 <?php echo "This is an example showing a module specific class being called -> " .mymodule::EchoTest(); ?>
 
-<?php echo "The version of Apache running on this server is: <strong>" .sys_versions::ShowApacheVersion() ."</strong> <- This shows that core classes can also be utilised within modules which is pretty cool don't you think ;)"; ?>
+<?php 
+$test = new helloworld();
+echo $test->GetHello(); ?>
 </p>

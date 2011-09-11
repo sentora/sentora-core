@@ -42,13 +42,29 @@ class runtime_controller {
      */
     public function GetControllerRequest($type="URL", $name) {
         if ($type == 'FORM') {
-            return $this->vars_post[0][$name];
+            if (isset($this->vars_post[0][$name])) {
+                return $this->vars_post[0][$name];
+            } else {
+                return false;
+            }
         } elseif ($type == 'URL') {
-            return $this->vars_get[0][$name];
+            if (isset($this->vars_get[0][$name])) {
+                return $this->vars_get[0][$name];
+            } else {
+                return false;
+            }
         } elseif ($type == 'USER') {
-            return $this->vars_session[0][$name];
+            if (isset($this->vars_session[0][$name])) {
+                return $this->vars_session[0][$name];
+            } else {
+                return false;
+            }
         } else {
-            return $this->vars_cookie[0][$name];
+           if (isset($this->vars_cookie[0][$name])) {
+                return $this->vars_cookie[0][$name];
+            } else {
+                return false;
+            }
         }
         return false;
     }
