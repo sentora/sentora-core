@@ -198,6 +198,8 @@
                     <td class="copypower">Copyright &copy; 2004-2011 <a href="http://www.zpanelcp.com/" target="_blank">ZPanel Project</a>.<br><# ui_getzpversion #></td>
                 </tr>
             </table>
-
+			<!-- BEGIN DEBUG -->
+			<div class="zdebug" id="zdebug">This is a test debug footer</div>
+			<!-- END DEBUG -->
         </div>
     </body></html>

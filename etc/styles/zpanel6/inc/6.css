@@ -430,3 +430,12 @@ a.zmodule{
 	cursor:pointer;
 	padding-right:10px; 
 }
+.zdebug{
+	background-color: #FFCBCB;
+	border:solid 1px #C11B17;
+	font-weight:normal;
+	text-align: left;
+	margin: 10px;
+	padding:10px;
+	color:#C11B17;
+}
