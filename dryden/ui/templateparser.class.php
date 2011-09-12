@@ -67,6 +67,18 @@ class ui_templateparser {
                 }
             }
         }
+        
+        /*
+         * Load module controller templates!! (Runtime stuff!)
+         */
+         preg_match_all("'<@\s(.*?)\s@>'si", $raw, $match);
+        if ($match) {
+            foreach ($match[1] as $classes) {
+                #if (class_exists('' . $classes . '')) {
+                    $raw = str_replace("<@ " . $classes . " @>", eval("echo module_controller::get" .$classes. "();"), $raw);
+                #}
+            }
+        }
 
         return $raw;
     }

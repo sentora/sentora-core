@@ -17,7 +17,7 @@ class ui_sysmessage {
 
     static function shout($message, $class="zannounce", $id="zannounce") {
 	$line = "<div class=\"".$class."\" id=\"".$id."\">".$message."</div>";
-	echo $line;
+	return $line;
     }
 }
 

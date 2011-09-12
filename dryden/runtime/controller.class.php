@@ -36,7 +36,7 @@ class runtime_controller {
         }
         if (isset($this->vars_get[0]['action'])) {
             if (class_exists('module_controller', FALSE)) {
-                call_user_func(array('module_controller', $this->vars_get[0]['action']));
+                call_user_func(array('module_controller', 'do'.$this->vars_get[0]['action']));
             }
         }
         return;
