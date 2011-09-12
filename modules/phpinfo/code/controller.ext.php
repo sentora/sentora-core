@@ -25,9 +25,9 @@
  *
  */
  
-class mod_phpinfo {
+class module_controller {
 
-    static function phpinfo_show() {
+    static function getPHPInfo() {
 	ob_start();
 	phpinfo(INFO_GENERAL);
 	$info = ob_get_contents();
