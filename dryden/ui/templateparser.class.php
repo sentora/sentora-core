@@ -38,7 +38,7 @@ class ui_templateparser {
         /*
          * Register some 'core' template place holders!
          */
-        $tplp->addItemValue('assetfolderpath', 'etc/styles/zpanel6/');
+        $tplp->addItemValue('assetfolderpath', 'etc/styles/zpanelx/');
         $tplp->addItemValue('version_apache', sys_versions::ShowApacheVersion());
         $tplp->addItemValue('version_php', sys_versions::ShowPHPVersion());
         $tplp->addItemValue('version_mysql', sys_versions::ShowMySQLVersion());

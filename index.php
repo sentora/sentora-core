@@ -24,7 +24,7 @@ require_once 'inc/init.inc.php';
 
 #ctrl_options::SetSystemOption('dbversion', '10.0.0 dev');
 
-ui_templateparser::Generate("etc/styles/zpanel6");
+ui_templateparser::Generate("etc/styles/zpanelx");
 
 ui_module::ModuleInfoToDB('test');
 ?>

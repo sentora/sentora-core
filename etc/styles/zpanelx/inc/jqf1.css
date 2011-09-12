@@ -1,0 +1,18 @@
+/*
+  jQuery FormOne - JQF1 1.0.1 - 05/06/2010
+  Por: Thiago Azurem - azurem@gmail.com
+*/
+  .jqf1Hidden { filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);-moz-opacity: 0;opacity:0;overflow:hidden; }
+
+/* Input file e Button */
+  .jqf1Btn { float:left;overflow:hidden; }
+  .div span { float:left;overflow:hidden; }
+  .jqf1 input, .jqf1Btn .div span { font:14px arial;padding-top:2px; }
+  .jqf1Btn input, .jqf1Btn button { cursor:pointer; }
+  .jqf1Btn .div, .jqf1Btn .div div, .jqf1Btn .div span { height:22px; }
+  .jqf1Btn .div div { padding:0px 4px;text-align:center;color:#F4F9FA;letter-spacing:-0.2px; }
+  .jqf1Btn .div { background: url('../images/jqf1.png') left -208px no-repeat; }
+  .jqf1Btn .div div { background: url('../images/jqf1.png') right -256px no-repeat; }
+  .jqf1Btn .div span { background: url('../images/jqf1.png') left -304px repeat-x; }
+
+/* END Input file e Button */
