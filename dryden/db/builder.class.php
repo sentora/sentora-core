@@ -43,7 +43,7 @@ class db_builder {
 						$sql->execute();
 					}
 					
-					//Loop through columnns for selected table
+					#Loop through columnns for selected table
 					foreach($table->column as $data){
 						$column_name = $data->column_name[0]->tagData;
 						$column_structure = $data->column_structure[0]->tagData;
@@ -54,13 +54,14 @@ class db_builder {
 							$sql = $zdbh->prepare("ALTER TABLE $database.$table_name ADD $column_name $column_structure");
 							$sql->execute();
 						}
-					}
+					}					
 		
+					#Populate tables with data from xml
 					$sql = $zdbh->prepare("SELECT COUNT(*) FROM $database.$table_name");
 					$sql->execute();
 					$empty = $sql->fetch();
 					if ($empty[0] == 0){
-						//Loop through inserts for selected table
+						#Loop through inserts/updates for selected table
 						foreach($table->data as $data){
 							if (!empty($data->insert[0])){
 								$insert = $data->insert[0]->tagData;
@@ -73,6 +74,15 @@ class db_builder {
 								$sql->execute();		
 							}
 						}				
+					}
+					
+					#Remove temp table if created.
+					$sql = $zdbh->prepare("SHOW COLUMNS FROM $database.$table_name LIKE 'create_temp'");
+					$sql->execute();
+					$table_exists = $sql->fetch();
+					if ($table_exists){
+        				$sql = $zdbh->prepare("ALTER TABLE $database.$table_name DROP create_temp");
+						$sql->execute();
 					}
 				}
 			}
