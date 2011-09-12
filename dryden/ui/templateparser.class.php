@@ -33,7 +33,7 @@ class ui_templateparser {
          */
         global $controller;
         $tplp = new runtime_dataobject;
-        
+
 
         /*
          * Register some 'core' template place holders!
@@ -67,15 +67,19 @@ class ui_templateparser {
                 }
             }
         }
-        
+
         /*
-         * Load module controller templates!! (Runtime stuff!)
+         * Load module controller output placeholders!
          */
-         preg_match_all("'<@\s(.*?)\s@>'si", $raw, $match);
+        preg_match_all("'<@\s(.*?)\s@>'si", $raw, $match);
         if ($match) {
             foreach ($match[1] as $classes) {
                 #if (class_exists('' . $classes . '')) {
-                    $raw = str_replace("<@ " . $classes . " @>", eval("echo module_controller::get" .$classes. "();"), $raw);
+                ob_start();
+                eval("echo module_controller::get" . $classes . "();");
+                $output = ob_get_contents();
+                ob_end_clean();
+                $raw = str_replace("<@ " . $classes . " @>", $output, $raw);
                 #}
             }
         }

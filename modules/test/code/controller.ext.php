@@ -34,7 +34,9 @@ class module_controller {
      * The 'return' class as prefixed with 'get' but called within the module without the prefix!
      */
     static function getSubmitName() {
-        return ui_sysmessage::shout("Your name is: " . self::$name . " and debugging is set to: " . self::$isdebug . "");
+        if (!fs_director::CheckForEmptyValue(self::$name))
+            return ui_sysmessage::shout("Your name is: " . self::$name . " and debugging is set to: " . self::$isdebug . "");
+        return;
     }
 
 }
