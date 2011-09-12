@@ -78,18 +78,22 @@ class db_builder {
 			}
 		}
 		catch (Exception $e){
-		echo $e;
+		// I know this will change, just testing for now
+		echo ui_sysmessage::shout($e, 'zdebug', 'zdebug');
 		}
 	}
 
     /**
-     * Drops database from XML
+     * Drops database if not zpanel core
      * @author RusTus (rustus@zpanelcp.com)
      * @version 10.0.0
      */
-	static function moduledb_drop() {
+	static function moduledb_drop($database) {
 		global $zdbh;
-		
+		if ($database != 'zpanelx'){ //Change to systemoption
+			$sql = $zdbh->prepare("DROP DATABASE IF EXISTS $database");
+			$sql->execute();
+		}	
 	}
 	
 }
