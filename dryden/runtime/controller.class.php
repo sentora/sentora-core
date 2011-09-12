@@ -27,16 +27,14 @@ class runtime_controller {
         if (isset($this->vars_get[0]['module'])) {
             ui_module::getModule($this->GetCurrentModule());
         }
-        if (isset($this->vars_get[0]['debug'])) {
-            
-        }
-
         if (!isset($this->vars_get[0]['module'])) {
             
         }
         if (isset($this->vars_get[0]['action'])) {
-            if (class_exists('module_controller', FALSE)) {
-                call_user_func(array('module_controller', 'do'.$this->vars_get[0]['action']));
+            if ((class_exists('module_controller', FALSE)) && (method_exists('module_controller', 'do' . $this->vars_get[0]['action']))) {
+                call_user_func(array('module_controller', 'do' . $this->vars_get[0]['action']));
+            } else {
+                echo ui_sysmessage::shout("No 'do" . $this->vars_get[0]['action'] . "' class exists - Please create it to enable controller actions and runtime placeholders within your module.");
             }
         }
         return;
@@ -101,8 +99,14 @@ class runtime_controller {
         return false;
     }
 
+    /**
+     * Displays Controller debug infomation (mainly for module development and debugging)
+     * @global type $script_memory
+     * @return type 
+     */
     public function OutputControllerDebug() {
         global $script_memory;
+        global $starttime;
         if (isset($this->vars_get[0]['debug'])) {
             ob_start();
             var_dump($this->GetAllControllerRequests('URL'));
@@ -120,19 +124,19 @@ class runtime_controller {
             var_dump($this->GetAllControllerRequests('COOKIE'));
             $set_cookies = ob_get_contents();
             ob_end_clean();
-            return "<strong>PHP Script Memory Usage:</strong> " .  debug_execution::ScriptMemoryUsage($script_memory). "<br><strong>URL Variables set:</strong><br><pre>" . $set_urls . "</pre><strong>POST Variables set:</strong><br><pre>" . $set_forms . "</pre><strong>SESSION Variables set:</strong><br><pre>" . $set_sessions . "</pre><strong>COOKIE Variables set:</strong><br><pre>" . $set_cookies . "</pre>";
+            ob_start();
+            debug_execution::GetLoadedClasses();
+            $classes_loaded = ob_get_contents();
+            ob_end_clean();
+            $mtime = microtime();
+            $mtime = explode(" ", $mtime);
+            $mtime = $mtime[1] + $mtime[0];
+            $endtime = $mtime;
+            $totaltime = ($endtime - $starttime);
+            return "<h1>Controller Debug Mode</h1><strong>PHP Script Memory Usage:</strong> " . debug_execution::ScriptMemoryUsage($script_memory) . "<br><strong>Script Execution Time: </strong> " . $totaltime . "<br><br><strong>URL Variables set:</strong><br><pre>" . $set_urls . "</pre><strong>POST Variables set:</strong><br><pre>" . $set_forms . "</pre><strong>SESSION Variables set:</strong><br><pre>" . $set_sessions . "</pre><strong>COOKIE Variables set:</strong><br><pre>" . $set_cookies . "</pre><br><br><strong>Loaded classes:</strong><pre>" . $classes_loaded . "</pre>";
         } else {
             return false;
         }
-    }
-    
-    public function ControllerResponse(){
-        /**
-         * @todo Response getting directed fine but infomation still needs to be sent back to the controller.
-         */
-        header("location: ./?module=" .$this->GetCurrentModule(). "&options=" .$this->vars_get[0]['options']. "&debug");
-        exit;
-        return;
     }
 
 }

@@ -83,6 +83,13 @@ class ui_templateparser {
                 #}
             }
         }
+        
+        /*
+         * PHP Execution protection!
+         * @todo Add an error logging trap here!
+         */
+        $raw = str_replace('<?', 'PHP execution is not permitted! Caught: [', $raw);
+        $raw = str_replace('?>', ']', $raw);
 
         return $raw;
     }

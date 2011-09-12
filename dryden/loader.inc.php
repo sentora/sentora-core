@@ -8,6 +8,16 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
+
+/**
+ * Script timer (start) used for determining script execution time.
+ */
+global $starttime;
+$mtime = microtime();
+$mtime = explode(" ", $mtime);
+$mtime = $mtime[1] + $mtime[0];
+$starttime = $mtime;
+
 function __autoload($class_name) {
     $path = str_replace("_", "/", $class_name);
     if (file_exists("dryden/" . $path . ".class.php")) {

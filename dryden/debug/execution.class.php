@@ -11,15 +11,20 @@
 class debug_execution {
 
     static function ScriptMemoryUsage() {
-        $mem_usage = memory_get_usage(true);
+        $mem_usage = memory_get_usage(false);
         if ($mem_usage < 1024) {
             $retval = $mem_usage . " bytes";
         } elseif ($mem_usage < 1048576) {
-            $retval = round($mem_usage / 1024, 2) . " kilobytes";
+            $retval = round($mem_usage / 1024, 2) . " KB";
         } else {
-            $retval = round($mem_usage / 1048576, 2) . " megabytes";
+            $retval = round($mem_usage / 1048576, 2) . " MB";
         }
         return $retval;
+    }
+    
+    static function GetLoadedClasses(){
+        $classes_loaded = get_declared_classes();
+        return print_r($classes_loaded);
     }
 
 }
