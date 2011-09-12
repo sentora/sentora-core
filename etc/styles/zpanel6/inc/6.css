@@ -413,7 +413,15 @@ margin-top: 81px;
 	border-bottom:1px solid #CCCCCC;
 	border-spacing:0px;
 }
-.zannouce{
+.zannounce{
+	background-color: #ECF5F9;
+	border:solid 1px #55A7C8;
+	font-weight:normal;
+	text-align: left;
+	padding:10px;
+	color:#2266AA;
+}
+.zupdatemessage{
 	background-color: #ECF5F9;
 	border:solid 1px #55A7C8;
 	font-weight:normal;
