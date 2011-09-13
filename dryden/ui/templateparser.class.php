@@ -36,27 +36,6 @@ class ui_templateparser {
 
 
         /*
-         * Register some 'core' template place holders!
-         */
-        $tplp->addItemValue('assetfolderpath', 'etc/styles/zpanelx/');
-        $tplp->addItemValue('version_apache', sys_versions::ShowApacheVersion());
-        $tplp->addItemValue('version_php', sys_versions::ShowPHPVersion());
-        $tplp->addItemValue('version_mysql', sys_versions::ShowMySQLVersion());
-        $tplp->addItemValue('version_zpanel', ctrl_options::GetOption('dbversion'));
-        $tplp->addItemValue('version_platform', sys_versions::ShowOSPlatformVersion());
-        $tplp->addItemValue('version_kernal', sys_versions::ShowOSKernalVersion(sys_versions::ShowOSPlatformVersion()));
-        $tplp->addItemValue('version_osname', sys_versions::ShowOSName());
-        $tplp->addItemValue('client_ipaddress', sys_monitoring::ClientIPAddress());
-        $tplp->addItemValue('server_ipaddress', sys_monitoring::ServerIPAddress());
-        $tplp->addItemValue('uptime', sys_monitoring::ServerUptime());
-
-        $tplp->addItemValue('module', ui_module::getModule($controller->getCurrentModule()));
-
-        foreach ($tplp->getDataObject() as $placeholder => $replace) {
-            $raw = str_replace("<% " . $placeholder . " %>", $replace, $raw);
-        }
-
-        /*
          * Load class template holders (if the class exists) - It will execute 'Template()' method from the class.
          */
         preg_match_all("'<#\s(.*?)\s#>'si", $raw, $match);
@@ -83,7 +62,7 @@ class ui_templateparser {
                 #}
             }
         }
-        
+
         /*
          * PHP Execution protection!
          * @todo Add an error logging trap here!

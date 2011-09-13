@@ -70,6 +70,11 @@ class ctrl_auth {
         $this->password = null;
         return true;
     }
+    
+    static function CurrentUserID(){
+        global $controller;
+        return $controller->GetControllerRequest('USER', 'zpuid');
+    }
 
 }
 
