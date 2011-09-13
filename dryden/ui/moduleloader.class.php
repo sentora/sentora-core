@@ -22,11 +22,10 @@ class ui_moduleloader {
 		
 		if ($category == ""){
 			$sql = $zdbh->prepare("SELECT * FROM x_modcats");
-			$sql->execute();
 		}else{
-			$sql = $zdbh->prepare("SELECT * FROM x_modcats WHERE mc_name_vc = '$category'");
-			$sql->execute();		
+			$sql = $zdbh->prepare("SELECT * FROM x_modcats WHERE mc_name_vc = '$category'");	
 		}
+		$sql->execute();
 		$line = "";
 		
 		while ($categories = $sql->fetch()){

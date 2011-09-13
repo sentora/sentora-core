@@ -51,6 +51,46 @@ class ctrl_options {
             }
         }
     }
+	
+    /**
+     * Gets user account information.
+     * 
+     * @global array $zdbh
+     * @param string $name
+     * @return array 
+     */
+    static function GetUserInfo($id) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk = '$id'")->Fetch();
+        if ($result) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets user package information.
+     * 
+     * @global array $zdbh
+     * @param string $name
+     * @return array 
+     */
+    static function GetPackageInfo($id) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk = '$id'")->Fetch();
+        if ($result) {
+			$packageid = $result['ac_id_pk'];//change this to package id
+        	$result = $zdbh->query("SELECT * FROM x_packages WHERE pk_id_pk = '$packageid'")->Fetch();
+			if ($result){
+				return $result;
+			} else {
+				return false;
+			}
+        } else {
+            return false;
+        }
+    }
 
 }
 

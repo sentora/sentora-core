@@ -411,3 +411,7 @@ $(document).ready(function() {
    }
    });
 });
+//show the page after all jquery is loaded
+$(document).ready(function() { 
+   $("body").show(); 
+});
