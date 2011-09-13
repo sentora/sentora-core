@@ -27,9 +27,6 @@ class runtime_controller {
         if (isset($this->vars_get[0]['module'])) {
             ui_module::getModule($this->GetCurrentModule());
         }
-        if (!isset($this->vars_get[0]['module'])) {
-            
-        }
         if (isset($this->vars_get[0]['action'])) {
             if ((class_exists('module_controller', FALSE)) && (method_exists('module_controller', 'do' . $this->vars_get[0]['action']))) {
                 call_user_func(array('module_controller', 'do' . $this->vars_get[0]['action']));
