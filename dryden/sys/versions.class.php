@@ -97,30 +97,40 @@ class sys_versions {
              * @todo convert the bottom bit to read from a list of OS's.
              */
             /*
-            $list = @parse_ini_file("lib/zpanel/os.ini", true);
-            foreach ($list as $section => $distribution) {
-                if (!isset($distribution["Files"])) {
-                    
-                } else {
-                    $intBytes = 4096;
-                    $intLines = 0;
-                    $intCurLine = 0;
-                    $strFile = "";
-                    foreach (preg_split("/;/", $distribution["Files"], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
-                        if (file_exists($filename)) {
-                            if (isset($distribution["Name"])) {
-                                $os = $distribution["Name"];
-                            }
-                        }
-                    }
-                    if ($os == null) {
-                        $os = "Unknown";
-                    }
-                }
-            } 
+              $list = @parse_ini_file("lib/zpanel/os.ini", true);
+              foreach ($list as $section => $distribution) {
+              if (!isset($distribution["Files"])) {
+
+              } else {
+              $intBytes = 4096;
+              $intLines = 0;
+              $intCurLine = 0;
+              $strFile = "";
+              foreach (preg_split("/;/", $distribution["Files"], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
+              if (file_exists($filename)) {
+              if (isset($distribution["Name"])) {
+              $os = $distribution["Name"];
+              }
+              }
+              }
+              if ($os == null) {
+              $os = "Unknown";
+              }
+              }
+              }
              */
         }
         return $retval;
+    }
+
+    /**
+     * Returns the ZPanel version (based on the DB version number.)
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @return string ZPanel DB Version
+     */
+    static function ShowZpanelVersion() {
+        return ctrl_options::GetOption('dbversion');
     }
 
 }
