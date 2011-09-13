@@ -73,23 +73,23 @@
                                                     <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                                         	<tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Username:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info">{{account:username}}</span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_username #></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Full name:</strong></td>
-                                                                <td nowrap="nowrap">{{account:fullname}}</td>
+                                                                <td nowrap="nowrap"><# ui_tpl_fullname #></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Email Address:</strong></td>
-                                                                <td nowrap="nowrap"><a href="./?c=account&p=my_account" title="Update your contact email address">{{account:email}}</a></td>
+                                                                <td nowrap="nowrap"><a href="./?module=account" title="Update your contact email address"><# ui_tpl_email #></a></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Package name:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info">{{package:name}}</span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_packagename #></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Account type:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info">{{account:type}}</span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_accounttype #></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
