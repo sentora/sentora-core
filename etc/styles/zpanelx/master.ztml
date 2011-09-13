@@ -89,7 +89,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Account type:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_accounttype #></span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usergroup #></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>

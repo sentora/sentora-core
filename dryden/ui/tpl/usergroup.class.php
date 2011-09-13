@@ -8,11 +8,11 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class ui_tpl_accounttype {
+class ui_tpl_usergroup {
 
     public function Template() {
         $user_array = ctrl_users::GetUserDetail();
-        return $user_array['accounttype'];
+        return $user_array['usergroup'];
     }
 
 }

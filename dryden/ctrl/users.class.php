@@ -17,15 +17,15 @@ class ctrl_users {
 
         if ($user == "") {
             # Display the current logged in your details!
-            $rows = $zdbh->prepare("SELECT * FROM x_accounts LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) WHERE x_accounts.ac_id_pk = " . ctrl_auth::CurrentUserID() . "");
+            $rows = $zdbh->prepare("SELECT * FROM x_accounts LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) LEFT JOIN x_groups ON (x_profiles.ud_group_fk=x_groups.ug_id_pk) LEFT JOIN x_packages ON (x_profiles.ud_package_fk=x_packages.pk_id_pk) WHERE x_accounts.ac_id_pk = " . ctrl_auth::CurrentUserID() . "");
             $rows->execute();
             $dbvals = $rows->fetch();
             $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
             $userdetail->addItemValue('password', $dbvals['ac_pass_vc']);
             $userdetail->addItemValue('email', $dbvals['ac_email_vc']);
             $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
-            $userdetail->addItemValue('packagename', 'TO BE DONE LATER');
-            $userdetail->addItemValue('accounttype', 'TO BE DONE LATER');
+            $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
+            $userdetail->addItemValue('usergroup', $dbvals['ug_name_vc']);
         } else {
             # Display the requested user details based on USERID.
             # Display the current logged in your details!
@@ -37,7 +37,7 @@ class ctrl_users {
             $userdetail->addItemValue('email', $dbvals['ac_email_vc']);
             $userdetail->addItemValue('fullname', $dbvals['ac_fullname_vc']);
             $userdetail->addItemValue('packagename', 'TO BE DONE LATER');
-            $userdetail->addItemValue('accounttype', 'TO BE DONE LATER');
+            $userdetail->addItemValue('usergroup', 'TO BE DONE LATER');
         }
         return $userdetail->getDataObject();
     }
