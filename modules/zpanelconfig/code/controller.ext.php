@@ -28,12 +28,42 @@
 class module_controller {
 
 	static function getZpanelOptions (){
-	
-	
-	
+	global $zdbh;
+	$line = "";
+		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {
+			
+				$sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_usereditable_en = 'true'");
+	 			$sql->execute();
+				
+				while ($row = $sql->fetch()) {
+					$line .= "<tr><th>".$row['so_name_vc']."</th><td><input style=\"width:300px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
+				}
+				$line .= "<tr><td><input type=\"submit\" name=\"inSaveSystem\"value=\"Save Changes\"></td><td></td></tr>";
+			}
+		}	
+	return $line;
 	}
 	
 	static function doUpdateZpanelConfig(){
+	global $zdbh;
+
+		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {
+			
+				$sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_usereditable_en = 'true'");
+	 			$sql->execute();
+				
+				while ($row = $sql->fetch()) {
+					if ($controller->GetControllerRequest('FORM', $row['so_name_vc'])) {
+						$sql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '".$row['so_name_vc']."' WHERE so_name_vc = '".$row['so_name_vc']."'");
+	 					$sql->execute();		
+					}
+				}
+			}
+		}
 	
 	}
 	
