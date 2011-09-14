@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
+
 class module_controller {
 
 	static $currentuser;
@@ -38,13 +38,13 @@ class module_controller {
 		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "'";
 		if ($numrows = $zdbh->query($sql)) {
  			if ($numrows->fetchColumn() <> 0) {
-						
+
 	 			$sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "'");
 	 			$sql->execute();
-		
+
 				while ($rowclients = $sql->fetch()) {
 					$clientuserid = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-					$line .= "<tr><td>".$clientuserid['username']."</td><td>TODO</td><td>TODO</td><td>TODO</td><td><input type=\"submit\" name=\"inShadow_".$rowclients['ac_id_pk']."\" id=\"inShadow_".$rowclients['ac_id_pk']."\" value=\"Shadow\"></td></tr>\n"; 
+					$line .= "<tr><td>".$clientuserid['username']."</td><td>TODO</td><td>TODO</td><td>TODO</td><td><input type=\"submit\" name=\"inShadow_".$rowclients['ac_id_pk']."\" id=\"inShadow_".$rowclients['ac_id_pk']."\" value=\"Shadow\"></td></tr>\n";
 				}
 			}else{
 			$line = "<tr><td colspan=\"5\">You have no Clients at this time.</td></tr>\n";
@@ -52,11 +52,11 @@ class module_controller {
 		}
 		return $line;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
     static function doShadowUser() {
 		global $zdbh;
         global $controller;
@@ -65,24 +65,29 @@ class module_controller {
 		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'";
 		if ($numrows = $zdbh->query($sql)) {
  			if ($numrows->fetchColumn() <> 0) {
-			
+
 				$sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'");
 	 			$sql->execute();
 					while ($rowclients = $sql->fetch()) {
-					
+
 						if ($controller->GetControllerRequest('FORM', 'inShadow_'.$rowclients['ac_id_pk'])) {
 							 self::$shout = "";
                              ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
                              header("location: /");
                              exit;
-						
+
 						}
 					}
 			}
 		}
-		
+
     }
-	
+
+    static function hookTest(){
+        echo "This does something here!";
+        return;
+    }
+
 
 
 
