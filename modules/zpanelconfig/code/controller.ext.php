@@ -27,6 +27,8 @@
  
 class module_controller {
 
+	static $hasupdated;
+
 	static function getZpanelOptions (){
 	global $zdbh;
 	$line = "";
@@ -38,7 +40,7 @@ class module_controller {
 	 			$sql->execute();
 				
 				while ($row = $sql->fetch()) {
-					$line .= "<tr><th>".$row['so_name_vc']."</th><td><input style=\"width:300px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
+					$line .= "<tr><th>".$row['so_desc_tx']."</th><td><input style=\"width:300px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
 				}
 				$line .= "<tr><td><input type=\"submit\" name=\"inSaveSystem\"value=\"Save Changes\"></td><td></td></tr>";
 			}
@@ -59,16 +61,24 @@ class module_controller {
 				
 				while ($row = $sql->fetch()) {
 					
-					$mysql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". $controller->GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
-	 				$mysql->execute();		
+					$rowsql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". $controller->GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
+	 				$rowsql->execute();		
 					
 				}
+				self::$hasupdated = "yes";
 			}
 		}
 	
 	}
 	
-
+	static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
+            return ui_sysmessage::shout("Changes to the System options have been saved successfully!");
+		}else{
+			return "<p>Changes made here affect the entire ZPanel configuration, please double check everything before saving changes.</p>";
+		}
+        return;
+    }
 
 
 }
