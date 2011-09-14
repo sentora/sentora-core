@@ -25,4 +25,6 @@ require_once 'inc/init.inc.php';
 #ctrl_options::SetSystemOption('dbversion', '10.0.0 dev');
 
 ui_templateparser::Generate("etc/styles/zpanelx");
+
+runtime_hook::Execute('Test');
 ?>

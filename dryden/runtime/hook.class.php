@@ -10,15 +10,18 @@
  */
 class runtime_hook {
 
-    function Execute($name) {
-        $mod_folder = ctrl_options::GetOption('zpanel_root') . "modules/*/code/{controller.ext.php}";
-
+    static function Execute($name) {
+        $mod_folder = "modules/*/code/{hook.ext.php}";
         foreach (glob($mod_folder, GLOB_BRACE) as $hook_file) {
-
             // Check that the file exists and the class/method exists before running it!
-            if (file_exists($mod_folder)) {
-                include($mod_folder);
-                call_user_method('hook' . $name, 'module_controller');
+            if (file_exists($hook_file)) {
+                $class_file = include($hook_file);
+                if (method_exists('module_hooks', 'hook' . $name . '')) {
+                    if (call_user_func(array('module_hooks', 'hook' . $name . ''))) {
+                        echo "Executed hook$name in file: $hook_file";
+                    }
+                }
+                unset($class_file);
             }
         }
     }

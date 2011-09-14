@@ -38,6 +38,8 @@ class module_controller {
             return ui_sysmessage::shout("Your name is: " . self::$name . " and debugging is set to: " . self::$isdebug . "");
         return;
     }
+    
+    
 
 }
 
