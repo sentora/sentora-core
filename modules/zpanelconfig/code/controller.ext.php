@@ -48,6 +48,7 @@ class module_controller {
 	
 	static function doUpdateZpanelConfig(){
 	global $zdbh;
+	global $controller;
 
 		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
 		if ($numrows = $zdbh->query($sql)) {
@@ -57,10 +58,10 @@ class module_controller {
 	 			$sql->execute();
 				
 				while ($row = $sql->fetch()) {
-					if ($controller->GetControllerRequest('FORM', $row['so_name_vc'])) {
-						$sql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". $controller->GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
-	 					$sql->execute();		
-					}
+					
+					$mysql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". $controller->GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
+	 				$mysql->execute();		
+					
 				}
 			}
 		}
