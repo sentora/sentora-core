@@ -27,6 +27,9 @@
  
 class module_controller {
 
+	static $currentuser;
+	static $clientuserid;
+
     static function getShadowAccounts() {
 		global $zdbh;
 		$currentuser = ctrl_users::GetUserDetail();
@@ -48,6 +51,36 @@ class module_controller {
 		}
 		return $line;
 	}
+	
+	
+	
+	
+	
+    static function doShadowUser() {
+		global $zdbh;
+        global $controller;
+		$line = "";
+		self::$currentuser = ctrl_users::GetUserDetail();
+		self::$clientuserid = "2";
+		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {
+			
+			
+			}
+		}
+		
+		return $line;
+    }
+	
+
+    static function getShadowUser() {
+	$line = "";
+	if (!fs_director::CheckForEmptyValue(self::$clientuser)){
+	$line = self::$clientuser;
+	}
+echo print_r($line);
+    }
 
 
 }
