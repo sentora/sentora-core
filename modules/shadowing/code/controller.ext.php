@@ -44,7 +44,7 @@ class module_controller {
 		
 				while ($rowclients = $sql->fetch()) {
 					$clientuserid = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-					$line = "<tr><td>".$clientuserid['username']."</td><td>TODO</td><td>TODO</td><td>TODO</td><td><input type=\"submit\" name=\"inShadow_".$rowclients['ac_id_pk']."\" id=\"inShadow_".$rowclients['ac_id_pk']."\" value=\"Shadow\"></td></tr>\n"; 
+					$line .= "<tr><td>".$clientuserid['username']."</td><td>TODO</td><td>TODO</td><td>TODO</td><td><input type=\"submit\" name=\"inShadow_".$rowclients['ac_id_pk']."\" id=\"inShadow_".$rowclients['ac_id_pk']."\" value=\"Shadow\"></td></tr>\n"; 
 				}
 			}else{
 			$line = "<tr><td colspan=\"5\">You have no Clients at this time.</td></tr>\n";
@@ -71,7 +71,7 @@ class module_controller {
 					while ($rowclients = $sql->fetch()) {
 					
 						if ($controller->GetControllerRequest('FORM', 'inShadow_'.$rowclients['ac_id_pk'])) {
-							 self::$shout
+							 self::$shout = "";
                              ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
                              header("loaction: /");
                              exit;
