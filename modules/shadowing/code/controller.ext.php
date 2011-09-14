@@ -65,8 +65,9 @@ class module_controller {
 		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'";
 		if ($numrows = $zdbh->query($sql)) {
  			if ($numrows->fetchColumn() <> 0) {
-			
-			
+                             ctrl_auth::SetUserSession($numrows['ac_id_pk']);
+                             header("loaction: /");
+                             exit;
 			}
 		}
 		
@@ -74,13 +75,6 @@ class module_controller {
     }
 	
 
-    static function getShadowUser() {
-	$line = "";
-	if (!fs_director::CheckForEmptyValue(self::$clientuser)){
-	$line = self::$clientuser;
-	}
-echo print_r($line);
-    }
 
 
 }
