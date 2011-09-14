@@ -1,0 +1,9 @@
+<p>Changes made here affect the entire ZPanel configuration, please double check everything before saving changes.</p>
+
+<h2>Configure Options</h2>
+
+<form action="./?module=shadowing&action=ShadowUser" method="post">
+    <table class="zgrid">
+		<@ ZPanelOptions @>
+    </table>
+</form>
