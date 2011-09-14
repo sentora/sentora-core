@@ -73,7 +73,7 @@ class module_controller {
 						if ($controller->GetControllerRequest('FORM', 'inShadow_'.$rowclients['ac_id_pk'])) {
 							 self::$shout = "";
                              ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
-                             header("loaction: /");
+                             header("location: /");
                              exit;
 						
 						}
