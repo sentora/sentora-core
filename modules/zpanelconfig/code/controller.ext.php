@@ -58,7 +58,7 @@ class module_controller {
 				
 				while ($row = $sql->fetch()) {
 					if ($controller->GetControllerRequest('FORM', $row['so_name_vc'])) {
-						$sql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
+						$sql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". $controller->GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
 	 					$sql->execute();		
 					}
 				}
