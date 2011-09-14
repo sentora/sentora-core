@@ -29,6 +29,7 @@ class module_controller {
 
 	static $currentuser;
 	static $clientuserid;
+	static $shout;
 
     static function getShadowAccounts() {
 		global $zdbh;
@@ -59,19 +60,27 @@ class module_controller {
     static function doShadowUser() {
 		global $zdbh;
         global $controller;
-		$line = "";
+
 		self::$currentuser = ctrl_users::GetUserDetail();
-		self::$clientuserid = "2";
 		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'";
 		if ($numrows = $zdbh->query($sql)) {
  			if ($numrows->fetchColumn() <> 0) {
-                             ctrl_auth::SetUserSession($numrows['ac_id_pk']);
+			
+				$sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'");
+	 			$sql->execute();
+					while ($rowclients = $sql->fetch()) {
+					
+						if ($controller->GetControllerRequest('FORM', 'inShadow_'.$rowclients['ac_id_pk'])) {
+							 self::$shout
+                             ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
                              header("loaction: /");
                              exit;
+						
+						}
+					}
 			}
 		}
 		
-		return $line;
     }
 	
 
