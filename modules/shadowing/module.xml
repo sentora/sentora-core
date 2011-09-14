@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+<name>Shadowing</name>
+<version>100</version>
+<default-cat>Admin</default-cat>
+<desc>From here you can shadow any of your client's accounts, this enables you to automatically login as the user which enables you to offer remote help by seeing what they see!</desc>
+<author-name>Bobby Allen</author-name>
+<author-email>bobbyallen.uk@gmail.com</author-email>
+<author-url>http://www.example.com</author-url>
+<update-url>http://www.example.com/products/test-module/updateservice.xml</update-url>
+</module>

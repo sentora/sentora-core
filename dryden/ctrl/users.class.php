@@ -22,6 +22,7 @@ class ctrl_users {
             $dbvals = $rows->fetch();
             $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
             $userdetail->addItemValue('password', $dbvals['ac_pass_vc']);
+			$userdetail->addItemValue('userid', $dbvals['ac_id_pk']);
             $userdetail->addItemValue('email', $dbvals['ac_email_vc']);
             $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
             $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
@@ -34,8 +35,9 @@ class ctrl_users {
             $dbvals = $rows->fetch();
             $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
             $userdetail->addItemValue('password', $dbvals['ac_pass_vc']);
+			$userdetail->addItemValue('userid', $dbvals['ac_id_pk']);
             $userdetail->addItemValue('email', $dbvals['ac_email_vc']);
-            $userdetail->addItemValue('fullname', $dbvals['ac_fullname_vc']);
+            $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
             $userdetail->addItemValue('packagename', 'TO BE DONE LATER');
             $userdetail->addItemValue('usergroup', 'TO BE DONE LATER');
         }
