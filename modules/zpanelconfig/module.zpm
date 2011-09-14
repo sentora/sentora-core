@@ -2,7 +2,7 @@
 
 <h2>Configure Options</h2>
 
-<form action="./?module=shadowing&action=ShadowUser" method="post">
+<form action="./?module=shadowing&action=UpdateZpanelConfig" method="post">
     <table class="zgrid">
 		<@ ZPanelOptions @>
     </table>

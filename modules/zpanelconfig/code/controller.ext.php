@@ -27,61 +27,45 @@
  
 class module_controller {
 
-	static $currentuser;
-	static $clientuserid;
-	static $shout;
-
-    static function getShadowAccounts() {
-		global $zdbh;
-		$currentuser = ctrl_users::GetUserDetail();
-		$line = "";
-		
-		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "'";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {
-						
-	 			$sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "'");
-	 			$sql->execute();
-		
-				while ($rowclients = $sql->fetch()) {
-					$clientuserid = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-					$line .= "<tr><td>".$clientuserid['username']."</td><td>TODO</td><td>TODO</td><td>TODO</td><td><input type=\"submit\" name=\"inShadow_".$rowclients['ac_id_pk']."\" id=\"inShadow_".$rowclients['ac_id_pk']."\" value=\"Shadow\"></td></tr>\n"; 
-				}
-			}else{
-			$line = "<tr><td colspan=\"5\">You have no Clients at this time.</td></tr>\n";
-			}
-		}
-		return $line;
-	}
-	
-	
-	
-	
-	
-    static function doShadowUser() {
-		global $zdbh;
-        global $controller;
-
-		self::$currentuser = ctrl_users::GetUserDetail();
-		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'";
+	static function getZpanelOptions (){
+	global $zdbh;
+	$line = "";
+		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
 		if ($numrows = $zdbh->query($sql)) {
  			if ($numrows->fetchColumn() <> 0) {
 			
-				$sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . self::$currentuser['userid'] . "'");
+				$sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_usereditable_en = 'true'");
 	 			$sql->execute();
-					while ($rowclients = $sql->fetch()) {
-					
-						if ($controller->GetControllerRequest('FORM', 'inShadow_'.$rowclients['ac_id_pk'])) {
-							 self::$shout = "";
-                             ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
-                             header("location: /");
-                             exit;
-						}
+				
+				while ($row = $sql->fetch()) {
+					$line .= "<tr><th>".$row['so_name_vc']."</th><td><input style=\"width:300px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
+				}
+				$line .= "<tr><td><input type=\"submit\" name=\"inSaveSystem\"value=\"Save Changes\"></td><td></td></tr>";
+			}
+		}	
+	return $line;
+	}
+	
+	static function doUpdateZpanelConfig(){
+	global $zdbh;
+
+		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {
+			
+				$sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_usereditable_en = 'true'");
+	 			$sql->execute();
+				
+				while ($row = $sql->fetch()) {
+					if ($controller->GetControllerRequest('FORM', $row['so_name_vc'])) {
+						$sql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '".$row['so_name_vc']."' WHERE so_name_vc = '".$row['so_name_vc']."'");
+	 					$sql->execute();		
 					}
+				}
 			}
 		}
-		
-    }
+	
+	}
 	
 
 
