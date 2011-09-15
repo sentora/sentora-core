@@ -84,35 +84,34 @@ class module_controller {
 		}
 		
 		
-if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-	# Now we send the output (Windows)...
-	header('Pragma: public'); 
-	header('Expires: 0');        
-	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');   
-	header('Cache-Control: private',false);   
-	header('Content-Type: application/zip');   
-	header('Content-Disposition: attachment; filename='.$backupname.'.zip');   
-	header('Content-Transfer-Encoding: binary');   
-	header('Content-Length: '.filesize(ctrl_options::GetOption('temp_dir').$backupname. '.zip ').''); 
-	readfile(ctrl_options::GetOption('temp_dir').$backupname. ".zip ");
-	unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip ");
-	exit();   
-} else {
-	# Now we send the output (POSIX)...
-	$file = ctrl_options::GetOption('temp_dir') . $backupname . ".zip"; 
-	header('Pragma: public');
-	header('Expires: 0');
-	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-	header('Cache-Control: private', false);
-	header('Content-Description: File Transfer');
-	header('Content-Transfer-Encoding: binary');
-	header('Content-Type: application/force-download'); 
-	header('Content-Length: ' . filesize($file)); 
-	header('Content-Disposition: attachment; filename=' . $backupname . '.zip');  
-	readfile_chunked($file);
-	unlink(ctrl_options::GetOption('temp_dir') . $backupname . ".zip ");
-}			
-
+		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
+			# Now we send the output (Windows)...
+			header('Pragma: public'); 
+			header('Expires: 0');        
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');   
+			header('Cache-Control: private',false);   
+			header('Content-Type: application/zip');   
+			header('Content-Disposition: attachment; filename='.$backupname.'.zip');   
+			header('Content-Transfer-Encoding: binary');   
+			header('Content-Length: '.filesize(ctrl_options::GetOption('temp_dir').$backupname. '.zip ').''); 
+			readfile(ctrl_options::GetOption('temp_dir').$backupname. ".zip ");
+			unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip ");
+			exit();   
+		} else {
+			# Now we send the output (POSIX)...
+			$file = ctrl_options::GetOption('temp_dir') . $backupname . ".zip"; 
+			header('Pragma: public');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Cache-Control: private', false);
+			header('Content-Description: File Transfer');
+			header('Content-Transfer-Encoding: binary');
+			header('Content-Type: application/force-download'); 
+			header('Content-Length: ' . filesize($file)); 
+			header('Content-Disposition: attachment; filename=' . $backupname . '.zip');  
+			readfile_chunked($file);
+			unlink(ctrl_options::GetOption('temp_dir') . $backupname . ".zip ");
+		}			
 
 	}
 	
