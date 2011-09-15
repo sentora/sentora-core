@@ -3,7 +3,8 @@
 <name>PHP Info</name>
 <version>100</version>
 <default-cat>Server Admin</default-cat>
-<desc>A test module for testing ZPX module handling.</desc>
+<desc>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.
+</desc>
 <author-name>Bobby Allen</author-name>
 <author-email>bobbyallen.uk@gmail.com</author-email>
 <author-url>http://www.example.com</author-url>

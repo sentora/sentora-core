@@ -1,5 +1,10 @@
+<p>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.</p>
+
+<h2>PHP Info</h2>
+
 <div id="contentwrapper_phpinfo" style="width:600px">
-<br>&raquo; <a href="etc/apps/phpinfo/" target="_blank" title="Launch PHPInfo()">Launch PHPInfo()</a>
 <br>
+&raquo; <a href="etc/apps/phpinfo/" target="_blank" title="Launch PHPInfo()">View full PHP configuration</a>
+<br><br>
 <@ PHPInfo @>
 </div>
