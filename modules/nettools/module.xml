@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+<name>Network Tools</name>
+<version>100</version>
+<default-cat>Advanced</default-cat>
+<desc>You can use the tools below to diagnose issues or to simply test connectivity to other servers or sites around the globe.</desc>
+<author-name>Bobby Allen</author-name>
+<author-email>bobbyallen.uk@gmail.com</author-email>
+<author-url>http://www.example.com</author-url>
+<update-url>http://www.example.com/products/test-module/updateservice.xml</update-url>
+</module>
