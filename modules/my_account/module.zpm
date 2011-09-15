@@ -1,6 +1,6 @@
 <p><@ Result @></p>
 
-<h2>My Account</h2>
+<h2><@ ModuleName @></h2>
 
 <form action="./?module=my_account&action=UpdateAccountSettings" method="post">
     <table class="zgrid">
