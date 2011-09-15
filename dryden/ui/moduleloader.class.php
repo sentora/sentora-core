@@ -35,10 +35,10 @@ class ui_moduleloader {
 
             $line .= "<table align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n";
 
-			$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "'";
+			$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user'";
 			if ($nummodsql = $zdbh->query($modsql)) {
  				if ($nummodsql->fetchColumn() > 0) {
-            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "'");
+            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user'");
             		$modsql->execute();
             		$icons_per_row = ctrl_options::GetOption('module_icons_pr');
             		$num_icons = 0;
