@@ -39,7 +39,7 @@ class module_controller {
 		$returnurl = $_SERVER['HTTP_HOST'];
 		$currentuser = ctrl_users::GetUserDetail();
 		
-    	$line  = '<form name="frmReport" id="frmReport" target="_blank" method="post" action="http://api.zpanelcp.com/api/bugapi.php?secure='. base64_encode('' . $returnurl . '|||' . $zpanelurl . '|||' . $serversoft . '|||' . $apacheversion . '|||' . $phpversion . '|||' . $mysqlversion . '|||' . $zpanelversion . '').'">';
+    	$line  = '<form name="frmReport" id="frmReport" target="_blank" method="post" action="'.ctrl_options::GetOption('bugreport_url').'?secure='. base64_encode('' . $returnurl . '|||' . $zpanelurl . '|||' . $serversoft . '|||' . $apacheversion . '|||' . $phpversion . '|||' . $mysqlversion . '|||' . $zpanelversion . '').'">';
 	    $line .= '<table class="zform">';
 	    $line .= '    <tr>';
 	    $line .= '       <th>Contact email:</th>';
