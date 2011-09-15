@@ -38,6 +38,13 @@ class module_controller {
     	}
     return $content;
 	}
+	
+
+	static function getModuleName() {
+		$module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
+	
 }
 
 ?>

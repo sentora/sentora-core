@@ -64,6 +64,12 @@ class module_controller {
 	return $line;
 
 	}
+
+
+	static function getModuleName() {
+		$module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
 	
 }
 

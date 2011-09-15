@@ -1,6 +1,6 @@
 <p>You can use the tools below to diagnose issues or to simply test connectivity to other servers or sites around the globe.</p>
 
-<h2>Network Tools</h2>
+<h2><@ ModuleName @></h2>
 
 <form action="./?module=nettools&action=DisplayInfo" method="post">
     <table class="zgrid">

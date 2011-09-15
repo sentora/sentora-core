@@ -1,6 +1,6 @@
 <p>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.</p>
 
-<h2>PHP Info</h2>
+<h2><@ ModuleName @></h2>
 
 <div id="contentwrapper_phpinfo" style="width:600px">
 <br>

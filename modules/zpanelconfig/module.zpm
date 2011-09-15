@@ -1,6 +1,6 @@
 <p><@ Result @></p>
 
-<h2>Configure ZPanel Options</h2>
+<h2><@ ModuleName @></h2>
 
 <form action="./?module=zpanelconfig&action=UpdateZpanelConfig" method="post">
     <table class="zgrid">

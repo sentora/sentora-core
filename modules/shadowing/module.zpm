@@ -1,6 +1,6 @@
 <p>From here you can shadow any of your client's accounts, this enables you to automatically login as the user which enables you to offer remote help by seeing what they see!</p>
 
-<h2>Current clients</h2>
+<h2><@ ModuleName @></h2>
 
 <form action="./?module=shadowing&action=ShadowUser" method="post">
     <table class="zgrid">

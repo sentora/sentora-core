@@ -95,6 +95,17 @@ class ui_module {
         return $new_module_list;
     }
 
+    /**
+     * This class returns the name of the current module.
+     */
+    static function GetModuleName(){
+        global $controller;
+		global $zdbh;
+		$retval = $zdbh->query("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = '".$controller->GetControllerRequest('URL', 'module')."'")->Fetch();
+        $retval = $retval['mo_name_vc'];
+		return $retval;
+    }
+	
 }
 
 ?>

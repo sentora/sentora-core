@@ -91,7 +91,7 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
             return ui_sysmessage::shout("Changes to your account settings have been saved successfully!");
 		}else{
-			return "<p>Below is your current personal details that you have provided us with, We ask that you keep these upto date in case we require to contact you regarding your hosting package.</p>";
+			return "<p>Below is your current personal details that you have provided us with, We ask that you keep these upto date in case we require to contact you regarding your hosting package.</p>".ui_module::GetModuleName()."";
 		}
         return;
     }

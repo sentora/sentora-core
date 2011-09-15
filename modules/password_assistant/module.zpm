@@ -1,6 +1,6 @@
 <p><@ Result @></p>
 
-<h2>Change Password</h2>
+<h2><@ ModuleName @></h2>
 
 <form action="./?module=password_assistant&action=UpdatePassword" method="post">
     <table class="zgrid">

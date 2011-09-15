@@ -1,5 +1,5 @@
 <p>Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.</p>
 
-<h2>WebMail</h2>
+<h2><@ ModuleName @></h2>
 
 &raquo; <a href="apps/webmail/" target="_blank" title="Launch WebMail">Launch WebMail</a>

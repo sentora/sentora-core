@@ -1,5 +1,5 @@
 <p>Find out all the latest news and infomation from the ZPanel project below...</p>
 
-<h2>ZPanel News</h2>
+<h2><@ ModuleName @></h2>
 
 <@ ZpanelNews @>

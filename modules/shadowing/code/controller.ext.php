@@ -84,7 +84,10 @@ class module_controller {
     }
 	
 
-
+	static function getModuleName() {
+		$module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
 
 }
 
