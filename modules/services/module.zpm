@@ -1,0 +1,5 @@
+<p>Here you can check the current status of our services and see what services are up and running and which are down and not.</p>
+
+<h2><@ ModuleName @></h2>
+
+<@ Services @>
