@@ -27,6 +27,9 @@ class ctrl_users {
             $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
             $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
             $userdetail->addItemValue('usergroup', $dbvals['ug_name_vc']);
+			$userdetail->addItemValue('address', $dbvals['ud_address_tx']);
+			$userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
+			$userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
         } else {
             # Display the requested user details based on USERID.
             # Display the current logged in your details!
@@ -40,6 +43,9 @@ class ctrl_users {
             $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
             $userdetail->addItemValue('packagename', 'TO BE DONE LATER');
             $userdetail->addItemValue('usergroup', 'TO BE DONE LATER');
+			$userdetail->addItemValue('address', $dbvals['ud_address_tx']);
+			$userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
+			$userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
         }
         return $userdetail->getDataObject();
     }
