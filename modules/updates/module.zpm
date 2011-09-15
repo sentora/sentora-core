@@ -1,3 +1,5 @@
 <p>Check to see if there are any avaliable updates to your version of the ZPanel software.</p>
 
+<h2>ZPanel Updates</h2>
+
 <@ ZpanelUpdates @>

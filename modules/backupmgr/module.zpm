@@ -1,0 +1,9 @@
+<p><@ Result @></p>
+
+<h2>Backup Manager</h2>
+
+<form action="./?module=backupmgr&action=Backup" method="post">
+    <table class="zgrid">
+		<@ BackupManager @>
+    </table>
+</form>

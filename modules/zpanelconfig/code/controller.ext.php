@@ -40,7 +40,7 @@ class module_controller {
 	 			$sql->execute();
 				
 				while ($row = $sql->fetch()) {
-					$line .= "<tr><th>".$row['so_desc_tx']."</th><td><input style=\"width:300px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
+					$line .= "<tr><th>".$row['so_desc_tx']."</th><td><input style=\"width:250px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
 				}
 				$line .= "<tr><td><input type=\"submit\" name=\"inSaveSystem\"value=\"Save Changes\"></td><td></td></tr>";
 			}
