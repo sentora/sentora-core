@@ -34,9 +34,9 @@ class ui_moduleloader {
 			$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user'";
 			if ($nummodsql = $zdbh->query($modsql)) {
  				if ($nummodsql->fetchColumn() > 0) {
-					$line .= "<table class=\"zmodule\"><tr><th align=\"left\"><a name=\"" . strtolower($categories['mc_name_vc']) . "\"></a>" . $categories['mc_name_vc'] . "<a href=\"#\" class=\"zmodule\" id=\"zmodule_" . strtolower($categories['mc_name_vc']) . "_a\"></a></th></tr>";
+					$line .= "<table class=\"zmodule\"><tr><th align=\"left\"><a name=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"></a>" . $categories['mc_name_vc'] . "<a href=\"#\" class=\"zmodule\" id=\"zmodule_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_a\"></a></th></tr>";
 
-            		$line .="<tr><td align=\"left\"><div class=\"zmodule_" . strtolower($categories['mc_name_vc']) . "\" id=\"zmodule_" . strtolower($categories['mc_name_vc']) . "\"><table class=\"zmodulecontent\" align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
+            		$line .="<tr><td align=\"left\"><div class=\"zmodule_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" id=\"zmodule_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><table class=\"zmodulecontent\" align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 
             		$line .= "<table align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n";
 					

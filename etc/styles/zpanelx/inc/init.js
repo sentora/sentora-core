@@ -78,24 +78,24 @@
 	
 //Account DIV	
 $(document).ready(function() { 
-    $("#zmodule_account").show();
-    $("#zmodule_account_a").click(function(){
-        if ($("#zmodule_account").is(":visible")) {
-			$("#zmodule_account").slideUp("fast");
+    $("#zmodule_account_information").show();
+    $("#zmodule_account_information_a").click(function(){
+        if ($("#zmodule_account_information").is(":visible")) {
+			$("#zmodule_account_information").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_account-state', 'hiding');
+            $.cookie('zmodule_account_information-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_account").slideDown("fast");
+            $("#zmodule_account_information").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_account-state', 'showing');
+            $.cookie('zmodule_account_information-state', 'showing');
             return false;
         }
     }); 
-    var zmoduleaccountstate = $.cookie('zmodule_account-state'); 
+    var zmoduleaccountstate = $.cookie('zmodule_account_information-state'); 
     if (zmoduleaccountstate == 'hiding') {
-            $("#zmodule_account").hide();
-            $("#zmodule_account_a").addClass("active");
+            $("#zmodule_account_information").hide();
+            $("#zmodule_account_information_a").addClass("active");
     };
 })
 //Advanced DIV
@@ -122,68 +122,68 @@ $(document).ready(function() {
 })
 //Admin DIV
 $(document).ready(function() { 
-    $("#zmodule_admin").show();
-    $("#zmodule_admin_a").click(function(){
-        if ($("#zmodule_admin").is(":visible")) {
-			$("#zmodule_admin").slideUp("fast");
+    $("#zmodule_server_admin").show();
+    $("#zmodule_server_admin_a").click(function(){
+        if ($("#zmodule_server_admin").is(":visible")) {
+			$("#zmodule_server_admin").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_admin-state', 'hiding');
+            $.cookie('zmodule_server_admin-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_admin").slideDown("fast");
+            $("#zmodule_server_admin").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_admin-state', 'showing');
+            $.cookie('zmodule_server_admin-state', 'showing');
             return false;
         }
     }); 
-    var zmoduleadminstate = $.cookie('zmodule_admin-state'); 
+    var zmoduleadminstate = $.cookie('zmodule_server_admin-state'); 
     if (zmoduleadminstate == 'hiding') {
-            $("#zmodule_admin").hide();
-            $("#zmodule_admin_a").addClass("active");
+            $("#zmodule_server_admin").hide();
+            $("#zmodule_server_admin_a").addClass("active");
     };
 })
 //Database DIV
 $(document).ready(function() { 
-    $("#zmodule_databases").show();
-    $("#zmodule_databases_a").click(function(){
-        if ($("#zmodule_databases").is(":visible")) {
-			$("#zmodule_databases").slideUp("fast");
+    $("#zmodule_database_management").show();
+    $("#zmodule_database_management_a").click(function(){
+        if ($("#zmodule_database_management").is(":visible")) {
+			$("#zmodule_database_management").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_databases-state', 'hiding');
+            $.cookie('zmodule_database_management-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_databases").slideDown("fast");
+            $("#zmodule_database_management").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_databases-state', 'showing');
+            $.cookie('zmodule_database_management-state', 'showing');
             return false;
         }
     }); 
-    var zmoduledatabasesstate = $.cookie('zmodule_databases-state'); 
+    var zmoduledatabasesstate = $.cookie('zmodule_database_management-state'); 
     if (zmoduledatabasesstate == 'hiding') {
-            $("#zmodule_databases").hide();
-            $("#zmodule_databases_a").addClass("active");
+            $("#zmodule_database_management").hide();
+            $("#zmodule_database_management_a").addClass("active");
     };
 })
 //Domains DIV
 $(document).ready(function() { 
-    $("#zmodule_domains").show();
-    $("#zmodule_domains_a").click(function(){
-        if ($("#zmodule_domains").is(":visible")) {
-			$("#zmodule_domains").slideUp("fast");
+    $("#zmodule_domain_management").show();
+    $("#zmodule_domain_management_a").click(function(){
+        if ($("#zmodule_domain_management").is(":visible")) {
+			$("#zmodule_domain_management").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_domains-state', 'hiding');
+            $.cookie('zmodule_domain_management-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_domains").slideDown("fast");
+            $("#zmodule_domain_management").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_domains-state', 'showing');
+            $.cookie('zmodule_domain_management-state', 'showing');
             return false;
         }
     }); 
-    var zmoduledomainsstate = $.cookie('zmodule_domains-state'); 
+    var zmoduledomainsstate = $.cookie('zmodule_domain_management-state'); 
     if (zmoduledomainsstate == 'hiding') {
-            $("#zmodule_domains").hide();
-            $("#zmodule_domains_a").addClass("active");
+            $("#zmodule_domain_management").hide();
+            $("#zmodule_domain_management_a").addClass("active");
     };
 })
 //Mail DIV
@@ -232,24 +232,24 @@ $(document).ready(function() {
 })
 //Storage DIV
 $(document).ready(function() { 
-    $("#zmodule_storage").show();
-    $("#zmodule_storage_a").click(function(){
-        if ($("#zmodule_storage").is(":visible")) {
-			$("#zmodule_storage").slideUp("fast");
+    $("#zmodule_file_management").show();
+    $("#zmodule_file_management_a").click(function(){
+        if ($("#zmodule_file_management").is(":visible")) {
+			$("#zmodule_file_management").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_storage-state', 'hiding');
+            $.cookie('zmodule_file_management-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_storage").slideDown("fast");
+            $("#zmodule_file_management").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_storage-state', 'showing');
+            $.cookie('zmodule_file_management-state', 'showing');
             return false;
         }
     }); 
-    var zmodulestoragestate = $.cookie('zmodule_storage-state'); 
+    var zmodulestoragestate = $.cookie('zmodule_file_management-state'); 
     if (zmodulestoragestate == 'hiding') {
-            $("#zmodule_storage").hide();
-            $("#zmodule_storage_a").addClass("active");
+            $("#zmodule_file_management").hide();
+            $("#zmodule_file_management_a").addClass("active");
     };
 })
 //Statsdata DIV
@@ -258,15 +258,15 @@ $(document).ready(function() {
     $("#statsdata_wrapper_a").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
@@ -275,15 +275,15 @@ $(document).ready(function() {
     $("#statsdata_wrapper_a_small").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
@@ -292,8 +292,8 @@ $(document).ready(function() {
     var zmodulestatsdatastate = $.cookie('statsdata_wrapper-state'); 
     if (zmodulestatsdatastate == 'hiding') {
             $("#statsdata_wrapper").hide();
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
             $("#statsdata_wrapper_a").addClass("active");
     };
 })

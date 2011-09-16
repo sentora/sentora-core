@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>ZPanel</title>
+        <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
         <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>/inc/favicon.ico">
         <link href="<# ui_tpl_assetfolderpath #>/inc/10.css" rel="stylesheet" type="text/css">
         <link href="<# ui_tpl_assetfolderpath #>/inc/jqf1.css" rel="stylesheet" type="text/css">
@@ -35,8 +35,8 @@
 					<div id="header_arrows"><a class="header_top" id="header_top_a"></a>
 					<a class="statsdata_wrapper" id="statsdata_wrapper_a"></a>
 					</div>
-                    <br>
-                    <div id="time">Server time is: <div id="jclock"><div class="jclock"></div></div></div>
+                    <br clear="all">
+                    <div id="time">Server time is: <b><# ui_tpl_date #></b> <div id="jclock"><div class="jclock"></div></div></div>
                 </div>
             </div>
 			</div>
