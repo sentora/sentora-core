@@ -26,5 +26,6 @@ require_once 'inc/init.inc.php';
 
 ui_templateparser::Generate("etc/styles/zpanelx");
 
-runtime_hook::Execute('Test');
+// Commenting out example hook.
+//runtime_hook::Execute('Test');
 ?>
