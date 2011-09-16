@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+<name>Parked Domains</name>
+<version>100</version>
+<default-cat>Domain Management</default-cat>
+<desc>Domain parking refers to the registration of an Internet domain name without that domain being used to provide services such as e-mail or a website. If you have any domains that you are not using, then simply park them!</desc>
+<author-name>Bobby Allen</author-name>
+<author-email>bobbyallen.uk@gmail.com</author-email>
+<author-url>http://www.example.com</author-url>
+<update-url>http://www.example.com/products/test-module/updateservice.xml</update-url>
+</module>

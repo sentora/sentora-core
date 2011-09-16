@@ -117,15 +117,15 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Domains:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"></span> / <span class="Side_Info"></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_domains #></span> / <span class="Side_Info"></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Sub-domains:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"></span> / <span class="Side_Info"></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_subdomains #></span> / <span class="Side_Info"></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Parked domains:</strong></td>
-                                                                <td nowrap="nowrap"> <span class="Side_Info"></span> / <span class="Side_Info"></span></td>
+                                                                <td nowrap="nowrap"> <span class="Side_Info"><# ui_tpl_parkeddomains #></span> / <span class="Side_Info"></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>FTP accounts:</strong></td>

@@ -50,6 +50,27 @@ class ctrl_users {
         return $userdetail->getDataObject();
     }
 
+	
+	#Get all active domains on user account
+    static function GetUserDomains($userid, $type="1") {
+        global $zdbh;
+		
+		$sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $userid . " AND vh_deleted_ts IS NULL AND vh_type_in=".$type."";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {
+				$domains = 0;
+				$sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $userid . " AND vh_deleted_ts IS NULL AND vh_type_in=".$type."");
+				$sql->execute();
+				while ($numrows = $sql->fetch()) {
+					$domains ++;
+				}
+				return $domains;
+			}
+		} else {
+			return "0";
+		}
+	}
+
 }
 
 ?>
