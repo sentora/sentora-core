@@ -13,7 +13,11 @@ class ui_tpl_parkeddomains {
     public function Template() {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-        return ctrl_users::GetUserDomains($currentuser['userid'], "3");
+		$domain = ctrl_users::GetUserDomains($currentuser['userid'], 3);
+		if ($domain <> 0){
+        	return (string) $domain;
+		} 
+		return (string) 0;
     }
 
 }
