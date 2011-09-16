@@ -27,7 +27,7 @@
  
 class module_controller {
 
-	static $hasupdated;
+	static $complete;
 	
 	static function getDomains(){
 		global $zdbh;
@@ -61,7 +61,7 @@ class module_controller {
 					        if ($rowdomains['vh_active_in'] == 1) {
 					            $line .= "<font color=\"green\">Live</font>";
 					        } else {
-					            $line .= "<font color=\"orange\">Pending</font>";
+					            $line .= "<font color=\"orange\">Pending</font> <a href=\"#\" title=\"Your domain will become active at the next scheduled update.  This can take up to one hour.\"><img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/help_small.png\"></a>";
 					        }
 							
 					        $line .= "</td>";
@@ -135,28 +135,13 @@ class module_controller {
 	global $zdbh;
 	global $controller;
 
-		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {
-			
-				$sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_usereditable_en = 'true'");
-	 			$sql->execute();
-				
-				while ($row = $sql->fetch()) {
-					
-					$rowsql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". $controller->GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
-	 				$rowsql->execute();		
-					
-				}
-				self::$hasupdated = "yes";
-			}
-		}
-	
+
+	self::$complete = TRUE;
 	}
 	
 	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
-            return ui_sysmessage::shout("Changes to the System options have been saved successfully!");
+        if (!fs_director::CheckForEmptyValue(self::$complete)){
+            return ui_sysmessage::shout("Changes to your domain web hosting has been saved successfully.");
 		}else{
 			return ui_module::GetModuleDescription();
 		}
