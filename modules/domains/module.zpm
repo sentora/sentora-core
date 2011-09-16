@@ -1,0 +1,9 @@
+<p><@ Result @></p>
+
+<h2><@ ModuleName @></h2>
+
+<@ Domains @>
+
+<br><br>
+
+<@ CreateDomainForm @>

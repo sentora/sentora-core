@@ -75,7 +75,7 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
             return ui_sysmessage::shout("Changes to the System options have been saved successfully!");
 		}else{
-			return "<p>Changes made here affect the entire ZPanel configuration, please double check everything before saving changes.</p>";
+			return ui_module::GetModuleDescription();
 		}
         return;
     }

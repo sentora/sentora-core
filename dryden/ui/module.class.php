@@ -106,6 +106,17 @@ class ui_module {
 		return $retval;
     }
 	
+    /**
+     * This class returns the description of the current module.
+     */
+    static function GetModuleDescription(){
+        global $controller;
+		global $zdbh;
+		$retval = $zdbh->query("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = '".$controller->GetControllerRequest('URL', 'module')."'")->Fetch();
+        $retval = $retval['mo_desc_tx'];
+		return $retval;
+    }
+	
 }
 
 ?>

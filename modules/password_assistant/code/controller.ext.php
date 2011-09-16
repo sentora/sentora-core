@@ -107,7 +107,7 @@ class module_controller {
             return ui_sysmessage::shout("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again.");
 			}
 		}else{
-			return "<p>Welcome to the Password assistant, Please be aware that if you change your MySQL password too (by ticking the box below) you will need to manually change the MySQL password in any PHP/CGI scripts you are running on your hosting account.</p>";
+			return ui_module::GetModuleDescription();
 		}
         return;
     }

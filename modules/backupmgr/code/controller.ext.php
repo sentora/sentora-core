@@ -135,7 +135,7 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
             return ui_sysmessage::shout("Backup completed successfully!");
 		}else{
-			return "<p>The backup manager module enables you to backup your entire hosting account including all your MySQL® databases.</p>";
+			return ui_module::GetModuleDescription();
 		}
         return;
     }

@@ -65,12 +65,16 @@ class module_controller {
 
 	}
 
-
+ui_module::GetModuleDescription();
 	static function getModuleName() {
 		$module_name = ui_module::GetModuleName();
         return $module_name;
     }
 	
+	static function getModuleDescription() {
+		$module_name = ui_module::GetModuleDescription();
+        return $module_name;
+    }
 }
 
 ?>
