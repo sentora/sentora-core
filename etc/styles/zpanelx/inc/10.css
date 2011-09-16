@@ -1,4 +1,11 @@
-body {
+* {
+	padding-bottom: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-left: 0px;
+	margin: 0px;
+}
+body{
 	display: none;
 	text-align:left;
 	height:100%;
@@ -12,8 +19,6 @@ body {
 }
 h3{
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
-	
-	
 	font-size: 14pt;
 	color: #ECF5F9;
 	font-weight: bold;
@@ -41,6 +46,13 @@ h2{
 hr{
 	color:#E5F0F1;
 }
+p{	
+	/* text-indent:20px; */
+	text-align:left;
+	padding:0px;
+	margin-bottom:20px;
+	vertical-align:top;
+}
 a img{
 	border: none;
 }
@@ -64,26 +76,54 @@ table{
 	border-radius: 3px;
 	
 }
-fieldset {
-  padding: 10px;
-  font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
-  font-size: 9pt;
-  border:solid 2px #E5F0F1;
-  background-color:#F3F3F3;
-  }
-label {
-  color:#1587CA;
-  float:left;
-  width:25%;
-  margin-right:10px;
-  padding-top:10px;
-  text-align:left;
-  font-weight:bold;
-  }
- .legendhead{
-color:#1587CA;
-font-weight:bold;
-font-size:14px;
+fieldset{
+  	padding: 10px;
+  	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+  	font-size: 9pt;
+  	border:solid 2px #E5F0F1;
+  	background-color:#F3F3F3;
+}
+label{
+  	color:#1587CA;
+  	float:left;
+  	width:25%;
+  	margin-right:10px;
+  	padding-top:10px;
+  	text-align:left;
+  	font-weight:bold;
+}
+.legendhead{
+	color:#1587CA;
+	font-weight:bold;
+	font-size:14px;
+}
+#none{
+	background:none;
+	background-image:none;
+	border:none;
+}
+#none th{
+	background:none;
+	background-image:none;
+	border:none;
+}
+#none td{
+	background:none;
+	background-image:none;
+	border:none;
+}
+
+/** THEME RELATED CSS ATTRIBUTES!! **/
+
+#logo_small{
+	border:none;
+	float:left;
+	padding-top:5px;
+	padding-left:5px;
+}
+a.logo_small{
+	border:none;
+	float:left;
 }
 .statsdata{
 	font-size: 8pt;
@@ -125,34 +165,7 @@ font-size:14px;
 	border-bottom:0px;
 	text-indent:10px;
 }
-#none {
-background:none;
-background-image:none;
-border:none;
-}
-#none th{
-background:none;
-background-image:none;
-border:none;
-}
-#none td{
-background:none;
-background-image:none;
-border:none;
-}
-
-/** THEME RELATED CSS ATTRIBUTES!! **/
-#logo_small{
-	border:none;
-	float:left;
-	padding-top:5px;
-	padding-left:5px;
-}
-a.logo_small{
-	border:none;
-	float:left;
-}
-.copypower {
+.copypower{
 text-align:left;
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	font-size: 8pt;
@@ -171,34 +184,34 @@ text-align:left;
 	border-left-color: #888888;
 	padding: 10px;
 }
-.copypower a {
+.copypower a{
 	color: #1587CA;
 	text-decoration:none;
 }
-.copypower a:link {
+.copypower a:link{
 	color: #1587CA;
 	text-decoration:none;
 }
-.copypower a:hover {
+.copypower a:hover{
 	color: #1587CA;
 	text-decoration:none;
 }
-.copypower a:active {
+.copypower a:active{
 	color: #1587CA;
 	text-decoration:none;
 }
-.main {
+.main{
 	padding: 10px;
 	background-color: #FFFFFF;
 }
-#header {
+#header{
 	width: 100%;
 	position: fixed;
 	top: 0px;
 	left: 0px;
 	z-index:9999;
 }
-#header_top {
+#header_top{
 	background: url(../images/statsdata_th_center.png) #4b4d4a repeat-x center top;
 	height: 41px;
 	width: 100%;
@@ -230,19 +243,19 @@ a.header_top_small{
 	cursor:pointer;
 	padding-right:0px; 
 }
-#header_middle {
+#header_middle{
 	background: url() #4b4d4a repeat-x center top;
 		border-bottom:solid 1px #ffffff;
 	height: 6px;
 	width: 100%;
 }
-#header_bottom {
+#header_bottom{
 	background: url() #dddddd repeat-x center top;
 	border-bottom:solid 1px #B3B3B3;
 	height: 80px;
 	position: relative;
 }
-#header_overlay {
+#header_overlay{
 	background: url(../images/bg_top_overlay.png) no-repeat center top;
 	margin-left: 0px;
 	margin-top: 0px;
@@ -254,12 +267,12 @@ a.header_top_small{
 	padding-left: 0px;
 	width:100%;
 }
-#header_spacer {
+#header_spacer{
 	display:block;
 	margin-top: 41px;
 	height: 1px;
 }
-.mainlayout {
+.mainlayout{
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	font-size: 9pt;
 	color: #333333;
@@ -272,22 +285,22 @@ a.header_top_small{
 	padding-right: 12px;
 	border-spacing:0px;
 }
-.mainlayout a {
+.mainlayout a{
 	color:#006699;
 	text-decoration: none;
 }
-.mainlayout a:visited {
+.mainlayout a:visited{
 	color:#006699;
 	text-decoration: none;
 }
-.mainlayout a:hover {
+.mainlayout a:hover{
 	color:#006699;
 	text-decoration: underline;
 }
-#content {
+#content{
 margin-top: 40px;
 }
-.center {
+.center{
 	padding-bottom: 0px;
 	padding-right: 0px;
 	padding-top: 0px;
@@ -295,13 +308,6 @@ margin-top: 40px;
 	margin: 0px;
 	width: 960px;
 	height: 100%;
-}
-* {
-	padding-bottom: 0px;
-	padding-right: 0px;
-	padding-top: 0px;
-	padding-left: 0px;
-	margin: 0px;
 }
 #status{
     width:50%;
@@ -406,7 +412,9 @@ a.statsdata_wrapper{
 	cursor:pointer;
 	padding-right:0px; 
 }
+
 /** ZPANEL SPECIFIC CSS ATTRIBUTES!! **/
+
 .zmodule{
 	text-align:left;
 	width:100%;
@@ -463,7 +471,7 @@ a.statsdata_wrapper{
 	border-right:0px;
 	border-bottom:0px;
 	padding-right:15px;
-	padding-top:2px;
+	padding-top:8px;
 	padding-bottom:8px;
 }
 .zform{
@@ -498,7 +506,6 @@ a.statsdata_wrapper{
 	border-spacing:0px;
 }
 .zgrid{
-	
 	text-align:left;
 	background-color: #FFF;
 	border-bottom:0px solid #CCCCCC;
@@ -514,9 +521,7 @@ a.statsdata_wrapper{
 	border-top:1px solid #FFFFFF;
 	border-bottom:1px solid #CCCCCC;
 	border-spacing:0px;
-	
 }
-
 .zgrid th{
 	padding:5px;
 	background-color: #ECECEC;
@@ -554,4 +559,19 @@ a.zmodule{
 	margin: 10px;
 	padding:10px;
 	color:#C11B17;
+}
+.zmodule_header{
+	height:41px;
+	margin:0px;
+	padding:0px;
+	background:#ffffff url(../images/zmodule_th_center.png) left top repeat-x;
+	color: #333;
+	font-weight:bold;
+	text-align: left;
+	border-spacing:0px;
+	border-top:0px;
+	border-left:solid 1px #CCC;
+	border-right:solid 1px #CCC;
+	border-bottom:0px;
+	text-indent:10px;
 }

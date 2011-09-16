@@ -258,15 +258,15 @@ $(document).ready(function() {
     $("#statsdata_wrapper_a").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
@@ -275,15 +275,15 @@ $(document).ready(function() {
     $("#statsdata_wrapper_a_small").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_right.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
@@ -292,8 +292,8 @@ $(document).ready(function() {
     var zmodulestatsdatastate = $.cookie('statsdata_wrapper-state'); 
     if (zmodulestatsdatastate == 'hiding') {
             $("#statsdata_wrapper").hide();
-			$('#statsdata_wrapper_a').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/templates/zpanel10/images/arrow_left.png)");
+			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
             $("#statsdata_wrapper_a").addClass("active");
     };
 })
