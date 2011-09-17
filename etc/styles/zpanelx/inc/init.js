@@ -69,13 +69,6 @@
     		});
 		});
 		
-		//submit button
-		$(document).ready(function(){
-  			$('.mainlayout').jqf1();
-		});
-		
-		
-	
 //Account DIV	
 $(document).ready(function() { 
     $("#zmodule_account_information").show();
@@ -411,7 +404,8 @@ $(document).ready(function() {
    }
    });
 });
+
 //show the page after all jquery is loaded
-$(document).ready(function() { 
-   $("body").show(); 
-});
+//$(document).ready(function() { 
+//   $("body").show(); 
+//});

@@ -6,7 +6,7 @@
 	margin: 0px;
 }
 body{
-	display: none;
+	/* display: none; */
 	text-align:left;
 	height:100%;
 	background:url(../images/bkg-texture.png) #F3F3F3;
@@ -274,6 +274,7 @@ a.header_top_small{
 }
 .mainlayout{
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	background-color:#FFFFFF;
 	font-size: 9pt;
 	color: #333333;
 	padding:0px;
@@ -574,4 +575,12 @@ a.zmodule{
 	border-right:solid 1px #CCC;
 	border-bottom:0px;
 	text-indent:10px;
+}
+
+/** JQUERY NAV BAR!! **/
+#znavbar{
+	border:none;
+	float:right;
+	padding-top:5px;
+	padding-left:5px;
 }

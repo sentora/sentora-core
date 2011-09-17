@@ -42,7 +42,7 @@ class module_controller {
 				while ($row = $sql->fetch()) {
 					$line .= "<tr><th>".$row['so_desc_tx']."</th><td><input style=\"width:250px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
 				}
-				$line .= "<tr><td><input type=\"submit\" name=\"inSaveSystem\"value=\"Save Changes\"></td><td></td></tr>";
+				$line .= "<tr><td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSaveSystem\">Save Changes</button></td><td></td></tr>";
 			}
 		}	
 	return $line;

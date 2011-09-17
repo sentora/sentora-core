@@ -1,24 +1,30 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+               <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
         <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>/inc/favicon.ico">
         <link href="<# ui_tpl_assetfolderpath #>/inc/10.css" rel="stylesheet" type="text/css">
-        <link href="<# ui_tpl_assetfolderpath #>/inc/jqf1.css" rel="stylesheet" type="text/css">
 		<link href="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.min.js"></script>
         <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.cookie.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jqf1.english.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
+		
+    	<-- JQUERY NAVBAR REQUIREMENTS -->
+    	<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
+		<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
+		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
+    	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.js"></script>
+		<-- END JQUERY NAVBAR REQUIREMENTS -->
+
     </head>
     <body>
 		<!-- BEGIN HEADER -->
         <div id="header">
 			<div id="header_top">
-				<div class="logo_small" id="logo_small"><a class="logo_small" id="logo_small_a" title="Main Page" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/zpanel_small.png"/></a></div>
+				<div class="logo_small" id="logo_small"><a class="logo_small" id="logo_small_a" title="Main Page" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/zpanel_small.png"/></a></div>			
 				<div id="header_arrows_small"><a class="header_top_small" id="header_top_a_small"></a><a class="statsdata_wrapper" id="statsdata_wrapper_a_small"></a></div>
 			    <div id="header_links_small">
                     <a title="Main Page" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/home.png"/></a>
@@ -26,6 +32,7 @@
                     <a title="Change Password" href="?c=account&p=password_assistant"><img src="<# ui_tpl_assetfolderpath #>/images/pass.png"/></a>
                     <a title="Log off ZPanel" href="login.php?logout"><img src="<# ui_tpl_assetfolderpath #>/images/logout.png"/></a>
                 </div>
+				
 			</div>
 			<div class="header_bottom" id="header_bottom">
 			<div id="header_middle"></div>
@@ -35,6 +42,7 @@
 					<div id="header_arrows"><a class="header_top" id="header_top_a"></a>
 					<a class="statsdata_wrapper" id="statsdata_wrapper_a"></a>
 					</div>
+					<div class="znavbar" id="znavbar"><# ui_tpl_modulelistznavbar #></div>
                     <br clear="all">
                     <div id="time">Server time is: <b><# ui_tpl_date #></b> <div id="jclock"><div class="jclock"></div></div></div>
                 </div>
@@ -46,6 +54,7 @@
 		<!-- BEGIN CONTENT WRAPPER -->
         <div id="content" align="center">
             <br>
+	
 			<!-- BEGIN MAIN LAYOUT -->
             <table align="center" class="mainlayout" width="98%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -58,7 +67,16 @@
 						<!-- BEGIN MAIN LAYOUT CONTENT -->
                         <table class="mainlayout_content" width="100%" border="0" cellpadding="0" cellspacing="0">
                             <tr valign="top">
-                                <td class="mainlayout_content" width="100%" bgcolor="#FFFFFF"><# ui_tpl_modulelist #><# ui_tpl_module #></td>
+                                <td class="mainlayout_content" width="100%" bgcolor="#FFFFFF">
+								
+								
+					
+</td>
+</tr>								
+                            <tr valign="top">
+                                <td class="mainlayout_content" width="100%" bgcolor="#FFFFFF">								
+								
+								<# ui_tpl_modulelist #><# ui_tpl_module #></td>
                                 <td style="padding-right:0px" width="200px" bgcolor="#FFFFFF">
 									<!-- BEGIN STATSDATA -->
 									<div class="statsdata_wrapper" id="statsdata_wrapper">

@@ -56,7 +56,7 @@ class module_controller {
 	    $line .= '    </tr>';
 	    $line .= '    <tr>';
 	    $line .= '       <td>&nbsp;</td>';
-	    $line .= '       <td align="right"><input name="Submit" value="Send Report" type="submit"></td>';
+	    $line .= '       <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" name="Submit">Send Report</button></td>';
 	    $line .= '    </tr>';
 	    $line .= ' </table>';
 		$line .= '</form>';
@@ -65,7 +65,7 @@ class module_controller {
 
 	}
 
-ui_module::GetModuleDescription();
+
 	static function getModuleName() {
 		$module_name = ui_module::GetModuleName();
         return $module_name;

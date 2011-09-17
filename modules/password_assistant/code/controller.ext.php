@@ -49,7 +49,7 @@ class module_controller {
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<td>&nbsp;</td>";
-		$line .= "<td align=\"right\"><input name=\"Submit\" type=\"submit\" id=\"Submit\" value=\"Change\" /></td>";
+		$line .= "<td align=\"right\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\">Change</button></td>";
 		$line .= "</tr>";
 	
 	return $line;

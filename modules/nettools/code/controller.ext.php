@@ -57,7 +57,7 @@ class module_controller {
 		$line .= "<input class=\"inputbox\" type=\"text\" name=\"target\" value=\"Enter Host or IP\" onFocus=\"m(this)\">";
 		$line .= "</td>";
 		$line .= "<td>";
-		$line .= "<input class=\"inputbox\" type=\"submit\" name=\"Submit\" value=\"Display\">";
+		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"Submit\">Display</button>";
 		$line .= "</td>";
 		$line .= "</tr>";
 	

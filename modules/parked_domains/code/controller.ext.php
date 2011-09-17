@@ -63,7 +63,7 @@ class module_controller {
 						$line .= "<font color=\"orange\">Pending</font> <a href=\"#\" title=\"Your domain will become active at the next scheduled update.  This can take up to one hour.\"><img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/help_small.png\"></a>";
 			        }
 				$line .= "</td>";
-				$line .= "<td><input type=\"submit\" name=\"inDelete_".$rowdomains['vh_id_pk']."\" id=\"inDelete_".$rowdomains['vh_id_pk']."\" value=\"Delete\" /></td>";
+				$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inDelete_".$rowdomains['vh_id_pk']."\" id=\"inDelete_".$rowdomains['vh_id_pk']."\">Delete</button></td>";
 				$line .= "</tr>";
 			}
 			
@@ -93,7 +93,7 @@ class module_controller {
         $line .= "<tr>";
         $line .= "<th colspan=\"2\" align=\"right\">";
         $line .= "<input type=\"hidden\" name=\"inAction\" value=\"NewParkedDomain\" />";
-        $line .= "<input type=\"submit\" name=\"inSubmit\" id=\"inSubmit\" value=\"Create\" /></th>";
+        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button></th>";
         $line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";	
