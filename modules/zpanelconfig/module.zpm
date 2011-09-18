@@ -4,6 +4,7 @@
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
 
 <div class="zform_wrapper">
+<h2>Configure your ZPanel Settings</h2>
 <form action="./?module=zpanelconfig&action=UpdateZpanelConfig" method="post">
     <table class="zform">
 		<@ ZPanelOptions @>

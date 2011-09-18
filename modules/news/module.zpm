@@ -4,6 +4,7 @@
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Find out all the latest news and infomation from the ZPanel project below...</p></div>
 
 <div class="zform_wrapper">
+<h2>Latest Zpanel News</h2>
 <@ ZpanelNews @>
 </div>
 </div>

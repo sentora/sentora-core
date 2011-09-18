@@ -4,6 +4,7 @@
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
 
 <div class="zform_wrapper">
+<h2>Enter your current and new password</h2>
 <form action="./?module=password_assistant&action=UpdatePassword" method="post">
     <table class="zform">
 		<@ ChangePassword @>

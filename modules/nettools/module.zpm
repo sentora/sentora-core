@@ -4,7 +4,7 @@
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>You can use the tools below to diagnose issues or to simply test connectivity to other servers or sites around the globe.</p></div>
 
 <div class="zgrid_wrapper">
-
+<h2>Enter host or IP details</h2>
 <form action="./?module=nettools&action=DisplayInfo" method="post">
     <table class="zgrid">
 		<@ NetworkTools @>
