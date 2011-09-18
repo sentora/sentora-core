@@ -1,5 +1,8 @@
-<p>Find out all the latest news and infomation from the ZPanel project below...</p>
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<h2><@ ModuleName @></h2>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Find out all the latest news and infomation from the ZPanel project below...</p></div>
 
 <@ ZpanelNews @>
+
+</div>

@@ -34,9 +34,9 @@ class ui_moduleloader {
 			$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user'";
 			if ($nummodsql = $zdbh->query($modsql)) {
  				if ($nummodsql->fetchColumn() > 0) {
-					$line .= "<table class=\"zmodule\"><tr><th align=\"left\"><a name=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"></a>" . $categories['mc_name_vc'] . "<a href=\"#\" class=\"zmodule\" id=\"zmodule_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_a\"></a></th></tr>";
+					$line .= "<table class=\"zcat\"><tr><th align=\"left\"><a name=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"></a>" . $categories['mc_name_vc'] . "<a href=\"#\" class=\"zcat\" id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_a\"></a></th></tr>";
 
-            		$line .= "<tr><td align=\"left\"><div class=\"zmodule_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" id=\"zmodule_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><table class=\"zmodulecontent\" align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
+            		$line .= "<tr><td align=\"left\"><div class=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><table class=\"zcatcontent\" align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 
             		$line .= "<table align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n";
 					
@@ -82,7 +82,7 @@ class ui_moduleloader {
 			if ($nummodsql = $zdbh->query($modsql)) {
  				if ($nummodsql->fetchColumn() > 0) {
 					if ($show == 0) { $class = "parent"; } else { $class = "parent"; }
-					$line .= "<div id=\"id=\"zmodule_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_list\" class=\"" . $class . "\">";
+					$line .= "<div id=\"id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_list\" class=\"" . $class . "\">";
             		$line .= "<ul>";
             		$line .= "<lh>" . $categories['mc_name_vc'] . "</lh>";
 					
@@ -145,7 +145,7 @@ class ui_moduleloader {
 
             			while ($modules = $modsql->fetch()) {
  
-							$line .= "<li><a href=\"?module=".$modules['mo_folder_vc']."\">" . $modules['mo_name_vc'] . "</a></li>";
+							$line .= "<li><a href=\"?module=".$modules['mo_folder_vc']."\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" width=\"20\" height=\"20\" border=\"0\" /> " . $modules['mo_name_vc'] . "</a></li>";
             			}
 						$line .= "</ul></div>";
 						$tabindex ++;

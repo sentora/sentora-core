@@ -90,6 +90,12 @@ class module_controller {
         return $module_name;
     }
 
+	static function getModuleIcon() {
+		global $controller;
+		$module_icon = "/etc/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        return $module_icon;
+    }
+
 }
 
 ?>

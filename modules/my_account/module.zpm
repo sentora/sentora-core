@@ -1,9 +1,12 @@
-<p><@ Result @></p>
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<h2><@ ModuleName @></h2>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
 
 <form action="./?module=my_account&action=UpdateAccountSettings" method="post">
     <table class="zgrid">
 		<@ AccountSettings @>
     </table>
 </form>
+
+</div>

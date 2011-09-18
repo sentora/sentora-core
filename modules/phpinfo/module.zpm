@@ -1,10 +1,13 @@
-<p>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.</p>
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<h2><@ ModuleName @></h2>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.</p></div>
 
 <div id="contentwrapper_phpinfo" style="width:600px">
 <br>
 &raquo; <a href="etc/apps/phpinfo/" target="_blank" title="Launch PHPInfo()" class="fg-button ui-state-default ui-corner-all">View full PHP configuration</a>
 <br><br>
 <@ PHPInfo @>
+</div>
+
 </div>
