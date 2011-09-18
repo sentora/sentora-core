@@ -90,11 +90,14 @@ class module_controller {
         $line .= "<th>Domain name:</th>";
         $line .= "<td><input name=\"inDomain\" type=\"text\" id=\"inDomain\" size=\"30\" /></td>";
         $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th colspan=\"2\" align=\"right\">";
+		$line .= "<tr>";
+		$line .= "<th>";
+		$line .= "</th>";
+		$line .= "<td align=\"right\">";
         $line .= "<input type=\"hidden\" name=\"inAction\" value=\"NewParkedDomain\" />";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button></th>";
-        $line .= "</tr>";
+		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button>";
+		$line .= "</td>";
+		$line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";	
 		

@@ -87,7 +87,7 @@ class module_controller {
 		
 		$line  = "<h2>Create a new sub-domain</h2>";
 		$line .= "<form action=\"./?module=sub_domains&action=CreateDomain\" method=\"post\">";
-   	 	$line .= "<table class=\"zgrid\">";
+   	 	$line .= "<table class=\"zform\">";
 		$line .= "<tr>";
 		$line .= "<th>Domain name:</th>";
 	 	$line .= "<td><input name=\"inDomain\" type=\"text\" id=\"inDomain\" size=\"30\" /></td>";
@@ -121,8 +121,11 @@ class module_controller {
 		$line .= "</select></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th colspan=\"2\" align=\"right\">";
-		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button></th>";
+		$line .= "<th>";
+		$line .= "</th>";
+		$line .= "<td align=\"right\">";
+		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button>";
+		$line .= "</td>";
 		$line .= "</tr>";
 	    $line .= "</table>";
 		$line .= "</form>";	

@@ -33,7 +33,7 @@ class module_controller {
 	
         $line  = "<tr>";
         $line .= "<th><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"Now\">Backup & download now</button>";
-        $line .= "<td>backups your data whilst you wait and then prompt's you to download the backup archive.</td>";
+        $line .= "<td>Backups your data whilst you wait and then prompt's you to download the backup archive.</td>";
         $line .= "</tr>";
 	
 	return $line;

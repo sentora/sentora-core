@@ -6,7 +6,7 @@
 <div class="zform_wrapper">
 <h2>Backup your hosting account files</h2>
 <form action="./?module=backupmgr&action=Backup" method="post">
-    <table class="zgrid">
+    <table class="zform">
 		<@ BackupManager @>
     </table>
 </form>

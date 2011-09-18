@@ -121,8 +121,11 @@ class module_controller {
 		$line .= "</select></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th colspan=\"2\" align=\"right\">";
-		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button></th>";
+		$line .= "<th>";
+		$line .= "</th>";
+		$line .= "<td align=\"right\">";
+		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button>";
+		$line .= "</td>";
 		$line .= "</tr>";
 	    $line .= "</table>";
 		$line .= "</form>";	

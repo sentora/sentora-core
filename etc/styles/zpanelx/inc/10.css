@@ -9,7 +9,10 @@ body{
 	/* display: none; */
 	text-align:left;
 	height:100%;
+	/*
 	background:url(../images/bkg-texture.png) #F4F9FA;
+	*/
+	background:url(../images/bkg-texture.png) #F3F3F3;
 	font-size: 62.5%;
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	margin-left: 0px;
@@ -40,7 +43,7 @@ h2{
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	font-size: 14pt;
 	/*color: #999999;*/
-	color: #000000;
+	color: #006699;
 	font-weight: lighter;
 	line-height:50px;
 }
@@ -442,6 +445,12 @@ statsdata_wrapper{
 	border-right:solid 1px #CCC;
 	border-bottom:0px;
 	text-indent:10px;
+	/*
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius-topleft: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	*/
 }
 .zcat td{
 	margin:0px;
@@ -486,12 +495,15 @@ a.zcat{
 }
 .zform_wrapper{
 	background:#F1F4F6 url(../images/zgrid_zform_wrapper.png) left top repeat-x;
-	border:solid 1px #DADEE2;
+	border:solid 1px #DFDFDF;
+	/*
+	border:solid 1px #E5F0F1;
+	*/
 	margin-bottom:20px;
 	margin-top:20px;
 	padding-top:0px;
 	padding-bottom:20px;
-	padding-right:20px;
+	padding-right:0px;
 	padding-left:20px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
@@ -535,12 +547,15 @@ a.zcat{
 }
 .zgrid_wrapper{
 	background:#F1F4F6 url(../images/zgrid_zform_wrapper.png) left top repeat-x;
-	border:solid 1px #DADEE2;
+	border:solid 1px #DFDFDF;
+	/*
+	border:solid 1px #E5F0F1;
+	*/
 	margin-bottom:20px;
 	margin-top:20px;
 	padding-top:0px;
 	padding-bottom:20px;
-	padding-right:20px;
+	padding-right:0px;
 	padding-left:20px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
@@ -566,6 +581,7 @@ a.zcat{
 	border-top:1px solid #FFFFFF;
 	border-bottom:1px solid #CCCCCC;
 	*/
+	border-bottom:1px solid #DFDFDF;
 	border-spacing:0px;
 }
 .zgrid th{
@@ -577,6 +593,7 @@ a.zcat{
 	*/
 	/*background:#FFFFFF url(../images/zcat_td.png) left top repeat-x;*/
 	/* background:#ECECEC url(../images/th_back.png) left top repeat-x; */
+	border-bottom:1px solid #DADEE2;
 	color: #333;
 	font-weight:bold;
 	text-align: left;
@@ -626,7 +643,7 @@ a.zcat{
 	border-left:0px;
 	border-right:0px;
 	border-bottom:0px;
-	padding-right:15px;
+	padding-right:0px;
 	padding-top:20px;
 	padding-bottom:8px;
 }

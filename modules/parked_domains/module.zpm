@@ -7,7 +7,7 @@
 <@ Domains @>
 </div>
 
-<div class="zgform_wrapper">
+<div class="zform_wrapper">
 <@ CreateDomainForm @>
 </div>
 
