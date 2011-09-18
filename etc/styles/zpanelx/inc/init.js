@@ -245,49 +245,104 @@ $(document).ready(function() {
             $("#zcat_file_management_a").addClass("active");
     };
 })
-//Statsdata DIV
+//Statsdata Arrows DIV
 $(document).ready(function() { 
     $("#statsdata_wrapper").show();
-    $("#statsdata_wrapper_a").click(function(){
+	$("#arrow_small_left").hide();
+	$("#arrow_left").hide();
+    $("#statsdata_wrapper_a_small_right").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$("#arrow_small_left").show();
+			$("#arrow_small_right").hide();
+			$("#arrow_left").show();
+			$("#arrow_right").hide();
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
-			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			$("#arrow_small_left").hide();
+			$("#arrow_small_right").show();
+			$("#arrow_left").hide();
+			$("#arrow_right").show();
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
         }
-    }); 
-    $("#statsdata_wrapper_a_small").click(function(){
+    });
+    $("#statsdata_wrapper_a_small_left").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			$("#arrow_small_left").show();
+			$("#arrow_small_right").hide();
+			$("#arrow_left").show();
+			$("#arrow_right").hide();
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
-			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			$("#arrow_small_left").hide();
+			$("#arrow_small_right").show();
+			$("#arrow_left").hide();
+			$("#arrow_right").show();
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
         }
-    }); 
+    });
+    $("#statsdata_wrapper_a_right").click(function(){
+        if ($("#statsdata_wrapper").is(":visible")) {
+			$("#statsdata_wrapper").animate({width:'toggle'},350);
+			$("#arrow_left").show();
+			$("#arrow_right").hide();
+			$("#arrow_small_left").show();
+			$("#arrow_small_right").hide();
+            $(this).addClass("active");
+            $.cookie('statsdata_wrapper-state', 'hiding');
+            return false;
+        } else {
+            $("#statsdata_wrapper").animate({width:'toggle'},350);
+			$("#arrow_left").hide();
+			$("#arrow_right").show();
+			$("#arrow_small_left").hide();
+			$("#arrow_small_right").show();
+            $(this).removeClass("active");
+            $.cookie('statsdata_wrapper-state', 'showing');
+            return false;
+        }
+    });
+    $("#statsdata_wrapper_a_left").click(function(){
+        if ($("#statsdata_wrapper").is(":visible")) {
+			$("#statsdata_wrapper").animate({width:'toggle'},350);
+			$("#arrow_left").show();
+			$("#arrow_right").hide();
+			$("#arrow_small_left").show();
+			$("#arrow_small_right").hide();
+            $(this).addClass("active");
+            $.cookie('statsdata_wrapper-state', 'hiding');
+            return false;
+        } else {
+            $("#statsdata_wrapper").animate({width:'toggle'},350);
+			$("#arrow_left").hide();
+			$("#arrow_right").show();
+			$("#arrow_small_left").hide();
+			$("#arrow_small_right").show();
+            $(this).removeClass("active");
+            $.cookie('statsdata_wrapper-state', 'showing');
+            return false;
+        }
+    });
     var zcatstatsdatastate = $.cookie('statsdata_wrapper-state'); 
     if (zcatstatsdatastate == 'hiding') {
             $("#statsdata_wrapper").hide();
-			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-            $("#statsdata_wrapper_a").addClass("active");
+			$("#arrow_small_right").hide();
+			$("#arrow_small_left").show();
+			$("#arrow_right").hide();
+			$("#arrow_left").show();
+			$("#arrow_small_left").addClass("active");
+			$("#arrow_left").addClass("active");
     };
 })
 //Accountinfo DIV

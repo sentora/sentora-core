@@ -5,7 +5,7 @@
 
 <div id="contentwrapper_phpinfo" style="width:600px">
 <br>
-&raquo; <a href="etc/apps/phpinfo/" target="_blank" title="Launch PHPInfo()" class="fg-button ui-state-default ui-corner-all">View full PHP configuration</a>
+&raquo; <a href="etc/apps/phpinfo/" target="_blank" title="Launch PHPInfo()">View full PHP configuration</a>
 <br><br>
 <@ PHPInfo @>
 </div>

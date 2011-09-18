@@ -272,6 +272,12 @@ a.header_top_small{
 	margin-top: 41px;
 	height: 1px;
 }
+#arrow_small_left span{
+	display:block;
+}
+#arrow_small_right span{
+	display:block;
+}
 .mainlayout{
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	background-color:#FFFFFF;
@@ -295,7 +301,7 @@ a.header_top_small{
 	text-decoration: none;
 }
 .mainlayout a:hover{
-	color:#006699;
+	color:#669933;
 	text-decoration: underline;
 }
 #content{
