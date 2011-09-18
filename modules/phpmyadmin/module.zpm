@@ -1,0 +1,10 @@
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.</p></div>
+
+<div class="zform_wrapper">
+&raquo; <a href="apps/phpmyadmin/" target="_blank" title="Launch phpMyAdmin">Launch phpMyAdmin</a>
+</div>
+
+</div>

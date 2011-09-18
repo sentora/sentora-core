@@ -3,6 +3,8 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>If you have found a bug with ZPanel you can report it using the form below, its much easier and faster to use the form as you required infomation will automatically be submitted with your bug report such as ZPanel version, Apache Version, PHP version etc. When logging a new bug report please try and be as specific as possible, the more infomation you can give us about when the bug happens, what error messages you get etc. The quicker and easier it will be for us to fix the problem.</p></div>
 
+<div class="zform_wrapper">
 <p><@ BugReport @></p>
+</div>
 
 </div>

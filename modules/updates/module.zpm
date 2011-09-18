@@ -3,6 +3,8 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Check to see if there are any avaliable updates to your version of the ZPanel software.</p></div>
 
+<div class="zform_wrapper">
 <@ ZpanelUpdates @>
+</div>
 
 </div>

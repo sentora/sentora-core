@@ -3,6 +3,8 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Here you can check the current status of our services and see what services are up and running and which are down and not.</p></div>
 
+<div class="zform_wrapper">
 <@ Services @>
+</div>
 
 </div>

@@ -39,7 +39,8 @@ h1{
 h2{
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	font-size: 14pt;
-	color: #999999;
+	/*color: #999999;*/
+	color: #000000;
 	font-weight: lighter;
 	line-height:50px;
 }
@@ -483,63 +484,102 @@ a.zcat{
 	cursor:pointer;
 	padding-right:10px; 
 }
+.zform_wrapper{
+	background:#F1F4F6 url(../images/zgrid_zform_wrapper.png) left top repeat-x;
+	border:solid 1px #DADEE2;
+	margin-bottom:20px;
+	margin-top:20px;
+	padding-top:0px;
+	padding-bottom:20px;
+	padding-right:20px;
+	padding-left:20px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	min-height:100px;
+}
 .zform{
 	text-align:left;
+	/*
 	background-color: #FFF;
 	border-bottom:0px solid #CCCCCC;
 	border-left:1px solid #CCCCCC;
 	border-right:1px solid #CCCCCC;
 	border-top:1px solid #CCCCCC;
+	*/
 	border-spacing:0px;
 	
 }
 .zform td{
 	padding:5px;
+	/*
 	background-color: #F7F7F7;
 	background:#F7F7F7 url(../images/td_back.png) left top repeat-x;
 	border-top:1px solid #FFFFFF;
 	border-bottom:1px solid #CCCCCC;
+	*/
 	border-spacing:0px;
 }
 .zform th{
 	padding:5px;
-	background-color: #ECECEC;
+	/*
+	background-color: #E5F0F1;
+	border-top:1px solid #FFFFFF;
+	border-bottom:1px solid #CCCCCC;
+	/*
 	/*background:#FFFFFF url(../images/zcat_td.png) left top repeat-x;*/
 	/* background:#ECECEC url(../images/th_back.png) left top repeat-x;*/
 	color: #333;
 	font-weight:bold;
 	text-align: left;
-	border-top:1px solid #FFFFFF;
-	border-bottom:1px solid #CCCCCC;
 	border-spacing:0px;
+}
+.zgrid_wrapper{
+	background:#F1F4F6 url(../images/zgrid_zform_wrapper.png) left top repeat-x;
+	border:solid 1px #DADEE2;
+	margin-bottom:20px;
+	margin-top:20px;
+	padding-top:0px;
+	padding-bottom:20px;
+	padding-right:20px;
+	padding-left:20px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	min-height:100px;
 }
 .zgrid{
 	text-align:left;
+	min-width:75%;
+	/*
 	background-color: #FFF;
 	border-bottom:0px solid #CCCCCC;
 	border-left:1px solid #CCCCCC;
 	border-right:1px solid #CCCCCC;
 	border-top:1px solid #CCCCCC;
+	*/
 	border-spacing:0px;
 }
 .zgrid td{
 	padding:5px;
+	/*
 	background-color: #F7F7F7;
 	background:#F7F7F7 url(../images/td_back.png) left top repeat-x;
 	border-top:1px solid #FFFFFF;
 	border-bottom:1px solid #CCCCCC;
+	*/
 	border-spacing:0px;
 }
 .zgrid th{
 	padding:5px;
-	background-color: #ECECEC;
+	/*
+	background-color: #E5F0F1;
+	border-top:1px solid #FFFFFF;
+	border-bottom:1px solid #CCCCCC;
+	*/
 	/*background:#FFFFFF url(../images/zcat_td.png) left top repeat-x;*/
 	/* background:#ECECEC url(../images/th_back.png) left top repeat-x; */
 	color: #333;
 	font-weight:bold;
 	text-align: left;
-	border-top:1px solid #FFFFFF;
-	border-bottom:1px solid #CCCCCC;
 	border-spacing:0px;
 }
 .zannounce{

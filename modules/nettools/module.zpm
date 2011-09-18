@@ -3,6 +3,8 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>You can use the tools below to diagnose issues or to simply test connectivity to other servers or sites around the globe.</p></div>
 
+<div class="zgrid_wrapper">
+
 <form action="./?module=nettools&action=DisplayInfo" method="post">
     <table class="zgrid">
 		<@ NetworkTools @>
@@ -12,6 +14,8 @@
 <br><br>
 
 <@ Result @>
+
+</div>
 
 </div>
 

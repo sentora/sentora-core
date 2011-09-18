@@ -3,10 +3,12 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
 
+<div class="zgrid_wrapper">
 <form action="./?module=my_account&action=UpdateAccountSettings" method="post">
     <table class="zgrid">
 		<@ AccountSettings @>
     </table>
 </form>
+</div>
 
 </div>

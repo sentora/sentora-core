@@ -87,7 +87,7 @@ class module_controller {
 		
 		$line  = "<h2>Create a new domain</h2>";
 		$line .= "<form action=\"./?module=domains&action=CreateDomain\" method=\"post\">";
-   	 	$line .= "<table class=\"zgrid\">";
+   	 	$line .= "<table class=\"zform\">";
 		$line .= "<tr>";
 		$line .= "<th>Domain name:</th>";
 	 	$line .= "<td><input name=\"inDomain\" type=\"text\" id=\"inDomain\" size=\"30\" /></td>";

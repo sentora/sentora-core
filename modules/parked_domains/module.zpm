@@ -3,10 +3,12 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
 
+<div class="zgrid_wrapper">
 <@ Domains @>
+</div>
 
-<br>
-
+<div class="zgform_wrapper">
 <@ CreateDomainForm @>
+</div>
 
 </div>
