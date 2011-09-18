@@ -12,12 +12,12 @@
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
 		
-    	<-- JQUERY NAVBAR REQUIREMENTS -->
+    	<!-- JQUERY NAVBAR REQUIREMENTS -->
     	<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
 		<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
     	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.js"></script>
-		<-- END JQUERY NAVBAR REQUIREMENTS -->
+		<!-- END JQUERY NAVBAR REQUIREMENTS -->
 
     </head>
     <body>
@@ -25,24 +25,29 @@
         <div id="header">
 			<div id="header_top">
 				<div class="logo_small" id="logo_small"><a class="logo_small" id="logo_small_a" title="Main Page" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/zpanel_small.png"/></a></div>			
-				<div id="header_arrows_small"><a class="header_top_small" id="header_top_a_small"></a><a class="statsdata_wrapper" id="statsdata_wrapper_a_small"></a></div>
+	
+				<!--
 			    <div id="header_links_small">
                     <a title="Main Page" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/home.png"/></a>
                     <a title="My Account" href="?c=account&p=my_account"><img src="<# ui_tpl_assetfolderpath #>/images/account.png"/></a>
                     <a title="Change Password" href="?c=account&p=password_assistant"><img src="<# ui_tpl_assetfolderpath #>/images/pass.png"/></a>
                     <a title="Log off ZPanel" href="login.php?logout"><img src="<# ui_tpl_assetfolderpath #>/images/logout.png"/></a>
                 </div>
-				
+				-->
+				<div class="znavbar" id="znavbar"><# ui_tpl_modulelistznavbar #>
+				<a class="fg-button ui-state-default ui-corner-all" id="header_top_a_small"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_up.png"/></a>
+				<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_small"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
+				</div>	
 			</div>
 			<div class="header_bottom" id="header_bottom">
 			<div id="header_middle"></div>
             <div id="header_overlay" class="center">
                 <a href="index.php"><img src="<# ui_tpl_assetfolderpath #>/inc/zp_logo.png" border="0"></a>
                 <div id="header_links">
-					<div id="header_arrows"><a class="header_top" id="header_top_a"></a>
-					<a class="statsdata_wrapper" id="statsdata_wrapper_a"></a>
+					<div id="header_arrows">
+					<a class="fg-button ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_down.png"/></a>
+					<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
 					</div>
-					<div class="znavbar" id="znavbar"><# ui_tpl_modulelistznavbar #></div>
                     <br clear="all">
                     <div id="time">Server time is: <b><# ui_tpl_date #></b> <div id="jclock"><div class="jclock"></div></div></div>
                 </div>

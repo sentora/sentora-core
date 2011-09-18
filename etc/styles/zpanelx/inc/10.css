@@ -9,7 +9,7 @@ body{
 	/* display: none; */
 	text-align:left;
 	height:100%;
-	background:url(../images/bkg-texture.png) #F3F3F3;
+	background:url(../images/bkg-texture.png) #F4F9FA;
 	font-size: 62.5%;
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	margin-left: 0px;
@@ -404,19 +404,13 @@ statsdata_wrapper{
 	width:
 	min-width:300px;
 }
-a.statsdata_wrapper{
-	background: url(../images/arrow_right.png) no-repeat;
-	border:none;
-	float:right;
-	width:24px; height:24px;
-	display:block;
-	cursor:pointer;
-	padding-right:0px; 
+#statsdata_wrapper_a{
+
 }
 
 /** ZPANEL SPECIFIC CSS ATTRIBUTES!! **/
 
-.zmodule{
+.zcat{
 	text-align:left;
 	width:100%;
 	margin:0px;
@@ -428,11 +422,11 @@ a.statsdata_wrapper{
 	border-right:0px;
 	border-bottom:0px;
 }
-.zmodule th{
+.zcat th{
 	height:41px;
 	margin:0px;
 	padding:0px;
-	background:#ffffff url(../images/zmodule_th_center.png) left top repeat-x;
+	background:#ffffff url(../images/zcat_th_center.png) left top repeat-x;
 	color: #333;
 	font-weight:bold;
 	text-align: left;
@@ -443,17 +437,17 @@ a.statsdata_wrapper{
 	border-bottom:0px;
 	text-indent:10px;
 }
-.zmodule td{
+.zcat td{
 	margin:0px;
 	padding:0px;
-	background:#ffffff url(../images/zmodule_td.png) left top repeat-x;
+	background:#ffffff url(../images/zcat_td.png) left top repeat-x;
 	vertical-align:top;
 	border-top:0px;
 	border-left:1px solid #E5F0F1;
 	border-right:1px solid #E5F0F1;
 	border-bottom:1px solid #E5F0F1;
 }
-.zmodulecontent{
+.zcatcontent{
 	text-align:left;
 	margin:0px;
 	padding:0px;
@@ -463,7 +457,7 @@ a.statsdata_wrapper{
 	border-right:0px;
 	border-bottom:0px;
 }
-.zmodulecontent td{
+.zcatcontent td{
 	margin:0px;
 	padding:0px;
 	background: url(../) left top repeat-x;
@@ -474,6 +468,15 @@ a.statsdata_wrapper{
 	padding-right:15px;
 	padding-top:8px;
 	padding-bottom:8px;
+}
+a.zcat{
+	background: url(../images/udarrows.png) no-repeat;
+	border:none;
+	float:right;
+	width:36px; height:14px;
+	display:block;
+	cursor:pointer;
+	padding-right:10px; 
 }
 .zform{
 	text-align:left;
@@ -493,11 +496,10 @@ a.statsdata_wrapper{
 	border-bottom:1px solid #CCCCCC;
 	border-spacing:0px;
 }
-
 .zform th{
 	padding:5px;
 	background-color: #ECECEC;
-	/*background:#FFFFFF url(../images/zmodule_td.png) left top repeat-x;*/
+	/*background:#FFFFFF url(../images/zcat_td.png) left top repeat-x;*/
 	/* background:#ECECEC url(../images/th_back.png) left top repeat-x;*/
 	color: #333;
 	font-weight:bold;
@@ -526,7 +528,7 @@ a.statsdata_wrapper{
 .zgrid th{
 	padding:5px;
 	background-color: #ECECEC;
-	/*background:#FFFFFF url(../images/zmodule_td.png) left top repeat-x;*/
+	/*background:#FFFFFF url(../images/zcat_td.png) left top repeat-x;*/
 	/* background:#ECECEC url(../images/th_back.png) left top repeat-x; */
 	color: #333;
 	font-weight:bold;
@@ -534,15 +536,6 @@ a.statsdata_wrapper{
 	border-top:1px solid #FFFFFF;
 	border-bottom:1px solid #CCCCCC;
 	border-spacing:0px;
-}
-a.zmodule{
-	background: url(../images/udarrows.png) no-repeat;
-	border:none;
-	float:right;
-	width:36px; height:14px;
-	display:block;
-	cursor:pointer;
-	padding-right:10px; 
 }
 .zannounce{
 	background-color: #ECF5F9;
@@ -565,8 +558,8 @@ a.zmodule{
 	height:41px;
 	margin:0px;
 	padding:0px;
-	background:#ffffff url(../images/zmodule_th_center.png) left top repeat-x;
-	color: #333;
+	background:#ffffff url(../images/zcat_th_center.png) left top repeat-x;
+	color: #006699;
 	font-weight:bold;
 	text-align: left;
 	border-spacing:0px;
@@ -575,6 +568,22 @@ a.zmodule{
 	border-right:solid 1px #CCC;
 	border-bottom:0px;
 	text-indent:10px;
+	line-height:3em;
+}
+.zmodule_header img{
+	float:left;
+}
+.zmodule_content{
+	margin:0px;
+	padding:0px;
+	background:#ffffff url(../images/zcat_td.png) left top repeat-x;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
+	padding-right:15px;
+	padding-top:20px;
+	padding-bottom:8px;
 }
 
 /** JQUERY NAV BAR!! **/

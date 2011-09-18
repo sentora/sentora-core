@@ -6,7 +6,7 @@ Date:		September 2008
 
 /* REQUIRED STYLES - the menus will only render correctly with these rules */	
 
-.fg-menu-container { position: absolute; margin-top:10px; top:0; z-index:99999; left:-999px; padding: .4em;  overflow: hidden; }
+.fg-menu-container { position: absolute; margin-top:5px; top:0; z-index:99999; left:-999px; padding: .4em;  overflow: hidden; }
 .fg-menu-container.fg-menu-flyout { overflow: visible; }
 
 .fg-menu, .fg-menu ul { list-style-type:none; padding: 0; margin:0; }

@@ -71,178 +71,178 @@
 		
 //Account DIV	
 $(document).ready(function() { 
-    $("#zmodule_account_information").show();
-    $("#zmodule_account_information_a").click(function(){
-        if ($("#zmodule_account_information").is(":visible")) {
-			$("#zmodule_account_information").slideUp("fast");
+    $("#zcat_account_information").show();
+    $("#zcat_account_information_a").click(function(){
+        if ($("#zcat_account_information").is(":visible")) {
+			$("#zcat_account_information").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_account_information-state', 'hiding');
+            $.cookie('zcat_account_information-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_account_information").slideDown("fast");
+            $("#zcat_account_information").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_account_information-state', 'showing');
+            $.cookie('zcat_account_information-state', 'showing');
             return false;
         }
     }); 
-    var zmoduleaccountstate = $.cookie('zmodule_account_information-state'); 
-    if (zmoduleaccountstate == 'hiding') {
-            $("#zmodule_account_information").hide();
-            $("#zmodule_account_information_a").addClass("active");
+    var zcataccountstate = $.cookie('zcat_account_information-state'); 
+    if (zcataccountstate == 'hiding') {
+            $("#zcat_account_information").hide();
+            $("#zcat_account_information_a").addClass("active");
     };
 })
 //Advanced DIV
 $(document).ready(function() { 
-    $("#zmodule_advanced").show();
-    $("#zmodule_advanced_a").click(function(){
-        if ($("#zmodule_advanced").is(":visible")) {
-			$("#zmodule_advanced").slideUp("fast");
+    $("#zcat_advanced").show();
+    $("#zcat_advanced_a").click(function(){
+        if ($("#zcat_advanced").is(":visible")) {
+			$("#zcat_advanced").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_advanced-state', 'hiding');
+            $.cookie('zcat_advanced-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_advanced").slideDown("fast");
+            $("#zcat_advanced").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_advanced-state', 'showing');
+            $.cookie('zcat_advanced-state', 'showing');
             return false;
         }
     }); 
-    var zmoduleadvancedstate = $.cookie('zmodule_advanced-state'); 
-    if (zmoduleadvancedstate == 'hiding') {
-            $("#zmodule_advanced").hide();
-            $("#zmodule_advanced_a").addClass("active");
+    var zcatadvancedstate = $.cookie('zcat_advanced-state'); 
+    if (zcatadvancedstate == 'hiding') {
+            $("#zcat_advanced").hide();
+            $("#zcat_advanced_a").addClass("active");
     };
 })
 //Admin DIV
 $(document).ready(function() { 
-    $("#zmodule_server_admin").show();
-    $("#zmodule_server_admin_a").click(function(){
-        if ($("#zmodule_server_admin").is(":visible")) {
-			$("#zmodule_server_admin").slideUp("fast");
+    $("#zcat_server_admin").show();
+    $("#zcat_server_admin_a").click(function(){
+        if ($("#zcat_server_admin").is(":visible")) {
+			$("#zcat_server_admin").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_server_admin-state', 'hiding');
+            $.cookie('zcat_server_admin-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_server_admin").slideDown("fast");
+            $("#zcat_server_admin").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_server_admin-state', 'showing');
+            $.cookie('zcat_server_admin-state', 'showing');
             return false;
         }
     }); 
-    var zmoduleadminstate = $.cookie('zmodule_server_admin-state'); 
-    if (zmoduleadminstate == 'hiding') {
-            $("#zmodule_server_admin").hide();
-            $("#zmodule_server_admin_a").addClass("active");
+    var zcatadminstate = $.cookie('zcat_server_admin-state'); 
+    if (zcatadminstate == 'hiding') {
+            $("#zcat_server_admin").hide();
+            $("#zcat_server_admin_a").addClass("active");
     };
 })
 //Database DIV
 $(document).ready(function() { 
-    $("#zmodule_database_management").show();
-    $("#zmodule_database_management_a").click(function(){
-        if ($("#zmodule_database_management").is(":visible")) {
-			$("#zmodule_database_management").slideUp("fast");
+    $("#zcat_database_management").show();
+    $("#zcat_database_management_a").click(function(){
+        if ($("#zcat_database_management").is(":visible")) {
+			$("#zcat_database_management").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_database_management-state', 'hiding');
+            $.cookie('zcat_database_management-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_database_management").slideDown("fast");
+            $("#zcat_database_management").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_database_management-state', 'showing');
+            $.cookie('zcat_database_management-state', 'showing');
             return false;
         }
     }); 
-    var zmoduledatabasesstate = $.cookie('zmodule_database_management-state'); 
-    if (zmoduledatabasesstate == 'hiding') {
-            $("#zmodule_database_management").hide();
-            $("#zmodule_database_management_a").addClass("active");
+    var zcatdatabasesstate = $.cookie('zcat_database_management-state'); 
+    if (zcatdatabasesstate == 'hiding') {
+            $("#zcat_database_management").hide();
+            $("#zcat_database_management_a").addClass("active");
     };
 })
 //Domains DIV
 $(document).ready(function() { 
-    $("#zmodule_domain_management").show();
-    $("#zmodule_domain_management_a").click(function(){
-        if ($("#zmodule_domain_management").is(":visible")) {
-			$("#zmodule_domain_management").slideUp("fast");
+    $("#zcat_domain_management").show();
+    $("#zcat_domain_management_a").click(function(){
+        if ($("#zcat_domain_management").is(":visible")) {
+			$("#zcat_domain_management").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_domain_management-state', 'hiding');
+            $.cookie('zcat_domain_management-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_domain_management").slideDown("fast");
+            $("#zcat_domain_management").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_domain_management-state', 'showing');
+            $.cookie('zcat_domain_management-state', 'showing');
             return false;
         }
     }); 
-    var zmoduledomainsstate = $.cookie('zmodule_domain_management-state'); 
-    if (zmoduledomainsstate == 'hiding') {
-            $("#zmodule_domain_management").hide();
-            $("#zmodule_domain_management_a").addClass("active");
+    var zcatdomainsstate = $.cookie('zcat_domain_management-state'); 
+    if (zcatdomainsstate == 'hiding') {
+            $("#zcat_domain_management").hide();
+            $("#zcat_domain_management_a").addClass("active");
     };
 })
 //Mail DIV
 $(document).ready(function() { 
-    $("#zmodule_mail").show();
-    $("#zmodule_mail_a").click(function(){
-        if ($("#zmodule_mail").is(":visible")) {
-			$("#zmodule_mail").slideUp("fast");
+    $("#zcat_mail").show();
+    $("#zcat_mail_a").click(function(){
+        if ($("#zcat_mail").is(":visible")) {
+			$("#zcat_mail").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_mail-state', 'hiding');
+            $.cookie('zcat_mail-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_mail").slideDown("fast");
+            $("#zcat_mail").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_mail-state', 'showing');
+            $.cookie('zcat_mail-state', 'showing');
             return false;
         }
     }); 
-    var zmodulemailstate = $.cookie('zmodule_mail-state'); 
-    if (zmodulemailstate == 'hiding') {
-            $("#zmodule_mail").hide();
-            $("#zmodule_mail_a").addClass("active");
+    var zcatmailstate = $.cookie('zcat_mail-state'); 
+    if (zcatmailstate == 'hiding') {
+            $("#zcat_mail").hide();
+            $("#zcat_mail_a").addClass("active");
     };
 })
 //Reseller DIV
 $(document).ready(function() { 
-    $("#zmodule_reseller").show();
-    $("#zmodule_reseller_a").click(function(){
-        if ($("#zmodule_reseller").is(":visible")) {
-			$("#zmodule_reseller").slideUp("fast");
+    $("#zcat_reseller").show();
+    $("#zcat_reseller_a").click(function(){
+        if ($("#zcat_reseller").is(":visible")) {
+			$("#zcat_reseller").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_reseller-state', 'hiding');
+            $.cookie('zcat_reseller-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_reseller").slideDown("fast");
+            $("#zcat_reseller").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_reseller-state', 'showing');
+            $.cookie('zcat_reseller-state', 'showing');
             return false;
         }
     }); 
-    var zmoduleresellerstate = $.cookie('zmodule_reseller-state'); 
-    if (zmoduleresellerstate == 'hiding') {
-            $("#zmodule_reseller").hide();
-            $("#zmodule_reseller_a").addClass("active");
+    var zcatresellerstate = $.cookie('zcat_reseller-state'); 
+    if (zcatresellerstate == 'hiding') {
+            $("#zcat_reseller").hide();
+            $("#zcat_reseller_a").addClass("active");
     };
 })
 //Storage DIV
 $(document).ready(function() { 
-    $("#zmodule_file_management").show();
-    $("#zmodule_file_management_a").click(function(){
-        if ($("#zmodule_file_management").is(":visible")) {
-			$("#zmodule_file_management").slideUp("fast");
+    $("#zcat_file_management").show();
+    $("#zcat_file_management_a").click(function(){
+        if ($("#zcat_file_management").is(":visible")) {
+			$("#zcat_file_management").slideUp("fast");
             $(this).addClass("active");
-            $.cookie('zmodule_file_management-state', 'hiding');
+            $.cookie('zcat_file_management-state', 'hiding');
             return false;
         } else {
-            $("#zmodule_file_management").slideDown("fast");
+            $("#zcat_file_management").slideDown("fast");
             $(this).removeClass("active");
-            $.cookie('zmodule_file_management-state', 'showing');
+            $.cookie('zcat_file_management-state', 'showing');
             return false;
         }
     }); 
-    var zmodulestoragestate = $.cookie('zmodule_file_management-state'); 
-    if (zmodulestoragestate == 'hiding') {
-            $("#zmodule_file_management").hide();
-            $("#zmodule_file_management_a").addClass("active");
+    var zcatstoragestate = $.cookie('zcat_file_management-state'); 
+    if (zcatstoragestate == 'hiding') {
+            $("#zcat_file_management").hide();
+            $("#zcat_file_management_a").addClass("active");
     };
 })
 //Statsdata DIV
@@ -251,15 +251,15 @@ $(document).ready(function() {
     $("#statsdata_wrapper_a").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
@@ -268,25 +268,25 @@ $(document).ready(function() {
     $("#statsdata_wrapper_a_small").click(function(){
         if ($("#statsdata_wrapper").is(":visible")) {
 			$("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
             $(this).addClass("active");
             $.cookie('statsdata_wrapper-state', 'hiding');
             return false;
         } else {
             $("#statsdata_wrapper").animate({width:'toggle'},350);
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
+			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_right.png)");
             $(this).removeClass("active");
             $.cookie('statsdata_wrapper-state', 'showing');
             return false;
         }
     }); 
-    var zmodulestatsdatastate = $.cookie('statsdata_wrapper-state'); 
-    if (zmodulestatsdatastate == 'hiding') {
+    var zcatstatsdatastate = $.cookie('statsdata_wrapper-state'); 
+    if (zcatstatsdatastate == 'hiding') {
             $("#statsdata_wrapper").hide();
-			$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
-			$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			//$('#statsdata_wrapper_a').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
+			//$('#statsdata_wrapper_a_small').css("background-image", "url(/etc/styles/zpanelx/images/arrow_left.png)");
             $("#statsdata_wrapper_a").addClass("active");
     };
 })
@@ -306,8 +306,8 @@ $(document).ready(function() {
             return false;
         }
     }); 
-    var zmoduleaccountinfostate = $.cookie('statsdata_accountinfo-state'); 
-    if (zmoduleaccountinfostate == 'hiding') {
+    var zcataccountinfostate = $.cookie('statsdata_accountinfo-state'); 
+    if (zcataccountinfostate == 'hiding') {
             $("#statsdata_accountinfo").hide();
             $("#statsdata_accountinfo_a").addClass("active");
     };
@@ -328,8 +328,8 @@ $(document).ready(function() {
             return false;
         }
     }); 
-    var zmoduleserverinfostate = $.cookie('statsdata_serverinfo-state'); 
-    if (zmoduleserverinfostate == 'hiding') {
+    var zcatserverinfostate = $.cookie('statsdata_serverinfo-state'); 
+    if (zcatserverinfostate == 'hiding') {
             $("#statsdata_serverinfo").hide();
             $("#statsdata_serverinfo_a").addClass("active");
     };
@@ -372,8 +372,8 @@ $(document).ready(function() {
             return false;
         }
     });
-    var zmoduleheaderbottomstate = $.cookie('header_bottom-state'); 
-    if (zmoduleheaderbottomstate == 'hiding') {
+    var zcatheaderbottomstate = $.cookie('header_bottom-state'); 
+    if (zcatheaderbottomstate == 'hiding') {
             $("#header_bottom").hide();
             $("#header_spacer").hide();
             $("#header_top").show();
