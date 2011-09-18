@@ -34,8 +34,8 @@
                     <a title="Log off ZPanel" href="login.php?logout"><img src="<# ui_tpl_assetfolderpath #>/images/logout.png"/></a>
                 </div>
 				-->
-				<div class="znavbar" id="znavbar"><# ui_tpl_modulelistznavbar #>
-				<a class="fg-button ui-state-default ui-corner-all" id="header_top_a_small"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_up.png"/></a>
+				<div class="znavbar_small" id="znavbar_small">
+				<a class="fg-button ui-state-default ui-corner-all" id="header_top_a_small"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_down.png"/></a>
 				<span id="arrow_small_right">
 				<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
 				</span>
@@ -49,14 +49,18 @@
             <div id="header_overlay" class="center">
                 <a href="index.php"><img src="<# ui_tpl_assetfolderpath #>/inc/zp_logo.png" border="0"></a>
                 <div id="header_links">
+
 					<div id="header_arrows">
-					<a class="fg-button ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_down.png"/></a>
+					<a class="fg-button ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_up.png"/></a>
 					<span id="arrow_right">
 					<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
 					</span>
 					<span id="arrow_left">
 					<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_left"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_left.png"/></a>
 					</span>
+					</div>
+										<div class="znavbar" id="znavbar">
+					<# ui_tpl_modulelistznavbar #>
 					</div>
                     <br clear="all">
                     <div id="time">Server time is: <b><# ui_tpl_date #></b> <div id="jclock"><div class="jclock"></div></div></div>
