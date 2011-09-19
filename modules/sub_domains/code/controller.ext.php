@@ -65,7 +65,7 @@ class module_controller {
 					        }
 							
 					        $line .= "</td>";
-					        $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inDelete_".$rowdomains['vh_id_pk']."\" id=\"inDelete_".$rowdomains['vh_id_pk']."\">Delete</button></td>";
+					        $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_".$rowdomains['vh_id_pk']."\">Delete</button></td>";
 					        $line .= "</tr>";
 						}
 	
@@ -124,7 +124,7 @@ class module_controller {
 		$line .= "<th>";
 		$line .= "</th>";
 		$line .= "<td align=\"right\">";
-		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button>";
+		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSubmit\">Create</button>";
 		$line .= "</td>";
 		$line .= "</tr>";
 	    $line .= "</table>";

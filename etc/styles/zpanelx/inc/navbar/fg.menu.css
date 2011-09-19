@@ -112,12 +112,22 @@ Date:		September 2008
 .fg-menu .horizontal-divider hr { border:0; height:1px; }
 .fg-menu .horizontal-divider span { font-size:.9em; text-transform: uppercase; padding-left:.2em; }
 
-/* BUTTONS */
-
 #menuLog { font-size:1.4em; margin:20px; }
 .hidden { position:absolute; top:0; left:-9999px; width:1px; height:1px; overflow:hidden; }
 
-.fg-button { margin:0px 10px 0px 0px; padding: .4em 1em; text-decoration:none !important; cursor:pointer; position: relative; text-align: center; zoom: 1; }
+/* navBUTTONS */
+
+.fg-navbutton { margin:0px 5px 0px 0px; padding: .4em 1em; text-decoration:none !important; cursor:pointer; position: relative; text-align: center; zoom: 1; }
+.fg-navbutton .ui-icon { position: absolute; top: 50%; margin-top: -8px; left: 50%; margin-left: -8px; }
+a.fg-navbutton { float:left;  }
+button.fg-navbutton { width:auto; overflow:visible; } /* removes extra button width in IE */
+
+.fg-navbutton.ui-state-loading .ui-icon { background: url(navtheme/images/spinner_bar.gif) no-repeat 0 0; }
+
+
+/* BUTTONS */
+
+.fg-button { margin:0px 5px 0px 0px; padding: .1em 1em; text-decoration:none !important; cursor:pointer; position: relative; text-align: center; zoom: 1; }
 .fg-button .ui-icon { position: absolute; top: 50%; margin-top: -8px; left: 50%; margin-left: -8px; }
 a.fg-button { float:left;  }
 button.fg-button { width:auto; overflow:visible; } /* removes extra button width in IE */

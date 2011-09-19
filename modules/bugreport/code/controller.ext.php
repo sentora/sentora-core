@@ -56,7 +56,7 @@ class module_controller {
 	    $line .= '    </tr>';
 	    $line .= '    <tr>';
 	    $line .= '       <td>&nbsp;</td>';
-	    $line .= '       <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" name="Submit">Send Report</button></td>';
+	    $line .= '       <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="Submit">Send Report</button></td>';
 	    $line .= '    </tr>';
 	    $line .= ' </table>';
 		$line .= '</form>';

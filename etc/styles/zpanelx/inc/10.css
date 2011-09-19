@@ -647,6 +647,38 @@ a.zcat{
 	padding-top:20px;
 	padding-bottom:8px;
 }
+.zloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    text-align:center;
+    z-index:99992;
+    width: 100%;
+    height: 100%;
+}
+.zloader_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    text-align:center;
+    z-index:99991;
+    width: 100%;
+    height: 100%;
+	background-color:#000;
+	opacity:0.5;
+	cursor:wait;
+}
+.zloader_content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+	margin-left: -110px; /* half width of the loader gif */
+	margin-top: -11px; /* half height of the loader gif */
+    text-align:center;
+    width: 220px; /* width of the loader gif */
+    height: 21px; /*hight of the loader gif +2px to fix IE8 issue */
+	z-index:99992;
+}
 
 /** JQUERY NAV BAR!! **/
 #znavbar{

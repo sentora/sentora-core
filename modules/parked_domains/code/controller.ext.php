@@ -63,7 +63,7 @@ class module_controller {
 						$line .= "<font color=\"orange\">Pending</font> <a href=\"#\" title=\"Your domain will become active at the next scheduled update.  This can take up to one hour.\"><img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/help_small.png\"></a>";
 			        }
 				$line .= "</td>";
-				$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inDelete_".$rowdomains['vh_id_pk']."\" id=\"inDelete_".$rowdomains['vh_id_pk']."\">Delete</button></td>";
+				$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_".$rowdomains['vh_id_pk']."\">Delete</button></td>";
 				$line .= "</tr>";
 			}
 			
@@ -95,7 +95,7 @@ class module_controller {
 		$line .= "</th>";
 		$line .= "<td align=\"right\">";
         $line .= "<input type=\"hidden\" name=\"inAction\" value=\"NewParkedDomain\" />";
-		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\">Create</button>";
+		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSubmit\">Create</button>";
 		$line .= "</td>";
 		$line .= "</tr>";
         $line .= "</table>";

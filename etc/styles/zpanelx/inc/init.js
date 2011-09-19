@@ -464,3 +464,13 @@ $(document).ready(function() {
 //$(document).ready(function() { 
 //   $("body").show(); 
 //});
+
+//Bind zloader to button click	
+$(document).ready(function(){
+    $('#button').click(function() {
+		$('#zloader_overlay').fadeIn('fast', function() {
+		$("#zloader").show();
+        showDiv();
+      	});
+    });
+});

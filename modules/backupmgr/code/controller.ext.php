@@ -32,7 +32,7 @@ class module_controller {
 	static function getBackupManager (){
 	
         $line  = "<tr>";
-        $line .= "<th><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"Now\">Backup & download now</button>";
+        $line .= "<th><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"Now\">Backup & download now</button>";
         $line .= "<td>Backups your data whilst you wait and then prompt's you to download the backup archive.</td>";
         $line .= "</tr>";
 	

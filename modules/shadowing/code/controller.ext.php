@@ -45,7 +45,7 @@ class module_controller {
 		
 				while ($rowclients = $sql->fetch()) {
 					$clientuserid = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-					$line .= "<tr><td>".$clientuserid['username']."</td><td>TODO</td><td>TODO</td><td>TODO</td><td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inShadow_".$rowclients['ac_id_pk']."\" id=\"inShadow_".$rowclients['ac_id_pk']."\">Shadow</button></td></tr>\n";
+					$line .= "<tr><td>".$clientuserid['username']."</td><td>TODO</td><td>TODO</td><td>TODO</td><td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inShadow_".$rowclients['ac_id_pk']."\">Shadow</button></td></tr>\n";
 					//$line .= "<input type=\"submit\" name=\"inShadow_".$rowclients['ac_id_pk']."\" id=\"inShadow_".$rowclients['ac_id_pk']."\" value=\"Shadow\">";
 				}
 			}else{

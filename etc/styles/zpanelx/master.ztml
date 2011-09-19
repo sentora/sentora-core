@@ -5,12 +5,16 @@
         <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
         <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>/inc/favicon.ico">
         <link href="<# ui_tpl_assetfolderpath #>/inc/10.css" rel="stylesheet" type="text/css">
-		<link href="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.css" rel="stylesheet" type="text/css"/>
+
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.min.js"></script>
         <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.cookie.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
+		
+		<!-- TOOL TIPS (Styles title="" in links into nice boxes) -->
+		<link href="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
+		<!-- END TOOL TIPS -->
 		
     	<!-- JQUERY NAVBAR REQUIREMENTS -->
     	<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
@@ -18,9 +22,25 @@
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
     	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.js"></script>
 		<!-- END JQUERY NAVBAR REQUIREMENTS -->
+		
+		<!-- ZLOADER ANIMATION FIX FOR IE (I use JQuery to call this in init.js)-->
+		<script languag='javascript'> 
+		function showDiv(){ 
+		//document.getElementById('myHiddeDiv').style.display =""; 
+		document.getElementById('zloader_image').src = "<# ui_tpl_assetfolderpath #>/images/loading.gif";} 
+		</script> 
+		<!-- END ZLOADER ANIMATION FIX FOR IE -->
 
     </head>
     <body>
+	<!-- BEGIN ZLOADER PROGRESSBAR DIV -->
+	<div class="zloader_overlay" id="zloader_overlay" style="display:none;"></div>
+	<div class="zloader" id="zloader" style="display:none;">
+	<div class="zloader_content" id="zloader_content">
+	<img src="<# ui_tpl_assetfolderpath #>/images/loading.gif" id="zloader_image" alt="Loading...">
+	</div>
+	</div>
+	<!-- END ZLOADER PROGRESSBAR DIV -->
 		<!-- BEGIN HEADER -->
         <div id="header">
 			<div id="header_top">
@@ -35,9 +55,9 @@
                 </div>
 				-->
 				<div class="znavbar_small" id="znavbar_small">
-				<a class="fg-button ui-state-default ui-corner-all" id="header_top_a_small"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_down.png"/></a>
+				<a class="fg-navbutton ui-state-default ui-corner-all" id="header_top_a_small"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_down.png"/></a>
 				<span id="arrow_small_right">
-				<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
+				<a class="fg-navbutton ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
 				</span>
 				<span id="arrow_small_left">
 				<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_left"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_left.png"/></a>
@@ -51,9 +71,9 @@
                 <div id="header_links">
 
 					<div id="header_arrows">
-					<a class="fg-button ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_up.png"/></a>
+					<a class="fg-navbutton ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_up.png"/></a>
 					<span id="arrow_right">
-					<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
+					<a class="fg-navbutton ui-state-default ui-corner-all" id="statsdata_wrapper_a_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
 					</span>
 					<span id="arrow_left">
 					<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_left"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_left.png"/></a>
@@ -89,7 +109,11 @@
                                 <td class="mainlayout_content" width="100%" bgcolor="#FFFFFF">
 								
 								
-					
+
+
+
+
+
 </td>
 </tr>								
                             <tr valign="top">

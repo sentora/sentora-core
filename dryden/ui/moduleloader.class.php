@@ -136,7 +136,7 @@ class ui_moduleloader {
 					$line .= "});";
 					$line .= "</script>";
 					
-					$line .= "<a tabindex=\"" . $tabindex . "\" href=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" class=\"fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all\" id=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><span class=\"ui-icon ui-icon-triangle-1-s\"></span>" . $cleanname . "</a>";
+					$line .= "<a tabindex=\"" . $tabindex . "\" href=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" class=\"fg-navbutton fg-button-icon-right ui-widget ui-state-default ui-corner-all\" id=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><span class=\"ui-icon ui-icon-triangle-1-s\"></span>" . $cleanname . "</a>";
             		$line .= "<div id=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" class=\"hidden\">";
             		$line .= "<ul>";
 					
