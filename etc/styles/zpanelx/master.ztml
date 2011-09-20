@@ -69,7 +69,6 @@
             <div id="header_overlay" class="center">
                 <a href="index.php"><img src="<# ui_tpl_assetfolderpath #>/inc/zp_logo.png" border="0"></a>
                 <div id="header_links">
-
 					<div id="header_arrows">
 					<a class="fg-navbutton ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_up.png"/></a>
 					<span id="arrow_right">
@@ -79,11 +78,10 @@
 					<a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_left"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_left.png"/></a>
 					</span>
 					</div>
-										<div class="znavbar" id="znavbar">
-					<# ui_tpl_modulelistznavbar #>
-					</div>
+					<div class="znavbar" id="znavbar"><# ui_tpl_modulelistznavbar #></div>
                     <br clear="all">
-                    <div id="time">Server time is: <b><# ui_tpl_date #></b> <div id="jclock"><div class="jclock"></div></div></div>
+					<div id="jclock" class="jclock"></div>
+                    <div id="time">Server time is: <b><# ui_tpl_date #></b></div>
                 </div>
             </div>
 			</div>

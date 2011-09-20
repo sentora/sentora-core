@@ -378,6 +378,7 @@ margin-top: 40px;
 	padding-left:0px;
 	padding-top:20px;
 	padding-bottom:0px;
+	width:350px;
 }
 #jclock{
 	float:right;
@@ -386,6 +387,8 @@ margin-top: 40px;
 	text-shadow:1px 1px 5px #E5F0F1;
 	font-weight:bold;
 	padding-left:5px;
+	padding-top:20px;
+	line-height:12px;
 }
 a.statsdata_accountinfo{
 	background: url(../images/udarrows.png) no-repeat;
