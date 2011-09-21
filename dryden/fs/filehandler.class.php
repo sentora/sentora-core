@@ -17,6 +17,32 @@ class fs_filehandler {
 	}
 
     /**
+    * Copies a without overwritting existing file, adding permissions for Linux.
+    * @author RusTus (rustus@zpanel.co.uk) 
+    * @version 10.0.0
+	*/
+	static function CopyFileSafe($src, $dest) {
+    	if (!file_exists($dest)) {
+        	@copy($src, $dest);
+        	if (sys_versions::ShowOSPlatformVersion() <> "Windows"){
+           	 @chmod($dest, 0777);
+        	}
+    	}
+	}
+
+    /**
+    * Copies and overwrites existing file, adding permissions for Linux.
+    * @author RusTus (rustus@zpanel.co.uk) 
+    * @version 10.0.0
+	*/
+	static function CopyFile($src, $dest) {
+        @copy($src, $dest);
+        if (sys_versions::ShowOSPlatformVersion() <> "Windows"){
+        	@chmod($dest, 0777);
+        }
+	}
+		
+    /**
     * Create blank or populated with permissions.
     * @author RusTus (rustus@zpanel.co.uk) 
     * @version 10.0.0
@@ -36,6 +62,23 @@ class fs_filehandler {
 			fclose($fp);
 			chmod($path, $chmod);
 		}
+	}
+
+    /**
+    * Creates Directory.
+    * @param string $directory
+    */
+	static function CreateDirectory($directory) {
+    	if (!file_exists($directory)) {
+        	@mkdir($directory, 0777, TRUE);
+        	if (sys_versions::ShowOSPlatformVersion() <> "Windows"){
+            	# Lets set some more permissions on it so it can be accessed correctly! (eg. 0777 permissions)
+            	@chmod($directory, 0777);
+        	}
+    	} else {
+        # Folder already exist... Just ignore the request!
+    	}
+    	return;
 	}
 	
     /**
@@ -60,6 +103,8 @@ class fs_filehandler {
     static function ReadFileContents($file){
     	return file_get_contents($file);
     }
+
+
 	
 }
 
