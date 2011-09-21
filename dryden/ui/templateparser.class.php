@@ -27,17 +27,10 @@ class ui_templateparser {
      * @return string 
      */
     static function Process($raw) {
-        /**
-         * @todo Add dynamic place holders which relate to class methods (for easy extending) - All place holders will be placed in an XML file.
-         * for now the below is just a test!
-         */
         global $controller;
+        
+        runtime_hook::Execute('OnBeforeTemplateProcessor');
         $tplp = new runtime_dataobject;
-
-
-        /*
-         * Load class template holders (if the class exists) - It will execute 'Template()' method from the class.
-         */
         preg_match_all("'<#\s(.*?)\s#>'si", $raw, $match);
         if ($match) {
             foreach ($match[1] as $classes) {
@@ -46,10 +39,6 @@ class ui_templateparser {
                 }
             }
         }
-
-        /*
-         * Load module controller output placeholders!
-         */
         preg_match_all("'<@\s(.*?)\s@>'si", $raw, $match);
         if ($match) {
             foreach ($match[1] as $classes) {
@@ -62,14 +51,10 @@ class ui_templateparser {
                 #}
             }
         }
-
-        /*
-         * PHP Execution protection!
-         * @todo Add an error logging trap here!
-         */
         $raw = str_replace('<?', 'PHP execution is not permitted! Caught: [', $raw);
         $raw = str_replace('?>', ']', $raw);
-
+        runtime_hook::Execute('OnAfterTemplateProcessor');
+        
         return $raw;
     }
 

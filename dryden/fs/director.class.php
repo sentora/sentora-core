@@ -53,7 +53,9 @@ class fs_director {
      */
     static function CreateDirectory($path) {
         if (!file_exists($path)) {
+            runtime_hook::Execute('OnBeforeDirectoryCreate');
             @mkdir($path, 0777);
+            runtime_hook::Execute('OnAfterDirectoryCreate');
             $retval = true;
         } else {
             $retval = false;
@@ -75,7 +77,9 @@ class fs_director {
             if ($obj == '.' || $obj == '..')
                 continue;
             if (!@unlink($path . '/' . $obj))
+                runtime_hook::Execute('OnBeforeDirectoryDelete');
                 SureRemoveDir($path . '/' . $obj, true);
+                runtime_hook::Execute('OnAfterDirectoryDelete');
         }
 
         closedir($dh);
@@ -94,7 +98,9 @@ class fs_director {
      */
     static function SetDirectoryPermissions($path, $mode) {
         if (file_exists($path)) {
+            runtime_hook::Execute('OnBeforeSetDirectoryPerms');
             @chmod($path, $mode);
+            runtime_hook::Execute('OnAfterSetDirectoryPerms');
             $retval = true;
         } else {
             $retval = false;
