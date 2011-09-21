@@ -23,6 +23,10 @@ class runtime_controller {
         $this->vars_post = array($_POST);
         $this->vars_session = array($_SESSION);
         $this->vars_cookie = array($_COOKIE);
+        
+        if(!isset($this->vars_session[0]['zpuid'])){
+            ui_module::GetLoginTemplate();
+        }
 
         if (isset($this->vars_get[0]['module'])) {
             ui_module::getModule($this->GetCurrentModule());

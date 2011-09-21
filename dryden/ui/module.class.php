@@ -71,52 +71,62 @@ class ui_module {
     static function ModuleInfoToDB($module) {
         global $zdbh;
         global $zlo;
+        runtime_hook::Execute('OnBeforeModuleInfoToDB');
         $mod_xml = "modules/$module/module.xml";
         try {
             $mod_config = new xml_reader(fs_filehandler::ReadFileContents($mod_xml));
             $mod_config->Parse();
             $module_name = $mod_config->document->name[0]->tagData;
             $module_version = $mod_config->document->version[0]->tagData;
-			$module_description = $mod_config->document->desc[0]->tagData;
+            $module_description = $mod_config->document->desc[0]->tagData;
             $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_version_in, mo_folder_vc, mo_installed_ts, mo_desc_tx) VALUES ('$module_name', $module_version, '$module_name', " . time() . ", '$module_description')");
             $sql->execute();
             return true;
         } catch (Exception $e) {
             return false;
         }
+        runtime_hook::Execute('OnAfterModuleInfoToDB');
     }
-    
+
     /**
      * This class scans the module directory and will return an array of new modules that are not yet in the database.
      */
-    static function ScanForNewModules(){
+    static function ScanForNewModules() {
         $new_module_list = array();
-        
+
         return $new_module_list;
     }
 
     /**
      * This class returns the name of the current module.
      */
-    static function GetModuleName(){
+    static function GetModuleName() {
         global $controller;
-		global $zdbh;
-		$retval = $zdbh->query("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = '".$controller->GetControllerRequest('URL', 'module')."'")->Fetch();
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
         $retval = $retval['mo_name_vc'];
-		return $retval;
+        return $retval;
     }
-	
+
     /**
      * This class returns the description of the current module.
      */
-    static function GetModuleDescription(){
+    static function GetModuleDescription() {
         global $controller;
-		global $zdbh;
-		$retval = $zdbh->query("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = '".$controller->GetControllerRequest('URL', 'module')."'")->Fetch();
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
         $retval = $retval['mo_desc_tx'];
-		return $retval;
+        return $retval;
     }
-	
+
+    /**
+     * This method returns the login form and forces the user to login!
+     */
+    static function GetLoginTemplate() {
+        echo "LOGIN HTML HERE!";
+        die();
+    }
+
 }
 
 ?>

@@ -38,8 +38,7 @@ ctrl_auth::KillSession();
 $zpauth = new ctrl_auth;
 $zpauth->username = "test2";
 $zpauth->password = "password";
-$zpauth->Authenticate();
-
+$zpauth->Authenticate(); 
 
 ctrl_auth::RequireUser();
 
