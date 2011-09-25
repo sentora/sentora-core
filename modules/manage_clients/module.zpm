@@ -1,0 +1,15 @@
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+
+<div class="zgrid_wrapper">
+<h2>Current Clients</h2>
+<@ CurrentClients @>
+</div>
+
+<div class="zform_wrapper">
+<@ ClientAction @>
+</div>
+
+</div>

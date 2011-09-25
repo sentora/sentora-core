@@ -183,28 +183,6 @@ class module_controller {
     }
 		
 	
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "/etc/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
-    }
-	
-
-    static function GetVHOption($name) {
-        global $zdbh;
-        $result = $zdbh->query("SELECT vhs_value_tx FROM x_vhosts_settings WHERE vhs_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['vhs_value_tx'];
-        } else {
-            return false;
-        }
-    }
 ############### METHODS TO BE MOVED TO INDIVIDUAL CLASSES ###############
 	
 	public function AddVhost(){
@@ -389,7 +367,7 @@ class module_controller {
 	}
 	
 	
-	
+	############### Script Functions ###############
 	static function IsValidDomainName($a) {
     # DESCRIPTION: Check for invalid characters in domain creation.
 	if (stristr($a, '.')){
@@ -403,7 +381,7 @@ class module_controller {
 		return false;
 	}
     return true;
-}
+	}
 
 	static function IsValidEmail($email) {
     # DESCRIPTION: Check for invalid characters in email creation.
@@ -411,9 +389,32 @@ class module_controller {
     	return false;
     }
     return true;
-}
+	}
 
+	static function getModuleName() {
+		$module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
+
+
+	static function getModuleIcon() {
+		global $controller;
+		$module_icon = "/etc/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        return $module_icon;
+    }
 	
+
+    static function GetVHOption($name) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT vhs_value_tx FROM x_vhosts_settings WHERE vhs_name_vc = '$name'")->Fetch();
+        if ($result) {
+            return $result['vhs_value_tx'];
+        } else {
+            return false;
+        }
+    }
+	
+		
 }
 
 ?>
