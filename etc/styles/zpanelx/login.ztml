@@ -219,7 +219,7 @@
                                 </tr>
                                 <tr>
                                     <td><br />
-                                        <form action="login.php" method="post" name="frmZLogin" id="frmZLogin">
+                                        <form action="" method="post" name="frmZLogin" id="frmZLogin">
                                             <table align="center">
                                                 <tr>
                                                     <td><strong>Username:</strong>:</td>

@@ -22,7 +22,7 @@ class ctrl_auth {
          * @todo Add a default redirect URL if none is specified!
          */
         if (!isset($_SESSION['zpuid'])) {
-            header("location: " . $url_redir . "");
+            include 'etc/styles/zpanelx/login.ztml';
             exit;
         }
         return true;
@@ -70,8 +70,8 @@ class ctrl_auth {
         $this->password = null;
         return true;
     }
-    
-    static function CurrentUserID(){
+
+    static function CurrentUserID() {
         global $controller;
         return $controller->GetControllerRequest('USER', 'zpuid');
     }
