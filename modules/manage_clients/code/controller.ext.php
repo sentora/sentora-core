@@ -64,7 +64,7 @@ class module_controller {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$line = "";
-		$sql  = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $currentuser['userid'] . " AND ac_deleted_ts IS NULL";
+		$sql  = "SELECT * FROM x_accounts JOIN (x_bandwidth, x_quotas, x_packages) ON (x_accounts.ac_id_pk=x_bandwidth.bd_acc_fk AND x_accounts.ac_package_fk=x_quotas.qt_package_fk AND x_accounts.ac_package_fk=x_packages.pk_id_pk) WHERE ac_reseller_fk=" . $currentuser['userid'] . " AND ac_deleted_ts IS NULL";
 		if ($numrows = $zdbh->query($sql)) {
  			if ($numrows->fetchColumn() <> 0) {
 				$line .= "<form action=\"./?module=manage_clients&action=EditClient\" method=\"post\">";
@@ -76,15 +76,16 @@ class module_controller {
 				$line .= "<th>Current Bandwidth</th>";
 				$line .= "<th></th>";
 				$line .= "</tr>";
-				$sql  = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $currentuser['userid'] . " AND ac_deleted_ts IS NULL");
+				$sql  = $zdbh->prepare($sql);
 				$sql->execute();
 				while ($rowclients = $sql->fetch()) {
 					$line .= "<tr>";
                     $line .= "<td>" . $rowclients['ac_user_vc'] . "</td>";
 					$package = $zdbh->query("SELECT pk_name_vc FROM x_packages WHERE pk_id_pk=" . $rowclients['ac_package_fk'] . "")->Fetch();
-                    $line .= "<td>" . $package['pk_name_vc'] . "</td>";
-                    $line .= "<td>" . /*FormatFileSize(GetQuotaUsages('diskspace', $rowclients['ac_id_pk']))*/$currentuser['userid'] . "</td>";
-                    $line .= "<td>" . /*FormatFileSize(GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))*/$currentuser['userid'] . "</td>";
+                    $line .= "<td>" . $rowclients['pk_name_vc'] . "</td>";
+                    /* NOTE the disk space and bandwith values below need converting to MB / GB */
+                    $line .= "<td>" . $rowclients['bd_diskamount_bi'] . "/" . $rowclients['qt_diskspace_bi'] . "</td>";
+                    $line .= "<td>" . $rowclients['bd_transamount_bi'] . "/" . $rowclients['qt_bandwidth_bi'] . "</td>";
                     $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inEdit_" . $rowclients['ac_id_pk'] . "\" value=\"" . $rowclients['ac_id_pk'] . "\">Edit</button>";
                     if ($rowclients['ac_user_vc'] != 'zadmin') {
                     	$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_" . $rowclients['ac_id_pk'] . "\" value=\"" . $rowclients['ac_id_pk'] . "\">Delete</button>";
