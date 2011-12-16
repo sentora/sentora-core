@@ -432,7 +432,7 @@ class module_controller {
 	
 	static function getModuleIcon() {
 		global $controller;
-		$module_icon = "/etc/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+		$module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 	

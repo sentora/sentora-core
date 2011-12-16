@@ -5,9 +5,11 @@
 
 <div id="contentwrapper_phpinfo" style="width:600px">
 <br>
-&raquo; <a href="etc/apps/phpinfo/" target="_blank" title="Launch PHPInfo()">View full PHP configuration</a>
+<button class="fg-button ui-state-default ui-corner-all" type="submit" onclick="window.open('etc/apps/phpinfo/')">View full PHP configuration</button>
 <br><br>
+<div class="zform_wrapper" style="width:100%">
 <@ PHPInfo @>
+</div>
 </div>
 
 </div>
