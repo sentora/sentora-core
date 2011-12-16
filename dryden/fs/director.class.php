@@ -23,6 +23,22 @@ class fs_director {
     static function SlashesToNIX($string) {
         return str_replace("\\", "/", $string);
     }
+	
+    /**
+     * Converts to proper slashes based on OS platform.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @param string $string
+     * @return string
+     */
+    static function ConvertSlashes($string) {
+	    if (sys_versions::ShowOSPlatformVersion() <> "Windows"){
+        	$retval = self::SlashesToNIX($string);
+    	} else {
+			$retval = self::SlashesToWin($string);
+    	}
+        return $retval;
+    }
 
     /**
      * Takes a raw file size value (bytes) and converts it to human readable size with an abbreavation.
@@ -125,7 +141,7 @@ class fs_director {
 
     /**
      * Check for an empty value.
-     *  @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
      * @version 10.0.0
      * @param string $value, string $true, string $false
      * @return boolean 
@@ -137,6 +153,23 @@ class fs_director {
             return true;
         }
     }
+
+    /**
+     * Checks the value of a checkbox and returns if 0 if not ticked or 1 if it is ticked.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */	
+	static function GetCheckboxValue($value) {
+    $checkbox_status = $value;
+    if ($checkbox_status == 1) {
+        $retval = 1;
+    } else {
+        $retval = 0;
+    }
+    return $retval;
+}
 
 }
 
