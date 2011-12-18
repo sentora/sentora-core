@@ -31,12 +31,22 @@ class module_controller {
 		$module_name = ui_module::GetModuleName();
         return $module_name;
     }
-
+	static function getLaunchWebMail() {
+		$message = ui_language::translate("Launch Webmail");
+        return $message;
+    }
+	static function getModuleDesc() {
+		$message = ui_language::translate("Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.");
+        return $message;
+    }
+	
 	static function getModuleIcon() {
 		global $controller;
 		$module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
+
+
 		
 }
 
