@@ -34,7 +34,7 @@ class ui_moduleloader {
 			$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user'";
 			if ($nummodsql = $zdbh->query($modsql)) {
  				if ($nummodsql->fetchColumn() > 0) {
-					$line .= "<table class=\"zcat\"><tr><th align=\"left\"><a name=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"></a>" . $categories['mc_name_vc'] . "<a href=\"#\" class=\"zcat\" id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_a\"></a></th></tr>";
+					$line .= "<table class=\"zcat\"><tr><th align=\"left\"><a name=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"></a>" . ui_language::translate($categories['mc_name_vc']) . "<a href=\"#\" class=\"zcat\" id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_a\"></a></th></tr>";
 
             		$line .= "<tr><td align=\"left\"><div class=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><table class=\"zcatcontent\" align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
 
@@ -46,7 +46,8 @@ class ui_moduleloader {
             		$num_icons = 0;
 
             			while ($modules = $modsql->fetch()) {
-                			$cleanname = str_replace(" ", "<br />", $modules['mo_name_vc']);
+							$translatename = ui_language::translate($modules['mo_name_vc']);
+                			$cleanname = str_replace(" ", "<br />", $translatename);
                 			if ($num_icons == $icons_per_row) {
                     			$line .= "</tr><tr>";
                     			$num_icons = 0;
@@ -91,7 +92,7 @@ class ui_moduleloader {
 
             			while ($modules = $modsql->fetch()) {
  
-							$line .= "<li><a href=\"?module=".$modules['mo_folder_vc']."\">" . $modules['mo_name_vc'] . "</a></li>";
+							$line .= "<li><a href=\"?module=".$modules['mo_folder_vc']."\">" . ui_language::translate($modules['mo_name_vc']) . "</a></li>";
             			}
 						$line .= "</ul></div>";
 						$show ++;
@@ -121,7 +122,7 @@ class ui_moduleloader {
         while ($categories = $sql->fetch()) {
 		
 		$cleanname = explode(" ", $categories['mc_name_vc']);
-		$cleanname = $cleanname[0];
+		$cleanname = ui_language::translate($cleanname[0]);
 
 			$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user'";
 			if ($nummodsql = $zdbh->query($modsql)) {
@@ -145,7 +146,7 @@ class ui_moduleloader {
 
             			while ($modules = $modsql->fetch()) {
  
-							$line .= "<li><a href=\"?module=".$modules['mo_folder_vc']."\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" width=\"20\" height=\"20\" border=\"0\" /> " . $modules['mo_name_vc'] . "</a></li>";
+							$line .= "<li><a href=\"?module=".$modules['mo_folder_vc']."\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" width=\"20\" height=\"20\" border=\"0\" /> " . ui_language::translate($modules['mo_name_vc']) . "</a></li>";
             			}
 						$line .= "</ul></div>";
 						$tabindex ++;
