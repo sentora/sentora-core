@@ -51,7 +51,7 @@ class ui_moduleloader {
                     			$line .= "</tr><tr>";
                     			$num_icons = 0;
                 			}
-                			$line .= "<td style=\"text-align:center;\" align=\"left\"><a href=\"?module=".$modules['mo_folder_vc']."\" title=\"" . $modules['mo_desc_tx'] . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" border=\"0\" /></a><br /><a href=\"?module=".$modules['mo_folder_vc']."\">" . $cleanname . "</a></td>";
+                			$line .= "<td style=\"text-align:center;\" align=\"left\"><a href=\"?module=".$modules['mo_folder_vc']."\" title=\"" . ui_language::translate($modules['mo_desc_tx']) . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" border=\"0\" /></a><br /><a href=\"?module=".$modules['mo_folder_vc']."\">" . $cleanname . "</a></td>";
                 			$num_icons++;
             			}
 						$line .= "</tr></table></td></tr></table></div></td></tr></table><br>";

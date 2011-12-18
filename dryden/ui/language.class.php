@@ -18,6 +18,7 @@ class ui_language {
     static function translate($message) {
 		global $controller;
 		global $zdbh;
+		$message = addslashes($message);
 		$currentuser = ctrl_users::GetUserDetail();
 		$column_names = self::GetColumnNames('x_translations');
 		foreach ($column_names as $column_name){
@@ -27,11 +28,11 @@ class ui_language {
 				if (!fs_director::CheckForEmptyValue($result['tr_'.$lang.'_tx'])){
         			return $result['tr_'.$lang.'_tx'];
 				} else {
-					return $message;
+					return stripslashes($message);
 				}
         	}
 		}	
-		return $message;
+		return stripslashes($message);
     }
 	
 	# return array of column names for a table
