@@ -125,6 +125,10 @@ class module_controller {
         return $module_icon;
     }
 	
+	static function getHeader() {
+		$message = ui_language::translate('Enter your account details');
+        return $message;
+    }	
 }
 
 ?>
