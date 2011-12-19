@@ -3,8 +3,6 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.</p></div>
 
-
-&raquo; <a href="apps/phpmyadmin/" target="_blank" title="Launch phpMyAdmin">Launch phpMyAdmin</a>
-
+<button class="fg-button ui-state-default ui-corner-all" type="submit" onclick="window.open('etc/apps/phpmyadmin/')">Launch phpMyAdmin</button>
 
 </div>

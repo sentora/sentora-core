@@ -1,11 +1,9 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.</p>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p>
 </div>
 
-
-&raquo; <a href="apps/webmail/" target="_blank" title="Launch WebMail">Launch WebMail</a>
-
+<button class="fg-button ui-state-default ui-corner-all" type="submit" onclick="window.open('etc/apps/webmail/')"><@ LaunchWebMail @></button>
 
 </div>

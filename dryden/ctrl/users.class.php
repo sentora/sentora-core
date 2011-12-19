@@ -30,6 +30,7 @@ class ctrl_users {
 			$userdetail->addItemValue('address', $dbvals['ud_address_tx']);
 			$userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
 			$userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
+			$userdetail->addItemValue('language', $dbvals['ud_language_vc']);
         } else {
             # Display the requested user details based on USERID.
             # Display the current logged in your details!
@@ -46,6 +47,7 @@ class ctrl_users {
 			$userdetail->addItemValue('address', $dbvals['ud_address_tx']);
 			$userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
 			$userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
+			$userdetail->addItemValue('language', $dbvals['ud_language_vc']);
         }
         return $userdetail->getDataObject();
     }

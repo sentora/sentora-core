@@ -43,7 +43,7 @@ class fs_filehandler {
 	}
 		
     /**
-    * Create blank or populated with permissions.
+    * Create blank or populated with permissions, including the path.
     * @author RusTus (rustus@zpanel.co.uk) 
     * @version 10.0.0
 	*/
