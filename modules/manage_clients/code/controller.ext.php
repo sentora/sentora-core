@@ -43,9 +43,6 @@ class module_controller {
 		return $display;
 	}
 	
-	
-	
-	
 	static function getClientAction(){
 		global $controller;
 		if (!fs_director::CheckForEmptyValue(self::$edit)){
@@ -56,9 +53,6 @@ class module_controller {
 		return $display;
 	}
 	
-	
-	
-
 	static function DisplayCurrentClient(){
 		global $zdbh;
 		global $controller;
@@ -102,9 +96,6 @@ class module_controller {
 		}
 		return $line;
 	}
-	
-	
-	
 	
 	static function DisplayNewClient(){
 		global $zdbh;
@@ -166,9 +157,6 @@ class module_controller {
     	$line .= "</form>";
 		return $line;
 	}
-	
-	
-	
 	
 	static function DisplayEditClient(){
 		global $zdbh;
@@ -241,9 +229,6 @@ class module_controller {
     	$line .= "</form>";
 		return $line;
 	}
-	
-	
-	
 			
 	static function doEditClient(){
 		global $zdbh;
@@ -264,9 +249,6 @@ class module_controller {
 		}		
 
 	}
-	
-	
-	
 	
 	static function doSaveClient(){
 		global $zdbh;
@@ -291,9 +273,6 @@ class module_controller {
 	    }
 		self::$ok=1;	
 	}
-	
-	
-	
 	
 	static function doCreateClient(){
 		global $zdbh;
@@ -372,9 +351,6 @@ class module_controller {
 		# Send the user account details via. email (if requested)...
 	}
 	
-	
-	
-	
 	static function DeleteClient($ac_id_pk){
 		global $zdbh;
 		global $controller;
@@ -395,21 +371,18 @@ class module_controller {
 		self::$ok=1;
 	}
 	
-	
-	
-	
 	static function getResult() {
 		if (!fs_director::CheckForEmptyValue(self::$blank)){
 			return ui_sysmessage::shout("You need to specify a username to create a new client.");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$badname)){
-		return ui_sysmessage::shout("Your client name is not valid. Please enter a valid client name.");
+			return ui_sysmessage::shout("Your client name is not valid. Please enter a valid client name.");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-		return ui_sysmessage::shout("A client with that name already appears to exsist on this server.");
+			return ui_sysmessage::shout("A client with that name already appears to exsist on this server.");
 		}	
 		if (!fs_director::CheckForEmptyValue(self::$error)){
-		return ui_sysmessage::shout("You must select a package for your new client");
+			return ui_sysmessage::shout("You must select a package for your new client");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
 			return ui_sysmessage::shout("Changes to your client(s) have been saved successfully!");
@@ -419,16 +392,10 @@ class module_controller {
         return;
     }
 	
-	
-	
-	
 	static function getModuleName() {
 		$module_name = ui_module::GetModuleName();
     	return $module_name;
     }
-	
-	
-	
 	
 	static function getModuleIcon() {
 		global $controller;
