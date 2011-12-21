@@ -147,8 +147,8 @@ class module_controller {
 	    }
 	    # Check to make sure the cron script exists before we go any further...
 	    if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . '/' . $controller->GetControllerRequest('FORM', 'inScript'))))) {
-			self::$noexists = 1;
-			$retval = 1;
+			self::$noexists = TRUE;
+			$retval = TRUE;
 	    }
 		return $retval;
    	}
