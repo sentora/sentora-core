@@ -1,6 +1,6 @@
 <?php
 
-$host = "xpace.co";
+$host = "ballen.co.uk";
 $dbname = "zpanelx_dev";
 $user = "zpanelx";
 $pass = "zpanelx";
