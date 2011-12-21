@@ -39,6 +39,18 @@ class fs_director {
     	}
         return $retval;
     }
+	
+    /**
+     * Remove the last character from a string.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @param string $string
+     * @return string
+     */
+	static function RemoveDoubleSlash($var) {
+    	$retval = str_replace("\\\\", "\\", $var);
+    	return $retval;
+	}
 
     /**
      * Takes a raw file size value (bytes) and converts it to human readable size with an abbreavation.
