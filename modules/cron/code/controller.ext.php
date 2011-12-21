@@ -103,7 +103,7 @@ class module_controller {
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th colspan=\"2\" align=\"right\"><input type=\"hidden\" name=\"inReturn\" value=\"GetFullURL\" />";
-		$line .= "<input type=\"hidden\" name=\"inAction\" value=\"new\" />";
+		$line .= "<input type=\"hidden\" name=\"inUserID\" value=\"".$currentuser['userid']."\" />";
 		$line .= "<input type=\"submit\" name=\"inSubmit\" id=\"inSubmit\" value=\"Create\" /></th>";
 		$line .= "</tr>";
 		$line .= "</table>";
@@ -113,7 +113,22 @@ class module_controller {
 	}
 	
 	static function doCreateCron(){
-		self::CheckCronForErrors();
+		global $zdbh;
+		global $controller;
+		$geterror = self::CheckCronForErrors();
+		if (!fs_director::CheckForEmptyValue($geterror)){
+    	# If the user submitted a 'new' request then we will simply add the cron task to the database...
+	    $sql = $zdbh->prepare("INSERT INTO x_cronjobs (ct_acc_fk,
+										ct_script_vc,
+										ct_description_tx,
+										ct_created_ts) VALUES (
+										" . $controller->GetControllerRequest('FORM', 'inUserID') . ",
+										'" . $controller->GetControllerRequest('FORM', 'inScript') . "',
+										'" . $controller->GetControllerRequest('FORM', 'inDescription') . "',
+										" . time() . ")");
+		$sql->execute();
+		self::$ok = 1;
+		}
 	}
 	
 	static function doDeleteCron(){
@@ -128,15 +143,16 @@ class module_controller {
 	    if ($controller->GetControllerRequest('FORM', 'inScript') == '') {
 			self::$blank = 1;
 			//$retval = "blank";
-			return;
+			return NULL;
 	    }
 	    # Check to make sure the cron script exists before we go any further...
 	    if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . '/' . $controller->GetControllerRequest('FORM', 'inScript'))))) {
 			self::$noexists = 1;
+					echo "<br><br><Br><Br><Br><br><Br><Br><Br>".fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . '/' . $controller->GetControllerRequest('FORM', 'inScript')));
 			//$retval = "noexists";
-			return;
+			return NULL;
 	    }
-		echo "OOPS!";
+		echo "<br><br><Br><Br><Br><br><Br><Br><Br>".ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . '/' . $controller->GetControllerRequest('FORM', 'inScript');
    	}
 	
 	static function getResult() {
