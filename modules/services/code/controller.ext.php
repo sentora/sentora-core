@@ -29,13 +29,13 @@ class module_controller {
 
 	function getServices() {
 		global $controller;
-
-		$line  = "<table>";
+		$line  = "<h2>".ui_language::translate("Checking status of services...")."</h2>";
+		$line .= "<table>";
 		$line .= "<tr>";
 		$line .= "<th>HTTP</th>";
 		$line .= "<td>";
 		
-		if (sys_monitoring::PortStatus(80) == 0) {
+		if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(80))) {
 			$line .= "    <img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.gif\">";
 		} else {
 			$line .= "    <img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.gif\">";
@@ -47,7 +47,7 @@ class module_controller {
 		$line .= "<th>FTP</th>";
 		$line .= "<td>";
 		
-		if (sys_monitoring::PortStatus(21) == 0) {
+		if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(21))) {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.gif\">";
 		} else {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.gif\">";
@@ -59,7 +59,7 @@ class module_controller {
 		$line .= "<th>SMTP</th>";
 		$line .= "<td>";
 		
-		if (sys_monitoring::PortStatus(25) == 0) {
+		if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(25))) {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.gif\">";
 		} else {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.gif\">";
@@ -71,7 +71,7 @@ class module_controller {
 		$line .= "<th>POP3</th>";
 		$line .= "<td>";
 		
-		if (sys_monitoring::PortStatus(110) == 0) {
+		if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(110))) {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.gif\">";
 		} else {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.gif\">";
@@ -83,7 +83,7 @@ class module_controller {
 		$line .= "<th>IMAP</th>";
 		$line .= "<td>";
 		
-		if (sys_monitoring::PortStatus(143) == 0) {
+		if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(143))) {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.gif\">";
 		} else {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.gif\">";
@@ -95,25 +95,49 @@ class module_controller {
 		$line .= "<th>MySQL</th>";
 		$line .= "<td>";
 		
-		if (sys_monitoring::PortStatus(3306) == 0) {
+		if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(3306))) {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.gif\">";
 		} else {
 			$line .= "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.gif\">";
 		}
 		
 		$line .= "</td>";
+		$line .= "</tr>";
 		$line .= "</table>";
-		$line .= "<br><h2>Server Uptime</h2>";
-		$line .= "Uptime: " . sys_monitoring::ServerUptime();
+		$line .= "<br><h2>".ui_language::translate("Server Uptime")."</h2>";
+		$line .= ui_language::translate("Uptime").": " . sys_monitoring::ServerUptime();
 		
 		return $line;
 		
 	}	
 	
-
+	static function getDaemon() {
+		$line = "";
+		$line .= "<h2>".ui_language::translate("Daemon Status")."</h2>";
+		$line .= "<table class=\"zform\">";
+		$line .= "<tr>";
+		$line .= "<th>".ui_language::translate("Last Daemon Run").":</th>";
+		$line .= "<td>";
+		$line .= "</td>";
+		$line .= "</tr>";
+		$line .= "<tr>";
+		$line .= "<th>".ui_language::translate("Next Daemon Run").":</th>";
+		$line .= "<td>";
+		$line .= "</td>";
+		$line .= "</tr>";
+		$line .= "</table>";
+				
+		return $line;
+    }
+	
 	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+		$module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
+    }
+
+	static function getModuleDesc() {
+		$message = ui_language::translate("Here you can check the current status of our services and see what services are up and running and which are down and not.");
+        return $message;
     }
 
 	static function getModuleIcon() {

@@ -64,10 +64,10 @@ class module_controller {
 				$line .= "<form action=\"./?module=manage_clients&action=EditClient\" method=\"post\">";
     			$line .= "<table class=\"zgrid\">";
  				$line .= "<tr>";
-				$line .= "<th>Username</th>";
-				$line .= "<th>Package</th>";
-				$line .= "<th>Current Disk</th>";
-				$line .= "<th>Current Bandwidth</th>";
+				$line .= "<th>".ui_language::translate("Username")."</th>";
+				$line .= "<th>".ui_language::translate("Package")."</th>";
+				$line .= "<th>".ui_language::translate("Current Disk")."</th>";
+				$line .= "<th>".ui_language::translate("Current Bandwidth")."</th>";
 				$line .= "<th></th>";
 				$line .= "</tr>";
 				$sql  = $zdbh->prepare($sql);
@@ -78,8 +78,8 @@ class module_controller {
 					$package = $zdbh->query("SELECT pk_name_vc FROM x_packages WHERE pk_id_pk=" . $rowclients['ac_package_fk'] . "")->Fetch();
                     $line .= "<td>" . $rowclients['pk_name_vc'] . "</td>";
                     /* NOTE the disk space and bandwith values below need converting to MB / GB */
-                    $line .= "<td>" . $rowclients['bd_diskamount_bi'] . "/" . $rowclients['qt_diskspace_bi'] . "</td>";
-                    $line .= "<td>" . $rowclients['bd_transamount_bi'] . "/" . $rowclients['qt_bandwidth_bi'] . "</td>";
+                    $line .= "<td>" . fs_director::ShowHumanFileSize($rowclients['bd_diskamount_bi']) . "/" . fs_director::ShowHumanFileSize($rowclients['qt_diskspace_bi']) . "</td>";
+                    $line .= "<td>" . fs_director::ShowHumanFileSize($rowclients['bd_transamount_bi']) . "/" . fs_director::ShowHumanFileSize($rowclients['qt_bandwidth_bi']) . "</td>";
                     $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inEdit_" . $rowclients['ac_id_pk'] . "\" value=\"" . $rowclients['ac_id_pk'] . "\">Edit</button>";
                     if ($rowclients['ac_user_vc'] != 'zadmin') {
                     	$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_" . $rowclients['ac_id_pk'] . "\" value=\"" . $rowclients['ac_id_pk'] . "\">Delete</button>";
@@ -92,7 +92,7 @@ class module_controller {
 				$line .= " </table>";
 				$line .= "</form>";
 			} else {
-			$line .= "You have no client accounts at this time";
+			$line .= "".ui_language::translate("You have no client accounts at this time")."";
 			}
 		}
 		return $line;
@@ -103,19 +103,19 @@ class module_controller {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$line  = "";
-		$line .= "<h2>Create new client account</h2>";
+		$line .= "<h2>".ui_language::translate("Create new client account")."</h2>";
 		$line .= "<form action=\"./?module=manage_clients&action=CreateClient\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr>";
-        $line .= "<th>Username:</th>";
+        $line .= "<th>".ui_language::translate("Username").":</th>";
         $line .= "<td><input type=\"text\" name=\"inUserName\" id=\"inUserName\" maxlength=\"10\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Password:</th>";
+        $line .= "<th>".ui_language::translate("Password").":</th>";
         $line .= "<td><input type=\"text\" name=\"inPassword\" id=\"inPassword\" value=\"" . /*GenerateRandomPassword(9, 4)*/$currentuser['userid'] . "\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Package:</th>";
+        $line .= "<th>".ui_language::translate("Package").":</th>";
         $line .= "<td><select name=\"inPackage\" id=\"inPackage\">";
         $line .= "<option value=\"\" selected=\"selected\">-- Select a package --</option>";
 		$sql  = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $currentuser['userid'] . " AND pk_deleted_ts IS NULL");
@@ -126,27 +126,27 @@ class module_controller {
         $line .= "</select></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Full Name:</th>";
+        $line .= "<th>".ui_language::translate("Full Name").":</th>";
         $line .= "<td><input type=\"text\" name=\"inFullName\" id=\"inFullName\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Email Address:</th>";
+        $line .= "<th>".ui_language::translate("Email Address").":</th>";
         $line .= "<td><input type=\"text\" name=\"inEmailAddress\" id=\"inEmailAddress\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Postal Address</th>";
+        $line .= "<th>".ui_language::translate("Postal Address")."</th>";
         $line .= "<td><textarea name=\"inAddress\" id=\"inAddress\" cols=\"45\" rows=\"5\"></textarea></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Postal Code</th>";
+        $line .= "<th>".ui_language::translate("Postal Code")."</th>";
         $line .= "<td><input name=\"inPostCode\" type=\"text\" id=\"inPostCode\" value=\"\" size=\"20\" maxlength=\"10\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Phone Number</th>";
+        $line .= "<th>".ui_language::translate("Phone Number")."</th>";
         $line .= "<td><input name=\"inPhone\" type=\"text\" id=\"inPhone\" value=\"\" size=\"20\" maxlength=\"50\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Send welcome email?</th>";
+        $line .= "<th>".ui_language::translate("Send welcome email?")."</th>";
         $line .= "<td><input name=\"inSWE\" type=\"checkbox\" id=\"inSWE\" value=\"1\" checked=\"checked\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
@@ -165,15 +165,15 @@ class module_controller {
 		$currentuser = ctrl_users::GetUserDetail();
 		$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . self::$clientid . " AND ac_deleted_ts IS NULL AND ac_reseller_fk=" . $currentuser['userid'] . "")->Fetch();
 		$line  = "";
-		$line .= "<h2>Edit existing client</h2>";
+		$line .= "<h2>".ui_language::translate("Edit existing client")."</h2>";
     	$line .= "<form action=\"./?module=manage_clients&action=SaveClient\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr>";
-        $line .= "<th>Username:</th>";
+        $line .= "<th>".ui_language::translate("Username").":</th>";
         $line .= "<td><input name=\"inUserName\" type=\"text\" disabled=\"disabled\" maxlength=\"10\" id=\"inUserName\" value=\"" . $rowclient['ac_user_vc'] . "\" readonly=\"readonly\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Package:</th>";
+        $line .= "<th>".ui_language::translate("Package").":</th>";
         $line .= "<td>";
 		$sql  = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $currentuser['userid'] . " AND pk_deleted_ts IS NULL");
 		$sql->execute();
@@ -195,27 +195,27 @@ class module_controller {
         $line .= "</td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Full name:</th>";
+        $line .= "<th>".ui_language::translate("Full name").":</th>";
         $line .= "<td><input type=\"text\" name=\"inFullName\" id=\"inFullName\" value=\"" . $rowpersonal['ud_fullname_vc'] . "\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Email Address:</th>";
+        $line .= "<th>".ui_language::translate("Email Address").":</th>";
         $line .= "<td><input type=\"text\" name=\"inEmailAddress\" id=\"inEmailAddress\" value=\"" . $rowpersonal['ud_email_vc'] . "\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Postal Address:</th>";
+        $line .= "<th>".ui_language::translate("Postal Address").":</th>";
         $line .= "<td><textarea name=\"inAddress\" id=\"inAddress\" cols=\"45\" rows=\"5\">" . $rowpersonal['ud_address_tx'] . "</textarea></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Postal Code:</th>";
+        $line .= "<th>".ui_language::translate("Postal Code").":</th>";
         $line .= "<td><input name=\"inPostCode\" type=\"text\" id=\"inPostCode\" size=\"20\" maxlength=\"10\" value=\"" . $rowpersonal['ud_postcode_vc'] . "\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Phone Number:</th>";
+        $line .= "<th>".ui_language::translate("Phone Number").":</th>";
         $line .= "<td><input name=\"inPhone\" type=\"text\" id=\"inPhone\" size=\"20\" maxlength=\"50\" value=\"" . $rowpersonal['ud_phone_vc'] . "\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
-        $line .= "<th>Reset password:</th>";
+        $line .= "<th>".ui_language::translate("Reset password").":</th>";
         $line .= "<td><input name=\"inNewPassword\" type=\"password\" id=\"inNewPassword\" size=\"20\" maxlength=\"50\" /> ";
         $line .= "</td>";
         $line .= "</tr>";
@@ -374,19 +374,19 @@ class module_controller {
 	
 	static function getResult() {
 		if (!fs_director::CheckForEmptyValue(self::$blank)){
-			return ui_sysmessage::shout("You need to specify a username to create a new client.");
+			return ui_sysmessage::shout(ui_language::translate("You need to specify a username to create a new client."));
 		}
 		if (!fs_director::CheckForEmptyValue(self::$badname)){
-			return ui_sysmessage::shout("Your client name is not valid. Please enter a valid client name.");
+			return ui_sysmessage::shout(ui_language::translate("Your client name is not valid. Please enter a valid client name."));
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-			return ui_sysmessage::shout("A client with that name already appears to exsist on this server.");
+			return ui_sysmessage::shout(ui_language::translate("A client with that name already appears to exsist on this server."));
 		}	
 		if (!fs_director::CheckForEmptyValue(self::$error)){
-			return ui_sysmessage::shout("You must select a package for your new client");
+			return ui_sysmessage::shout(ui_language::translate("You must select a package for your new client"));
 		}
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
-			return ui_sysmessage::shout("Changes to your client(s) have been saved successfully!");
+			return ui_sysmessage::shout(ui_language::translate("Changes to your client(s) have been saved successfully!"));
 		}else{
 			return ui_module::GetModuleDescription();
 		}
