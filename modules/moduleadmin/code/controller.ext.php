@@ -33,7 +33,7 @@ class module_controller {
 	static function getAdminModules (){
 	global $zdbh;
 	$line = "<h2>".ui_language::translate("Administration Modules")."</h2>";
-	$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'modadmin'";
+	$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'modadmin' ORDER BY mo_name_vc ASC";
 	if ($nummodsql = $zdbh->query($modsql)) {
  		if ($nummodsql->fetchColumn() > 0) {
             $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'modadmin'");
@@ -60,10 +60,16 @@ class module_controller {
 	$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'user'";
 	if ($nummodsql = $zdbh->query($modsql)) {
  		if ($nummodsql->fetchColumn() > 0) {
-            $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'user'");
+            $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'user' AND mo_name_vc != 'Module Admin' ORDER BY mo_name_vc ASC");
             $modsql->execute();
 			$line .= "<form action=\"./?module=moduleadmin&action=EditModule\" method=\"post\">";
 			$line .= "<table class=\"zgrid\">";
+			$line .= "<tr>";
+			$line .= "<th></th>";
+			$line .= "<th>".ui_language::translate("Module")."</th>";
+			$line .= "<th>".ui_language::translate("On")."/".ui_language::translate("Off")."</th>";
+			$line .= "<th></th>";
+			$line .= "</tr>";
             while ($modules = $modsql->fetch()) {
 				$line .= "<tr>";
 				$line .= "<td>".self::ModuleStatisIcon($modules['mo_id_pk'])."</td>";
