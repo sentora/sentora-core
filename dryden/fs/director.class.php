@@ -174,14 +174,87 @@ class fs_director {
      * @return boolean 
      */	
 	static function GetCheckboxValue($value) {
-    $checkbox_status = $value;
-    if ($checkbox_status == 1) {
-        $retval = 1;
-    } else {
-        $retval = 0;
-    }
-    return $retval;
-}
+    	$checkbox_status = $value;
+    	if ($checkbox_status == 1) {
+       	 $retval = 1;
+   	 	} else {
+        	$retval = 0;
+    	}
+    	return $retval;
+	}
+	
+    /**
+     * Returns the current usage of a particular resource.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */	
+	static function GetQuotaUsages($resource, $acc_key=0) {
+		global $zdbh;
+	    if ($resource == 'domains') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=1 AND vh_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'subdomains') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=2 AND vh_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'parkeddomains') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=3 AND vh_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'mailboxes') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mailboxes WHERE mb_acc_fk=" . $acc_key . " AND mb_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'forwarders') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_forwarders WHERE fw_acc_fk=" . $acc_key . " AND fw_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'distlists') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_distlists WHERE dl_acc_fk=" . $acc_key . " AND dl_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'ftpaccounts') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_ftpaccounts WHERE ft_acc_fk=" . $acc_key . " AND ft_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'mysql') {
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mysql WHERE my_acc_fk=" . $acc_key . " AND my_deleted_ts IS NULL");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['amount'];
+	    }
+	    if ($resource == 'diskspace') {
+	        $sql = $zdbh->query("SELECT bd_diskamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['bd_diskamount_bi'];
+	    }
+	    if ($resource == 'bandwidth') {
+	        $sql = $zdbh->query("SELECT bd_transamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
+			$sql->execute();
+			$retval = $sql->fetch();
+	        $retval = $retval['bd_transamount_bi'];
+	    }
+    	return $retval;
+	}
+
 
 }
 

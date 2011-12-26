@@ -1,0 +1,48 @@
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+
+<div class="zgrid_wrapper">
+<@ Usage @>
+</div>
+
+<table width="100%">
+<tr>
+<td>
+
+<div class="zgrid_wrapper">
+<@ DomainsUsage @>
+</div>
+
+</td>
+<td>
+
+<div class="zgrid_wrapper">
+<@ SubDomainsUsage @>
+</div>
+
+</td>
+</tr>
+</table>
+
+<table width="100%">
+<tr>
+<td>
+
+<div class="zgrid_wrapper">
+<@ ParkedDomainsUsage @>
+</div>
+
+</td>
+<td>
+
+<div class="zgrid_wrapper">
+<@ MysqlUsage @>
+</div>
+
+</td>
+</tr>
+</table>
+
+</div>

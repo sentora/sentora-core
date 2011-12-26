@@ -17,7 +17,7 @@ class ctrl_users {
 
         if ($user == "") {
             # Display the current logged in your details!
-            $rows = $zdbh->prepare("SELECT * FROM x_accounts LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) LEFT JOIN x_groups ON (x_profiles.ud_group_fk=x_groups.ug_id_pk) LEFT JOIN x_packages ON (x_profiles.ud_package_fk=x_packages.pk_id_pk) WHERE x_accounts.ac_id_pk = " . ctrl_auth::CurrentUserID() . "");
+            $rows = $zdbh->prepare("SELECT * FROM x_accounts LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) LEFT JOIN x_groups ON (x_profiles.ud_group_fk=x_groups.ug_id_pk) LEFT JOIN x_packages ON (x_profiles.ud_package_fk=x_packages.pk_id_pk) LEFT JOIN x_quotas ON (x_profiles.ud_package_fk=x_quotas.qt_package_fk) WHERE x_accounts.ac_id_pk = " . ctrl_auth::CurrentUserID() . "");
             $rows->execute();
             $dbvals = $rows->fetch();
             $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
@@ -31,6 +31,16 @@ class ctrl_users {
 			$userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
 			$userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
 			$userdetail->addItemValue('language', $dbvals['ud_language_vc']);
+			$userdetail->addItemValue('diskquota', $dbvals['qt_diskspace_bi']);
+			$userdetail->addItemValue('bandwidthquota', $dbvals['qt_bandwidth_bi']);
+			$userdetail->addItemValue('domainquota', $dbvals['qt_domains_in']);
+			$userdetail->addItemValue('subdomainquota', $dbvals['qt_subdomains_in']);
+			$userdetail->addItemValue('parkeddomainquota', $dbvals['qt_parkeddomains_in']);
+			$userdetail->addItemValue('ftpaccountsquota', $dbvals['qt_ftpaccounts_in']);
+			$userdetail->addItemValue('mysqlquota', $dbvals['qt_mysql_in']);
+			$userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
+			$userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
+			$userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
         } else {
             # Display the requested user details based on USERID.
             # Display the current logged in your details!
