@@ -156,19 +156,19 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Disk Quota:</strong></td>
-                                                                <td nowrap="nowrap">{{progbar:diskspace}}</td>
+                                                                <td nowrap="nowrap"><# ui_tpl_progbardisk #></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
-                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>/inc/drop.gif" width="10" height="8"> <span class="Side_Info">{{usage:diskspace}}</span> / <span class="Side_Info">{{quota:diskspace}}</span>&nbsp;</td>
+                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>/inc/drop.gif" width="10" height="8"> <span class="Side_Info"><# ui_tpl_usagediskspace #></span> / <span class="Side_Info"><# ui_tpl_quotadiskspace #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Bandwidth Quota:</strong></td>
-                                                                <td nowrap="nowrap">{{progbar:bandwidth}}</td>
+                                                                <td nowrap="nowrap"><# ui_tpl_progbarbandwidth #></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
-                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>/inc/drop.gif" width="10" height="8"><span class="Side_Info"> {{usage:bandwidth}}</span> / <span class="Side_Info">{{quota:bandwidth}}</span>&nbsp;</td>
+                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>/inc/drop.gif" width="10" height="8"><span class="Side_Info"> <# ui_tpl_usagebandwidth #></span> / <span class="Side_Info"><# ui_tpl_quotabandwidth #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
