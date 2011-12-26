@@ -92,7 +92,8 @@ class module_controller {
 		
 		$currentuser = ctrl_users::GetUserDetail();
 		
-		$line  = "<h2>Create a new domain</h2>";
+		$line  = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";	
+		$line .= "<h2>Create a new domain</h2>";
 		$line .= "<form action=\"./?module=domains&action=CreateDomain\" method=\"post\" name=\"CreateDomain\">";
    	 	$line .= "<table class=\"zform\">";
 		$line .= "<tr>";
@@ -135,11 +136,27 @@ class module_controller {
 		$line .= "</td>";
 		$line .= "</tr>";
 	    $line .= "</table>";
-		$line .= "</form>";	
+		$line .= "</form>";
+		$line .= "</td>";
+		$line .= "<td align=\"right\">".self::DisplayDomainUsagepChart()."</td>";
+		$line .= "</tr></table>";
 		
 		return $line;
 			
 	}
+	
+    static function DisplayDomainUsagepChart() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$line  = "";
+		$domainsquota = $currentuser['domainquota'];
+		$domains = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
+		$total= $domainsquota;
+		$used = $domains;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
+		return $line;
+	}	
 	
 	static function doCreateDomain(){
 	global $controller;
@@ -160,22 +177,22 @@ class module_controller {
 
 	static function getResult() {
 		if (!fs_director::CheckForEmptyValue(self::$blank)){
-			return ui_sysmessage::shout("Your Domain can not be empty. Please enter a valid Domain Name and try again.");
+			return ui_sysmessage::shout("Your Domain can not be empty. Please enter a valid Domain Name and try again.", "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$badname)){
-		return ui_sysmessage::shout("Your Domain name is not valid. Please enter a valid Domain Name: i.e. \"domain.com\"");
+		return ui_sysmessage::shout("Your Domain name is not valid. Please enter a valid Domain Name: i.e. \"domain.com\"", "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-		return ui_sysmessage::shout("The domain already appears to exsist on this server.");
+		return ui_sysmessage::shout("The domain already appears to exsist on this server.", "zannounceerror");
 		}	
 		if (!fs_director::CheckForEmptyValue(self::$nosub)){
-		return ui_sysmessage::shout("You cannot add a Sub-Domain here. Please use the Subdomain manager to add Sub-Domains.");
+		return ui_sysmessage::shout("You cannot add a Sub-Domain here. Please use the Subdomain manager to add Sub-Domains.", "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$error)){
-		return ui_sysmessage::shout("Please remove 'www'. The 'www' will automatically work with all Domains / Subdomains.");
+		return ui_sysmessage::shout("Please remove 'www'. The 'www' will automatically work with all Domains / Subdomains.", "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
-			return ui_sysmessage::shout("Changes to your domain web hosting has been saved successfully.");
+			return ui_sysmessage::shout("Changes to your domain web hosting has been saved successfully.", "zannounceok");
 		}else{
 			return ui_module::GetModuleDescription();
 		}

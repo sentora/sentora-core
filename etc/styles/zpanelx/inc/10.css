@@ -610,6 +610,30 @@ a.zcat{
 	padding:10px;
 	color:#2266AA;
 }
+.zannounceok{
+	background-color: #E8FCDC;
+	border:solid 1px #008800;
+	font-weight:normal;
+	text-align: left;
+	padding:10px;
+	color:#008800;
+}
+.zannounceerror{
+	background-color: #FFCBCB;
+	border:solid 1px #C11B17;
+	font-weight:normal;
+	text-align: left;
+	padding:10px;
+	color:#C11B17;
+}
+.zannouncecaution{
+	background-color: #FFFFCC;
+	border:solid 1px #FFCC66;
+	font-weight:normal;
+	text-align: left;
+	padding:10px;
+	color:#FFCC66;
+}
 .zdebug{
 	background-color: #FFCBCB;
 	border:solid 1px #C11B17;

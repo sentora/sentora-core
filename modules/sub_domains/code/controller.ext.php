@@ -85,7 +85,8 @@ class module_controller {
 		
 		$currentuser = ctrl_users::GetUserDetail();
 		
-		$line  = "<h2>Create a new sub-domain</h2>";
+		$line  = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";		
+		$line .= "<h2>Create a new sub-domain</h2>";
 		$line .= "<form action=\"./?module=sub_domains&action=CreateDomain\" method=\"post\">";
    	 	$line .= "<table class=\"zform\">";
 		$line .= "<tr>";
@@ -129,10 +130,25 @@ class module_controller {
 		$line .= "</tr>";
 	    $line .= "</table>";
 		$line .= "</form>";	
-		
-		return $line;
+		$line .= "</td>";
+		$line .= "<td align=\"right\">".self::DisplaySubDomainUsagepChart()."</td>";
+		$line .= "</tr></table>";
 			
+		return $line;
 	}
+	
+    static function DisplaySubDomainUsagepChart() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$line  = "";
+		$subdomainquota = $currentuser['subdomainquota'];
+		$subdomain = fs_director::GetQuotaUsages('subdomains', $currentuser['userid']);
+		$total= $subdomainquota;
+		$used = $subdomain;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
+		return $line;
+	}	
 	
 	static function doCreateDomain(){
 	global $zdbh;
@@ -144,7 +160,7 @@ class module_controller {
 	
 	static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$complete)){
-            return ui_sysmessage::shout("Changes to your domain web hosting has been saved successfully.");
+            return ui_sysmessage::shout("Changes to your domain web hosting has been saved successfully.", "zannounceok");
 		}else{
 			return ui_module::GetModuleDescription();
 		}

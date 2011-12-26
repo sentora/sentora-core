@@ -84,7 +84,8 @@ class module_controller {
 		global $zdbh;
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$line  = "<h2>".ui_language::translate("Create a new MySQL&reg database")."</h2>";
+		$line  = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";
+		$line .= "<h2>".ui_language::translate("Create a new MySQL&reg database")."</h2>";
     	$line .= "<form action=\"./?module=mysql&action=CreateDatabase\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr>";
@@ -97,8 +98,24 @@ class module_controller {
         $line .= "</tr>";
         $line .= "</table>";
     	$line .= "</form>";
+		$line .= "</td>";
+		$line .= "<td align=\"right\">".self::DisplayMysqlUsagepChart()."</td>";
+		$line .= "</tr></table>";
 		return $line;
-    }		
+    }
+	
+    static function DisplayMysqlUsagepChart() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$line  = "";
+		$mysqlquota = $currentuser['mysqlquota'];
+		$mysql = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+		$total= $mysqlquota;
+		$used = $mysql;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
+		return $line;
+	}		
 	
 	static function doCreateDatabase(){
 		global $zdbh;
@@ -187,13 +204,13 @@ class module_controller {
 	
 	static function getResult() {
 		if (!fs_director::CheckForEmptyValue(self::$blank)){
-			return ui_sysmessage::shout(ui_language::translate("You need to specify a database name to create your database."));
+			return ui_sysmessage::shout(ui_language::translate("You need to specify a database name to create your database."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-		return ui_sysmessage::shout(ui_language::translate("A database with that name already appears to exsist."));
+		return ui_sysmessage::shout(ui_language::translate("A database with that name already appears to exsist."), "zannounceerror");
 		}	
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
-			return ui_sysmessage::shout(ui_language::translate("Changes to your databases have been saved successfully!"));
+			return ui_sysmessage::shout(ui_language::translate("Changes to your databases have been saved successfully!"), "zannounceok");
 		}else{
 			return ui_language::translate(ui_module::GetModuleDescription());
 		}

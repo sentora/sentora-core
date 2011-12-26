@@ -113,9 +113,9 @@ class module_controller {
 	    $line .= "<td align=\"left\" valign=\"top\">";
 		$line .= "<h2>".ui_language::translate("Disk Usage Total")."</h2>";
 	
-		//$line .= "<img src=\"etc/lib/pChart2/zpanel/3DPie.php?score=40::30::20&labels=test_1::test_2::test_3\"/></td>";
+		//$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=40::30::20&labels=test_1::test_2::test_3\"/></td>";
 		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/3DPie.php?score=".$free."::".$used."&labels=Free_Space: ".fs_director::ShowHumanFileSize($free)."::Used_Space: ".fs_director::ShowHumanFileSize($used)."&legendfont=verdana&legendfontsize=8&imagesize=350::250&chartsize=150::120&radius=150&legendsize=10::220\"/></td>";
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free_Space: ".fs_director::ShowHumanFileSize($free)."::Used_Space: ".fs_director::ShowHumanFileSize($used)."&legendfont=verdana&legendfontsize=8&imagesize=350::250&chartsize=150::120&radius=150&legendsize=10::220\"/></td>";
 
 		$line .= "<td align=\"left\" valign=\"top\">";
 		$line .= "<h2>".ui_language::translate("Package Usage Total")."</h2>";
@@ -168,7 +168,7 @@ class module_controller {
 		$line .= "</td>";
 		$line .= "</tr>";
 		$line .= "</table>";
-		//$line  = "<img src=\"etc/lib/pChart2/charts/3dpie.php?used=alot\"/>";
+		//$line  = "<img src=\"etc/lib/pChart2/charts/z3DPie.php?used=alot\"/>";
 		return $line;	
     }
 
@@ -177,7 +177,7 @@ class module_controller {
 		$total= self::$domainsquota;
 		$used = self::$domains;
 		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
 		return $line;
 	}
 
@@ -186,7 +186,7 @@ class module_controller {
 		$total= self::$subdomainsquota;
 		$used = self::$subdomains;
 		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
 		return $line;
 	}
 
@@ -195,7 +195,7 @@ class module_controller {
 		$total= self::$parkeddomainsquota;
 		$used = self::$parkeddomains;
 		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
 		return $line;
 	}
 
@@ -204,7 +204,7 @@ class module_controller {
 		$total= self::$mysqlquota;
 		$used = self::$mysql;
 		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
 		return $line;
 	}
 

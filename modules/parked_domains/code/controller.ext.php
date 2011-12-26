@@ -82,8 +82,8 @@ class module_controller {
 		global $controller;
 		
 		$currentuser = ctrl_users::GetUserDetail();
-		
-		$line  = "<h2>Create a new parked domain</h2>";
+		$line  = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";		
+		$line .= "<h2>Create a new parked domain</h2>";
 		$line .= "<form action=\"./?module=parked_domains&action=CreateDomain\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr>";
@@ -100,9 +100,24 @@ class module_controller {
 		$line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";	
-		
+		$line .= "</td>";
+		$line .= "<td align=\"right\">".self::DisplayParkedDomainUsagepChart()."</td>";
+		$line .= "</tr></table>";		
 		return $line;
 			
+	}
+
+    static function DisplayParkedDomainUsagepChart() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$line  = "";
+		$parkeddomainquota = $currentuser['parkeddomainquota'];
+		$parkeddomain = fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid']);
+		$total= $parkeddomainquota;
+		$used = $parkeddomain;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
+		return $line;
 	}
 	
 	static function doCreateDomain(){
