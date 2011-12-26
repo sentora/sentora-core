@@ -186,19 +186,19 @@ class module_controller {
 	
 	static function getResult() {
 		if (!fs_director::CheckForEmptyValue(self::$blank)){
-			return ui_sysmessage::shout(ui_language::translate("You need to specify a valid location for your script."));
+			return ui_sysmessage::shout(ui_language::translate("You need to specify a valid location for your script."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$noexists)){
-			return ui_sysmessage::shout(ui_language::translate("Your script does not appear to exist at that location. Your root folder is: "));
+			return ui_sysmessage::shout(ui_language::translate("Your script does not appear to exist at that location. Your root folder is: "), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-			return ui_sysmessage::shout(ui_language::translate("You can not add the same cron task more than once."));
+			return ui_sysmessage::shout(ui_language::translate("You can not add the same cron task more than once."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$error)){
-			return ui_sysmessage::shout(ui_language::translate("There was an error updating the cron job."));
+			return ui_sysmessage::shout(ui_language::translate("There was an error updating the cron job."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
-			return ui_sysmessage::shout(ui_language::translate("Cron updated successfully."));
+			return ui_sysmessage::shout(ui_language::translate("Cron updated successfully."), "zannounceok");
 		}else{
 			return ui_language::translate(ui_module::GetModuleDescription());
 		}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+<name>FTP Accounts</name>
+<version>100</version>
+<default-cat>File Management</default-cat>
+<desc>Using this module you can create FTP accounts which will enable you and any other accounts you create have the ability to upload and manage files on your hosting space.</desc>
+<author-name>Bobby Allen</author-name>
+<author-email>bobbyallen.uk@gmail.com</author-email>
+<author-url>http://www.example.com</author-url>
+<update-url>http://www.example.com/products/test-module/updateservice.xml</update-url>
+</module>
