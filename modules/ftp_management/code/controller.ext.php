@@ -216,13 +216,12 @@ class module_controller {
     		# Check to see if its a new home directory or use a current one...
 	    	if ($controller->GetControllerRequest('FORM', 'inAutoHome') == 1) {
 		        $homedirectoy_to_use = "/" . str_replace(".", "_", $username);
-		        # Create the new home directory... (If it doesnt already exist.)
-				/*
-		        if (!file_exists(GetSystemOption('hosted_dir') . $useraccount['ac_user_vc'] . homedirectoy_to_use . "/")) {
-		            @mkdir(GetSystemOption('hosted_dir') . $useraccount['ac_user_vc'] . $homedirectoy_to_use . "/", 777);
-		            @chmod(GetSystemOption('hosted_dir') . $useraccount['ac_user_vc'] . $homedirectoy_to_use . "/", 0777);
+		        # Create the new home directory... (If it doesnt already exist.)		
+		        if (!file_exists(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/")) {
+		            @mkdir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 777);
+		            @chmod(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 0777);
 		        }
-				*/
+				
 		    } else {
 		        $homedirectoy_to_use = "/" . $destination;
 		    }
@@ -298,7 +297,7 @@ class module_controller {
 			$retval = TRUE;
     	}
 	    # Check to make sure the cron is not a duplicate...
-			$sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc='" . $currentuser['userid'] . "' AND ft_deleted_ts IS NULL";
+			$sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc='" . $controller->GetControllerRequest('FORM', 'inUsername') . "' AND ft_deleted_ts IS NULL";
 			if ($numrows = $zdbh->query($sql)) {
  				if ($numrows->fetchColumn() <> 0) {	
 					self::$alreadyexists = TRUE;
