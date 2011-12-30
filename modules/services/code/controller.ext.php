@@ -106,8 +106,7 @@ class module_controller {
 		$line .= "</table>";
 		$line .= "<br><h2>".ui_language::translate("Server Uptime")."</h2>";
 		$line .= ui_language::translate("Uptime").": " . sys_monitoring::ServerUptime();
-		
-		return $line;
+                return $line;
 		
 	}	
 	
@@ -126,8 +125,7 @@ class module_controller {
 		$line .= "</td>";
 		$line .= "</tr>";
 		$line .= "</table>";
-				
-		return $line;
+                return $line;
     }
 	
 	static function getModuleName() {
@@ -142,7 +140,7 @@ class module_controller {
 
 	static function getModuleIcon() {
 		global $controller;
-		$module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 	
