@@ -34,7 +34,9 @@ $zlo->method = "database";
  */
 if ((isset($_POST['inUsername'])) && (!isset($_SESSION['zpuid']))) {
     # Log the user in here!
-    ctrl_auth::SetUserSession(2);
+    if(!ctrl_auth::Authenticate($_POST['inUsername'], $_POST['inPassword'])){
+           ctrl_auth::RequireUser(); 
+    }
 } else {
     ctrl_auth::RequireUser();
 }

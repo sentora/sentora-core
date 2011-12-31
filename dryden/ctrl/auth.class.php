@@ -10,9 +10,6 @@
  */
 class ctrl_auth {
 
-    var $username;
-    var $password;
-
     /**
      * Checks that the server has a valid session for the user if not it will
      * redirect to a given page/URL.
@@ -20,6 +17,7 @@ class ctrl_auth {
     static function RequireUser($url_redir="") {
         /**
          * @todo Add a default redirect URL if none is specified!
+         * @todo Also check that session data hasn't been used to store the account details.
          */
         if (!isset($_SESSION['zpuid'])) {
             include 'etc/styles/zpanelx/login.ztml';
@@ -40,15 +38,17 @@ class ctrl_auth {
         }
     }
 
-    function Authenticate() {
+    function Authenticate($username, $password) {
         /**
          * Authetnicate against the database with the supplied user credentials.
+         * @todo Check that the 'remember me' tick box hasn't been ticked.
          */
-        global $zdbh;
-        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$this->username' AND ac_pass_vc = '$this->password'")->fetch();
+        global $zdbh;  
+        $password = md5($password);
+        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password'")->fetch();
         if ($rows) {
-            $this->SetUserSession($rows['ac_id_pk']);
-            return true;
+            ctrl_auth::SetUserSession($rows['ac_id_pk']);
+           return true;
         } else {
             return false;
         }

@@ -10,6 +10,12 @@
  */
 class runtime_hook {
 
+    /**
+     * Executes a hook file at the called position.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param type $name 
+     * @return void
+     */
     static function Execute($name) {
         $mod_folder = "modules/*/hooks/{" .$name. ".hook.php}";
         foreach (glob($mod_folder, GLOB_BRACE) as $hook_file) {

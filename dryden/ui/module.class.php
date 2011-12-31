@@ -119,14 +119,6 @@ class ui_module {
         return $retval;
     }
 
-    /**
-     * This method returns the login form and forces the user to login!
-     */
-    static function GetLoginTemplate() {
-        echo "LOGIN HTML HERE!";
-        die();
-    }
-
 }
 
 ?>

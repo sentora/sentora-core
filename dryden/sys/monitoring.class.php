@@ -86,6 +86,8 @@ class sys_monitoring {
     
     /**
      * Returns the client's IP address.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
      * @return type 
      */
     static function ClientIPAddress(){
@@ -94,6 +96,8 @@ class sys_monitoring {
     
     /**
      * Returns the server IP address.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
      * @return type 
      */
     static function ServerIPAddress(){
