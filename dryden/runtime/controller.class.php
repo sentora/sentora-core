@@ -148,7 +148,7 @@ class runtime_controller {
      * @return bool 
      */
     static function IsCLI(){
-        if(!$_SERVER['HTTP_USER_AGENT'])
+        if(!@$_SERVER['HTTP_USER_AGENT'])
             return true;
         return false;
     }
