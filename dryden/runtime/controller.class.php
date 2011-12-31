@@ -102,6 +102,7 @@ class runtime_controller {
 
     /**
      * Displays Controller debug infomation (mainly for module development and debugging)
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @global type $script_memory
      * @return type 
      */
@@ -138,6 +139,18 @@ class runtime_controller {
         } else {
             return false;
         }
+    }
+    
+    /**
+     * Checks if the current script is running in CLI mode (eg. as a cron job)
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $script_memory
+     * @return bool 
+     */
+    static function IsCLI(){
+        if(!$_SERVER['HTTP_USER_AGENT'])
+            return true;
+        return false;
     }
 
 }

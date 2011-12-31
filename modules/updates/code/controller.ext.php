@@ -24,33 +24,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	function getZpanelUpdates() {
-    	$updateurl = ctrl_options::GetOption('update_url') . "?sv=" . ctrl_options::GetOption('dbversion') . "";
-    	$handle = @file_get_contents($updateurl);
-    	$content = $handle;
-    	if ($content == '') {
-        	$content = "Unable to connect to the ZPanel Version Checker Service at this time.";
-    	} else {
-        	$content = "<iframe allowtransparency=\"\" src=\"".$updateurl."\" frameborder=\"0\" width=\"100%\" height=\"300\"></iframe>";
-    	}
-    return $content;
-	}
-	
+    function getZpanelUpdates() {
+        if (ctrl_options::GetOption('dbversion') < ctrl_options::GetOption('latestzpversion')) {
+            $msg = "There are currently new updates for your ZPanel installation, please download the latest release (<strong>" . ctrl_options::GetOption('latestzpversion') . "</strong>) from <a hre=\"http://www.zpanelcp.com/\">http://www.zpanelcp.com/</a>.";
+        } elseif (ctrl_options::GetOption('dbversion') == ctrl_options::GetOption('latestzpversion')) {
+            $msg = "Congratulations, You are running the most recent version of ZPanel (<strong>" . ctrl_options::GetOption('latestzpversion') . "</strong>)!";
+        } else {
+            $msg = "You appear to be running a BETA release, unless you are testing or developing we recommend you download and use the latest stable release (<strong>" . ctrl_options::GetOption('latestzpversion') . "</strong>).";
+        }
+        return $msg;
+    }
 
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+    function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
-	
+
 }
 
 ?>
