@@ -26,7 +26,7 @@ if ((isset($_POST['inUsername'])) && (!isset($_SESSION['zpuid']))) {
     ctrl_auth::RequireUser();
 }
 
-if ((isset($_GET['logout']))) {
+if (isset($_GET['logout'])) {
     ctrl_auth::KillSession();
     include 'etc/styles/zpanelx/login.ztml';
     exit;

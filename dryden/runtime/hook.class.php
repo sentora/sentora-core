@@ -23,7 +23,7 @@ class runtime_hook {
         $hook_log->logcode = "861";
         foreach (glob($mod_folder, GLOB_BRACE) as $hook_file) {
             if (file_exists($hook_file)) {
-                $hook_log->detail = "Daemon executed hook file (" .$hook_file. ")";
+                $hook_log->detail = "Hook file executed (" .$hook_file. ")";
                 include $hook_file;
                 $hook_log->writeLog();
             }
