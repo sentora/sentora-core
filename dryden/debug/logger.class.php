@@ -21,7 +21,7 @@ class debug_logger {
         /**
          * @var string $method How the debug log will be reported options html, text, email, database,file
          */
-        $this->method = "text"; // html, text, email, datatabe, file.
+        $this->method = "file";
         $this->mextra = null;
         $this->detail = null;
         $this->logcode = 0;

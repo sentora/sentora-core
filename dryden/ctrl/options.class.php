@@ -51,7 +51,7 @@ class ctrl_options {
             }
         }
     }
-	
+
     /**
      * Gets user account information.
      * 
@@ -80,13 +80,13 @@ class ctrl_options {
         global $zdbh;
         $result = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk = '$id'")->Fetch();
         if ($result) {
-			$packageid = $result['ac_id_pk'];//change this to package id
-        	$result = $zdbh->query("SELECT * FROM x_packages WHERE pk_id_pk = '$packageid'")->Fetch();
-			if ($result){
-				return $result;
-			} else {
-				return false;
-			}
+            $packageid = $result['ac_id_pk']; //change this to package id
+            $result = $zdbh->query("SELECT * FROM x_packages WHERE pk_id_pk = '$packageid'")->Fetch();
+            if ($result) {
+                return $result;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

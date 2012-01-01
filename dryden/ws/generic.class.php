@@ -8,6 +8,7 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
+
 class ws_generic {
 
     /**
@@ -17,10 +18,16 @@ class ws_generic {
      */
     static function ReadURLRequestResult($requestURL) {
         ob_start();
-        readfile($requestURL);
+        @readfile($requestURL);
         $reqcontent = ob_get_contents();
         ob_clean();
-        return $reqcontent;
+        if ($reqcontent)
+            return $reqcontent;
+        $ws_log = new debug_logger();
+        $ws_log->logcode = "903";
+        $ws_log->detail = "Unable to connect to webservice URL (" .$requestURL. ") as requested in ws_generic::ReadURLRequestResult()";
+        $ws_log->writeLog();
+        return false;
     }
 
 }

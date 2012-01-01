@@ -19,7 +19,7 @@ require_once 'cnf/db.php';
 require_once 'inc/dbc.inc.php';
 
 $daemon_log = new debug_logger();
-$daemon_log->method = ctrl_options::GetOption('logmode');
+$daemon_log->method = "file";
 $daemon_log->logcode = "001";
 
 // Lets start running the hooks!
