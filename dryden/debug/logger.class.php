@@ -39,11 +39,7 @@ class debug_logger {
              *  @todo Add HTML file compatible box for displaying a raw system error message.
              */
         } elseif ($this->method == "file") {
-            /**
-             * Use the filesystem class to generate a logfile entry!
-             * @todo Add class call to filesystem:writefile to append the debug log with the log entry.
-             */
-            fs_filehandler::AddTextToExistingFile();
+            fs_filehandler::AddTextToFile(ctrl_options::GetOption('logfile'), date('c'). ' - ' .$this->logcode. ' - '.$this->detail, 1);
         } elseif ($this->method == "email") {
             /**
              * Use this option to email a debug log to an email account!
@@ -77,14 +73,9 @@ class debug_logger {
             }
             return true;
         } else {
-            /**
-             * This is the default error reporting option, if no option is set or an unsupported option is choosen the default reporting mode will fall back to 'text' only!
-             * @todo Maybe change the 'ZPEC' gimic? (Z)(P)anel (E)rror (C)ode??
-             */
-            echo "ZPEC: " . $this->logcode . " - " . $this->detail . " - " .$this->mextra;
-            $retval = true;
+            echo $this->logcode . " - " . $this->detail . " - " .$this->mextra;
         }
-        return $retval;
+        return;
     }
 
     /**

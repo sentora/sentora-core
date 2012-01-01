@@ -18,10 +18,17 @@ require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 require_once 'inc/dbc.inc.php';
 
+$daemon_log = new debug_logger();
+$daemon_log->method = ctrl_options::GetOption('logmode');
+$daemon_log->logcode = "001";
+
 // Lets start running the hooks!
 if (!runtime_controller::IsCLI())
     echo "<pre>";
 echo "Daemon is now running...";
+
+$daemon_log->detail = "Daemon execution started...";
+$daemon_log->writeLog();
 
 // Everytime the daemon is run! (10 mins by default!)
 runtime_hook::Execute("OnStartDaemonRun");
@@ -50,6 +57,9 @@ runtime_hook::Execute("OnEndDaemonMonth");
 
 // All hooks have been run!
 echo "\nDaemon run complete!";
+
+$daemon_log->detail = "Daemon execution completed!";
+$daemon_log->writeLog();
 
 if (!runtime_controller::IsCLI())
     echo "</pre>";

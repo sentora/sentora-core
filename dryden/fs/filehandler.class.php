@@ -9,7 +9,7 @@ class fs_filehandler {
      */
     static function ResetFile($file) {
         $new_file = "";
-        if (is_dir($file)) {
+        if (!is_dir($file)) {
             $fp = fopen($file, 'w');
             fwrite($fp, $new_file);
             fclose($fp);
@@ -106,15 +106,40 @@ class fs_filehandler {
     }
 
     /**
-     * This adds text data into a specified file. This can be before the start or at the end of the file.
+     * Updates an existing file and will chmod it too if required.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @version 10.0.0
      * @param string $file
-     * @param string $content
-     * @param int $pos
+     * @return type 
      */
-    static function AddTextToExistingFile($file, $content, $pos) {
-        
+    static function UpdateFile($path, $chmod="0777", $string="") {
+        if (!file_exists($path))
+            fs_filehandler::ResetFile($path);
+        $fp = fopen($path, 'w');
+        fwrite($fp, $string);
+        fclose($fp);
+        //chmod($path, $chmod);
+        return true;
+    }
+
+    /**
+     * This adds text data into a specified file. This can be before the start or at the end of the file.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @param string $file The system path to the file.
+     * @param string $content The content to add to the file.
+     * @param int $pos Where to add the text. 0 = At the start, 1 = At the end of the file.
+     */
+    static
+
+    function AddTextToFile($file, $content, $pos) {
+        $current_version = @fs_filehandler::ReadFileContents($file);
+        if ($pos == 0) {
+            $new_version = $content . fs_filehandler::NewLine() . $current_version;
+        } else {
+            $new_version = $current_version . fs_filehandler::NewLine() . $content;
+        }
+        fs_filehandler::UpdateFile($file, '0777', $new_version);
     }
 
 }
