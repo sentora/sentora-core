@@ -56,7 +56,7 @@ runtime_hook::Execute("OnDaemonMonth");
 runtime_hook::Execute("OnEndDaemonMonth");
 
 // All hooks have been run!
-echo "\nDaemon run complete!";
+echo "\nDaemon run complete!\n";
 
 $daemon_log->detail = "Daemon execution completed!";
 $daemon_log->writeLog();
