@@ -17,10 +17,15 @@ class runtime_hook {
      * @return void
      */
     static function Execute($name) {
-        $mod_folder = "modules/*/hooks/{" .$name. ".hook.php}";
+        $daemon_log = new debug_logger();
+        $mod_folder = "modules/*/hooks/{" . $name . ".hook.php}";
+        $daemon_log->method = "database";
+        $daemon_log->logcode = "861";
         foreach (glob($mod_folder, GLOB_BRACE) as $hook_file) {
             if (file_exists($hook_file)) {
+                $daemon_log->detail = "Daemon executed hook file (" .$hook_file. ")";
                 include $hook_file;
+                $daemon_log->writeLog();
             }
         }
     }

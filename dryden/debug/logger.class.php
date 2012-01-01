@@ -32,6 +32,7 @@ class debug_logger {
      * @return boolean 
      */
     function writeLog() {
+        global $zdbh;
         if ($this->method == "screen") {
             /**
              *  Output is to the screen, generate a nice error message.
@@ -42,19 +43,23 @@ class debug_logger {
              * Use the filesystem class to generate a logfile entry!
              * @todo Add class call to filesystem:writefile to append the debug log with the log entry.
              */
+            fs_filehandler::AddTextToExistingFile();
         } elseif ($this->method == "email") {
             /**
              * Use this option to email a debug log to an email account!
              * @todo Link with the email class once it has been developed.
              */
         } elseif ($this->method == "database") {
-            /**
-             * Using the database class, this logs the debug infomation into a MySQL database.
-             * @todo Finalise the SQL query string and also use a 'prepared' statement for SQL injection protection.
-             */
+            $zdbh = new db_driver("mysql");
+                $statment = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx, lg_when_ts) VALUES (0, '" .$this->logcode. "', 'no yet supported', '" .$this->detail. "', '" .$this->mextra. "','" .time(). "')";
+                if ($zdbh->exec($statement) > 0) {
+                    $retval = true;
+                } else {
+                    $retval = false;
+                }
             try {
                 $zdbh = new db_driver("mysql");
-                $statment = "INSERT INTO Logs";
+                $statment = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx, lg_when_ts) VALUES (0, '" .$this->logcode. "', 'no yet supported', '" .$this->detail. "', '" .$this->mextra. "','" .time(). "')";
                 if ($zdbh->exec($statement) > 0) {
                     $retval = true;
                 } else {
