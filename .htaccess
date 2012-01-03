@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^api/([^/\.]+)/?$ bin/api.php?m=$1 [L]

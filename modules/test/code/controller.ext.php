@@ -39,6 +39,15 @@ class module_controller {
         return;
     }
     
+    /**
+     * An example web service class
+     * @param type $name
+     * @return type 
+     */
+    static function wsReturnMyName($name){
+        return "Your name is: " .$name. "";
+    }
+    
     
 
 }
