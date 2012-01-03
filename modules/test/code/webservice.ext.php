@@ -10,20 +10,20 @@ class webservice extends ws_xmws {
     
 
     function StaticDataReturnExample() {
-        // Lets request that the user must be authenticated to request this!
-        //$this->RequireUserAuth($raw_request);
-        echo $this->wsdata;
-        $array_request = $this->RawXMWSToArray($this->wsdata);
-        print_r($array_request);
         
-        $customcontent = "This is just some standard text that I'm sending back in my response! You said your name was: " . $array_request['content'] . "";
+        $request_data = $this->RawXMWSToArray($this->wsdata);
+        
+        $customcontent = "This is just some standard text that I'm sending back in my response! You said your name was: " . $request_data['content'] . "";
 
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('responsecode', '4328');
         $dataobject->addItemValue('content', $customcontent);
-
-        // If the RequireUserAuth is valid then we can carry on..
-        echo $this->SendResponse($dataobject->getDataObject());
+        
+        // If this is declared 'RequireUserAuth()'then it will check that the user is authenticated first and if successful will contiue otherwise the request will fail.
+        $this->RequireUserAuth();
+        
+        // As long as the API key matches (done automatically in the xmws class and if RequireUserAuth is declared and successfull then the request can now be processed!
+        $this->SendResponse($dataobject->getDataObject());
     }
 
 }

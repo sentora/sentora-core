@@ -21,12 +21,12 @@ $test = new webservice();
 /**
  * We will automate this soon based on the content of the XML request but for now we are calling it statically.
  */
-if (!$test->CheckServerAPIKey()) {
+if ($test->CheckServerAPIKey()) {
     $test->StaticDataReturnExample();
 } else {
     $response_nokey = new runtime_dataobject;
     $response_nokey->addItemValue('responsecode', '1103');
-    $response_nokey->addItemValue('content', '');
+   $response_nokey->addItemValue('content', '');
     $test->SendResponse($response_nokey->getDataObject());
 }
 ?>

@@ -16,13 +16,14 @@ class ws_xmws {
         $this->wsdata = fs_filehandler::ReadFileContents('php://input');
     }
 
-    public function RequireUserAuth($xml) {
-        $request_data = $this->RawToArray($xml);
+    public function RequireUserAuth() {
+        $request_data = $this->RawXMWSToArray($this->wsdata);
         if (($request_data['authuser'] == 'test2') && ($request_data['authpass'] == 'password'))
-        // Return the UID if a successful login
             return true;
-        // Otherwise if authentication failed, return false.
-        return false;
+        $dataobject = new runtime_dataobject();
+        $dataobject->addItemValue('responsecode', '1105');
+        $dataobject->addItemValue('content', '');
+        die($this->SendResponse($dataobject->getDataObject()));
     }
 
     public function CheckServerAPIKey() {
@@ -34,7 +35,7 @@ class ws_xmws {
 
     public function SendResponse($responsearray) {
         header("Content-Type:text/xml");
-        return "<?xml version=\"1.0\"?>\n" .
+        echo "<?xml version=\"1.0\"?>\n" .
                 "<xmws-version>" . ctrl_options::GetOption('dbversion') . "</xmws-version>\n" .
                 "<xmws-apikey></xmws-apikey>\n" .
                 "<xmws-request></xmws-request>\n" .
