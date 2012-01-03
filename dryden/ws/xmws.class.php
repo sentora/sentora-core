@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ZPanel(X) (M)odular (W)eb (S)ervice class.
+ * The ZPanel(X) (M)odular (W)eb (S)ervice class.
  *
  * @package zpanelx
  * @subpackage dryden -> webservice
@@ -20,7 +20,7 @@ class ws_xmws {
      * Used to store the array of request variables.
      */
     var $wsdataarray;
-    
+
     /**
      * Current module controller
      */
@@ -44,7 +44,8 @@ class ws_xmws {
      * @return type 
      */
     public function RequireUserAuth() {
-        if (ctrl_auth::Authenticate($this->wsdataarray['authuser'], $this->wsdataarray['authpass']))
+        $ws_auth = new ctrl_auth;
+        if ($ws_auth->Authenticate($this->wsdataarray['authuser'], $this->wsdataarray['authpass']))
             return true;
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '1105');
@@ -74,10 +75,10 @@ class ws_xmws {
         if ($responsearray['response'] == '')
             $responsearray['response'] = '1101';
         header("Content-Type:text/xml");
-        echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n".
+        echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" .
         "<xmws>\n" .
         "\t<response>" . $responsearray['response'] . "</response>\n" .
-        "\t<content>" . $responsearray['content'] . "</content>\n".
+        "\t<content>" . $responsearray['content'] . "</content>\n" .
         "</xmws>";
     }
 

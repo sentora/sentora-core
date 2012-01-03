@@ -46,6 +46,6 @@ if (file_exists('modules/' . $_GET['m'] . '/code/webservice.ext.php')) {
         $api->SendResponse($response_nokey->getDataObject());
     }
 } else {
-    echo "No modular web service found using this request URL (" .$_SERVER['REQUEST_URI']. ")";
+    echo "No modular web service found using this request URL (" . $_SERVER['REQUEST_URI'] . ")";
 }
 ?>
