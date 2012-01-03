@@ -21,17 +21,15 @@ $test_xml ="<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n".
         "\t<authpass>password</authpass>\n" .
         "\t<content>Bobby Allen</content>".
         "</xmws>";
-
-//echo ws_generic::DoPostRequest('http://127.0.0.1/zpanelx/bin/api.php?m=test', $test_xml);
 echo ws_generic::DoPostRequest('http://127.0.0.1/zpanelx/api/test/', $test_xml);
+
+
 
 $test_xml ="<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n".
         "<xmws>".
         "\t<apikey>sdfdsfsdfsdfsfdsfd--</apikey>\n" .
-        "\t<request>AnotherDataReturnExample</request>\n" .
-        "\t<content>Ruby and Molly</content>".
+        "\t<request>TestMe</request>\n" .
+        "\t<content>Bobby Bruce Allen</content>".
         "</xmws>";
-
-//echo ws_generic::DoPostRequest('http://127.0.0.1/zpanelx/bin/api.php?m=test', $test_xml);
 echo ws_generic::DoPostRequest('http://127.0.0.1/zpanelx/api/test/', $test_xml);
 ?>

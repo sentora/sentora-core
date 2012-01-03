@@ -20,6 +20,11 @@ class ws_xmws {
      * Used to store the array of request variables.
      */
     var $wsdataarray;
+    
+    /**
+     * Current module controller
+     */
+    var $currentmodule;
 
     /**
      * Constructs the object setting the web service request data to a class variable.
@@ -29,6 +34,7 @@ class ws_xmws {
     function __construct() {
         $this->wsdata = fs_filehandler::ReadFileContents('php://input');
         $this->wsdataarray = $this->RawXMWSToArray($this->wsdata);
+        $this->currentmodule = new module_controller;
     }
 
     /**
@@ -38,7 +44,7 @@ class ws_xmws {
      * @return type 
      */
     public function RequireUserAuth() {
-        if (($this->wsdataarray['authuser'] == 'test2') && ($this->wsdataarray['authpass'] == 'password'))
+        if (ctrl_auth::Authenticate($this->wsdataarray['authuser'], $this->wsdataarray['authpass']))
             return true;
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '1105');
