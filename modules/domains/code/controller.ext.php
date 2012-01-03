@@ -90,7 +90,8 @@ class module_controller {
 		$line .= "</table>";
 		$line .= "</form>";
 				} else {
-		$line = ui_sysmessage::shout("You currently do not have any domains configured.");		
+		$line = "<h2>Current domains</h2>";
+		$line .= "You currently do not have any domains configured. Create a domain using the form below.";		
 				}
 			}
 		
@@ -218,13 +219,13 @@ class module_controller {
 	    $domain = str_replace(' ', '', $domain);
 		if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors())){	  	
     		// Check to see if its a new home directory or use a current one...
-		    if ($controller->GetControllerRequest('FORM', 'inAutoHome') == 2) {
-		        $homedirectoy_to_use = "/" . str_replace(".", "_", $domain);
+		    if ($controller->GetControllerRequest('FORM', 'inAutoHome') == 1) {
+		        $homedirectoy_to_use = "/public_html/" . str_replace(".", "_", $domain);
 				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/";
 		        // Create the new home directory... (If it doesnt already exist.)
 		        fs_filehandler::CreateDirectory($vhost_path);
 		    } else {
-		        $homedirectoy_to_use = "/public_html" . $destination;
+		        $homedirectoy_to_use = "/public_html/" . $destination;
 				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/";
 		    }		
 		    // Only run if the Server platform is Windows.
