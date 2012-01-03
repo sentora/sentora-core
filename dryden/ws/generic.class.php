@@ -8,7 +8,6 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-
 class ws_generic {
 
     /**
@@ -25,9 +24,46 @@ class ws_generic {
             return $reqcontent;
         $ws_log = new debug_logger();
         $ws_log->logcode = "903";
-        $ws_log->detail = "Unable to connect to webservice URL (" .$requestURL. ") as requested in ws_generic::ReadURLRequestResult()";
+        $ws_log->detail = "Unable to connect to webservice URL (" . $requestURL . ") as requested in ws_generic::ReadURLRequestResult()";
         $ws_log->writeLog();
         return false;
+    }
+
+    /**
+     * Generic method to send POST data to a web service and then return its response (without the need to use cURL etc.)
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param type $url The URL of which to POST the data too.
+     * @param type $data The data content of which to send.
+     * @param type $optional_headers Option headers if you require to send them.
+     * @return type 
+     */
+    static function DoPostRequest($url, $data, $optional_headers = null) {
+        //$ws_log = new debug_logger();
+        //$ws_log->logcode = "904";
+        $params = array('http' => array(
+                'method' => 'POST',
+                'content' => $data
+                ));
+        if ($optional_headers !== null) {
+            $params['http']['header'] = $optional_headers;
+        }
+        $ctx = stream_context_create($params);
+        $fp = @fopen($url, 'rb', false, $ctx);
+        if (!$fp) {
+            //$ws_log->detail = "Problem with " .$url. ", ".$php_errormsg."";
+            //$ws_log->writeLog();
+        }
+        $response = @stream_get_contents($fp);
+        if ($response == false) {
+            //$ws_log->detail = "Problem reading data from ".$url. ", ".$php_errormsg."";
+            //$ws_log->writeLog();
+        }
+        return $response;
+    }
+
+    static function ProcessRawRequest() {
+        $xml_raw_data = fs_filehandler::ReadFileContents('php://input');
+        return $xml_raw_data;
     }
 
 }
