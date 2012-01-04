@@ -182,6 +182,22 @@ class fs_director {
     	}
     	return $retval;
 	}
+
+    /**
+     * Checks the value of a checkbox and returns string "CHECKED" if ticked and NULL if not ticked.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */	
+	static function IsChecked($value){
+ 		if ($value == 1){
+			$retval = "CHECKED";
+		} else {
+			$retval =  NULL;
+		}
+		return $retval;
+ 	}
 	
     /**
      * Returns the current usage of a particular resource.
