@@ -27,6 +27,11 @@ class ws_xmws {
     var $currentmodule;
 
     /**
+     * Authenticated User ID
+     */
+    var $authuserid;
+
+    /**
      * Constructs the object setting the web service request data to a class variable.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @version 10.0.0
@@ -45,12 +50,16 @@ class ws_xmws {
      */
     public function RequireUserAuth() {
         $ws_auth = new ctrl_auth;
-        if ($ws_auth->Authenticate($this->wsdataarray['authuser'], $this->wsdataarray['authpass']))
+        $user = $ws_auth->Authenticate($this->wsdataarray['authuser'], $this->wsdataarray['authpass']);
+        if ($user) {
+            $this->authuserid = $user;
             return true;
-        $dataobject = new runtime_dataobject();
-        $dataobject->addItemValue('response', '1105');
-        $dataobject->addItemValue('content', 'User authentication failed');
-        die($this->SendResponse($dataobject->getDataObject()));
+        } else {
+            $dataobject = new runtime_dataobject();
+            $dataobject->addItemValue('response', '1105');
+            $dataobject->addItemValue('content', 'User authentication failed');
+            die($this->SendResponse($dataobject->getDataObject()));
+        }
     }
 
     /**
@@ -99,6 +108,36 @@ class ws_xmws {
         $return_dataobject->addItemValue('authpass', runtime_haystack::GetValueBetween($xml, '<authpass>', '</authpass>'));
         $return_dataobject->addItemValue('content', runtime_haystack::GetValueBetween($xml, '<content>', '</content>'));
         return $return_dataobject->getDataObject();
+    }
+
+    /**
+     * A simple way to build an XML section for the <content> tag, perfect for multiple data lines etc.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @param string $name The name of the section <tag>.
+     * @param array $tags An associated array of the tag names and values to be added.
+     * @return string A formatted XML section block which can then be used in the <content> tag if required.
+     */
+    static function NewXMLContentSection($name, $tags) {
+        $xml = "\t<" . $name . ">\n";
+        foreach ($tags as $tagname => $tagval) {
+            $xml .="\t\t<" . $tagname . ">" . $tagval . "</" . $tagname . ">\n";
+        }
+        $xml .= "\t</" . $name . ">\n";
+        return $xml;
+    }
+
+    /**
+     * A simple way to build an XML tag, for simple single line XML data.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @param string $name The name of the <tag>.
+     * @param array $value The value of the <tag>.
+     * @return string A formatted XML line designed to be used in the <content> tag.
+     */
+    static function NewXMLTag($name, $value) {
+        $xml = "\t<" . $name . ">" . $value . "</" . $name . ">\n";
+        return $xml;
     }
 
 }

@@ -48,7 +48,7 @@ class ctrl_auth {
         $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password'")->fetch();
         if ($rows) {
             ctrl_auth::SetUserSession($rows['ac_id_pk']);
-           return true;
+           return $rows['ac_id_pk'];
         } else {
             return false;
         }

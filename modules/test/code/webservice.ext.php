@@ -5,7 +5,7 @@
  *
  * @author ballen
  */
-class xmwswebservice extends ws_xmws {
+class webservice extends ws_xmws {
 
     /**
      * This example will require the user to be fully authenticated before the response and any action is carried out.

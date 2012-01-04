@@ -19,7 +19,7 @@ require_once 'inc/dbc.inc.php';
 if (file_exists('modules/' . $_GET['m'] . '/code/webservice.ext.php')) {
     include 'modules/' . $_GET['m'] . '/code/controller.ext.php';
     include 'modules/' . $_GET['m'] . '/code/webservice.ext.php';
-    $api = new xmwswebservice();
+    $api = new webservice();
 
     if ($api->wsdataarray['request'] == '') {
         $response_nomethod = new runtime_dataobject;
