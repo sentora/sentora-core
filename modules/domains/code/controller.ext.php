@@ -345,94 +345,118 @@ class module_controller {
 		$sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
 		$sql->execute();
 		while ($rowvhost = $sql->fetch()) {
+			//Domain is enabled
+			if ($rowvhost['vh_enabled_in'] == 1){
 		
-		// Get account username vhost is create with
-		$username = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
+				// Get account username vhost is create with
+				$username = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
 		
-		$line .= "# DOMAIN: ".$rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-		$line .= "<virtualhost *:" . self::GetVHOption('apache_port') . ">" . fs_filehandler::NewLine();
+				$line .= "# DOMAIN: ".$rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "<virtualhost *:" . self::GetVHOption('apache_port') . ">" . fs_filehandler::NewLine();
 		
-		// Bandwidth Settings
-		//$line .= "Include C:/ZPanel/bin/apache/conf/mod_bw/mod_bw/mod_bw_Administration.conf" . fs_filehandler::NewLine();
+				// Bandwidth Settings
+				//$line .= "Include C:/ZPanel/bin/apache/conf/mod_bw/mod_bw/mod_bw_Administration.conf" . fs_filehandler::NewLine();
 		
-		// Server name, alias, email settings
-		$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-		$line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-		$line .= "ServerAdmin postmaster@txt-clan.com" . fs_filehandler::NewLine();
+				// Server name, alias, email settings
+				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "ServerAdmin postmaster@txt-clan.com" . fs_filehandler::NewLine();
 		
-		// Document root
-		$line .= "DocumentRoot \"" . self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . "\"" . fs_filehandler::NewLine();
+				// Document root
+				$line .= "DocumentRoot \"" . self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . "\"" . fs_filehandler::NewLine();
 		
-		// Get Package openbasedir and suhosin enabled options
-		if (self::GetVHOption('use_openbase') == "true"){
-			if ($rowvhost['vh_obasedir_in'] <> 0){
-				$line .= "php_admin_value open_basedir \"" . self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . self::GetVHOption('openbase_seperator') . self::GetVHOption('openbase_temp') . "\"" . fs_filehandler::NewLine();
+				// Get Package openbasedir and suhosin enabled options
+				if (self::GetVHOption('use_openbase') == "true"){
+					if ($rowvhost['vh_obasedir_in'] <> 0){
+						$line .= "php_admin_value open_basedir \"" . self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . self::GetVHOption('openbase_seperator') . self::GetVHOption('openbase_temp') . "\"" . fs_filehandler::NewLine();
+					}
+				}
+				if (self::GetVHOption('use_suhosin') == "true"){
+					if ($rowvhost['vh_suhosin_in'] <> 0){
+						$line .= self::GetVHOption('suhosin_value') . fs_filehandler::NewLine();
+					}
+				}
+				// Logs
+				$line .= "ErrorLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-error.log\" " . fs_filehandler::NewLine();
+				$line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-access.log\" " . self::GetVHOption('access_log_format') . fs_filehandler::NewLine();
+				$line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-bandwidth.log\" " . self::GetVHOption('bandwidth_log_format') . fs_filehandler::NewLine();
+		
+				// Directory options
+				$line .= "<Directory />" . fs_filehandler::NewLine();
+				$line .= "Options FollowSymLinks Indexes" . fs_filehandler::NewLine();
+				$line .= "AllowOverride All" . fs_filehandler::NewLine();
+				$line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+				$line .= "Allow from all" . fs_filehandler::NewLine();
+				$line .= "</Directory>" . fs_filehandler::NewLine();
+		
+				// Get Package php and cgi enabled options
+		        $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $rowvhost['vh_acc_fk'] . " AND pk_deleted_ts IS NULL");
+		        $rows->execute();
+		        $dbvals = $rows->fetch();
+				if ($dbvals['pk_enablephp_in'] <> 0){
+					$line .= self::GetVHOption('php_handler') . fs_filehandler::NewLine();
+				}
+				if ($dbvals['pk_enablecgi_in'] <> 0){
+					$line .= self::GetVHOption('cgi_handler') . fs_filehandler::NewLine();
+				}
+		
+				// Error documents:- Error pages are added automatically if they are found in the _errorpages directory
+				// and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
+				$errorpages = self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . "/_errorpages";
+				if (is_dir($errorpages)) {
+	    			if ($handle = opendir($errorpages)) {
+	        			while (($file = readdir($handle)) !== false) {
+							if ($file != "." && $file != "..") {
+								$page = explode( ".", $file);
+								if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))){
+	            					$line .= "ErrorDocument ".$page[0]." /_errorpages/".$page[0].".html" . fs_filehandler::NewLine();
+								}
+	        				}
+	        			}
+	        		closedir($handle);
+	    			}
+				}
+		
+				// Directory indexes
+				$line .= self::GetVHOption('dir_index') . fs_filehandler::NewLine();
+		
+				// Global custom global vh entry
+				$line .= "# Custom Global Settings" . fs_filehandler::NewLine();
+				$line .= self::GetVHOption('global_vhcustom') . fs_filehandler::NewLine();
+		
+				// Client custom vh entry
+				$line .= "# Custom VH settings" . fs_filehandler::NewLine();
+				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
+		
+				// End Virtual Host Settings
+				$line .= "</virtualhost>" . fs_filehandler::NewLine();
+				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "################################################################" . fs_filehandler::NewLine();	
+			}else {
+			//Domain is NOT enabled
+				$line .= "# DOMAIN: ".$rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
+				$line .= "<virtualhost *:" . self::GetVHOption('apache_port') . ">" . fs_filehandler::NewLine();
+				// Server name, alias, email settings
+				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "ServerAdmin postmaster@txt-clan.com" . fs_filehandler::NewLine();
+				// Document root
+				$line .= "DocumentRoot \"" . self::GetVHOption('static_dir') . "disabled\"" . fs_filehandler::NewLine();
+				// Directory options
+				$line .= "<Directory />" . fs_filehandler::NewLine();
+				$line .= "Options FollowSymLinks Indexes" . fs_filehandler::NewLine();
+				$line .= "AllowOverride All" . fs_filehandler::NewLine();
+				$line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+				$line .= "Allow from all" . fs_filehandler::NewLine();
+				$line .= "</Directory>" . fs_filehandler::NewLine();
+				$line .= self::GetVHOption('dir_index') . fs_filehandler::NewLine();
+				$line .= "</virtualhost>" . fs_filehandler::NewLine();
+				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "################################################################" . fs_filehandler::NewLine();
 			}
 		}
-		if (self::GetVHOption('use_suhosin') == "true"){
-			if ($rowvhost['vh_suhosin_in'] <> 0){
-				$line .= self::GetVHOption('suhosin_value') . fs_filehandler::NewLine();
-			}
-		}
-		// Logs
-		$line .= "ErrorLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-error.log\" " . fs_filehandler::NewLine();
-		$line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-access.log\" " . self::GetVHOption('access_log_format') . fs_filehandler::NewLine();
-		$line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-bandwidth.log\" " . self::GetVHOption('bandwidth_log_format') . fs_filehandler::NewLine();
-		
-		// Directory options
-		$line .= "<Directory />" . fs_filehandler::NewLine();
-		$line .= "Options FollowSymLinks Indexes" . fs_filehandler::NewLine();
-		$line .= "AllowOverride All" . fs_filehandler::NewLine();
-		$line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-		$line .= "Allow from all" . fs_filehandler::NewLine();
-		$line .= "</Directory>" . fs_filehandler::NewLine();
-		
-		// Get Package php and cgi enabled options
-        $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $rowvhost['vh_acc_fk'] . " AND pk_deleted_ts IS NULL");
-        $rows->execute();
-        $dbvals = $rows->fetch();
-		if ($dbvals['pk_enablephp_in'] <> 0){
-			$line .= self::GetVHOption('php_handler') . fs_filehandler::NewLine();
-		}
-		if ($dbvals['pk_enablecgi_in'] <> 0){
-			$line .= self::GetVHOption('cgi_handler') . fs_filehandler::NewLine();
-		}
-		
-		// Error documents:- Error pages are added automatically if they are found in the _errorpages directory
-		// and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
-		$errorpages = self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . "/_errorpages";
-		if (is_dir($errorpages)) {
-	    	if ($handle = opendir($errorpages)) {
-	        	while (($file = readdir($handle)) !== false) {
-					if ($file != "." && $file != "..") {
-						$page = explode( ".", $file);
-						if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))){
-	            		$line .= "ErrorDocument ".$page[0]." /_errorpages/".$page[0].".html" . fs_filehandler::NewLine();
-						}
-	        		}
-	        	}
-	        closedir($handle);
-	    	}
-		}
-		
-		// Directory indexes
-		$line .= self::GetVHOption('dir_index') . fs_filehandler::NewLine();
-		
-		// Global custom global vh entry
-		$line .= "# Custom Global Settings" . fs_filehandler::NewLine();
-		$line .= self::GetVHOption('global_vhcustom') . fs_filehandler::NewLine();
-		
-		// Client custom vh entry
-		$line .= "# Custom VH settings" . fs_filehandler::NewLine();
-		$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
-		
-		// End Virtual Host Settings
-		$line .= "</virtualhost>" . fs_filehandler::NewLine();
-		$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-		$line .= "################################################################" . fs_filehandler::NewLine();	
-		}
-
-		// write the FTP config file
+		// write the vhost config file
 		$vhconfigfile = self::GetVHOption('apache_vhost');
 		if (fs_filehandler::UpdateFile($vhconfigfile, 0777, $line)){
 			return TRUE;
@@ -454,18 +478,18 @@ class module_controller {
 	    $domain = str_replace(' ', '', $domain);
 	    // Check to make sure the domain is not blank before we go any further...
 	    if ($domain == '') {
-			self::$blank=1;
+			self::$blank=TRUE;
 			return FALSE;
 	    }
 	    // Check for invalid characters in the domain...
 	    if (!self::IsValidDomainName($domain)) {
-			self::$badname=1;
+			self::$badname=TRUE;
 			return FALSE;
 	    }
 	    // Check to make sure the domain is in the correct format before we go any further...
 	    $wwwclean = stristr($domain, 'www.');
 	    if ($wwwclean == true) {
-			self::$error=1;
+			self::$error=TRUE;
 			return FALSE;
 	    }
 	    // Check to see if the domain already exists in ZPanel somewhere and redirect if it does....
