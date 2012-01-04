@@ -22,6 +22,13 @@ class webservice extends ws_xmws {
         $sql->execute();
 
         while ($rowdomains = $sql->fetch()) {
+
+            if ($rowdomains['vh_custom_tx'] == "") {
+                $customconf = "NULL";
+            } else {
+                $customconf = $rowdomains['vh_custom_tx'];
+            }
+
             $response_xml = $response_xml . ws_xmws::NewXMLContentSection('domain', array(
                         'id' => $rowdomains['vh_id_pk'],
                         'uid' => $rowdomains['vh_acc_fk'],
@@ -31,9 +38,8 @@ class webservice extends ws_xmws {
                         'active' => $rowdomains['vh_active_in'],
                         'suhosin' => $rowdomains['vh_suhosin_in'],
                         'openbasedir' => $rowdomains['vh_obasedir_in'],
-                        'customconfig' => 'x',
+                        'customconfig' => $customconf,
                         'datecreated' => $rowdomains['vh_created_ts'],
-                        'datedeleted' => 'x',
                     ));
         }
 
@@ -85,15 +91,15 @@ class webservice extends ws_xmws {
      */
     function CreateDomain() {
         $this->RequireUserAuth();
-        
+
         // We can add the domain here, as the user is authenticated we can user the $this->authuserid to get the user's ID.
 
         $response = "Authenticated user id: " . $this->authuserid . "";
-        
+
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', $response);
-        
+
         return $dataobject->getDataObject();
     }
 
