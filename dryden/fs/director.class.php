@@ -271,6 +271,44 @@ class fs_director {
     	return $retval;
 	}
 
+    /**
+     * Returns a random password.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */		
+	static function GenerateRandomPassword($a=9, $b=0) {
+	    $length = $a;
+	    $strength = $b;
+	    $vowels = 'aeuy';
+	    $consonants = 'bdghjmnpqrstvz';
+	    if ($strength & 1) {
+	        $consonants .= 'BDGHJLMNPQRSTVWXZ';
+	    }
+	    if ($strength & 2) {
+	        $vowels .= "AEUY";
+	    }
+	    if ($strength & 4) {
+	        $consonants .= '23456789';
+	    }
+	    if ($strength & 8) {
+	        $consonants .= '@#$%';
+	    }
+	    $fretval = '';
+	    $alt = time() % 2;
+	    for ($i = 0; $i < $length; $i++) {
+	        if ($alt == 1) {
+	            $fretval .= $consonants[(rand() % strlen($consonants))];
+	            $alt = 0;
+	        } else {
+	            $fretval .= $vowels[(rand() % strlen($vowels))];
+	            $alt = 1;
+	        }
+	    }
+	    return $fretval;
+	}
+
 
 }
 

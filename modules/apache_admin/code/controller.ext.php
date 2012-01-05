@@ -193,13 +193,15 @@ class module_controller {
 			}
 			*/
 				$cmd = "C:/ZPanel/bin/apache/bin/httpd.exe";
-				system($cmd . ' -t', $retval);
+				ob_start(); 
+				exec($cmd . ' -t', $retval);
 				//print_r($retval);
 				if ($retval == 0){
 					return TRUE;
 				} else {
 					return FALSE;
 				}
+				ob_clean(); 
 				
 					
 				

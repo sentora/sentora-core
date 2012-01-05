@@ -40,6 +40,7 @@ class module_controller {
 	static function getCurrentClients(){
 		global $controller;
 			$display = self::DisplayCurrentClient();
+			$display .= self::DisplayDisabledClient();
 		return $display;
 	}
 	
@@ -57,8 +58,8 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$line = "";
-		$sql  = "SELECT * FROM x_accounts JOIN (x_bandwidth, x_quotas, x_packages) ON (x_accounts.ac_id_pk=x_bandwidth.bd_acc_fk AND x_accounts.ac_package_fk=x_quotas.qt_package_fk AND x_accounts.ac_package_fk=x_packages.pk_id_pk) WHERE ac_reseller_fk=" . $currentuser['userid'] . " AND ac_deleted_ts IS NULL";
+		$line = "<h2>".ui_language::translate("Current Clients")."</h2>";
+		$sql  = "SELECT * FROM x_accounts JOIN (x_bandwidth, x_quotas, x_packages) ON (x_accounts.ac_id_pk=x_bandwidth.bd_acc_fk AND x_accounts.ac_package_fk=x_quotas.qt_package_fk AND x_accounts.ac_package_fk=x_packages.pk_id_pk) WHERE ac_reseller_fk=" . $currentuser['userid'] . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
 		if ($numrows = $zdbh->query($sql)) {
  			if ($numrows->fetchColumn() <> 0) {
 				$line .= "<form action=\"./?module=manage_clients&action=EditClient\" method=\"post\">";
@@ -98,6 +99,53 @@ class module_controller {
 		return $line;
 	}
 	
+	static function DisplayDisabledClient(){
+		global $zdbh;
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		//$line = "<h2>".ui_language::translate("Disabled Clients")."</h2>";
+		$sql  = "SELECT * FROM x_accounts JOIN (x_bandwidth, x_quotas, x_packages) ON (x_accounts.ac_id_pk=x_bandwidth.bd_acc_fk AND x_accounts.ac_package_fk=x_quotas.qt_package_fk AND x_accounts.ac_package_fk=x_packages.pk_id_pk) WHERE ac_reseller_fk=" . $currentuser['userid'] . " AND ac_enabled_in=0 AND ac_deleted_ts IS NULL";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {
+				$line = "<h2>".ui_language::translate("Disabled Clients")."</h2>";
+				$line .= "<form action=\"./?module=manage_clients&action=EditClient\" method=\"post\">";
+    			$line .= "<table class=\"zgrid\">";
+ 				$line .= "<tr>";
+				$line .= "<th>".ui_language::translate("Username")."</th>";
+				$line .= "<th>".ui_language::translate("Package")."</th>";
+				$line .= "<th>".ui_language::translate("Current Disk")."</th>";
+				$line .= "<th>".ui_language::translate("Current Bandwidth")."</th>";
+				$line .= "<th></th>";
+				$line .= "</tr>";
+				$sql  = $zdbh->prepare($sql);
+				$sql->execute();
+				while ($rowclients = $sql->fetch()) {
+					$line .= "<tr>";
+                    $line .= "<td>" . $rowclients['ac_user_vc'] . "</td>";
+					$package = $zdbh->query("SELECT pk_name_vc FROM x_packages WHERE pk_id_pk=" . $rowclients['ac_package_fk'] . "")->Fetch();
+                    $line .= "<td>" . $rowclients['pk_name_vc'] . "</td>";
+                    /* NOTE the disk space and bandwith values below need converting to MB / GB */
+                    $line .= "<td>" . fs_director::ShowHumanFileSize($rowclients['bd_diskamount_bi']) . "/" . fs_director::ShowHumanFileSize($rowclients['qt_diskspace_bi']) . "</td>";
+                    $line .= "<td>" . fs_director::ShowHumanFileSize($rowclients['bd_transamount_bi']) . "/" . fs_director::ShowHumanFileSize($rowclients['qt_bandwidth_bi']) . "</td>";
+                    $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inEdit_" . $rowclients['ac_id_pk'] . "\" value=\"" . $rowclients['ac_id_pk'] . "\">Edit</button>";
+                    if ($rowclients['ac_user_vc'] != 'zadmin') {
+                    	$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_" . $rowclients['ac_id_pk'] . "\" value=\"" . $rowclients['ac_id_pk'] . "\">Delete</button>";
+         			}
+					$line .= "<input type=\"hidden\" name=\"inEdit\" value=\"edit\">";
+					$line .= "<input type=\"hidden\" name=\"edit\" value=\"" . $rowclients['ac_id_pk'] . "\">";
+                    $line .= "</td>";
+                	$line .= "</tr>";
+				}
+				$line .= " </table>";
+				$line .= "</form>";
+			} else {
+			//$line .= "".ui_language::translate("You have no disabled accounts at this time")."";
+			$line = NULL;
+			}
+		}
+		return $line;
+	}
+	
 	static function DisplayNewClient(){
 		global $zdbh;
 		global $controller;
@@ -112,7 +160,7 @@ class module_controller {
         $line .= "</tr>";
         $line .= "<tr>";
         $line .= "<th>".ui_language::translate("Password").":</th>";
-        $line .= "<td><input type=\"text\" name=\"inPassword\" id=\"inPassword\" value=\"" . /*GenerateRandomPassword(9, 4)*/$currentuser['userid'] . "\" /></td>";
+        $line .= "<td><input type=\"text\" name=\"inPassword\" id=\"inPassword\" value=\"".fs_director::GenerateRandomPassword(9, 4)."\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
         $line .= "<th>".ui_language::translate("Package").":</th>";
@@ -165,7 +213,7 @@ class module_controller {
 		$currentuser = ctrl_users::GetUserDetail();
 		$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . self::$clientid . " AND ac_deleted_ts IS NULL AND ac_reseller_fk=" . $currentuser['userid'] . "")->Fetch();
 		$line  = "";
-		$line .= "<h2>".ui_language::translate("Edit existing client")."</h2>";
+		$line .= "<h2>".ui_language::translate("Edit existing client").": ".$rowclient['ac_user_vc']."</h2>";
     	$line .= "<form action=\"./?module=manage_clients&action=SaveClient\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr>";
@@ -175,9 +223,9 @@ class module_controller {
         $line .= "<tr>";
         $line .= "<th>".ui_language::translate("Package").":</th>";
         $line .= "<td>";
-		$sql  = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $currentuser['userid'] . " AND pk_deleted_ts IS NULL");
+		$sql  = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $rowclient['ac_reseller_fk'] . " AND pk_deleted_ts IS NULL");
 		$sql->execute();
-        if ($currentuser['username'] != 'zadmin'){
+        if ($rowclient['ac_user_vc'] != 'zadmin'){
         	$line .= "<select name=\"inPackage\" id=\"inPackage\">";  
 			while ($rowpackages = $sql->fetch()) {
             	$line .= "<option value=\"" . $rowpackages['pk_id_pk'] . "\""; 
@@ -188,10 +236,14 @@ class module_controller {
         	}
             $line .= "</select>";
     	} else {
+			$rowpackages = $sql->fetch();
 			$line .= "<input type=\"text\" disabled=\"disabled\" maxlength=\"10\" value=\"" . $rowpackages['pk_name_vc'] . "\" readonly=\"readonly\" />";
 			$line .= "<input type=\"hidden\" name=\"inPackage\" id=\"inPackage\" value=\"" . $rowpackages['pk_id_pk'] . "\" />";
     	}
-		$rowpersonal = $zdbh->query("SELECT * FROM x_profiles WHERE ud_user_fk=" . self::$clientid . "")->Fetch();
+		$sql  = $zdbh->prepare("SELECT * FROM x_profiles WHERE ud_user_fk=" . self::$clientid . "");
+		$sql->execute();
+		$rowpersonal = $sql->fetch();
+		//$rowpersonal = $zdbh->query("SELECT * FROM x_profiles WHERE ud_user_fk=" . self::$clientid . "")->Fetch();
         $line .= "</td>";
         $line .= "</tr>";
         $line .= "<tr>";
@@ -219,6 +271,19 @@ class module_controller {
         $line .= "<td><input name=\"inNewPassword\" type=\"password\" id=\"inNewPassword\" size=\"20\" maxlength=\"50\" /> ";
         $line .= "</td>";
         $line .= "</tr>";
+		if ($rowclient['ac_user_vc'] != 'zadmin') {
+	        $line .= "<tr>";
+	        $line .= "<th>".ui_language::translate("Status").":</th>";
+			if ($rowclient['ac_enabled_in'] == 1){
+				$echecked = "CHECKED";
+				$dchecked = "";
+			} else {
+				$echecked = "";
+				$dchecked = "CHECKED";
+			}
+	        $line .= "<td><input type=\"radio\" name=\"inEnabled\" value=\"1\" ".$echecked." /> Enabled <input type=\"radio\" name=\"inEnabled\" value=\"0\" ".$dchecked." /> Disabled</td>";
+	        $line .= "</tr>";
+		}
         $line .= "<tr>";
         $line .= "<th>";
         $line .= "<input type=\"hidden\" name=\"inClientID\" value=\"" . $rowclient['ac_id_pk'] . "\" />";
@@ -239,7 +304,7 @@ class module_controller {
 		$sql->execute();
 		while ($rowclients = $sql->fetch()) {
 			if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inEdit_' . $rowclients['ac_id_pk'] . ''))){
-				self::$edit=1;
+				self::$edit=TRUE;
 				self::$clientid = $rowclients['ac_id_pk'];
 				return;
 			}
@@ -255,7 +320,8 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 	    $sql = $zdbh->prepare("UPDATE x_accounts SET 
-										ac_package_fk= " . $controller->GetControllerRequest('FORM', 'inPackage')  . " 
+										ac_package_fk= " . $controller->GetControllerRequest('FORM', 'inPackage')  . " ,
+										ac_enabled_in= " . $controller->GetControllerRequest('FORM', 'inEnabled')  . "
 										WHERE ac_id_pk=" . $controller->GetControllerRequest('FORM', 'inClientID') . "");
 		$sql->execute();
   
