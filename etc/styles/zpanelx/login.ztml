@@ -212,8 +212,8 @@
                                         if(isset($_GET['error'])&&($_GET['error']=='noadmin')){ 
   	echo $lang['366'];
                                         }
-                                        if(isset($_GET['logout'])){ 
-	echo $lang['220'];
+                                        if(isset($_GET['loggedout'])){ 
+	echo "You have been logged out successfully";
 	} ?></font>
                                     </td>
                                 </tr>
@@ -235,7 +235,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Remember Me:</strong>: </td>
-                                                    <td><input type="checkbox" value="1"/></td>
+                                                    <td><input name="inRemember" type="checkbox" id="inRemember" value="1"/></td>
                                                 </tr>
                                                 <tr>
                                                     <td>&nbsp;</td>
