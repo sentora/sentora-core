@@ -99,9 +99,7 @@ class webservice extends ws_xmws {
      */
     function DeleteDomain() {
         $request_data = $this->RawXMWSToArray($this->wsdata);
-
         $contenttags = $this->XMLDataToArray($request_data['content']);
-
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
 
