@@ -16,6 +16,14 @@ if ($zlo->hasInfo()) {
     $zlo->reset();
 }
 
+if (isset($_GET['logout'])) {
+    ctrl_auth::KillSession();
+    ctrl_auth::KillCookies();
+    runtime_hook::Execute('OnUserLogout');
+    header("location: ./?loggedout");
+    exit;
+}
+
 if (isset($_POST['inUsername'])) {
     if (!isset($_POST['inRemember'])) {
         $rememberdetails = false;
@@ -31,14 +39,6 @@ if (isset($_COOKIE['zUser'])) {
 
 if (!isset($_SESSION['zpuid'])) {
     ctrl_auth::RequireUser();
-}
-
-if (isset($_GET['logout'])) {
-    ctrl_auth::KillSession();
-    ctrl_auth::KillCookies();
-    runtime_hook::Execute('OnUserLogout');
-    header("location: ./?loggedout");
-    exit;
 }
 
 $controller->Init();
