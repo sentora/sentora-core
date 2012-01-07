@@ -33,6 +33,25 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
+    function GetPortStatus() {
+        $request_data = $this->RawXMWSToArray($this->wsdata);
+        $contenttags = $this->XMLDataToArray($this->wsdata);
+        if (sys_monitoring::PortStatus($contenttags['xmws']['content']['port'])) {
+            $port_response = 1;
+        } else {
+            $port_response = 0;
+        }
+        $response_xml = ws_xmws::NewXMLContentSection('portstatus', array(
+                    'port' => $contenttags['xmws']['content']['port'],
+                    'status' => $port_response,
+                ));
+        $dataobject = new runtime_dataobject();
+        $dataobject->addItemValue('response', '');
+        $dataobject->addItemValue('content', $response_xml);
+
+        return $dataobject->getDataObject();
+    }
+
 }
 
 ?>
