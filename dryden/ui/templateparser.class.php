@@ -51,6 +51,16 @@ class ui_templateparser {
                 #}
             }
         }
+        preg_match_all("'<:\s(.*?)\s:>'si", $raw, $match);
+        if ($match) {
+            foreach ($match[1] as $string) {
+                ob_start();
+                eval("echo ui_language::translate(\"" . $string . "\");");
+                $output = ob_get_contents();
+                ob_end_clean();
+                $raw = str_replace("<: " . $string . " :>", $output, $raw);
+            }
+        }
         $raw = str_replace('<?', 'PHP execution is not permitted! Caught: [', $raw);
         $raw = str_replace('?>', ']', $raw);
         runtime_hook::Execute('OnAfterTemplateProcessor');
