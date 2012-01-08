@@ -41,21 +41,6 @@ class ctrl_auth {
         }
     }
 
-<<<<<<< HEAD
-    function Authenticate($username, $password) {
-        /**
-         * Authetnicate against the database with the supplied user credentials.
-         * @todo Check that the 'remember me' tick box hasn't been ticked.
-         */
-        global $zdbh;  
-        $password = md5($password);
-        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password' AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL")->fetch();
-        if ($rows) {
-            ctrl_auth::SetUserSession($rows['ac_id_pk']);
-			$log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
-			$log_logon->execute();	
-           return $rows['ac_id_pk'];
-=======
     /**
      * The main authentication mechanism, checks user and password against the database.
      * @author Bobby Allen (ballen@zpanelcp.com)
@@ -68,15 +53,16 @@ class ctrl_auth {
      */
     function Authenticate($username, $password, $rememberme = false, $iscookie = false) {
         global $zdbh;
-        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password'")->fetch();
+        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password' AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL")->fetch();
         if ($rows) {
             ctrl_auth::SetUserSession($rows['ac_id_pk']);
+			$log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
+			$log_logon->execute();
             if ($rememberme) {
                 setcookie("zUser", $username, time() + 60 * 60 * 24 * 30, "/");
                 setcookie("zPass", $password, time() + 60 * 60 * 24 * 30, "/");
             }
             return $rows['ac_id_pk'];
->>>>>>> 423951f882de6f012bcece76670251ac015a3d15
         } else {
             return false;
         }

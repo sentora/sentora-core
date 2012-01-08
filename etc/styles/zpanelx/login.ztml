@@ -202,11 +202,7 @@
 <body>
     <div id="header">
         <div id="header_overlay" class="center">
-<<<<<<< HEAD
             <a href="index.php"><img src="etc/styles/zpanelx/inc/zp_logo.png" width="198" height="50" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></img></a>
-=======
-            <a href="index.php"><img src="./etc/styles/zpanelx/inc/zp_logo.png" width="198" height="50" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></img></a>
->>>>>>> 423951f882de6f012bcece76670251ac015a3d15
         </div>
     </div>
 
@@ -233,7 +229,6 @@
                                         if(isset($_GET['error'])&&($_GET['error']=='noadmin')){ 
 											//echo $lang['366'];
                                         }
-<<<<<<< HEAD
                                         if(isset($_GET['logout'])){ 
 											//echo $lang['220'];
 										} ?>messages go here.</font>&nbsp;
@@ -252,42 +247,6 @@
 											<tr>
 											<td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
 											<td><input name="inPassword" type="password" id="inPassword" maxlength="20" /></td>
-=======
-                                        if(isset($_GET['loggedout'])){ 
-	echo "You have been logged out successfully";
-	} ?></font>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><br />
-                                        <form action="" method="post" name="frmZLogin" id="frmZLogin">
-                                            <table align="center">
-                                                <tr>
-                                                    <td><strong>Username:</strong></td>
-                                                    <td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Password:</strong></td>
-                                                    <td><input name="inPassword" type="password" id="inPassword" maxlength="20" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Remember Me:</strong> </td>
-                                                    <td><input name="inRemember" type="checkbox" id="inRemember" value="1"/></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>IP Address:</strong> </td>
-                                                    <td><?php echo $_SERVER['REMOTE_ADDR']; ?></td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <td>&nbsp;</td>
-                                                    <td><input type="submit" name="sublogin2" value="LogIn" /></td>
-                                                </tr>
-                                            </table>
-                                        </form><br></td>
-                                </tr>
-                            </table></td></tr></table>
->>>>>>> 423951f882de6f012bcece76670251ac015a3d15
 
 											</tr>
 											<tr>
