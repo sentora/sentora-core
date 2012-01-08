@@ -287,7 +287,7 @@
 	</div>
 	<div class="poweredbox">
 <p><strong>Powered by <a href="http://www.zpanelcp.com/" target="_blank" title="ZPanel - Taking hosting to the next level!">ZPanel</a></strong><br>
-                        This server is running: ZPanel <?php echo 'zpanel_version'; ?>
+                        This server is running: ZPanel <?php echo sys_versions::ShowZpanelVersion(); ?>
                     </p>
 </div>
 </body>
