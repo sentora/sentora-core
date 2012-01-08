@@ -144,7 +144,7 @@
             font-size: 9pt;
 			width:490;
 			height:190;
-            color: #647983;
+            color: #333333;
             padding-left: 25px;
 			padding-top: 10px;
         }
@@ -153,7 +153,7 @@
             font-size: 9pt;
 			width:235;
 			height:190;
-            color: #647983;
+            color: #333333;
             padding-right: 65%;
 			padding-left: 35%;
         }
@@ -163,7 +163,7 @@
             font-size: 9pt;
 			width:725;
 			height:190;
-            color: #647983;
+            color: #333333;
 			margin:0 auto;
         }
         .loginbox th {
@@ -181,7 +181,7 @@
         }
         #login{
             text-shadow:1px 2px 3px #BBBBBB;
-			color: #647983;
+			color: #333333;
         }
         #grey{
 			color: #939598;
@@ -250,12 +250,15 @@
 
 											</tr>
 											<tr>
-												<td id="lightblue">Forgot Password?</td>
-												<td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
+												<td id="lightblue"></td>
+												<td id="lightblue"></td>
 											</tr>
 											<tr>
-												<td id="grey"><strong>IP Address: <?php echo $_SERVER['REMOTE_ADDR']; ?></strong></td>
+												<td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
 												<td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
+											</tr>
+											<tr>
+												<td colspan="2" id="grey">Forgot Password?</td>
 											</tr>
 										</table>
 									</form>
