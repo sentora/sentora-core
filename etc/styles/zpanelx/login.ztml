@@ -1,8 +1,15 @@
 <head>
-    <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>/inc/favicon.ico">
-	<link href="<# ui_tpl_assetfolderpath #>/inc/10.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="etc/styles/zpanelx/inc/favicon.ico">
+	<link href="#etc/styles/zpanelx/inc/10.css" rel="stylesheet" type="text/css">
+     <script type="text/javascript" src="etc/styles/zpanelx/inc/jquery.min.js"></script>
+    <script type="text/javascript" language="javascript" src="etc/styles/zpanelx/inc/jquery.cookie.js"></script>
+    <script type="text/javascript" src="etc/styles/zpanelx/inc/init.js"></script>
+	    	<!-- JQUERY NAVBAR REQUIREMENTS -->
+    	<link href="etc/styles/zpanelx/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
+		<link href="etc/styles/zpanelx/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
+		<script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/init.js"></script>	
+    	<script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/fg.menu.js"></script>
+		<!-- END JQUERY NAVBAR REQUIREMENTS -->
     <script type="text/javascript">
         $(document).ready(function() {
             $('input[type="text"]').addClass("idleField");
@@ -42,13 +49,21 @@
         });
     </script>	
     <style type="text/css">
+	* {
+	padding-bottom: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-left: 0px;
+	margin: 0px;
+}
         <!--
         .poweredbox {
             font-family: Geneva, Arial, Helvetica, sans-serif;
             background-color: #DDDDDD;
             border-top-width: 0px;
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAABRCAIAAACVEvtTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABfElEQVR42mLx9vViQAIAAcTEgAoAAgidDxBA6HyAAELnAwQQC+N/FD5AADH+/48iABBALPfu3UPmAwQQun6AAELnAwQQOh8ggND5AAGEzgcIIHQ+QACh8wECCJ0PEEDofIAAQucDBBA6HyCA0PkAAYTOBwggdD5AAKHzAQIInQ8QQOh8gABC5wMEEDofIIDQ+QABhM4HCCB0PkAAofMBAgidDxBA6HyAAELnAwQQOh8ggND5AAGEzgcIIHQ+QACh8wECCJ0PEEDofIAAQucDBBA6HyCA0PkAAYTOBwggdD5AAKHzAQIInQ8QQOh8gABC5wMEEDofIIDQ+QABhM4HCCB0PkAAofMBAgidDxBA6HyAAELnAwQQOh8ggND5AAGEzgcIIHQ+QACh8wECCJ0PEEDofIAAQucDBBA6HyCA0PkAAYTOBwggdD5AAKHzAQIInQ8QQOh8gABC5wMEEDofIIDQ+QABhM4HCCB0PkAAofMBAgidDxBA6HyAAAMA8dwIIRnmsY4AAAAASUVORK5CYII=);
-            color:#333333;
+       color:#333333;
+			padding-top: 10px;
+			padding-left: 15px;
         }
         body{
             text-align:left;
@@ -56,11 +71,13 @@
             background: #DDDDDD;
             font-size: 62.5%;
             font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
-            margin-top:30px;
-            margin-bottom:100px;
+            */ margin-top:30px; */
+			margin-top: 0px;
+			margin-bottom: 0px;
             margin-right:0px;
             margin-left:0px;
             padding:0px;
+			
         }
         body,td, th{
             font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -96,7 +113,9 @@
             background: url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAAZAAA/+4ADkFkb2JlAGTAAAAAAf/bAIQAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQICAgICAgICAgICAwMDAwMDAwMDAwEBAQEBAQECAQECAgIBAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD/8AAEQgAUQAFAwERAAIRAQMRAf/EAFkAAQADAAAAAAAAAAAAAAAAAAAHCQoBAQEAAAAAAAAAAAAAAAAAAAADEAEAAAcAAAAAAAAAAAAAAAAABlfXCJgJGREBAAMBAAAAAAAAAAAAAAAAAAFREgL/2gAMAwEAAhEDEQA/AIj4ybHpDQ7kNbJWVDHVJZltEXVAAAAAAAAVXg//2Q==) #dddddd repeat-x center top;
             height: 81px;
             width: 100%;
-            position: fixed;
+            */ position: fixed; */
+			position:absolute;
+			margin: 0 0 0 0;
             top: 0px;
             left: 0px;
         }
@@ -111,59 +130,69 @@
             padding-top: 15px;
             padding-left: 0px;
             width:100%;
-        }
-        .center {
-            padding-bottom: 0px;
-            padding-right: 0px;
-            padding-top: 0px;
-            padding-left: 0px;
-            margin: 0px;
-            width: 960px;
-            height: 100%;
-        }
-        .innerborder{
-            border-top:solid 1px #ACE7FA;
-            border-bottom:solid 1px #ACE7FA;
-            border-right:solid 1px #ACE7FA;
-            border-left:solid 1px #ACE7FA;
+			height: 81px;
         }
         .content{
-            border-top:solid 1px #E5F0F1;
-            border-bottom:solid 1px #E5F0F1;
-            border-right:solid 1px #E5F0F1;
-            border-left:solid 1px #E5F0F1;
-            padding-top:0px;
-            padding-bottom:20px;
-            padding-right:20px;
-            padding-left:20px;
-            height:400px;
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAnCAYAAAA2ANlVAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAACT0lEQVR42mJ88enzfwYiAEAAsTAyMEJYUIrhP5T9H8pg/A8WAwggFkZGmASQAnL+M0AtYITpBNJMDAwAAcTCxMQINwVEMTEi2YDkKIAAglgNRiCzGFEdhqQHIIBYQCZANDOCbWP8D3PqfxTVAAHEwsQI4TBCnYWQhhkAcRdAALEwQX0DFmRkQLccrhwggMBuhLmNEex19LCC8AECiAnse7ChUOX/kU1FsAACiAXJK3DfI4cOIzS4AAKICe4LNF8is0A0QABB3fgfGitIEYIGAAKIiQEpmFHNYkTxOUAAgeP6/39GJOH/SNEHsQ0EAQKICRZSqEkHEgoQz0HkAQKIBRbQyMELcxXE7RAFAAHEwoAUv+jxwghPfwwMAAHExIiWShihToDHFzQYAAKIBazvP2rSQkQoUDHQ2v9AxQABxISemMGaoI5m/M8I1wgQQCxwNYzw/ACPJeTABwggJri7GBExzMgIT6Fw1QABxPSfESmJweyHRQA0OYFsAwggFsb//zETAkoOhiR7gABiQXYIjgwI5gMEEBMDI2Zg/0c1Dxw8AAHEgghDRMnwH+z5/3BjQe4HCCBI6oGncohi1NwISSAAAcQEixlGJOvgiqASICMAAogJxav/keP8P4o7AQKICSW1MKIlfiTrAQKICSMdwiIAKdGCCIAAgkQh43/URMEAKx8R2QIggJgQUcEIL1OYGBkwykiAAGKCaPoPT07g4IMVQkhhBBBALCjxyohcpDAiIgHoDIAAYoJHHaxcROYyIgoYgAACJp7/RNUKAAEGAFHMeu4mFRCSAAAAAElFTkSuQmCC) repeat-x top;
-        }
-        .loginbox {
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAnCAYAAAA2ANlVAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAACT0lEQVR42mJ88enzfwYiAEAAsTAyMEJYUIrhP5T9H8pg/A8WAwggFkZGmASQAnL+M0AtYITpBNJMDAwAAcTCxMQINwVEMTEi2YDkKIAAglgNRiCzGFEdhqQHIIBYQCZANDOCbWP8D3PqfxTVAAHEwsQI4TBCnYWQhhkAcRdAALEwQX0DFmRkQLccrhwggMBuhLmNEex19LCC8AECiAnse7ChUOX/kU1FsAACiAXJK3DfI4cOIzS4AAKICe4LNF8is0A0QABB3fgfGitIEYIGAAKIiQEpmFHNYkTxOUAAgeP6/39GJOH/SNEHsQ0EAQKICRZSqEkHEgoQz0HkAQKIBRbQyMELcxXE7RAFAAHEwoAUv+jxwghPfwwMAAHExIiWShihToDHFzQYAAKIBazvP2rSQkQoUDHQ2v9AxQABxISemMGaoI5m/M8I1wgQQCxwNYzw/ACPJeTABwggJri7GBExzMgIT6Fw1QABxPSfESmJweyHRQA0OYFsAwggFsb//zETAkoOhiR7gABiQXYIjgwI5gMEEBMDI2Zg/0c1Dxw8AAHEgghDRMnwH+z5/3BjQe4HCCBI6oGncohi1NwISSAAAcQEixlGJOvgiqASICMAAogJxav/keP8P4o7AQKICSW1MKIlfiTrAQKICSMdwiIAKdGCCIAAgkQh43/URMEAKx8R2QIggJgQUcEIL1OYGBkwykiAAGKCaPoPT07g4IMVQkhhBBBALCjxyohcpDAiIgHoDIAAYoJHHaxcROYyIgoYgAACJp7/RNUKAAEGAFHMeu4mFRCSAAAAAElFTkSuQmCC) repeat-x top;
-            background-color: #FFFFFF;
-            border: 1px solid #E5F0F1;
+			background:url(etc/styles/zpanelx/images/bg_header.jpg) #F3F3F3;
+            padding: 0;
+			margin: 0;
+			width:100%
+            height:418px;
+         }
+        .login {
             font-family: Geneva, Arial, Helvetica, sans-serif;
             font-size: 9pt;
-            color: #333333;
-            padding: 12px;
+			width:490;
+			height:190;
+            color: #647983;
+            padding-left: 25px;
+			padding-top: 10px;
+        }
+        .loginlogo {
+            font-family: Geneva, Arial, Helvetica, sans-serif;
+            font-size: 9pt;
+			width:235;
+			height:190;
+            color: #647983;
+            padding-right: 65%;
+			padding-left: 35%;
+        }
+        .loginbox {
+			background:url(etc/styles/zpanelx/images/loginbg.png) ;
+            font-family: Geneva, Arial, Helvetica, sans-serif;
+            font-size: 9pt;
+			width:725;
+			height:190;
+            color: #647983;
+			margin:0 auto;
         }
         .loginbox th {
+		    font-size: 20px;
+            font-weight:bold;
+            text-shadow:3px 3px 5px #BBBBBB;
             font-family: Geneva, Arial, Helvetica, sans-serif;
-            font-size:14px;
             text-align:left;
-            padding:10px;
+			color: #04B1EB;
         }
         .login_screen {
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAADAFBMVEX///8AAAACAgIDAwMEBAQFBQUGBgYHBwcICAgJCQkKCgoLCwsMDAwNDQ0ODg4PDw8QEBARERESEhITExMUFBQVFRUWFhYXFxcYGBgZGRkaGhobGxscHBwdHR0eHh4fHx8gICAhISEiIiIjIyMkJCQlJSUmJiYnJycoKCgpKSkqKiorKyssLCwtLS0uLi4vLy8wMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlKSkpLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJTU1NUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBhYWFiYmJjY2NkZGRlZWVmZmZnZ2doaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N0dHR1dXV2dnZ3d3d4eHh5eXl6enp7e3t8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSVlZWWlpaXl5eYmJiZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWmpqanp6eoqKipqamqqqqrq6usrKytra2urq6vr6+wsLCxsbGysrKzs7O0tLS1tbW2tra3t7e4uLi5ubm6urq7u7u8vLy9vb2+vr6/v7/AwMDBwcHCwsLDw8PExMTFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbX19fY2NjZ2dna2trb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7///+VceJeAAAAAnRSTlP/AOW3MEoAAADaSURBVHjaYmRkYPgPxCCAkwYIICYi1DACBBATEWoYAAKImYGwGgaAAGIiQg0DQAAxEaGGASCAmIhQwwAQQExEqGEACCAmItT8BwggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACDABXwp9Sg+8newAAAABJRU5ErkJggg==);
-            background-attachment:fixed;
-            background-color: #F3F3F3;
-            border-bottom:solid 1px #B3B3B3;
         }
-        td.login_screen{
+        td.login{
             text-shadow:1px 2px 3px #BBBBBB;
         }
+        #login{
+            text-shadow:1px 2px 3px #BBBBBB;
+			color: #647983;
+        }
+        #grey{
+			color: #939598;
+        }
+        #lightblue{
+			color: #04B1EB;
+        }
         .mainlayout {
+			margin-top: 0px;
+			background:url(etc/styles/zpanelx/images/bg_header_overlay.jpg) #F3F3F3;
+			height:418px;
         }
 
         -->
@@ -173,98 +202,96 @@
 <body>
     <div id="header">
         <div id="header_overlay" class="center">
-            <a href="index.php"><img src="<# ui_tpl_assetfolderpath #>/inc/zp_logo.png" width="198" height="50" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></img></a>
+            <a href="index.php"><img src="etc/styles/zpanelx/inc/zp_logo.png" width="198" height="50" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></img></a>
         </div>
     </div>
 
+	<div class="content">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mainlayout">
         <tr>
-            <td class="login_screen">
-
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-
-                <table align="center" class="mainlayout" width="400" border="0" cellpadding="0" cellspacing="0">
+            <td>
+                <table align="center" class="loginbox"  border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td width="15px" align="left"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAUCAYAAABSx2cSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAA+klEQVR42mL8//8/Awg8efLk/69fvxj+/v3LABMjBAACiBGk8MGDB/+ZmZkZBAQEGDg5ORlYWFiI0gwQQCyPHz8G26ikpES0JhgACCCWnz9/MkhKSoI1wpxLrLMBAojl379/DNzc3GANIAziE6sZIIDA7mRkZARrAAUWSDMIEwMAAgjuSZitMEyM7QABxISsGUYT62yAAMIavCBvEAMAAogFWQMIMzExEW0zQACxoNtIrK0gABBALOhOJUUzQACh2AxzMrHOBgggFmTbYJqItR0ggFjICWUYAAggijQDBBBKgIGcTYoBAAFEkc0AAcTEQAEACCCKNAMEGAAvfmkMO5eh2gAAAABJRU5ErkJggg==" border="0"></td><td width="100%" background="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAUCAYAAABMDlehAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAdElEQVR42mK4efPmf4AAYvgPBAABxMQABAABxPTv3z8GgABi+vv3LwNAADH9+fOHASCAwCyAAAJLAAQQEyMjIwNAADEBAQNAAIFZAAEEJgACCMwFCCAwCyCAwARAAIEJgAACEwABBCYAAgisDSCAwARAgAEAVYoTq/c12uEAAAAASUVORK5CYII="></td><td width="15px"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAUCAYAAABSx2cSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAA90lEQVR42mK8efPmfwYiACMjIwMzMzMDGxsbg4yMDCNIDCCAGP8DATGa//z5w/D9+3eGDx8+MPz9+5dBQUGBESCAiNaMbMi9e/cYODk5GQACiBFoCtHOhtGfP39mePnyJQNAALGAnECsZiYmJjCbm5ub4d+/fwwAAcQCcgYxAKQR5ENQoMFcARBARNkMUwwzBMYHCCAmYmwF2QgLV+TwBQggFmRTSQUAAcQCCwRinA7DMAAQQETbjK4RBAACiCTN6IEHEEAkOxsZAAQQyQGGbAhAAJGkGV0tQABRpBkggMhyNgwABBBFiQQggJgYKAAAAUSRZoAAAwCDpj/U7iaJ7QAAAABJRU5ErkJggg==" border="0"></td>
-                    </tr>
-                    <tr>
-                        <td bgcolor="#FFFFFF" style="border-left:solid 1px #CCC"></td>
                         <td>
-
-                            <table table width="400" border="0" align="center" cellpadding="0" cellspacing="0" class="innerborder"><tr><td>
-
+	
 
 
-                                        <table width="400" border="0" align="center" cellpadding="0" cellspacing="0" class="loginbox">
-                                            <tr>
-                                                <th><h1>Control panel login</h1></th>
+                            <table border="0" align="center" cellpadding="0" cellspacing="0" class="login">
+                                <tr>
+                                    <th>Control panel login</th>
                                 </tr>
                                 <tr>
-                                    <td align="center"><font color="#55a7c8">
+                                    <td align="left" colspan="2"><font color="#55a7c8">
                                         <?php 
                                         if(isset($_GET['error'])&&($_GET['error']=='nologin')){ 
-  	echo $lang['219'];
+											//echo $lang['219'];
                                         }
                                         if(isset($_GET['error'])&&($_GET['error']=='noadmin')){ 
-  	echo $lang['366'];
+											//echo $lang['366'];
                                         }
                                         if(isset($_GET['logout'])){ 
-	echo $lang['220'];
-	} ?></font>
+											//echo $lang['220'];
+										} ?>messages go here.</font>&nbsp;
                                     </td>
-                                </tr>
+								</tr>
+								<tr valign="top">
+									<td>
+									<form action="" method="post" name="frmZLogin" id="frmZLogin">
+										<table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
+											<tr>
+												<td id="login"><strong>Username:</strong></td>
+												
+												<td id="login"><strong>Password:</strong></td>
+												
+											</tr>
+											<tr>
+											<td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
+											<td><input name="inPassword" type="password" id="inPassword" maxlength="20" /></td>
+
+											</tr>
+											<tr>
+												<td id="lightblue">Forgot Password?</td>
+												<td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
+											</tr>
+											<tr>
+												<td id="grey"><strong>IP Address: <?php echo $_SERVER['REMOTE_ADDR']; ?></strong></td>
+												<td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
+											</tr>
+										</table>
+									</form>
+									</td>
+								</tr>
+                            </table>
+
+
+
+
+	
+						</td>
+						<td>
+						
+						
+						<table border="0" align="center" cellpadding="0" cellspacing="0" class="loginlogo">
                                 <tr>
-                                    <td><br />
-                                        <form action="" method="post" name="frmZLogin" id="frmZLogin">
-                                            <table align="center">
-                                                <tr>
-                                                    <td><strong>Username:</strong>:</td>
-                                                    <td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Password:</strong>:</td>
-                                                    <td><input name="inPassword" type="password" id="inPassword" maxlength="20" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>IP Address:</strong>: </td>
-                                                    <td><?php echo $_SERVER['REMOTE_ADDR']; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Remember Me:</strong>: </td>
-                                                    <td><input type="checkbox" value="1"/></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>&nbsp;</td>
-                                                    <td><input type="submit" name="sublogin2" value="LogIn" /></td>
-                                                </tr>
-                                            </table>
-                                        </form><br></td>
+                                    <td><img src="etc/styles/zpanelx/images/logoicon.png" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></td>
                                 </tr>
-                            </table></td></tr></table>
-
-
-
-            </td>
-            <td bgcolor="#FFFFFF" style="border-right:solid 1px #CCC"></td>
-        </tr>
-
-        <tr>
-            <td width="15px" align="left"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAA2klEQVR42mK4efPmf3IBQACxMCABIJ+BFAAQQCzoGkkxACCAMGwmRTNAAFGkGSCAWLBpItYAgADCajOxmgECiCLNAAHE8u/fP4bfv38zMDMzk+xvgABi+fPnD8OHDx8YBAUFGX79+sUA4oMMJAYABBBY89u3bxmYmJgYeHh4wLYyMjISpRkggFjY2dkZvn79yvD371+wZjY2NgZWVlaiNAMEEFgzyLlfvnxh+PbtG9jvxGoGCCBGkDPv3r37H6QRZAjIBcT6GSCAGGEh+/Dhw/8wzSBMTIgDBBgAUpHC0MATvvEAAAAASUVORK5CYII=" border="0"></td><td width="100%" background="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAPCAYAAAAlH6X5AAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAX0lEQVR42mL4DwQAAcQExAwAAQQmAAIITAAEEJgACCAwARBAYAIggMAEQACBCYAAYvr+/TsDQAAxMTMzMwAEENPPnz8ZAAKI6fnz5wwAAcT07ds3BoAAYuLh4WEACDAAne8nldB+1PwAAAAASUVORK5CYII="></td><td width="15px"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAA5UlEQVR42mL8DwQMZIBbt24xAAQQC6l6GRkZ4WyAACJJM0gjSD3MAIAAoshmgACiSDNAABGtGaYJWT1AAFFkM0AAsZAZU2AAEEBkhfafP38Y/v37xwAQQCzfv38nSiMTExMDCwsLAxsbG8OHDx/ABgAEEAszMzPRmkFqP378yPD27VuwZoAAYvn58ydRmn///s3w69cvhi9fvjD8+PGDgZubmwEggFieP39OtOa/f/+C/crJycnAzs7OABBALN++fSPJ2SCNXFxcDEpKSowAAcTCw8NDVCiDNIIwKMDk5eXBkQ0QYAAhfl3MjsAzDgAAAABJRU5ErkJggg==" border="0"></td>
-        </tr>		
-    </table>
-
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-</td>
-</tr>
-</table>
-
+						</table>
+						
+						
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	</div>
+	<div class="poweredbox">
+<p><strong>Powered by <a href="http://www.zpanelcp.com/" target="_blank" title="ZPanel - Taking hosting to the next level!">ZPanel</a></strong><br>
+                        This server is running: ZPanel <?php echo 'zpanel_version'; ?>
+                    </p>
+</div>
 </body>
 </html>
+        <script language="javascript">
+            document.frmZLogin.inUsername.focus();
+        </script>

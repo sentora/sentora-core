@@ -45,9 +45,11 @@ class ctrl_auth {
          */
         global $zdbh;  
         $password = md5($password);
-        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password'")->fetch();
+        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password' AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL")->fetch();
         if ($rows) {
             ctrl_auth::SetUserSession($rows['ac_id_pk']);
+			$log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
+			$log_logon->execute();	
            return $rows['ac_id_pk'];
         } else {
             return false;
