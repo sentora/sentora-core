@@ -12,27 +12,33 @@ global $controller;
 $controller = new runtime_controller();
 
 if ($zlo->hasInfo()) {
-
     $zlo->writeLog();
     $zlo->reset();
 }
 
-if ((isset($_POST['inUsername'])) && (!isset($_SESSION['zpuid']))) {
-    if (!ctrl_auth::Authenticate($_POST['inUsername'], $_POST['inPassword'])) {
-        runtime_hook::Execute('OnFailedUserLogin');
-        ctrl_auth::RequireUser();
-    } else {
-        runtime_hook::Execute('OnUserLogin');
-    }
-} else {
-    ctrl_auth::RequireUser();
-}
-
 if (isset($_GET['logout'])) {
     ctrl_auth::KillSession();
+    ctrl_auth::KillCookies();
     runtime_hook::Execute('OnUserLogout');
-    include 'etc/styles/zpanelx/login.ztml';
+    header("location: ./?loggedout");
     exit;
+}
+
+if (isset($_POST['inUsername'])) {
+    if (!isset($_POST['inRemember'])) {
+        $rememberdetails = false;
+    } else {
+        $rememberdetails = true;
+    }
+    ctrl_auth::Authenticate($_POST['inUsername'], md5($_POST['inPassword']), $rememberdetails, false);
+}
+
+if (isset($_COOKIE['zUser'])) {
+    ctrl_auth::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true);
+}
+
+if (!isset($_SESSION['zpuid'])) {
+    ctrl_auth::RequireUser();
 }
 
 $controller->Init();

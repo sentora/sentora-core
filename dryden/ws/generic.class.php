@@ -61,6 +61,11 @@ class ws_generic {
         return $response;
     }
 
+    /**
+     * Captures the RAW POST data.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @return type 
+     */
     static function ProcessRawRequest() {
         $xml_raw_data = fs_filehandler::ReadFileContents('php://input');
         return $xml_raw_data;

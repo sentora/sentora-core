@@ -90,16 +90,24 @@ class webservice extends ws_xmws {
      * @return type 
      */
     function CreateDomain() {
-        $this->RequireUserAuth();
+        
+    }
 
-        // We can add the domain here, as the user is authenticated we can user the $this->authuserid to get the user's ID.
-
-        $response = "Authenticated user id: " . $this->authuserid . "";
-
+    /**
+     * Delete a specified domain using the content <domainid> tag to pass the domain DB ID through.
+     * @return type 
+     */
+    function DeleteDomain() {
+        $request_data = $this->RawXMWSToArray($this->wsdata);
+        $contenttags = $this->XMLDataToArray($request_data['content']);
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
-        $dataobject->addItemValue('content', $response);
 
+        if (module_controller::DeleteVhost($contenttags['domainid'])) {
+            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domainid', $contenttags['domainid']) . ws_xmws::NewXMLTag('deleted', 'true'));
+        } else {
+            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domainid', $contenttags['domainid']) . ws_xmws::NewXMLTag('deleted', 'false'));
+        }
         return $dataobject->getDataObject();
     }
 
