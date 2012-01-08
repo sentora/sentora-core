@@ -229,9 +229,9 @@
                                         if(isset($_GET['error'])&&($_GET['error']=='noadmin')){ 
 											//echo $lang['366'];
                                         }
-                                        if(isset($_GET['logout'])){ 
-											//echo $lang['220'];
-										} ?>messages go here.</font>&nbsp;
+                                        if(isset($_GET['loggedout'])){ 
+											echo "You have been logged out successfully!";
+										} ?></font>&nbsp;
                                     </td>
 								</tr>
 								<tr valign="top">
