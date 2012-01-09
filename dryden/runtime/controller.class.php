@@ -8,7 +8,6 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-
 class runtime_controller {
 
     private $vars_get;
@@ -24,8 +23,8 @@ class runtime_controller {
         $this->vars_post = array($_POST);
         $this->vars_session = array($_SESSION);
         $this->vars_cookie = array($_COOKIE);
-        
-        if(!isset($this->vars_session[0]['zpuid'])){
+
+        if (!isset($this->vars_session[0]['zpuid'])) {
             ui_module::GetLoginTemplate();
         }
 
@@ -141,17 +140,41 @@ class runtime_controller {
             return false;
         }
     }
-    
+
     /**
      * Checks if the current script is running in CLI mode (eg. as a cron job)
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global type $script_memory
      * @return bool 
      */
-    static function IsCLI(){
-        if(!@$_SERVER['HTTP_USER_AGENT'])
+    static function IsCLI() {
+        if (!@$_SERVER['HTTP_USER_AGENT'])
             return true;
         return false;
+    }
+
+    /**
+     * Used in hooks to communicate with the modules controller.ext.php
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     */
+    static function ModuleControllerCode($module_path) {
+        $raw_path = str_replace("\\", "/", $module_path);
+        $module_path = str_replace("/hooks", "/code/", $raw_path);
+        $rawroot_path = str_replace("\\", "/", dirname(__FILE__));
+        $root_path = str_replace("/dryden/runtime", "/", $rawroot_path);
+        // Include some files that we need.
+        require_once $root_path.'dryden/loader.inc.php';
+        require_once $root_path.'cnf/db.php';
+        require_once $root_path.'inc/dbc.inc.php';
+        if (file_exists($module_path . 'controller.ext.php')) {
+            require_once $module_path . 'controller.ext.php';
+        } else {
+            $hook_log = new debug_logger();
+            $hook_log->method = ctrl_options::GetOption('logmode');
+            $hook_log->logcode = "611";
+            $hook_log->detail = "No hook controller.ext.php avaliable to import in (" . $root_path . 'controller.ext.php' . ")";
+            $hook_log->writeLog();
+        }
     }
 
 }

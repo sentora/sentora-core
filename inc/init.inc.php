@@ -24,6 +24,19 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+if (isset($_POST['inForgotPassword'])) {
+
+    /**
+     * Add in functionality here once Russell has completed the Forgot password panel.
+     */
+    $phpmailer = new sys_email();
+    $phpmailer->Subject = "Control Panel Password Reset";
+    $phpmailer->Body = "I think you might have forgotten your password?";
+    $phpmailer->AddAddress('bobbyallen.uk@gmail.com');
+
+    $phpmailer->SendEmail();
+}
+
 if (isset($_POST['inUsername'])) {
     if (!isset($_POST['inRemember'])) {
         $rememberdetails = false;
@@ -31,10 +44,12 @@ if (isset($_POST['inUsername'])) {
         $rememberdetails = true;
     }
     ctrl_auth::Authenticate($_POST['inUsername'], md5($_POST['inPassword']), $rememberdetails, false);
+    runtime_hook::Execute('OnUserLogin');
 }
 
 if (isset($_COOKIE['zUser'])) {
     ctrl_auth::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true);
+    runtime_hook::Execute('OnUserLogin');
 }
 
 if (!isset($_SESSION['zpuid'])) {
