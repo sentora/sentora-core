@@ -191,7 +191,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>FTP accounts:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"></span> / <span class="Side_Info"></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedftp #></span> / <span class="Side_Info"><# ui_tpl_totalftp #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>MySQL&reg; databases:</strong></td>
