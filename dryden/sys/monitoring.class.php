@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Class provides server port monitoring and uptime reporting functionality.
+ *
+ * @package zpanelx
+ * @subpackage dryden -> sys
+ * @version 1.0.0
+ * @author ballen (ballen@zpanelcp.com)
+ */
+
 class sys_monitoring {
 
     /**
