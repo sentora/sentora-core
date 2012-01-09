@@ -142,8 +142,6 @@
         .login {
             font-family: Geneva, Arial, Helvetica, sans-serif;
             font-size: 9pt;
-			width:490;
-			height:190;
             color: #333333;
             padding-left: 25px;
 			padding-top: 10px;
@@ -151,18 +149,15 @@
         .loginlogo {
             font-family: Geneva, Arial, Helvetica, sans-serif;
             font-size: 9pt;
-			width:235;
-			height:190;
             color: #333333;
-            padding-right: 65%;
-			padding-left: 35%;
+			margin:0 auto;
         }
         .loginbox {
 			background:url(etc/styles/zpanelx/images/loginbg.png) ;
             font-family: Geneva, Arial, Helvetica, sans-serif;
             font-size: 9pt;
-			width:725;
-			height:190;
+			width:725px;
+			height:190px;
             color: #333333;
 			margin:0 auto;
         }
@@ -173,8 +168,6 @@
             font-family: Geneva, Arial, Helvetica, sans-serif;
             text-align:left;
 			color: #04B1EB;
-        }
-        .login_screen {
         }
         td.login{
             text-shadow:1px 2px 3px #BBBBBB;
@@ -210,13 +203,13 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mainlayout">
         <tr>
             <td>
-                <table align="center" class="loginbox"  border="0" cellpadding="0" cellspacing="0">
+                <table class="loginbox"  border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td>
+                        <td width="492px">
 	
 
 
-                            <table border="0" align="center" cellpadding="0" cellspacing="0" class="login">
+                            <table border="0" cellpadding="0" cellspacing="0" class="login">
                                 <tr>
                                     <th>Control panel login</th>
                                 </tr>
@@ -271,12 +264,12 @@
 
 	
 						</td>
-						<td>
+						<td width="233px">
 						
 						
-						<table border="0" align="center" cellpadding="0" cellspacing="0" class="loginlogo">
+						<table border="0" cellpadding="0" cellspacing="0" class="loginlogo">
                                 <tr>
-                                    <td><img src="etc/styles/zpanelx/images/logoicon.png" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></td>
+                                    <td width="100%" border="0" ><img src="etc/styles/zpanelx/images/logoicon.png" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></td>
                                 </tr>
 						</table>
 						
