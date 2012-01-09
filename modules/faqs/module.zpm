@@ -1,0 +1,24 @@
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Please find a list of the most common questons from users, if you are unable to find a solution to your problem below please then contact your hosting provider. Simply click on the FAQ below to view the solution.</p></div>
+
+<div class="zform_wrapper">
+<h2>Frequently Asked Questions</h2>
+<table class="none">
+<@ FAQS @>
+</table>
+</div>
+</div>
+
+<script type="text/javascript">
+    <!--
+    function toggle_visibility(id) {
+        var e = document.getElementById(id);
+        if(e.style.display == 'none')
+            e.style.display = 'block';
+        else
+            e.style.display = 'none';
+    }
+    //-->
+</script>
