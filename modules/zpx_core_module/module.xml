@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+<name>ZPanel Core System Module</name>
+<version>100</version>
+<default-cat>other</default-cat>
+<desc>Core system modules for ZPanelX.</desc>
+<author-name>Bobby Allen</author-name>
+<author-email>ballen@zpanelcp.com</author-email>
+<author-url>http://www.zpanelcp.com/</author-url>
+<update-url></update-url>
+</module>

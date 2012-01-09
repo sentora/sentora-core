@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This reports on core zpanel software versions.
+ *
+ * @package zpanelx
+ * @subpackage dryden -> sys
+ * @version 1.0.0
+ * @author ballen (ballen@zpanelcp.com)
+ */
+
 class sys_versions {
 
     /**
