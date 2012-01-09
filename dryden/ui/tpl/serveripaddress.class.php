@@ -11,7 +11,16 @@
 class ui_tpl_serveripaddress {
 
     public function Template() {
-        return sys_monitoring::ServerIPAddress();
+		global $zdbh;
+        $sql = $zdbh->prepare("SELECT so_value_tx FROM x_settings WHERE so_name_vc='server_ip'");
+        $sql->execute();
+        $serverip = $sql->fetch();
+		if (!fs_director::CheckForEmptyValue($serverip['so_value_tx'])){
+        	return $serverip['so_value_tx'];
+		} else {
+			return sys_monitoring::ServerIPAddress();
+		}
+		
     }
 
 }
