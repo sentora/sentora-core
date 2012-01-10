@@ -40,7 +40,7 @@ class ui_moduleloader {
 
             		$line .= "<table align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n";
 					
-            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'");
+            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
             		$modsql->execute();
             		$icons_per_row = ctrl_options::GetOption('module_icons_pr');
             		$num_icons = 0;
@@ -87,7 +87,7 @@ class ui_moduleloader {
             		$line .= "<ul>";
             		$line .= "<lh>" . $categories['mc_name_vc'] . "</lh>";
 					
-            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'");
+            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
             		$modsql->execute();
 
             			while ($modules = $modsql->fetch()) {
@@ -141,7 +141,7 @@ class ui_moduleloader {
             		$line .= "<div id=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" class=\"hidden\">";
             		$line .= "<ul>";
 					
-            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'");
+            		$modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
             		$modsql->execute();
 
             			while ($modules = $modsql->fetch()) {

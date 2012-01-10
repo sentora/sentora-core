@@ -1,4 +1,15 @@
 		//input styles
+		//remove Chrome's input border styling while keeping the autocomplete functionality intact.
+		if (navigator.userAgent.toLowerCase().indexOf("chrome") >= 0) {
+		$(window).load(function(){
+			$('input:-webkit-autofill').each(function(){
+				var text = $(this).val();
+				var name = $(this).attr('name');
+				$(this).after(this.outerHTML).remove();
+				$('input[name=' + name + ']').val(text);
+			});
+		});}
+		
 		$(document).ready(function() {
 			$('input[type="text"]').addClass("idleField");
        		$('input[type="text"]').focus(function() {
