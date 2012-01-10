@@ -7,6 +7,7 @@
         <link href="<# ui_tpl_assetfolderpath #>/inc/10.css" rel="stylesheet" type="text/css">
 
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.min.js"></script>
+		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>
         <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.cookie.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>

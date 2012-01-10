@@ -1,0 +1,65 @@
+<@ Init @>
+
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+
+<div class="zgrid_wrapper">
+<@ RecordAction @>
+</div>
+
+<script>
+	$(function() {
+		$( "#tabs" ).tabs();
+	});
+	</script>
+
+
+
+<div class="demo">
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">A</a></li>
+		<li><a href="#tabs-2">AAAA</a></li>
+		<li><a href="#tabs-3">CNAME</a></li>
+		<li><a href="#tabs-4">MX</a></li>
+		<li><a href="#tabs-5">TXT</a></li>
+		<li><a href="#tabs-6">SRV</a></li>
+		<li><a href="#tabs-7">SPF</a></li>
+		<li><a href="#tabs-8">NS</a></li>
+	</ul>
+	<div id="tabs-1">
+		<p>The A record contains an IPv4 address. It's target is an IPv4 address, e.g. '192.168.1.1'.</p>
+	</div>
+	<div id="tabs-2">
+		<p>The AAAA record contains an IPv6 address. It's target is an IPv6 address, e.g. '2607:fe90:2::1'.</p>
+	</div>
+	<div id="tabs-3">
+		<p>The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g. 'webserver-01.example.com'.</p>
+	</div>
+	<div id="tabs-4">
+		<p>The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535. It's target is a fully qualified domain name, e.g. 'mail.example.com'.</p>
+	</div>
+	<div id="tabs-5">
+		<p>The TXT field can be used to attach textual data to a domain.</p>
+	</div>
+		<div id="tabs-6">
+		<p>SRV records can be used to encode the location and port of services on a domain name. It's target is a fully qualified domain name, e.g. 'host.example.com'.</p>
+	</div>
+	<div id="tabs-7">
+		<p>SPF records is used to store Sender Policy Framework details. It's target is a text string, e.g. 'v=spf1 a:192.168.1.1 include:example.com mx ptr -all'</p>
+	</div>
+	<div id="tabs-8">
+		<p>Nameserver record. Specifies nameservers for a domain. It's target is a fully qualified domain name, e.g. 'ns1.example.com'. The records should match what the domain name has registered with the internet root servers.</p>
+	</div>
+</div>
+
+</div><!-- End demo -->
+
+
+
+
+</div>
+
