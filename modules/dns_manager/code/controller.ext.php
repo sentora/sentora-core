@@ -31,7 +31,10 @@ class module_controller {
 	static $editdomain;
 	
 	static function getInit(){
+		global $controller;
 		$line = "";
+		$line .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/dns.css\"></script>";
+		$line .= "<script type=\"text/javascript\" src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/dns.js\"></script>";
 		return $line;
 	}
 	

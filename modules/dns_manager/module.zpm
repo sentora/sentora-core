@@ -9,57 +9,239 @@
 <@ RecordAction @>
 </div>
 
-<script>
-	$(function() {
-		$( "#tabs" ).tabs();
-	});
-	</script>
 
 
 
-<div class="demo">
 
-<div id="tabs">
-	<ul>
-		<li><a href="#tabs-1">A</a></li>
-		<li><a href="#tabs-2">AAAA</a></li>
-		<li><a href="#tabs-3">CNAME</a></li>
-		<li><a href="#tabs-4">MX</a></li>
-		<li><a href="#tabs-5">TXT</a></li>
-		<li><a href="#tabs-6">SRV</a></li>
-		<li><a href="#tabs-7">SPF</a></li>
-		<li><a href="#tabs-8">NS</a></li>
+
+
+	<div id="dnsTitle" class="displayMessage  center account accountTitle image48">
+		<div class="content">
+			<div>Manage the DNS records for:<br><a href="">CHANGEME</a>
+				<div class="actions"><a class="undo disabled">Undo Changes</a><a class="save disabled">Save Changes</a><a class="back" href="MODULE_PATH">Domain List</a></div>
+			</div><br class="clear">
+		</div>
+	</div>
+	
+	
+	<form method="post">
+	<input id="domainName" name="domainName" value="DOMAIN_NAME" type="hidden">
+
+<!-- TABS -->
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all" id="dnsRecords">
+	<ul class="domains ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+		<li><a href="#typeA">A</a></li>
+		<li><a href="#typeAAAA">AAAA</a></li>
+		<li><a href="#typeCNAME">CNAME</a></li>
+		<li><a href="#typeMX">MX</a></li>
+		<li><a href="#typeTXT">TXT</a></li>
+		<li><a href="#typeSRV">SRV</a></li>
+		<li><a href="#typeSPF">SPF</a></li>
+		<li><a href="#typeNS">NS</a></li>
 	</ul>
-	<div id="tabs-1">
-		<p>The A record contains an IPv4 address. It's target is an IPv4 address, e.g. '192.168.1.1'.</p>
-	</div>
-	<div id="tabs-2">
-		<p>The AAAA record contains an IPv6 address. It's target is an IPv6 address, e.g. '2607:fe90:2::1'.</p>
-	</div>
-	<div id="tabs-3">
-		<p>The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g. 'webserver-01.example.com'.</p>
-	</div>
-	<div id="tabs-4">
-		<p>The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535. It's target is a fully qualified domain name, e.g. 'mail.example.com'.</p>
-	</div>
-	<div id="tabs-5">
-		<p>The TXT field can be used to attach textual data to a domain.</p>
-	</div>
-		<div id="tabs-6">
-		<p>SRV records can be used to encode the location and port of services on a domain name. It's target is a fully qualified domain name, e.g. 'host.example.com'.</p>
-	</div>
-	<div id="tabs-7">
-		<p>SPF records is used to store Sender Policy Framework details. It's target is a text string, e.g. 'v=spf1 a:192.168.1.1 include:example.com mx ptr -all'</p>
-	</div>
-	<div id="tabs-8">
-		<p>Nameserver record. Specifies nameservers for a domain. It's target is a fully qualified domain name, e.g. 'ns1.example.com'. The records should match what the domain name has registered with the internet root servers.</p>
-	</div>
-</div>
 
-</div><!-- End demo -->
+<!-- A RECORDS -->
+	<div class="records dnsRecordA ui-tabs-panel ui-widget-content ui-corner-bottom" id="typeA">
+		<div class="description">The A record contains an IPv4 address. It's target is an IPv4 address, e.g. '192.168.1.1'.</div>
+				<div class="header row">
+					<div class="hostName"><label class="enableToolTip">Host Name</label></div>
+					<div class="TTL"><label class="enableToolTip">TTL</label></div>
+					<div class="in">&nbsp;</div><div class="type">&nbsp;</div><div class="target"><label class="enableToolTip">Target</label></div>
+					<div class="actions"><label>Actions</label></div>
+					<br>
+				</div>
+								
+				<div class="add row"><span><span>Add new record</span></span></div>
+				<div class="newRecord row" style="display: none">
+					<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+					<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
+					<div class="in">IN</div>
+					<div class="type">A</div>
+					<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+					<input class="delete" name="proto_delete" value="false" type="hidden"><span class="delete enableToolTip"></span><input name="proto_type" value="A" type="hidden">
+				</div>
+				
+	</div> <!-- END A RECORDS -->
 
+<!-- AAA RECORDS -->
+	<div class="records dnsRecordAAAA ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeAAAA">
+		<div class="description">The AAAA record contains an IPv6 address. It's target is an IPv6 address, e.g. '2607:fe90:2::1'.</div>
+		<div class="header row">
+			<div class="hostName"><label class="enableToolTip">Host Name</label></div>
+			<div class="TTL"><label class="enableToolTip">TTL</label></div>
+			<div class="in">&nbsp;</div>
+			<div class="type">&nbsp;</div>
+			<div class="target"><label class="enableToolTip">Target</label></div>
+			<div class="actions"><label>Actions</label></div>
+			<br>
+		</div>
+				
+		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="newRecord row" style="display: none">
+			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
+			<div class="in">IN</div><div class="type">AAAA</div>
+			<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+			<input class="delete" name="proto_delete" value="false" type="hidden"><span class="delete enableToolTip"></span><input name="proto_type" value="AAAA" type="hidden">
+		</div>
+	</div> <!-- END AAA RECORDS -->
 
+<!-- CNAME RECORDS -->	
+	<div class="records dnsRecordCNAME ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeCNAME">
+		<div class="description">The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g. 
+'webserver-01.example.com'.</div>
+		<div class="header row">
+			<div class="hostName"><label class="enableToolTip">Host Name</label></div>
+			<div class="TTL"><label class="enableToolTip">TTL</label></div>
+			<div class="in">&nbsp;</div>
+			<div class="type">&nbsp;</div>
+			<div class="target"><label class="enableToolTip">Target</label></div>
+			<div class="actions"><label>Actions</label></div>
+			<br>
+		</div>
+				
+		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="newRecord row" style="display: none">
+			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
+			<div class="in">IN</div>
+			<div class="type">CNAME</div>
+			<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+			<input class="delete" name="proto_delete" value="false" type="hidden"><span class="delete enableToolTip"></span><input name="proto_type" value="CNAME" type="hidden">
+		</div>			
+	</div> <!-- END CNAME RECORDS -->
 
+<!-- MX RECORDS -->
+	<div class="records dnsRecordMX ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeMX">
+		<div class="description">The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535.  It's target is a fully qualified domain name, e.g. 'mail.example.com'.</div>
+		<div class="header row">
+			<div class="hostName"><label class="enableToolTip">Host Name</label></div>
+			<div class="TTL"><label class="enableToolTip">TTL</label></div>
+			<div class="in">&nbsp;</div>
+			<div class="type">&nbsp;</div>
+			<div class="priority"><label class="enableToolTip">Priority</label></div>
+			<div class="target"><label class="enableToolTip">Target</label></div>
+			<div class="actions"><label>Actions</label></div>
+			<br>
+		</div>
 
-</div>
+		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="newRecord row" style="display: none">
+			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
+			<div class="in">IN</div>
+			<div class="type">MX</div>
+			<div class="priority"><label>Priority</label><input name="proto_priority" type="text"></div>
+			<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+			<input class="delete" name="proto_delete" value="false" type="hidden"><span class="delete enableToolTip"></span>
+			<input name="proto_type" value="MX" type="hidden">
+		</div>			
+	</div> <!-- END MX RECORDS -->
 
+<!-- TXT RECORDS -->
+	<div class="records dnsRecordTXT ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeTXT">
+		<div class="description">The TXT field can be used to attach textual data to a domain.</div>
+		<div class="header row"><div class="hostName"><label class="enableToolTip">Host Name</label></div>
+		<div class="TTL"><label class="enableToolTip">TTL</label></div>
+		<div class="in">&nbsp;</div><div class="type">&nbsp;</div>
+		<div class="target"><label class="enableToolTip">Target</label></div>
+		<div class="actions"><label>Actions</label></div>
+		<br>
+		</div>
+				
+		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="newRecord row" style="display: none">
+			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
+			<div class="in">IN</div>
+			<div class="type">TXT</div>
+			<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+			<input class="delete" name="proto_delete" value="false" type="hidden"><span class="delete enableToolTip"></span>
+			<input name="proto_type" value="TXT" type="hidden">
+		</div>
+	</div> <!-- END TXT RECORDS -->
+
+<!-- SRV RECORDS -->	
+	<div class="records dnsRecordSRV ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeSRV">
+		<div class="description">SRV records can be used to encode the location and port of services on a domain name.  It's target is a fully qualified domain name, e.g. 'host.example.com'.</div>
+		<div class="header row">
+			<div class="hostName"><label class="enableToolTip">Host Name</label></div>
+			<div class="TTL"><label class="enableToolTip">TTL</label></div>
+			<div class="in">&nbsp;</div><div class="type">&nbsp;</div><div class="priority"><label class="enableToolTip">Priority</label></div>
+			<div class="weight"><label class="enableToolTip">Weight</label></div>
+			<div class="port"><label class="enableToolTip">Port</label></div>
+			<div class="target"><label class="enableToolTip">Target</label></div>
+			<div class="actions"><label>Actions</label></div>
+			<br>
+		</div>
+				
+		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="newRecord row" style="display: none">
+			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
+			<div class="in">IN</div>
+			<div class="type">SRV</div>
+			<div class="priority"><label>Priority</label><input name="proto_priority" type="text"></div>
+			<div class="weight"><label>Weight</label><input name="proto_weight" type="text"></div>
+			<div class="port"><label>Port</label><input name="proto_port" type="text"></div>
+			<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+			<input class="delete" name="proto_delete" value="false" type="hidden"><span class="delete enableToolTip"></span>
+			<input name="proto_type" value="SRV" type="hidden">
+		</div>
+	</div> <!-- END SRV RECORDS -->	
+
+<!-- SPF RECORDS -->
+	<div class="records dnsRecordSPF ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeSPF">
+		<div class="description">SPF records is used to store Sender Policy Framework details.  It's target is a text string, e.g. 'v=spf1 a:192.168.1.1 include:example.com mx ptr -all'</div>
+		<div class="header row">
+			<div class="hostName"><label class="enableToolTip">Host Name</label></div>
+			<div class="TTL"><label class="enableToolTip">TTL</label></div>
+			<div class="in">&nbsp;</div>
+			<div class="type">&nbsp;</div>
+			<div class="target"><label class="enableToolTip">Target</label></div>
+			<div class="actions"><label>Actions</label></div>
+			<br>
+		</div>
+				
+		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="newRecord row" style="display: none">
+			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
+			<div class="in">IN</div>
+			<div class="type">SPF</div>
+			<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+			<input class="delete" name="proto_delete" value="false" type="hidden"><span class="delete enableToolTip"></span>
+			<input name="proto_type" value="SPF" type="hidden">
+		</div>
+	</div> <!-- END SPF RECORDS -->
+
+<!-- NS RECORDS -->
+	<div class="records dnsRecordNS ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeNS">
+		<div class="description">Nameserver record. Specifies nameservers for a domain. It's target is a fully qualified domain name, e.g.  'ns1.example.com'.  The records should match what the domain name has registered with the internet root servers.</div>
+		<div class="header row">
+			<div class="hostName"><label class="enableToolTip">Host Name</label></div>
+			<div class="TTL"><label class="enableToolTip">TTL</label></div>
+			<div class="in">&nbsp;</div><div class="type">&nbsp;</div><div class="target"><label class="enableToolTip">Target</label></div>
+			<div class="actions"><label>Actions</label></div>
+			<br>
+		</div>
+		
+		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="newRecord row" style="display: none">
+			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
+			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="172800" type="text"></div>
+			<div class="in">IN</div>
+			<div class="type">NS</div>
+			<div class="target"><label>Target</label><input name="proto_target" type="text"></div>
+			<input class="delete" name="proto_delete" value="false" type="hidden">
+			<span class="delete enableToolTip"></span>
+			<input name="proto_type" value="NS" type="hidden">
+		</div>
+		<input name="newRecords" value="0" type="hidden">
+	</div> <!-- END NS RECORDS -->
+
+</div> <!-- END TABS -->
+
+</form>
+
+</div> <!-- END zmodule_content -->
