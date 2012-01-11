@@ -212,7 +212,9 @@ class module_controller {
 			$line .= "<div class=\"priority\"><input name=\"priority[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_priority_in']."\" type=\"text\"><input name=\"original_priority[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_priority_in']."\" type=\"hidden\"></div>";
 			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\"></div>";
 			$line .= "<span class=\"delete enableToolTip\"></span>";
-			$line .= "<span class=\"undo enableToolTip\"></span><input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"MX\" type=\"hidden\"><input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"MX\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
 			$line .= "<br>";
 			$line .= "</div>";
 		}		
@@ -232,9 +234,11 @@ class module_controller {
 			$line .= "<div class=\"TTL\"><input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\"><input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\"></div>";
 			$line .= "<div class=\"in\">IN</div>";
 			$line .= "<div class=\"type\">TXT</div>";
-			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_texttarget_tx']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_texttarget_tx']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\"></div>";
 			$line .= "<span class=\"delete enableToolTip\"></span>";
-			$line .= "<span class=\"undo enableToolTip\"></span><input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"TXT\" type=\"hidden\"><input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"TXT\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
 			$line .= "<br>";
 			$line .= "</div>";
 		}		
@@ -319,15 +323,216 @@ class module_controller {
 	static function doSaveDNS(){
 		global $zdbh;
 		global $controller;
-		$line = print_r($_POST);
+		//$line = print_r($_POST);
+		self::SaveDNS();
 		//self::$editdomain = $controller->GetControllerRequest('FORM', 'inDomain');
-		return $line;
+		//return $line;
+		self::$ok = TRUE;
 	}
 	
 	static function doDisplayRecords(){
 		global $zdbh;
 		global $controller;
 		self::$editdomain = $controller->GetControllerRequest('FORM', 'inDomain');
+		return;
+	}
+
+	static function SaveDNS(){
+		global $zdbh;
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$dnsrecords  = array();
+		//Grab form inputs in array and assign them to variables
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainName'))){
+			$domainName 		= $controller->GetControllerRequest('FORM', 'domainName');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'ttl'))){
+			$ttl 				= $controller->GetControllerRequest('FORM', 'ttl');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_ttl'))){
+			$original_ttl 		= $controller->GetControllerRequest('FORM', 'original_ttl');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'target'))){
+			$target 			= $controller->GetControllerRequest('FORM', 'target');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_target'))){
+			$original_target 	= $controller->GetControllerRequest('FORM', 'original_target');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'type'))){
+			$type 				= $controller->GetControllerRequest('FORM', 'type');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'delete'))){
+			$delete 			= $controller->GetControllerRequest('FORM', 'delete');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'hostName'))){
+			$hostName 			= $controller->GetControllerRequest('FORM', 'hostName');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'priority'))){
+			$priority 			= $controller->GetControllerRequest('FORM', 'priority');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_priority'))){
+			$original_priority  = $controller->GetControllerRequest('FORM', 'original_priority');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'weight'))){
+			$weight 			= $controller->GetControllerRequest('FORM', 'weight');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_weight'))){
+			$original_weight 	= $controller->GetControllerRequest('FORM', 'original_weight');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'port'))){
+			$port 				= $controller->GetControllerRequest('FORM', 'port');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_port'))){
+			$original_port 		= $controller->GetControllerRequest('FORM', 'original_port');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'newRecords'))){
+			$newRecords 		= $controller->GetControllerRequest('FORM', 'newRecords');}
+		//Get all existing records for domain and add the id's to an array
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+				$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL");
+				$sql->execute();
+				while ($rowdns = $sql->fetch()) {
+					$dnsrecords[] = $rowdns['dn_id_pk'];
+				}
+			}
+		}
+		//Existing Records
+		//Sort through the dns record array by id and update as needed
+		foreach ($dnsrecords as $id){
+			if ($delete[$id] == "true"){
+				//The record has been marked for deletion, so lets delete it!
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=" . time() . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql->execute();
+			} else {
+				//The record needs updating instead.
+				//TTL
+				if (isset($ttl[$id]) && !fs_director::CheckForEmptyValue($ttl[$id]) && $ttl[$id] != $original_ttl[$id] && is_numeric($ttl[$id])){
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_ttl_in=" . trim($ttl[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql->execute();
+				}
+				//TARGET
+				if (isset($target[$id]) && !fs_director::CheckForEmptyValue($target[$id]) && $target[$id] != $original_target[$id]){
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_target_vc='" . trim($target[$id]) . "' WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql->execute();
+				}
+				//PRIORITY
+				if (isset($priority[$id]) && !fs_director::CheckForEmptyValue($priority[$id]) && $priority[$id] != $original_priority[$id]){
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_priority_in=" . trim($priority[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql->execute();
+				}
+				//WEIGHT
+				if (isset($weight[$id]) && !fs_director::CheckForEmptyValue($weight[$id]) && $weight[$id] != $original_weight[$id]){
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_weight_in=" . trim($weight[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql->execute();
+				}
+				//PORT
+				if (isset($port[$id]) && !fs_director::CheckForEmptyValue($port[$id]) && $port[$id] != $original_port[$id]){
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_port_in=" . trim($port[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql->execute();
+				}
+			}
+		}
+		//NEW Records
+		//Find all new records in post array
+		if (isset($newRecords) && !fs_director::CheckForEmptyValue($newRecords)){
+			$numnew = $newRecords;
+			$id = 1;
+			while ($numnew >= $id){
+				if ($delete['new_'.$id] != "true"){
+					if (isset($hostName['new_'.$id]) && !fs_director::CheckForEmptyValue($hostName['new_'.$id])){
+						$hostName_new = "'".$hostName['new_'.$id]."'";
+					} else {
+						$hostName_new = "NULL";
+					}
+					if (isset($type['new_'.$id]) && !fs_director::CheckForEmptyValue($type['new_'.$id])){
+						$type_new = "'".$type['new_'.$id]."'";
+					} else {
+						$type_new = "NULL";
+					}
+					if (isset($ttl['new_'.$id]) && !fs_director::CheckForEmptyValue($ttl['new_'.$id])){
+						$ttl_new = $ttl['new_'.$id];
+					} else {
+						$ttl_new = "NULL";
+					}
+					if (isset($target['new_'.$id]) && !fs_director::CheckForEmptyValue($target['new_'.$id])){
+						$target_new = "'".$target['new_'.$id]."'";
+					} else {
+						$target_new = "NULL";
+					}				
+					if (isset($priority['new_'.$id]) && !fs_director::CheckForEmptyValue($priority['new_'.$id])){
+						$priority_new = $priority['new_'.$id];
+					} else {
+						$priority_new = "NULL";
+					}
+					if (isset($weight['new_'.$id]) && !fs_director::CheckForEmptyValue($weight['new_'.$id])){
+						$weight_new = $weight['new_'.$id];
+					} else {
+						$weight_new = "NULL";
+					}
+					if (isset($port['new_'.$id]) && !fs_director::CheckForEmptyValue($port['new_'.$id])){
+						$port_new = $port['new_'.$id];
+					} else {
+						$port_new = "NULL";
+					}
+				$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$currentuser['userid'].",
+															'ztest.com',
+															1,
+															".$type_new.",
+															".$hostName_new.",
+															".$ttl_new.",
+															".$target_new.",
+															".$priority_new.",
+															".$weight_new.",
+															".$port_new.",
+															".time().")");
+				
+				/*
+				$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															1,
+															'ztest.com',
+															1,
+															'A',
+															'test',
+															8600,
+															'192.168.100.100',
+															1,
+															1,
+															1,
+															".time().")");
+				*/			
+				$sql->execute();				
+				}
+			$id++;
+			}
+		}
+		
+		/*
+		echo "dnsrecords:<br>".print_r($dnsrecords)."<br>";
+		echo "domainName:<br>".print_r($domainName)."<br>";
+		echo "ttl:<br>".print_r($ttl)."<br>";
+		echo "original_ttl:<br>".print_r($original_ttl)."<br>";
+		echo "target:<br>".print_r($target)."<br>";
+		echo "original_target:<br>".print_r($original_target)."<br>";
+		echo "type:<br>".print_r($type)."<br>";
+		echo "delete:<br>".print_r($delete)."<br>";
+		echo "hostname:<br>".print_r($hostName)."<br>";
+		echo "priority:<br>".print_r($priority)."<br>";
+		echo "original_priority:<br>".print_r($original_priority)."<br>";
+		echo "weight:<br>".print_r($weight)."<br>";
+		echo "original_weight:<br>".print_r($original_weight)."<br>";
+		echo "port:<br>".print_r($port)."<br>";
+		echo "original_port:<br>".print_r($original_port)."<br>";
+		echo "newrecords:<br>".print_r($newRecords)."<br>";
+		*/
 		return;
 	}
 	
