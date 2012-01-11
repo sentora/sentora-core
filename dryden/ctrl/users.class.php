@@ -27,23 +27,22 @@ class ctrl_users {
             $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
             $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
             $userdetail->addItemValue('usergroup', $dbvals['ug_name_vc']);
-			$userdetail->addItemValue('address', $dbvals['ud_address_tx']);
-			$userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
-			$userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
-			$userdetail->addItemValue('language', $dbvals['ud_language_vc']);
-			$userdetail->addItemValue('diskquota', $dbvals['qt_diskspace_bi']);
-			$userdetail->addItemValue('bandwidthquota', $dbvals['qt_bandwidth_bi']);
-			$userdetail->addItemValue('domainquota', $dbvals['qt_domains_in']);
-			$userdetail->addItemValue('subdomainquota', $dbvals['qt_subdomains_in']);
-			$userdetail->addItemValue('parkeddomainquota', $dbvals['qt_parkeddomains_in']);
-			$userdetail->addItemValue('ftpaccountsquota', $dbvals['qt_ftpaccounts_in']);
-			$userdetail->addItemValue('mysqlquota', $dbvals['qt_mysql_in']);
-			$userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
-			$userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
-			$userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
+            $userdetail->addItemValue('usergroupid', $dbvals['ac_group_fk']);
+            $userdetail->addItemValue('address', $dbvals['ud_address_tx']);
+            $userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
+            $userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
+            $userdetail->addItemValue('language', $dbvals['ud_language_vc']);
+            $userdetail->addItemValue('diskquota', $dbvals['qt_diskspace_bi']);
+            $userdetail->addItemValue('bandwidthquota', $dbvals['qt_bandwidth_bi']);
+            $userdetail->addItemValue('domainquota', $dbvals['qt_domains_in']);
+            $userdetail->addItemValue('subdomainquota', $dbvals['qt_subdomains_in']);
+            $userdetail->addItemValue('parkeddomainquota', $dbvals['qt_parkeddomains_in']);
+            $userdetail->addItemValue('ftpaccountsquota', $dbvals['qt_ftpaccounts_in']);
+            $userdetail->addItemValue('mysqlquota', $dbvals['qt_mysql_in']);
+            $userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
+            $userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
+            $userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
         } else {
-            # Display the requested user details based on USERID.
-            # Display the current logged in your details!
             $rows = $zdbh->query("SELECT * FROM x_accounts JOIN x_profiles ON x_accounts.ac_id_pk=x_profiles.ud_user_fk WHERE x_accounts.ac_id_pk = " . $user . "");
             $rows->execute();
             $dbvals = $rows->fetch();
@@ -54,28 +53,30 @@ class ctrl_users {
             $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
             $userdetail->addItemValue('packagename', 'TO BE DONE LATER');
             $userdetail->addItemValue('usergroup', 'TO BE DONE LATER');
-			$userdetail->addItemValue('address', $dbvals['ud_address_tx']);
-			$userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
-			$userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
-			$userdetail->addItemValue('language', $dbvals['ud_language_vc']);
+            $userdetail->addItemValue('usergroupid', $dbvals['ac_group_fk']);
+            $userdetail->addItemValue('address', $dbvals['ud_address_tx']);
+            $userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
+            $userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
+            $userdetail->addItemValue('language', $dbvals['ud_language_vc']);
+            
         }
         return $userdetail->getDataObject();
     }
 
-	
-	#Get all active domains on user account
+    #Get all active domains on user account
+
     static function GetUserDomains($userid, $type="1") {
         global $zdbh;
-		$domains = 0;
-		$sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $userid . " AND vh_deleted_ts IS NULL AND vh_type_in=".$type."";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {
-				$domains = count($numrows->fetchColumn());
-				return $domains;
-			}
-		}
-		return $domains;
-	}
+        $domains = 0;
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $userid . " AND vh_deleted_ts IS NULL AND vh_type_in=" . $type . "";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $domains = count($numrows->fetchColumn());
+                return $domains;
+            }
+        }
+        return $domains;
+    }
 
 }
 
