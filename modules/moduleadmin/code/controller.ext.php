@@ -24,139 +24,158 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	static $error;
-	static $ok;
+    static $error;
+    static $ok;
 
-	static function getAdminModules (){
-	global $zdbh;
-	$line = "<h2>".ui_language::translate("Administration Modules")."</h2>";
-	$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'modadmin' ORDER BY mo_name_vc ASC";
-	if ($nummodsql = $zdbh->query($modsql)) {
- 		if ($nummodsql->fetchColumn() > 0) {
-            $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'modadmin'");
-            $modsql->execute();
-			$line .="<table>";
-            while ($modules = $modsql->fetch()) {
-				$translatename = ui_language::translate($modules['mo_name_vc']);
-				//$line .= $translatename;
-				$line .="<tr><td>";
-				$line .= "<a href=\"./?module=".$modules['mo_folder_vc']."\">" . $translatename . "</a>";
-				$line .="</td></tr>";
+    static function getAdminModules() {
+        global $zdbh;
+        $line = "<h2>" . ui_language::translate("Administration Modules") . "</h2>";
+        $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'modadmin' ORDER BY mo_name_vc ASC";
+        if ($nummodsql = $zdbh->query($modsql)) {
+            if ($nummodsql->fetchColumn() > 0) {
+                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'modadmin'");
+                $modsql->execute();
+                $line .="<table>";
+                while ($modules = $modsql->fetch()) {
+                    $translatename = ui_language::translate($modules['mo_name_vc']);
+                    //$line .= $translatename;
+                    $line .="<tr><td>";
+                    $line .= "<a href=\"./?module=" . $modules['mo_folder_vc'] . "\">" . $translatename . "</a>";
+                    $line .="</td></tr>";
+                }
+                $line .="</table>";
+            } else {
+                $line .= ui_language::translate("You have no administration modules at this time.");
             }
-			$line .="</table>";
-		} else {
-		$line .= ui_language::translate("You have no administration modules at this time.");
-		}
-	}	
-	return $line;
-	}
-	
-	static function getConfigModules() {
-		global $zdbh;
-		$line = "<h2>".ui_language::translate("Configure Modules")."</h2>";
-	$modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'user'";
-	if ($nummodsql = $zdbh->query($modsql)) {
- 		if ($nummodsql->fetchColumn() > 0) {
-            $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'user' AND mo_name_vc != 'Module Admin' ORDER BY mo_name_vc ASC");
-            $modsql->execute();
-			$line .= "<form action=\"./?module=moduleadmin&action=EditModule\" method=\"post\">";
-			$line .= "<table class=\"zgrid\">";
-			$line .= "<tr>";
-			$line .= "<th></th>";
-			$line .= "<th>".ui_language::translate("Module")."</th>";
-			$line .= "<th>".ui_language::translate("On")."/".ui_language::translate("Off")."</th>";
-			$line .= "<th></th>";
-			$line .= "</tr>";
-            while ($modules = $modsql->fetch()) {
-				$line .= "<tr>";
-				$line .= "<td>".self::ModuleStatisIcon($modules['mo_id_pk'])."</td>";
-				$line .= "<td><a href=\"./?module=".$modules['mo_folder_vc']."\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
-				$line .= "<td><select name=\"inDisable_".$modules['mo_id_pk']."\" id=\"inDisable_".$modules['mo_id_pk']."\">";
-				if ($modules['mo_enabled_en'] == 'true'){
-					$selected = "SELECTED";
-				} else {
-					$selected = "";
-				}
-       			$line .= "<option value=\"true\" ".$selected.">" . ui_language::translate("Enabled") . "</option>";
-				if ($modules['mo_enabled_en'] == 'false'){
-					$selected = "SELECTED";
-				} else {
-					$selected = "";
-				}
-				$line .= "<option value=\"false\" ".$selected.">" . ui_language::translate("Disabled") . "</option>";
-        		$line .= "</select></td>";
-				$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSave_".$modules['mo_id_pk']."\" value=\"inSave_".$modules['mo_id_pk']."\">".ui_language::translate("Save")."</button></td>";
-				$line .= "</tr>";
-            }
-			$line .= "</table>";
-			$line .= "</form>";
-		} else {
-		$line .= ui_language::translate("You have no administration modules at this time.");
-		}
-	}	
-	return $line;
+        }
+        return $line;
     }
 
-	static function ModuleStatisIcon($mo_id_pk){
-		global $zdbh;
-		global $controller;
-        $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = '".$mo_id_pk."'");
+    static function getConfigModules() {
+        global $zdbh;
+        $line = "<h2>" . ui_language::translate("Configure Modules") . "</h2>";
+        $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'user'";
+        if ($nummodsql = $zdbh->query($modsql)) {
+            if ($nummodsql->fetchColumn() > 0) {
+                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'user' AND mo_name_vc != 'Module Admin' ORDER BY mo_name_vc ASC");
+                $modsql->execute();
+                $line .= "<form action=\"./?module=moduleadmin&action=EditModule\" method=\"post\">";
+                $line .= "<table class=\"zgrid\">";
+                $line .= "<tr>";
+                $line .= "<th></th>";
+                $line .= "<th>" . ui_language::translate("Module") . "</th>";
+                $line .= "<th>" . ui_language::translate("On") . "/" . ui_language::translate("Off") . "</th>";
+                $line .= "<th></th>";
+                $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
+                while ($groups = $groupssql->fetch()) {
+                    $line .= "<th>" . $groups['ug_name_vc'] . "</th>";
+                }
+
+                $line .= "</tr>";
+                while ($modules = $modsql->fetch()) {
+                    $line .= "<tr>";
+                    $line .= "<td>" . self::ModuleStatisIcon($modules['mo_id_pk']) . "</td>";
+                    $line .= "<td><a href=\"./?module=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
+                    $line .= "<td><select name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\">";
+                    if ($modules['mo_enabled_en'] == 'true') {
+                        $selected = "SELECTED";
+                    } else {
+                        $selected = "";
+                    }
+                    $line .= "<option value=\"true\" " . $selected . ">" . ui_language::translate("Enabled") . "</option>";
+                    if ($modules['mo_enabled_en'] == 'false') {
+                        $selected = "SELECTED";
+                    } else {
+                        $selected = "";
+                    }
+                    $line .= "<option value=\"false\" " . $selected . ">" . ui_language::translate("Disabled") . "</option>";
+                    $line .= "</select></td>";
+                    $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSave_" . $modules['mo_id_pk'] . "\" value=\"inSave_" . $modules['mo_id_pk'] . "\">" . ui_language::translate("Save") . "</button></td>";
+                    $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
+                    while ($groups = $groupssql->fetch()) {
+                        $ischeck = 0;
+                        if (ctrl_groups::CheckGroupModulePermissions($groups['ug_id_pk'], $modules['mo_id_pk']))
+                            $ischeck = "checked=\"checked\" ";
+                        $line .= "<td><input type=\"checkbox\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . "/></td>";
+                    }
+                    $line .= "</tr>";
+                }
+                $line .= "</table>";
+                $line .= "</form>";
+            } else {
+                $line .= ui_language::translate("You have no administration modules at this time.");
+            }
+        }
+        return $line;
+    }
+
+    static function ModuleStatisIcon($mo_id_pk) {
+        global $zdbh;
+        global $controller;
+        $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = '" . $mo_id_pk . "'");
         $modsql->execute();
-		$modulestatus = $modsql->fetch();
-		if ($modulestatus['mo_enabled_en'] == 'false') {
-			$retval = "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.gif\">";
-		} else {
-			$retval = "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.gif\">";
-		}
-		return $retval;
-	}
-	
-	static function doEditModule() {
-		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$sql = "SELECT COUNT(*) FROM x_modules";
-			if ($numrows = $zdbh->query($sql)) {
- 				if ($numrows->fetchColumn() <> 0) {	
-					$sql = $zdbh->prepare("SELECT * FROM x_modules");
-					$sql->execute();
-					while ($rowmodule = $sql->fetch()) {
-						if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inSave_'.$rowmodule['mo_id_pk'].''))){
-        					$sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = '".$controller->GetControllerRequest('FORM', 'inDisable_'.$rowmodule['mo_id_pk'].'')."' WHERE mo_id_pk = ".$rowmodule['mo_id_pk']."");
-							$sql2->execute();
-							self::$ok = TRUE;
-							return;
-						}
-					}
-				}
-			}
-		self::$error = TRUE;
-		return;
+        $modulestatus = $modsql->fetch();
+        if ($modulestatus['mo_enabled_en'] == 'false') {
+            $retval = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
+        } else {
+            $retval = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
+        }
+        return $retval;
     }
-	
-	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$ok)){
-            return ui_sysmessage::shout(ui_language::translate("Changes to your module options have been saved successfully!"));
-		}else{
-			return ui_language::translate(ui_module::GetModuleDescription());
-		}
+
+    static function doEditModule() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $sql = "SELECT COUNT(*) FROM x_modules";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $sql = $zdbh->prepare("SELECT * FROM x_modules");
+                $sql->execute();
+                while ($rowmodule = $sql->fetch()) {
+                    $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
+                    while ($groups = $groupssql->fetch()) {
+                        if (isset($_POST['inEnable_' . $groups['ug_id_pk'] . '_' . $rowmodule['mo_id_pk'] . ''])) {
+                            ctrl_groups::AddGroupModulePermissions($groups['ug_id_pk'], $rowmodule['mo_id_pk']);
+                        } else {
+                            ctrl_groups::DeleteGroupModulePermissions($groups['ug_id_pk'], $rowmodule['mo_id_pk']);
+                        }
+                    }
+                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inSave_' . $rowmodule['mo_id_pk'] . ''))) {
+                        $sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = '" . $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . '') . "' WHERE mo_id_pk = " . $rowmodule['mo_id_pk'] . "");
+                        $sql2->execute();
+                    }
+                }
+                self::$ok = TRUE;
+                return;
+            }
+        }
+        self::$error = TRUE;
         return;
     }
-	
-	static function getModuleName() {
-		$module_name = ui_language::translate(ui_module::GetModuleName());
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your module options have been saved successfully!"));
+        } else {
+            return ui_language::translate(ui_module::GetModuleDescription());
+        }
+        return;
+    }
+
+    static function getModuleName() {
+        $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
-	
+
 }
 
 ?>
