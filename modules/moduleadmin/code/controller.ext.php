@@ -98,7 +98,7 @@ class module_controller {
                         $ischeck = 0;
                         if (ctrl_groups::CheckGroupModulePermissions($groups['ug_id_pk'], $modules['mo_id_pk']))
                             $ischeck = "checked=\"checked\" ";
-                        $line .= "<td><input type=\"checkbox\" name=\"inEnable_" . $groups['ug_name_vc'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . "/></td>";
+                        $line .= "<td><input type=\"checkbox\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . "/></td>";
                     }
                     $line .= "</tr>";
                 }
@@ -135,15 +135,21 @@ class module_controller {
                 $sql = $zdbh->prepare("SELECT * FROM x_modules");
                 $sql->execute();
                 while ($rowmodule = $sql->fetch()) {
+                    $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
+                    while ($groups = $groupssql->fetch()) {
+                        if (isset($_POST['inEnable_' . $groups['ug_id_pk'] . '_' . $rowmodule['mo_id_pk'] . ''])) {
+                            ctrl_groups::AddGroupModulePermissions($groups['ug_id_pk'], $rowmodule['mo_id_pk']);
+                        } else {
+                            ctrl_groups::DeleteGroupModulePermissions($groups['ug_id_pk'], $rowmodule['mo_id_pk']);
+                        }
+                    }
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inSave_' . $rowmodule['mo_id_pk'] . ''))) {
                         $sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = '" . $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . '') . "' WHERE mo_id_pk = " . $rowmodule['mo_id_pk'] . "");
                         $sql2->execute();
-                        // We add here the add for each group!
-
-                        self::$ok = TRUE;
-                        return;
                     }
                 }
+                self::$ok = TRUE;
+                return;
             }
         }
         self::$error = TRUE;

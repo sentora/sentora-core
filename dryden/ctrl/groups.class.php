@@ -17,6 +17,7 @@ class ctrl_groups {
      * @return bool
      */
     static function CheckGroupModulePermissions($groupid, $moduleid) {
+        global $zdbh;
         $rows = $zdbh->query("SELECT pe_id_pk FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid")->fetch();
         if ($rows)
             return true;
@@ -31,11 +32,14 @@ class ctrl_groups {
      */
     static function AddGroupModulePermissions($groupid, $moduleid) {
         global $zdbh;
-        $zdbh = new db_driver("mysql");
-        $statment = "INSERT INTO x_permissions (pe_group_fk, pe_module_fk) VALUES ($groupid, $moduleid)";
-        if ($zdbh->exec($statement) > 0)
-            return true;
-        return false;
+        $sql = "SELECT COUNT(*) FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() < 1) {
+            $statement = "INSERT INTO x_permissions (pe_group_fk, pe_module_fk) VALUES ($groupid, $moduleid)";
+            if ($zdbh->exec($statement) > 0)
+                return true;
+            return false;
+        }
     }
 
     /**
@@ -46,12 +50,10 @@ class ctrl_groups {
      */
     static function DeleteGroupModulePermissions($groupid, $moduleid) {
         global $zdbh;
-        $zdbh = new db_driver("mysql");
-        $statment = "DELETE FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid)";
+        $statement = "DELETE FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid";
         if ($zdbh->exec($statement) > 0)
             return true;
         return false;
-        ;
     }
 
 }
