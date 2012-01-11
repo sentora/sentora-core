@@ -26,6 +26,7 @@
 	
 	<form action="./?module=dns_manager&action=SaveDNS" method="post">
 	<input id="domainName" name="domainName" value="DOMAIN_NAME" type="hidden">
+	<input id="domainID" name="domainID" value="DOMAIN_ID" type="hidden">
 
 <!-- TABS -->
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all" id="dnsRecords">
