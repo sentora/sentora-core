@@ -3026,7 +3026,7 @@ div.accountTitle > div.content > div > a:hover {
 	margin-bottom: 12px;
 	padding-left: 32px;
 	padding-top: 1px;
-	background: url(/icons/24x24/plain/information2.png) no-repeat 0 0;
+	background: url(./information_big.png) no-repeat 0 0;
 	color: #949494;
 	min-height: 28px;
 	}

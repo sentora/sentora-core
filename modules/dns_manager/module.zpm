@@ -24,7 +24,7 @@
 	</div>
 	
 	
-	<form method="post">
+	<form action="./?module=dns_manager&action=SaveDNS" method="post">
 	<input id="domainName" name="domainName" value="DOMAIN_NAME" type="hidden">
 
 <!-- TABS -->
@@ -50,7 +50,9 @@
 					<div class="actions"><label>Actions</label></div>
 					<br>
 				</div>
-								
+				
+				<@ A_Records @>
+							
 				<div class="add row"><span><span>Add new record</span></span></div>
 				<div class="newRecord row" style="display: none">
 					<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
@@ -75,7 +77,9 @@
 			<div class="actions"><label>Actions</label></div>
 			<br>
 		</div>
-				
+		
+		<@ AAAA_Records @>
+			
 		<div class="add row"><span><span>Add new record</span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
@@ -99,7 +103,9 @@
 			<div class="actions"><label>Actions</label></div>
 			<br>
 		</div>
-				
+		
+		<@ CNAME_Records @>
+			
 		<div class="add row"><span><span>Add new record</span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
@@ -124,7 +130,9 @@
 			<div class="actions"><label>Actions</label></div>
 			<br>
 		</div>
-
+		
+		<@ MX_Records @>
+		
 		<div class="add row"><span><span>Add new record</span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
@@ -148,7 +156,9 @@
 		<div class="actions"><label>Actions</label></div>
 		<br>
 		</div>
-				
+		
+		<@ TXT_Records @>
+			
 		<div class="add row"><span><span>Add new record</span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
@@ -174,7 +184,9 @@
 			<div class="actions"><label>Actions</label></div>
 			<br>
 		</div>
-				
+		
+		<@ SRV_Records @>
+		
 		<div class="add row"><span><span>Add new record</span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
@@ -192,7 +204,7 @@
 
 <!-- SPF RECORDS -->
 	<div class="records dnsRecordSPF ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide" id="typeSPF">
-		<div class="description">SPF records is used to store Sender Policy Framework details.  It's target is a text string, e.g. 'v=spf1 a:192.168.1.1 include:example.com mx ptr -all'</div>
+		<div class="description">SPF records is used to store Sender Policy Framework details.  It's target is a text string, e.g.<br>'v=spf1 a:192.168.1.1 include:example.com mx ptr -all'</div>
 		<div class="header row">
 			<div class="hostName"><label class="enableToolTip">Host Name</label></div>
 			<div class="TTL"><label class="enableToolTip">TTL</label></div>
@@ -202,7 +214,9 @@
 			<div class="actions"><label>Actions</label></div>
 			<br>
 		</div>
-				
+		
+		<@ SPF_Records @>
+			
 		<div class="add row"><span><span>Add new record</span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
@@ -226,6 +240,8 @@
 			<br>
 		</div>
 		
+		<@ NS_Records @>
+
 		<div class="add row"><span><span>Add new record</span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
