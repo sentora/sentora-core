@@ -40,15 +40,15 @@ class ui_moduleloader {
                     $num_icons = 0;
                     while ($modules = $modsql->fetch()) {
                         $user = ctrl_users::GetUserDetail();
-                        if(ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $modules['mo_id_pk'])){
-                        $translatename = ui_language::translate($modules['mo_name_vc']);
-                        $cleanname = str_replace(" ", "<br />", $translatename);
-                        if ($num_icons == $icons_per_row) {
-                            $line .= "</tr><tr>";
-                            $num_icons = 0;
-                        }
-                        $line .= "<td style=\"text-align:center;\" align=\"left\"><a href=\"?module=" . $modules['mo_folder_vc'] . "\" title=\"" . ui_language::translate($modules['mo_desc_tx']) . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" border=\"0\" /></a><br /><a href=\"?module=" . $modules['mo_folder_vc'] . "\">" . $cleanname . "</a></td>";
-                        $num_icons++;
+                        if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $modules['mo_id_pk'])) {
+                            $translatename = ui_language::translate($modules['mo_name_vc']);
+                            $cleanname = str_replace(" ", "<br />", $translatename);
+                            if ($num_icons == $icons_per_row) {
+                                $line .= "</tr><tr>";
+                                $num_icons = 0;
+                            }
+                            $line .= "<td style=\"text-align:center;\" align=\"left\"><a href=\"?module=" . $modules['mo_folder_vc'] . "\" title=\"" . ui_language::translate($modules['mo_desc_tx']) . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" border=\"0\" /></a><br /><a href=\"?module=" . $modules['mo_folder_vc'] . "\">" . $cleanname . "</a></td>";
+                            $num_icons++;
                         }
                     }
                     $line .= "</tr></table></td></tr></table></div></td></tr></table><br>";
@@ -144,8 +144,10 @@ class ui_moduleloader {
                     $modsql->execute();
 
                     while ($modules = $modsql->fetch()) {
-
-                        $line .= "<li><a href=\"?module=" . $modules['mo_folder_vc'] . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" width=\"20\" height=\"20\" border=\"0\" /> " . ui_language::translate($modules['mo_name_vc']) . "</a></li>";
+                        $user = ctrl_users::GetUserDetail();
+                        if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $modules['mo_id_pk'])) {
+                            $line .= "<li><a href=\"?module=" . $modules['mo_folder_vc'] . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" width=\"20\" height=\"20\" border=\"0\" /> " . ui_language::translate($modules['mo_name_vc']) . "</a></li>";
+                        }
                     }
                     $line .= "</ul></div>";
                     $tabindex++;
