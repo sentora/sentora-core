@@ -29,6 +29,17 @@ class module_controller {
 
 	static $ok;
 	static $editdomain;
+	static $ttl_error;
+	static $invalidIPv4_error;
+	static $invalidIPv6_error;
+	static $invalidDomainName_error;
+	static $invalidIP_error;
+	static $priorityNumeric_error;
+	static $priorityRange_error;
+	static $weightNumeric_error;
+	static $weightRange_error;
+	static $portNumeric_error;
+	static $portRange_error;
 	
 	static function getInit(){
 		global $controller;
@@ -320,21 +331,22 @@ class module_controller {
 		return $line;
 	}
 
-	static function doSaveDNS(){
-		global $zdbh;
-		global $controller;
-		//$line = print_r($_POST);
-		self::SaveDNS();
-		//self::$editdomain = $controller->GetControllerRequest('FORM', 'inDomain');
-		//return $line;
-		self::$ok = TRUE;
-	}
-	
 	static function doDisplayRecords(){
 		global $zdbh;
 		global $controller;
 		self::$editdomain = $controller->GetControllerRequest('FORM', 'inDomain');
 		return;
+	}
+	
+	static function doSaveDNS(){
+		global $zdbh;
+		global $controller;
+		//$line = print_r($_POST);
+		if (!fs_director::CheckForEmptyValue(self::CheckForErrors())){
+		self::SaveDNS();
+		self::$ok = TRUE;
+		return;
+		}
 	}
 
 	static function SaveDNS(){
@@ -395,27 +407,27 @@ class module_controller {
 				//The record needs updating instead.
 				//TTL
 				if (isset($ttl[$id]) && !fs_director::CheckForEmptyValue($ttl[$id]) && $ttl[$id] != $original_ttl[$id] && is_numeric($ttl[$id])){
-				$sql = $zdbh->prepare("UPDATE x_dns SET dn_ttl_in=" . trim($ttl[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_ttl_in=" . self::CleanRecord($ttl[$id], $type[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
 				$sql->execute();
 				}
 				//TARGET
 				if (isset($target[$id]) && !fs_director::CheckForEmptyValue($target[$id]) && $target[$id] != $original_target[$id]){
-				$sql = $zdbh->prepare("UPDATE x_dns SET dn_target_vc='" . trim($target[$id]) . "' WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_target_vc='" . self::CleanRecord($target[$id], $type[$id]) . "' WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
 				$sql->execute();
 				}
 				//PRIORITY
 				if (isset($priority[$id]) && !fs_director::CheckForEmptyValue($priority[$id]) && $priority[$id] != $original_priority[$id]){
-				$sql = $zdbh->prepare("UPDATE x_dns SET dn_priority_in=" . trim($priority[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_priority_in=" . self::CleanRecord($priority[$id], $type[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
 				$sql->execute();
 				}
 				//WEIGHT
 				if (isset($weight[$id]) && !fs_director::CheckForEmptyValue($weight[$id]) && $weight[$id] != $original_weight[$id]){
-				$sql = $zdbh->prepare("UPDATE x_dns SET dn_weight_in=" . trim($weight[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_weight_in=" . self::CleanRecord($weight[$id], $type[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
 				$sql->execute();
 				}
 				//PORT
 				if (isset($port[$id]) && !fs_director::CheckForEmptyValue($port[$id]) && $port[$id] != $original_port[$id]){
-				$sql = $zdbh->prepare("UPDATE x_dns SET dn_port_in=" . trim($port[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
+				$sql = $zdbh->prepare("UPDATE x_dns SET dn_port_in=" . self::CleanRecord($port[$id], $type[$id]) . " WHERE dn_id_pk = ".$id." AND dn_deleted_ts IS NULL");
 				$sql->execute();
 				}
 			}
@@ -428,37 +440,37 @@ class module_controller {
 			while ($numnew >= $id){
 				if ($delete['new_'.$id] != "true"){
 					if (isset($hostName['new_'.$id]) && !fs_director::CheckForEmptyValue($hostName['new_'.$id])){
-						$hostName_new = "'".$hostName['new_'.$id]."'";
+						$hostName_new = "'".self::CleanRecord($hostName['new_'.$id], $type['new_'.$id])."'";
 					} else {
 						$hostName_new = "NULL";
 					}
 					if (isset($type['new_'.$id]) && !fs_director::CheckForEmptyValue($type['new_'.$id])){
-						$type_new = "'".$type['new_'.$id]."'";
+						$type_new = "'".self::CleanRecord($type['new_'.$id], $type['new_'.$id])."'";
 					} else {
 						$type_new = "NULL";
 					}
 					if (isset($ttl['new_'.$id]) && !fs_director::CheckForEmptyValue($ttl['new_'.$id])){
-						$ttl_new = $ttl['new_'.$id];
+						$ttl_new = self::CleanRecord($ttl['new_'.$id], $type['new_'.$id]);
 					} else {
 						$ttl_new = "NULL";
 					}
 					if (isset($target['new_'.$id]) && !fs_director::CheckForEmptyValue($target['new_'.$id])){
-						$target_new = "'".$target['new_'.$id]."'";
+						$target_new = "'".self::CleanRecord($target['new_'.$id], $type['new_'.$id])."'";
 					} else {
 						$target_new = "NULL";
 					}				
 					if (isset($priority['new_'.$id]) && !fs_director::CheckForEmptyValue($priority['new_'.$id])){
-						$priority_new = $priority['new_'.$id];
+						$priority_new = self::CleanRecord($priority['new_'.$id], $type['new_'.$id]);
 					} else {
 						$priority_new = "NULL";
 					}
 					if (isset($weight['new_'.$id]) && !fs_director::CheckForEmptyValue($weight['new_'.$id])){
-						$weight_new = $weight['new_'.$id];
+						$weight_new = self::CleanRecord($weight['new_'.$id], $type['new_'.$id]);
 					} else {
 						$weight_new = "NULL";
 					}
 					if (isset($port['new_'.$id]) && !fs_director::CheckForEmptyValue($port['new_'.$id])){
-						$port_new = $port['new_'.$id];
+						$port_new = self::CleanRecord($port['new_'.$id], $type['new_'.$id]);
 					} else {
 						$port_new = "NULL";
 					}
@@ -483,60 +495,308 @@ class module_controller {
 															".$priority_new.",
 															".$weight_new.",
 															".$port_new.",
-															".time().")");
-				
-				/*
-				$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-															dn_name_vc,
-															dn_vhost_fk,
-															dn_type_vc,
-															dn_host_vc,
-															dn_ttl_in,
-															dn_target_vc,
-															dn_priority_in,
-															dn_weight_in,
-															dn_port_in,
-															dn_created_ts) VALUES (
-															1,
-															'ztest.com',
-															1,
-															'A',
-															'test',
-															8600,
-															'192.168.100.100',
-															1,
-															1,
-															1,
-															".time().")");
-				*/			
+															".time().")");		
 				$sql->execute();				
 				}
 			$id++;
 			}
 		}
-		
-		/*
-		echo "dnsrecords:<br>".print_r($dnsrecords)."<br>";
-		echo "domainName:<br>".print_r($domainName)."<br>";
-		echo "ttl:<br>".print_r($ttl)."<br>";
-		echo "original_ttl:<br>".print_r($original_ttl)."<br>";
-		echo "target:<br>".print_r($target)."<br>";
-		echo "original_target:<br>".print_r($original_target)."<br>";
-		echo "type:<br>".print_r($type)."<br>";
-		echo "delete:<br>".print_r($delete)."<br>";
-		echo "hostname:<br>".print_r($hostName)."<br>";
-		echo "priority:<br>".print_r($priority)."<br>";
-		echo "original_priority:<br>".print_r($original_priority)."<br>";
-		echo "weight:<br>".print_r($weight)."<br>";
-		echo "original_weight:<br>".print_r($original_weight)."<br>";
-		echo "port:<br>".print_r($port)."<br>";
-		echo "original_port:<br>".print_r($original_port)."<br>";
-		echo "newrecords:<br>".print_r($newRecords)."<br>";
-		*/
 		return;
 	}
 	
+	//Use the same method as above and check for input errors doSaveDNS() uses before continuing.
+	static function CheckForErrors(){
+		global $zdbh;
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$dnsrecords  = array();
+		//Grab form inputs in array and assign them to variables
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainName'))){
+			$domainName 		= $controller->GetControllerRequest('FORM', 'domainName');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'ttl'))){
+			$ttl 				= $controller->GetControllerRequest('FORM', 'ttl');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_ttl'))){
+			$original_ttl 		= $controller->GetControllerRequest('FORM', 'original_ttl');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'target'))){
+			$target 			= $controller->GetControllerRequest('FORM', 'target');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_target'))){
+			$original_target 	= $controller->GetControllerRequest('FORM', 'original_target');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'type'))){
+			$type 				= $controller->GetControllerRequest('FORM', 'type');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'delete'))){
+			$delete 			= $controller->GetControllerRequest('FORM', 'delete');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'hostName'))){
+			$hostName 			= $controller->GetControllerRequest('FORM', 'hostName');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'priority'))){
+			$priority 			= $controller->GetControllerRequest('FORM', 'priority');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_priority'))){
+			$original_priority  = $controller->GetControllerRequest('FORM', 'original_priority');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'weight'))){
+			$weight 			= $controller->GetControllerRequest('FORM', 'weight');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_weight'))){
+			$original_weight 	= $controller->GetControllerRequest('FORM', 'original_weight');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'port'))){
+			$port 				= $controller->GetControllerRequest('FORM', 'port');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_port'))){
+			$original_port 		= $controller->GetControllerRequest('FORM', 'original_port');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'newRecords'))){
+			$newRecords 		= $controller->GetControllerRequest('FORM', 'newRecords');}
+		//Get all existing records for domain and add the id's to an array
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+				$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL");
+				$sql->execute();
+				while ($rowdns = $sql->fetch()) {
+					$dnsrecords[] = $rowdns['dn_id_pk'];
+				}
+			}
+		}
+		//Existing Records
+		//Sort through the dns record array by id and update as needed
+		foreach ($dnsrecords as $id){
+			if ($delete[$id] == "false"){
+				//TTL
+				if (isset($ttl[$id]) && !fs_director::CheckForEmptyValue($ttl[$id]) && $ttl[$id] != $original_ttl[$id]){
+					if (!is_numeric($ttl[$id])){
+						self::$ttl_error = TRUE;
+						return FALSE;
+					}
+				}
+				//TARGET
+				if (isset($target[$id]) && !fs_director::CheckForEmptyValue($target[$id]) && $target[$id] != $original_target[$id]){
+					if ($type[$id] == "A"){
+						if (!self::IsValidIPv4($target[$id])){
+						self::$invalidIPv4_error = TRUE;
+						return FALSE;
+						}
+					} elseif ($type[$id] == "AAAA"){
+						if (!self::IsValidIPv6($target[$id])){
+						self::$invalidIPv6_error = TRUE;
+						return FALSE;
+						}
+					} elseif ($type[$id] == "TXT") {
+						
+					} elseif ($type[$id] == "SPF") {
+					
+					} else {
+						if (!self::IsValidIP($target[$id])){
+							if (!self::IsValidDomainName($target[$id])){
+								self::$invalidDomainName_error = TRUE;
+								return FALSE;
+							}
+						}
+						if (!self::IsValidDomainName($target[$id])){
+							if (!self::IsValidIP($target[$id])){
+								self::$invalidIP_error = TRUE;
+								return FALSE;
+							}
+						}		
+					}
+				}
+				//PRIORITY
+				if (isset($priority[$id]) && !fs_director::CheckForEmptyValue($priority[$id]) && $priority[$id] != $original_priority[$id]){
+					if (!is_numeric($priority[$id])){
+						self::$priorityNumeric_error = TRUE;
+						return FALSE;
+					}
+					if ($priority[$id] < 0 || $priority[$id] > 65535){
+						self::$priorityRange_error = TRUE;
+						return FALSE;
+					}				
+				}
+				//WEIGHT
+				if (isset($weight[$id]) && !fs_director::CheckForEmptyValue($weight[$id]) && $weight[$id] != $original_weight[$id]){
+					if (!is_numeric($weight[$id])){
+						self::$weightNumeric_error = TRUE;
+						return FALSE;
+					}
+					if ($weight[$id] < 0 || $weight[$id] > 65535){
+						self::$weightRange_error = TRUE;
+						return FALSE;
+					}
+				}
+				//PORT
+				if (isset($port[$id]) && !fs_director::CheckForEmptyValue($port[$id]) && $port[$id] != $original_port[$id]){
+					if (!is_numeric($port[$id])){
+						self::$portNumeric_error = TRUE;
+						return FALSE;
+					}
+					if ($port[$id] < 0 || $port[$id] > 65535){
+						self::$portRange_error = TRUE;
+						return FALSE;
+					}
+				}
+			}
+		}
+		//NEW Records
+		//Find all new records in post array
+		if (isset($newRecords) && !fs_director::CheckForEmptyValue($newRecords)){
+			$numnew = $newRecords;
+			$id = 1;
+			while ($numnew >= $id){
+				if ($delete['new_'.$id] == "false"){
+					//HOSTNAME
+					if (isset($hostName['new_'.$id]) && !fs_director::CheckForEmptyValue($hostName['new_'.$id])){
+						if (!self::IsValidDomainName($hostName['new_'.$id])){
+							return FALSE;
+						}
+					}
+					//TTL
+					if (isset($ttl['new_'.$id]) && !fs_director::CheckForEmptyValue($ttl['new_'.$id])){
+						if (!is_numeric($ttl['new_'.$id])){
+							self::$ttl_error = TRUE;
+							return FALSE;
+						}
+					}
+					//TARGET
+					if (isset($target['new_'.$id]) && !fs_director::CheckForEmptyValue($target['new_'.$id])){
+						if ($type['new_'.$id] == "A"){
+							if (!self::IsValidIPv4($target['new_'.$id])){
+							self::$invalidIPv4_error = TRUE;
+							return FALSE;
+							}
+						} elseif ($type['new_'.$id] == "AAAA"){
+							if (!self::IsValidIPv6($target['new_'.$id])){
+							self::$invalidIPv6_error = TRUE;
+							return FALSE;
+							}
+						} elseif ($type['new_'.$id] == "TXT") {
+							
+						} elseif ($type['new_'.$id] == "SPF") {
+						
+						} else {
+							if (!self::IsValidIP($target['new_'.$id])){
+								if (!self::IsValidDomainName($target['new_'.$id])){
+									self::$invalidDomainName_error = TRUE;
+									return FALSE;
+								}
+							}
+							if (!self::IsValidDomainName($target['new_'.$id])){
+								if (!self::IsValidIP($target['new_'.$id])){
+									self::$invalidIP_error = TRUE;
+									return FALSE;
+								}
+							}		
+						}
+					}
+					//PRIORITY			
+					if (isset($priority['new_'.$id]) && !fs_director::CheckForEmptyValue($priority['new_'.$id])){
+						if (!is_numeric($priority['new_'.$id])){
+							self::$priorityNumeric_error = TRUE;
+							return FALSE;
+						}
+						if ($priority['new_'.$id] < 0 || $priority['new_'.$id] > 65535){
+							self::$priorityRange_error = TRUE;
+							return FALSE;
+						}	
+					}
+					//WEIGHT
+					if (isset($weight['new_'.$id]) && !fs_director::CheckForEmptyValue($weight['new_'.$id])){
+						if (!is_numeric($weight['new_'.$id])){
+							self::$weightNumeric_error = TRUE;
+							return FALSE;
+						}
+						if ($weight['new_'.$id] < 0 || $weight['new_'.$id] > 65535){
+							self::$weightRange_error = TRUE;
+							return FALSE;
+						}
+					}
+					//PORT
+					if (isset($port['new_'.$id]) && !fs_director::CheckForEmptyValue($port['new_'.$id])){
+						if (!is_numeric($port['new_'.$id])){
+							self::$portNumeric_error = TRUE;
+							return FALSE;
+						}
+						if ($port['new_'.$id] < 0 || $port['new_'.$id] > 65535){
+							self::$portRange_error = TRUE;
+							return FALSE;
+						}
+					}				
+				}
+			$id++;
+			}
+		}
+		return true;
+	}
+
+	static function IsValidDomainName($a) {
+	    $part = explode(".", $a);
+	    foreach ($part as $check) {
+	        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+
+	static function CleanRecord($data, $type){
+		$data = trim($data);
+		if ( $type != 'SPF' &&  $type != 'TXT'){
+	  		$data = str_replace(' ', '', $data);
+	 	}
+  		$data = strtolower($data);
+		return $data;
+	}
+
+	static function IsValidIP($ip){
+		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+  			return TRUE;
+		} else {
+  			return FALSE;
+		}
+	}
+
+	static function IsValidIPv4($ip){
+		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+  			return TRUE;
+		} else {
+  			return FALSE;
+		}
+	}
+
+	static function IsValidIPv6($ip){
+		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+  			return TRUE;
+		} else {
+  			return FALSE;
+		}
+	}
+
 	static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$ttl_error)) {
+            return ui_sysmessage::shout("TTL must be a numeric value.", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$invalidIPv4_error)) {
+            return ui_sysmessage::shout("IP Address is not a valid IPV4 address.", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$invalidIPv6_error)) {
+            return ui_sysmessage::shout("IP Address is not a valid IPV6 address", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$invalidDomainName_error)) {
+            return ui_sysmessage::shout("An invalid domain name character was entered. Domain names are limited to alphanumeric characters and hyphens.", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$invalidIP_error)) {
+            return ui_sysmessage::shout("Target is not a valid IP address", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$priorityNumeric_error)) {
+            return ui_sysmessage::shout("Priority must be a numeric value.", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$priorityRange_error)) {
+            return ui_sysmessage::shout("The priority of a dns record must be a numeric value between 0 and 65535", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$weightNumeric_error)) {
+            return ui_sysmessage::shout("Weight must be a numeric value.", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$weightRange_error)) {
+            return ui_sysmessage::shout("The weight of a dns record must be a numeric value between 0 and 65535", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$portNumeric_error)) {
+            return ui_sysmessage::shout("PORT must be a numeric value.", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$portRange_error)) {
+            return ui_sysmessage::shout("The port of a dns record must be a numeric value between 0 and 65535", "zannounceerror");
+        }
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
 			return ui_sysmessage::shout(ui_language::translate("Changes to your DNS have been saved successfully!"));
 		}else{

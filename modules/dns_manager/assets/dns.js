@@ -66,7 +66,7 @@ $(document).ready(function() {
 	});
 	*/
 	
-	/*
+	
 	$("div.dnsRecordSOA div.serial input").attr("disabled","disabled");
 	
 	$("div.dnsRecordMX div.hostName input").live('keypress',function() {
@@ -92,14 +92,14 @@ $(document).ready(function() {
 			"If this is not what you intended, remove the domain name from the host name field and enter in only the host value into the Host Name field."});
 		}
 	});
-	*/
+	
 	
 	$("div.dnsRecord input[type='text']").live('keypress',function() {
 		$(this).parents("div.dnsRecord").find("span.undo").fadeIn('slow');
 		unsavedChanges = true;
 	});
 	
-	/*
+	
 	$("span.undo").live("click",function() {
 		
 		$(".records div.dnsRecordError").parents("div.records").each(function(index) {
@@ -131,7 +131,7 @@ $(document).ready(function() {
 		$("#dnsRecords").tabs("select",this.id);
 		$("#dnsTitle a.undo").removeClass("disabled");
 	});
-	*/
+	
 	
 	//Save Changes
 	$("#dnsTitle a.save").click(function() {

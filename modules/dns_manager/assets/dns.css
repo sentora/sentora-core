@@ -3245,7 +3245,7 @@ div.accountTitle > div.content > div > a:hover {
 	margin-left: 4px;
 	width: 16px;
 	height: 16px;
-	background: url(/icons/16x16/plain/undo.png) no-repeat 0 0;
+	background: url(./undo_small.png) no-repeat 0 0;
 	display: none;
 	position: absolute;
 	right: 22px;
