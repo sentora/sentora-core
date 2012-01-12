@@ -29,8 +29,10 @@ class ui_module {
      * @return boolean 
      */
     static function CheckModuleExists($name) {
+        $user = ctrl_users::GetUserDetail();
         if (file_exists("modules/" . $name . "/module.zpm"))
-            return true;
+            if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], self::GetModuleID()))
+                return true;
         return false;
     }
 
@@ -105,6 +107,17 @@ class ui_module {
         global $zdbh;
         $retval = $zdbh->query("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
         $retval = $retval['mo_name_vc'];
+        return $retval;
+    }
+
+    /**
+     * This class returns the database ID of the current module.
+     */
+    static function GetModuleID() {
+        global $controller;
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
+        $retval = $retval['mo_id_pk'];
         return $retval;
     }
 
