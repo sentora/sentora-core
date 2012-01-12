@@ -2819,24 +2819,28 @@ th.center, td.center {
 
 #selectList > div.content > div > div.actions > a:hover,
 #selectList > div.content > div:hover > div.actions > a:hover {
+	/*
 	border-left: 1px solid gray;
 	border-top: 1px solid gray;
 	border-right: 1px inset gray;
 	border-bottom: 1px inset gray;
 	background-color: #f1f1f1;
+	*/
 	}
 
 #selectList > div.content > div > div.actions > a:focus,
 #selectList > div.content > div:hover > div.actions > a:focus {
+	/*
 	border-left: 1px inset gray;
 	border-top: 1px inset gray;
 	border-right: 1px inset gray;
 	border-bottom: 1px inset gray;
 	background-color: #f1f1f1;
+	*/
 	}
 
 #selectList > div.content > div:hover > div.actions > a {
-	border-color: #e8e3e3;
+	/* border-color: #e8e3e3; */
 	}
 
 /* @end */
@@ -2863,11 +2867,13 @@ div.account > div.content > div > div.actions > a {
 	vertical-align: top;
 	}
 div.account > div.content > div > div.actions > a:hover {
+	/* Removed hover changes
 	border-left: 1px solid silver;
 	border-top: 1px solid silver;
 	border-right: 1px inset silver;
 	border-bottom: 1px inset silver;
 	background-color: #f1f1f1;
+	*/
 	}
 
 div.account > div.content > div > div.actions > a.disabled:hover {
@@ -3212,17 +3218,17 @@ div.accountTitle > div.content > div > a:hover {
 
 #dnsRecords div.records > div.add > span {
 	margin: 0 auto;
-	background: url(./add.png) no-repeat 0 3px;
+	/* background: url(./add.png) no-repeat 0 3px; */
 	padding-left: 20px;
 	display: block;
 	height: 22px;
-	width: 130px;
+	width: 230px;
 	}
 #dnsRecords div.records > div.add > span:hover {
 	cursor: pointer;
 	}
 #dnsRecords div.records > div.add > span > span {
-	border-bottom: 1px dotted black;
+	/* border-bottom: 1px dotted black; */
 	vertical-align: middle;
 	}
 

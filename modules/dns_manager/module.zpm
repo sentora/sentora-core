@@ -54,7 +54,7 @@
 				
 				<@ A_Records @>
 							
-				<div class="add row"><span><span>Add new record</span></span></div>
+				<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 				<div class="newRecord row" style="display: none">
 					<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 					<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
@@ -81,7 +81,7 @@
 		
 		<@ AAAA_Records @>
 			
-		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
@@ -107,7 +107,7 @@
 		
 		<@ CNAME_Records @>
 			
-		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
@@ -134,7 +134,7 @@
 		
 		<@ MX_Records @>
 		
-		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
@@ -160,7 +160,7 @@
 		
 		<@ TXT_Records @>
 			
-		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
@@ -188,7 +188,7 @@
 		
 		<@ SRV_Records @>
 		
-		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
@@ -218,7 +218,7 @@
 		
 		<@ SPF_Records @>
 			
-		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="86400" type="text"></div>
@@ -243,7 +243,7 @@
 		
 		<@ NS_Records @>
 
-		<div class="add row"><span><span>Add new record</span></span></div>
+		<div class="add row"><span><span><button class="fg-button ui-state-default ui-corner-all" type="button">Add New Record</button></span></span></div>
 		<div class="newRecord row" style="display: none">
 			<div class="hostName"><label>Host Name</label><input name="proto_hostName" type="text"></div>
 			<div class="TTL"><label>TTL</label><input name="proto_ttl" value="172800" type="text"></div>
