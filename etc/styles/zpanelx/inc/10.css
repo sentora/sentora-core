@@ -721,3 +721,7 @@ a.zcat{
 	padding-left:5px;
 	padding-right:15px;
 }
+/** JQUERY UI TABS BACKGROUND **/
+.ui-tabs .ui-tabs-panel {
+	background-color: #F1F4F6;
+}

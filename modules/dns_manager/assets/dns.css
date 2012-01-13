@@ -232,7 +232,7 @@ div.red > div.title, div.error > div.title {
 }
 
 div.displayMessage > div.content {
-	background-color: #F1F4F6;
+	/* background-color: #F1F4F6; */
 	border: 1px solid #DBDBDB;
 	margin-bottom: 14px;
 	padding: 4px;
@@ -599,7 +599,7 @@ div.homeBox > div.content > a {
 	font-size: 12px;
 	font-weight: bold;
 	text-align: center;
-	border: 1px solid #F1F4F6;
+	/* border: 1px solid #F1F4F6; */
 	vertical-align: top;
 	}
 div.homeBox > div.content > a:hover {
@@ -2648,7 +2648,7 @@ th.header {
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {  padding-bottom: 1px; margin-bottom: -1px; border-bottom: 0; }
 
 .ui-tabs .ui-tabs-panel {
-	background-color: #F1F4F6;
+	/* background-color: #F1F4F6; */
 }
 .ui-tabs ul.icon li a {
 	background-image: url(/icons/16x16/plain/gear.png);
@@ -2713,9 +2713,9 @@ th.center, td.center {
 #selectList > div.content > div {
 	height: 48px;
 	position: relative;
-	border-top: 1px solid silver;
-	border-right: 1px solid #F1F4F6;
-	border-left: 1px solid #F1F4F6;
+	/* border-top: 1px solid silver; */
+	/* border-right: 1px solid #F1F4F6; */
+	/* border-left: 1px solid #F1F4F6; */
 	color: black;
 }
 
@@ -2863,7 +2863,7 @@ div.account > div.content > div > div.actions > a {
 	font-size: 12px;
 	font-weight: bold;
 	text-align: center;
-	border: 1px solid #F1F4F6;
+	/* border: 1px solid #F1F4F6; */
 	vertical-align: top;
 	}
 div.account > div.content > div > div.actions > a:hover {
@@ -2877,7 +2877,7 @@ div.account > div.content > div > div.actions > a:hover {
 	}
 
 div.account > div.content > div > div.actions > a.disabled:hover {
-	border: 1px solid #F1F4F6;
+	/* border: 1px solid #F1F4F6; */
 	background-color: inherit;
 	cursor: default;
 	color: #005297;
@@ -2997,8 +2997,11 @@ div.accountTitle > div.content > div > a:hover {
 /* @end */
 
 #dnsRecords .ui-tabs-panel {
+	min-height:250px;
+	/*
 	height: 440px;
 	overflow: auto;
+	*/
 }
 
 #dnsRecords div.header {

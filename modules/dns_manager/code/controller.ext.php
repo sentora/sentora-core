@@ -29,6 +29,7 @@ class module_controller {
 
 	static $ok;
 	static $editdomain;
+	static $showform;
 	static $ttl_error;
 	static $invalidIPv4_error;
 	static $invalidIPv6_error;
@@ -50,23 +51,478 @@ class module_controller {
 	}
 	
 	static function getRecordAction(){
+		global $zdbh;
 		global $controller;
-		if (fs_director::CheckForEmptyValue(self::$editdomain)){
+		$currentuser = ctrl_users::GetUserDetail();
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainID'))){
+		//$line = print_r($_POST);
+			$display = self::DisplayRecords();	
+		} elseif (fs_director::CheckForEmptyValue(self::$editdomain)) {
 			$display = self::DisplayDomains();
 		} else {
-			$display = self::DisplayRecords();
+			//Create default records if no records are found for the domain.
+			if (fs_director::CheckForEmptyValue(self::$editdomain)){
+				$domainID = $controller->GetControllerRequest('FORM', 'domainID');
+			} else {
+				$domainID = self::$editdomain;
+			}
+        	$sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL";
+        	if ($numrows = $zdbh->query($sql)) {
+            	if ($numrows->fetchColumn() == 0) {
+					$display = self::DisplayDefaultRecords();
+				} else {
+					$display = self::DisplayRecords();
+				}
+			}
 		}
 		return $display;
+	}
+
+	static function DisplayDefaultRecords(){
+		global $zdbh;
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$line  = "";
+		$line .= "<div class=\"zgrid_wrapper\">";
+		
+		
+		$line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
+		$line .= "<div class=\"content\"><h2>".ui_language::translate("Create Deafult DNS Records")."</h2>";
+		$line .= "".ui_language::translate("No records were found for this domain.  Click the button below to set up your domain records for the first time")."";
+		$line .= "<div>";
+		$line .= "<div class=\"actions\"><a class=\"back\" href=\"/?module=" . $controller->GetControllerRequest('URL', 'module') . "\">Domain List</a></div>";
+		$line .= "</div><br class=\"clear\">";
+		$line .= "</div>";
+		$line .= "</div>";
+		
+
+		$line .= "<form action=\"./?module=dns_manager&action=CreateDefaultRecords\" method=\"post\">";
+        $line .= "<table class=\"zform\">";
+		$line .= "<tr>";
+		$line .= "<td>";
+		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\">".ui_language::translate("Create Records")."</button>";
+		$line .= "</td>";
+		$line .= "</tr>";
+		$line .= "</table>";
+		$line .= "<input type=\"hidden\" name=\"inDomain\" value =\"" . $controller->GetControllerRequest('FORM', 'inDomain') . "\" />";
+		$line .= "<input type=\"hidden\" name=\"inUserID\" value =\"" . $currentuser['userid'] . "\" />";
+		$line .= "</form>";
+		$line .= "</div>";
+		return $line;
 	}
 	
 	static function DisplayRecords(){
 		global $zdbh;
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . self::$editdomain . " AND vh_deleted_ts IS NULL")->Fetch();
-		$line  = "";
-		$line .= "<h2>".ui_language::translate("DNS Records for:")." ".$domain['vh_name_vc']."</h2>";
-		$line .= "<a href=\"./?module=" . $controller->GetControllerRequest('URL', 'module') . "\">".ui_language::translate("Select Another Domain")."</a>";
+		if (fs_director::CheckForEmptyValue(self::$editdomain)){
+			$domainID = $controller->GetControllerRequest('FORM', 'domainID');
+		} else {
+			$domainID = self::$editdomain;
+		}
+		$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_deleted_ts IS NULL")->Fetch();
+		$line  = "";		
+		$line .= "<div class=\"zgrid_wrapper\">";
+		//$line .= "<h2>".ui_language::translate("DNS Records for:")." ".$domain['vh_name_vc']."</h2>";
+		//$line .= "<a href=\"./?module=" . $controller->GetControllerRequest('URL', 'module') . "\">".ui_language::translate("Select Another Domain")."</a>";
+		$line .= "<!-- DNS FORM -->";
+		$line .= "<div style=\"display: block; margin-right:20px;\">";
+		$line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
+		$line .= "<div class=\"content\"><h2>DNS records for:</h2><a href=\"http://".$domain['vh_name_vc']."\" target=\"_blank\">".$domain['vh_name_vc']."</a>";
+		$line .= "<div>";
+		$line .= "<div class=\"actions\"><a class=\"undo disabled\">Undo Changes</a><a class=\"save disabled\">Save Changes</a><a class=\"back\" href=\"/?module=" . $controller->GetControllerRequest('URL', 'module') . "\">Domain List</a></div>";
+		$line .= "</div><br class=\"clear\">";
+		$line .= "</div>";
+		$line .= "</div>";
+		$line .= "<form action=\"./?module=dns_manager&action=SaveDNS\" method=\"post\">";
+		$line .= "<input id=\"domainName\" name=\"domainName\" value=\"".$domain['vh_name_vc']."\" type=\"hidden\">";
+		$line .= "<input id=\"domainID\" name=\"domainID\" value=\"".$domain['vh_id_pk']."\" type=\"hidden\">";
+		$line .= "<!-- TABS -->";
+		$line .= "<div class=\"ui-tabs ui-widget ui-widget-content ui-corner-all\" id=\"dnsRecords\">";
+		$line .= "<ul class=\"domains ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all\">";
+		$line .= "<li><a href=\"#typeA\">A</a></li>";
+		$line .= "		<li><a href=\"#typeAAAA\">AAAA</a></li>";
+		$line .= "		<li><a href=\"#typeCNAME\">CNAME</a></li>";
+		$line .= "		<li><a href=\"#typeMX\">MX</a></li>";
+		$line .= "		<li><a href=\"#typeTXT\">TXT</a></li>";
+		$line .= "		<li><a href=\"#typeSRV\">SRV</a></li>";
+		$line .= "		<li><a href=\"#typeSPF\">SPF</a></li>";
+		$line .= "		<li><a href=\"#typeNS\">NS</a></li>";
+		$line .= "	</ul>";
+		$line .= "<!-- A RECORDS -->";
+		$line .= "	<div class=\"records dnsRecordA ui-tabs-panel ui-widget-content ui-corner-bottom\" id=\"typeA\">";
+		$line .= "		<div class=\"description\">The A record contains an IPv4 address. It's target is an IPv4 address, e.g. '192.168.1.1'.</div>";
+		$line .= "				<div class=\"header row\">";
+		$line .= "					<div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+		$line .= "					<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+		$line .= "					<div class=\"in\">&nbsp;</div><div class=\"type\">&nbsp;</div><div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+		$line .= "					<div class=\"actions\"><label>Actions</label></div>";
+		$line .= "					<br>";
+		$line .= "				</div>";			
+		//$line .= "				<@ A_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='A' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">\n";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>\n";
+			$line .= "<div class=\"TTL\">\n";
+			$line .= "<input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\">\n";
+			$line .= "<input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\">\n";
+			$line .= "</div>\n";
+			$line .= "<div class=\"in\">IN</div>\n";
+			$line .= "<div class=\"type\">A</div>\n";
+			$line .= "<div class=\"target\">\n";
+			$line .= "<input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\">\n";
+			$line .= "<input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\">\n";
+			$line .= "</div>\n";
+			$line .= "<span class=\"delete enableToolTip\"></span>\n";
+			$line .= "<span class=\"undo enableToolTip\"></span>\n";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"A\" type=\"hidden\">\n";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">\n";
+			$line .= "<br>\n";
+			$line .= "</div>\n";
+		}							
+		$line .= "				<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+		$line .= "				<div class=\"newRecord row\" style=\"display: none\">";
+		$line .= "					<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+		$line .= "					<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"86400\" type=\"text\"></div>";
+		$line .= "					<div class=\"in\">IN</div>";
+		$line .= "					<div class=\"type\">A</div>";
+		$line .= "					<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+		$line .= "					<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span><input name=\"proto_type\" value=\"A\" type=\"hidden\">";
+		$line .= "				</div>";
+		$line .= "	</div> <!-- END A RECORDS -->";
+		$line .= "<!-- AAA RECORDS -->";
+$line .= "	<div class=\"records dnsRecordAAAA ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeAAAA\">";
+$line .= "		<div class=\"description\">The AAAA record contains an IPv6 address. It's target is an IPv6 address, e.g. '2607:fe90:2::1'.</div>";
+$line .= "		<div class=\"header row\">";
+$line .= "			<div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+$line .= "			<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+$line .= "			<div class=\"in\">&nbsp;</div>";
+$line .= "			<div class=\"type\">&nbsp;</div>";
+$line .= "			<div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+$line .= "			<div class=\"actions\"><label>Actions</label></div>";
+$line .= "			<br>";
+$line .= "		</div>";
+		
+//$line .= "		<@ AAAA_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='AAAA' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">\n";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>\n";
+			$line .= "<div class=\"TTL\">\n";
+			$line .= "<input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\">\n";
+			$line .= "<input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\">\n";
+			$line .= "</div>\n";
+			$line .= "<div class=\"in\">IN</div>\n";
+			$line .= "<div class=\"type\">AAAA</div>\n";
+			$line .= "<div class=\"target\">\n";
+			$line .= "<input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\">\n";
+			$line .= "<input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\">\n";
+			$line .= "</div>\n";
+			$line .= "<span class=\"delete enableToolTip\"></span>\n";
+			$line .= "<span class=\"undo enableToolTip\"></span>\n";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"AAAA\" type=\"hidden\">\n";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">\n";
+			$line .= "<br>\n";
+			$line .= "</div>\n";
+		}	
+			
+$line .= "		<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+$line .= "		<div class=\"newRecord row\" style=\"display: none\">";
+$line .= "			<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+$line .= "			<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"86400\" type=\"text\"></div>";
+$line .= "			<div class=\"in\">IN</div><div class=\"type\">AAAA</div>";
+$line .= "			<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+$line .= "			<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span><input name=\"proto_type\" value=\"AAAA\" type=\"hidden\">";
+$line .= "		</div>";
+$line .= "	</div> <!-- END AAA RECORDS -->";
+
+$line .= "<!-- CNAME RECORDS -->	";
+$line .= "	<div class=\"records dnsRecordCNAME ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeCNAME\">";
+$line .= "		<div class=\"description\">The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g. 
+'webserver-01.example.com'.</div>";
+$line .= "		<div class=\"header row\">";
+$line .= "			<div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+$line .= "			<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+$line .= "			<div class=\"in\">&nbsp;</div>";
+$line .= "			<div class=\"type\">&nbsp;</div>";
+$line .= "			<div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+$line .= "			<div class=\"actions\"><label>Actions</label></div>";
+$line .= "			<br>";
+$line .= "		</div>";
+		
+//$line .= "		<@ CNAME_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='CNAME' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>";
+			$line .= "<div class=\"TTL\">";
+			$line .= "<input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\">";
+			$line .= "<input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"in\">IN</div>";
+			$line .= "<div class=\"type\">CNAME</div>";
+			$line .= "<div class=\"target\">";
+			$line .= "<input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\">";
+			$line .= "<input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\">";
+			$line .= "</div>";
+			$line .= "<span class=\"delete enableToolTip\"></span>";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"CNAME\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<br>";
+			$line .= "</div>";
+		}	
+			
+$line .= "		<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+$line .= "		<div class=\"newRecord row\" style=\"display: none\">";
+$line .= "			<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+$line .= "			<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"86400\" type=\"text\"></div>";
+$line .= "			<div class=\"in\">IN</div>";
+$line .= "			<div class=\"type\">CNAME</div>";
+$line .= "			<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+$line .= "			<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span><input name=\"proto_type\" value=\"CNAME\" type=\"hidden\">";
+$line .= "		</div>			";
+$line .= "	</div> <!-- END CNAME RECORDS -->";
+
+$line .= "<!-- MX RECORDS -->";
+$line .= "	<div class=\"records dnsRecordMX ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeMX\">";
+$line .= "		<div class=\"description\">The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535.  It's target is a fully qualified domain name, e.g. 'mail.example.com'.</div>";
+$line .= "		<div class=\"header row\">";
+$line .= "			<div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+$line .= "			<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+$line .= "			<div class=\"in\">&nbsp;</div>";
+$line .= "			<div class=\"type\">&nbsp;</div>";
+$line .= "			<div class=\"priority\"><label class=\"enableToolTip\">Priority</label></div>";
+$line .= "			<div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+$line .= "			<div class=\"actions\"><label>Actions</label></div>";
+$line .= "			<br>";
+$line .= "		</div>";
+		
+//$line .= "		<@ MX_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='MX' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>";
+			$line .= "<div class=\"TTL\"><input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\"><input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"in\">IN</div>";
+			$line .= "<div class=\"type\">MX</div>";
+			$line .= "<div class=\"priority\"><input name=\"priority[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_priority_in']."\" type=\"text\"><input name=\"original_priority[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_priority_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\"></div>";
+			$line .= "<span class=\"delete enableToolTip\"></span>";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"MX\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<br>";
+			$line .= "</div>";
+		}
+		
+$line .= "		<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+$line .= "		<div class=\"newRecord row\" style=\"display: none\">";
+$line .= "			<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+$line .= "			<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"86400\" type=\"text\"></div>";
+$line .= "			<div class=\"in\">IN</div>";
+$line .= "			<div class=\"type\">MX</div>";
+$line .= "			<div class=\"priority\"><label>Priority</label><input name=\"proto_priority\" type=\"text\"></div>";
+$line .= "			<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+$line .= "			<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span>";
+$line .= "			<input name=\"proto_type\" value=\"MX\" type=\"hidden\">";
+$line .= "		</div>			";
+$line .= "	</div> <!-- END MX RECORDS -->";
+
+$line .= "<!-- TXT RECORDS -->";
+$line .= "	<div class=\"records dnsRecordTXT ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeTXT\">";
+$line .= "		<div class=\"description\">The TXT field can be used to attach textual data to a domain.</div>";
+$line .= "		<div class=\"header row\"><div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+$line .= "		<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+$line .= "		<div class=\"in\">&nbsp;</div><div class=\"type\">&nbsp;</div>";
+$line .= "		<div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+$line .= "		<div class=\"actions\"><label>Actions</label></div>";
+$line .= "		<br>";
+$line .= "		</div>";
+		
+//$line .= "		<@ TXT_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='TXT' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>";
+			$line .= "<div class=\"TTL\"><input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\"><input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"in\">IN</div>";
+			$line .= "<div class=\"type\">TXT</div>";
+			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\"></div>";
+			$line .= "<span class=\"delete enableToolTip\"></span>";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"TXT\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<br>";
+			$line .= "</div>";
+		}	
+			
+$line .= "		<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+$line .= "		<div class=\"newRecord row\" style=\"display: none\">";
+$line .= "			<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+$line .= "			<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"86400\" type=\"text\"></div>";
+$line .= "			<div class=\"in\">IN</div>";
+$line .= "			<div class=\"type\">TXT</div>";
+$line .= "			<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+$line .= "			<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span>";
+$line .= "			<input name=\"proto_type\" value=\"TXT\" type=\"hidden\">";
+$line .= "		</div>";
+$line .= "	</div> <!-- END TXT RECORDS -->";
+
+$line .= "<!-- SRV RECORDS -->	";
+$line .= "	<div class=\"records dnsRecordSRV ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeSRV\">";
+$line .= "		<div class=\"description\">SRV records can be used to encode the location and port of services on a domain name.  It's target is a fully qualified domain name, e.g. 'host.example.com'.</div>";
+$line .= "		<div class=\"header row\">";
+$line .= "			<div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+$line .= "			<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+$line .= "			<div class=\"in\">&nbsp;</div><div class=\"type\">&nbsp;</div><div class=\"priority\"><label class=\"enableToolTip\">Priority</label></div>";
+$line .= "			<div class=\"weight\"><label class=\"enableToolTip\">Weight</label></div>";
+$line .= "			<div class=\"port\"><label class=\"enableToolTip\">Port</label></div>";
+$line .= "			<div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+$line .= "			<div class=\"actions\"><label>Actions</label></div>";
+$line .= "			<br>";
+$line .= "		</div>";
+		
+//$line .= "		<@ SRV_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='SRV' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>";
+			$line .= "<div class=\"TTL\"><input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\"><input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"in\">IN</div>";
+			$line .= "<div class=\"type\">SRV</div>";
+			$line .= "<div class=\"priority\"><input name=\"priority[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_priority_in']."\" type=\"text\"><input name=\"original_priority[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_priority_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"weight\"><input name=\"weight[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_weight_in']."\" type=\"text\"><input name=\"original_weight[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_weight_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"port\"><input name=\"port[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_port_in']."\" type=\"text\"><input name=\"original_port[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_port_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\"></div>";
+			$line .= "<span class=\"delete enableToolTip\"></span>";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"SRV\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<br>";
+			$line .= "</div>";
+		}	
+		
+$line .= "		<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+$line .= "		<div class=\"newRecord row\" style=\"display: none\">";
+$line .= "			<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+$line .= "			<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"86400\" type=\"text\"></div>";
+$line .= "			<div class=\"in\">IN</div>";
+$line .= "			<div class=\"type\">SRV</div>";
+$line .= "			<div class=\"priority\"><label>Priority</label><input name=\"proto_priority\" type=\"text\"></div>";
+$line .= "			<div class=\"weight\"><label>Weight</label><input name=\"proto_weight\" type=\"text\"></div>";
+$line .= "			<div class=\"port\"><label>Port</label><input name=\"proto_port\" type=\"text\"></div>";
+$line .= "			<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+$line .= "			<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span>";
+$line .= "			<input name=\"proto_type\" value=\"SRV\" type=\"hidden\">";
+$line .= "		</div>";
+$line .= "	</div> <!-- END SRV RECORDS -->	";
+
+$line .= "<!-- SPF RECORDS -->";
+$line .= "	<div class=\"records dnsRecordSPF ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeSPF\">";
+$line .= "		<div class=\"description\">SPF records is used to store Sender Policy Framework details.  It's target is a text string, e.g.<br>'v=spf1 a:192.168.1.1 include:example.com mx ptr -all'</div>";
+$line .= "		<div class=\"header row\">";
+$line .= "			<div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+$line .= "			<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+$line .= "			<div class=\"in\">&nbsp;</div>";
+$line .= "			<div class=\"type\">&nbsp;</div>";
+$line .= "			<div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+$line .= "			<div class=\"actions\"><label>Actions</label></div>";
+$line .= "			<br>";
+$line .= "		</div>";
+		
+//$line .= "		<@ SPF_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='SPF' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>";
+			$line .= "<div class=\"TTL\"><input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\"><input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"in\">IN</div>";
+			$line .= "<div class=\"type\">SPF</div>";
+			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\"></div>";
+			$line .= "<span class=\"delete enableToolTip\"></span>";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"SPF\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<br>";
+			$line .= "</div>";
+		}
+			
+$line .= "		<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+$line .= "		<div class=\"newRecord row\" style=\"display: none\">";
+$line .= "			<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+$line .= "			<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"86400\" type=\"text\"></div>";
+$line .= "			<div class=\"in\">IN</div>";
+$line .= "			<div class=\"type\">SPF</div>";
+$line .= "			<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+$line .= "			<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span>";
+$line .= "			<input name=\"proto_type\" value=\"SPF\" type=\"hidden\">";
+$line .= "		</div>";
+$line .= "	</div> <!-- END SPF RECORDS -->";
+
+$line .= "<!-- NS RECORDS -->";
+$line .= "	<div class=\"records dnsRecordNS ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeNS\">";
+$line .= "		<div class=\"description\">Nameserver record. Specifies nameservers for a domain. It's target is a fully qualified domain name, e.g.  'ns1.example.com'.  The records should match what the domain name has registered with the internet root servers.</div>";
+$line .= "		<div class=\"header row\">";
+$line .= "			<div class=\"hostName\"><label class=\"enableToolTip\">Host Name</label></div>";
+$line .= "			<div class=\"TTL\"><label class=\"enableToolTip\">TTL</label></div>";
+$line .= "			<div class=\"in\">&nbsp;</div><div class=\"type\">&nbsp;</div><div class=\"target\"><label class=\"enableToolTip\">Target</label></div>";
+$line .= "			<div class=\"actions\"><label>Actions</label></div>";
+$line .= "			<br>";
+$line .= "		</div>";
+		
+//$line .= "		<@ NS_Records @>";
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='NS' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql->execute();
+		while ($rowdns = $sql->fetch()) {
+			$line .= "<div class=\"dnsRecord row\">";
+			$line .= "<div class=\"hostName\"><span>".$rowdns['dn_host_vc']."</span></div>";
+			$line .= "<div class=\"TTL\"><input name=\"ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"text\"><input name=\"original_ttl[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_ttl_in']."\" type=\"hidden\"></div>";
+			$line .= "<div class=\"in\">IN</div>";
+			$line .= "<div class=\"type\">NS</div>";
+			$line .= "<div class=\"target\"><input name=\"target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"text\"><input name=\"original_target[".$rowdns['dn_id_pk']."]\" value=\"".$rowdns['dn_target_vc']."\" type=\"hidden\"></div>";
+			$line .= "<span class=\"delete enableToolTip\"></span>";
+			$line .= "<span class=\"undo enableToolTip\"></span>";
+			$line .= "<input name=\"type[".$rowdns['dn_id_pk']."]\" value=\"NS\" type=\"hidden\">";
+			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
+			$line .= "<br>";
+			$line .= "</div>";
+		}	
+
+$line .= "		<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">Add New Record</button></span></span></div>";
+$line .= "		<div class=\"newRecord row\" style=\"display: none\">";
+$line .= "			<div class=\"hostName\"><label>Host Name</label><input name=\"proto_hostName\" type=\"text\"></div>";
+$line .= "			<div class=\"TTL\"><label>TTL</label><input name=\"proto_ttl\" value=\"172800\" type=\"text\"></div>";
+$line .= "			<div class=\"in\">IN</div>";
+$line .= "			<div class=\"type\">NS</div>";
+$line .= "			<div class=\"target\"><label>Target</label><input name=\"proto_target\" type=\"text\"></div>";
+$line .= "			<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\">";
+$line .= "			<span class=\"delete enableToolTip\"></span>";
+$line .= "			<input name=\"proto_type\" value=\"NS\" type=\"hidden\">";
+$line .= "		</div>";
+$line .= "		<input name=\"newRecords\" value=\"0\" type=\"hidden\">";
+$line .= "	</div> <!-- END NS RECORDS -->";
+
+$line .= "</div> <!-- END TABS -->";
+
+$line .= "	<div id=\"dnsTitle\" class=\"account accountTitle\">";
+$line .= "		<div class=\"content\">";
+$line .= "			<div>";
+$line .= "				<div class=\"actions\"><a class=\"undo disabled\">Undo Changes</a><a class=\"save disabled\">Save Changes</a><a class=\"back\" href=\"MODULE_PATH\">Domain List</a></div>";
+$line .= "			</div><br class=\"clear\">";
+$line .= "		</div>";
+$line .= "	</div>";
+	
+$line .= "</form>";
+$line .= "</div>";
+$line .= "<!-- END DNS FORM -->";
 		return $line;
 	}
 	
@@ -74,11 +530,12 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		//$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . self::$clientid . " AND ac_deleted_ts IS NULL AND ac_reseller_fk=" . $currentuser['userid'] . "")->Fetch();
 		$line  = "";
-		$line  = "";
+		$line .= "<div class=\"zgrid_wrapper\">";
 		$line .= "<h2>".ui_language::translate("Manage Domains")."</h2>";
-		$line .= "<form action=\"./?module=dns_manager&action=DisplayRecords\" method=\"post\">";
+		$line .= "".ui_language::translate("Choose fom the list of domains below")."";
+		$line .= "<form name=DisplayDNS action=\"./?module=dns_manager&action=DisplayRecords\" method=\"post\">";
+		$line .= "<br><br>";
         $line .= "<table class=\"zform\">";
         $line .= "<tr>";
         $line .= "<td><select name=\"inDomain\" id=\"inDomain\">";
@@ -95,6 +552,7 @@ class module_controller {
 		$line .= "</tr>";
         $line .= "</table>";
     	$line .= "</form>";
+		$line .= "</div>";
 		return $line;
 	}
 			
@@ -123,7 +581,7 @@ class module_controller {
 		global $controller;
 		$line = NULL;
 		$currentuser = ctrl_users::GetUserDetail();
-		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='A' AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
+		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='A' AND dn_vhost_fk=".self::$editdomain." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
 		$sql->execute();
 		while ($rowdns = $sql->fetch()) {
 			$line .= "<div class=\"dnsRecord row\">\n";
@@ -144,7 +602,7 @@ class module_controller {
 			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">\n";
 			$line .= "<br>\n";
 			$line .= "</div>\n";
-		}		
+		}	
 		return $line;
 	}
 
@@ -174,7 +632,7 @@ class module_controller {
 			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">\n";
 			$line .= "<br>\n";
 			$line .= "</div>\n";
-		}		
+		}	
 		return $line;
 	}
 
@@ -203,7 +661,7 @@ class module_controller {
 			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
 			$line .= "<br>";
 			$line .= "</div>";
-		}		
+		}	
 		return $line;
 	}
 
@@ -228,7 +686,7 @@ class module_controller {
 			$line .= "<input class=\"delete\" name=\"delete[".$rowdns['dn_id_pk']."]\" value=\"false\" type=\"hidden\">";
 			$line .= "<br>";
 			$line .= "</div>";
-		}		
+		}
 		return $line;
 	}
 
@@ -341,12 +799,231 @@ class module_controller {
 	static function doSaveDNS(){
 		global $zdbh;
 		global $controller;
-		//$line = print_r($_POST);
 		if (!fs_director::CheckForEmptyValue(self::CheckForErrors())){
 		self::SaveDNS();
 		self::$ok = TRUE;
 		return;
 		}
+	}
+	
+	static function doCreateDefaultRecords(){
+		global $zdbh;
+		global $controller;
+		$domainID = $controller->GetControllerRequest('FORM', 'inDomain');
+		$domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_deleted_ts IS NULL")->Fetch();
+		$userID = $controller->GetControllerRequest('FORM', 'inUserID');
+		$target = $_SERVER["SERVER_ADDR"];
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'A',
+															'@',
+															3600,
+															'".$target."',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'CNAME',
+															'www',
+															3600,
+															'@',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'CNAME',
+															'ftp',
+															3600,
+															'@',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'A',
+															'mail',
+															86400,
+															'".$target."',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'MX',
+															'@',
+															86400,
+															'mail.".$domainName['vh_name_vc']."',
+															10,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'A',
+															'ns1',
+															172800,
+															'".$target."',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'A',
+															'ns2',
+															172800,
+															'".$target."',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'NS',
+															'@',
+															172800,
+															'ns1.".$domainName['vh_name_vc']."',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+															dn_name_vc,
+															dn_vhost_fk,
+															dn_type_vc,
+															dn_host_vc,
+															dn_ttl_in,
+															dn_target_vc,
+															dn_priority_in,
+															dn_weight_in,
+															dn_port_in,
+															dn_created_ts) VALUES (
+															".$userID.",
+															'".$domainName['vh_name_vc']."',
+															".$domainID.",
+															'NS',
+															'@',
+															172800,
+															'ns2.".$domainName['vh_name_vc']."',
+															NULL,
+															NULL,
+															NULL,
+															".time().")");		
+		$sql->execute();
+				
+		self::$editdomain = $domainID;			
+		return;
+	
 	}
 
 	static function SaveDNS(){
@@ -357,6 +1034,8 @@ class module_controller {
 		//Grab form inputs in array and assign them to variables
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainName'))){
 			$domainName 		= $controller->GetControllerRequest('FORM', 'domainName');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainID'))){
+			$domainID 		= $controller->GetControllerRequest('FORM', 'domainID');}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'ttl'))){
 			$ttl 				= $controller->GetControllerRequest('FORM', 'ttl');}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_ttl'))){
@@ -386,10 +1065,10 @@ class module_controller {
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'newRecords'))){
 			$newRecords 		= $controller->GetControllerRequest('FORM', 'newRecords');}
 		//Get all existing records for domain and add the id's to an array
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL";
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-				$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL");
+				$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL");
 				$sql->execute();
 				while ($rowdns = $sql->fetch()) {
 					$dnsrecords[] = $rowdns['dn_id_pk'];
@@ -445,7 +1124,7 @@ class module_controller {
 						$hostName_new = "NULL";
 					}
 					if (isset($type['new_'.$id]) && !fs_director::CheckForEmptyValue($type['new_'.$id])){
-						$type_new = "'".self::CleanRecord($type['new_'.$id], $type['new_'.$id])."'";
+						$type_new = "'".$type['new_'.$id]."'";
 					} else {
 						$type_new = "NULL";
 					}
@@ -486,8 +1165,8 @@ class module_controller {
 															dn_port_in,
 															dn_created_ts) VALUES (
 															".$currentuser['userid'].",
-															'ztest.com',
-															1,
+															'".$domainName."',
+															".$domainID.",
 															".$type_new.",
 															".$hostName_new.",
 															".$ttl_new.",
@@ -513,6 +1192,8 @@ class module_controller {
 		//Grab form inputs in array and assign them to variables
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainName'))){
 			$domainName 		= $controller->GetControllerRequest('FORM', 'domainName');}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainID'))){
+			$domainID 		= $controller->GetControllerRequest('FORM', 'domainID');}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'ttl'))){
 			$ttl 				= $controller->GetControllerRequest('FORM', 'ttl');}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'original_ttl'))){
@@ -542,10 +1223,10 @@ class module_controller {
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'newRecords'))){
 			$newRecords 		= $controller->GetControllerRequest('FORM', 'newRecords');}
 		//Get all existing records for domain and add the id's to an array
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL";
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-				$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_deleted_ts IS NULL");
+				$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL");
 				$sql->execute();
 				while ($rowdns = $sql->fetch()) {
 					$dnsrecords[] = $rowdns['dn_id_pk'];
