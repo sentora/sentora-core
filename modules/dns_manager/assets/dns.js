@@ -210,3 +210,44 @@ function UnLoadWindow(e) {
 
 window.onbeforeunload = UnLoadWindow;
 */
+
+function displayWarning (message) {
+
+	var html = "";
+	var height = "auto";
+	var width = "360";
+
+	if ( typeof message == "object" ) {
+		html = message.message;
+		if ( typeof message.height != "undefined" ) {
+			height = message.height;
+		}
+		if ( typeof message.width != "undefined" ) {
+			width = message.width;
+		}
+
+	} else {
+		html = message;
+	}
+
+	$("<div/>").html(html).dialog({
+		autoOpen: true,
+		width: width,
+		height: height,
+		stack: true,
+		modal: true,
+		resizable: false,
+		draggable: false,
+		dialogClass: "dialogWarning",
+		buttons: {
+			"Close": function() {
+				$(this).dialog("close");
+			}
+		},
+		close: function () {
+			$(this).remove();
+		},
+		title: 'Warning'
+	});
+
+}
