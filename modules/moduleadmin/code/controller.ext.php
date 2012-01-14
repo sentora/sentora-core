@@ -32,10 +32,10 @@ class module_controller {
     static function getAdminModules() {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Administration Modules") . "</h2>";
-        $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'modadmin' ORDER BY mo_name_vc ASC";
+        $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'modadmin' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC";
         if ($nummodsql = $zdbh->query($modsql)) {
             if ($nummodsql->fetchColumn() > 0) {
-                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'modadmin'");
+                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'modadmin' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
                 $modsql->execute();
                 $line .="<table>";
                 while ($modules = $modsql->fetch()) {
@@ -59,12 +59,11 @@ class module_controller {
         $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'user'";
         if ($nummodsql = $zdbh->query($modsql)) {
             if ($nummodsql->fetchColumn() > 0) {
-                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en = 'user' AND mo_name_vc != 'Module Admin' ORDER BY mo_name_vc ASC");
+                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en <> 'system' ORDER BY mo_name_vc ASC");
                 $modsql->execute();
                 $line .= "<form action=\"./?module=moduleadmin&action=EditModule\" method=\"post\">";
                 $line .= "<table class=\"zgrid\">";
                 $line .= "<tr>";
-                $line .= "<th></th>";
                 $line .= "<th>" . ui_language::translate("Module") . "</th>";
                 $line .= "<th>" . ui_language::translate("On") . "/" . ui_language::translate("Off") . "</th>";
                 $line .= "<th></th>";
@@ -76,7 +75,7 @@ class module_controller {
                 $line .= "</tr>";
                 while ($modules = $modsql->fetch()) {
                     $line .= "<tr>";
-                    $line .= "<td>" . self::ModuleStatisIcon($modules['mo_id_pk']) . "</td>";
+                    $line .= "<td>" . self::ModuleStatusIcon($modules['mo_id_pk']) . "</td>";
                     $line .= "<td><a href=\"./?module=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
                     $line .= "<td><select name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\">";
                     if ($modules['mo_enabled_en'] == 'true') {
@@ -92,7 +91,6 @@ class module_controller {
                     }
                     $line .= "<option value=\"false\" " . $selected . ">" . ui_language::translate("Disabled") . "</option>";
                     $line .= "</select></td>";
-                    $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSave_" . $modules['mo_id_pk'] . "\" value=\"inSave_" . $modules['mo_id_pk'] . "\">" . ui_language::translate("Save") . "</button></td>";
                     $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
                     while ($groups = $groupssql->fetch()) {
                         $ischeck = 0;
@@ -103,7 +101,7 @@ class module_controller {
                     $line .= "</tr>";
                 }
                 $line .= "</table>";
-                $line .= "</form>";
+                $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSave\" value=\"inSave\">" . ui_language::translate("Save changes") . "</button></form>";
             } else {
                 $line .= ui_language::translate("You have no administration modules at this time.");
             }
@@ -111,7 +109,7 @@ class module_controller {
         return $line;
     }
 
-    static function ModuleStatisIcon($mo_id_pk) {
+    static function ModuleStatusIcon($mo_id_pk) {
         global $zdbh;
         global $controller;
         $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = '" . $mo_id_pk . "'");
@@ -132,7 +130,7 @@ class module_controller {
         $sql = "SELECT COUNT(*) FROM x_modules";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_modules");
+                $sql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en <> 'system' ORDER BY mo_name_vc ASC");
                 $sql->execute();
                 while ($rowmodule = $sql->fetch()) {
                     $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
@@ -143,10 +141,8 @@ class module_controller {
                             ctrl_groups::DeleteGroupModulePermissions($groups['ug_id_pk'], $rowmodule['mo_id_pk']);
                         }
                     }
-                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inSave_' . $rowmodule['mo_id_pk'] . ''))) {
-                        $sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = '" . $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . '') . "' WHERE mo_id_pk = " . $rowmodule['mo_id_pk'] . "");
-                        $sql2->execute();
-                    }
+                    $sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = '" . $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . '') . "' WHERE mo_id_pk = " . $rowmodule['mo_id_pk'] . "");
+                    $sql2->execute();
                 }
                 self::$ok = TRUE;
                 return;
