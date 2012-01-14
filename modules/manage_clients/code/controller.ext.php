@@ -162,6 +162,16 @@ class module_controller {
         $line .= "<td><input type=\"text\" name=\"inPassword\" id=\"inPassword\" value=\"" . fs_director::GenerateRandomPassword(9, 4) . "\" /></td>";
         $line .= "</tr>";
         $line .= "<tr>";
+        $line .= "<th>" . ui_language::translate("Usergroup") . ":</th>";
+        $line .= "<td><select name=\"inGroup\" id=\"inGroup\">";
+        $line .= "<option value=\"\" selected=\"selected\">-- Select a usergroup --</option>";
+        $sql = $zdbh->prepare("SELECT * FROM x_groups WHERE ug_reseller_fk=" . $currentuser['userid'] . " ORDER BY ug_name_vc ASC");
+        $sql->execute();
+        while ($rowgroups = $sql->fetch()) {
+            $line .= "<option value=\"" . $rowgroups['ug_id_pk'] . "\">" . $rowgroups['ug_name_vc'] . "</option>";
+        }
+        $line .= "</select></td>";
+        $line .= "</tr>";
         $line .= "<th>" . ui_language::translate("Package") . ":</th>";
         $line .= "<td><select name=\"inPackage\" id=\"inPackage\">";
         $line .= "<option value=\"\" selected=\"selected\">-- Select a package --</option>";
@@ -219,6 +229,26 @@ class module_controller {
         $line .= "<th>" . ui_language::translate("Username") . ":</th>";
         $line .= "<td><input name=\"inUserName\" type=\"text\" disabled=\"disabled\" maxlength=\"10\" id=\"inUserName\" value=\"" . $rowclient['ac_user_vc'] . "\" readonly=\"readonly\" /></td>";
         $line .= "</tr>";
+        $line .= "<tr>";
+        $line .= "<th>" . ui_language::translate("User group") . ":</th>";
+        $line .= "<td>";
+        $sql = $zdbh->prepare("SELECT * FROM x_groups WHERE ug_reseller_fk=" . $rowclient['ac_reseller_fk'] . "");
+        $sql->execute();
+        if ($rowclient['ac_user_vc'] != 'zadmin') {
+            $line .= "<select name=\"inGroup\" id=\"inGroup\">";
+            while ($rowgroups = $sql->fetch()) {
+                $line .= "<option value=\"" . $rowgroups['ug_id_pk'] . "\"";
+                if ($rowgroups['ug_id_pk'] == $rowclient['ac_group_fk']) {
+                    $line .= " selected ";
+                }
+                $line .= ">" . $rowgroups['ug_name_vc'] . "</option>";
+            }
+            $line .= "</select>";
+        } else {
+            $rowgroups = $sql->fetch();
+            $line .= "<input type=\"text\" disabled=\"disabled\" maxlength=\"10\" value=\"" . $rowgroups['ug_name_vc'] . "\" readonly=\"readonly\" />";
+            $line .= "<input type=\"hidden\" name=\"inGroup\" id=\"inGroup\" value=\"" . $rowgroups['ug_id_pk'] . "\" />";
+        }
         $line .= "<tr>";
         $line .= "<th>" . ui_language::translate("Package") . ":</th>";
         $line .= "<td>";
@@ -319,13 +349,14 @@ class module_controller {
         global $controller;
         $sql = $zdbh->prepare("UPDATE x_accounts SET 
 										ac_package_fk= " . $controller->GetControllerRequest('FORM', 'inPackage') . " ,
-										ac_enabled_in= " . $controller->GetControllerRequest('FORM', 'inEnabled') . "
+										ac_enabled_in= " . $controller->GetControllerRequest('FORM', 'inEnabled') . ",
+                                                                                ac_group_fk= " . $controller->GetControllerRequest('FORM', 'inGroup') . "
 										WHERE ac_id_pk=" . $controller->GetControllerRequest('FORM', 'inClientID') . "");
         $sql->execute();
 
         $sql = $zdbh->prepare("UPDATE x_profiles SET 
 										ud_fullname_vc= '" . $controller->GetControllerRequest('FORM', 'inFullName') . "',
-		     							ud_email_vc=    '" . $controller->GetControllerRequest('FORM', 'inEmailAddress') . "',
+                                                                                ud_email_vc=    '" . $controller->GetControllerRequest('FORM', 'inEmailAddress') . "',
 										ud_address_tx=  '" . $controller->GetControllerRequest('FORM', 'inAddress') . "',
 										ud_postcode_vc= '" . $controller->GetControllerRequest('FORM', 'inPostCode') . "',
 										ud_phone_vc=    '" . $controller->GetControllerRequest('FORM', 'inPhone') . "'
@@ -347,6 +378,7 @@ class module_controller {
         $username = $controller->GetControllerRequest('FORM', 'inUserName');
         $packageid = $controller->GetControllerRequest('FORM', 'inPackage');
         $password = $controller->GetControllerRequest('FORM', 'inPassword');
+        $group = $controller->GetControllerRequest('FORM', 'inGroup');
         # Check for spaces and remove if found...
         $username = str_replace(' ', '', $username);
         # Check to make sure the username is not blank or exists before we go any further...
@@ -380,11 +412,13 @@ class module_controller {
 										ac_user_vc,
 										ac_pass_vc,
 										ac_package_fk,
+                                                                                ac_group_fk,
 										ac_reseller_fk,
 										ac_created_ts) VALUES (
 										'" . $username . "',
 										'" . md5($password) . "',
-										'" . $packageid . "',
+                                                                                '" . $packageid . "',
+										'" . $group . "',
 										" . $acc_fk . ",
 										" . time() . ")");
         $sql->execute();
@@ -463,7 +497,7 @@ class module_controller {
         $sql->execute();
         return true;
     }
-    
+
     static function DisableClient($userid) {
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=0 WHERE ac_id_pk=" . $userid . "");
