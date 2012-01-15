@@ -35,9 +35,9 @@ class module_controller {
         $line .= "<td>";
 
         if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(80))) {
-            $line .= "    <img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
+            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
         } else {
-            $line .= "    <img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
+            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
         }
 
         $line .= "</td>";

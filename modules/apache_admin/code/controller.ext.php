@@ -57,9 +57,9 @@ class module_controller {
 
                 while ($row = $sql->fetch()) {
                     $count++;
-                    $line .= "<tr valign=\"top\"><th>" . $row['vhs_cleanname_vc'] . "</th><td><textarea cols=\"45\" rows=\"1\" name=\"" . $row['vhs_name_vc'] . "\">" . $row['vhs_value_tx'] . "</textarea></td><td>" . $row['vhs_desc_tx'] . "</td></tr>";
+                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['vhs_cleanname_vc'] . "</th><td><textarea cols=\"30\" rows=\"1\" name=\"" . $row['vhs_name_vc'] . "\">" . $row['vhs_value_tx'] . "</textarea></td><td>" . $row['vhs_desc_tx'] . "</td></tr>";
                 }
-                $line .= "<tr><th><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button></th><td></td><td></td></tr>";
+                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button></th><td></td><td></td></tr>";
             }
         }
         $line .= "</table>";
