@@ -3,6 +3,7 @@ var unsavedChanges = false;
 $(document).ready(function() {
 
 	$("#dnsRecords").tabs({
+		cookie: { expires: 7, name: "dnsRecords Cookie" } 
 	   /*
 	   show: function(event, ui) {
 		   window.location.hash = ui.panel.id;

@@ -34,6 +34,10 @@ class module_controller {
 	static $type;
 	static $reset;
 	static $addmissing;
+	static $logerror;
+	static $logwarning;
+	static $getlog;
+	static $showlog;
 
     static function getDNSConfig() {
         $display = self::DisplayDNSConfig();
@@ -51,6 +55,7 @@ class module_controller {
 		$line .= "<li><a href=\"#general\">General</a></li>";
 		$line .= "<li><a href=\"#tools\">Tools</a></li>";
 		$line .= "<li><a href=\"#services\">Services</a></li>";
+		$line .= "<li><a href=\"#logs\">Logs</a></li>";
 		$line .= "</ul>";
 		//general
 		$line .= "<div class=\"ui-tabs-panel ui-widget-content ui-corner-bottom\" id=\"general\">";
@@ -65,7 +70,7 @@ class module_controller {
 
                 while ($row = $sql->fetch()) {
                     $count++;
-                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['dns_cleanname_vc'] . "</th><td><textarea cols=\"30\" rows=\"1\" name=\"" . $row['dns_name_vc'] . "\">" . $row['dns_value_tx'] . "</textarea></td><td>" . $row['dns_desc_tx'] . "</td></tr>";
+                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['dns_cleanname_vc'] . "</th><td><textarea cols=\"32\" rows=\"1\" name=\"" . $row['dns_name_vc'] . "\">" . $row['dns_value_tx'] . "</textarea></td><td>" . $row['dns_desc_tx'] . "</td></tr>";
                 }
                 $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button></th><td></td><td></td></tr>";
             }
@@ -146,8 +151,99 @@ class module_controller {
 		$line .="</td></tr></table>";
 		$line .= "</form>";
 		$line .= "</div>";
+		//logs
+		self::ViewErrors();
+
+		$line .= "<div class=\"ui-tabs-panel ui-widget-content ui-corner-bottom\" id=\"logs\">";
+		$line .= "<form action=\"./?module=dns_admin&action=Updatelogs\" method=\"post\">";
+        $line .= "<table class=\"zgrid\">";
+		$line .= "<tr>";
+		$line .= "<th>Clear errors</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearErrors\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
+		$line .= "<tr>";
+		$line .= "<th>Clear warnings";
+		$line .= "</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearWarnings\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
+		$line .= "<tr>";
+		$line .= "<th>Clear logs";
+		$line .= "</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearLogs\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
+		$line .= "<tr>";
+		if (count(self::$logerror) > 0) {
+			$logerrorcolor = "red";
+		} else {
+			$logerrorcolor = NULL;
+		}
+		$line .= "<th>View Errors (<font color=\"".$logerrorcolor."\">".count(self::$logerror)."</font>)</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logerror_a\" name=\"inViewErrors\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
+		$line .= "<tr>";
+		if (count(self::$logwarning) > 0) {
+			$logwarningcolor = "red";
+		} else {
+			$logwarningcolor = NULL;
+		}
+		$line .= "<th>View warnings (<font color=\"".$logwarningcolor."\">".count(self::$logwarning)."</font>)</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logwarning_a\" name=\"inViewWarnings\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
+		$line .= "<th>View logs (".count(self::$getlog).")</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
+        $line .= "</table>";
+		$line .= "</form>";		
 		$line .= "</div>";
+		
+		//logerrordiv
+		if (!fs_director::CheckForEmptyValue(self::$logerror)){
+			$line .= "<div id=\"logerror\" style=\"display:none;\">";
+			$line .= "<h2>Log Errors:</h2>";
+			$line .= "<table class=\"zgrid\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
+			foreach (self::$logerror as $loglineerror){
+				$line .= "<tr><td>".$loglineerror."</td></tr>";
+			}
+			$line .= "</table>";
+			$line .= "</div>";
+		}
+			//logwarningdiv	
+		if (!fs_director::CheckForEmptyValue(self::$logwarning)){	
+			$line .= "<div id=\"logwarning\" style=\"display:none;\">";
+			
+			$line .= "<h2>Log warnings:</h2>";
+			$line .= "<table class=\"zgrid\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
+			foreach (self::$logwarning as $loglinewarning){
+				$line .= "<tr><td>".$loglinewarning."</td></tr>";
+			}
+			$line .= "</table>";
+			$line .= "</div>";
+		}
+		//showlogsdiv
+		if (!fs_director::CheckForEmptyValue(self::$showlog)){
+			$line .= "<div style=\"width:100%; height:500px; overflow:auto\">";
+			$line .= "<h2>Bind Log:</h2>";
+			$line .= "<table class=\"zgrid\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
+			foreach (self::$getlog as $logline){
+				$line .= "<tr><td>".$logline."</td></tr>";
+			}
+			$line .= "</table>";
+			$line .= "</div>";
+			$line .= "</div>";
+		}
+		
+		
+		
+		$line .= "</div>";
+		$line .= "</div>";
+		
+		//CHARTS
+		$line .= "<table class=\"none\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td>";
 		$line .= self::DisplayDNSUsagepChart();
+		$line .= "</td><td>";
+		$line .= self::DisplayRecordsUsagepChart();
+		$line .= "</td></tr></table>";
+		
         return $line;
     }
 
@@ -200,6 +296,24 @@ class module_controller {
 		}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDeleteAll'))) {
 			self::DeleteAll();
+		}
+    }
+
+    static function doUpdateLogs() {
+        global $zdbh;
+        global $controller;
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inClearErrors'))) {
+			self::ClearErrors();
+		}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inClearWarnings'))) {
+			self::ClearWarnings();
+		}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inClearLogs'))) {
+			self::ClearLog();
+		}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inViewLogs'))) {
+			//self::ViewLogs();
+			self::$showlog = TRUE;
 		}
     }
 	
@@ -344,6 +458,68 @@ class module_controller {
 		}
 	}
 
+	static function ClearErrors(){
+		$bindlog = self::GetDNSOption('bind_log');
+		$log = $bindlog;
+		if (file_exists($bindlog)){
+		$handle = @fopen($log, "r");
+		$getlog = array();
+			if ($handle) { 
+    			while (!feof($handle)) {
+        		$buffer = fgets($handle, 4096);
+					if (strstr($buffer,'error:')){
+        			$line = "";
+					}else{
+					$line = $buffer;
+					}
+				$getlog[] = $line;
+    			}fclose($handle);
+			}
+			
+		$fp = fopen($log,'w');
+		foreach($getlog as $key => $value){
+			fwrite($fp,$value);
+		}
+		fclose($fp);
+		}
+	}
+
+	static function ClearWarnings(){
+		$bindlog = self::GetDNSOption('bind_log');
+		$log = $bindlog;
+		if (file_exists($bindlog)){
+		$handle = @fopen($log, "r");
+		$getlog = array();
+			if ($handle) { 
+    			while (!feof($handle)) {
+        		$buffer = fgets($handle, 4096);
+					if (strstr($buffer,'warning:')){
+        			$line = "";
+					}else{
+					$line = $buffer;
+					}
+				$getlog[] = $line;
+    			}fclose($handle);
+			}
+			
+		$fp = fopen($log,'w');
+		foreach($getlog as $key => $value){
+			fwrite($fp,$value);
+		}
+		fclose($fp);
+		}
+	}
+
+	static function ClearLog(){
+		$bindlog = self::GetDNSOption('bind_log');
+		$log = $bindlog;
+		if (file_exists($bindlog)){			
+		$fp = fopen($log,'w');
+		fwrite($fp,'');
+		fclose($fp);
+		}
+	}
+
     static function DisplayDNSUsagepChart() {
         global $zdbh;
         global $controller;
@@ -377,50 +553,74 @@ class module_controller {
 		return $line;
 	}
 
-    static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$reset)) {
-            return ui_sysmessage::shout(number_format(self::$reset) . " " . ui_language::translate("Domains records where reset to default"));
-        }
-        if (!fs_director::CheckForEmptyValue(self::$addmissing)) {
-            return ui_sysmessage::shout(number_format(self::$addmissing) . " " . ui_language::translate("Domains records were created"));
-        }
-        if (!fs_director::CheckForEmptyValue(self::$deletedtype)) {
-            return ui_sysmessage::shout(number_format(self::$deletedtype) . " '" .  self::$type . "' " . ui_language::translate("Records where marked as deleted from the database"));
-        }
-        if (!fs_director::CheckForEmptyValue(self::$deleted)) {
-            return ui_sysmessage::shout(number_format(self::$deleted) . " " . ui_language::translate("Records where marked as deleted from the database"));
-        }
-        if (!fs_director::CheckForEmptyValue(self::$purged)) {
-            return ui_sysmessage::shout(number_format(self::$purged) . " " . ui_language::translate("Records where purged from the database"));
-        }
-        if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your DNS settings have been saved successfully!"));
-        } else {
-            return ui_language::translate(ui_module::GetModuleDescription());
-        }
-        return;
-    }
-
-    static function getModuleName() {
-        $module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-    static function getModuleIcon() {
-        global $controller;
-        $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
-    }
-
-    static function GetDNSOption($name) {
+    static function DisplayRecordsUsagepChart() {
         global $zdbh;
-        $result = $zdbh->query("SELECT dns_value_tx FROM x_dns_settings WHERE dns_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['dns_value_tx'];
-        } else {
-            return false;
-        }
-    }
+        global $controller;
+		$numtotalrecords = 0;
+		$numArecords 	 = 0;
+		$numAAAArecords  = 0;
+		$numMXrecords    = 0;
+		$numCNAMErecords = 0;
+		$numTXTrecords   = 0;
+		$numSRVrecords   = 0;
+		$numSPFrecords   = 0;
+		$numNSrecords    = 0;
+        $sql = "SELECT COUNT(*) FROM x_dns";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $sql = $zdbh->prepare("SELECT * FROM x_dns");
+                $sql->execute();
+                while ($row = $sql->fetch()) {
+					$numtotalrecords++;
+				}
+			}
+		}
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NULL");
+                $sql->execute();
+                while ($row = $sql->fetch()) {
+					if ($row['dn_type_vc'] == "A"){
+						$numArecords++;
+					}
+					if ($row['dn_type_vc'] == "AAAA"){
+						$numAAAArecords++;
+					}
+					if ($row['dn_type_vc'] == "MX"){
+						$numMXrecords++;
+					}
+					if ($row['dn_type_vc'] == "CNAME"){
+						$numCNAMErecords++;
+					}
+					if ($row['dn_type_vc'] == "TXT"){
+						$numTXTrecords++;
+					}
+					if ($row['dn_type_vc'] == "SRV"){
+						$numSRVrecords++;
+					}
+					if ($row['dn_type_vc'] == "SPF"){
+						$numSPFrecords++;
+					}
+					if ($row['dn_type_vc'] == "NS"){
+						$numNSrecords++;
+					}
+				}
+			}
+		}
+		$total   = $numtotalrecords;
+		$Arecords = $numArecords;
+		$AAAArecords = $numAAAArecords;
+		$MXrecords = $numMXrecords;
+		$CNAMErecords = $numCNAMErecords;
+		$TXTrecords = $numTXTrecords;
+		$SRVrecords = $numSRVrecords;
+		$SPFrecords = $numSPFrecords;
+		$NSrecords = $numNSrecords;
+		$line  = "<h2>Record Types Usage</h2>";		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$Arecords."::".$NSrecords."::".$MXrecords."::".$SPFrecords."::".$TXTrecords."::".$SRVrecords."::".$CNAMErecords."::".$AAAArecords."&labels=A: ".$Arecords."::NS: ".$NSrecords."::MX: ".$MXrecords."::SPF: ".$SPFrecords."::TXT: ".$TXTrecords."::SRV: ".$SRVrecords."::CNAME: ".$CNAMErecords."::AAAA: ".$AAAArecords."&legendfont=verdana&legendfontsize=8&imagesize=340::190&chartsize=120::90&radius=100&legendsize=240::80\"/>";		
+		return $line;
+	}
 
 	static function CreateDefaultRecords($vh_acc_fk){
 		global $zdbh;
@@ -643,29 +843,83 @@ class module_controller {
 		return;
 	}
 	
-}
-/*
-if (ShowServerPlatform() == "Windows") {
-	$bindlog = GetSystemOption('windows_drive').':Zpanel/logs/bind/bind.log';
-}else{
-	$bindlog = '/var/zpanel/logs/bind/bind.log';
+	static function ViewErrors(){	
+		$bindlog = self::GetDNSOption('bind_log');
+		$logerror = array();
+		$logwarning = array();
+		$getlog = array();
+		if (file_exists($bindlog)){
+			$handle = @fopen($bindlog, "r");
+			$getlog = array();
+			if ($handle) { 
+		    	while (!feof($handle)) {
+		       	$buffer = fgets($handle, 4096);
+				$getlog[] = $buffer;
+					if (strstr($buffer,'error:')){
+		       			$logerror[] = $buffer;
+					}
+					if (strstr($buffer,'warning:')){
+		       			$logwarning[] = $buffer;
+					}
+		    	}fclose($handle);
+				if (!fs_director::CheckForEmptyValue($logerror)){
+					self::$logerror = $logerror;
+				}
+				if (!fs_director::CheckForEmptyValue($logwarning)){
+					self::$logwarning = $logwarning;
+				}
+				if (!fs_director::CheckForEmptyValue($getlog)){
+					self::$getlog = $getlog;
+				}
+			}
+		}
+	}
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$reset)) {
+            return ui_sysmessage::shout(number_format(self::$reset) . " " . ui_language::translate("Domains records where reset to default"));
+        }
+        if (!fs_director::CheckForEmptyValue(self::$addmissing)) {
+            return ui_sysmessage::shout(number_format(self::$addmissing) . " " . ui_language::translate("Domains records were created"));
+        }
+        if (!fs_director::CheckForEmptyValue(self::$deletedtype)) {
+            return ui_sysmessage::shout(number_format(self::$deletedtype) . " '" .  self::$type . "' " . ui_language::translate("Records where marked as deleted from the database"));
+        }
+        if (!fs_director::CheckForEmptyValue(self::$deleted)) {
+            return ui_sysmessage::shout(number_format(self::$deleted) . " " . ui_language::translate("Records where marked as deleted from the database"));
+        }
+        if (!fs_director::CheckForEmptyValue(self::$purged)) {
+            return ui_sysmessage::shout(number_format(self::$purged) . " " . ui_language::translate("Records where purged from the database"));
+        }
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your DNS settings have been saved successfully!"));
+        } else {
+            return ui_language::translate(ui_module::GetModuleDescription());
+        }
+        return;
+    }
+
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
+
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        return $module_icon;
+    }
+
+    static function GetDNSOption($name) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT dns_value_tx FROM x_dns_settings WHERE dns_name_vc = '$name'")->Fetch();
+        if ($result) {
+            return $result['dns_value_tx'];
+        } else {
+            return false;
+        }
+    }
+	
 }
 
-if (file_exists($bindlog)){
-	$handle = @fopen($bindlog, "r");
-	$getlog = array();
-		if ($handle) { 
-    		while (!feof($handle)) {
-        	$buffer = fgets($handle, 4096);
-			$getlog[] = $buffer;
-				if (strstr($buffer,'error:')){
-        			$logerror[] = $buffer;
-				}
-				if (strstr($buffer,'warning:')){
-        		$logwarning[] = $buffer;
-				}
-    		}fclose($handle);
-		}
-}
-*/
 ?>

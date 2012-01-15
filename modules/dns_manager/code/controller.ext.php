@@ -137,15 +137,32 @@ class module_controller {
 		$line .= "<!-- TABS -->";
 		$line .= "<div class=\"ui-tabs ui-widget ui-widget-content ui-corner-all\" id=\"dnsRecords\">";
 		$line .= "<ul class=\"domains ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all\">";
-		$line .= "<li><a href=\"#typeA\">A</a></li>";
-		$line .= "<li><a href=\"#typeAAAA\">AAAA</a></li>";
-		$line .= "<li><a href=\"#typeCNAME\">CNAME</a></li>";
-		$line .= "<li><a href=\"#typeMX\">MX</a></li>";
-		$line .= "<li><a href=\"#typeTXT\">TXT</a></li>";
-		$line .= "<li><a href=\"#typeSRV\">SRV</a></li>";
-		$line .= "<li><a href=\"#typeSPF\">SPF</a></li>";
-		$line .= "<li><a href=\"#typeNS\">NS</a></li>";
+		if (self::IsTypeAllowed('A')){
+			$line .= "<li><a href=\"#typeA\">A</a></li>";
+		}
+		if (self::IsTypeAllowed('AAAA')){
+			$line .= "<li><a href=\"#typeAAAA\">AAAA</a></li>";
+		}
+		if (self::IsTypeAllowed('CNAME')){
+			$line .= "<li><a href=\"#typeCNAME\">CNAME</a></li>";
+		}
+		if (self::IsTypeAllowed('MX')){
+			$line .= "<li><a href=\"#typeMX\">MX</a></li>";
+		}
+		if (self::IsTypeAllowed('TXT')){
+			$line .= "<li><a href=\"#typeTXT\">TXT</a></li>";
+		}
+		if (self::IsTypeAllowed('SRV')){
+			$line .= "<li><a href=\"#typeSRV\">SRV</a></li>";
+		}
+		if (self::IsTypeAllowed('SPF')){
+			$line .= "<li><a href=\"#typeSPF\">SPF</a></li>";
+		}
+		if (self::IsTypeAllowed('NS')){
+			$line .= "<li><a href=\"#typeNS\">NS</a></li>";
+		}
 		$line .= "</ul>";
+		if (self::IsTypeAllowed('A')){
 		$line .= "<!-- A RECORDS -->";
 		$line .= "<div class=\"records dnsRecordA ui-tabs-panel ui-widget-content ui-corner-bottom\" id=\"typeA\">";
 		$line .= "<div class=\"description\">The A record contains an IPv4 address. It's target is an IPv4 address, e.g. '192.168.1.1'.</div>";
@@ -194,6 +211,8 @@ class module_controller {
 		$line .= "<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span><input name=\"proto_type\" value=\"A\" type=\"hidden\">";
 		$line .= "</div>";
 		$line .= "</div> <!-- END A RECORDS -->";
+		}
+		if (self::IsTypeAllowed('AAAA')){
 		$line .= "<!-- AAA RECORDS -->";
 		$line .= "<div class=\"records dnsRecordAAAA ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeAAAA\">";
 		$line .= "<div class=\"description\">The AAAA record contains an IPv6 address. It's target is an IPv6 address, e.g. '2607:fe90:2::1'.</div>";
@@ -238,6 +257,8 @@ class module_controller {
 		$line .= "<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span><input name=\"proto_type\" value=\"AAAA\" type=\"hidden\">";
 		$line .= "</div>";
 		$line .= "</div> <!-- END AAA RECORDS -->";
+		}
+		if (self::IsTypeAllowed('CNAME')){
 		$line .= "<!-- CNAME RECORDS -->	";
 		$line .= "<div class=\"records dnsRecordCNAME ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeCNAME\">";
 		$line .= "<div class=\"description\">The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g. 
@@ -283,6 +304,8 @@ class module_controller {
 		$line .= "<input class=\"delete\" name=\"proto_delete\" value=\"false\" type=\"hidden\"><span class=\"delete enableToolTip\"></span><input name=\"proto_type\" value=\"CNAME\" type=\"hidden\">";
 		$line .= "</div>			";
 		$line .= "</div> <!-- END CNAME RECORDS -->";
+		}
+		if (self::IsTypeAllowed('MX')){
 		$line .= "<!-- MX RECORDS -->";
 		$line .= "<div class=\"records dnsRecordMX ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeMX\">";
 		$line .= "<div class=\"description\">The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535.  It's target is a fully qualified domain name, e.g. 'mail.example.com'.</div>";
@@ -326,7 +349,8 @@ class module_controller {
 		$line .= "<input name=\"proto_type\" value=\"MX\" type=\"hidden\">";
 		$line .= "</div>			";
 		$line .= "</div> <!-- END MX RECORDS -->";
-
+		}
+		if (self::IsTypeAllowed('TXT')){
 		$line .= "<!-- TXT RECORDS -->";
 		$line .= "<div class=\"records dnsRecordTXT ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeTXT\">";
 		$line .= "<div class=\"description\">The TXT field can be used to attach textual data to a domain.</div>";
@@ -365,7 +389,8 @@ class module_controller {
 		$line .= "<input name=\"proto_type\" value=\"TXT\" type=\"hidden\">";
 		$line .= "</div>";
 		$line .= "</div> <!-- END TXT RECORDS -->";
-
+		}
+		if (self::IsTypeAllowed('SRV')){
 		$line .= "<!-- SRV RECORDS -->	";
 		$line .= "<div class=\"records dnsRecordSRV ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeSRV\">";
 		$line .= "<div class=\"description\">SRV records can be used to encode the location and port of services on a domain name.  It's target is a fully qualified domain name, e.g. 'host.example.com'.</div>";
@@ -413,6 +438,8 @@ class module_controller {
 		$line .= "<input name=\"proto_type\" value=\"SRV\" type=\"hidden\">";
 		$line .= "</div>";
 		$line .= "</div> <!-- END SRV RECORDS -->	";
+		}
+		if (self::IsTypeAllowed('SPF')){
 		$line .= "<!-- SPF RECORDS -->";
 		$line .= "<div class=\"records dnsRecordSPF ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeSPF\">";
 		$line .= "<div class=\"description\">SPF records is used to store Sender Policy Framework details.  It's target is a text string, e.g.<br>'v=spf1 a:192.168.1.1 include:example.com mx ptr -all'</div>";
@@ -453,6 +480,8 @@ class module_controller {
 		$line .= "<input name=\"proto_type\" value=\"SPF\" type=\"hidden\">";
 		$line .= "</div>";
 		$line .= "</div> <!-- END SPF RECORDS -->";
+		}
+		if (self::IsTypeAllowed('NS')){
 		$line .= "<!-- NS RECORDS -->";
 		$line .= "<div class=\"records dnsRecordNS ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeNS\">";
 		$line .= "<div class=\"description\">Nameserver record. Specifies nameservers for a domain. It's target is a fully qualified domain name, e.g.  'ns1.example.com'.  The records should match what the domain name has registered with the internet root servers.</div>";
@@ -493,6 +522,7 @@ class module_controller {
 		$line .= "</div>";
 		$line .= "<input name=\"newRecords\" value=\"0\" type=\"hidden\">";
 		$line .= "</div> <!-- END NS RECORDS -->";
+		}
 		$line .= "</div> <!-- END TABS -->";
 		$line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
 		$line .= "<div class=\"content\">";
@@ -1523,6 +1553,17 @@ class module_controller {
 	*/
 	
 	}
+	
+    static function IsTypeAllowed($type) {
+        global $zdbh;
+        $record_types = self::GetDNSOption('allowed_types');
+		$record_types = explode(" ", $record_types);
+		if (in_array($type, $record_types)){
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+    }
 
     static function GetDNSOption($name) {
         global $zdbh;
