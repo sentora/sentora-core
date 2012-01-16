@@ -111,6 +111,7 @@ class module_controller {
 	}
 	
 	static function DisplayRecords(){
+	//print_r($_POST); //Post Debug
 		global $zdbh;
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
@@ -123,7 +124,7 @@ class module_controller {
 		$line  = "";		
 		$line .= "<div class=\"zgrid_wrapper\">";
 		$line .= "<!-- DNS FORM -->";
-		$line .= "<div style=\"display: block; margin-right:20px;\">";
+		$line .= "<div style=\"margin-right:20px;\">";
 		$line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
 		$line .= "<div class=\"content\"><h2>DNS records for:</h2><a href=\"http://".$domain['vh_name_vc']."\" target=\"_blank\">".$domain['vh_name_vc']."</a>";
 		$line .= "<div>";
@@ -812,10 +813,10 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		if (!fs_director::CheckForEmptyValue(self::CheckForErrors())){
-		self::SaveDNS();
-		self::WriteRecord();
-		self::$ok = TRUE;
-		return;
+			self::SaveDNS();
+			self::WriteRecord();
+			self::$ok = TRUE;
+			return;
 		}
 	}
 	
@@ -1139,7 +1140,8 @@ class module_controller {
 			$numnew = $newRecords;
 			$id = 1;
 			while ($numnew >= $id){
-				if ($delete['new_'.$id] != "true"){
+			if (isset($type['new_'.$id])){
+				if ($delete['new_'.$id] != "true" && !fs_director::CheckForEmptyValue($type['new_'.$id])){
 					if (isset($hostName['new_'.$id]) && !fs_director::CheckForEmptyValue($hostName['new_'.$id])){
 						$hostName_new = "'".self::CleanRecord($hostName['new_'.$id], $type['new_'.$id])."'";
 					} else {
@@ -1209,6 +1211,7 @@ class module_controller {
 															".time().")");		
 				$sql->execute();				
 				}
+			}
 			$id++;
 			}
 		}
@@ -1348,7 +1351,8 @@ class module_controller {
 			$numnew = $newRecords;
 			$id = 1;
 			while ($numnew >= $id){
-				if ($delete['new_'.$id] == "false"){
+			if (isset($type['new_'.$id])){
+				if ($delete['new_'.$id] == "false" && !fs_director::CheckForEmptyValue($type['new_'.$id])){
 					//HOSTNAME
 					if (isset($hostName['new_'.$id]) && !fs_director::CheckForEmptyValue($hostName['new_'.$id])){
 						if ($type['new_'.$id] != "SRV"){
@@ -1429,6 +1433,7 @@ class module_controller {
 						}
 					}				
 				}
+			}
 			$id++;
 			}
 		}
