@@ -78,7 +78,7 @@ class module_controller {
                     if ($rowdomains['vh_active_in'] == 1) {
                         $line .= "<font color=\"green\">Live</font></td><td>";
                     } else {
-                        $line .= "<font color=\"orange\">Pending</font></td><td><a href=\"#\" title=\"Your domain will become active at the next scheduled update.  This can take up to one hour.\"><img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/help_small.png\"></a>";
+                        $line .= "<font color=\"orange\">Pending</font></td><td><a href=\"#\" class=\"help_small\" id=\"help_small_" . $rowdomains['vh_id_pk'] . "_a\" title=\"Your domain will become active at the next scheduled update.  This can take up to one hour.\"></a>";
                     }
 
                     $line .= "</td>";
