@@ -100,12 +100,12 @@
                 </tr>
 
                 <tr>
-                    <td bgcolor="#FFFFFF" style="border-left:solid 1px #CCC"></td>
+                    <td style="background:url(<# ui_tpl_assetfolderpath #>/images/mainlayout_left.png) repeat-y;"></td>
                     <td>
 						<!-- BEGIN MAIN LAYOUT CONTENT -->
                         <table class="mainlayout_content" width="100%" border="0" cellpadding="0" cellspacing="0">
                             <tr valign="top">
-                                <td class="mainlayout_content" width="100%" bgcolor="#FFFFFF">
+                                <td class="mainlayout_content" width="100%" bgcolor="#F3F2F0">
 								
 								
 
@@ -116,10 +116,10 @@
 </td>
 </tr>								
                             <tr valign="top">
-                                <td class="mainlayout_content" width="100%" bgcolor="#FFFFFF">								
+                                <td class="mainlayout_content" width="100%" bgcolor="#F3F2F0">								
 								
 								<# ui_tpl_modulelist #><# ui_tpl_module #></td>
-                                <td style="padding-right:0px" width="200px" bgcolor="#FFFFFF">
+                                <td style="padding-right:0px" width="200px" bgcolor="#F3F2F0">
 									<!-- BEGIN STATSDATA -->
 									<div class="statsdata_wrapper" id="statsdata_wrapper">
                                     <table class="statsdata" border="0" cellpadding="0" cellspacing="0">
@@ -267,7 +267,7 @@
                         </table>
 						<!-- END MAIN LAYOUT CONTENT -->
                     </td>
-                    <td bgcolor="#FFFFFF" style="border-right:solid 1px #CCC"></td>
+                    <td style="background:url(<# ui_tpl_assetfolderpath #>/images/mainlayout_right.png) repeat-y;"></td>
                 </tr>
                 <tr>
                     <td width="15px" align="left"><img src="<# ui_tpl_assetfolderpath #>/images/mainlayout_bleft.png" border="0"></td><td width="100%" background="<# ui_tpl_assetfolderpath #>/images/mainlayout_bcenter.png"></td><td width="15px"><img src="<# ui_tpl_assetfolderpath #>/images/mainlayout_bright.png" border="0"></td>
