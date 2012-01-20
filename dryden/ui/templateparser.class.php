@@ -63,6 +63,13 @@ class ui_templateparser {
         }
         $raw = str_replace('<?', 'PHP execution is not permitted! Caught: [', $raw);
         $raw = str_replace('?>', ']', $raw);
+        $raw = str_replace('<% else %>', '<?php } else { ?>', $raw);
+        $raw = str_replace('<% endif %>', '<?php } ?>', $raw);
+        $raw = preg_replace('/\<% if (.+?)\ %>/i', '<?php if(module_controller::get$1()){ ?>', $raw);
+        $raw = preg_replace('/\<% loop (.+?)\ %>/i', "<?php foreach(module_controller::get$1() as \$key => \$value){ ?>", $raw);
+        $raw = str_replace('<% endloop %>', '<?php } ?>', $raw);
+        $raw = preg_replace('/\<& (.+?)\ &>/i', '<?php echo \$value[\'$1\']; ?>', $raw);
+        
         runtime_hook::Execute('OnAfterTemplateProcessor');
         
         return $raw;

@@ -5,4 +5,23 @@
 
 <div class="zform_wrapper">
 <h2><: Current user groups :></h2>
-<@ GroupList @>
+<% if GroupList %>
+<form action="./?module=manage_groups&action=EditGroup" method="post">
+<table class="zgrid">
+<tr>
+<th><: Group :></th>
+<th><: Description  :></th>
+<th></th>
+</tr>
+<% loop GroupList %>
+<tr>
+<td><& groupname &></td>
+<td><& groupdesc &></td>
+<td></td>
+</tr>
+<% endloop %>
+</table>
+</form>
+<% else %>
+<: Sorry there are currently no user groups configured! :>
+<% endif %>

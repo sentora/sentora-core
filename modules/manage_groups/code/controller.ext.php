@@ -42,31 +42,18 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $currentuser['userid'] . "";
-        if ($numrows = $zdbh->query($sql)) {
-            if ($numrows->fetchColumn() <> 0) {
-                $line = "<form action=\"./?module=manage_groups&action=EditGroup\" method=\"post\">";
-                $line .= "<table class=\"zgrid\">";
-                $line .= "<tr>";
-                $line .= "<th>" . ui_language::translate("Group") . "</th>";
-                $line .= "<th>" . ui_language::translate("Description") . "</th>";
-                $line .= "<th></th>";
-                $line .= "</tr>";
-                $sql = $zdbh->prepare($sql);
-                $sql->execute();
-                while ($rowgroups = $sql->fetch()) {
-                    $line .= "<tr>";
-                    $line .= "<td>" . $rowgroups['ug_name_vc'] . "</td>";
-                    $line .= "<td>" . $rowgroups['ug_notes_tx'] . "</td>";
-                    $line .= "<td></td>";
-                    $line .= "</tr>";
-                }
-                $line .= "</table>";
-                $line . "</form>";
-            } else {
-                $line = ui_language::translate("No groups currently configured on your account.");
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowgroups = $sql->fetch()) {
+                array_push($res, array('groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
             }
+            return $res;
+        } else {
+            return false;
         }
-        return $line;
     }
 
 }
