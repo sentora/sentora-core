@@ -1,0 +1,26 @@
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create alias mailboxes to existing accounts. :></p></div>
+
+<div class="zgrid_wrapper">
+<h2><: Current aliases :></h2>
+<% if AliasList %>
+<form action="./?module=aliases&action=EditAliases" method="post">
+<table class="zgrid">
+<tr>
+<th><: Address :></th>
+<th></th>
+</tr>
+<% loop AliasList %>
+<tr>
+<td><& groupname &></td>
+<td></td>
+</tr>
+<% endloop %>
+</table>
+</form>
+<% else %>
+<: Sorry there are currently no Aliases configured! :>
+<% endif %>
+</div>
