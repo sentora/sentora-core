@@ -3,7 +3,7 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: This module enables you to manage user groups for your client, User groups enable you to control what modules your users can see and access.  :></p></div>
 
-<div class="zform_wrapper">
+<div class="zgrid_wrapper">
 <h2><: Current user groups :></h2>
 <% if GroupList %>
 <form action="./?module=manage_groups&action=EditGroup" method="post">
@@ -25,3 +25,4 @@
 <% else %>
 <: Sorry there are currently no user groups configured! :>
 <% endif %>
+</div>
