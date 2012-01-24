@@ -9,22 +9,14 @@
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class ui_module {
-    /**
-     * ui_module class is used to load in the module contents into the controller.
-     */
 
-    /**
-     * Lets declare some variables here!
-     */
     function __construct() {
-        /**
-         * Lets grab the controller properties and then we can use the values to set the class variables which we will then
-         * use to build the UI.
-         */
+        
     }
 
     /**
      * Checks that the module exists.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $name
      * @return boolean 
      */
@@ -38,6 +30,7 @@ class ui_module {
 
     /**
      * Returns the module code.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $name
      * @return string 
      */
@@ -49,6 +42,7 @@ class ui_module {
 
     /**
      * Handles the GetModule control, if unable to load the module will handle the error too!
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $module
      * @return string 
      */
@@ -67,6 +61,7 @@ class ui_module {
 
     /**
      * Gathers module infomation from the FS and adds the detail to the DB.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @var $module Name of the module (folder name)
      * @return boolean
      */
@@ -92,6 +87,8 @@ class ui_module {
 
     /**
      * This class scans the module directory and will return an array of new modules that are not yet in the database.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @return array 
      */
     static function ScanForNewModules() {
         $new_module_list = array();
@@ -101,6 +98,10 @@ class ui_module {
 
     /**
      * This class returns the name of the current module.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $controller
+     * @global type $zdbh
+     * @return type 
      */
     static function GetModuleName() {
         global $controller;
@@ -112,6 +113,10 @@ class ui_module {
 
     /**
      * This class returns the database ID of the current module.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $controller
+     * @global type $zdbh
+     * @return type 
      */
     static function GetModuleID() {
         global $controller;
@@ -123,12 +128,34 @@ class ui_module {
 
     /**
      * This class returns the description of the current module.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $controller
+     * @global type $zdbh
+     * @return type 
      */
     static function GetModuleDescription() {
         global $controller;
         global $zdbh;
         $retval = $zdbh->query("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
         $retval = $retval['mo_desc_tx'];
+        return $retval;
+    }
+
+    /**
+     * Checks to see if the specified module has updates.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $zdbh
+     * @param type $modulefolder
+     * @return boolean 
+     */
+    static function GetModuleHasUpdates($modulefolder) {
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_updateurl_tx, mo_updatever_vc FROM x_modules WHERE mo_folder_vc = '" . $modulefolder . "'")->Fetch();
+        if ($retval['mo_updatever_vc'] <> "") {
+            $retval = array($retval['mo_updatever_vc'], $retval['mo_updateurl_tx']);
+        } else {
+            $retval = false;
+        }
         return $retval;
     }
 

@@ -40,7 +40,6 @@ class module_controller {
                 $line .="<table>";
                 while ($modules = $modsql->fetch()) {
                     $translatename = ui_language::translate($modules['mo_name_vc']);
-                    //$line .= $translatename;
                     $line .="<tr><td>";
                     $line .= "<a href=\"./?module=" . $modules['mo_folder_vc'] . "\">" . $translatename . "</a>";
                     $line .="</td></tr>";
@@ -55,6 +54,7 @@ class module_controller {
 
     static function getConfigModules() {
         global $zdbh;
+        global $controller;
         $line = "<h2>" . ui_language::translate("Configure Modules") . "</h2>";
         $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'user'";
         if ($nummodsql = $zdbh->query($modsql)) {
@@ -64,9 +64,11 @@ class module_controller {
                 $line .= "<form action=\"./?module=moduleadmin&action=EditModule\" method=\"post\">";
                 $line .= "<table class=\"zgrid\">";
                 $line .= "<tr>";
+                $line .= "<th></th>";
                 $line .= "<th>" . ui_language::translate("Module") . "</th>";
                 $line .= "<th>" . ui_language::translate("On") . "/" . ui_language::translate("Off") . "</th>";
-                $line .= "<th></th>";
+                $line .= "<th>" . ui_language::translate("Category") . "</th>";
+                $line .= "<th>" . ui_language::translate("Up-to-date?") . "</th>";
                 $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
                 while ($groups = $groupssql->fetch()) {
                     $line .= "<th>" . $groups['ug_name_vc'] . "</th>";
@@ -91,6 +93,31 @@ class module_controller {
                     }
                     $line .= "<option value=\"false\" " . $selected . ">" . ui_language::translate("Disabled") . "</option>";
                     $line .= "</select></td>";
+                    $line .= "<td>";
+                    if ($modules['mo_type_en'] == "user") {
+                        $line .= "<select name=\"inCategory_" . $modules['mo_id_pk'] . "\" id=\"inCategory_" . $modules['mo_id_pk'] . "\">";
+                        $catssql = $zdbh->query("SELECT * FROM x_modcats ORDER BY mc_name_vc ASC");
+                        while ($modulecats = $catssql->fetch()) {
+                            $selected = "";
+                            if ($modules['mo_category_fk'] == $modulecats['mc_id_pk']) {
+                                $selected = "selected";
+                            }
+                            $line .= "<option value=\"" . $modulecats['mc_id_pk'] . "\" " . $selected . ">" . $modulecats['mc_name_vc'] . "</option>";
+                        }
+                        $line .= "</select>";
+                    } else {
+                        $line .="" . ui_language::translate("N/A (System module)") . "";
+                    }
+                    $line .= "</td><td>";
+                    if (ui_module::GetModuleHasUpdates($modules['mo_folder_vc'])) {
+                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"> - " .ui_language::translate("Latest version").": <a href=\"".$modules['mo_updateurl_tx']."\" target=\"_blank\">" .$modules['mo_updatever_vc']. "</a>";
+                    } else {
+                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
+                    }
+                    /**
+                     * --
+                     */
+                    $line .= "</td>";
                     $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
                     while ($groups = $groupssql->fetch()) {
                         $ischeck = 0;
@@ -109,7 +136,9 @@ class module_controller {
         return $line;
     }
 
-    static function ModuleStatusIcon($mo_id_pk) {
+    static
+
+    function ModuleStatusIcon($mo_id_pk) {
         global $zdbh;
         global $controller;
         $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = '" . $mo_id_pk . "'");
@@ -123,7 +152,9 @@ class module_controller {
         return $retval;
     }
 
-    static function doEditModule() {
+    static
+
+    function doEditModule() {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -141,7 +172,7 @@ class module_controller {
                             ctrl_groups::DeleteGroupModulePermissions($groups['ug_id_pk'], $rowmodule['mo_id_pk']);
                         }
                     }
-                    $sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = '" . $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . '') . "' WHERE mo_id_pk = " . $rowmodule['mo_id_pk'] . "");
+                    $sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = '" . $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . '') . "', mo_category_fk = '" . $controller->GetControllerRequest('FORM', 'inCategory_' . $rowmodule['mo_id_pk'] . '') . "' WHERE mo_id_pk = " . $rowmodule['mo_id_pk'] . "");
                     $sql2->execute();
                 }
                 self::$ok = TRUE;
@@ -152,7 +183,9 @@ class module_controller {
         return;
     }
 
-    static function getResult() {
+    static
+
+    function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your module options have been saved successfully!"));
         } else {
@@ -161,12 +194,16 @@ class module_controller {
         return;
     }
 
-    static function getModuleName() {
+    static
+
+    function getModuleName() {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static
+
+    function getModuleIcon() {
         global $controller;
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
