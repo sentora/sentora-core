@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>
         <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.cookie.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
+		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.MyTopMessageBar.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
 		
 		<!-- TOOL TIPS (Styles title="" in links into nice boxes) -->
@@ -31,6 +32,7 @@
 		document.getElementById('zloader_image').src = "<# ui_tpl_assetfolderpath #>/images/loading.gif";} 
 		</script> 
 		<!-- END ZLOADER ANIMATION FIX FOR IE -->
+		
 
     </head>
     <body>

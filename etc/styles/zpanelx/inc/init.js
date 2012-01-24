@@ -470,6 +470,20 @@ $(document).ready(function() {
    }
    });
 });
+//Zannounce
+$(document).ready(function() {
+	$("#zannounce").hide();
+	//$("#zannounce").fadeIn();
+	$("#zannounce").slideDown("slow").animate({ opacity: 1.0 },5000).fadeOut();
+	$('#zannounce_a').click(function() {
+		$("#zannounce").fadeOut();
+		//$("#zannounce").hide();
+	});
+	//$("#zannounce").fadeIn().animate({ opacity: 1.0 },3000).fadeOut();
+	//$("#zannounce").slideDown("slow").animate({ opacity: 1.0 },3000).fadeOut();
+	//$("#zannounce").slideDown("slow");
+	//$('#zannounce').hide().fadeIn('3000');
+});
 
 //show the page after all jquery is loaded
 //$(document).ready(function() { 
