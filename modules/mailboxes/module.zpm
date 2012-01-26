@@ -1,30 +1,96 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create IMAP and POP3 Mailboxes. :></p></div>
+	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create IMAP and POP3 Mailboxes. :></p></div>
+	<@ Result @>
 
-<div class="zgrid_wrapper">
-<h2><: Current mailboxes :></h2>
-<% if MailboxList %>
-<form action="./?module=mailboxess&action=EditMailboxList" method="post">
-<table class="zgrid">
-<tr>
-<th><: Address :></th>
-<th><: Date created :></th>
-<th><: Status :></th>
-<th></th>
-</tr>
-<% loop MailboxList %>
-<tr>
-<td><& groupname &></td>
-<td><& groupdesc &></td>
-<td></td>
-<td></td>
-</tr>
-<% endloop %>
-</table>
-</form>
-<% else %>
-<: Sorry there are currently no mailboxes configured! :>
-<% endif %>
+	<div class="zgrid_wrapper">
+		<h2><: Current mailboxes :></h2>
+		<% if MailboxList %>
+		<form action="./?module=mailboxes&action=EditMailbox" method="post">
+		<table class="zgrid">
+			<tr>
+				<th><: Address :></th>
+				<th><: Date created :></th>
+				<th><: Status :></th>
+				<th></th>
+				<th></th>
+			</tr>
+		<% loop MailboxList %>
+			<tr>
+				<td><& address &></td>
+				<td><& created &></td>
+				<td><& status &></td>
+				<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& id &>" id="inEdit_<& id &>" value="inEdit_<& id &>"><: Edit :></button></td>
+				<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
+			</tr>
+		<% endloop %>
+		</table>
+		</form>
+		<% else %><!-- ELSE MailboxList -->
+		<: Sorry there are currently no mailboxes configured! :>
+		<% endif %><!-- END MailboxList -->
+	</div>
+
+	<div class="zform_wrapper">
+		<table class="none" width="100%" cellborder="0" cellspacing="0">
+			<tr valign="top">
+				<td>
+				<% if QuotaLimit %>
+				<% if EditMailbox %>
+				<h2><: Edit mailbox :></h2>
+				<form action="./?module=mailboxes&action=EditMailbox" method="post">
+				<table class="zform">
+					<% loop EditMailbox %>
+					<tr>
+						<th><: Email Address :>:</th><td><& address &></td>
+					</tr>
+					<tr>
+						<th><: Set Password :>:</th><td><input type="text" name="inPassword" id="inPassword" /></td>
+					</tr>
+				<% endloop %>
+					<tr>
+						<th><: Enabled :>:</th><td><input type="checkbox" name="inEnabled" id="inEnabled" value="1" <& ischeck &> /></td>
+					</tr>
+					<tr>
+						<th><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSave_<& id &>" id="inSave_<& id &>" value="inSave_<& id &>"><: Save :></button></th><td></td>
+					</tr>
+				</table>
+				</form>
+				<% else %><!-- ELSE EditMailbox -->
+				<h2><: Create a new mailbox :></h2>
+				<form action="./?module=mailboxes&action=AddMailbox" method="post">
+				<table class="zform">
+					<tr>
+						<th><: Email Address :>:</th>
+						<td><input type="text" name="inAddress" id="inAddress" /></td>
+						<td>
+						<select name="inDomain" id="inDomain">
+						<option value="" selected="selected">-- <: Select a domain :> --</option>
+					<% loop DomainList %>
+						<option value="<& domain &>">@<& domain &></option>
+					<% endloop %>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<th><: Password :>:</th><td><input type="text" name="inPassword" id="inPassword" /></td><td></td>
+					</tr>
+					<tr>
+						<th><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inCreate" id="inCreate" value="inCreate"><: Create :></button></th>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+				</form>
+				<% endif %><!-- END EditMailbox -->
+				<% else %><!-- ELSE QuotaLimit -->
+				<: Sorry, you have reached your mailbox quota limit! :>
+				<% endif %><!-- END QuotaLimit -->
+				</td>
+				<td align="right"><@ EmailUsagepChart @></td>
+			</tr>
+		</table>		
+	</div>
+	
 </div>
