@@ -7,5 +7,5 @@
 <author-name>Bobby Allen</author-name>
 <author-email>bobbyallen.uk@gmail.com</author-email>
 <author-url>http://www.example.com</author-url>
-<update-url>http://www.example.com/products/test-module/updateservice.xml</update-url>
+<updateurl>http://www.ballen.co.uk/testupdate/update.xml</updateurl>
 </module>
