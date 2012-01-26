@@ -4,8 +4,8 @@
 <version>100</version>
 <default-cat>other</default-cat>
 <desc>Core system modules for ZPanelX.</desc>
-<author-name>Bobby Allen</author-name>
-<author-email>ballen@zpanelcp.com</author-email>
-<author-url>http://www.zpanelcp.com/</author-url>
+<authorname>ZPanel Project</authorname>
+<authoremail>ballen@zpanelcp.com</authoremail>
+<authorurl>http://www.zpanelcp.com/</authorurl>
 <updateurl></updateurl>
 </module>

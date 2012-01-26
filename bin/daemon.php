@@ -1,8 +1,9 @@
 <?php
 
 /**
+ * The daemon initiator file.
  * @package zpanelx
- * @subpackage bin -> daemon
+ * @subpackage core -> daemon
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -21,7 +22,6 @@ $daemon_log = new debug_logger();
 $daemon_log->method = "file";
 $daemon_log->logcode = "001";
 
-// Lets start running the hooks!
 if (!runtime_controller::IsCLI())
     echo "<pre>";
 echo "Daemon is now running...";
@@ -29,12 +29,10 @@ echo "Daemon is now running...";
 $daemon_log->detail = "Daemon execution started...";
 $daemon_log->writeLog();
 
-// Everytime the daemon is run! (10 mins by default!)
 runtime_hook::Execute("OnStartDaemonRun");
 runtime_hook::Execute("OnDaemonRun");
 runtime_hook::Execute("OnEndDaemonRun");
 
-// Every hour
 if (ctrl_options::GetOption('daemon_hourrun') < (time() + 3599)) {
     runtime_hook::Execute("OnStartDaemonHour");
     runtime_hook::Execute("OnDaemonHour");
@@ -42,7 +40,6 @@ if (ctrl_options::GetOption('daemon_hourrun') < (time() + 3599)) {
     ctrl_options::SetSystemOption('daemon_hourrun', time());
 }
 
-// Every day
 if (ctrl_options::GetOption('daemon_dayrun') < (time() - 86399)) {
     runtime_hook::Execute("OnStartDaemonDay");
     runtime_hook::Execute("OnDaemonDay");
@@ -50,7 +47,6 @@ if (ctrl_options::GetOption('daemon_dayrun') < (time() - 86399)) {
     ctrl_options::SetSystemOption('daemon_dayrun', time());
 }
 
-// Every week
 if (ctrl_options::GetOption('daemon_weekrun') < (time() - 604799)) {
     runtime_hook::Execute("OnStartDaemonWeek");
     runtime_hook::Execute("OnDaemonWeek");
@@ -58,7 +54,6 @@ if (ctrl_options::GetOption('daemon_weekrun') < (time() - 604799)) {
     ctrl_options::SetSystemOption('daemon_weekrun', time());
 }
 
-// Every month
 if (ctrl_options::GetOption('daemon_monthrun') < (time() - 2419199)) {
     runtime_hook::Execute("OnStartDaemonMonth");
     runtime_hook::Execute("OnDaemonMonth");
@@ -66,10 +61,8 @@ if (ctrl_options::GetOption('daemon_monthrun') < (time() - 2419199)) {
     ctrl_options::SetSystemOption('daemon_monthrun', time());
 }
 
-// All hooks have been run!
 echo "\nDaemon run complete!\n";
 
-// Ensure we update the database on when the daemon last run (I won't add this to a hook in zpx_core_module as it needs to be fail safe!)
 ctrl_options::SetSystemOption('daemon_lastrun', time());
 
 $daemon_log->detail = "Daemon execution completed!";

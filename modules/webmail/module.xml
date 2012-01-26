@@ -4,8 +4,8 @@
 <version>100</version>
 <default-cat>Mail</default-cat>
 <desc>Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.</desc>
-<author-name>Bobby Allen</author-name>
-<author-email>bobbyallen.uk@gmail.com</author-email>
-<author-url>http://www.example.com</author-url>
+<authorname>ZPanel Project</authorname>
+<authoremail>developers@zpanelcp.com</authoremail>
+<authorurl>http://www.zpanelcp.com/</authorurl>
 <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

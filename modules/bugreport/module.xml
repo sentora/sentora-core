@@ -4,8 +4,8 @@
 <version>100</version>
 <default-cat>Server Admin</default-cat>
 <desc>If you have found a bug with ZPanel you can report it here.</desc>
-<author-name>Bobby Allen</author-name>
-<author-email>bobbyallen.uk@gmail.com</author-email>
-<author-url>http://www.example.com</author-url>
+<authorname>ZPanel Project</authorname>
+<authoremail>developers@zpanelcp.com</authoremail>
+<authorurl>http://www.zpanelcp.com/</authorurl>
 <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

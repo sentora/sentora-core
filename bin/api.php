@@ -2,11 +2,12 @@
 
 /**
  * This is the the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
- *
  * @package zpanelx
- * @subpackage dryden -> bin
- * @version 10.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @subpackage core -> api
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 $raw_path = str_replace("\\", "/", dirname(__FILE__));
 $root_path = str_replace("/bin", "/", $raw_path);
