@@ -10,8 +10,7 @@ while ($modules = $modsql->fetch()) {
     if (isset($mod_config->document->version[0]->tagData)) {
         $current_version = $mod_config->document->version[0]->tagData;
         $updateurl = $mod_config->document->updateurl[0]->tagData;
-
-        $updateinfo = new xml_reader(readfile($updateurl));
+        $updateinfo = new xml_reader(fs_filehandler::ReadFileContents($updateurl));
         $updateinfo->Parse();
         if (isset($updateinfo->document->latestversion[0]->tagData)) {
             $latest_version = $updateinfo->document->latestversion[0]->tagData;
