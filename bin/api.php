@@ -2,9 +2,8 @@
 
 /**
  * This is the the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
- *
  * @package zpanelx
- * @subpackage bin -> api
+ * @subpackage core -> api
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/

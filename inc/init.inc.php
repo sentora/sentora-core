@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * The web gui initiation script.
  * @package zpanelx
  * @subpackage core
  * @author Bobby Allen (ballen@zpanelcp.com)

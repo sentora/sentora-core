@@ -1,8 +1,9 @@
 <?php
 
 /**
+ * The daemon initiator file.
  * @package zpanelx
- * @subpackage bin -> daemon
+ * @subpackage core -> daemon
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
