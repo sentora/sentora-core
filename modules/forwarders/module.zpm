@@ -1,28 +1,75 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create mail forwarders. :></p></div>
+	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create mail forwarders. :></p></div>
+	<@ Result @>
 
-<div class="zgrid_wrapper">
-<h2><: Current forwarders :></h2>
-<% if ForwardList %>
-<form action="./?module=mailboxess&action=EditForwardList" method="post">
-<table class="zgrid">
-<tr>
-<th><: Address :></th>
-<th><: Destination :></th>
-<th></th>
-</tr>
-<% loop ForwardList %>
-<tr>
-<td><& groupname &></td>
-<td><& groupdesc &></td>
-<td></td>
-</tr>
-<% endloop %>
-</table>
-</form>
-<% else %>
-<: Sorry there are currently no forwarders configured! :>
-<% endif %>
+	<div class="zgrid_wrapper">
+		<h2><: Current Forwarders :></h2>
+		<% if ForwardList %>
+		<form action="./?module=forwarders&action=DeleteForwarder" method="post">
+		<table class="zgrid">
+			<tr>
+				<th><: Address :></th>
+				<th><: Destination :></th>
+				<th><: Keep Message :></th>
+				<th></th>
+			</tr>
+		<% loop ForwardList %>
+			<tr>
+				<td><& address &></td>
+				<td><& destination &></td>
+				<td><& status &></td>
+				<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
+			</tr>
+		<% endloop %>
+		</table>
+		</form>
+		<% else %><!-- ELSE ForwardList -->
+		<: Sorry there are currently no mailbox forwards configured! :>
+		<% endif %><!-- END ForwardList -->
+	</div>
+
+	<div class="zform_wrapper">
+		<table class="none" width="100%" cellborder="0" cellspacing="0">
+			<tr valign="top">
+				<td>
+				<% if QuotaLimit %>
+				<h2><: Create a new forward :></h2>
+				<form action="./?module=forwarders&action=AddForwarder" method="post">
+				<table class="zform">
+					<tr>
+						<th><: Email Address :>:</th>
+						<td>
+						<select name="inAddress" id="inAddress">
+						<option value="" selected="selected">-- <: Select a mailbox :> --</option>
+					<% loop MailboxList %>
+						<option value="<& address &>"><& address &></option>
+					<% endloop %>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<th><: Destination :>:</th>
+						<td><input type="text" name="inDestinationName" id="inDestinationName" /> @ <input type="text" name="inDestinationDomain" id="inDestinationDomain" /></td>
+					</tr>
+					<tr>
+						<th><: Keep original message :>:</th>
+						<td><input type="checkbox" name="inKeepMessage" id="inKeepMessage" value="1" checked="checked" /></td>
+					</tr>
+					<tr>
+						<th><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inCreate" id="inCreate" value="inCreate"><: Create :></button></th>
+						<td></td>
+					</tr>
+				</table>
+				</form>
+				<% else %><!-- ELSE QuotaLimit -->
+				<: Sorry, you have reached your mailbox forward quota limit! :>
+				<% endif %><!-- END QuotaLimit -->
+				</td>
+				<td align="right"><@ ForwardUsagepChart @></td>
+			</tr>
+		</table>		
+	</div>
+	
 </div>
