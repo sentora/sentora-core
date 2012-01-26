@@ -5,8 +5,8 @@
 <default-cat>Server Admin</default-cat>
 <desc>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.
 </desc>
-<author-name>Bobby Allen</author-name>
-<author-email>bobbyallen.uk@gmail.com</author-email>
-<author-url>http://www.example.com</author-url>
+<authorname>ZPanel Project</authorname>
+<authoremail>developers@zpanelcp.com</authoremail>
+<authorurl>http://www.zpanelcp.com/</authorurl>
 <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

@@ -4,8 +4,8 @@
 <version>100</version>
 <default-cat>Advanced</default-cat>
 <desc>Please find a list of the most common questons from users, if you are unable to find a solution to your problem below please then contact your hosting provider. Simply click on the FAQ below to view the solution.</desc>
-<author-name>Bobby Allen</author-name>
-<author-email>bobbyallen.uk@gmail.com</author-email>
-<author-url>http://www.example.com</author-url>
+<authorname>ZPanel Project</authorname>
+<authoremail>developers@zpanelcp.com</authoremail>
+<authorurl>http://www.zpanelcp.com/</authorurl>
 <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>
