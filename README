@@ -1,1 +1,39 @@
-ZPANELX Development README
+ZPanel README
+
+ZPanel is an open-source web hosting control panel written in PHP and is compatible
+with Microsoft Windows and POSIX (Linux, UNIX, MacOSX and the BSD's).
+
+For more information about ZPanel, please visit our official website at:-
+http://www.zpanelcp.com/
+
+---
+
+LICENSE
+
+ZPanel is licensed under the GNU GENERAL PUBLIC LICENSE (GPL v3) you can view
+a copy of this license either by opening the LICENSE file in the root of this folder
+or by visiting:- http://www.gnu.org/copyleft/gpl.html
+
+---
+
+INSTALLATION
+
+Due to the nature of this software and how it integrates with various third-party
+applications we always recommend to new users that they view our installation
+guide on our planet site: http://planet.zpanelcp.com/
+
+Alternatively our forums contain various installation scripts and installers for
+different versions of Linux and UNIX and also single click installers for Microsoft
+Windows.
+
+---
+
+GETTING SUPPORT
+
+We provide excelent support and documentation at our website of which can be 
+viewed here: http://www.zpanelcp.com
+
+Other support resources include:-
+
+Our official community support forums: http://forums.zpanelcp.com/
+Our documentation site (planet): http://planet.zpanelcp.com/
