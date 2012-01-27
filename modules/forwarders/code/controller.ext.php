@@ -31,7 +31,9 @@ class module_controller {
 	
 	static $ok;
 	static $password;
-	static $alreadyexists;
+	static $alreadyexistssame;
+	static $alreadyexistsforwarder;
+	static $alreadyexistsalias;
 	static $validemail;
 	static $noaddress;
 
@@ -47,9 +49,9 @@ class module_controller {
             $sql->execute();
             while ($rowforwarders = $sql->fetch()) {
 				if ($rowforwarders['fw_keepmessage_in'] == 1){
-					$status = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
+					$status = "<a href=\"#\" title=\"".ui_language::translate("A copy of the original message will be left in the source mailbox address when it is fowarded to the destination address")."\"><img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\"></a>";
 				} else {
-					$status = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
+					$status = "<a href=\"#\" title=\"".ui_language::translate("The original message will only be available in the destination address")."\"><img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"></a>";
 				}
                 array_push($res, array('address'     => $rowforwarders['fw_address_vc'],
 									   'destination' => $rowforwarders['fw_destination_vc'],
@@ -197,10 +199,26 @@ class module_controller {
 			self::$validemail = true;
 			return true;
 		}
+        if ($address == $destination) {
+			self::$alreadyexistssame = true;
+			return true;
+		}
         $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $address . "' AND fw_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
+			self::$alreadyexistsforwarder = true;
+			return true;
+		}
+        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $destination . "' AND fw_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+			self::$alreadyexistsforwarder = true;
+			return true;
+		}
+        $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $destination . "' AND al_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+			self::$alreadyexistsalias = true;
 			return true;
 		}
 		return false;
@@ -224,8 +242,14 @@ class module_controller {
     }
 
     static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout("The email address you entered already exists!", "zannounceerror");
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexistssame)) {
+            return ui_sysmessage::shout("You cannot forward a mailbox to itself!", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexistsforwarder)) {
+            return ui_sysmessage::shout("A forwarder already exists with that address!", "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexistsalias)) {
+            return ui_sysmessage::shout("An alias already exists with that destination address!", "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$validemail)) {
             return ui_sysmessage::shout("Your email address is not valid.", "zannounceerror");
@@ -237,7 +261,7 @@ class module_controller {
             return ui_sysmessage::shout("Your email address cannot be blank.", "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout("Changes to your mailboxes have been saved successfully!", "zannounceok");
+            return ui_sysmessage::shout("Changes to your forwarders have been saved successfully!", "zannounceok");
         } else {
             return NULL;
         }
