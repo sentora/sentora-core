@@ -110,7 +110,7 @@ class module_controller {
                     }
                     $line .= "</td><td>";
                     if (ui_module::GetModuleHasUpdates($modules['mo_folder_vc'])) {
-                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"> - " .ui_language::translate("Latest version").": <a href=\"".$modules['mo_updateurl_tx']."\" target=\"_blank\">" .$modules['mo_updatever_vc']. "</a>";
+                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"> - " . ui_language::translate("Latest version") . ": <a href=\"" . $modules['mo_updateurl_tx'] . "\" target=\"_blank\">" . $modules['mo_updatever_vc'] . "</a>";
                     } else {
                         $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
                     }
@@ -136,9 +136,7 @@ class module_controller {
         return $line;
     }
 
-    static
-
-    function ModuleStatusIcon($mo_id_pk) {
+    static function ModuleStatusIcon($mo_id_pk) {
         global $zdbh;
         global $controller;
         $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = '" . $mo_id_pk . "'");
@@ -152,9 +150,7 @@ class module_controller {
         return $retval;
     }
 
-    static
-
-    function doEditModule() {
+    static function doEditModule() {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -183,9 +179,7 @@ class module_controller {
         return;
     }
 
-    static
-
-    function getResult() {
+    static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your module options have been saved successfully!"));
         } else {
@@ -194,16 +188,55 @@ class module_controller {
         return;
     }
 
-    static
+    static function getIsShowModuleInfo() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'showinfo'))
+            return true;
+        return false;
+    }
+    
+   static function getModuleInfoName(){
+       global $controller;
+       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+       return $info['name'];
+   }
+   
+   static function getModuleDescription(){
+       global $controller;
+       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+       return $info['desc'];
+   }
 
-    function getModuleName() {
+   static function getModuleDeveloperName(){
+       global $controller;
+       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+       return $info['authorname'];
+   }
+   
+   static function getModuleDeveloperEmail(){
+       global $controller;
+       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+       return $info['authoremail'];
+   }
+   
+   static function getModuleVersion(){
+       global $controller;
+       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+       return $info['version'];
+   }
+   
+   static function getModuleDeveloperURL(){
+       global $controller;
+       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+       return $info['authorurl'];
+   }
+   
+    static function getModuleName() {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-    static
-
-    function getModuleIcon() {
+    static function getModuleIcon() {
         global $controller;
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;

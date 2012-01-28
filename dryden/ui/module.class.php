@@ -159,6 +159,33 @@ class ui_module {
         return $retval;
     }
 
+    /**
+     * Returns an array of the XML tags from the module.xml file.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $zlo
+     * @param type $module
+     * @return type 
+     */
+    static function GetModuleXMLTags($module) {
+        global $zlo;
+        $mod_xml = "modules/$module/module.xml";
+        $info = array();
+        try {
+            $mod_config = new xml_reader(fs_filehandler::ReadFileContents($mod_xml));
+            $mod_config->Parse();
+            $info['name'] = $mod_config->document->name[0]->tagData;
+            $info['version'] = $mod_config->document->version[0]->tagData;
+            $info['desc'] = $mod_config->document->desc[0]->tagData;
+            $info['authorname'] = $mod_config->document->authorname[0]->tagData;
+            $info['authoremail'] = $mod_config->document->authoremail[0]->tagData;
+            $info['authorurl'] = $mod_config->document->authorurl[0]->tagData;
+            $info['updateurl'] = $mod_config->document->updateurl[0]->tagData;
+            return $info;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }
 
 ?>

@@ -3,12 +3,44 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
 
-<div class="zgrid_wrapper">
-<@ AdminModules @>
+<% if IsShowModuleInfo %>
+    <div class="zgrid_wrapper">
+    <h2><: Module Information :></h2>
+    <table class="zgrid">
+    <tr>
+    <th><: Module name :></th>
+    <td><@ ModuleInfoName @></td>
+    </tr>
+<tr>
+    <th><: Module description :></th>
+    <td><@ ModuleDescription @></td>
+    </tr>
+    <tr>
+    <th><: Module developer :></th>
+    <td><a href="<@ ModuleDeveloperURL @>"><@ ModuleDeveloperName @></a> (<@ ModuleDeveloperEmail @>)</td>
+    </tr>
+    <tr>
+    <th><: Version :></th>
+    <td><@ ModuleVersion @></td>
+    </tr>
+    <tr>
+    <th><: Latest Version :></th>
+    <td><a href="<@ ModuleUpdateURL @>"><@ LatestVersion @></a></td>
+    </tr>
+    <tr>
+    <th><: Module Type :></th>
+    <td><@ ModuleType @></td>
+    </tr>
+    </table>
+<p><a href="./?module=moduleadmin">Return to Module Admin</a></p>
 </div>
-
-<div class="zgrid_wrapper">
-<@ ConfigModules @>
-</div>
+<% else %> 
+    <div class="zgrid_wrapper">
+    <@ AdminModules @>
+    </div>
+    <div class="zgrid_wrapper">
+    <@ ConfigModules @>
+    </div>
+<% endif %>
 
 </div>
