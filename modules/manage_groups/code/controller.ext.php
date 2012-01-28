@@ -49,7 +49,7 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-                array_push($res, array('groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
+                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
             }
             return $res;
         } else {
@@ -96,6 +96,34 @@ class module_controller {
             return false;
         }
         return;
+    }
+
+    static function doEditGroup() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        /* if (self::ExectuteCreateGroup($formvars['inGroupName'], $formvars['inDesc'], $currentuser['userid'])) {
+
+          } else {
+          return false;
+          } */
+        return;
+    }
+
+    static function getisCreateGroup() {
+        global $controller;
+        if ($controller->GetAction() == "EditGroup")
+            return false;
+        return true;
+    }
+
+    static function getisDeleteGroup() {
+        global $controller;
+        if ($controller->GetAction()) {
+            if ($controller->GetAction() == "EditGroup")
+                return true;
+            return false;
+        }
     }
 
     /**

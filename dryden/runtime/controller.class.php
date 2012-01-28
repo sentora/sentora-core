@@ -87,11 +87,15 @@ class runtime_controller {
     }
 
     public function GetAction() {
-        return $this->vars_get[0]['action'];
+        if (isset($this->vars_get[0]['action']))
+            return $this->vars_get[0]['action'];
+        return false;
     }
 
     public function GetOptions() {
-        return $this->vars_get[0]['options'];
+        if (isset($this->vars_get[0]['options']))
+            return $this->vars_get[0]['options'];
+        return false;
     }
 
     public function GetCurrentModule() {
@@ -163,9 +167,9 @@ class runtime_controller {
         $rawroot_path = str_replace("\\", "/", dirname(__FILE__));
         $root_path = str_replace("/dryden/runtime", "/", $rawroot_path);
         // Include some files that we need.
-        require_once $root_path.'dryden/loader.inc.php';
-        require_once $root_path.'cnf/db.php';
-        require_once $root_path.'inc/dbc.inc.php';
+        require_once $root_path . 'dryden/loader.inc.php';
+        require_once $root_path . 'cnf/db.php';
+        require_once $root_path . 'inc/dbc.inc.php';
         if (file_exists($module_path . 'controller.ext.php')) {
             require_once $module_path . 'controller.ext.php';
         } else {
