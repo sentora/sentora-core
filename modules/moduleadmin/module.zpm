@@ -5,34 +5,35 @@
 
 <% if IsShowModuleInfo %>
     <div class="zgrid_wrapper">
-    <h2><: Module Information :></h2>
-    <table class="zgrid">
-    <tr>
-    <th><: Module name :></th>
-    <td><@ ModuleInfoName @></td>
-    </tr>
-<tr>
-    <th><: Module description :></th>
-    <td><@ ModuleDescription @></td>
-    </tr>
-    <tr>
-    <th><: Module developer :></th>
-    <td><a href="<@ ModuleDeveloperURL @>"><@ ModuleDeveloperName @></a> (<@ ModuleDeveloperEmail @>)</td>
-    </tr>
-    <tr>
-    <th><: Version :></th>
-    <td><@ ModuleVersion @></td>
-    </tr>
-    <tr>
-    <th><: Latest Version :></th>
-    <td><a href="<@ ModuleUpdateURL @>"><@ LatestVersion @></a></td>
-    </tr>
-    <tr>
-    <th><: Module Type :></th>
-    <td><@ ModuleType @></td>
-    </tr>
-    </table>
-<p><a href="./?module=moduleadmin">Return to Module Admin</a></p>
+        <h2><: Module Information :></h2>
+        <table class="zgrid">
+        <tr>
+        <th><: Module name :></th>
+        <td><@ ModuleInfoName @></td>
+        </tr>
+        <tr>
+        <th><: Module description :></th>
+        <td><@ ModuleDescription @></td>
+        </tr>
+        <tr>
+        <th><: Module developer :></th>
+        <td><% if ModuleDeveloperURL %><a href="<@ ModuleDeveloperURL @>"><% endif %><@ ModuleDeveloperName @><% if ModuleDeveloperURL %></a><% endif %> <% if ModuleDeveloperEmail %>(<@ ModuleDeveloperEmail @>)<% endif %></td>
+        </tr>
+        <tr>
+        <th><: Module version :></th>
+        <td><@ ModuleVersion @></td>
+        </tr>
+        <tr>
+        <th><: Latest Version :></th>
+        <td><% if LatestVersion %><a href="<@ ModuleUpdateURL @>"><@ LatestVersion @></a><% else %>Already up to date!<% endif %></td>
+        </tr>
+        <tr>
+        <th><: Module Type :></th>
+        <td><@ ModuleType @></td>
+        </tr>
+        </table>
+        <br>
+        <p><a href="./?module=moduleadmin">Return to Module Admin</a></p>
 </div>
 <% else %> 
     <div class="zgrid_wrapper">

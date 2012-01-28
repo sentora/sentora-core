@@ -110,7 +110,7 @@ class module_controller {
                     }
                     $line .= "</td><td>";
                     if (ui_module::GetModuleHasUpdates($modules['mo_folder_vc'])) {
-                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"> - " . ui_language::translate("Latest version") . ": <a href=\"" . $modules['mo_updateurl_tx'] . "\" target=\"_blank\">" . $modules['mo_updatever_vc'] . "</a>";
+                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"> " . ui_language::translate("Latest version") . ": <a href=\"" . $modules['mo_updateurl_tx'] . "\" target=\"_blank\">" . $modules['mo_updatever_vc'] . "</a>";
                     } else {
                         $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
                     }
@@ -194,43 +194,67 @@ class module_controller {
             return true;
         return false;
     }
-    
-   static function getModuleInfoName(){
-       global $controller;
-       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-       return $info['name'];
-   }
-   
-   static function getModuleDescription(){
-       global $controller;
-       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-       return $info['desc'];
-   }
 
-   static function getModuleDeveloperName(){
-       global $controller;
-       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-       return $info['authorname'];
-   }
-   
-   static function getModuleDeveloperEmail(){
-       global $controller;
-       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-       return $info['authoremail'];
-   }
-   
-   static function getModuleVersion(){
-       global $controller;
-       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-       return $info['version'];
-   }
-   
-   static function getModuleDeveloperURL(){
-       global $controller;
-       $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-       return $info['authorurl'];
-   }
-   
+    static function getModuleInfoName() {
+        global $controller;
+        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+        return $info['name'];
+    }
+
+    static function getModuleDescription() {
+        global $controller;
+        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+        return $info['desc'];
+    }
+
+    static function getModuleDeveloperName() {
+        global $controller;
+        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+        return $info['authorname'];
+    }
+
+    static function getModuleDeveloperEmail() {
+        global $controller;
+        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+        return $info['authoremail'];
+    }
+
+    static function getModuleVersion() {
+        global $controller;
+        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+        return $info['version'];
+    }
+
+    static function getModuleDeveloperURL() {
+        global $controller;
+        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+        return $info['authorurl'];
+    }
+
+    static function getModuleUpdateURL() {
+        global $controller;
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_updateurl_tx FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        $retval = $retval['mo_updateurl_tx'];
+        return $retval;
+    }
+
+    static function getLatestVersion() {
+        global $controller;
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_updatever_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        $retval = $retval['mo_updatever_vc'];
+        return $retval;
+    }
+
+    static function getModuleType() {
+        global $controller;
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_type_en FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        $retval = $retval['mo_type_en'];
+        return $retval;
+    }
+
     static function getModuleName() {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
