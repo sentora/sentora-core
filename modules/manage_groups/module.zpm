@@ -19,7 +19,7 @@
 <tr>
 <td><& groupname &></td>
 <td><& groupdesc &></td>
-<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& groupid &>" id="inDelete_<& groupid &>" value="inDelete_<& groupid &>">Delete</button></td>
+<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& groupid &>" id="inEdit_<& groupid &>" value="inEdit_<& groupid &>">Edit</button><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& groupid &>" id="inDelete_<& groupid &>" value="inDelete_<& groupid &>">Delete</button></td>
 </tr>
 <% endloop %>
 </table>
@@ -55,19 +55,19 @@
 <% if isEditGroup %>
 <div class="zform_wrapper">
 <h2><: Edit user group :></h2>
-<form action="./?module=manage_groups&action=CreateGroup" method="post">
+<form action="./?module=manage_groups&action=UpdateGroup" method="post">
 <table class="zform">
 <tr>
 <th><: Group name :>:</th>
-<td><input name="inGroupName" type="text" id="inGroupName" size="30" /></td>
+<td><input name="inGroupName" type="text" id="inGroupName" size="30" value="<@ EditCurrentName @>" /></td>
 </tr>
 <tr>
 <th><: Description :>:</th>
-<td><input name="inDesc" type="text" id="inDesc" size="30" /></td>
+<td><input name="inDesc" type="text" id="inDesc" size="30"  value="<@ EditCurrentDesc @>" /></td>
 </tr>
 <tr>
 <th colspan="2" align="right">
-<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Create :></button>
+<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save :></button>
 </th>
 </tr>
 </table>
@@ -78,15 +78,25 @@
 <% if isDeleteGroup %>
 <div class="zform_wrapper">
 <h2><: Delete user group :></h2>
+<: Please confirm and choose a group to move any existing clients to before the selected group is deleted. :>
+<p>&nbsp;</p>
 <form action="./?module=manage_groups&action=UpdateGroup" method="post">
 <table class="zform">
 <tr>
-<th><: Move group member to :>:</th>
-<td>(Group selection here!)</td>
+<th><: Group to delete :>:</th>
+<td><@ EditCurrentName @></td>
+</tr>
+<tr>
+<th><: Move current group members to :>:</th>
+<td><select name="inMoveGroup" id="inMoveGroup">
+<% loop GroupMoveToList %>
+<option value="<& groupid &>"><& groupname &></option>"
+<% endloop %>
+</td>
 </tr>
 <tr>
 <th colspan="2" align="right">
-<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Confirm delete :></button>
+<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
 </th>
 </tr>
 </table>
