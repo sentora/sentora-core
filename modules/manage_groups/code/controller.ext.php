@@ -38,8 +38,25 @@ class module_controller {
     }
 
     /**
-     * The 'worker' methods
+     * The 'worker' methods.
      */
+    static function ListGroups($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . "";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowgroups = $sql->fetch()) {
+                array_push($res, array('groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
     static function ExectuteCreateGroup($name, $desc, $uid) {
         global $zdbh;
         $sql = $zdbh->prepare("
@@ -56,23 +73,17 @@ class module_controller {
         return true;
     }
 
+    /**
+     * End 'worker' methods.
+     */
+
+    /**
+     * Webinterface sudo methods.
+     */
     static function getGroupList() {
-        global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $currentuser['userid'] . "";
-        $numrows = $zdbh->query($sql);
-        if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $res = array();
-            $sql->execute();
-            while ($rowgroups = $sql->fetch()) {
-                array_push($res, array('groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
-            }
-            return $res;
-        } else {
-            return false;
-        }
+        return self::ListGroups($currentuser['userid']);
     }
 
     static function doCreateGroup() {
@@ -82,12 +93,14 @@ class module_controller {
         if (self::ExectuteCreateGroup($formvars['inGroupName'], $formvars['inDesc'], $currentuser['userid'])) {
             
         } else {
-            die("Oppps couldnt create the user group.");
+            return false;
         }
-
         return;
     }
 
+    /**
+     * Webinterface sudo methods.
+     */
 }
 
 ?>
