@@ -108,6 +108,17 @@ class module_controller {
         $sql->execute();
         return true;
     }
+    
+    static function ExectuteUpdateGroup($gid, $name, $desc) {
+        global $zdbh;
+        $sql = $zdbh->prepare("
+            UPDATE x_groups
+            SET ug_name_vc = '" .$name. "',
+            ug_notes_tx = '" .$desc. "'
+            WHERE ug_id_pk = " .$gid. "");
+        $sql->execute();
+        return true;
+    }
 
     static function ExecuteDeleteGroup($gid, $mgid) {
         global $zdbh;
@@ -179,8 +190,15 @@ class module_controller {
             return true;
         return false;
     }
-
     
+    static function doUpdateGroup() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExectuteUpdateGroup($formvars['inGroupID'], $formvars['inGroupName'], $formvars['inDesc']))
+            return true;
+        return false;
+    }
+  
     static function getisCreateGroup() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');

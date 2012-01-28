@@ -57,7 +57,7 @@
 <% if isEditGroup %>
 <div class="zform_wrapper">
 <h2><: Edit user group :></h2>
-<form action="./?module=manage_groups&action=EditGroup" method="post">
+<form action="./?module=manage_groups&action=UpdateGroup" method="post">
 <table class="zform">
 <tr>
 <th><: Group name :>:</th>
