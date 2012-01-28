@@ -78,7 +78,7 @@ class module_controller {
                 while ($modules = $modsql->fetch()) {
                     $line .= "<tr>";
                     $line .= "<td>" . self::ModuleStatusIcon($modules['mo_id_pk']) . "</td>";
-                    $line .= "<td><a href=\"./?module=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
+                    $line .= "<td><a href=\"./?module=moduleadmin&showinfo=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
                     $line .= "<td><select name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\">";
                     if ($modules['mo_enabled_en'] == 'true') {
                         $selected = "SELECTED";
