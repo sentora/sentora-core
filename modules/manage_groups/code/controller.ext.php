@@ -37,6 +37,25 @@ class module_controller {
         return $module_icon;
     }
 
+    /**
+     * The 'worker' methods
+     */
+    static function ExectuteCreateGroup($name, $desc, $uid) {
+        global $zdbh;
+        $sql = $zdbh->prepare("
+            INSERT INTO x_groups (
+            ug_name_vc,
+            ug_notes_tx,
+            ug_reseller_fk
+            ) VALUES (
+            '" . $name . "',
+            '" . $desc . "',
+            " . $uid . ")
+            ");
+        $sql->execute();
+        return true;
+    }
+
     static function getGroupList() {
         global $zdbh;
         global $controller;
@@ -54,6 +73,19 @@ class module_controller {
         } else {
             return false;
         }
+    }
+
+    static function doCreateGroup() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExectuteCreateGroup($formvars['inGroupName'], $formvars['inDesc'], $currentuser['userid'])) {
+            
+        } else {
+            die("Oppps couldnt create the user group.");
+        }
+
+        return;
     }
 
 }
