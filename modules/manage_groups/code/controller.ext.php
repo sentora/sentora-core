@@ -40,8 +40,7 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    
-    static function GroupInfo($gid){
+    static function GroupInfo($gid) {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_id_pk=" . $gid . "";
         $numrows = $zdbh->query($sql);
@@ -55,9 +54,9 @@ class module_controller {
             return $res;
         } else {
             return false;
-        }   
+        }
     }
-    
+
     static function ListGroups($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . "";
@@ -67,17 +66,19 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
+                $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
+                $totalnoaccs = $zdbh->query($noaccs)->fetch();
+                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
             }
             return $res;
         } else {
             return false;
         }
     }
-    
-    static function GroupMoveTo($uid, $gid){
+
+    static function GroupMoveTo($uid, $gid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . " AND ug_id_pk <> " .$gid. "";
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . " AND ug_id_pk <> " . $gid . "";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
@@ -120,8 +121,8 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListGroups($currentuser['userid']);
     }
-    
-    static function getGroupMoveToList(){
+
+    static function getGroupMoveToList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -180,19 +181,18 @@ class module_controller {
             return true;
         return false;
     }
-    
-    static function getEditCurrentName(){
+
+    static function getEditCurrentName() {
         global $controller;
-        $current = self::GroupInfo($controller->GetControllerRequest('URL','other'));
+        $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
         return $current[0]['groupname'];
     }
-    
-    static function getEditCurrentDesc(){
+
+    static function getEditCurrentDesc() {
         global $controller;
-        $current = self::GroupInfo($controller->GetControllerRequest('URL','other'));
+        $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
         return $current[0]['groupdesc'];
     }
-    
 
     /**
      * Webinterface sudo methods.
