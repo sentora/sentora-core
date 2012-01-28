@@ -102,28 +102,41 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        /* if (self::ExectuteCreateGroup($formvars['inGroupName'], $formvars['inDesc'], $currentuser['userid'])) {
-
-          } else {
-          return false;
-          } */
+        foreach (self::ListGroups($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['groupid'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['groupid'] . "");
+                exit;
+            }
+            if (isset($formvars['inEdit_' . $row['groupid'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['groupid'] . "");
+                exit;
+            }
+        }
         return;
     }
 
     static function getisCreateGroup() {
         global $controller;
-        if ($controller->GetAction() == "EditGroup")
-            return false;
-        return true;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if (!isset($urlvars['show']))
+            return true;
+        return false;
     }
 
     static function getisDeleteGroup() {
         global $controller;
-        if ($controller->GetAction()) {
-            if ($controller->GetAction() == "EditGroup")
-                return true;
-            return false;
-        }
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
+            return true;
+        return false;
+    }
+
+    static function getisEditGroup() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit"))
+            return true;
+        return false;
     }
 
     /**

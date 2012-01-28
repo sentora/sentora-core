@@ -52,10 +52,33 @@
 </div>
 <% endif %>
 
+<% if isEditGroup %>
+<div class="zform_wrapper">
+<h2><: Edit user group :></h2>
+<form action="./?module=manage_groups&action=CreateGroup" method="post">
+<table class="zform">
+<tr>
+<th><: Group name :>:</th>
+<td><input name="inGroupName" type="text" id="inGroupName" size="30" /></td>
+</tr>
+<tr>
+<th><: Description :>:</th>
+<td><input name="inDesc" type="text" id="inDesc" size="30" /></td>
+</tr>
+<tr>
+<th colspan="2" align="right">
+<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Create :></button>
+</th>
+</tr>
+</table>
+</form>
+</div>
+<% endif %>
+
 <% if isDeleteGroup %>
 <div class="zform_wrapper">
-<h2><: Delete a user group :></h2>
-<form action="./?module=manage_groups&action=ConfirmDeleteGroup" method="post">
+<h2><: Delete user group :></h2>
+<form action="./?module=manage_groups&action=UpdateGroup" method="post">
 <table class="zform">
 <tr>
 <th><: Move group member to :>:</th>
