@@ -57,7 +57,7 @@
 <% if isEditGroup %>
 <div class="zform_wrapper">
 <h2><: Edit user group :></h2>
-<form action="./?module=manage_groups&action=UpdateGroup" method="post">
+<form action="./?module=manage_groups&action=EditGroup" method="post">
 <table class="zform">
 <tr>
 <th><: Group name :>:</th>
@@ -69,6 +69,7 @@
 </tr>
 <tr>
 <th colspan="2" align="right">
+<input type="hidden" name="inGroupID" value="<@ CurrentID @>">
 <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save :></button>
 </th>
 </tr>
@@ -82,7 +83,7 @@
 <h2><: Delete user group :></h2>
 <: Please confirm and choose a group to move any existing clients to before the selected group is deleted. :>
 <p>&nbsp;</p>
-<form action="./?module=manage_groups&action=UpdateGroup" method="post">
+<form action="./?module=manage_groups&action=DeleteGroup" method="post">
 <table class="zform">
 <tr>
 <th><: Group to delete :>:</th>
@@ -98,6 +99,7 @@
 </tr>
 <tr>
 <th colspan="2" align="right">
+<input type="hidden" name="inGroupID" value="<@ CurrentID @>">
 <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
 </th>
 </tr>

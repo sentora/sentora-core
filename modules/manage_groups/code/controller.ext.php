@@ -109,6 +109,20 @@ class module_controller {
         return true;
     }
 
+    static function ExecuteDeleteGroup($gid, $mgid) {
+        global $zdbh;
+        $sql = $zdbh->prepare("
+            UPDATE x_accounts
+            SET ac_group_fk = " . $mgid . "
+            WHERE ac_group_fk = " . $gid . "");
+        $sql->execute();
+        $sql = $zdbh->prepare("
+            DELETE FROM x_groups
+            WHERE ug_id_pk = " . $gid . "");
+        $sql->execute();
+        return true;
+    }
+
     /**
      * End 'worker' methods.
      */
@@ -158,6 +172,15 @@ class module_controller {
         return;
     }
 
+    static function doDeleteGroup() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteDeleteGroup($formvars['inGroupID'], $formvars['inMoveGroup']))
+            return true;
+        return false;
+    }
+
+    
     static function getisCreateGroup() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -182,9 +205,19 @@ class module_controller {
         return false;
     }
 
+    static function getCurrentID() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['groupid'];
+        } else {
+            return "";
+        }
+    }
+    
     static function getEditCurrentName() {
         global $controller;
-        if($controller->GetControllerRequest('URL', 'other')) {
+        if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
             return $current[0]['groupname'];
         } else {
@@ -194,7 +227,7 @@ class module_controller {
 
     static function getEditCurrentDesc() {
         global $controller;
-        if($controller->GetControllerRequest('URL', 'other')) {
+        if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
             return $current[0]['groupdesc'];
         } else {
