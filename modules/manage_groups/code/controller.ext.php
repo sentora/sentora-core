@@ -184,14 +184,22 @@ class module_controller {
 
     static function getEditCurrentName() {
         global $controller;
-        $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
-        return $current[0]['groupname'];
+        if($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['groupname'];
+        } else {
+            return "";
+        }
     }
 
     static function getEditCurrentDesc() {
         global $controller;
-        $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
-        return $current[0]['groupdesc'];
+        if($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['groupdesc'];
+        } else {
+            return "";
+        }
     }
 
     /**
