@@ -39,6 +39,14 @@ class module_controller {
 	static $parkeddomainsquota;
 	static $mysql;
 	static $mysqlquota;
+	static $ftpaccounts;
+	static $ftpaccountsquota;
+	static $mailboxes;
+	static $mailboxquota;
+	static $forwarders;
+	static $forwardersquota;
+	static $distlists;
+	static $distrobutionlistsquota;
 	
     static function getUsage() {
 		if (file_exists('etc/lib/pChart2/class/pData.class.php')){
@@ -85,30 +93,74 @@ class module_controller {
 		return $display;		
     }
 
+    static function getFTPUsage() {
+		if (file_exists('etc/lib/pChart2/class/pData.class.php')){
+			$display = self::DisplayFTPUsagepChart();
+		} else {
+			$display = "pChart Library Not Found.";
+		}
+		return $display;		
+    }
+
+    static function getMailboxUsage() {
+		if (file_exists('etc/lib/pChart2/class/pData.class.php')){
+			$display = self::DisplayMailboxUsagepChart();
+		} else {
+			$display = "pChart Library Not Found.";
+		}
+		return $display;		
+    }
+
+    static function getForwardersUsage() {
+		if (file_exists('etc/lib/pChart2/class/pData.class.php')){
+			$display = self::DisplayForwardersUsagepChart();
+		} else {
+			$display = "pChart Library Not Found.";
+		}
+		return $display;		
+    }
+
+    static function getDistListUsage() {
+		if (file_exists('etc/lib/pChart2/class/pData.class.php')){
+			$display = self::DisplayDistListUsagepChart();
+		} else {
+			$display = "pChart Library Not Found.";
+		}
+		return $display;		
+    }
+
 	#Begin Display Methods
     static function DisplayUsagepChart() {
 		global $zdbh;
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		
-		self::$diskquota = $currentuser['diskquota'];
-		self::$diskspace = fs_director::GetQuotaUsages('diskspace', $currentuser['userid']);
-		self::$bandwidthquota = $currentuser['bandwidthquota'];
-		self::$bandwidth = fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']);
-		self::$domainsquota = $currentuser['domainquota'];
-		self::$domains = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
-		self::$subdomainsquota = $currentuser['subdomainquota'];
-		self::$subdomains = fs_director::GetQuotaUsages('subdomains', $currentuser['userid']);
-		self::$parkeddomainsquota = $currentuser['parkeddomainquota'];
-		self::$parkeddomains = fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid']);
-		self::$mysqlquota = $currentuser['mysqlquota'];
-		self::$mysql = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+		self::$diskquota 			  = $currentuser['diskquota'];
+		self::$diskspace 			  = fs_director::GetQuotaUsages('diskspace', $currentuser['userid']);
+		self::$bandwidthquota 		  = $currentuser['bandwidthquota'];
+		self::$bandwidth 			  = fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']);
+		self::$domainsquota 		  = $currentuser['domainquota'];
+		self::$domains 				  = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
+		self::$subdomainsquota  	  = $currentuser['subdomainquota'];
+		self::$subdomains 			  = fs_director::GetQuotaUsages('subdomains', $currentuser['userid']);
+		self::$parkeddomainsquota 	  = $currentuser['parkeddomainquota'];
+		self::$parkeddomains 		  = fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid']);
+		self::$mysqlquota 			  = $currentuser['mysqlquota'];
+		self::$mysql 				  = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+		self::$ftpaccountsquota 	  = $currentuser['ftpaccountsquota'];
+		self::$ftpaccounts     		  = fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
+		self::$mailboxquota   	      = $currentuser['mailboxquota'];
+		self::$mailboxes       		  = fs_director::GetQuotaUsages('mailboxes', $currentuser['userid']);
+		self::$forwardersquota 		  = $currentuser['forwardersquota'];
+		self::$forwarders      		  = fs_director::GetQuotaUsages('forwarders', $currentuser['userid']);
+		self::$distrobutionlistsquota = $currentuser['distrobutionlistsquota'];
+		self::$distlists       		  = fs_director::GetQuotaUsages('distlists', $currentuser['userid']);
 		
 		$total= self::$diskquota;
 		$used = self::$diskspace;
 		$free = $total - $used;		
 		
-		$line = "<table>";
+		$line  = "<table>";
   		$line .= "<tr>";
 	    $line .= "<td align=\"left\" valign=\"top\">";
 		$line .= "<h2>".ui_language::translate("Disk Usage Total")."</h2>";
@@ -142,8 +194,7 @@ class module_controller {
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>".ui_language::translate("FTP accounts").":</th>";
-		//$line .= "<td>".fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid'])." / ".$currentuser['ftpaccountsquota']."</td>";
-		$line .= "<td></td>";
+		$line .= "<td>".self::$ftpaccounts." / ".self::$ftpaccountsquota."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>".ui_language::translate("MySQL&reg databases").":</th>";
@@ -151,18 +202,15 @@ class module_controller {
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>".ui_language::translate("Mailboxes").":</th>";
-		//$line .= "<td>".fs_director::GetQuotaUsages('mailboxes', $currentuser['userid'])." / ".$currentuser['mailboxquota']."</td>";
-		$line .= "<td></td>";
+		$line .= "<td>".self::$mailboxes." / ".self::$mailboxquota."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>".ui_language::translate("Mail forwarders").":</th>";
-		//$line .= "<td>".fs_director::GetQuotaUsages('forwarders', $currentuser['userid'])." / ".$currentuser['forwardersquota']."</td>";
-		$line .= " <td></td>";
+		$line .= " <td>".self::$forwarders." / ".self::$forwardersquota."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>".ui_language::translate("Distrubution lists").":</th>";
-		//$line .= "<td>".fs_director::GetQuotaUsages('distlists', $currentuser['userid'])." / ".$currentuser['distrobutionlistsquota']."</td>";
-		$line .= "<td></td>";
+		$line .= "<td>".self::$distlists." / ".self::$distrobutionlistsquota."</td>";
 		$line .= "</tr>";
 		$line .= "</table>";
 		$line .= "</td>";
@@ -203,6 +251,42 @@ class module_controller {
 		$line  = "<h2>MySQL&reg Database Usage</h2>";
 		$total= self::$mysqlquota;
 		$used = self::$mysql;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		return $line;
+	}
+
+    static function DisplayMailboxUsagepChart() {
+		$line  = "<h2>Mailbox Usage</h2>";
+		$total= self::$mailboxquota;
+		$used = self::$mailboxes;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		return $line;
+	}
+
+    static function DisplayFTPUsagepChart() {
+		$line  = "<h2>FTP Usage</h2>";
+		$total= self::$ftpaccountsquota;
+		$used = self::$ftpaccounts;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		return $line;
+	}
+
+    static function DisplayForwardersUsagepChart() {
+		$line  = "<h2>Forwarders Usage</h2>";
+		$total= self::$forwardersquota;
+		$used = self::$forwarders;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
+		return $line;
+	}
+
+    static function DisplayDistListUsagepChart() {
+		$line  = "<h2>Distrubution List Usage</h2>";
+		$total= self::$distrobutionlistsquota;
+		$used = self::$distlists;
 		$free = $total - $used;		
 		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
 		return $line;

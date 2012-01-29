@@ -8,41 +8,64 @@
 </div>
 
 <table width="100%">
-<tr>
-<td>
-
-<div class="zgrid_wrapper">
-<@ DomainsUsage @>
-</div>
-
-</td>
-<td>
-
-<div class="zgrid_wrapper">
-<@ SubDomainsUsage @>
-</div>
-
-</td>
-</tr>
+	<tr>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ DomainsUsage @>
+			</div>
+		</td>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ SubDomainsUsage @>
+			</div>
+		</td>
+	</tr>
 </table>
 
 <table width="100%">
-<tr>
-<td>
-
-<div class="zgrid_wrapper">
-<@ ParkedDomainsUsage @>
-</div>
-
-</td>
-<td>
-
-<div class="zgrid_wrapper">
-<@ MysqlUsage @>
-</div>
-
-</td>
-</tr>
+	<tr>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ ParkedDomainsUsage @>
+			</div>
+		</td>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ MysqlUsage @>
+			</div>
+		</td>
+	</tr>
 </table>
+
+<table width="100%">
+	<tr>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ FTPUsage @>
+			</div>
+		</td>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ MailboxUsage @>
+			</div>
+		</td>
+	</tr>
+</table>
+
+<table width="100%">
+	<tr>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ ForwardersUsage @>
+			</div>
+		</td>
+		<td>
+			<div class="zgrid_wrapper">
+			<@ DistListUsage @>
+			</div>
+		</td>
+	</tr>
+</table>
+
 
 </div>
