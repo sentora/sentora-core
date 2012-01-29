@@ -33,7 +33,7 @@ class module_controller {
     	$handle = @file_get_contents($newsurl);
     	$content = $handle;
     	if ($content == '') {
-        	$content = "Unable to connect to the ZPanel News server at this time.";
+        	$content = ui_language::translate("Unable to connect to the ZPanel News server at this time.");
     	} else {
         	$content = "<iframe allowtransparency=\"\" src=\"".$newsurl."\" frameborder=\"0\" width=\"100%\" height=\"300\"></iframe>";
     	}
@@ -50,6 +50,11 @@ class module_controller {
 		global $controller;
 		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
+    }
+
+	static function getModuleDesc() {
+		$message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
     }
 		
 }

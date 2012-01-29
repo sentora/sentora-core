@@ -1,13 +1,54 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+<@ Result @>
+
+<% loop AccountSettings %>
+<% endloop %>
 
 <div class="zform_wrapper">
-<h2><@ Header @></h2>
+<h2><: Enter your account details :></h2>
 <form action="./?module=my_account&action=UpdateAccountSettings" method="post">
     <table class="zform">
-		<@ AccountSettings @>
+		<tr>
+			<th><: Full name :>:</th>
+			<td><input name="inFullname" type="text" id="inFullname" size="40" value="<& fullname &>" /></td>
+		</tr>
+		<tr>
+			<th><: Email Address :>:</th>
+			<td><input name="inEmail" type="text" id="inEmail" size="40" value="<& email &>" /></td>
+		</tr>
+		<tr>
+			<th><: Phone Number :>:</th>
+			<td><input name="inPhone" type="text" id="inPhone" size="20" value="<& phone &>" /></td>
+		</tr>
+		<tr>
+			<th><: Choose Language :>:</th>
+			<td>
+			<select name="inLanguage" id="inLanguage" style="width:50px;">
+		
+			<% loop LangList %>
+			<option value="<& language &>" <& selected &>><& language &></option>"
+			<% endloop %>
+			
+			</select>
+			</td>
+		</tr>
+<% loop AccountSettings %>
+<% endloop %>
+		<tr>
+			<th><: Postal Address :>:</th>
+			<td><textarea name="inAddress" id="inAddress" cols="45" rows="5"><& address &></textarea></td>
+		</tr>
+		<tr>
+			<th><: Postal Code :>:</th>
+			<td><input name="inPostalCode" type="text" id="inPostalCode" size="15" value="<& postcode &>" /></td>
+		</tr>
+		<tr>
+			<th>&nbsp;</th>
+			<td align="right"><button class="fg-button ui-state-default ui-corner-all" id="button" type="submit" ><: Update Account :></button</td>
+		</tr>	
     </table>
 </form>
 </div>

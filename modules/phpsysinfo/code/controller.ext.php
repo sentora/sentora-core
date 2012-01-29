@@ -27,11 +27,6 @@
  
 class module_controller {
 
-    static function getphpSysInfo() {
-		$line = "<button class=\"fg-button ui-state-default ui-corner-all\" onclick=\"window.open('etc/apps/phpsysinfo/')\">".ui_language::translate("Launch phpSysInfo")."</button>";
-		return $line;
-    }
-
 	static function getModuleDesc() {
 		$message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;

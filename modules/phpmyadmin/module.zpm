@@ -1,8 +1,8 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.</p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
 
-<button class="fg-button ui-state-default ui-corner-all" type="submit" onclick="window.open('etc/apps/phpmyadmin/')">Launch phpMyAdmin</button>
+<button class="fg-button ui-state-default ui-corner-all" type="submit" onclick="window.open('etc/apps/phpmyadmin/')"><: Launch phpMyAdmin :></button>
 
 </div>

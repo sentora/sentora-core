@@ -27,29 +27,22 @@
  
 class module_controller {
 
-	static $hasupdated;
+	static $ok;
 
-	static function getAccountSettings (){
-	
+    static function getAccountSettings() {
 		$currentuser = ctrl_users::GetUserDetail();
+		$res = array();
+		array_push($res, array( 'fullname' => $currentuser['fullname'], 
+					 			'email'    => $currentuser['email'], 
+					 			'phone'    => $currentuser['phone'], 
+					 			'address'  => $currentuser['address'], 
+					 			'postcode' => $currentuser['postcode']));
+        return $res;
+    }
 	
- 		$line  = "<tr>";
-		$line .= "<th>".ui_language::translate('Full name').":</th>";
-		$line .= "<td><input name=\"inFullname\" type=\"text\" id=\"inFullname\" size=\"40\" value=\"" . $currentuser['fullname'] . "\" /></td>";
-		$line .= "</tr>";
-		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate('Email Address').":</th>";
-		$line .= "<td><input name=\"inEmail\" type=\"text\" id=\"inEmail\" size=\"40\" value=\"" . $currentuser['email'] . "\" /></td>";
-		$line .= "</tr>";
-		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate('Phone Number').":</th>";
-		$line .= "<td><input name=\"inPhone\" type=\"text\" id=\"inPhone\" size=\"20\" value=\"" . $currentuser['phone'] . "\" /></td>";
-		$line .= "</tr>";
-		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate('Choose Language').":</th>";
-		$line .= "<td>";
-		$line .= "<select name=\"inLanguage\" id=\"inLanguage\" style=\"width:50px;\">";
-		
+    static function getLangList() {
+		$currentuser = ctrl_users::GetUserDetail();
+        $res = array();
 		$column_names = ui_language::GetColumnNames('x_translations');
 		foreach ($column_names as $column_name){
 			if ($column_name != 'tr_id_pk'){
@@ -60,59 +53,52 @@ class module_controller {
 				} else {
 					$selected = "";
 				}
-				$line .= "<option value=\"".$lang."\" ".$selected.">".$lang."</option>";
+				array_push($res, array('language' => $lang, 'selected' => $selected));
 			}
-		}	
-			
-		$line .= "</select>";
-		$line .= "</td>";
-		$line .= "</tr>";
-		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate('Postal Address').":</th>";
-		$line .= "<td><textarea name=\"inAddress\" id=\"inAddress\" cols=\"45\" rows=\"5\">" . $currentuser['address'] . "</textarea></td>";
-		$line .= "</tr>";
-		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate('Postal Code').":</th>";
-		$line .= "<td><input name=\"inPostalCode\" type=\"text\" id=\"inPostalCode\" size=\"15\" value=\"" . $currentuser['postcode'] . "\" /></td>";
-		$line .= "</tr>";
-		$line .= "<tr>";
-		$line .= "<th>&nbsp;</th>";
-		$line .= "<td align=\"right\"><button class=\"fg-button ui-state-default ui-corner-all\" id=\"button\" type=\"submit\" >".ui_language::translate('Update Account')."</button</td>";
-		$line .= "</tr>	";
-	
-	return $line;
-	}
-	
+		}
+        return $res;
+    }	
 	
 	static function doUpdateAccountSettings(){
 		global $zdbh;
 		global $controller;
-		
 		$currentuser = ctrl_users::GetUserDetail();
+		$userid     = $currentuser['userid'];
+		$email      = $controller->GetControllerRequest('FORM', 'inEmail');
+	 	$fullname   = $controller->GetControllerRequest('FORM', 'inFullname');
+		$language   = $controller->GetControllerRequest('FORM', 'inLanguage');
+		$phone      = $controller->GetControllerRequest('FORM', 'inPhone');
+		$address    = $controller->GetControllerRequest('FORM', 'inAddress');
+		$postalCode = $controller->GetControllerRequest('FORM', 'inPostalCode');
 			
-		$sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = '". $controller->GetControllerRequest('FORM', 'inEmail')."' WHERE ac_id_pk = '".$currentuser['userid']."'");
-	 	$sql->execute();
-
-		$sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc = '". $controller->GetControllerRequest('FORM', 'inFullname')."',
-													 ud_language_vc = '". $controller->GetControllerRequest('FORM', 'inLanguage')."',
-													 ud_phone_vc = '". $controller->GetControllerRequest('FORM', 'inPhone')."',
-													 ud_address_tx = '". $controller->GetControllerRequest('FORM', 'inAddress')."',
-													 ud_postcode_vc = '". $controller->GetControllerRequest('FORM', 'inPostalCode')."' WHERE 
-													 ud_user_fk = '".$currentuser['userid']."'");
-	 	$sql->execute();	
-		self::$hasupdated = "yes";
+		if (!fs_director::CheckForEmptyValue(self::ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode))){
+			self::$ok = true;
+		}
 	}
 	
+	static function ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode){
+		global $zdbh;
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();	
+		$sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = '". $email."' WHERE ac_id_pk = '".$userid."'");
+	 	$sql->execute();
+		$sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc = '". $fullname."',
+													 ud_language_vc = '". $language."',
+													 ud_phone_vc    = '". $phone."',
+													 ud_address_tx  = '". $address."',
+													 ud_postcode_vc = '". $postalCode."' WHERE 
+													 ud_user_fk     = '".$userid."'");
+	 	$sql->execute();	
+		return true;
+	}
 	
 	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
+        if (!fs_director::CheckForEmptyValue(self::$ok)){
             return ui_sysmessage::shout(ui_language::translate("Changes to your account settings have been saved successfully!"));
 		}else{
-			return ui_language::translate(ui_module::GetModuleDescription());
+			return;
 		}
-        return;
     }
-
 
 	static function getModuleName() {
 		$module_name = ui_language::translate(ui_module::GetModuleName());
@@ -125,8 +111,8 @@ class module_controller {
         return $module_icon;
     }
 	
-	static function getHeader() {
-		$message = ui_language::translate('Enter your account details');
+	static function getModuleDesc() {
+		$message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }	
 }

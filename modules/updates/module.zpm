@@ -1,10 +1,10 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Check to see if there are any avaliable updates to your version of the ZPanel software.</p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
 
 <div class="zform_wrapper">
-<h2>Checking if your version of ZPanel is up to date...</h2>
+<h2><: Checking if your version of ZPanel is up to date... :></h2>
 <@ ZpanelUpdates @>
 </div>
 

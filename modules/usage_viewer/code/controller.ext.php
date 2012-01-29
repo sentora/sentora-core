@@ -208,8 +208,9 @@ class module_controller {
 		return $line;
 	}
 
-	static function getResult() {
-			return ui_language::translate(ui_module::GetModuleDescription());
+	static function getModuleDesc() {
+		$message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
     }
 
 	static function getModuleName() {

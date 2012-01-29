@@ -3,4 +3,4 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
 
-<@ phpSysInfo @>
+<button class="fg-button ui-state-default ui-corner-all" onclick="window.open('etc/apps/phpsysinfo/')"><: Launch phpSysInfo :></button>

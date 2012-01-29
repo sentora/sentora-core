@@ -28,32 +28,6 @@ class module_controller {
 
     static $error;
 
-    static function getChangePassword() {
-
-        $line = "<tr>";
-        $line .= "<th>Current password:</th>";
-        $line .= "<td><input name=\"inCurPass\" type=\"password\" id=\"inCurPass\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>New password:</th>";
-        $line .= "<td><input name=\"inNewPass\" type=\"password\" id=\"inNewPass\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Confirm new password:</th>";
-        $line .= "<td><input name=\"inConPass\" type=\"password\" id=\"inConPass\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Update MySQL password too?</th>";
-        $line .= "<td><input name=\"inResMySQL\" type=\"checkbox\" id=\"inResMySQL\" value=\"1\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<td>&nbsp;</td>";
-        $line .= "<td align=\"right\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\">Change</button></td>";
-        $line .= "</tr>";
-
-        return $line;
-    }
-
     static function doUpdatePassword() {
         global $zdbh;
         global $controller;
@@ -94,18 +68,17 @@ class module_controller {
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$error)) {
             if (self::$error == "ok") {
-                return ui_sysmessage::shout("Your account password been changed successfully!");
+                return ui_sysmessage::shout(ui_language::translate("Your account password been changed successfully!"));
             }
             if (self::$error == "ok-both") {
-                return ui_sysmessage::shout("Your account and MySQL password been changed successfully!");
+                return ui_sysmessage::shout(ui_language::translate("Your account and MySQL password been changed successfully!"));
             }
             if (self::$error == "matcherror") {
-                return ui_sysmessage::shout("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again.");
+                return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."));
             }
         } else {
-            return ui_module::GetModuleDescription();
+           return;
         }
-        return;
     }
 
     static function getModuleName() {
@@ -124,6 +97,11 @@ class module_controller {
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($password) . "' WHERE ac_id_pk=$uid");
         $sql->execute();
         return true;
+    }
+
+	static function getModuleDesc() {
+		$message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
     }
 
 }

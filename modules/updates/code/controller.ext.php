@@ -28,7 +28,7 @@ class module_controller {
 
     function getZpanelUpdates() {
         if (ctrl_options::GetOption('dbversion') < ctrl_options::GetOption('latestzpversion')) {
-            $msg = "There are currently new updates for your ZPanel installation, please download the latest release (<strong>" . ctrl_options::GetOption('latestzpversion') . "</strong>) from <a hre=\"http://www.zpanelcp.com/\">http://www.zpanelcp.com/</a>.";
+            $msg = ui_language::translate("There are currently new updates for your ZPanel installation, please download the latest release") . " (<strong>" . ctrl_options::GetOption('latestzpversion') . "</strong>) @ <a hre=\"http://www.zpanelcp.com/\">http://www.zpanelcp.com/</a>.";
         } elseif (ctrl_options::GetOption('dbversion') == ctrl_options::GetOption('latestzpversion')) {
             $msg = "Congratulations, You are running the most recent version of ZPanel (<strong>" . ctrl_options::GetOption('latestzpversion') . "</strong>)!";
         } else {
@@ -46,6 +46,11 @@ class module_controller {
         global $controller;
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
+    }
+
+	static function getModuleDesc() {
+		$message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
     }
 
 }
