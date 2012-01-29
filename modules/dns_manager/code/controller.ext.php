@@ -122,9 +122,9 @@ class module_controller {
 		}
 		$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_deleted_ts IS NULL")->Fetch();
 		$line  = "";		
-		$line .= "<div class=\"zgrid_wrapper\">";
+		//$line .= "<div class=\"zgrid_wrapper\">";
 		$line .= "<!-- DNS FORM -->";
-		$line .= "<div style=\"margin-right:20px;\">";
+		//$line .= "<div style=\"margin-right:20px;\">";
 		$line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
 		$line .= "<div class=\"content\"><h2>DNS records for:</h2><a href=\"http://".$domain['vh_name_vc']."\" target=\"_blank\">".$domain['vh_name_vc']."</a>";
 		$line .= "<div>";
@@ -531,9 +531,9 @@ class module_controller {
 		$line .= "<div class=\"actions\"><a class=\"undo disabled\">Undo Changes</a><a class=\"save disabled\">Save Changes</a><a class=\"back\" href=\"/?module=" . $controller->GetControllerRequest('URL', 'module') . "\">Domain List</a></div>";
 		$line .= "</div><br class=\"clear\">";
 		$line .= "</div>";
-		$line .= "</div>";
+		//$line .= "</div>";
 		$line .= "</form>";
-		$line .= "</div>";
+		//$line .= "</div>";
 		$line .= "<!-- END DNS FORM -->";
 		
 		return $line;
