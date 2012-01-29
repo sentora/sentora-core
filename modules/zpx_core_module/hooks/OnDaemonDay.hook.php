@@ -29,5 +29,14 @@ while ($modules = $modsql->fetch()) {
         echo "\r\nCouldn't open the module XML file for (" . $modules['mo_name_vc'] . ")";
     }
 }
+
+
+/*
+ * Please DO NOT remove the below code, this small 'hello' function helps us at the ZPanel project
+ * find out what non-personal infomation about how people are running ZPanel. The only infomation
+ * that we are passing back here is just your ZPanel version and what OS you are running it on.
+ */
+$sayhello = @file_get_contents("http://hello.zpanelcp.com/?version=" .ctrl_options::GetOption('dbversion'). "&platform=" .sys_versions::ShowOSName(). "");
+
 return true;
 ?>
