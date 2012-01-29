@@ -534,6 +534,7 @@ a.zcat{
 	border-top:1px solid #CCCCCC;
 	*/
 	border-spacing:0px;
+	padding-right:20px;
 	
 }
 .zform td{
@@ -587,6 +588,7 @@ a.zcat{
 	border-top:1px solid #CCCCCC;
 	*/
 	border-spacing:0px;
+	padding-right:20px;
 }
 .zgrid td{
 	padding:5px;
