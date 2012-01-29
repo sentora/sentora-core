@@ -202,15 +202,15 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Email Accounts:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"></span> / <span class="Side_Info"></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedemail #></span> / <span class="Side_Info"><# ui_tpl_totalemail #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Email Forwarders:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"></span> / <span class="Side_Info"></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedforwarders #></span> / <span class="Side_Info"><# ui_tpl_totalforwarders #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Distrubution lists:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"> / </span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_useddistlists #></span> / <span class="Side_Info"><# ui_tpl_totaldistlists #></span>&nbsp;</td>
                                                             </tr>
                                                     </table>
                                                 </div>
