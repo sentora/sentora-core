@@ -55,7 +55,7 @@ class module_controller {
 				}
                 array_push($res, array('address'     => $rowforwarders['fw_address_vc'],
 									   'destination' => $rowforwarders['fw_destination_vc'],
-									   'status'     => $status,
+									   'status'      => $status,
 									   'id' 	     => $rowforwarders['fw_id_pk']));
             }
             return $res;

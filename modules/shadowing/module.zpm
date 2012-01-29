@@ -1,22 +1,34 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>From here you can shadow any of your client's accounts, this enables you to automatically login as the user which enables you to offer remote help by seeing what they see!</p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
 
 <div class="zgrid_wrapper">
-<h2>Select the client you wish to shadow</h2>
+<h2><: Select the client you wish to shadow :></h2>
+<% if ShadowAccounts %>
 <form action="./?module=shadowing&action=ShadowUser" method="post">
     <table class="zgrid">
         <tr>
-            <th>Username</th>
-            <th>Package</th>
-            <th>Current Disk</th>
-            <th>Current Bandwidth</th>
+            <th><: Username :></th>
+            <th><: Package :></th>
+            <th><: Current Disk :></th>
+            <th><: Current Bandwidth :></th>
             <th>&nbsp;</th>
         </tr>
-		<@ ShadowAccounts @>
+		<% loop ShadowAccounts %>
+		<tr>
+			<td><& clientusername &></td>
+			<td><& packagename &></td>
+			<td><& currentdisk &></td>
+			<td><& currentbandwidth &></td>
+			<td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inShadow_<& clientid &>" id="inShadow_<& clientid &>" value="inShadow_<& clientid &>"><: Shadow :></button></td>
+		</tr>
+		<% endloop %>
     </table>
 </form>
+<% else %><!-- ELSE ShadowAccounts -->
+<: You have no Clients at this time. :>
+<% endif %><!-- END ShadowAccounts -->
 </div>
 
 </div>

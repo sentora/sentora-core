@@ -162,7 +162,7 @@ class module_controller {
 		
 		$line  = "<table>";
   		$line .= "<tr>";
-	    $line .= "<td align=\"left\" valign=\"top\">";
+	    $line .= "<td align=\"left\" valign=\"top\" width=\"350px\">";
 		$line .= "<h2>".ui_language::translate("Disk Usage Total")."</h2>";
 	
 		//$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=40::30::20&labels=test_1::test_2::test_3\"/></td>";
