@@ -1,26 +1,95 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: This module enables you to create and manage email distrubution groups. :></p></div>
+	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: This module enables you to create and manage email distrubution groups. :></p></div>
+	<@ Result @>
+	
+	<% if Edit %>
+	<div class="zgrid_wrapper">
+		<h2><: Edit Distrubution List :>: <@ EditAddress @></h2>
+		<form action="./?module=distlists&action=EditDistList" method="post">
+		<table class="zgrid">
+			<% if DistListUsers %>
+			<% loop DistListUsers %>
+			<tr>
+				<th><: Email Address :>:</th>
+				<td><& address &></td>
+				<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDeleteUser_<& id &>" id="inDeleteUser_<& id &>" value="inDeleteUser_<& id &>"><: Delete :></button></td>
+			</tr>
+			<% endloop %>
+			<tr>
+				<th>&nbsp;</th>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<% endif %>
+			<tr>
+				<th><: Add New Address :>:</th>
+				<td><input type="text" name="inAddAddress" id="inAddAddress" /> @ <input type="text" name="inAddDomain" id="inAddDomain" /><input type="hidden" name="inDLID" id="inDLID" value="<@ Edit @>" /><input type="hidden" name="inDLAD" id="inDLAD" value="<@ EditAddress @>" /></td>
+				<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inAdd" id="inAdd" value="inAdd"><: Add Mailbox :></button></td>
+			</tr>
+		</table>
+		</form>
+	</div>
+<% else %><!-- ELSE Edit -->
+<% endif %><!-- END Edit -->
 
-<div class="zgrid_wrapper">
-<h2><: Current distrubution lists :></h2>
-<% if DistrubutionList %>
-<form action="./?module=distlists&action=EditDistrubutionList" method="post">
-<table class="zgrid">
-<tr>
-<th><: Address :></th>
-<th></th>
-</tr>
-<% loop DistrubutionList %>
-<tr>
-<td><& groupname &></td>
-<td></td>
-</tr>
-<% endloop %>
-</table>
-</form>
-<% else %>
-<: Sorry there are currently no distrubution list configured! :>
-<% endif %>
+	<div class="zgrid_wrapper">
+		<h2><: Current Distrubution Lists :></h2>
+		<% if DistList %>
+		<form action="./?module=distlists&action=DeleteDistList" method="post">
+		<table class="zgrid">
+			<tr>
+				<th><: Address :></th>
+				<th></th>
+			</tr>
+		<% loop DistList %>
+			<tr>
+				<td><& address &></td>
+				<td>
+				<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& id &>" id="inEdit_<& id &>" value="inEdit_<& id &>"><: Edit :></button>
+				<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button>
+				</td>
+			</tr>
+		<% endloop %>
+		</table>
+		</form>
+		<% else %><!-- ELSE DistList -->
+		<: You currently do not have any distrubution lists setup. :>
+		<% endif %><!-- END DistList -->
+	</div>
+
+	<div class="zform_wrapper">
+	<table class="none" width="100%" cellborder="0" cellspacing="0">
+	<tr valign="top">
+	<td>
+		<h2><: Create a new Distrubution List :></h2>
+		<form action="./?module=distlists&action=AddDistList" method="post">
+		<table class="zform">
+			<tr>
+				<th><: Email Address :>:</th>
+				<td>
+				<input type="text" name="inAddress" id="inAddress" />
+				<select name="inDomain" id="inDomain">
+				<option value="" selected="selected">-- <: Select a domain :> --</option>
+			<% loop DomainList %>
+				<option value="<& domain &>">@<& domain &></option>
+			<% endloop %>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<th><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inCreate" id="inCreate" value="inCreate"><: Create :></button></th>
+				<td></td>
+			</tr>
+		</table>
+		</form>	
+	</td>
+	<td align="right"><@ DistListUsagepChart @></td>
+	</tr>
+	</table>	
+	</div>
+	
+	
+	
 </div>
