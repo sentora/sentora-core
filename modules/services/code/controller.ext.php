@@ -108,24 +108,6 @@ class module_controller {
         return $line;
     }
 
-    static function getDaemon() {
-        $line = "";
-        $line .= "<h2>" . ui_language::translate("Daemon Status") . "</h2>";
-        $line .= "<table class=\"zform\">";
-        $line .= "<tr>";
-        $line .= "<th>" . ui_language::translate("Last Daemon Run") . ":</th>";
-        $line .= "<td>";
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>" . ui_language::translate("Next Daemon Run") . ":</th>";
-        $line .= "<td>";
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "</table>";
-        return $line;
-    }
-
     static function getModuleName() {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
@@ -169,6 +151,17 @@ class module_controller {
     static function getUptime(){
        return sys_monitoring::ServerUptime();
     }
+    
+    static function getLastRunTime(){
+        return date(ctrl_options::GetOption('zpanel_df'),ctrl_options::GetOption('daemon_lastrun'));
+    }
+    
+    static function getNextRunTime(){
+        $time_between_daemon_runs = ctrl_options::GetOption('daemon_run_interval');
+        $new_time = ctrl_options::GetOption('daemon_lastrun') + ctrl_options::GetOption('daemon_run_interval');
+        return date(ctrl_options::GetOption('zpanel_df'),$new_time);
+    }
+    
 }
 
 ?>
