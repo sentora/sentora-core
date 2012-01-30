@@ -28,7 +28,6 @@
 class module_controller {
 
 	function getZpanelNews() {
-    	//$newsurl = "http://api.zpanelcp.com/api/news.php";
 		$newsurl = ctrl_options::GetOption('news_url');
     	$handle = @file_get_contents($newsurl);
     	$content = $handle;
@@ -39,7 +38,6 @@ class module_controller {
     	}
     return $content;
 	}
-	
 
 	static function getModuleName() {
 		$module_name = ui_module::GetModuleName();

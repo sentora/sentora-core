@@ -66,6 +66,7 @@ class module_controller {
                 $line .= "<tr>";
                 $line .= "<th>" . ui_language::translate("Username") . "</th>";
                 $line .= "<th>" . ui_language::translate("Package") . "</th>";
+				$line .= "<th>" . ui_language::translate("Group") . "</th>";
                 $line .= "<th>" . ui_language::translate("Current Disk") . "</th>";
                 $line .= "<th>" . ui_language::translate("Current Bandwidth") . "</th>";
                 $line .= "<th></th>";
@@ -73,11 +74,11 @@ class module_controller {
                 $sql = $zdbh->prepare($sql);
                 $sql->execute();
                 while ($rowclients = $sql->fetch()) {
+				$client = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
                     $line .= "<tr>";
-                    $line .= "<td>" . $rowclients['ac_user_vc'] . "</td>";
-                    $package = $zdbh->query("SELECT pk_name_vc FROM x_packages WHERE pk_id_pk=" . $rowclients['ac_package_fk'] . "")->Fetch();
-                    $line .= "<td>" . $rowclients['pk_name_vc'] . "</td>";
-                    /* NOTE the disk space and bandwith values below need converting to MB / GB */
+                    $line .= "<td>" . $client['username'] . "</td>";
+                    $line .= "<td>" . $client['packagename'] . "</td>";
+					$line .= "<td>" . $client['usergroup'] . "</td>";
                     $line .= "<td>" . fs_director::ShowHumanFileSize($rowclients['bd_diskamount_bi']) . "/" . fs_director::ShowHumanFileSize($rowclients['qt_diskspace_bi']) . "</td>";
                     $line .= "<td>" . fs_director::ShowHumanFileSize($rowclients['bd_transamount_bi']) . "/" . fs_director::ShowHumanFileSize($rowclients['qt_bandwidth_bi']) . "</td>";
                     $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inEdit_" . $rowclients['ac_id_pk'] . "\" value=\"" . $rowclients['ac_id_pk'] . "\">Edit</button>";
@@ -350,13 +351,15 @@ class module_controller {
         $sql = $zdbh->prepare("UPDATE x_accounts SET 
 										ac_package_fk= " . $controller->GetControllerRequest('FORM', 'inPackage') . " ,
 										ac_enabled_in= " . $controller->GetControllerRequest('FORM', 'inEnabled') . ",
-                                                                                ac_group_fk= " . $controller->GetControllerRequest('FORM', 'inGroup') . "
+                                        ac_group_fk= " . $controller->GetControllerRequest('FORM', 'inGroup') . "
 										WHERE ac_id_pk=" . $controller->GetControllerRequest('FORM', 'inClientID') . "");
         $sql->execute();
 
         $sql = $zdbh->prepare("UPDATE x_profiles SET 
 										ud_fullname_vc= '" . $controller->GetControllerRequest('FORM', 'inFullName') . "',
-                                                                                ud_email_vc=    '" . $controller->GetControllerRequest('FORM', 'inEmailAddress') . "',
+                                        ud_email_vc=    '" . $controller->GetControllerRequest('FORM', 'inEmailAddress') . "',
+										ud_group_fk=    '" . $controller->GetControllerRequest('FORM', 'inGroup') . "',
+										ud_package_fk=  '" . $controller->GetControllerRequest('FORM', 'inPackage') . "',
 										ud_address_tx=  '" . $controller->GetControllerRequest('FORM', 'inAddress') . "',
 										ud_postcode_vc= '" . $controller->GetControllerRequest('FORM', 'inPostCode') . "',
 										ud_phone_vc=    '" . $controller->GetControllerRequest('FORM', 'inPhone') . "'
@@ -412,12 +415,12 @@ class module_controller {
 										ac_user_vc,
 										ac_pass_vc,
 										ac_package_fk,
-                                                                                ac_group_fk,
+                                        ac_group_fk,
 										ac_reseller_fk,
 										ac_created_ts) VALUES (
 										'" . $username . "',
 										'" . md5($password) . "',
-                                                                                '" . $packageid . "',
+                                        '" . $packageid . "',
 										'" . $group . "',
 										" . $acc_fk . ",
 										" . time() . ")");
@@ -427,6 +430,8 @@ class module_controller {
         $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk,
 										ud_fullname_vc,
 										ud_email_vc,
+										ud_group_fk,
+										ud_package_fk,
 										ud_address_tx,
 										ud_postcode_vc,
 										ud_phone_vc,
@@ -434,6 +439,8 @@ class module_controller {
 										 " . $client['ac_id_pk'] . ",
 										'" . $controller->GetControllerRequest('FORM', 'inFullName') . "',
 										'" . $controller->GetControllerRequest('FORM', 'inEmailAddress') . "',
+										'" . $packageid . "',
+										'" . $group . "',
 										'" . $controller->GetControllerRequest('FORM', 'inAddress') . "',
 										'" . $controller->GetControllerRequest('FORM', 'inPostCode') . "',
 										'" . $controller->GetControllerRequest('FORM', 'inPhone') . "',

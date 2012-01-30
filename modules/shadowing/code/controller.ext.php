@@ -33,7 +33,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();	
-        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL";
+        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
@@ -44,6 +44,7 @@ class module_controller {
                 array_push($res, array( 'clientusername'   => $clientdetail['username'],
 										'clientid'         => $rowclients['ac_id_pk'],
 										'packagename'      => $clientdetail['packagename'],
+										'usergroup'        => $clientdetail['usergroup'],
 										'currentdisk'      => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
 										'currentbandwidth' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
             }
