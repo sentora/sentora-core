@@ -17,7 +17,7 @@ class fs_filehandler {
     }
 
     /**
-     * Copies a without overwritting existing file, adding permissions for Linux.
+     * Copies without overwritting an existing file, adding permissions for Linux.
      * @author RusTus (rustus@zpanel.co.uk) 
      * @version 10.0.0
      */

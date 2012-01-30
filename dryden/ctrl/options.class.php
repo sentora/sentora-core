@@ -50,6 +50,7 @@ class ctrl_options {
                 return false;
             }
         }
+        runtime_hook::Execute('OnSetSystemOption');
     }
 
     /**

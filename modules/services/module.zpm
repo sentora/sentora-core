@@ -8,7 +8,17 @@
 </div>
 
 <div class="zform_wrapper">
-<@ Daemon @>
+<h2><: Daemon Status :></h2>
+<table class="zform">
+<tr>
+<th><: Last Daemon Run :>:</th>
+<td><@ LastRunTime @></td>
+</tr>
+<tr>
+<th><: Next Daemon Run :>:</th>
+<td><@ NextRunTime @></td>
+</tr>
+</table>
 </div>
 
 </div>

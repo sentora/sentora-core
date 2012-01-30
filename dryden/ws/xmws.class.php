@@ -69,9 +69,13 @@ class ws_xmws {
      * @return bool 
      */
     public function CheckServerAPIKey() {
-        if ($this->wsdataarray['apikey'] <> ctrl_options::GetOption('apikey'))
+        if ($this->wsdataarray['apikey'] <> ctrl_options::GetOption('apikey')) {
+            runtime_hook::Execute('OnBadAPIKeyAuth');
             return false;
-        return true;
+        } else {
+            runtime_hook::Execute('OnGoodAPIKeyAuth');
+            return true;
+        }
     }
 
     /**

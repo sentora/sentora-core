@@ -54,6 +54,7 @@ class ui_module {
         if (self::CheckModuleExists($module)) {
             $retval = self::GetModuleContent($module);
         } else {
+            runtime_hook::Execute('OnFailedModuleLoad');
             $retval = "Unable to find requested module!";
         }
         return $retval;
@@ -92,7 +93,6 @@ class ui_module {
      */
     static function ScanForNewModules() {
         $new_module_list = array();
-
         return $new_module_list;
     }
 

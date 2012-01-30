@@ -33,6 +33,7 @@ class debug_logger {
      */
     function writeLog() {
         global $zdbh;
+        runtime_hook::Execute('OnWriteErrorLog');
         if ($this->method == "screen") {
             /**
              *  Output is to the screen, generate a nice error message.

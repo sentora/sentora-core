@@ -20,6 +20,7 @@ class ctrl_auth {
             if (isset($_COOKIE['zUser'])) {
                 self::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true);
             }
+            runtime_hook::Execute('OnRequireUserLogin');
             include 'etc/styles/zpanelx/login.ztml';
             exit;
         }
@@ -56,14 +57,16 @@ class ctrl_auth {
         $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password' AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL")->fetch();
         if ($rows) {
             ctrl_auth::SetUserSession($rows['ac_id_pk']);
-			$log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
-			$log_logon->execute();
+            $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
+            $log_logon->execute();
             if ($rememberme) {
                 setcookie("zUser", $username, time() + 60 * 60 * 24 * 30, "/");
                 setcookie("zPass", $password, time() + 60 * 60 * 24 * 30, "/");
             }
+            runtime_hook::Execute('OnGoodUserLogin');
             return $rows['ac_id_pk'];
         } else {
+            runtime_hook::Execute('OnBadUserLogin');
             return false;
         }
     }
@@ -74,6 +77,7 @@ class ctrl_auth {
      * @return bool
      */
     static function KillSession() {
+        runtime_hook::Execute('OnUserLogout');
         $_SESSION['zpuid'] = null;
         return true;
     }

@@ -309,7 +309,6 @@ class fs_director {
 	    return $fretval;
 	}
 
-
 }
 
 ?>

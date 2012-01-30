@@ -139,6 +139,7 @@ class runtime_controller {
             $mtime = $mtime[1] + $mtime[0];
             $endtime = $mtime;
             $totaltime = ($endtime - $starttime);
+            runtime_hook::Execute('OnDisplayRuntimeDebug');
             return "<h1>Controller Debug Mode</h1><strong>PHP Script Memory Usage:</strong> " . debug_execution::ScriptMemoryUsage($script_memory) . "<br><strong>Script Execution Time: </strong> " . $totaltime . "<br><br><strong>URL Variables set:</strong><br><pre>" . $set_urls . "</pre><strong>POST Variables set:</strong><br><pre>" . $set_forms . "</pre><strong>SESSION Variables set:</strong><br><pre>" . $set_sessions . "</pre><strong>COOKIE Variables set:</strong><br><pre>" . $set_cookies . "</pre><br><br><strong>Loaded classes:</strong><pre>" . $classes_loaded . "</pre>";
         } else {
             return false;
@@ -166,7 +167,6 @@ class runtime_controller {
         $module_path = str_replace("/hooks", "/code/", $raw_path);
         $rawroot_path = str_replace("\\", "/", dirname(__FILE__));
         $root_path = str_replace("/dryden/runtime", "/", $rawroot_path);
-        // Include some files that we need.
         require_once $root_path . 'dryden/loader.inc.php';
         require_once $root_path . 'cnf/db.php';
         require_once $root_path . 'inc/dbc.inc.php';

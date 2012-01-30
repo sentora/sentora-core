@@ -34,14 +34,18 @@ class sys_email extends PHPMailer {
         $send_resault = $this->Send();
         $error = ob_get_contents();
         ob_clean();
-        if ($send_resault)
+        if ($send_resault){
+            runtime_hook::Execute('OnSuccessfulSendEmail');
             return true;
+        } else {
         $logger = new debug_logger();
         $logger->method = ctrl_options::GetOption('logmode');
         $logger->logcode = "061";
         $logger->detail = 'Error sending email (using sys_email): ' . $error . '';
         $logger->writeLog();
+        runtime_hook::Execute('OnFailedSendEmail');
         return false;
+    }
     }
 
 }
