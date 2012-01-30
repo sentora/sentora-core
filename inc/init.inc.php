@@ -65,5 +65,6 @@ if (!isset($_SESSION['zpuid'])) {
     ctrl_auth::RequireUser();
 }
 
+runtime_hook::Execute('OnBeforeControllerInit');
 $controller->Init();
 ?>
