@@ -1,15 +1,38 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><a href="#" title="Reload Module"><img src="<@ ModuleIcon @>" border="0"></a><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+<@ Result @>
 
 <div class="zform_wrapper">
-<h2>Backup your hosting account files</h2>
+<h2><: Backup your hosting account files :></h2>
 <form action="./?module=backupmgr&action=Backup" method="post">
     <table class="zform">
-		<@ BackupManager @>
+        <tr>
+        <th nowrap="nowrap"><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inBackUp" value="<@ UserID @>"><: Backup Now :></button></th>
+        	<td><: Backups your data whilst you wait and then prompt's you to download the backup archive. Backups are also saved in your home directory. :></td>
+	        </tr>
+        <tr>
+	        <th></th>
+	        <td><input type="checkbox" name="inDownLoad" id="inDownLoad" value="1" /> <b><: Prompt to download when finished? :></b></td>
+        </tr>
     </table>
 </form>
 </div>
 
+<% if BackUpList %>
+<div class="zgrid_wrapper">
+<h2><: Backup Archives :></h2>
+<form action="./?module=backupmgr&action=DeleteBackup" method="post">
+    <table class="zgrid">
+	
+        <tr>
+        <th nowrap="nowrap"></th>
+        <td></td>
+        </tr>
+	
+    </table>
+</form>
+</div>
+<% endif %>
 </div>
