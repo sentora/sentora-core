@@ -56,14 +56,13 @@ class module_controller {
 		if($faqs){
 			$res = array();
 			foreach ($faqs as $faq){
+			$createdby = NULL;
 				if ($faq['reseller'] == $currentuser['resellerid'] || $faq['reseller'] == $currentuser['userid'] || $currentuser['usergroup'] == "Administrators" || $faq['global'] <> 0){
 					if ($faq['reseller'] == $currentuser['userid'] || $currentuser['usergroup'] == "Administrators"){
 					$allowdelete = "<input type=\"image\" src=\"" . self::getModulePath() . "assets/delete_small.png\" name=\"inDelete_".$faq['id']."\" id=\"inDelete_".$faq['id']."\" value=\"".$faq['id']."\" title=\"DELETE FAQ\">";
 						if ($currentuser['usergroup'] == "Administrators"){
 							$createdbyid = ctrl_users::GetUserDetail($faq['reseller']);
 							$createdby = " (". $createdbyid['username'] .")";
-						} else {
-							$createdby = NULL;
 						}
 					} else {
 					$allowdelete = NULL;
