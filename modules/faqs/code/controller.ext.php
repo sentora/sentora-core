@@ -24,135 +24,134 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	function getFAQS() {
-		global $zdbh;
+    function getFAQS() {
+        global $zdbh;
         $sql = "SELECT * FROM x_faqs WHERE fq_question_tx IS NOT NULL AND fq_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
-			while ($rowfaqs = $sql->fetch()) {
-            	array_push($res, array('question'  => $rowfaqs['fq_question_tx'],
-										'answer'   => $rowfaqs['fq_answer_tx'],
-										'reseller' => $rowfaqs['fq_acc_fk'],
-										'global'   => $rowfaqs['fq_global_in'],
-										'id' 	   => $rowfaqs['fq_id_pk']));
+            while ($rowfaqs = $sql->fetch()) {
+                array_push($res, array(
+                    'question' => $rowfaqs['fq_question_tx'],
+                    'answer' => $rowfaqs['fq_answer_tx'],
+                    'reseller' => $rowfaqs['fq_acc_fk'],
+                    'global' => $rowfaqs['fq_global_in'],
+                    'id' => $rowfaqs['fq_id_pk']));
             }
             return $res;
         } else {
             return false;
         }
-	}
+    }
 
-	function getUserFAQS() {
-		global $zdbh;
-	    global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$faqs = self::getFAQS();
-		if($faqs){
-			$res = array();
-			foreach ($faqs as $faq){
-			$createdby = NULL;
-				if ($faq['reseller'] == $currentuser['resellerid'] || $faq['reseller'] == $currentuser['userid'] || $currentuser['usergroup'] == "Administrators" || $faq['global'] <> 0){
-					if ($faq['reseller'] == $currentuser['userid'] || $currentuser['usergroup'] == "Administrators"){
-					$allowdelete = "<input type=\"image\" src=\"" . self::getModulePath() . "assets/delete_small.png\" name=\"inDelete_".$faq['id']."\" id=\"inDelete_".$faq['id']."\" value=\"".$faq['id']."\" title=\"DELETE FAQ\">";
-						if ($currentuser['usergroup'] == "Administrators"){
-							$createdbyid = ctrl_users::GetUserDetail($faq['reseller']);
-							$createdby = " (". $createdbyid['username'] .")";
-						}
-					} else {
-					$allowdelete = NULL;
-					}
-					array_push($res, array( 'question'    => $faq['question'] . $createdby,
-											'answer'      => $faq['answer'],
-											'reseller'    => $faq['reseller'],
-											'global'      => $faq['global'],
-											'allowdelete' => $allowdelete,
-											'id' 	      => $faq['id']));		
-				}
-			}
-			return $res;
-		} else {
-			return false;
-		}
-			
-	
-	}
-
-	function getAddFAQS() {
+    function getUserFAQS() {
+        global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		if ($currentuser['usergroup'] == "Administrators" || $currentuser['usergroup'] == "Resellers"){
+        $faqs = self::getFAQS();
+        if ($faqs) {
+            $res = array();
+            foreach ($faqs as $faq) {
+                $createdby = NULL;
+                if ($faq['reseller'] == $currentuser['resellerid'] || $faq['reseller'] == $currentuser['userid'] || $currentuser['usergroup'] == "Administrators" || $faq['global'] <> 0) {
+                    if ($faq['reseller'] == $currentuser['userid'] || $currentuser['usergroup'] == "Administrators") {
+                        $allowdelete = "<input type=\"image\" src=\"" . self::getModulePath() . "assets/delete_small.png\" name=\"inDelete_" . $faq['id'] . "\" id=\"inDelete_" . $faq['id'] . "\" value=\"" . $faq['id'] . "\" title=\"DELETE FAQ\">";
+                        if ($currentuser['usergroup'] == "Administrators") {
+                            $createdbyid = ctrl_users::GetUserDetail($faq['reseller']);
+                            $createdby = " (" . $createdbyid['username'] . ")";
+                        }
+                    } else {
+                        $allowdelete = NULL;
+                    }
+                    array_push($res, array(
+                        'question' => $faq['question'] . $createdby,
+                        'answer' => $faq['answer'],
+                        'reseller' => $faq['reseller'],
+                        'global' => $faq['global'],
+                        'allowdelete' => $allowdelete,
+                        'id' => $faq['id']));
+                }
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
+    function getAddFAQS() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        if ($currentuser['usergroup'] == "Administrators" || $currentuser['usergroup'] == "Resellers") {
             return true;
         } else {
             return false;
         }
-	}
-	
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+    }
+
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
-	static function getModulePath() {
-		global $controller;
-		$module_path = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/";
+    static function getModulePath() {
+        global $controller;
+        $module_path = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/";
         return $module_path;
     }
 
-	static function getModuleDesc() {
-		$message = ui_language::translate(ui_module::GetModuleDescription());
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
-	
-	static function doDeleteFaq() {
-		global $controller;
-		$faqs = self::getFAQS();
-		//print_r($_POST);
-		foreach ($faqs as $faq){
-			if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_'.$faq['id'].'_x'))) {
-				self::ExecuteDeleteFaq($faq['id']);
-			}
-		}
-    }
-	
-	static function doAddFaq() {
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inAdd'))) {
-			$question = $controller->GetControllerRequest('FORM', 'question');
-			$answer = $controller->GetControllerRequest('FORM', 'answer');
-			$userid = $currentuser['userid'];
-			if ($currentuser['usergroup'] == "Administrators"){
-			$global=1;
-			} else {
-			$global=0;
-			}
-			self::ExecuteAddFaq($question, $answer, $userid, $global);
-		}
+
+    static function doDeleteFaq() {
+        global $controller;
+        $faqs = self::getFAQS();
+        //print_r($_POST);
+        foreach ($faqs as $faq) {
+            if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $faq['id'] . '_x'))) {
+                self::ExecuteDeleteFaq($faq['id']);
+            }
+        }
     }
 
-	static function ExecuteDeleteFaq($fq_id_pk) {
-		global $zdbh;
-		$sql = "UPDATE x_faqs SET fq_deleted_ts=" . time() . " WHERE fq_id_pk=" . $fq_id_pk . "";
-		$sql = $zdbh->prepare($sql);
-		$sql->execute();
-		return true;		
+    static function doAddFaq() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inAdd'))) {
+            $question = $controller->GetControllerRequest('FORM', 'question');
+            $answer = $controller->GetControllerRequest('FORM', 'answer');
+            $userid = $currentuser['userid'];
+            if ($currentuser['usergroup'] == "Administrators") {
+                $global = 1;
+            } else {
+                $global = 0;
+            }
+            self::ExecuteAddFaq($question, $answer, $userid, $global);
+        }
     }
 
-	static function ExecuteAddFaq($question, $answer, $userid, $global) {
-		global $zdbh;
-		$sql = "INSERT INTO x_faqs (fq_acc_fk,
+    static function ExecuteDeleteFaq($fq_id_pk) {
+        global $zdbh;
+        $sql = "UPDATE x_faqs SET fq_deleted_ts=" . time() . " WHERE fq_id_pk=" . $fq_id_pk . "";
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        return true;
+    }
+
+    static function ExecuteAddFaq($question, $answer, $userid, $global) {
+        global $zdbh;
+        $sql = "INSERT INTO x_faqs (fq_acc_fk,
 									fq_question_tx,
 									fq_answer_tx,
 									fq_global_in,
@@ -162,11 +161,11 @@ class module_controller {
 									'" . $answer . "',
 									" . $global . ",
 									" . time() . ")";
-		$sql = $zdbh->prepare($sql);
-		$sql->execute();
-		return true;		
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        return true;
     }
-		
+
 }
 
 ?>
