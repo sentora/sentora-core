@@ -25,6 +25,9 @@ class ctrl_users {
             $userdetail->addItemValue('userid', $dbvals['ac_id_pk']);
             $userdetail->addItemValue('password', $dbvals['ac_pass_vc']);
             $userdetail->addItemValue('email', $dbvals['ac_email_vc']);
+			$userdetail->addItemValue('resellerid', $dbvals['ac_reseller_fk']);
+			$userdetail->addItemValue('packageid', $dbvals['ac_package_fk']);
+			$userdetail->addItemValue('enabled', $dbvals['ac_enabled_in']);
             $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
             $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
             $userdetail->addItemValue('usergroup', $dbvals['ug_name_vc']);

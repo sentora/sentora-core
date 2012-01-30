@@ -1,14 +1,49 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p>Please find a list of the most common questons from users, if you are unable to find a solution to your problem below please then contact your hosting provider. Simply click on the FAQ below to view the solution.</p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+	
+	<% if UserFAQS %>
+	<div class="zform_wrapper">
+	<h2><: Frequently Asked Questions :></h2>
+	<form action="./?module=faqs&action=DeleteFaq" method="post">
+		<table class="none">
+			<% loop UserFAQS %>
+			<tr valign="top">
+				<td><& allowdelete &></td>
+				<td><img src="<@ ModulePath @>assets/item.png" width="16" height="16"></td>
+				<td><a href="#" onclick="toggle_visibility('<& id &>')"><strong><& question &></strong></a>
+				<div id="<& id &>" style="display:none;"><& answer &><br><br></div></td>
+			</tr>
+			<% endloop %>
+		</table>
+	</form>
+	</div>
+	<% endif %><!-- END UserFAQS -->
+	
+	<% if AddFAQS %>
+	<div class="zform_wrapper">
+	<h2><a href="#" onclick="toggle_visibility('admin_desc')"><img src="<@ ModulePath @>assets/help_small.png" width="16" height="16"></a> <: Add FAQ Item :></h2>
+	<div id="admin_desc" style="display:none;"><: Since you are logged in as an Administrator or a Reseller, you can add and remove FAQ items.  Administrators can see and remove all FAQ items, but Resellers can only remove FAQ items they have created.  Your clients will be able to see any FAQ items you create, plus any FAQ items created by an Administrator. Your clients will not be able to add or remove any FAQ items. :><br><br></div>
+	<form action="./?module=faqs&action=AddFaq" method="post">
+		<table class="none">
+ 	 		<tr valign="top">
+ 				<th>Question:</th><td><input type="text" name="question" id="question" style="width: 310px;"></td>
+			</tr>
+ 	 		<tr valign="top">
+ 				<th>&nbsp;</th><td>&nbsp;</td>
+			</tr>
+			<tr valign="top">
+				<th>Answer:</th><td><textarea rows="5" cols="45" name="answer"id="answer"></textarea></td>
+			</tr>
+			<tr valign="top">
+				<th></th><td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inAdd" value="1"><: Add :></button></td>		
+ 			</tr>
+	</table>
+	</form>
+	</div>
+	<% endif %><!-- END AddFAQS -->
 
-<div class="zform_wrapper">
-<h2>Frequently Asked Questions</h2>
-<table class="none">
-<@ FAQS @>
-</table>
-</div>
 </div>
 
 <script type="text/javascript">
