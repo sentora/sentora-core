@@ -28,8 +28,10 @@ class sys_monitoring {
         }
         $fp = @fsockopen($ip, $port, $errno, $errstr, $timeout);
         if (!$fp) {
+            runtime_hook::Execute('OnPortStatusDown');
             $retval = false;
         } else {
+            runtime_hook::Execute('OnPortStatusUp');
             $retval = true;
         }
         return $retval;
