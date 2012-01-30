@@ -160,7 +160,7 @@ class module_controller {
 		$used = self::$diskspace;
 		$free = $total - $used;		
 		
-		$line  = "<table>";
+		$line  = "<table class=\"none\" cellpadding=\"0\" cellspacing=\"0\">";
   		$line .= "<tr>";
 	    $line .= "<td align=\"left\" valign=\"top\" width=\"350px\">";
 		$line .= "<h2>".ui_language::translate("Disk Usage Total")."</h2>";
@@ -173,44 +173,44 @@ class module_controller {
 		$line .= "<h2>".ui_language::translate("Package Usage Total")."</h2>";
 		$line .= "<table class=\"zgrid\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Disk space").":</th>";
-		$line .= "<td>".fs_director::ShowHumanFileSize(self::$diskspace)." / ".fs_director::ShowHumanFileSize(self::$diskquota)."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Disk space").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".fs_director::ShowHumanFileSize(self::$diskspace)." / ".fs_director::ShowHumanFileSize(self::$diskquota)."</td><td>".self::DisplaypBar("diskspace", "diskquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Bandwidth").":</th>";
-		$line .= "<td>".fs_director::ShowHumanFileSize(self::$bandwidth)." / ".fs_director::ShowHumanFileSize(self::$bandwidthquota)."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Bandwidth").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".fs_director::ShowHumanFileSize(self::$bandwidth)." / ".fs_director::ShowHumanFileSize(self::$bandwidthquota)."</td><td>".self::DisplaypBar("bandwidth", "bandwidthquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Domains").":</th>";
-		$line .= "<td>".self::$domains." / ".self::$domainsquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Domains").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".self::$domains." / ".self::$domainsquota."</td><td>".self::DisplaypBar("domains", "domainquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Sub-domains").":</th>";
-		$line .= "<td>".self::$subdomains." / ".self::$subdomainsquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Sub-domains").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".self::$subdomains." / ".self::$subdomainsquota."</td><td>".self::DisplaypBar("subdomains", "subdomainquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Parked domains").":</th>";
-		$line .= "<td>".self::$parkeddomains." / ".self::$parkeddomainsquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Parked domains").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".self::$parkeddomains." / ".self::$parkeddomainsquota."</td><td>".self::DisplaypBar("parkeddomains", "parkeddomainquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("FTP accounts").":</th>";
-		$line .= "<td>".self::$ftpaccounts." / ".self::$ftpaccountsquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("FTP accounts").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".self::$ftpaccounts." / ".self::$ftpaccountsquota."</td><td>".self::DisplaypBar("ftpaccounts", "ftpaccountsquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("MySQL&reg databases").":</th>";
-		$line .= "<td>".self::$mysql." / ".self::$mysqlquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("MySQL&reg databases").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".self::$mysql." / ".self::$mysqlquota."</td><td>".self::DisplaypBar("mysql", "mysqlquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Mailboxes").":</th>";
-		$line .= "<td>".self::$mailboxes." / ".self::$mailboxquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Mailboxes").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".self::$mailboxes." / ".self::$mailboxquota."</td><td>".self::DisplaypBar("mailboxes", "mailboxquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Mail forwarders").":</th>";
-		$line .= " <td>".self::$forwarders." / ".self::$forwardersquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Mail forwarders").":</th>";
+		$line .= " <td nowrap=\"nowrap\">".self::$forwarders." / ".self::$forwardersquota."</td><td>".self::DisplaypBar("forwarders", "forwardersquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>".ui_language::translate("Distrubution lists").":</th>";
-		$line .= "<td>".self::$distlists." / ".self::$distrobutionlistsquota."</td>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Distrubution lists").":</th>";
+		$line .= "<td nowrap=\"nowrap\">".self::$distlists." / ".self::$distrobutionlistsquota."</td><td>".self::DisplaypBar("distlists", "distrobutionlistsquota")."</td>";
 		$line .= "</tr>";
 		$line .= "</table>";
 		$line .= "</td>";
@@ -291,6 +291,21 @@ class module_controller {
 		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";		
 		return $line;
 	}
+
+    static function DisplaypBar($total, $quota) {
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$typequota = $currentuser[''.$quota.''];
+		$type = fs_director::GetQuotaUsages($total, $currentuser['userid']);
+		if (!fs_director::CheckForEmptyValue($type)){
+			$per = ($type / $typequota) * 100;
+			$percent = round($per, 0);
+			$line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=".$percent."\"/>";	
+		} else{
+			$line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=0\"/>";		
+		}
+		return $line;
+    }
 
 	static function getModuleDesc() {
 		$message = ui_language::translate(ui_module::GetModuleDescription());
