@@ -25,7 +25,8 @@
 <h2><: Backup Archives :></h2>
 <form action="./?module=backupmgr&action=DeleteBackup" method="post">
     <table class="zgrid">
-		<tr>	
+		<tr>
+			<th></th>
 			<th><: Location :></th>
 			<th><: File :></th>
 			<th><: File Size :></th>
@@ -33,6 +34,7 @@
 		</tr>
 	<% loop BackUpList %>
         <tr>
+			<td width="16px"><img src="<@ ModulePath @>assets/backup_icon.png" border="0" /></td>
 			<!--
 			<td width="16px"><input type="image" src="<@ ModulePath @>assets/delete_small.png" name="inDelete_<& backupfile &>" id="inDelete_<& backupfile &>" value="<& backupfile &>" title="<: DELETE BACKUP :>" /></td>
 			-->

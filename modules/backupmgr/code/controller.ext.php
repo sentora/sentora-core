@@ -43,9 +43,9 @@ class module_controller {
 		$dbstamp = date("dmy_Gi", time());		
 		// We now see what the OS is before we work out what compression command to use..
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-    		$resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('7z_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . ""));
+    		$resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('7z_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
 		} else {
-    		$resault = exec(ctrl_options::GetOption('7z_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " " . $homedir . "/*");
+    		$resault = exec(ctrl_options::GetOption('7z_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " " . $homedir . "/public_html/*");
     		@chmod(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", 0777);
 		}		
 		// Now lets backup all MySQL datbases for the user and add them to the archive...
@@ -132,10 +132,19 @@ class module_controller {
 		$userid = $currentuser['userid'];
 		$username = $currentuser['username'];
 		$res = array();
+		$dirFiles = array();
 		$backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/"; 
 		if ($handle = opendir($backupdir)) {
    			while (false !== ($file = readdir($handle))){
           		if ($file != "." && $file != ".." && substr($file, -4) == ".zip"){
+					$dirFiles[] = $file;
+          		}
+       		}
+		}
+		closedir($handle);
+		if (!fs_director::CheckForEmptyValue($dirFiles)){
+			sort($dirFiles);
+				foreach ($dirFiles as $file) {
           			$filesize = fs_director::ShowHumanFileSize(filesize($backupdir . $file));
 					$splitfile = explode("_", $file);
 					$filedate = $splitfile[1];
@@ -144,10 +153,8 @@ class module_controller {
 					array_push($res, array('backupfile' => substr($file, 0, -4),
 										   'created'    => $filecreated,
 										   'filesize'   => $filesize));
-          		}
-       		}
-		}
-  		closedir($handle);
+				}
+		}							   
         return $res;
     }
 	

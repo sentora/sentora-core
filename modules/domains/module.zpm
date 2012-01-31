@@ -2,15 +2,77 @@
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+	<% if DomainList %>
+	<div class="zgrid_wrapper">
+		<h2><: Current domains :></h2>
+    	<form action="./?module=domains&action=DeleteDomain" method="post">
+    	<table class="zgrid">
+		    <tr>
+			    <th><: Domain name :></th>
+			    <th><: Home directory :></th>
+			    <th><: Status :></th>
+			    <th></th>
+			    <th></th>
+		    </tr>
+			<% loop DomainList %>
+            <tr>
+            	<td><& name &></td>
+                <td><& directory &></td>
+                <td></td>
+                <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
+            </tr>			
+			<% endloop %>
+	    </table>
+    	</form>
+	<% else %>
+	<: You currently do not have any domains configured. Create a domain using the form below. :>
+	<% endif %>
+	</div>
 
-<div class="zgrid_wrapper">
-<@ CurrentDomains @>
-</div>
-
-<div class="zform_wrapper">
-<@ CreateDomain @>
-</div>
-
+	<% if CreateDomain %>
+	<div class="zform_wrapper">
+        <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
+        	<h2>Create a new domain</h2>
+	        <form action="./?module=domains&action=CreateDomain" method="post" name="CreateDomain">
+	        <table class="zform">
+		        <tr>
+			        <th><: Domain name :>:</th>
+			        <td><input name="inDomain" type="text" id="inDomain" size="30" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Home directory :>:</th>
+			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
+		        </tr>
+		        <tr>
+			        <th>&nbsp;</th>
+			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showdomainselect');" />&nbsp;<: Use existing home directory :></td>
+		        </tr>
+		        <tr>
+			        <th>&nbsp;</th>
+			        <td>
+			        	<div id="showdomainselect" style="display:none;">
+			        		<select name="inDestination" id="inDestination">
+			        		<option value="">/ (root)</option>
+							<% loop CreateDomain %>
+							<option value="<& domains &>"><& domains &></option>
+							<% endloop %>
+			        		</select>
+						</div>
+					</td>
+		        </tr>
+		        <tr>
+			        <th></th>
+			        <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
+		        </tr>
+        </table>
+        </form>
+        </td>
+        <td align="right"><@ DomainUsagepChart @></td>
+        </tr></table>		
+	</div>
+	<% else %>
+	<% endif %>
+	
 </div>
 
 <script type="text/javascript">

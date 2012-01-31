@@ -35,16 +35,26 @@ class module_controller {
     static $blank;
     static $ok;
 
-    static function getCurrentDomains() {
-        $display = self::DisplayCurrentDomains();
-        return $display;
+    static function ListDomains($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+             while ($rowdomains = $sql->fetch()) {
+                array_push($res, array( 'name' => $rowdomains['vh_name_vc'],
+										'directory' => $rowdomains['vh_directory_vc'],
+										'id' => $rowdomains['vh_id_pk']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
     }
 
-    static function getCreateDomain() {
-        $display = self::DisplayCreateDomain();
-        return $display;
-    }
-
+/*
     static function DisplayCurrentDomains() {
         global $zdbh;
         global $controller;
@@ -54,18 +64,6 @@ class module_controller {
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=1";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-
-                $line = "<h2>Current domains</h2>";
-                $line .= "<form action=\"./?module=domains&action=DeleteDomain\" method=\"post\">";
-                $line .= "<table class=\"zgrid\">";
-                $line .= "<tr>";
-                $line .= "<th>Domain name</th>";
-                $line .= "<th>Home directory</th>";
-                $line .= "<th>Status</th>";
-                $line .= "<th></th>";
-                $line .= "<th></th>";
-                $line .= "</tr>";
-
                 $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=1");
                 $sql->execute();
 
@@ -85,94 +83,9 @@ class module_controller {
                     $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_" . $rowdomains['vh_id_pk'] . "\" id=\"inDelete_" . $rowdomains['vh_id_pk'] . "\" value=\"inDelete_" . $rowdomains['vh_id_pk'] . "\">Delete</button></td>";
                     $line .= "</tr>";
                 }
-
-                $line .= "</table>";
-                $line .= "</form>";
-            } else {
-                $line = "<h2>Current domains</h2>";
-                $line .= "You currently do not have any domains configured. Create a domain using the form below.";
-            }
         }
-
-        return $line;
     }
-
-    static function DisplayCreateDomain() {
-        global $zdbh;
-        global $controller;
-
-        $currentuser = ctrl_users::GetUserDetail();
-
-        $line = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";
-        $line .= "<h2>Create a new domain</h2>";
-        $line .= "<form action=\"./?module=domains&action=CreateDomain\" method=\"post\" name=\"CreateDomain\">";
-        $line .= "<table class=\"zform\">";
-        $line .= "<tr>";
-        $line .= "<th>Domain name:</th>";
-        $line .= "<td><input name=\"inDomain\" type=\"text\" id=\"inDomain\" size=\"30\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Home directory:</th>";
-        $line .= "<td><input name=\"inAutoHome\" type=\"radio\" id=\"inAutoHome\" value=\"1\" onclick=\"hide_div('showdomainselect');\" CHECKED />";
-        $line .= "&nbsp;Create a new home directory</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>&nbsp;</th>";
-        $line .= "<td><input name=\"inAutoHome\" type=\"radio\" id=\"inAutoHome\" value=\"2\" onclick=\"show_div('showdomainselect');\" />";
-        $line .= "&nbsp;Use existing home directory</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>&nbsp;</th>";
-        $line .= "<td>";
-        $line .= "<div id=\"showdomainselect\" style=\"display:none;\">";
-        $line .= "<select name=\"inDestination\" id=\"inDestination\">";
-        $line .= "<option value=\"\">/ (root)</option>";
-
-        $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username']);
-        $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/";
-        if (!$handle) {
-            // Log an error as the folder cannot be opened...
-        } else {
-            while ($file = readdir($handle)) {
-                if ($file != "." && $file != "..") {
-                    if (is_dir($chkdir . $file)) {
-                        $line .= "<option value=\"" . $file . "\">/" . $file . "</option>\n";
-                    }
-                }
-            }
-            closedir($handle);
-        }
-
-        $line .= "</select></div></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>";
-        $line .= "</th>";
-        $line .= "<td align=\"right\">";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"CreateDomain\" value=\"1\">Create</button>";
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "</table>";
-        $line .= "</form>";
-        $line .= "</td>";
-        $line .= "<td align=\"right\">" . self::DisplayDomainUsagepChart() . "</td>";
-        $line .= "</tr></table>";
-
-        return $line;
-    }
-
-    static function DisplayDomainUsagepChart() {
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $domainsquota = $currentuser['domainquota'];
-        $domains = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
-        $total = $domainsquota;
-        $used = $domains;
-        $free = $total - $used;
-        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
-        return $line;
-    }
+*/
 
     static function doCreateDomain() {
         global $controller;
@@ -283,7 +196,6 @@ class module_controller {
         global $zdbh;
         global $controller;
         $retval = FALSE;
-        // $currentuser = ctrl_users::GetUserDetail(); Not needed here as its not being used within the method and I need to remove it so the webservice.ext.php can can delete a domain the correct way (by making use of the controller.ext.php)
         $sql = $zdbh->prepare("UPDATE x_vhosts SET vh_deleted_ts=" . time() . " WHERE vh_id_pk=" . $vh_id_pk . "");
         $sql->execute();
         $retval = TRUE;
@@ -658,6 +570,59 @@ class module_controller {
             return false;
         }
     }
+
+    /**
+     * Webinterface sudo methods.
+     */
+    static function getDomainList() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::ListDomains($currentuser['userid']);
+    }
+	
+    static function getCreateDomain() {
+        global $zdbh;
+        global $controller;
+		$yes = 1;
+        $currentuser = ctrl_users::GetUserDetail();
+		if ($yes == 1){
+			$res = array();
+	        $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username']);
+	        $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/";
+	        if (!$handle) {
+				return;
+	        } else {
+	            while ($file = readdir($handle)) {
+	                if ($file != "." && $file != "..") {
+	                    if (is_dir($chkdir . $file)) {
+	                        array_push($res, array('domains' => $file));
+	                    }
+	                }
+	            }
+	            closedir($handle);
+	        }
+			return $res;
+		} else {
+			return;
+		}
+    }
+
+    static function getDomainUsagepChart() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $line = "";
+        $domainsquota = $currentuser['domainquota'];
+        $domains = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
+        $total = $domainsquota;
+        $used = $domains;
+        $free = $total - $used;
+        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
+        return $line;
+    }
+
+    /**
+     * Webinterface sudo methods.
+     */
 
 }
 
