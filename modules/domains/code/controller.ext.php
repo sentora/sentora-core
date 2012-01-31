@@ -35,6 +35,10 @@ class module_controller {
     static $blank;
     static $ok;
 
+    /**
+     * The 'worker' methods.
+     */
+
     static function ListDomains($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1";
@@ -53,82 +57,51 @@ class module_controller {
             return false;
         }
     }
+	
+	static function ListDomainDirs($uid){
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail($uid);
+		$res = array();
+	    $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username']);
+	    $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/";
+	    if (!$handle) {
+			return;
+	    } else {
+	    	while ($file = readdir($handle)) {
+	        	if ($file != "." && $file != "..") {
+	            	if (is_dir($chkdir . $file)) {
+	                	array_push($res, array('domains' => $file));
+	                }
+	            }
+	        }
+	    closedir($handle);
+		}
+		return $res;	
+	}
 
-/*
-    static function DisplayCurrentDomains() {
+
+	static function ExecuteDeleteDomain($id){
+        global $zdbh;
+        $retval = FALSE;
+		runtime_hook::Execute('OnBeforeDeleteDomain');
+        $sql = $zdbh->prepare("UPDATE x_vhosts SET vh_deleted_ts=" . time() . " WHERE vh_id_pk=" . $id . "");
+        $sql->execute();
+        $retval = TRUE;
+		runtime_hook::Execute('OnAfterDeleteDomain');
+        return $retval;
+	}
+
+	public function ExecuteAddDomain($uid, $domain, $destination, $autohome) {
         global $zdbh;
         global $controller;
-
-        $currentuser = ctrl_users::GetUserDetail();
-
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=1";
-        if ($numrows = $zdbh->query($sql)) {
-            if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=1");
-                $sql->execute();
-
-                while ($rowdomains = $sql->fetch()) {
-                    $line .= "<tr>";
-                    $line .= "<td>" . $rowdomains['vh_name_vc'] . "</td>";
-                    $line .= "<td>" . $rowdomains['vh_directory_vc'] . "</td>";
-                    $line .= "<td>";
-
-                    if ($rowdomains['vh_active_in'] == 1) {
-                        $line .= "<font color=\"green\">Live</font></td><td>";
-                    } else {
-                        $line .= "<font color=\"orange\">Pending</font></td><td><a href=\"#\" class=\"help_small\" id=\"help_small_" . $rowdomains['vh_id_pk'] . "_a\" title=\"Your domain will become active at the next scheduled update.  This can take up to one hour.\"></a>";
-                    }
-
-                    $line .= "</td>";
-                    $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_" . $rowdomains['vh_id_pk'] . "\" id=\"inDelete_" . $rowdomains['vh_id_pk'] . "\" value=\"inDelete_" . $rowdomains['vh_id_pk'] . "\">Delete</button></td>";
-                    $line .= "</tr>";
-                }
-        }
-    }
-*/
-
-    static function doCreateDomain() {
-        global $controller;
-        if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'CreateDomain'))) {
-            self::AddVhost();
-        }
-        return;
-    }
-
-    static function doDeleteDomain() {
-        global $zdbh;
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=1";
-        if ($numrows = $zdbh->query($sql)->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=1");
-            $sql->execute();
-            while ($rowdomains = $sql->fetch()) {
-                if ($controller->GetControllerRequest('FORM', 'inDelete_' . $rowdomains['vh_id_pk'])) {
-                    if (!fs_director::CheckForEmptyValue(self::DeleteVhost($rowdomains['vh_id_pk']))) {
-                        self::$ok = TRUE;
-                        return;
-                    }
-                }
-            }
-        }
-
-        return;
-    }
-
-    public function AddVhost() {
-        global $zdbh;
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        // Declare the domain name as a string...
-        $domain = $controller->GetControllerRequest('FORM', 'inDomain');
-        $destination = $controller->GetControllerRequest('FORM', 'inDestination');
-        $returnurl = $controller->GetControllerRequest('URL', 'module');
-        // Check for spaces and remove if found...
+		$retval = FALSE;
+		runtime_hook::Execute('OnBeforeAddDomain');
+        $currentuser = ctrl_users::GetUserDetail($uid);
         $domain = str_replace(' ', '', $domain);
-        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors())) {
+		$domain = strtolower($domain);
+        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain, $destination))) {
             // Check to see if its a new home directory or use a current one...
-            if ($controller->GetControllerRequest('FORM', 'inAutoHome') == 1) {
+            if ($autohome == 1) {
                 $homedirectoy_to_use = "/public_html/" . str_replace(".", "_", $domain);
                 $vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/";
                 // Create the new home directory... (If it doesnt already exist.)
@@ -145,7 +118,6 @@ class module_controller {
                     @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe www." . $domain . "");
                 }
             }
-
             // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
             // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
             fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
@@ -167,7 +139,6 @@ class module_controller {
             if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
                 fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
             }
-
             // If all has gone well we need to now create the domain in the database...
             $sql = $zdbh->prepare("INSERT INTO x_vhosts (vh_acc_fk,
 										vh_name_vc,
@@ -180,8 +151,8 @@ class module_controller {
 										1,
 										" . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectoy_to_use
             $sql->execute();
-
-            // Write the vhost file
+            /*
+			// Write the vhost file
             if (!fs_director::CheckForEmptyValue(self::WriteVhostConfigFile())) {
                 self::$ok = TRUE;
                 return;
@@ -189,199 +160,20 @@ class module_controller {
                 self::$writeerror = TRUE;
                 return;
             }
+			*/
+        	$retval = TRUE;
+			runtime_hook::Execute('OnAfterAddDomain');
+        	return $retval;
         }
     }
 
-    static function DeleteVhost($vh_id_pk) {
-        global $zdbh;
-        global $controller;
-        $retval = FALSE;
-        $sql = $zdbh->prepare("UPDATE x_vhosts SET vh_deleted_ts=" . time() . " WHERE vh_id_pk=" . $vh_id_pk . "");
-        $sql->execute();
-        $retval = TRUE;
-        return $retval;
-    }
-
-    static function WriteVhostConfigFile() {
+    static function CheckCreateForErrors($domain, $destination) {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-
-        $line = "################################################################" . fs_filehandler::NewLine();
-        $line .= "# Apache VHOST configuration file                               " . fs_filehandler::NewLine();
-        $line .= "# Automatically generated by ZPanel " . sys_versions::ShowZpanelVersion() . "                           " . fs_filehandler::NewLine();
-        $line .= "################################################################" . fs_filehandler::NewLine();
-        $line .= "" . fs_filehandler::NewLine();
-
-        // ZPanel default virtual host container
-        $line .= "NameVirtualHost *:" . self::GetVHOption('apache_port') . "" . fs_filehandler::NewLine();
-        $line .= "" . fs_filehandler::NewLine();
-        $line .= "# Configuration for ZPanel control panel." . fs_filehandler::NewLine();
-        $line .= "<VirtualHost localhost:" . self::GetVHOption('apache_port') . ">" . fs_filehandler::NewLine();
-        $line .= "ServerAdmin zadmin@ztest.com" . fs_filehandler::NewLine();
-        $line .= "DocumentRoot \"" . ctrl_options::GetOption('zpanel_root') . "\"" . fs_filehandler::NewLine();
-        $line .= "ServerName " . ctrl_options::GetOption('zpanel_domain') . "" . fs_filehandler::NewLine();
-        $line .= "ServerAlias *." . ctrl_options::GetOption('zpanel_domain') . "" . fs_filehandler::NewLine();
-        $line .= "<Location /server-status>" . fs_filehandler::NewLine();
-        $line .= "	SetHandler server-status" . fs_filehandler::NewLine();
-        $line .= "	Order Deny,Allow" . fs_filehandler::NewLine();
-        $line .= "	Allow from all" . fs_filehandler::NewLine();
-        $line .= "</Location>" . fs_filehandler::NewLine();
-        $line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
-        $line .= "<Directory \"" . ctrl_options::GetOption('zpanel_root') . "\">" . fs_filehandler::NewLine();
-        $line .= "Options FollowSymLinks" . fs_filehandler::NewLine();
-        $line .= "	AllowOverride All" . fs_filehandler::NewLine();
-        $line .= "	Order allow,deny" . fs_filehandler::NewLine();
-        $line .= "	Allow from all" . fs_filehandler::NewLine();
-        $line .= "</Directory>" . fs_filehandler::NewLine();
-        $line .= "" . fs_filehandler::NewLine();
-        $line .= "# Custom settings are loaded below this line (if any exist)" . fs_filehandler::NewLine();
-
-        // Global custom zpanel entry
-        $line .= self::GetVHOption('global_zpcustom');
-
-        $line .= "</VirtualHost>" . fs_filehandler::NewLine();
-
-        $line .= "" . fs_filehandler::NewLine();
-        $line .= "################################################################" . fs_filehandler::NewLine();
-        $line .= "# ZPanel generated VHOST configurations below.....      " . fs_filehandler::NewLine();
-        $line .= "################################################################" . fs_filehandler::NewLine();
-        $line .= "" . fs_filehandler::NewLine();
-
-        // Zpanel virtual host container configuration
-        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
-        $sql->execute();
-        while ($rowvhost = $sql->fetch()) {
-            //Domain is enabled
-            if ($rowvhost['vh_enabled_in'] == 1) {
-
-                // Get account username vhost is create with
-                $username = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
-
-                $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "<virtualhost *:" . self::GetVHOption('apache_port') . ">" . fs_filehandler::NewLine();
-
-                // Bandwidth Settings
-                //$line .= "Include C:/ZPanel/bin/apache/conf/mod_bw/mod_bw/mod_bw_Administration.conf" . fs_filehandler::NewLine();
-                // Server name, alias, email settings
-                $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "ServerAdmin postmaster@txt-clan.com" . fs_filehandler::NewLine();
-
-                // Document root
-                $line .= "DocumentRoot \"" . self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . "\"" . fs_filehandler::NewLine();
-
-                // Get Package openbasedir and suhosin enabled options
-                if (self::GetVHOption('use_openbase') == "true") {
-                    if ($rowvhost['vh_obasedir_in'] <> 0) {
-                        $line .= "php_admin_value open_basedir \"" . self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . self::GetVHOption('openbase_seperator') . self::GetVHOption('openbase_temp') . "\"" . fs_filehandler::NewLine();
-                    }
-                }
-                if (self::GetVHOption('use_suhosin') == "true") {
-                    if ($rowvhost['vh_suhosin_in'] <> 0) {
-                        $line .= self::GetVHOption('suhosin_value') . fs_filehandler::NewLine();
-                    }
-                }
-                // Logs
-                $line .= "ErrorLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-error.log\" " . fs_filehandler::NewLine();
-                $line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-access.log\" " . self::GetVHOption('access_log_format') . fs_filehandler::NewLine();
-                $line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-bandwidth.log\" " . self::GetVHOption('bandwidth_log_format') . fs_filehandler::NewLine();
-
-                // Directory options
-                $line .= "<Directory />" . fs_filehandler::NewLine();
-                $line .= "Options FollowSymLinks Indexes" . fs_filehandler::NewLine();
-                $line .= "AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "Allow from all" . fs_filehandler::NewLine();
-                $line .= "</Directory>" . fs_filehandler::NewLine();
-
-                // Get Package php and cgi enabled options
-                $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $rowvhost['vh_acc_fk'] . " AND pk_deleted_ts IS NULL");
-                $rows->execute();
-                $dbvals = $rows->fetch();
-                if ($dbvals['pk_enablephp_in'] <> 0) {
-                    $line .= self::GetVHOption('php_handler') . fs_filehandler::NewLine();
-                }
-                if ($dbvals['pk_enablecgi_in'] <> 0) {
-                    $line .= self::GetVHOption('cgi_handler') . fs_filehandler::NewLine();
-                }
-
-                // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
-                // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
-                $errorpages = self::GetVHOption('hosted_dir') . $username['ac_user_vc'] . $rowvhost['vh_directory_vc'] . "/_errorpages";
-                if (is_dir($errorpages)) {
-                    if ($handle = opendir($errorpages)) {
-                        while (($file = readdir($handle)) !== false) {
-                            if ($file != "." && $file != "..") {
-                                $page = explode(".", $file);
-                                if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))) {
-                                    $line .= "ErrorDocument " . $page[0] . " /_errorpages/" . $page[0] . ".html" . fs_filehandler::NewLine();
-                                }
-                            }
-                        }
-                        closedir($handle);
-                    }
-                }
-
-                // Directory indexes
-                $line .= self::GetVHOption('dir_index') . fs_filehandler::NewLine();
-
-                // Global custom global vh entry
-                $line .= "# Custom Global Settings" . fs_filehandler::NewLine();
-                $line .= self::GetVHOption('global_vhcustom') . fs_filehandler::NewLine();
-
-                // Client custom vh entry
-                $line .= "# Custom VH settings" . fs_filehandler::NewLine();
-                $line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
-
-                // End Virtual Host Settings
-                $line .= "</virtualhost>" . fs_filehandler::NewLine();
-                $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "################################################################" . fs_filehandler::NewLine();
-            } else {
-                //Domain is NOT enabled
-                $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
-                $line .= "<virtualhost *:" . self::GetVHOption('apache_port') . ">" . fs_filehandler::NewLine();
-                // Server name, alias, email settings
-                $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "ServerAdmin postmaster@txt-clan.com" . fs_filehandler::NewLine();
-                // Document root
-                $line .= "DocumentRoot \"" . self::GetVHOption('static_dir') . "disabled\"" . fs_filehandler::NewLine();
-                // Directory options
-                $line .= "<Directory />" . fs_filehandler::NewLine();
-                $line .= "Options FollowSymLinks Indexes" . fs_filehandler::NewLine();
-                $line .= "AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "Allow from all" . fs_filehandler::NewLine();
-                $line .= "</Directory>" . fs_filehandler::NewLine();
-                $line .= self::GetVHOption('dir_index') . fs_filehandler::NewLine();
-                $line .= "</virtualhost>" . fs_filehandler::NewLine();
-                $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "################################################################" . fs_filehandler::NewLine();
-            }
-        }
-        // write the vhost config file
-        $vhconfigfile = self::GetVHOption('apache_vhost');
-        if (fs_filehandler::UpdateFile($vhconfigfile, 0777, $line)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    static function CheckCreateForErrors() {
-        global $zdbh;
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-
-        // Declare the domain name as a string...
-        $domain = $controller->GetControllerRequest('FORM', 'inDomain');
-        $destination = $controller->GetControllerRequest('FORM', 'inDestination');
-        $returnurl = $controller->GetControllerRequest('URL', 'module');
         // Check for spaces and remove if found...
         $domain = str_replace(' ', '', $domain);
+		$domain = strtolower($domain);
         // Check to make sure the domain is not blank before we go any further...
         if ($domain == '') {
             self::$blank = TRUE;
@@ -435,8 +227,21 @@ class module_controller {
         return TRUE;
     }
 
+    static function CheckErrorDocument($error) {
+        $errordocs = array(100, 101, 102, 200, 201, 202, 203, 204, 205, 206, 207,
+				           300, 301, 302, 303, 304, 305, 306, 307, 400, 401, 402,
+				           403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
+				           414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424,
+				           425, 426, 500, 501, 502, 503, 504, 505, 506, 507, 508,
+				           509, 510);
+        if (in_array($error, $errordocs)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     static function IsValidDomainName($a) {
-        // DESCRIPTION: Check for invalid characters in domain creation.
         if (stristr($a, '.')) {
             $part = explode(".", $a);
             foreach ($part as $check) {
@@ -451,76 +256,95 @@ class module_controller {
     }
 
     static function IsValidEmail($email) {
-        // DESCRIPTION: Check for invalid characters in email creation.
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
             return false;
         }
         return true;
     }
 
-    static function CheckErrorDocument($error) {
-        $errordocs = array(100,
-            101,
-            102,
-            200,
-            201,
-            202,
-            203,
-            204,
-            205,
-            206,
-            207,
-            300,
-            301,
-            302,
-            303,
-            304,
-            305,
-            306,
-            307,
-            400,
-            401,
-            402,
-            403,
-            404,
-            405,
-            406,
-            407,
-            408,
-            409,
-            410,
-            411,
-            412,
-            413,
-            414,
-            415,
-            416,
-            417,
-            418,
-            419,
-            420,
-            421,
-            422,
-            423,
-            424,
-            425,
-            426,
-            500,
-            501,
-            502,
-            503,
-            504,
-            505,
-            506,
-            507,
-            508,
-            509,
-            510);
-        if (in_array($error, $errordocs)) {
-            return true;
+    static function GetVHOption($name) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT vhs_value_tx FROM x_vhosts_settings WHERE vhs_name_vc = '$name'")->Fetch();
+        if ($result) {
+            return $result['vhs_value_tx'];
         } else {
             return false;
         }
+    }
+
+    /**
+     * End 'worker' methods.
+     */
+
+    /**
+     * Webinterface sudo methods.
+     */
+	 
+    static function getDomainList() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::ListDomains($currentuser['userid']);
+    }
+	
+    static function getCreateDomain() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+		if ($currentuser['domainquota'] > fs_director::GetQuotaUsages('domains', $currentuser['userid'])){
+			return self::ListDomainDirs($currentuser['userid']);
+		} else {
+			return false;
+		}
+    }
+
+    static function doCreateDomain() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$formvars = $controller->GetAllControllerRequests('FORM');
+		if (self::ExecuteAddDomain($currentuser['userid'], $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])){
+			self::$ok = TRUE;
+            return true;
+		} else {
+        	return false;
+		}
+        return;
+    }
+
+    static function doDeleteDomain() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$formvars = $controller->GetAllControllerRequests('FORM');
+        foreach (self::ListDomains($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['id'] . ''])) {
+				if (self::ExecuteDeleteDomain($row['id'])){
+					self::$ok = TRUE;
+					return true;
+				}
+            }
+		}
+		return false;
+    }
+
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
+
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        return $module_icon;
+    }
+
+    static function getDomainUsagepChart() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $line  = "";
+        $total = $currentuser['domainquota'];
+        $used  = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
+        $free  = $total - $used;
+        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
+        return $line;
     }
 
     static function getResult() {
@@ -548,76 +372,6 @@ class module_controller {
             return ui_module::GetModuleDescription();
         }
         return;
-    }
-
-    static function getModuleName() {
-        $module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-    static function getModuleIcon() {
-        global $controller;
-        $module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
-    }
-
-    static function GetVHOption($name) {
-        global $zdbh;
-        $result = $zdbh->query("SELECT vhs_value_tx FROM x_vhosts_settings WHERE vhs_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['vhs_value_tx'];
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Webinterface sudo methods.
-     */
-    static function getDomainList() {
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        return self::ListDomains($currentuser['userid']);
-    }
-	
-    static function getCreateDomain() {
-        global $zdbh;
-        global $controller;
-		$yes = 1;
-        $currentuser = ctrl_users::GetUserDetail();
-		if ($yes == 1){
-			$res = array();
-	        $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username']);
-	        $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/";
-	        if (!$handle) {
-				return;
-	        } else {
-	            while ($file = readdir($handle)) {
-	                if ($file != "." && $file != "..") {
-	                    if (is_dir($chkdir . $file)) {
-	                        array_push($res, array('domains' => $file));
-	                    }
-	                }
-	            }
-	            closedir($handle);
-	        }
-			return $res;
-		} else {
-			return;
-		}
-    }
-
-    static function getDomainUsagepChart() {
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $domainsquota = $currentuser['domainquota'];
-        $domains = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
-        $total = $domainsquota;
-        $used = $domains;
-        $free = $total - $used;
-        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
-        return $line;
     }
 
     /**
