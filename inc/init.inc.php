@@ -25,7 +25,6 @@ if (isset($_GET['logout'])) {
 }
 
 if (isset($_POST['inForgotPassword'])) {
-
     $randomkey = sha1(microtime());
     $result = $zdbh->query("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = '" . $_POST['inForgotPassword'] . "'")->Fetch();
     if ($result) {
@@ -48,8 +47,16 @@ if (isset($_POST['inForgotPassword'])) {
     }
 }
 
-if (isset($_POST['inConfEmail'])){
-    
+if (isset($_POST['inConfEmail'])) {
+    $result = $zdbh->query("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = '" . $_POST['inConfEmail'] . "' AND ac_resethash_tx = '" . $_GET['resetkey'] . "'")->Fetch();
+    if ($result) {
+        $zdbh->exec("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= '" . md5($_POST['inNewPass']) . "' WHERE ac_id_pk=" . $result['ac_id_pk'] . "");
+        runtime_hook::Execute('OnSuccessfulPasswordReset');
+    } else {
+        runtime_hook::Execute('OnFailedPasswordReset');
+    }
+    header("location: ./?passwordreset");
+    exit();
 }
 
 if (isset($_POST['inUsername'])) {
