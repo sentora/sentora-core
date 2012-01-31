@@ -27,7 +27,8 @@
  
 class module_controller {
 
-	static $hasupdated;	
+	static $deleteok;
+	static $backupok;	
 	
 	static function ExecuteBackup($userid, $download=0){
 		global $zdbh;
@@ -35,9 +36,10 @@ class module_controller {
 		$currentuser = ctrl_users::GetUserDetail($userid);
 		$username = $currentuser['username'];
 		include('cnf/db.php');
+		runtime_hook::Execute('OnBeforeCreateBackup');
 		// Lets grab and archive the user's web data....
 		$homedir =  ctrl_options::GetOption('hosted_dir') . $username;
-		$backupname = $username . "_" . date("dmy_Gi", time());
+		$backupname = $username . "_" . date("M-d-Y_hms", time());
 		$dbstamp = date("dmy_Gi", time());		
 		// We now see what the OS is before we work out what compression command to use..
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
@@ -98,8 +100,9 @@ class module_controller {
 				header('Content-Length: ' . filesize($file)); 
 				header('Content-Disposition: attachment; filename=' . $backupname . '.zip');  
 				self::readfile_chunked($file);
-			}			
+			}		
 		}
+		runtime_hook::Execute('OnAfterCreateBackup');
 	}
 	
 	
@@ -115,6 +118,13 @@ class module_controller {
 	   		print $buffer; 
 	 	} 
 	 	return fclose($handle); 
+	}
+	
+	static function ExecuteDeleteBackup($username, $file) {
+		runtime_hook::Execute('OnBeforeDeleteBackup');
+		$backup_file_to_delete = ctrl_options::GetOption('hosted_dir') . $username ."/backups/". $file .".zip";
+		unlink($backup_file_to_delete);
+		runtime_hook::Execute('OnAfterDeleteBackup');
 	} 
 
     static function ListBackUps($userid) {
@@ -126,8 +136,14 @@ class module_controller {
 		if ($handle = opendir($backupdir)) {
    			while (false !== ($file = readdir($handle))){
           		if ($file != "." && $file != ".." && substr($file, -4) == ".zip"){
-          			//echo $file;
-					array_push($res, array('backupfile' => $file));
+          			$filesize = fs_director::ShowHumanFileSize(filesize($backupdir . $file));
+					$splitfile = explode("_", $file);
+					$filedate = $splitfile[1];
+					//$filecreated = date("M-d-Y", mktime(0, 0, 0, substr($filedate, 2, -2), substr($filedate, 0, -4), substr($filedate, -2)));
+					$filecreated = $splitfile[1];
+					array_push($res, array('backupfile' => substr($file, 0, -4),
+										   'created'    => $filecreated,
+										   'filesize'   => $filesize));
           		}
        		}
 		}
@@ -137,8 +153,11 @@ class module_controller {
 	
 	
 	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
-            return ui_sysmessage::shout("Backup completed successfully!");
+        if (!fs_director::CheckForEmptyValue(self::$deleteok)){
+            return ui_sysmessage::shout("Backup deleted successfully!", "zannounceok");
+		}
+        if (!fs_director::CheckForEmptyValue(self::$backupok)){
+            return ui_sysmessage::shout("Backup completed successfully!", "zannounceok");
 		}
         return;
     }
@@ -177,10 +196,23 @@ class module_controller {
         }
     }
 
+    static function getModulePath() {
+        global $controller;
+        $module_path = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/";
+        return $module_path;
+    }
+
     static function GetBackUpList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListBackUps($currentuser['userid']);     
+    }
+
+    static function GetFileLocation() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();;
+		$filelocation = $currentuser['username'] . "/backups/";
+        return $filelocation;
     }
 
 	static function doBackup(){
@@ -189,7 +221,26 @@ class module_controller {
 		$userid = $controller->GetControllerRequest('FORM', 'inBackUp');
 		$download = $controller->GetControllerRequest('FORM', 'inDownLoad');
 		self::ExecuteBackup($userid, $download);
+		self::$backupok = true;
 		
+	}
+
+	static function doDeleteBackup(){
+		global $zdbh;
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$userid = $currentuser['userid'];
+		$username = $currentuser['username'];
+		$files = self::ListBackUps($userid);
+		//print_r($_POST);
+		foreach ($files as $file){
+			if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $file['backupfile'] . '')) ||
+				!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $file['backupfile'] . '_x'))||
+				!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $file['backupfile'] . '_y'))){
+				self::ExecuteDeleteBackup($username, $file['backupfile']);
+				self::$deleteok = true;
+			}
+		}
 	}
 	
 }
