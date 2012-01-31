@@ -62,8 +62,8 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
 		$res = array();
-	    $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username']);
-	    $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/";
+	    $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html");
+	    $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/";
 	    if (!$handle) {
 			return;
 	    } else {
