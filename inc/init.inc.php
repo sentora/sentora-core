@@ -48,6 +48,10 @@ if (isset($_POST['inForgotPassword'])) {
     }
 }
 
+if (isset($_POST['inConfEmail'])){
+    
+}
+
 if (isset($_POST['inUsername'])) {
     if (!isset($_POST['inRemember'])) {
         $rememberdetails = false;
