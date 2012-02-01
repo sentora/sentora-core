@@ -1,14 +1,103 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+<@ Result @>
+	<div class="zgrid_wrapper">
+		<h2><: Current Sub-domains :></h2>
+		<% if SubDomainList %>
+    	<form action="./?module=sub_domains&action=DeleteSubDomain" method="post">
+    	<table class="zgrid">
+		    <tr>
+			    <th><: Sub-domain :></th>
+			    <th><: Home directory :></th>
+			    <th><: Status :></th>
+			    <th></th>
+			    <th></th>
+		    </tr>
+			<% loop SubDomainList %>
+            <tr>
+            	<td><& subname &></td>
+                <td><& subdirectory &></td>
+                <& substatus &>
+                <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& subid &>" id="inDelete_<& subid &>" value="inDelete_<& subid &>"><: Delete :></button></td>
+            </tr>			
+			<% endloop %>
+	    </table>
+    	</form>
+	<% else %>
+	<: You currently do not have any Sub-domains configured. Create a Sub-domain using the form below. :>
+	<% endif %>
+	</div>
 
-<div class="zgrid_wrapper">
-<@ Domains @>
+	<div class="zform_wrapper">
+        <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
+        	<h2>Create a new sub-domain</h2>
+			<% if CreateSubDomain %>
+	        <form action="./?module=sub_domains&action=CreateSubDomain" method="post" name="CreateDomain">
+	        <table class="zform">
+		        <tr>
+			        <th><: Sub-domain :>:</th>
+			        <td nowrap="nowrap"><input name="inSub" type="text" id="inSub" /> . <select name="inDomain" id="inDomain">
+																						<% loop DomainList %>
+																						<option value="<& name &>"><& name &></option>
+																						<% endloop %>
+																						</select>
+					
+					</td>
+		        </tr>
+		        <tr>
+			        <th><: Home directory :>:</th>
+			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
+		        </tr>
+		        <tr>
+			        <th>&nbsp;</th>
+			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showdomainselect');" />&nbsp;<: Use existing home directory :></td>
+		        </tr>
+		        <tr>
+			        <th>&nbsp;</th>
+			        <td>
+			        	<div id="showdomainselect" style="display:none;">
+			        		<select name="inDestination" id="inDestination">
+			        		<option value="">/ (root)</option>
+							<% loop SubDomainDirsList %>
+							<option value="<& domains &>">/<& domains &></option>
+							<% endloop %>
+			        		</select>
+						</div>
+					</td>
+		        </tr>
+		        <tr>
+			        <th></th>
+			        <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateSubDomain" value="1">Create</button></td>
+		        </tr>
+        </table>
+        </form>
+	<% else %>
+	<: You have reached your Sub-domains limit! :>
+	<% endif %>	
+        </td>
+        <td align="right"><@ SubDomainUsagepChart @></td>
+        </tr></table>	
+	</div>
+	
 </div>
 
-<div class="zform_wrapper">
-<@ CreateDomainForm @>
-</div>
-
-</div>
+<script type="text/javascript">
+    <!--
+    function show_div(id) {
+        var e = document.getElementById(id);
+        if(e.style.display == 'none')
+            e.style.display = 'block';
+    }
+    //-->
+</script>
+<script type="text/javascript">
+    <!--
+    function hide_div(id) {
+        var e = document.getElementById(id);
+        if(e.style.display == 'block')
+            e.style.display = 'none';
+    }
+    //-->
+</script>

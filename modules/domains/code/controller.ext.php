@@ -69,7 +69,7 @@ class module_controller {
 			# Log an error as the folder cannot be opened...
 	    } else {
 	    	while ($file = @readdir($handle)) {
-	        	if ($file != "." && $file != "..") {
+	        	if ($file != "." && $file != ".." && $file != "_errorpages") {
 	            	if (is_dir($chkdir . $file)) {
 	                	array_push($res, array('domains' => $file));
 	                }
