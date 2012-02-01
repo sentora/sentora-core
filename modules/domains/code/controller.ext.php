@@ -104,8 +104,8 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain, $destination))) {
             //** New Home Directory **//
             if ($autohome == 1) {
-                $destination = str_replace(".", "_", $domain);
-				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+                $destination = "/" . str_replace(".", "_", $domain);
+				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html" . $destination . "/";
 				fs_filehandler::CreateDirectory($vhost_path);
             	// Error documents:- Error pages are added automatically if they are found in the _errorpages directory
 	            // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
