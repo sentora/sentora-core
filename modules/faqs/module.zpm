@@ -12,9 +12,25 @@
 			<tr valign="top">
 				<td><& allowdelete &></td>
 				<td><img src="<@ ModulePath @>assets/item.png" width="16" height="16"></td>
-				<td><a href="#" onclick="toggle_visibility('<& id &>')"><strong><& question &></strong></a>
-				<div id="<& id &>" style="display:none;"><& answer &><br><br></div></td>
+				<td><a href="#" id="faq_<& id &>_a" onclick="toggle_visibility('<& id &>')"><strong><& question &></strong></a>
+				<div id="faq_<& id &>" style="display:none;"><& answer &><br><br></div></td>
 			</tr>
+			<script type="text/javascript">
+			$(document).ready(function() { 
+    			$("#faq_<& id &>").hide();
+    			$("#faq_<& id &>_a").click(function(){
+        		if ($("#faq_<& id &>").is(":visible")) {
+					$("#faq_<& id &>").slideUp("fast");
+            		$(this).addClass("active");
+            		return false;
+        		} else {
+            		$("#faq_<& id &>").slideDown("fast");
+            		$(this).removeClass("active");
+            		return false;
+        		}
+    			}); 
+			})
+			</script>
 			<% endloop %>
 		</table>
 	</form>
