@@ -101,7 +101,7 @@ class module_controller {
 		runtime_hook::Execute('OnBeforeAddDomain');
         $currentuser = ctrl_users::GetUserDetail($uid);
         $domain = strtolower(str_replace(' ', '', $domain));
-        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain, $destination))) {
+        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain))) {
             //** New Home Directory **//
             if ($autohome == 1) {
                 $destination = "/" . str_replace(".", "_", $domain);
@@ -159,10 +159,8 @@ class module_controller {
         }
     }
 
-    static function CheckCreateForErrors($domain, $destination) {
+    static function CheckCreateForErrors($domain) {
         global $zdbh;
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
         // Check for spaces and remove if found...
 		$domain = strtolower(str_replace(' ', '', $domain));
         // Check to make sure the domain is not blank before we go any further...
