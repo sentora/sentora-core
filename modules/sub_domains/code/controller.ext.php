@@ -61,16 +61,13 @@ class module_controller {
 
     static function ListDomains($uid) {
         global $zdbh;
-		echo "MADEIT";
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-		echo "YES";
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
              while ($rowdomains = $sql->fetch()) {
-			 echo $rowdomains['vh_name_vc'];
                 array_push($res, array( 'name' => $rowdomains['vh_name_vc'],
 										'directory' => $rowdomains['vh_directory_vc'],
 										'active' => $rowdomains['vh_active_in'],
