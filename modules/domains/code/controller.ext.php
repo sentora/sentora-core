@@ -182,7 +182,7 @@ class module_controller {
             return FALSE;
         }
         // Check to see if the domain already exists in ZPanel somewhere and redirect if it does....
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc='" . $domain . "' AND vh_deleted_ts IS NULL AND vh_type_in='1'";
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc='" . $domain . "' AND vh_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() > 0) {
                 self::$alreadyexists = TRUE;

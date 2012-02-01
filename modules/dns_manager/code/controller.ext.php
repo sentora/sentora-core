@@ -120,7 +120,7 @@ class module_controller {
 		} else {
 			$domainID = self::$editdomain;
 		}
-		$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_deleted_ts IS NULL")->Fetch();
+		$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
 		$line  = "";		
 		//$line .= "<div class=\"zgrid_wrapper\">";
 		$line .= "<!-- DNS FORM -->";
@@ -553,7 +553,7 @@ class module_controller {
         $line .= "<tr>";
         $line .= "<td><select name=\"inDomain\" id=\"inDomain\">";
         $line .= "<option value=\"\" selected=\"selected\">-- ".ui_language::translate("Select a domain")." --</option>";
-		$sql  = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL");
+		$sql  = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
 		$sql->execute();
     	while ($rowdomains = $sql->fetch()) {
         	$line .= "<option value=\"" . $rowdomains['vh_id_pk'] . "\">" . $rowdomains['vh_name_vc'] . "</option>";
@@ -611,7 +611,7 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		$domainID = $controller->GetControllerRequest('FORM', 'inDomain');
-		$domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_deleted_ts IS NULL")->Fetch();
+		$domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
 		$userID = $controller->GetControllerRequest('FORM', 'inUserID');
 		if (!fs_director::CheckForEmptyValue(ctrl_options::GetOption('server_ip'))){
 			$target = ctrl_options::GetOption('server_ip');

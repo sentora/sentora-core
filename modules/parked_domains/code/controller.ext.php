@@ -24,131 +24,322 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	static $complete;
+    static $complete;
+    static $error;
+    static $writeerror;
+    static $nosub;
+    static $alreadyexists;
+    static $badname;
+    static $blank;
+    static $ok;
+
+    /**
+     * The 'worker' methods.
+     */
+
+    static function ListParkedDomains($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=3 ORDER BY vh_name_vc ASC";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+             while ($rowdomains = $sql->fetch()) {
+                array_push($res, array( 'name' => $rowdomains['vh_name_vc'],
+										'directory' => $rowdomains['vh_directory_vc'],
+										'active' => $rowdomains['vh_active_in'],
+										'created' => $rowdomains['vh_created_ts'],
+										'id' => $rowdomains['vh_id_pk']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
 	
-	static function getDomains(){
-		global $zdbh;
-		global $controller;
-		
-		$currentuser = ctrl_users::GetUserDetail();
-		
-			$sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=3";
-			if ($numrows = $zdbh->query($sql)) {
- 				if ($numrows->fetchColumn() <> 0) {
-			
-			$line = "<h2>Current parked domains</h2>";
-			$line .= "<form action=\"./?module=parked_domains&action=CreateDomain\" method=\"post\">";
-    		$line .= "<table class=\"zgrid\">";
-			$line .= "<tr>";
-			$line .= "<th>Domain name</th>";
-			$line .= "<th>Date parked</th>";
-			$line .= "<th>Status</th>";
-			$line .= "<th></th>";
-			$line .= "</tr>";
-			
-			$sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_deleted_ts IS NULL AND vh_type_in=3");
-		 	$sql->execute();
-			
-			while ($rowdomains = $sql->fetch()) {
-				$line .= "<tr>";
-				$line .= "<td>" . $rowdomains['vh_name_vc'] . "</td>";
-				$line .= "<td>" . date(ctrl_options::GetOption('zpanel_df'), $rowdomains['vh_created_ts']) . "</td>";
-				$line .= "<td>";
-			        if ($rowdomains['vh_active_in'] == 1) {
-						$line .= "<font color=\"green\">Live</font>";
-			        } else {
-						$line .= "<font color=\"orange\">Pending</font> <a href=\"#\" title=\"Your domain will become active at the next scheduled update.  This can take up to one hour.\"><img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/help_small.png\"></a>";
-			        }
-				$line .= "</td>";
-				$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_".$rowdomains['vh_id_pk']."\">Delete</button></td>";
-				$line .= "</tr>";
-			}
-			
-			$line .= "</table>";
-			$line .= "</form>";
-				} else {
-		$line = ui_sysmessage::shout("You currently do not have any parked domains configured.");		
-				}
-			}
-		
-		return $line;	
+	static function ExecuteDeleteParkedDomain($id){
+        global $zdbh;
+        $retval = FALSE;
+		runtime_hook::Execute('OnBeforeDeleteParkedDomain');
+        $sql = $zdbh->prepare("UPDATE x_vhosts 
+							   SET vh_deleted_ts=" . time() . " 
+							   WHERE vh_id_pk=" . $id . "");
+        $sql->execute();
+        $retval = TRUE;
+		runtime_hook::Execute('OnAfterDeleteParkedDomain');
+        return $retval;
 	}
 
-	static function getCreateDomainForm(){
-		global $zdbh;
-		global $controller;
-		
-		$currentuser = ctrl_users::GetUserDetail();
-		$line  = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";		
-		$line .= "<h2>Create a new parked domain</h2>";
-		$line .= "<form action=\"./?module=parked_domains&action=CreateDomain\" method=\"post\">";
-        $line .= "<table class=\"zform\">";
-        $line .= "<tr>";
-        $line .= "<th>Domain name:</th>";
-        $line .= "<td><input name=\"inDomain\" type=\"text\" id=\"inDomain\" size=\"30\" /></td>";
-        $line .= "</tr>";
-		$line .= "<tr>";
-		$line .= "<th>";
-		$line .= "</th>";
-		$line .= "<td align=\"right\">";
-        $line .= "<input type=\"hidden\" name=\"inAction\" value=\"NewParkedDomain\" />";
-		$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSubmit\">Create</button>";
-		$line .= "</td>";
-		$line .= "</tr>";
-        $line .= "</table>";
-		$line .= "</form>";	
-		$line .= "</td>";
-		$line .= "<td align=\"right\">".self::DisplayParkedDomainUsagepChart()."</td>";
-		$line .= "</tr></table>";		
-		return $line;
-			
-	}
+	public function ExecuteAddParkedDomain($uid, $domain) {
+        global $zdbh;
+        global $controller;
+		$retval = FALSE;
+		runtime_hook::Execute('OnBeforeAddParkedDomain');
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        $domain = strtolower(str_replace(' ', '', $domain));
+        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain))) {
+            // Only run if the Server platform is Windows.
+            if (sys_versions::ShowOSPlatformVersion() == "Windows") {
+                if (self::GetVHOption('disable_hostsen') == 'false') {
+                    // Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
+                    @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe " . $domain . "");
+                    @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe www." . $domain . "");
+                }
+            }
+            // If all has gone well we need to now create the domain in the database...
+            $sql = $zdbh->prepare("INSERT INTO x_vhosts (vh_acc_fk,
+														 vh_name_vc,
+														 vh_directory_vc,
+														 vh_type_in,
+														 vh_created_ts) VALUES (
+														 " . $currentuser['userid'] . ",
+														 '" . $domain . "',
+														 '',
+														 3,
+														 " . time() . ")");
+            $sql->execute();
+        	$retval = TRUE;
+			runtime_hook::Execute('OnAfterAddParkedDomain');
+        	return $retval;
+        }
+    }
 
-    static function DisplayParkedDomainUsagepChart() {
+    static function CheckCreateForErrors($domain) {
+        global $zdbh;
+        // Check for spaces and remove if found...
+		$domain = strtolower(str_replace(' ', '', $domain));
+        // Check to make sure the domain is not blank before we go any further...
+        if ($domain == '') {
+            self::$blank = TRUE;
+            return FALSE;
+        }
+        // Check for invalid characters in the domain...
+        if (!self::IsValidDomainName($domain)) {
+            self::$badname = TRUE;
+            return FALSE;
+        }
+        // Check to make sure the domain is in the correct format before we go any further...
+        $wwwclean = stristr($domain, 'www.');
+        if ($wwwclean == true) {
+            self::$error = TRUE;
+            return FALSE;
+        }
+        // Check to see if the domain already exists in ZPanel somewhere and redirect if it does....
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc='" . $domain . "' AND vh_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() > 0) {
+                self::$alreadyexists = TRUE;
+                return FALSE;
+            }
+        }
+        // Check to make sure user not adding a subdomain and blocks stealing of subdomains....
+        $SharedDomains = array(); //DELETE THIS
+        if (substr_count($domain, ".") > 1) {
+            $part = explode('.', $domain);
+            foreach ($part as $check) {
+                if (!in_array($check, $SharedDomains)) {
+                    if (strlen($check) > 3) {
+                        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_name_vc LIKE '%" . $check . "%' AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+                        $sql->execute();
+                        while ($rowcheckdomains = $sql->fetch()) {
+                            $subpart = explode('.', $rowcheckdomains['vh_name_vc']);
+                            foreach ($subpart as $subcheck) {
+                                if (strlen($subcheck) > 3) {
+                                    if ($subcheck == $check) {
+                                        if (substr($domain, -7) == substr($rowcheckdomains['vh_name_vc'], -7)) {
+                                            self::$nosub = TRUE;
+                                            return FALSE;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return TRUE;
+    }
+
+    static function CheckErrorDocument($error) {
+        $errordocs = array(100, 101, 102, 200, 201, 202, 203, 204, 205, 206, 207,
+				           300, 301, 302, 303, 304, 305, 306, 307, 400, 401, 402,
+				           403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
+				           414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424,
+				           425, 426, 500, 501, 502, 503, 504, 505, 506, 507, 508,
+				           509, 510);
+        if (in_array($error, $errordocs)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static function IsValidDomainName($a) {
+        if (stristr($a, '.')) {
+            $part = explode(".", $a);
+            foreach ($part as $check) {
+                if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    static function IsValidEmail($email) {
+        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
+            return false;
+        }
+        return true;
+    }
+
+    static function GetVHOption($name) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT vhs_value_tx FROM x_vhosts_settings WHERE vhs_name_vc = '$name'")->Fetch();
+        if ($result) {
+            return $result['vhs_value_tx'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * End 'worker' methods.
+     */
+
+    /**
+     * Webinterface sudo methods.
+     */
+	 
+    static function getParkedDomainList() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+		$res = array();
+		$parkeddomains = self::ListParkedDomains($currentuser['userid']);
+		if (!fs_director::CheckForEmptyValue($parkeddomains)){
+		foreach ($parkeddomains as $row) {
+		$status = self::getParkedDomainStatusHTML($row['active'], $row['id']);
+		$created = date(ctrl_Options::GetOption('zpanel_df'),  $row['created']);
+             array_push($res, array('name' => $row['name'],
+									'directory' => $row['directory'],
+									'active' => $row['active'],
+									'status' => $status,
+									'created' => $created,
+									'id' => $row['id']));
+		}
+		return $res;
+		} else {
+		return false;
+		}
+    }
+	
+    static function getCreateParkedDomain() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+		if ($currentuser['parkeddomainquota'] > fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid'])){
+			return true;
+		} else {
+			return false;
+		}
+    }
+
+    static function doCreateParkedDomain() {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$line  = "";
-		$parkeddomainquota = $currentuser['parkeddomainquota'];
-		$parkeddomain = fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid']);
-		$total= $parkeddomainquota;
-		$used = $parkeddomain;
-		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
-		return $line;
-	}
-	
-	static function doCreateDomain(){
-	global $zdbh;
-	global $controller;
-
-
-	self::$complete = TRUE;
-	}
-	
-	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$complete)){
-            return ui_sysmessage::shout("Changes to your domain web hosting has been saved successfully.");
-		}else{
-			return ui_module::GetModuleDescription();
+		$formvars = $controller->GetAllControllerRequests('FORM');
+		if (self::ExecuteAddParkedDomain($currentuser['userid'], $formvars['inDomain'])){
+			self::$ok = TRUE;
+            return true;
+		} else {
+        	return false;
 		}
         return;
     }
-	
-	
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+
+    static function doDeleteParkedDomain() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$formvars = $controller->GetAllControllerRequests('FORM');
+        foreach (self::ListParkedDomains($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['id'] . ''])) {
+				if (self::ExecuteDeleteParkedDomain($row['id'])){
+					self::$ok = TRUE;
+					return true;
+				}
+            }
+		}
+		return false;
+    }
+
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
+
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
+    static function getParkedDomainUsagepChart() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $line  = "";
+        $total = $currentuser['parkeddomainquota'];
+        $used  = fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid']);
+        $free  = $total - $used;
+        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
+        return $line;
+    }
 	
+    static function getParkedDomainStatusHTML($int, $id) {
+		global $controller;
+    		if ($int == 1) {
+        		return "<td><font color=\"green\">".ui_language::translate("Live")."</font></td><td></td>";
+        	} else {
+            	return "<td><font color=\"orange\">".ui_language::translate("Pending")."</font></td><td><a href=\"#\" class=\"help_small\" id=\"help_small_" . $id . "_a\" title=\"".ui_language::translate("Your domain will become active at the next scheduled update.  This can take up to one hour.")."\"><img src=\"/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/help_small.png\" border=\"0\" /></a>";
+        	}
+    }
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$blank)) {
+            return ui_sysmessage::shout(ui_language::translate("Your Domain can not be empty. Please enter a valid Domain Name and try again."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$badname)) {
+            return ui_sysmessage::shout(ui_language::translate("Your Domain name is not valid. Please enter a valid Domain Name: i.e. 'domain.com'"), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
+            return ui_sysmessage::shout(ui_language::translate("The domain already appears to exsist on this server."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$error)) {
+            return ui_sysmessage::shout(ui_language::translate("Please remove 'www'. The 'www' will automatically work with all Domains / Subdomains."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$writeerror)) {
+            return ui_sysmessage::shout(ui_language::translate("There was a problem writting to the virtual host container file. Please contact your administrator and report this error. Your domain will not function until this error is corrected."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your domain web hosting has been saved successfully."), "zannounceok");
+        }
+        return;
+    }
+
+    /**
+     * Webinterface sudo methods.
+     */
+
 }
 
 ?>

@@ -121,7 +121,7 @@ class module_controller {
 		runtime_hook::Execute('OnBeforeAddSubDomain');
         $currentuser = ctrl_users::GetUserDetail($uid);
         $domain = strtolower(str_replace(' ', '', $domain));
-        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain, $destination))) {
+        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain))) {
             //** New Home Directory **//
             if ($autohome == 1) {
                 $destination = "/" . str_replace(".", "_", $domain);
@@ -179,10 +179,8 @@ class module_controller {
         }
     }
 
-    static function CheckCreateForErrors($domain, $destination) {
+    static function CheckCreateForErrors($domain) {
         global $zdbh;
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
         // Check for spaces and remove if found...
 		$domain = strtolower(str_replace(' ', '', $domain));
         // Check to make sure the domain is not blank before we go any further...
@@ -202,7 +200,7 @@ class module_controller {
             return FALSE;
         }
         // Check to see if the domain already exists in ZPanel somewhere and redirect if it does....
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc='" . $domain . "' AND vh_deleted_ts IS NULL AND vh_type_in='2'";
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc='" . $domain . "' AND vh_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() > 0) {
                 self::$alreadyexists = TRUE;
