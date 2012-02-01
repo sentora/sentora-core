@@ -59,6 +59,27 @@ class module_controller {
             return false;
         }
     }
+
+    static function ListCurrentDomain($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+             while ($rowdomains = $sql->fetch()) {
+                array_push($res, array( 'name' => $rowdomains['vh_name_vc'],
+										'directory' => $rowdomains['vh_directory_vc'],
+										'active' => $rowdomains['vh_active_in'],
+										'created' => $rowdomains['vh_created_ts'],
+										'id' => $rowdomains['vh_id_pk']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
 	
 	static function ExecuteDeleteParkedDomain($id){
         global $zdbh;
@@ -267,15 +288,52 @@ class module_controller {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$formvars = $controller->GetAllControllerRequests('FORM');
-        foreach (self::ListParkedDomains($currentuser['userid']) as $row) {
-            if (isset($formvars['inDelete_' . $row['id'] . ''])) {
-				if (self::ExecuteDeleteParkedDomain($row['id'])){
+            if (isset($formvars['inDelete'])) {
+				if (self::ExecuteDeleteParkedDomain($formvars['inDelete'])){
 					self::$ok = TRUE;
 					return true;
 				}
             }
+		return false;
+    }
+
+    static function doConfirmDeleteParkedDomain() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$formvars = $controller->GetAllControllerRequests('FORM');
+        foreach (self::ListParkedDomains($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['id'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&id=" . $row['id'] . "&domain=" . $row['name'] . "");
+                exit;
+            }
 		}
 		return false;
+    }
+
+    static function getisDeleteDomain() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
+            return true;
+        return false;
+    }
+
+    static function getCurrentID() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'id')) {
+            return $controller->GetControllerRequest('URL', 'id');
+        } else {
+            return "";
+        }
+    }
+
+    static function getCurrentDomain() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'domain')) {
+            return $controller->GetControllerRequest('URL', 'domain');
+        } else {
+            return "";
+        }
     }
 
     static function getModuleName() {

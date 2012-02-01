@@ -334,15 +334,52 @@ class module_controller {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$formvars = $controller->GetAllControllerRequests('FORM');
-        foreach (self::ListSubDomains($currentuser['userid']) as $row) {
-            if (isset($formvars['inDelete_' . $row['subid'] . ''])) {
-				if (self::ExecuteDeleteSubDomain($row['subid'])){
+            if (isset($formvars['inDelete'])) {
+				if (self::ExecuteDeleteSubDomain($formvars['inDelete'])){
 					self::$ok = TRUE;
 					return true;
 				}
             }
+		return false;
+    }
+
+    static function doConfirmDeleteSubDomain() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$formvars = $controller->GetAllControllerRequests('FORM');
+        foreach (self::ListSubDomains($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['subid'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&id=" . $row['subid'] . "&domain=" . $row['subname'] . "");
+                exit;
+            }
 		}
 		return false;
+    }
+
+    static function getisDeleteDomain() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
+            return true;
+        return false;
+    }
+
+    static function getCurrentID() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'id')) {
+            return $controller->GetControllerRequest('URL', 'id');
+        } else {
+            return "";
+        }
+    }
+
+    static function getCurrentDomain() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'domain')) {
+            return $controller->GetControllerRequest('URL', 'domain');
+        } else {
+            return "";
+        }
     }
 
     static function getModuleName() {
