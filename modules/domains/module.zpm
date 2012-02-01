@@ -1,7 +1,8 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+<@ Result @>
 	<div class="zgrid_wrapper">
 		<h2><: Current domains :></h2>
 		<% if DomainList %>
@@ -29,10 +30,10 @@
 	<% endif %>
 	</div>
 
-	<% if CreateDomain %>
 	<div class="zform_wrapper">
         <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
         	<h2>Create a new domain</h2>
+			<% if CreateDomain %>
 	        <form action="./?module=domains&action=CreateDomain" method="post" name="CreateDomain">
 	        <table class="zform">
 		        <tr>
@@ -53,8 +54,8 @@
 			        	<div id="showdomainselect" style="display:none;">
 			        		<select name="inDestination" id="inDestination">
 			        		<option value="">/ (root)</option>
-							<% loop CreateDomain %>
-							<option value="<& domains &>"><& domains &></option>
+							<% loop DomainDirsList %>
+							<option value="<& domains &>">/<& domains &></option>
 							<% endloop %>
 			        		</select>
 						</div>
@@ -66,12 +67,13 @@
 		        </tr>
         </table>
         </form>
+	<% else %>
+	<: You have reached your domain limit! :>
+	<% endif %>	
         </td>
         <td align="right"><@ DomainUsagepChart @></td>
-        </tr></table>		
+        </tr></table>	
 	</div>
-	<% else %>
-	<% endif %>
 	
 </div>
 

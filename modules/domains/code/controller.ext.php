@@ -66,7 +66,7 @@ class module_controller {
 	    $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html");
 	    $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/";
 	    if (!$handle) {
-			return;
+			# Log an error as the folder cannot be opened...
 	    } else {
 	    	while ($file = @readdir($handle)) {
 	        	if ($file != "." && $file != "..") {
@@ -105,33 +105,34 @@ class module_controller {
             //** New Home Directory **//
             if ($autohome == 1) {
                 $destination = "/" . str_replace(".", "_", $domain);
-				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html" . $destination . "/";
+				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
 				fs_filehandler::CreateDirectory($vhost_path);
-            	// Error documents:- Error pages are added automatically if they are found in the _errorpages directory
-	            // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
-	            fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
-	            $errorpages = self::GetVHOption('static_dir') . "/errorpages/";
-	            if (is_dir($errorpages)) {
-	                if ($handle = @opendir($errorpages)) {
-	                    while (($file = @readdir($handle)) !== false) {
-	                        if ($file != "." && $file != "..") {
-	                            $page = explode(".", $file);
-	                            if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))) {
-	                                fs_filehandler::CopyFile($errorpages . $file, $vhost_path . '/_errorpages/' . $file);
-	                            }
-	                        }
-	                    }
-	                    closedir($handle);
-	                }
-	            }
-	            // Lets copy the default welcome page across...
-	            if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
-	                fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
-	            }
 			//** Existing Home Directory **//
 			} else {
+				$destination = "/" . $destination;
 				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
 			}
+            // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
+	        // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
+	        fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
+	        $errorpages = self::GetVHOption('static_dir') . "/errorpages/";
+	        if (is_dir($errorpages)) {
+	        	if ($handle = @opendir($errorpages)) {
+			        while (($file = @readdir($handle)) !== false) {
+				        if ($file != "." && $file != "..") {
+					        $page = explode(".", $file);
+					        if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))) {
+						        fs_filehandler::CopyFile($errorpages . $file, $vhost_path . '/_errorpages/' . $file);
+					        }
+				        }
+			        }
+		        closedir($handle);
+		        }
+	        }
+	        // Lets copy the default welcome page across...
+	        if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
+	        fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
+	        }
             // Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                 if (self::GetVHOption('disable_hostsen') == 'false') {
@@ -274,7 +275,8 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
 		$res = array();
-		if ($domains = self::ListDomains($currentuser['userid'])){
+		$domains = self::ListDomains($currentuser['userid']);
+		if (!fs_director::CheckForEmptyValue($domains)){
 		foreach ($domains as $row) {
 		$status = self::getDomainStatusHTML($row['active'], $row['id']);
              array_push($res, array('name' => $row['name'],
@@ -294,7 +296,19 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
 		if ($currentuser['domainquota'] > fs_director::GetQuotaUsages('domains', $currentuser['userid'])){
-			return self::ListDomainDirs($currentuser['userid']);
+			return true;
+		} else {
+			return false;
+		}
+    }
+
+    static function getDomainDirsList() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+		$domaindirectories = self::ListDomainDirs($currentuser['userid']);
+		if (!fs_director::CheckForEmptyValue($domaindirectories)){
+			return $domaindirectories;
 		} else {
 			return false;
 		}
@@ -339,6 +353,11 @@ class module_controller {
         return $module_icon;
     }
 
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
     static function getDomainUsagepChart() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -380,8 +399,6 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your domain web hosting has been saved successfully."), "zannounceok");
-        } else {
-            return ui_module::GetModuleDescription();
         }
         return;
     }
