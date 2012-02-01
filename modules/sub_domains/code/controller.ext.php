@@ -300,7 +300,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		if ($currentuser['domainquota'] > fs_director::GetQuotaUsages('domains', $currentuser['userid'])){
+		if ($currentuser['subdomainquota'] > fs_director::GetQuotaUsages('subdomains', $currentuser['userid'])){
 			return true;
 		} else {
 			return false;
