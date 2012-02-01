@@ -50,6 +50,7 @@ class module_controller {
              while ($rowdomains = $sql->fetch()) {
                 array_push($res, array( 'name' => $rowdomains['vh_name_vc'],
 										'directory' => $rowdomains['vh_directory_vc'],
+										'active' => $rowdomains['vh_active_in'],
 										'id' => $rowdomains['vh_id_pk']));
             }
             return $res;
@@ -283,7 +284,16 @@ class module_controller {
     static function getDomainList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        return self::ListDomains($currentuser['userid']);
+		$res = array();
+		foreach (self::ListDomains($currentuser['userid']) as $row) {
+		$status = self::getDomainStatusHTML($row['active'], $row['id']);
+             array_push($res, array('name' => $row['name'],
+									'directory' => $row['directory'],
+									'active' => $row['active'],
+									'status' => $status,
+									'id' => $row['id']));
+		}
+		return $res;
     }
 	
     static function getCreateDomain() {
@@ -346,28 +356,37 @@ class module_controller {
         $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
         return $line;
     }
+	
+    static function getDomainStatusHTML($int, $id) {
+		global $controller;
+    		if ($int == 1) {
+        		return "<td><font color=\"green\">".ui_language::translate("Live")."</font></td><td></td>";
+        	} else {
+            	return "<td><font color=\"orange\">".ui_language::translate("Pending")."</font></td><td><a href=\"#\" class=\"help_small\" id=\"help_small_" . $id . "_a\" title=\"".ui_language::translate("Your domain will become active at the next scheduled update.  This can take up to one hour.")."\"><img src=\"/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/help_small.png\" border=\"0\" /></a>";
+        	}
+    }
 
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
-            return ui_sysmessage::shout("Your Domain can not be empty. Please enter a valid Domain Name and try again.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Your Domain can not be empty. Please enter a valid Domain Name and try again."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$badname)) {
-            return ui_sysmessage::shout("Your Domain name is not valid. Please enter a valid Domain Name: i.e. \"domain.com\"", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Your Domain name is not valid. Please enter a valid Domain Name: i.e. 'domain.com'"), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout("The domain already appears to exsist on this server.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("The domain already appears to exsist on this server."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$nosub)) {
-            return ui_sysmessage::shout("You cannot add a Sub-Domain here. Please use the Subdomain manager to add Sub-Domains.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("You cannot add a Sub-Domain here. Please use the Subdomain manager to add Sub-Domains."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$error)) {
-            return ui_sysmessage::shout("Please remove 'www'. The 'www' will automatically work with all Domains / Subdomains.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Please remove 'www'. The 'www' will automatically work with all Domains / Subdomains."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$writeerror)) {
-            return ui_sysmessage::shout("There was a problem writting to the virtual host container file. Please contact your administrator and report this error. Your domain will not function until this error is corrected.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("There was a problem writting to the virtual host container file. Please contact your administrator and report this error. Your domain will not function until this error is corrected."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout("Changes to your domain web hosting has been saved successfully.", "zannounceok");
+            return ui_sysmessage::shout(ui_language::translate("Changes to your domain web hosting has been saved successfully."), "zannounceok");
         } else {
             return ui_module::GetModuleDescription();
         }
