@@ -41,7 +41,7 @@ class module_controller {
 
     static function ListDomains($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1";
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
@@ -68,7 +68,7 @@ class module_controller {
 	    if (!$handle) {
 			return;
 	    } else {
-	    	while ($file = readdir($handle)) {
+	    	while ($file = @readdir($handle)) {
 	        	if ($file != "." && $file != "..") {
 	            	if (is_dir($chkdir . $file)) {
 	                	array_push($res, array('domains' => $file));
@@ -85,7 +85,9 @@ class module_controller {
         global $zdbh;
         $retval = FALSE;
 		runtime_hook::Execute('OnBeforeDeleteDomain');
-        $sql = $zdbh->prepare("UPDATE x_vhosts SET vh_deleted_ts=" . time() . " WHERE vh_id_pk=" . $id . "");
+        $sql = $zdbh->prepare("UPDATE x_vhosts 
+							   SET vh_deleted_ts=" . time() . " 
+							   WHERE vh_id_pk=" . $id . "");
         $sql->execute();
         $retval = TRUE;
 		runtime_hook::Execute('OnAfterDeleteDomain');
@@ -98,19 +100,38 @@ class module_controller {
 		$retval = FALSE;
 		runtime_hook::Execute('OnBeforeAddDomain');
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $domain = str_replace(' ', '', $domain);
-		$domain = strtolower($domain);
+        $domain = strtolower(str_replace(' ', '', $domain));
         if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain, $destination))) {
-            // Check to see if its a new home directory or use a current one...
+            //** New Home Directory **//
             if ($autohome == 1) {
-                $homedirectoy_to_use = "/public_html/" . str_replace(".", "_", $domain);
-                $vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/";
-                // Create the new home directory... (If it doesnt already exist.)
-                fs_filehandler::CreateDirectory($vhost_path);
-            } else {
-                $homedirectoy_to_use = "/public_html/" . $destination;
-                $vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/";
-            }
+                $destination = str_replace(".", "_", $domain);
+				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+				fs_filehandler::CreateDirectory($vhost_path);
+            	// Error documents:- Error pages are added automatically if they are found in the _errorpages directory
+	            // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
+	            fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
+	            $errorpages = self::GetVHOption('static_dir') . "/errorpages/";
+	            if (is_dir($errorpages)) {
+	                if ($handle = @opendir($errorpages)) {
+	                    while (($file = @readdir($handle)) !== false) {
+	                        if ($file != "." && $file != "..") {
+	                            $page = explode(".", $file);
+	                            if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))) {
+	                                fs_filehandler::CopyFile($errorpages . $file, $vhost_path . '/_errorpages/' . $file);
+	                            }
+	                        }
+	                    }
+	                    closedir($handle);
+	                }
+	            }
+	            // Lets copy the default welcome page across...
+	            if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
+	                fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
+	            }
+			//** Existing Home Directory **//
+			} else {
+				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+			}
             // Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                 if (self::GetVHOption('disable_hostsen') == 'false') {
@@ -119,49 +140,18 @@ class module_controller {
                     @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe www." . $domain . "");
                 }
             }
-            // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
-            // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
-            fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
-            $errorpages = self::GetVHOption('static_dir') . "/errorpages/";
-            if (is_dir($errorpages)) {
-                if ($handle = opendir($errorpages)) {
-                    while (($file = readdir($handle)) !== false) {
-                        if ($file != "." && $file != "..") {
-                            $page = explode(".", $file);
-                            if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))) {
-                                fs_filehandler::CopyFile($errorpages . $file, $vhost_path . '/_errorpages/' . $file);
-                            }
-                        }
-                    }
-                    closedir($handle);
-                }
-            }
-            // Lets copy the default welcome page across...
-            if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
-                fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
-            }
             // If all has gone well we need to now create the domain in the database...
             $sql = $zdbh->prepare("INSERT INTO x_vhosts (vh_acc_fk,
-										vh_name_vc,
-										vh_directory_vc,
-										vh_type_in,
-										vh_created_ts) VALUES (
-										" . $currentuser['userid'] . ",
-										'" . $domain . "',
-										'" . $homedirectoy_to_use . "',
-										1,
-										" . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectoy_to_use
+														 vh_name_vc,
+														 vh_directory_vc,
+														 vh_type_in,
+														 vh_created_ts) VALUES (
+														 " . $currentuser['userid'] . ",
+														 '" . $domain . "',
+														 '" . $destination . "',
+														 1,
+														 " . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->execute();
-            /*
-			// Write the vhost file
-            if (!fs_director::CheckForEmptyValue(self::WriteVhostConfigFile())) {
-                self::$ok = TRUE;
-                return;
-            } else {
-                self::$writeerror = TRUE;
-                return;
-            }
-			*/
         	$retval = TRUE;
 			runtime_hook::Execute('OnAfterAddDomain');
         	return $retval;
@@ -173,8 +163,7 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         // Check for spaces and remove if found...
-        $domain = str_replace(' ', '', $domain);
-		$domain = strtolower($domain);
+		$domain = strtolower(str_replace(' ', '', $domain));
         // Check to make sure the domain is not blank before we go any further...
         if ($domain == '') {
             self::$blank = TRUE;
@@ -285,7 +274,8 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
 		$res = array();
-		foreach (self::ListDomains($currentuser['userid']) as $row) {
+		if ($domains = self::ListDomains($currentuser['userid'])){
+		foreach ($domains as $row) {
 		$status = self::getDomainStatusHTML($row['active'], $row['id']);
              array_push($res, array('name' => $row['name'],
 									'directory' => $row['directory'],
@@ -294,6 +284,9 @@ class module_controller {
 									'id' => $row['id']));
 		}
 		return $res;
+		} else {
+		return false;
+		}
     }
 	
     static function getCreateDomain() {
