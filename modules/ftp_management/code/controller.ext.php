@@ -32,189 +32,93 @@ class module_controller {
 	static $blank;
 	static $ok;
 	static $edit;
-	static $ftpid;
+	static $ftpid;	
 
-	static function getFTPAccounts(){
-		global $controller;
-			$display = self::DisplayFTPAccounts();
-		return $display;
-	}
+    /**
+     * The 'worker' methods.
+     */
 
-	static function getFTPAction(){
-		global $controller;
-		if (!fs_director::CheckForEmptyValue(self::$edit)){
-			$display = self::DisplayEditFTP();
-		} else {
-			$display = self::DisplayNewFTP();
-		}
-		return $display;
-	}
+    static function ListClients($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $uid . " AND ft_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+             while ($rowclients = $sql->fetch()) {
+                	array_push($res, array( 'id' => $rowclients['ft_id_pk'],
+											'directory' => $rowclients['ft_directory_vc'], 
+											'access' => $rowclients['ft_access_vc'], 
+									   	   	'username' => $rowclients['ft_user_vc']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
 
-	static function DisplayFTPAccounts(){
-		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
+    static function ListCurrentClient($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . $uid . " AND ft_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+             while ($rowclients = $sql->fetch()) {
+                	array_push($res, array( 'id' => $rowclients['ft_id_pk'],
+											'directory' => $rowclients['ft_directory_vc'], 
+											'access' => $rowclients['ft_access_vc'], 
+									   	   	'username' => $rowclients['ft_user_vc']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
 
-		$sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_acc_fk=" . $currentuser['userid'] . " AND ft_deleted_ts IS NULL";
-			if ($numrows = $zdbh->query($sql)) {
- 				if ($numrows->fetchColumn() <> 0) {
-							
-				$sql = $zdbh->prepare("SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $currentuser['userid'] . " AND ft_deleted_ts IS NULL");
-				$sql->execute();
-				$line  = "<h2>".ui_language::translate("Current FTP accounts")."</h2>"; 
-    			$line .= "<form action=\"./?module=ftp_management&action=EditFTP\" method=\"post\">";
-        		$line .= "<table class=\"zgrid\">"; 
-            	$line .= "<tr>"; 
-                $line .= "<th>".ui_language::translate("Account name")."</th>"; 
-                $line .= "<th>".ui_language::translate("Home directory")."</th>"; 
-                $line .= "<th>".ui_language::translate("Permission")."</th>"; 
-                $line .= "<th></th>"; 
-            	$line .= "</tr>"; 
-           	 	while ($rowftpaccounts = $sql->fetch()) {
-                	$line .= "<tr>"; 
-                    $line .= "<td>".$rowftpaccounts['ft_user_vc']."</td>"; 
-                    $line .= "<td>".$rowftpaccounts['ft_directory_vc']."</td>"; 
-                    $line .= "<td>".$rowftpaccounts['ft_access_vc']."</td>";
-					$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inReset_".$rowftpaccounts['ft_id_pk'] . "\" id=\"button\" value=\"inReset_".$rowftpaccounts['ft_id_pk'] . "\">".ui_language::translate("Reset Password")."</button><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inDelete_".$rowftpaccounts['ft_id_pk'] . "\" id=\"button\" value=\"inDelete_".$rowftpaccounts['ft_id_pk'] . "\">".ui_language::translate("Delete")."</button></td>";
-                	$line .= "</tr>"; 
-            	}
-        		$line .= "</table>"; 
-    			$line .= "</form>";
-
-				} else {
-    			$line = "<h2>".ui_language::translate("You do not have any FTP Accounts setup.")."</h2>";
-    			$line .= ui_language::translate("Create an FTP account using the form below.");
-				}
-				return $line;
-			}
-
-	}
-	
-	static function DisplayNewFTP(){
-		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$line  = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";
-		$line .= "<h2>".ui_language::translate("Create a new FTP Account")."</h2>";
-		$line .= "<form action=\"./?module=ftp_management&action=CreateFTP\" method=\"post\">";
-       	$line .= "<table class=\"zform\">";
-        $line .= "<tr>";
-        $line .= "<th>".ui_language::translate("Username").":</th>";
-        $line .= "<td><input name=\"inUsername\" type=\"text\" id=\"inUsername\" size=\"30\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>".ui_language::translate("Password").":</th>";
-        $line .= "<td><input name=\"inPassword\" type=\"password\" id=\"inPassword\" size=\"30\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>".ui_language::translate("Access type").":</th>";
-        $line .= "<td><select name=\"inAccess\" size=\"1\">";
-        $line .= "<option value=\"RO\" selected=\"selected\">".ui_language::translate("Read-only")."</option>";
-        $line .= "<option value=\"WO\">".ui_language::translate("Write-only")."</option>";
-        $line .= "<option value=\"RW\">".ui_language::translate("Full access")."</option>";
-        $line .= "</select></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>".ui_language::translate("Home directory").":</th>";
-        $line .= "<td><input name=\"inAutoHome\" type=\"checkbox\" id=\"inAutoHome\" value=\"1\" checked=\"checked\" /> ".ui_language::translate("Create a new home directory")."</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>&nbsp;</th>";
-        $line .= "<td>".ui_language::translate("or use existing").": ";
-        $line .= "<select name=\"inDestination\" id=\"inDestination\">";
-        $line .= "<option value=\"\">/ (".ui_language::translate("Default").")</option>";
-                        /*
-                        $handle = @opendir(GetSystemOption('hosted_dir') . $useraccount['ac_user_vc']);
-                        $chkdir = GetSystemOption('hosted_dir') . $useraccount['ac_user_vc'] . "/";
-                        if (!$handle) {
-                            # Log an error as the folder cannot be opened...
-
-                        } else {
-                            while ($file = readdir($handle)) {
-                                if ($file != "." && $file != "..") {
-                                    if (is_dir($chkdir . $file)) {
-                                        $line .= "<option value=\"" . $file . "\">/" . $file . "</option>";
-                                    }
-                                }
-                            }
-                            closedir($handle);
-                        }
-                       */
-       	$line .= "</select></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th colspan=\"2\" align=\"right\">";
-        $line .= "<input type=\"hidden\" name=\"inAction\" value=\"NewFTPAccount\" />";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inSubmit\" id=\"inSubmit\" value=\"\">".ui_language::translate("Create")."</button></th>";
-        $line .= "</tr>";
-        $line .= "</table>";
-    	$line .= "</form>";
-		$line .= "</td>";
-		$line .= "<td align=\"right\">".self::DisplayFTPUsagepChart()."</td>";
-		$line .= "</tr></table>";
-		
-		return $line;
-	}
-	
-	static function DisplayEditFTP(){
-		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		
-		$rowftp = $zdbh->query("SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . self::$ftpid . " AND ft_deleted_ts IS NULL")->Fetch();
-		$line  = "<table class=\"none\" width=\"100%\" cellborder=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";		
-		$line .= "<h2>".ui_language::translate("Reset FTP Password")."</h2>";
-		$line .= "<form action=\"./?module=ftp_management&action=ResetPassword\" method=\"post\">";
-        $line .= "<table class=\"zform\">";
-        $line .= "<tr>";
-        $line .= "<th>".ui_language::translate("Username").":</th>";
-        $line .= "<td>".$rowftp['ft_user_vc']."</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>".ui_language::translate("New password").":</th>";
-        $line .= "<td><input name=\"inPassword\" type=\"password\" id=\"inPassword\" size=\"30\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th colspan=\"2\" align=\"right\">";
-        $line .= "<input type=\"hidden\" name=\"inAccount\" value=\"".$rowftp['ft_user_vc']."\" />";
-        //$line .= "<input type=\"hidden\" name=\"inAction\" value=\"reset\" />";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inReset_".self::$ftpid . "\" id=\"button\" value=\"inReset_".self::$ftpid . "\">".ui_language::translate("Reset Password")."</button><button class=\"fg-button ui-state-default ui-corner-all\" name=\"inReset_CANCEL\" value=\"CANCEL\" onclick=\"window.location.href='".self::getModulePath()."'\">".ui_language::translate("Cancel")."</button></th>";
-        $line .= "</tr>";
-        $line .= "</table>";
-    	$line .= "</form>";
-		$line .= "</td>";
-		$line .= "<td align=\"right\">".self::DisplayFTPUsagepChart()."</td>";
-		$line .= "</tr></table>";
-		
-		return $line;	
-	}
-
-    static function DisplayFTPUsagepChart() {
+	static function ListDomainDirs($uid){
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$line  = "";
-		$ftpquota = $currentuser['ftpaccountsquota'];
-		$ftp = fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
-		$total= $ftpquota;
-		$used = $ftp;
-		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
-		return $line;
+        $currentuser = ctrl_users::GetUserDetail($uid);
+		$res = array();
+	    $handle = @opendir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "");
+	    $chkdir = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/";
+	    if (!$handle) {
+			# Log an error as the folder cannot be opened...
+	    } else {
+	    	while ($file = @readdir($handle)) {
+	        	if ($file != "." && $file != ".." && $file != "_errorpages") {
+	            	if (is_dir($chkdir . $file)) {
+	                	array_push($res, array('domains' => $file));
+	                }
+	            }
+	        }
+	    closedir($handle);
+		}
+		return $res;	
 	}
-	
-	static function doCreateFTP(){
+
+	static function ExecuteResetPassword($userid, $password){
+		global $zdbh;
+		runtime_hook::Execute('OnBeforeResetFTPPassword');
+		$retval = FALSE;
+		$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc=" . $password . " WHERE ft_id_pk=" . $ft_id_pk . "");
+		$sql->execute();
+		$retval = TRUE;
+		runtime_hook::Execute('OnAfterResetFTPPassword');
+		return $retval;
+
+	}
+
+	static function ExecuteCreateFTP($uid, $username, $password, $destination, $access_type, $home){
 		global $zdbh;
 		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-	
-		if (fs_director::CheckForEmptyValue(self::CheckForErrors())){
-			$username = $controller->GetControllerRequest('FORM', 'inUsername');
-	    	$password = $controller->GetControllerRequest('FORM', 'inPassword');
-		    $destination = $controller->GetControllerRequest('FORM', 'inDestination');
-		    $access_type = $controller->GetControllerRequest('FORM', 'inAccess');
-		
+		$currentuser = ctrl_users::GetUserDetail($uid);
+		runtime_hook::Execute('OnBeforeCreateFTPAccount');
+		if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))){
     		# Check to see if its a new home directory or use a current one...
-	    	if ($controller->GetControllerRequest('FORM', 'inAutoHome') == 1) {
+	    	if ($home == 1) {
 		        $homedirectoy_to_use = "/" . str_replace(".", "_", $username);
 		        # Create the new home directory... (If it doesnt already exist.)		
 		        if (!file_exists(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/")) {
@@ -237,67 +141,23 @@ class module_controller {
 										'" . $access_type . "',
 										" . time() . ")");
 			$sql->execute();
-			self::$ok = TRUE;
-			return;
+			runtime_hook::Execute('OnAfterCreateFTPAccount');
+			return true;
 		}
-		self::$error = TRUE;
-		return;
+		return false;
 	}
-	
-	static function doEditFTP(){
-		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$sql = $zdbh->prepare("SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $currentuser['userid'] . " AND ft_deleted_ts IS NULL");
-		$sql->execute();
-		while ($rowftp = $sql->fetch()) {
-			if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inReset_' . $rowftp['ft_id_pk'] . ''))){
-				self::$edit=1;
-				self::$ftpid = $rowftp['ft_id_pk'];
-				return;
-			}
-			if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $rowftp['ft_id_pk'] . ''))){
-				self::DeleteFTP($rowftp['ft_id_pk']);
-				return;
-			}
-		}		
 
-	}
-	
-	static function doResetPassword(){
+	static function CheckForErrors($username, $password) {
 		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		if (fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inReset_CANCEL'))){
-    		$sql = "SELECT * FROM x_ftpaccounts WHERE ft_user_vc='" . $controller->GetControllerRequest('FORM', 'inAccount') . "' AND ft_acc_fk=" . $currentuser['userid'] . " AND ft_deleted_ts IS NULL";
-			if ($numrows = $zdbh->query($sql)) {
-	 			if ($numrows->fetchColumn() <> 0) {
-				
-				self::$ok=TRUE;
-				}
-			}
-		}	
-	}
-	
-	static function DeleteFTP($ft_id_pk){
-		global $zdbh;
-		$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_id_pk=" . $ft_id_pk . "");
-		$sql->execute();
-		self::$ok=TRUE;
-	}
-	
-	static function CheckForErrors() {
-		global $zdbh;
-		global $controller;
 		$retval = FALSE;
 		$currentuser = ctrl_users::GetUserDetail();
     	# Check to make sure the username and password is not blank before we go any further...
-    	if ($controller->GetControllerRequest('FORM', 'inUsername') == '' || $controller->GetControllerRequest('FORM', 'inPassword') == '') {
+    	if ($username == '' || $password == '') {
 			self::$blank = TRUE;
 			$retval = TRUE;
     	}
 	    # Check to make sure the cron is not a duplicate...
-			$sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc='" . $controller->GetControllerRequest('FORM', 'inUsername') . "' AND ft_deleted_ts IS NULL";
+			$sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc='" . $username . "' AND ft_deleted_ts IS NULL";
 			if ($numrows = $zdbh->query($sql)) {
  				if ($numrows->fetchColumn() <> 0) {	
 					self::$alreadyexists = TRUE;
@@ -306,6 +166,152 @@ class module_controller {
 			}
 		return $retval;
    	}
+
+	static function ExecuteDeleteFTP($ft_id_pk){
+		global $zdbh;
+		runtime_hook::Execute('OnBeforeDeleteFTPAccount');
+		$retval = FALSE;
+		$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_id_pk=" . $ft_id_pk . "");
+		$sql->execute();
+		$retval = TRUE;
+		runtime_hook::Execute('OnAfterDeleteFTPAccount');
+		return $retval;
+	}
+	
+    /**
+     * End 'worker' methods.
+     */
+	
+    /**
+     * Webinterface sudo methods.
+     */
+
+    static function doCreateFTP() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteCreateFTP($currentuser['userid'], $formvars['inUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inAccess'], $formvars['inAutoHome']))
+			self::$ok = true;
+            return true;
+        return false;
+    }
+
+    static function doDeleteFTP() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteDeleteFTP($formvars['inDelete']))
+			self::$ok = true;
+            return true;
+        return false;
+    }
+
+    static function doResetPassword() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteDeleteFTP($formvars['inReset'], $formvars['inPassword']))
+			self::$ok = true;
+            return true;
+        return false;
+    }
+
+	 
+    static function getClientList() {
+        $currentuser = ctrl_users::GetUserDetail();
+		$clientlist = self::ListClients($currentuser['userid']);
+		if (!fs_director::CheckForEmptyValue($clientlist)){
+			return $clientlist;
+		} else {
+			return false;
+		}
+    }
+
+    static function getDomainDirsList() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+		$domaindirectories = self::ListDomainDirs($currentuser['userid']);
+		if (!fs_director::CheckForEmptyValue($domaindirectories)){
+			return $domaindirectories;
+		} else {
+			return false;
+		}
+    }
+
+    static function doEditFTP() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        foreach (self::ListClients($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['id'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id'] . "");
+                exit;
+            }
+            if (isset($formvars['inReset_' . $row['id'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['id'] . "");
+                exit;
+            }
+        }
+        return;
+    }
+	
+    static function getisCreateFTP() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if (!isset($urlvars['show']))
+            return true;
+        return false;
+    }
+
+    static function getisDeleteFTP() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
+            return true;
+        return false;
+    }
+
+    static function getisEditFTP() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")){
+			return true;
+		} else {
+        	return false;
+		}
+    }
+
+    static function getEditCurrentName() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['username'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentID() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['id'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getFTPUsagepChart() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$line  = "";
+		$ftpquota = $currentuser['ftpaccountsquota'];
+		$ftp = fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
+		$total= $ftpquota;
+		$used = $ftp;
+		$free = $total - $used;		
+		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
+		return $line;
+	}
 	
 	static function getResult() {
 		if (!fs_director::CheckForEmptyValue(self::$blank)){
@@ -319,8 +325,6 @@ class module_controller {
 		}
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
 			return ui_sysmessage::shout(ui_language::translate("FTP accounts updated successfully."), "zannounceok");
-		}else{
-			return ui_language::translate(ui_module::GetModuleDescription());
 		}
         return;
     }
@@ -341,7 +345,16 @@ class module_controller {
 		$module_path = "?module=" . $controller->GetControllerRequest('URL', 'module') . "";
         return $module_path;
     }
-	
+
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
+    /**
+     * Webinterface sudo methods.
+     */
+	 	
 }
 
 ?>
