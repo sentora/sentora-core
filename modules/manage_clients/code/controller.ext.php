@@ -30,20 +30,19 @@ class module_controller {
     static $error;
     static $alreadyexists;
     static $badname;
-	static $bademail;
+    static $bademail;
     static $userblank;
-	static $emailblank;
-	static $packageblank;
-	static $groupblank;
+    static $emailblank;
+    static $packageblank;
+    static $groupblank;
     static $ok;
     static $edit;
     static $clientid;
     static $clientpkgid;
-	
+
     /**
      * The 'worker' methods.
      */
-
     static function ListClients($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
@@ -52,15 +51,15 @@ class module_controller {
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
-             while ($rowclients = $sql->fetch()) {
-			 	if ($rowclients['ac_user_vc'] != "zadmin"){
-			 	$currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-				$currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
-				$currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
-				$currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']));
-				$currentuser['bandwidthquotareadable'] = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
-                array_push($res, $currentuser);
-				}
+            while ($rowclients = $sql->fetch()) {
+                if ($rowclients['ac_user_vc'] != "zadmin") {
+                    $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
+                    $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
+                    $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
+                    $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']));
+                    $currentuser['bandwidthquotareadable'] = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
+                    array_push($res, $currentuser);
+                }
             }
             return $res;
         } else {
@@ -76,15 +75,15 @@ class module_controller {
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
-             while ($rowclients = $sql->fetch()) {
-			 	if ($rowclients['ac_user_vc'] != "zadmin"){
-			 	$currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-				$currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
-				$currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
-				$currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']));
-				$currentuser['bandwidthquotareadable'] = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
-                array_push($res, $currentuser);
-				}
+            while ($rowclients = $sql->fetch()) {
+                if ($rowclients['ac_user_vc'] != "zadmin") {
+                    $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
+                    $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
+                    $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
+                    $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']));
+                    $currentuser['bandwidthquotareadable'] = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
+                    array_push($res, $currentuser);
+                }
             }
             return $res;
         } else {
@@ -93,15 +92,15 @@ class module_controller {
     }
 
     static function ListCurrentClient($uid) {
-		$res = array();
-		$currentuser = ctrl_users::GetUserDetail($uid);
-                array_push($res, $currentuser);
+        $res = array();
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        array_push($res, $currentuser);
         return $res;
     }
 
     static function ListGroups($uid) {
         global $zdbh;
-		$currentuser = ctrl_users::GetUserDetail($uid);
+        $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $currentuser['resellerid'] . "";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -109,8 +108,8 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 
-									   'groupname' => ui_language::translate($rowgroups['ug_name_vc'])));
+                array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
+                    'groupname' => ui_language::translate($rowgroups['ug_name_vc'])));
             }
             return $res;
         } else {
@@ -123,18 +122,18 @@ class module_controller {
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $rid . "";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			$currentuser = ctrl_users::GetUserDetail($uid);
+            $currentuser = ctrl_users::GetUserDetail($uid);
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-				$selected="";
-				if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']){
-					$selected = " selected";	
-				}
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 
-									   'groupname' => ui_language::translate($rowgroups['ug_name_vc']),
-									   'groupselected' => $selected));
+                $selected = "";
+                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
+                    $selected = " selected";
+                }
+                array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
+                    'groupname' => ui_language::translate($rowgroups['ug_name_vc']),
+                    'groupselected' => $selected));
             }
             return $res;
         } else {
@@ -152,7 +151,7 @@ class module_controller {
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
                 array_push($res, array('packageid' => $rowgroups['pk_id_pk'],
-									   'packagename' => ui_language::translate($rowgroups['pk_name_vc'])));
+                    'packagename' => ui_language::translate($rowgroups['pk_name_vc'])));
             }
             return $res;
         } else {
@@ -165,18 +164,18 @@ class module_controller {
         $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=" . $rid . " AND pk_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			$currentuser = ctrl_users::GetUserDetail($uid);
+            $currentuser = ctrl_users::GetUserDetail($uid);
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-				$selected = "";
-				if ($rowgroups['pk_id_pk'] == $currentuser['packageid']){
-					$selected = " selected";	
-				}
+                $selected = "";
+                if ($rowgroups['pk_id_pk'] == $currentuser['packageid']) {
+                    $selected = " selected";
+                }
                 array_push($res, array('packageid' => $rowgroups['pk_id_pk'],
-									   'packagename' => ui_language::translate($rowgroups['pk_name_vc']),
-									   'packageselected' => $selected));
+                    'packagename' => ui_language::translate($rowgroups['pk_name_vc']),
+                    'packageselected' => $selected));
             }
             return $res;
         } else {
@@ -186,40 +185,40 @@ class module_controller {
 
     static function SetClientAccount($userid, $column, $value) {
         global $zdbh;
-		runtime_hook::Execute('OnBeforeSetClientAccount');
+        runtime_hook::Execute('OnBeforeSetClientAccount');
         $sql = $zdbh->prepare("UPDATE x_accounts
 								SET " . $column . "=" . $value . " 
 								WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
-		runtime_hook::Execute('OnAfterSetClientAccount');
-		return true;
+        runtime_hook::Execute('OnAfterSetClientAccount');
+        return true;
     }
 
     static function SetClientProfile($userid, $column, $value) {
         global $zdbh;
-		runtime_hook::Execute('OnBeforeSetClientProfile');
+        runtime_hook::Execute('OnBeforeSetClientProfile');
         $sql = $zdbh->prepare("UPDATE x_profiles
 								SET " . $column . "=" . $value . " 
 								WHERE ud_user_fk=" . $userid . "");
         $sql->execute();
-		runtime_hook::Execute('OnAfterSetClientProfile');
-		return true;
+        runtime_hook::Execute('OnAfterSetClientProfile');
+        return true;
     }
 
     static function ExecuteDeleteClient($userid) {
         global $zdbh;
-		runtime_hook::Execute('OnBeforeDeleteClient');
+        runtime_hook::Execute('OnBeforeDeleteClient');
         $sql = $zdbh->prepare("UPDATE x_accounts
 								SET ac_deleted_ts=" . time() . " 
 								WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
-		runtime_hook::Execute('OnAfterDeleteClient');
+        runtime_hook::Execute('OnAfterDeleteClient');
         return true;
     }
 
     static function ExecuteUpdateClient($clientid, $package, $enabled, $group, $fullname, $email, $address, $post, $phone, $newpass) {
         global $zdbh;
-		runtime_hook::Execute('OnBeforeUpdateClient');
+        runtime_hook::Execute('OnBeforeUpdateClient');
         $sql = $zdbh->prepare("UPDATE x_accounts SET 
 										ac_package_fk= " . $package . " ,
 										ac_enabled_in= " . $enabled . ",
@@ -238,42 +237,42 @@ class module_controller {
 										WHERE ud_user_fk=" . $clientid . "");
         $sql->execute();
         if ($newpass <> "") {
-        	//zapi_mysqluser_setpass($resetforuser, Cleaner("i", $_POST['inNewPassword']), $zdb);
+            //zapi_mysqluser_setpass($resetforuser, Cleaner("i", $_POST['inNewPassword']), $zdb);
         }
-		runtime_hook::Execute('OnAfterUpdateClient');
-		return true;
-    } 
-		 	 
+        runtime_hook::Execute('OnAfterUpdateClient');
+        return true;
+    }
+
     static function EnableClient($userid) {
-		runtime_hook::Execute('OnBeforeEnableClient');
+        runtime_hook::Execute('OnBeforeEnableClient');
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=1 WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
-		runtime_hook::Execute('OnAfterEnableClient');
+        runtime_hook::Execute('OnAfterEnableClient');
         return true;
     }
 
     static function DisableClient($userid) {
-		runtime_hook::Execute('OnBeforeDisableClient');
+        runtime_hook::Execute('OnBeforeDisableClient');
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=0 WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
-		runtime_hook::Execute('OnAfterDisableClient');
+        runtime_hook::Execute('OnAfterDisableClient');
         return true;
     }
 
     static function CheckEnabledHTML($userid) {
-		$currentuser = ctrl_users::GetUserDetail($userid);
-		$res = array();
-		if ($currentuser['enabled'] == 1) {
-        	$echecked = "CHECKED";
+        $currentuser = ctrl_users::GetUserDetail($userid);
+        $res = array();
+        if ($currentuser['enabled'] == 1) {
+            $echecked = "CHECKED";
             $dchecked = "";
         } else {
             $echecked = "";
             $dchecked = "CHECKED";
         }
-                array_push($res, array('echecked' => $echecked,
-									   'dchecked' => $dchecked));
+        array_push($res, array('echecked' => $echecked,
+            'dchecked' => $dchecked));
         return $res;
     }
 
@@ -283,11 +282,11 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
-		// Check for errors before we continue...
-		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $packageid, $groupid, $email))) {
-			return false;
-		}
-		runtime_hook::Execute('OnBeforeCreateClient');
+        // Check for errors before we continue...
+        if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $packageid, $groupid, $email))) {
+            return false;
+        }
+        runtime_hook::Execute('OnBeforeCreateClient');
         // No errors found, so we can add the user to the database...
         $sql = $zdbh->prepare("INSERT INTO x_accounts (
 										ac_user_vc,
@@ -327,7 +326,7 @@ class module_controller {
         // Now we add an entry into the bandwidth table, for the user for the upcoming month.
         $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
         $sql->execute();
-		runtime_hook::Execute('OnAfterCreateClient');
+        runtime_hook::Execute('OnAfterCreateClient');
 
         // Create the MySQL account for the user...
         // Now we create the user's home directory if it doesnt already exsist...
@@ -336,9 +335,9 @@ class module_controller {
         // Send the user account details via. email (if requested)...
     }
 
-	static function CheckCreateForErrors($username, $packageid, $groupid, $email){
-		global $zdbh;
-		$username = strtolower(str_replace(' ', '', $username));
+    static function CheckCreateForErrors($username, $packageid, $groupid, $email) {
+        global $zdbh;
+        $username = strtolower(str_replace(' ', '', $username));
         // Check to make sure the username is not blank or exists before we go any further...
         if (!fs_director::CheckForEmptyValue($username)) {
             $sql = "SELECT COUNT(*) FROM x_accounts WHERE UPPER(ac_user_vc)='" . strtoupper($username) . "' AND ac_deleted_ts IS NULL";
@@ -348,10 +347,10 @@ class module_controller {
                     return false;
                 }
             }
-        	if (!self::IsValidUserName($username)) {
-            	self::$badname = true;
-            	return false;
-        	}
+            if (!self::IsValidUserName($username)) {
+                self::$badname = true;
+                return false;
+            }
         } else {
             self::$userblank = true;
             return false;
@@ -383,18 +382,18 @@ class module_controller {
             return false;
         }
         // Check for invalid characters in the email and that it exists...
-		if (!fs_director::CheckForEmptyValue($email)) {
-        	if (!self::IsValidEmail($email)) {
-            	self::$bademail = true;
-            	return false;
-        	}
-		} else {
-           self::$emailblank = true;
-           return false;		
-		}
-		
-		return true;	
-	}
+        if (!fs_director::CheckForEmptyValue($email)) {
+            if (!self::IsValidEmail($email)) {
+                self::$bademail = true;
+                return false;
+            }
+        } else {
+            self::$emailblank = true;
+            return false;
+        }
+
+        return true;
+    }
 
     static function IsValidEmail($email) {
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
@@ -404,13 +403,12 @@ class module_controller {
     }
 
     static function IsValidUserName($username) {
-                if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
-                    return false;
-                }
+        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
+            return false;
+        }
         return true;
     }
-	 
-	 
+
     /**
      * End 'worker' methods.
      */
@@ -418,16 +416,15 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-
-	static function doCreateClient(){
+    static function doCreateClient() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-       	$formvars = $controller->GetAllControllerRequests('FORM');
-       	if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inUserName'], $formvars['inPackage'], $formvars['inGroup'], $formvars['inFullName'], $formvars['inEmailAddress'], $formvars['inAddress'], $formvars['inPostCode'], $formvars['inPhone'], $formvars['inPassword']))
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inUserName'], $formvars['inPackage'], $formvars['inGroup'], $formvars['inFullName'], $formvars['inEmailAddress'], $formvars['inAddress'], $formvars['inPostCode'], $formvars['inPhone'], $formvars['inPassword']))
             return true;
         return false;
-	}
-	
+    }
+
     static function doEditClient() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -472,42 +469,42 @@ class module_controller {
 
     static function doUpdateClient() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteUpdateClient($formvars['inClientID'], $formvars['inPackage'], $formvars['inEnabled'], $formvars['inGroup'], $formvars['inFullName'], $formvars['inEmailAddress'], $formvars['inAddress'], $formvars['inPostCode'], $formvars['inPhone'], $formvars['inNewPassword']))
             return true;
         return false;
     }
-		 
+
     static function getClientList() {
         $currentuser = ctrl_users::GetUserDetail();
-		$clientlist = self::ListClients($currentuser['userid']);
-		if (!fs_director::CheckForEmptyValue($clientlist)){
-			return $clientlist;
-		} else {
-			return false;
-		}
+        $clientlist = self::ListClients($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($clientlist)) {
+            return $clientlist;
+        } else {
+            return false;
+        }
     }
 
     static function getDisabledClientList() {
         $currentuser = ctrl_users::GetUserDetail();
-		$disabledclientlist = self::ListDisabledClients($currentuser['userid']);
-		if (!fs_director::CheckForEmptyValue($disabledclientlist)){
-			return $disabledclientlist;
-		} else {
-			return false;
-		}
+        $disabledclientlist = self::ListDisabledClients($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($disabledclientlist)) {
+            return $disabledclientlist;
+        } else {
+            return false;
+        }
     }
 
     static function getCurrentClient() {
-		global $controller;
-		$urlvars = $controller->GetAllControllerRequests('URL');
-		$client = self::ListCurrentClient($urlvars['other']);
-		if (!fs_director::CheckForEmptyValue($client)){
-			return $client;
-		} else {
-			return false;
-		}
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        $client = self::ListCurrentClient($urlvars['other']);
+        if (!fs_director::CheckForEmptyValue($client)) {
+            return $client;
+        } else {
+            return false;
+        }
     }
 
     static function getGroupList() {
@@ -518,7 +515,7 @@ class module_controller {
 
     static function getCurrentGroupList() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail();
         return self::ListCurrentGroups($controller->GetControllerRequest('URL', 'other'), $currentuser['userid']);
     }
 
@@ -558,11 +555,11 @@ class module_controller {
     static function getisEditClient() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")){
-			return true;
-		} else {
-        	return false;
-		}
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static function getEditCurrentName() {
@@ -639,7 +636,7 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inUserName'])) {
-			return $formvars['inUserName'];
+            return $formvars['inUserName'];
         }
         return;
     }
@@ -648,7 +645,7 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inFullName'])) {
-			return $formvars['inFullName'];
+            return $formvars['inFullName'];
         }
         return;
     }
@@ -657,7 +654,7 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inEmailAddress'])) {
-			return $formvars['inEmailAddress'];
+            return $formvars['inEmailAddress'];
         }
         return;
     }
@@ -666,7 +663,7 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inAddress'])) {
-			return $formvars['inAddress'];
+            return $formvars['inAddress'];
         }
         return;
     }
@@ -675,7 +672,7 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inPostCode'])) {
-			return $formvars['inPostCode'];
+            return $formvars['inPostCode'];
         }
         return;
     }
@@ -684,11 +681,11 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inPhone'])) {
-			return $formvars['inPhone'];
+            return $formvars['inPhone'];
         }
         return;
     }
-	
+
     static function getModuleName() {
         $module_name = ui_module::GetModuleName();
         return $module_name;
