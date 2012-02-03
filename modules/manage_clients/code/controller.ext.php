@@ -223,7 +223,7 @@ class module_controller {
         $sql = $zdbh->prepare("UPDATE x_accounts SET 
 										ac_package_fk= " . $package . " ,
 										ac_enabled_in= " . $enabled . ",
-                                        ac_group_fk= " . $group . "
+                                        ac_group_fk=   " . $group . "
 										WHERE ac_id_pk=" . $clientid . "");
         $sql->execute();
 
@@ -283,11 +283,12 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
+		// Check for errors before we continue...
 		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $packageid, $groupid, $email))) {
 			return false;
 		}
 		runtime_hook::Execute('OnBeforeCreateClient');
-        // If the user submitted a 'new' request then we will simply add the client to the database...
+        // No errors found, so we can add the user to the database...
         $sql = $zdbh->prepare("INSERT INTO x_accounts (
 										ac_user_vc,
 										ac_pass_vc,
