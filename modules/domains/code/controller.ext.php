@@ -38,9 +38,13 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListDomains($uid) {
+    static function ListDomains($uid=0) {
         global $zdbh;
-        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
+        if($uid == 0){
+            $sql = "SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
+        } else {
+            $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
+        }
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);

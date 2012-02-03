@@ -18,6 +18,9 @@ class webservice extends ws_xmws {
     function GetAllDomains() {
         global $zdbh;
         $response_xml = "\n";
+        
+        
+        
         $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL AND vh_type_in=1");
         $sql->execute();
 
