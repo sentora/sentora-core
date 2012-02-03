@@ -18,7 +18,12 @@ class ctrl_users {
         if ($user == "") {
             $user = ctrl_auth::CurrentUserID();
         }
-        $rows = $zdbh->prepare("SELECT * FROM x_accounts LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) LEFT JOIN x_groups ON (x_profiles.ud_group_fk=x_groups.ug_id_pk) LEFT JOIN x_packages ON (x_profiles.ud_package_fk=x_packages.pk_id_pk) LEFT JOIN x_quotas ON (x_profiles.ud_package_fk=x_quotas.qt_package_fk) WHERE x_accounts.ac_id_pk = " . $user . "");
+        $rows = $zdbh->prepare("SELECT * FROM x_accounts 
+								LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) 
+								LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk) 
+								LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk) 
+								LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk) 
+								WHERE x_accounts.ac_id_pk= " . $user . "");
         $rows->execute();
         $dbvals = $rows->fetch();
         $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
@@ -46,6 +51,7 @@ class ctrl_users {
         $userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
         $userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
         $userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
+
 
         /*
           # Display the current logged in your details!
