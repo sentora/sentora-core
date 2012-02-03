@@ -18,34 +18,27 @@ class webservice extends ws_xmws {
     function GetAllDomains() {
         global $zdbh;
         $response_xml = "\n";
-        
-        
-        
-        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL AND vh_type_in=1");
-        $sql->execute();
-
-        while ($rowdomains = $sql->fetch()) {
-
-            if ($rowdomains['vh_custom_tx'] == "") {
+        $alldomains = module_controller::ListDomains();
+        foreach ($alldomains as $domain) {
+            if ($domain['vh_custom_tx'] == "") {
                 $customconf = "NULL";
             } else {
-                $customconf = $rowdomains['vh_custom_tx'];
+                $customconf = $domain['vh_custom_tx'];
             }
 
             $response_xml = $response_xml . ws_xmws::NewXMLContentSection('domain', array(
-                        'id' => $rowdomains['vh_id_pk'],
-                        'uid' => $rowdomains['vh_acc_fk'],
-                        'domain' => $rowdomains['vh_name_vc'],
-                        'homedirectory' => $rowdomains['vh_directory_vc'],
-                        'domaintype' => $rowdomains['vh_type_in'],
-                        'active' => $rowdomains['vh_active_in'],
-                        'suhosin' => $rowdomains['vh_suhosin_in'],
-                        'openbasedir' => $rowdomains['vh_obasedir_in'],
+                        'id' => $domain['vh_id_pk'],
+                        'uid' => $domain['vh_acc_fk'],
+                        'domain' => $domain['vh_name_vc'],
+                        'homedirectory' => $domain['vh_directory_vc'],
+                        'domaintype' => $domain['vh_type_in'],
+                        'active' => $domain['vh_active_in'],
+                        'suhosin' => $domain['vh_suhosin_in'],
+                        'openbasedir' => $domain['vh_obasedir_in'],
                         'customconfig' => $customconf,
-                        'datecreated' => $rowdomains['vh_created_ts'],
+                        'datecreated' => $domain['vh_created_ts'],
                     ));
         }
-
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', $response_xml);
