@@ -38,7 +38,6 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-
     static function ListDomains($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
@@ -47,92 +46,91 @@ class module_controller {
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
-             while ($rowdomains = $sql->fetch()) {
-                array_push($res, array( 'name' => $rowdomains['vh_name_vc'],
-										'directory' => $rowdomains['vh_directory_vc'],
-										'active' => $rowdomains['vh_active_in'],
-										'id' => $rowdomains['vh_id_pk']));
+            while ($rowdomains = $sql->fetch()) {
+                array_push($res, array('name' => $rowdomains['vh_name_vc'],
+                    'directory' => $rowdomains['vh_directory_vc'],
+                    'active' => $rowdomains['vh_active_in'],
+                    'id' => $rowdomains['vh_id_pk']));
             }
             return $res;
         } else {
             return false;
         }
     }
-	
-	static function ListDomainDirs($uid){
+
+    static function ListDomainDirs($uid) {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-		$res = array();
-	    $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html");
-	    $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/";
-	    if (!$handle) {
-			# Log an error as the folder cannot be opened...
-	    } else {
-	    	while ($file = @readdir($handle)) {
-	        	if ($file != "." && $file != ".." && $file != "_errorpages") {
-	            	if (is_dir($chkdir . $file)) {
-	                	array_push($res, array('domains' => $file));
-	                }
-	            }
-	        }
-	    closedir($handle);
-		}
-		return $res;	
-	}
+        $res = array();
+        $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html");
+        $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+        if (!$handle) {
+            # Log an error as the folder cannot be opened...
+        } else {
+            while ($file = @readdir($handle)) {
+                if ($file != "." && $file != ".." && $file != "_errorpages") {
+                    if (is_dir($chkdir . $file)) {
+                        array_push($res, array('domains' => $file));
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        return $res;
+    }
 
-
-	static function ExecuteDeleteDomain($id){
+    static function ExecuteDeleteDomain($id) {
         global $zdbh;
         $retval = FALSE;
-		runtime_hook::Execute('OnBeforeDeleteDomain');
+        runtime_hook::Execute('OnBeforeDeleteDomain');
         $sql = $zdbh->prepare("UPDATE x_vhosts 
 							   SET vh_deleted_ts=" . time() . " 
 							   WHERE vh_id_pk=" . $id . "");
         $sql->execute();
         $retval = TRUE;
-		runtime_hook::Execute('OnAfterDeleteDomain');
+        runtime_hook::Execute('OnAfterDeleteDomain');
         return $retval;
-	}
+    }
 
-	public function ExecuteAddDomain($uid, $domain, $destination, $autohome) {
+    public function ExecuteAddDomain($uid, $domain, $destination, $autohome) {
         global $zdbh;
         global $controller;
-		$retval = FALSE;
-		runtime_hook::Execute('OnBeforeAddDomain');
+        $retval = FALSE;
+        runtime_hook::Execute('OnBeforeAddDomain');
         $currentuser = ctrl_users::GetUserDetail($uid);
         $domain = strtolower(str_replace(' ', '', $domain));
         if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain))) {
             //** New Home Directory **//
             if ($autohome == 1) {
                 $destination = "/" . str_replace(".", "_", $domain);
-				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
-				fs_filehandler::CreateDirectory($vhost_path);
-			//** Existing Home Directory **//
-			} else {
-				$destination = "/" . $destination;
-				$vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
-			}
+                $vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+                fs_filehandler::CreateDirectory($vhost_path);
+                //** Existing Home Directory **//
+            } else {
+                $destination = "/" . $destination;
+                $vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+            }
             // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
-	        // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
-	        fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
-	        $errorpages = self::GetVHOption('static_dir') . "/errorpages/";
-	        if (is_dir($errorpages)) {
-	        	if ($handle = @opendir($errorpages)) {
-			        while (($file = @readdir($handle)) !== false) {
-				        if ($file != "." && $file != "..") {
-					        $page = explode(".", $file);
-					        if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))) {
-						        fs_filehandler::CopyFile($errorpages . $file, $vhost_path . '/_errorpages/' . $file);
-					        }
-				        }
-			        }
-		        closedir($handle);
-		        }
-	        }
-	        // Lets copy the default welcome page across...
-	        if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
-	        fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
-	        }
+            // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
+            fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
+            $errorpages = self::GetVHOption('static_dir') . "/errorpages/";
+            if (is_dir($errorpages)) {
+                if ($handle = @opendir($errorpages)) {
+                    while (($file = @readdir($handle)) !== false) {
+                        if ($file != "." && $file != "..") {
+                            $page = explode(".", $file);
+                            if (!fs_director::CheckForEmptyValue(self::CheckErrorDocument($page[0]))) {
+                                fs_filehandler::CopyFile($errorpages . $file, $vhost_path . '/_errorpages/' . $file);
+                            }
+                        }
+                    }
+                    closedir($handle);
+                }
+            }
+            // Lets copy the default welcome page across...
+            if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
+                fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
+            }
             // Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                 if (self::GetVHOption('disable_hostsen') == 'false') {
@@ -153,16 +151,16 @@ class module_controller {
 														 1,
 														 " . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->execute();
-        	$retval = TRUE;
-			runtime_hook::Execute('OnAfterAddDomain');
-        	return $retval;
+            $retval = TRUE;
+            runtime_hook::Execute('OnAfterAddDomain');
+            return $retval;
         }
     }
 
     static function CheckCreateForErrors($domain) {
         global $zdbh;
         // Check for spaces and remove if found...
-		$domain = strtolower(str_replace(' ', '', $domain));
+        $domain = strtolower(str_replace(' ', '', $domain));
         // Check to make sure the domain is not blank before we go any further...
         if ($domain == '') {
             self::$blank = TRUE;
@@ -218,11 +216,11 @@ class module_controller {
 
     static function CheckErrorDocument($error) {
         $errordocs = array(100, 101, 102, 200, 201, 202, 203, 204, 205, 206, 207,
-				           300, 301, 302, 303, 304, 305, 306, 307, 400, 401, 402,
-				           403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
-				           414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424,
-				           425, 426, 500, 501, 502, 503, 504, 505, 506, 507, 508,
-				           509, 510);
+            300, 301, 302, 303, 304, 305, 306, 307, 400, 401, 402,
+            403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
+            414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424,
+            425, 426, 500, 501, 502, 503, 504, 505, 506, 507, 508,
+            509, 510);
         if (in_array($error, $errordocs)) {
             return true;
         } else {
@@ -268,87 +266,86 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-	 
     static function getDomainList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		$res = array();
-		$domains = self::ListDomains($currentuser['userid']);
-		if (!fs_director::CheckForEmptyValue($domains)){
-		foreach ($domains as $row) {
-		$status = self::getDomainStatusHTML($row['active'], $row['id']);
-             array_push($res, array('name' => $row['name'],
-									'directory' => $row['directory'],
-									'active' => $row['active'],
-									'status' => $status,
-									'id' => $row['id']));
-		}
-		return $res;
-		} else {
-		return false;
-		}
+        $res = array();
+        $domains = self::ListDomains($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($domains)) {
+            foreach ($domains as $row) {
+                $status = self::getDomainStatusHTML($row['active'], $row['id']);
+                array_push($res, array('name' => $row['name'],
+                    'directory' => $row['directory'],
+                    'active' => $row['active'],
+                    'status' => $status,
+                    'id' => $row['id']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
     }
-	
+
     static function getCreateDomain() {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		if ($currentuser['domainquota'] > fs_director::GetQuotaUsages('domains', $currentuser['userid'])){
-			return true;
-		} else {
-			return false;
-		}
+        if ($currentuser['domainquota'] > fs_director::GetQuotaUsages('domains', $currentuser['userid'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static function getDomainDirsList() {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		$domaindirectories = self::ListDomainDirs($currentuser['userid']);
-		if (!fs_director::CheckForEmptyValue($domaindirectories)){
-			return $domaindirectories;
-		} else {
-			return false;
-		}
+        $domaindirectories = self::ListDomainDirs($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($domaindirectories)) {
+            return $domaindirectories;
+        } else {
+            return false;
+        }
     }
 
     static function doCreateDomain() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$formvars = $controller->GetAllControllerRequests('FORM');
-		if (self::ExecuteAddDomain($currentuser['userid'], $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])){
-			self::$ok = TRUE;
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteAddDomain($currentuser['userid'], $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])) {
+            self::$ok = TRUE;
             return true;
-		} else {
-        	return false;
-		}
+        } else {
+            return false;
+        }
         return;
     }
 
     static function doDeleteDomain() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$formvars = $controller->GetAllControllerRequests('FORM');
-            if (isset($formvars['inDelete'])) {
-				if (self::ExecuteDeleteDomain($formvars['inDelete'])){
-					self::$ok = TRUE;
-					return true;
-				}
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (isset($formvars['inDelete'])) {
+            if (self::ExecuteDeleteDomain($formvars['inDelete'])) {
+                self::$ok = TRUE;
+                return true;
             }
-		return false;
+        }
+        return false;
     }
 
     static function doConfirmDeleteDomain() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$formvars = $controller->GetAllControllerRequests('FORM');
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListDomains($currentuser['userid']) as $row) {
             if (isset($formvars['inDelete_' . $row['id'] . ''])) {
                 header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&id=" . $row['id'] . "&domain=" . $row['name'] . "");
                 exit;
             }
-		}
-		return false;
+        }
+        return false;
     }
 
     static function getisDeleteDomain() {
@@ -396,21 +393,21 @@ class module_controller {
     static function getDomainUsagepChart() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $line  = "";
+        $line = "";
         $total = $currentuser['domainquota'];
-        $used  = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
-        $free  = $total - $used;
+        $used = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
+        $free = $total - $used;
         $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
         return $line;
     }
-	
+
     static function getDomainStatusHTML($int, $id) {
-		global $controller;
-    		if ($int == 1) {
-        		return "<td><font color=\"green\">".ui_language::translate("Live")."</font></td><td></td>";
-        	} else {
-            	return "<td><font color=\"orange\">".ui_language::translate("Pending")."</font></td><td><a href=\"#\" class=\"help_small\" id=\"help_small_" . $id . "_a\" title=\"".ui_language::translate("Your domain will become active at the next scheduled update.  This can take up to one hour.")."\"><img src=\"/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/help_small.png\" border=\"0\" /></a>";
-        	}
+        global $controller;
+        if ($int == 1) {
+            return "<td><font color=\"green\">" . ui_language::translate("Live") . "</font></td><td></td>";
+        } else {
+            return "<td><font color=\"orange\">" . ui_language::translate("Pending") . "</font></td><td><a href=\"#\" class=\"help_small\" id=\"help_small_" . $id . "_a\" title=\"" . ui_language::translate("Your domain will become active at the next scheduled update.  This can take up to one hour.") . "\"><img src=\"/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/help_small.png\" border=\"0\" /></a>";
+        }
     }
 
     static function getResult() {
@@ -441,7 +438,6 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-
 }
 
 ?>

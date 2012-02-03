@@ -46,7 +46,6 @@ class webservice extends ws_xmws {
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', $response_xml);
-
         return $dataobject->getDataObject();
     }
 
@@ -90,7 +89,17 @@ class webservice extends ws_xmws {
      * @return type 
      */
     function CreateDomain() {
-        
+        $request_data = $this->RawXMWSToArray($this->wsdata);
+        $contenttags = $this->XMLDataToArray($request_data['content']);
+        $dataobject = new runtime_dataobject();
+        $dataobject->addItemValue('response', '');
+
+        if (module_controller::ExecuteAddDomain($contenttags['uid'], $contenttags['domain'], $contenttags['destination'], $contenttags['autohome'])) {
+            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domain', $contenttags['domain']) . ws_xmws::NewXMLTag('created', 'true'));
+        } else {
+            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domain', $contenttags['domain']) . ws_xmws::NewXMLTag('created', 'false'));
+        }
+        return $dataobject->getDataObject();
     }
 
     /**
@@ -103,7 +112,7 @@ class webservice extends ws_xmws {
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
 
-        if (module_controller::DeleteVhost($contenttags['domainid'])) {
+        if (module_controller::ExecuteDeleteDomain($contenttags['domainid'])) {
             $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domainid', $contenttags['domainid']) . ws_xmws::NewXMLTag('deleted', 'true'));
         } else {
             $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domainid', $contenttags['domainid']) . ws_xmws::NewXMLTag('deleted', 'false'));
