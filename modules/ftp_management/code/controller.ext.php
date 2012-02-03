@@ -30,9 +30,8 @@ class module_controller {
 	static $error;
 	static $alreadyexists;
 	static $blank;
+	static $badname;
 	static $ok;
-	static $edit;
-	static $ftpid;	
 
     /**
      * The 'worker' methods.
@@ -85,7 +84,7 @@ class module_controller {
 	    $handle = @opendir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "");
 	    $chkdir = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/";
 	    if (!$handle) {
-			# Log an error as the folder cannot be opened...
+			// Log an error as the folder cannot be opened...
 	    } else {
 	    	while ($file = @readdir($handle)) {
 	        	if ($file != "." && $file != ".." && $file != "_errorpages") {
@@ -117,10 +116,10 @@ class module_controller {
 		$currentuser = ctrl_users::GetUserDetail($uid);
 		runtime_hook::Execute('OnBeforeCreateFTPAccount');
 		if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))){
-    		# Check to see if its a new home directory or use a current one...
+    		// Check to see if its a new home directory or use a current one...
 	    	if ($home == 1) {
 		        $homedirectoy_to_use = "/" . str_replace(".", "_", $username);
-		        # Create the new home directory... (If it doesnt already exist.)		
+		        // Create the new home directory... (If it doesnt already exist.)		
 		        if (!file_exists(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/")) {
 		            @mkdir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 777);
 		            @chmod(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 0777);
@@ -151,12 +150,17 @@ class module_controller {
 		global $zdbh;
 		$retval = FALSE;
 		$currentuser = ctrl_users::GetUserDetail();
-    	# Check to make sure the username and password is not blank before we go any further...
+    	// Check to make sure the username and password is not blank before we go any further...
     	if ($username == '' || $password == '') {
 			self::$blank = TRUE;
 			$retval = TRUE;
     	}
-	    # Check to make sure the cron is not a duplicate...
+		// Check for invalid username
+        if (!self::IsValidUserName($username)) {
+			self::$badname = true;
+            $retval = TRUE;
+        }
+	    // Check to make sure the cron is not a duplicate...
 			$sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc='" . $username . "' AND ft_deleted_ts IS NULL";
 			if ($numrows = $zdbh->query($sql)) {
  				if ($numrows->fetchColumn() <> 0) {	
@@ -166,6 +170,13 @@ class module_controller {
 			}
 		return $retval;
    	}
+
+    static function IsValidUserName($username) {
+        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
+            return false;
+        }
+        return true;
+    }
 
 	static function ExecuteDeleteFTP($ft_id_pk){
 		global $zdbh;
@@ -323,6 +334,9 @@ class module_controller {
 		if (!fs_director::CheckForEmptyValue(self::$error)){
 			return ui_sysmessage::shout(ui_language::translate("There was an error updating your FTP accounts."), "zannounceerror");
 		}
+        if (!fs_director::CheckForEmptyValue(self::$badname)) {
+            return ui_sysmessage::shout(ui_language::translate("Your ftp account name is not valid. Please enter a valid ftp account name."), "zannounceerror");
+        }
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
 			return ui_sysmessage::shout(ui_language::translate("FTP accounts updated successfully."), "zannounceok");
 		}
