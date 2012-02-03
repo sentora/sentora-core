@@ -627,6 +627,60 @@ class module_controller {
             return "";
         }
     }
+
+    static function getFormName() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (isset($formvars['inUserName'])) {
+			return $formvars['inUserName'];
+        }
+        return;
+    }
+
+    static function getFormFullName() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (isset($formvars['inFullName'])) {
+			return $formvars['inFullName'];
+        }
+        return;
+    }
+
+    static function getFormEmail() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (isset($formvars['inEmailAddress'])) {
+			return $formvars['inEmailAddress'];
+        }
+        return;
+    }
+
+    static function getFormAddress() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (isset($formvars['inAddress'])) {
+			return $formvars['inAddress'];
+        }
+        return;
+    }
+
+    static function getFormPost() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (isset($formvars['inPostCode'])) {
+			return $formvars['inPostCode'];
+        }
+        return;
+    }
+
+    static function getFormPhone() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (isset($formvars['inPhone'])) {
+			return $formvars['inPhone'];
+        }
+        return;
+    }
 	
     static function getModuleName() {
         $module_name = ui_module::GetModuleName();

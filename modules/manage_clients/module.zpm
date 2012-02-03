@@ -170,7 +170,7 @@
         	<table class="zform">
 		        <tr>
 			        <th><: Username :>:</th>
-			        <td><input type="text" name="inUserName" id="inUserName" maxlength="10" /></td>
+			        <td><input type="text" name="inUserName" id="inUserName" maxlength="10" value="<@ FormName @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Password :>:</th>
@@ -200,23 +200,23 @@
 		        </tr>
 		        <tr>
 			        <th><: Full Name :>:</th>
-			        <td><input type="text" name="inFullName" id="inFullName" /></td>
+			        <td><input type="text" name="inFullName" id="inFullName" value="<@ FormFullName @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Email Address :>:</th>
-			        <td><input type="text" name="inEmailAddress" id="inEmailAddress" /></td>
+			        <td><input type="text" name="inEmailAddress" id="inEmailAddress" value="<@ FormEmail @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Postal Address :>:</th>
-			        <td><textarea name="inAddress" id="inAddress" cols="45" rows="5"></textarea></td>
+			        <td><textarea name="inAddress" id="inAddress" cols="45" rows="5"><@ FormAddress @></textarea></td>
 		        </tr>
 		        <tr>
 			        <th><: Postal Code :>:</th>
-			        <td><input name="inPostCode" type="text" id="inPostCode" value="" size="20" maxlength="10" /></td>
+			        <td><input name="inPostCode" type="text" id="inPostCode" size="20" maxlength="10" value="<@ FormPost @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Phone Number :>:</th>
-			        <td><input name="inPhone" type="text" id="inPhone" value="" size="20" maxlength="50" /></td>
+			        <td><input name="inPhone" type="text" id="inPhone" size="20" maxlength="50" value="<@ FormPhone @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Send welcome email? :></th>
