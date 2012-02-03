@@ -54,22 +54,25 @@ class webservice extends ws_xmws {
         global $zdbh;
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $response_xml = "\n";
-        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $request_data['content'] . " AND vh_deleted_ts IS NULL AND vh_type_in=1");
-        $sql->execute();
+        $alldomains = module_controller::ListDomains($request_data['content']);
+        foreach ($alldomains as $domain) {
+            if ($domain['vh_custom_tx'] == "") {
+                $customconf = "NULL";
+            } else {
+                $customconf = $domain['vh_custom_tx'];
+            }
 
-        while ($rowdomains = $sql->fetch()) {
             $response_xml = $response_xml . ws_xmws::NewXMLContentSection('domain', array(
-                        'id' => $rowdomains['vh_id_pk'],
-                        'uid' => $rowdomains['vh_acc_fk'],
-                        'domain' => $rowdomains['vh_name_vc'],
-                        'homedirectory' => $rowdomains['vh_directory_vc'],
-                        'domaintype' => $rowdomains['vh_type_in'],
-                        'active' => $rowdomains['vh_active_in'],
-                        'suhosin' => $rowdomains['vh_suhosin_in'],
-                        'openbasedir' => $rowdomains['vh_obasedir_in'],
-                        'customconfig' => $rowdomains['vh_custom_tx'],
-                        'datecreated' => $rowdomains['vh_created_ts'],
-                        'datedeleted' => $rowdomains['vh_deleted_ts'],
+                        'id' => $domain['vh_id_pk'],
+                        'uid' => $domain['vh_acc_fk'],
+                        'domain' => $domain['vh_name_vc'],
+                        'homedirectory' => $domain['vh_directory_vc'],
+                        'domaintype' => $domain['vh_type_in'],
+                        'active' => $domain['vh_active_in'],
+                        'suhosin' => $domain['vh_suhosin_in'],
+                        'openbasedir' => $domain['vh_obasedir_in'],
+                        'customconfig' => $customconf,
+                        'datecreated' => $domain['vh_created_ts'],
                     ));
         }
 
