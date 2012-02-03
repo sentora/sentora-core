@@ -245,16 +245,20 @@ class module_controller {
     } 
 		 	 
     static function EnableClient($userid) {
+		runtime_hook::Execute('OnBeforeEnableClient');
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=1 WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
+		runtime_hook::Execute('OnAfterEnableClient');
         return true;
     }
 
     static function DisableClient($userid) {
+		runtime_hook::Execute('OnBeforeDisableClient');
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=0 WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
+		runtime_hook::Execute('OnAfterDisableClient');
         return true;
     }
 
@@ -282,6 +286,7 @@ class module_controller {
 		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $packageid, $groupid, $email))) {
 			return false;
 		}
+		runtime_hook::Execute('OnBeforeCreateClient');
         // If the user submitted a 'new' request then we will simply add the client to the database...
         $sql = $zdbh->prepare("INSERT INTO x_accounts (
 										ac_user_vc,
@@ -321,6 +326,7 @@ class module_controller {
         // Now we add an entry into the bandwidth table, for the user for the upcoming month.
         $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
         $sql->execute();
+		runtime_hook::Execute('OnAfterCreateClient');
 
         // Create the MySQL account for the user...
         // Now we create the user's home directory if it doesnt already exsist...
