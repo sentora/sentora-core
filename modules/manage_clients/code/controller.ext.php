@@ -43,6 +43,7 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
+	 
     static function ListClients($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
@@ -416,6 +417,7 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
+	 
     static function doCreateClient() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();

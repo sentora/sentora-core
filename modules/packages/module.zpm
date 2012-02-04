@@ -1,14 +1,205 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+<@ Result @>
+	
+	<% if isDeletePackage %>
+	<div class="zform_wrapper">
+		<h2><: Delete package :>: <@ EditCurrentPackageName @> ?</h2>
+		<: Please confirm and choose a package to move any existing clients to before the selected package is deleted. :>
+		<p>&nbsp;</p>
+		<form action="./?module=packages&action=DeletePackage" method="post">
+		<table class="zform">
+			<tr>
+				<th><: Package to delete :>:</th>
+				<td><@ EditCurrentPackageName @></td>
+			</tr>
+			<tr>
+				<th><: Move current package members to :>:</th>
+				<td>
+				<select name="inMovePackage" id="inMovePackage">
+				<% loop PackageList %>
+				<option value="<& packageid &>"><& packagename &></option>"
+				<% endloop %>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2" align="right">
+				<input type="hidden" name="inPackageID" value="<@ EditCurrentPackageID @>"/>
+				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
+				</th>
+			</tr>
+		</table>
+		</form>
+	</div>
+	<% endif %>
 
-<div class="zgrid_wrapper">
-<@ CurrentPackages @>
-</div>
+	<% if isEditPackage %>
+	<div class="zgrid_wrapper">
+		<h2><: Edit package :>: <@ EditCurrentPackageName @></h2>
+    	<form action="./?module=packages&action=UpdatePackage" method="post">
+        	<table class="zform">
+    		    <tr>
+			        <th><: Package name :>:</th>
+			        <td><input type="text" name="inPackageName" id="inPackageName" value="<@ EditCurrentPackageName @>" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Enable PHP :>:</th>
+			        <td><input type="checkbox" name="inEnablePHP" id="inEnablePHP" value="1" <@ PHPChecked @>/></td>
+		        </tr>
+		        <tr>
+			        <th><: Enable CGI :>:</th>
+			        <td><input type="checkbox" name="inEnableCGI" id="inEnableCGI" value="1" <@ CGIChecked @>/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Domains :>:</th>
+			        <td><input name="inNoDomains" type="text" id="inNoDomains" size="5" maxlength="3" value="<@ EditCurrentDomains @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Sub-domains :>:</th>
+			        <td><input name="inNoSubDomains" type="text" id="inNoSubDomains" size="5" maxlength="3" value="<@ EditCurrentSubDomains @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Parked domains :>:</th>
+			        <td><input name="inNoParkedDomains" type="text" id="inNoParkedDomains" size="5" maxlength="3" value="<@ EditCurrentParkedDomains @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Mailboxes :>:</th>
+			        <td><input name="inNoMailboxes" type="text" id="inNoMailboxes" size="5" maxlength="3" value="<@ EditCurrentMailboxes @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Forwarders :>:</th>
+			        <td><input name="inNoFowarders" type="text" id="inNoFowarders" size="5" maxlength="3" value="<@ EditCurrentForwarders @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Dist Lists :>:</th>
+			        <td><input name="inNoDistLists" type="text" id="inNoDistLists" size="5" maxlength="3" value="<@ EditCurrentDistLists @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. FTP accounts :>:</th>
+			        <td><input name="inNoFTPAccounts" type="text" id="inNoFTPAccounts" size="5" maxlength="3" value="<@ EditCurrentFTP @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: No. MySQL databases :>:</th>
+			        <td><input name="inNoMySQL" type="text" id="inNoMySQL" size="5" maxlength="3" value="<@ EditCurrentMySQL @>"/></td>
+		        </tr>
+		        <tr>
+			        <th><: Disk space quota :>:</th>
+			        <td><input name="inDiskQuota" type="text" id="inDiskQuota" size="10" maxlength="10" value="<@ EditCurrentDisk @>"/> MB (1000MB = 1GB)</td>
+		        </tr>
+		        <tr>
+			        <th><: Monthly bandwidth quota :>:</th>
+			        <td><input name="inBandQuota" type="text" id="inBandQuota" size="10" maxlength="10" value="<@ EditCurrentBandWidth @>"/> MB (1000MB = 1GB)</td>
+		        </tr>
+		        <tr>
+			        <th></th>
+					<td>
+					<input type="hidden" name="inPackageID" value="<@ EditCurrentPackageID @>"/>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="inSave"><: Save :></button>
+					<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
+					</td>
+		        </tr>
+        	</table>
+    	</form>
+	</div>
+	<% endloop %>
+	
+	<div class="zgrid_wrapper">
+		<% if PackageList %>
+		<h2>Current packages</h2>
+	    <form action="./?module=packages&action=EditPackage" method="post">
+	       	<table class="zgrid">
+		        <tr>
+			        <th scope="row"><: Package name :></th>
+	        		<th><: Created :></th>
+			        <th><: No. of clients :></th>
+			        <th>&nbsp;</th>
+		        </tr> 
+				<% loop PackageList %> 
+	            <tr>
+		            <td scope="row"><& packagename &></td>
+		            <td><& created &></td>
+		            <td><& clients &></td>
+		            <td>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& packageid &>" value="<& packageid &>"><: Edit :></button>
+	            	<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& packageid &>" value="<& packageid &>"><: Delete :></button>
+	        	    </td>
+	            </tr>
+				<% endloop %>
+	        </table>
+	    	</form>
+		<% else %>
+		<: You have no packages at this time. Create a package using the form below. :>
+		<% endif %>
+	</div>
 
-<div class="zform_wrapper">
-<@ PackageAction @>
-</div>
+	<% if isCreatePackage %>
+	<div class="zform_wrapper">
+		<h2><: Create a new package :></h2>
+    	<form action="./?module=packages&action=CreatePackage" method="post">
+    	    <table class="zform">
+		        <tr>
+			        <th><: Package name :>:</th>
+			        <td><input type="text" name="inPackageName" id="inPackageName" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Enable PHP :>:</th>
+			        <td><input type="checkbox" name="inEnablePHP" id="inEnablePHP" value="1" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Enable CGI :>:</th>
+			        <td><input type="checkbox" name="inEnableCGI" id="inEnableCGI" value="1" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Domains :>:</th>
+			        <td><input name="inNoDomains" type="text" id="inNoDomains" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Sub-domains :>:</th>
+			        <td><input name="inNoSubDomains" type="text" id="inNoSubDomains" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Parked domains :>:</th>
+			        <td><input name="inNoParkedDomains" type="text" id="inNoParkedDomains" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Mailboxes :>:</th>
+			        <td><input name="inNoMailboxes" type="text" id="inNoMailboxes" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Forwarders :>:</th>
+			        <td><input name="inNoFowarders" type="text" id="inNoFowarders" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. Dist Lists :>:</th>
+			        <td><input name="inNoDistLists" type="text" id="inNoDistLists" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. FTP accounts :>:</th>
+			        <td><input name="inNoFTPAccounts" type="text" id="inNoFTPAccounts" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: No. MySQL databases :>:</th>
+			        <td><input name="inNoMySQL" type="text" id="inNoMySQL" value="0" size="5" maxlength="3" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Disk space quota :>:</th>
+			        <td><input name="inDiskQuota" type="text" id="inDiskQuota" value="0" size="10" maxlength="10" /> MB (1000MB = 1GB)</td>
+		        </tr>
+		        <tr>
+			        <th><: Monthly bandwidth quota :>:</th>
+			        <td><input name="inBandQuota" type="text" id="inBandQuota" value="0" size="10" maxlength="10" /> MB (1000MB = 1GB)</td>
+		        </tr>
+		        <tr>
+			        <th></th>
+					<td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="inSave"><: Save :></button></td>
+		        </tr>
+	        </table>
+    	</form>
+	</div>
+	<% endif %>
 
 </div>

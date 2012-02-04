@@ -35,378 +35,449 @@ class module_controller {
 	static $edit;
 	static $package_to_edit;
 
-	static function getPackageAction(){
-		global $controller;
-		if (!fs_director::CheckForEmptyValue(self::$edit)){
-			$display = self::DisplayEditPackage();
-		} else {
-			$display = self::DisplayNewPackage();
-		}
-		return $display;
+    /**
+     * The 'worker' methods.
+     */
+
+    static function ListPackages($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowpackages = $sql->fetch()) {
+				$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . "")->fetchColumn(); 
+	            $totalclients = count($numrows);
+                array_push($res, array( 'packageid'   => $rowpackages['pk_id_pk'],
+										'created'     => date(ctrl_options::GetOption('zpanel_df'), $rowpackages['pk_created_ts']),
+										'clients'     => $totalclients,
+                    					'packagename' => ui_language::translate($rowpackages['pk_name_vc'])));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
+    static function ListCurrentPackage($id) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_packages 
+				LEFT JOIN x_quotas  ON (x_packages.pk_id_pk=x_quotas.qt_package_fk) 
+				WHERE pk_id_pk=" . $id . " AND pk_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowpackages = $sql->fetch()) {
+				$PHPChecked = "";
+				$CGIChecked = "";
+				if ($rowpackages['pk_enablephp_in'] <> 0) {
+					$PHPChecked = "CHECKED";
+				} 
+				if ($rowpackages['pk_enablecgi_in']){
+					$CGIChecked = "CHECKED";
+				}
+                array_push($res, array( 'packageid'   	=> $rowpackages['pk_id_pk'],
+										'enablePHP'     => $rowpackages['pk_enablephp_in'],
+										'enableCGI'     => $rowpackages['pk_enablecgi_in'],
+										'PHPChecked'    => $PHPChecked,
+										'CGIChecked'    => $CGIChecked,
+										'domains'     	=> $rowpackages['qt_domains_in'],
+										'subdomains'    => $rowpackages['qt_subdomains_in'],
+										'parkeddomains' => $rowpackages['qt_parkeddomains_in'],
+										'fowarders'     => $rowpackages['qt_fowarders_in'],
+										'distlists'     => $rowpackages['qt_distlists_in'],
+										'ftpaccounts'   => $rowpackages['qt_ftpaccounts_in'],
+										'mysql'     	=> $rowpackages['qt_mysql_in'],
+										'diskquota'     => ($rowpackages['qt_diskspace_bi'] / 1024000),
+										'bandquota'     => ($rowpackages['qt_bandwidth_bi'] / 1024000),
+										'mailboxes'     => $rowpackages['qt_mailboxes_in'],
+                    					'packagename' 	=> $rowpackages['pk_name_vc']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+	
+	static function ExecuteDeletePackage($pk_id_pk, $mpk_id_pk){
+		global $zdbh;
+		    runtime_hook::Execute('OnBeforeDeletePackage');
+			$sql = $zdbh->prepare("
+            UPDATE x_accounts
+            SET ac_package_fk = " . $mpk_id_pk . "
+            WHERE ac_package_fk = " . $pk_id_pk . "");
+        $sql->execute();
+			$sql = $zdbh->prepare("
+            UPDATE x_profiles
+            SET ud_package_fk = " . $mpk_id_pk . "
+            WHERE ud_package_fk = " . $pk_id_pk . "");
+        $sql->execute();
+		$sql = $zdbh->prepare("
+			UPDATE x_packages 
+			SET pk_deleted_ts = '" . time() . "' 
+			WHERE pk_id_pk = '".$pk_id_pk."'");
+		$sql->execute();
+		runtime_hook::Execute('OnAfterDeletePackage');
+	}
+
+	static function ExecuteCreatePackage($uid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota){
+		global $zdbh;
+		$packagename = str_replace(' ', '', $packagename);
+        // Check for errors before we continue...
+        if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($packagename, $uid))) {
+            return false;
+        }
+		runtime_hook::Execute('OnBeforeCreatePackage');
+		# If the user submitted a 'new' request then we will simply add the package to the database...
+	    $sql = $zdbh->prepare("INSERT INTO x_packages (pk_reseller_fk,
+										pk_name_vc,
+										pk_enablephp_in,
+										pk_enablecgi_in,
+										pk_created_ts) VALUES (
+										" . $uid . ",
+										'" . $packagename . "',
+										" . fs_director::GetCheckboxValue($EnablePHP) . ",
+										" . fs_director::GetCheckboxValue($EnableCGI) . ",
+										" . time() . ");");
+	    $sql->execute();
+	    # Now lets pull back the package ID so we can use it in the other tables we are about to manipulate.
+		$package = $zdbh->query("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " ORDER BY pk_id_pk DESC")->Fetch();
+	    $sql = $zdbh->prepare("INSERT INTO x_quotas (qt_package_fk,
+										qt_domains_in,
+										qt_subdomains_in,
+										qt_parkeddomains_in,
+										qt_mailboxes_in,
+										qt_fowarders_in,
+										qt_distlists_in,
+										qt_ftpaccounts_in,
+										qt_mysql_in,
+										qt_diskspace_bi,
+										qt_bandwidth_bi) VALUES (
+										" . $package['pk_id_pk'] . ",
+										" . $Domains . ",
+										" . $SubDomains . ",
+										" . $ParkedDomains . ",
+										" . $Mailboxes . ",
+										" . $Fowarders . ",
+										" . $DistLists . ",
+										" . $FTPAccounts . ",
+										" . $MySQL . ",
+										" . ($DiskQuota * 1024000) . ",
+										" . ($BandQuota * 1024000) . ")");
+		$sql->execute();
+		runtime_hook::Execute('OnAfterCreatePackage');				  
+		return true;
+	}
+
+	static function ExecuteUpdatePackage($uid, $pid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota){
+		global $zdbh;
+		$packagename = str_replace(' ', '', $packagename);
+        // Check for errors before we continue...
+        if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($packagename, $uid, $pid))) {
+            return false;
+        }
+		runtime_hook::Execute('OnBeforeUpdatePackage');
+		$sql = $zdbh->prepare("UPDATE x_packages SET pk_name_vc='" . $packagename . "',
+								pk_enablephp_in =" . fs_director::GetCheckboxValue($EnablePHP) . ",
+								pk_enablecgi_in =" . fs_director::GetCheckboxValue($EnableCGI) . " 
+								WHERE pk_id_pk  =" . $pid . "");
+		$sql->execute();
+		$sql = $zdbh->prepare("UPDATE x_quotas SET qt_domains_in = " . $Domains . ", 
+								qt_parkeddomains_in =" . $ParkedDomains . ",
+								qt_ftpaccounts_in   =" . $FTPAccounts . ",
+								qt_subdomains_in    =" . $SubDomains . ",
+								qt_mailboxes_in     =" . $Mailboxes . ",
+								qt_fowarders_in     =" . $Fowarders . ",
+								qt_distlists_in     =" . $DistLists . ",
+								qt_diskspace_bi     =" . ($DiskQuota * 1024000) . ",
+								qt_bandwidth_bi     =" . ($BandQuota * 1024000) . " ,
+								qt_mysql_in         =" . $MySQL . "
+								WHERE qt_package_fk =" . $pid . "");						
+		$sql->execute();
+		runtime_hook::Execute('OnAfterUpdatePackage');				  
+		return true;
 	}
 	
-	
-    static function getCurrentPackages() {
-		$display = self::DisplayCurrentPackages();
-		return $display;		
-    }
-
-
-
-	#Begin Display Methods
-    static function DisplayCurrentPackages() {
+	static function CheckCreateForErrors($packagename, $uid, $pid=0) {
 		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$totalpackages = 1;
-		$line  = "";
-		$line .= "<h2>Current packages</h2>";
-		$numrows = $zdbh->query("SELECT COUNT(*) FROM x_packages WHERE pk_reseller_fk=" . $currentuser['userid'] . " AND pk_deleted_ts IS NULL")->fetchColumn(); 
-	    $totalpackages = count($numrows); 
-		if ($totalpackages <> 0) {
-	    	$line .= "<form action=\"./?module=packages&action=EditPackage\" method=\"post\">";
-	        $line .= "<table class=\"zgrid\">";
-	        $line .= "<tr>";
-	        $line .= "<th scope=\"row\">Package name</th>";
-	        $line .= "<th>Created</th>";
-	        $line .= "<th>No. of clients</th>";
-	        $line .= "<th>&nbsp;</th>";
-	        $line .= "</tr>";
-			$sql = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $currentuser['userid'] . " AND pk_deleted_ts IS NULL");   
-			$sql->execute();
-			while ($rowpackages = $sql->fetch()) {
-				$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . "")->fetchColumn(); 
-	            $totalclients = count($numrows);   
-	            $line .= "<tr>";
-	            $line .= "<td scope=\"row\">" . $rowpackages['pk_name_vc'] . "</td>";
-	            $line .= "<td>" . date(ctrl_options::GetOption('zpanel_df'), $rowpackages['pk_created_ts']) . "</td>";
-	            $line .= "<td>" . $totalclients . "</td>";
-	            $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inEdit_" . $rowpackages['pk_id_pk'] . "\" value=\"1\">Edit</button>";
-	        	if ($rowpackages['pk_id_pk'] != 1) {
-	            	$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDelete_" . $rowpackages['pk_id_pk'] . "\" value=\"1\">Delete</button>";
-    	     	}
-        	    $line .= "</td>";
-	            $line .= "</tr>";
-	     	}
-	        $line .= "</table>";
-	        $line .= "<input type=\"hidden\" name=\"inReturn\" value=\"\" /><input type=\"hidden\" name=\"inAction\" value=\"delete\" />";
-	    	$line .= "</form>";
-		} else {
-		$line .= "You have no packages at this time";
-		}
-		
-		return $line;	
-    }
-
-
-    static function DisplayNewPackage() {
-		global $zdbh;
-        global $controller;
-		$line  = "";
-		$line .= "<h2>Create a new package</h2>";
-    	$line .= "<form action=\"./?module=packages&action=CreatePackage\" method=\"post\">";
-        $line .= "<table class=\"zform\">";
-        $line .= "<tr>";
-        $line .= "<th>Package name:</th>";
-        $line .= "<td><input type=\"text\" name=\"inPackageName\" id=\"inPackageName\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Enable PHP:</th>";
-        $line .= "<td><input type=\"checkbox\" name=\"inEnablePHP\" id=\"inEnablePHP\" value=\"1\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Enable CGI:</th>";
-        $line .= "<td><input type=\"checkbox\" name=\"inEnableCGI\" id=\"inEnableCGI\" value=\"1\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Domains:</th>";
-        $line .= "<td><input name=\"inNoDomains\" type=\"text\" id=\"inNoDomains\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Sub-domains:</th>";
-        $line .= "<td><input name=\"inNoSubDomains\" type=\"text\" id=\"inNoSubDomains\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Parked domains:</th>";
-        $line .= "<td><input name=\"inNoParkedDomains\" type=\"text\" id=\"inNoParkedDomains\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Mailboxes:</th>";
-        $line .= "<td><input name=\"inNoMailboxes\" type=\"text\" id=\"inNoMailboxes\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Forwarders:</th>";
-        $line .= "<td><input name=\"inNoFowarders\" type=\"text\" id=\"inNoFowarders\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Dist Lists:</th>";
-        $line .= "<td><input name=\"inNoDistLists\" type=\"text\" id=\"inNoDistLists\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. FTP accounts:</th>";
-        $line .= "<td><input name=\"inNoFTPAccounts\" type=\"text\" id=\"inNoFTPAccounts\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. MySQL databases:</th>";
-        $line .= "<td><input name=\"inNoMySQL\" type=\"text\" id=\"inNoMySQL\" value=\"0\" size=\"5\" maxlength=\"3\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Disk space quota:</th>";
-        $line .= "<td><input name=\"inDiskQuota\" type=\"text\" id=\"inDiskQuota\" value=\"0\" size=\"10\" maxlength=\"10\" /> MB (1000MB = 1GB)</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Monthly bandwidth quota:</th>";
-        $line .= "<td><input name=\"inBandQuota\" type=\"text\" id=\"inBandQuota\" value=\"0\" size=\"10\" maxlength=\"10\" /> MB (1000MB = 1GB)</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th><input type=\"hidden\" name=\"inAction\" value=\"new\" /></th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSubmit\" value=\"Save\">Save</button></td>";
-        $line .= "</tr>";
-        $line .= "</table>";
-    	$line .= "</form>";
-		return $line;
-    }	
-
-
-    static function DisplayEditPackage() {
-		global $zdbh;	
-					$sql = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_id_pk=" . self::$package_to_edit . " AND pk_deleted_ts IS NULL");
-					$sql->execute();
-					$packageinfo = $sql->fetch();
-					$sql = $zdbh->prepare("SELECT * FROM x_quotas WHERE qt_package_fk=" . self::$package_to_edit . "");
-					$sql->execute();
-					$quotainfo = $sql->fetch();
-		$line  = "";
-		$line .= "<h2>Edit package: ".$packageinfo['pk_name_vc']."</h2>";
-    	$line .= "<form action=\"./?module=packages&action=SavePackage\" method=\"post\">";
-        $line .= "<table class=\"zform\">";
-        $line .= "<tr>";
-        $line .= "<th>Package name:</th>";
-        $line .= "<td><input type=\"text\" name=\"inPackageName\" id=\"inPackageName\" value=\"".$packageinfo['pk_name_vc']."\" /></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Enable PHP:</th>";
-        $line .= "<td><input type=\"checkbox\" name=\"inEnablePHP\" id=\"inEnablePHP\" value=\"1\"";
-		if (fs_director::GetCheckboxValue($packageinfo['pk_enablephp_in']) == 1){
-			$line .= " CHECKED";
-		}
-		$line .= "/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Enable CGI:</th>";
-        $line .= "<td><input type=\"checkbox\" name=\"inEnableCGI\" id=\"inEnableCGI\" value=\"1\"";
-		if (fs_director::GetCheckboxValue($packageinfo['pk_enablecgi_in']) == 1){
-			$line .= " CHECKED";
-		}
-		$line .= "/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Domains:</th>";
-        $line .= "<td><input name=\"inNoDomains\" type=\"text\" id=\"inNoDomains\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_domains_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Sub-domains:</th>";
-        $line .= "<td><input name=\"inNoSubDomains\" type=\"text\" id=\"inNoSubDomains\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_subdomains_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Parked domains:</th>";
-        $line .= "<td><input name=\"inNoParkedDomains\" type=\"text\" id=\"inNoParkedDomains\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_parkeddomains_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Mailboxes:</th>";
-        $line .= "<td><input name=\"inNoMailboxes\" type=\"text\" id=\"inNoMailboxes\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_mailboxes_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Forwarders:</th>";
-        $line .= "<td><input name=\"inNoFowarders\" type=\"text\" id=\"inNoFowarders\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_fowarders_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. Dist Lists:</th>";
-        $line .= "<td><input name=\"inNoDistLists\" type=\"text\" id=\"inNoDistLists\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_distlists_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. FTP accounts:</th>";
-        $line .= "<td><input name=\"inNoFTPAccounts\" type=\"text\" id=\"inNoFTPAccounts\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_ftpaccounts_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>No. MySQL databases:</th>";
-        $line .= "<td><input name=\"inNoMySQL\" type=\"text\" id=\"inNoMySQL\" size=\"5\" maxlength=\"3\" value=\"".$quotainfo['qt_mysql_in']."\"/></td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Disk space quota:</th>";
-        $line .= "<td><input name=\"inDiskQuota\" type=\"text\" id=\"inDiskQuota\" size=\"10\" maxlength=\"10\" value=\"".$quotainfo['qt_diskspace_bi'] / 1024000 ."\"/> MB (1000MB = 1GB)</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>Monthly bandwidth quota:</th>";
-        $line .= "<td><input name=\"inBandQuota\" type=\"text\" id=\"inBandQuota\" size=\"10\" maxlength=\"10\" value=\"".$quotainfo['qt_bandwidth_bi'] / 1024000 ."\"/> MB (1000MB = 1GB)</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th><input type=\"hidden\" name=\"inPackageID\" value=\"".self::$package_to_edit."\" /></th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSubmit\" value=\"Save\">Save</button></td>";
-        $line .= "</tr>";
-        $line .= "</table>";
-    	$line .= "</form>";
-		return $line;
-		
-    }
-	
-	
-	
-	static function doCreatePackage(){
-		global $zdbh;
-        global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$acc_fk = $currentuser['userid'];
-		$packagename = $controller->GetControllerRequest('FORM', 'inPackageName');
 		$packagename = str_replace(' ', '', $packagename);
    		# Check to make sure the packagename is not blank or exists for reseller before we go any further...
    		if (!fs_director::CheckForEmptyValue($packagename)) {
-			$sql = "SELECT COUNT(*) FROM x_packages WHERE UPPER(pk_name_vc)='" . strtoupper($packagename) . "' AND pk_reseller_fk=" . $acc_fk . " AND pk_deleted_ts IS NULL";
+			$sql = "SELECT COUNT(*) FROM x_packages WHERE UPPER(pk_name_vc)='" . strtoupper($packagename) . "' AND pk_reseller_fk=" . $uid . " AND pk_id_pk !=" . $pid . " AND pk_deleted_ts IS NULL";
 			if ($numrows = $zdbh->query($sql)) {
 				if ($numrows->fetchColumn() <> 0) {
-					self::$alreadyexists=1;
-					return;				
+					self::$alreadyexists=true;
+					return false;				
 				}
 			}
 		} else {
-		self::$blank=1;
-		return;		
+			self::$blank=true;
+			return false;		
 		}
-	# If the user submitted a 'new' request then we will simply add the package to the database...
-    $sql = $zdbh->prepare("INSERT INTO x_packages (pk_reseller_fk,
-									pk_name_vc,
-									pk_enablephp_in,
-									pk_enablecgi_in,
-									pk_created_ts) VALUES (
-									" . $acc_fk . ",
-									'" . $packagename . "',
-									" . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'inEnablePHP')) . ",
-									" . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'inEnableCGI')) . ",
-									" . time() . ");");
-    $sql->execute();
-    # Now lets pull back the package ID so we can use it in the other tables we are about to manipulate.
-	$package = $zdbh->query("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $acc_fk . " ORDER BY pk_id_pk DESC")->Fetch();
-    $sql = $zdbh->prepare("INSERT INTO x_quotas (qt_package_fk,
-									qt_domains_in,
-									qt_subdomains_in,
-									qt_parkeddomains_in,
-									qt_mailboxes_in,
-									qt_fowarders_in,
-									qt_distlists_in,
-									qt_ftpaccounts_in,
-									qt_mysql_in,
-									qt_diskspace_bi,
-									qt_bandwidth_bi) VALUES (
-									" . $package['pk_id_pk'] . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoDomains') . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoSubDomains') . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoParkedDomains') . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoMailboxes') . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoFowarders') . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoDistLists') . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoFTPAccounts') . ",
-									" . $controller->GetControllerRequest('FORM', 'inNoMySQL') . ",
-									" . ($controller->GetControllerRequest('FORM', 'inDiskQuota') * 1024000) . ",
-									" . ($controller->GetControllerRequest('FORM', 'inBandQuota') * 1024000) . ")");
-	$sql->execute();
-	/* TODO Sort out new permissions and BW_MOD
-    $sql = $zdbh->prepare("INSERT INTO x_permissions (pr_package_fk) VALUES (" . $packageid['pk_id_pk'] . ");");
-	$sql->execute();
-	# Insert default mod_bw quota limits for package
-    $throttledefaults = = $zdbh->query("SELECT * FROM x_throttle WHERE tr_id_pk=1")->Fetch();
-	$sql = "UPDATE x_quotas SET qt_bwenabled_in = '".$throttledefaults['tr_bwenabled_in']."',
-								qt_dlenabled_in = '".$throttledefaults['tr_dlenabled_in']."',
-								qt_totalbw_fk   = '".$throttledefaults['tr_totalbw_fk']."',
-								qt_minbw_fk     = '".$throttledefaults['tr_minbw_fk']."',
-								qt_maxcon_fk    = '".$throttledefaults['tr_maxcon_fk']."',
-								qt_filesize_fk  = '".$throttledefaults['tr_filespeed_fk']."',
-								qt_filespeed_fk = '".$throttledefaults['tr_filespeed_fk']."',
-								qt_filetype_vc  = '".$throttledefaults['tr_filetype_vc']."',
-								qt_modified_in  = '1'
-								WHERE qt_package_fk  = '".$packageid['pk_id_pk']."'";
-	*/						  
-	self::$ok = 1;	
+		// Check packagename format.
+        if (!self::IsValidPackageName($packagename)) {
+            self::$badname = true;
+            return false;
+        }
+		return true;		
 	}
 
+    static function IsValidPackageName($packagename) {
+        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $packagename) || preg_match('/-$/', $packagename)) {
+            return false;
+        }
+        return true;
+    }
+		
+    /**
+     * End 'worker' methods.
+     */
 
+    /**
+     * Webinterface sudo methods.
+     */
 
-
-	static function doEditPackage(){
-		global $zdbh;
+	static function doCreatePackage(){
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();		
-		$sql = "SELECT COUNT(*) FROM x_packages WHERE pk_reseller_fk=" . $currentuser['userid'] . " AND pk_deleted_ts IS NULL";
-			if ($numrows = $zdbh->query($sql)) {
-				if ($numrows->fetchColumn() <> 0) {
-					$sql = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $currentuser['userid'] . " AND pk_deleted_ts IS NULL");
-					$sql->execute();
-					while ($rowpackages = $sql->fetch()) {
-						#Check if we are deleting a package
-						if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_'.$rowpackages['pk_id_pk'].''))){
-							self::DeletePackage($rowpackages['pk_id_pk']);
-						}
-						#Check if we are editing a package
-						if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inEdit_'.$rowpackages['pk_id_pk'].''))){
-							self::$edit=1;
-							self::$package_to_edit=$rowpackages['pk_id_pk'];
-						}			
-					}			
-				}
-			}
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+		if (isset($formvars['inEnablePHP'])){
+		$EnablePHP = fs_director::GetCheckboxValue($formvars['inEnablePHP']);
+		} else {
+		$EnablePHP = 0;
+		}
+		if (isset($formvars['inEnableCGI'])){
+		$EnableCGI = fs_director::GetCheckboxValue($formvars['inEnableCGI']);
+		} else {
+		$EnableCGI = 0;
+		}
+		if (self::ExecuteCreatePackage($currentuser['userid'], $formvars['inPackageName'], $EnablePHP, $EnableCGI, $formvars['inNoDomains'], $formvars['inNoSubDomains'], $formvars['inNoParkedDomains'], $formvars['inNoMailboxes'], $formvars['inNoFowarders'], $formvars['inNoDistLists'], $formvars['inNoFTPAccounts'], $formvars['inNoMySQL'], $formvars['inDiskQuota'], $formvars['inBandQuota']))
+			return true;
+		return false;
+		
+	}
+	
+	static function doUpdatePackage(){
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+		if (isset($formvars['inEnablePHP'])){
+		$EnablePHP = fs_director::GetCheckboxValue($formvars['inEnablePHP']);
+		} else {
+		$EnablePHP = 0;
+		}
+		if (isset($formvars['inEnableCGI'])){
+		$EnableCGI = fs_director::GetCheckboxValue($formvars['inEnableCGI']);
+		} else {
+		$EnableCGI = 0;
+		}
+		if (self::ExecuteUpdatePackage($currentuser['userid'], $formvars['inPackageID'], $formvars['inPackageName'], $EnablePHP, $EnableCGI, $formvars['inNoDomains'], $formvars['inNoSubDomains'], $formvars['inNoParkedDomains'], $formvars['inNoMailboxes'], $formvars['inNoFowarders'], $formvars['inNoDistLists'], $formvars['inNoFTPAccounts'], $formvars['inNoMySQL'], $formvars['inDiskQuota'], $formvars['inBandQuota']))
+			return true;
+		return false;
+		
 	}
 
-	static function doSavePackage(){
-		global $zdbh;
+    static function doEditPackage() {
         global $controller;
-		$sql = $zdbh->prepare("UPDATE x_packages SET pk_name_vc='" . $controller->GetControllerRequest('FORM', 'inPackageName') . "',
-								pk_enablephp_in =" . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'inEnablePHP')) . ",
-								pk_enablecgi_in =" . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'inEnableCGI')) . " 
-								WHERE pk_id_pk  =" . $controller->GetControllerRequest('FORM', 'inPackageID') . "");
-		$sql->execute();
-		$sql = $zdbh->prepare("UPDATE x_quotas SET qt_domains_in = " . $controller->GetControllerRequest('FORM', 'inNoDomains') . ", 
-								qt_parkeddomains_in =" . $controller->GetControllerRequest('FORM', 'inNoParkedDomains') . ",
-								qt_ftpaccounts_in   =" . $controller->GetControllerRequest('FORM', 'inNoFTPAccounts') . ",
-								qt_subdomains_in    =" . $controller->GetControllerRequest('FORM', 'inNoSubDomains') . ",
-								qt_mailboxes_in     =" . $controller->GetControllerRequest('FORM', 'inNoMailboxes') . ",
-								qt_fowarders_in     =" . $controller->GetControllerRequest('FORM', 'inNoFowarders') . ",
-								qt_distlists_in     =" . $controller->GetControllerRequest('FORM', 'inNoDistLists') . ",
-								qt_diskspace_bi     =" . ($controller->GetControllerRequest('FORM', 'inDiskQuota') * 1024000) . ",
-								qt_bandwidth_bi     =" . ($controller->GetControllerRequest('FORM', 'inBandQuota') * 1024000) . " ,
-								qt_mysql_in         =" . $controller->GetControllerRequest('FORM', 'inNoMySQL') . "
-								WHERE qt_package_fk =" . $controller->GetControllerRequest('FORM', 'inPackageID') . "");						
-		$sql->execute();
-		self::$ok = 1;
-	}
-	
-	static function DeletePackage($pk_id_pk){
-		global $zdbh;
-		$sql = $zdbh->prepare("UPDATE x_packages SET pk_deleted_ts = '" . time() . "' WHERE pk_id_pk = '".$pk_id_pk."'");
-		$sql->execute();
-		self::$ok = 1;
-	}
-	
-	
-	
-	
-	static function getResult() {
-		if (!fs_director::CheckForEmptyValue(self::$blank)){
-			return ui_sysmessage::shout(ui_language::translate("You need to specify a package name to create your package."));
-		}
-		if (!fs_director::CheckForEmptyValue(self::$badname)){
-		return ui_sysmessage::shout(ui_language::translate("Your package name is not valid. Please enter a valid package name."));
-		}
-		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-		return ui_sysmessage::shout(ui_language::translate("A package with that name already appears to exsist."));
-		}	
-		if (!fs_director::CheckForEmptyValue(self::$error)){
-		return ui_sysmessage::shout(ui_language::translate("There was an error updating your package"));
-		}
-		if (!fs_director::CheckForEmptyValue(self::$ok)){
-			return ui_sysmessage::shout(ui_language::translate("Changes to your packages have been saved successfully!"));
-		}else{
-			return ui_module::GetModuleDescription();
-		}
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        foreach (self::ListPackages($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['packageid'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['packageid'] . "");
+                exit;
+            }
+            if (isset($formvars['inEdit_' . $row['packageid'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['packageid'] . "");
+                exit;
+            }
+        }
         return;
+    }
+
+    static function doDeletePackage() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteDeletePackage($formvars['inPackageID'], $formvars['inMovePackage']))
+            return true;
+        return false;
+    }
+	
+    static function getPackageList() {
+        $currentuser = ctrl_users::GetUserDetail();
+		$packages = self::ListPackages($currentuser['userid']);
+        if ($packages)
+            return $packages;
+           return false;
+    }
+
+    static function getisCreatePackage() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if (!isset($urlvars['show']))
+            return true;
+        return false;
+    }
+
+    static function getisDeletePackage() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
+            return true;
+        return false;
+    }
+
+    static function getisEditPackage() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static function getEditCurrentPackageName() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['packagename'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentPackageID() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['packageid'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentDomains() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['domains'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentSubDomains() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['subdomains'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentParkedDomains() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['parkeddomains'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentMailboxes() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['mailboxes'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentForwarders() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['fowarders'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentDistLists() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['distlists'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentFTP() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['ftpaccounts'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentMySQL() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['mysql'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentDisk() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['diskquota'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getEditCurrentBandWidth() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['bandquota'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getPHPChecked() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['PHPChecked'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getCGIChecked() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['CGIChecked'];
+        } else {
+            return "";
+        }
     }
 
 	static function getModuleName() {
@@ -420,6 +491,34 @@ class module_controller {
         return $module_icon;
     }
 
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
+	static function getResult() {
+		if (!fs_director::CheckForEmptyValue(self::$blank)){
+			return ui_sysmessage::shout(ui_language::translate("You need to specify a package name to create your package."), "zannounceerror");
+		}
+		if (!fs_director::CheckForEmptyValue(self::$badname)){
+		return ui_sysmessage::shout(ui_language::translate("Your package name is not valid. Please enter a valid package name."), "zannounceerror");
+		}
+		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
+		return ui_sysmessage::shout(ui_language::translate("A package with that name already appears to exsist."), "zannounceerror");
+		}	
+		if (!fs_director::CheckForEmptyValue(self::$error)){
+		return ui_sysmessage::shout(ui_language::translate("There was an error updating your package"), "zannounceerror");
+		}
+		if (!fs_director::CheckForEmptyValue(self::$ok)){
+			return ui_sysmessage::shout(ui_language::translate("Changes to your packages have been saved successfully!"), "zannounceok");
+		}
+        return;
+    }
+
+    /**
+     * Webinterface sudo methods.
+     */
+	 
 }
 
 ?>

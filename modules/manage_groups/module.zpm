@@ -94,6 +94,7 @@
 <% loop GroupMoveToList %>
 <option value="<& groupid &>"><& groupname &></option>"
 <% endloop %>
+</select>
 </td>
 </tr>
 <tr>
