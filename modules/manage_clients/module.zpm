@@ -6,7 +6,7 @@
 
 	<% if isDeleteClient %>
 	<div class="zform_wrapper">
-		<h2><: Delete :>: <@ EditCurrentName @>?</h2>
+		<h2><: Delete :>: <@ EditCurrentName @> ?</h2>
 		<p><: Please confirm that you want to delete this client. :></p>
 		<form action="./?module=manage_clients&action=DeleteClient" method="post">
 		<table class="none" cellpadding="0" cellspacing="0">
@@ -26,71 +26,69 @@
 	<div class="zgrid_wrapper">
         <h2><: Edit existing client :>: <@ EditCurrentName @></h2>
         <form action="./?module=manage_clients&action=UpdateClient" method="post">
-        <table class="zform">
-        <tr>
-        <th><: Username :>:</th>
-        <td><input name="inUserName" type="text" disabled="disabled" maxlength="10" id="inUserName" value="<@ EditCurrentName @>" readonly="readonly" /></td>
-        </tr>
-        <tr>
-        <th><: User group :>:</th>
-        <td>
-					<select name="inGroup" id="inGroup">
-					<% loop CurrentGroupList %>
-					<option value="<& groupid &>" <& groupselected &>><& groupname &></option>
-					<% endloop %>
-			        </select>
-        <tr>
-        <th><: Package :>:</th>
-        <td>
-					<select name="inPackage" id="inPackage">
-					<% loop CurrentPackageList %>
-					<option value="<& packageid &>" <& packageselected &>><& packagename &></option>
-					<% endloop %>
-			        </select>
-        </td>
-        </tr>
-        <tr>
-        <th><: Full name :>:</th>
-        <td><input type="text" name="inFullName" id="inFullName" value="<@ EditCurrentFullName @>" /></td>
-        </tr>
-        <tr>
-        <th><: Email Address :>:</th>
-        <td><input type="text" name="inEmailAddress" id="inEmailAddress" value="<@ EditCurrentEmail @>" /></td>
-        </tr>
-        <tr>
-        <th><: Postal Address :>:</th>
-        <td><textarea name="inAddress" id="inAddress" cols="45" rows="5"><@ EditCurrentAddress @></textarea></td>
-        </tr>
-        <tr>
-        <th><: Postal Code :>:</th>
-        <td><input name="inPostCode" type="text" id="inPostCode" size="20" maxlength="10" value="<@ EditCurrentPost @>" /></td>
-        </tr>
-        <tr>
-        <th><: Phone Number :>:</th>
-        <td><input name="inPhone" type="text" id="inPhone" size="20" maxlength="50" value="<@ EditCurrentPhone @>" /></td>
-        </tr>
-        <tr>
-        <th><: Reset password :>:</th>
-        <td><input name="inNewPassword" type="password" id="inNewPassword" size="20" maxlength="50" /> 
-        </td>
-        </tr>
-        <td>
-		<% loop CheckEnabledHTML %>
-		<input type="radio" name="inEnabled" value="1" <& echecked &>/> Enabled 
-		<input type="radio" name="inEnabled" value="0" <& dchecked &>/> Disabled
-		<% endloop %>
-		</td>
-        </tr>
-        <tr>
-        <th>
-        <input type="hidden" name="inClientID" value="<@ EditCurrentID @>" />
-        </th>
-        <td>
-		<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="Save"><: Save :></button>
-		<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=manage_clients';return false;"><: Cancel :></button>
-		</td>
-        </tr>
-        </table>
+	        <table class="zform">
+		        <tr>
+			        <th><: Username :>:</th>
+			        <td><input name="inUserName" type="text" disabled="disabled" maxlength="10" id="inUserName" value="<@ EditCurrentName @>" readonly="readonly" /></td>
+		        </tr>
+		        <tr>
+			        <th><: User group :>:</th>
+			        <td>
+						<select name="inGroup" id="inGroup">
+						<% loop CurrentGroupList %>
+						<option value="<& groupid &>" <& groupselected &>><& groupname &></option>
+						<% endloop %>
+				        </select>
+					</td>
+		        <tr>
+			        <th><: Package :>:</th>
+			        <td>
+						<select name="inPackage" id="inPackage">
+						<% loop CurrentPackageList %>
+						<option value="<& packageid &>" <& packageselected &>><& packagename &></option>
+						<% endloop %>
+				        </select>
+    			    </td>
+		        </tr>
+		        <tr>
+			        <th><: Full name :>:</th>
+			        <td><input type="text" name="inFullName" id="inFullName" value="<@ EditCurrentFullName @>" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Email Address :>:</th>
+			        <td><input type="text" name="inEmailAddress" id="inEmailAddress" value="<@ EditCurrentEmail @>" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Postal Address :>:</th>
+			        <td><textarea name="inAddress" id="inAddress" cols="45" rows="5"><@ EditCurrentAddress @></textarea></td>
+		        </tr>
+		        <tr>
+			        <th><: Postal Code :>:</th>
+			        <td><input name="inPostCode" type="text" id="inPostCode" size="20" maxlength="10" value="<@ EditCurrentPost @>" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Phone Number :>:</th>
+			        <td><input name="inPhone" type="text" id="inPhone" size="20" maxlength="50" value="<@ EditCurrentPhone @>" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Reset password :>:</th>
+			        <td><input name="inNewPassword" type="password" id="inNewPassword" size="20" maxlength="50" /></td>
+		        </tr>
+        			<td>
+						<% loop CheckEnabledHTML %>
+						<input type="radio" name="inEnabled" value="1" <& echecked &>/> Enabled 
+						<input type="radio" name="inEnabled" value="0" <& dchecked &>/> Disabled
+						<% endloop %>
+					</td>
+		        </tr>
+		        <tr>
+			        <th><input type="hidden" name="inClientID" value="<@ EditCurrentID @>" /></th>
+			        <td>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="Save"><: Save :></button>
+					<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=manage_clients';return false;"><: Cancel :></button>
+					</td>
+		        </tr>
+	        </table>
         </form>
 	</div>
 	<% endif %>
@@ -121,8 +119,6 @@
 				</td>
 			</tr>
 			<% endloop %>
-				
-
         </table>
         </form>
 		<% else %>
@@ -156,8 +152,6 @@
 				</td>
 			</tr>
 			<% endloop %>
-				
-
         </table>
         </form>
 	</div>
