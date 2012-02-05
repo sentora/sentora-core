@@ -30,7 +30,7 @@
 	        <table class="zgrid">
 		        <tr>
     			    <th><: Database name :></th>
-					<th></th>
+					<th><: Remove from user :></th>
 		        </tr>
 				<% loop UserDatabaseList %>
 		        <tr>
