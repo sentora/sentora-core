@@ -251,7 +251,7 @@ class fs_director {
 	        $retval = $retval['amount'];
 	    }
 	    if ($resource == 'mysql') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mysql WHERE my_acc_fk=" . $acc_key . " AND my_deleted_ts IS NULL");
+	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mysql_databases WHERE my_acc_fk=" . $acc_key . " AND my_deleted_ts IS NULL");
 			$sql->execute();
 			$retval = $sql->fetch();
 	        $retval = $retval['amount'];

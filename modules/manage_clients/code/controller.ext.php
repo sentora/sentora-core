@@ -711,28 +711,28 @@ class module_controller {
 
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$userblank)) {
-            return ui_sysmessage::shout(ui_language::translate("You need to specify a username to create a new client."));
+            return ui_sysmessage::shout(ui_language::translate("You need to specify a username to create a new client."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$emailblank)) {
-            return ui_sysmessage::shout(ui_language::translate("You need to specify an email address to create a new client."));
+            return ui_sysmessage::shout(ui_language::translate("You need to specify an email address to create a new client."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$packageblank)) {
-            return ui_sysmessage::shout(ui_language::translate("You must select a package for your new client."));
+            return ui_sysmessage::shout(ui_language::translate("You must select a package for your new client."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$groupblank)) {
-            return ui_sysmessage::shout(ui_language::translate("You must select a user group for your new client."));
+            return ui_sysmessage::shout(ui_language::translate("You must select a user group for your new client."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$badname)) {
-            return ui_sysmessage::shout(ui_language::translate("Your client name is not valid. Please enter a valid client name."));
+            return ui_sysmessage::shout(ui_language::translate("Your client name is not valid. Please enter a valid client name."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$bademail)) {
-            return ui_sysmessage::shout(ui_language::translate("Your email adress is not valid. Please enter a valid email address."));
+            return ui_sysmessage::shout(ui_language::translate("Your email adress is not valid. Please enter a valid email address."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout(ui_language::translate("A client with that name already appears to exsist on this server."));
+            return ui_sysmessage::shout(ui_language::translate("A client with that name already appears to exsist on this server."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your client(s) have been saved successfully!"));
+            return ui_sysmessage::shout(ui_language::translate("Changes to your client(s) have been saved successfully!"), "zannounceok");
         }
         return;
     }

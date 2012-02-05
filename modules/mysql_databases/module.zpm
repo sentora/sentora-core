@@ -52,6 +52,7 @@
 		<tr valign="top">
 		<td>
 			<h2><: Create a new MySQL&reg database :></h2>
+			<% if QuotaLimit %>
 	    	<form action="./?module=mysql_databases&action=CreateDatabase" method="post">
 	        <table class="zform">
 		        <tr>
@@ -64,6 +65,9 @@
 		        </tr>
 	        </table>
 	    	</form>
+	<% else %>
+	<: You have reached your MySQL database limit! :>
+	<% endif %>	
 		</td>
 		<td align="right"><@ MysqlUsagepChart @></td>
 		</tr></table>

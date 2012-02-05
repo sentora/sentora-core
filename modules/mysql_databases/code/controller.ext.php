@@ -220,14 +220,23 @@ class module_controller {
         }
     }
 
+    static function getQuotaLimit() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        if ($currentuser['mysqlquota'] > fs_director::GetQuotaUsages('mysql', $currentuser['userid'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     static function getMysqlUsagepChart() {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$line  = "";
-		$mysqlquota = $currentuser['mysqlquota'];
-		$mysql = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
-		$total= $mysqlquota;
-		$used = $mysql;
+		$total= $currentuser['mysqlquota'];
+		$used = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
 		$free = $total - $used;		
 		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
 		return $line;
