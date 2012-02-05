@@ -47,10 +47,17 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-				//$rowdb = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mu_database_fk'] . "")->fetch(); 
+				$numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_user_fk=" . $rowmysql['mu_id_pk'] . "")->fetch();
+				if ($rowmysql['mu_access_vc'] == "%"){
+					$access = "ANY (%)";
+				} else {
+					$access = $rowmysql['mu_access_vc'];
+				}
                 array_push($res, array(	'userid'   	 => $rowmysql['mu_id_pk'],
 										'username'   => $rowmysql['mu_name_vc'],
 										'dbpassword' => $rowmysql['mu_pass_vc'],
+										'totaldb'	 => $numrowdb[0],
+										'accesshtml' => $access,
 									   	'access' 	 => $rowmysql['mu_access_vc']));
             }
             return $res;

@@ -49,10 +49,9 @@ class module_controller {
             $sql->execute();
             while ($rowpackages = $sql->fetch()) {
 				$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . "")->fetchColumn(); 
-	            $totalclients = count($numrows);
                 array_push($res, array( 'packageid'   => $rowpackages['pk_id_pk'],
 										'created'     => date(ctrl_options::GetOption('zpanel_df'), $rowpackages['pk_created_ts']),
-										'clients'     => $totalclients,
+										'clients'     => $numrows[0],
                     					'packagename' => ui_language::translate($rowpackages['pk_name_vc'])));
             }
             return $res;

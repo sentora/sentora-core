@@ -80,13 +80,15 @@
 			<tr>
 				<th><: User name :></th>
 				<th><: Access :></th>
+				<th><: Databases :></th>
 				<th><: Password :></th>
 				<th></th>
 			</tr>
 			<% loop UserList %>
 			<tr>
 				<td><& username &></td>
-				<td><& access &></td>
+				<td><& accesshtml &></td>
+				<td><& totaldb &></td>
 				<td><& dbpassword &></td>
 				<td>
 				<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inEdit_<& userid &>" id="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
