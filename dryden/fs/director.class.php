@@ -309,6 +309,98 @@ class fs_director {
 	    return $fretval;
 	}
 
+    /**
+     * Checks that an IP address is valid (v6 and v4).
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */		
+	static function IsValidIP($ip){
+		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+  			return TRUE;
+		} else {
+  			return FALSE;
+		}
+	}
+
+    /**
+     * Checks that an IPv4 address is valid.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */	
+	static function IsValidIPv4($ip){
+		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+  			return TRUE;
+		} else {
+  			return FALSE;
+		}
+	}
+
+    /**
+     * Checks that an IPv6 address is valid.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */	
+	static function IsValidIPv6($ip){
+		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+  			return TRUE;
+		} else {
+  			return FALSE;
+		}
+	}
+
+    /**
+     * Checks that an email address is valid.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */	
+    static function IsValidEmail($email) {
+        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email))
+            return false;
+        return true;
+    }
+
+    /**
+     * Checks that a domain name is valid.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */	
+    static function IsValidDomainName($a) {
+        if (stristr($a, '.')) {
+            $part = explode(".", $a);
+            foreach ($part as $check) {
+                if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks that a user name is valid.
+     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @version 10.0.0
+     * @param string $value
+     * @return boolean 
+     */
+    static function IsValidUserName($username) {
+        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username))
+            return false;
+        return true;
+    }
+
 }
 
 ?>

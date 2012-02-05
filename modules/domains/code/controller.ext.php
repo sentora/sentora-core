@@ -263,6 +263,13 @@ class module_controller {
         }
     }
 
+	static	function IsvalidIP($ip){
+    	if(!preg_match("^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}^", $ip))
+        	return false;
+    	else
+        return true;
+	} 
+
     /**
      * End 'worker' methods.
      */

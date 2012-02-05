@@ -21,6 +21,56 @@
 		</form>
 	</div>
 	<% endif %>
+
+	<% if isEditUser %>
+	<div class="zgrid_wrapper">
+		<h2><: Databases for user :>: <@ EditCurrentUserName @></h2>
+		<% if UserDatabaseList %>
+	    <form action="./?module=mysql_users&action=RemoveDB" method="post">
+	        <table class="zgrid">
+		        <tr>
+    			    <th><: Database name :></th>
+					<th></th>
+		        </tr>
+				<% loop UserDatabaseList %>
+		        <tr>
+					<td><& mmdbname &></td>
+			        <td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inRemove_<& mmid &>" id="inRemove_<& mmid &>" value="<& mmid &>"><: Remove database :></button></td>
+		        </tr>
+				<% endloop %>
+				<input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
+	    	</table>
+	    </form>
+		<% else %>
+		<: This user currently has no databases. Assign a database using the form below. :>
+		<% endif %>
+		
+		<p>&nbsp;</p>
+		
+		<h2><: Add Database :></h2>
+		<form action="./?module=mysql_users&action=AddDB" method="post">
+	        <table class="zform">
+		        <tr>
+    			    <th nowrap="nowrap"><: Database :>:</th>
+			        <td>
+						<select name="inDatabase" id="inDatabase">
+						<option value="" selected="selected">-- Select a database --</option>
+						<% loop DatabaseList %>
+						<option value="<& mysqlid &>"><& mysqlname &></option>
+						<% endloop %>
+				        </select>
+					</td>
+					<td>
+					<input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Add :></button>
+					<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
+					</td>
+		        </tr>
+	    	</table>
+		</form>
+			
+	</div>
+	<% endif %>
 	
 	<div class="zgrid_wrapper">
 		<h2><: Current MySQL&reg Users :></h2>
@@ -29,14 +79,14 @@
 		<table class="zgrid">
 			<tr>
 				<th><: User name :></th>
-				<th><: Database :></th>
+				<th><: Access :></th>
 				<th><: Password :></th>
 				<th></th>
 			</tr>
 			<% loop UserList %>
 			<tr>
 				<td><& username &></td>
-				<td><& dbname &></td>
+				<td><& access &></td>
 				<td><& dbpassword &></td>
 				<td>
 				<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inEdit_<& userid &>" id="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
@@ -75,6 +125,22 @@
 					</td>
 		        </tr>
 		        <tr>
+			        <th><: Remote Access :>:</th>
+			        <td><input name="inAccess" type="radio" id="inAccess" value="1" onclick="hide_div('showaccess');" CHECKED />&nbsp;<: Allow from any IP :></td>
+		        </tr>
+		        <tr>
+			        <th>&nbsp;</th>
+			        <td><input name="inAccess" type="radio" id="inAccess" value="2" onclick="show_div('showaccess');" />&nbsp;<: Only from single IP :></td>
+		        </tr>
+		        <tr>
+			        <th>&nbsp;</th>
+			        <td>
+			        	<div id="showaccess" style="display:none;">
+						<input type="text" size="30" name="inAccessIP" id="inAccessIP" />
+						</div>
+					</td>
+		        </tr>
+		        <tr>
 			        <th colspan="2" align="right">
 			        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Create :></button></th>
 		        </tr>
@@ -87,3 +153,22 @@
 	<% endif %>
 
 </div>
+
+<script type="text/javascript">
+    <!--
+    function show_div(id) {
+        var e = document.getElementById(id);
+        if(e.style.display == 'none')
+            e.style.display = 'block';
+    }
+    //-->
+</script>
+<script type="text/javascript">
+    <!--
+    function hide_div(id) {
+        var e = document.getElementById(id);
+        if(e.style.display == 'block')
+            e.style.display = 'none';
+    }
+    //-->
+</script>
