@@ -288,7 +288,7 @@ class module_controller {
 		runtime_hook::Execute('OnBeforeRemoveDatabaseAccess');
 		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $dbid . " AND my_deleted_ts IS NULL")->fetch();
 		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
-		$sql = $zdbh->prepare("REVOKE ALL ON `" . $rowdb['my_name_vc'] . "`.* TO '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
+		$sql = $zdbh->prepare("REVOKE ALL ON `" . $rowdb['my_name_vc'] . "`.* FROM '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
 		$sql = $zdbh->prepare("DELETE FROM x_mysql_dbmap WHERE mm_id_pk=" . $dbid . " AND mm_user_fk=" . $myuserid . "");
 		$sql->execute();
 		runtime_hook::Execute('OnAfterRemoveDatabaseAccess');
