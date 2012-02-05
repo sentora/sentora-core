@@ -122,19 +122,27 @@ class module_controller {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail($uid);
 		// Check for spaces and remove if found...
-        $username = strtolower(str_replace(' ', '', $username)); 
+        $username = strtolower(str_replace(' ', '', $username));
+		// If errors are found, then exit before creating user...
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $database, $access))) {
             return false;
         }
 		runtime_hook::Execute('OnBeforeCreateDatabaseUser');
 		$password = fs_director::GenerateRandomPassword(9, 4);
+		// Create user in MySQL
     	$sql = $zdbh->prepare("CREATE USER `" . $username . "`@`" . $access . "`;");
 		$sql->execute();
+		// Set MySQL password for new user...
 		$sql = $zdbh->prepare("SET PASSWORD FOR `" . $username . "`@`" . $access . "`=PASSWORD('" . $password . "')");
 		$sql->execute();
+		// Get the database name from the ID...
 		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $database . " AND my_deleted_ts IS NULL")->fetch();
+		// Grant privileges for new user to the assigned database...
 		$sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* TO '" . $username . "'@'" . $access . "'");
 		$sql->execute();
+		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
+		$sql->execute();
+		// Add user to zpanel database...
 		$sql = $zdbh->prepare("INSERT INTO x_mysql_users (
 								mu_acc_fk,
 								mu_name_vc,
@@ -142,12 +150,23 @@ class module_controller {
 								mu_pass_vc,
 								mu_access_vc,
 								mu_created_ts) VALUES (
-								" . $uid . ",
+								"  . $uid . ",
 								'" . $username . "',
-								'" . $database . "',
+								"  . $database . ",
 								'" . $password . "',
 								'" . $access . "',
 								" . time() . ")");		
+		$sql->execute();
+		// Get the new users id...
+		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_name_vc='" . $username . "' AND mu_acc_fk=" . $uid . " AND mu_deleted_ts IS NULL")->fetch();
+		// Add database to zpanel user account...
+		$sql = $zdbh->prepare("INSERT INTO x_mysql_dbmap (
+								mm_acc_fk,
+								mm_user_fk,
+								mm_database_fk) VALUES (
+								" . $uid . ",
+								" . $rowuser['mu_id_pk'] . ",
+								" . $database . ")");		
 		$sql->execute();
 		runtime_hook::Execute('OnAfterCreateDatabaseUser');
 		self::$ok = true;
@@ -215,6 +234,8 @@ class module_controller {
 		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $mu_id_pk . " AND mu_deleted_ts IS NULL")->fetch();		
 		$sql = $zdbh->prepare("DROP USER `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`;");
 		$sql->execute();
+		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
+		$sql->execute();
 		$sql = $zdbh->prepare("
 			UPDATE x_mysql_users
 			SET mu_deleted_ts = '" . time() . "' 
@@ -238,6 +259,8 @@ class module_controller {
 		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $dbid . " AND my_deleted_ts IS NULL")->fetch();
 		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
 		$sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* TO '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
+		$sql->execute();
+		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
 		$sql->execute();
 		$sql = $zdbh->prepare("
 			INSERT INTO x_mysql_dbmap (

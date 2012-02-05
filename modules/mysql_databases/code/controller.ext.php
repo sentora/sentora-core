@@ -83,8 +83,8 @@ class module_controller {
 		runtime_hook::Execute('OnBeforeCreateDatabase');
 		$sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
 		$sql->execute();
-    	//$sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `" . $currentuser['username'] . "\_" . $databasename . "`.* TO '" . $currentuser['username'] . "'@'%'");
-		//$sql->execute();
+		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
+		$sql->execute();
 		$sql = $zdbh->prepare("INSERT INTO x_mysql_databases (
 								my_acc_fk,
 								my_name_vc,
@@ -122,6 +122,8 @@ class module_controller {
 		runtime_hook::Execute('OnBeforeDeleteDatabase');
 		$rowmysql = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $my_id_pk . "")->fetch(); 
 		$sql = $zdbh->prepare("DROP DATABASE IF EXISTS `" . $rowmysql['my_name_vc'] . "`;");
+		$sql->execute();
+		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
 		$sql->execute();
 		$sql = $zdbh->prepare("
 			UPDATE x_mysql_databases 
