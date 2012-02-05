@@ -222,7 +222,7 @@ class module_controller {
 		$sql->execute();
 		$sql = $zdbh->prepare("
 			DELETE FROM x_mysql_dbmap
-			WHERE mu_user_fk = '".$mu_id_pk."'");
+			WHERE mm_user_fk = '".$mu_id_pk."'");
 		$sql->execute();
 		runtime_hook::Execute('OnAfterDeleteDatabaseUser');
 		self::$ok = true;
