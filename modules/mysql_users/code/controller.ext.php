@@ -214,7 +214,7 @@ class module_controller {
             return false;
         }
         // Check for invalid IP address
-		if ($access != "%") {
+		if ($access != "%" && strtolower($access) != "localhost") {
 			if (!fs_director::IsValidIP($access)) {
             	self::$badIP = true;
             	return false;
@@ -283,18 +283,18 @@ class module_controller {
 		return true;
 	}
 
-	static function ExecuteRemoveDB($myuserid, $dbid){ // <-- mmid = dbmaps
+	static function ExecuteRemoveDB($myuserid, $mapid){ // <-- mmid = dbmaps
 		global $zdbh;
 		runtime_hook::Execute('OnBeforeRemoveDatabaseAccess');
-		$rowdbm  = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_id_pk=" . $dbid . "")->fetch();
-		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowdbm['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
+		$rowdbmap  = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . "")->fetch();
+		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowdbmap['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
 		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
 		$sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* FROM '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
 		$sql->execute();
 		//echo "NAME ".$rowdb['my_name_vc']." DBID ".$dbid." ROWDB " .$rowdbm['mm_database_fk'] . "RowUser " . $rowuser['mu_name_vc'] . " access " . $rowuser['mu_access_vc'];
 		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
 		$sql->execute();
-		$sql = $zdbh->prepare("DELETE FROM x_mysql_dbmap WHERE mm_id_pk=" . $dbid . " AND mm_user_fk=" . $myuserid . "");
+		$sql = $zdbh->prepare("DELETE FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . " AND mm_user_fk=" . $myuserid . "");
 		$sql->execute();
 		runtime_hook::Execute('OnAfterRemoveDatabaseAccess');
 		self::$ok = true;
