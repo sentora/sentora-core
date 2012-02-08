@@ -32,6 +32,9 @@ class module_controller {
 	static $blank;
 	static $badname;
 	static $ok;
+	static $delete;
+	static $reset;
+	static $create;
 
     /**
      * The 'worker' methods.
@@ -98,12 +101,17 @@ class module_controller {
 		return $res;	
 	}
 
-	static function ExecuteResetPassword($userid, $password){
+	static function ExecuteResetPassword($ft_id_pk, $password){
 		global $zdbh;
+		global $controller;
 		runtime_hook::Execute('OnBeforeResetFTPPassword');
 		$retval = FALSE;
-		$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc=" . $password . " WHERE ft_id_pk=" . $ft_id_pk . "");
+		$rowftp  = $zdbh->query("SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . $ft_id_pk . "")->fetch();
+		$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc='" . $password . "' WHERE ft_id_pk=" . $ft_id_pk . "");
 		$sql->execute();
+		self::$reset=true;
+		// Include FTP server specific file here.
+		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "");
 		$retval = TRUE;
 		runtime_hook::Execute('OnAfterResetFTPPassword');
 		return $retval;
@@ -127,8 +135,7 @@ class module_controller {
 				
 		    } else {
 		        $homedirectoy_to_use = "/" . $destination;
-		    }
-			
+		    }			
 			$sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk,
 											ft_user_vc,
 											ft_directory_vc,
@@ -140,6 +147,9 @@ class module_controller {
 										'" . $access_type . "',
 										" . time() . ")");
 			$sql->execute();
+			self::$create=true;
+			// Include FTP server specific file here.
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "");
 			runtime_hook::Execute('OnAfterCreateFTPAccount');
 			return true;
 		}
@@ -180,14 +190,29 @@ class module_controller {
 
 	static function ExecuteDeleteFTP($ft_id_pk){
 		global $zdbh;
+		global $controller;
 		runtime_hook::Execute('OnBeforeDeleteFTPAccount');
 		$retval = FALSE;
+		$rowftp  = $zdbh->query("SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . $ft_id_pk . "")->fetch();
 		$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_id_pk=" . $ft_id_pk . "");
 		$sql->execute();
+		self::$delete=true;
+		// Include FTP server specific file here.
+		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "");
 		$retval = TRUE;
 		runtime_hook::Execute('OnAfterDeleteFTPAccount');
 		return $retval;
 	}
+
+    static function GetFTPOption($name) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT fts_value_tx FROM x_ftp_settings WHERE fts_name_vc = '$name'")->Fetch();
+        if ($result) {
+            return $result['fts_value_tx'];
+        } else {
+            return false;
+        }
+    }
 	
     /**
      * End 'worker' methods.
@@ -219,7 +244,7 @@ class module_controller {
     static function doResetPassword() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteDeleteFTP($formvars['inReset'], $formvars['inPassword']))
+        if (self::ExecuteResetPassword($formvars['inReset'], $formvars['inPassword']))
 			self::$ok = true;
             return true;
         return false;

@@ -31,6 +31,7 @@ class module_controller {
 	static $dbalreadyadded;
 	static $blank;
 	static $badname;
+	static $rootabuse;
 	static $badIP;
 	static $ok;
 	 
@@ -38,8 +39,29 @@ class module_controller {
      * The 'worker' methods.
      */
 
+	static function CleanOrphanDatabases($uid){
+        global $zdbh;
+        $sql = "SELECT * FROM x_mysql_dbmap WHERE mm_user_fk=" . $uid . "";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $sql->execute();
+            while ($rowmysql = $sql->fetch()) {
+				$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
+				if (!$rowdb){
+					
+				}
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     static function ListUsers($uid) {
         global $zdbh;
+		// Remove deleted databases from MySQL userlist...
+		self::CleanOrphanDatabases($uid);
         $sql = "SELECT * FROM x_mysql_users WHERE mu_acc_fk=" . $uid . " AND mu_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -94,11 +116,13 @@ class module_controller {
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
 				$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
+				if ($rowdb){
                 array_push($res, array(	'mmid'   => $rowmysql['mm_id_pk'],
 										'mmaccount' => $rowmysql['mm_acc_fk'],
 										'mmuserid'  => $rowmysql['mm_user_fk'],
 										'mmdbid'    => $rowmysql['mm_database_fk'],
 										'mmdbname'  => $rowdb['my_name_vc']));
+				}
             }
             return $res;
         } else {
@@ -188,6 +212,11 @@ class module_controller {
 			return false;
 	    }
 	    // Check to make sure the user name is not blank before we go any further...
+	    if ($username == 'root') {
+			self::$rootabuse = true;
+			return false;
+	    }
+	    // Check to make sure the user name is not blank before we go any further...
 	    if ($database == '') {
 			self::$blank = true;
 			return false;
@@ -238,11 +267,16 @@ class module_controller {
 	static function ExecuteDeleteUser($mu_id_pk){
 		global $zdbh;
 		runtime_hook::Execute('OnBeforeDeleteDatabaseUser');
-		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $mu_id_pk . " AND mu_deleted_ts IS NULL")->fetch();		
-		$sql = $zdbh->prepare("DROP USER `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`;");
-		$sql->execute();
-		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-		$sql->execute();
+		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $mu_id_pk . " AND mu_deleted_ts IS NULL")->fetch();	
+		$sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '". $rowuser['mu_name_vc'] . "')";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {	
+				$sql = $zdbh->prepare("DROP USER `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`;");
+				$sql->execute();
+				$sql = $zdbh->prepare("FLUSH PRIVILEGES");
+				$sql->execute();
+			}
+		}
 		$sql = $zdbh->prepare("
 			UPDATE x_mysql_users
 			SET mu_deleted_ts = '" . time() . "' 
@@ -466,6 +500,9 @@ class module_controller {
 	static function getResult() {
 		if (!fs_director::CheckForEmptyValue(self::$blank)){
 			return ui_sysmessage::shout(ui_language::translate("You need to specify a user name and select a database to create your MySQL user."), "zannounceerror");
+		}
+		if (!fs_director::CheckForEmptyValue(self::$rootabuse)){
+		return ui_sysmessage::shout(ui_language::translate("You cannot create a user named 'root'! This attempt has been logged and the system administrator notified!."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
 		return ui_sysmessage::shout(ui_language::translate("A MySQL username with that name already appears to exsist."), "zannounceerror");

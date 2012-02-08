@@ -130,6 +130,10 @@ class module_controller {
 			SET my_deleted_ts = '" . time() . "' 
 			WHERE my_id_pk = '".$my_id_pk."'");
 		$sql->execute();
+		$sql = $zdbh->prepare("
+			DELETE FROM x_mysql_dbmap 
+			WHERE mm_database_fk=" . $my_id_pk . "");
+		$sql->execute();
 		runtime_hook::Execute('OnAfterDeleteDatabase');
 		self::$ok = true;
 		return true;

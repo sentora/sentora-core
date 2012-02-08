@@ -46,7 +46,7 @@
 	<!-- END ZLOADER PROGRESSBAR DIV -->
 		<!-- BEGIN HEADER -->
         <div id="header">
-			<div id="header_top">
+			<div id="header_top" style="display:none;">
 				<div class="logo_small" id="logo_small"><a class="logo_small" id="logo_small_a" title="Main Page" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/zpanel_small.png"/></a></div>			
 	
 				<!--
