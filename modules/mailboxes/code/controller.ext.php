@@ -35,6 +35,9 @@ class module_controller {
 	static $validemail;
 	static $noaddress;
 	static $editmailbox;
+	static $update;
+	static $delete;
+	static $create;
 
     static function getMailboxList() {
         global $zdbh;
@@ -189,8 +192,11 @@ class module_controller {
 			$fulladdress = strtolower($fulladdress);
 			$password = $controller->GetControllerRequest('FORM', 'inPassword');
 			$password = md5($password);
+			self::$create=true;
 			// Include mail server specific file here.
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+			if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "")){
+				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+			}
 			$sql = "INSERT INTO x_mailboxes (mb_acc_fk,
 											 mb_address_vc,
 											 mb_created_ts) VALUES (
@@ -206,8 +212,11 @@ class module_controller {
 	static function DeleteMailbox($mb_id_pk){
 		global $zdbh;
 		global $controller;
+		self::$delete=true;
 		// Include mail server specific file here.
-		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		}
 		$sql = "UPDATE x_mailboxes SET mb_deleted_ts=" . time() . " WHERE mb_id_pk=" . $mb_id_pk . "";
 		$sql = $zdbh->prepare($sql);
 		$sql->execute();
@@ -217,8 +226,11 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		$password = $controller->GetControllerRequest('FORM', 'inPassword');
+		self::$update=true;
 		// Include mail server specific file here.
-		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		}
 		if ($controller->GetControllerRequest('FORM', 'inEnabled') == 1){
 			$sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=1 WHERE mb_id_pk='" . $mb_id_pk . "'");
 			$sql->execute();

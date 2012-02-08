@@ -39,7 +39,7 @@
 		
 		
 				// Deleting hMail Mailboxes
-				if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_'.$hmailbox['id'].''))) {
+				if (!fs_director::CheckForEmptyValue(self::$delete)) {
 	        		$result = $mail_db->query("SELECT accountid FROM hm_accounts WHERE accountaddress='" . $hmailbox['address'] . "'")->Fetch();
 					if ($result) {
 						$sql = $mail_db->prepare("DELETE FROM hm_accounts WHERE accountaddress='" . $hmailbox['address'] . "'");
@@ -49,7 +49,7 @@
 			
 			
 				//Saving hMail Mailboxes
-				if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inSave_'.$hmailbox['id'].''))) {
+				if (self::$update)) {
 					if (!fs_director::CheckForEmptyValue($password)){
 						$sql = $mail_db->prepare("UPDATE hm_accounts SET accountpassword='" . md5($password) . "' WHERE accountaddress='" . $hmailbox['address'] . "'");
 						$sql->execute();
@@ -69,7 +69,7 @@
 		
 		
 		// Adding hMail Mailboxes
-		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inCreate'))) {
+		if (!fs_director::CheckForEmptyValue(self::$create)) {
 			   	$encryption_type = self::GetMailOption('hmailserver_et');
 	            $max_mailbox_size = self::GetMailOption('hmailserver_mms');
 				// Lets add the domain if it does not exist for that mailbox...
