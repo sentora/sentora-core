@@ -141,7 +141,7 @@ class module_controller {
 		$backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/"; 
 		if ($handle = opendir($backupdir)) {
    			while (false !== ($file = readdir($handle))){
-          		if ($file != "." && $file != ".." && substr($file, -4) == ".zip"){
+          		if ($file != "." && $file != ".." && stristr($file,"_") && substr($file, -4) == ".zip"){
 					$dirFiles[] = $file;
           		}
        		}

@@ -35,11 +35,17 @@ class module_controller {
 	static $alreadyexistsalias;
 	static $validemail;
 	static $noaddress;
+	static $delete;
+	static $create;
+	
+    /**
+     * The 'worker' methods.
+     */
 
-    static function getAliasList() {
+    static function ListAliases($uid) {
         global $zdbh;
         global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_aliases WHERE al_acc_fk=" . $currentuser['userid'] . " AND al_deleted_ts IS NULL ORDER BY al_address_vc ASC";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -56,11 +62,31 @@ class module_controller {
             return false;
         }
     }
-	
-    static function getMailboxList() {
+
+    static function ListCurrentAlias($aid) {
         global $zdbh;
         global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
+        $sql = "SELECT * FROM x_aliases WHERE al_id_pk=" . $aid . " AND al_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowaliases = $sql->fetch()) {
+                array_push($res, array('address'     => $rowaliases['al_address_vc'],
+									   'destination' => $rowaliases['al_destination_vc'],
+									   'id' 	     => $rowaliases['al_id_pk']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+	
+    static function getMailboxList($uid) {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $currentuser['userid'] . " AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -77,10 +103,10 @@ class module_controller {
         }
     }
 
-    static function getDomainList() {
+    static function getDomainList($uid) {
         global $zdbh;
         global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -96,56 +122,15 @@ class module_controller {
         }
     }
 
-    static function getForwardUsagepChart() {
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $forwardersquota = $currentuser['forwardersquota'];
-        $forwarders = fs_director::GetQuotaUsages('forwarders', $currentuser['userid']);
-        $total = $forwardersquota;
-        $used = $forwarders;
-        $free = $total - $used;
-        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
-        return $line;
-    }
-	
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
-    }
-
-	static function doAddAlias(){
-		self::AddAlias();	
-	}
-
-	static function doDeleteAlias(){
-		global $controller;
-		$aliases = self::getAliasList();
-		foreach ($aliases as $alias){
-			if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_'.$alias['id'].''))) {
-				self::DeleteAlias($alias['id']);
-				self::$ok = true;
-				return;
-			}
-		}
-	}
-
-	static function AddAlias(){
+	static function ExecuteCreateAlias($uid, $address, $domain, $destination){
 		global $zdbh;
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors())) {
-			$address = $controller->GetControllerRequest('FORM', 'inAddress');
-			$domain  = $controller->GetControllerRequest('FORM', 'inDomain');
+		$currentuser = ctrl_users::GetUserDetail($uid);
+		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $domain, $destination))) {
+			runtime_hook::Execute('OnBeforeCreateAlias');
 			$fulladdress = $address . "@". $domain;
-			$destination = str_replace(' ', '', $controller->GetControllerRequest('FORM', 'inDestination'));
-			$destination = strtolower($destination);
+			$destination = strtolower(str_replace(' ', '', $destination));
+			self::$create=true;
 			// Include mail server specific file here.
 			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
 			$sql = "INSERT INTO x_aliases (al_acc_fk,
@@ -158,29 +143,33 @@ class module_controller {
 											  " . time() . ")";
 			$sql = $zdbh->prepare($sql);
 			$sql->execute();
+			runtime_hook::Execute('OnAfterCreateAlias');
 			self::$ok = true;
 		}
 	}
 
-	static function DeleteAlias($al_id_pk){
+	static function ExecuteDeleteAlias($al_id_pk){
 		global $zdbh;
 		global $controller;
+		self::$delete=true;
+		runtime_hook::Execute('OnBeforeDeleteAlias');
+		$rowalias = $zdbh->query("SELECT * FROM x_aliases WHERE al_id_pk=" . $al_id_pk . "")->Fetch();
 		// Include mail server specific file here.
-		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		}
 		$sql = "UPDATE x_aliases SET al_deleted_ts=" . time() . " WHERE al_id_pk=" . $al_id_pk . "";
 		$sql = $zdbh->prepare($sql);
 		$sql->execute();
+		runtime_hook::Execute('OnAfterDeleteAlias');
 		self::$ok = true;
 	}
 	
-	static function CheckCreateForErrors(){
+	static function CheckCreateForErrors($address, $domain, $destination){
 		global $zdbh;
         global $controller;
-		$address = $controller->GetControllerRequest('FORM', 'inAddress');
-		$domain  = $controller->GetControllerRequest('FORM', 'inDomain');
 		$fulladdress = $address . "@". $domain;
-		$destination = str_replace(' ', '', $controller->GetControllerRequest('FORM', 'inDestination'));
-		$destination = strtolower($destination);
+		$destination = strtolower(str_replace(' ', '', $destination));
 		if (fs_director::CheckForEmptyValue($address)){
 			self::$noaddress = true;
 			return true;
@@ -223,6 +212,97 @@ class module_controller {
         return true;
     }
 
+    /**
+     * End 'worker' methods.
+     */
+	
+    /**
+     * Webinterface sudo methods.
+     */
+
+    static function doCreateAlias() {
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteCreateAlias($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain'], $formvars['inDestination']))
+			self::$ok = true;
+            return true;
+        return false;
+    }
+
+    static function doDeleteAlias() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        foreach (self::ListAliases($currentuser['userid']) as $row) {
+            if (isset($formvars['inDelete_' . $row['id'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id'] . "");
+                exit;
+            }
+            if (isset($formvars['inEdit_' . $row['id'] . ''])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['id'] . "");
+                exit;
+            }
+        }
+        return;
+    }
+
+    static function doConfirmDeleteAlias() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteDeleteAlias($formvars['inDelete']))
+            return true;
+        return false;
+    }
+
+    static function getEditCurrentAliasName() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentAlias($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['address'];
+        } else {
+            return "";
+        }
+    }
+
+    static function getAliasList() {
+		global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::ListAliases($currentuser['userid']);
+    }
+	
+    static function getCurrentAliasList() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::ListCurrentMailboxes($controller->GetControllerRequest('URL', 'other'));
+    }
+
+    static function getisCreateAlias() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if (!isset($urlvars['show']))
+            return true;
+        return false;
+    }
+
+    static function getisDeleteAlias() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
+            return true;
+        return false;
+    }
+
+    static function getEditCurrentAliasID() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListCurrentAlias($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['id'];
+        } else {
+            return "";
+        }
+    }
+
     static function GetMailOption($name) {
         global $zdbh;
         $result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
@@ -233,6 +313,41 @@ class module_controller {
         }
     }
 
+	static function getModuleName() {
+		$module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
+
+	static function getModuleIcon() {
+		global $controller;
+		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        return $module_icon;
+    }
+
+    static function getForwardUsagepChart() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $line = "";
+        $forwardersquota = $currentuser['forwardersquota'];
+        $forwarders = fs_director::GetQuotaUsages('forwarders', $currentuser['userid']);
+        $total = $forwardersquota;
+        $used = $forwarders;
+        $free = $total - $used;
+        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
+        return $line;
+    }
+
+    static function getQuotaLimit() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        if ($currentuser['forwardersquota'] > fs_director::GetQuotaUsages('forwarders', $currentuser['userid'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+	
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexistsmail)) {
             return ui_sysmessage::shout("A mailbox already exists with that alias address!", "zannounceerror");
@@ -256,6 +371,10 @@ class module_controller {
         }
         return;
     }
+
+    /**
+     * Webinterface sudo methods.
+     */		
 		
 }
 

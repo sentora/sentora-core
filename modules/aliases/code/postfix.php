@@ -34,28 +34,32 @@
 	
 		}
 			
-		// Deleting hMail Alias
+		// Deleting Postfix Alias
 		if (!fs_director::CheckForEmptyValue(self::$delete)) {
-		   	$result = $mail_db->query("SELECT aliasname FROM hm_aliases WHERE aliasname='" . $rowalias['al_address_vc'] . "'")->Fetch();
+		   	$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'")->Fetch();
 			if ($result) {
-				$sql = "DELETE FROM hm_aliases WHERE aliasname='" . $rowalias['al_address_vc'] . "'";
+				$sql = "DELETE FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'";
 				$sql = $mail_db->prepare($sql);
 				$sql->execute();
 			}
 		}
 
-		// Adding hMail Alias
+		// Adding Postfix Alias
 		if (!fs_director::CheckForEmptyValue(self::$create)) {
-	        $result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
-			if ($result) {				
-            	$sql = "INSERT INTO hm_aliases (aliasdomainid,
-										aliasname,
-										aliasvalue,
-										aliasactive) VALUES (
-									 	'" . $result['domainid'] . "',
-									 	'" . $fulladdress . "',
-									 	'" . $destination . "',
-									 	'1')";
+	        $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
+			if (!$result) {				
+            	$sql = "INSERT INTO alias  (address,
+										 	goto,
+										 	domain,
+											created,
+										 	modified,
+										 	active) VALUES (
+										 	'" . $fulladdress . "',
+										 	'" . $destination . "',
+										 	'" . $domain . "',
+										 	NOW(),
+										 	NOW(),
+										 	'1')";
 				$sql = $mail_db->prepare($sql);
 				$sql->execute();
 			}			
