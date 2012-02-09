@@ -28,7 +28,8 @@
 class module_controller {
 
 	static $deleteok;
-	static $backupok;	
+	static $backupok;
+	static $filenotexist;
 	
 	static function ExecuteBackup($userid, $download=0){
 		global $zdbh;
@@ -72,35 +73,39 @@ class module_controller {
 		if (!is_dir($backupdir)){
 			mkdir($backupdir, 0777, TRUE);
 		}
-		copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip ", $backupdir . $backupname . ".zip");
-		unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip ");
-		// If Client has checked to download file
-		if ($download <> 0){
-			if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-				# Now we send the output (Windows)...
-				header('Pragma: public'); 
-				header('Expires: 0');        
-				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');   
-				header('Cache-Control: private',false);   
-				header('Content-Type: application/zip');   
-				header('Content-Disposition: attachment; filename='.$backupname.'.zip');   
-				header('Content-Transfer-Encoding: binary');   
-				header('Content-Length: '.filesize($backupdir . $backupname . '.zip ').''); 
-				readfile($backupdir . $backupname . ".zip ");   
-			} else {
-				# Now we send the output (POSIX)...
-				$file = $backupdir . $backupname . ".zip"; 
-				header('Pragma: public');
-				header('Expires: 0');
-				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-				header('Cache-Control: private', false);
-				header('Content-Description: File Transfer');
-				header('Content-Transfer-Encoding: binary');
-				header('Content-Type: application/force-download'); 
-				header('Content-Length: ' . filesize($file)); 
-				header('Content-Disposition: attachment; filename=' . $backupname . '.zip');  
-				self::readfile_chunked($file);
-			}		
+		if (file_exists(ctrl_options::GetOption('temp_dir') . $backupname . ".zip ")){
+			copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip ", $backupdir . $backupname . ".zip");
+			unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip ");
+			// If Client has checked to download file
+			if ($download <> 0){
+				if (sys_versions::ShowOSPlatformVersion() == "Windows") {
+					# Now we send the output (Windows)...
+					header('Pragma: public'); 
+					header('Expires: 0');        
+					header('Cache-Control: must-revalidate, post-check=0, pre-check=0');   
+					header('Cache-Control: private',false);   
+					header('Content-Type: application/zip');   
+					header('Content-Disposition: attachment; filename='.$backupname.'.zip');   
+					header('Content-Transfer-Encoding: binary');   
+					header('Content-Length: '.filesize($backupdir . $backupname . '.zip ').''); 
+					readfile($backupdir . $backupname . ".zip ");   
+				} else {
+					# Now we send the output (POSIX)...
+					$file = $backupdir . $backupname . ".zip"; 
+					header('Pragma: public');
+					header('Expires: 0');
+					header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+					header('Cache-Control: private', false);
+					header('Content-Description: File Transfer');
+					header('Content-Transfer-Encoding: binary');
+					header('Content-Type: application/force-download'); 
+					header('Content-Length: ' . filesize($file)); 
+					header('Content-Disposition: attachment; filename=' . $backupname . '.zip');  
+					self::readfile_chunked($file);
+				}		
+			}
+		} else {
+			self::$filenotexist=true;
 		}
 		runtime_hook::Execute('OnAfterCreateBackup');
 	}
@@ -157,9 +162,20 @@ class module_controller {
 		}							   
         return $res;
     }
+
+	static function ExecuteCreateBackupDirectory($username){
+		$backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/";
+		if (!is_dir($backupdir)){
+			mkdir($backupdir, 0777, TRUE);
+		}
+	
+	}
 	
 	
 	static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$filenotexist)){
+            return ui_sysmessage::shout("There was an error saving your backup!", "zannounceerror");
+		}
         if (!fs_director::CheckForEmptyValue(self::$deleteok)){
             return ui_sysmessage::shout("Backup deleted successfully!", "zannounceok");
 		}
@@ -169,7 +185,13 @@ class module_controller {
         return;
     }
 	
-	
+	static function getCreateBackupDirectory() {
+		$currentuser = ctrl_users::GetUserDetail();
+		if (self::ExecuteCreateBackupDirectory($currentuser['username']))
+        	return true;
+		return false;
+    }
+		
 	static function getModuleName() {
 		$module_name = ui_module::GetModuleName();
         return $module_name;
