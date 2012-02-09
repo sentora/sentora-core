@@ -38,7 +38,7 @@
 		
 		// Deleting hMail Forwarder
 				if (!fs_director::CheckForEmptyValue(self::$delete)) {
-		        	$result = $mail_db->query("SELECT goto FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+		        	$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
 					if ($result) {
 						$sql = "UPDATE alias SET goto='" . $rowforwarder['fw_address_vc'] . "', modified=NOW() WHERE address = '" . $rowforwarder['fw_address_vc'] . "'";
 						$sql = $mail_db->prepare($sql);
@@ -50,7 +50,7 @@
 		
 		// Adding hMail Forwarder
 		if (!fs_director::CheckForEmptyValue(self::$create)) {
-	        $result = $mail_db->query("SELECT goto FROM alias WHERE address='" . $address . "'")->Fetch();
+	        $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $address . "'")->Fetch();
 			if ($result) {				
 				if ($keepmessage == 1) {
                 	$copy = "," . $address;
