@@ -87,7 +87,7 @@
 				<form action="./?module=ftp_management&action=CreateFTP" method="post">
 		       		<table class="zform">
 				        <tr>
-					        <th><: Username :>:</th>
+					        <th nowrap="nowrap"><: Username :>:</th>
 					        <td><input name="inUsername" type="text" id="inUsername" size="30" value=""/></td>
 				        </tr>
 				        <tr>
@@ -95,7 +95,7 @@
 					        <td><input name="inPassword" type="password" id="inPassword" size="30" /></td>
 				        </tr>
 				        <tr>
-					        <th><: Access type :>:</th>
+					        <th nowrap="nowrap"><: Access type :>:</th>
 					        <td><select name="inAccess" size="1">
 					        <option value="RO" selected="selected"><: Read-only :></option>
 					        <option value="WO"><: Write-only :></option>
@@ -103,7 +103,7 @@
 					        </select></td>
 				        </tr>
 		        <tr>
-			        <th><: Home directory :>:</th>
+			        <th nowrap="nowrap"><: Home directory :>:</th>
 			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
 		        </tr>
 		        <tr>

@@ -56,11 +56,11 @@
 	        <form action="./?module=domains&action=CreateDomain" method="post" name="CreateDomain">
 	        <table class="zform">
 		        <tr>
-			        <th><: Domain name :>:</th>
+			        <th nowrap="nowrap"><: Domain name :>:</th>
 			        <td><input name="inDomain" type="text" id="inDomain" size="30" /></td>
 		        </tr>
 		        <tr>
-			        <th><: Home directory :>:</th>
+			        <th nowrap="nowrap"><: Home directory :>:</th>
 			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
 		        </tr>
 		        <tr>

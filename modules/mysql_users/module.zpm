@@ -127,7 +127,7 @@
 					</td>
 		        </tr>
 		        <tr>
-			        <th><: Remote Access :>:</th>
+			        <th nowrap="nowrap"><: Remote Access :>:</th>
 			        <td><input name="inAccess" type="radio" id="inAccess" value="1" onclick="hide_div('showaccess');" CHECKED />&nbsp;<: Allow from any IP :></td>
 		        </tr>
 		        <tr>

@@ -56,8 +56,8 @@
 	        <form action="./?module=parked_domains&action=CreateParkedDomain" method="post" name="CreateDomain">
 	        <table class="zform">
 		        <tr>
-			        <th><: Domain name :>:</th>
-			        <td nowrap="nowrap"><input name="inDomain" type="text" id="inDomain" /></td>
+			        <th nowrap="nowrap"><: Domain name :>:</th>
+			        <td><input name="inDomain" type="text" id="inDomain" /></td>
 		        </tr>
 		        <tr>
 			        <th></th>
