@@ -344,6 +344,17 @@ class module_controller {
         }
     }
 
+    static function getQuotaLimit() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        if ($currentuser['ftpaccountsquota'] > fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     static function getFTPUsagepChart() {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail();

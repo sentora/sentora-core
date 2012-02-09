@@ -80,9 +80,10 @@
 	<% if isCreateFTP %>
 	<div class="zform_wrapper">
 		<table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top">
-			<tr>
+			<tr valign="top">
 				<td>
 				<h2><: Create a new FTP Account :></h2>
+				<% if QuotaLimit %>
 				<form action="./?module=ftp_management&action=CreateFTP" method="post">
 		       		<table class="zform">
 				        <tr>
@@ -128,6 +129,9 @@
 				        </tr>
 			        </table>
 		    	</form>
+				<% else %>
+				<: You have reached your FTP account limit! :>
+				<% endif %>	
 				</td>
 				<td align="right"><@ FTPUsagepChart @></td>
 			</tr>
