@@ -324,6 +324,11 @@ class module_controller {
         return $module_icon;
     }
 
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
     static function getForwardUsagepChart() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();

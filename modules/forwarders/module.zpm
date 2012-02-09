@@ -1,7 +1,7 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create mail forwarders. :></p></div>
+	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
 	<@ Result @>
 
 	<% if isDeleteForwarder %>
@@ -53,8 +53,8 @@
 		<table class="none" width="100%" cellborder="0" cellspacing="0">
 			<tr valign="top">
 				<td>
-				<% if QuotaLimit %>
 				<h2><: Create a new forward :></h2>
+				<% if QuotaLimit %>
 				<form action="./?module=forwarders&action=CreateForwarder" method="post">
 				<table class="zform">
 					<tr>

@@ -378,6 +378,11 @@ class module_controller {
 		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
+
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
 	
     static function getQuotaLimit() {
         global $zdbh;

@@ -1,7 +1,7 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create alias mailboxes to existing accounts. :></p></div>
+	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
 	<@ Result @>
 
 	<% if isDeleteAlias %>
@@ -47,42 +47,49 @@
 	</div>
 
 	<div class="zform_wrapper">
-		<h2><: Create a new Alias :></h2>
-		<% if QuotaLimit %>
-		<form action="./?module=aliases&action=CreateAlias" method="post">
-		<table class="zform">
-			<tr>
-				<th><: Alias Address :>:</th>
+		<table class="none" width="100%" cellborder="0" cellspacing="0">
+			<tr valign="top">
 				<td>
-				<input type="text" name="inAddress" id="inAddress" />
-				<select name="inDomain" id="inDomain">
-				<option value="" selected="selected">-- <: Select a domain :> --</option>
-			<% loop DomainList %>
-				<option value="<& domain &>">@<& domain &></option>
-			<% endloop %>
-				</select>
+				<h2><: Create a new Alias :></h2>
+				<% if QuotaLimit %>
+				<form action="./?module=aliases&action=CreateAlias" method="post">
+				<table class="zform">
+					<tr>
+						<th><: Alias Address :>:</th>
+						<td>
+						<input type="text" name="inAddress" id="inAddress" />
+						<select name="inDomain" id="inDomain">
+						<option value="" selected="selected">-- <: Select a domain :> --</option>
+						<% loop DomainList %>
+						<option value="<& domain &>">@<& domain &></option>
+						<% endloop %>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<th><: Destination :>:</th>
+						<td>
+						<select name="inDestination" id="inDestination">
+						<option value="" selected="selected">-- <: Select a mailbox :> --</option>
+						<% loop MailboxList %>
+						<option value="<& address &>"><& address &></option>
+						<% endloop %>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<th><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inCreate" id="inCreate" value="inCreate"><: Create :></button></th>
+						<td></td>
+					</tr>
+				</table>
+				</form>
+				<% else %><!-- ELSE QuotaLimit -->
+				<: Sorry, you have reached your mailbox forward quota limit! :>
+				<% endif %><!-- END QuotaLimit -->
 				</td>
-			</tr>
-			<tr>
-				<th><: Destination :>:</th>
-				<td>
-				<select name="inDestination" id="inDestination">
-				<option value="" selected="selected">-- <: Select a mailbox :> --</option>
-			<% loop MailboxList %>
-				<option value="<& address &>"><& address &></option>
-			<% endloop %>
-				</select>
-				</td>
-			</tr>
-			<tr>
-				<th><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inCreate" id="inCreate" value="inCreate"><: Create :></button></th>
-				<td></td>
+				<td align="right"><@ ForwardUsagepChart @></td>
 			</tr>
 		</table>
-		</form>
-		<% else %><!-- ELSE QuotaLimit -->
-		<: Sorry, you have reached your mailbox forward quota limit! :>
-		<% endif %><!-- END QuotaLimit -->
 	</div>
 	
 </div>

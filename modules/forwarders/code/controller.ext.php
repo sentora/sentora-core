@@ -345,6 +345,11 @@ class module_controller {
         return $module_icon;
     }
 
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexistssame)) {
             return ui_sysmessage::shout("You cannot forward a mailbox to itself!", "zannounceerror");
