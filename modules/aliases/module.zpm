@@ -55,8 +55,8 @@
 				<form action="./?module=aliases&action=CreateAlias" method="post">
 				<table class="zform">
 					<tr>
-						<th><: Alias Address :>:</th>
-						<td>
+						<th nowrap="nowrap"><: Alias Address :>:</th>
+						<td nowrap="nowrap">
 						<input type="text" name="inAddress" id="inAddress" />
 						<select name="inDomain" id="inDomain">
 						<option value="" selected="selected">-- <: Select a domain :> --</option>
@@ -67,7 +67,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th><: Destination :>:</th>
+						<th nowrap="nowrap"><: Destination :>:</th>
 						<td>
 						<select name="inDestination" id="inDestination">
 						<option value="" selected="selected">-- <: Select a mailbox :> --</option>

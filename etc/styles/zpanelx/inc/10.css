@@ -227,6 +227,7 @@ text-align:left;
 	top: 0px;
 	left: 0px;
 	z-index:9999;
+	min-width:1000px;
 }
 #header_top{
 	background: url(../images/statsdata_th_center.png) #4b4d4a repeat-x center top;
@@ -523,6 +524,7 @@ a.zcat{
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	min-height:100px;
+	min-width:730px;
 }
 .zform{
 	text-align:left;
@@ -576,6 +578,7 @@ a.zcat{
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	min-height:100px;
+	min-width:730px;
 }
 .zgrid{
 	text-align:left;
