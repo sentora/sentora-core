@@ -164,16 +164,16 @@
         	<table class="zform">
 		        <tr>
 			        <th><: Username :>:</th>
-			        <td><input type="text" name="inUserName" id="inUserName" maxlength="10" value="<@ FormName @>" /></td>
+			        <td><input type="text" name="inNewUserName" id="inNewUserName" maxlength="10" value="<@ FormName @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Password :>:</th>
-			        <td><input type="text" name="inPassword" id="inPassword" value="<@ RandomPassword @>" /></td>
+			        <td><input type="text" name="inNewPassword" id="inNewPassword" value="<@ RandomPassword @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Usergroup :>:</th>
 			        <td>
-					<select name="inGroup" id="inGroup">
+					<select name="inNewGroup" id="inNewGroup">
 			        <option value="" selected="selected">-- Select a usergroup --</option>
 					<% loop GroupList %>
 					<option value="<& groupid &>"><& groupname &></option>
@@ -184,7 +184,7 @@
 				<tr>
 			        <th><: Package :>:</th>
 			        <td>
-					<select name="inPackage" id="inPackage">
+					<select name="inNewPackage" id="inNewPackage">
 			        <option value="" selected="selected">-- Select a package --</option>
 					<% loop PackageList %>
 					<option value="<& packageid &>"><& packagename &></option>
@@ -194,23 +194,23 @@
 		        </tr>
 		        <tr>
 			        <th><: Full Name :>:</th>
-			        <td><input type="text" name="inFullName" id="inFullName" value="<@ FormFullName @>" /></td>
+			        <td><input type="text" name="inNewFullName" id="inNewFullName" value="<@ FormFullName @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Email Address :>:</th>
-			        <td><input type="text" name="inEmailAddress" id="inEmailAddress" value="<@ FormEmail @>" /></td>
+			        <td><input type="text" name="inNewEmailAddress" id="inNewEmailAddress" value="<@ FormEmail @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Postal Address :>:</th>
-			        <td><textarea name="inAddress" id="inAddress" cols="45" rows="5"><@ FormAddress @></textarea></td>
+			        <td><textarea name="inNewAddress" id="inNewAddress" cols="45" rows="5"><@ FormAddress @></textarea></td>
 		        </tr>
 		        <tr>
 			        <th><: Postal Code :>:</th>
-			        <td><input name="inPostCode" type="text" id="inPostCode" size="20" maxlength="10" value="<@ FormPost @>" /></td>
+			        <td><input name="inNewPostCode" type="text" id="inNewPostCode" size="20" maxlength="10" value="<@ FormPost @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Phone Number :>:</th>
-			        <td><input name="inPhone" type="text" id="inPhone" size="20" maxlength="50" value="<@ FormPhone @>" /></td>
+			        <td><input name="inNewPhone" type="text" id="inNewPhone" size="20" maxlength="50" value="<@ FormPhone @>" /></td>
 		        </tr>
 		        <tr>
 			        <th><: Send welcome email? :></th>

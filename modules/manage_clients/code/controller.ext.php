@@ -39,6 +39,7 @@ class module_controller {
     static $edit;
     static $clientid;
     static $clientpkgid;
+	static $resetform;
 
     /**
      * The 'worker' methods.
@@ -214,6 +215,7 @@ class module_controller {
 								WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteClient');
+		self::$ok=true;
         return true;
     }
 
@@ -241,6 +243,7 @@ class module_controller {
             //zapi_mysqluser_setpass($resetforuser, Cleaner("i", $_POST['inNewPassword']), $zdb);
         }
         runtime_hook::Execute('OnAfterUpdateClient');
+		self::$ok=true;
         return true;
     }
 
@@ -328,6 +331,9 @@ class module_controller {
         $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
         $sql->execute();
         runtime_hook::Execute('OnAfterCreateClient');
+		self::$resetform=true;
+		self::$ok=true;
+		return true;
 
         // Create the MySQL account for the user...
         // Now we create the user's home directory if it doesnt already exsist...
@@ -422,9 +428,12 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inUserName'], $formvars['inPackage'], $formvars['inGroup'], $formvars['inFullName'], $formvars['inEmailAddress'], $formvars['inAddress'], $formvars['inPostCode'], $formvars['inPhone'], $formvars['inPassword']))
+        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inNewUserName'], $formvars['inNewPackage'], $formvars['inNewGroup'], $formvars['inNewFullName'], $formvars['inNewEmailAddress'], $formvars['inNewAddress'], $formvars['inNewPostCode'], $formvars['inNewPhone'], $formvars['inNewPassword'])){
+			unset($_POST['inNewUserName']);
             return true;
+		} else {
         return false;
+		}
     }
 
     static function doEditClient() {
@@ -637,8 +646,8 @@ class module_controller {
     static function getFormName() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inUserName'])) {
-            return $formvars['inUserName'];
+        if (isset($formvars['inNewUserName']) && fs_director::CheckForEmptyValue(self::$resetform)) {
+            return $formvars['inNewUserName'];
         }
         return;
     }
@@ -646,8 +655,8 @@ class module_controller {
     static function getFormFullName() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inFullName'])) {
-            return $formvars['inFullName'];
+        if (isset($formvars['inNewFullName']) && fs_director::CheckForEmptyValue(self::$resetform)) {
+            return $formvars['inNewFullName'];
         }
         return;
     }
@@ -655,8 +664,8 @@ class module_controller {
     static function getFormEmail() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inEmailAddress'])) {
-            return $formvars['inEmailAddress'];
+        if (isset($formvars['inNewEmailAddress']) && fs_director::CheckForEmptyValue(self::$resetform)) {
+            return $formvars['inNewEmailAddress'];
         }
         return;
     }
@@ -664,8 +673,8 @@ class module_controller {
     static function getFormAddress() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inAddress'])) {
-            return $formvars['inAddress'];
+        if (isset($formvars['inNewAddress']) && fs_director::CheckForEmptyValue(self::$resetform)) {
+            return $formvars['inNewAddress'];
         }
         return;
     }
@@ -673,8 +682,8 @@ class module_controller {
     static function getFormPost() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inPostCode'])) {
-            return $formvars['inPostCode'];
+        if (isset($formvars['inNewPostCode']) && fs_director::CheckForEmptyValue(self::$resetform)) {
+            return $formvars['inNewPostCode'];
         }
         return;
     }
@@ -682,8 +691,8 @@ class module_controller {
     static function getFormPhone() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inPhone'])) {
-            return $formvars['inPhone'];
+        if (isset($formvars['inNewPhone']) && fs_director::CheckForEmptyValue(self::$resetform)) {
+            return $formvars['inNewPhone'];
         }
         return;
     }
