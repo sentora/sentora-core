@@ -541,7 +541,7 @@ class module_controller {
 		return ui_sysmessage::shout(ui_language::translate("A package with that name already appears to exsist."), "zannounceerror");
 		}	
 		if (!fs_director::CheckForEmptyValue(self::$error)){
-		return ui_sysmessage::shout(ui_language::translate("There was an error updating your package"), "zannounceerror");
+		return ui_sysmessage::shout(ui_language::translate("There was an error updating your packages"), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$samepackage)){
 		return ui_sysmessage::shout(ui_language::translate("You cant move clients to the same package you are deleting!"), "zannounceerror");
