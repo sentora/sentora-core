@@ -33,7 +33,7 @@ class module_controller {
 	static $blank;
 	static $ok;
 	static $edit;
-	static $package_to_edit;
+	static $samepackage;
 
     /**
      * The 'worker' methods.
@@ -104,13 +104,17 @@ class module_controller {
 	
 	static function ExecuteDeletePackage($pk_id_pk, $mpk_id_pk){
 		global $zdbh;
-		    runtime_hook::Execute('OnBeforeDeletePackage');
-			$sql = $zdbh->prepare("
+		if ($pk_id_pk == $mpk_id_pk){
+			self::$samepackage=true;
+			return false;		
+		}
+		runtime_hook::Execute('OnBeforeDeletePackage');
+		$sql = $zdbh->prepare("
             UPDATE x_accounts
             SET ac_package_fk = " . $mpk_id_pk . "
             WHERE ac_package_fk = " . $pk_id_pk . "");
         $sql->execute();
-			$sql = $zdbh->prepare("
+		$sql = $zdbh->prepare("
             UPDATE x_profiles
             SET ud_package_fk = " . $mpk_id_pk . "
             WHERE ud_package_fk = " . $pk_id_pk . "");
@@ -121,10 +125,15 @@ class module_controller {
 			WHERE pk_id_pk = '".$pk_id_pk."'");
 		$sql->execute();
 		runtime_hook::Execute('OnAfterDeletePackage');
+		self::$ok = true;
+		return true;
 	}
 
 	static function ExecuteCreatePackage($uid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota){
 		global $zdbh;
+        if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
+            return false;
+        }
 		$packagename = str_replace(' ', '', $packagename);
         // Check for errors before we continue...
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($packagename, $uid))) {
@@ -168,12 +177,16 @@ class module_controller {
 										" . ($DiskQuota * 1024000) . ",
 										" . ($BandQuota * 1024000) . ")");
 		$sql->execute();
-		runtime_hook::Execute('OnAfterCreatePackage');				  
+		runtime_hook::Execute('OnAfterCreatePackage');
+		self::$ok = true;				  
 		return true;
 	}
 
 	static function ExecuteUpdatePackage($uid, $pid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota){
 		global $zdbh;
+        if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
+            return false;
+        }
 		$packagename = str_replace(' ', '', $packagename);
         // Check for errors before we continue...
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($packagename, $uid, $pid))) {
@@ -197,7 +210,8 @@ class module_controller {
 								qt_mysql_in         =" . $MySQL . "
 								WHERE qt_package_fk =" . $pid . "");						
 		$sql->execute();
-		runtime_hook::Execute('OnAfterUpdatePackage');				  
+		runtime_hook::Execute('OnAfterUpdatePackage');
+		self::$ok = true;				  
 		return true;
 	}
 	
@@ -231,6 +245,26 @@ class module_controller {
         }
         return true;
     }
+
+	static function CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota){
+		if (!is_numeric($EnablePHP)		||
+			!is_numeric($EnableCGI)		||
+			!is_numeric($Domains) 		|| 
+			!is_numeric($SubDomains) 	|| 
+			!is_numeric($ParkedDomains) ||
+			!is_numeric($Mailboxes) 	|| 
+			!is_numeric($Fowarders) 	|| 
+			!is_numeric($DistLists) 	|| 
+			!is_numeric($FTPAccounts) 	|| 
+			!is_numeric($MySQL) 		|| 
+			!is_numeric($DiskQuota)		|| 
+			!is_numeric($BandQuota)){
+			self::$error=true;
+			return false;
+		} else {
+		return true;
+		}
+	}
 		
     /**
      * End 'worker' methods.
@@ -303,6 +337,7 @@ class module_controller {
         if (self::ExecuteDeletePackage($formvars['inPackageID'], $formvars['inMovePackage']))
             return true;
         return false;
+
     }
 	
     static function getPackageList() {
@@ -507,6 +542,9 @@ class module_controller {
 		}	
 		if (!fs_director::CheckForEmptyValue(self::$error)){
 		return ui_sysmessage::shout(ui_language::translate("There was an error updating your package"), "zannounceerror");
+		}
+		if (!fs_director::CheckForEmptyValue(self::$samepackage)){
+		return ui_sysmessage::shout(ui_language::translate("You cant move clients to the same package you are deleting!"), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$ok)){
 			return ui_sysmessage::shout(ui_language::translate("Changes to your packages have been saved successfully!"), "zannounceok");
