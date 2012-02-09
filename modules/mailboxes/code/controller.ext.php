@@ -155,6 +155,7 @@ class module_controller {
 		$sql = $zdbh->prepare($sql);
 		$sql->execute();
 		runtime_hook::Execute('OnAfterDeleteMailbox');
+		self::$ok = true;
 	}
 	
 	static function ExecuteUpdateMailbox($mid, $password, $enabled){
@@ -422,6 +423,7 @@ class module_controller {
         }
         return;
     } 
+	
     /**
      * Webinterface sudo methods.
      */		

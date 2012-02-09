@@ -38,9 +38,9 @@
 		
 		// Deleting hMail Forwarder
 				if (!fs_director::CheckForEmptyValue(self::$delete)) {
-		        	$result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+		        	$result = $mail_db->query("SELECT goto FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
 					if ($result) {
-						$sql = "UPDATE hm_accounts SET accountforwardenabled='0', accountforwardaddress='', accountforwardkeeporiginal='0' WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'";
+						$sql = "UPDATE alias SET goto='" . $rowforwarder['fw_address_vc'] . "', modified=NOW() WHERE address = '" . $rowforwarder['fw_address_vc'] . "'";
 						$sql = $mail_db->prepare($sql);
 						$sql->execute();
 					}
@@ -50,9 +50,14 @@
 		
 		// Adding hMail Forwarder
 		if (!fs_director::CheckForEmptyValue(self::$create)) {
-	        $result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $address . "'")->Fetch();
+	        $result = $mail_db->query("SELECT goto FROM alias WHERE address='" . $address . "'")->Fetch();
 			if ($result) {				
-				$sql = "UPDATE hm_accounts SET accountforwardenabled='1', accountforwardaddress='" . $destination . "', accountforwardkeeporiginal='" . $keepmessage . "' WHERE accountaddress='" . $address . "'";
+				if ($keepmessage == 1) {
+                	$copy = "," . $address;
+            	} else {
+                	$copy = NULL;
+            	}
+            $sql = "UPDATE alias SET goto='" . $destination . $copy . "', modified=NOW() WHERE address = '" . $address . "'";
 				$sql = $mail_db->prepare($sql);
 				$sql->execute();
 			}			

@@ -4,9 +4,27 @@
 	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: Using this module you have the ability to create mail forwarders. :></p></div>
 	<@ Result @>
 
+	<% if isDeleteForwarder %>
+	<div class="zform_wrapper">
+		<h2><: Delete Forwarder :>: <@ EditCurrentForwarderName @> ?</h2>
+		<p><: Please confirm that you want to delete this forwarder. :></p>
+		<form action="./?module=forwarders&action=ConfirmDeleteForwarder" method="post">
+		<table class="none" cellpadding="0" cellspacing="0">
+			<tr>
+				<td colspan="2" align="right">
+				<input type="hidden" name="inDelete" value="<@ EditCurrentForwarderID @>">
+				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=forwarders';return false;"><: Cancel :></button>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+	<% endif %>
+	
 	<div class="zgrid_wrapper">
 		<h2><: Current Forwarders :></h2>
-		<% if ForwardList %>
+		<% if ForwarderList %>
 		<form action="./?module=forwarders&action=DeleteForwarder" method="post">
 		<table class="zgrid">
 			<tr>
@@ -15,7 +33,7 @@
 				<th><: Keep Message :></th>
 				<th></th>
 			</tr>
-		<% loop ForwardList %>
+		<% loop ForwarderList %>
 			<tr>
 				<td><& address &></td>
 				<td><& destination &></td>
@@ -25,21 +43,22 @@
 		<% endloop %>
 		</table>
 		</form>
-		<% else %><!-- ELSE ForwardList -->
+		<% else %>
 		<: Sorry there are currently no mailbox forwards configured! :>
-		<% endif %><!-- END ForwardList -->
+		<% endif %>
 	</div>
 
+	<% if isCreateForwarder %>
 	<div class="zform_wrapper">
 		<table class="none" width="100%" cellborder="0" cellspacing="0">
 			<tr valign="top">
 				<td>
 				<% if QuotaLimit %>
 				<h2><: Create a new forward :></h2>
-				<form action="./?module=forwarders&action=AddForwarder" method="post">
+				<form action="./?module=forwarders&action=CreateForwarder" method="post">
 				<table class="zform">
 					<tr>
-						<th><: Email Address :>:</th>
+						<th nowrap="nowrap"><: Email Address :>:</th>
 						<td>
 						<select name="inAddress" id="inAddress">
 						<option value="" selected="selected">-- <: Select a mailbox :> --</option>
@@ -50,11 +69,11 @@
 						</td>
 					</tr>
 					<tr>
-						<th><: Destination :>:</th>
-						<td><input type="text" name="inDestinationName" id="inDestinationName" /> @ <input type="text" name="inDestinationDomain" id="inDestinationDomain" /></td>
+						<th nowrap="nowrap"><: Destination :>:</th>
+						<td nowrap="nowrap"><input type="text" name="inDestinationName" id="inDestinationName" /> @ <input type="text" name="inDestinationDomain" id="inDestinationDomain" /></td>
 					</tr>
 					<tr>
-						<th><: Keep original message :>:</th>
+						<th nowrap="nowrap"><: Keep original message :>:</th>
 						<td><input type="checkbox" name="inKeepMessage" id="inKeepMessage" value="1" checked="checked" /></td>
 					</tr>
 					<tr>
@@ -71,5 +90,6 @@
 			</tr>
 		</table>		
 	</div>
+	<% endif %>
 	
 </div>
