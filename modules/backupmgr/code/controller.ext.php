@@ -73,9 +73,10 @@ class module_controller {
 		if (!is_dir($backupdir)){
 			mkdir($backupdir, 0777, TRUE);
 		}
-		if (file_exists(ctrl_options::GetOption('temp_dir') . $backupname . ".zip ")){
-			copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip ", $backupdir . $backupname . ".zip");
-			unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip ");
+		
+		if (file_exists(ctrl_options::GetOption('temp_dir') . $backupname . ".zip")){
+			copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", $backupdir . $backupname . ".zip");
+			unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip");
 			// If Client has checked to download file
 			if ($download <> 0){
 				if (sys_versions::ShowOSPlatformVersion() == "Windows") {
