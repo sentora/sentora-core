@@ -72,7 +72,7 @@ class module_controller {
                     $count++;
                     $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['dns_cleanname_vc'] . "</th><td><textarea cols=\"32\" rows=\"1\" name=\"" . $row['dns_name_vc'] . "\">" . $row['dns_value_tx'] . "</textarea></td><td>" . $row['dns_desc_tx'] . "</td></tr>";
                 }
-                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button></th><td></td><td></td></tr>";
+                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></tr>";
             }
         }
         $line .= "</table>";

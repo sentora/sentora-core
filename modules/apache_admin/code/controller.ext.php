@@ -59,7 +59,7 @@ class module_controller {
                     $count++;
                     $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['vhs_cleanname_vc'] . "</th><td><textarea cols=\"30\" rows=\"1\" name=\"" . $row['vhs_name_vc'] . "\">" . $row['vhs_value_tx'] . "</textarea></td><td>" . $row['vhs_desc_tx'] . "</td></tr>";
                 }
-                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button></th><td></td><td></td></tr>";
+                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></th></tr>";
             }
         }
         $line .= "</table>";

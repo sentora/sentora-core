@@ -5,8 +5,8 @@
 	<@ Result @>
 
 	<div class="zgrid_wrapper">
-		<h2><: Configure your Mail Settings :></h2>
-		<form action="./?module=mail_admin&action=UpdateConfig" method="post">
+		<h2><: Configure your Backup Settings :></h2>
+		<form action="./?module=backup_admin&action=UpdateConfig" method="post">
 		<table class="zgrid">
 			<% loop Config %>
 			<tr valign="top">
