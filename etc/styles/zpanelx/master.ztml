@@ -235,7 +235,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Server OS:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_serverosname #></span></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><img src="<# ui_tpl_assetfolderpath #>/images/os_icons/<# ui_tpl_serverosname #>.png" border="0" width="16" height="16"/> <# ui_tpl_serverosname #></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Apache Version:</strong></td>
