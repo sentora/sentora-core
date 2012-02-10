@@ -48,6 +48,28 @@ class module_controller {
         }
     }
 
+    function ListCurrentFAQ($fid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_faqs WHERE fq_id_pk=" . $fid . " IS NOT NULL AND fq_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowfaqs = $sql->fetch()) {
+                array_push($res, array(
+                    'question' => $rowfaqs['fq_question_tx'],
+                    'answer' => $rowfaqs['fq_answer_tx'],
+                    'reseller' => $rowfaqs['fq_acc_fk'],
+                    'global' => $rowfaqs['fq_global_in'],
+                    'id' => $rowfaqs['fq_id_pk']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
     function getUserFAQS() {
         global $zdbh;
         global $controller;
@@ -120,9 +142,19 @@ class module_controller {
         //print_r($_POST);
         foreach ($faqs as $faq) {
             if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $faq['id'] . '_x'))) {
-                self::ExecuteDeleteFaq($faq['id']);
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $faq['id'] . "");
+                exit;
+                //self::ExecuteDeleteFaq($faq['id']);
             }
         }
+    }
+
+    static function doConfirmDeleteFAQ() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteDeleteFaq($formvars['inDelete']))
+            return true;
+        return false;
     }
 
     static function doAddFaq() {
@@ -138,6 +170,15 @@ class module_controller {
                 $global = 0;
             }
             self::ExecuteAddFaq($question, $answer, $userid, $global);
+        }
+    }
+
+    static function getEditCurrentFAQID() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            return $controller->GetControllerRequest('URL', 'other');
+        } else {
+            return "";
         }
     }
 
@@ -164,6 +205,14 @@ class module_controller {
         $sql = $zdbh->prepare($sql);
         $sql->execute();
         return true;
+    }
+	
+    static function getisDeleteFAQ() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
+            return true;
+        return false;
     }
 
 }
