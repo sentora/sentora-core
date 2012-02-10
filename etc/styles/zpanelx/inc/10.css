@@ -304,6 +304,9 @@ a.header_top_small{
 	margin: 0px;
 	border-spacing:0px;
 }
+.mainlayout_content{
+	min-width:750px;
+}
 .mainlayout_content td{
 	margin: 0px;
 	padding-right: 12px;
@@ -524,7 +527,6 @@ a.zcat{
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	min-height:100px;
-	min-width:730px;
 }
 .zform{
 	text-align:left;
@@ -578,7 +580,6 @@ a.zcat{
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	min-height:100px;
-	min-width:730px;
 }
 .zgrid{
 	text-align:left;
