@@ -68,34 +68,41 @@ class module_controller {
                 $line .= "<th>" . ui_language::translate("Module") . "</th>";
                 $line .= "<th>" . ui_language::translate("On") . "/" . ui_language::translate("Off") . "</th>";
                 $line .= "<th>" . ui_language::translate("Category") . "</th>";
-                $line .= "<th>" . ui_language::translate("Up-to-date?") . "</th>";
+                $line .= "<th style=\"text-align:center\">" . ui_language::translate("Up-to-date?") . "</th>";
                 $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
                 while ($groups = $groupssql->fetch()) {
-                    $line .= "<th>" . $groups['ug_name_vc'] . "</th>";
+                    $line .= "<th style=\"text-align:center\">" . $groups['ug_name_vc'] . "</th>";
                 }
 
                 $line .= "</tr>";
                 while ($modules = $modsql->fetch()) {
+					$ismodadmin=0;
                     $line .= "<tr>";
                     $line .= "<td>" . self::ModuleStatusIcon($modules['mo_id_pk']) . "</td>";
                     $line .= "<td><a href=\"./?module=moduleadmin&showinfo=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
-                    $line .= "<td><select name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\">";
+                    $line .= "<td><select style=\"min-width:85px;\" name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\">";
                     if ($modules['mo_enabled_en'] == 'true') {
                         $selected = "SELECTED";
                     } else {
                         $selected = "";
                     }
-                    $line .= "<option value=\"true\" " . $selected . ">" . ui_language::translate("Enabled") . "</option>";
+                    if ($modules['mo_name_vc'] == 'Module Admin') {
+						$ismodadmin=1;
+                        $disabled = "disabled=\"disabled\"";
+                    } else {
+                        $disabled = "";
+                    }
+                    $line .= "<option value=\"true\" " . $selected . " >" . ui_language::translate("Enabled") . "</option>";
                     if ($modules['mo_enabled_en'] == 'false') {
                         $selected = "SELECTED";
                     } else {
                         $selected = "";
                     }
-                    $line .= "<option value=\"false\" " . $selected . ">" . ui_language::translate("Disabled") . "</option>";
+                    $line .= "<option value=\"false\" " . $selected . " " . $disabled . ">" . ui_language::translate("Disabled") . "</option>";
                     $line .= "</select></td>";
                     $line .= "<td>";
                     if ($modules['mo_type_en'] == "user") {
-                        $line .= "<select name=\"inCategory_" . $modules['mo_id_pk'] . "\" id=\"inCategory_" . $modules['mo_id_pk'] . "\">";
+                        $line .= "<select style=\"min-width:175px;\" name=\"inCategory_" . $modules['mo_id_pk'] . "\" id=\"inCategory_" . $modules['mo_id_pk'] . "\">";
                         $catssql = $zdbh->query("SELECT * FROM x_modcats ORDER BY mc_name_vc ASC");
                         while ($modulecats = $catssql->fetch()) {
                             $selected = "";
@@ -108,9 +115,9 @@ class module_controller {
                     } else {
                         $line .="" . ui_language::translate("N/A (System module)") . "";
                     }
-                    $line .= "</td><td>";
+                    $line .= "</td><td style=\"text-align:center\">";
                     if (ui_module::GetModuleHasUpdates($modules['mo_folder_vc'])) {
-                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"> " . ui_language::translate("Latest version") . ": <a href=\"" . $modules['mo_updateurl_tx'] . "\" target=\"_blank\">" . $modules['mo_updatever_vc'] . "</a>";
+                        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"><br>" . ui_language::translate("Latest version") . ": <a href=\"" . $modules['mo_updateurl_tx'] . "\" target=\"_blank\">" . $modules['mo_updatever_vc'] . "</a>";
                     } else {
                         $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
                     }
@@ -120,14 +127,20 @@ class module_controller {
                     $line .= "</td>";
                     $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
                     while ($groups = $groupssql->fetch()) {
+						if ($groups['ug_name_vc'] == 'Administrators' && $ismodadmin==1){
+							$line .= "<input type=\"hidden\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\"/>";
+                        	$disabled = "disabled=\"disabled\"";
+                    	} else {
+                        	$disabled = "";
+                    	}
                         $ischeck = 0;
                         if (ctrl_groups::CheckGroupModulePermissions($groups['ug_id_pk'], $modules['mo_id_pk']))
                             $ischeck = "checked=\"checked\" ";
-                        $line .= "<td><input type=\"checkbox\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . "/></td>";
+                        $line .= "<td style=\"text-align:center\"><input type=\"checkbox\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . " " . $disabled . "/></td>";
                     }
                     $line .= "</tr>";
                 }
-                $line .= "</table>";
+                $line .= "</table><br>";
                 $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSave\" value=\"inSave\">" . ui_language::translate("Save changes") . "</button></form>";
             } else {
                 $line .= ui_language::translate("You have no administration modules at this time.");
