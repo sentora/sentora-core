@@ -6,7 +6,7 @@
 
 <div class="zgrid_wrapper">
 <h2><: Current user groups :></h2>
-<% if GroupList %>
+<% if DefaultGroupList %>
 <form action="./?module=manage_groups&action=EditGroup" method="post">
 <table class="zgrid">
 <tr>
@@ -15,6 +15,14 @@
 <th><: Description  :></th>
 <th></th>
 </tr>
+<% loop DefaultGroupList %>
+<tr>
+<td><& groupname &></td>
+<td><& usersingroup &></td>
+<td><& groupdesc &></td>
+<td nowrap="nowrap"></td>
+</tr>
+<% endloop %>
 <% loop GroupList %>
 <tr>
 <td><& groupname &></td>

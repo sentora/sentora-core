@@ -66,9 +66,36 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
+				if ($rowgroups['ug_name_vc'] != "Administrators" &&
+					$rowgroups['ug_name_vc'] != "Resellers"      &&
+					$rowgroups['ug_name_vc'] != "Users"){
                 $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
                 $totalnoaccs = $zdbh->query($noaccs)->fetch();
                 array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
+				}
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
+    static function ListDefaultGroups($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . "";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowgroups = $sql->fetch()) {
+				if ($rowgroups['ug_name_vc'] == "Administrators" ||
+					$rowgroups['ug_name_vc'] == "Resellers"      ||
+					$rowgroups['ug_name_vc'] == "Users"){
+                $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
+                $totalnoaccs = $zdbh->query($noaccs)->fetch();
+                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
+				}
             }
             return $res;
         } else {
@@ -145,6 +172,12 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListGroups($currentuser['userid']);
+    }
+
+    static function getDefaultGroupList() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::ListDefaultGroups($currentuser['userid']);
     }
 
     static function getGroupMoveToList() {
