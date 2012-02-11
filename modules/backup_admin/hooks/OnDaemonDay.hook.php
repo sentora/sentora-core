@@ -79,6 +79,7 @@ $rowconfig_date = $zdbh->query("SELECT * FROM x_backup_settings WHERE bus_name_v
 if (strtolower($rowconfig['bus_value_tx']) == "true"){
 	echo "\r\nBackup Purging enabled - Purging old backups now...\r\n";
 	runtime_hook::Execute('OnBeforePurgeBackup');
+	clearstatcache();
 	// Get all accounts
 	$bsql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
     $numrows = $zdbh->query($bsql);
