@@ -31,6 +31,7 @@ class module_controller {
 	static $dbalreadyadded;
 	static $blank;
 	static $badname;
+	static $badpass;
 	static $rootabuse;
 	static $badIP;
 	static $ok;
@@ -335,12 +336,52 @@ class module_controller {
 		return true;
 	}
 
+	static function ExecuteResetPassword($myuserid, $password){
+		global $zdbh;
+		runtime_hook::Execute('OnBeforeResetDatabasePassword');
+		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
+		// If errors are found, then exit before resetting password...
+        if (fs_director::CheckForEmptyValue(self::CheckPasswordForErrors($password))) {
+            return false;
+        }		
+		$sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '". $rowuser['mu_name_vc'] . "')";
+		if ($numrows = $zdbh->query($sql)) {
+ 			if ($numrows->fetchColumn() <> 0) {
+				// Set MySQL password for new user...
+				$sql = $zdbh->prepare("SET PASSWORD FOR `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`=PASSWORD('" . $password . "')");
+				$sql->execute();
+				$sql = $zdbh->prepare("FLUSH PRIVILEGES");
+				$sql->execute();
+				$sql = $zdbh->prepare("UPDATE x_mysql_users SET mu_pass_vc='".$password."' WHERE mu_id_pk=".$myuserid."");
+				$sql->execute();
+			}
+		}
+		runtime_hook::Execute('OnAfterResetDatabasePassword');
+		self::$ok = true;
+		return true;
+	}
+
+	static function CheckPasswordForErrors($password) {
+		if (!self::IsValidPassword($password)) {
+            self::$badpass = true;
+            return false;
+        }
+		return true;
+	}
+
     static function IsValidUserName($username) {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
         }
         return true;
     }
+
+    static function IsValidPassword($password) {
+        if (!ctype_alnum($password)) {
+            return false;
+        }
+        return true;
+	}
 	
     /**
      * End 'worker' methods.
@@ -414,6 +455,15 @@ class module_controller {
         if (self::ExecuteDeleteUser($formvars['inDelete']))
             return true;
         return false;
+    }
+
+    static function doResetPW() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteResetPassword($formvars['inUser'], $formvars['inResetPW']))
+            return true;
+		return false;
+
     }
 
     static function getUserList() {
@@ -509,7 +559,10 @@ class module_controller {
 		}
 		if (!fs_director::CheckForEmptyValue(self::$badname)){
 		return ui_sysmessage::shout(ui_language::translate("Your MySQL user name is not valid. Please enter a valid MySQL user name."), "zannounceerror");
-		}	
+		}
+		if (!fs_director::CheckForEmptyValue(self::$badpass)){
+		return ui_sysmessage::shout(ui_language::translate("Your MySQL password is not valid. Valid characters are A-Z, a-z, 0-9."), "zannounceerror");
+		}
 		if (!fs_director::CheckForEmptyValue(self::$badIP)){
 		return ui_sysmessage::shout(ui_language::translate("The IP address is not valid. Please enter a valid IP address."), "zannounceerror");
 		}

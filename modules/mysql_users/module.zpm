@@ -62,9 +62,32 @@
 					</td>
 					<td>
 					<input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
-					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Add :></button>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Add Database :></button>
+					</td>
+		        </tr>
+	    	</table>
+		</form>
+		
+		<p>&nbsp;</p>
+
+		<h2><: Reset Password :></h2>
+		<form action="./?module=mysql_users&action=ResetPW" method="post">
+	        <table class="zform">
+		        <tr>
+    			    <th nowrap="nowrap"><: Password :>:</th>
+			        <td>
+					<input type="text" name="inResetPW" id="input-password" value="">
+					</td>
+					<td>
+					<input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save Password :></button>
 					<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
 					</td>
+		        </tr>
+		        <tr>
+    			    <th></th>
+			        <td><a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
+					<td></td>
 		        </tr>
 	    	</table>
 		</form>
@@ -173,4 +196,38 @@
             e.style.display = 'none';
     }
     //-->
+</script>
+<script type="text/JavaScript">
+$.extend({
+  password: function (length, special) {
+    var iteration = 0;
+    var password = "";
+    var randomNumber;
+    if(special == undefined){
+        var special = false;
+    }
+    while(iteration < length){
+        randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
+        if(!special){
+            if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
+            if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
+            if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
+            if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+        }
+        iteration++;
+        password += String.fromCharCode(randomNumber);
+    }
+    return password;
+  }
+});
+$(document).ready(function() {
+	$('.link-password').click(function(e){
+		linkId = $(this).attr('id');
+		if (linkId == 'generate'){
+			password = $.password(9,false);
+			$('#input-password').val(password);
+		}
+		e.preventDefault();
+	});
+});
 </script>
