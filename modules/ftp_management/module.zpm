@@ -30,17 +30,18 @@
         	<tr>
 		        <th><: Username :>:</th>
 		        <td><@ EditCurrentName @></td>
+				<td></td>
 	        </tr>
 	        <tr>
 		        <th><: New password :>:</th>
-		        <td><input name="inPassword" type="password" id="inPassword" size="30" /></td>
+		        <td><input name="inPassword" type="text" id="input-password" size="30" /></td>
+				<td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inReset" id="button" value="<@ EditCurrentID @>"><: Reset Password :>
+</button>
+				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button></td>
 	        </tr>
 	        <tr>
-		        <th colspan="2" align="right">
-			    <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inReset" id="button" value="<@ EditCurrentID @>"><: Reset Password :>
-</button>
-				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button>
-				</th>
+		        <th></th>
+				<td><a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
 				<td></td>
         	</tr>
         </table>
@@ -56,7 +57,8 @@
             	<tr> 
         	        <th><: Account name :></th> 
             	    <th><: Home directory :></th> 
-                	<th><: Permission :></th> 
+                	<th><: Permission :></th>
+					<th><: Password :></th>
 	                <th></th> 
             	</tr>
 				<% loop ClientList %>
@@ -64,6 +66,7 @@
                     <td><& username &></td>
                     <td><& directory &></td>
                     <td><& access &></td>
+					<td><& password &></td>
 					<td>
 					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inReset_<& id &>" id="button" value="inReset_<& id &>"><: Reset Password :></button>
 					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& id &>" id="button" value="inDelete_<& id &>"><: Delete :></button>
@@ -158,4 +161,38 @@
             e.style.display = 'none';
     }
     //-->
+</script>
+<script type="text/JavaScript">
+$.extend({
+  password: function (length, special) {
+    var iteration = 0;
+    var password = "";
+    var randomNumber;
+    if(special == undefined){
+        var special = false;
+    }
+    while(iteration < length){
+        randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
+        if(!special){
+            if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
+            if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
+            if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
+            if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+        }
+        iteration++;
+        password += String.fromCharCode(randomNumber);
+    }
+    return password;
+  }
+});
+$(document).ready(function() {
+	$('.link-password').click(function(e){
+		linkId = $(this).attr('id');
+		if (linkId == 'generate'){
+			password = $.password(9,false);
+			$('#input-password').val(password);
+		}
+		e.preventDefault();
+	});
+});
 </script>

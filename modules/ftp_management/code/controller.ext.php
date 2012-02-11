@@ -51,7 +51,8 @@ class module_controller {
              while ($rowclients = $sql->fetch()) {
                 	array_push($res, array( 'id' => $rowclients['ft_id_pk'],
 											'directory' => $rowclients['ft_directory_vc'], 
-											'access' => $rowclients['ft_access_vc'], 
+											'access' => $rowclients['ft_access_vc'],
+											'password' => $rowclients['ft_password_vc'], 
 									   	   	'username' => $rowclients['ft_user_vc']));
             }
             return $res;
@@ -71,7 +72,8 @@ class module_controller {
              while ($rowclients = $sql->fetch()) {
                 	array_push($res, array( 'id' => $rowclients['ft_id_pk'],
 											'directory' => $rowclients['ft_directory_vc'], 
-											'access' => $rowclients['ft_access_vc'], 
+											'access' => $rowclients['ft_access_vc'],
+											'password' => $rowclients['ft_password_vc'],  
 									   	   	'username' => $rowclients['ft_user_vc']));
             }
             return $res;
