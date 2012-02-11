@@ -30,6 +30,37 @@ class module_controller {
 	static $deleteok;
 	static $backupok;
 	static $filenotexist;
+
+    static function ListBackUps($userid) {
+        $currentuser = ctrl_users::GetUserDetail($userid);
+		$userid = $currentuser['userid'];
+		$username = $currentuser['username'];
+		$res = array();
+		$dirFiles = array();
+		$backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/"; 
+		if ($handle = opendir($backupdir)) {
+   			while (false !== ($file = readdir($handle))){
+          		if ($file != "." && $file != ".." && stristr($file,"_") && substr($file, -4) == ".zip"){
+					$dirFiles[] = $file;
+          		}
+       		}
+		}
+		closedir($handle);
+		if (!fs_director::CheckForEmptyValue($dirFiles)){
+			sort($dirFiles);
+				foreach ($dirFiles as $file) {
+          			$filesize = fs_director::ShowHumanFileSize(filesize($backupdir . $file));
+					$splitfile = explode("_", $file);
+					$filedate = $splitfile[1];
+					//$filecreated = date("M-d-Y", mktime(0, 0, 0, substr($filedate, 2, -2), substr($filedate, 0, -4), substr($filedate, -2)));
+					$filecreated = $splitfile[1];
+					array_push($res, array('backupfile' => substr($file, 0, -4),
+										   'created'    => $filecreated,
+										   'filesize'   => $filesize));
+				}
+		}							   
+        return $res;
+    }
 	
 	static function ExecuteBackup($userid, $download=0){
 		global $zdbh;
@@ -68,15 +99,21 @@ class module_controller {
 			    }
 			}
 		}
-		// Copy Backup to user home directory...
-		$backupdir = $homedir . "/backups/";
-		if (!is_dir($backupdir)){
-			mkdir($backupdir, 0777, TRUE);
-		}
-		
+		// We have the backup now lets output it to disk or download
 		if (file_exists(ctrl_options::GetOption('temp_dir') . $backupname . ".zip")){
-			copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", $backupdir . $backupname . ".zip");
-			unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip");
+		
+			// If Disk based backups are allowed in backup config
+			if (strtolower(self::GetBUOption('disk_bu')) == "true"){
+				// Copy Backup to user home directory...
+				$backupdir = $homedir . "/backups/";
+				if (!is_dir($backupdir)){
+					mkdir($backupdir, 0777, TRUE);
+				}
+				copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", $backupdir . $backupname . ".zip");
+			} else {
+				$backupdir = ctrl_options::GetOption('temp_dir');
+			}	
+			
 			// If Client has checked to download file
 			if ($download <> 0){
 				if (sys_versions::ShowOSPlatformVersion() == "Windows") {
@@ -105,12 +142,12 @@ class module_controller {
 					self::readfile_chunked($file);
 				}		
 			}
+			unlink(ctrl_options::GetOption('temp_dir').$backupname. ".zip");
 		} else {
 			self::$filenotexist=true;
 		}
 		runtime_hook::Execute('OnAfterCreateBackup');
 	}
-	
 	
 	static function readfile_chunked($filename) { 
 		$chunksize = 1*(1024*1024);
@@ -133,37 +170,6 @@ class module_controller {
 		runtime_hook::Execute('OnAfterDeleteBackup');
 	} 
 
-    static function ListBackUps($userid) {
-        $currentuser = ctrl_users::GetUserDetail($userid);
-		$userid = $currentuser['userid'];
-		$username = $currentuser['username'];
-		$res = array();
-		$dirFiles = array();
-		$backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/"; 
-		if ($handle = opendir($backupdir)) {
-   			while (false !== ($file = readdir($handle))){
-          		if ($file != "." && $file != ".." && stristr($file,"_") && substr($file, -4) == ".zip"){
-					$dirFiles[] = $file;
-          		}
-       		}
-		}
-		closedir($handle);
-		if (!fs_director::CheckForEmptyValue($dirFiles)){
-			sort($dirFiles);
-				foreach ($dirFiles as $file) {
-          			$filesize = fs_director::ShowHumanFileSize(filesize($backupdir . $file));
-					$splitfile = explode("_", $file);
-					$filedate = $splitfile[1];
-					//$filecreated = date("M-d-Y", mktime(0, 0, 0, substr($filedate, 2, -2), substr($filedate, 0, -4), substr($filedate, -2)));
-					$filecreated = $splitfile[1];
-					array_push($res, array('backupfile' => substr($file, 0, -4),
-										   'created'    => $filecreated,
-										   'filesize'   => $filesize));
-				}
-		}							   
-        return $res;
-    }
-
 	static function ExecuteCreateBackupDirectory($username){
 		$backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/";
 		if (!is_dir($backupdir)){
@@ -172,79 +178,6 @@ class module_controller {
 	
 	}
 	
-	
-	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$filenotexist)){
-            return ui_sysmessage::shout("There was an error saving your backup!", "zannounceerror");
-		}
-        if (!fs_director::CheckForEmptyValue(self::$deleteok)){
-            return ui_sysmessage::shout("Backup deleted successfully!", "zannounceok");
-		}
-        if (!fs_director::CheckForEmptyValue(self::$backupok)){
-            return ui_sysmessage::shout("Backup completed successfully!", "zannounceok");
-		}
-        return;
-    }
-	
-	static function getCreateBackupDirectory() {
-		$currentuser = ctrl_users::GetUserDetail();
-		if (self::ExecuteCreateBackupDirectory($currentuser['username']))
-        	return true;
-		return false;
-    }
-		
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
-    }
-
-	static function getUserID() {
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-		$userid = $currentuser['userid'];
-		return $userid;
-    }
-
-	static function getModuleDesc() {
-		$message = ui_language::translate(ui_module::GetModuleDescription());
-        return $message;
-    }
-
-    static function GetBUOption($name) {
-        global $zdbh;
-        $result = $zdbh->query("SELECT bus_value_tx FROM x_backup_settings WHERE bus_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['bus_value_tx'];
-        } else {
-            return false;
-        }
-    }
-
-    static function getModulePath() {
-        global $controller;
-        $module_path = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/";
-        return $module_path;
-    }
-
-    static function GetBackUpList() {
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        return self::ListBackUps($currentuser['userid']);     
-    }
-
-    static function GetFileLocation() {
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();;
-		$filelocation = $currentuser['username'] . "/backups/";
-        return $filelocation;
-    }
-
 	static function doBackup(){
 		global $zdbh;
 		global $controller;
@@ -272,6 +205,85 @@ class module_controller {
 			}
 		}
 	}
+
+    static function GetBackUpList() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::ListBackUps($currentuser['userid']);     
+    }
+
+    static function GetFileLocation() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();;
+		$filelocation = $currentuser['username'] . "/backups/";
+        return $filelocation;
+    }
+
+	static function getUserID() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+		$userid = $currentuser['userid'];
+		return $userid;
+    }
+
+    static function GetDiskAllowed() {
+        global $controller;
+        if (strtolower(self::GetBUOption('disk_bu')) == "true")
+        	return true;
+		return false;
+    }
+	
+	static function getCreateBackupDirectory() {
+		$currentuser = ctrl_users::GetUserDetail();
+		if (self::ExecuteCreateBackupDirectory($currentuser['username']))
+        	return true;
+		return false;
+    }
+
+    static function GetBUOption($name) {
+        global $zdbh;
+        $result = $zdbh->query("SELECT bus_value_tx FROM x_backup_settings WHERE bus_name_vc = '$name'")->Fetch();
+        if ($result) {
+            return $result['bus_value_tx'];
+        } else {
+            return false;
+        }
+    }
+		
+	static function getModuleName() {
+		$module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
+
+	static function getModuleIcon() {
+		global $controller;
+		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        return $module_icon;
+    }
+
+	static function getModuleDesc() {
+		$message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
+    static function getModulePath() {
+        global $controller;
+        $module_path = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/";
+        return $module_path;
+    }
+
+	static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$filenotexist)){
+            return ui_sysmessage::shout("There was an error saving your backup!", "zannounceerror");
+		}
+        if (!fs_director::CheckForEmptyValue(self::$deleteok)){
+            return ui_sysmessage::shout("Backup deleted successfully!", "zannounceok");
+		}
+        if (!fs_director::CheckForEmptyValue(self::$backupok)){
+            return ui_sysmessage::shout("Backup completed successfully!", "zannounceok");
+		}
+        return;
+    }
 	
 }
 
