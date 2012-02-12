@@ -75,9 +75,9 @@ class module_controller {
 		$dbstamp = date("dmy_Gi", time());		
 		// We now see what the OS is before we work out what compression command to use..
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-    		$resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('7z_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
+    		$resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
 		} else {
-    		$resault = exec(ctrl_options::GetOption('7z_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " " . $homedir . "/public_html/*");
+    		$resault = exec(ctrl_options::GetOption('zip_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " " . $homedir . "/public_html/*");
     		@chmod(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", 0777);
 		}		
 		// Now lets backup all MySQL datbases for the user and add them to the archive...
@@ -91,9 +91,9 @@ class module_controller {
 			        passthru($bkcommand);
 			        // Add it to the ZIP archive...
 			        if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			            $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('7z_exe') . " u " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql"));
+			            $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " u " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql"));
 			        } else {
-			            $resault = exec(ctrl_options::GetOption('7z_exe') . " " . ctrl_options::GetOption('temp_dir') . $backupname . "  " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
+			            $resault = exec(ctrl_options::GetOption('zip_exe') . " " . ctrl_options::GetOption('temp_dir') . $backupname . "  " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
 			        }
 			        unlink(ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
 			    }
