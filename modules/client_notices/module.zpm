@@ -8,7 +8,7 @@
 <form action="./?module=client_notices&action=UpdateMessage" method="post">
 <table class="zform">
 <tr>
-<th><: Group name :>:</th>
+<th><: Notice message :>:</th>
 <td><textarea name="inNotice" id="inNotice" /><@ CurrentNoticeText @></textarea></td>
 </tr>
 <tr>
