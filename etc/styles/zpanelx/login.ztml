@@ -1,15 +1,18 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
+    <title>ZPanel - Taking hosting to the next level!</title>
     <link rel="shortcut icon" type="image/x-icon" href="etc/styles/zpanelx/inc/favicon.ico">
-	<link href="etc/styles/zpanelx/inc/login.css" rel="stylesheet" type="text/css">
+    <link href="etc/styles/zpanelx/inc/login.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="etc/styles/zpanelx/inc/jquery.min.js"></script>
     <script type="text/javascript" language="javascript" src="etc/styles/zpanelx/inc/jquery.cookie.js"></script>
     <script type="text/javascript" src="etc/styles/zpanelx/inc/init.js"></script>
-	<!-- JQUERY NAVBAR REQUIREMENTS -->
+    <!-- JQUERY NAVBAR REQUIREMENTS -->
     <link href="etc/styles/zpanelx/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
-	<link href="etc/styles/zpanelx/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
-	<script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/init.js"></script>	
+    <link href="etc/styles/zpanelx/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
+    <script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/init.js"></script>	
     <script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/fg.menu.js"></script>
-	<!-- END JQUERY NAVBAR REQUIREMENTS -->
+    <!-- END JQUERY NAVBAR REQUIREMENTS -->
 </head>
 
 <body>
