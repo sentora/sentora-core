@@ -103,24 +103,14 @@
 
                 <tr>
                     <td style="background:url(<# ui_tpl_assetfolderpath #>/images/mainlayout_left.png) repeat-y;"></td>
-                    <td>
+                    <td><# ui_tpl_notice #>
 						<!-- BEGIN MAIN LAYOUT CONTENT -->
                         <table class="mainlayout_content" width="100%" border="0" cellpadding="0" cellspacing="0">
-                            <tr valign="top">
-                                <td class="mainlayout_content" width="100%" bgcolor="#F3F2F0">
-								
-								
-
-
-
-
-
-</td>
-</tr>								
+						
                             <tr valign="top">
                                 <td class="mainlayout_content" width="100%" bgcolor="#F3F2F0">								
 								
-								<# ui_tpl_notice #><# ui_tpl_modulelist #><# ui_tpl_module #></td>
+								<# ui_tpl_modulelist #><# ui_tpl_module #></td>
                                 <td style="padding-right:0px" width="200px" bgcolor="#F3F2F0">
 									<!-- BEGIN STATSDATA -->
 									<div class="statsdata_wrapper" id="statsdata_wrapper">

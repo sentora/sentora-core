@@ -303,6 +303,7 @@ a.header_top_small{
 	padding:0px;
 	margin: 0px;
 	border-spacing:0px;
+	background:#F3F2F0;
 }
 .mainlayout_content{
 	min-width:750px;
@@ -719,6 +720,16 @@ a.zannounce_a{
 	padding:10px;
 	color:#C11B17;
 }
+.znotice{
+	height:20px;
+	background-color: #FFFFCC;
+	border:solid 1px #FFCC66;
+	font-weight:normal;
+	text-align: left;
+	padding:10px;
+	margin-bottom:20px;
+	color:#FFCC66;
+}
 .zmodule_header{
 	height:41px;
 	margin:0px;
@@ -798,6 +809,7 @@ a.zannounce_a{
 	padding-right:15px;
 }
 
+/*
 .znotice {
         margin-bottom: 20px;
 	padding:20px;
@@ -805,6 +817,7 @@ a.zannounce_a{
         border-color: #666;
         color: #666;
 }
+*/
 
 /** JQUERY UI TABS BACKGROUND **/
 .ui-tabs .ui-tabs-panel {
