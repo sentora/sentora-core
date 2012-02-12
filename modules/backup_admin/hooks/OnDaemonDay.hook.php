@@ -7,12 +7,9 @@ try {
 } catch (PDOException $e) {
 	
 }
-		
-// Get backup settings...
-$rowconfig = $zdbh->query("SELECT * FROM x_backup_settings WHERE bus_name_vc='schedule_bu'")->fetch();
 
 // Schedule daily backups are enabled...
-if (strtolower($rowconfig['bus_value_tx']) == "true"){
+if (strtolower(ctrl_options::GetOption('schedule_bu')) == "true"){
 	runtime_hook::Execute('OnBeforeScheduleBackup');
 	echo "\r\nBackup Scheduling enabled - Backing up all enabled client files now...\r\n";
 	// Get all accounts
@@ -30,9 +27,9 @@ if (strtolower($rowconfig['bus_value_tx']) == "true"){
 			$dbstamp    = date("dmy_Gi", time());		
 			// We now see what the OS is before we work out what compression command to use..
 			if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-	    		$result = exec(fs_director::SlashesToWin(ctrl_options::GetOption('7z_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
+	    		$result = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
 			} else {
-	    		$result = exec(ctrl_options::GetOption('7z_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " " . $homedir . "/public_html/*");
+	    		$result = exec(ctrl_options::GetOption('zip_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " " . $homedir . "/public_html/*");
 	    		@chmod(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", 0777);
 			}
 			// Now lets backup all MySQL datbases for the user and add them to the archive...
@@ -46,9 +43,9 @@ if (strtolower($rowconfig['bus_value_tx']) == "true"){
 				        passthru($bkcommand);
 				        // Add it to the ZIP archive...
 				        if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-				            $result = exec(fs_director::SlashesToWin(ctrl_options::GetOption('7z_exe') . " u " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql"));
+				            $result = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " u " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql"));
 				        } else {
-				            $result = exec(ctrl_options::GetOption('7z_exe') . " " . ctrl_options::GetOption('temp_dir') . $backupname . "  " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
+				            $result = exec(ctrl_options::GetOption('zip_exe') . " " . ctrl_options::GetOption('temp_dir') . $backupname . "  " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
 				        }
 				        unlink(ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
 				    }
@@ -71,12 +68,8 @@ if (strtolower($rowconfig['bus_value_tx']) == "true"){
 	echo "Backup Schedule COMPLETE...\r\n";
 }
 
-
-// Get backup settings...
-$rowconfig = $zdbh->query("SELECT * FROM x_backup_settings WHERE bus_name_vc='purge_bu'")->fetch();
-$rowconfig_date = $zdbh->query("SELECT * FROM x_backup_settings WHERE bus_name_vc='purge_date'")->fetch();
 // Purge backups are enabled....
-if (strtolower($rowconfig['bus_value_tx']) == "true"){
+if (strtolower(ctrl_options::GetOption('purge_bu')) == "true"){
 	echo "\r\nBackup Purging enabled - Purging old backups now...\r\n";
 	runtime_hook::Execute('OnBeforePurgeBackup');
 	clearstatcache();
@@ -84,14 +77,14 @@ if (strtolower($rowconfig['bus_value_tx']) == "true"){
 	$bsql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
     $numrows = $zdbh->query($bsql);
     if ($numrows->fetchColumn() <> 0) {
-		$purge_date = $rowconfig_date['bus_value_tx'];
+		$purge_date = ctrl_options::GetOption('purge_date');
     	$bsql = $zdbh->prepare($bsql);
         $bsql->execute();
 		echo "[FILE][PURGE_DATE][FILE_DATE][ACTION]\r\n";
         while ($rowclients = $bsql->fetch()) {
 			$username   = $rowclients['ac_user_vc'];
 			$backupdir  = ctrl_options::GetOption('hosted_dir') . $username . "/backups/"; 
-			if ($handle = opendir($backupdir)) {
+			if ($handle = @opendir($backupdir)) {
 	   			while (false !== ($file = readdir($handle))){
 	          		if ($file != "." && $file != ".."){
 						$filetime = @filemtime($backupdir . $file);
