@@ -77,7 +77,7 @@ define('PSI_DEFAULT_LANG', 'en');
 /**
  * Define the default template
  */
-define('PSI_DEFAULT_TEMPLATE', 'phpsysinfo');
+define('PSI_DEFAULT_TEMPLATE', 'clean');
 
 /**
  * Show or hide language picklist
