@@ -24,15 +24,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	static $shout;
+    static $shout;
 
     static function getShadowAccounts() {
         global $zdbh;
         global $controller;
-        $currentuser = ctrl_users::GetUserDetail();	
+        $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -40,53 +39,54 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
-				$clientdetail = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-                array_push($res, array( 'clientusername'   => $clientdetail['username'],
-										'clientid'         => $rowclients['ac_id_pk'],
-										'packagename'      => $clientdetail['packagename'],
-										'usergroup'        => $clientdetail['usergroup'],
-										'currentdisk'      => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
-										'currentbandwidth' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
+                $clientdetail = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
+                array_push($res, array('clientusername' => $clientdetail['username'],
+                    'clientid' => $rowclients['ac_id_pk'],
+                    'packagename' => $clientdetail['packagename'],
+                    'usergroup' => $clientdetail['usergroup'],
+                    'currentdisk' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
+                    'currentbandwidth' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
             }
             return $res;
         } else {
             return false;
         }
-	}
-	
+    }
+
     static function doShadowUser() {
-		global $zdbh;
+        global $zdbh;
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {
-				$sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL");
-	 			$sql->execute();
-				while ($rowclients = $sql->fetch()) {
-					if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inShadow_'.$rowclients['ac_id_pk']))) {
+        $currentuser = ctrl_users::GetUserDetail();
+        $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL");
+                $sql->execute();
+                while ($rowclients = $sql->fetch()) {
+                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inShadow_' . $rowclients['ac_id_pk']))) {
+                        ctrl_auth::SetSession('ruid', $currentuser['userid']);
                         ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
                         header("location: /");
                         exit;
-					}
-				}
-			}
-		}	
+                    }
+                }
+            }
+        }
     }
-	
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
-	static function getModuleDesc() {
-		$message = ui_language::translate(ui_module::GetModuleDescription());
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
