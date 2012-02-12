@@ -117,6 +117,16 @@ class ctrl_users {
         return $domains;
     }
 
+    static function CheckUserEnabled($userid) {
+        global $zdbh;
+        $row = $zdbh->prepare("SELECT ac_enabled_in FROM x_accounts WHERE ac_id_pk=" . $userid . " AND ac_deleted_ts IS NULL");
+        $row->execute();
+		if ($row['ac_enabled_in'] <> 0){
+			return true;
+        }
+        return false;
+    }
+
 }
 
 ?>

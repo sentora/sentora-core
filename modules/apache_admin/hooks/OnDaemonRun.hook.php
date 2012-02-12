@@ -1,11 +1,10 @@
 <?php
 
 
-echo "\r\nBegin writing Apache Config to: ".ctrl_options::GetOption('apache_vhost'). fs_filehandler::NewLine();
-
+	echo fs_filehandler::NewLine() . "Begin writing Apache Config to: ".ctrl_options::GetOption('apache_vhost'). fs_filehandler::NewLine();
 	if (ui_module::CheckModuleEnabled('Apache Config')){
 		echo "Apache Admin module ENABLED..." . fs_filehandler::NewLine();
-		if (ctrl_options::GetOption('apache_changed') == strtolower("true")){
+		if (ctrl_options::GetOption('apache_changed') != strtolower("false")){
 			echo "Apache Config has changed..." . fs_filehandler::NewLine();
 			WriteVhostConfigFile();
 			echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
@@ -15,8 +14,7 @@ echo "\r\nBegin writing Apache Config to: ".ctrl_options::GetOption('apache_vhos
 	} else {
 		echo "Apache Admin module DISABLED...nothing to do." . fs_filehandler::NewLine();
 	}
-
-echo "END Apache Config." . fs_filehandler::NewLine();
+	echo "END Apache Config." . fs_filehandler::NewLine();
 
     function WriteVhostConfigFile() {
 		include('cnf/db.php');
@@ -70,6 +68,10 @@ echo "END Apache Config." . fs_filehandler::NewLine();
         while ($rowvhost = $sql->fetch()) {
             //Domain is enabled
             if ($rowvhost['vh_enabled_in'] == 1) {
+				
+				// Set the vhosts to "LIVE"
+        		$vsql = $zdbh->prepare("UPDATE x_vhosts SET vh_active_in=1 WHERE vh_id_pk=". $rowvhost['vh_id_pk'] . "");
+        		$vsql->execute();
 
                 // Get account username vhost is create with
                 $username = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
@@ -155,6 +157,7 @@ echo "END Apache Config." . fs_filehandler::NewLine();
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
             } else {
+				if (ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")){
                 //Domain is NOT enabled
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
@@ -176,11 +179,16 @@ echo "END Apache Config." . fs_filehandler::NewLine();
                 $line .= "</virtualhost>" . fs_filehandler::NewLine();
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
+				}
             }
         }
+		
         // write the vhost config file
         $vhconfigfile = ctrl_options::GetOption('apache_vhost');
         if (fs_filehandler::UpdateFile($vhconfigfile, 0777, $line)) {
+			// Reset Apache settings to reflect that config file has been written, until the next change.
+	        $vsql = $zdbh->prepare("UPDATE x_settings SET so_value_tx='false' WHERE so_name_vc='apache_changed'");
+	        $vsql->execute();
             return true;
         } else {
             return false;
