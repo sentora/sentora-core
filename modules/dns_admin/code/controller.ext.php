@@ -62,15 +62,15 @@ class module_controller {
         $line .= "<form action=\"./?module=dns_admin&action=UpdateDNSConfig\" method=\"post\">";
         $line .= "<table class=\"zgrid\">";
         $count = 0;
-        $sql = "SELECT COUNT(*) FROM x_dns_settings WHERE dns_usereditable_en = 'true'";
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_dns_settings WHERE dns_usereditable_en = 'true'");
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc");
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
                     $count++;
-                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['dns_cleanname_vc'] . "</th><td><textarea cols=\"32\" rows=\"1\" name=\"" . $row['dns_name_vc'] . "\">" . $row['dns_value_tx'] . "</textarea></td><td>" . $row['dns_desc_tx'] . "</td></tr>";
+                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td><textarea cols=\"32\" rows=\"1\" name=\"" . $row['so_name_vc'] . "\">" . $row['so_value_tx'] . "</textarea></td><td>" . $row['so_desc_tx'] . "</td></tr>";
                 }
                 $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></tr>";
             }
@@ -250,14 +250,14 @@ class module_controller {
     static function doUpdateDNSConfig() {
         global $zdbh;
         global $controller;
-        $sql = "SELECT COUNT(*) FROM x_dns_settings WHERE dns_usereditable_en = 'true'";
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_dns_settings WHERE dns_usereditable_en = 'true'");
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'");
                 $sql->execute();
                 while ($row = $sql->fetch()) {
-                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['dns_name_vc']))) {
-                        $updatesql = $zdbh->prepare("UPDATE x_dns_settings SET dns_value_tx = '" . $controller->GetControllerRequest('FORM', $row['dns_name_vc']) . "' WHERE dns_name_vc = '" . $row['dns_name_vc'] . "'");
+                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
+                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
                         $updatesql->execute();
                     }
                 }
@@ -892,7 +892,7 @@ class module_controller {
             return ui_sysmessage::shout(number_format(self::$purged) . " " . ui_language::translate("Records where purged from the database"));
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your DNS settings have been saved successfully!"));
+            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
         } else {
             return ui_language::translate(ui_module::GetModuleDescription());
         }

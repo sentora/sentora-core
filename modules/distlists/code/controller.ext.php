@@ -249,7 +249,7 @@ class module_controller {
 			$fulladdress = str_replace(' ', '', $fulladdress);
 			$fulladdress = strtolower($fulladdress);
 			// Include mail server specific file here.
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
 			$sql = "INSERT INTO x_distlists (dl_acc_fk,
 											  dl_address_vc,
 											  dl_created_ts) VALUES (
@@ -266,7 +266,7 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		// Include mail server specific file here.
-		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
 		$sql = "UPDATE x_distlistusers SET du_deleted_ts=" . time() . " WHERE du_distlist_fk=" .  $dl_id_pk . "";
 		$sql = $zdbh->prepare($sql);
 		$sql->execute();
@@ -288,7 +288,7 @@ class module_controller {
 		$fulladdress = strtolower($fulladdress);
 		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrorsDistListUser())) {
 			// Include mail server specific file here.
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
        		$sql = "INSERT INTO x_distlistusers (
 											du_distlist_fk,
 											du_address_vc,
@@ -307,7 +307,7 @@ class module_controller {
 		global $controller;
 		$dladdress   = $controller->GetControllerRequest('FORM', 'inDLAD');
 		// Include mail server specific file here.
-		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetMailOption('mailserver_php') . "");
+		include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
 		$sql = "UPDATE x_distlistusers SET du_deleted_ts=" . time() . " WHERE du_id_pk=" . $du_id_pk . "";
 		$sql = $zdbh->prepare($sql);
 		$sql->execute();

@@ -91,6 +91,17 @@ class sys_versions {
      * @return string Human readable OS name.
      */
     static function ShowOSName() {
+		preg_match_all("#(?<=\()(.*?)(?=\))#", $_SERVER['SERVER_SOFTWARE'], $osname);
+		if (!empty($osname)) { 
+			if (strtoupper(substr($osname[0][0], 0, 3)) == "WIN") {
+            	$retval = "Windows";
+			} else {
+        		$retval = $osname[0][0];
+			}
+		
+		//Mytesting shows Linux shows correct OS, WindowsXP=Win32, Windows2007/Server=WINNT -russ
+	
+	/*
         $uname = strtolower(php_uname());
         $retval = "";
         if (strpos($uname, "darwin") !== false) {
@@ -102,6 +113,7 @@ class sys_versions {
         } else if (strpos($uname, "openbsd") !== false) {
             $retval = "OpenBSD";
         } else {
+	*/
             /**
              * @todo convert the bottom bit to read from a list of OS's.
              */
@@ -128,7 +140,9 @@ class sys_versions {
               }
               }
              */
-        }
+        } else {
+			$retval = "Unknown";
+		}
         return $retval;
     }
 

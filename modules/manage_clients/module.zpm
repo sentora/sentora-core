@@ -168,7 +168,7 @@
 		        </tr>
 		        <tr>
 			        <th><: Password :>:</th>
-			        <td><input type="text" name="inNewPassword" id="inNewPassword" value="<@ RandomPassword @>" /></td>
+			        <td><input type="text" name="inNewPassword" id="input-password" value="<@ RandomPassword @>" /> <a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
 		        </tr>
 		        <tr>
 			        <th><: Usergroup :>:</th>
@@ -226,3 +226,47 @@
 	<% endif %>
 
 </div>
+
+<script type="text/javascript">
+    <!--
+    function hide_div(id) {
+        var e = document.getElementById(id);
+        if(e.style.display == 'block')
+            e.style.display = 'none';
+    }
+    //-->
+</script>
+<script type="text/JavaScript">
+$.extend({
+  password: function (length, special) {
+    var iteration = 0;
+    var password = "";
+    var randomNumber;
+    if(special == undefined){
+        var special = false;
+    }
+    while(iteration < length){
+        randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
+        if(!special){
+            if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
+            if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
+            if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
+            if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+        }
+        iteration++;
+        password += String.fromCharCode(randomNumber);
+    }
+    return password;
+  }
+});
+$(document).ready(function() {
+	$('.link-password').click(function(e){
+		linkId = $(this).attr('id');
+		if (linkId == 'generate'){
+			password = $.password(9,false);
+			$('#input-password').val(password);
+		}
+		e.preventDefault();
+	});
+});
+</script>

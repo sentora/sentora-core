@@ -25,7 +25,7 @@
  *
  */
  
- 		$mailserver_db = self::GetMailOption('mailserver_db');
+ 		$mailserver_db = ctrl_options::GetOption('mailserver_db');
 		include('cnf/db.php');
 		$z_db_user = $user;
 		$z_db_pass = $pass;
@@ -100,7 +100,7 @@
 												 0,
 												 0,
 												 0,
-												 " . self::GetMailOption('max_mail_size') . ",
+												 " . ctrl_options::GetOption('max_mail_size') . ",
 												 '',
 												 '')";
 				$sql = $mail_db->prepare($sql);
@@ -143,11 +143,11 @@
 											 	0,
 											 	'',
 											 	'',
-											 	" . self::GetMailOption('max_mail_size') . ",
+											 	" . ctrl_options::GetOption('max_mail_size') . ",
 											 	0,
 											 	'',
 											 	'',
-											 	" . self::GetMailOption('hmailserver_et') . ",
+											 	" . ctrl_options::GetOption('hmailserver_et') . ",
 											 	0,
 											 	'',
 											 	0,

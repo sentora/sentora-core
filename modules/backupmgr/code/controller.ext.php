@@ -103,7 +103,7 @@ class module_controller {
 		if (file_exists(ctrl_options::GetOption('temp_dir') . $backupname . ".zip")){
 		
 			// If Disk based backups are allowed in backup config
-			if (strtolower(self::GetBUOption('disk_bu')) == "true"){
+			if (strtolower(ctrl_options::GetOption('disk_bu')) == "true"){
 				// Copy Backup to user home directory...
 				$backupdir = $homedir . "/backups/";
 				if (!is_dir($backupdir)){
@@ -228,7 +228,7 @@ class module_controller {
 
     static function GetDiskAllowed() {
         global $controller;
-        if (strtolower(self::GetBUOption('disk_bu')) == "true")
+        if (strtolower(ctrl_options::GetOption('disk_bu')) == "true")
         	return true;
 		return false;
     }

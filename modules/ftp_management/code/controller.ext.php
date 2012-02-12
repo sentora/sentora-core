@@ -113,8 +113,8 @@ class module_controller {
 		$sql->execute();
 		self::$reset=true;
 		// Include FTP server specific file here.
-		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "");
+		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "");
 		}
 		$retval = TRUE;
 		runtime_hook::Execute('OnAfterResetFTPPassword');
@@ -155,8 +155,8 @@ class module_controller {
 			$sql->execute();
 			self::$create=true;
 			// Include FTP server specific file here.
-			if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "")){
-				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "");
+			if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "")){
+				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "");
 			}
 			runtime_hook::Execute('OnAfterCreateFTPAccount');
 			return true;
@@ -206,8 +206,8 @@ class module_controller {
 		$sql->execute();
 		self::$delete=true;
 		// Include FTP server specific file here.
-		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . self::GetFTPOption('ftp_php') . "");
+		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "");
 		}
 		$retval = TRUE;
 		runtime_hook::Execute('OnAfterDeleteFTPAccount');

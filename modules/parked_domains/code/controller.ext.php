@@ -104,7 +104,7 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain))) {
             // Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-                if (self::GetVHOption('disable_hostsen') == 'false') {
+                if (ctrl_options::GetOption('disable_hostsen') == 'false') {
                     // Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
                     @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe " . $domain . "");
                     @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe www." . $domain . "");

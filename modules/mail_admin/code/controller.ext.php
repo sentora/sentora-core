@@ -32,17 +32,17 @@ class module_controller {
     static function getConfig() {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT * FROM x_mail_settings WHERE mbs_usereditable_en = 'true' ORDER BY mbs_cleanname_vc";
+        $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
             while ($rowmailsettings = $sql->fetch()) {
-                array_push($res, array('cleanname'   => $rowmailsettings['mbs_cleanname_vc'],
-									   'name' 		 => $rowmailsettings['mbs_name_vc'],
-									   'description' => $rowmailsettings['mbs_desc_tx'],
-									   'value' 		 => $rowmailsettings['mbs_value_tx']));
+                array_push($res, array('cleanname'   => $rowmailsettings['so_cleanname_vc'],
+									   'name' 		 => $rowmailsettings['so_name_vc'],
+									   'description' => $rowmailsettings['so_desc_tx'],
+									   'value' 		 => $rowmailsettings['so_value_tx']));
             }
             return $res;
         } else {
@@ -53,14 +53,14 @@ class module_controller {
     static function doUpdateConfig() {
         global $zdbh;
         global $controller;
-        $sql = "SELECT * FROM x_mail_settings WHERE mbs_usereditable_en = 'true'";
+        $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
  			 $sql = $zdbh->prepare($sql);
              $sql->execute();
                 while ($row = $sql->fetch()) {
-                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['mbs_name_vc']))) {
-                        $updatesql = $zdbh->prepare("UPDATE x_mail_settings SET mbs_value_tx = '" . $controller->GetControllerRequest('FORM', $row['mbs_name_vc']) . "' WHERE mbs_name_vc = '" . $row['mbs_name_vc'] . "'");
+                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
+                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
                         $updatesql->execute();
                     }
                 }
@@ -71,7 +71,7 @@ class module_controller {
 
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your Mail settings have been saved successfully!"));
+            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
         }
         return;
     }

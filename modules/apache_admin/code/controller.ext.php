@@ -49,15 +49,15 @@ class module_controller {
         $line .= "<form action=\"./?module=apache_admin&action=UpdateApacheConfig\" method=\"post\">";
         $line .= "<table class=\"zgrid\">";
         $count = 0;
-        $sql = "SELECT COUNT(*) FROM x_vhosts_settings WHERE vhs_usereditable_en = 'true'";
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_vhosts_settings WHERE vhs_usereditable_en = 'true'");
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc");
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
                     $count++;
-                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['vhs_cleanname_vc'] . "</th><td><textarea cols=\"30\" rows=\"1\" name=\"" . $row['vhs_name_vc'] . "\">" . $row['vhs_value_tx'] . "</textarea></td><td>" . $row['vhs_desc_tx'] . "</td></tr>";
+                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td><textarea cols=\"30\" rows=\"1\" name=\"" . $row['so_name_vc'] . "\">" . $row['so_value_tx'] . "</textarea></td><td>" . $row['so_desc_tx'] . "</td></tr>";
                 }
                 $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></th></tr>";
             }
@@ -119,8 +119,8 @@ class module_controller {
                 $line .= "<tr valign=\"top\"><th>" . ui_language::translate("Custom Entry") . ":</th><td><textarea cols=\"60\" rows=\"10\" name=\"vh_custom_tx\">" . $row['vh_custom_tx'] . "</textarea></td></tr>";
             }
         }
-        $line .= "<tr><td>";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button>";
+        $line .= "<tr><td colspan=\"2\">";
+        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=apache_admin';return false;\"><: Cancel :></button>";
         $line .= "</td></tr>";
         $line .= "</table>";
         $line .= "</form>";
@@ -136,14 +136,14 @@ class module_controller {
     static function doUpdateApacheConfig() {
         global $zdbh;
         global $controller;
-        $sql = "SELECT COUNT(*) FROM x_vhosts_settings WHERE vhs_usereditable_en = 'true'";
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_vhosts_settings WHERE vhs_usereditable_en = 'true'");
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'");
                 $sql->execute();
                 while ($row = $sql->fetch()) {
-                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['vhs_name_vc']))) {
-                        $updatesql = $zdbh->prepare("UPDATE x_vhosts_settings SET vhs_value_tx = '" . $controller->GetControllerRequest('FORM', $row['vhs_name_vc']) . "' WHERE vhs_name_vc = '" . $row['vhs_name_vc'] . "'");
+                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
+                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
                         $updatesql->execute();
                     }
                 }
@@ -423,7 +423,7 @@ while (!feof($fp)) {
 
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your VHost settings have been saved successfully!"));
+            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
         } else {
             return ui_language::translate(ui_module::GetModuleDescription());
         }

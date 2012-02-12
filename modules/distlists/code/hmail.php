@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$mailserver_db = self::GetMailOption('mailserver_db');
+ 		$mailserver_db = ctrl_options::GetOption('mailserver_db');
 		include('cnf/db.php');
 		$z_db_user = $user;
 		$z_db_pass = $pass;

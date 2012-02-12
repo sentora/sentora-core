@@ -127,6 +127,21 @@ class ui_module {
     }
 
     /**
+     * This class returns the folder name of the current module.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $controller
+     * @global type $zdbh
+     * @return type 
+     */
+    static function GetModuleFolderName() {
+        global $controller;
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_folder_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
+        $retval = $retval['mo_folder_vc'];
+        return $retval;
+    }
+
+    /**
      * This class returns the description of the current module.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global type $controller

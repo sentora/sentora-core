@@ -27,71 +27,70 @@
  
 class module_controller {
 
-	static $hasupdated;
+    static $ok;
 
-	static function getZpanelOptions (){
-	global $zdbh;
-	$line = "";
-		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {
-			
-				$sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_usereditable_en = 'true'");
-	 			$sql->execute();
-				
-				while ($row = $sql->fetch()) {
-					$line .= "<tr><th>".$row['so_desc_tx']."</th><td><input style=\"width:250px;\" type=\"text\" name=\"".$row['so_name_vc']."\" value=\"".$row['so_value_tx']."\"></td></tr>";	
-				}
-				$line .= "<tr><th></th><td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button></td></tr>";
-			}
-		}	
-	return $line;
-	}
-	
-	static function doUpdateZpanelConfig(){
-	global $zdbh;
-	global $controller;
+    static function getConfig() {
+        global $zdbh;
+        $currentuser = ctrl_users::GetUserDetail();
+        $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowmailsettings = $sql->fetch()) {
+                array_push($res, array('cleanname'   => $rowmailsettings['so_cleanname_vc'],
+									   'name' 		 => $rowmailsettings['so_name_vc'],
+									   'description' => $rowmailsettings['so_desc_tx'],
+									   'value' 		 => $rowmailsettings['so_value_tx']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
 
-		$sql = "SELECT COUNT(*) FROM x_settings WHERE so_usereditable_en = 'true'";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {
-			
-				$sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_usereditable_en = 'true'");
-	 			$sql->execute();
-				
-				while ($row = $sql->fetch()) {
-					
-					$rowsql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '". $controller->GetControllerRequest('FORM', $row['so_name_vc'])."' WHERE so_name_vc = '".$row['so_name_vc']."'");
-	 				$rowsql->execute();		
-					
-				}
-				self::$hasupdated = "yes";
-			}
-		}
-	
-	}
-	
-	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$hasupdated)){
-            return ui_sysmessage::shout("Changes to the System options have been saved successfully!");
-		}else{
-			return ui_module::GetModuleDescription();
-		}
+    static function doUpdateConfig() {
+        global $zdbh;
+        global $controller;
+        $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+ 			 $sql = $zdbh->prepare($sql);
+             $sql->execute();
+                while ($row = $sql->fetch()) {
+                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
+                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
+                        $updatesql->execute();
+                    }
+                }
+        }
+		self::$ok=true;
+    }
+
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
+        }
         return;
     }
+
+    static function getModuleDesc() {
+        $module_desc = ui_language::translate(ui_module::GetModuleDescription());
+        return $module_desc;
+    }
 	
-	
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
-	
 }
 
 ?>

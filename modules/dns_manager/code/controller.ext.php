@@ -178,7 +178,7 @@ class module_controller {
 		$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='A' AND dn_vhost_fk=".$domainID." AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
 		$sql->execute();
 		while ($rowdns = $sql->fetch()) {
-			if (self::GetDNSOption('custom_ip') == strtolower("false")){
+			if (ctrl_options::GetOption('custom_ip') == strtolower("false")){
 				$custom_ip = "READONLY";
 			} else {
 				$custom_ip = NULL;
@@ -947,7 +947,7 @@ class module_controller {
 					if (isset($target['new_'.$id]) && !fs_director::CheckForEmptyValue($target['new_'.$id])){
 						//If Custom IP addresses are not allowed.
 						if ($type['new_'.$id] == 'A'){
-							if (self::GetDNSOption('custom_ip') == strtolower("false")){
+							if (ctrl_options::GetOption('custom_ip') == strtolower("false")){
 								if (!fs_director::CheckForEmptyValue(ctrl_options::GetOption('server_ip'))){
 									$target['new_'.$id] = ctrl_options::GetOption('server_ip');
 								} else {
@@ -1275,15 +1275,15 @@ class module_controller {
 					$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=".$dnsrecord." AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
 					$sql->execute();
 					$domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=".$dnsrecord." AND dn_deleted_ts IS NULL")->Fetch();
-					$zone_file = (self::GetDNSOption('zone_dir')) . $domain['dn_name_vc'] . ".txt";
+					$zone_file = (ctrl_options::GetOption('zone_dir')) . $domain['dn_name_vc'] . ".txt";
 					$line  = "$"."TTL 10800" . fs_filehandler::NewLine();
 					$line .= "@ IN SOA " . $domain['dn_name_vc'] . ".    ";
 					$line .= "postmaster@".$domain['dn_name_vc'].". (" . fs_filehandler::NewLine();
 					$line .= "                       ".time(). ";serial" . fs_filehandler::NewLine();
-					$line .= "                       ".self::GetDNSOption('refresh_ttl')."      ;refresh after 6 hours" . fs_filehandler::NewLine();
-					$line .= "                       ".self::GetDNSOption('retry_ttl')."       ;retry after 1 hour" . fs_filehandler::NewLine();
-					$line .= "                       ".self::GetDNSOption('expire_ttl')."     ;expire after 1 week" . fs_filehandler::NewLine();
-					$line .= "                       ".self::GetDNSOption('minimum_ttl')." )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();		
+					$line .= "                       ".ctrl_options::GetOption('refresh_ttl')."      ;refresh after 6 hours" . fs_filehandler::NewLine();
+					$line .= "                       ".ctrl_options::GetOption('retry_ttl')."       ;retry after 1 hour" . fs_filehandler::NewLine();
+					$line .= "                       ".ctrl_options::GetOption('expire_ttl')."     ;expire after 1 week" . fs_filehandler::NewLine();
+					$line .= "                       ".ctrl_options::GetOption('minimum_ttl')." )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();		
 					while ($rowdns = $sql->fetch()) {
 						if ($rowdns['dn_type_vc'] == "A"){
 						$line .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		A		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();	
@@ -1348,7 +1348,7 @@ class module_controller {
 	
     static function IsTypeAllowed($type) {
         global $zdbh;
-        $record_types = self::GetDNSOption('allowed_types');
+        $record_types = ctrl_options::GetOption('allowed_types');
 		$record_types = explode(" ", $record_types);
 		if (in_array($type, $record_types)){
 			return TRUE;

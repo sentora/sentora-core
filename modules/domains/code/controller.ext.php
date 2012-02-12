@@ -66,8 +66,8 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $res = array();
-        $handle = @opendir(self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html");
-        $chkdir = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+        $handle = @opendir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html");
+        $chkdir = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/";
         if (!$handle) {
             # Log an error as the folder cannot be opened...
         } else {
@@ -107,17 +107,17 @@ class module_controller {
             //** New Home Directory **//
             if ($autohome == 1) {
                 $destination = "/" . str_replace(".", "_", $domain);
-                $vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+                $vhost_path = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
                 fs_filehandler::CreateDirectory($vhost_path);
                 //** Existing Home Directory **//
             } else {
                 $destination = "/" . $destination;
-                $vhost_path = self::GetVHOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+                $vhost_path = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
             }
             // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
             // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
             fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
-            $errorpages = self::GetVHOption('static_dir') . "/errorpages/";
+            $errorpages = ctrl_options::GetOption('static_dir') . "/errorpages/";
             if (is_dir($errorpages)) {
                 if ($handle = @opendir($errorpages)) {
                     while (($file = @readdir($handle)) !== false) {
@@ -133,11 +133,11 @@ class module_controller {
             }
             // Lets copy the default welcome page across...
             if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
-                fs_filehandler::CopyFileSafe(self::GetVHOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
+                fs_filehandler::CopyFileSafe(ctrl_options::GetOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
             }
             // Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-                if (self::GetVHOption('disable_hostsen') == 'false') {
+                if (ctrl_options::GetOption('disable_hostsen') == 'false') {
                     // Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
                     @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe " . $domain . "");
                     @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe www." . $domain . "");
