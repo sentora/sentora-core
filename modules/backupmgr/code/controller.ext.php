@@ -173,7 +173,7 @@ class module_controller {
 	static function ExecuteCreateBackupDirectory($username){
 		$backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/";
 		if (!is_dir($backupdir)){
-			mkdir($backupdir, 0777, TRUE);
+                    fs_director::CreateDirectory($backupdir);
 		}
 	
 	}
