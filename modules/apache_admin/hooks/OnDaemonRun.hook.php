@@ -68,6 +68,8 @@
         while ($rowvhost = $sql->fetch()) {
             //Domain is enabled
             if ($rowvhost['vh_enabled_in'] == 1) {
+				if (ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")){
+		
 				
 				// Set the vhosts to "LIVE"
         		$vsql = $zdbh->prepare("UPDATE x_vhosts SET vh_active_in=1 WHERE vh_id_pk=". $rowvhost['vh_id_pk'] . "");
@@ -156,8 +158,10 @@
                 $line .= "</virtualhost>" . fs_filehandler::NewLine();
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
+				
+				}
+				
             } else {
-				if (ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")){
                 //Domain is NOT enabled
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
@@ -179,10 +183,10 @@
                 $line .= "</virtualhost>" . fs_filehandler::NewLine();
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
-				}
+				
             }
         }
-		
+				
         // write the vhost config file
         $vhconfigfile = ctrl_options::GetOption('apache_vhost');
         if (fs_filehandler::UpdateFile($vhconfigfile, 0777, $line)) {
