@@ -21,9 +21,7 @@
     		});
     		$('input[type="text"]').blur(function() {
     			$(this).removeClass("focusField").addClass("idleField");
-    		    if ($.trim(this.value) == ''){
-			    	this.value = (this.defaultValue ? this.defaultValue : '');
-				}
+
     		});
 		});			
 
@@ -38,9 +36,7 @@
     		});
     		$('input[type="text"],textarea').blur(function() {
     			$(this).removeClass("focusField").addClass("idleField");
-    		    if ($.trim(this.value) == ''){
-			    	this.value = (this.defaultValue ? this.defaultValue : '');
-				}
+
     		});
 		});			
 
@@ -55,9 +51,7 @@
     		});
     		$('input[type="text"],textarea').blur(function() {
     			$(this).removeClass("focusField").addClass("idleField");
-    		    if ($.trim(this.value) == ''){
-			    	this.value = (this.defaultValue ? this.defaultValue : '');
-				}
+
     		});
 		});			
 
@@ -74,9 +68,7 @@
     		});
     		$('input[type="password"]').blur(function() {
     			$(this).removeClass("focusField").addClass("idleField");
-    		    if ($.trim(this.value) == ''){
-			    	this.value = (this.defaultValue ? this.defaultValue : '');
-				}
+
     		});
 		});
 		
