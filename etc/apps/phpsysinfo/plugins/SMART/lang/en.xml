@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- $Id: en.xml 198 2009-05-02 12:30:29Z diaoulael $ -->
+	<!--
+		phpSysInfo language file Language: English Created by: Antoine Bertin
+	-->
+<tns:translationPlugin language="english" charset="utf-8"
+	xmlns:tns="http://phpsysinfo.sourceforge.net/translation-plugin"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://phpsysinfo.sourceforge.net/translation-plugin ../../../language/translation-plugin.xsd">
+	<expression id="plugin_smart_001" name="smart_title">
+		<exp>S.M.A.R.T Informations</exp>
+	</expression>
+	<expression id="plugin_smart_002" name="smart_date">
+		<exp>Last refresh</exp>
+	</expression>
+	<expression id="plugin_smart_003" name="smart_name">
+		<exp>Name</exp>
+	</expression>
+	<expression id="plugin_smart_101" name="smart_raw_read_error_rate">
+		<exp>Raw Read Error Rate</exp>
+	</expression>
+	<expression id="plugin_smart_103" name="smart_spin_up_time">
+		<exp>Spin Up Time</exp>
+	</expression>
+	<expression id="plugin_smart_104" name="smart_start_stop_count">
+		<exp>Start Stop Count</exp>
+	</expression>
+	<expression id="plugin_smart_105" name="smart_reallocated_sector_ct">
+		<exp>Reallocated Sector Ct</exp>
+	</expression>
+	<expression id="plugin_smart_107" name="smart_seek_error_rate">
+		<exp>Seek Error Rate</exp>
+	</expression>
+	<expression id="plugin_smart_109" name="smart_power_on_hours">
+		<exp>Power On Hours</exp>
+	</expression>
+	<expression id="plugin_smart_110" name="smart_spin_retry_count">
+		<exp>Spin Retry Count</exp>
+	</expression>
+	<expression id="plugin_smart_111" name="smart_calibration_retry_count">
+		<exp>Calibration Retry Count</exp>
+	</expression>
+	<expression id="plugin_smart_112" name="smart_power_cycle_count">
+		<exp>Power Cycle Count</exp>
+	</expression>
+	<expression id="plugin_smart_292" name="smart_power_off_retry_count">
+		<exp>Power-Off Retract Count</exp>
+	</expression>
+	<expression id="plugin_smart_293" name="smart_load_cycle_count">
+		<exp>Load Cycle Count</exp>
+	</expression>
+	<expression id="plugin_smart_294" name="smart_temperature">
+		<exp>Temperature</exp>
+	</expression>
+	<expression id="plugin_smart_296" name="smart_reallocated_event_count">
+		<exp>Reallocated Event Count</exp>
+	</expression>
+	<expression id="plugin_smart_297" name="smart_current_pending_sector">
+		<exp>Current Pending Sector</exp>
+	</expression>
+	<expression id="plugin_smart_298" name="smart_offline_uncorrectable">
+		<exp>Offline Uncorrectable</exp>
+	</expression>
+	<expression id="plugin_smart_299" name="smart_udma_crc_error_count">
+		<exp>UDMA CRC Error Count</exp>
+	</expression>
+	<expression id="plugin_smart_300" name="smart_multi_zone_error_rate">
+		<exp>Multi Zone Error Rate</exp>
+	</expression>
+</tns:translationPlugin>
