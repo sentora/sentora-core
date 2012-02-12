@@ -97,6 +97,24 @@ class ui_module {
     }
 
     /**
+     * Checks to see if the specified module is enabled.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global type $zdbh
+     * @param type $modulename
+     * @return boolean 
+     */
+    static function CheckModuleEnabled($modulename) {
+        global $zdbh;
+        $retval = $zdbh->query("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_name_vc = '" . $modulename . "'")->Fetch();
+        if ($retval['mo_enabled_en'] == "true") {
+            $retval = true;
+        } else {
+            $retval = false;
+        }
+        return $retval;
+    }
+
+    /**
      * This class returns the name of the current module.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global type $controller
