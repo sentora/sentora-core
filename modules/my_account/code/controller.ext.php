@@ -24,97 +24,97 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	static $ok;
+    static $ok;
 
     static function getAccountSettings() {
-		$currentuser = ctrl_users::GetUserDetail();
-		$res = array();
-		array_push($res, array( 'fullname' => $currentuser['fullname'], 
-					 			'email'    => $currentuser['email'], 
-					 			'phone'    => $currentuser['phone'], 
-					 			'address'  => $currentuser['address'], 
-					 			'postcode' => $currentuser['postcode']));
-        return $res;
-    }
-	
-    static function getLangList() {
-		$currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail();
         $res = array();
-		$column_names = ui_language::GetColumnNames('x_translations');
-		foreach ($column_names as $column_name){
-			if ($column_name != 'tr_id_pk'){
-				$column_name = explode('_',$column_name);
-				$lang = $column_name[1];
-				if ($lang == $currentuser['language']){
-					$selected = "SELECTED";
-				} else {
-					$selected = "";
-				}
-				array_push($res, array('language' => $lang, 'selected' => $selected));
-			}
-		}
+        array_push($res, array('fullname' => $currentuser['fullname'],
+            'email' => $currentuser['email'],
+            'phone' => $currentuser['phone'],
+            'address' => $currentuser['address'],
+            'postcode' => $currentuser['postcode']));
         return $res;
-    }	
-	
-	static function doUpdateAccountSettings(){
-		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$userid     = $currentuser['userid'];
-		$email      = $controller->GetControllerRequest('FORM', 'inEmail');
-	 	$fullname   = $controller->GetControllerRequest('FORM', 'inFullname');
-		$language   = $controller->GetControllerRequest('FORM', 'inLanguage');
-		$phone      = $controller->GetControllerRequest('FORM', 'inPhone');
-		$address    = $controller->GetControllerRequest('FORM', 'inAddress');
-		$postalCode = $controller->GetControllerRequest('FORM', 'inPostalCode');
-			
-		if (!fs_director::CheckForEmptyValue(self::ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode))){
-			self::$ok = true;
-		}
-	}
-	
-	static function ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode){
-		global $zdbh;
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();	
-		$sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = '". $email."' WHERE ac_id_pk = '".$userid."'");
-	 	$sql->execute();
-		$sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc = '". $fullname."',
-													 ud_language_vc = '". $language."',
-													 ud_phone_vc    = '". $phone."',
-													 ud_address_tx  = '". $address."',
-													 ud_postcode_vc = '". $postalCode."' WHERE 
-													 ud_user_fk     = '".$userid."'");
-	 	$sql->execute();	
-		return true;
-	}
-	
-	static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$ok)){
-            return ui_sysmessage::shout(ui_language::translate("Changes to your account settings have been saved successfully!"));
-		}else{
-			return;
-		}
     }
 
-	static function getModuleName() {
-		$module_name = ui_language::translate(ui_module::GetModuleName());
+    static function getLangList() {
+        $currentuser = ctrl_users::GetUserDetail();
+        $res = array();
+        $column_names = ui_language::GetColumnNames('x_translations');
+        foreach ($column_names as $column_name) {
+            if ($column_name != 'tr_id_pk') {
+                $column_name = explode('_', $column_name);
+                $lang = $column_name[1];
+                if ($lang == $currentuser['language']) {
+                    $selected = "SELECTED";
+                } else {
+                    $selected = "";
+                }
+                array_push($res, array('language' => $lang, 'selected' => $selected));
+            }
+        }
+        return $res;
+    }
+
+    static function doUpdateAccountSettings() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $userid = $currentuser['userid'];
+        $email = $controller->GetControllerRequest('FORM', 'inEmail');
+        $fullname = $controller->GetControllerRequest('FORM', 'inFullname');
+        $language = $controller->GetControllerRequest('FORM', 'inLanguage');
+        $phone = $controller->GetControllerRequest('FORM', 'inPhone');
+        $address = $controller->GetControllerRequest('FORM', 'inAddress');
+        $postalCode = $controller->GetControllerRequest('FORM', 'inPostalCode');
+
+        if (!fs_director::CheckForEmptyValue(self::ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode))) {
+            self::$ok = true;
+        }
+    }
+
+    static function ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode) {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = '" . $email . "' WHERE ac_id_pk = '" . $userid . "'");
+        $sql->execute();
+        $sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc = '" . $fullname . "',
+													 ud_language_vc = '" . $language . "',
+													 ud_phone_vc    = '" . $phone . "',
+													 ud_address_tx  = '" . $address . "',
+													 ud_postcode_vc = '" . $postalCode . "' WHERE 
+													 ud_user_fk     = '" . $userid . "'");
+        $sql->execute();
+        return true;
+    }
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your account settings have been saved successfully!"));
+        } else {
+            return;
+        }
+    }
+
+    static function getModuleName() {
+        $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
-	
-	static function getModuleDesc() {
-		$message = ui_language::translate(ui_module::GetModuleDescription());
+
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
-    }	
+    }
+
 }
 
 ?>

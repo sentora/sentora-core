@@ -797,6 +797,15 @@ a.zannounce_a{
 	padding-left:5px;
 	padding-right:15px;
 }
+
+.znotice {
+        margin-bottom: 20px;
+	padding:20px;
+	background: #EDEF7D;
+        border-color: #666;
+        color: #666;
+}
+
 /** JQUERY UI TABS BACKGROUND **/
 .ui-tabs .ui-tabs-panel {
 	background-color: #F1F4F6;
