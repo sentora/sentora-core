@@ -6,6 +6,9 @@
 		echo "Apache Admin module ENABLED..." . fs_filehandler::NewLine();
 		if (ctrl_options::GetOption('apache_changed') != strtolower("false")){
 			echo "Apache Config has changed..." . fs_filehandler::NewLine();
+			if (ctrl_options::GetOption('apache_backup') == strtolower("true")){
+				BackupVhostConfigFile();
+			}
 			WriteVhostConfigFile();
 			echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
 		} else {
@@ -211,5 +214,40 @@
         } else {
             return false;
         }
+    }
+	
+    function BackupVhostConfigFile() {
+		echo "Apache VHost backups are enabled... Backing up current vhost.conf to: " .ctrl_options::GetOption('apache_budir') . fs_filehandler::NewLine();
+	    if (!is_dir(ctrl_options::GetOption('apache_budir'))) {
+        	fs_director::CreateDirectory(ctrl_options::GetOption('apache_budir'));
+        }
+		copy(ctrl_options::GetOption('apache_vhost'), ctrl_options::GetOption('apache_budir'). "VHOST_BACKUP_".time()."");
+		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('apache_budir'). ctrl_options::GetOption('apache_vhost').".BU", 0777);
+		if(ctrl_options::GetOption('apache_purgebu') == strtolower("true")){
+			echo "Apache VHost purges are enabled... Purging backups older than: " .ctrl_options::GetOption('apache_purge_date') . fs_filehandler::NewLine();
+			echo "[FILE][PURGE_DATE][FILE_DATE][ACTION]" . fs_filehandler::NewLine();
+			$purge_date = ctrl_options::GetOption('apache_purge_date');
+			if ($handle = @opendir(ctrl_options::GetOption('apache_budir'))) {
+	   			while (false !== ($file = readdir($handle))){
+	          		if ($file != "." && $file != ".."){
+						$filetime = @filemtime(ctrl_options::GetOption('apache_budir') . $file);
+						if($filetime == NULL){
+    						$filetime = @filemtime(utf8_decode(ctrl_options::GetOption('apache_budir') . $file));
+						} 
+						$filetime = floor((time() - $filetime)/86400);
+						echo "" . $file . " - " . $purge_date ." - " . $filetime . "";
+						if ($purge_date < $filetime){
+							//delete the file
+							echo " - Deleting file...\r\n";
+							unlink(ctrl_options::GetOption('apache_budir') . $file);
+						} else {
+							echo " - Skipping file...\r\n";
+						}
+    	      		}
+	       		}
+			}
+			echo "Purging old backups complete..." . fs_filehandler::NewLine();
+		}
+		echo "Apache backups complete..." . fs_filehandler::NewLine();
     }
 ?>
