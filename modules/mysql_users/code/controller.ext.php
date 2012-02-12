@@ -24,23 +24,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	static $alreadyexists;
-	static $dbalreadyadded;
-	static $blank;
-	static $badname;
-	static $badpass;
-	static $rootabuse;
-	static $badIP;
-	static $ok;
-	 
+    static $alreadyexists;
+    static $dbalreadyadded;
+    static $blank;
+    static $badname;
+    static $badpass;
+    static $rootabuse;
+    static $badIP;
+    static $ok;
+
     /**
      * The 'worker' methods.
      */
-
-	static function CleanOrphanDatabases($uid){
+    static function CleanOrphanDatabases($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_mysql_dbmap WHERE mm_user_fk=" . $uid . "";
         $numrows = $zdbh->query($sql);
@@ -48,10 +46,10 @@ class module_controller {
             $sql = $zdbh->prepare($sql);
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-				$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
-				if (!$rowdb){
-					
-				}
+                $rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
+                if (!$rowdb) {
+                    
+                }
             }
             return true;
         } else {
@@ -61,8 +59,8 @@ class module_controller {
 
     static function ListUsers($uid) {
         global $zdbh;
-		// Remove deleted databases from MySQL userlist...
-		self::CleanOrphanDatabases($uid);
+        // Remove deleted databases from MySQL userlist...
+        self::CleanOrphanDatabases($uid);
         $sql = "SELECT * FROM x_mysql_users WHERE mu_acc_fk=" . $uid . " AND mu_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -70,18 +68,18 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-				$numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_user_fk=" . $rowmysql['mu_id_pk'] . "")->fetch();
-				if ($rowmysql['mu_access_vc'] == "%"){
-					$access = "ANY (%)";
-				} else {
-					$access = $rowmysql['mu_access_vc'];
-				}
-                array_push($res, array(	'userid'   	 => $rowmysql['mu_id_pk'],
-										'username'   => $rowmysql['mu_name_vc'],
-										'dbpassword' => $rowmysql['mu_pass_vc'],
-										'totaldb'	 => $numrowdb[0],
-										'accesshtml' => $access,
-									   	'access' 	 => $rowmysql['mu_access_vc']));
+                $numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_user_fk=" . $rowmysql['mu_id_pk'] . "")->fetch();
+                if ($rowmysql['mu_access_vc'] == "%") {
+                    $access = "ANY (%)";
+                } else {
+                    $access = $rowmysql['mu_access_vc'];
+                }
+                array_push($res, array('userid' => $rowmysql['mu_id_pk'],
+                    'username' => $rowmysql['mu_name_vc'],
+                    'dbpassword' => $rowmysql['mu_pass_vc'],
+                    'totaldb' => $numrowdb[0],
+                    'accesshtml' => $access,
+                    'access' => $rowmysql['mu_access_vc']));
             }
             return $res;
         } else {
@@ -98,8 +96,8 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-                array_push($res, array(	'mysqlid'   => $rowmysql['my_id_pk'],
-									   	'mysqlname' => $rowmysql['my_name_vc']));
+                array_push($res, array('mysqlid' => $rowmysql['my_id_pk'],
+                    'mysqlname' => $rowmysql['my_name_vc']));
             }
             return $res;
         } else {
@@ -116,14 +114,14 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-				$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
-				if ($rowdb){
-                array_push($res, array(	'mmid'   => $rowmysql['mm_id_pk'],
-										'mmaccount' => $rowmysql['mm_acc_fk'],
-										'mmuserid'  => $rowmysql['mm_user_fk'],
-										'mmdbid'    => $rowmysql['mm_database_fk'],
-										'mmdbname'  => $rowdb['my_name_vc']));
-				}
+                $rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
+                if ($rowdb) {
+                    array_push($res, array('mmid' => $rowmysql['mm_id_pk'],
+                        'mmaccount' => $rowmysql['mm_acc_fk'],
+                        'mmuserid' => $rowmysql['mm_user_fk'],
+                        'mmdbid' => $rowmysql['mm_database_fk'],
+                        'mmdbname' => $rowdb['my_name_vc']));
+                }
             }
             return $res;
         } else {
@@ -140,8 +138,8 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-                array_push($res, array(	'userid'   => $rowmysql['mu_id_pk'],
-									   	'username' => $rowmysql['mu_name_vc']));
+                array_push($res, array('userid' => $rowmysql['mu_id_pk'],
+                    'username' => $rowmysql['mu_name_vc']));
             }
             return $res;
         } else {
@@ -149,225 +147,218 @@ class module_controller {
         }
     }
 
-	static function ExecuteCreateUser($uid, $username, $database, $access){
-		global $zdbh;
+    static function ExecuteCreateUser($uid, $username, $database, $access) {
+        global $zdbh;
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail($uid);
-		// Check for spaces and remove if found...
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
-		// If errors are found, then exit before creating user...
+        // If errors are found, then exit before creating user...
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $database, $access))) {
             return false;
         }
-		runtime_hook::Execute('OnBeforeCreateDatabaseUser');
-		$password = fs_director::GenerateRandomPassword(9, 4);
-		// Create user in MySQL
-    	$sql = $zdbh->prepare("CREATE USER `" . $username . "`@`" . $access . "`;");
-		$sql->execute();
-		// Set MySQL password for new user...
-		$sql = $zdbh->prepare("SET PASSWORD FOR `" . $username . "`@`" . $access . "`=PASSWORD('" . $password . "')");
-		$sql->execute();
-		// Get the database name from the ID...
-		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $database . " AND my_deleted_ts IS NULL")->fetch();
-		// Grant privileges for new user to the assigned database...
-		$sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* TO '" . $username . "'@'" . $access . "'");
-		$sql->execute();
-		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-		$sql->execute();
-		// Add user to zpanel database...
-		$sql = $zdbh->prepare("INSERT INTO x_mysql_users (
+        runtime_hook::Execute('OnBeforeCreateDatabaseUser');
+        $password = fs_director::GenerateRandomPassword(9, 4);
+        // Create user in MySQL
+        $sql = $zdbh->prepare("CREATE USER `" . $username . "`@`" . $access . "`;");
+        $sql->execute();
+        // Set MySQL password for new user...
+        $sql = $zdbh->prepare("SET PASSWORD FOR `" . $username . "`@`" . $access . "`=PASSWORD('" . $password . "')");
+        $sql->execute();
+        // Get the database name from the ID...
+        $rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $database . " AND my_deleted_ts IS NULL")->fetch();
+        // Grant privileges for new user to the assigned database...
+        $sql = $zdbh->prepare("GRANT USAGE ON *.* TO '" . $username . "'@'" . $access . "'");
+        $sql->execute();
+        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+        $sql->execute();
+        // Add user to zpanel database...
+        $sql = $zdbh->prepare("INSERT INTO x_mysql_users (
 								mu_acc_fk,
 								mu_name_vc,
 								mu_database_fk,
 								mu_pass_vc,
 								mu_access_vc,
 								mu_created_ts) VALUES (
-								"  . $uid . ",
+								" . $uid . ",
 								'" . $username . "',
-								"  . $database . ",
+								" . $database . ",
 								'" . $password . "',
 								'" . $access . "',
-								" . time() . ")");		
-		$sql->execute();
-		// Get the new users id...
-		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_name_vc='" . $username . "' AND mu_acc_fk=" . $uid . " AND mu_deleted_ts IS NULL")->fetch();
-		// Add database to zpanel user account...
-		$sql = $zdbh->prepare("INSERT INTO x_mysql_dbmap (
-								mm_acc_fk,
-								mm_user_fk,
-								mm_database_fk) VALUES (
-								" . $uid . ",
-								" . $rowuser['mu_id_pk'] . ",
-								" . $database . ")");		
-		$sql->execute();
-		runtime_hook::Execute('OnAfterCreateDatabaseUser');
-		self::$ok = true;
-		return true;
-	}
+								" . time() . ")");
+        $sql->execute();
+        // Get the new users id...
+        $rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_name_vc='" . $username . "' AND mu_acc_fk=" . $uid . " AND mu_deleted_ts IS NULL")->fetch();
+        // Add database to zpanel user account...
+        self::ExecuteAddDB($uid, $rowuser['mu_id_pk'], $database);
+        runtime_hook::Execute('OnAfterCreateDatabaseUser');
+        self::$ok = true;
+        return true;
+    }
 
-	static function CheckCreateForErrors($username, $database, $access) {
-		global $zdbh;
-	    // Check to make sure the user name is not blank before we go any further...
-	    if ($username == '') {
-			self::$blank = true;
-			return false;
-	    }
-	    // Check to make sure the user name is not blank before we go any further...
-	    if ($username == 'root') {
-			self::$rootabuse = true;
-			return false;
-	    }
-	    // Check to make sure the user name is not blank before we go any further...
-	    if ($database == '') {
-			self::$blank = true;
-			return false;
-	    }
-	    // Check to make sure the user name is not a duplicate...
-		$sql = "SELECT COUNT(*) FROM x_mysql_users WHERE mu_name_vc='" . $username . "' AND mu_deleted_ts IS NULL";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {	
-				self::$alreadyexists = true;
-				return false;
-			}
-		}
-		// Check to make sure the user name is not a duplicate (checks actual mysql table)...
-		$sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '". $username . "')";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {	
-				self::$alreadyexists = true;
-				return false;
-			}
-		}
+    static function CheckCreateForErrors($username, $database, $access) {
+        global $zdbh;
+        // Check to make sure the user name is not blank before we go any further...
+        if ($username == '') {
+            self::$blank = true;
+            return false;
+        }
+        // Check to make sure the user name is not blank before we go any further...
+        if ($username == 'root') {
+            self::$rootabuse = true;
+            return false;
+        }
+        // Check to make sure the user name is not blank before we go any further...
+        if ($database == '') {
+            self::$blank = true;
+            return false;
+        }
+        // Check to make sure the user name is not a duplicate...
+        $sql = "SELECT COUNT(*) FROM x_mysql_users WHERE mu_name_vc='" . $username . "' AND mu_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                self::$alreadyexists = true;
+                return false;
+            }
+        }
+        // Check to make sure the user name is not a duplicate (checks actual mysql table)...
+        $sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '" . $username . "')";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                self::$alreadyexists = true;
+                return false;
+            }
+        }
         // Check for invalid username
-		if (!self::IsValidUserName($username)) {
+        if (!self::IsValidUserName($username)) {
             self::$badname = true;
             return false;
         }
         // Check for invalid IP address
-		if ($access != "%" && strtolower($access) != "localhost") {
-			if (!fs_director::IsValidIP($access)) {
-            	self::$badIP = true;
-            	return false;
-			}
+        if ($access != "%" && strtolower($access) != "localhost") {
+            if (!fs_director::IsValidIP($access)) {
+                self::$badIP = true;
+                return false;
+            }
         }
 
-		return true;
-   	}
+        return true;
+    }
 
-	static function CheckAddForErrors($userid, $database) {
-		global $zdbh;
-	    // Check to make sure the database isnt already added...
-		$result = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_database_fk=" . $database . " AND mm_user_fk=".$userid."")->fetch();
-	    if ($result) {
-			self::$dbalreadyadded = true;
-			return false;
-	    }
-		return true;
-	}
-	
-	static function ExecuteDeleteUser($mu_id_pk){
-		global $zdbh;
-		runtime_hook::Execute('OnBeforeDeleteDatabaseUser');
-		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $mu_id_pk . " AND mu_deleted_ts IS NULL")->fetch();	
-		$sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '". $rowuser['mu_name_vc'] . "')";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {	
-				$sql = $zdbh->prepare("DROP USER `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`;");
-				$sql->execute();
-				$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-				$sql->execute();
-			}
-		}
-		$sql = $zdbh->prepare("
+    static function CheckAddForErrors($userid, $database) {
+        global $zdbh;
+        // Check to make sure the database isnt already added...
+        $result = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_database_fk=" . $database . " AND mm_user_fk=" . $userid . "")->fetch();
+        if ($result) {
+            self::$dbalreadyadded = true;
+            return false;
+        }
+        return true;
+    }
+
+    static function ExecuteDeleteUser($mu_id_pk) {
+        global $zdbh;
+        runtime_hook::Execute('OnBeforeDeleteDatabaseUser');
+        $rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $mu_id_pk . " AND mu_deleted_ts IS NULL")->fetch();
+        $sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '" . $rowuser['mu_name_vc'] . "')";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $sql = $zdbh->prepare("DROP USER `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`;");
+                $sql->execute();
+                $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+                $sql->execute();
+            }
+        }
+        $sql = $zdbh->prepare("
 			UPDATE x_mysql_users
 			SET mu_deleted_ts = '" . time() . "' 
-			WHERE mu_id_pk = '".$mu_id_pk."'");
-		$sql->execute();
-		$sql = $zdbh->prepare("
+			WHERE mu_id_pk = '" . $mu_id_pk . "'");
+        $sql->execute();
+        $sql = $zdbh->prepare("
 			DELETE FROM x_mysql_dbmap
-			WHERE mm_user_fk = '".$mu_id_pk."'");
-		$sql->execute();
-		runtime_hook::Execute('OnAfterDeleteDatabaseUser');
-		self::$ok = true;
-		return true;
-	}
+			WHERE mm_user_fk = '" . $mu_id_pk . "'");
+        $sql->execute();
+        runtime_hook::Execute('OnAfterDeleteDatabaseUser');
+        self::$ok = true;
+        return true;
+    }
 
-	static function ExecuteAddDB($uid, $myuserid, $dbid){
-		global $zdbh;
+    static function ExecuteAddDB($uid, $myuserid, $dbid) {
+        global $zdbh;
         if (fs_director::CheckForEmptyValue(self::CheckAddForErrors($myuserid, $dbid))) {
             return false;
         }
-		runtime_hook::Execute('OnBeforeAddDatabaseAccess');
-		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $dbid . " AND my_deleted_ts IS NULL")->fetch();
-		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
-		$sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* TO '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
-		$sql->execute();
-		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-		$sql->execute();
-		$sql = $zdbh->prepare("
+        runtime_hook::Execute('OnBeforeAddDatabaseAccess');
+        $rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $dbid . " AND my_deleted_ts IS NULL")->fetch();
+        $rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
+        $sql = $zdbh->prepare("GRANT ALTER, CREATE, CREATE TEMPORARY TABLES, DELETE, INDEX, INSERT, LOCK TABLES, SELECT, UPDATE ON " . $rowdb['my_name_vc'] . ".* TO '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
+        $sql->execute();
+        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+        $sql->execute();
+        $sql = $zdbh->prepare("
 			INSERT INTO x_mysql_dbmap (
 							mm_acc_fk,
 							mm_user_fk,
 							mm_database_fk) VALUES (
-							". $uid .",
-							". $myuserid .",
-							". $dbid .")");
-		$sql->execute();
-		runtime_hook::Execute('OnAfterAddDatabaseAccess');
-		self::$ok = true;
-		return true;
-	}
+							" . $uid . ",
+							" . $myuserid . ",
+							" . $dbid . ")");
+        $sql->execute();
+        runtime_hook::Execute('OnAfterAddDatabaseAccess');
+        self::$ok = true;
+        return true;
+    }
 
-	static function ExecuteRemoveDB($myuserid, $mapid){ // <-- mmid = dbmaps
-		global $zdbh;
-		runtime_hook::Execute('OnBeforeRemoveDatabaseAccess');
-		$rowdbmap  = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . "")->fetch();
-		$rowdb   = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowdbmap['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
-		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
-		$sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* FROM '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
-		$sql->execute();
-		//echo "NAME ".$rowdb['my_name_vc']." DBID ".$dbid." ROWDB " .$rowdbm['mm_database_fk'] . "RowUser " . $rowuser['mu_name_vc'] . " access " . $rowuser['mu_access_vc'];
-		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-		$sql->execute();
-		$sql = $zdbh->prepare("DELETE FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . " AND mm_user_fk=" . $myuserid . "");
-		$sql->execute();
-		runtime_hook::Execute('OnAfterRemoveDatabaseAccess');
-		self::$ok = true;
-		return true;
-	}
+    static function ExecuteRemoveDB($myuserid, $mapid) { // <-- mmid = dbmaps
+        global $zdbh;
+        runtime_hook::Execute('OnBeforeRemoveDatabaseAccess');
+        $rowdbmap = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . "")->fetch();
+        $rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowdbmap['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
+        $rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
+        $sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* FROM '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
+        $sql->execute();
+        //echo "NAME ".$rowdb['my_name_vc']." DBID ".$dbid." ROWDB " .$rowdbm['mm_database_fk'] . "RowUser " . $rowuser['mu_name_vc'] . " access " . $rowuser['mu_access_vc'];
+        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+        $sql->execute();
+        $sql = $zdbh->prepare("DELETE FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . " AND mm_user_fk=" . $myuserid . "");
+        $sql->execute();
+        runtime_hook::Execute('OnAfterRemoveDatabaseAccess');
+        self::$ok = true;
+        return true;
+    }
 
-	static function ExecuteResetPassword($myuserid, $password){
-		global $zdbh;
-		runtime_hook::Execute('OnBeforeResetDatabasePassword');
-		$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
-		// If errors are found, then exit before resetting password...
+    static function ExecuteResetPassword($myuserid, $password) {
+        global $zdbh;
+        runtime_hook::Execute('OnBeforeResetDatabasePassword');
+        $rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
+        // If errors are found, then exit before resetting password...
         if (fs_director::CheckForEmptyValue(self::CheckPasswordForErrors($password))) {
             return false;
-        }		
-		$sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '". $rowuser['mu_name_vc'] . "')";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {
-				// Set MySQL password for new user...
-				$sql = $zdbh->prepare("SET PASSWORD FOR `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`=PASSWORD('" . $password . "')");
-				$sql->execute();
-				$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-				$sql->execute();
-				$sql = $zdbh->prepare("UPDATE x_mysql_users SET mu_pass_vc='".$password."' WHERE mu_id_pk=".$myuserid."");
-				$sql->execute();
-			}
-		}
-		runtime_hook::Execute('OnAfterResetDatabasePassword');
-		self::$ok = true;
-		return true;
-	}
+        }
+        $sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '" . $rowuser['mu_name_vc'] . "')";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                // Set MySQL password for new user...
+                $sql = $zdbh->prepare("SET PASSWORD FOR `" . $rowuser['mu_name_vc'] . "`@`" . $rowuser['mu_access_vc'] . "`=PASSWORD('" . $password . "')");
+                $sql->execute();
+                $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+                $sql->execute();
+                $sql = $zdbh->prepare("UPDATE x_mysql_users SET mu_pass_vc='" . $password . "' WHERE mu_id_pk=" . $myuserid . "");
+                $sql->execute();
+            }
+        }
+        runtime_hook::Execute('OnAfterResetDatabasePassword');
+        self::$ok = true;
+        return true;
+    }
 
-	static function CheckPasswordForErrors($password) {
-		if (!self::IsValidPassword($password)) {
+    static function CheckPasswordForErrors($password) {
+        if (!self::IsValidPassword($password)) {
             self::$badpass = true;
             return false;
         }
-		return true;
-	}
+        return true;
+    }
 
     static function IsValidUserName($username) {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
@@ -381,8 +372,8 @@ class module_controller {
             return false;
         }
         return true;
-	}
-	
+    }
+
     /**
      * End 'worker' methods.
      */
@@ -390,22 +381,20 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-
     static function doCreateUser() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-		if ($formvars['inAccess'] == 1){
-			$access = "%";
-		} else {
-			$access = $formvars['inAccessIP'];
-		}
+        if ($formvars['inAccess'] == 1) {
+            $access = "%";
+        } else {
+            $access = $formvars['inAccessIP'];
+        }
         if (self::ExecuteCreateUser($currentuser['userid'], $formvars['inUserName'], $formvars['inDatabase'], $access))
             return true;
-		return false;
-
+        return false;
     }
-	
+
     static function doEditUser() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -429,8 +418,7 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddDB($currentuser['userid'], $formvars['inUser'], $formvars['inDatabase']))
             return true;
-		return false;
-
+        return false;
     }
 
     static function doRemoveDB() {
@@ -439,14 +427,14 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListUserDatabases($formvars['inUser']) as $row) {
             if (isset($formvars['inRemove_' . $row['mmid'] . ''])) {
- 				if (self::ExecuteRemoveDB($formvars['inUser'], $formvars['inRemove_' . $row['mmid'] . ''])){
-            		return true;
-				} else {
-					return false;
-				}
+                if (self::ExecuteRemoveDB($formvars['inUser'], $formvars['inRemove_' . $row['mmid'] . ''])) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
-		}
-		return false;
+        }
+        return false;
     }
 
     static function doConfirmDeleteUser() {
@@ -462,12 +450,11 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteResetPassword($formvars['inUser'], $formvars['inResetPW']))
             return true;
-		return false;
-
+        return false;
     }
 
     static function getUserList() {
-		global $controller;
+        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListUsers($currentuser['userid']);
     }
@@ -483,7 +470,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListUserDatabases($controller->GetControllerRequest('URL', 'other'));
     }
-	
+
     static function getisDeleteUser() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -511,7 +498,7 @@ class module_controller {
     static function getCurrentUserName() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		return $currentuser['username'];
+        return $currentuser['username'];
     }
 
     static function getEditCurrentUserName() {
@@ -536,42 +523,42 @@ class module_controller {
 
     static function getMysqlUsagepChart() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$line  = "";
-		$mysqlquota = $currentuser['mysqlquota'];
-		$mysql = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
-		$total= $mysqlquota;
-		$used = $mysql;
-		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
-		return $line;
-	}
-		
-	static function getResult() {
-		if (!fs_director::CheckForEmptyValue(self::$blank)){
-			return ui_sysmessage::shout(ui_language::translate("You need to specify a user name and select a database to create your MySQL user."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$rootabuse)){
-		return ui_sysmessage::shout(ui_language::translate("You cannot create a user named 'root'! This attempt has been logged and the system administrator notified!."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-		return ui_sysmessage::shout(ui_language::translate("A MySQL username with that name already appears to exsist."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$badname)){
-		return ui_sysmessage::shout(ui_language::translate("Your MySQL user name is not valid. Please enter a valid MySQL user name."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$badpass)){
-		return ui_sysmessage::shout(ui_language::translate("Your MySQL password is not valid. Valid characters are A-Z, a-z, 0-9."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$badIP)){
-		return ui_sysmessage::shout(ui_language::translate("The IP address is not valid. Please enter a valid IP address."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$dbalreadyadded)){
-		return ui_sysmessage::shout(ui_language::translate("That database has already been added to this user."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$ok)){
-			return ui_sysmessage::shout(ui_language::translate("Changes to your MySQL users have been saved successfully!"), "zannounceok");
-		}
+        $currentuser = ctrl_users::GetUserDetail();
+        $line = "";
+        $mysqlquota = $currentuser['mysqlquota'];
+        $mysql = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+        $total = $mysqlquota;
+        $used = $mysql;
+        $free = $total - $used;
+        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
+        return $line;
+    }
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$blank)) {
+            return ui_sysmessage::shout(ui_language::translate("You need to specify a user name and select a database to create your MySQL user."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$rootabuse)) {
+            return ui_sysmessage::shout(ui_language::translate("You cannot create a user named 'root'! This attempt has been logged and the system administrator notified!."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
+            return ui_sysmessage::shout(ui_language::translate("A MySQL username with that name already appears to exsist."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$badname)) {
+            return ui_sysmessage::shout(ui_language::translate("Your MySQL user name is not valid. Please enter a valid MySQL user name."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$badpass)) {
+            return ui_sysmessage::shout(ui_language::translate("Your MySQL password is not valid. Valid characters are A-Z, a-z, 0-9."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$badIP)) {
+            return ui_sysmessage::shout(ui_language::translate("The IP address is not valid. Please enter a valid IP address."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$dbalreadyadded)) {
+            return ui_sysmessage::shout(ui_language::translate("That database has already been added to this user."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your MySQL users have been saved successfully!"), "zannounceok");
+        }
         return;
     }
 
@@ -580,21 +567,20 @@ class module_controller {
         return $message;
     }
 
-	static function getModuleName() {
-		$module_name = ui_language::translate(ui_module::GetModuleName());
+    static function getModuleName() {
+        $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
     /**
      * Webinterface sudo methods.
      */
-	 
 }
 
 ?>

@@ -24,17 +24,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-	static $alreadyexists;
-	static $blank;
-	static $ok;
-	 
+    static $alreadyexists;
+    static $blank;
+    static $ok;
+
     /**
      * The 'worker' methods.
      */
-
     static function ListDatabases($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_mysql_databases WHERE my_acc_fk=" . $uid . " AND my_deleted_ts IS NULL";
@@ -44,9 +42,9 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-                array_push($res, array(	'mysqlid'   => $rowmysql['my_id_pk'],
-									   	'mysqlname' => $rowmysql['my_name_vc'],
-                    					'mysqlsize' => $rowmysql['my_usedspace_bi']));
+                array_push($res, array('mysqlid' => $rowmysql['my_id_pk'],
+                    'mysqlname' => $rowmysql['my_name_vc'],
+                    'mysqlsize' => $rowmysql['my_usedspace_bi']));
             }
             return $res;
         } else {
@@ -63,9 +61,9 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-                array_push($res, array(	'mysqlid'   => $rowmysql['my_id_pk'],
-									   	'mysqlname' => $rowmysql['my_name_vc'],
-                    					'mysqlsize' => $rowmysql['my_usedspace_bi']));
+                array_push($res, array('mysqlid' => $rowmysql['my_id_pk'],
+                    'mysqlname' => $rowmysql['my_name_vc'],
+                    'mysqlsize' => $rowmysql['my_usedspace_bi']));
             }
             return $res;
         } else {
@@ -73,72 +71,72 @@ class module_controller {
         }
     }
 
-	static function ExecuteCreateDatabase($uid, $databasename){
-		global $zdbh;
+    static function ExecuteCreateDatabase($uid, $databasename) {
+        global $zdbh;
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail($uid);
+        $currentuser = ctrl_users::GetUserDetail($uid);
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($currentuser['username'], $databasename))) {
             return false;
         }
-		runtime_hook::Execute('OnBeforeCreateDatabase');
-		$sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
-		$sql->execute();
-		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-		$sql->execute();
-		$sql = $zdbh->prepare("INSERT INTO x_mysql_databases (
+        runtime_hook::Execute('OnBeforeCreateDatabase');
+        $sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
+        $sql->execute();
+        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+        $sql->execute();
+        $sql = $zdbh->prepare("INSERT INTO x_mysql_databases (
 								my_acc_fk,
 								my_name_vc,
 								my_created_ts) VALUES (
 								" . $currentuser['userid'] . ",
 								'" . $currentuser['username'] . "_" . $databasename . "',
-								" . time() . ")");		
-		$sql->execute();
-		runtime_hook::Execute('OnAfterCreateDatabase');
-		self::$ok = true;
-		return true;
-	}
+								" . time() . ")");
+        $sql->execute();
+        runtime_hook::Execute('OnAfterCreateDatabase');
+        self::$ok = true;
+        return true;
+    }
 
-	static function CheckCreateForErrors($username, $databasename) {
-		global $zdbh;
-	    # Check to make sure the database name is not blank before we go any further...
-	    if ($databasename == '') {
-			self::$blank = true;
-			return false;
-	    }
-	    # Check to make sure the database is not a duplicate...
-		$sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_name_vc='" . $username . "_".$databasename."' AND my_deleted_ts IS NULL";
-		if ($numrows = $zdbh->query($sql)) {
- 			if ($numrows->fetchColumn() <> 0) {	
-				self::$alreadyexists = true;
-				return false;
-			}
-		}
+    static function CheckCreateForErrors($username, $databasename) {
+        global $zdbh;
+        # Check to make sure the database name is not blank before we go any further...
+        if ($databasename == '') {
+            self::$blank = true;
+            return false;
+        }
+        # Check to make sure the database is not a duplicate...
+        $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_name_vc='" . $username . "_" . $databasename . "' AND my_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                self::$alreadyexists = true;
+                return false;
+            }
+        }
 
-		return true;
-   	}
-	
-	static function ExecuteDeleteDatabase($my_id_pk){
-		global $zdbh;
-		runtime_hook::Execute('OnBeforeDeleteDatabase');
-		$rowmysql = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $my_id_pk . "")->fetch(); 
-		$sql = $zdbh->prepare("DROP DATABASE IF EXISTS `" . $rowmysql['my_name_vc'] . "`;");
-		$sql->execute();
-		$sql = $zdbh->prepare("FLUSH PRIVILEGES");
-		$sql->execute();
-		$sql = $zdbh->prepare("
+        return true;
+    }
+
+    static function ExecuteDeleteDatabase($my_id_pk) {
+        global $zdbh;
+        runtime_hook::Execute('OnBeforeDeleteDatabase');
+        $rowmysql = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $my_id_pk . "")->fetch();
+        $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `" . $rowmysql['my_name_vc'] . "`;");
+        $sql->execute();
+        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+        $sql->execute();
+        $sql = $zdbh->prepare("
 			UPDATE x_mysql_databases 
 			SET my_deleted_ts = '" . time() . "' 
-			WHERE my_id_pk = '".$my_id_pk."'");
-		$sql->execute();
-		$sql = $zdbh->prepare("
+			WHERE my_id_pk = '" . $my_id_pk . "'");
+        $sql->execute();
+        $sql = $zdbh->prepare("
 			DELETE FROM x_mysql_dbmap 
 			WHERE mm_database_fk=" . $my_id_pk . "");
-		$sql->execute();
-		runtime_hook::Execute('OnAfterDeleteDatabase');
-		self::$ok = true;
-		return true;
-	}
-	
+        $sql->execute();
+        runtime_hook::Execute('OnAfterDeleteDatabase');
+        self::$ok = true;
+        return true;
+    }
+
     /**
      * End 'worker' methods.
      */
@@ -146,17 +144,15 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-
     static function doCreateDatabase() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteCreateDatabase($currentuser['userid'], $formvars['inDatabase']))
             return true;
-		return false;
-
+        return false;
     }
-	
+
     static function doDeleteDatabase() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -179,11 +175,11 @@ class module_controller {
     }
 
     static function getDatabaseList() {
-		global $controller;
+        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDatabases($currentuser['userid']);
     }
-	
+
     static function getisDeleteDatabase() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -203,7 +199,7 @@ class module_controller {
     static function getCurrentUserName() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		return $currentuser['username'];
+        return $currentuser['username'];
     }
 
     static function getEditCurrentDatabaseName() {
@@ -239,25 +235,25 @@ class module_controller {
 
     static function getMysqlUsagepChart() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$line  = "";
-		$total= $currentuser['mysqlquota'];
-		$used = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
-		$free = $total - $used;		
-		$line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=".$free."::".$used."&labels=Free: ".$free."::Used: ".$used."&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";		
-		return $line;
-	}
-		
-	static function getResult() {
-		if (!fs_director::CheckForEmptyValue(self::$blank)){
-			return ui_sysmessage::shout(ui_language::translate("You need to specify a database name to create your database."), "zannounceerror");
-		}
-		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
-		return ui_sysmessage::shout(ui_language::translate("A database with that name already appears to exsist."), "zannounceerror");
-		}	
-		if (!fs_director::CheckForEmptyValue(self::$ok)){
-			return ui_sysmessage::shout(ui_language::translate("Changes to your databases have been saved successfully!"), "zannounceok");
-		}
+        $currentuser = ctrl_users::GetUserDetail();
+        $line = "";
+        $total = $currentuser['mysqlquota'];
+        $used = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+        $free = $total - $used;
+        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
+        return $line;
+    }
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$blank)) {
+            return ui_sysmessage::shout(ui_language::translate("You need to specify a database name to create your database."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
+            return ui_sysmessage::shout(ui_language::translate("A database with that name already appears to exsist."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your databases have been saved successfully!"), "zannounceok");
+        }
         return;
     }
 
@@ -266,21 +262,20 @@ class module_controller {
         return $message;
     }
 
-	static function getModuleName() {
-		$module_name = ui_language::translate(ui_module::GetModuleName());
+    static function getModuleName() {
+        $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
     /**
      * Webinterface sudo methods.
      */
-	 
 }
 
 ?>
