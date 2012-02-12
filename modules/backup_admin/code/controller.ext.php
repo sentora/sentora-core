@@ -59,7 +59,7 @@ class module_controller {
  			 $sql = $zdbh->prepare($sql);
              $sql->execute();
                 while ($row = $sql->fetch()) {
-                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['bus_name_vc']))) {
+                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
                         $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
                         $updatesql->execute();
                     }
