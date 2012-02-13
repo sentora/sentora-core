@@ -707,9 +707,8 @@ a.zannounce_a{
 	width:16px; height:16px;
 	display:block;
 	cursor:pointer;
-	padding-right:10px;
-	padding-top:10px;
-	padding-bottom:10px;
+	padding:0;
+	margin-right:10px;
 }
 .zdebug{
 	background-color: #FFCBCB;

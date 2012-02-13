@@ -466,10 +466,10 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$("#zannounce").hide();
 	//$("#zannounce").fadeIn();
-	$("#zannounce").slideDown("slow").animate({ opacity: 1.0 },5000).fadeOut();
+	$("#zannounce").slideDown("slow").animate({ opacity: 1.0 },6000).fadeOut();
 	$('#zannounce_a').click(function() {
-		$("#zannounce").fadeOut();
-		//$("#zannounce").hide();
+		$("#zannounce_a").fadeOut();
+		$("#zannounce").hide();
 	});
 	//$("#zannounce").fadeIn().animate({ opacity: 1.0 },3000).fadeOut();
 	//$("#zannounce").slideDown("slow").animate({ opacity: 1.0 },3000).fadeOut();
