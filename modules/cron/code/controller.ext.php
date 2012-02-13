@@ -37,15 +37,14 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-
+		$line  = "<h2>".ui_language::translate("Current Cron Tasks")."</h2>";
 		$sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_deleted_ts IS NULL";
 			if ($numrows = $zdbh->query($sql)) {
  				if ($numrows->fetchColumn() <> 0) {
 							
 				$sql = $zdbh->prepare("SELECT * FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_deleted_ts IS NULL");
 				$sql->execute();
-		
-    			$line  = "<form action=\"./?module=cron&action=DeleteCron\" method=\"post\">";
+    			$line .= "<form action=\"./?module=cron&action=DeleteCron\" method=\"post\">";
         		$line .= "<table class=\"zgrid\">";
             	$line .= "<tr>";
                 $line .= "<th>".ui_language::translate("Script")."</th>";
@@ -65,7 +64,7 @@ class module_controller {
     			$line .= "</form>";
 
 				} else {
-    			$line = "<h2>".ui_language::translate("You currently do no have any tasks setup.")."</h2>";
+    			$line .= ui_language::translate("You currently do no have any tasks setup.");
 				}
 				return $line;
 			}
