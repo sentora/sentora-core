@@ -16,7 +16,7 @@ class ui_tpl_notice {
         $result = $zdbh->query("SELECT ac_notice_tx FROM x_accounts WHERE ac_id_pk = " . $user_array['resellerid'] . "")->Fetch();
         if ($result) {
             if ($result['ac_notice_tx'] <> "")
-                return "<div class=\"znotice\" id=\"znotice\">" . $result['ac_notice_tx'] . "</div>";
+                return "<div class=\"znotice\" id=\"znotice\"><a href=\"#\" class=\"znotice\" id=\"znotice_a\" border=\"0\"></a>" . $result['ac_notice_tx'] . "</div>";
             return false;
         } else {
             return false;

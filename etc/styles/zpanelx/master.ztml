@@ -45,7 +45,7 @@
 	</div>
 	<!-- END ZLOADER PROGRESSBAR DIV -->
 	<!-- BEGIN HEADER -->
-        <# ui_tpl_shadowbar #>
+        
         <div id="header">
 			<div id="header_top" style="display:none;">
 				<div class="logo_small" id="logo_small"><a class="logo_small" id="logo_small_a" title="Main Page" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/zpanel_small.png"/></a></div>			
@@ -115,6 +115,7 @@
                                 <td style="padding-right:0px" width="200px" bgcolor="#F3F2F0">
 									<!-- BEGIN STATSDATA -->
 									<div class="statsdata_wrapper" id="statsdata_wrapper">
+									<# ui_tpl_shadowbar #>
                                     <table class="statsdata" border="0" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <th>Account Information <a class="statsdata_accountinfo" id="statsdata_accountinfo_a"></a></th>

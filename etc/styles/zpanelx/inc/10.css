@@ -626,7 +626,7 @@ a.zcat{
 	top: 81px;
 	left: 0px;
 	width:100%;
-	height:20px;
+	min-height:20px;
 	background-color: #ECF5F9;
 	border:solid 1px #55A7C8;
 	font-weight:normal;
@@ -639,7 +639,7 @@ a.zcat{
 	top: 81px;
 	left: 0px;
 	width:100%;
-	height:20px;
+	min-height:20px;
 	background-color: #ECF5F9;
 	border:solid 1px #55A7C8;
 	font-weight:normal;
@@ -653,7 +653,7 @@ a.zcat{
 	top: 81px;
 	left: 0px;
 	width:100%;
-	height:20px;
+	min-height:20px;
 	background-color: #E8FCDC;
 	border:solid 1px #008800;
 	font-weight:normal;
@@ -667,7 +667,7 @@ a.zcat{
 	top: 81px;
 	left: 0px;
 	width:100%;
-	height:20px;
+	min-height:20px;
 	background-color: #FFCBCB;
 	border:solid 1px #C11B17;
 	font-weight:normal;
@@ -680,7 +680,7 @@ a.zcat{
 	top: 81px;
 	left: 0px;
 	width:100%;
-	height:20px;
+	min-height:20px;
 	background-color: #FFFFCC;
 	border:solid 1px #FFCC66;
 	font-weight:normal;
@@ -729,6 +729,39 @@ a.zannounce_a{
 	padding:10px;
 	margin-bottom:20px;
 	color:#444444;
+}
+a.znotice{
+	background: url(../images/notices.png) no-repeat;
+	border:none;
+	float:left;
+	width:35px; height:26px;
+	display:block;
+	cursor:pointer;
+	padding:0;
+	margin-right:10px;
+}
+.zshadowbar{
+	min-height:20px;
+	background-color: #FFCBCB;
+	border:solid 1px #C11B17;
+	font-weight:normal;
+	text-align: left;
+	padding:10px;
+	margin-bottom:20px;
+	color:#C11B17;
+}
+a.zshadowbar{
+	background: url(../images/shadowing.png) no-repeat;
+	border:none;
+	float:right;
+	width:36px; height:14px;
+	display:block;
+	cursor:pointer;
+	padding-right:10px; 
+}
+.zshadowbar a:hover{
+	color: #C11B17;
+	text-decoration:none;
 }
 .zmodule_header{
 	height:41px;
