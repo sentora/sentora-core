@@ -106,6 +106,9 @@
                     }
                 }
                 // Logs
+				if (!is_dir(ctrl_options::GetOption('log_dir'). "domains/" . $username['ac_user_vc'] . "/")) {
+                    fs_director::CreateDirectory(ctrl_options::GetOption('log_dir'). "domains/" . $username['ac_user_vc'] . "/");
+                }
                 $line .= "ErrorLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-error.log\" " . fs_filehandler::NewLine();
                 $line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-access.log\" " . ctrl_options::GetOption('access_log_format') . fs_filehandler::NewLine();
                 $line .= "CustomLog \"" . ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-bandwidth.log\" " . ctrl_options::GetOption('bandwidth_log_format') . fs_filehandler::NewLine();
@@ -127,6 +130,9 @@
                 }
                 if ($dbvals['pk_enablecgi_in'] <> 0) {
                     $line .= ctrl_options::GetOption('cgi_handler') . fs_filehandler::NewLine();
+					if (!is_dir(ctrl_options::GetOption('hosted_dir') . $username['ac_user_vc'] . "/public_html" . $rowvhost['vh_directory_vc'] . "/_cgi-bin")) {
+                    	fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username['ac_user_vc'] . "/public_html" . $rowvhost['vh_directory_vc'] . "/_cgi-bin");
+                	}
                 }
 
                 // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
@@ -198,6 +204,12 @@
 									SET so_value_tx='".time()."'
 									WHERE so_name_vc='apache_changed'");
             $vsql->execute();
+			if (sys_versions::ShowOSPlatformVersion() == "Windows") {
+                system("".ctrl_options::GetOption('httpd_exe')." ".ctrl_options::GetOption('apache_restart')."");
+            } else {
+				system("".ctrl_options::GetOption('zsudo')." service ".ctrl_options::GetOption('apache_sn')." ".ctrl_options::GetOption('apache_restart')."");
+            }
+			
             return true;
         } else {
             return false;
