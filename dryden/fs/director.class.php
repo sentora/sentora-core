@@ -23,7 +23,7 @@ class fs_director {
     static function SlashesToNIX($string) {
         return str_replace("\\", "/", $string);
     }
-	
+
     /**
      * Converts to proper slashes based on OS platform.
      * @author Bobby Allen (ballen@zpanelcp.com)
@@ -32,14 +32,14 @@ class fs_director {
      * @return string
      */
     static function ConvertSlashes($string) {
-	    if (sys_versions::ShowOSPlatformVersion() <> "Windows"){
-        	$retval = self::SlashesToNIX($string);
-    	} else {
-			$retval = self::SlashesToWin($string);
-    	}
+        if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
+            $retval = self::SlashesToNIX($string);
+        } else {
+            $retval = self::SlashesToWin($string);
+        }
         return $retval;
     }
-	
+
     /**
      * Remove the last character from a string.
      * @author Bobby Allen (ballen@zpanelcp.com)
@@ -47,10 +47,10 @@ class fs_director {
      * @param string $string
      * @return string
      */
-	static function RemoveDoubleSlash($var) {
-    	$retval = str_replace("\\\\", "\\", $var);
-    	return $retval;
-	}
+    static function RemoveDoubleSlash($var) {
+        $retval = str_replace("\\\\", "\\", $var);
+        return $retval;
+    }
 
     /**
      * Takes a raw file size value (bytes) and converts it to human readable size with an abbreavation.
@@ -107,8 +107,8 @@ class fs_director {
                 continue;
             if (!@unlink($path . '/' . $obj))
                 runtime_hook::Execute('OnBeforeDirectoryDelete');
-                SureRemoveDir($path . '/' . $obj, true);
-                runtime_hook::Execute('OnAfterDirectoryDelete');
+            SureRemoveDir($path . '/' . $obj, true);
+            runtime_hook::Execute('OnAfterDirectoryDelete');
         }
 
         closedir($dh);
@@ -173,16 +173,16 @@ class fs_director {
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */	
-	static function GetCheckboxValue($value) {
-    	$checkbox_status = $value;
-    	if ($checkbox_status == 1) {
-       	 $retval = 1;
-   	 	} else {
-        	$retval = 0;
-    	}
-    	return $retval;
-	}
+     */
+    static function GetCheckboxValue($value) {
+        $checkbox_status = $value;
+        if ($checkbox_status == 1) {
+            $retval = 1;
+        } else {
+            $retval = 0;
+        }
+        return $retval;
+    }
 
     /**
      * Checks the value of a checkbox and returns string "CHECKED" if ticked and NULL if not ticked.
@@ -190,87 +190,87 @@ class fs_director {
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */	
-	static function IsChecked($value){
- 		if ($value == 1){
-			$retval = "CHECKED";
-		} else {
-			$retval =  NULL;
-		}
-		return $retval;
- 	}
-	
+     */
+    static function IsChecked($value) {
+        if ($value == 1) {
+            $retval = "CHECKED";
+        } else {
+            $retval = NULL;
+        }
+        return $retval;
+    }
+
     /**
      * Returns the current usage of a particular resource.
      * @author Bobby Allen (ballen@zpanel.co.uk) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */	
-	static function GetQuotaUsages($resource, $acc_key=0) {
-		global $zdbh;
-	    if ($resource == 'domains') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=1 AND vh_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'subdomains') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=2 AND vh_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'parkeddomains') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=3 AND vh_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'mailboxes') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mailboxes WHERE mb_acc_fk=" . $acc_key . " AND mb_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'forwarders') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_forwarders WHERE fw_acc_fk=" . $acc_key . " AND fw_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'distlists') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_distlists WHERE dl_acc_fk=" . $acc_key . " AND dl_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'ftpaccounts') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_ftpaccounts WHERE ft_acc_fk=" . $acc_key . " AND ft_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'mysql') {
-	        $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mysql_databases WHERE my_acc_fk=" . $acc_key . " AND my_deleted_ts IS NULL");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['amount'];
-	    }
-	    if ($resource == 'diskspace') {
-	        $sql = $zdbh->query("SELECT bd_diskamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['bd_diskamount_bi'];
-	    }
-	    if ($resource == 'bandwidth') {
-	        $sql = $zdbh->query("SELECT bd_transamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
-			$sql->execute();
-			$retval = $sql->fetch();
-	        $retval = $retval['bd_transamount_bi'];
-	    }
-    	return $retval;
-	}
+     */
+    static function GetQuotaUsages($resource, $acc_key = 0) {
+        global $zdbh;
+        if ($resource == 'domains') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=1 AND vh_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'subdomains') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=2 AND vh_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'parkeddomains') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=3 AND vh_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'mailboxes') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mailboxes WHERE mb_acc_fk=" . $acc_key . " AND mb_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'forwarders') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_forwarders WHERE fw_acc_fk=" . $acc_key . " AND fw_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'distlists') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_distlists WHERE dl_acc_fk=" . $acc_key . " AND dl_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'ftpaccounts') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_ftpaccounts WHERE ft_acc_fk=" . $acc_key . " AND ft_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'mysql') {
+            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mysql_databases WHERE my_acc_fk=" . $acc_key . " AND my_deleted_ts IS NULL");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['amount'];
+        }
+        if ($resource == 'diskspace') {
+            $sql = $zdbh->query("SELECT bd_diskamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['bd_diskamount_bi'];
+        }
+        if ($resource == 'bandwidth') {
+            $sql = $zdbh->query("SELECT bd_transamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
+            $sql->execute();
+            $retval = $sql->fetch();
+            $retval = $retval['bd_transamount_bi'];
+        }
+        return $retval;
+    }
 
     /**
      * Returns a random password.
@@ -278,37 +278,37 @@ class fs_director {
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */		
-	static function GenerateRandomPassword($a=9, $b=0) {
-	    $length = $a;
-	    $strength = $b;
-	    $vowels = 'aeuy';
-	    $consonants = 'bdghjmnpqrstvz';
-	    if ($strength & 1) {
-	        $consonants .= 'BDGHJLMNPQRSTVWXZ';
-	    }
-	    if ($strength & 2) {
-	        $vowels .= "AEUY";
-	    }
-	    if ($strength & 4) {
-	        $consonants .= '23456789';
-	    }
-	    if ($strength & 8) {
-	        $consonants .= '@#$%';
-	    }
-	    $fretval = '';
-	    $alt = time() % 2;
-	    for ($i = 0; $i < $length; $i++) {
-	        if ($alt == 1) {
-	            $fretval .= $consonants[(rand() % strlen($consonants))];
-	            $alt = 0;
-	        } else {
-	            $fretval .= $vowels[(rand() % strlen($vowels))];
-	            $alt = 1;
-	        }
-	    }
-	    return $fretval;
-	}
+     */
+    static function GenerateRandomPassword($a = 9, $b = 0) {
+        $length = $a;
+        $strength = $b;
+        $vowels = 'aeuy';
+        $consonants = 'bdghjmnpqrstvz';
+        if ($strength & 1) {
+            $consonants .= 'BDGHJLMNPQRSTVWXZ';
+        }
+        if ($strength & 2) {
+            $vowels .= "AEUY";
+        }
+        if ($strength & 4) {
+            $consonants .= '23456789';
+        }
+        if ($strength & 8) {
+            $consonants .= '@#$%';
+        }
+        $fretval = '';
+        $alt = time() % 2;
+        for ($i = 0; $i < $length; $i++) {
+            if ($alt == 1) {
+                $fretval .= $consonants[(rand() % strlen($consonants))];
+                $alt = 0;
+            } else {
+                $fretval .= $vowels[(rand() % strlen($vowels))];
+                $alt = 1;
+            }
+        }
+        return $fretval;
+    }
 
     /**
      * Checks that an IP address is valid (v6 and v4).
@@ -316,14 +316,14 @@ class fs_director {
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */		
-	static function IsValidIP($ip){
-		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-  			return TRUE;
-		} else {
-  			return FALSE;
-		}
-	}
+     */
+    static function IsValidIP($ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     /**
      * Checks that an IPv4 address is valid.
@@ -331,14 +331,14 @@ class fs_director {
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */	
-	static function IsValidIPv4($ip){
-		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-  			return TRUE;
-		} else {
-  			return FALSE;
-		}
-	}
+     */
+    static function IsValidIPv4($ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     /**
      * Checks that an IPv6 address is valid.
@@ -346,14 +346,14 @@ class fs_director {
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */	
-	static function IsValidIPv6($ip){
-		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-  			return TRUE;
-		} else {
-  			return FALSE;
-		}
-	}
+     */
+    static function IsValidIPv6($ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     /**
      * Checks that an email address is valid.
@@ -361,7 +361,7 @@ class fs_director {
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */	
+     */
     static function IsValidEmail($email) {
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email))
             return false;
@@ -370,11 +370,11 @@ class fs_director {
 
     /**
      * Checks that a domain name is valid.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
-     */	
+     */
     static function IsValidDomainName($a) {
         if (stristr($a, '.')) {
             $part = explode(".", $a);
@@ -391,7 +391,7 @@ class fs_director {
 
     /**
      * Checks that a user name is valid.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -400,6 +400,32 @@ class fs_director {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username))
             return false;
         return true;
+    }
+
+    /**
+     * Checks that a file exists or not.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @param type $path
+     * @return boolean 
+     */
+    static function CheckFileExists($path) {
+        if (file_exists($path))
+            return true;
+        return false;
+    }
+
+    /**
+     * Checks that a folder exists or not.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @version 10.0.0
+     * @param type $path
+     * @return boolean 
+     */
+    static function CheckFolderExists($path) {
+        if (file_exists($path))
+            return true;
+        return false;
     }
 
 }
