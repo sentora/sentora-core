@@ -333,6 +333,13 @@ class module_controller {
         // Now we add an entry into the bandwidth table, for the user for the upcoming month.
         $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
         $sql->execute();
+        // Lets create the client diectories
+        fs_filehandler::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username);
+		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username, 0777);
+		fs_filehandler::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/public_html");
+		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
+		fs_filehandler::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
+		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
         runtime_hook::Execute('OnAfterCreateClient');
 		self::$resetform=true;
 		self::$ok=true;

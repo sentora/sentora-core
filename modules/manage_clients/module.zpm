@@ -8,6 +8,7 @@
 	<div class="zform_wrapper">
 		<h2><: Delete :>: <@ EditCurrentName @> ?</h2>
 		<p><: Please confirm that you want to delete this client. :></p>
+		<p><b><: WARNING! This will remove all files and services belonging to this client! :></b></p>
 		<form action="./?module=manage_clients&action=DeleteClient" method="post">
 		<table class="none" cellpadding="0" cellspacing="0">
 			<tr>
