@@ -29,7 +29,15 @@ if (!runtime_controller::IsCLI())
 
 if ((isset($argv[1])) && ($argv[1] == 'install')) {
     fwrite(STDOUT, "Module to be installed " . $argv[2] . "\n");
-
+    $zip = new ZipArchive;
+    $res = $zip->open("/tmp/" . $argv[2] . ".zip");
+    if ($res) {
+        $zip->extractTo("/tmp/");
+        $zip->close();
+        fwrite(STDOUT, "Module extracted successfully!");
+    } else {
+        fwrite(STDOUT, "Module failed to be extracted!");
+    }
     exit;
 }
 
