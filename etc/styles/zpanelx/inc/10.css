@@ -721,14 +721,14 @@ a.zannounce_a{
 	color:#C11B17;
 }
 .znotice{
-	height:20px;
-	background-color: #FFFFCC;
-	border:solid 1px #FFCC66;
+	min-height:20px;
+	background-color: #FFFFA3;
+	border:solid 1px #F1D031;
 	font-weight:normal;
 	text-align: left;
 	padding:10px;
 	margin-bottom:20px;
-	color:#FFCC66;
+	color:#444444;
 }
 .zmodule_header{
 	height:41px;

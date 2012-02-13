@@ -109,6 +109,7 @@ class module_controller {
 							   SET vh_deleted_ts=" . time() . " 
 							   WHERE vh_id_pk=" . $id . "");
         $sql->execute();
+		self::SetWriteApacheConfigTrue();
         $retval = TRUE;
 		runtime_hook::Execute('OnAfterDeleteSubDomain');
         return $retval;
@@ -173,6 +174,7 @@ class module_controller {
 														 2,
 														 " . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->execute();
+			self::SetWriteApacheConfigTrue();
         	$retval = TRUE;
 			runtime_hook::Execute('OnAfterAddSubDomain');
         	return $retval;
@@ -245,14 +247,12 @@ class module_controller {
         return true;
     }
 
-    static function GetVHOption($name) {
+    static function SetWriteApacheConfigTrue() {
         global $zdbh;
-        $result = $zdbh->query("SELECT vhs_value_tx FROM x_vhosts_settings WHERE vhs_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['vhs_value_tx'];
-        } else {
-            return false;
-        }
+        $sql = $zdbh->prepare("UPDATE x_settings
+								SET so_value_tx='true'
+								WHERE so_name_vc='apache_changed'");
+            $sql->execute();
     }
 
     /**
