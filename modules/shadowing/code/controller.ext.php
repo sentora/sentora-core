@@ -39,15 +39,15 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
-				if ($rowclients['ac_id_pk'] != $currentuser['userid']){
-                	$clientdetail = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-	                array_push($res, array('clientusername' => $clientdetail['username'],
-	                    'clientid' => $rowclients['ac_id_pk'],
-	                    'packagename' => $clientdetail['packagename'],
-	                    'usergroup' => $clientdetail['usergroup'],
-	                    'currentdisk' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
-	                    'currentbandwidth' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
-				}
+                if ($rowclients['ac_id_pk'] != $currentuser['userid']) {
+                    $clientdetail = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
+                    array_push($res, array('clientusername' => $clientdetail['username'],
+                        'clientid' => $rowclients['ac_id_pk'],
+                        'packagename' => $clientdetail['packagename'],
+                        'usergroup' => $clientdetail['usergroup'],
+                        'currentdisk' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
+                        'currentbandwidth' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
+                }
             }
             return $res;
         } else {
