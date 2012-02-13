@@ -138,7 +138,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Email Address:</strong></td>
-                                                                <td nowrap="nowrap"><a href="./?module=account" title="Update your contact email address"><# ui_tpl_email #></a></td>
+                                                                <td nowrap="nowrap"><a href="./?module=my_account" title="Update your contact email address"><# ui_tpl_email #></a></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Package name:</strong></td>
