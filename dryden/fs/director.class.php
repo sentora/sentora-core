@@ -101,21 +101,21 @@ class fs_director {
      */
     static function RemoveDirectory($path) {
         if (!$dh = @opendir($path))
-            $retval = false;
+            return false;
         while (false !== ($obj = readdir($dh))) {
             if ($obj == '.' || $obj == '..')
                 continue;
             if (!@unlink($path . '/' . $obj))
                 runtime_hook::Execute('OnBeforeDirectoryDelete');
-            SureRemoveDir($path . '/' . $obj, true);
+            self::RemoveDirectory($path . '/' . $obj, true);
             runtime_hook::Execute('OnAfterDirectoryDelete');
         }
 
         closedir($dh);
         @rmdir($path);
-        $retval = true;
-        return $retval;
+        return true;
     }
+
 
     /**
      * Sets file/directory permissions on a given path.
