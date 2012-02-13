@@ -28,6 +28,7 @@ class module_controller {
 
     static $alreadyexists;
     static $blank;
+	static $badname;
     static $ok;
 
     /**
@@ -75,6 +76,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
+		$databasename = strtolower(str_replace(' ', '', $databasename));
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($currentuser['username'], $databasename))) {
             return false;
         }
@@ -101,6 +103,11 @@ class module_controller {
         # Check to make sure the database name is not blank before we go any further...
         if ($databasename == '') {
             self::$blank = true;
+            return false;
+        }
+        // Check for invalid username
+        if (!self::IsValidUserName($databasename)) {
+            self::$badname = true;
             return false;
         }
         # Check to make sure the database is not a duplicate...
@@ -134,6 +141,13 @@ class module_controller {
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteDatabase');
         self::$ok = true;
+        return true;
+    }
+
+    static function IsValidUserName($username) {
+        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
+            return false;
+        }
         return true;
     }
 
@@ -247,6 +261,9 @@ class module_controller {
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
             return ui_sysmessage::shout(ui_language::translate("You need to specify a database name to create your database."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$badname)) {
+            return ui_sysmessage::shout(ui_language::translate("Your MySQL database name is not valid. Please enter a valid MySQL database name."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate("A database with that name already appears to exsist."), "zannounceerror");
