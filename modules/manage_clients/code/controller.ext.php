@@ -239,9 +239,12 @@ class module_controller {
 										ud_phone_vc=    '" . $phone . "'
 										WHERE ud_user_fk=" . $clientid . "");
         $sql->execute();
-        if ($newpass <> "") {
-            //zapi_mysqluser_setpass($resetforuser, Cleaner("i", $_POST['inNewPassword']), $zdb);
-        }
+		if ($enabled == 0){
+			self::DisableClient($clientid);
+		}
+		if ($enabled == 1){
+			self::EnableClient($clientid);		
+		}
         runtime_hook::Execute('OnAfterUpdateClient');
 		self::$ok=true;
         return true;
