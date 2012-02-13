@@ -70,8 +70,8 @@
         $sql->execute();
         while ($rowvhost = $sql->fetch()) {
             //Domain is enabled
-            if ($rowvhost['vh_enabled_in'] == 1) {
-				if (ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")){
+            if ($rowvhost['vh_enabled_in'] == 1 && ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || $rowvhost['vh_enabled_in'] == 1 && ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")) {
+			
 		
 				
 				// Set the vhosts to "LIVE"
@@ -162,7 +162,7 @@
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
 				
-				}
+				
 				
             } else {
                 //Domain is NOT enabled
