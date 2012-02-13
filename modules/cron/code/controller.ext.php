@@ -238,35 +238,36 @@ class module_controller {
 	}
 
 	static function TranslateTiming($timing){
+	$timing = trim($timing);
 		$retval = NULL;
-		if ($timing = "* * * * *"){
+		if ($timing == "* * * * *"){
 			$retval = "Every 1 minute";
 		}
-		if ($timing = "0,5,10,15,20,25,30,35,40,45,50,55 * * * *"){
+		if ($timing == "0,5,10,15,20,25,30,35,40,45,50,55 * * * *"){
 			$retval = "Every 5 minutes";
 		}
-		if ($timing = "0,10,20,30,40,50 * * * *"){
+		if ($timing == "0,10,20,30,40,50 * * * *"){
 			$retval = "Every 10 minutes";
 		}
-		if ($timing = "0,30 * * * *"){
+		if ($timing == "0,30 * * * *"){
 			$retval = "Every 30 minutes";
 		}
-		if ($timing = "0 * * * *"){
+		if ($timing == "0 * * * *"){
 			$retval = "Every 1 hour";
 		}
-		if ($timing = "0 0,2,4,6,8,10,12,14,16,18,20,22 * * *"){
+		if ($timing == "0 0,2,4,6,8,10,12,14,16,18,20,22 * * *"){
 			$retval = "Every 2 hours";
 		}
-		if ($timing = "0 0,8,16 * * *"){
+		if ($timing == "0 0,8,16 * * *"){
 			$retval = "Every 8 hours";
 		}
-		if ($timing = "0 0,12 * * *"){
+		if ($timing == "0 0,12 * * *"){
 			$retval = "Every 12 hours";
 		}
-		if ($timing = "0 0 * * *"){
+		if ($timing == "0 0 * * *"){
 			$retval = "Every day";
 		}
-		if ($timing = "0 0 * * 0"){
+		if ($timing == "0 0 * * 0"){
 			$retval = "Every week";
 		}
 	return $retval;
