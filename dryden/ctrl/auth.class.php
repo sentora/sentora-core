@@ -33,9 +33,24 @@ class ctrl_auth {
      * @param type $zpuid
      * @return bool 
      */
-    static function SetUserSession($zpuid=0) {
+    static function SetUserSession($zpuid = 0) {
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Sets a named session value.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param type $zpuid
+     * @return bool 
+     */
+    static function SetSession($name, $value = "") {
+        if (isset($name)) {
+            $_SESSION['' . $name . ''] = $value;
             return true;
         } else {
             return false;

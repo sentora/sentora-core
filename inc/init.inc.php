@@ -24,6 +24,15 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+if (isset($_GET['returnsession'])) {
+    if (isset($_SESSION['ruid'])) {
+        ctrl_auth::SetUserSession($_SESSION['ruid']);
+        $_SESSION['ruid'] = null;
+    }
+    header("location: ./");
+    exit;
+}
+
 if (isset($_POST['inForgotPassword'])) {
     $randomkey = sha1(microtime());
     $result = $zdbh->query("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = '" . $_POST['inForgotPassword'] . "'")->Fetch();
