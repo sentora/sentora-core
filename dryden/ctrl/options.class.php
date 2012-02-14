@@ -121,7 +121,7 @@ class ctrl_options {
     /**
      * Dynamicaly builds a single line text area and will populate with the value if one is set.
      */
-    public static function OuputSettingTextArea($name, $cval = "") {
+    public static function OutputSettingTextArea($name, $cval = "") {
         return "<textarea cols=\"30\" rows=\"1\" name=\"" . $name . "\">" . $cval . "</textarea>";
     }
 

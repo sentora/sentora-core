@@ -60,7 +60,7 @@ class module_controller {
                     if (ctrl_options::CheckForPredefinedOptions($row['so_defvalues_tx'])) {
                         $fieldhtml = ctrl_options::OuputSettingMenuField($row['so_name_vc'], $row['so_defvalues_tx'], $row['so_value_tx']);
                     } else {
-                        $fieldhtml = ctrl_options::OuputSettingTextArea($row['so_name_vc'], $row['so_value_tx']);
+                        $fieldhtml = ctrl_options::OutputSettingTextArea($row['so_name_vc'], $row['so_value_tx']);
                     }
                     $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td>" . $fieldhtml. "</td><td>" . $row['so_desc_tx'] . "</td></tr>";
                 }
