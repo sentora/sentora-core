@@ -41,7 +41,7 @@ class module_controller {
                 if (ctrl_options::CheckForPredefinedOptions($rowmailsettings['so_defvalues_tx'])) {
                     $fieldhtml = ctrl_options::OuputSettingMenuField($rowmailsettings['so_name_vc'], $rowmailsettings['so_defvalues_tx'], $rowmailsettings['so_value_tx']);
                 } else {
-                    $fieldhtml = ctrl_options::OutputSettingTextField($rowmailsettings['so_name_vc'], $rowmailsettings['so_value_tx']);
+                    $fieldhtml = ctrl_options::OutputSettingTextArea($rowmailsettings['so_name_vc'], $rowmailsettings['so_value_tx']);
                 }
                 array_push($res, array('cleanname' => $rowmailsettings['so_cleanname_vc'],
                     'name' => $rowmailsettings['so_name_vc'],

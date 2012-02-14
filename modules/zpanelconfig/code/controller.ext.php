@@ -41,7 +41,7 @@ class module_controller {
                 if (ctrl_options::CheckForPredefinedOptions($rowsettings['so_defvalues_tx'])) {
                     $fieldhtml = ctrl_options::OuputSettingMenuField($rowsettings['so_name_vc'], $rowsettings['so_defvalues_tx'], $rowsettings['so_value_tx']);
                 } else {
-                    $fieldhtml = ctrl_options::OutputSettingTextField($rowsettings['so_name_vc'], $rowsettings['so_value_tx']);
+                    $fieldhtml = ctrl_options::OutputSettingTextArea($rowsettings['so_name_vc'], $rowsettings['so_value_tx']);
                 }
                 array_push($res, array('cleanname' => $rowsettings['so_cleanname_vc'],
                     'name' => $rowsettings['so_name_vc'],
