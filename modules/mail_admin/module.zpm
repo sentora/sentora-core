@@ -11,7 +11,7 @@
 			<% loop Config %>
 			<tr valign="top">
 				<th nowrap="nowrap"><& cleanname &></th>
-				<td><textarea cols="30" rows="1" name="<& name &>"><& value &></textarea></td>
+				<td><& fieldhtml &></td>
 				<td><& description &></td>
 			</tr>
 			<% endloop %>
