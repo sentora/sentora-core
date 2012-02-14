@@ -81,18 +81,22 @@ class module_controller {
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateDatabase');
-        $sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
-        $sql->execute();
-        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_mysql_databases (
-								my_acc_fk,
-								my_name_vc,
-								my_created_ts) VALUES (
-								" . $currentuser['userid'] . ",
-								'" . $currentuser['username'] . "_" . $databasename . "',
-								" . time() . ")");
-        $sql->execute();
+		try {	
+       		$sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
+	        $sql->execute();
+	        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+	        $sql->execute();
+	        $sql = $zdbh->prepare("INSERT INTO x_mysql_databases (
+									my_acc_fk,
+									my_name_vc,
+									my_created_ts) VALUES (
+									" . $currentuser['userid'] . ",
+									'" . $currentuser['username'] . "_" . $databasename . "',
+									" . time() . ")");
+	        $sql->execute();
+		} catch (PDOException $e) {
+			return false;
+		}
         runtime_hook::Execute('OnAfterCreateDatabase');
         self::$ok = true;
         return true;
@@ -126,6 +130,7 @@ class module_controller {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteDatabase');
         $rowmysql = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $my_id_pk . "")->fetch();
+		try {
         $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `" . $rowmysql['my_name_vc'] . "`;");
         $sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
@@ -139,6 +144,9 @@ class module_controller {
 			DELETE FROM x_mysql_dbmap 
 			WHERE mm_database_fk=" . $my_id_pk . "");
         $sql->execute();
+		} catch (PDOException $e) {
+			return false;
+		}
         runtime_hook::Execute('OnAfterDeleteDatabase');
         self::$ok = true;
         return true;
