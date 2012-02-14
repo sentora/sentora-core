@@ -37,16 +37,16 @@ class module_controller {
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
-            while ($rowmailsettings = $sql->fetch()) {
-                if (ctrl_options::CheckForPredefinedOptions($rowmailsettings['so_defvalues_tx'])) {
-                    $fieldhtml = ctrl_options::OuputSettingMenuField($rowmailsettings['so_name_vc'], $rowmailsettings['so_defvalues_tx'], $rowmailsettings['so_value_tx']);
+            while ($rowsettings = $sql->fetch()) {
+                if (ctrl_options::CheckForPredefinedOptions($rowsettings['so_defvalues_tx'])) {
+                    $fieldhtml = ctrl_options::OuputSettingMenuField($rowsettings['so_name_vc'], $rowsettings['so_defvalues_tx'], $rowsettings['so_value_tx']);
                 } else {
-                    $fieldhtml = ctrl_options::OutputSettingTextField($rowmailsettings['so_name_vc'], $rowmailsettings['so_value_tx']);
+                    $fieldhtml = ctrl_options::OutputSettingTextField($rowsettings['so_name_vc'], $rowsettings['so_value_tx']);
                 }
-                array_push($res, array('cleanname' => $rowmailsettings['so_cleanname_vc'],
-                    'name' => $rowmailsettings['so_name_vc'],
-                    'description' => $rowmailsettings['so_desc_tx'],
-                    'value' => $rowmailsettings['so_value_tx'],
+                array_push($res, array('cleanname' => $rowsettings['so_cleanname_vc'],
+                    'name' => $rowsettings['so_name_vc'],
+                    'description' => $rowsettings['so_desc_tx'],
+                    'value' => $rowsettings['so_value_tx'],
                     'fieldhtml' => $fieldhtml));
             }
             return $res;
