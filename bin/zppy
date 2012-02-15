@@ -148,30 +148,34 @@ if ((isset($argv[1])) && ($argv[1] == 'update')) {
     $handle = fopen($package_file, "w+");
     fwrite($handle, "");
     fclose($handle);
+    fwrite(STDOUT, "Updating package list..\n");
     foreach ($lines as $line) {
-        if ((isset($line[0])) && (($line[0] == "#") || ($line == ""))) {
+        if (isset($line[0]) && ($line[0] == "#")) {
             # Its a comment or empty line - lets ignore it.
         } else {
-            echo "Connecting to " . $line . "<br>";
-            $packagects = @file_get_contents($line . "packages.txt");
-            echo "Generating package list from " . $line . "<br>";
-            if ($packagects) {
-                $currconf = file_get_contents($package_file);
-                $plines = preg_split('/\r\n|\r|\n/', $packagects);
-                $newconf = "";
-                foreach ($plines as $pline) {
-                    if (substr($line, 1, 1) != "#") {
-                        $newconf .= $pline . "\t" . $line . "\n";
+            if ($line != "") {
+                fwrite(STDOUT, "  Connecting to " . $line . "\n");
+                $packagects = @file_get_contents("http://" . $line . "/packages.txt");
+                fwrite(STDOUT, "  Getting list from " . $line . "\n");
+                if ($packagects) {
+                    $currconf = file_get_contents($package_file);
+                    $plines = preg_split('/\r\n|\r|\n/', $packagects);
+                    $newconf = "";
+                    foreach ($plines as $pline) {
+                        if ((substr($line, 1, 1) != "#") || ($line != "")) {
+                            $newconf .= $pline . "\t" . $line . "\n";
+                        }
                     }
+                    $handle = fopen($package_file, "w");
+                    fwrite($handle, $currconf . $newconf);
+                    fclose($handle);
+                } else {
+                    echo "  Failed to contact the URL '".$line."'\n";
                 }
-                $handle = fopen($package_file, "w");
-                fwrite($handle, $currconf . $newconf);
-                fclose($handle);
-            } else {
-                #echo "Sorry, couldn't contact the URL!";
             }
         }
     }
+    fwrite(STDOUT, "Local package cache is now up-to-date!\n");
 }
 
 
