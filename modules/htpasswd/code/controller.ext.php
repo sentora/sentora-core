@@ -55,6 +55,23 @@ class module_controller {
         }
     }
 
+    static function ListCurrentHTA($id) {
+        global $zdbh;
+		$res = array();
+        $htpasswd = ctrl_options::GetOption('zpanel_root') . "modules/htpasswd/assets/files/" . $id . ".htpasswd";
+		if (file_exists($htpasswd)){
+        	$lines = file($htpasswd);
+	        foreach ($lines as $line_num => $line) {
+	        	$data = explode(":", $line);
+				array_push($res, array('htaccuser' => $data[0],
+									   'htaccpass' => $data[1]));
+    	    }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
     static function ListHTA($id) {
         global $zdbh;
         $sql = "SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "";
@@ -74,6 +91,17 @@ class module_controller {
             return false;
         }
     }
+	
+    static function DirectoryIsProtected($folder) {
+        global $zdbh;
+		$rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_dir_vc='".$folder."'")->fetch();
+		if ($rowpath){
+			header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "");
+	        exit;		
+        } else {
+            return false;
+        }
+    }
 
     static function ExecuteDeleteHTA($id) {
         global $zdbh;
@@ -88,6 +116,29 @@ class module_controller {
     	if (file_exists($htaccess)) {
         	unlink($htaccess);
     	}
+    }
+
+    static function ExecuteRemoveUserHTA($id, $username) {
+		$htpasswd_exe = ctrl_options::GetOption('htpasswd_exe') . " -D " . 
+						ctrl_options::GetOption('zpanel_root') . 
+						"/modules/htpasswd/assets/files/" . 
+						$id . ".htpasswd " . $username . "";
+		system($htpasswd_exe);
+		header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "");
+        exit;
+    }
+
+    static function ExecuteAddUserHTA($id, $inHTUsername, $inHTPassword, $inConfirmHTPassword) {
+        if (fs_director::CheckForEmptyValue(self::CheckAddForErrors($inHTPassword, $inConfirmHTPassword))) {
+            return false;
+        }
+		$htpasswd_exe = ctrl_options::GetOption('htpasswd_exe') . " -b -m " . 
+						ctrl_options::GetOption('zpanel_root') . 
+						"/modules/htpasswd/assets/files/" . 
+						$id . ".htpasswd " . $inHTUsername . " " . $inHTPassword . "";
+		system($htpasswd_exe);
+		header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "");
+        exit;
     }
 	
     static function ExecuteCreateHTA($userid, $inAuthName, $inHTUsername, $inHTPassword, $inConfirmHTPassword, $inPath) {
@@ -170,6 +221,26 @@ class module_controller {
         return true;
     }
 
+    static function CheckAddForErrors($inHTPassword, $inConfirmHTPassword) {
+        global $zdbh;
+        // Check to make sure the password is not blank before we go any further...
+        if ($inHTPassword == '') {
+            self::$blank = true;
+            return false;
+        }
+        // Check to make sure the confirm is not blank before we go any further...
+        if ($inConfirmHTPassword == '') {
+            self::$blank = true;
+            return false;
+        }
+        // Check to make sure passwords match before we go any further...
+        if ($inHTPassword != $inConfirmHTPassword) {
+            self::$nomatch = true;
+            return false;
+        }
+        return true;
+    }
+
     /**
      * End 'worker' methods.
      */
@@ -182,8 +253,10 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inFolder'])) {
+			if (!self::DirectoryIsProtected($formvars['inFolder'])){
             header("location: ./?module=" . $controller->GetCurrentModule() . "&selected=Selected&path=" . $formvars['inFolder'] . "");
             exit;
+			}
         }
         return;
     }
@@ -218,6 +291,22 @@ class module_controller {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteHTA($formvars['inDelete']))
+            return true;
+        return false;
+    }
+
+    static function doRemoveUserHTA() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteRemoveUserHTA($formvars['inID'], $formvars['inRemove']))
+            return true;
+        return false;
+    }
+
+    static function doAddUserHTA() {
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if (self::ExecuteAddUserHTA($formvars['inID'], $formvars['inHTUsername'], $formvars['inHTPassword'], $formvars['inConfirmHTPassword']))
             return true;
         return false;
     }
@@ -265,6 +354,16 @@ class module_controller {
             return $urlvars['path'];
     }
 
+    static function getCurrentSelectedFolder() {
+        global $controller;
+        if ($controller->GetControllerRequest('URL', 'other')) {
+            $current = self::ListHTA($controller->GetControllerRequest('URL', 'other'));
+            return $current[0]['htdir'];
+        } else {
+            return "";
+        }
+	}
+
 	static function getRootPath(){
 		$currentuser = ctrl_users::GetUserDetail();
 		return ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/";
@@ -284,6 +383,12 @@ class module_controller {
         } else {
             return "";
         }
+    }
+
+    static function getCurrentHTA() {
+        global $controller;
+		$urlvars = $controller->GetAllControllerRequests('URL');
+		return self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
     }
 
     static function getResult() {

@@ -4,7 +4,6 @@
 	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
 	<@ Result @>
 	
-
 	<form name="getpath" id="getpath" action="./?module=htpasswd&action=SelectFolder" method="post">
     <table class="none" cellspacing="0" cellpadding="0">
 		<tr>
@@ -12,7 +11,7 @@
 		    <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inFolder" id="inFolder" value="" ><: Select Folder :></button>
 		    </td>
 			<td>
-				<div id="filetreeinner" style="font-weight:bold; font-size:smaller;"></div>
+				<div id="filetreeinner" style="height:10px; font-weight:bold; font-size:smaller;"></div>
 			</td>
 		</tr>
 	</table>
@@ -36,10 +35,19 @@
 	<td>
 		
 		<% if isSelected %>
+		<div class="zform_wrapper" style="min-height:30px;"><br>
+			<% if CurrentSelectedFolder %>
+			<font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ CurrentSelectedFolder @></font></font>
+			<% endif %>
+			<% if SelectedFolder %>
+			<font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ SelectedFolder @></font></font>
+			<% endif %>
+		</div>
+	
 		<div class="zform_wrapper">
 		
 			<% if isDelete %>
-			<h2>REMOVE Protection from Directory</h2>
+			<h2><: REMOVE Protection from Directory :></h2>
 			<p><: Please confirm that you want to remove password protection fom this directory. :></p>
 			<form action="./?module=htpasswd&action=ConfirmDeleteHTA" method="post">
 			<table class="none" cellpadding="0" cellspacing="0">
@@ -55,31 +63,30 @@
 			<% endif %>
 			
 			<% if isEdit %>
-			<h2>EDIT .htaccess Users in Directory</h2>
+			<h2><: EDIT .htaccess Users in Directory :>:</h2>
 			<p><: From here you can add or remove users that are allowed to access this directory :></p>
-			<form action="./?module=htpasswd&action=SaveHTA" method="post">
+			<form action="./?module=htpasswd&action=RemoveUserHTA" method="post">
 			<table class="zgrid">
 				<tr>
-					<th><: User :></th><th><: Encrypted Password :></th><th>&nbsp;</th>
+					<th><: User :></th><th><: Encrypted Password :></th><th>&nbsp;<input type="hidden" name="inID" id="inID" value="<@ CurrentHTID @>"></th>
 				</tr>
+				<% loop CurrentHTA %>
 				<tr>
-					<td><: Username :></td><td><input type="text" name="inHTUsername"></td>
+					<td><& htaccuser &></td><td><& htaccpass &></td>
 					<td>
-					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Remove :></button>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inRemove" id="inRemove" value="<& htaccuser &>"><: Remove :></button>
 					</td>
 				</tr>
+				<% endloop %>
 			</table>
 			</form>
 			<p>&nbsp;</p>
-			<h2>Add New User</h2>
+			<h2><: Add New User :>:</h2>
 			<table class="none" width="100%" cellspacing="0" cellpadding="0">
 			<tr>
 			<td>
-			<form action="./?module=htpasswd&action=CreateHTA" method="post">
+			<form action="./?module=htpasswd&action=AddUserHTA" method="post">
 			<table class="zform">
-				<tr>
-					<th><: Message :>:</th><td><input type="text" name="inAuthName" value="<: Restricted Area :>"></td>
-				</tr>
 				<tr>
 					<th><: Username :>:</th><td><input type="text" name="inHTUsername"></td>
 				</tr>
@@ -89,7 +96,7 @@
 				<tr>	
 					<th><: Confirm PW :>:</th><td><input type="password" name="inConfirmHTPassword"></td>
 				</tr>
-					<th></th>
+					<th><input type="hidden" name="inID" id="inID" value="<@ CurrentHTID @>"></th>
 					<td>
 					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inPath" id="inPath" value="<@ SelectedFolder @>"><: Create :></button>
 					</td>
@@ -105,9 +112,7 @@
 			<% endif %>
 			
 			<% if SelectedFolder %>
-			<h2>Create .htaccess</h2>
-			<font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ SelectedFolder @></font></font>
-			<div id="filetreeinner" style="font-weight:bold; display:none;"></div><br><br>	
+			<h2>Create .htaccess</h2>	
 			<table class="none" width="100%" cellspacing="0" cellpadding="0">
 			<tr>
 			<td>

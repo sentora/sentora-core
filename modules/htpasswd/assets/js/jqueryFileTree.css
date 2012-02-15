@@ -21,9 +21,11 @@ UL.jqueryFileTree A {
 	padding: 0px 2px;
 }
 
+/*
 UL.jqueryFileTree A:hover {
 	background: #BDF;
 }
+*/
 
 /* Core Styles */
 .jqueryFileTree LI.directory { background: url(images/directory.png) left top no-repeat; }

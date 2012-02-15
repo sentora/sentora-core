@@ -34,7 +34,13 @@ if( file_exists($path) ) {
 		foreach( $files as $file ) {
 			if( file_exists($path . $file) && $file != '.' && $file != '..' && !is_dir($path . $file) && strstr($file, '.htaccess')) {
 				$ext = preg_replace('/^.*\./', '', $file);
+				$htaccesspath = trim(substr($path, strlen($rowsettings['so_value_tx']), strlen($path . $file)));
+				$rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_dir_vc='".substr($htaccesspath, 0, -1)."'")->fetch();
+				if ($rowpath){
+					echo "<li class=\"file ext_$ext\"><a href=\"./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "\" title=\"Edit Users\">" . htmlentities($file) . "</a></li>";
+				} else {
 				echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($path . $file) . "\">" . htmlentities($file) . "</a></li>";
+				}
 			}
 		}
 		echo "</ul>";	
