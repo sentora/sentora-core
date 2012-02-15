@@ -2,7 +2,7 @@
 
 /**
  * Group permissions class, handles user group permissions.
- *
+ * @author Bobby Allen (ballen@zpanelcp.com)
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
@@ -12,6 +12,7 @@ class ctrl_groups {
 
     /**
      * Checks permissions to a module for a given user group.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @param int $groupid The usergroup ID.
      * @param int $moduleid The module ID.
      * @return bool
@@ -26,6 +27,7 @@ class ctrl_groups {
 
     /**
      * Adds permission to enable a module for a given user group.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @param int $groupid The usergroup ID.
      * @param int $moduleid The module ID.
      * @return bool
@@ -44,6 +46,7 @@ class ctrl_groups {
 
     /**
      * Deletes permission to disable a module for a given user group.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @param int $groupid The usergroup ID.
      * @param int $moduleid The module ID.
      * @return bool

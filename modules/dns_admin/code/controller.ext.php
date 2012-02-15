@@ -70,7 +70,12 @@ class module_controller {
 
                 while ($row = $sql->fetch()) {
                     $count++;
-                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td><textarea cols=\"32\" rows=\"1\" name=\"" . $row['so_name_vc'] . "\">" . $row['so_value_tx'] . "</textarea></td><td>" . $row['so_desc_tx'] . "</td></tr>";
+                    if (ctrl_options::CheckForPredefinedOptions($row['so_defvalues_tx'])) {
+                        $fieldhtml = ctrl_options::OuputSettingMenuField($row['so_name_vc'], $row['so_defvalues_tx'], $row['so_value_tx']);
+                    } else {
+                        $fieldhtml = ctrl_options::OutputSettingTextArea($row['so_name_vc'], $row['so_value_tx']);
+                    }
+                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td>" .$fieldhtml. "</td><td>" . $row['so_desc_tx'] . "</td></tr>";
                 }
                 $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></tr>";
             }

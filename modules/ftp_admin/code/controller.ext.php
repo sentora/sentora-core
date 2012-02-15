@@ -24,7 +24,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
     static $ok;
@@ -39,10 +38,16 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmailsettings = $sql->fetch()) {
-                array_push($res, array('cleanname'   => $rowmailsettings['so_cleanname_vc'],
-									   'name' 		 => $rowmailsettings['so_name_vc'],
-									   'description' => $rowmailsettings['so_desc_tx'],
-									   'value' 		 => $rowmailsettings['so_value_tx']));
+                if (ctrl_options::CheckForPredefinedOptions($rowmailsettings['so_defvalues_tx'])) {
+                    $fieldhtml = ctrl_options::OuputSettingMenuField($rowmailsettings['so_name_vc'], $rowmailsettings['so_defvalues_tx'], $rowmailsettings['so_value_tx']);
+                } else {
+                    $fieldhtml = ctrl_options::OutputSettingTextArea($rowmailsettings['so_name_vc'], $rowmailsettings['so_value_tx']);
+                }
+                array_push($res, array('cleanname' => $rowmailsettings['so_cleanname_vc'],
+                    'name' => $rowmailsettings['so_name_vc'],
+                    'description' => $rowmailsettings['so_desc_tx'],
+                    'value' => $rowmailsettings['so_value_tx'],
+                    'fieldhtml' => $fieldhtml));
             }
             return $res;
         } else {
@@ -56,18 +61,17 @@ class module_controller {
         $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
- 			 $sql = $zdbh->prepare($sql);
-             $sql->execute();
-                while ($row = $sql->fetch()) {
-                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
-                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
-                        $updatesql->execute();
-                    }
+            $sql = $zdbh->prepare($sql);
+            $sql->execute();
+            while ($row = $sql->fetch()) {
+                if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
+                    $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
+                    $updatesql->execute();
                 }
+            }
         }
-		self::$ok=true;
+        self::$ok = true;
     }
-
 
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
@@ -80,7 +84,7 @@ class module_controller {
         $module_desc = ui_language::translate(ui_module::GetModuleDescription());
         return $module_desc;
     }
-	
+
     static function getModuleName() {
         $module_name = ui_module::GetModuleName();
         return $module_name;
@@ -91,6 +95,7 @@ class module_controller {
         $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
+
 }
 
 ?>
