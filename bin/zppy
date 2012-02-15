@@ -107,8 +107,8 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
             fwrite(STDOUT, "Added '" . $argv[3] . "' to list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
         }
     }
-    
-    
+
+
     if ((isset($argv[2])) && ($argv[2] == 'remove')) {
         $contents = file_get_contents($repo_file);
         $lines = preg_split('/\r\n|\r|\n/', $contents);
@@ -123,8 +123,8 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
         fclose($handle);
         fwrite(STDOUT, "Removed '" . $argv[3] . "' from the list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
     }
-    
-    
+
+
     if ((isset($argv[2])) && ($argv[2] == 'list')) {
         $handle = fopen($repo_file, "r+");
         $contents = fread($handle, filesize($repo_file));
@@ -137,6 +137,38 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
                 if ($line != "") {
                     fwrite(STDOUT, " > " . $line . "\n");
                 }
+            }
+        }
+    }
+}
+
+if ((isset($argv[1])) && ($argv[1] == 'update')) {
+    $raw_repos = file_get_contents($repo_file);
+    $lines = preg_split('/\r\n|\r|\n/', $raw_repos);
+    $handle = fopen($package_file, "w+");
+    fwrite($handle, "");
+    fclose($handle);
+    foreach ($lines as $line) {
+        if ((isset($line[0])) && (($line[0] == "#") || ($line == ""))) {
+            # Its a comment or empty line - lets ignore it.
+        } else {
+            echo "Connecting to " . $line . "<br>";
+            $packagects = @file_get_contents($line . "packages.txt");
+            echo "Generating package list from " . $line . "<br>";
+            if ($packagects) {
+                $currconf = file_get_contents($package_file);
+                $plines = preg_split('/\r\n|\r|\n/', $packagects);
+                $newconf = "";
+                foreach ($plines as $pline) {
+                    if (substr($line, 1, 1) != "#") {
+                        $newconf .= $pline . "\t" . $line . "\n";
+                    }
+                }
+                $handle = fopen($package_file, "w");
+                fwrite($handle, $currconf . $newconf);
+                fclose($handle);
+            } else {
+                #echo "Sorry, couldn't contact the URL!";
             }
         }
     }
