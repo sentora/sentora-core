@@ -58,7 +58,7 @@ class ui_moduleloader {
         if ($catid == "") {
 			$sql = "SELECT * FROM x_modules";
         } else {
-			$sql = "SELECT * FROM x_modules WHERE mo_category_fk = '" . $catid . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
+			$sql = "SELECT * FROM x_modules WHERE mo_category_fk = '" . $catid . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc";
         }
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
