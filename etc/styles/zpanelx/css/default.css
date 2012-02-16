@@ -681,12 +681,12 @@ a.zcat{
 	left: 0px;
 	width:100%;
 	min-height:20px;
-	background-color: #FFFFCC;
-	border:solid 1px #FFCC66;
+	background-color: #FFFFA3;
+	border:solid 1px #F1D031;
 	font-weight:normal;
 	text-align: left;
 	padding:10px;
-	color:#FFCC66;
+	color:#444444;
 }
 .zannounce_a{
 	text-align:left;
@@ -840,16 +840,6 @@ a.zshadowbar{
 	padding-left:5px;
 	padding-right:15px;
 }
-
-/*
-.znotice {
-        margin-bottom: 20px;
-	padding:20px;
-	background: #EDEF7D;
-        border-color: #666;
-        color: #666;
-}
-*/
 
 /** JQUERY UI TABS BACKGROUND **/
 .ui-tabs .ui-tabs-panel {

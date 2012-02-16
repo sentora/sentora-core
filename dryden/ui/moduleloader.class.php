@@ -11,158 +11,82 @@
 class ui_moduleloader {
 
     /**
+     * Gets all categories, or if parameter given can select a single category.
+     * @param string $name
+     */
+    static function GetModuleCats($catname = "") {
+        global $zdbh;
+		$user = ctrl_users::GetUserDetail();
+        if ($catname == "") {
+			$sql = "SELECT * FROM x_modcats";
+        } else {
+			$sql = "SELECT * FROM x_modcats WHERE mc_name_vc = '" . $catname . "'";
+        }
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+			$has_icons = false;            	
+            while ($row = $sql->fetch()) {
+				$checksql = "SELECT * FROM x_modules WHERE mo_category_fk = '" . $row['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
+				$checksql = $zdbh->prepare($checksql);
+            	$checksql->execute();
+            	while ($rowcheck = $checksql->fetch()) {
+            		if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $rowcheck['mo_id_pk'])) {
+                		$has_icons = true;
+                	}
+            	}
+	            if ($has_icons){
+					array_push($res, array('mc_id_pk'   => $row['mc_id_pk'],
+	                					   'mc_name_vc' => $row['mc_name_vc']));
+				}
+	        }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Gets all modules in categories, or if parameter given can select a single category.
      * @param string $name
      */
-    static function GetModuleCats($category = "") {
+    static function  GetModuleList($catid = "") {
         global $zdbh;
-        $user = ctrl_users::GetUserDetail();
-        if ($category == "") {
-            $sql = $zdbh->prepare("SELECT * FROM x_modcats");
+		$user = ctrl_users::GetUserDetail();
+        if ($catid == "") {
+			$sql = "SELECT * FROM x_modules";
         } else {
-            $sql = $zdbh->prepare("SELECT * FROM x_modcats WHERE mc_name_vc = '$category'");
+			$sql = "SELECT * FROM x_modules WHERE mo_category_fk = '" . $catid . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
         }
-        $sql->execute();
-        $line = "";
-        while ($categories = $sql->fetch()) {
-            $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
-            if ($nummodsql = $zdbh->query($modsql)) {
-                if ($nummodsql->fetchColumn() > 0) {
-                    $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
-                    $modsql->execute();
-                    $has_icons = false;
-                    while ($modules = $modsql->fetch()) {
-                        if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $modules['mo_id_pk'])) {
-                            $has_icons = true;
-                        }
-                    }
-                    if ($has_icons) {
-                        $line .= "<table class=\"zcat\"><tr><th align=\"left\"><a name=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"></a>" . ui_language::translate($categories['mc_name_vc']) . "<a href=\"#\" class=\"zcat\" id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_a\"></a></th></tr>";
-                        $line .= "<tr><td align=\"left\"><div class=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><table class=\"zcatcontent\" align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>";
-                        $line .= "<table align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n";
-                        $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
-                        $modsql->execute();
-                        $icons_per_row = ctrl_options::GetOption('module_icons_pr');
-                        $num_icons = 0;
-                        while ($modules = $modsql->fetch()) {
-                            if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $modules['mo_id_pk'])) {
-                                $translatename = ui_language::translate($modules['mo_name_vc']);
-                                $cleanname = str_replace(" ", "<br />", $translatename);
-                                if ($num_icons == $icons_per_row) {
-                                    $line .= "</tr><tr>";
-                                    $num_icons = 0;
-                                }
-                                $line .= "<td style=\"text-align:center;\" align=\"left\"><a href=\"?module=" . $modules['mo_folder_vc'] . "\" title=\"" . ui_language::translate($modules['mo_desc_tx']) . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" border=\"0\" /></a><br /><a href=\"?module=" . $modules['mo_folder_vc'] . "\">" . $cleanname . "</a></td>";
-                                $num_icons++;
-                            }
-                        }
-                        $line .= "</tr></table></td></tr></table></div></td></tr></table><br>";
-                    }
-                }
-            }
-        }
-        return $line;
-    }
-
-    /**
-     * Gets all modules in categories in unordered list format, or if parameter given can select a single category.
-     * @param string $name
-     */
-    static function GetModuleCatsUL($category = "") {
-        global $zdbh;
-
-        if ($category == "") {
-            $sql = $zdbh->prepare("SELECT * FROM x_modcats");
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($row = $sql->fetch()) {
+				if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $row['mo_id_pk'])) {
+            	array_push($res, array('mo_id_pk'   	 => $row['mo_id_pk'],
+                					   'mo_category_fk'  => $row['mo_category_fk'],
+									   'mo_name_vc' 	 => $row['mo_name_vc'],
+									   'mo_version_in' 	 => $row['mo_version_in'],
+									   'mo_folder_vc' 	 => $row['mo_folder_vc'],
+									   'mo_type_en' 	 => $row['mo_type_en'],
+									   'mo_desc_tx' 	 => $row['mo_desc_tx'],
+									   'mo_installed_ts' => $row['mo_installed_ts'],
+									   'mo_enabled_en' 	 => $row['mo_enabled_en'],
+									   'mo_updatever_vc' => $row['mo_updatever_vc'],
+									   'mo_updateurl_tx' => $row['mo_updateurl_tx']));
+            	}
+			}
+            return $res;
         } else {
-            $sql = $zdbh->prepare("SELECT * FROM x_modcats WHERE mc_name_vc = '$category'");
+            return false;
         }
-        $sql->execute();
-        $line = "";
-        $show = 0;
-        while ($categories = $sql->fetch()) {
-
-            $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
-            if ($nummodsql = $zdbh->query($modsql)) {
-                if ($nummodsql->fetchColumn() > 0) {
-                    if ($show == 0) {
-                        $class = "parent";
-                    } else {
-                        $class = "parent";
-                    }
-                    $line .= "<div id=\"id=\"zcat_" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "_list\" class=\"" . $class . "\">";
-                    $line .= "<ul>";
-                    $line .= "<lh>" . $categories['mc_name_vc'] . "</lh>";
-
-                    $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
-                    $modsql->execute();
-
-                    while ($modules = $modsql->fetch()) {
-
-                        $line .= "<li><a href=\"?module=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></li>";
-                    }
-                    $line .= "</ul></div>";
-                    $show++;
-                }
-            }
-        }
-        return $line;
     }
-
-    /**
-     * Gets all modules in categories and returns preformatted navbar that can be custom styled in css
-     * or with JQueryUI Themeroller. If parameter given can select a single category.
-     * @param string $name
-     */
-    static function GetModuleCatsZnavBar($category = "") {
-        global $zdbh;
-
-        if ($category == "") {
-            $sql = $zdbh->prepare("SELECT * FROM x_modcats");
-        } else {
-            $sql = $zdbh->prepare("SELECT * FROM x_modcats WHERE mc_name_vc = '$category'");
-        }
-        $sql->execute();
-        $line = "";
-        $tabindex = 0;
-        while ($categories = $sql->fetch()) {
-
-            $cleanname = explode(" ", $categories['mc_name_vc']);
-            $cleanname = ui_language::translate($cleanname[0]);
-
-            $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
-            if ($nummodsql = $zdbh->query($modsql)) {
-                if ($nummodsql->fetchColumn() > 0) {
-
-                    $line .= "<script type=\"text/javascript\">";
-                    $line .= "$(function(){";
-                    $line .= "$('#" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "').menu({";
-                    $line .= "content: $('#" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "').next().html(),";
-                    $line .= "showSpeed: 400";
-                    $line .= "});";
-                    $line .= "});";
-                    $line .= "</script>";
-
-                    $line .= "<a tabindex=\"" . $tabindex . "\" href=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" class=\"fg-navbutton fg-button-icon-right ui-widget ui-state-default ui-corner-all\" id=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\"><span class=\"ui-icon ui-icon-triangle-1-s\"></span>" . $cleanname . "</a>";
-                    $line .= "<div id=\"" . str_replace(" ", "_", strtolower($categories['mc_name_vc'])) . "\" class=\"hidden\">";
-                    $line .= "<ul>";
-
-                    $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_category_fk = '" . $categories['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC");
-                    $modsql->execute();
-
-                    while ($modules = $modsql->fetch()) {
-                        $user = ctrl_users::GetUserDetail();
-                        if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $modules['mo_id_pk'])) {
-                            $line .= "<li><a href=\"?module=" . $modules['mo_folder_vc'] . "\"><img src=\"modules/" . $modules['mo_folder_vc'] . "/assets/icon.png\" width=\"20\" height=\"20\" border=\"0\" /> " . ui_language::translate($modules['mo_name_vc']) . "</a></li>";
-                        }
-                    }
-                    $line .= "</ul></div>";
-                    $tabindex++;
-                }
-            }
-        }
-        return $line;
-    }
-
+	
+	
 }
 
 ?>
