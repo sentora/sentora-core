@@ -19,6 +19,9 @@ class ui_tpl_modulelistznavbar {
 			$modcats = ui_moduleloader::GetModuleCats();
 			foreach ($modcats as $modcat){
             	$cleanname = $modcat['mc_name_vc'];
+				if ($cleanname == "Account Information"){
+					$cleanname = "Account";		
+				}
 				if ($cleanname == "Server Admin"){
 					$cleanname = "Admin";		
 				}
