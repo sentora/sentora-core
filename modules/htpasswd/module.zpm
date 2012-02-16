@@ -143,7 +143,18 @@
 			</td>
 			</tr>
 			</table>
-			<% endif %>		
+			<% else %>
+			<h2><: Password protect your directories :></h2>
+			<table class="none" width="100%" cellspacing="0" cellpadding="0">
+				<tr valign="top">
+					<td>
+						<p><b><: To begin, first select the directory you want to protect. :></b></p>
+						<p><b>1.</b> <: Click the folder Links to expand the directory tree. :></p>
+						<p><b>2.</b> <: Click on the Select Folder button to select the directory for protection. :></p>
+					</td>
+				</tr>	
+			</table>
+			<% endif %>
 		
 		</div>
 		<% else %>
@@ -153,8 +164,8 @@
 				<tr valign="top">
 					<td>
 						<p><b><: To begin, first select the directory you want to protect. :></b></p>
-						<p><b>1.</b><: Click the folder Links to expand the directory tree. :></p>
-						<p><b>2.</b><: Click on the Select Folder button to select the directory for protection. :></p>
+						<p><b>1.</b> <: Click the folder Links to expand the directory tree. :></p>
+						<p><b>2.</b> <: Click on the Select Folder button to select the directory for protection. :></p>
 					</td>
 				</tr>	
 			</table>

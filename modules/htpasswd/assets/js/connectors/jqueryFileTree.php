@@ -44,6 +44,8 @@ if( file_exists($path) ) {
 			}
 		}
 		echo "</ul>";	
+	} else {
+	echo "<font color=\"red\">No Directories Found!</font>";
 	}
 }
 ?>
