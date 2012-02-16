@@ -1,0 +1,26 @@
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: As a reseller you can configure theme settings for your clients. If the theme you select has multiple CSS versions you will be prompted for which theme 'version' you would like to use after you 'save' the changes. :></p></div>
+
+
+
+<div class="zform_wrapper">
+<h2><: Client Theme Configuration :></h2>
+<form action="./?module=theme_manager&action=SaveTheme" method="post">
+<table class="zform">
+<tr>
+<th><: Theme :>:</th>
+<td><select name = "inTheme" id="inTheme">
+<@ SelectThemeMenu @>
+</select></td>
+</tr>
+<tr>
+<th colspan="2" align="right">
+<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save :></button>
+</th>
+</tr>
+</table>
+</form>
+</div>
+</div>

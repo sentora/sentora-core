@@ -10,7 +10,7 @@
  */
 class ctrl_users {
 
-    static function GetUserDetail($user="") {
+    static function GetUserDetail($user = "") {
         global $zdbh;
 
         $userdetail = new runtime_dataobject();
@@ -33,6 +33,7 @@ class ctrl_users {
         $userdetail->addItemValue('resellerid', $dbvals['ac_reseller_fk']);
         $userdetail->addItemValue('packageid', $dbvals['ac_package_fk']);
         $userdetail->addItemValue('enabled', $dbvals['ac_enabled_in']);
+        $userdetail->addItemValue('usertheme', $dbvals['ac_usertheme_vc']);
         $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
         $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
         $userdetail->addItemValue('usergroup', $dbvals['ug_name_vc']);
@@ -104,7 +105,7 @@ class ctrl_users {
 
     #Get all active domains on user account
 
-    static function GetUserDomains($userid, $type="1") {
+    static function GetUserDomains($userid, $type = "1") {
         global $zdbh;
         $domains = 0;
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $userid . " AND vh_deleted_ts IS NULL AND vh_type_in=" . $type . "";
@@ -117,14 +118,13 @@ class ctrl_users {
         return $domains;
     }
 
-
     static function CheckUserEnabled($userid) {
         global $zdbh;
         $domains = 0;
         $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_id_pk=" . $userid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-			return true;
+                return true;
             }
         }
         return false;
