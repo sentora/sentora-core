@@ -40,11 +40,22 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ExectuteUpdate($uid, $theme) {
+    static function ExectuteUpdateTheme($uid, $theme) {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_accounts
             SET ac_usertheme_vc = '" . $theme . "'
+            WHERE ac_reseller_fk = " . $uid . "
+            OR ac_id_pk = " . $uid . "");
+        $sql->execute();
+        return true;
+    }
+    
+    static function ExectuteUpdateCSS($uid, $css) {
+        global $zdbh;
+        $sql = $zdbh->prepare("
+            UPDATE x_accounts
+            SET ac_usercss_vc = '" . $css . "'
             WHERE ac_reseller_fk = " . $uid . "
             OR ac_id_pk = " . $uid . "");
         $sql->execute();
@@ -104,8 +115,15 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        self::ExectuteUpdate($currentuser['userid'], $formvars['inTheme'], $formvars['inCSS']);
-        header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
+        self::ExectuteUpdateTheme($currentuser['userid'], $formvars['inTheme']);
+        /*
+         * @todo Need to add a check here for multiple CSS files - will do this sataurday when I'm at work!
+         */
+        if(true == true) {
+            header("location: ./?module=" . $controller->GetCurrentModule() . "&selectcss=true");
+        } else {
+            header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
+        }
         exit;
     }
 
