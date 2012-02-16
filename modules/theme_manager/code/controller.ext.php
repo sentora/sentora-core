@@ -52,13 +52,7 @@ class module_controller {
     }
 
     static function ExecuteShowCurrentTheme($uid) {
-        global $zdbh;
-        $result = $zdbh->query("SELECT ac_usertheme_vc FROM x_accounts WHERE ac_usertheme_vc = " . $uid . "")->Fetch();
-        if ($result) {
-            return $result['ac_usertheme_tx'];
-        } else {
-            return false;
-        }
+        return ui_template::GetUserTemplate();
     }
 
     static function ExecuteShowCurrentCSS($uid) {
@@ -69,6 +63,10 @@ class module_controller {
         } else {
             return false;
         }
+    }
+
+    static function ExectuteStylesList() {
+        return ui_template::ListAvaliableTemeplates();
     }
 
     /**
@@ -89,9 +87,17 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ExecuteShowCurrentCSS($currentuser['userid']);
     }
-    
-    static function getStylesList(){
-        return ui_template::ListAvaliableTemeplates();
+
+    static function getSelectThemeMenu() {
+        $html = "";
+        foreach (self::ExectuteStylesList() as $theme) {
+            if ($theme['name'] != self::getCurrentTheme()) {
+                $html .="<option value = \"" . $theme['name'] . "\">" . $theme['name'] . "</option>\n";
+            } else {
+                $html .="<option value = \"" . $theme['name'] . "\" selected=\"selected\">" . $theme['name'] . "</option>\n";
+            }
+        }
+        return $html;
     }
 
     static function doSaveTheme() {

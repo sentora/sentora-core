@@ -12,9 +12,7 @@
 <tr>
 <th><: Theme :>:</th>
 <td><select name = "inTheme" id="inTheme">
-<% loop StylesList %>
-<option value="<& theme &>"><& theme &></option>
-<% endloop %>
+<@ SelectThemeMenu @>
 </select></td>
 </tr>
 <tr>

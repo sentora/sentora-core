@@ -29,7 +29,7 @@ class ui_template {
             while ($file = readdir($handle)) {
                 if ($file != "." && $file != "..") {
                     if (is_dir($chkdir . $file)) {
-                        array_push($allstyles, array('theme' => $file));
+                        array_push($allstyles, array('name' => $file));
                     }
                 }
             }
