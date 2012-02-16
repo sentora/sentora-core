@@ -85,6 +85,8 @@ if (!isset($_SESSION['zpuid'])) {
     ctrl_auth::RequireUser();
 }
 
+
 runtime_hook::Execute('OnBeforeControllerInit');
 $controller->Init();
+ui_templateparser::Generate("etc/styles/" . ui_template::GetUserTemplate());
 ?>
