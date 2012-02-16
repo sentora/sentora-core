@@ -9,10 +9,10 @@
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class ui_template {
-    
-    static function GetUserTemplate(){
+
+    static function GetUserTemplate() {
         $user = ctrl_users::GetUserDetail();
-        if(fs_director::CheckForEmptyValue($user['usertheme'])){
+        if (fs_director::CheckForEmptyValue($user['usertheme'])) {
             # Lets use the reseller's theme they have setup!
             $reseller = ctrl_users::GetUserDetail($user['resellerid']);
             return $reseller['usertheme'];
@@ -20,7 +20,24 @@ class ui_template {
             return $user['usertheme'];
         }
     }
-    
+
+    static function ListAvaliableTemeplates() {
+        $allstyles = array();
+        $handle = @opendir(ctrl_options::GetOption('zpanel_root') . "etc/styles");
+        $chkdir = ctrl_options::GetOption('zpanel_root') . "etc/styles/";
+        if ($handle) {
+            while ($file = readdir($handle)) {
+                if ($file != "." && $file != "..") {
+                    if (is_dir($chkdir . $file)) {
+                        array_push($allstyles, array('theme' => $file));
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        return $allstyles;
+    }
+
 }
 
 ?>

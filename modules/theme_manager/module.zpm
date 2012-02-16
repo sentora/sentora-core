@@ -11,7 +11,11 @@
 <table class="zform">
 <tr>
 <th><: Theme :>:</th>
-<td><@ CurrentTheme @></td>
+<td><select name = "inTheme" id="inTheme">
+<% loop StylesList %>
+<option value="<& theme &>"><& theme &></option>
+<% endloop %>
+</select></td>
 </tr>
 <tr>
 <th colspan="2" align="right">

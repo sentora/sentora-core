@@ -89,6 +89,10 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ExecuteShowCurrentCSS($currentuser['userid']);
     }
+    
+    static function getStylesList(){
+        return ui_template::ListAvaliableTemeplates();
+    }
 
     static function doSaveTheme() {
         global $controller;
