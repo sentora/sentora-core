@@ -74,7 +74,10 @@ if (isset($_POST['inUsername'])) {
     } else {
         $rememberdetails = true;
     }
-    ctrl_auth::Authenticate($_POST['inUsername'], md5($_POST['inPassword']), $rememberdetails, false);
+    if (!ctrl_auth::Authenticate($_POST['inUsername'], md5($_POST['inPassword']), $rememberdetails, false)) {
+        header("location: ./?invalidlogin");
+        exit();
+    }
 }
 
 if (isset($_COOKIE['zUser'])) {
