@@ -18,8 +18,29 @@ class ui_tpl_modulelistznavbar {
 			$tabindex = 0;
 			$modcats = ui_moduleloader::GetModuleCats();
 			foreach ($modcats as $modcat){
-				$cleanname = explode(" ", $modcat['mc_name_vc']);
-            	$cleanname = ui_language::translate($cleanname[0]);
+            	$cleanname = $modcat['mc_name_vc'];
+				if ($cleanname == "Server Admin"){
+					$cleanname = "Admin";		
+				}
+				if ($cleanname == "Database Management"){
+					$cleanname = "Database";		
+				}
+				if ($cleanname == "Domain Management"){
+					$cleanname = "Domain";		
+				}
+				if ($cleanname == "File Management"){
+					$cleanname = "File";		
+				}
+				if ($cleanname == "Server Admin"){
+					$cleanname = "Server";		
+				}
+				if ($cleanname == "Server Admin"){
+					$cleanname = "Server";		
+				}
+				if ($cleanname == "Server Admin"){
+					$cleanname = "Server";		
+				}
+            	$cleanname = ui_language::translate($cleanname);
 				$mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk'], "modadmin");
                 $line .= "<script type=\"text/javascript\">";
                 $line .= "$(function(){";
