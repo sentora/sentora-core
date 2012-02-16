@@ -3,6 +3,7 @@
 global $zdbh;
 $modsql = $zdbh->prepare("SELECT * FROM x_modules ORDER BY mo_name_vc ASC");
 $modsql->execute();
+echo "Checking for any avaliable module updates..\n";
 while ($modules = $modsql->fetch()) {
 
     $mod_config = new xml_reader(fs_filehandler::ReadFileContents(ctrl_options::GetOption('zpanel_root') . 'modules/' . $modules['mo_folder_vc'] . '/module.xml'));
@@ -29,6 +30,7 @@ while ($modules = $modsql->fetch()) {
         echo "\r\nCouldn't open the module XML file for (" . $modules['mo_name_vc'] . ")";
     }
 }
+echo "Finished getting module version update information!\n";
 
 
 /*

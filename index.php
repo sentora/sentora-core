@@ -15,5 +15,4 @@ require_once 'cnf/db.php';
 debug_phperrors::SetMode('dev');
 require_once 'inc/dbc.inc.php';
 require_once 'inc/init.inc.php';
-ui_templateparser::Generate("etc/styles/zpanelx");
 ?>

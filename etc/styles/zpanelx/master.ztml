@@ -4,7 +4,7 @@
                <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
         <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>/inc/favicon.ico">
-        <link href="<# ui_tpl_assetfolderpath #>/inc/10.css" rel="stylesheet" type="text/css">
+        <link href="<# ui_tpl_assetfolderpath #>/css/default.css" rel="stylesheet" type="text/css">
 
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.min.js"></script>
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>

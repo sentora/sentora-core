@@ -1,0 +1,254 @@
+<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
+<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+
+	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+	<@ Result @>
+	
+	<form name="getpath" id="getpath" action="./?module=htpasswd&action=SelectFolder" method="post">
+    <table class="none" cellspacing="0" cellpadding="0">
+		<tr>
+			<td> 
+		    <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inFolder" id="inFolder" value="" ><: Select Folder :></button>
+		    </td>
+			<td>
+				<div id="filetreeinner" style="height:10px; font-weight:bold; font-size:smaller;"></div>
+			</td>
+		</tr>
+	</table>
+	</form>
+	
+	<table class="none" width="100%" cellspacing="0" cellpadding="0">
+	<tr valign="top">
+	<td width="250">
+	
+		<div class="zform_wrapper">
+			<table class="none" width="100%" cellspacing="0" cellpadding="0">
+				<tr>
+					<td><br><b><@ CurrentUserName @> <: root :>:</b><br>
+					<div id="htfileTree" class="fileTree"></div>		
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</td>
+	<td>
+		
+		<% if isSelected %>
+		
+		<% if CurrentSelectedFolder %>
+		<div class="zform_wrapper" style="min-height:30px;"><br>
+			<font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ CurrentSelectedFolder @></font></font>			
+		</div>
+		<% endif %>
+
+		<% if SelectedFolder %>
+		<div class="zform_wrapper" style="min-height:30px;"><br>
+			<font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ SelectedFolder @></font></font>		
+		</div>
+		<% endif %>
+		
+		
+
+	
+		<div class="zform_wrapper">
+		
+			<% if isDelete %>
+			<h2><: REMOVE Protection from Directory :></h2>
+			<p><: Please confirm that you want to remove password protection fom this directory. :></p>
+			<form action="./?module=htpasswd&action=ConfirmDeleteHTA" method="post">
+			<table class="none" cellpadding="0" cellspacing="0">
+				<tr>
+					<td colspan="2" align="right">
+					<input type="hidden" name="inDelete" value="<@ CurrentHTID @>">
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+					<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=htpasswd';return false;"><: Cancel :></button>
+					</td>
+				</tr>
+			</table>
+			</form>
+			<% endif %>
+			
+			<% if isEdit %>
+			<h2><: EDIT .htaccess Users in Directory :>:</h2>
+			<p><: From here you can add or remove users that are allowed to access this directory :></p>
+			<form action="./?module=htpasswd&action=RemoveUserHTA" method="post">
+			<table class="zgrid">
+				<tr>
+					<th><: User :></th><th><: Encrypted Password :></th><th>&nbsp;<input type="hidden" name="inID" id="inID" value="<@ CurrentHTID @>"></th>
+				</tr>
+				<% loop CurrentHTA %>
+				<tr>
+					<td><& htaccuser &></td><td><& htaccpass &></td>
+					<td>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inRemove" id="inRemove" value="<& htaccuser &>"><: Remove :></button>
+					</td>
+				</tr>
+				<% endloop %>
+			</table>
+			</form>
+			<p>&nbsp;</p>
+			<h2><: Add New User :>:</h2>
+			<table class="none" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+			<td>
+			<form action="./?module=htpasswd&action=AddUserHTA" method="post">
+			<table class="zform">
+				<tr>
+					<th><: Username :>:</th><td><input type="text" name="inHTUsername"></td>
+				</tr>
+				<tr>
+					<th><: Password :>:</th><td><input type="password" name="inHTPassword"></td>
+				</tr>
+				<tr>	
+					<th><: Confirm PW :>:</th><td><input type="password" name="inConfirmHTPassword"></td>
+				</tr>
+					<th><input type="hidden" name="inID" id="inID" value="<@ CurrentHTID @>"></th>
+					<td>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inPath" id="inPath" value="<@ SelectedFolder @>"><: Create :></button>
+					</td>
+				</tr>
+			</table>
+			</form>
+			</td>
+			<td>
+			<img src="/modules/htpasswd/assets/images/add_user.png" border="0" />
+			</td>
+			</tr>
+			</table>
+			<% endif %>
+			
+			<% if SelectedFolder %>
+			<h2>Create .htaccess</h2>	
+			<table class="none" width="100%" cellspacing="0" cellpadding="0">
+			<tr>
+			<td>
+			<form action="./?module=htpasswd&action=CreateHTA" method="post">
+			<table class="zform">
+				<tr>
+					<th><: Message :>:</th><td><input type="text" name="inAuthName" value="<: Restricted Area :>"></td>
+				</tr>
+				<tr>
+					<th><: Username :>:</th><td><input type="text" name="inHTUsername"></td>
+				</tr>
+				<tr>
+					<th><: Password :>:</th><td><input type="password" name="inHTPassword"></td>
+				</tr>
+				<tr>	
+					<th><: Confirm PW :>:</th><td><input type="password" name="inConfirmHTPassword"></td>
+				</tr>
+					<th></th>
+					<td>
+					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inPath" id="inPath" value="<@ SelectedFolder @>"><: Create :></button>
+					</td>
+				</tr>
+			</table>
+			</form>
+			</td>
+			<td>
+			<img src="/modules/htpasswd/assets/images/lock_big.png" border="0" />
+			</td>
+			</tr>
+			</table>
+			<% else %>
+				<% if CurrentSelectedFolder %>
+				<% else %>
+					<h2><: Password protect your directories :></h2>
+					<table class="none" width="100%" cellspacing="0" cellpadding="0">
+						<tr valign="top">
+							<td>
+								<p><b><: To begin, first select the directory you want to protect. :></b></p>
+								<p><b>1.</b> <: Click the folder Links to expand the directory tree. :></p>
+								<p><b>2.</b> <: Click on the Select Folder button to select the directory for protection. :></p>
+							</td>
+						</tr>	
+					</table>
+				<% endif %>
+			<% endif %>
+		
+		</div>
+		<% else %>
+		<div class="zform_wrapper">
+			<h2><: Password protect your directories :></h2>
+			<table class="none" width="100%" cellspacing="0" cellpadding="0">
+				<tr valign="top">
+					<td>
+						<p><b><: To begin, first select the directory you want to protect. :></b></p>
+						<p><b>1.</b> <: Click the folder Links to expand the directory tree. :></p>
+						<p><b>2.</b> <: Click on the Select Folder button to select the directory for protection. :></p>
+					</td>
+				</tr>	
+			</table>
+		</div>
+		<% endif %>
+		
+		<% if ProtectedDirectories %>
+		<div class="zgrid_wrapper">
+			<h2><: All Protected Directories :></h2>
+			<p><: Edit allowed users, or remove protection from passworded directories. :></p>
+			<form action="./?module=htpasswd&action=EditHTA" method="post">
+			<table class="zgrid" style="width:100%">
+				<tr>
+					<th colspan="3"><: Directory :></th>
+				</tr>
+				<% loop ProtectedDirectories %>
+				<tr>
+				<td><img src="/modules/htpasswd/assets/images/lock_small.png" border="0" /></td><td  style="width:100%"><& htdir &></td>
+				<td nowrap="nowrap">
+				<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inEdit_<& id &>" id="inEdit_<& id &>" value="<& id &>"><: Edit :></button>
+				<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& id &>" id="inDelete_<& id &>" value="<& id &>"><: Remove :></button>
+				</td>
+				</tr>
+				<% endloop %>
+			</table>
+			</form>
+		</div>
+		<% endif %>
+		
+	
+	</td>
+	</tr>
+	</table>	
+
+</div>
+
+<link rel="stylesheet" type="text/css" href="modules/htpasswd/assets/js/jqueryFileTree.css" media="screen">
+<link rel="stylesheet" href="modules/htpasswd/assets/css/scrollbars.css" type="text/css" media="screen"/>
+<!--This function SHOULD check if jquery is loaded, and if not then load as needed-->
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') { 
+        var head = document.getElementsByTagName("head")[0];
+        script = document.createElement('script');
+        script.id = 'jQuery';
+        script.type = 'text/javascript';
+        script.src = 'modules/htpasswd/assets/js/jquery.js';
+        head.appendChild(script);
+    }
+</script>
+<script type="text/javascript" src="modules/htpasswd/assets/js/jquery.easing.js"></SCRIPT>
+<script type="text/javascript" src="modules/htpasswd/assets/js/jqueryFileTree.js"></SCRIPT>
+<script type="text/javascript">
+    $(document).ready( function() {	
+        $('#htfileTree').fileTree({ root: '<@ RootPath @>', script: 'modules/htpasswd/assets/js/connectors/jqueryFileTree.php' });				
+    });
+</script>
+<script type="text/javascript" language="javascript">
+    function appendText($folderlink, fieldID) {
+        w=document.getElementById('filetreeinner');
+        x=document.getElementById('inFolder');
+        y=document.getElementById(fieldID);
+        x.value=y.name;
+        w.innerHTML=$folderlink;
+    }
+</script>
+<style type="text/css">
+    .fileTree {
+        padding:0;
+        margin:0;
+        min-width:175px;
+        max-width:250px;
+        height: 500px;
+        overflow-y: none;
+        overflow-x: auto;
+    }
+</style>
