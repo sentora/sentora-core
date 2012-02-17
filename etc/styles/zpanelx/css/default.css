@@ -436,6 +436,38 @@ statsdata_wrapper{
 #statsdata_wrapper_a{
 
 }
+img.mainlayout_tleft{
+width:15px;
+height:20px;
+background:url(../images/mainlayout_tleft.png) 0 0;
+}
+img.mainlayout_tright{
+width:15px;
+height:20px;
+background:url(../images/mainlayout_tright.png) 0 0;
+}
+td.mainlayout_tcenter{
+background:url(../images/mainlayout_tcenter.png) repeat-x;
+}
+img.mainlayout_bleft{
+width:15px;
+height:15px;
+background:url(../images/mainlayout_bleft.png) 0 0;
+}
+img.mainlayout_bright{
+width:15px;
+height:15px;
+background:url(../images/mainlayout_bright.png) 0 0;
+}
+td.mainlayout_bcenter{
+background:url(../images/mainlayout_bcenter.png) repeat-x;
+}
+td.mainlayout_right{
+border-right: 1px solid #CDCDCD;
+}
+td.mainlayout_left{
+border-left: 1px solid #CDCDCD;
+}
 
 /** ZPANEL SPECIFIC CSS ATTRIBUTES!! **/
 

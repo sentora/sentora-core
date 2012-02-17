@@ -11,11 +11,7 @@ body{
 	height:100%;
 
 	
-	/* background:url(../images/bkg-texture.png) #F4F9FA; */
-	
-	background:#444  left top repeat-x; 
-	background-attachment: fixed;
-	/* background:#3291C9; */
+	background:url(../images/bkg-texture.png) #F3F3F3;
 	font-size: 62.5%;
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
 	margin-left: 0px;
@@ -147,7 +143,7 @@ a.logo_small{
 	text-align:center;
 	margin:0px;
 	padding:0px;
-	background-color: #F3F2F0;
+	background-color: #FFFFFF;
 	border-left:1px solid #E5F0F1;
 	border-right:1px solid #E5F0F1;
 	border-spacing:0px;
@@ -158,7 +154,7 @@ a.logo_small{
 	width:100%;
 	margin:0px;
 	padding:5px;
-	background-color: #F3F2F0;
+	background-color: #FFFFFF;
 	border-spacing:0px;
 	background:#F1F4F6;
 	vertical-align:top;
@@ -171,7 +167,7 @@ a.logo_small{
 	height:41px;
 	margin:0px;
 	padding:0px;
-	background:#F3F2F0 url(../images/statsdata_th_center.png) left top repeat-x;
+	background:#FFFFFF url(../images/statsdata_th_center.png) left top repeat-x;
 	color: #FFFFFF;
 	font-weight:bold;
 	text-align: left;
@@ -219,7 +215,7 @@ text-align:left;
 }
 .main{
 	padding: 10px;
-	background-color: #F3F2F0;
+	background-color: #FFFFFF;
 }
 #header{
 	width: 100%;
@@ -303,7 +299,7 @@ a.header_top_small{
 	padding:0px;
 	margin: 0px;
 	border-spacing:0px;
-	background:#F3F2F0;
+	background:#FFFFFF;
 }
 .mainlayout_content{
 	min-width:750px;
@@ -436,6 +432,38 @@ statsdata_wrapper{
 #statsdata_wrapper_a{
 
 }
+img.mainlayout_tleft{
+width:15px;
+height:20px;
+background:url(../images/mainlayout_tleft_white.png) 0 0;
+}
+img.mainlayout_tright{
+width:15px;
+height:20px;
+background:url(../images/mainlayout_tright_white.png) 0 0;
+}
+td.mainlayout_tcenter{
+background:url(../images/mainlayout_tcenter_white.png) repeat-x;
+}
+img.mainlayout_bleft{
+width:15px;
+height:15px;
+background:url(../images/mainlayout_bleft_white.png) 0 0;
+}
+img.mainlayout_bright{
+width:15px;
+height:15px;
+background:url(../images/mainlayout_bright_white.png) 0 0;
+}
+td.mainlayout_bcenter{
+background:url(../images/mainlayout_bcenter_white.png) repeat-x;
+}
+td.mainlayout_right{
+border-right: 1px solid #DADADA;
+}
+td.mainlayout_left{
+border-left: 1px solid #DADADA;
+}
 
 /** ZPANEL SPECIFIC CSS ATTRIBUTES!! **/
 
@@ -455,7 +483,7 @@ statsdata_wrapper{
 	height:41px;
 	margin:0px;
 	padding:0px;
-	background:#F3F2F0 url(../images/zcat_th_center.png) left top repeat-x;
+	background:#FFFFFF url(../images/zcat_th_center.png) left top repeat-x;
 	color: #333;
 	font-weight:bold;
 	text-align: left;
@@ -475,7 +503,7 @@ statsdata_wrapper{
 .zcat td{
 	margin:0px;
 	padding:0px;
-	background:#F3F2F0 url(../images/zcat_td.png) left top repeat-x;
+	background:#FFFFFF url(../images/zmodule_td.png) left top repeat-x;
 	vertical-align:top;
 	border-top:0px;
 	border-left:1px solid #E5F0F1;
@@ -558,7 +586,7 @@ a.zcat{
 	background-color: #E5F0F1;
 	border-top:1px solid #FFFFFF;
 	border-bottom:1px solid #CCCCCC;
-	/*
+	/*z
 	/*background:#FFFFFF url(../images/zcat_td.png) left top repeat-x;*/
 	/* background:#ECECEC url(../images/th_back.png) left top repeat-x;*/
 	color: #333;
@@ -766,7 +794,7 @@ a.zshadowbar{
 	height:41px;
 	margin:0px;
 	padding:0px;
-	background:#F3F2F0 url(../images/zcat_th_center.png) left top repeat-x;
+	background:#FFFFFF url(../images/zcat_th_center.png) left top repeat-x;
 	color: #006699;
 	font-weight:bold;
 	text-align: left;
@@ -784,7 +812,7 @@ a.zshadowbar{
 .zmodule_content{
 	margin:0px;
 	padding:0px;
-	background:#F3F2F0 url(../images/zcat_td.png) left top repeat-x;
+	background:#FFFFFF url(../images/zmodule_td.png) left top repeat-x;
 	border-top:0px;
 	border-left:0px;
 	border-right:0px;

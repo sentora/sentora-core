@@ -93,11 +93,11 @@ class module_controller {
         }
     }
 	
-    static function DirectoryIsProtected($folder) {
+    static function DirectoryIsProtected($uid, $folder) {
         global $zdbh;
-		$rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_dir_vc='".$folder."' AND ht_deleted_ts IS NULL")->fetch();
+		$rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk=". $uid ." AND ht_dir_vc='".$folder."' AND ht_deleted_ts IS NULL")->fetch();
 		if ($rowpath){
-			if (file_exists(ctrl_options::GetOption('hosted_dir') . $folder . ".htaccess")){
+			if (file_exists(ctrl_options::GetOption('hosted_dir') . $folder . "/.htaccess")){
 				header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "");
 	        	exit;
 			} else {
@@ -272,9 +272,10 @@ class module_controller {
 	
     static function doSelectFolder() {
         global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inFolder'])) {
-			if (!self::DirectoryIsProtected($formvars['inFolder'])){
+			if (!self::DirectoryIsProtected($currentuser['userid'], $formvars['inFolder'])){
             header("location: ./?module=" . $controller->GetCurrentModule() . "&selected=Selected&path=" . $formvars['inFolder'] . "");
             exit;
 			}

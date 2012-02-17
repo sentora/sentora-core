@@ -100,20 +100,20 @@
 			<!-- BEGIN MAIN LAYOUT -->
             <table align="center" class="mainlayout" width="98%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="15px" align="left"><img src="<# ui_tpl_assetfolderpath #>/images/mainlayout_tleft.png" border="0"></td><td width="100%" background="<# ui_tpl_assetfolderpath #>/images/mainlayout_tcenter.png"></td><td width="15px"><img src="<# ui_tpl_assetfolderpath #>/images/mainlayout_tright.png" border="0"></td>
+                    <td width="15px" align="left"><img class="mainlayout_tleft" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td><td width="100%" class="mainlayout_tcenter"></td><td width="15px"><img class="mainlayout_tright" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td>
                 </tr>
 
                 <tr>
-                    <td style="background:url(<# ui_tpl_assetfolderpath #>/images/mainlayout_left.png) repeat-y;"></td>
+                    <td class="mainlayout_left"></td>
                     <td><# ui_tpl_notice #>
 						<!-- BEGIN MAIN LAYOUT CONTENT -->
                         <table class="mainlayout_content" width="100%" border="0" cellpadding="0" cellspacing="0">
 						
                             <tr valign="top">
-                                <td class="mainlayout_content" width="100%" bgcolor="#F3F2F0">								
+                                <td class="mainlayout_content" width="100%">								
 								
 								<# ui_tpl_modulelist #><# ui_tpl_module #></td>
-                                <td style="padding-right:0px" width="200px" bgcolor="#F3F2F0">
+                                <td style="padding-right:0px" width="200px">
 									<!-- BEGIN STATSDATA -->
 									<div class="statsdata_wrapper" id="statsdata_wrapper">
 									<# ui_tpl_shadowbar #>
@@ -262,10 +262,10 @@
                         </table>
 						<!-- END MAIN LAYOUT CONTENT -->
                     </td>
-                    <td style="background:url(<# ui_tpl_assetfolderpath #>/images/mainlayout_right.png) repeat-y;"></td>
+                    <td class="mainlayout_right"></td>
                 </tr>
                 <tr>
-                    <td width="15px" align="left"><img src="<# ui_tpl_assetfolderpath #>/images/mainlayout_bleft.png" border="0"></td><td width="100%" background="<# ui_tpl_assetfolderpath #>/images/mainlayout_bcenter.png"></td><td width="15px"><img src="<# ui_tpl_assetfolderpath #>/images/mainlayout_bright.png" border="0"></td>
+                    <td width="15px" align="left"><img class="mainlayout_bleft" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td><td width="100%" class="mainlayout_bcenter"></td><td width="15px"><img class="mainlayout_bright" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td>
                 </tr>
             </table>
 			<!-- BEGIN MAIN LAYOUT -->
