@@ -83,6 +83,7 @@ class module_controller {
     static function ExecuteCSSList() {
         return ui_template::ListAvaliableCSS(self::ExecuteShowCurrentTheme());
     }
+
     /**
      * End 'worker' methods.
      */
@@ -126,15 +127,20 @@ class module_controller {
         return $html;
     }
 
+    static function getIsSelectCSS() {
+        global $controller;
+        $getvars = $controller->GetAllControllerRequests('URL');
+        if (isset($getvars['selectcss']))
+            return true;
+        return false;
+    }
+
     static function doSaveTheme() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         self::ExectuteUpdateTheme($currentuser['userid'], $formvars['inTheme']);
-        /*
-         * @todo Need to add a check here for multiple CSS files - will do this sataurday when I'm at work!
-         */
-        if (true == true) {
+        if (count(self::ExecuteCSSList($formvars['inTheme'])) > 0) {
             header("location: ./?module=" . $controller->GetCurrentModule() . "&selectcss=true");
         } else {
             header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
@@ -142,11 +148,25 @@ class module_controller {
         exit;
     }
 
-    static function getIsSelectCSS() {
+    static function doSaveCSS() {
         global $controller;
-        $getvars = $controller->GetAllControllerRequests('URL');
-        if (isset($getvars['selectcss']))
-            return true;
+        $currentuser = ctrl_users::GetUserDetail();
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        self::ExectuteUpdateCSS($currentuser['userid'], $formvars['inCSS']);
+        header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
+        exit;
+    }
+
+    static function getResult() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if (isset($urlvars['saved'])) {
+            return ui_sysmessage::shout(ui_language::translate("Your theme configuration has been saved and has been updated for all clients!"), "zannounceok");
+        }
+        if (isset($urlvars['selectcss'])) {
+            return ui_sysmessage::shout(ui_language::translate("This theme has more than one variation, please choose a variation you'd like to use.."), "zannounceerror");
+        }
         return false;
     }
 

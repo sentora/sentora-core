@@ -62,7 +62,7 @@ class ui_template {
             while ($file = readdir($handle)) {
                 if ($file != "." && $file != "..") {
                     if (is_file($chkdir . $file)) {
-                        array_push($allstyles, array('name' => $file));
+                        array_push($allstyles, array('name' => str_replace(".css", "", $file)));
                     }
                 }
             }
