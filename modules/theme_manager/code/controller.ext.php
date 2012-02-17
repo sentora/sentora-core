@@ -140,9 +140,10 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         self::ExectuteUpdateTheme($currentuser['userid'], $formvars['inTheme']);
-        if (count(self::ExecuteCSSList($formvars['inTheme'])) > 0) {
+        if (count(self::ExecuteCSSList($formvars['inTheme'])) > 1) {
             header("location: ./?module=" . $controller->GetCurrentModule() . "&selectcss=true");
         } else {
+            self::ExectuteUpdateCSS($currentuser['userid'], "");
             header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
         }
         exit;
