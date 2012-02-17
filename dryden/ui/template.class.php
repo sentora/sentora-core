@@ -47,21 +47,21 @@ class ui_template {
         }
         return $allstyles;
     }
-    
+
     /**
      * Returns a list of all avaliable CSS styles for a given theme. If only a single CSS style then it will return false.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param type $template
      * @return array 
      */
-    static function ListAvaliableCSS($template){
+    static function ListAvaliableCSS($template) {
         $allstyles = array();
-        $handle = @opendir(ctrl_options::GetOption('zpanel_root') . "etc/styles/" .$template);
-        $chkdir = ctrl_options::GetOption('zpanel_root') . "etc/styles/" .$template."/";
+        $handle = @opendir(ctrl_options::GetOption('zpanel_root') . "etc/styles/" . $template . "/css");
+        $chkdir = ctrl_options::GetOption('zpanel_root') . "etc/styles/" . $template . "/css/";
         if ($handle) {
             while ($file = readdir($handle)) {
                 if ($file != "." && $file != "..") {
-                    if (is_dir($chkdir . $file)) {
+                    if (is_file($chkdir . $file)) {
                         array_push($allstyles, array('name' => $file));
                     }
                 }

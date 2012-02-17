@@ -50,7 +50,7 @@ class module_controller {
         $sql->execute();
         return true;
     }
-    
+
     static function ExectuteUpdateCSS($uid, $css) {
         global $zdbh;
         $sql = $zdbh->prepare("
@@ -68,7 +68,7 @@ class module_controller {
 
     static function ExecuteShowCurrentCSS($uid) {
         global $zdbh;
-        $result = $zdbh->query("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_fk = " . $uid . "")->Fetch();
+        $result = $zdbh->query("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_pk = " . $uid . "")->Fetch();
         if ($result) {
             return $result['ac_usertheme_tx'];
         } else {
@@ -80,6 +80,9 @@ class module_controller {
         return ui_template::ListAvaliableTemeplates();
     }
 
+    static function ExecuteCSSList() {
+        return ui_template::ListAvaliableCSS(self::ExecuteShowCurrentTheme());
+    }
     /**
      * End 'worker' methods.
      */
@@ -111,6 +114,18 @@ class module_controller {
         return $html;
     }
 
+    static function getSelectCSSMenu() {
+        $html = "";
+        foreach (self::ExecuteCSSList() as $css) {
+            if ($css['name'] != self::getCurrentCSS()) {
+                $html .="<option value = \"" . $css['name'] . "\">" . $css['name'] . "</option>\n";
+            } else {
+                $html .="<option value = \"" . $css['name'] . "\" selected=\"selected\">" . $css['name'] . "</option>\n";
+            }
+        }
+        return $html;
+    }
+
     static function doSaveTheme() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -119,12 +134,20 @@ class module_controller {
         /*
          * @todo Need to add a check here for multiple CSS files - will do this sataurday when I'm at work!
          */
-        if(true == true) {
+        if (true == true) {
             header("location: ./?module=" . $controller->GetCurrentModule() . "&selectcss=true");
         } else {
             header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
         }
         exit;
+    }
+
+    static function getIsSelectCSS() {
+        global $controller;
+        $getvars = $controller->GetAllControllerRequests('URL');
+        if (isset($getvars['selectcss']))
+            return true;
+        return false;
     }
 
     /**

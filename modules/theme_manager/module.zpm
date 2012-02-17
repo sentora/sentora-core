@@ -23,4 +23,25 @@
 </table>
 </form>
 </div>
+
+<% if IsSelectCSS %>
+<div class="zform_wrapper">
+<h2><: Choose variation :></h2>
+<form action="./?module=theme_manager&action=SaveCSS" method="post">
+<table class="zform">
+<tr>
+<th><: Theme variation :>:</th>
+<td><select name = "inCSS" id="iCSS">
+<@ SelectCSSMenu @>
+</select></td>
+</tr>
+<tr>
+<th colspan="2" align="right">
+<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save :></button>
+</th>
+</tr>
+</table>
+</form>
+</div>
+<% endif %>
 </div>
