@@ -277,7 +277,7 @@ class module_controller {
 			return ui_sysmessage::shout(ui_language::translate("You need to specify a valid location for your script."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$noexists)){
-			return ui_sysmessage::shout(ui_language::translate("Your script does not appear to exist at that location. Your root folder is: "), "zannounceerror");
+			return ui_sysmessage::shout(ui_language::translate("Your script does not appear to exist at that location."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
 			return ui_sysmessage::shout(ui_language::translate("You can not add the same cron task more than once."), "zannounceerror");

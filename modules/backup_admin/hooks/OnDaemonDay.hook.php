@@ -9,10 +9,14 @@ try {
     
 }
 
+echo "START Backup Config." . fs_filehandler::NewLine();
+if (ui_module::CheckModuleEnabled('Backup Config')){
+echo "Backup Config module ENABLED..." . fs_filehandler::NewLine();
+
 // Schedule daily backups are enabled...
 if (strtolower(ctrl_options::GetOption('schedule_bu')) == "true") {
     runtime_hook::Execute('OnBeforeScheduleBackup');
-    echo "\r\nBackup Scheduling enabled - Backing up all enabled client files now...\r\n";
+    echo "Backup Scheduling enabled - Backing up all enabled client files now..." . fs_filehandler::NewLine();
     // Get all accounts
     $bsql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
     $numrows = $zdbh->query($bsql);
@@ -62,17 +66,17 @@ if (strtolower(ctrl_options::GetOption('schedule_bu')) == "true") {
                 copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", $backupdir . $backupname . ".zip");
                 unlink(ctrl_options::GetOption('temp_dir') . $backupname . ".zip");
                 fs_director::SetDirectoryPermissions($backupdir . $backupname . ".zip", 0777);
-                echo $backupdir . $backupname . ".zip\r\n";
+                echo $backupdir . $backupname . ".zip" . fs_filehandler::NewLine();
             }
         }
     }
     runtime_hook::Execute('OnAfterScheduleBackup');
-    echo "Backup Schedule COMPLETE...\r\n";
+    echo "Backup Schedule COMPLETE..." . fs_filehandler::NewLine();
 }
 
 // Purge backups are enabled....
 if (strtolower(ctrl_options::GetOption('purge_bu')) == "true") {
-    echo "\r\nBackup Purging enabled - Purging old backups now...\r\n";
+    echo fs_filehandler::NewLine() . "Backup Purging enabled - Purging backups older than ".ctrl_options::GetOption('purge_date')." days..." . fs_filehandler::NewLine();
     runtime_hook::Execute('OnBeforePurgeBackup');
     clearstatcache();
     // Get all accounts
@@ -82,7 +86,7 @@ if (strtolower(ctrl_options::GetOption('purge_bu')) == "true") {
         $purge_date = ctrl_options::GetOption('purge_date');
         $bsql = $zdbh->prepare($bsql);
         $bsql->execute();
-        echo "[FILE][PURGE_DATE][FILE_DATE][ACTION]\r\n";
+        echo "[FILE][PURGE_DATE][FILE_DATE][ACTION]" . fs_filehandler::NewLine();
         while ($rowclients = $bsql->fetch()) {
             $username = $rowclients['ac_user_vc'];
             $backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/";
@@ -97,17 +101,24 @@ if (strtolower(ctrl_options::GetOption('purge_bu')) == "true") {
                         echo "" . $file . " - " . $purge_date . " - " . $filetime . "";
                         if ($purge_date < $filetime) {
                             //delete the file
-                            echo " - Deleting file...\r\n";
+                            echo " - Deleting file..." . fs_filehandler::NewLine();
                             unlink($backupdir . $file);
                         } else {
-                            echo " - Skipping file...\r\n";
+                            echo " - Skipping file..." . fs_filehandler::NewLine();
                         }
                     }
                 }
             }
         }
     }
-    echo "Backup Purging COMPLETE...\r\n";
+    echo "Backup Purging COMPLETE..." . fs_filehandler::NewLine();
     runtime_hook::Execute('OnAfterPurgeBackup');
 }
+
+
+
+} else {
+echo "Backup Config module DISABLED...nothing to do." . fs_filehandler::NewLine();
+}
+echo "END Backup Config." . fs_filehandler::NewLine();
 ?>
