@@ -1,13 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-               <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
         <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>/inc/favicon.ico">
-        <link href="<# ui_tpl_assetfolderpath #>/css/default.css" rel="stylesheet" type="text/css">
+        <link href="<# ui_tpl_csspath #>" rel="stylesheet" type="text/css">
+
 
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.min.js"></script>
-		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>
+	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>
         <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.cookie.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
@@ -19,6 +20,7 @@
 		
     	<!-- JQUERY NAVBAR REQUIREMENTS -->
     	<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
+
 		<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
 		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
     	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.js"></script>

@@ -11,7 +11,7 @@
 class ui_tpl_date {
 
     public function Template() {
-        return date('l F jS\, Y');
+        return date(ctrl_options::GetOption('zpanel_df'));
     }
 
 }

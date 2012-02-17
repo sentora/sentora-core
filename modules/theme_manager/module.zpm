@@ -2,15 +2,15 @@
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: As a reseller you can configure theme settings for your clients. If the theme you select has multiple CSS versions you will be prompted for which theme 'version' you would like to use after you 'save' the changes. :></p></div>
-
+<@ Result @>
 
 
 <div class="zform_wrapper">
-<h2><: Client Theme Configuration :></h2>
+<h2><: Select a theme :></h2>
 <form action="./?module=theme_manager&action=SaveTheme" method="post">
 <table class="zform">
 <tr>
-<th><: Theme :>:</th>
+<th><: Theme name :>:</th>
 <td><select name = "inTheme" id="inTheme">
 <@ SelectThemeMenu @>
 </select></td>
@@ -23,4 +23,25 @@
 </table>
 </form>
 </div>
+
+<% if IsSelectCSS %>
+<div class="zform_wrapper">
+<h2><: Theme variation :></h2>
+<form action="./?module=theme_manager&action=SaveCSS" method="post">
+<table class="zform">
+<tr>
+<th><: Theme variation :>:</th>
+<td><select name = "inCSS" id="iCSS">
+<@ SelectCSSMenu @>
+</select></td>
+</tr>
+<tr>
+<th colspan="2" align="right">
+<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Update :></button>
+</th>
+</tr>
+</table>
+</form>
+</div>
+<% endif %>
 </div>
