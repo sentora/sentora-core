@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * A search and retrieve/replace class.
  * @package zpanelx
  * @subpackage dryden -> runtime
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -13,8 +15,7 @@ class runtime_hook {
     /**
      * Executes a hook file at the called position.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param type $name 
-     * @return void
+     * @param string $name The name of the hook of which to execute.
      */
     static function Execute($name) {
         $hook_log = new debug_logger();
@@ -23,7 +24,7 @@ class runtime_hook {
         $hook_log->logcode = "861";
         foreach (glob($mod_folder, GLOB_BRACE) as $hook_file) {
             if (file_exists($hook_file)) {
-                $hook_log->detail = "Hook file executed (" .$hook_file. ")";
+                $hook_log->detail = "Hook file executed (" . $hook_file . ")";
                 include $hook_file;
                 $hook_log->writeLog();
             }

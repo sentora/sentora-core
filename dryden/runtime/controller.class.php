@@ -3,7 +3,7 @@
 /**
  * The controller class!
  * @package zpanelx
- * @subpackage dryden -> controller
+ * @subpackage dryden -> runtime
  * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
