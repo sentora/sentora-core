@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A class to manage common file system operations.
+ * A class to manage common file manipulation operations.
  * @package zpanelx
  * @subpackage dryden -> filesystem
  * @version 1.0.0
