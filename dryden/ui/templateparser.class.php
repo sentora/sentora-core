@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * The template parser class.
  * @package zpanelx
  * @subpackage dryden -> ui
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -12,8 +14,9 @@ class ui_templateparser {
 
     /**
      * Loads in the template content and parses it to compute the place holder content.
-     * @param string $template_path The full path to the system template (or user template)
-     * @return sting 
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $template_path The full path to the system template (or user template).
+     * @return sting The processed template HTML. (PHP Eval'd ready for execution).
      */
     static function Generate($template_path) {
         $template_raw = file_get_contents($template_path . "/master.ztml");
@@ -23,14 +26,13 @@ class ui_templateparser {
 
     /**
      * Replaces the template place holders with the equivilent dynamic infomation.
-     * @param string $raw
-     * @return string 
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $raw The HTML tempalte file (as is in the filesystem, the raw module.zpm file)
+     * @return string The generated HTML text.
      */
     static function Process($raw) {
-        global $controller;
-        
         runtime_hook::Execute('OnBeforeTemplateProcessor');
-        $tplp = new runtime_dataobject;
+        $match = null;
         preg_match_all("'<#\s(.*?)\s#>'si", $raw, $match);
         if ($match) {
             foreach ($match[1] as $classes) {
@@ -69,9 +71,7 @@ class ui_templateparser {
         $raw = preg_replace('/\<% loop (.+?)\ %>/i', "<?php foreach(module_controller::get$1() as \$key => \$value){ ?>", $raw);
         $raw = str_replace('<% endloop %>', '<?php } ?>', $raw);
         $raw = preg_replace('/\<& (.+?)\ &>/i', '<?php echo \$value[\'$1\']; ?>', $raw);
-        
         runtime_hook::Execute('OnAfterTemplateProcessor');
-        
         return $raw;
     }
 
