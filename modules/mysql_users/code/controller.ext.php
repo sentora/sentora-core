@@ -236,7 +236,7 @@ class module_controller {
         }
         // Check for invalid IP address
         if ($access != "%" && strtolower($access) != "localhost") {
-            if (!fs_director::IsValidIP($access)) {
+            if (!sys_monitoring::IsValidIP($access)) {
                 self::$badIP = true;
                 return false;
             }

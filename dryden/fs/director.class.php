@@ -235,48 +235,6 @@ class fs_director {
     }
 
     /**
-     * Checks that an IP address is valid (IPv6 and IPv4).
-     * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @param string $ip The IP address of which to check.
-     * @return boolean 
-     */
-    static function IsValidIP($ip) {
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Checks that an IPv4 address is valid.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @param string $ip The IP address of which to check.
-     * @return boolean 
-     */
-    static function IsValidIPv4($ip) {
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Checks that an IPv6 address is valid.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @param string $ip The IP address of which to check.
-     * @return boolean 
-     */
-    static function IsValidIPv6($ip) {
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Checks that an email address is of a valid format.
      * @author Bobby Allen (ballen@zpanelcp.com) 
      * @param string $email The email address of which to check.
