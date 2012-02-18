@@ -30,7 +30,7 @@ if (file_exists('modules/' . $_GET['m'] . '/code/webservice.ext.php')) {
         die();
     }
 
-    if ($api->CheckServerAPIKey()) {
+    if (!$api->CheckServerAPIKey()) {
         if (method_exists($api, $api->wsdataarray['request'])) {
             $api->SendResponse(call_user_func(array($api, '' . $api->wsdataarray['request'] . '')));
         } else {

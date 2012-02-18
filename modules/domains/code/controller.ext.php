@@ -40,7 +40,7 @@ class module_controller {
      */
     static function ListDomains($uid=0) {
         global $zdbh;
-        if($uid == 0){
+        if ($uid == 0) {
             $sql = "SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
         } else {
             $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
@@ -51,10 +51,13 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowdomains = $sql->fetch()) {
-                array_push($res, array('name' => $rowdomains['vh_name_vc'],
+                array_push($res, array(
+                    'uid' => $rowdomains['vh_acc_fk'],
+                    'name' => $rowdomains['vh_name_vc'],
                     'directory' => $rowdomains['vh_directory_vc'],
                     'active' => $rowdomains['vh_active_in'],
-                    'id' => $rowdomains['vh_id_pk']));
+                    'id' => $rowdomains['vh_id_pk'],
+                ));
             }
             return $res;
         } else {
@@ -91,7 +94,7 @@ class module_controller {
 							   SET vh_deleted_ts=" . time() . " 
 							   WHERE vh_id_pk=" . $id . "");
         $sql->execute();
-		self::SetWriteApacheConfigTrue();
+        self::SetWriteApacheConfigTrue();
         $retval = TRUE;
         runtime_hook::Execute('OnAfterDeleteDomain');
         return $retval;
@@ -110,7 +113,7 @@ class module_controller {
                 $destination = "/" . str_replace(".", "_", $domain);
                 $vhost_path = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
                 fs_directorr::CreateDirectory($vhost_path);
-				fs_director::SetFileSystemPermissions($vhost_path, 0777);
+                fs_director::SetFileSystemPermissions($vhost_path, 0777);
                 //** Existing Home Directory **//
             } else {
                 $destination = "/" . $destination;
@@ -157,7 +160,7 @@ class module_controller {
 														 1,
 														 " . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->execute();
-			self::SetWriteApacheConfigTrue();
+            self::SetWriteApacheConfigTrue();
             $retval = TRUE;
             runtime_hook::Execute('OnAfterAddDomain');
             return $retval;
@@ -193,13 +196,13 @@ class module_controller {
             }
         }
         // Check to make sure user not adding a subdomain and blocks stealing of subdomains....
-		// Get shared domain list
-		$SharedDomains = array();
-		$a = ctrl_options::GetOption('shared_domains');
-		$a = explode(',', $a);
-		foreach ($a as $b) {
-    		$SharedDomains[] = $b;
-		}
+        // Get shared domain list
+        $SharedDomains = array();
+        $a = ctrl_options::GetOption('shared_domains');
+        $a = explode(',', $a);
+        foreach ($a as $b) {
+            $SharedDomains[] = $b;
+        }
         if (substr_count($domain, ".") > 1) {
             $part = explode('.', $domain);
             foreach ($part as $check) {
@@ -267,15 +270,15 @@ class module_controller {
         $sql = $zdbh->prepare("UPDATE x_settings
 								SET so_value_tx='true'
 								WHERE so_name_vc='apache_changed'");
-            $sql->execute();
+        $sql->execute();
     }
 
-	static	function IsvalidIP($ip){
-    	if(!preg_match("^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}^", $ip))
-        	return false;
-    	else
-        return true;
-	}
+    static function IsvalidIP($ip) {
+        if (!preg_match("^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}^", $ip))
+            return false;
+        else
+            return true;
+    }
 
     /**
      * End 'worker' methods.
