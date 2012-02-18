@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * General user infoamtion class.
  * @package zpanelx
- * @subpackage dryden -> ctrl
+ * @subpackage dryden -> controller
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -10,20 +12,26 @@
  */
 class ctrl_users {
 
-    static function GetUserDetail($user = "") {
+    /**
+     * Returns an array of infomation for the account details, package, groups and quota limits for a given UID.
+     * @global obj $zdbh The ZPX database handle.
+     * @param int $uid The ZPanel user account ID.
+     * @return array
+     */
+    static function GetUserDetail($uid = "") {
         global $zdbh;
-
         $userdetail = new runtime_dataobject();
-
-        if ($user == "") {
-            $user = ctrl_auth::CurrentUserID();
+        if ($uid == "") {
+            $uid = ctrl_auth::CurrentUserID();
         }
-        $rows = $zdbh->prepare("SELECT * FROM x_accounts 
-								LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) 
-								LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk) 
-								LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk) 
-								LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk) 
-								WHERE x_accounts.ac_id_pk= " . $user . "");
+        $rows = $zdbh->prepare("
+            SELECT * FROM x_accounts 
+            LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) 
+            LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk) 
+            LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk) 
+            LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk) 
+            WHERE x_accounts.ac_id_pk= " . $uid . "
+          ");
         $rows->execute();
         $dbvals = $rows->fetch();
         $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
@@ -53,7 +61,6 @@ class ctrl_users {
         $userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
         $userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
         $userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
-
         return $userdetail->getDataObject();
     }
 
@@ -74,16 +81,16 @@ class ctrl_users {
     }
 
     /**
-     * Checks that the specified user (from their UID) is active and therefore allowed to login to the panel.
+     * Checks that the specified user is active and therefore allowed to login to the panel.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $zdbh
-     * @param type $userid
+     * @global obj $zdbh The ZPX database handle.
+     * @param int $uid The ZPanel user account ID.
      * @return type 
      */
-    static function CheckUserEnabled($userid) {
+    static function CheckUserEnabled($uid) {
         global $zdbh;
         $domains = 0;
-        $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_id_pk=" . $userid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+        $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_id_pk=" . $uid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
                 return true;
