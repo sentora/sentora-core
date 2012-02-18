@@ -39,7 +39,7 @@ if( file_exists($path) ) {
 				if ($rowpath){
 					echo "<li class=\"file ext_$ext\"><a href=\"./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "\" title=\"Edit Users\">" . htmlentities($file) . "</a></li>";
 				} else {
-				echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($path . $file) . "\">" . htmlentities($file) . "</a></li>";
+				echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($path . $file) . "\" title=\"Not a known Password File\"><font color=\"red\">" . htmlentities($file) . "</font></a></li>";
 				}
 			}
 		}

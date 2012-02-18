@@ -13,16 +13,12 @@
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
 		
-		<!-- TOOL TIPS (Styles title="" in links into nice boxes) -->
-		<link href="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.css" rel="stylesheet" type="text/css"/>
-		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
-		<!-- END TOOL TIPS -->
+	<!-- TOOL TIPS (Styles title="" in links into nice boxes) -->
+	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
+	<!-- END TOOL TIPS -->
 		
     	<!-- JQUERY NAVBAR REQUIREMENTS -->
-    	<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
-
-		<link href="<# ui_tpl_assetfolderpath #>/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
-		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
+	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
     	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.js"></script>
 		<!-- END JQUERY NAVBAR REQUIREMENTS -->
 		
