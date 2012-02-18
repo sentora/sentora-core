@@ -2,20 +2,22 @@
 
 /**
  * Options class communicates with the ZPanel database and can read and write system options.
- *
  * @package zpanelx
- * @subpackage dryden -> ctrl
+ * @subpackage dryden -> controller
  * @version 1.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class ctrl_options {
 
     /**
      * The main 'getter' class used to retrieve the value from the system options table.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global array $zdbh
-     * @param string $name
-     * @return array 
+     * @global obj $zdbh The ZPX database handle.
+     * @param str $name The name of the system option (eg. zpanel_root)
+     * @return str The system option value.
      */
     static function GetOption($name) {
         global $zdbh;
@@ -30,10 +32,11 @@ class ctrl_options {
     /**
      * The main 'setter' class used to write/update system options.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global array $zdbh
-     * @param string $name
-     * @param string $value
-     * @return int (0 = record updated, 1 = record inserted)
+     * @global obj $zdbh The ZPX database handle.
+     * @param str $name The name of the system option (eg. zpanel_root)
+     * @param str $value The value to set.
+     * @param bool $create Instead of update the system option, create it instead?
+     * @return bool
      */
     static function SetSystemOption($name, $value, $create = false) {
         global $zdbh;
@@ -56,9 +59,9 @@ class ctrl_options {
     /**
      * Gets user account information.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global array $zdbh
-     * @param string $name
-     * @return array 
+     * @global obj $zdbh The ZPX database handle.
+     * @param int $id The user account ID. 
+     * @return mixed If the user exists it will return an array containing the account details for the user otherwise if the user doesn't exist will return 'false'.
      */
     static function GetUserInfo($id) {
         global $zdbh;
@@ -73,9 +76,9 @@ class ctrl_options {
     /**
      * Gets user package information.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global array $zdbh
-     * @param string $name
-     * @return array 
+     * @global obj $zdbh The ZPX database handle.
+     * @param int $id The user account ID.
+     * @return mixed If the user and package details exist it will return an array containing the user's package details otherwise will return 'false'. 
      */
     static function GetPackageInfo($id) {
         global $zdbh;
@@ -96,7 +99,7 @@ class ctrl_options {
     /**
      * Checks for predefined avaliable options to choose from.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param type $dval The container to hold the predefined values (seperated with a '|' pipe charater!)
+     * @param str $dval The list of predefined values (seperated with a '|' pipe charater!)
      * @return boolean 
      */
     public static function CheckForPredefinedOptions($dval) {
@@ -108,9 +111,9 @@ class ctrl_options {
     /**
      * Dynamically builds a standard text field and will populate with a value if one is set.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param type $name
-     * @param type $cval
-     * @return string The HTML code for the generated text field.
+     * @param str $name The name to use for the <input> tag.
+     * @param str $cval Current value of the field.
+     * @return str The HTML code for the generated text field.
      */
     public static function OutputSettingTextField($name, $cval = "") {
         if ($cval == "")
@@ -119,7 +122,11 @@ class ctrl_options {
     }
 
     /**
-     * Dynamicaly builds a single line text area and will populate with the value if one is set.
+     * Dynamicaly builds a single line text area and will populate with a value if one is set.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param str $name The name to use for the <textarea> tag.
+     * @param str $cval Current value of the field.
+     * @return str The HTML code for the generated textarea field.
      */
     public static function OutputSettingTextArea($name, $cval = "") {
         return "<textarea cols=\"30\" rows=\"1\" name=\"" . $name . "\">" . $cval . "</textarea>";
@@ -128,10 +135,10 @@ class ctrl_options {
     /**
      * Dynamically builds a drop-down menu of avaliable options based on predfined list of values (seperated with a '|' pipe character!)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param type $name The name of the text field and 'id' to use.
-     * @param type $dval The predefined list of avaliable options.
-     * @param type $cval The current value of the field (optional) - Will autoamtically select this if one is set.
-     * @return string The HTML code for the generated drop down.
+     * @param str $name The name to use for the <select> tag.
+     * @param str $dval The list of predefined values (seperated with a '|' pipe charater!) 
+     * @param str $cval Current value of the field.
+     * @return str The HTML code for the generated drop-down menu.
      */
     public static function OuputSettingMenuField($name, $dval, $cval = "") {
         $values = explode("|", $dval);

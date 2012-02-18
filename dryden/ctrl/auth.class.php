@@ -63,7 +63,7 @@ class ctrl_auth {
     /**
      * The main authentication mechanism, checks username and password against the database and logs the user in on a successful authenitcation request.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $zdbh The ZPX database handle.
+     * @global obj $zdbh The ZPX database handle.
      * @param str $username The username to use to authenticate with.
      * @param str $password The password to use to authenticate with.
      * @param bool $rememberme Remember the password for 30 days? (true/false)
