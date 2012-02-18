@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * Language translation class.
  * @package zpanelx
  * @subpackage dryden -> ui
+ * @version 1.0.0
  * @author Russell Skinner (rskinner@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -13,11 +15,11 @@ class ui_language {
     /**
      * Used to translate a text string into the language preference of the user.
      * @author Russell Skinner (rskinner@zpanelcp.com)
-     * @version 10.0.0
-     * @return string Table name
+     * @global obj $zdbh The ZPX database handle.
+     * @param $message The string to translate.
+     * @return string The transalated string.
      */
     static function translate($message) {
-        global $controller;
         global $zdbh;
         $message = addslashes($message);
         $currentuser = ctrl_users::GetUserDetail();
@@ -37,10 +39,10 @@ class ui_language {
     }
 
     /**
-     * Return array of column names for a table
+     * Return array of column names for a table.
      * @author Russell Skinner (rskinner@zpanelcp.com)
-     * @version 10.0.0
-     * @return string Table name
+     * @param string $table The table name to return that column names from.
+     * @return array List of column names.
      */
     static function GetColumnNames($table) {
         global $zdbh;
