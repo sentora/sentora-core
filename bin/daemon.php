@@ -13,7 +13,6 @@ $raw_path = str_replace("\\", "/", dirname(__FILE__));
 $root_path = str_replace("/bin", "/", $raw_path);
 chdir($root_path);
 
-// Include some files that we need.
 require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 require_once 'inc/dbc.inc.php';

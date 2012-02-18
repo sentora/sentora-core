@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
+ * The the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
  * @package zpanelx
  * @subpackage core -> api
  * @author Bobby Allen (ballen@zpanelcp.com)
