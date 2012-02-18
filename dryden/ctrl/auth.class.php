@@ -2,11 +2,13 @@
 
 /**
  * Authentication class handles ZPanel authentication and handles user sessions.
- *
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class ctrl_auth {
 
@@ -28,9 +30,9 @@ class ctrl_auth {
     }
 
     /**
-     * Sets the users session ID.
+     * Sets a user session ID.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param type $zpuid
+     * @param int $zpuid The ZPanel user account ID to set the session as.
      * @return bool 
      */
     static function SetUserSession($zpuid = 0) {
@@ -43,10 +45,11 @@ class ctrl_auth {
     }
 
     /**
-     * Sets a named session value.
+     * Sets the value of a given named session variable, if does not exist will create the session variable too.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param type $zpuid
-     * @return bool 
+     * @param str $name The name of the session variable to set.
+     * @param str $value The value of the session variable to set.
+     * @return boolean 
      */
     static function SetSession($name, $value = "") {
         if (isset($name)) {
@@ -58,16 +61,16 @@ class ctrl_auth {
     }
 
     /**
-     * The main authentication mechanism, checks user and password against the database.
+     * The main authentication mechanism, checks username and password against the database and logs the user in on a successful authenitcation request.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $zdbh
-     * @param type $username
-     * @param type $password
-     * @param type $rememberme
-     * @param type $checkingcookie
-     * @return type 
+     * @global type $zdbh The ZPX database handle.
+     * @param str $username The username to use to authenticate with.
+     * @param str $password The password to use to authenticate with.
+     * @param bool $rememberme Remember the password for 30 days? (true/false)
+     * @param bool $checkingcookie The authentication request has come from a set cookie.
+     * @return mixed Returns 'false' if the authentication fails otherwise will return the user ID. 
      */
-    function Authenticate($username, $password, $rememberme = false, $iscookie = false) {
+    static function Authenticate($username, $password, $rememberme = false, $iscookie = false) {
         global $zdbh;
         $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password' AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL")->fetch();
         if ($rows) {
@@ -87,7 +90,7 @@ class ctrl_auth {
     }
 
     /**
-     * Ends a user's server session.
+     * Destroys a session and ends a user's Zpanel session.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @return bool
      */
@@ -111,21 +114,10 @@ class ctrl_auth {
     }
 
     /**
-     * For security reasons, this blanks out the current object stored username and password.
-     * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return type 
-     */
-    function ResetCredentials() {
-        $this->username = null;
-        $this->password = null;
-        return true;
-    }
-
-    /**
      * Returns the UID (User ID) of the current logged in user.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $controller
-     * @return type 
+     * @global obj $controller The Zpanel controller object.
+     * @return int The current user's session ID. 
      */
     static function CurrentUserID() {
         global $controller;
