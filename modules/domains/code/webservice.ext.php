@@ -44,14 +44,16 @@ class webservice extends ws_xmws {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $response_xml = "\n";
         $alldomains = module_controller::ListDomains($request_data['content']);
-        foreach ($alldomains as $domain) {
-            $response_xml = $response_xml . ws_xmws::NewXMLContentSection('domain', array(
-                        'id' => $domain['id'],
-                        'uid' => $domain['uid'],
-                        'domain' => $domain['name'],
-                        'homedirectory' => $domain['directory'],
-                        'active' => $domain['active'],
-                    ));
+        if (!fs_director::CheckForEmptyValue($alldomains)) {
+            foreach ($alldomains as $domain) {
+                $response_xml = $response_xml . ws_xmws::NewXMLContentSection('domain', array(
+                            'id' => $domain['id'],
+                            'uid' => $domain['uid'],
+                            'domain' => $domain['name'],
+                            'homedirectory' => $domain['directory'],
+                            'active' => $domain['active'],
+                        ));
+            }
         }
 
         $dataobject = new runtime_dataobject();

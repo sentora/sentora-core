@@ -147,7 +147,7 @@ class ws_xmws {
      */
     function XMLDataToArray($contents, $get_attributes = 1, $priority = 'tag') {
         if (!function_exists('xml_parser_create')) {
-            return array();
+            return array('message' => 'xml_parser_create function does not exist on the server!');
         }
         $parser = xml_parser_create('');
         xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8");
