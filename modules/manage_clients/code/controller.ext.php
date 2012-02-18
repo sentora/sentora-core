@@ -56,9 +56,9 @@ class module_controller {
             while ($rowclients = $sql->fetch()) {
                 if ($rowclients['ac_user_vc'] != "zadmin") {
                     $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-                    $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
+                    $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
                     $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
-                    $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']));
+                    $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']));
                     $currentuser['bandwidthquotareadable'] = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
                     array_push($res, $currentuser);
                 }
@@ -80,9 +80,9 @@ class module_controller {
             while ($rowclients = $sql->fetch()) {
                 if ($rowclients['ac_user_vc'] != "zadmin") {
                     $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
-                    $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
+                    $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
                     $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
-                    $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']));
+                    $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']));
                     $currentuser['bandwidthquotareadable'] = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
                     array_push($res, $currentuser);
                 }
@@ -334,11 +334,11 @@ class module_controller {
         $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
         $sql->execute();
         // Lets create the client diectories
-        fs_filehandler::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username);
+        fs_directorr::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username);
 		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username, 0777);
-		fs_filehandler::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/public_html");
+		fs_directorr::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/public_html");
 		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
-		fs_filehandler::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
+		fs_directorr::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
 		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
         runtime_hook::Execute('OnAfterCreateClient');
 		self::$resetform=true;

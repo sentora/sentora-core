@@ -270,7 +270,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		if ($currentuser['parkeddomainquota'] > fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid'])){
+		if ($currentuser['parkeddomainquota'] > ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid'])){
 			return true;
 		} else {
 			return false;
@@ -363,7 +363,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $line  = "";
         $total = $currentuser['parkeddomainquota'];
-        $used  = fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid']);
+        $used  = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
         $free  = $total - $used;
         $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
         return $line;

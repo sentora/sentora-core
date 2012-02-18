@@ -14,7 +14,7 @@ class ui_tpl_progbardisk {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$diskquota = $currentuser['diskquota'];
-		$diskspace = fs_director::GetQuotaUsages('diskspace', $currentuser['userid']);
+		$diskspace = ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']);
 		if (!fs_director::CheckForEmptyValue($diskspace)){
 			$per = ($diskspace / $diskquota) * 100;
 			$percent = round($per, 0);

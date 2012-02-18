@@ -14,7 +14,7 @@ class ui_tpl_usagebandwidth {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		
-		$bandwidth = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']));
+		$bandwidth = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']));
 					
 		return $bandwidth;
     }

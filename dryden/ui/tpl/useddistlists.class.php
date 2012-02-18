@@ -13,7 +13,7 @@ class ui_tpl_useddistlists {
     public function Template() {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$distlists = fs_director::GetQuotaUsages('distlists', $currentuser['userid']);
+		$distlists = ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']);
 		if ($distlists <> 0){
         	return (string) $distlists;
 		} 

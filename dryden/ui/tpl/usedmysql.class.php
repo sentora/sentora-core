@@ -13,7 +13,7 @@ class ui_tpl_usedmysql {
     public function Template() {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$mysql = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+		$mysql = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
 		if ($mysql <> 0){
         	return (string) $mysql;
 		} 

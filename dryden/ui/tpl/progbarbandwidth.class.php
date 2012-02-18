@@ -14,7 +14,7 @@ class ui_tpl_progbarbandwidth {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$bandwidthquota = $currentuser['bandwidthquota'];
-		$bandwidth = fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']);		
+		$bandwidth = ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']);		
 		if (!fs_director::CheckForEmptyValue($bandwidth)){
 			$per = ($bandwidth / $bandwidthquota) * 100;
 			$percent = round($per, 0);

@@ -45,8 +45,8 @@ class module_controller {
                         'clientid' => $rowclients['ac_id_pk'],
                         'packagename' => $clientdetail['packagename'],
                         'usergroup' => $clientdetail['usergroup'],
-                        'currentdisk' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
-                        'currentbandwidth' => fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
+                        'currentdisk' => fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
+                        'currentbandwidth' => fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
                 }
             }
             return $res;

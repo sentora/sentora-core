@@ -13,7 +13,7 @@ class ui_tpl_usedforwarders {
     public function Template() {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$forwarders = fs_director::GetQuotaUsages('forwarders', $currentuser['userid']);
+		$forwarders = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
 		if ($forwarders <> 0){
         	return (string) $forwarders;
 		} 

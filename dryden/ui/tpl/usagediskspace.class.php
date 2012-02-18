@@ -14,7 +14,7 @@ class ui_tpl_usagediskspace {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		
-		$diskspace = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
+		$diskspace = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
 					
 		return $diskspace;
     }

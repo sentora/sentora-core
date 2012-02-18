@@ -109,7 +109,7 @@ class module_controller {
             if ($autohome == 1) {
                 $destination = "/" . str_replace(".", "_", $domain);
                 $vhost_path = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
-                fs_filehandler::CreateDirectory($vhost_path);
+                fs_directorr::CreateDirectory($vhost_path);
 				fs_director::SetDirectoryPermissions($vhost_path, 0777);
                 //** Existing Home Directory **//
             } else {
@@ -118,7 +118,7 @@ class module_controller {
             }
             // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
             // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
-            fs_filehandler::CreateDirectory($vhost_path . "/_errorpages/");
+            fs_directorr::CreateDirectory($vhost_path . "/_errorpages/");
             $errorpages = ctrl_options::GetOption('static_dir') . "/errorpages/";
             if (is_dir($errorpages)) {
                 if ($handle = @opendir($errorpages)) {
@@ -308,7 +308,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['domainquota'] > fs_director::GetQuotaUsages('domains', $currentuser['userid'])) {
+        if ($currentuser['domainquota'] > ctrl_users::GetQuotaUsages('domains', $currentuser['userid'])) {
             return true;
         } else {
             return false;
@@ -413,7 +413,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $line = "";
         $total = $currentuser['domainquota'];
-        $used = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
+        $used = ctrl_users::GetQuotaUsages('domains', $currentuser['userid']);
         $free = $total - $used;
         $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
         return $line;

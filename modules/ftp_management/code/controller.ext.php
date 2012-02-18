@@ -350,7 +350,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['ftpaccountsquota'] > fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid'])) {
+        if ($currentuser['ftpaccountsquota'] > ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid'])) {
             return true;
         } else {
             return false;
@@ -362,7 +362,7 @@ class module_controller {
 		$currentuser = ctrl_users::GetUserDetail();
 		$line  = "";
 		$ftpquota = $currentuser['ftpaccountsquota'];
-		$ftp = fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
+		$ftp = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
 		$total= $ftpquota;
 		$used = $ftp;
 		$free = $total - $used;		

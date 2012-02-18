@@ -13,7 +13,7 @@ class ui_tpl_usedemail {
     public function Template() {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
-		$email = fs_director::GetQuotaUsages('mailboxes', $currentuser['userid']);
+		$email = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
 		if ($email <> 0){
         	return (string) $email;
 		} 

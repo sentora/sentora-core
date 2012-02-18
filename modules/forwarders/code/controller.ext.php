@@ -326,7 +326,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $line = "";
         $forwardersquota = $currentuser['forwardersquota'];
-        $forwarders = fs_director::GetQuotaUsages('forwarders', $currentuser['userid']);
+        $forwarders = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
         $total = $forwardersquota;
         $used = $forwarders;
         $free = $total - $used;
