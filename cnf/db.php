@@ -1,7 +1,7 @@
 <?php
 
-$host = "ballen.co.uk";
+$host = "localhost";
 $dbname = "zpanelx_dev";
-$user = "zpanelx";
-$pass = "zpanelx";
+$user = "root";
+$pass = "";
 ?>
