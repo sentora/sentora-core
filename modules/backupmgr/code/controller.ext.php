@@ -75,15 +75,15 @@ class module_controller {
         // We now see what the OS is before we work out what compression command to use..
         if (sys_versions::ShowOSPlatformVersion() == "Windows") {
             $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
-        } else {
-            $resault = exec(ctrl_options::GetOption('zip_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " " . $homedir . "/public_html/*");
+        } else {//cd /var/zpanel/hostdata/zadmin/; zip -r backups/backup.zip public_html/
+            $resault = exec("cd ".$homedir ."/ && " . ctrl_options::GetOption('zip_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " public_html/*");
             @chmod(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", 0777);
         }
         // Now lets backup all MySQL datbases for the user and add them to the archive...
-        $sql = "SELECT COUNT(*) FROM x_mysql WHERE my_acc_fk = '" . $userid . "'";
+        $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_mysql WHERE my_acc_fk=" . $userid . "");
+                $sql = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL");
                 $sql->execute();
                 while ($row_mysql = $sql->fetch()) {
                     $bkcommand = ctrl_options::GetOption('mysqldump_exe') . " -h " . $host . " -u " . $user . " -p" . $pass . " --no-create-db " . $row_mysql['my_name_vc'] . " > " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql";
@@ -92,7 +92,7 @@ class module_controller {
                     if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                         $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " u " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql"));
                     } else {
-                        $resault = exec(ctrl_options::GetOption('zip_exe') . " " . ctrl_options::GetOption('temp_dir') . $backupname . "  " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
+                        $resault = exec("cd ".ctrl_options::GetOption('temp_dir') ."/ && " . ctrl_options::GetOption('zip_exe') . " " . ctrl_options::GetOption('temp_dir') . $backupname . "  " .$row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
                     }
                     unlink(ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
                 }
