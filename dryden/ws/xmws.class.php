@@ -37,7 +37,7 @@ class ws_xmws {
      * @author Bobby Allen (ballen@zpanelcp.com)
      */
     function __construct() {
-        $this->wsdata = fs_filehandler::ReadFileContents('php://input');
+        $this->wsdata = ws_generic::ProcessRawRequest();
         $this->wsdataarray = $this->RawXMWSToArray($this->wsdata);
         $this->currentmodule = new module_controller;
     }

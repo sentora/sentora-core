@@ -100,7 +100,7 @@ class module_controller {
         return $retval;
     }
 
-    public function ExecuteAddDomain($uid, $domain, $destination, $autohome) {
+    static function ExecuteAddDomain($uid, $domain, $destination, $autohome) {
         global $zdbh;
         global $controller;
         $retval = FALSE;
