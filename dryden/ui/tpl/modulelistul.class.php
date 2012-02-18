@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * Generic template place holder class.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -11,7 +13,6 @@
 class ui_tpl_modulelistul {
 
     function Template() {
-        global $controller;
         $line = "";
         $show = 0;
         $modcats = ui_moduleloader::GetModuleCats();
@@ -26,7 +27,6 @@ class ui_tpl_modulelistul {
             $line .= "<ul>";
             $line .= "<lh>" . $modcat['mc_name_vc'] . "</lh>";
             foreach ($mods as $mod) {
-                $translatename = ui_language::translate($mod['mo_name_vc']);
                 $line .= "<li><a href=\"?module=" . $mod['mo_folder_vc'] . "\">" . ui_language::translate($mod['mo_name_vc']) . "</a></li>";
             }
             $line .= "</ul></div>";
