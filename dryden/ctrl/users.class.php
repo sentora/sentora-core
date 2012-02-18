@@ -14,6 +14,7 @@ class ctrl_users {
 
     /**
      * Returns an array of infomation for the account details, package, groups and quota limits for a given UID.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $zdbh The ZPX database handle.
      * @param int $uid The ZPanel user account ID.
      * @return array

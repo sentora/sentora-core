@@ -16,8 +16,8 @@ class ctrl_options {
      * The main 'getter' class used to retrieve the value from the system options table.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $zdbh The ZPX database handle.
-     * @param str $name The name of the system option (eg. zpanel_root)
-     * @return str The system option value.
+     * @param string $name The name of the system option (eg. zpanel_root)
+     * @return string The system option value.
      */
     static function GetOption($name) {
         global $zdbh;
@@ -33,8 +33,8 @@ class ctrl_options {
      * The main 'setter' class used to write/update system options.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $zdbh The ZPX database handle.
-     * @param str $name The name of the system option (eg. zpanel_root)
-     * @param str $value The value to set.
+     * @param string $name The name of the system option (eg. zpanel_root)
+     * @param string $value The value to set.
      * @param bool $create Instead of update the system option, create it instead?
      * @return bool
      */
@@ -99,7 +99,7 @@ class ctrl_options {
     /**
      * Checks for predefined avaliable options to choose from.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param str $dval The list of predefined values (seperated with a '|' pipe charater!)
+     * @param string $dval The list of predefined values (seperated with a '|' pipe charater!)
      * @return boolean 
      */
     public static function CheckForPredefinedOptions($dval) {
@@ -111,9 +111,9 @@ class ctrl_options {
     /**
      * Dynamically builds a standard text field and will populate with a value if one is set.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param str $name The name to use for the <input> tag.
-     * @param str $cval Current value of the field.
-     * @return str The HTML code for the generated text field.
+     * @param string $name The name to use for the <input> tag.
+     * @param string $cval Current value of the field.
+     * @return string The HTML code for the generated text field.
      */
     public static function OutputSettingTextField($name, $cval = "") {
         if ($cval == "")
@@ -124,9 +124,9 @@ class ctrl_options {
     /**
      * Dynamicaly builds a single line text area and will populate with a value if one is set.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param str $name The name to use for the <textarea> tag.
-     * @param str $cval Current value of the field.
-     * @return str The HTML code for the generated textarea field.
+     * @param string $name The name to use for the <textarea> tag.
+     * @param string $cval Current value of the field.
+     * @return string The HTML code for the generated textarea field.
      */
     public static function OutputSettingTextArea($name, $cval = "") {
         return "<textarea cols=\"30\" rows=\"1\" name=\"" . $name . "\">" . $cval . "</textarea>";
@@ -135,10 +135,10 @@ class ctrl_options {
     /**
      * Dynamically builds a drop-down menu of avaliable options based on predfined list of values (seperated with a '|' pipe character!)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param str $name The name to use for the <select> tag.
-     * @param str $dval The list of predefined values (seperated with a '|' pipe charater!) 
-     * @param str $cval Current value of the field.
-     * @return str The HTML code for the generated drop-down menu.
+     * @param string $name The name to use for the <select> tag.
+     * @param string $dval The list of predefined values (seperated with a '|' pipe charater!) 
+     * @param string $cval Current value of the field.
+     * @return string The HTML code for the generated drop-down menu.
      */
     public static function OuputSettingMenuField($name, $dval, $cval = "") {
         $values = explode("|", $dval);

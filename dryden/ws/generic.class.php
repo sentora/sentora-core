@@ -13,7 +13,7 @@ class ws_generic {
     /**
      * This function provides very basic way of retrieving a result as a string from a given URL (RAW) this does not need to be a 'true' web service.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param str $requestURL 
+     * @param string $requestURL 
      */
     static function ReadURLRequestResult($requestURL) {
         ob_start();

@@ -47,8 +47,8 @@ class ctrl_auth {
     /**
      * Sets the value of a given named session variable, if does not exist will create the session variable too.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param str $name The name of the session variable to set.
-     * @param str $value The value of the session variable to set.
+     * @param string $name The name of the session variable to set.
+     * @param string $value The value of the session variable to set.
      * @return boolean 
      */
     static function SetSession($name, $value = "") {
@@ -64,8 +64,8 @@ class ctrl_auth {
      * The main authentication mechanism, checks username and password against the database and logs the user in on a successful authenitcation request.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $zdbh The ZPX database handle.
-     * @param str $username The username to use to authenticate with.
-     * @param str $password The password to use to authenticate with.
+     * @param string $username The username to use to authenticate with.
+     * @param string $password The password to use to authenticate with.
      * @param bool $rememberme Remember the password for 30 days? (true/false)
      * @param bool $checkingcookie The authentication request has come from a set cookie.
      * @return mixed Returns 'false' if the authentication fails otherwise will return the user ID. 
