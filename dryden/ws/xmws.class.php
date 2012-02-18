@@ -2,39 +2,39 @@
 
 /**
  * The ZPanel(X) (M)odular (W)eb (S)ervice class.
- *
  * @package zpanelx
- * @subpackage dryden -> webservice
- * @version 10.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @subpackage dryden -> webservices
+ * @version 1.0.0
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class ws_xmws {
 
     /**
-     * Used to store the current RAW XML request data.
-     * @var string 
+     * @var string Used to store the current RAW XML request data.
      */
     var $wsdata;
 
     /**
-     * Used to store the array of request variables.
+     * @var string Used to store the array of request variables.
      */
     var $wsdataarray;
 
     /**
-     * Current module controller
+     * @var obj Current module controller
      */
     var $currentmodule;
 
     /**
-     * Authenticated User ID
+     * @var int Authenticated User ID
      */
     var $authuserid;
 
     /**
      * Constructs the object setting the web service request data to a class variable.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      */
     function __construct() {
         $this->wsdata = fs_filehandler::ReadFileContents('php://input');
@@ -44,9 +44,7 @@ class ws_xmws {
 
     /**
      * Requests that the web service method requires that the user must be authenticated wth the server.
-     * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @return type 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      */
     public function RequireUserAuth() {
         $ws_auth = new ctrl_auth;
@@ -65,8 +63,7 @@ class ws_xmws {
     /**
      * Checks that the Server API given in the webservice request XML is valid and matches the one stored in the x_settings table.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @return bool 
+     * @return boolean
      */
     public function CheckServerAPIKey() {
         if ($this->wsdataarray['apikey'] <> ctrl_options::GetOption('apikey')) {
@@ -81,8 +78,7 @@ class ws_xmws {
     /**
      * Will format and send a valid XMWS XML response.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param array $responsearray 
+     * @param array $responsearray Array of data to send.
      */
     public function SendResponse($responsearray) {
         if ($responsearray['response'] == '')
@@ -96,11 +92,10 @@ class ws_xmws {
     }
 
     /**
-     * Takes RAW XMWS XML and converts its contents into a usable (array).
+     * Takes RAW XMWS XML request data and converts its contents into a usable data array.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $xml
-     * @return type 
+     * @param string $xml The RAW XML content.
+     * @return array Array containing all the request data that has been received.
      */
     public function RawXMWSToArray($xml) {
         $return_dataobject = new runtime_dataobject();
@@ -117,7 +112,6 @@ class ws_xmws {
     /**
      * A simple way to build an XML section for the <content> tag, perfect for multiple data lines etc.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @param string $name The name of the section <tag>.
      * @param array $tags An associated array of the tag names and values to be added.
      * @return string A formatted XML section block which can then be used in the <content> tag if required.
@@ -134,10 +128,9 @@ class ws_xmws {
     /**
      * A simple way to build an XML tag, for simple single line XML data.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @param string $name The name of the <tag>.
-     * @param array $value The value of the <tag>.
-     * @return string A formatted XML line designed to be used in the <content> tag.
+     * @param string $value The value of the <tag>.
+     * @return string A formatted (single tab indented) XML line designed to be used in the <content> tag.
      */
     static function NewXMLTag($name, $value) {
         $xml = "\t<" . $name . ">" . $value . "</" . $name . ">\n";
@@ -147,10 +140,10 @@ class ws_xmws {
     /**
      * Takes an XML string and converts it into a usable PHP array.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param $contents string The XML content to convert to a PHP array.
-     * @param $get_arrtibutes bool Retieve the tag attrubtes too?
-     * @param $priotiry string
-     * @return array
+     * @param string $contents The XML content to convert to a PHP array.
+     * @param int $get_arrtibutes Retieve the tag attrubtes too (1 = yes, 0 =no)?
+     * @param string $priotiry What should take priority? tag or attributes?
+     * @return array Associated array of the XML tag data.
      */
     function XMLDataToArray($contents, $get_attributes = 1, $priority = 'tag') {
         if (!function_exists('xml_parser_create')) {
