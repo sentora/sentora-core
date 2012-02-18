@@ -4,7 +4,7 @@ class fs_filehandler {
 
     /**
      * Clear all text in a file.
-     * @author RusTus (rustus@zpanel.co.uk) 
+     * @author RusTus (rustus@zpanelcp.com) 
      * @version 10.0.0
      */
     static function ResetFile($file) {
@@ -18,7 +18,7 @@ class fs_filehandler {
 
     /**
      * Copies without overwritting an existing file, adding permissions for Linux.
-     * @author RusTus (rustus@zpanel.co.uk) 
+     * @author RusTus (rustus@zpanelcp.com) 
      * @version 10.0.0
      */
     static function CopyFileSafe($src, $dest) {
@@ -32,7 +32,7 @@ class fs_filehandler {
 
     /**
      * Copies and overwrites existing file, adding permissions for Linux.
-     * @author RusTus (rustus@zpanel.co.uk) 
+     * @author RusTus (rustus@zpanelcp.com) 
      * @version 10.0.0
      */
     static function CopyFile($src, $dest) {
@@ -44,10 +44,10 @@ class fs_filehandler {
 
     /**
      * Create blank or populated with permissions, including the path.
-     * @author RusTus (rustus@zpanel.co.uk) 
+     * @author RusTus (rustus@zpanelcp.com) 
      * @version 10.0.0
      */
-    static function CreateFile($path, $chmod="0777", $string="") {
+    static function CreateFile($path, $chmod = "0777", $string = "") {
         if (!is_file($path)) {
             preg_match('`^(.+)/([a-zA-Z0-9]+\.[a-z]+)$`i', $path, $matches);
             $directory = $matches[1];
@@ -82,7 +82,7 @@ class fs_filehandler {
 
     /**
      * Create proper line ending based on server version.
-     * @author RusTus (rustus@zpanel.co.uk) 
+     * @author RusTus (rustus@zpanelcp.com) 
      * @version 10.0.0
      */
     static function NewLine() {
@@ -112,7 +112,7 @@ class fs_filehandler {
      * @param string $file
      * @return type 
      */
-    static function UpdateFile($path, $chmod="0777", $string="") {
+    static function UpdateFile($path, $chmod = "0777", $string = "") {
         if (!file_exists($path))
             fs_filehandler::ResetFile($path);
         $fp = fopen($path, 'w');
@@ -130,9 +130,7 @@ class fs_filehandler {
      * @param string $content The content to add to the file.
      * @param int $pos Where to add the text. 0 = At the start, 1 = At the end of the file.
      */
-    static
-
-    function AddTextToFile($file, $content, $pos) {
+    static function AddTextToFile($file, $content, $pos) {
         $current_version = @fs_filehandler::ReadFileContents($file);
         if ($pos == 0) {
             $new_version = $content . fs_filehandler::NewLine() . $current_version;

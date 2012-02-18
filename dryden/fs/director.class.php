@@ -139,7 +139,7 @@ class fs_director {
 
     /**
      * Checks and converts a given value.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value, string $true, string $false
      * @return boolean 
@@ -154,7 +154,7 @@ class fs_director {
 
     /**
      * Check for an empty value.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value, string $true, string $false
      * @return boolean 
@@ -169,7 +169,7 @@ class fs_director {
 
     /**
      * Checks the value of a checkbox and returns if 0 if not ticked or 1 if it is ticked.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -186,7 +186,7 @@ class fs_director {
 
     /**
      * Checks the value of a checkbox and returns string "CHECKED" if ticked and NULL if not ticked.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -202,7 +202,7 @@ class fs_director {
 
     /**
      * Returns the current usage of a particular resource.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -274,7 +274,7 @@ class fs_director {
 
     /**
      * Returns a random password.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -312,7 +312,7 @@ class fs_director {
 
     /**
      * Checks that an IP address is valid (v6 and v4).
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -327,7 +327,7 @@ class fs_director {
 
     /**
      * Checks that an IPv4 address is valid.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -342,7 +342,7 @@ class fs_director {
 
     /**
      * Checks that an IPv6 address is valid.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
@@ -357,7 +357,7 @@ class fs_director {
 
     /**
      * Checks that an email address is valid.
-     * @author Bobby Allen (ballen@zpanel.co.uk) 
+     * @author Bobby Allen (ballen@zpanelcp.com) 
      * @version 10.0.0
      * @param string $value
      * @return boolean 
