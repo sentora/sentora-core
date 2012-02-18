@@ -1,19 +1,25 @@
 <?php
 
 /**
- * Email class used for sending out emails from ZPanel.
- * This class extends on the PHPMailer library included in etc/lib/PHPMailer!
- *
+ * Email class used for sending out emails from ZPanel. This class extends on the PHPMailer library included in etc/lib/PHPMailer!
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 require './etc/lib/PHPMailer/class.phpmailer.php';
 
 class sys_email extends PHPMailer {
 
-    function SendEmail() {
+    /**
+     * Sends the email with the contents of the object (Body etc. set using the parant calls in phpMailer!)
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @return boolean 
+     */
+    public function SendEmail() {
         $this->From = ctrl_options::GetOption('email_from_address');
         $this->FromName = ctrl_options::GetOption('email_from_name');
         if (ctrl_options::GetOption('email_smtp') <> 'false') {
@@ -34,18 +40,18 @@ class sys_email extends PHPMailer {
         $send_resault = $this->Send();
         $error = ob_get_contents();
         ob_clean();
-        if ($send_resault){
+        if ($send_resault) {
             runtime_hook::Execute('OnSuccessfulSendEmail');
             return true;
         } else {
-        $logger = new debug_logger();
-        $logger->method = ctrl_options::GetOption('logmode');
-        $logger->logcode = "061";
-        $logger->detail = 'Error sending email (using sys_email): ' . $error . '';
-        $logger->writeLog();
-        runtime_hook::Execute('OnFailedSendEmail');
-        return false;
-    }
+            $logger = new debug_logger();
+            $logger->method = ctrl_options::GetOption('logmode');
+            $logger->logcode = "061";
+            $logger->detail = 'Error sending email (using sys_email): ' . $error . '';
+            $logger->writeLog();
+            runtime_hook::Execute('OnFailedSendEmail');
+            return false;
+        }
     }
 
 }

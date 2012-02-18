@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A search and retrieve/replace class.
+ * Intergration hooks class.
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.0
