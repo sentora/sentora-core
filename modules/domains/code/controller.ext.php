@@ -110,7 +110,7 @@ class module_controller {
                 $destination = "/" . str_replace(".", "_", $domain);
                 $vhost_path = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
                 fs_directorr::CreateDirectory($vhost_path);
-				fs_director::SetDirectoryPermissions($vhost_path, 0777);
+				fs_director::SetFileSystemPermissions($vhost_path, 0777);
                 //** Existing Home Directory **//
             } else {
                 $destination = "/" . $destination;

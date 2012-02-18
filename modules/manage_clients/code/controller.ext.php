@@ -335,11 +335,11 @@ class module_controller {
         $sql->execute();
         // Lets create the client diectories
         fs_directorr::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username);
-		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username, 0777);
+		fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username, 0777);
 		fs_directorr::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/public_html");
-		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
+		fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
 		fs_directorr::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
-		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
+		fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
         runtime_hook::Execute('OnAfterCreateClient');
 		self::$resetform=true;
 		self::$ok=true;

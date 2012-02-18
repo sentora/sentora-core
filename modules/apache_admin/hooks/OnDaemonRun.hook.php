@@ -236,7 +236,7 @@
         	fs_director::CreateDirectory(ctrl_options::GetOption('apache_budir'));
         }
 		copy(ctrl_options::GetOption('apache_vhost'), ctrl_options::GetOption('apache_budir'). "VHOST_BACKUP_".time()."");
-		fs_director::SetDirectoryPermissions(ctrl_options::GetOption('apache_budir'). ctrl_options::GetOption('apache_vhost').".BU", 0777);
+		fs_director::SetFileSystemPermissions(ctrl_options::GetOption('apache_budir'). ctrl_options::GetOption('apache_vhost').".BU", 0777);
 		if(ctrl_options::GetOption('apache_purgebu') == strtolower("true")){
 			echo "Apache VHost purges are enabled... Purging backups older than: " .ctrl_options::GetOption('apache_purge_date') . " days..." . fs_filehandler::NewLine();
 			echo "[FILE][PURGE_DATE][FILE_DATE][ACTION]" . fs_filehandler::NewLine();

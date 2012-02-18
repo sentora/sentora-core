@@ -9,8 +9,8 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-$host = "ballen.co.uk";
+$host = "localhost";
 $dbname = "zpanelx_dev";
-$user = "zpanelx";
-$pass = "zpanelx";
+$user = "root";
+$pass = "";
 ?>

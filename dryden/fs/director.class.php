@@ -87,7 +87,7 @@ class fs_director {
         if (!file_exists($path)) {
             runtime_hook::Execute('OnBeforeDirectoryCreate');
             @mkdir($path, 0777);
-            fs_director::SetDirectoryPermissions($path, 0777);
+            fs_director::SetFileSystemPermissions($path, 0777);
             runtime_hook::Execute('OnAfterDirectoryCreate');
             $retval = true;
         } else {
@@ -125,11 +125,11 @@ class fs_director {
      * @param int $mode The UNIX permissions octal (eg. 0777 or 777)
      * @return boolean 
      */
-    static function SetDirectoryPermissions($path, $mode) {
+    static function SetFileSystemPermissions($path, $mode) {
         if (file_exists($path)) {
-            runtime_hook::Execute('OnBeforeSetDirectoryPerms');
+            runtime_hook::Execute('OnBeforeSetFileSystemPerms');
             @chmod($path, $mode);
-            runtime_hook::Execute('OnAfterSetDirectoryPerms');
+            runtime_hook::Execute('OnAfterSetFileSystemPerms');
             $retval = true;
         } else {
             $retval = false;

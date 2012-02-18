@@ -36,7 +36,7 @@ class fs_filehandler {
         if (!file_exists($dest)) {
             @copy($src, $dest);
             if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
-                fs_director::SetDirectoryPermissions($dest, 0777);
+                fs_director::SetFileSystemPermissions($dest, 0777);
             }
         }
     }
@@ -50,7 +50,7 @@ class fs_filehandler {
     static function CopyFile($src, $dest) {
         @copy($src, $dest);
         if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
-            fs_director::SetDirectoryPermissions($dest, 0777);
+            fs_director::SetFileSystemPermissions($dest, 0777);
         }
     }
 
@@ -74,7 +74,7 @@ class fs_filehandler {
             $fp = fopen($path, 'w');
             fwrite($fp, $string);
             fclose($fp);
-            fs_director::SetDirectoryPermissions($dest, 0777);
+            fs_director::SetFileSystemPermissions($dest, 0777);
         }
     }
 
@@ -116,7 +116,7 @@ class fs_filehandler {
         $fp = fopen($path, 'w');
         fwrite($fp, $string);
         fclose($fp);
-        fs_director::SetDirectoryPermissions($path, $chmod);
+        fs_director::SetFileSystemPermissions($path, $chmod);
         return true;
     }
 
