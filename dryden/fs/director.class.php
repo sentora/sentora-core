@@ -1,12 +1,21 @@
 <?php
 
+/**
+ * A class to manage common file system operations.
+ * @package zpanelx
+ * @subpackage dryden -> filesystem
+ * @version 1.0.0
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
+ */
 class fs_director {
 
     /**
      * Corrects standard UNIX/PHP file slashes '/' to Windows slashes '\'.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $string
+     * @param string $string The string to that of which to convert the slashes in.
      * @return string 
      */
     static function SlashesToWin($string) {
@@ -16,8 +25,7 @@ class fs_director {
     /**
      * Converts Windows slashes '\' to UNIX/PHP path slashes '/'.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $string
+     * @param string $string The string to that of which to convert the slashes in.
      * @return string
      */
     static function SlashesToNIX($string) {
@@ -27,8 +35,7 @@ class fs_director {
     /**
      * Converts to proper slashes based on OS platform.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $string
+     * @param string $string The string to that of which to convert the slashes in.
      * @return string
      */
     static function ConvertSlashes($string) {
@@ -41,10 +48,9 @@ class fs_director {
     }
 
     /**
-     * Remove the last character from a string.
+     * Remove double slashes.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $string
+     * @param string $string The string to that of which to convert the slashes in.
      * @return string
      */
     static function RemoveDoubleSlash($var) {
@@ -53,11 +59,10 @@ class fs_director {
     }
 
     /**
-     * Takes a raw file size value (bytes) and converts it to human readable size with an abbreavation.
+     * Takes a raw file size value (bytes) and converts it to human readable size with the correct abbreavation.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param int $size
-     * @return string 
+     * @param int $size Number of bytes to convert to human readable format.
+     * @return string Human readable version eg. 250 MB
      */
     static function ShowHumanFileSize($size) {
         if ($size / 1024000000 > 1) {
@@ -73,10 +78,9 @@ class fs_director {
     }
 
     /**
-     * Creates a directory (if it doesn't already exist!)
+     * Creates a directory if it doesn't already exist!
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param type $path 
+     * @param string $path The full path of the folder to create.
      * @return boolean
      */
     static function CreateDirectory($path) {
@@ -95,8 +99,7 @@ class fs_director {
     /**
      * Removes (Deletes) a directory and all folders/file within it.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $path
+     * @param string $path The full path of the folder to delete.
      * @return boolean
      */
     static function RemoveDirectory($path) {
@@ -110,19 +113,16 @@ class fs_director {
             self::RemoveDirectory($path . '/' . $obj, true);
             runtime_hook::Execute('OnAfterDirectoryDelete');
         }
-
         closedir($dh);
         @rmdir($path);
         return true;
     }
 
-
     /**
      * Sets file/directory permissions on a given path.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $path
-     * @param int $mode
+     * @param string $path The full path of the file or folder on which to set the permissions on.
+     * @param int $mode The UNIX permissions octal (eg. 0777 or 777)
      * @return boolean 
      */
     static function SetDirectoryPermissions($path, $mode) {
@@ -138,10 +138,11 @@ class fs_director {
     }
 
     /**
-     * Checks and converts a given value.
+     * Checks and converts a given value if the value is of a certain state. (designed to be used with HTML checkboxes).
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value, string $true, string $false
+     * @param string $value The value to check on which is null.
+     * @param string $true If the result is 'true' return this.
+     * @param string $false If the result is 'false' return this.
      * @return boolean 
      */
     static function CheckForNullValue($value, $true, $false) {
@@ -155,8 +156,7 @@ class fs_director {
     /**
      * Check for an empty value.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value, string $true, string $false
+     * @param string $value The value of which to check if its empty.
      * @return boolean 
      */
     static function CheckForEmptyValue($value) {
@@ -169,10 +169,9 @@ class fs_director {
 
     /**
      * Checks the value of a checkbox and returns if 0 if not ticked or 1 if it is ticked.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
-     * @return boolean 
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $value The value of which to check.
+     * @return int Returns 1 if the checkbox is ticked and 0 if the text box is unticked.
      */
     static function GetCheckboxValue($value) {
         $checkbox_status = $value;
@@ -187,9 +186,8 @@ class fs_director {
     /**
      * Checks the value of a checkbox and returns string "CHECKED" if ticked and NULL if not ticked.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
-     * @return boolean 
+     * @param string $value The value of which to check.
+     * @return string  Returns 'CHECKED' if the checkbox is ticked and 'NULL' if the text box is unticked.
      */
     static function IsChecked($value) {
         if ($value == 1) {
@@ -203,9 +201,9 @@ class fs_director {
     /**
      * Returns the current usage of a particular resource.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
-     * @return boolean 
+     * @param string $resource What time of quota should we be checking? (domains, subdomains, parkeddomains, mailboxes, distlists etc.)
+     * @param int $acc_key The user ID of which to check the quota status for.
+     * @return array Database table array of the quota infomation. 
      */
     static function GetQuotaUsages($resource, $acc_key = 0) {
         global $zdbh;
@@ -274,14 +272,12 @@ class fs_director {
 
     /**
      * Returns a random password.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
-     * @return boolean 
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param int $length The total number of characters the password should be.
+     * @param int $strength The strengh of the password generated. 
+     * @return string The newly generated password. 
      */
-    static function GenerateRandomPassword($a = 9, $b = 0) {
-        $length = $a;
-        $strength = $b;
+    static function GenerateRandomPassword($length = 9, $strength = 0) {
         $vowels = 'aeuy';
         $consonants = 'bdghjmnpqrstvz';
         if ($strength & 1) {
@@ -311,55 +307,51 @@ class fs_director {
     }
 
     /**
-     * Checks that an IP address is valid (v6 and v4).
+     * Checks that an IP address is valid (IPv6 and IPv4).
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
+     * @param string $ip The IP address of which to check.
      * @return boolean 
      */
     static function IsValidIP($ip) {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
     /**
      * Checks that an IPv4 address is valid.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
+     * @param string $ip The IP address of which to check.
      * @return boolean 
      */
     static function IsValidIPv4($ip) {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
     /**
      * Checks that an IPv6 address is valid.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
+     * @param string $ip The IP address of which to check.
      * @return boolean 
      */
     static function IsValidIPv6($ip) {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
     /**
-     * Checks that an email address is valid.
+     * Checks that an email address is of a valid format.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
+     * @param string $email The email address of which to check.
      * @return boolean 
      */
     static function IsValidEmail($email) {
@@ -369,15 +361,14 @@ class fs_director {
     }
 
     /**
-     * Checks that a domain name is valid.
+     * Checks that a domain name is of a valid format.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
+     * @param string $domainname The domain name of which to check.
      * @return boolean 
      */
-    static function IsValidDomainName($a) {
-        if (stristr($a, '.')) {
-            $part = explode(".", $a);
+    static function IsValidDomainName($domainname) {
+        if (stristr($domainname, '.')) {
+            $part = explode(".", $domainname);
             foreach ($part as $check) {
                 if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
                     return false;
@@ -390,10 +381,9 @@ class fs_director {
     }
 
     /**
-     * Checks that a user name is valid.
+     * Checks that a user name is of a valid format.
      * @author Bobby Allen (ballen@zpanelcp.com) 
-     * @version 10.0.0
-     * @param string $value
+     * @param string $username The user name of which to check.
      * @return boolean 
      */
     static function IsValidUserName($username) {
@@ -403,28 +393,32 @@ class fs_director {
     }
 
     /**
-     * Checks that a file exists or not.
+     * Checks if a file exists or not.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param type $path
+     * @param string $path The path to the file of which to check.
      * @return boolean 
      */
     static function CheckFileExists($path) {
-        if (file_exists($path))
-            return true;
+        if (file_exists($path)) {
+            if (is_file($path))
+                return true;
+            return false;
+        }
         return false;
     }
 
     /**
      * Checks that a folder exists or not.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param type $path
+     * @param string $path The path to the folder of which to check.
      * @return boolean 
      */
     static function CheckFolderExists($path) {
-        if (file_exists($path))
-            return true;
+        if (file_exists($path)) {
+            if (is_dir($path))
+                return true;
+            return false;
+        }
         return false;
     }
 
