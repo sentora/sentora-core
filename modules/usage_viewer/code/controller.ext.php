@@ -136,25 +136,25 @@ class module_controller {
 		$currentuser = ctrl_users::GetUserDetail();
 		
 		self::$diskquota 			  = $currentuser['diskquota'];
-		self::$diskspace 			  = fs_director::GetQuotaUsages('diskspace', $currentuser['userid']);
+		self::$diskspace 			  = ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']);
 		self::$bandwidthquota 		  = $currentuser['bandwidthquota'];
-		self::$bandwidth 			  = fs_director::GetQuotaUsages('bandwidth', $currentuser['userid']);
+		self::$bandwidth 			  = ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']);
 		self::$domainsquota 		  = $currentuser['domainquota'];
-		self::$domains 				  = fs_director::GetQuotaUsages('domains', $currentuser['userid']);
+		self::$domains 				  = ctrl_users::GetQuotaUsages('domains', $currentuser['userid']);
 		self::$subdomainsquota  	  = $currentuser['subdomainquota'];
-		self::$subdomains 			  = fs_director::GetQuotaUsages('subdomains', $currentuser['userid']);
+		self::$subdomains 			  = ctrl_users::GetQuotaUsages('subdomains', $currentuser['userid']);
 		self::$parkeddomainsquota 	  = $currentuser['parkeddomainquota'];
-		self::$parkeddomains 		  = fs_director::GetQuotaUsages('parkeddomains', $currentuser['userid']);
+		self::$parkeddomains 		  = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
 		self::$mysqlquota 			  = $currentuser['mysqlquota'];
-		self::$mysql 				  = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+		self::$mysql 				  = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
 		self::$ftpaccountsquota 	  = $currentuser['ftpaccountsquota'];
-		self::$ftpaccounts     		  = fs_director::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
+		self::$ftpaccounts     		  = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
 		self::$mailboxquota   	      = $currentuser['mailboxquota'];
-		self::$mailboxes       		  = fs_director::GetQuotaUsages('mailboxes', $currentuser['userid']);
+		self::$mailboxes       		  = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
 		self::$forwardersquota 		  = $currentuser['forwardersquota'];
-		self::$forwarders      		  = fs_director::GetQuotaUsages('forwarders', $currentuser['userid']);
+		self::$forwarders      		  = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
 		self::$distrobutionlistsquota = $currentuser['distrobutionlistsquota'];
-		self::$distlists       		  = fs_director::GetQuotaUsages('distlists', $currentuser['userid']);
+		self::$distlists       		  = ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']);
 		
 		$total= self::$diskquota;
 		$used = self::$diskspace;
@@ -296,7 +296,7 @@ class module_controller {
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$typequota = $currentuser[''.$quota.''];
-		$type = fs_director::GetQuotaUsages($total, $currentuser['userid']);
+		$type = ctrl_users::GetQuotaUsages($total, $currentuser['userid']);
 		if (!fs_director::CheckForEmptyValue($type)){
 			$per = ($type / $typequota) * 100;
 			$percent = round($per, 0);

@@ -3,7 +3,7 @@
 /**
  * ZPPY - The ZPanel Package Manager Tool.
  * @package zpanelx
- * @subpackage core -> zppy client
+ * @subpackage core -> zppy
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -27,8 +27,7 @@ $repo_file = "etc/zppy-cache/repo.list";
 $package_file = "etc/zppy-cache/package.list";
 
 if (!runtime_controller::IsCLI())
-    exit;
-
+    exit(1);
 
 if ((isset($argv[1])) && ($argv[1] == 'install')) {
     fwrite(STDOUT, "Module to be installed " . $argv[2] . "\n");
@@ -38,19 +37,18 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
         $zip->extractTo("/tmp/");
         $zip->close();
         fwrite(STDOUT, "Module extracted successfully!");
+        exit(0);
     } else {
         fwrite(STDOUT, "Module failed to be extracted!");
+        exit(1);
     }
-    exit;
 }
-
 
 if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
     fwrite(STDOUT, "Module to be upgraded!\n");
 
-    exit;
+    exit(0);
 }
-
 
 if ((isset($argv[1])) && ($argv[1] == 'remove')) {
     if (fs_director::CheckFolderExists('modules/' . $argv[2])) {
@@ -63,21 +61,21 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
             // Lets clean up the module group permissions too... Lets drop them all!
             // Lets drop any system options from the system options table that are related to this module!
             // Lets drop the module from the modules table
+            exit(0);
         } else {
             fwrite(STDOUT, "Cancelled module removal!\n");
+            exit(0);
         }
     } else {
         fwrite(STDOUT, "The module '" . $argv[2] . "' doesn't appear to be installed!\n");
+        exit(1);
     }
-    exit;
 }
-
 
 if ((isset($argv[1])) && (($argv[1] == 'version') || ($argv[1] == '-v') || ($argv[1] == '--version'))) {
     fwrite(STDOUT, "Version: " . ctrl_options::GetOption('dbversion') . "\n");
-    exit;
+    exit(0);
 }
-
 
 if (isset($argv[1]) && ($argv[1] == 'checkperms')) {
     $checks = 0;
@@ -92,9 +90,10 @@ if (isset($argv[1]) && ($argv[1] == 'checkperms')) {
     }
     if ($checks == 0) {
         fwrite(STDOUT, "All good!\n");
+        exit(0);
     }
+    exit(1);
 }
-
 
 if ((isset($argv[1])) && ($argv[1] == 'repo')) {
     if ((isset($argv[2])) && ($argv[2] == 'add')) {
@@ -105,9 +104,9 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
             fwrite($handle, $newrepo);
             fclose($handle);
             fwrite(STDOUT, "Added '" . $argv[3] . "' to list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
+            exit(0);
         }
     }
-
 
     if ((isset($argv[2])) && ($argv[2] == 'remove')) {
         $contents = file_get_contents($repo_file);
@@ -122,8 +121,8 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
         fwrite($handle, $newconf);
         fclose($handle);
         fwrite(STDOUT, "Removed '" . $argv[3] . "' from the list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
+        exit(0);
     }
-
 
     if ((isset($argv[2])) && ($argv[2] == 'list')) {
         $handle = fopen($repo_file, "r+");
@@ -139,6 +138,7 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
                 }
             }
         }
+        exit(0);
     }
 }
 
@@ -170,14 +170,14 @@ if ((isset($argv[1])) && ($argv[1] == 'update')) {
                     fwrite($handle, $currconf . $newconf);
                     fclose($handle);
                 } else {
-                    echo "  Failed to contact the URL '".$line."'\n";
+                    fwrite(STDOUT, "  Failed to contact the URL '" . $line . "'\n");
                 }
             }
         }
     }
     fwrite(STDOUT, "Local package cache is now up-to-date!\n");
+    exit(0);
 }
-
 
 if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {
     fwrite(STDOUT, "\nZPanel Package Manager\n");
@@ -190,7 +190,6 @@ if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1
     fwrite(STDOUT, "  remove [modulename]- Remove a named module.\n");
     fwrite(STDOUT, "  --version - Displays the Zpanel version\n");
     fwrite(STDOUT, "  --help - Displays this text.\n\n");
+    exit(0);
 }
-
-exit;
 ?>

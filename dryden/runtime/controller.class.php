@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * The controller class!
  * @package zpanelx
  * @subpackage dryden -> runtime
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -10,13 +12,29 @@
  */
 class runtime_controller {
 
+    /**
+     * @var array All current request 'get' variables. 
+     */
     private $vars_get;
+
+    /**
+     * @var array All current request 'post' variables. 
+     */
     private $vars_post;
+
+    /**
+     * @var array All current request 'session' variables. 
+     */
     private $vars_session;
+
+    /**
+     * @var array All current request 'cookie' variables. 
+     */
     private $vars_cookie;
 
     /**
      * Get the latest requests and updates the values avaliable to the model/view.
+     * @author Bobby Allen (ballen@zpanelcp.com)
      */
     public function Init() {
         $this->vars_get = array($_GET);
@@ -43,8 +61,12 @@ class runtime_controller {
 
     /**
      * Returns a vlaue from one of the requested type.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $type The type of request data to return.
+     * @param string $name The named key of the array.
+     * @retrun mixed Returns that array data if avaliable (is set) otherwise will return 'false'.
      */
-    public function GetControllerRequest($type="URL", $name) {
+    public function GetControllerRequest($type = "URL", $name) {
         if ($type == 'FORM') {
             if (isset($this->vars_post[0][$name])) {
                 return $this->vars_post[0][$name];
@@ -73,7 +95,13 @@ class runtime_controller {
         return false;
     }
 
-    public function GetAllControllerRequests($type="URL") {
+    /**
+     * Grabs the list of all controller requests for a given type.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $type What type of requests would you like to see? (URL, USER, FORM or COOKIE)
+     * @return array List of all set variables for the requested type. 
+     */
+    public function GetAllControllerRequests($type = "URL") {
         if ($type == 'FORM') {
             return $this->vars_post[0];
         } elseif ($type == 'URL') {
@@ -86,18 +114,30 @@ class runtime_controller {
         return false;
     }
 
+    /**
+     * Gets the current framework requested action.
+     * @return boolean 
+     */
     public function GetAction() {
         if (isset($this->vars_get[0]['action']))
             return $this->vars_get[0]['action'];
         return false;
     }
 
+    /**
+     * Gets the current framework requested module 'options'.
+     * @return boolean 
+     */
     public function GetOptions() {
         if (isset($this->vars_get[0]['options']))
             return $this->vars_get[0]['options'];
         return false;
     }
 
+    /**
+     * Gets and returns the name of the current module.
+     * @return boolean 
+     */
     public function GetCurrentModule() {
         if (isset($this->vars_get[0]['module']))
             return $this->vars_get[0]['module'];
@@ -107,8 +147,9 @@ class runtime_controller {
     /**
      * Displays Controller debug infomation (mainly for module development and debugging)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $script_memory
-     * @return type 
+     * @global string $script_memory The current amount of memory that the script it using.
+     * @global int $starttime The microtime of when the script started executing.
+     * @return string HTML output of the debug infomation. 
      */
     public function OutputControllerDebug() {
         global $script_memory;
@@ -149,8 +190,7 @@ class runtime_controller {
     /**
      * Checks if the current script is running in CLI mode (eg. as a cron job)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $script_memory
-     * @return bool 
+     * @return boolean
      */
     static function IsCLI() {
         if (!@$_SERVER['HTTP_USER_AGENT'])
@@ -161,6 +201,7 @@ class runtime_controller {
     /**
      * Used in hooks to communicate with the modules controller.ext.php
      * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $module_path The full path to the module.
      */
     static function ModuleControllerCode($module_path) {
         $raw_path = str_replace("\\", "/", $module_path);

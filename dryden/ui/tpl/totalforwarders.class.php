@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * Generic template place holder class.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -11,13 +13,12 @@
 class ui_tpl_totalforwarders {
 
     public function Template() {
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$forwardersquota = $currentuser['forwardersquota'];
-		if ($forwardersquota <> 0){
-        	return (string) $forwardersquota;
-		} 
-		return (string) 0;
+        $currentuser = ctrl_users::GetUserDetail();
+        $forwardersquota = $currentuser['forwardersquota'];
+        if ($forwardersquota <> 0) {
+            return (string) $forwardersquota;
+        }
+        return (string) 0;
     }
 
 }

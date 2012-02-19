@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
+ * The the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
  * @package zpanelx
  * @subpackage core -> api
  * @author Bobby Allen (ballen@zpanelcp.com)
@@ -16,6 +16,8 @@ chdir($root_path);
 require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 require_once 'inc/dbc.inc.php';
+
+debug_phperrors::SetMode('dev');
 
 if (file_exists('modules/' . $_GET['m'] . '/code/webservice.ext.php')) {
     include 'modules/' . $_GET['m'] . '/code/controller.ext.php';

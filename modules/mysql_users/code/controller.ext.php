@@ -236,7 +236,7 @@ class module_controller {
         }
         // Check for invalid IP address
         if ($access != "%" && strtolower($access) != "localhost") {
-            if (!fs_director::IsValidIP($access)) {
+            if (!sys_monitoring::IsValidIP($access)) {
                 self::$badIP = true;
                 return false;
             }
@@ -526,7 +526,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $line = "";
         $mysqlquota = $currentuser['mysqlquota'];
-        $mysql = fs_director::GetQuotaUsages('mysql', $currentuser['userid']);
+        $mysql = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
         $total = $mysqlquota;
         $used = $mysql;
         $free = $total - $used;

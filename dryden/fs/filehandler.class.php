@@ -1,11 +1,21 @@
 <?php
 
+/**
+ * A class to manage common file manipulation operations.
+ * @package zpanelx
+ * @subpackage dryden -> filesystem
+ * @version 1.0.0
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
+ */
 class fs_filehandler {
 
     /**
      * Clear all text in a file.
-     * @author RusTus (rustus@zpanel.co.uk) 
-     * @version 10.0.0
+     * @author Russell Skinner (rskinner@zpanelcp.com)
+     * @param string $file The full path to the file.
      */
     static function ResetFile($file) {
         $new_file = "";
@@ -18,36 +28,40 @@ class fs_filehandler {
 
     /**
      * Copies without overwritting an existing file, adding permissions for Linux.
-     * @author RusTus (rustus@zpanel.co.uk) 
-     * @version 10.0.0
+     * @author Russell Skinner (rskinner@zpanelcp.com)
+     * @param string $src The full path to the source file (the file to copy)
+     * @param string $desc The full path to the new file (where to copy the file too) 
      */
     static function CopyFileSafe($src, $dest) {
         if (!file_exists($dest)) {
             @copy($src, $dest);
             if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
-                @chmod($dest, 0777);
+                fs_director::SetFileSystemPermissions($dest, 0777);
             }
         }
     }
 
     /**
      * Copies and overwrites existing file, adding permissions for Linux.
-     * @author RusTus (rustus@zpanel.co.uk) 
-     * @version 10.0.0
+     * @author Russell Skinner (rskinner@zpanelcp.com)
+     * @param string $src The full path to the source file (the file to copy)
+     * @param string dest The full path to the new file (where to copy the file too) 
      */
     static function CopyFile($src, $dest) {
         @copy($src, $dest);
         if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
-            @chmod($dest, 0777);
+            fs_director::SetFileSystemPermissions($dest, 0777);
         }
     }
 
     /**
-     * Create blank or populated with permissions, including the path.
-     * @author RusTus (rustus@zpanel.co.uk) 
-     * @version 10.0.0
+     * Create blank or populated file with permissions, including the path.
+     * @author Russell Skinner (rskinner@zpanelcp.com)
+     * @param string $path Path and filename to the file to create.
+     * @param string $chmod Permissions mode to use for the new file. (eg. 0777)
+     * @param string $string The contents to write into the new file.
      */
-    static function CreateFile($path, $chmod="0777", $string="") {
+    static function CreateFile($path, $chmod = "0777", $string = "") {
         if (!is_file($path)) {
             preg_match('`^(.+)/([a-zA-Z0-9]+\.[a-z]+)$`i', $path, $matches);
             $directory = $matches[1];
@@ -60,30 +74,14 @@ class fs_filehandler {
             $fp = fopen($path, 'w');
             fwrite($fp, $string);
             fclose($fp);
-            chmod($path, $chmod);
+            fs_director::SetFileSystemPermissions($dest, 0777);
         }
     }
 
     /**
-     * @todo - THIS NEEDS TO BE REMOVED!! - THIS ALREADY EXISTS IN director.class.php
-     */
-    static function CreateDirectory($directory) {
-        if (!file_exists($directory)) {
-            @mkdir($directory, 0777, TRUE);
-            if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
-                # Lets set some more permissions on it so it can be accessed correctly! (eg. 0777 permissions)
-                @chmod($directory, 0777);
-            }
-        } else {
-            # Folder already exist... Just ignore the request!
-        }
-        return;
-    }
-
-    /**
-     * Create proper line ending based on server version.
-     * @author RusTus (rustus@zpanel.co.uk) 
-     * @version 10.0.0
+     * Creates the correct line ending based on the server OS platform.
+     * @author Russell Skinner (rskinner@zpanelcp.com)
+     * @return string The correct line ending charater.
      */
     static function NewLine() {
         if (sys_versions::ShowOSPlatformVersion() == "Windows") {
@@ -97,9 +95,8 @@ class fs_filehandler {
     /**
      * Returns the contents of a file in a string.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $file
-     * @return type 
+     * @param string $file The path and file name to the file.
+     * @return string The contents of the file. 
      */
     static function ReadFileContents($file) {
         return file_get_contents($file);
@@ -108,31 +105,29 @@ class fs_filehandler {
     /**
      * Updates an existing file and will chmod it too if required.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param string $file
-     * @return type 
+     * @param string $path The path and file name to the file to update.
+     * @param string $chmod Permissions mode to use for the new file. (eg. 0777)
+     * @param string $sting The content to update the file with.
+     * @return boolean 
      */
-    static function UpdateFile($path, $chmod="0777", $string="") {
+    static function UpdateFile($path, $chmod = "0777", $string = "") {
         if (!file_exists($path))
             fs_filehandler::ResetFile($path);
         $fp = fopen($path, 'w');
         fwrite($fp, $string);
         fclose($fp);
-        //chmod($path, $chmod);
+        fs_director::SetFileSystemPermissions($path, $chmod);
         return true;
     }
 
     /**
      * This adds text data into a specified file. This can be before the start or at the end of the file.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @param string $file The system path to the file.
      * @param string $content The content to add to the file.
-     * @param int $pos Where to add the text. 0 = At the start, 1 = At the end of the file.
+     * @param int $pos Where to add the text. (0 = At the start, 1 = At the end of the file)
      */
-    static
-
-    function AddTextToFile($file, $content, $pos) {
+    static function AddTextToFile($file, $content, $pos) {
         $current_version = @fs_filehandler::ReadFileContents($file);
         if ($pos == 0) {
             $new_version = $content . fs_filehandler::NewLine() . $current_version;

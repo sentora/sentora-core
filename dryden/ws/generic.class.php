@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * Generic web services class.
  * @package zpanelx
- * @subpackage dryden -> ws
+ * @subpackage dryden -> webservices
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -11,9 +13,10 @@
 class ws_generic {
 
     /**
-     * This function provides very basic way of retrieving a result as a string from a given URL (RAW) this does not need to be a 'true' web service.
+     * Provides very basic way of retrieving a result as a string from a given URL (RAW) this does not need to be a 'true' web service.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param str $requestURL 
+     * @param string $requestURL The URL to the resource.
+     * @return mixed If the request was successful it will return the contents of the requested URL otherwise will return 'false'.
      */
     static function ReadURLRequestResult($requestURL) {
         ob_start();
@@ -30,12 +33,12 @@ class ws_generic {
     }
 
     /**
-     * Generic method to send POST data to a web service and then return its response (without the need to use cURL etc.)
+     * Generic method to send POST data to a web service and then return its response (without the need to use cURL or another HTTP client).
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param type $url The URL of which to POST the data too.
-     * @param type $data The data content of which to send.
-     * @param type $optional_headers Option headers if you require to send them.
-     * @return type 
+     * @param string $url The URL of which to POST the data too.
+     * @param string $data The data content of which to send.
+     * @param string $optional_headers Option headers if you require to send them.
+     * @return string The response recieved. 
      */
     static function DoPostRequest($url, $data, $optional_headers = null) {
         //$ws_log = new debug_logger();
@@ -62,9 +65,9 @@ class ws_generic {
     }
 
     /**
-     * Captures the RAW POST data.
+     * Captures the RAW POST data passed to this script.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return type 
+     * @return string The raw request data.
      */
     static function ProcessRawRequest() {
         $xml_raw_data = fs_filehandler::ReadFileContents('php://input');

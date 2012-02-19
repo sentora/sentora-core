@@ -2,18 +2,20 @@
 
 /**
  * Database builder class build database schema based on XML files.
- *
  * @package zpanelx
  * @subpackage dryden -> db
  * @version 1.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @author Russell Skinner (rustus@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class db_builder {
 
     /**
-     * Builds database from XML
-     * @author RusTus (rustus@zpanelcp.com)
-     * @version 10.0.0
+     * Builds database schema from the module XML file (dbs.xml)
+     * @author Russell Skinner (rustus@zpanelcp.com)
+     * @global obj $zdbh The ZPX database handle.
      */
     static function moduledb_commit() {
         global $zdbh;
@@ -31,7 +33,7 @@ class db_builder {
                 foreach ($db_config->document->table_structure as $table) {
                     $table_name = $table->table_name[0]->tagData;
 
-                    #Check if table exists, if not then create it.
+                    // Check if table exists, if not then create it.
                     $sql = $zdbh->prepare("SHOW TABLES FROM $database LIKE '$table_name'");
                     $sql->execute();
                     $table_exists = $sql->fetch();
@@ -40,7 +42,7 @@ class db_builder {
                         $sql->execute();
                     }
 
-                    #Loop through columnns for selected table
+                    // Loop through columnns for selected table
                     foreach ($table->column as $data) {
                         $column_name = $data->column_name[0]->tagData;
                         $column_structure = $data->column_structure[0]->tagData;
@@ -53,12 +55,12 @@ class db_builder {
                         }
                     }
 
-                    #Populate tables with data from xml
+                    // Populate tables with data from xml
                     $sql = $zdbh->prepare("SELECT COUNT(*) FROM $database.$table_name");
                     $sql->execute();
                     $empty = $sql->fetch();
                     if ($empty[0] == 0) {
-                        #Loop through inserts/updates for selected table
+                        // Loop through inserts/updates for selected table
                         foreach ($table->data as $data) {
                             if (!empty($data->insert[0])) {
                                 $insert = $data->insert[0]->tagData;
@@ -73,7 +75,7 @@ class db_builder {
                         }
                     }
 
-                    #Remove temp table if created.
+                    // Remove temp table if created.
                     $sql = $zdbh->prepare("SHOW COLUMNS FROM $database.$table_name LIKE 'create_temp'");
                     $sql->execute();
                     $table_exists = $sql->fetch();
@@ -84,15 +86,16 @@ class db_builder {
                 }
             }
         } catch (Exception $e) {
-            // I know this will change, just testing for now
             echo ui_sysmessage::shout($e, 'zdebug', 'zdebug');
         }
+        return;
     }
 
     /**
-     * Drops database if not zpanel core
-     * @author RusTus (rustus@zpanelcp.com)
-     * @version 10.0.0
+     * Drops a database if not zpanel core
+     * @author Russell Skinner (rustus@zpanelcp.com)
+     * @global obj $zdbh The ZPX database handle.
+     * @param string $database The name of the database to drop.
      */
     static function moduledb_drop($database) {
         global $zdbh;

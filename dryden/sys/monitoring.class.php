@@ -2,25 +2,25 @@
 
 /**
  * Class provides server port monitoring and uptime reporting functionality.
- *
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-
 class sys_monitoring {
 
     /**
      * Reports on whether a TCP or UDP port is listening for connections.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param int $port
-     * @param boolean $udp
+     * @param int $port The port number of which to check (eg. 25 for SMTP).
+     * @param boolean $udp Port is a UDP port as opposed to a TCP port.
      * @return boolean 
      */
-    static function PortStatus($port, $udp=FALSE) {
-        $timeout = 30;
+    static function PortStatus($port, $udp = false) {
+        $timeout = ctrl_options::GetOption('servicechk_to');
         if ($udp) {
             $ip = 'udp://' . $_SERVER['SERVER_ADDR'];
         } else {
@@ -40,9 +40,7 @@ class sys_monitoring {
     /**
      * Returns a nice human readable copy of the server uptime.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @return string Human readable server uptime.
-     * @todo Remove and replace old ZP6 functions with the new eqivilents.
      */
     static function ServerUptime() {
         if (sys_versions::ShowOSPlatformVersion() == "Linux") {
@@ -90,29 +88,69 @@ class sys_monitoring {
             $minutes = fs_director::CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
             $retval = $days . ", " . $hours . ", " . $minutes . "";
         } else {
-            $retval = "Unsupported O/S";
+            $retval = "Unsupported OS";
         }
         return $retval;
     }
-    
+
     /**
      * Returns the client's IP address.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @return type 
+     * @return string The IP address of the current client connection. 
      */
-    static function ClientIPAddress(){
+    static function ClientIPAddress() {
         return $_SERVER['REMOTE_ADDR'];
     }
-    
+
     /**
-     * Returns the server IP address.
+     * Returns the server's IP address.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @return type 
+     * @return string Returns the IP address of the server. 
      */
-    static function ServerIPAddress(){
+    static function ServerIPAddress() {
         return $_SERVER['SERVER_ADDR'];
+    }
+    
+        /**
+     * Checks that an IP address is valid (IPv6 and IPv4).
+     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @param string $ip The IP address of which to check.
+     * @return boolean 
+     */
+    static function IsValidIP($ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks that an IPv4 address is valid.
+     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @param string $ip The IP address of which to check.
+     * @return boolean 
+     */
+    static function IsValidIPv4($ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks that an IPv6 address is valid.
+     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @param string $ip The IP address of which to check.
+     * @return boolean 
+     */
+    static function IsValidIPv6($ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

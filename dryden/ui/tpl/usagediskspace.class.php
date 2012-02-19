@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * Generic template place holder class.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -11,12 +13,9 @@
 class ui_tpl_usagediskspace {
 
     public function Template() {
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		
-		$diskspace = fs_director::ShowHumanFileSize(fs_director::GetQuotaUsages('diskspace', $currentuser['userid']));
-					
-		return $diskspace;
+        $currentuser = ctrl_users::GetUserDetail();
+        $diskspace = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
+        return $diskspace;
     }
 
 }

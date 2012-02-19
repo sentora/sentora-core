@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * A search and retrieve/replace class.
  * @package zpanelx
  * @subpackage dryden -> runtime
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -12,10 +14,11 @@ class runtime_haystack {
 
     /**
      * Get a value between two given strings.
-     * @param string $string
-     * @param type $start
-     * @param type $end
-     * @return type 
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $string The complete string on which to compute.
+     * @param string $start The starting character or seqence of characters.
+     * @param string $end The ending character or seqence of characters.
+     * @return string The value of the string between the starting and ending character(s).
      */
     static function GetValueBetween($string, $start, $end) {
         $string = " " . $string;

@@ -2,11 +2,13 @@
 
 /**
  * Group permissions class, handles user group permissions.
- * @author Bobby Allen (ballen@zpanelcp.com)
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class ctrl_groups {
 

@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * Generic template place holder class.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -11,7 +13,6 @@
 class ui_tpl_modulelistznavbar {
 
     function Template() {
-        global $controller;
         $line = "";
         $tabindex = 0;
         $modcats = ui_moduleloader::GetModuleCats();

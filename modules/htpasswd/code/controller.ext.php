@@ -191,10 +191,10 @@ class module_controller {
 		$stringData .= "Require valid-user" . fs_filehandler::NewLine();
 		if (is_writable(ctrl_options::GetOption('hosted_dir') . $inPath)){
         	fs_filehandler::UpdateFile($htaccessfile, 0777, $stringData);
-			fs_director::SetDirectoryPermissions($htaccessfile, 0777);
+			fs_director::SetFileSystemPermissions($htaccessfile, 0777);
 		}
 		if(file_exists($htaccessfile)){
-			fs_director::SetDirectoryPermissions($htaccesfiledir, 0777);
+			fs_director::SetFileSystemPermissions($htaccesfiledir, 0777);
 			$htpasswd_exe = ctrl_options::GetOption('htpasswd_exe') . " -b -m -c " . 
 							$htaccesfiledir . 
 							$row['ht_id_pk'] . ".htpasswd " . 

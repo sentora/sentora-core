@@ -109,7 +109,7 @@ class module_controller {
                     fs_director::CreateDirectory($backupdir);
                 }
                 copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", $backupdir . $backupname . ".zip");
-                fs_director::SetDirectoryPermissions($backupdir . $backupname . ".zip", 0777);
+                fs_director::SetFileSystemPermissions($backupdir . $backupname . ".zip", 0777);
             } else {
                 $backupdir = ctrl_options::GetOption('temp_dir');
             }

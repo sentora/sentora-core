@@ -2,18 +2,19 @@
 
 /**
  * This reports on core zpanel software versions.
- *
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
- * @author ballen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class sys_versions {
 
     /**
      * Returns the Apache HTTPd Server Version Number
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @return string Apache Server version number.
      */
     static function ShowApacheVersion() {
@@ -28,7 +29,6 @@ class sys_versions {
     /**
      * Returns the PHP version number.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @return string PHP version number
      */
     static function ShowPHPVersion() {
@@ -38,7 +38,6 @@ class sys_versions {
     /**
      * Returns the MySQL server version number.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @return string MySQL version number 
      */
     static function ShowMySQLVersion() {
@@ -50,8 +49,7 @@ class sys_versions {
     /**
      * Returns a human readable copy of the Kernal version number running on the server.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
-     * @param type $platform
+     * @param string $platform The OS Platform (eg. Linux or Windows)
      * @return string *NIX kernal version. - Will return 'N/A' for Microsoft Windows.
      */
     static function ShowOSKernalVersion($platform) {
@@ -66,7 +64,6 @@ class sys_versions {
     /**
      * Returns in human readable form the operating system platform (eg. Windows, Linux, FreeBSD, Other)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @return string Human readable OS Platform name.
      */
     static function ShowOSPlatformVersion() {
@@ -86,7 +83,6 @@ class sys_versions {
     /**
      * Returns in human readable form the operating system name (eg. Windows, Ubuntu, CentOS, MacOSX, FreeBSD, Other)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @return string Human readable OS name.
      */
     static function ShowOSName() {
@@ -98,7 +94,7 @@ class sys_versions {
                 $retval = $osname[0][0];
             }
 
-            //Mytesting shows Linux shows correct OS, WindowsXP=Win32, Windows2007/Server=WINNT -russ
+            //My testing shows Linux shows correct OS, WindowsXP=Win32, Windows2007/Server=WINNT -russ
 
             /*
               $uname = strtolower(php_uname());
@@ -148,7 +144,6 @@ class sys_versions {
     /**
      * Returns the ZPanel version (based on the DB version number.)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @version 10.0.0
      * @return string ZPanel DB Version
      */
     static function ShowZpanelVersion() {

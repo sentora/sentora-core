@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * Main module interface class.
  * @package zpanelx
  * @subpackage dryden -> ui
+ * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -17,7 +19,7 @@ class ui_module {
     /**
      * Checks that the module exists.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param string $name
+     * @param string $name Name of the module to check that exists.
      * @return boolean 
      */
     static function CheckModuleExists($name) {
@@ -29,9 +31,9 @@ class ui_module {
     }
 
     /**
-     * Returns the module code.
+     * Returns the module template code.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param string $name
+     * @param string $name Name of the module.
      * @return string 
      */
     static function GetModuleContent($name) {
@@ -43,14 +45,10 @@ class ui_module {
     /**
      * Handles the GetModule control, if unable to load the module will handle the error too!
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param string $module
+     * @param string $module The name of the module to load.
      * @return string 
      */
     static function GetModule($module) {
-        /**
-         * This is where it outputs the module code to the view.
-         * @var $module (string) is the folder path to the requested module.
-         */
         if (self::CheckModuleExists($module)) {
             $retval = self::GetModuleContent($module);
         } else {
@@ -61,9 +59,9 @@ class ui_module {
     }
 
     /**
-     * Gathers module infomation from the FS and adds the detail to the DB.
+     * Gathers module infomation from the modules XML file and adds the details to the DB.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @var $module Name of the module (folder name)
+     * @param string $module The name of the module of which to import the module infomation in for.
      * @return boolean
      */
     static function ModuleInfoToDB($module) {
@@ -89,7 +87,7 @@ class ui_module {
     /**
      * This class scans the module directory and will return an array of new modules that are not yet in the database.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return array 
+     * @return array List of all new modules.
      */
     static function ScanForNewModules() {
         $new_module_list = array();
@@ -99,8 +97,8 @@ class ui_module {
     /**
      * Checks to see if the specified module is enabled.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $zdbh
-     * @param type $modulename
+     * @global obj $zdbh The ZPX database handle.
+     * @param string $modulename The name of the module of which to check.
      * @return boolean 
      */
     static function CheckModuleEnabled($modulename) {
@@ -115,11 +113,11 @@ class ui_module {
     }
 
     /**
-     * This class returns the name of the current module.
+     * Returns the name of the current module.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $controller
-     * @global type $zdbh
-     * @return type 
+     * @global obj $controller The controller object.
+     * @global obj $zdbh The ZPX database handle.
+     * @return string The name of the currently loaded (active) module. 
      */
     static function GetModuleName() {
         global $controller;
@@ -130,11 +128,11 @@ class ui_module {
     }
 
     /**
-     * This class returns the database ID of the current module.
+     * This class returns the database ID of the currently loaded (active) module.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $controller
-     * @global type $zdbh
-     * @return type 
+     * @global obj $controller The controller object.
+     * @global obj $zdbh The ZPX database handle.
+     * @return int The module ID of the currently loaded (active) module.
      */
     static function GetModuleID() {
         global $controller;
@@ -147,9 +145,9 @@ class ui_module {
     /**
      * This class returns the folder name of the current module.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $controller
-     * @global type $zdbh
-     * @return type 
+     * @global obj $controller The controller object.
+     * @global obj $zdbh The ZPX database handle.
+     * @return string The modules folder name as it appears in panel/modules/.
      */
     static function GetModuleFolderName() {
         global $controller;
@@ -162,9 +160,9 @@ class ui_module {
     /**
      * This class returns the description of the current module.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $controller
-     * @global type $zdbh
-     * @return type 
+     * @global obj $controller The controller object.
+     * @global obj $zdbh The ZPX database handle.
+     * @return string The module description from the database (originally improted from the module.xml file). 
      */
     static function GetModuleDescription() {
         global $controller;
@@ -177,9 +175,9 @@ class ui_module {
     /**
      * Checks to see if the specified module has updates.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $zdbh
-     * @param type $modulefolder
-     * @return boolean 
+     * @global obj $zdbh The ZPX database handle.
+     * @param string $modulefolder The module folder of which to check updates for.
+     * @return mixed If updates are avaliable will return an array with the new version and download URL otherwise will return 'false'.
      */
     static function GetModuleHasUpdates($modulefolder) {
         global $zdbh;
@@ -195,13 +193,13 @@ class ui_module {
     /**
      * Returns an array of the XML tags from the module.xml file.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global type $zlo
-     * @param type $module
-     * @return type 
+     * @global obj $zlo The Generic ZPX logging object.
+     * @param string $modulefolder The module folder name of which to import the XML data from.
+     * @return mixed Will an array of the module XML data if the parsing of the document is successful otherwise will return 'false'. 
      */
-    static function GetModuleXMLTags($module) {
+    static function GetModuleXMLTags($modulefolder) {
         global $zlo;
-        $mod_xml = "modules/$module/module.xml";
+        $mod_xml = "modules/$modulefolder/module.xml";
         $info = array();
         try {
             $mod_config = new xml_reader(fs_filehandler::ReadFileContents($mod_xml));
