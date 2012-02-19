@@ -37,8 +37,8 @@
 		
 		
 		// Adding hMail DistList
-		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inAddress'))) {
-		   	$result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
+		if (!fs_director::CheckForEmptyValue(self::$create)) {
+		   	$result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $inDomain . "'")->Fetch();
 			if ($result) {
         		$domain_id = $result['domainid'];
         		$sql = "INSERT INTO hm_distributionlists (
@@ -61,8 +61,8 @@
 		}
 
 		// Adding hMail DistListUser
-		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inAdd'))) {
-	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $dladdress . "'")->Fetch();
+		if (!fs_director::CheckForEmptyValue(self::$createuser)) {
+	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
 			if ($result) {	
                 $sql = "INSERT INTO hm_distributionlistsrecipients (
 									distributionlistrecipientlistid,
@@ -76,23 +76,23 @@
 		}
 
 		// Deleting hMail DistList
-		if (isset($dl_id_pk) && !fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_'.$dl_id_pk.''))) {
-	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . self::getDistListAddress($dl_id_pk) . "'")->Fetch();
+		if (!fs_director::CheckForEmptyValue(self::$delete)) {
+	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
 			if ($result) {	
             	$sql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid='" . $result['distributionlistid'] . "'";
 				$sql = $mail_db->prepare($sql);
 				$sql->execute();
-	            $sql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . self::getDistListAddress($dl_id_pk) . "'";
+	            $sql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'";
 				$sql = $mail_db->prepare($sql);
 				$sql->execute();
 			}			
 		}
 
 		// Deleting hMail DistListUser
-		if (isset($du_id_pk) && !fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDeleteUser_'.$du_id_pk.''))) {
-	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $dladdress . "'")->Fetch();
+		if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
+	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
 			if ($result) {	
-                $sql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientaddress='" . self::getDistListUserAddress($du_id_pk) . "' AND distributionlistrecipientlistid=" . $result['distributionlistid'] . "";
+                $sql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientaddress='" . $rowdlu['du_address_vc'] . "' AND distributionlistrecipientlistid=" . $result['distributionlistid'] . "";
 				$sql = $mail_db->prepare($sql);
 				$sql->execute();
 			}			

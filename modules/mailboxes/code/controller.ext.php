@@ -119,7 +119,9 @@ class module_controller {
 		global $zdbh;
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail($uid);
-		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors())) {
+		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $domain, $password))) {
+			return false;
+		}
 			runtime_hook::Execute('OnBeforeCreateMailbox');
 			$address = strtolower(str_replace(' ', '', $address));
 			$fulladdress = strtolower(str_replace(' ', '', $address . "@" . $domain));
@@ -138,7 +140,7 @@ class module_controller {
 			$sql->execute();
 			runtime_hook::Execute('OnAfterCreateMailbox');
 			self::$ok = true;
-		}
+			return true;
 	}
 
 	static function ExecuteDeleteMailbox($mid){
@@ -200,33 +202,48 @@ class module_controller {
 		return $retval;	
 	}
 
-	static function CheckCreateForErrors(){
+	static function CheckCreateForErrors($address, $domain, $password){
 		global $zdbh;
         global $controller;
-		$address  = $controller->GetControllerRequest('FORM', 'inAddress');
-		$domain   = $controller->GetControllerRequest('FORM', 'inDomain');
-		$password = $controller->GetControllerRequest('FORM', 'inPassword');
 		$fulladdress = str_replace(' ', '', $address . "@" . $domain);
 		$fulladdress = strtolower($fulladdress);
 		if (fs_director::CheckForEmptyValue($address)){
 			self::$noaddress = true;
-			return true;
+			return false;
 		}
 		if (fs_director::CheckForEmptyValue($password)){
 			self::$password = true;
-			return true;
+			return false;
 		}
 		if (!self::IsValidEmail($fulladdress)){
 			self::$validemail = true;
-			return true;
+			return false;
 		}
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc='" . $fulladdress . "' AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
 			self::$alreadyexists = true;
-			return true;
+			return false;
 		}
-		return false;
+        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+			self::$alreadyexists = true;
+			return false;
+		}
+        $sql = "SELECT * FROM x_distlists WHERE dl_address_vc='" . $fulladdress . "' AND dl_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+			self::$alreadyexists = true;
+			return false;
+		}
+        $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $fulladdress . "' AND al_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+			self::$alreadyexists = true;
+			return false;
+		}
+		return true;
 	}
 
     static function IsValidEmail($email) {
@@ -388,7 +405,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['mailboxquota'] > ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid'])) {
+        if ($currentuser['mailboxquota'] > fs_director::GetQuotaUsages('mailboxes', $currentuser['userid'])) {
             return true;
         } else {
             return false;
@@ -400,7 +417,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $line = "";
         $mailboxquota = $currentuser['mailboxquota'];
-        $mailboxes = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
+        $mailboxes = fs_director::GetQuotaUsages('mailboxes', $currentuser['userid']);
         $total = $mailboxquota;
         $used = $mailboxes;
         $free = $total - $used;
@@ -410,7 +427,7 @@ class module_controller {
 
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout("The email address you entered already exists!", "zannounceerror");
+            return ui_sysmessage::shout("A mailbox, alias, forwarder or distrubution list already exists with that name.", "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$validemail)) {
             return ui_sysmessage::shout("Your email address is not valid.", "zannounceerror");
@@ -423,8 +440,6 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout("Changes to your mailboxes have been saved successfully!", "zannounceok");
-        } else {
-            return NULL;
         }
         return;
     } 
