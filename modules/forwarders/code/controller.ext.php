@@ -31,9 +31,8 @@ class module_controller {
 	
 	static $ok;
 	static $password;
+	static $alreadyexists;
 	static $alreadyexistssame;
-	static $alreadyexistsforwarder;
-	static $alreadyexistsalias;
 	static $validemail;
 	static $noaddress;
 	static $delete;
@@ -117,7 +116,9 @@ class module_controller {
 		global $zdbh;
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail($uid);
-		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors())) {
+		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $dname, $ddomain, $keepmessage))) {
+			return false;
+		}
 			$destination = strtolower(str_replace(' ', '', $dname . "@" . $ddomain));
 			runtime_hook::Execute('OnBeforeCreateForwarder');
 			self::$create=true;
@@ -139,7 +140,7 @@ class module_controller {
 			$sql->execute();
 			runtime_hook::Execute('OnAfterCreateForwarder');
 			self::$ok = true;
-		}
+			return true;
 	}
 
 	static function ExecuteDeleteForwarder($fw_id_pk){
@@ -159,43 +160,24 @@ class module_controller {
 		self::$ok = true;
 	}
 	
-	static function CheckCreateForErrors(){
+	static function CheckCreateForErrors($address, $dname, $ddomain, $keepmessage){
 		global $zdbh;
         global $controller;
 		$address = $controller->GetControllerRequest('FORM', 'inAddress');
-		$destination = str_replace(' ', '', $controller->GetControllerRequest('FORM', 'inDestinationName') . "@" . $controller->GetControllerRequest('FORM', 'inDestinationDomain'));
-		$destination = strtolower($destination);
+		$destination = strtolower(str_replace(' ', '', $dname . "@" . $ddomain));
 		if (fs_director::CheckForEmptyValue($address)){
 			self::$noaddress = true;
 			return true;
 		}
 		if (!self::IsValidEmail($destination)){
 			self::$validemail = true;
-			return true;
+			return false;
 		}
         if ($address == $destination) {
 			self::$alreadyexistssame = true;
-			return true;
+			return false;
 		}
-        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $address . "' AND fw_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
-        if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexistsforwarder = true;
-			return true;
-		}
-        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $destination . "' AND fw_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
-        if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexistsforwarder = true;
-			return true;
-		}
-        $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $destination . "' AND al_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
-        if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexistsalias = true;
-			return true;
-		}
-		return false;
+		return true;
 	}
 
     static function IsValidEmail($email) {
@@ -354,11 +336,8 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexistssame)) {
             return ui_sysmessage::shout("You cannot forward a mailbox to itself!", "zannounceerror");
         }
-        if (!fs_director::CheckForEmptyValue(self::$alreadyexistsforwarder)) {
-            return ui_sysmessage::shout("A forwarder already exists with that address!", "zannounceerror");
-        }
-        if (!fs_director::CheckForEmptyValue(self::$alreadyexistsalias)) {
-            return ui_sysmessage::shout("An alias already exists with that destination address!", "zannounceerror");
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
+            return ui_sysmessage::shout("A mailbox, alias, forwarder or distrubution list already exists with that name.", "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$validemail)) {
             return ui_sysmessage::shout("Your email address is not valid.", "zannounceerror");

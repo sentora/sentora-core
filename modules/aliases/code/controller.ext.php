@@ -30,9 +30,7 @@ class module_controller {
 
 	
 	static $ok;
-	static $alreadyexistsmail;
-	static $alreadyexistsforwarder;
-	static $alreadyexistsalias;
+	static $alreadyexists;
 	static $validemail;
 	static $noaddress;
 	static $delete;
@@ -127,6 +125,8 @@ class module_controller {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail($uid);
 		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $domain, $destination))) {
+			return false;
+		}
 			runtime_hook::Execute('OnBeforeCreateAlias');
 			$fulladdress = $address . "@". $domain;
 			$destination = strtolower(str_replace(' ', '', $destination));
@@ -145,7 +145,7 @@ class module_controller {
 			$sql->execute();
 			runtime_hook::Execute('OnAfterCreateAlias');
 			self::$ok = true;
-		}
+  			return true;
 	}
 
 	static function ExecuteDeleteAlias($al_id_pk){
@@ -181,28 +181,34 @@ class module_controller {
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc='" . $fulladdress . "' AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexistsmail = true;
-			return true;
+			self::$alreadyexists = true;
+			return false;
 		}
         $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexistsforwarder = true;
-			return true;
+			self::$alreadyexists = true;
+			return false;
 		}
         $sql = "SELECT * FROM x_forwarders WHERE fw_destination_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexistsforwarder = true;
-			return true;
+			self::$alreadyexists = true;
+			return false;
+		}
+        $sql = "SELECT * FROM x_distlists WHERE dl_address_vc='" . $fulladdress . "' AND dl_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+			self::$alreadyexists = true;
+			return false;
 		}
         $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $fulladdress . "' AND al_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexistsalias = true;
-			return true;
+			self::$alreadyexists = true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
     static function IsValidEmail($email) {
@@ -354,14 +360,8 @@ class module_controller {
     }
 	
     static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$alreadyexistsmail)) {
-            return ui_sysmessage::shout("A mailbox already exists with that alias address!", "zannounceerror");
-        }
-        if (!fs_director::CheckForEmptyValue(self::$alreadyexistsforwarder)) {
-            return ui_sysmessage::shout("A forwarder already exists with that address!", "zannounceerror");
-        }
-        if (!fs_director::CheckForEmptyValue(self::$alreadyexistsalias)) {
-            return ui_sysmessage::shout("An alias already exists with that address!", "zannounceerror");
+        if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
+            return ui_sysmessage::shout("A mailbox, alias, forwarder or distrubution list already exists with that name.", "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$validemail)) {
             return ui_sysmessage::shout("Your email address is not valid.", "zannounceerror");

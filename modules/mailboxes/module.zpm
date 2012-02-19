@@ -34,7 +34,7 @@
 				</tr>
 				<tr>
 					<th><: Set Password :>:</th>
-					<td><input type="text" name="inPassword" id="inPassword" /></td>
+					<td><input type="password" name="inPassword" id="inPassword" /></td>
 				</tr>
 			<% endloop %>
 				<tr>
@@ -104,7 +104,7 @@
 				</tr>
 				<tr>
 					<th nowrap="nowrap"><: Password :>:</th>
-					<td><input type="text" name="inPassword" id="inPassword" /></td>
+					<td><input type="password" name="inPassword" id="inPassword" /></td>
 					<td></td>
 				</tr>
 				<tr>
