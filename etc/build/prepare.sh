@@ -8,7 +8,7 @@ echo "===================================="
 echo ""
 echo "If you need help, please visit our forums: http://forums.zpanelcp.com/"
 echo ""
-echo "Creating folder structure..."
+echo "Creating folder structure.."
 mkdir /etc/zpanel
 mkdir /etc/zpanel/configs
 mkdir /etc/zpanel/panel
@@ -19,6 +19,14 @@ mkdir /var/zpanel/logs
 mkdir /var/zpanel/backups
 mkdir /var/zpanel/temp
 echo "Complete!"
+echo "Copying application configuration files.."
+cp -R -v contrib/nix_specific/* /etc/zpanel/configs
+cp -R -v contrib/all_platforms/* /etc/zpanel/configs
+echo "Complete!"
+chmod -R 777 /etc/zpanel/
+chmod -R 777 /var/zpanel/
+echo "Setting permissions.."
+echo ""
 echo ""
 echo "The Zpanel directories have now been created in /etc/zpanel and /var/zpanel"
 echo ""
