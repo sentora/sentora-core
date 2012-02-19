@@ -352,7 +352,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['forwardersquota'] > fs_director::GetQuotaUsages('forwarders', $currentuser['userid'])) {
+        if ($currentuser['forwardersquota'] > ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid'])) {
             return true;
         } else {
             return false;

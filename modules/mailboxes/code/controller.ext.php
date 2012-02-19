@@ -405,7 +405,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['mailboxquota'] > fs_director::GetQuotaUsages('mailboxes', $currentuser['userid'])) {
+        if ($currentuser['mailboxquota'] > ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid'])) {
             return true;
         } else {
             return false;

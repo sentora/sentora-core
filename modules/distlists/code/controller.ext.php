@@ -451,7 +451,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['distrobutionlistsquota'] > fs_director::GetQuotaUsages('distlists', $currentuser['userid'])) {
+        if ($currentuser['distrobutionlistsquota'] > ctrl_users::GetQuotaUsages('distlists', $currentuser['userid'])) {
             return true;
         } else {
             return false;
