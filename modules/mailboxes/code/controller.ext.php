@@ -417,7 +417,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $line = "";
         $mailboxquota = $currentuser['mailboxquota'];
-        $mailboxes = fs_director::GetQuotaUsages('mailboxes', $currentuser['userid']);
+        $mailboxes = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
         $total = $mailboxquota;
         $used = $mailboxes;
         $free = $total - $used;

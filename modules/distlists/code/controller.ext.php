@@ -439,7 +439,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $line = "";
         $distlistquota = $currentuser['distrobutionlistsquota'];
-        $distlist = fs_director::GetQuotaUsages('distlists', $currentuser['userid']);
+        $distlist = ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']);
         $total = $distlistquota;
         $used = $distlist;
         $free = $total - $used;
