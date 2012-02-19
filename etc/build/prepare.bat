@@ -26,6 +26,10 @@ mkdir %zpd%:\zpanel\logs
 mkdir %zpd%:\zpanel\backups
 mkdir %zpd%:\zpanel\temp
 echo Complete!
+echo Copying application configuration files...
+xcopy /s/e contrib\win_specific\* %zpd%:\zpanel\configs
+xcopy /s/e contrib\all_platforms\* %zpd%:\zpanel\configs
+echo Complete!
 echo.
 echo You can access your new ZPanel folder layout here: %zpd%:\zpanel
 echo.
