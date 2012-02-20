@@ -9,12 +9,17 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-global $controller, $zdbh;
+global $controller, $zdbh, $zlo;
 $controller = new runtime_controller();
 
 if ($zlo->hasInfo()) {
     $zlo->writeLog();
     $zlo->reset();
+}
+
+if (isset($_GET['scannewmodules'])) {
+    print_r(ui_module::ScanForNewModules());
+    die;
 }
 
 if (isset($_GET['logout'])) {

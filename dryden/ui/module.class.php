@@ -61,7 +61,7 @@ class ui_module {
     /**
      * Gathers module infomation from the modules XML file and adds the details to the DB.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param string $module The name of the module of which to import the module infomation in for.
+     * @param string $module The name of the module (folder) of which to import the module infomation in for.
      * @return boolean
      */
     static function ModuleInfoToDB($module) {
@@ -87,10 +87,33 @@ class ui_module {
     /**
      * This class scans the module directory and will return an array of new modules that are not yet in the database.
      * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global obj $zdbh The ZPX database handle.
+     * @param boolean $init Upon finding modules that don't exist in the database, add them!
      * @return array List of all new modules.
      */
-    static function ScanForNewModules() {
+    static function ScanForNewModules($init = false) {
+        global $zdbh;
         $new_module_list = array();
+        $handle = @opendir(ctrl_options::GetOption('zpanel_root') . "modules");
+        $chkdir = ctrl_options::GetOption('zpanel_root') . "modules/";
+        if ($handle) {
+            while ($file = readdir($handle)) {
+                if ($file != "." && $file != "..") {
+                    if (is_dir($chkdir . $file)) {
+                        $match_module = $zdbh->query("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '$file'")->Fetch();
+                        if (!$match_module) {
+                            array_push($new_module_list, $file);
+                        }
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        if ($init == true) {
+            foreach ($new_module_list as $modules_to_import) {
+                ui_module::ModuleInfoToDB($modules_to_import);
+            }
+        }
         return $new_module_list;
     }
 
