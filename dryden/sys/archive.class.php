@@ -20,6 +20,8 @@ class sys_archive {
      * @return boolean 
      */
     static function Unzip($archive, $dest) {
+        if (!class_exists('ZipArchive'))
+            return false;
         $zip = new ZipArchive;
         $result = $zip->open($archive);
         if ($result == true) {
