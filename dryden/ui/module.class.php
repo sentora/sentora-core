@@ -75,7 +75,7 @@ class ui_module {
             $module_name = $mod_config->document->name[0]->tagData;
             $module_version = $mod_config->document->version[0]->tagData;
             $module_description = $mod_config->document->desc[0]->tagData;
-            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_version_in, mo_folder_vc, mo_installed_ts, mo_desc_tx) VALUES ('$module_name', $module_version, '$module_name', " . time() . ", '$module_description')");
+            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_version_in, mo_folder_vc, mo_installed_ts, mo_desc_tx) VALUES ('$module_name', $module_version, '$module', " . time() . ", '$module_description')");
             $sql->execute();
             return true;
         } catch (Exception $e) {
