@@ -75,7 +75,18 @@ class ui_module {
             $module_name = $mod_config->document->name[0]->tagData;
             $module_version = $mod_config->document->version[0]->tagData;
             $module_description = $mod_config->document->desc[0]->tagData;
-            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_version_in, mo_folder_vc, mo_installed_ts, mo_desc_tx) VALUES ('$module_name', $module_version, '$module', " . time() . ", '$module_description')");
+            $module_defaultcat = $mod_config->document->defaultcat[0]->tagData;
+            $module_type = $mod_config->document->type[0]->tagData;
+            if ($module_type != ("user" || "system" || "modadmin")) {
+                $module_type = "user";
+            }
+            $result = $zdbh->query("SELECT mc_id_pk FROM x_modcats WHERE mc_name_vc = '$module_defaultcat'")->Fetch();
+            if ($result) {
+                $cat_fk = $result['mc_id_pk'];
+            } else {
+                $cat_fk = 2;
+            }
+            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_category_fk, mo_version_in, mo_folder_vc, mo_installed_ts, mo_type_en, mo_desc_tx) VALUES ('$module_name', $cat_fk, $module_version, '$module', " . time() . ", '$module_type',  '$module_description')");
             $sql->execute();
             return true;
         } catch (Exception $e) {

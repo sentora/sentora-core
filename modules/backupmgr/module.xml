@@ -2,7 +2,7 @@
 <module>
 <name>Backup</name>
 <version>100</version>
-<default-cat>Advanced</default-cat>
+<defaultcat>Advanced</defaultcat>
 <desc>The backup manager module enables you to backup your entire hosting account including all your MySQL® databases.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

@@ -2,7 +2,7 @@
 <module>
 <name>Apache Admin</name>
 <version>100</version>
-<default-cat>Admin</default-cat>
+<defaultcat>Admin</defaultcat>
 <desc>This module enables you to configure Apache Vhost settings for your hosting accounts.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

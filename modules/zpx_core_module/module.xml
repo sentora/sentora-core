@@ -2,7 +2,8 @@
 <module>
 <name>ZPanel Core System Module</name>
 <version>100</version>
-<default-cat>other</default-cat>
+<defaultcat>other</defaultcat>
+<type>system</type>
 <desc>Core system modules for ZPanelX.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>ballen@zpanelcp.com</authoremail>

@@ -17,11 +17,6 @@ if ($zlo->hasInfo()) {
     $zlo->reset();
 }
 
-if (isset($_GET['scannewmodules'])) {
-    print_r(ui_module::ScanForNewModules());
-    die;
-}
-
 if (isset($_GET['logout'])) {
     ctrl_auth::KillSession();
     ctrl_auth::KillCookies();
