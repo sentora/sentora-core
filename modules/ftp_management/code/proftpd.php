@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$ftp_db = self::GetFTPOption('ftp_db');
+ 		$ftp_db = ctrl_options::GetOption('ftp_db');
 		include('cnf/db.php');
 		$z_db_user = $user;
 		$z_db_pass = $pass;

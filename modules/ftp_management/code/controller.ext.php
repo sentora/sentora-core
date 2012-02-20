@@ -213,16 +213,6 @@ class module_controller {
 		runtime_hook::Execute('OnAfterDeleteFTPAccount');
 		return $retval;
 	}
-
-    static function GetFTPOption($name) {
-        global $zdbh;
-        $result = $zdbh->query("SELECT fts_value_tx FROM x_ftp_settings WHERE fts_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['fts_value_tx'];
-        } else {
-            return false;
-        }
-    }
 	
     /**
      * End 'worker' methods.
