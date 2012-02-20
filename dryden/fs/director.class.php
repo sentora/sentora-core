@@ -308,6 +308,14 @@ class fs_director {
         return false;
     }
 
+    static function GetFileExtension($filename) {
+        return pathinfo($filename, PATHINFO_EXTENSION);
+    }
+
+    static function GetFileNameNoExtentsion($filename) {
+        return pathinfo($filename, PATHINFO_FILENAME);
+    }
+
 }
 
 ?>
