@@ -91,7 +91,7 @@
 		       		<table class="zform">
 				        <tr>
 					        <th nowrap="nowrap"><: Username :>:</th>
-					        <td><input name="inUsername" type="text" id="inUsername" size="30" value=""/></td>
+					        <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value=""/></td>
 				        </tr>
 				        <tr>
 					        <th><: Password :>:</th>

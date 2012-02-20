@@ -226,7 +226,7 @@ class module_controller {
         global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateFTP($currentuser['userid'], $formvars['inUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inAccess'], $formvars['inAutoHome']))
+        if (self::ExecuteCreateFTP($currentuser['userid'], $formvars['inFTPUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inAccess'], $formvars['inAutoHome']))
 			self::$ok = true;
             return true;
         return false;
