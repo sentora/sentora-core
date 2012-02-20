@@ -305,7 +305,26 @@ class fs_director {
                 return true;
             return false;
         }
-        return false;
+    }
+
+    /**
+     * Returns the file extentsion of a file.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $filename The full path to the file.
+     * @return string The file extentsion (eg. .jpg) 
+     */
+    static function GetFileExtension($filename) {
+        return pathinfo($filename, PATHINFO_EXTENSION);
+    }
+
+    /**
+     * Returns the file name of a file minus the file extention.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $filename The full path to the file.
+     * @return string The file name.
+     */
+    static function GetFileNameNoExtentsion($filename) {
+        return pathinfo($filename, PATHINFO_FILENAME);
     }
 
 }

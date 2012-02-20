@@ -2,7 +2,7 @@
 <module>
 <name>Network Tools</name>
 <version>100</version>
-<default-cat>Advanced</default-cat>
+<defaultcat>Advanced</defaultcat>
 <desc>You can use the tools below to diagnose issues or to simply test connectivity to other servers or sites around the globe.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

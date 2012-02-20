@@ -9,9 +9,10 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-global $controller, $zdbh;
+global $controller, $zdbh, $zlo;
 $controller = new runtime_controller();
 
+$zlo->method = ctrl_options::GetOption('logmode');
 if ($zlo->hasInfo()) {
     $zlo->writeLog();
     $zlo->reset();
@@ -40,7 +41,7 @@ if (isset($_POST['inForgotPassword'])) {
         $zdbh->exec("UPDATE x_accounts SET ac_resethash_tx = '" . $randomkey . "' WHERE ac_id_pk=" . $result['ac_id_pk'] . "");
 
         $phpmailer = new sys_email();
-        $phpmailer->Subject = "Control Panel Password Reset";
+        $phpmailer->Subject = "Hosting Panel Password Reset";
         $phpmailer->Body = "Hi " . $result['ac_user_vc'] . ",
             
         You or somebody pretending to be you has requested a password reset link to be sent for your web hosting control panel login at: " . ctrl_options::GetOption('cp_url') . "

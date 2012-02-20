@@ -61,7 +61,7 @@ class ui_module {
     /**
      * Gathers module infomation from the modules XML file and adds the details to the DB.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param string $module The name of the module of which to import the module infomation in for.
+     * @param string $module The name of the module (folder) of which to import the module infomation in for.
      * @return boolean
      */
     static function ModuleInfoToDB($module) {
@@ -75,7 +75,18 @@ class ui_module {
             $module_name = $mod_config->document->name[0]->tagData;
             $module_version = $mod_config->document->version[0]->tagData;
             $module_description = $mod_config->document->desc[0]->tagData;
-            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_version_in, mo_folder_vc, mo_installed_ts, mo_desc_tx) VALUES ('$module_name', $module_version, '$module_name', " . time() . ", '$module_description')");
+            $module_defaultcat = $mod_config->document->defaultcat[0]->tagData;
+            $module_type = $mod_config->document->type[0]->tagData;
+            if ($module_type != ("user" || "system" || "modadmin")) {
+                $module_type = "user";
+            }
+            $result = $zdbh->query("SELECT mc_id_pk FROM x_modcats WHERE mc_name_vc = '$module_defaultcat'")->Fetch();
+            if ($result) {
+                $cat_fk = $result['mc_id_pk'];
+            } else {
+                $cat_fk = 2;
+            }
+            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_category_fk, mo_version_in, mo_folder_vc, mo_installed_ts, mo_type_en, mo_desc_tx) VALUES ('$module_name', $cat_fk, $module_version, '$module', " . time() . ", '$module_type',  '$module_description')");
             $sql->execute();
             return true;
         } catch (Exception $e) {
@@ -87,10 +98,33 @@ class ui_module {
     /**
      * This class scans the module directory and will return an array of new modules that are not yet in the database.
      * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global obj $zdbh The ZPX database handle.
+     * @param boolean $init Upon finding modules that don't exist in the database, add them!
      * @return array List of all new modules.
      */
-    static function ScanForNewModules() {
+    static function ScanForNewModules($init = false) {
+        global $zdbh;
         $new_module_list = array();
+        $handle = @opendir(ctrl_options::GetOption('zpanel_root') . "modules");
+        $chkdir = ctrl_options::GetOption('zpanel_root') . "modules/";
+        if ($handle) {
+            while ($file = readdir($handle)) {
+                if ($file != "." && $file != "..") {
+                    if (is_dir($chkdir . $file)) {
+                        $match_module = $zdbh->query("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '$file'")->Fetch();
+                        if (!$match_module) {
+                            array_push($new_module_list, $file);
+                        }
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        if ($init == true) {
+            foreach ($new_module_list as $modules_to_import) {
+                ui_module::ModuleInfoToDB($modules_to_import);
+            }
+        }
         return $new_module_list;
     }
 

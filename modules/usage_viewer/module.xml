@@ -2,7 +2,7 @@
 <module>
 <name>Usage Viewer</name>
 <version>100</version>
-<default-cat>Account Information</default-cat>
+<defaultcat>Account Information</defaultcat>
 <desc>The account usage screen enables you to see exactly what you are currently using on your hosting package.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

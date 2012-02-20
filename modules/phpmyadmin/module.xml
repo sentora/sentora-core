@@ -2,7 +2,7 @@
 <module>
 <name>phpMyAdmin</name>
 <version>100</version>
-<default-cat>Databases</default-cat>
+<defaultcat>Databases</defaultcat>
 <desc>phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

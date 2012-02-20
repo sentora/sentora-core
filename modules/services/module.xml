@@ -2,7 +2,7 @@
 <module>
 <name>Services</name>
 <version>100</version>
-<default-cat>Advanced</default-cat>
+<defaultcat>Advanced</defaultcat>
 <desc>Here you can check the current status of our services and see what services are up and running and which are down and not.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

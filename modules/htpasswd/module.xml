@@ -2,7 +2,7 @@
 <module>
 <name>Protect Directories</name>
 <version>100</version>
-<default-cat>Advanced</default-cat>
+<defaultcat>Advanced</defaultcat>
 <desc>This module enables you to configure .htaccess files and users to protect your web directories.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

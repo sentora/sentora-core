@@ -28,6 +28,7 @@ class module_controller {
 
     static $error;
     static $ok;
+    static $error_message;
 
     static function getAdminModules() {
         global $zdbh;
@@ -76,7 +77,7 @@ class module_controller {
 
                 $line .= "</tr>";
                 while ($modules = $modsql->fetch()) {
-					$ismodadmin=0;
+                    $ismodadmin = 0;
                     $line .= "<tr>";
                     $line .= "<td>" . self::ModuleStatusIcon($modules['mo_id_pk']) . "</td>";
                     $line .= "<td><a href=\"./?module=moduleadmin&showinfo=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
@@ -87,7 +88,7 @@ class module_controller {
                         $selected = "";
                     }
                     if ($modules['mo_name_vc'] == 'Module Admin') {
-						$ismodadmin=1;
+                        $ismodadmin = 1;
                         $disabled = "disabled=\"disabled\"";
                     } else {
                         $disabled = "";
@@ -127,12 +128,12 @@ class module_controller {
                     $line .= "</td>";
                     $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
                     while ($groups = $groupssql->fetch()) {
-						if ($groups['ug_name_vc'] == 'Administrators' && $ismodadmin==1){
-							$line .= "<input type=\"hidden\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\"/>";
-                        	$disabled = "disabled=\"disabled\"";
-                    	} else {
-                        	$disabled = "";
-                    	}
+                        if ($groups['ug_name_vc'] == 'Administrators' && $ismodadmin == 1) {
+                            $line .= "<input type=\"hidden\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\"/>";
+                            $disabled = "disabled=\"disabled\"";
+                        } else {
+                            $disabled = "";
+                        }
                         $ischeck = 0;
                         if (ctrl_groups::CheckGroupModulePermissions($groups['ug_id_pk'], $modules['mo_id_pk']))
                             $ischeck = "checked=\"checked\" ";
@@ -193,6 +194,8 @@ class module_controller {
     }
 
     static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$error_message))
+            return ui_sysmessage::shout(ui_language::translate(self::$error_message), 'zannounceerror', 'zannounce');
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your module options have been saved successfully!"));
         } else {
@@ -266,6 +269,41 @@ class module_controller {
         $retval = $zdbh->query("SELECT mo_type_en FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
         $retval = $retval['mo_type_en'];
         return $retval;
+    }
+
+    static function doInstallModule() {
+        self::$error_message = "";
+        self::$error = false;
+        if ($_FILES['modulefile']['error'] > 0) {
+            self::$error_message = "Couldn't upload the file, " . $_FILES['modulefile']['error'] . "";
+        } else {
+            $archive_ext = fs_director::GetFileExtension($_FILES['modulefile']['name']);
+            $module_folder = fs_director::GetFileNameNoExtentsion($_FILES['modulefile']['name']);
+            if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder)) {
+                if ($archive_ext != 'zpp') {
+                    self::$error_message = "Package type was not detected as a .zpp (ZPanel Package) archive.";
+                } else {
+                    if (fs_director::CreateDirectory(ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder)) {
+                        if (sys_archive::Unzip($_FILES['modulefile']['tmp_name'], ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . '/')) {
+                            if (!fs_director::CheckFileExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . '/module.xml')) {
+                                self::$error_message = "No module.xml file found in the unzipped archive.";
+                            } else {
+                                ui_module::ModuleInfoToDB($module_folder);
+                                // @todo Run any config scripts etc.
+                                self::$ok = true;
+                            }
+                        } else {
+                            self::$error_message = "Couldn't unzip the archive (" . $_FILES['modulefile']['tmp_name'] . ") to " . ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . '/';
+                        }
+                    } else {
+                        self::$error_message = "Couldn't create module folder in " . ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . "";
+                    }
+                }
+            } else {
+                self::$error_message = "The module " . $module_folder . " is already installed on this server!";
+            }
+        }
+        return;
     }
 
     static function getModuleName() {

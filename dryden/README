@@ -2,9 +2,13 @@ DRYDEN FRAMEWORK FOR ZPANELX
 ============================
 
 Folder overview:
-fs			- Filesystem classes
-db			- Database drivers
-xml			- XML classes
-payment                 - Payment classes
-ui			- User interface classes
-ws			- Web service classes
+----------------
+ctrl         - Controller related classes
+fs           - File system classes
+db           - Database drivers
+debug        - Debugging and error logging classes
+runtime      - Runtime classes
+payment      - Payment classes
+ui           - User interface classes
+ws           - Web service classes
+xml          - XML classes

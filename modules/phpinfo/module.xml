@@ -2,7 +2,7 @@
 <module>
 <name>PHP Info</name>
 <version>100</version>
-<default-cat>Server Admin</default-cat>
+<defaultcat>Server Admin</defaultcat>
 <desc>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.
 </desc>
 <authorname>ZPanel Project</authorname>

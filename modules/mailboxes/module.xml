@@ -2,7 +2,7 @@
 <module>
 <name>Mail Boxes</name>
 <version>100</version>
-<default-cat>Mail</default-cat>
+<defaultcat>Mail</defaultcat>
 <desc>Using this module you have the ability to create IMAP and POP3 Mailboxes.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

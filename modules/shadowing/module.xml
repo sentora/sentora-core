@@ -2,7 +2,7 @@
 <module>
 <name>Shadowing</name>
 <version>100</version>
-<default-cat>Server Admin</default-cat>
+<defaultcat>Server Admin</defaultcat>
 <desc>From here you can shadow any of your client's accounts, this enables you to automatically login as the user which enables you to offer remote help by seeing what they see!</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

@@ -2,7 +2,7 @@
 <module>
 <name>MySQL Databases</name>
 <version>100</version>
-<default-cat>Databases</default-cat>
+<defaultcat>Databases</defaultcat>
 <desc>MySQL® databases are used by many PHP applications such as forums and ecommerce systems, below you can manage and create MySQL® databases.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>

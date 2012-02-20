@@ -2,7 +2,7 @@
 <module>
 <name>Manage Clients</name>
 <version>100</version>
-<default-cat>Reseller</default-cat>
+<defaultcat>Reseller</defaultcat>
 <desc>The account manager enables you to view, update and create client accounts.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>
