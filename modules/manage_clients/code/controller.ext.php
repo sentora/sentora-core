@@ -39,12 +39,11 @@ class module_controller {
     static $edit;
     static $clientid;
     static $clientpkgid;
-	static $resetform;
+    static $resetform;
 
     /**
      * The 'worker' methods.
      */
-	 
     static function ListClients($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
@@ -215,7 +214,7 @@ class module_controller {
 								WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteClient');
-		self::$ok=true;
+        self::$ok = true;
         return true;
     }
 
@@ -239,14 +238,14 @@ class module_controller {
 										ud_phone_vc=    '" . $phone . "'
 										WHERE ud_user_fk=" . $clientid . "");
         $sql->execute();
-		if ($enabled == 0){
-			self::DisableClient($clientid);
-		}
-		if ($enabled == 1){
-			self::EnableClient($clientid);		
-		}
+        if ($enabled == 0) {
+            self::DisableClient($clientid);
+        }
+        if ($enabled == 1) {
+            self::EnableClient($clientid);
+        }
         runtime_hook::Execute('OnAfterUpdateClient');
-		self::$ok=true;
+        self::$ok = true;
         return true;
     }
 
@@ -335,15 +334,15 @@ class module_controller {
         $sql->execute();
         // Lets create the client diectories
         fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username);
-		fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username, 0777);
-		fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/public_html");
-		fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
-		fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
-		fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
+        fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username, 0777);
+        fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/public_html");
+        fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
+        fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
+        fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
         runtime_hook::Execute('OnAfterCreateClient');
-		self::$resetform=true;
-		self::$ok=true;
-		return true;
+        self::$resetform = true;
+        self::$ok = true;
+        return true;
 
         // Create the MySQL account for the user...
         // Now we create the user's home directory if it doesnt already exsist...
@@ -433,17 +432,16 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-	 
     static function doCreateClient() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inNewUserName'], $formvars['inNewPackage'], $formvars['inNewGroup'], $formvars['inNewFullName'], $formvars['inNewEmailAddress'], $formvars['inNewAddress'], $formvars['inNewPostCode'], $formvars['inNewPhone'], $formvars['inNewPassword'])){
-			unset($_POST['inNewUserName']);
+        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inNewUserName'], $formvars['inNewPackage'], $formvars['inNewGroup'], $formvars['inNewFullName'], $formvars['inNewEmailAddress'], $formvars['inNewAddress'], $formvars['inNewPostCode'], $formvars['inNewPhone'], $formvars['inNewPassword'])) {
+            unset($_POST['inNewUserName']);
             return true;
-		} else {
-        return false;
-		}
+        } else {
+            return false;
+        }
     }
 
     static function doEditClient() {

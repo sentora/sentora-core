@@ -13,7 +13,7 @@ class webservice extends ws_xmws {
     function DeleteClient() {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
-        module_controller::DeleteClient($contenttags['uid']);
+        module_controller::ExecuteDeleteClient($contenttags['uid']);
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', ws_xmws::NewXMLTag('uid', $contenttags['uid']) . ws_xmws::NewXMLTag('deleted', 'true'));
@@ -30,7 +30,7 @@ class webservice extends ws_xmws {
         $dataobject->addItemValue('content', ws_xmws::NewXMLTag('uid', $contenttags['uid']) . ws_xmws::NewXMLTag('enabled', 'true'));
         return $dataobject->getDataObject();
     }
-    
+
     function DisableClient() {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
@@ -39,6 +39,30 @@ class webservice extends ws_xmws {
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', ws_xmws::NewXMLTag('uid', $contenttags['uid']) . ws_xmws::NewXMLTag('disabled', 'true'));
         return $dataobject->getDataObject();
+    }
+
+    public function GetAllClients() {
+        $request_data = $this->RawXMWSToArray($this->wsdata);
+        $contenttags = $this->XMLDataToArray($request_data['content']);
+        $response_xml = "\n";
+        if (module_controller::ListClients($contenttags['uid'])) {
+            $allactiveclients = module_controller::ListClients($contenttags['uid']);
+            $currentclient = 0;
+            $newsections = "";
+            foreach ($allactiveclients as $client) {
+                $newsections = $newsections . ws_xmws::NewXMLContentSection('client', $client);
+                $currentclient++;
+            }
+            $response_xml = $response_xml . $newsections;
+        }
+        $dataobject = new runtime_dataobject();
+        $dataobject->addItemValue('response', '');
+        $dataobject->addItemValue('content', $response_xml);
+        return $dataobject->getDataObject();
+    }
+
+    public function CreateClient() {
+        # ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password)
     }
 
 }
