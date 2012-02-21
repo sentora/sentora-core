@@ -69,14 +69,12 @@ class webservice extends ws_xmws {
      */
     public function CreateDomain() {
         $request_data = $this->RawXMWSToArray($this->wsdata);
-        $contenttags = $this->XMLDataToArray($request_data['content']);
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
-
-        if (module_controller::ExecuteAddDomain($contenttags['uid'], $contenttags['domain'], $contenttags['destination'], $contenttags['autohome'])) {
-            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domain', $contenttags['domain']) . ws_xmws::NewXMLTag('created', 'true'));
+        if (module_controller::ExecuteAddDomain(ws_generic::GetTagValue('uid', $request_data['content']), ws_generic::GetTagValue('domain', $request_data['content']), ws_generic::GetTagValue('destination', $request_data['content']), ws_generic::GetTagValue('autohome', $request_data['content']))) {
+            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domain', ws_generic::GetTagValue('domain', $request_data['content'])) . ws_xmws::NewXMLTag('created', 'true'));
         } else {
-            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domain', $contenttags['domain']) . ws_xmws::NewXMLTag('created', 'false'));
+            $dataobject->addItemValue('content', ws_xmws::NewXMLTag('domain', ws_generic::GetTagValue('domain', $request_data['content'])) . ws_xmws::NewXMLTag('created', 'false'));
         }
         return $dataobject->getDataObject();
     }
