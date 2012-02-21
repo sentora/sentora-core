@@ -74,6 +74,20 @@ class ws_generic {
         return $xml_raw_data;
     }
 
+    /**
+     * Returns the value of a tag from an XML string.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $tagname The name of the tag of which to retrieve the value from.
+     * @param string $xml The XML string
+     * @return string The XML tag value. 
+     */
+    static function GetTagValue($tagname, $xml) {
+        $matches = array();
+        $pattern = "/<$tagname>(.*?)<\/$tagname>/";
+        preg_match($pattern, $xml, $matches);
+        return $matches[1];
+    }
+
 }
 
 ?>

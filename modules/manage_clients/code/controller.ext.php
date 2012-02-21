@@ -284,8 +284,6 @@ class module_controller {
 
     static function ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password) {
         global $zdbh;
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
         // Check for errors before we continue...

@@ -62,7 +62,13 @@ class webservice extends ws_xmws {
     }
 
     public function CreateClient() {
-        # ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password)
+        $request_data = $this->RawXMWSToArray($this->wsdata);
+        $response_xml = "";
+        module_controller::ExecuteCreateClient(ws_generic::GetTagValue('resellerid', $request_data['content']), ws_generic::GetTagValue('username', $request_data['content']), ws_generic::GetTagValue('packageid', $request_data['content']), ws_generic::GetTagValue('groupid', $request_data['content']), ws_generic::GetTagValue('fullname', $request_data['content']), ws_generic::GetTagValue('email', $request_data['content']), ws_generic::GetTagValue('address', $request_data['content']), ws_generic::GetTagValue('postcode', $request_data['content']), ws_generic::GetTagValue('phone', $request_data['content']), ws_generic::GetTagValue('password', $request_data['content']));
+        $dataobject = new runtime_dataobject();
+        $dataobject->addItemValue('response', '');
+        $dataobject->addItemValue('content', $response_xml);
+        return $dataobject->getDataObject();
     }
 
 }
