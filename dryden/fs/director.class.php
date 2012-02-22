@@ -86,7 +86,7 @@ class fs_director {
     static function CreateDirectory($path) {
         if (!file_exists($path)) {
             runtime_hook::Execute('OnBeforeDirectoryCreate');
-            @mkdir($path, 0777);
+            @mkdir($path, 0777, true);
             fs_director::SetFileSystemPermissions($path, 0777);
             runtime_hook::Execute('OnAfterDirectoryCreate');
             $retval = true;

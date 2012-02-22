@@ -1385,16 +1385,6 @@ class module_controller {
         }
     }
 
-    static function GetDNSOption($name) {
-        global $zdbh;
-        $result = $zdbh->query("SELECT dns_value_tx FROM x_dns_settings WHERE dns_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['dns_value_tx'];
-        } else {
-            return false;
-        }
-    }
-
     static function IsValidIP($ip) {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
             return TRUE;

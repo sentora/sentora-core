@@ -324,27 +324,27 @@ class module_controller {
 	
 	static function StartBind(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			exec('net start '.self::GetDNSOption('bind_service').'', $out);
+			exec('net start '.ctrl_options::GetOption('bind_service').'', $out);
 		}else{
-			system('/etc/zpanel/bin/zsudo service '.self::GetDNSOption('bind_service').' start', $out);
+			system(ctrl_options::GetOption('zsudo') . ' service ' . ctrl_options::GetOption('bind_service') . ' start', $out);
 			sleep(2);
 		}
 	}
 
 	static function StopBind(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			exec('net stop '.self::GetDNSOption('bind_service').'', $out);
+			exec('net stop '.ctrl_options::GetOption('bind_service').'', $out);
 		}else{
-			system('/etc/zpanel/bin/zsudo service '.self::GetDNSOption('bind_service').' stop', $out);
+			system(ctrl_options::GetOption('zsudo') . ' service ' . ctrl_options::GetOption('bind_service') . ' stop', $out);
 			sleep(2);
 		}
 	}
 	
 	static function ReloadBind(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			$reload_bind = self::GetDNSOption('bind_dir').'bin/rndc.exe reload';
+			$reload_bind = ctrl_options::GetOption('bind_dir').'bin/rndc.exe reload';
 		}else{
-			$reload_bind = "/etc/zpanel/bin/zsudo service ".self::GetDNSOption('bind_service')." reload";
+			$reload_bind = ctrl_options::GetOption('zsudo') . " service " . ctrl_options::GetOption('bind_service') . " reload";
 		}
 		pclose(popen($reload_bind,'r'));
 	}
@@ -464,7 +464,7 @@ class module_controller {
 	}
 
 	static function ClearErrors(){
-		$bindlog = self::GetDNSOption('bind_log');
+		$bindlog = ctrl_options::GetOption('bind_log');
 		$log = $bindlog;
 		if (file_exists($bindlog)){
 		$handle = @fopen($log, "r");
@@ -490,7 +490,7 @@ class module_controller {
 	}
 
 	static function ClearWarnings(){
-		$bindlog = self::GetDNSOption('bind_log');
+		$bindlog = ctrl_options::GetOption('bind_log');
 		$log = $bindlog;
 		if (file_exists($bindlog)){
 		$handle = @fopen($log, "r");
@@ -516,7 +516,7 @@ class module_controller {
 	}
 
 	static function ClearLog(){
-		$bindlog = self::GetDNSOption('bind_log');
+		$bindlog = ctrl_options::GetOption('bind_log');
 		$log = $bindlog;
 		if (file_exists($bindlog)){			
 		$fp = fopen($log,'w');
@@ -849,7 +849,7 @@ class module_controller {
 	}
 	
 	static function ViewErrors(){	
-		$bindlog = self::GetDNSOption('bind_log');
+		$bindlog = ctrl_options::GetOption('bind_log');
 		$logerror = array();
 		$logwarning = array();
 		$getlog = array();
@@ -914,17 +914,7 @@ class module_controller {
         $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
-
-    static function GetDNSOption($name) {
-        global $zdbh;
-        $result = $zdbh->query("SELECT dns_value_tx FROM x_dns_settings WHERE dns_name_vc = '$name'")->Fetch();
-        if ($result) {
-            return $result['dns_value_tx'];
-        } else {
-            return false;
-        }
-    }
-	
+		
 }
 
 ?>
