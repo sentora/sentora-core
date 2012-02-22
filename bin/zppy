@@ -31,15 +31,44 @@ if (!runtime_controller::IsCLI())
 
 if ((isset($argv[1])) && ($argv[1] == 'install')) {
     fwrite(STDOUT, "Module to be installed " . $argv[2] . "\n");
-    $zip = new ZipArchive;
-    $res = $zip->open("/tmp/" . $argv[2] . ".zip");
-    if ($res) {
-        $zip->extractTo("/tmp/");
-        $zip->close();
-        fwrite(STDOUT, "Module extracted successfully!");
-        exit(0);
+    $contents = file_get_contents($package_file);
+    $lines = preg_split('/\r\n|\r|\n/', $contents);
+    $newconf = "";
+    foreach ($lines as $line) {
+        $this_line = preg_split('/\t/', $line);
+        if ($this_line[0] == $argv[2]) {
+            if (fs_director::CheckFileExists('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp')) {
+                unlink('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp');
+            }
+            chdir('etc/zppy-cache/package-downloads/');
+
+            exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
+            chdir($root_path);
+        }
+    }
+    if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $argv[2])) {
+        if (fs_director::CreateDirectory('modules/' . $argv[2])) {
+            if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
+                if (!fs_director::CheckFileExists('modules/' . $argv[2] . '/module.xml')) {
+                    fwrite(STDOUT, "No module.xml file found in the unzipped archive.");
+                    exit(1);
+                } else {
+                    ui_module::ModuleInfoToDB($argv[2]);
+                    fwrite(STDOUT, "Module installed successfully!");
+                    exit(0);
+                }
+            } else {
+                fwrite(STDOUT, "An error occured, The package archive could not be extracted!");
+                exit(1);
+            }
+
+            exit(1);
+        } else {
+            fwrite(STDOUT, "Cannot create directory for module!");
+            exit(1);
+        }
     } else {
-        fwrite(STDOUT, "Module failed to be extracted!");
+        fwrite(STDOUT, "Module already appears to be installed!");
         exit(1);
     }
 }
