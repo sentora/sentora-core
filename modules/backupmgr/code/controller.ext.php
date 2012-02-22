@@ -68,6 +68,9 @@ class module_controller {
         $username = $currentuser['username'];
         include('cnf/db.php');
         runtime_hook::Execute('OnBeforeCreateBackup');
+		if (!is_dir(ctrl_options::GetOption('temp_dir'))) {
+        	fs_director::CreateDirectory(ctrl_options::GetOption('temp_dir'));
+        }
         // Lets grab and archive the user's web data....
         $homedir = ctrl_options::GetOption('hosted_dir') . $username;
         $backupname = $username . "_" . date("M-d-Y_hms", time());
