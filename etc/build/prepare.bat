@@ -22,6 +22,8 @@ mkdir %zpd%:\zpanel\panel
 mkdir %zpd%:\zpanel\bin
 mkdir %zpd%:\zpanel\configs
 mkdir %zpd%:\zpanel\hostdata
+mkdir %zpd%:\zpanel\hostdata\zadmin
+mkdir %zpd%:\zpanel\hostdata\zadmin\public_html
 mkdir %zpd%:\zpanel\logs
 mkdir %zpd%:\zpanel\backups
 mkdir %zpd%:\zpanel\temp

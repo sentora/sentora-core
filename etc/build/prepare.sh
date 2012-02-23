@@ -15,6 +15,8 @@ mkdir /etc/zpanel/panel
 mkdir /etc/zpanel/docs
 mkdir /var/zpanel
 mkdir /var/zpanel/hostdata
+mkdir /var/zpanel/hostdata/zadmin
+mkdir /var/zpanel/hostdata/zadmin/public_html
 mkdir /var/zpanel/logs
 mkdir /var/zpanel/backups
 mkdir /var/zpanel/temp
