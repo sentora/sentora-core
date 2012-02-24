@@ -134,7 +134,7 @@ class fs_filehandler {
         } else {
             $new_version = $current_version . fs_filehandler::NewLine() . $content;
         }
-        fs_filehandler::UpdateFile($file, '0777', $new_version);
+        fs_filehandler::UpdateFile($file, 0777, $new_version);
     }
 
 }

@@ -58,17 +58,15 @@ class debug_logger {
             $email_log->Body = "" . date('c') . ' - ' . $this->logcode . ' - ' . $this->detail . "";
             $email_log->AddAddress(ctrl_options::GetOption('email_from_address'));
             $email_log->SendEmail();
-        } elseif ($this->method == "database") {
-            $zdbh = new db_driver("mysql");
-            $statment = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx, lg_when_ts) VALUES (0, '" . $this->logcode . "', 'no yet supported', '" . $this->detail . "', '" . $this->mextra . "','" . time() . "')";
-            if ($zdbh->exec($statement) > 0) {
+        } elseif ($this->method == "db") {
+            $statement = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx) VALUES (0, '" . $this->logcode . "', 'NA', '" . $this->detail . "', '" . $this->mextra . "')";
+            if ($zdbh->exec($statement)) {
                 $retval = true;
             } else {
                 $retval = false;
             }
             try {
-                $zdbh = new db_driver("mysql");
-                $statment = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx, lg_when_ts) VALUES (0, '" . $this->logcode . "', 'no yet supported', '" . $this->detail . "', '" . $this->mextra . "','" . time() . "')";
+                $statement = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx, lg_when_ts) VALUES (0, '" . $this->logcode . "', 'NA', '" . $this->detail . "', '" . $this->mextra . "','" . time() . "')";
                 if ($zdbh->exec($statement) > 0) {
                     $retval = true;
                 } else {

@@ -289,7 +289,9 @@ class module_controller {
                                 self::$error_message = "No module.xml file found in the unzipped archive.";
                             } else {
                                 ui_module::ModuleInfoToDB($module_folder);
-                                // @todo Run any config scripts etc.
+                                $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $module_folder . "/deploy/install.run";
+                                if (fs_director::CheckFileExists($extra_config))
+                                    exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
                                 self::$ok = true;
                             }
                         } else {

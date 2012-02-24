@@ -54,6 +54,9 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
                     exit(1);
                 } else {
                     ui_module::ModuleInfoToDB($argv[2]);
+                    $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/install.run";
+                    if (fs_director::CheckFileExists($extra_config))
+                        exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
                     fwrite(STDOUT, "Module installed successfully!");
                     exit(0);
                 }
