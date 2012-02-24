@@ -78,8 +78,43 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
 
 if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
     fwrite(STDOUT, "Module to be upgraded!\n");
-
-    exit(0);
+    $contents = file_get_contents($package_file);
+    $lines = preg_split('/\r\n|\r|\n/', $contents);
+    $newconf = "";
+    foreach ($lines as $line) {
+        $this_line = preg_split('/\t/', $line);
+        if ($this_line[0] == $argv[2]) {
+            if (fs_director::CheckFileExists('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp')) {
+                unlink('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp');
+            }
+            chdir('etc/zppy-cache/package-downloads/');
+            exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
+            chdir($root_path);
+        }
+    }
+    if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $argv[2])) {
+        fwrite(STDOUT, "The module '" . $argv[2] . "' is not installed, install it first before you can upgrade it!");
+        exit(1);
+    } else {
+        /**
+         * We need to overwrite any existing files here!!!
+         */
+        if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
+            if (!fs_director::CheckFileExists('modules/' . $argv[2] . '/module.xml')) {
+                fwrite(STDOUT, "No module.xml file found in the unzipped archive.");
+                exit(1);
+            } else {
+                $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
+                if (fs_director::CheckFileExists($extra_config))
+                    exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
+                fwrite(STDOUT, "Module upgraded successfully!");
+                exit(0);
+            }
+        } else {
+            fwrite(STDOUT, "An error occured, The package archive could not be extracted!");
+            exit(1);
+        }
+    }
 }
 
 if ((isset($argv[1])) && ($argv[1] == 'remove')) {
