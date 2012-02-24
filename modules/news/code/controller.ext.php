@@ -33,7 +33,7 @@ class module_controller {
         if ($content == '') {
             $content = ui_language::translate("Unable to connect to the ZPanel News server at this time.");
         } else {
-            $content = "<iframe allowtransparency=\"\" src=\"" . $newsurl . "\" frameborder=\"0\" width=\"100%\" height=\"300\"></iframe>";
+            $content = "<div style=\"min-width:900px; width:100%\"><iframe class=\"autoHeight\" frameborder=\"0\" scrolling=\"auto\" allowtransparency=\"\" src=\"" . $newsurl . "\" width=\"100%\"></iframe></div>";
         }
         return $content;
     }
