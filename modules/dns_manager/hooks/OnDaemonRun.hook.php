@@ -140,11 +140,19 @@
         //Now we have all domain ID's, loop through them and find records for each zone file.
 		$line = "";
         foreach ($domains as $domain) {
+			echo "CHECKING ZONE FILE: " . ctrl_options::GetOption('zone_dir') . $domain . ".txt..." . fs_filehandler::NewLine();
+			system(ctrl_options::GetOption('named_checkzone') . " " . $domain . " " . ctrl_options::GetOption('zone_dir') . $domain . ".txt", $retval);
+			echo $retval . fs_filehandler::NewLine();
+			if ($retval == 0){
+				echo "Syntax check passed. Adding zone to " . ctrl_options::GetOption('named_conf') . fs_filehandler::NewLine();
     		$line .= "zone \"" . $domain . "\" IN {" . fs_filehandler::NewLine();
 			$line .= "	type master;" . fs_filehandler::NewLine();
 			$line .= "	file \"" . ctrl_options::GetOption('zone_dir') . $domain . ".txt\";" . fs_filehandler::NewLine();
 			$line .= "	allow-transfer { " .ctrl_options::GetOption('allow_xfer') . "; };" . fs_filehandler::NewLine();
-			$line .= "};" . fs_filehandler::NewLine();		
+			$line .= "};" . fs_filehandler::NewLine();
+			} else {
+				echo "Syntax ERROR. Skipping zone record." . fs_filehandler::NewLine();
+			}
         } 
 		fs_filehandler::UpdateFile($named_file, 0777, $line);
     }
@@ -196,4 +204,22 @@
 			}
 		}
 	}
+
+function var_dump_to_string($var){
+    $output = "<pre>";
+    _var_dump_to_string($var,$output);
+    $output .= "</pre>";
+    return $output;
+}
+
+function _var_dump_to_string($var,&$output,$prefix=""){
+    foreach($var as $key=>$value){
+        if(is_array($value)){
+            $output.= $prefix.$key.": \n";
+            _var_dump_to_string($value,$output,"  ".$prefix);
+        } else{
+            $output.= $prefix.$key.": ".$value."\n";
+        }
+    }
+}
 ?>

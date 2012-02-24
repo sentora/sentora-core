@@ -1176,13 +1176,15 @@ class module_controller {
                 if (isset($type['new_' . $id])) {
                     if ($delete['new_' . $id] == "false" && !fs_director::CheckForEmptyValue($type['new_' . $id])) {
                         //HOSTNAME
-                        if (isset($hostName['new_' . $id]) && !fs_director::CheckForEmptyValue($hostName['new_' . $id])) {
+                        if (isset($hostName['new_' . $id]) && !fs_director::CheckForEmptyValue($hostName['new_' . $id]) && $hostName['new_' . $id] != "@") {
+							
 							//Check that hostname does not already exist.
 							$hostname = $zdbh->query("SELECT * FROM x_dns WHERE dn_host_vc='" . $hostName['new_' . $id] . "' AND dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();
 							if ($hostname){
 								self::$hostname_error = TRUE;
 								return FALSE;
 							}
+							
                             if ($type['new_' . $id] != "SRV") {
                                 if (!self::IsValidDomainName($hostName['new_' . $id])) {
                                     return FALSE;
