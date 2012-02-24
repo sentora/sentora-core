@@ -1,14 +1,16 @@
 <?php
 
 
-	echo fs_filehandler::NewLine() . "Begin writing Apache Config to: ".ctrl_options::GetOption('apache_vhost'). fs_filehandler::NewLine();
+	echo fs_filehandler::NewLine() . "START Apache Config Hook." . fs_filehandler::NewLine();
 	if (ui_module::CheckModuleEnabled('Apache Config')){
 		echo "Apache Admin module ENABLED..." . fs_filehandler::NewLine();
 		if (ctrl_options::GetOption('apache_changed') == strtolower("true")){
 			echo "Apache Config has changed..." . fs_filehandler::NewLine();
 			if (ctrl_options::GetOption('apache_backup') == strtolower("true")){
+				echo "Backing up Apache Config to: ".ctrl_options::GetOption('apache_budir'). fs_filehandler::NewLine();
 				BackupVhostConfigFile();
 			}
+			echo "Begin writing Apache Config to: ".ctrl_options::GetOption('apache_vhost'). fs_filehandler::NewLine();
 			WriteVhostConfigFile();
 			echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
 		} else {
@@ -17,7 +19,7 @@
 	} else {
 		echo "Apache Admin module DISABLED...nothing to do." . fs_filehandler::NewLine();
 	}
-	echo "END Apache Config." . fs_filehandler::NewLine();
+	echo "END Apache Config Hook." . fs_filehandler::NewLine();
 
     function WriteVhostConfigFile() {
 		include('cnf/db.php');

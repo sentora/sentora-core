@@ -653,10 +653,6 @@ a.zcat{
 	border-spacing:0px;
 }
 .zannounce{
-	position:fixed;
-	top: 81px;
-	left: 0px;
-	width:100%;
 	min-height:20px;
 	background-color: #ECF5F9;
 	border:solid 1px #55A7C8;
@@ -666,10 +662,6 @@ a.zcat{
 	color:#2266AA;
 }
 .zannounceok{
-	position:fixed;
-	top: 81px;
-	left: 0px;
-	width:100%;
 	min-height:20px;
 	background-color: #ECF5F9;
 	border:solid 1px #55A7C8;
@@ -678,26 +670,7 @@ a.zcat{
 	padding:10px;
 	color:#2266AA;
 }
-/*
-.zannounceok{
-	position:fixed;
-	top: 81px;
-	left: 0px;
-	width:100%;
-	min-height:20px;
-	background-color: #E8FCDC;
-	border:solid 1px #008800;
-	font-weight:normal;
-	text-align: left;
-	padding:10px;
-	color:#008800;
-}
-*/
 .zannounceerror{
-	position:fixed;
-	top: 81px;
-	left: 0px;
-	width:100%;
 	min-height:20px;
 	background-color: #FFCBCB;
 	border:solid 1px #C11B17;
@@ -707,10 +680,6 @@ a.zcat{
 	color:#C11B17;
 }
 .zannouncecaution{
-	position:fixed;
-	top: 81px;
-	left: 0px;
-	width:100%;
 	min-height:20px;
 	background-color: #FFFFA3;
 	border:solid 1px #F1D031;
