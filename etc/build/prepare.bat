@@ -32,6 +32,9 @@ echo Copying application configuration files...
 xcopy /s/e contrib\win_specific\* %zpd%:\zpanel\configs
 xcopy /s/e contrib\all_platforms\* %zpd%:\zpanel\configs
 echo Complete!
+echo Copying 'zppy' client to system root...
+COPY bin\zppy.bat %windir%\zppy.bat /Y
+echo Complete!
 echo.
 echo You can access your new ZPanel folder layout here: %zpd%:\zpanel
 echo.

@@ -61,7 +61,7 @@ class fs_filehandler {
      * @param string $chmod Permissions mode to use for the new file. (eg. 0777)
      * @param string $string The contents to write into the new file.
      */
-    static function CreateFile($path, $chmod = "0777", $string = "") {
+    static function CreateFile($path, $chmod = 0777, $string = "") {
         if (!is_file($path)) {
             preg_match('`^(.+)/([a-zA-Z0-9]+\.[a-z]+)$`i', $path, $matches);
             $directory = $matches[1];
@@ -74,7 +74,7 @@ class fs_filehandler {
             $fp = fopen($path, 'w');
             fwrite($fp, $string);
             fclose($fp);
-            fs_director::SetFileSystemPermissions($dest, 0777);
+            fs_director::SetFileSystemPermissions($dest, $chmod);
         }
     }
 
@@ -110,7 +110,7 @@ class fs_filehandler {
      * @param string $sting The content to update the file with.
      * @return boolean 
      */
-    static function UpdateFile($path, $chmod = "0777", $string = "") {
+    static function UpdateFile($path, $chmod = 0777, $string = "") {
         if (!file_exists($path))
             fs_filehandler::ResetFile($path);
         $fp = fopen($path, 'w');
