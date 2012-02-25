@@ -21,10 +21,9 @@ mkdir /var/zpanel/logs
 mkdir /var/zpanel/backups
 mkdir /var/zpanel/temp
 echo "Complete!"
-echo "Copying application configuration files.."
-cp -R -v contrib/nix_specific/* /etc/zpanel/configs
-cp -R -v contrib/all_platforms/* /etc/zpanel/configs
-echo "Complete!"
+# echo "Copying application configuration files.."
+# cp -R -v config_packs/NAME_OF_PACK/* /etc/zpanel/configs
+# echo "Complete!"
 chmod -R 777 /etc/zpanel/
 chmod -R 777 /var/zpanel/
 echo "Setting permissions.."
