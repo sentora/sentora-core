@@ -13,7 +13,7 @@
 class ui_tpl_assetfolderpath {
 
     public function Template() {
-        return 'etc/styles/zpanelx/';
+        return 'etc/styles/' .ui_template::GetUserTemplate(). '/';
     }
 
 }
