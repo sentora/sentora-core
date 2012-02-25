@@ -10,6 +10,7 @@
 			WriteDNSNamedHook();
 			ResetDNSRecordsUpatedHook();
 			PurgeOldZoneDNSRecordsHook();
+			ReloadBindHook();
 		} else {
 			echo "DNS Records have not changed...nothing to do." . fs_filehandler::NewLine();
 		}
@@ -205,21 +206,13 @@
 		}
 	}
 
-function var_dump_to_string($var){
-    $output = "<pre>";
-    _var_dump_to_string($var,$output);
-    $output .= "</pre>";
-    return $output;
-}
-
-function _var_dump_to_string($var,&$output,$prefix=""){
-    foreach($var as $key=>$value){
-        if(is_array($value)){
-            $output.= $prefix.$key.": \n";
-            _var_dump_to_string($value,$output,"  ".$prefix);
-        } else{
-            $output.= $prefix.$key.": ".$value."\n";
-        }
-    }
-}
+	function ReloadBindHook(){
+		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
+			$reload_bind = ctrl_options::GetOption('bind_dir') . "rndc.exe reload";
+		}else{
+			$reload_bind = ctrl_options::GetOption('zsudo') . " service " . ctrl_options::GetOption('bind_service') . " reload";
+		}
+		echo "Reloading BIND now..." . fs_filehandler::NewLine();
+		pclose(popen($reload_bind,'r'));
+	}
 ?>

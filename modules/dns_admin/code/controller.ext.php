@@ -38,6 +38,8 @@ class module_controller {
 	static $logwarning;
 	static $getlog;
 	static $showlog;
+	static $notwritable;
+	static $forceupdate;
 
     static function getDNSConfig() {
         $display = self::DisplayDNSConfig();
@@ -119,6 +121,9 @@ class module_controller {
 		$line .= "<th>Delete ALL Zone Records</th>";
 		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDeleteAll\" value=\"1\">GO</button></td>";
 		$line .= "</tr>";
+		$line .= "<th>Force Records Update on Next Daemon Run</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inForceUpdate\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";
 		$line .= "</div>";
@@ -161,6 +166,7 @@ class module_controller {
 
 		$line .= "<div class=\"ui-tabs-panel ui-widget-content ui-corner-bottom\" id=\"logs\">";
 		$line .= "<form action=\"./?module=dns_admin&action=Updatelogs\" method=\"post\">";
+		$line .= self::CheckLogReadable(ctrl_options::GetOption('bind_log')) . " " . self::CheckLogWritable(ctrl_options::GetOption('bind_log'));
         $line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
 		$line .= "<th>Clear errors</th>";
@@ -198,10 +204,9 @@ class module_controller {
 		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">GO</button></td>";
 		$line .= "</tr>";
         $line .= "</table>";
-		$line .= "</form>";		
-		$line .= "</div>";
+		$line .= "</form>";	
 		
-		//logerrordiv
+				//logerrordiv
 		if (!fs_director::CheckForEmptyValue(self::$logerror)){
 			$line .= "<div id=\"logerror\" style=\"display:none;\">";
 			$line .= "<h2>Log Errors:</h2>";
@@ -234,11 +239,15 @@ class module_controller {
 			}
 			$line .= "</table>";
 			$line .= "</div>";
-			$line .= "</div>";
+			
 		}
+			
+		$line .= "</div>";
+		
+
 		
 		
-		
+		$line .= "</div>";
 		$line .= "</div>";
 		$line .= "</div>";
 		
@@ -264,6 +273,7 @@ class module_controller {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
                         $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
                         $updatesql->execute();
+						self::TriggerDNSUpdate("0");
                     }
                 }
             }
@@ -289,18 +299,26 @@ class module_controller {
         global $controller;
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inResetAll'))) {
 			self::ResetAll();
+			self::TriggerDNSUpdate("0");
 		}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inAddMissing'))) {
 			self::AddMissing();
+			self::TriggerDNSUpdate("0");
 		}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDeleteType'))) {
 			self::DeleteType();
+			self::TriggerDNSUpdate("0");
 		}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inPurge'))) {
 			self::Purge();
 		}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDeleteAll'))) {
 			self::DeleteAll();
+			self::TriggerDNSUpdate("0");
+		}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inForceUpdate'))) {
+			self::$forceupdate=true;
+			self::TriggerDNSUpdate("0");
 		}
     }
 
@@ -342,7 +360,7 @@ class module_controller {
 	
 	static function ReloadBind(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			$reload_bind = ctrl_options::GetOption('bind_dir').'bin/rndc.exe reload';
+			$reload_bind = ctrl_options::GetOption('bind_dir') . 'rndc.exe reload';
 		}else{
 			$reload_bind = ctrl_options::GetOption('zsudo') . " service " . ctrl_options::GetOption('bind_service') . " reload";
 		}
@@ -465,63 +483,75 @@ class module_controller {
 
 	static function ClearErrors(){
 		$bindlog = ctrl_options::GetOption('bind_log');
-		$log = $bindlog;
-		if (file_exists($bindlog)){
-		$handle = @fopen($log, "r");
-		$getlog = array();
-			if ($handle) { 
-    			while (!feof($handle)) {
-        		$buffer = fgets($handle, 4096);
-					if (strstr($buffer,'error:')){
-        			$line = "";
-					}else{
-					$line = $buffer;
-					}
-				$getlog[] = $line;
-    			}fclose($handle);
+		if (is_writable($bindlog)) {
+			$log = $bindlog;
+			if (file_exists($bindlog)){
+			$handle = @fopen($log, "r");
+			$getlog = array();
+				if ($handle) { 
+	    			while (!feof($handle)) {
+	        		$buffer = fgets($handle, 4096);
+						if (strstr($buffer,'error:') || strstr($buffer,'error ')){
+	        			$line = "";
+						}else{
+						$line = $buffer;
+						}
+					$getlog[] = $line;
+	    			}fclose($handle);
+				}
+				
+			$fp = fopen($log,'w');
+			foreach($getlog as $key => $value){
+				fwrite($fp,$value);
 			}
-			
-		$fp = fopen($log,'w');
-		foreach($getlog as $key => $value){
-			fwrite($fp,$value);
-		}
-		fclose($fp);
+			fclose($fp);
+			}
+		} else {
+			self::$notwritable=true;
 		}
 	}
 
 	static function ClearWarnings(){
 		$bindlog = ctrl_options::GetOption('bind_log');
-		$log = $bindlog;
-		if (file_exists($bindlog)){
-		$handle = @fopen($log, "r");
-		$getlog = array();
-			if ($handle) { 
-    			while (!feof($handle)) {
-        		$buffer = fgets($handle, 4096);
-					if (strstr($buffer,'warning:')){
-        			$line = "";
-					}else{
-					$line = $buffer;
-					}
-				$getlog[] = $line;
-    			}fclose($handle);
-			}
+		if (is_writable($bindlog)) {
+			$log = $bindlog;
+			if (file_exists($bindlog)){
+			$handle = @fopen($log, "r");
+			$getlog = array();
+				if ($handle) { 
+	    			while (!feof($handle)) {
+	        		$buffer = fgets($handle, 4096);
+						if (strstr($buffer,'warning:') || strstr($buffer,'warning ')){
+	        			$line = "";
+						}else{
+						$line = $buffer;
+						}
+					$getlog[] = $line;
+	    			}fclose($handle);
+				}
 			
-		$fp = fopen($log,'w');
-		foreach($getlog as $key => $value){
-			fwrite($fp,$value);
-		}
-		fclose($fp);
+			$fp = fopen($log,'w');
+			foreach($getlog as $key => $value){
+				fwrite($fp,$value);
+			}
+			fclose($fp);
+			}
+		} else {
+			self::$notwritable=true;
 		}
 	}
 
 	static function ClearLog(){
 		$bindlog = ctrl_options::GetOption('bind_log');
-		$log = $bindlog;
-		if (file_exists($bindlog)){			
-		$fp = fopen($log,'w');
-		fwrite($fp,'');
-		fclose($fp);
+		if (is_writable($bindlog)) {
+			$log = $bindlog;
+			if (file_exists($bindlog)){			
+			$fp = fopen($log,'w');
+			fwrite($fp,'');
+			fclose($fp);
+			}
+		} else {
+			self::$notwritable=true;
 		}
 	}
 
@@ -860,10 +890,10 @@ class module_controller {
 		    	while (!feof($handle)) {
 		       	$buffer = fgets($handle, 4096);
 				$getlog[] = $buffer;
-					if (strstr($buffer,'error:')){
+					if (strstr($buffer,'error:') || strstr($buffer,'error ')){
 		       			$logerror[] = $buffer;
 					}
-					if (strstr($buffer,'warning:')){
+					if (strstr($buffer,'warning:') || strstr($buffer,'warning ')){
 		       			$logwarning[] = $buffer;
 					}
 		    	}fclose($handle);
@@ -881,25 +911,29 @@ class module_controller {
 	}
 
     static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$notwritable)) {
+            return ui_sysmessage::shout(ui_language::translate("No permission to write to log file."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$forceupdate)) {
+            return ui_sysmessage::shout(ui_language::translate("All zone records will be updated on next daemon run."), "zannounceok");
+        }
         if (!fs_director::CheckForEmptyValue(self::$reset)) {
-            return ui_sysmessage::shout(number_format(self::$reset) . " " . ui_language::translate("Domains records where reset to default"));
+            return ui_sysmessage::shout(number_format(self::$reset) . " " . ui_language::translate("Domains records where reset to default"), "zannounceok");
         }
         if (!fs_director::CheckForEmptyValue(self::$addmissing)) {
-            return ui_sysmessage::shout(number_format(self::$addmissing) . " " . ui_language::translate("Domains records were created"));
+            return ui_sysmessage::shout(number_format(self::$addmissing) . " " . ui_language::translate("Domains records were created"), "zannounceok");
         }
         if (!fs_director::CheckForEmptyValue(self::$deletedtype)) {
-            return ui_sysmessage::shout(number_format(self::$deletedtype) . " '" .  self::$type . "' " . ui_language::translate("Records where marked as deleted from the database"));
+            return ui_sysmessage::shout(number_format(self::$deletedtype) . " '" .  self::$type . "' " . ui_language::translate("Records where marked as deleted from the database"), "zannounceok");
         }
         if (!fs_director::CheckForEmptyValue(self::$deleted)) {
-            return ui_sysmessage::shout(number_format(self::$deleted) . " " . ui_language::translate("Records where marked as deleted from the database"));
+            return ui_sysmessage::shout(number_format(self::$deleted) . " " . ui_language::translate("Records where marked as deleted from the database"), "zannounceok");
         }
         if (!fs_director::CheckForEmptyValue(self::$purged)) {
-            return ui_sysmessage::shout(number_format(self::$purged) . " " . ui_language::translate("Records where purged from the database"));
+            return ui_sysmessage::shout(number_format(self::$purged) . " " . ui_language::translate("Records where purged from the database"), "zannounceok");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
-        } else {
-            return ui_language::translate(ui_module::GetModuleDescription());
+            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"), "zannounceok");
         }
         return;
     }
@@ -914,6 +948,52 @@ class module_controller {
         $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
+
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
+        return $message;
+    }
+
+    static function TriggerDNSUpdate($id) {
+		global $zdbh;
+        global $controller;
+        $GetRecords = ctrl_options::GetOption('dns_hasupdates');
+		$records = explode(",", $GetRecords);
+		foreach ($records as $record){
+			$RecordArray[] = $record;
+		}
+		if (!in_array($id, $RecordArray)){	
+        	$newlist = $GetRecords . "," . $id;
+	        $newlist = str_replace(",,", ",", $newlist);
+	        $sql = "UPDATE x_settings SET so_value_tx='" . $newlist . "' WHERE so_name_vc='dns_hasupdates'";
+			$sql = $zdbh->prepare($sql);
+			$sql->execute();
+	        return true;
+		}
+    }
+
+    static function CheckLogReadable($filename) {
+		if (is_readable($filename)){
+			$retval = "<font color=\"green\">" . ui_language::translate("Connected to log file") . "</font>";
+		} else {
+			$retval = "<font color=\"red\">" . ui_language::translate("Log file is not Readable") . "</font>";
+		}
+    	return $retval;
+	}
+
+    static function CheckLogWritable($filename) {
+		if (is_readable($filename)){
+			if (is_writable($filename)){
+				$retval = "<font color=\"green\">" . ui_language::translate("(writable)") . "</font>";
+			} else {
+				$retval = "<font color=\"red\">" . ui_language::translate("(readonly)") . "</font>";
+			}
+		} else {
+			$retval=NULL;
+		}
+    	return $retval;
+	}
+	
 		
 }
 

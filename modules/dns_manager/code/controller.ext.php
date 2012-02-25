@@ -565,6 +565,7 @@ class module_controller {
         $line .= "</tr>";
         $line .= "</table>";
         $line .= "</form>";
+		$line .= "<p>&nbsp;</p>";
         $line .= "</div>";
         return $line;
     }
