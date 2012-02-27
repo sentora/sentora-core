@@ -43,7 +43,9 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
+				$numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_acc_fk=" . $rowmysql['my_acc_fk'] . " AND mm_database_fk=" . $rowmysql['my_id_pk'] . "")->fetch();
                 array_push($res, array('mysqlid' => $rowmysql['my_id_pk'],
+					'totaldb' => $numrowdb[0],
                     'mysqlname' => $rowmysql['my_name_vc'],
                     'mysqlsize' => $rowmysql['my_usedspace_bi']));
             }
