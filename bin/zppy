@@ -23,6 +23,8 @@ require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 require_once 'inc/dbc.inc.php';
 
+global $zdbh;
+
 $repo_file = "etc/zppy-cache/repo.list";
 $package_file = "etc/zppy-cache/package.list";
 
@@ -125,11 +127,19 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
         fwrite(STDOUT, "Please confirm you want to remove this module? [y/N]");
         $confirm = fgets(STDIN, 2);
         if ($confirm == 'y') {
-            fwrite(STDOUT, "Deleting " . $argv[2] . " modules files..\n");
-            // Lets delete the actual module files and the module folder itself.
-            // Lets clean up the module group permissions too... Lets drop them all!
-            // Lets drop any system options from the system options table that are related to this module!
-            // Lets drop the module from the modules table
+            fwrite(STDOUT, "Removing " . $argv[2] . " module..\n");
+            $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/remove.run";
+            if (fs_director::CheckFileExists($extra_config))
+                    exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
+            ctrl_groups::DeleteGroupModulePermissions(0, $moduleid);
+            $sql = $zdbh->prepare("DELETE FROM x_modules WHERE mo_folder_vc = '$argv[2]'");
+            $sql->execute();
+            $sql = $zdbh->prepare("DELETE FROM x_settings WHERE so_module_vc = '$argv[2]'");
+            $sql->execute();
+            if (!fs_director::RemoveDirectory('modules/' . $argv[2])) {
+                fwrite(STDOUT, "Could not removed the module directory!\n");
+                exit(1);
+            }
             exit(0);
         } else {
             fwrite(STDOUT, "Cancelled module removal!\n");

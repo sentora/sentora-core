@@ -49,13 +49,17 @@ class ctrl_groups {
     /**
      * Deletes permission to disable a module for a given user group.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param int $groupid The usergroup ID.
+     * @param int $groupid The usergroup ID. (If '0' will delete the permissions for ALL groups)
      * @param int $moduleid The module ID.
      * @return bool
      */
     static function DeleteGroupModulePermissions($groupid, $moduleid) {
         global $zdbh;
-        $statement = "DELETE FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid";
+        if ($groupid > 0) {
+            $statement = "DELETE FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid";
+        } else {
+            $statement = "DELETE FROM x_permissions WHERE pe_module_fk=$moduleid";
+        }
         if ($zdbh->exec($statement) > 0)
             return true;
         return false;

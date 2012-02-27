@@ -21,13 +21,19 @@ mkdir /var/zpanel/logs
 mkdir /var/zpanel/backups
 mkdir /var/zpanel/temp
 echo "Complete!"
-echo "Copying application configuration files.."
-cp -R -v contrib/nix_specific/* /etc/zpanel/configs
-cp -R -v contrib/all_platforms/* /etc/zpanel/configs
+echo "Copying ZPanel files into place.."
+cp -R ../../* /etc/zpanel/panel/ 
 echo "Complete!"
+# echo "Copying application configuration files.."
+# cp -R -v config_packs/NAME_OF_PACK/* /etc/zpanel/configs
+# echo "Complete!"
+echo "Setting permissions.."
 chmod -R 777 /etc/zpanel/
 chmod -R 777 /var/zpanel/
-echo "Setting permissions.."
+echo "Complete!"
+echo "Registering 'zppy' client.."
+ln -s /etc/zpanel/panel/bin/zppy /usr/bin/zppy
+echo "Complete!"
 echo ""
 echo ""
 echo "The Zpanel directories have now been created in /etc/zpanel and /var/zpanel"
