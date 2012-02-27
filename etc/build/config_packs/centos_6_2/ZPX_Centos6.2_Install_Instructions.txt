@@ -1,0 +1,178 @@
+PREPARING THE SERVER:
+	edit /etc/selinux/config
+	SELINUX=disabled
+	save and quit, reboot
+
+	chkconfig --levels 235 sendmail off
+	/etc/init.d/sendmail stop
+	yum remove sendmail
+	yum remove vsftpd
+	service iptables save
+	service iptables stop
+	chkconfig iptables off
+	OR
+	/etc/init.d/iptables save
+	/etc/init.d/iptables stop
+	chkconfig --levels 235 iptables off
+	
+	chmod +x /etc/zpanel/panel/etc/build/prepare.sh
+	/etc/zpanel/panel/etc/build/prepare.sh
+	DOWNLOAD EXTRACT ZPANEL
+	# Set the security on these directories
+	sudo chown -R apache /etc/zpanel
+	sudo chmod -R g+s /etc/zpanel
+	sudo chown -R apache /var/zpanel
+	sudo chmod -R g+s /var/zpanel
+	sudo chmod -R 777 /etc/zpanel/
+	sudo chmod -R 777 /var/zpanel/
+	sudo chown root /etc/zpanel/panel/bin/zsudo
+	sudo chmod 4777 /etc/zpanel/panel/bin/zsudo
+	chmod 644 /etc/zpanel/panel/etc/apps/phpmyadmin/config.inc.php
+	
+	yum update
+	
+	yum install sudo
+	yum install make
+	yum install zip
+
+	
+MAIN PACKAGES:
+	yum install httpd php php-devel php-gd php-mbstring php-imap php-mysql php-xml php-xmlrpc curl curl-devel perl-libwww-perl libxml2 libxml2-devel mysql-server zip webalizer gcc gcc-c++ httpd-devel at make mysql-devel bzip2-devel
+
+	
+CONFIGURE MYSQL
+	chkconfig --levels 235 mysqld on
+	service mysqld start
+	/usr/bin/mysql_secure_installation
+	Set new password and accept defaults.
+
+	
+SET ZPANEL DATABASE CONFIG:
+	edit /etc/zpanel/panel/cnf/db.php
+	$host = "localhost";
+	$dbname = "zpanelx_core";
+	$user = "root";
+	$pass = "YOUR_ROOT_MYSQL_PASSWORD";
+	
+	import zpanel database:
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/zpanelx_core.sql
+
+	
+SET ZPANEL APACHE CONFIG:
+	edit /etc/httpd/conf/httpd.conf
+	At end of file add: Include /etc/zpanel/configs/centos_6_2/apache/httpd.conf
+
+	edit /etc/zpanel/configs/centos_6_2/apache/http-vhosts.cfg
+	ServerAdmin ZPANELADMIN@YOURDOMAIN.COM
+	DocumentRoot "/etc/zpanel/panel/"
+	ServerName CONTROLPANEL.YOURDOMAIN.COM
+	ServerAlias *.CONTROLPANEL.YOURDOMAIN.COM
+
+	*If you want to also browse by IP
+	edit /etc/httpd/conf/httpd.conf change Docroot to:
+	DocumentRoot "/etc/zpanel/panel"
+	
+	echo "127.0.0.1 CONTROLPANEL.YOURDOMAIN.COM" >> /etc/hosts
+	chkconfig --levels 235 httpd on
+	service httpd start
+	
+	echo "apache ALL=NOPASSWD: /etc/zpanel/panel/bin/zsudo" >> /etc/sudoers
+
+
+POSTFIX-DOVECOT:
+	yum install postfix
+	yum install dovecot
+	yum install dovecot-mysql
+	mkdir -p /var/zpanel/vmail
+	chmod -R 777 /var/zpanel/vmail
+	chmod -R g+s /var/zpanel/vmail
+	groupadd -g 5000 vmail
+	useradd -m -g vmail -u 5000 -d /var/zpanel/vmail -s /bin/bash vmail
+	chown -R vmail.vmail /var/zpanel/vmail
+	
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/postfix/zpanelx_postfix.sql
+
+	# Postfix Master.cf
+	echo "# Dovecot LDA" >> /etc/postfix/master.cf
+	echo "dovecot   unix  -       n       n       -       -       pipe" >> /etc/postfix/master.cf
+	echo "  flags=DRhu user=vmail:mail argv=/usr/libexec/dovecot/deliver -d ${recipient}" >> /etc/postfix/master.cf
+	
+	mv /etc/postfix/main.cf /etc/postfix/main.old
+	touch /etc/postfix/main.cf
+	chmod -R 777 /etc/postfix/main.cf
+	echo "include /etc/zpanel/configs/centos_6_2/postfix/conf/main.cf" >> /etc/postfix/main.cf
+	
+	edit these files and add mysql root and password:
+		/etc/zpanel/configs/centos_6_2/postfix/conf/dovecot-sql.conf
+		/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_relay_domains_maps.cf
+		/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_alias_maps.cf
+		/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_domains_maps.cf
+		/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_mailbox_limit_maps.cf
+		/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_mailbox_maps.cf
+		/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_transport.cf
+		
+	mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.old
+	touch /etc/dovecot/dovecot.conf
+	chmod -R 777 /etc/dovecot/dovecot.conf
+	echo "include /etc/zpanel/configs/centos_6_2/dovecot2/dovecot.conf" >> /etc/dovecot/dovecot.conf
+	
+	chkconfig --levels 345 postfix on
+	chkconfig --levels 345 dovecot on
+	service postfix start
+	service dovecot start
+	
+	*Server will need a reboot for postfix to be fully functional
+	
+	ROUNDCUBE
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/roundcube/zpanelx_roundcube.sql
+	edit /etc/zpanel/panel/etc/apps/webmail/config/db.inc.php
+	$rcmail_config['db_dsnw'] = 'mysql://root:YOUR_ROOT_MYSQL_PASSWORD@localhost/zpanelx_roundcube';
+	
+	
+PROFTPD:
+	wget http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-5.noarch.rpm
+	rpm -Uvh epel-release*rpm
+	yum install proftpd
+	yum install proftpd-mysql
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/proftpd/zpanelx_proftpd.sql
+	groupadd -g 2001 ftpgroup
+	useradd -u 2001 -s /bin/false -d /bin/null -c "proftpd user" -g ftpgroup ftpuser
+	
+	/** IF WE WANT TO NOT USE ROOT THEN WE CAN DO THIS
+	mysql -u root -p
+	create database zpanelx_proftpd;
+	GRANT SELECT, INSERT, UPDATE, DELETE ON ftp.* TO 'proftpd'@'localhost' IDENTIFIED BY 'password';
+	GRANT SELECT, INSERT, UPDATE, DELETE ON ftp.* TO 'proftpd'@'localhost.localdomain' IDENTIFIED BY 'password';
+	FLUSH PRIVILEGES;
+	Replace the string password with whatever password you want to use for the MySQL user proftpd.
+	**/
+	
+	edit /etc/zpanel/configs/centos_6_2/proftpd/proftpd-mysql.conf, replace with your credentials: SQLConnectInfo  DATABASE@localhost USER PASSWORD
+	SQLConnectInfo  zpanelx_proftpd@localhost proftpd password
+	
+	mv /etc/proftpd.conf /etc/proftpd.old
+	touch /etc/proftpd.conf
+	echo "include /etc/zpanel/configs/centos_6_2/proftpd/proftpd-mysql.conf" >> /etc/proftpd.conf
+	touch /var/zpanel/logs/proftpd
+	chmod -R 777 /var/zpanel/logs/proftpd
+	
+	chkconfig --levels 345 proftpd on
+	service proftpd start
+
+	
+BIND:
+	yum install bind bind-utils bind-libs
+	CONFIGURE BIND AS NEEDED - ONCE RUNNING INCLUDE ZPANEL NAMED PATH
+	echo 'include "/etc/zpanel/configs/centos_6_2/bind/etc/named.conf";' >> /etc/named.conf
+
+
+ZPANEL DAEMON:
+	touch /etc/cron.d/zdaemon
+	echo "*/5 * * * * root /usr/bin/php -q /etc/zpanel/panel/bin/daemon.php >> /dev/null 2>&1" >> /etc/cron.d/zdaemon
+	# Permissions must be 644 or cron will not run!
+	sudo chmod 644 /etc/cron.d/zdaemon
+	service crond restart
+	
+ZPPY LINK
+	ln -s /etc/zpanel/panel/bin/zppy /usr/bin/zppy
+	
