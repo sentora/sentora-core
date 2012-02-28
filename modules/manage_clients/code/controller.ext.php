@@ -258,7 +258,8 @@ class module_controller {
         $sql = $zdbh->prepare("UPDATE x_accounts SET 
 										ac_package_fk= " . $package . " ,
 										ac_enabled_in= " . $enabled . ",
-                                        ac_group_fk=   " . $group . "
+                                        ac_group_fk=   " . $group . ",
+										ac_pass_vc=	   '" . md5($newpass) . "'
 										WHERE ac_id_pk=" . $clientid . "");
         $sql->execute();
 
