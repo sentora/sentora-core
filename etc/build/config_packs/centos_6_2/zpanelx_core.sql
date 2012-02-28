@@ -583,103 +583,105 @@ INSERT INTO `x_permissions` VALUES ('279', '1', '43');
 INSERT INTO `x_permissions` VALUES ('280', '1', '46');
 INSERT INTO `x_profiles` VALUES ('1', '1', 'Test user 1', null, 'en', '1', '1', '1 Example house,\r\nTest street,\r\nSimple town,\r\nTestshire', 'C011 7RT', '+44(1206) 457169', null);
 INSERT INTO `x_quotas` VALUES ('1', '1', '5', '10', '5', '10', '100', '5', '10', '10', '2048000000', '10240000000', '0', '0', null, null, null, null, null, '*', '1');
-INSERT INTO `x_settings` VALUES ('6', 'dbversion', null, '10.0.0.0', null, 'Database Version', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('7', 'zpanel_root', 'ZPanel Root', 'C:/wwwdata/zpanelx/', null, 'Zpanel Web Root', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('8', 'module_icons_pr', 'Icons per Row', '8', null, 'Set the number of icons to display before beginning a new line.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('9', 'zpanel_template', null, '', null, 'Template', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('10', 'zpanel_df', 'Date Format', 'H:i jS M Y T', null, 'Set the date format used by modules.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('11', 'server_email', 'Server Email', '', null, 'Server Email', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('13', 'servicechk_to', 'Service Check Timeout', '2', null, 'Service Check Timeout', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('14', 'root_drive', 'Root Drive', '/', null, 'The root drive where ZPanel is installed.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('16', 'php_exer', null, 'php', null, 'PHP Executable', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('17', 'temp_dir', 'Temp Directory', 'C:/windows/temp/', null, 'Global temp directory.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('18', 'news_url', '', 'http://api.zpanelcp.com/api/news.php', null, 'Zpanel News URL', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('19', 'update_url', '', 'http://www.ballen.co.uk/zpxapi/latestversion/', null, 'Zpanel Update URL', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('20', 'bugreport_url', '', 'http://api.zpanelcp.com/api/bugapi.php', null, 'Bug report URL', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('21', 'server_ip', 'Server IP Address', '172.167.22.10', null, 'If set this will use this manually entered server IP address which is the prefered method for use behind a firewall.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('22', 'zip_exe', 'ZIP Exe', 'C:/ZPanel/bin/7zip/7za.exe', null, 'Path to the ZIP Executable', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('24', 'disable_hostsen', '', 'false', 'true|false', 'Disable Host Entries', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('25', 'latestzpversion', '', '10.0.0.2', null, 'This is used for caching the latest version of ZPanel.', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('26', 'logmode', null, 'file', 'db|file|email', 'The default mode to log all errors in.', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('27', 'logfile', null, 'log.txt', null, 'If loggging is set to \'file\' mode this is the path to the log file that is to be used by ZPanel.', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('28', 'apikey', null, 'ee8795c8c53bfdb3b2cc595186b68912', null, 'The secret API key for the server.', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('29', 'email_from_address', 'From Address', 'dev@zpanelcp.com', null, 'The email address to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('30', 'email_from_name', 'From Name', 'Control Panel', null, 'The name to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('31', 'email_smtp', 'Use SMTP', 'true', 'true|false', 'Use SMTP server to end emails from. (true/false)', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('32', 'smtp_auth', 'Use AUTH', 'true', 'true|false', 'SMTP requires authentication. (true/false)', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('33', 'smtp_server', 'SMTP Server', 'smtp.gmail.com', null, 'The address of the SMTP server.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('34', 'smtp_port', 'SMTP Port', '465', null, 'The port address of the SMTP server (usually 25)', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('35', 'smtp_username', 'SMTP User', 'bobbyallen.uk@gmail.com', null, 'Username for authentication on the SMTP server.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('36', 'smtp_password', 'SMTP Pass', '___', null, 'Password for authentication on the SMTP server.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('37', 'smtp_secure', 'SMTP Auth method', 'ssl', 'false|ssl|tls', 'If specified will attempt to use encryption to connect to the server, if \'false\' this is disabled. Avaliable options: false, ssl, tls', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('38', 'daemon_lastrun', null, '1328923783', null, 'Timestamp of when the daemon last ran.', null, 'false');
-INSERT INTO `x_settings` VALUES ('39', 'daemon_dayrun', null, '1328908442', null, null, null, 'false');
-INSERT INTO `x_settings` VALUES ('40', 'daemon_weekrun', null, '1328908442', null, null, null, 'false');
-INSERT INTO `x_settings` VALUES ('41', 'daemon_monthrun', null, '1328908442', null, null, null, 'false');
-INSERT INTO `x_settings` VALUES ('42', 'purge_bu', 'Purge Backups', 'true', 'true|false', 'Delete client backups after alloted time has elapsed to help save diskspace (true/false)', 'Backup Config', 'true');
-INSERT INTO `x_settings` VALUES ('43', 'purge_date', 'Purge Date', '30', null, 'Time in days backups are safe from being deleted. After days have elapsed, older backups will be deleted on Daemon Day Run', 'Backup Config', 'true');
-INSERT INTO `x_settings` VALUES ('44', 'disk_bu', 'Disk Backups', 'true', 'true|false', 'Allow users to create and save backups of their home directories to disk. (true/false)', 'Backup Config', 'true');
-INSERT INTO `x_settings` VALUES ('45', 'schedule_bu', 'Daily Backups', 'true', 'true|false', 'Maks a daily backup of each clients data, including MySQL databases to their backup folder. Backups will still be created if Disk Backups are set to false. (true/false)', 'Backup Config', 'true');
-INSERT INTO `x_settings` VALUES ('46', 'ftp_db', 'FTP Database', 'zpanel_proftp', null, 'The name of the ftp server database', 'FTP Config', 'true');
-INSERT INTO `x_settings` VALUES ('47', 'ftp_php', 'FTP PHP', 'filezilla.phps', null, 'Name of PHP to include when adding FTP data.', 'FTP Config', 'true');
-INSERT INTO `x_settings` VALUES ('48', 'ftp_service', 'FTP Service Name', 'FileZilla server.exe', null, 'The name of the FTP service', 'FTP Config', 'true');
-INSERT INTO `x_settings` VALUES ('49', 'ftp_service_root', 'FTP Service Root', 'C:/ZPanel/bin/filezilla/', null, 'The path to the service executable if applicable.', 'FTP Config', 'true');
-INSERT INTO `x_settings` VALUES ('50', 'ftp_config_file', 'FTP Config File', 'C:/ZPanel/bin/filezilla/FileZilla Server.xml', null, 'The path to the configuration file if applicable.', 'FTP Config', 'true');
-INSERT INTO `x_settings` VALUES ('51', 'mailserver_db', 'Mailserver Database', 'zpanel_hmail', null, 'The name of the mail server database', 'Mail Config', 'true');
-INSERT INTO `x_settings` VALUES ('52', 'hmailserver_et', 'Hmail Encryption Type', '2', null, 'Type of encryption uses for hMailServer passwords', 'Mail Config', 'false');
-INSERT INTO `x_settings` VALUES ('53', 'max_mail_size', 'Max Mailbox Size', '200', null, 'Maximum size in megabytes allowed for mailboxes. Default = 200', 'Mail Config', 'true');
-INSERT INTO `x_settings` VALUES ('54', 'mailserver_php', 'Mailserver PHP', 'hmail.php', null, 'Name of PHP to include when adding mailbox data.', 'Mail Config', 'true');
-INSERT INTO `x_settings` VALUES ('55', 'remove_orphan', 'Remove Orphans', 'true', 'true|false', 'When domains are deleted, also delete all mailboxes for that domain when the daemon runs. (true/false)', 'Mail Config', 'true');
-INSERT INTO `x_settings` VALUES ('56', 'named_dir', 'Named Directory', 'C:/zpanelx/bin/bind/etc/', null, 'Path to the directory where named.conf is stored', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('57', 'named_conf', 'Named Config', 'named.conf', null, 'Named configuration file', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('58', 'zone_dir', 'Zone Directory', 'C:/zpanelx/bin/bind/zones/', null, 'Path to where DNS zone files are stored', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('59', 'refresh_ttl', 'SOA Refesh TTL', '21600', null, 'Global refresh TTL.  Default = 21600 (6 hours)', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('60', 'retry_ttl', 'SOA Retry TTL', '3600', null, 'Global retry TTL. Default = 3600 (1 hour)', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('61', 'expire_ttl', 'SOA Expire TTL', '604800', null, 'Global expire TTL. Default = 604800 (1 week)', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('62', 'minimum_ttl', 'SOA Minimum TTL', '86400', null, 'Global minimum TTL. Default = 86400 (1 day)', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('63', 'custom_ip', 'Allow Custom IP', 'true', 'true|false', 'Allow users to change IP settings in A records. If set to false, IP is locked to server IP setting in ZPanel Config', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('64', 'bind_dir', 'Path to BIND Root', 'C:/zpanelx/bin/bind/', null, 'Path to the root directory where BIND is installed.', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('65', 'bind_service', 'BIND Service Name', 'named', null, 'Name of the BIND service', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('66', 'allow_xfer', 'Allow Zone Transfers', 'all', null, 'Setting to restrict zone transfers in setting: allow-transfer {}; Default = all', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('67', 'allowed_types', 'Allowed Record Types', 'A AAAA CNAME MX TXT SRV SPF NS', null, 'Types of records allowed seperated by a space. Default = A AAAA CNAME MX TXT SRV SPF NS', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('68', 'bind_log', 'Bind Log', 'C:/zpanelx/bin/bind/bind.log', null, 'Path and name of the Bind Log', 'DNS Config', 'true');
-INSERT INTO `x_settings` VALUES ('69', 'hosted_dir', 'Vhosts Directory', 'C:/ZPanelx/hostdata/', null, 'Virtual host directory', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('70', 'disable_hostsen', 'Disable HOSTS file entries', 'false', 'true|false', 'Disable host entries', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('71', 'apache_vhost', 'Apache VHOST Conf', 'C:/ZPanelx/cnf/httpd-vhosts.conf', null, 'The full system patch and filename of the Apache VHOST configuration name.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('72', 'php_handler', 'PHP Handler', 'AddType application/x-httpd-php .php3', null, 'The PHP Handler.', 'Apache Config', 'false');
-INSERT INTO `x_settings` VALUES ('73', 'cgi_handler', 'CGI Handler', 'ScriptAlias /cgi-bin/ \"/_cgi-bin/\"\r\n<location /cgi-bin>\r\nAddHandler cgi-script .cgi .pl\r\nOptions ExecCGI -Indexes\r\n</location>', null, 'The CGI Handler.', 'Apache Config', 'false');
-INSERT INTO `x_settings` VALUES ('74', 'global_vhcustom', 'Global VHost Entry', null, null, 'Extra directives for all apache vhost\'s.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('75', 'static_dir', 'Static Pages Directory', 'C:/zpanelx/etc/static/', null, 'The ZPanel static directory, used for storing welcome pages etc. etc.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('76', 'parking_path', 'Vhost Parking Path', 'C:/zpanelx/etc/static/parking/', null, 'The path to the parking website, this will be used by all clients.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('78', 'shared_domains', 'Shared Domains', 'no-ip,dydns', null, 'Domains entered here can be shared across multiple accounts. Seperate domains with , example: no-ip,dydns,test', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('79', 'upload_temp_dir', 'Upload Temp Directory', 'C:/zpanelx/etc/tmp/', null, 'The path to the Apache Upload directory (with trailing slash)', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('80', 'apache_port', 'Apache Port', '80', null, 'Apache service port', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('81', 'dir_index', 'Directory Indexes', 'DirectoryIndex index.html index.htm index.php index.asp index.aspx index.jsp index.jspa index.shtml index.shtm', null, 'Directory Index', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('82', 'suhosin_value', 'Suhosin Value', 'php_admin_value suhosin.executor.func.blacklist \"passthru, show_source, shell_exec, system, pcntl_exec, popen, pclose, proc_open, proc_nice, proc_terminate, proc_get_status, proc_close, leak, apache_child_terminate, posix_kill, posix_mkfifo, posix_setpgid, posix_setsid, posix_setuid, escapeshellcmd, escapeshellarg\"', null, 'Suhosin configuration for virtual host  blacklisting commands', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('83', 'openbase_seperator', 'Open Base Seperator', ';', null, 'Seperator flag used in open_base_directory setting', 'Apache Config', 'false');
-INSERT INTO `x_settings` VALUES ('84', 'openbase_temp', 'Open Base Temp Directory', 'c:/windows/temp', null, 'Temp directory used in open_base_directory setting', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('85', 'access_log_format', 'Access Log Format', 'combined', 'combined|common', 'Log format for the Apache access log', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('86', 'bandwidth_log_format', 'Bandwidth Log Format', 'common', 'combined|common', 'Log format for the Apache bandwidth log', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('87', 'global_zpcustom', 'Global ZPanel Entry', null, null, 'Extra directives for Zpanel default vhost.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('88', 'use_openbase', 'Use Open Base Dir', 'true', 'true|false', 'Enable openbase directory for all vhosts', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('89', 'use_suhosin', 'Use Suhosin', 'true', 'true|false', 'Enable Suhosin for all vhosts', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('90', 'zpanel_domain', 'ZPanel Domain', 'zpanel.ztest.com', null, 'Domain that the control panel is installed under.', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('91', 'log_dir', 'Log Directory', '/var/zpanel/logs/', null, 'Root path to directory log folders', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('92', 'apache_changed', 'Apache Changed', 'false', 'true|false', 'If set, Apache Config daemon hook will write the vhost config file changes.', 'Apache Config', 'false');
-INSERT INTO `x_settings` VALUES ('94', 'apache_allow_disabled', 'Allow Disabled', 'true', 'true|false', 'Allow webhosts to remain active even if a user has been disabled.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('95', 'apache_budir', 'VHost Backup Dir', '/etc/zpanel/cnf/apachebackups/', null, 'Directory that vhost.conf backups are stored.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('96', 'apache_purgebu', 'Purge Backups', 'true', 'true|false', 'Old backups are deleted after the date set in Puge Date', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('97', 'apache_purge_date', 'Purge Date', '7', null, 'Time in days that vhost backups are safe from deletion', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('98', 'apache_backup', 'VHost Backup', 'true', 'true|false', 'Backup vhost file before a new one is written', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('99', 'zsudo', 'zsudo path', '/etc/zpanel/bin/zsudo', null, 'Path to the zsudo binary used by Apache to run system commands.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('100', 'apache_restart', 'Apache Restart Cmd', '-k restart -n \"Apache\"', null, 'Command line arguements used after the restart service request when reloading Apache.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('101', 'httpd_exe', 'Apache Binary', 'C:/ZPanel/bin/apache/bin/httpd.exe', null, 'Path to the Apache binary', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('102', 'apache_sn', 'Apache Service Name', 'httpd', null, 'Service name used to handle Apache service control', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('103', 'daemon_exer', null, '/etc/zpanel/bin/daemon.php', null, 'Path to the ZPanel daemon', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('104', 'daemon_timing', null, '0 * * * *', null, 'Cron time for when to run the ZPanel daemon', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('105', 'cron_file', 'Cron File', 'c:/windows/system32/crontab', null, 'Path to the user cr0n file', 'Cron Config', 'true');
-INSERT INTO `x_settings` VALUES ('106', 'htpasswd_exe', 'htpassword Exe', 'htpasswd', null, 'Path to htpasswd.exe for potecting directories with .htaccess', 'Apache Config', 'false');
-INSERT INTO `x_settings` VALUES ('107', 'mysqldump_exe', 'MySQL Dump', 'C:/ZPanel/bin/mysql/bin/mysqldump.exe', null, 'Path to MySQL dump', 'ZPanel Config', 'false');
+INSERT INTO `x_settings` (`so_id_pk`, `so_name_vc`, `so_cleanname_vc`, `so_value_tx`, `so_defvalues_tx`, `so_desc_tx`, `so_module_vc`, `so_usereditable_en`) VALUES
+(6, 'dbversion', NULL, '10.0.0.0', NULL, 'Database Version', 'ZPanel Config', 'false'),
+(7, 'zpanel_root', 'ZPanel Root', '/etc/zpanel/panel/', NULL, 'Zpanel Web Root', 'ZPanel Config', 'true'),
+(8, 'module_icons_pr', 'Icons per Row', '8', NULL, 'Set the number of icons to display before beginning a new line.', 'ZPanel Config', 'true'),
+(9, 'zpanel_template', NULL, '', NULL, 'Template', 'ZPanel Config', 'false'),
+(10, 'zpanel_df', 'Date Format', 'H:i jS M Y T', NULL, 'Set the date format used by modules.', 'ZPanel Config', 'true'),
+(11, 'server_email', 'Server Email', '', NULL, 'Server Email', 'ZPanel Config', 'true'),
+(13, 'servicechk_to', 'Service Check Timeout', '10', NULL, 'Service Check Timeout', 'ZPanel Config', 'true'),
+(14, 'root_drive', 'Root Drive', '/', NULL, 'The root drive where ZPanel is installed.', 'ZPanel Config', 'true'),
+(16, 'php_exer', NULL, 'php', NULL, 'PHP Executable', 'ZPanel Config', 'false'),
+(17, 'temp_dir', 'Temp Directory', '/var/zpanel/temp/', NULL, 'Global temp directory.', 'ZPanel Config', 'true'),
+(18, 'news_url', '', 'http://api.zpanelcp.com/api/news.php', NULL, 'Zpanel News URL', 'ZPanel Config', 'false'),
+(19, 'update_url', '', 'http://www.ballen.co.uk/zpxapi/latestversion/', NULL, 'Zpanel Update URL', 'ZPanel Config', 'false'),
+(20, 'bugreport_url', '', 'http://api.zpanelcp.com/api/bugapi.php', NULL, 'Bug report URL', 'ZPanel Config', 'false'),
+(21, 'server_ip', 'Server IP Address', '', NULL, 'If set this will use this manually entered server IP address which is the prefered method for use behind a firewall.', 'ZPanel Config', 'true'),
+(22, 'zip_exe', 'ZIP Exe', 'zip', NULL, 'Path to the ZIP Executable', 'ZPanel Config', 'true'),
+(24, 'disable_hostsen', '', 'false', 'true|false', 'Disable Host Entries', 'ZPanel Config', 'false'),
+(25, 'latestzpversion', '', '10.0.0.0', NULL, 'This is used for caching the latest version of ZPanel.', 'ZPanel Config', 'false'),
+(26, 'logmode', NULL, 'db', 'db|file|email', 'The default mode to log all errors in.', 'ZPanel Config', 'true'),
+(27, 'logfile', NULL, '/etc/zpanel/logs/zpanel.log', NULL, 'If loggging is set to ''file'' mode this is the path to the log file that is to be used by ZPanel.', 'ZPanel Config', 'false'),
+(28, 'apikey', NULL, 'ee8795c8c53bfdb3b2cc595186b68912', NULL, 'The secret API key for the server.', 'ZPanel Config', 'false'),
+(29, 'email_from_address', 'From Address', 'zpanel@localhost', NULL, 'The email address to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true'),
+(30, 'email_from_name', 'From Name', 'ZPanel Server', NULL, 'The name to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true'),
+(31, 'email_smtp', 'Use SMTP', 'false', 'true|false', 'Use SMTP server to end emails from. (true/false)', 'ZPanel Config', 'true'),
+(32, 'smtp_auth', 'Use AUTH', 'false', 'true|false', 'SMTP requires authentication. (true/false)', 'ZPanel Config', 'true'),
+(33, 'smtp_server', 'SMTP Server', '', NULL, 'The address of the SMTP server.', 'ZPanel Config', 'true'),
+(34, 'smtp_port', 'SMTP Port', '465', NULL, 'The port address of the SMTP server (usually 25)', 'ZPanel Config', 'true'),
+(35, 'smtp_username', 'SMTP User', '', NULL, 'Username for authentication on the SMTP server.', 'ZPanel Config', 'true'),
+(36, 'smtp_password', 'SMTP Pass', '', NULL, 'Password for authentication on the SMTP server.', 'ZPanel Config', 'true'),
+(37, 'smtp_secure', 'SMTP Auth method', 'false', 'false|ssl|tls', 'If specified will attempt to use encryption to connect to the server, if ''false'' this is disabled. Avaliable options: false, ssl, tls', 'ZPanel Config', 'true'),
+(38, 'daemon_lastrun', NULL, '0', NULL, 'Timestamp of when the daemon last ran.', NULL, 'false'),
+(39, 'daemon_dayrun', NULL, '0', NULL, NULL, NULL, 'false'),
+(40, 'daemon_weekrun', NULL, '0', NULL, NULL, NULL, 'false'),
+(41, 'daemon_monthrun', NULL, '0', NULL, NULL, NULL, 'false'),
+(42, 'purge_bu', 'Purge Backups', 'true', 'true|false', 'Delete client backups after alloted time has elapsed to help save diskspace (true/false)', 'Backup Config', 'true'),
+(43, 'purge_date', 'Purge Date', '30', NULL, 'Time in days backups are safe from being deleted. After days have elapsed, older backups will be deleted on Daemon Day Run', 'Backup Config', 'true'),
+(44, 'disk_bu', 'Disk Backups', 'true', 'true|false', 'Allow users to create and save backups of their home directories to disk. (true/false)', 'Backup Config', 'true'),
+(45, 'schedule_bu', 'Daily Backups', 'true', 'true|false', 'Maks a daily backup of each clients data, including MySQL databases to their backup folder. Backups will still be created if Disk Backups are set to false. (true/false)', 'Backup Config', 'true'),
+(46, 'ftp_db', 'FTP Database', 'zpanelx_proftpd', NULL, 'The name of the ftp server database', 'FTP Config', 'true'),
+(47, 'ftp_php', 'FTP PHP', 'proftpd.php', NULL, 'Name of PHP to include when adding FTP data.', 'FTP Config', 'true'),
+(48, 'ftp_service', 'FTP Service Name', 'proftpd', NULL, 'The name of the FTP service', 'FTP Config', 'true'),
+(49, 'ftp_service_root', 'FTP Service Root', '/etc/init.d/', NULL, 'The path to the service executable if applicable.', 'FTP Config', 'true'),
+(50, 'ftp_config_file', 'FTP Config File', '', NULL, 'The path to the configuration file if applicable.', 'FTP Config', 'true'),
+(51, 'mailserver_db', 'Mailserver Database', 'zpanelx_postfix', NULL, 'The name of the mail server database', 'Mail Config', 'true'),
+(52, 'hmailserver_et', 'Hmail Encryption Type', '2', NULL, 'Type of encryption uses for hMailServer passwords', 'Mail Config', 'false'),
+(53, 'max_mail_size', 'Max Mailbox Size', '200', NULL, 'Maximum size in megabytes allowed for mailboxes. Default = 200', 'Mail Config', 'true'),
+(54, 'mailserver_php', 'Mailserver PHP', 'postfix.php', NULL, 'Name of PHP to include when adding mailbox data.', 'Mail Config', 'true'),
+(55, 'remove_orphan', 'Remove Orphans', 'true', 'true|false', 'When domains are deleted, also delete all mailboxes for that domain when the daemon runs. (true/false)', 'Mail Config', 'true'),
+(56, 'named_dir', 'Named Directory', '/etc/zpanel/configs/bind/etc/', NULL, 'Path to the directory where named.conf is stored', 'DNS Config', 'true'),
+(57, 'named_conf', 'Named Config', 'named.conf', NULL, 'Named configuration file', 'DNS Config', 'true'),
+(58, 'zone_dir', 'Zone Directory', '/etc/zpanel/configs/bind/zones/', NULL, 'Path to where DNS zone files are stored', 'DNS Config', 'true'),
+(59, 'refresh_ttl', 'SOA Refesh TTL', '21600', NULL, 'Global refresh TTL.  Default = 21600 (6 hours)', 'DNS Config', 'true'),
+(60, 'retry_ttl', 'SOA Retry TTL', '3600', NULL, 'Global retry TTL. Default = 3600 (1 hour)', 'DNS Config', 'true'),
+(61, 'expire_ttl', 'SOA Expire TTL', '604800', NULL, 'Global expire TTL. Default = 604800 (1 week)', 'DNS Config', 'true'),
+(62, 'minimum_ttl', 'SOA Minimum TTL', '86400', NULL, 'Global minimum TTL. Default = 86400 (1 day)', 'DNS Config', 'true'),
+(63, 'custom_ip', 'Allow Custom IP', 'true', 'true|false', 'Allow users to change IP settings in A records. If set to false, IP is locked to server IP setting in ZPanel Config', 'DNS Config', 'true'),
+(64, 'bind_dir', 'Path to BIND Root', '/etc/named/', NULL, 'Path to the root directory where BIND is installed.', 'DNS Config', 'true'),
+(65, 'bind_service', 'BIND Service Name', 'named', NULL, 'Name of the BIND service', 'DNS Config', 'true'),
+(66, 'allow_xfer', 'Allow Zone Transfers', 'any', NULL, 'Setting to restrict zone transfers in setting: allow-transfer {}; Default = all', 'DNS Config', 'true'),
+(67, 'allowed_types', 'Allowed Record Types', 'A AAAA CNAME MX TXT SRV SPF NS', NULL, 'Types of records allowed seperated by a space. Default = A AAAA CNAME MX TXT SRV SPF NS', 'DNS Config', 'true'),
+(68, 'bind_log', 'Bind Log', '/var/named/data/named.run', NULL, 'Path and name of the Bind Log', 'DNS Config', 'true'),
+(69, 'hosted_dir', 'Vhosts Directory', '/var/zpanel/hostdata/', NULL, 'Virtual host directory', 'Apache Config', 'true'),
+(70, 'disable_hostsen', 'Disable HOSTS file entries', 'false', 'true|false', 'Disable host entries', 'Apache Config', 'true'),
+(71, 'apache_vhost', 'Apache VHOST Conf', '/etc/zpanel/configs/apache/httpd-vhosts.conf', NULL, 'The full system patch and filename of the Apache VHOST configuration name.', 'Apache Config', 'true'),
+(72, 'php_handler', 'PHP Handler', 'AddType application/x-httpd-php .php3 .php', NULL, 'The PHP Handler.', 'Apache Config', 'false'),
+(73, 'cgi_handler', 'CGI Handler', 'ScriptAlias /cgi-bin/ "/_cgi-bin/"\r\n<location /cgi-bin>\r\nAddHandler cgi-script .cgi .pl\r\nOptions ExecCGI -Indexes\r\n</location>', NULL, 'The CGI Handler.', 'Apache Config', 'false'),
+(74, 'global_vhcustom', 'Global VHost Entry', NULL, NULL, 'Extra directives for all apache vhost''s.', 'Apache Config', 'true'),
+(75, 'static_dir', 'Static Pages Directory', '/etc/zpanel/panel/etc/static/', NULL, 'The ZPanel static directory, used for storing welcome pages etc. etc.', 'Apache Config', 'true'),
+(76, 'parking_path', 'Vhost Parking Path', '/etc/zpanel/panel/etc/static/parking/', NULL, 'The path to the parking website, this will be used by all clients.', 'Apache Config', 'true'),
+(78, 'shared_domains', 'Shared Domains', 'no-ip,dydns', NULL, 'Domains entered here can be shared across multiple accounts. Seperate domains with , example: no-ip,dydns,test', 'Apache Config', 'true'),
+(79, 'upload_temp_dir', 'Upload Temp Directory', '/var/zpanel/temp/', NULL, 'The path to the Apache Upload directory (with trailing slash)', 'Apache Config', 'true'),
+(80, 'apache_port', 'Apache Port', '80', NULL, 'Apache service port', 'Apache Config', 'true'),
+(81, 'dir_index', 'Directory Indexes', 'DirectoryIndex index.html index.htm index.php index.asp index.aspx index.jsp index.jspa index.shtml index.shtm', NULL, 'Directory Index', 'Apache Config', 'true'),
+(82, 'suhosin_value', 'Suhosin Value', 'php_admin_value suhosin.executor.func.blacklist "passthru, show_source, shell_exec, system, pcntl_exec, popen, pclose, proc_open, proc_nice, proc_terminate, proc_get_status, proc_close, leak, apache_child_terminate, posix_kill, posix_mkfifo, posix_setpgid, posix_setsid, posix_setuid, escapeshellcmd, escapeshellarg"', NULL, 'Suhosin configuration for virtual host  blacklisting commands', 'Apache Config', 'true'),
+(83, 'openbase_seperator', 'Open Base Seperator', ':', NULL, 'Seperator flag used in open_base_directory setting', 'Apache Config', 'false'),
+(84, 'openbase_temp', 'Open Base Temp Directory', '/var/zpanel/temp/', NULL, 'Temp directory used in open_base_directory setting', 'Apache Config', 'true'),
+(85, 'access_log_format', 'Access Log Format', 'combined', 'combined|common', 'Log format for the Apache access log', 'Apache Config', 'true'),
+(86, 'bandwidth_log_format', 'Bandwidth Log Format', 'common', 'combined|common', 'Log format for the Apache bandwidth log', 'Apache Config', 'true'),
+(87, 'global_zpcustom', 'Global ZPanel Entry', NULL, NULL, 'Extra directives for Zpanel default vhost.', 'Apache Config', 'true'),
+(88, 'use_openbase', 'Use Open Base Dir', 'true', 'true|false', 'Enable openbase directory for all vhosts', 'Apache Config', 'true'),
+(89, 'use_suhosin', 'Use Suhosin', 'true', 'true|false', 'Enable Suhosin for all vhosts', 'Apache Config', 'true'),
+(90, 'zpanel_domain', 'ZPanel Domain', 'zpanel.ztest.com', NULL, 'Domain that the control panel is installed under.', 'ZPanel Config', 'false'),
+(91, 'log_dir', 'Log Directory', '/var/zpanel/logs/', NULL, 'Root path to directory log folders', 'ZPanel Config', 'true'),
+(92, 'apache_changed', 'Apache Changed', '1330054619', 'true|false', 'If set, Apache Config daemon hook will write the vhost config file changes.', 'Apache Config', 'false'),
+(94, 'apache_allow_disabled', 'Allow Disabled', 'true', 'true|false', 'Allow webhosts to remain active even if a user has been disabled.', 'Apache Config', 'true'),
+(95, 'apache_budir', 'VHost Backup Dir', '/var/zpanel/backups/', NULL, 'Directory that vhost.conf backups are stored.', 'Apache Config', 'true'),
+(96, 'apache_purgebu', 'Purge Backups', 'true', 'true|false', 'Old backups are deleted after the date set in Puge Date', 'Apache Config', 'true'),
+(97, 'apache_purge_date', 'Purge Date', '7', NULL, 'Time in days that vhost backups are safe from deletion', 'Apache Config', 'true'),
+(98, 'apache_backup', 'VHost Backup', 'true', 'true|false', 'Backup vhost file before a new one is written', 'Apache Config', 'true'),
+(99, 'zsudo', 'zsudo path', '/etc/zpanel/panel/bin/zsudo', NULL, 'Path to the zsudo binary used by Apache to run system commands.', 'ZPanel Config', 'true'),
+(100, 'apache_restart', 'Apache Restart Cmd', 'reload', NULL, 'Command line arguements used after the restart service request when reloading Apache.', 'Apache Config', 'true'),
+(101, 'httpd_exe', 'Apache Binary', 'httpd', NULL, 'Path to the Apache binary', 'Apache Config', 'true'),
+(102, 'apache_sn', 'Apache Service Name', 'httpd', NULL, 'Service name used to handle Apache service control', 'Apache Config', 'true'),
+(103, 'daemon_exer', NULL, '/etc/zpanel/panel/bin/daemon.php', NULL, 'Path to the ZPanel daemon', 'ZPanel Config', 'false'),
+(104, 'daemon_timing', NULL, '0 * * * *', NULL, 'Cron time for when to run the ZPanel daemon', 'ZPanel Config', 'false'),
+(105, 'cron_file', 'Cron File', '/etc/crontab.d', NULL, 'Path to the user cron file', 'Cron Config', 'true'),
+(106, 'htpasswd_exe', 'htpassword Exe', 'htpasswd', NULL, 'Path to htpasswd.exe for potecting directories with .htaccess', 'Apache Config', 'false'),
+(107, 'mysqldump_exe', 'MySQL Dump', 'mysqldump', NULL, 'Path to MySQL dump', 'ZPanel Config', 'false'),
+(108, 'dns_hasupdates', 'DNS Updated', NULL, NULL, NULL, NULL, 'false');
 INSERT INTO `x_translations` VALUES ('44', 'Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.', 'Webmail ist ein bequemer Weg fÃ¼r Sie, Ihre E-Mail-Konten online zu Ã¼berprÃ¼fen, ohne dass eine E-Mail-Client zu konfigurieren.');
 INSERT INTO `x_translations` VALUES ('45', 'Launch Webmail', 'Starten Sie WebMail');
 INSERT INTO `x_translations` VALUES ('56', 'PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.', 'PHPInfo bietet Ihnen Informationen über die PHP-Version auf dem System, sowie PHP installiert extentsions und Konfigurationsmöglichkeiten.');
