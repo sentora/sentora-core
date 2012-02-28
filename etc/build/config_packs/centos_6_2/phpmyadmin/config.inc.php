@@ -25,8 +25,8 @@ $cfg['Servers'][$i]['bs_temp_blob_timeout'] = 600;
 $cfg['Servers'][$i]['bs_temp_log_threshold'] = '32M';
 
 /* ZPanel specific changes */
-$cfg['UploadDir'] = '/etc/zpanel/panel/temp/';
-$cfg['SaveDir'] = '/etc/zpanel/panel/temp/';
+$cfg['UploadDir'] = '/var/zpanel/temp/';
+$cfg['SaveDir'] = '/var/zpanel/temp/';
 $cfg['SuhosinDisableWarning'] = true;
 $cfg['PmaNoRelation_DisableWarning'] = true;
 $cfg['Servers'][$i]['hide_db'] = 'information_schema';
