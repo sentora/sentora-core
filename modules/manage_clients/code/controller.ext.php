@@ -321,6 +321,7 @@ class module_controller {
         global $zdbh;
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
+		$reseller = ctrl_users::GetUserDetail($uid);
         // Check for errors before we continue...
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $packageid, $groupid, $email))) {
             return false;
@@ -332,12 +333,16 @@ class module_controller {
 										ac_pass_vc,
 										ac_package_fk,
                                         ac_group_fk,
+										ac_usertheme_vc,
+										ac_usercss_vc,
 										ac_reseller_fk,
 										ac_created_ts) VALUES (
 										'" . $username . "',
 										'" . md5($password) . "',
                                         '" . $packageid . "',
 										'" . $groupid . "',
+										'" . $reseller['usertheme'] . "',
+										'" . $reseller['usercss'] . "',
 										" . $uid . ",
 										" . time() . ")");
         $sql->execute();
