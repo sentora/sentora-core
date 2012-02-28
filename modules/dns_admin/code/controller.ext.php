@@ -94,7 +94,7 @@ class module_controller {
 		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inResetAll\" value=\"1\">GO</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Add Records to Missing Domains";
+		$line .= "<th>Add Default Records to Missing Domains";
 		$line .= "</th>";
 		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inAddMissing\" value=\"1\">GO</button></td>";
 		$line .= "</tr>";
@@ -166,30 +166,36 @@ class module_controller {
 
 		$line .= "<div class=\"ui-tabs-panel ui-widget-content ui-corner-bottom\" id=\"logs\">";
 		$line .= "<form action=\"./?module=dns_admin&action=Updatelogs\" method=\"post\">";
-		$line .= self::CheckLogReadable(ctrl_options::GetOption('bind_log')) . " " . self::CheckLogWritable(ctrl_options::GetOption('bind_log'));
         $line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
+		$line .= "<th style=\"width:350px;\">" . self::CheckLogReadable(ctrl_options::GetOption('bind_log')) . " " . self::CheckLogWritable(ctrl_options::GetOption('bind_log')) . "</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSetPerms\" value=\"1\">Set Permissions</button></td>";
+		$line .= "<tr>";
 		$line .= "<th>Clear errors</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearErrors\" value=\"1\">GO</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearErrors\" value=\"1\">Clear</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>Clear warnings";
 		$line .= "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearWarnings\" value=\"1\">GO</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearWarnings\" value=\"1\">Clear</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>Clear logs";
 		$line .= "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearLogs\" value=\"1\">GO</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearLogs\" value=\"1\">Clear</button></td>";
 		$line .= "</tr>";
+        $line .= "</table>";
+		$line .= "</form>";
+		$line .= "<form name=\"launchbindlog\" action=\"modules/dns_admin/code/getbindlog.php\" target=\"bindlogwindow\" method=\"post\" onsubmit=\"window.open('', 'bindlogwindow', 'scrollbars=yes,menubar=no,height=525,width=825,resizable=no,toolbar=no,location=no,status=no')\">";
+		$line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
 		if (count(self::$logerror) > 0) {
 			$logerrorcolor = "red";
 		} else {
 			$logerrorcolor = NULL;
 		}
-		$line .= "<th>View Errors (<font color=\"".$logerrorcolor."\">".count(self::$logerror)."</font>)</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logerror_a\" name=\"inViewErrors\" value=\"1\">GO</button></td>";
+		$line .= "<th style=\"width:350px;\">View Errors (<font color=\"".$logerrorcolor."\">".count(self::$logerror)."</font>)</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logerror_a\" name=\"inViewErrors\" value=\"1\">View</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		if (count(self::$logwarning) > 0) {
@@ -198,50 +204,14 @@ class module_controller {
 			$logwarningcolor = NULL;
 		}
 		$line .= "<th>View warnings (<font color=\"".$logwarningcolor."\">".count(self::$logwarning)."</font>)</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logwarning_a\" name=\"inViewWarnings\" value=\"1\">GO</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logwarning_a\" name=\"inViewWarnings\" value=\"1\">View</button></td>";
 		$line .= "</tr>";
+		$line .= "<tr>";
 		$line .= "<th>View logs (".count(self::$getlog).")</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">GO</button></td>";
+		$line .= "<td><input type=\"hidden\" name=\"inBindLog\" value=\"" . ctrl_options::GetOption('bind_log') . "\" /><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">View</button></td>";
 		$line .= "</tr>";
         $line .= "</table>";
-		$line .= "</form>";	
-		
-				//logerrordiv
-		if (!fs_director::CheckForEmptyValue(self::$logerror)){
-			$line .= "<div id=\"logerror\" style=\"display:none;\">";
-			$line .= "<h2>Log Errors:</h2>";
-			$line .= "<table class=\"zgrid\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
-			foreach (self::$logerror as $loglineerror){
-				$line .= "<tr><td>".$loglineerror."</td></tr>";
-			}
-			$line .= "</table>";
-			$line .= "</div>";
-		}
-			//logwarningdiv	
-		if (!fs_director::CheckForEmptyValue(self::$logwarning)){	
-			$line .= "<div id=\"logwarning\" style=\"display:none;\">";
-			
-			$line .= "<h2>Log warnings:</h2>";
-			$line .= "<table class=\"zgrid\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
-			foreach (self::$logwarning as $loglinewarning){
-				$line .= "<tr><td>".$loglinewarning."</td></tr>";
-			}
-			$line .= "</table>";
-			$line .= "</div>";
-		}
-		//showlogsdiv
-		if (!fs_director::CheckForEmptyValue(self::$showlog)){
-			$line .= "<div style=\"width:100%; height:500px; overflow:auto\">";
-			$line .= "<h2>Bind Log:</h2>";
-			$line .= "<table class=\"zgrid\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
-			foreach (self::$getlog as $logline){
-				$line .= "<tr><td>".$logline."</td></tr>";
-			}
-			$line .= "</table>";
-			$line .= "</div>";
-			
-		}
-			
+		$line .= "</form>";				
 		$line .= "</div>";
 		
 
@@ -325,6 +295,9 @@ class module_controller {
     static function doUpdateLogs() {
         global $zdbh;
         global $controller;
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inSetPerms'))) {
+			self::SetPerms();
+		}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inClearErrors'))) {
 			self::ClearErrors();
 		}
@@ -479,6 +452,15 @@ class module_controller {
 				self::$deleted = $numrecords;
 			}
 		}
+	}
+
+	static function SetPerms(){
+		$bindlog = ctrl_options::GetOption('bind_log');
+		if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
+		//exec(ctrl_options::GetOption('zsudo') . " chgrp " . ctrl_options::GetOption('zsudo') . " " . $bindlog);
+		exec(ctrl_options::GetOption('zsudo') . " chmod 0777 " . $bindlog);
+		}
+
 	}
 
 	static function ClearErrors(){
