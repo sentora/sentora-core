@@ -93,10 +93,28 @@ class module_controller {
     }
 
     static function ListCurrentClient($uid) {
-        $res = array();
-        $currentuser = ctrl_users::GetUserDetail($uid);
-        array_push($res, $currentuser);
-        return $res;
+		global $zdbh;
+        $sql = "SELECT * FROM x_profiles WHERE ud_user_fk=" . $uid . "";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+			$currentuser = ctrl_users::GetUserDetail($uid);
+            while ($rowclients = $sql->fetch()) {
+                	array_push($res, array('fullname'   => $rowclients['ud_fullname_vc'],
+										   'username' => $currentuser['username'],
+										   'userid'   => $currentuser['userid'],
+										   'fullname'   => $rowclients['ud_fullname_vc'],
+										   'postcode'   => $rowclients['ud_postcode_vc'],
+										   'address'   => $rowclients['ud_address_tx'],
+										   'phone'   => $rowclients['ud_phone_vc'],
+                    					   'email' => $rowclients['ud_email_vc']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
     }
 
     static function ListGroups($uid) {
@@ -109,8 +127,15 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
-                    'groupname' => ui_language::translate($rowgroups['ug_name_vc'])));
+				if (strtoupper($currentuser['usergroup']) != "ADMINISTRATORS"){
+					if ($currentuser['usergroupid'] == $rowgroups['ug_id_pk'] || strtoupper($rowgroups['ug_name_vc']) == "USERS") {
+                		array_push($res, array('groupid'   => $rowgroups['ug_id_pk'],
+                    					   		'groupname' => ui_language::translate($rowgroups['ug_name_vc'])));
+					}
+				} else {
+                		array_push($res, array('groupid'   => $rowgroups['ug_id_pk'],
+                    					   		'groupname' => ui_language::translate($rowgroups['ug_name_vc'])));				
+				}
             }
             return $res;
         } else {
@@ -118,23 +143,32 @@ class module_controller {
         }
     }
 
-    static function ListCurrentGroups($uid, $rid) {
+    static function ListCurrentGroups($uid, $rid, $id) {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $rid . "";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $currentuser = ctrl_users::GetUserDetail($uid);
+			$reseller = ctrl_users::GetUserDetail($id);
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-                $selected = "";
-                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
-                    $selected = " selected";
-                }
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
-                    'groupname' => ui_language::translate($rowgroups['ug_name_vc']),
-                    'groupselected' => $selected));
+				if (strtoupper($reseller['usergroup']) != "ADMINISTRATORS"){
+					if ($reseller['usergroupid'] == $rowgroups['ug_id_pk'] || strtoupper($rowgroups['ug_name_vc']) == "USERS") {
+	                	$selected = "";
+		                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
+		                    $selected = " selected";
+		                }
+		                array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
+						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
+		                   					   'groupselected' => $selected));
+					}
+				} else{
+			                array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
+						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
+		                   					   'groupselected' => $selected));			
+				}
             }
             return $res;
         } else {
@@ -231,8 +265,8 @@ class module_controller {
         $sql = $zdbh->prepare("UPDATE x_profiles SET 
 										ud_fullname_vc= '" . $fullname . "',
                                         ud_email_vc=    '" . $email . "',
-										ud_group_fk=    '" . $group . "',
-										ud_package_fk=  '" . $package . "',
+										ud_group_fk=    " . $group . ",
+										ud_package_fk=  " . $package . ",
 										ud_address_tx=  '" . $address . "',
 										ud_postcode_vc= '" . $post . "',
 										ud_phone_vc=    '" . $phone . "'
@@ -533,7 +567,7 @@ class module_controller {
     static function getCurrentGroupList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        return self::ListCurrentGroups($controller->GetControllerRequest('URL', 'other'), $currentuser['userid']);
+        return self::ListCurrentGroups($controller->GetControllerRequest('URL', 'other'), $currentuser['resellerid'], $currentuser['userid']);
     }
 
     static function getPackageList() {

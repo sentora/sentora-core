@@ -108,8 +108,8 @@
 	<% endloop %>
 	
 	<div class="zgrid_wrapper">
-		<% if PackageList %>
 		<h2>Current packages</h2>
+		<% if PackageList %>
 	    <form action="./?module=packages&action=EditPackage" method="post">
 	       	<table class="zgrid">
 		        <tr>
