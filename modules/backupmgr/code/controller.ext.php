@@ -61,6 +61,24 @@ class module_controller {
         return $res;
     }
 
+    static function CheckHasData($userid) {
+        $currentuser = ctrl_users::GetUserDetail($userid);
+        $datafolder = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+		$dirFiles = array();
+        if ($handle = opendir($datafolder)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != "..") {
+                    $dirFiles[] = $file;
+                }
+            }
+        }
+        closedir($handle);
+        if (!fs_director::CheckForEmptyValue($dirFiles)) {
+			return true;
+        }
+        return false;
+    }
+
     static function ExecuteBackup($userid, $download = 0) {
         global $zdbh;
         global $controller;
@@ -207,6 +225,12 @@ class module_controller {
         }
     }
 
+    static function GetHasData() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::CheckHasData($currentuser['userid']);
+    }
+	
     static function GetBackUpList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -216,7 +240,6 @@ class module_controller {
     static function GetFileLocation() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        ;
         $filelocation = $currentuser['username'] . "/backups/";
         return $filelocation;
     }

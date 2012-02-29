@@ -8,6 +8,7 @@
 
 <div class="zform_wrapper">
 <h2><: Backup your hosting account files :></h2>
+<% if HasData %>
 <form action="./?module=backupmgr&action=Backup" method="post">
 	<% if DiskAllowed %>
     <table class="zform">
@@ -33,6 +34,9 @@
     </table>	
 	<% endif %>
 </form>
+<% else %>
+	<: There are no files in your public folder to back up. :>
+<% endif %>
 </div>
 
 <% if BackUpList %>
