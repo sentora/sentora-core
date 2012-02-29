@@ -37,7 +37,6 @@ class module_controller {
         $current_pass = $controller->GetControllerRequest('FORM', 'inCurPass');
         $newpass = $controller->GetControllerRequest('FORM', 'inNewPass');
         $conpass = $controller->GetControllerRequest('FORM', 'inConPass');
-        $doresetmysql = $controller->GetControllerRequest('FORM', 'inResMySQL');
 
         if (md5($current_pass) <> $currentuser['password']) {
             # Current password does not match!
@@ -45,22 +44,11 @@ class module_controller {
         } else {
             if ($newpass == $conpass) {
                 # Check that the new password matches the confirmation box.
-                if ($doresetmysql <> '1') {
-                    # User has selected to update ZPanel account password only!
-                    $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($newpass) . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
-                    $sql->execute();
-                    $error = "ok";
-                } else {
-                    # User has selected to change both passwords.
-                    $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($newpass) . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
-                    $sql->execute();
-                    # Set the MySQL password as well.
-                    $sql = $zdbh->prepare("SET PASSWORD FOR `" . $currentuser['username'] . "`@`%`=PASSWORD('" . $newpass . "')");
-                    $sql->execute();
-                    $error = "ok-both";
-                }
+                $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($newpass) . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
+                $sql->execute();
+                self::$error = "ok";
             } else {
-                $error = "matcherror";
+              	self::$error = "matcherror";
             }
         }
     }
@@ -69,9 +57,6 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::$error)) {
             if (self::$error == "ok") {
                 return ui_sysmessage::shout(ui_language::translate("Your account password been changed successfully!"));
-            }
-            if (self::$error == "ok-both") {
-                return ui_sysmessage::shout(ui_language::translate("Your account and MySQL password been changed successfully!"));
             }
             if (self::$error == "matcherror") {
                 return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."));

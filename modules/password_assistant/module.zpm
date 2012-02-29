@@ -21,10 +21,6 @@
 			<td><input name="inConPass" type="password" id="inConPass" /></td>
 		</tr>
 		<tr>
-			<th><: Update MySQL password too? :></th>
-			<td><input name="inResMySQL" type="checkbox" id="inResMySQL" value="1" /></td>
-		</tr>
-		<tr>
 			<td>&nbsp;</td>
 			<td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button"><: Change :></button></td>
 		</tr>
