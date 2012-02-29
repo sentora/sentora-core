@@ -10,9 +10,16 @@
  /* Start setting input configuration.  If _GET not found set defaults */
  if (isset($_GET['score'])){
  	$getscore=explode('::', $_GET['score']);
+	$notnull = 0;
  	foreach ($getscore as $getscorepart){
+		if ($getscorepart != 0){
+			$notnull = 1;
+		}
  		$Score[] = $getscorepart;
  	}
+	if ($notnull == 0){
+		$Score=array(0,100);
+	}
  }else{
  	$Score=array(0,100);
  }
