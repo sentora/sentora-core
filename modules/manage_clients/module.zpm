@@ -123,7 +123,11 @@
         </table>
         </form>
 		<% else %>
-		<: You have no client accounts at this time. Create a client using the form below. :>
+			<% if HasPackage %>
+			<: You have no client accounts at this time. Create a client using the form below. :>
+			<% else %>
+			<: You must first create a Package with the Package Manager module before you can create a client. :>
+			<% endif %>
 		<% endif %>
 	</div>
 	
@@ -158,6 +162,7 @@
 	</div>
 	<% endif %>
 	
+	<% if HasPackage %>
 	<% if isCreateClient %>
 	<div class="zform_wrapper">
         <h2><: Create new client account :></h2>
@@ -225,7 +230,7 @@
         </form>
 	</div>
 	<% endif %>
-
+	<% endif %>
 </div>
 
 <script type="text/javascript">

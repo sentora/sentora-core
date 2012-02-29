@@ -317,6 +317,17 @@ class module_controller {
         return $res;
     }
 
+    static function CheckHasPackage($userid) {
+		global $zdbh;
+    	$sql = "SELECT COUNT(*) FROM x_packages WHERE pk_reseller_fk='" . $userid . "' AND pk_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+        	if ($numrows->fetchColumn() == 0) {
+                return false;
+            }
+        }
+		return true;
+    }
+
     static function ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password) {
         global $zdbh;
         // Check for spaces and remove if found...
@@ -591,6 +602,12 @@ class module_controller {
     static function getCheckEnabledHTML() {
         global $controller;
         return self::CheckEnabledHTML($controller->GetControllerRequest('URL', 'other'));
+    }
+
+    static function getHasPackage() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::CheckHasPackage($currentuser['userid']);
     }
 
     static function getisCreateClient() {
