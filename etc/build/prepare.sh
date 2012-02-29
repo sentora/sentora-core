@@ -21,9 +21,9 @@ mkdir /var/zpanel/logs
 mkdir /var/zpanel/backups
 mkdir /var/zpanel/temp
 echo "Complete!"
-echo "Copying ZPanel files into place.."
-cp -R ../../* /etc/zpanel/panel/ 
-echo "Complete!"
+#echo "Copying ZPanel files into place.."
+#cp -R ../../* /etc/zpanel/panel/ 
+#echo "Complete!"
 # echo "Copying application configuration files.."
 # cp -R -v config_packs/NAME_OF_PACK/* /etc/zpanel/configs
 # echo "Complete!"
