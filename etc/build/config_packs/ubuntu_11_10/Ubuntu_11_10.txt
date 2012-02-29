@@ -1,0 +1,61 @@
+Preparing the enviroment:-
+===========================
+Download and extract the archive to your machine (anywhere)
+	tar -xvf zpanel.tar.gz
+cd zpanel/etc/build/
+chmod +x prepare.sh
+./prepare.sh
+cp -R ../../* /etc/zpanel/panel/
+chmod -R 777 /etc/zpanel/
+chmod -R 777 /var/zpanel/
+chmod 644 /etc/zpanel/panel/etc/apps/phpmyadmin/config.inc.php
+
+Copy the Ubuntu 11.10 config pack...
+====================================
+cp -R /etc/zpanel/panel/etc/build/config_packs/ubuntu_11_10/* /etc/zpanel/configs/
+
+Install the base packages:-
+==========================
+MySQL Server insatll:-
+apt-get install mysql-server mysql-server < I just do this seperatly out of personal preference.
+
+Web & PHP Install:-
+apt-get install apache2 libapache2-mod-php5 php5-common php5-suhosin php5-cli php5-mysql php5-gd php5-mcrypt
+
+Configure Apache Include:-
+==========================
+To add the ZPanel generated Apache2 config, we need to add the following line:-
+Include /etc/zpanel/configs/apache/httpd.conf
+
+Install ProFTPD:-
+=================
+apt-get install proftpd-mod-mysql (When asked what mode, choose 'stand-alone')
+groupadd -g 2001 ftpgroup
+useradd -u 2001 -s /bin/false -d /bin/null -c "proftpd user" -g ftpgroup ftpuser
+*** Edit /etc/zpanel/configs/proftpd/proftpd-mysql.conf, replace with your credentials: 
+*** You can use your MySQL root account if you wish or create a new restricted user account as you wish! ***
+*** Format is: SQLConnectInfo  DATABASE@localhost USER PASSWORD
+	SQLConnectInfo  zpanelx_proftpd@localhost root your_root_password
+*** 
+mv /etc/proftpd/proftpd.conf /etc/proftpd/proftpd.conf.orig
+touch /etc/proftpd.conf
+echo "include /etc/zpanel/configs/proftpd/proftpd-mysql.conf" >> /etc/proftpd/proftpd.conf
+touch /var/zpanel/logs/proftpd
+chmod -R 777 /var/zpanel/logs/proftpd
+
+Install BIND DNS Server:-
+=========================
+apt-get install bind9 bind9utils
+echo "include \"/etc/zpanel/configs/bind/etc/named.conf\";" >> /etc/bind/named.conf
+
+Setup the CRON job for the zdaemon:-
+====================================
+touch /etc/cron.d/zdaemon
+echo "*/5 * * * * root /usr/bin/php -q /etc/zpanel/panel/bin/daemon.php >> /dev/null 2>&1" >> /etc/cron.d/zdaemon
+chmod 644 /etc/cron.d/zdaemon
+
+^ Must ensure the permissions are set to 644 or the job WILL NOT RUN!
+
+Registering the zppy client:-
+=============================
+ln -s /etc/zpanel/panel/bin/zppy /usr/bin/zppy
