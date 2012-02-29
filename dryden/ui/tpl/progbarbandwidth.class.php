@@ -24,6 +24,9 @@ class ui_tpl_progbarbandwidth {
         } else {
             $line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=0\"/>";
         }
+		if ($bandwidth == $bandwidthquota){
+			$line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=100\"/>";
+		}
         return $line;
     }
 

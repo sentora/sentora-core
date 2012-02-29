@@ -304,6 +304,9 @@ class module_controller {
 		} else{
 			$line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=0\"/>";		
 		}
+		if ($type == $typequota){
+			$line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=100\"/>";
+		}
 		return $line;
     }
 
