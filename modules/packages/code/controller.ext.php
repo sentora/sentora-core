@@ -48,7 +48,7 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowpackages = $sql->fetch()) {
-				$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . "")->fetchColumn(); 
+				$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . " AND ac_deleted_ts IS NULL")->fetchColumn(); 
                 array_push($res, array( 'packageid'   => $rowpackages['pk_id_pk'],
 										'created'     => date(ctrl_options::GetOption('zpanel_df'), $rowpackages['pk_created_ts']),
 										'clients'     => $numrows[0],
@@ -104,9 +104,12 @@ class module_controller {
 	
 	static function ExecuteDeletePackage($pk_id_pk, $mpk_id_pk){
 		global $zdbh;
-		if ($pk_id_pk == $mpk_id_pk){
-			self::$samepackage=true;
-			return false;		
+		$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $pk_id_pk . " AND ac_deleted_ts IS NULL")->fetchColumn(); 
+		if ($numrows[0] <> 0){
+			if ($pk_id_pk == $mpk_id_pk){
+				self::$samepackage=true;
+				return false;		
+			}
 		}
 		runtime_hook::Execute('OnBeforeDeletePackage');
 		$sql = $zdbh->prepare("
@@ -153,7 +156,7 @@ class module_controller {
 										" . time() . ");");
 	    $sql->execute();
 	    # Now lets pull back the package ID so we can use it in the other tables we are about to manipulate.
-		$package = $zdbh->query("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " ORDER BY pk_id_pk DESC")->Fetch();
+		$package = $zdbh->query("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_name_vc='" . $packagename . "' AND pk_deleted_ts IS NULL")->Fetch();
 	    $sql = $zdbh->prepare("INSERT INTO x_quotas (qt_package_fk,
 										qt_domains_in,
 										qt_subdomains_in,
