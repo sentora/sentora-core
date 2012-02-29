@@ -1,8 +1,8 @@
 <?php
 ###############################################
 # PHPMyAdmin Configuration for ZPanel         #
-# Last updated: 26/03/2011                    #
-# Author: Bobby Allen (ballen@zpanel.co.uk)   #
+# Last updated: 28/02/2012                    #
+# Author: Bobby Allen (ballen@zpanelcp.com)   #
 ###############################################
 
 $i = 0;

@@ -33,10 +33,10 @@ $rcmail_config['syslog_facility'] = LOG_USER;
 
 // use this folder to store log files (must be writeable for apache user)
 // This is used by the 'file' log driver.
-$rcmail_config['log_dir'] = 'logs/';
+$rcmail_config['log_dir'] = '/var/zpanel/logs/roundcube/';
 
 // use this folder to store temp files (must be writeable for apache user)
-$rcmail_config['temp_dir'] = 'temp/';
+$rcmail_config['temp_dir'] = '/var/zpanel/temp/';
 
 // List of active plugins (in plugins/ directory)
 $rcmail_config['plugins'] = array();
