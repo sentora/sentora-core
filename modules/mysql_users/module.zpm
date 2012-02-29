@@ -52,7 +52,7 @@
 	        <table class="zform">
 		        <tr>
     			    <th nowrap="nowrap"><: Database :>:</th>
-			        <td>
+			        <td width="150px">
 						<select name="inDatabase" id="inDatabase">
 						<option value="" selected="selected">-- Select a database --</option>
 						<% loop DatabaseList %>
@@ -75,7 +75,7 @@
 	        <table class="zform">
 		        <tr>
     			    <th nowrap="nowrap"><: Password :>:</th>
-			        <td>
+			        <td width="150px">
 					<input type="text" name="inResetPW" id="input-password" value="">
 					</td>
 					<td>
