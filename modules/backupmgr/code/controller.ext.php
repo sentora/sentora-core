@@ -198,6 +198,14 @@ class module_controller {
         }
     }
 
+    static function CheckPurgeDate() {
+		if (strtolower(ctrl_options::GetOption('purge_bu')) == "true") {
+    		return ctrl_options::GetOption('purge_date');
+		} else {
+			return false;
+		}
+	}
+
     static function doBackup() {
         global $zdbh;
         global $controller;
@@ -257,6 +265,11 @@ class module_controller {
             return true;
         return false;
     }
+
+    static function GetPurgeDate() {
+        return self::CheckPurgeDate();
+    }
+
 
     static function getCreateBackupDirectory() {
         $currentuser = ctrl_users::GetUserDetail();

@@ -42,6 +42,9 @@
 <% if BackUpList %>
 <div class="zgrid_wrapper">
 <h2><: Backup Archives :></h2>
+<% if PurgeDate %>
+<p><: Archived files will automatically be deleted when they are older than :> <b><@ PurgeDate @></b> <: days :>.</p>
+<% endif %>
 <form action="./?module=backupmgr&action=DeleteBackup" method="post">
     <table class="zgrid">
 		<tr>
