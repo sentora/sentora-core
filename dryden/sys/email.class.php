@@ -20,6 +20,7 @@ class sys_email extends PHPMailer {
      * @return boolean 
      */
     public function SendEmail() {
+        $this->Mailer = ctrl_options::GetOption('mailer_type');
         $this->From = ctrl_options::GetOption('email_from_address');
         $this->FromName = ctrl_options::GetOption('email_from_name');
         if (ctrl_options::GetOption('email_smtp') <> 'false') {
