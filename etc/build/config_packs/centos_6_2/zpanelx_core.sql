@@ -682,6 +682,10 @@ INSERT INTO `x_settings` (`so_id_pk`, `so_name_vc`, `so_cleanname_vc`, `so_value
 (106, 'htpasswd_exe', 'htpassword Exe', 'htpasswd', NULL, 'Path to htpasswd.exe for potecting directories with .htaccess', 'Apache Config', 'false'),
 (107, 'mysqldump_exe', 'MySQL Dump', 'mysqldump', NULL, 'Path to MySQL dump', 'ZPanel Config', 'false'),
 (108, 'dns_hasupdates', 'DNS Updated', NULL, NULL, NULL, NULL, 'false');
+INSERT INTO `x_settings` VALUES ('109', 'named_checkconf', 'Named CheckConfig', 'named-checkconf', null, 'Path to named-checkconf bind utility.', 'DNS Config', 'true');
+INSERT INTO `x_settings` VALUES ('110', 'named_checkzone', 'Named CheckZone', 'named-checkzone', null, 'Path to named-checkzone bind utility.', 'DNS Config', 'true');
+INSERT INTO `x_settings` VALUES ('111', 'named_compilezone', 'Named CompileZone', 'named-compilezone', null, '	Path to named-compilezone bind utility.', 'DNS Config', 'true');
+INSERT INTO `x_settings` VALUES ('112', 'mailer_type', 'Mail method', 'mail', 'mail|smtp|sendmail', 'Method to use when sending emails out. (mail = PHP Mail())', 'ZPanel Config', 'true');
 INSERT INTO `x_translations` VALUES ('44', 'Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.', 'Webmail ist ein bequemer Weg fÃ¼r Sie, Ihre E-Mail-Konten online zu Ã¼berprÃ¼fen, ohne dass eine E-Mail-Client zu konfigurieren.');
 INSERT INTO `x_translations` VALUES ('45', 'Launch Webmail', 'Starten Sie WebMail');
 INSERT INTO `x_translations` VALUES ('56', 'PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.', 'PHPInfo bietet Ihnen Informationen über die PHP-Version auf dem System, sowie PHP installiert extentsions und Konfigurationsmöglichkeiten.');
