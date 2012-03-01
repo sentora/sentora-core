@@ -38,9 +38,12 @@ class module_controller {
         $newpass = $controller->GetControllerRequest('FORM', 'inNewPass');
         $conpass = $controller->GetControllerRequest('FORM', 'inConPass');
 
-        if (md5($current_pass) <> $currentuser['password']) {
+        if (fs_director::CheckForEmptyValue($newpass)) {
+            # Current password is blank!
+            self::$error = "error";
+        } elseif (md5($current_pass) <> $currentuser['password']) {
             # Current password does not match!
-            self::$error = "matcherror";
+            self::$error = "error";
         } else {
             if ($newpass == $conpass) {
                 # Check that the new password matches the confirmation box.
@@ -48,7 +51,7 @@ class module_controller {
                 $sql->execute();
                 self::$error = "ok";
             } else {
-              	self::$error = "matcherror";
+              	self::$error = "error";
             }
         }
     }
@@ -56,10 +59,10 @@ class module_controller {
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$error)) {
             if (self::$error == "ok") {
-                return ui_sysmessage::shout(ui_language::translate("Your account password been changed successfully!"));
+                return ui_sysmessage::shout(ui_language::translate("Your account password been changed successfully!"), "zannounceok");
             }
-            if (self::$error == "matcherror") {
-                return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."));
+            if (self::$error == "error") {
+                return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
             }
         } else {
            return;
