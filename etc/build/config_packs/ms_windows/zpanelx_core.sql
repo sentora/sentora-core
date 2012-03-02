@@ -1,4 +1,4 @@
-/*
+﻿/*
 MySQL Data Transfer
 Source Host: localhost
 Source Database: zpanelx_core
@@ -672,7 +672,7 @@ INSERT INTO `x_settings` VALUES ('68', 'bind_log', 'Bind Log', 'C:/ZPanel/logs/b
 INSERT INTO `x_settings` VALUES ('69', 'hosted_dir', 'Vhosts Directory', 'C:/ZPanel/hostdata/', null, 'Virtual host directory', 'Apache Config', 'true');
 INSERT INTO `x_settings` VALUES ('70', 'disable_hostsen', 'Disable HOSTS file entries', 'false', 'true|false', 'Disable host entries', 'Apache Config', 'true');
 INSERT INTO `x_settings` VALUES ('71', 'apache_vhost', 'Apache VHOST Conf', 'C:/zpanel/configs/apache/httpd-vhosts.conf', null, 'The full system patch and filename of the Apache VHOST configuration name.', 'Apache Config', 'true');
-INSERT INTO `x_settings` VALUES ('72', 'php_handler', 'PHP Handler', 'AddType application/x-httpd-php .php3', null, 'The PHP Handler.', 'Apache Config', 'false');
+INSERT INTO `x_settings` VALUES ('72', 'php_handler', 'PHP Handler', 'AddType application/x-httpd-php .php3 .php', null, 'The PHP Handler.', 'Apache Config', 'false');
 INSERT INTO `x_settings` VALUES ('73', 'cgi_handler', 'CGI Handler', 'ScriptAlias /cgi-bin/ \"/_cgi-bin/\"\r\n<location /cgi-bin>\r\nAddHandler cgi-script .cgi .pl\r\nOptions ExecCGI -Indexes\r\n</location>', null, 'The CGI Handler.', 'Apache Config', 'false');
 INSERT INTO `x_settings` VALUES ('74', 'global_vhcustom', 'Global VHost Entry', null, null, 'Extra directives for all apache vhost\'s.', 'Apache Config', 'true');
 INSERT INTO `x_settings` VALUES ('75', 'static_dir', 'Static Pages Directory', 'C:/zpanel/panel/etc/static/', null, 'The ZPanel static directory, used for storing welcome pages etc. etc.', 'Apache Config', 'true');
