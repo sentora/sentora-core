@@ -686,6 +686,7 @@ INSERT INTO `x_settings` VALUES ('109', 'named_checkconf', 'Named CheckConfig', 
 INSERT INTO `x_settings` VALUES ('110', 'named_checkzone', 'Named CheckZone', 'named-checkzone', null, 'Path to named-checkzone bind utility.', 'DNS Config', 'true');
 INSERT INTO `x_settings` VALUES ('111', 'named_compilezone', 'Named CompileZone', 'named-compilezone', null, '	Path to named-compilezone bind utility.', 'DNS Config', 'true');
 INSERT INTO `x_settings` VALUES ('112', 'mailer_type', 'Mail method', 'mail', 'mail|smtp|sendmail', 'Method to use when sending emails out. (mail = PHP Mail())', 'ZPanel Config', 'true');
+INSERT INTO `x_settings` VALUES ('113', 'daemon_run_interval', 'Number of seconds between each daemon execution', '300', null, 'The total number of seconds between each daemon run (default 300 = 5 mins)', 'ZPanel Config', 'false');
 INSERT INTO `x_translations` VALUES ('44', 'Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.', 'Webmail ist ein bequemer Weg fÃ¼r Sie, Ihre E-Mail-Konten online zu Ã¼berprÃ¼fen, ohne dass eine E-Mail-Client zu konfigurieren.');
 INSERT INTO `x_translations` VALUES ('45', 'Launch Webmail', 'Starten Sie WebMail');
 INSERT INTO `x_translations` VALUES ('56', 'PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.', 'PHPInfo bietet Ihnen Informationen über die PHP-Version auf dem System, sowie PHP installiert extentsions und Konfigurationsmöglichkeiten.');
