@@ -157,7 +157,6 @@ class module_controller {
     }
     
     static function getNextRunTime(){
-        $time_between_daemon_runs = ctrl_options::GetOption('daemon_run_interval');
         $new_time = ctrl_options::GetOption('daemon_lastrun') + ctrl_options::GetOption('daemon_run_interval');
         return date(ctrl_options::GetOption('zpanel_df'),$new_time);
     }
