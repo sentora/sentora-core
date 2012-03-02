@@ -14,7 +14,7 @@ $root_path = str_replace("/bin", "/", $raw_path);
 chdir($root_path);
 
 set_time_limit(0);
-ini_set('memory_limit', '256M');
+//ini_set('memory_limit', '256M');
 ini_set('error_reporting', E_ALL | E_STRICT);
 ini_set('display_errors', 'On');
 ini_set('log_errors', 'Off');
