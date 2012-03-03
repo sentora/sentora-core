@@ -43,7 +43,6 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
                 unlink('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp');
             }
             chdir('etc/zppy-cache/package-downloads/');
-
             exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
             chdir($root_path);
         }
@@ -123,6 +122,9 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
 
 if ((isset($argv[1])) && ($argv[1] == 'remove')) {
     if (fs_director::CheckFolderExists('modules/' . $argv[2])) {
+        $sql = $zdbh->prepare("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '" . $argv[2] . "'");
+        $sql->execute();
+        $moduleid = $sql->fetch();
         fwrite(STDOUT, "Removing \"" . $argv[2] . "\" will delete the module folder and drop any tables used by the module!\n");
         fwrite(STDOUT, "Please confirm you want to remove this module? [y/N]");
         $confirm = fgets(STDIN, 2);
@@ -131,7 +133,7 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
             $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/remove.run";
             if (fs_director::CheckFileExists($extra_config))
                 exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
-            ctrl_groups::DeleteGroupModulePermissions(0, $moduleid);
+            ctrl_groups::DeleteGroupModulePermissions(0, $moduleid['mo_id_pk']);
             $sql = $zdbh->prepare("DELETE FROM x_modules WHERE mo_folder_vc = '$argv[2]'");
             $sql->execute();
             $sql = $zdbh->prepare("DELETE FROM x_settings WHERE so_module_vc = '$argv[2]'");
