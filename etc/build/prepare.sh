@@ -33,6 +33,9 @@ chmod -R 777 /var/zpanel/
 echo "Complete!"
 echo "Registering 'zppy' client.."
 ln -s /etc/zpanel/panel/bin/zppy /usr/bin/zppy
+chmod +x /usr/bin/zppy
+ln -s /etc/zpanel/panel/bin/setso /usr/bin/setso
+chmod +x /usr/bin/setso
 echo "Complete!"
 echo ""
 echo ""

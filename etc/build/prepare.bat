@@ -33,6 +33,8 @@ xcopy /s/e config_packs\ms_windows\* %zpd%:\zpanel\configs
 echo Complete!
 echo Copying 'zppy' client to system root...
 COPY bin\zppy.bat %windir%\zppy.bat /Y
+echo Copying 'setso' client to system root...
+COPY bin\setso.bat %windir%\setso.bat /Y
 echo Complete!
 echo.
 echo You can access your new ZPanel folder layout here: %zpd%:\zpanel
