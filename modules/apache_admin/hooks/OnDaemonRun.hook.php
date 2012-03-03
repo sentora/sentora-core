@@ -82,6 +82,19 @@
 
                 // Get account username vhost is create with
                 $username = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
+				// Get email and if blank set postmaster@userdomain as default.
+				$getuseremail = $zdbh->query("SELECT ud_email_vc FROM x_profiles where ud_user_fk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
+				if (fs_director::CheckForEmptyValue($getuseremail['ud_email_vc'])){
+					$useremail = "postmaster@" . $rowvhost['vh_name_vc'];
+				} else {
+					$useremail = $getuseremail['ud_email_vc'];
+				}
+				// Check if domain or subdomain to see if we add an alias with 'www'
+				if($rowvhost['vh_type_in'] == 2){
+					$serveralias = $rowvhost['vh_name_vc'];
+				} else {
+					$serveralias = $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'];
+				}
 
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
@@ -90,8 +103,8 @@
                 //$line .= "Include C:/ZPanel/bin/apache/conf/mod_bw/mod_bw/mod_bw_Administration.conf" . fs_filehandler::NewLine();
                 // Server name, alias, email settings
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "ServerAdmin postmaster@txt-clan.com" . fs_filehandler::NewLine();
+                $line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
+                $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
 
                 // Document root
                 $line .= "DocumentRoot \"" . ctrl_options::GetOption('hosted_dir') . $username['ac_user_vc'] . "/public_html" . $rowvhost['vh_directory_vc'] . "\"" . fs_filehandler::NewLine();
