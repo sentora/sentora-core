@@ -496,8 +496,6 @@ INSERT INTO `x_modules` VALUES ('41', '0', 'Backup Config', '100', 'backup_admin
 INSERT INTO `x_modules` VALUES ('42', '7', 'Client Notice Manager', '100', 'client_notices', 'user', 'Enables resellers to set global notices for their clients.', null, 'true', '', '');
 INSERT INTO `x_modules` VALUES ('43', '3', 'Protect Directories', '100', 'htpasswd', 'user', 'This module enables you to configure .htaccess files and users to protect your web directories.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('46', '7', 'Theme Manager', '100', 'theme_manager', 'user', 'Enables the reseller to set themes configurations for their clients.', '0', 'true', '', '');
-INSERT INTO `x_modules` VALUES ('47', '8', 'FTP Browser', '100', 'ftp_browser', 'user', 'JAVA based FTP client component that runs within your web browser. It is designed to let non-technical users exchange data secureiy with an FTP server.', null, 'true', null, null);
-INSERT INTO `x_modules` VALUES ('48', '8', 'K-File Manager', '100', 'kfm', 'user', 'Gives you access to your files with drag-and-drop, multiple file uploading, text editing, zip support. ', null, 'true', null, null);
 INSERT INTO `x_packages` VALUES ('1', 'Administration', '1', '1', '1', null, null);
 INSERT INTO `x_packages` VALUES ('2', 'Demo', '1', '0', '0', null, null);
 INSERT INTO `x_permissions` VALUES ('221', '2', '22');
