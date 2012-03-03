@@ -27,6 +27,8 @@
 class module_controller {
 
     static $ok;
+	static $blank;
+	static $emailerror;
 
     static function getAccountSettings() {
         $currentuser = ctrl_users::GetUserDetail();
@@ -77,7 +79,11 @@ class module_controller {
 
     static function ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode) {
         global $zdbh;
-        global $controller;
+		$email = strtolower(str_replace(' ', '', $email));
+		$fullname = ucwords($fullname);
+		if (fs_director::CheckForEmptyValue(self::CheckUpdateForErrors($email, $fullname, $language, $phone, $address, $postalCode))){
+			return false;
+		}
         $currentuser = ctrl_users::GetUserDetail();
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = '" . $email . "' WHERE ac_id_pk = '" . $userid . "'");
         $sql->execute();
@@ -91,12 +97,42 @@ class module_controller {
         return true;
     }
 
-    static function getResult() {
-        if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your account settings have been saved successfully!"));
-        } else {
-            return;
+	static function CheckUpdateForErrors($email, $fullname, $language, $phone, $address, $postalCode){
+		global $zdbh;
+		if (fs_director::CheckForEmptyValue($email)    ||
+			fs_director::CheckForEmptyValue($fullname) ||
+			fs_director::CheckForEmptyValue($language) ||
+			fs_director::CheckForEmptyValue($phone)    ||
+			fs_director::CheckForEmptyValue($address)  ||
+			fs_director::CheckForEmptyValue($postalCode)){
+			self::$blank = true;
+			return false;
+		}
+		if (!self::IsValidEmail($email)){
+			self::$emailerror = true;
+			return false;
+		}
+		return true;
+	}
+
+    static function IsValidEmail($email) {
+        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
+            return false;
         }
+        return true;
+    }
+
+    static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$blank)) {
+            return ui_sysmessage::shout(ui_language::translate("You must fill out all fields!"), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$emailerror)) {
+            return ui_sysmessage::shout(ui_language::translate("Your email address is not valid!"), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your account settings have been saved successfully!"), "zannounceok");
+        }
+        return;
     }
 
     static function getModuleName() {

@@ -462,22 +462,22 @@ class module_controller {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (isset($urlvars['status']) && $urlvars['status'] == 'ok'){
-			return ui_sysmessage::shout("Changes to your distrubution lists have been saved successfully!", "zannounceok");
+			return ui_sysmessage::shout(ui_language::translate("Changes to your distrubution lists have been saved successfully!"), "zannounceok");
 		}
     }
 	
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout("A mailbox, alias, forwarder or distrubution list already exists with that name.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("A mailbox, alias, forwarder or distrubution list already exists with that name."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$validemail)) {
-            return ui_sysmessage::shout("Your email address is not valid.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Your email address is not valid."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$noaddress)) {
-            return ui_sysmessage::shout("Your email address cannot be blank.", "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Your email address cannot be blank."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout("Changes to your distrubution lists have been saved successfully!", "zannounceok");
+            return ui_sysmessage::shout(ui_language::translate("Changes to your distrubution lists have been saved successfully!"), "zannounceok");
         } else {
             return NULL;
         }
