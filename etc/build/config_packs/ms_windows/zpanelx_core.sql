@@ -628,7 +628,7 @@ INSERT INTO `x_settings` VALUES ('27', 'logfile', null, 'C:/zpanel/logs/log.txt'
 INSERT INTO `x_settings` VALUES ('28', 'apikey', null, 'ee8795c8c53bfdb3b2cc595186b68912', null, 'The secret API key for the server.', 'ZPanel Config', 'false');
 INSERT INTO `x_settings` VALUES ('29', 'email_from_address', 'From Address', 'zpanel@localhost', null, 'The email address to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('30', 'email_from_name', 'From Name', 'Control Panel', null, 'The name to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('31', 'email_smtp', 'Use SMTP', 'false', 'true|false', 'Use SMTP server to end emails from. (true/false)', 'ZPanel Config', 'true');
+INSERT INTO `x_settings` VALUES ('31', 'email_smtp', 'Use SMTP', 'false', 'true|false', 'Use SMTP server to send emails from. (true/false)', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('32', 'smtp_auth', 'Use AUTH', 'false', 'true|false', 'SMTP requires authentication. (true/false)', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('33', 'smtp_server', 'SMTP Server', 'smtp.gmail.com', null, 'The address of the SMTP server.', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('34', 'smtp_port', 'SMTP Port', '465', null, 'The port address of the SMTP server (usually 25)', 'ZPanel Config', 'true');

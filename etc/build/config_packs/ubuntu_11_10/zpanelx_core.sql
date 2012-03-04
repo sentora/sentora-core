@@ -605,7 +605,7 @@ INSERT INTO `x_settings` (`so_id_pk`, `so_name_vc`, `so_cleanname_vc`, `so_value
 (28, 'apikey', NULL, 'ee8795c8c53bfdb3b2cc595186b68912', NULL, 'The secret API key for the server.', 'ZPanel Config', 'false'),
 (29, 'email_from_address', 'From Address', 'zpanel@localhost', NULL, 'The email address to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true'),
 (30, 'email_from_name', 'From Name', 'ZPanel Server', NULL, 'The name to appear in the From field of emails sent by ZPanel.', 'ZPanel Config', 'true'),
-(31, 'email_smtp', 'Use SMTP', 'false', 'true|false', 'Use SMTP server to end emails from. (true/false)', 'ZPanel Config', 'true'),
+(31, 'email_smtp', 'Use SMTP', 'false', 'true|false', 'Use SMTP server to send emails from. (true/false)', 'ZPanel Config', 'true'),
 (32, 'smtp_auth', 'Use AUTH', 'false', 'true|false', 'SMTP requires authentication. (true/false)', 'ZPanel Config', 'true'),
 (33, 'smtp_server', 'SMTP Server', '', NULL, 'The address of the SMTP server.', 'ZPanel Config', 'true'),
 (34, 'smtp_port', 'SMTP Port', '465', NULL, 'The port address of the SMTP server (usually 25)', 'ZPanel Config', 'true'),
