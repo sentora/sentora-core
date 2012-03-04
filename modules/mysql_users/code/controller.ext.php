@@ -167,9 +167,12 @@ class module_controller {
         $sql->execute();
         // Get the database name from the ID...
         $rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $database . " AND my_deleted_ts IS NULL")->fetch();
-        // Grant privileges for new user to the assigned database...
+        // Remove all priveledges to all databases
         $sql = $zdbh->prepare("GRANT USAGE ON *.* TO '" . $username . "'@'" . $access . "'");
         $sql->execute();
+		// Grant privileges for new user to the assigned database...
+		$sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* TO '" . $username . "'@'" . $access . "'");
+		$sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
         // Add user to zpanel database...
