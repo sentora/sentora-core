@@ -14,9 +14,9 @@ class ui_tpl_useddomains {
 
     public function Template() {
         $currentuser = ctrl_users::GetUserDetail();
-        $domain = ctrl_users::GetUserDomains($currentuser['userid']);
-        if ($domain <> 0) {
-            return (string) $domain;
+        $subdomains = ctrl_users::GetQuotaUsages('domains', $currentuser['userid']);
+        if ($subdomains <> 0) {
+            return (string) $subdomains;
         }
         return (string) 0;
     }

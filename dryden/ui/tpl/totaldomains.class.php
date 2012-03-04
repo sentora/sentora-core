@@ -13,7 +13,6 @@
 class ui_tpl_totaldomains {
 
     public function Template() {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $domainsquota = $currentuser['domainquota'];
         if ($domainsquota <> 0) {
