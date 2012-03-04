@@ -239,6 +239,10 @@
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_mysqlversion #></span></td>
                                                             </tr>
                                                             <tr>
+                                                                <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>Perl Version:</strong></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_perlversion #></span></td>
+                                                            </tr>
+                                                            <tr>
                                                                 <td nowrap="nowrap"><img src="<# ui_tpl_assetfolderpath #>/images/raquo.png" border="0"> <strong>ZPanel Version:</strong></td>
                                                                 <td nowrap="nowrap"><# ui_tpl_zpanelversion #></td>
                                                             </tr>
