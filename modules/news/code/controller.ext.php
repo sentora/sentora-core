@@ -45,6 +45,8 @@ class module_controller {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
+    
+    
 
     static function getModuleIcon() {
         global $controller;

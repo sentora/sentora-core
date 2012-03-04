@@ -9,7 +9,7 @@
 <% if ZPanelNews %>
     <% loop ZPanelNews %>
         <tr>
-            <td><a href="<& url &>"><& title &></a></td>
+            <td><img src="modules/news/assets/newspaper.png"> <a href="<& url &>"><& title &></a></td>
         </tr>
     <% endloop %>
 <% else %>
