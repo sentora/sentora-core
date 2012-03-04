@@ -5,6 +5,17 @@
 
 <div class="zform_wrapper">
 <h2><: Latest Zpanel News :></h2>
-<@ ZpanelNews @>
+<table class="zgrid">
+<% if ZPanelNews %>
+    <% loop ZPanelNews %>
+        <tr>
+            <td><a href="<& url &>"><& title &></a></td>
+        </tr>
+    <% endloop %>
+<% else %>
+    Sorry, we couldn't connect to the ZPanel API Server, maybe its down at the moment!
+<% endif %>
+</tr>
+</table>
 </div>
 </div>

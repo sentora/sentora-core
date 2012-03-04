@@ -26,14 +26,17 @@
  */
 class module_controller {
 
-    function getZpanelNews() {
-        $newsurl = "http://forums.zpanelcp.com/archive/index.php/forum-86.html";
-        $handle = @file_get_contents($newsurl);
+    static function json_proces($json) {
+        return json_decode($json, true);
+    }
+
+    static function getZpanelNews() {
+        $handle = @file_get_contents(ctrl_options::GetOption('news_url'));
         $content = $handle;
         if ($content == '') {
-            $content = ui_language::translate("Unable to connect to the ZPanel News server at this time.");
+            $content = ui_language::translate("Unable to connect to the ZPanel API server at this time.");
         } else {
-            $content = "<iframe allowtransparency=\"\" src=\"" . $newsurl . "\" frameborder=\"0\" width=\"100%\" height=\"1000\"></iframe>";
+            $content = self::json_proces($content);
         }
         return $content;
     }
