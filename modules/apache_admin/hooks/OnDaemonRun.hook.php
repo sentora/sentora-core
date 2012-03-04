@@ -57,7 +57,7 @@
         $line .= "# Custom settings are loaded below this line (if any exist)" 				. fs_filehandler::NewLine();
 
         // Global custom zpanel entry
-        $line .= ctrl_options::GetOption('global_zpcustom');
+        $line .= ctrl_options::GetOption('global_zpcustom')                                 . fs_filehandler::NewLine();
 
         $line .= "</VirtualHost>" 															. fs_filehandler::NewLine();
 
