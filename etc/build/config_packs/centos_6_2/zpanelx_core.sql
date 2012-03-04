@@ -584,7 +584,7 @@ INSERT INTO `x_permissions` VALUES ('280', '1', '46');
 INSERT INTO `x_profiles` VALUES ('1', '1', 'Test user 1', null, 'en', '1', '1', '1 Example house,\r\nTest street,\r\nSimple town,\r\nTestshire', 'C011 7RT', '+44(1206) 457169', null);
 INSERT INTO `x_quotas` VALUES ('1', '1', '5', '10', '5', '10', '100', '5', '10', '10', '2048000000', '10240000000', '0', '0', null, null, null, null, null, '*', '1');
 INSERT INTO `x_settings` (`so_id_pk`, `so_name_vc`, `so_cleanname_vc`, `so_value_tx`, `so_defvalues_tx`, `so_desc_tx`, `so_module_vc`, `so_usereditable_en`) VALUES
-(6, 'dbversion', NULL, '10.0.0.0', NULL, 'Database Version', 'ZPanel Config', 'false'),
+(6, 'dbversion', NULL, '10.0.0', NULL, 'Database Version', 'ZPanel Config', 'false'),
 (7, 'zpanel_root', 'ZPanel Root', '/etc/zpanel/panel/', NULL, 'Zpanel Web Root', 'ZPanel Config', 'true'),
 (8, 'module_icons_pr', 'Icons per Row', '8', NULL, 'Set the number of icons to display before beginning a new line.', 'ZPanel Config', 'true'),
 (9, 'zpanel_template', NULL, '', NULL, 'Template', 'ZPanel Config', 'false'),
@@ -594,13 +594,12 @@ INSERT INTO `x_settings` (`so_id_pk`, `so_name_vc`, `so_cleanname_vc`, `so_value
 (14, 'root_drive', 'Root Drive', '/', NULL, 'The root drive where ZPanel is installed.', 'ZPanel Config', 'true'),
 (16, 'php_exer', NULL, 'php', NULL, 'PHP Executable', 'ZPanel Config', 'false'),
 (17, 'temp_dir', 'Temp Directory', '/var/zpanel/temp/', NULL, 'Global temp directory.', 'ZPanel Config', 'true'),
-(18, 'news_url', '', 'http://api.zpanelcp.com/api/news.php', NULL, 'Zpanel News URL', 'ZPanel Config', 'false'),
-(19, 'update_url', '', 'http://www.ballen.co.uk/zpxapi/latestversion/', NULL, 'Zpanel Update URL', 'ZPanel Config', 'false'),
-(20, 'bugreport_url', '', 'http://api.zpanelcp.com/api/bugapi.php', NULL, 'Bug report URL', 'ZPanel Config', 'false'),
+(18, 'news_url', '', 'http://api.zpanelcp.com/latestnews.xml', NULL, 'Zpanel News URL', 'ZPanel Config', 'false'),
+(19, 'update_url', '', 'http://api.zpanelcp.com/latestversion.xml', NULL, 'Zpanel Update URL', 'ZPanel Config', 'false'),
 (21, 'server_ip', 'Server IP Address', '', NULL, 'If set this will use this manually entered server IP address which is the prefered method for use behind a firewall.', 'ZPanel Config', 'true'),
 (22, 'zip_exe', 'ZIP Exe', 'zip', NULL, 'Path to the ZIP Executable', 'ZPanel Config', 'true'),
 (24, 'disable_hostsen', '', 'false', 'true|false', 'Disable Host Entries', 'ZPanel Config', 'false'),
-(25, 'latestzpversion', '', '10.0.0.0', NULL, 'This is used for caching the latest version of ZPanel.', 'ZPanel Config', 'false'),
+(25, 'latestzpversion', '', '10.0.0', NULL, 'This is used for caching the latest version of ZPanel.', 'ZPanel Config', 'false'),
 (26, 'logmode', NULL, 'db', 'db|file|email', 'The default mode to log all errors in.', 'ZPanel Config', 'true'),
 (27, 'logfile', NULL, '/etc/zpanel/logs/zpanel.log', NULL, 'If loggging is set to ''file'' mode this is the path to the log file that is to be used by ZPanel.', 'ZPanel Config', 'false'),
 (28, 'apikey', NULL, 'ee8795c8c53bfdb3b2cc595186b68912', NULL, 'The secret API key for the server.', 'ZPanel Config', 'false'),
