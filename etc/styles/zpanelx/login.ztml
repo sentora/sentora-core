@@ -89,11 +89,11 @@
                                                     </td>
                                                 </tr>
                                                 <tr valign="top">
-                                                    <td>
+                                                    <td align="left">
                                                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="frmZLogin" id="frmZLogin">
                                                             <table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
                                                                 <tr>
-                                                                    <td id="login"><strong>Username:</strong></td>
+                                                                    <td id="login" width="20px"><strong>Username:</strong></td>
                                                                     <td id="login"><strong>Password:</strong></td>
                                                                 </tr>
                                                                 <tr>
@@ -109,7 +109,7 @@
                                                                     <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');">Forgot Password?</a></td>
+                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" id="fp" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');">Forgot Password?</a></td>
                                                                 </tr>
                                                             </table>
                                                         </form>
@@ -140,7 +140,7 @@
                                                                     <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Submit</button></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');" id="grey">Back to Login</a></td>
+                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" id="btl" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');" id="grey">Back to Login</a></td>
                                                                 </tr>
                                                             </table>
                                                         </form>
@@ -196,3 +196,53 @@
 	}
 	// -->
 </script>
+<style type="text/css">
+.focusField{
+    border:solid 1px #55A7C8;
+    background:#ECF5F9;
+    color:#000;
+	outline:none;
+}
+.idleField{
+    background:#FFFFFF;
+    color: #6F6F6F;
+    border: solid 1px #DFDFDF;
+	outline:none;
+}
+</style>
+<script language="JavaScript" type="text/javascript">
+		$(document).ready(function() {
+			$('input[type="text"]').addClass("idleField");
+       		$('input[type="text"]').focus(function() {
+       			$(this).removeClass("idleField").addClass("focusField");
+    		    
+				if(this.value != this.defaultValue){
+	    			this.select();
+	    		}
+    		});
+    		$('input[type="text"]').blur(function() {
+    			$(this).removeClass("focusField").addClass("idleField");
+
+    		});
+		});	
+</script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('input[type="password"]').addClass("idleField");
+       		$('input[type="password"]').focus(function() {
+       			$(this).removeClass("idleField").addClass("focusField");
+    		    if (this.value == this.defaultValue){ 
+    		    	this.value = '';
+				}
+				if(this.value != this.defaultValue){
+	    			this.select();
+	    		}
+    		});
+    		$('input[type="password"]').blur(function() {
+    			$(this).removeClass("focusField").addClass("idleField");
+    		    if ($.trim(this.value) == ''){
+			    	this.value = (this.defaultValue ? this.defaultValue : '');
+				}
+    		});
+		});			
+	</script>

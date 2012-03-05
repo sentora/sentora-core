@@ -346,11 +346,13 @@ margin-top: 40px;
     border:solid 1px #55A7C8;
     background:#ECF5F9;
     color:#000;
+	outline:none;
 }
 .idleField{
     background:#FFFFFF;
     color: #6F6F6F;
     border: solid 1px #DFDFDF;
+	outline:none;
 }
 #header_links{
 	float:right;
