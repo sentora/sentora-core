@@ -26,17 +26,13 @@
  */
 class module_controller {
 
-    static function json_proces($json) {
-        return json_decode($json, true);
-    }
-
     static function getZpanelNews() {
         $handle = @file_get_contents(ctrl_options::GetOption('news_url'));
         $content = $handle;
         if ($content == '') {
             $content = ui_language::translate("Unable to connect to the ZPanel API server at this time.");
         } else {
-            $content = self::json_proces($content);
+            $content = ws_generic::JSONToArray($content, true);
         }
         return $content;
     }
@@ -45,8 +41,6 @@ class module_controller {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
-    
-    
 
     static function getModuleIcon() {
         global $controller;
