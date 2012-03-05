@@ -70,7 +70,7 @@ class module_controller {
             while ($rowmysql = $sql->fetch()) {
                 $numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_user_fk=" . $rowmysql['mu_id_pk'] . "")->fetch();
                 if ($rowmysql['mu_access_vc'] == "%") {
-                    $access = "ANY (%)";
+                    $access = "ANY";
                 } else {
                     $access = $rowmysql['mu_access_vc'];
                 }
