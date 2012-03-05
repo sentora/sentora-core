@@ -62,7 +62,7 @@ class ui_template {
         $chkdir = ctrl_options::GetOption('zpanel_root') . "etc/styles/" . $template . "/css/";
         if ($handle) {
             while ($file = readdir($handle)) {
-                if ($file != "." && $file != "..") {
+                if ($file != "." && $file != ".." && strtolower(substr($file, -4)) == ".css") {
                     if (is_file($chkdir . $file)) {
                         array_push($allstyles, array('name' => str_replace(".css", "", $file)));
                     }
