@@ -5,8 +5,6 @@
         <link rel="shortcut icon" type="image/x-icon" href="etc/styles/zpanelx/inc/favicon.ico">
         <link href="etc/styles/zpanelx/inc/login.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="etc/styles/zpanelx/inc/jquery.min.js"></script>
-        <script type="text/javascript" language="javascript" src="etc/styles/zpanelx/inc/jquery.cookie.js"></script>
-        <script type="text/javascript" src="etc/styles/zpanelx/inc/init.js"></script>
         <!-- JQUERY NAVBAR REQUIREMENTS -->
         <link href="etc/styles/zpanelx/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
         <link href="etc/styles/zpanelx/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
@@ -111,7 +109,7 @@
                                                                     <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" onclick="toggle_forgotpassword();" id="grey">Forgot Password?</a></td>
+                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');">Forgot Password?</a></td>
                                                                 </tr>
                                                             </table>
                                                         </form>
@@ -142,7 +140,7 @@
                                                                     <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Submit</button></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" onclick="toggle_login();" id="grey">Back to Login</a></td>
+                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');" id="grey">Back to Login</a></td>
                                                                 </tr>
                                                             </table>
                                                         </form>
@@ -178,21 +176,23 @@
 <script language="javascript">
     document.frmZLogin.inUsername.focus();
 </script>
-<script type="text/javascript">
-    <!--
-    function toggle_forgotpassword() {
-        if(forgotpassword_wrapper.style.display == 'none')
-            forgotpassword_wrapper.style.display = 'block';
-        login_wrapper.style.display = 'none';
-    }
-    //-->
-</script>
-<script type="text/javascript">
-    <!--
-    function toggle_login() {
-        if(forgotpassword_wrapper.style.display == 'block')
-            forgotpassword_wrapper.style.display = 'none';
-        login_wrapper.style.display = 'block';
-    }
-    //-->
+<script language="JavaScript" type="text/javascript">
+	<!--
+	function toggleVisibility(sId, lId){
+	  var me=document.getElementById(sId);
+	  var le=document.getElementById(lId);
+	  if (me.style.display=="none"){
+	     me.style.display="block";
+	  }
+	  else {
+	     me.style.display="none";
+	  }
+	   if (le.style.display=="block"){
+	     le.style.display="none";
+	  }
+	  else {
+	     le.style.display="block";
+	  }
+	}
+	// -->
 </script>
