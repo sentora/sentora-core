@@ -439,14 +439,14 @@ INSERT INTO `x_modcats` VALUES ('5', 'Domain Management');
 INSERT INTO `x_modcats` VALUES ('6', 'Mail');
 INSERT INTO `x_modcats` VALUES ('7', 'Reseller');
 INSERT INTO `x_modcats` VALUES ('8', 'File Management');
-INSERT INTO `x_modules` VALUES ('1', '2', 'PHPInfo', '100', 'phpinfo', 'user', 'PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.', '0', 'true', '', '');
+INSERT INTO `x_modules` VALUES ('1', '2', 'PHPInfo', '100', 'phpinfo', 'user', 'PHPInfo provides you with information regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('3', '2', 'Shadowing', '100', 'shadowing', 'user', 'From here you can shadow any of your client\'s accounts, this enables you to automatically login as the user which enables you to offer remote help by seeing what they see!', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('4', '2', 'ZPanel Config', '100', 'zpanelconfig', 'user', 'Changes made here affect the entire ZPanel configuration, please double check everything before saving changes.', '0', 'true', '', '');
-INSERT INTO `x_modules` VALUES ('5', '2', 'ZPanel News', '100', 'news', 'user', 'Find out all the latest news and infomation from the ZPanel project.', '0', 'true', '', '');
-INSERT INTO `x_modules` VALUES ('6', '2', 'Updates', '100', 'updates', 'user', 'Check to see if there are any avaliable updates to your version of the ZPanel software.', '0', 'true', '', '');
+INSERT INTO `x_modules` VALUES ('5', '2', 'ZPanel News', '100', 'news', 'user', 'Find out all the latest news and information from the ZPanel project.', '0', 'true', '', '');
+INSERT INTO `x_modules` VALUES ('6', '2', 'Updates', '100', 'updates', 'user', 'Check to see if there are any available updates to your version of the ZPanel software.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('8', '4', 'phpMyAdmin', '100', 'phpmyadmin', 'user', 'phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('9', '1', 'My Account', '100', 'my_account', 'user', 'Current personal details that you have provided us with, We ask that you keep these upto date in case we require to contact you regarding your hosting package.\r\n', '0', 'true', '', '');
-INSERT INTO `x_modules` VALUES ('10', '6', 'WebMail', '100', 'webmail', 'user', 'Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.', '0', 'true', '', '');
+INSERT INTO `x_modules` VALUES ('10', '6', 'WebMail', '100', 'webmail', 'user', 'Webmail is a convenient way for you to check your email accounts online without the need to configure an email client.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('11', '1', 'Change Password', '100', 'password_assistant', 'user', 'Change your current control panel password.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('12', '3', 'Backup', '100', 'backupmgr', 'user', 'The backup manager module enables you to backup your entire hosting account including all your MySQL® databases.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('13', '3', 'Network Tools', '100', 'nettools', 'user', 'You can use the tools below to diagnose issues or to simply test connectivity to other servers or sites around the globe.', '0', 'true', '', '');
@@ -611,7 +611,7 @@ INSERT INTO `x_settings` (`so_id_pk`, `so_name_vc`, `so_cleanname_vc`, `so_value
 (34, 'smtp_port', 'SMTP Port', '465', NULL, 'The port address of the SMTP server (usually 25)', 'ZPanel Config', 'true'),
 (35, 'smtp_username', 'SMTP User', '', NULL, 'Username for authentication on the SMTP server.', 'ZPanel Config', 'true'),
 (36, 'smtp_password', 'SMTP Pass', '', NULL, 'Password for authentication on the SMTP server.', 'ZPanel Config', 'true'),
-(37, 'smtp_secure', 'SMTP Auth method', 'false', 'false|ssl|tls', 'If specified will attempt to use encryption to connect to the server, if ''false'' this is disabled. Avaliable options: false, ssl, tls', 'ZPanel Config', 'true'),
+(37, 'smtp_secure', 'SMTP Auth method', 'false', 'false|ssl|tls', 'If specified will attempt to use encryption to connect to the server, if ''false'' this is disabled. Available options: false, ssl, tls', 'ZPanel Config', 'true'),
 (38, 'daemon_lastrun', NULL, '0', NULL, 'Timestamp of when the daemon last ran.', NULL, 'false'),
 (39, 'daemon_dayrun', NULL, '0', NULL, NULL, NULL, 'false'),
 (40, 'daemon_weekrun', NULL, '0', NULL, NULL, NULL, 'false'),
@@ -672,13 +672,13 @@ INSERT INTO `x_settings` (`so_id_pk`, `so_name_vc`, `so_cleanname_vc`, `so_value
 (97, 'apache_purge_date', 'Purge Date', '7', NULL, 'Time in days that vhost backups are safe from deletion', 'Apache Config', 'true'),
 (98, 'apache_backup', 'VHost Backup', 'true', 'true|false', 'Backup vhost file before a new one is written', 'Apache Config', 'true'),
 (99, 'zsudo', 'zsudo path', '/etc/zpanel/panel/bin/zsudo', NULL, 'Path to the zsudo binary used by Apache to run system commands.', 'ZPanel Config', 'true'),
-(100, 'apache_restart', 'Apache Restart Cmd', 'reload', NULL, 'Command line arguements used after the restart service request when reloading Apache.', 'Apache Config', 'true'),
+(100, 'apache_restart', 'Apache Restart Cmd', 'reload', NULL, 'Command line arguments used after the restart service request when reloading Apache.', 'Apache Config', 'true'),
 (101, 'httpd_exe', 'Apache Binary', 'httpd', NULL, 'Path to the Apache binary', 'Apache Config', 'true'),
 (102, 'apache_sn', 'Apache Service Name', 'httpd', NULL, 'Service name used to handle Apache service control', 'Apache Config', 'true'),
 (103, 'daemon_exer', NULL, '/etc/zpanel/panel/bin/daemon.php', NULL, 'Path to the ZPanel daemon', 'ZPanel Config', 'false'),
 (104, 'daemon_timing', NULL, '0 * * * *', NULL, 'Cron time for when to run the ZPanel daemon', 'ZPanel Config', 'false'),
 (105, 'cron_file', 'Cron File', '/etc/crontab.d', NULL, 'Path to the user cron file', 'Cron Config', 'true'),
-(106, 'htpasswd_exe', 'htpassword Exe', 'htpasswd', NULL, 'Path to htpasswd.exe for potecting directories with .htaccess', 'Apache Config', 'false'),
+(106, 'htpasswd_exe', 'htpassword Exe', 'htpasswd', NULL, 'Path to htpasswd.exe for protecting directories with .htaccess', 'Apache Config', 'false'),
 (107, 'mysqldump_exe', 'MySQL Dump', 'mysqldump', NULL, 'Path to MySQL dump', 'ZPanel Config', 'false'),
 (108, 'dns_hasupdates', 'DNS Updated', NULL, NULL, NULL, NULL, 'false');
 INSERT INTO `x_settings` VALUES ('109', 'named_checkconf', 'Named CheckConfig', 'named-checkconf', null, 'Path to named-checkconf bind utility.', 'DNS Config', 'true');
@@ -686,9 +686,9 @@ INSERT INTO `x_settings` VALUES ('110', 'named_checkzone', 'Named CheckZone', 'n
 INSERT INTO `x_settings` VALUES ('111', 'named_compilezone', 'Named CompileZone', 'named-compilezone', null, '	Path to named-compilezone bind utility.', 'DNS Config', 'true');
 INSERT INTO `x_settings` VALUES ('112', 'mailer_type', 'Mail method', 'mail', 'mail|smtp|sendmail', 'Method to use when sending emails out. (mail = PHP Mail())', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('113', 'daemon_run_interval', 'Number of seconds between each daemon execution', '300', null, 'The total number of seconds between each daemon run (default 300 = 5 mins)', 'ZPanel Config', 'false');
-INSERT INTO `x_translations` VALUES ('44', 'Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.', 'Webmail ist ein bequemer Weg fÃ¼r Sie, Ihre E-Mail-Konten online zu Ã¼berprÃ¼fen, ohne dass eine E-Mail-Client zu konfigurieren.');
+INSERT INTO `x_translations` VALUES ('44', 'Webmail is a convenient way for you to check your email accounts online without the need to configure an email client.', 'Webmail ist ein bequemer Weg fÃ¼r Sie, Ihre E-Mail-Konten online zu Ã¼berprÃ¼fen, ohne dass eine E-Mail-Client zu konfigurieren.');
 INSERT INTO `x_translations` VALUES ('45', 'Launch Webmail', 'Starten Sie WebMail');
-INSERT INTO `x_translations` VALUES ('56', 'PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.', 'PHPInfo bietet Ihnen Informationen über die PHP-Version auf dem System, sowie PHP installiert extentsions und Konfigurationsmöglichkeiten.');
+INSERT INTO `x_translations` VALUES ('56', 'PHPInfo provides you with information regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.', 'PHPInfo bietet Ihnen Informationen über die PHP-Version auf dem System, sowie PHP installiert extentsions und Konfigurationsmöglichkeiten.');
 INSERT INTO `x_translations` VALUES ('67', 'From here you can shadow any of your client\'s accounts, this enables you to automatically login as the user which enables you to offer remote help by seeing what they see!', 'Von hier aus können alle Ihre Kunden-Accounts können Schatten, ermöglicht Ihnen dies automatisch, wenn der Benutzer mit dem Sie remote helfen zu sehen, was sie sehen, anbieten zu können login!');
 INSERT INTO `x_translations` VALUES ('68', 'My Account', 'Meine Konto');
 INSERT INTO `x_translations` VALUES ('69', 'Change Password', 'Kennwort ändern');
@@ -718,12 +718,12 @@ INSERT INTO `x_translations` VALUES ('92', 'Account Information', 'Account Infor
 INSERT INTO `x_translations` VALUES ('93', 'Server Admin', 'Server Admin');
 INSERT INTO `x_translations` VALUES ('94', 'Database Management', 'Datenbank Verwalten');
 INSERT INTO `x_translations` VALUES ('95', 'Domain Management', 'Verwalten von Domains');
-INSERT INTO `x_translations` VALUES ('96', 'Find out all the latest news and infomation from the ZPanel project.', 'Finden Sie heraus, alle Neuigkeiten und Informationen aus dem ZPanel Projekt.');
-INSERT INTO `x_translations` VALUES ('97', 'Check to see if there are any avaliable updates to your version of the ZPanel software.', 'Prüfen Sie, ob es irgendwelche verfügbaren Aktualisierungen für Ihre Version des ZPanel Software.');
+INSERT INTO `x_translations` VALUES ('96', 'Find out all the latest news and information from the ZPanel project.', 'Finden Sie heraus, alle Neuigkeiten und Informationen aus dem ZPanel Projekt.');
+INSERT INTO `x_translations` VALUES ('97', 'Check to see if there are any available updates to your version of the ZPanel software.', 'Prüfen Sie, ob es irgendwelche verfügbaren Aktualisierungen für Ihre Version des ZPanel Software.');
 INSERT INTO `x_translations` VALUES ('98', 'If you have found a bug with ZPanel you can report it here.', 'Did you mean: If you have found a bug with CPanel you can report it here.\r\nWenn Sie einen Fehler mit ZPanel gefunden haben, können Sie ihn hier melden.');
 INSERT INTO `x_translations` VALUES ('99', 'phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.', 'phpMyAdmin ist ein webbasiertes Tool, das Sie zu Ihrem ZPanel MySQL-Datenbanken via verwalten können. im Internet.');
 INSERT INTO `x_translations` VALUES ('100', 'Current personal details that you have provided us with, We ask that you keep these upto date in case we require to contact you regarding your hosting package.', 'Aktuelle persönlichen Daten, die Sie uns mit vorgesehen ist, bitten wir Sie, diese zu halten bis zu Datum, falls wir mit Ihnen Kontakt aufnehmen über Ihre Hosting-Paket erfordern.');
-INSERT INTO `x_translations` VALUES ('101', 'Webmail is a convienient way for you to check your email accounts online without the need to configure an email client.', 'Webmail ist ein bequemer Weg für Sie, Ihre E-Mail-Konten online zu überprüfen, ohne dass eine E-Mail-Client zu konfigurieren.');
+INSERT INTO `x_translations` VALUES ('101', 'Webmail is a convenient way for you to check your email accounts online without the need to configure an email client.', 'Webmail ist ein bequemer Weg für Sie, Ihre E-Mail-Konten online zu überprüfen, ohne dass eine E-Mail-Client zu konfigurieren.');
 INSERT INTO `x_translations` VALUES ('102', 'Change your current control panel password.', 'Ändern Sie Ihre aktuelle Bedienfeld oder MySQL-Kennwort.');
 INSERT INTO `x_translations` VALUES ('103', 'The backup manager module enables you to backup your entire hosting account including all your MySQL® databases.', 'Der Backup-Manager-Modul ermöglicht es Ihnen, Ihre gesamte Hosting-Account inklusive aller Ihrer MySQL ® Datenbank-Backup.');
 INSERT INTO `x_translations` VALUES ('104', 'You can use the tools below to diagnose issues or to simply test connectivity to other servers or sites around the globe.', 'Sie können die folgenden Tools verwenden, um Probleme zu diagnostizieren oder einfach testen Verbindung mit anderen Servern oder Websites rund um den Globus.');
