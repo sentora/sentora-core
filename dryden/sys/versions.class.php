@@ -144,16 +144,16 @@ class sys_versions {
     /**
      * Returns in human readable form the version of perl installed.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return string Human readable PERL version number.
+     * @return string Human readable Perl version number.
      */
     static function ShowPerlVersion() {
-		ob_start();
-		passthru("perl -v", $result);
-		$content_grabbed=ob_get_contents();
-		ob_end_clean();
-		preg_match_all("#(\d+).(\d+).(\d+)#", $content_grabbed, $perlversion);
+        ob_start();
+        passthru("perl -v", $result);
+        $content_grabbed = ob_get_contents();
+        ob_end_clean();
+        preg_match_all("#(\d+).(\d+).(\d+)#", $content_grabbed, $perlversion);
         if (!empty($perlversion[0]) && !empty($perlversion[0][0])) {
-			$retval = $perlversion[0][0];
+            $retval = $perlversion[0][0];
         } else {
             $retval = "Unknown";
         }
