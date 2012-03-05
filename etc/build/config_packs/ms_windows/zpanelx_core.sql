@@ -617,8 +617,8 @@ INSERT INTO `x_settings` VALUES ('13', 'servicechk_to', 'Service Check Timeout',
 INSERT INTO `x_settings` VALUES ('14', 'root_drive', 'Root Drive', '/', null, 'The root drive where ZPanel is installed.', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('16', 'php_exer', null, 'php', null, 'PHP Executable', 'ZPanel Config', 'false');
 INSERT INTO `x_settings` VALUES ('17', 'temp_dir', 'Temp Directory', 'C:/windows/temp/', null, 'Global temp directory.', 'ZPanel Config', 'true');
-INSERT INTO `x_settings` VALUES ('18', 'news_url', '', 'http://api.zpanelcp.com/latestnews.xml', null, 'Zpanel News URL', 'ZPanel Config', 'false');
-INSERT INTO `x_settings` VALUES ('19', 'update_url', '', 'http://api.zpanelcp.com/latestversion.xml', null, 'Zpanel Update URL', 'ZPanel Config', 'false');
+INSERT INTO `x_settings` VALUES ('18', 'news_url', '', 'http://api.zpanelcp.com/latestnews.json', null, 'Zpanel News URL', 'ZPanel Config', 'false');
+INSERT INTO `x_settings` VALUES ('19', 'update_url', '', 'http://api.zpanelcp.com/latestversion.json', null, 'Zpanel Update URL', 'ZPanel Config', 'false');
 INSERT INTO `x_settings` VALUES ('21', 'server_ip', 'Server IP Address', '172.167.22.10', null, 'If set this will use this manually entered server IP address which is the prefered method for use behind a firewall.', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('22', 'zip_exe', 'ZIP Exe', 'C:/ZPanel/bin/7zip/7za.exe', null, 'Path to the ZIP Executable', 'ZPanel Config', 'true');
 INSERT INTO `x_settings` VALUES ('24', 'disable_hostsen', '', 'false', 'true|false', 'Disable Host Entries', 'ZPanel Config', 'false');
