@@ -48,7 +48,7 @@ if (isset($_POST['inForgotPassword'])) {
             
         If you wish to proceed with the password reset on your account please use this link below to be taken to the password reset page.
             
-        " . ctrl_options::GetOption('cp_url') . "/?resetkey=" . $randomkey . "
+        http://" . ctrl_options::GetOption('zpanel_domain') . "/?resetkey=" . $randomkey . "
             
         ";
         $phpmailer->AddAddress($result['ac_email_vc']);
