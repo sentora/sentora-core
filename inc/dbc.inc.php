@@ -21,5 +21,21 @@ try {
     $zlo->logcode = "0100";
     $zlo->detail = "Unable to connect/authenticate against the database supplied!";
     $zlo->mextra = $e;
+    $error_html = "<style type=\"text/css\"><!--
+            .dbwarning {
+                    font-family: Verdana, Geneva, sans-serif;
+                    font-size: 14px;
+                    color: #C00;
+                    background-color: #FCC;
+                    padding: 30px;
+                    border: 1px solid #C00;
+            }
+            p {
+                    font-size: 12px;
+                    color: #666;
+            }
+            </style>
+            <div class=\"dbwarning\"><strong>Critical Error:</strong> [0100] - Unable to connect or authenticate to the ZPanel database (<em>$dbname</em>).<p>We advice that you contact the server administator to ensure that the dataase server is online and that the correct connection parameter are being used.</p></div>";
+    die($error_html);
 }
 ?>
