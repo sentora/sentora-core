@@ -392,6 +392,28 @@ $(document).ready(function() {
             $("#statsdata_serverinfo_a").addClass("active");
     };
 })
+//Domaininfo DIV
+$(document).ready(function() { 
+    $("#statsdata_domaininfo").show();
+    $("#statsdata_domaininfo_a").click(function(){
+        if ($("#statsdata_domaininfo").is(":visible")) {
+			$("#statsdata_domaininfo").slideUp("slow");
+            $(this).addClass("active");
+            $.cookie('statsdata_domaininfo-state', 'hiding');
+            return false;
+        } else {
+            $("#statsdata_domaininfo").slideDown("slow");
+            $(this).removeClass("active");
+            $.cookie('statsdata_domaininfo-state', 'showing');
+            return false;
+        }
+    }); 
+    var zcatserverinfostate = $.cookie('statsdata_domaininfo-state'); 
+    if (zcatserverinfostate == 'hiding') {
+            $("#statsdata_domaininfo").hide();
+            $("#statsdata_domaininfo_a").addClass("active");
+    };
+})
 //Header DIV
 $(document).ready(function() { 
     $("#header_bottom").show();

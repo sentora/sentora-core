@@ -428,6 +428,15 @@ a.statsdata_serverinfo{
 	cursor:pointer;
 	padding-right:10px; 
 }
+a.statsdata_domaininfo{
+	background: url(../images/udarrows.png) no-repeat;
+	border:none;
+	float:right;
+	width:36px; height:14px;
+	display:block;
+	cursor:pointer;
+	padding-right:10px; 
+}
 statsdata_wrapper{
 	border:none;
 	display:block;
@@ -470,6 +479,13 @@ border-right: 1px solid #CDCDCD;
 }
 td.mainlayout_left{
 border-left: 1px solid #CDCDCD;
+}
+img.raquo{
+	background: url(../images/raquo.png) 0 0;
+	float:left;
+	margin-right:5px;
+	width:7px;
+	height:13px;
 }
 
 /** ZPANEL SPECIFIC CSS ATTRIBUTES!! **/
