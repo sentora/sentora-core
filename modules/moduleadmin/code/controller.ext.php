@@ -57,10 +57,10 @@ class module_controller {
         global $zdbh;
         global $controller;
         $line = "<h2>" . ui_language::translate("Configure Modules") . "</h2>";
-        $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'user'";
+        $modsql = "SELECT COUNT(*) FROM x_modules";
         if ($nummodsql = $zdbh->query($modsql)) {
             if ($nummodsql->fetchColumn() > 0) {
-                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_type_en <> 'system' ORDER BY mo_name_vc ASC");
+                $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_folder_vc <> 'zpx_core_module' ORDER BY mo_name_vc ASC");
                 $modsql->execute();
                 $line .= "<form action=\"./?module=moduleadmin&action=EditModule\" method=\"post\">";
                 $line .= "<table class=\"zgrid\">";
@@ -81,7 +81,12 @@ class module_controller {
                     $line .= "<tr>";
                     $line .= "<td>" . self::ModuleStatusIcon($modules['mo_id_pk']) . "</td>";
                     $line .= "<td><a href=\"./?module=moduleadmin&showinfo=" . $modules['mo_folder_vc'] . "\">" . ui_language::translate($modules['mo_name_vc']) . "</a></td>";
-                    $line .= "<td><select style=\"min-width:85px;\" name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\">";
+                    $line .= "<td>";
+                    if ($modules['mo_type_en'] != "system") {
+                        $line .="<select style=\"min-width:85px;\" name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\">";
+                    } else {
+                        $line .="<select style=\"min-width:85px;\" name=\"inDisable_" . $modules['mo_id_pk'] . "\" id=\"inDisable_" . $modules['mo_id_pk'] . "\" disabled=\"disabled\">";
+                    }
                     if ($modules['mo_enabled_en'] == 'true') {
                         $selected = "SELECTED";
                     } else {
@@ -93,6 +98,7 @@ class module_controller {
                     } else {
                         $disabled = "";
                     }
+
                     $line .= "<option value=\"true\" " . $selected . " >" . ui_language::translate("Enabled") . "</option>";
                     if ($modules['mo_enabled_en'] == 'false') {
                         $selected = "SELECTED";
@@ -113,8 +119,10 @@ class module_controller {
                             $line .= "<option value=\"" . $modulecats['mc_id_pk'] . "\" " . $selected . ">" . $modulecats['mc_name_vc'] . "</option>";
                         }
                         $line .= "</select>";
+                    } elseif ($modules['mo_type_en'] == "modadmin") {
+                        $line .="" . ui_language::translate("N/A (Module Admin)") . "";
                     } else {
-                        $line .="" . ui_language::translate("N/A (System module)") . "";
+                        $line .="" . ui_language::translate("N/A (System Module)") . "";
                     }
                     $line .= "</td><td style=\"text-align:center\">";
                     if (ui_module::GetModuleHasUpdates($modules['mo_folder_vc'])) {
@@ -137,7 +145,12 @@ class module_controller {
                         $ischeck = 0;
                         if (ctrl_groups::CheckGroupModulePermissions($groups['ug_id_pk'], $modules['mo_id_pk']))
                             $ischeck = "checked=\"checked\" ";
-                        $line .= "<td style=\"text-align:center\"><input type=\"checkbox\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . " " . $disabled . "/></td>";
+                        if ($modules['mo_type_en'] != "system") {
+                            $line .= "<td style=\"text-align:center\"><input type=\"checkbox\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . " " . $disabled . "/></td>";
+                        } else {
+                            $disabled = "disabled=\"disabled\"";
+                            $line .= "<td style=\"text-align:center\"><input type=\"checkbox\" value=\"1\" name=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" id=\"inEnable_" . $groups['ug_id_pk'] . "_" . $modules['mo_id_pk'] . "\" " . $ischeck . " " . $disabled . " /></td>";
+                        }
                     }
                     $line .= "</tr>";
                 }
