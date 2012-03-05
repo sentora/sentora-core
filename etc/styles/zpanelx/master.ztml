@@ -170,36 +170,40 @@
                                                                 <td nowrap="nowrap">&nbsp;</td>
                                                             </tr>
                                                             <tr>
+                                                                <td nowrap="nowrap"></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used_header"><b>Used</b></span>  <span class="Side_Info_max_header"><b>Max</b></span>&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Domains:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_useddomains #></span> / <span class="Side_Info"><# ui_tpl_totaldomains #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_useddomains #></span>  <span class="Side_Info_max"><# ui_tpl_totaldomains #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Sub-domains:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedsubdomains #></span> / <span class="Side_Info"><# ui_tpl_totalsubdomains #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedsubdomains #></span>  <span class="Side_Info_max"><# ui_tpl_totalsubdomains #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Parked domains:</strong></td>
-                                                                <td nowrap="nowrap"> <span class="Side_Info"><# ui_tpl_usedparkeddomains #></span> / <span class="Side_Info"><# ui_tpl_totalparkeddomains #></span></td>
+                                                                <td nowrap="nowrap"> <span class="Side_Info_used"><# ui_tpl_usedparkeddomains #></span>  <span class="Side_Info_max"><# ui_tpl_totalparkeddomains #></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>FTP accounts:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedftp #></span> / <span class="Side_Info"><# ui_tpl_totalftp #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedftp #></span>  <span class="Side_Info_max"><# ui_tpl_totalftp #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>MySQL&reg; databases:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedmysql #></span> / <span class="Side_Info"><# ui_tpl_totalmysql #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedmysql #></span>  <span class="Side_Info_max"><# ui_tpl_totalmysql #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Email Accounts:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedemail #></span> / <span class="Side_Info"><# ui_tpl_totalemail #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedemail #></span>  <span class="Side_Info_max"><# ui_tpl_totalemail #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Email Forwarders:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usedforwarders #></span> / <span class="Side_Info"><# ui_tpl_totalforwarders #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedforwarders #></span>  <span class="Side_Info_max"><# ui_tpl_totalforwarders #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Distrubution lists:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_useddistlists #></span> / <span class="Side_Info"><# ui_tpl_totaldistlists #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_useddistlists #></span>  <span class="Side_Info_max"><# ui_tpl_totaldistlists #></span>&nbsp;</td>
                                                             </tr>
                                                     </table>
                                                 </div>

@@ -438,7 +438,6 @@ statsdata_wrapper{
 	display:block;
 	margin:0;
 	padding:0;
-	width:
 	min-width:300px;
 }
 #statsdata_wrapper_a{
@@ -482,6 +481,29 @@ img.raquo{
 	margin-right:5px;
 	width:7px;
 	height:13px;
+}
+span.Side_Info_used{
+	float:left;
+	min-width:40px;
+	margin-right:20px;
+	background-color:#E5F0F1;
+}
+span.Side_Info_max{
+	float:left;
+	min-width:40px;
+	background-color:#E5F0F1;
+}
+span.Side_Info_used_header{
+	float:left;
+	min-width:40px;
+	margin-right:20px;
+}
+span.Side_Info_max_header{
+	float:left;
+	min-width:40px;
+}
+span.Side_Info_None{
+	color:#999999;
 }
 
 /** ZPANEL SPECIFIC CSS ATTRIBUTES!! **/
