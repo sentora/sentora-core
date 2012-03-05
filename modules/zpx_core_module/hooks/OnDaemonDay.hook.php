@@ -34,11 +34,11 @@ echo "Finished getting module version update information!\n";
 
 
 /*
- * Please DO NOT remove the below code, this small 'hello' function helps us at the ZPanel project
- * find out what non-personal infomation about how people are running ZPanel. The only infomation
+ * Please DO NOT remove the below code, this helps us at the ZPanel project
+ * find out non-personal infomation about how people are running ZPanel. The only infomation
  * that we are passing back here is just your ZPanel version and what OS you are running it on.
  */
-$sayhello = @file_get_contents("http://hello.zpanelcp.com/?version=" .ctrl_options::GetOption('dbversion'). "&platform=" .sys_versions::ShowOSName(). "");
+ws_generic::DoPostRequest('http://api.zpanelcp.com/hello.json', "version=" . sys_versions::ShowZpanelVersion() . "&platform=" . sys_versions::ShowOSPlatformVersion() . "&url=" . ctrl_options::GetOption('zpanel_domain') . "");
 
 return true;
 ?>
