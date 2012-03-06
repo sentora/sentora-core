@@ -328,7 +328,7 @@ class module_controller {
 		return true;
     }
 
-    static function ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password) {
+    static function ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password, $sendemail, $emailsubject, $emailbody) {
         global $zdbh;
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
@@ -388,16 +388,25 @@ class module_controller {
         fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
         fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
         fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
+		// Send the user account details via. email (if requested)... 
+		if ($sendemail <> 0){
+			$emailsubject = str_replace("{{username}}", $username, $emailsubject);
+            $emailsubject = str_replace("{{password}}", $password, $emailsubject);
+            $emailsubject = str_replace("{{fullname}}", $fullname, $emailsubject);
+			$emailbody = str_replace("{{username}}", $username, $emailbody);
+            $emailbody = str_replace("{{password}}", $password, $emailbody);
+            $emailbody = str_replace("{{fullname}}", $fullname, $emailbody);
+			
+		    $phpmailer = new sys_email();
+        	$phpmailer->Subject = $emailsubject;
+	        $phpmailer->Body = $emailbody;
+	        $phpmailer->AddAddress($email);
+	        $phpmailer->SendEmail();
+		}
         runtime_hook::Execute('OnAfterCreateClient');
         self::$resetform = true;
         self::$ok = true;
         return true;
-
-        // Create the MySQL account for the user...
-        // Now we create the user's home directory if it doesnt already exsist...
-        // Create the domain logs folder read for Apache...
-        // Create a default FTP account if set in the system options...
-        // Send the user account details via. email (if requested)...
     }
 
     static function CheckCreateForErrors($username, $packageid, $groupid, $email) {
@@ -473,6 +482,11 @@ class module_controller {
         }
         return true;
     }
+	
+	static function DefaultEmailBody(){
+		$line = ui_language::translate("Hi {{fullname}},\r\rWe are pleased to inform you that your new hosting account is now active, you can now login to ZPanel using the following credentials:\r\rUsername: {{username}}\rPassword: {{password}}");
+		return $line;
+	}
 
     /**
      * End 'worker' methods.
@@ -485,7 +499,7 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inNewUserName'], $formvars['inNewPackage'], $formvars['inNewGroup'], $formvars['inNewFullName'], $formvars['inNewEmailAddress'], $formvars['inNewAddress'], $formvars['inNewPostCode'], $formvars['inNewPhone'], $formvars['inNewPassword'])) {
+        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inNewUserName'], $formvars['inNewPackage'], $formvars['inNewGroup'], $formvars['inNewFullName'], $formvars['inNewEmailAddress'], $formvars['inNewAddress'], $formvars['inNewPostCode'], $formvars['inNewPhone'], $formvars['inNewPassword'], $formvars['inSWE'], $formvars['inEmailSubject'], $formvars['inEmailBody'])) {
             unset($_POST['inNewUserName']);
             return true;
         } else {
@@ -704,6 +718,11 @@ class module_controller {
         } else {
             return "";
         }
+    }
+
+    static function getDefaultEmailBody() {
+        global $controller;
+		return self::DefaultEmailBody();
     }
 
     static function getFormName() {

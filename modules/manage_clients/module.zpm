@@ -223,6 +223,14 @@
 			        <td><input name="inSWE" type="checkbox" id="inSWE" value="1" checked="checked" /></td>
 		        </tr>
 		        <tr>
+			        <th><: Email Subject :>:</th>
+			        <td><input name="inEmailSubject" type="text" id="inEmailSubject" value="<: Your ZPanel Account details :>" style="width:380px;" /></td>
+		        </tr>
+		        <tr>
+			        <th><: Email Body :>:</th>
+			        <td><textarea name="inEmailBody" id="inEmailBody" cols="45" rows="5"><@ DefaultEmailBody @></textarea></td>
+		        </tr>
+		        <tr>
 			        <th></th>
 			        <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="Save"><: Save :></button></td>
 		        </tr>
