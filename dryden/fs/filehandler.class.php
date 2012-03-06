@@ -20,9 +20,9 @@ class fs_filehandler {
     static function ResetFile($file) {
         $new_file = "";
         if (!is_dir($file)) {
-            $fp = fopen($file, 'w');
-            fwrite($fp, $new_file);
-            fclose($fp);
+            $fp = @fopen($file, 'w');
+            @fwrite($fp, $new_file);
+            @fclose($fp);
         }
     }
 
@@ -71,9 +71,9 @@ class fs_filehandler {
                     return FALSE;
                 }
             }
-            $fp = fopen($path, 'w');
-            fwrite($fp, $string);
-            fclose($fp);
+            $fp = @fopen($path, 'w');
+            @fwrite($fp, $string);
+            @fclose($fp);
             fs_director::SetFileSystemPermissions($dest, $chmod);
         }
     }
@@ -113,9 +113,9 @@ class fs_filehandler {
     static function UpdateFile($path, $chmod = 0777, $string = "") {
         if (!file_exists($path))
             fs_filehandler::ResetFile($path);
-        $fp = fopen($path, 'w');
-        fwrite($fp, $string);
-        fclose($fp);
+        $fp = @fopen($path, 'w');
+        @fwrite($fp, $string);
+        @fclose($fp);
         fs_director::SetFileSystemPermissions($path, $chmod);
         return true;
     }

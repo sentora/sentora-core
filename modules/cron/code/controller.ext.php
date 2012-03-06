@@ -29,6 +29,8 @@ class module_controller {
 
 	static $error;
 	static $noexists;
+	static $cronnoexists;
+	static $cronnowrite;
 	static $alreadyexists;
 	static $blank;
 	static $ok;
@@ -130,7 +132,7 @@ class module_controller {
 											'" . $controller->GetControllerRequest('FORM', 'inScript') . "',
 											'" . $controller->GetControllerRequest('FORM', 'inDescription') . "',
 											'" . $controller->GetControllerRequest('FORM', 'inTiming') . "',
-											'" . fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $controller->GetControllerRequest('FORM', 'inScript'))) . "',
+											'" . ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $controller->GetControllerRequest('FORM', 'inScript') . "',
 											" . time() . ")");
 			$sql->execute();
 			self::WriteCronFile();
@@ -178,6 +180,16 @@ class module_controller {
 	    # Check to make sure the cron script exists before we go any further...
 	    if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . '/public_html/' . $controller->GetControllerRequest('FORM', 'inScript'))))) {
 			self::$noexists = TRUE;
+			$retval = TRUE;
+	    }
+	    # Check to see if creating system cron file was successful...
+	    if (!is_file(ctrl_options::GetOption('cron_file'))) {
+			self::$cronnoexists = TRUE;
+			$retval = TRUE;
+	    }
+	    # Check to makesystem cron file is writable...
+	    if (!is_writable(ctrl_options::GetOption('cron_file'))) {
+			self::$cronnowrite = TRUE;
 			$retval = TRUE;
 	    }
 	    # Check to make sure the cron is not a duplicate...
@@ -278,6 +290,12 @@ class module_controller {
 		}
 		if (!fs_director::CheckForEmptyValue(self::$noexists)){
 			return ui_sysmessage::shout(ui_language::translate("Your script does not appear to exist at that location."), "zannounceerror");
+		}
+		if (!fs_director::CheckForEmptyValue(self::$cronnoexists)){
+			return ui_sysmessage::shout(ui_language::translate("System Cron file could not be created."), "zannounceerror");
+		}
+		if (!fs_director::CheckForEmptyValue(self::$cronnowrite)){
+			return ui_sysmessage::shout(ui_language::translate("Could not write to the System Cron file."), "zannounceerror");
 		}
 		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)){
 			return ui_sysmessage::shout(ui_language::translate("You can not add the same cron task more than once."), "zannounceerror");
