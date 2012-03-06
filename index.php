@@ -14,5 +14,6 @@ require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 debug_phperrors::SetMode('dev');
 require_once 'inc/dbc.inc.php';
+debug_phperrors::SetMode(ctrl_options::GetOption('debug_mode'));
 require_once 'inc/init.inc.php';
 ?>
