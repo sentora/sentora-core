@@ -81,7 +81,9 @@
         		$vsql->execute();
 
                 // Get account username vhost is create with
-                $username = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
+                $username  = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
+                // Get account package id vhost is create with
+                $packageid = $zdbh->query("SELECT ac_package_fk FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
 				// Get email and if blank set postmaster@userdomain as default.
 				$getuseremail = $zdbh->query("SELECT ud_email_vc FROM x_profiles where ud_user_fk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
 				if (fs_director::CheckForEmptyValue($getuseremail['ud_email_vc'])){
@@ -137,13 +139,13 @@
                 $line .= "</Directory>" 					. fs_filehandler::NewLine();
 
                 // Get Package php and cgi enabled options
-                $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $rowvhost['vh_acc_fk'] . " AND pk_deleted_ts IS NULL");
+                $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_id_pk=" . $packageid['ac_package_fk'] . " AND pk_deleted_ts IS NULL");
                 $rows->execute();
-                $dbvals = $rows->fetch();
-                if ($dbvals['pk_enablephp_in'] <> 0) {
+                $packageinfo = $rows->fetch();
+                if ($packageinfo['pk_enablephp_in'] <> 0) {
                     $line .= ctrl_options::GetOption('php_handler') . fs_filehandler::NewLine();
                 }
-                if ($dbvals['pk_enablecgi_in'] <> 0) {
+                if ($packageinfo['pk_enablecgi_in'] <> 0) {
                     $line .= ctrl_options::GetOption('cgi_handler') . fs_filehandler::NewLine();
 					if (!is_dir(ctrl_options::GetOption('hosted_dir') . $username['ac_user_vc'] . "/public_html" . $rowvhost['vh_directory_vc'] . "/_cgi-bin")) {
                     	fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username['ac_user_vc'] . "/public_html" . $rowvhost['vh_directory_vc'] . "/_cgi-bin");
