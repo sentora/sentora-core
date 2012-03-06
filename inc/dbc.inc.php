@@ -19,7 +19,7 @@ try {
 } catch (PDOException $e) {
     $zlo->method = "text";
     $zlo->logcode = "0100";
-    $zlo->detail = "Unable to connect/authenticate against the database supplied!";
+    $zlo->detail = "Unable to connect or authenticate against the database supplied!";
     $zlo->mextra = $e;
     $error_html = "<style type=\"text/css\"><!--
             .dbwarning {
