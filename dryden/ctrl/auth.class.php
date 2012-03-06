@@ -18,12 +18,14 @@ class ctrl_auth {
      * return bool
      */
     static function RequireUser() {
+        global $zdbh;
         if (!isset($_SESSION['zpuid'])) {
             if (isset($_COOKIE['zUser'])) {
                 self::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true);
             }
             runtime_hook::Execute('OnRequireUserLogin');
-            include 'etc/styles/zpanelx/login.ztml';
+            $theme = $zdbh->query("SELECT ac_usertheme_vc, ac_usercss_vc FROM x_accounts WHERE ac_user_vc = 'zadmin'")->fetch();
+            include 'etc/styles/' . $theme['ac_usertheme_vc'] . '/login.ztml';
             exit;
         }
         return true;
