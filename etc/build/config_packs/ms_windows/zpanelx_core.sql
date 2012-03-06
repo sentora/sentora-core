@@ -487,7 +487,7 @@ INSERT INTO `x_modules` VALUES ('30', '0', 'DNS Config', '100', 'dns_admin', 'mo
 INSERT INTO `x_modules` VALUES ('31', '7', 'Manage Groups', '100', 'manage_groups', 'user', 'Manage user groups to enable greater control over module permission.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('32', '6', 'Mailboxes', '100', 'mailboxes', 'user', 'Using this module you have the ability to create IMAP and POP3 Mailboxes.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('33', '6', 'Forwards', '100', 'forwarders', 'user', 'Using this module you have the ability to create mail forwarders.', '0', 'true', '', '');
-INSERT INTO `x_modules` VALUES ('34', '6', 'Distrubution Lists', '100', 'distlists', 'user', 'This module enables you to create and manage email distrubution groups.', '0', 'true', '', '');
+INSERT INTO `x_modules` VALUES ('34', '6', 'Distribution Lists', '100', 'distlists', 'user', 'This module enables you to create and manage email distribution groups.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('35', '6', 'Aliases', '100', 'aliases', 'user', 'Using this module you have the ability to create alias mailboxes to existing accounts.', '0', 'true', '', '');
 INSERT INTO `x_modules` VALUES ('36', '0', 'Mail Config', '100', 'mail_admin', 'modadmin', 'This module enables you to configure your mail options', null, 'true', '', '');
 INSERT INTO `x_modules` VALUES ('39', '4', 'MySQL Users', '100', 'mysql_users', 'user', 'MySQL® Users allows you to add users and permissions to your MySQL® databases.', null, 'true', '', '');
