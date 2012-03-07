@@ -66,13 +66,13 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-				if ($rowgroups['ug_name_vc'] != "Administrators" &&
-					$rowgroups['ug_name_vc'] != "Resellers"      &&
-					$rowgroups['ug_name_vc'] != "Users"){
-                $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
-                $totalnoaccs = $zdbh->query($noaccs)->fetch();
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
-				}
+                if ($rowgroups['ug_name_vc'] != "Administrators" &&
+                        $rowgroups['ug_name_vc'] != "Resellers" &&
+                        $rowgroups['ug_name_vc'] != "Users") {
+                    $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
+                    $totalnoaccs = $zdbh->query($noaccs)->fetch();
+                    array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
+                }
             }
             return $res;
         } else {
@@ -89,13 +89,13 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-				if ($rowgroups['ug_name_vc'] == "Administrators" ||
-					$rowgroups['ug_name_vc'] == "Resellers"      ||
-					$rowgroups['ug_name_vc'] == "Users"){
-                $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
-                $totalnoaccs = $zdbh->query($noaccs)->fetch();
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
-				}
+                if ($rowgroups['ug_name_vc'] == "Administrators" ||
+                        $rowgroups['ug_name_vc'] == "Resellers" ||
+                        $rowgroups['ug_name_vc'] == "Users") {
+                    $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
+                    $totalnoaccs = $zdbh->query($noaccs)->fetch();
+                    array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
+                }
             }
             return $res;
         } else {
@@ -122,7 +122,8 @@ class module_controller {
 
     static function ExectuteCreateGroup($name, $desc, $uid) {
         global $zdbh;
-        $sql = $zdbh->prepare("
+        if (!fs_director::CheckForEmptyValue($name)) {
+            $sql = $zdbh->prepare("
             INSERT INTO x_groups (
             ug_name_vc,
             ug_notes_tx,
@@ -132,17 +133,18 @@ class module_controller {
             '" . $desc . "',
             " . $uid . ")
             ");
-        $sql->execute();
+            $sql->execute();
+        }
         return true;
     }
-    
+
     static function ExectuteUpdateGroup($gid, $name, $desc) {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_groups
-            SET ug_name_vc = '" .$name. "',
-            ug_notes_tx = '" .$desc. "'
-            WHERE ug_id_pk = " .$gid. "");
+            SET ug_name_vc = '" . $name . "',
+            ug_notes_tx = '" . $desc . "'
+            WHERE ug_id_pk = " . $gid . "");
         $sql->execute();
         return true;
     }
@@ -192,7 +194,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExectuteCreateGroup($formvars['inGroupName'], $formvars['inDesc'], $currentuser['userid'])) {
-            
+            return true;
         } else {
             return false;
         }
@@ -223,7 +225,7 @@ class module_controller {
             return true;
         return false;
     }
-    
+
     static function doUpdateGroup() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -231,7 +233,7 @@ class module_controller {
             return true;
         return false;
     }
-  
+
     static function getisCreateGroup() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -265,7 +267,7 @@ class module_controller {
             return "";
         }
     }
-    
+
     static function getEditCurrentName() {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
