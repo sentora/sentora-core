@@ -58,7 +58,7 @@ if (isset($_POST['inForgotPassword'])) {
 }
 
 if (isset($_POST['inConfEmail'])) {
-    $result = $zdbh->query("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = '" . $_POST['inConfEmail'] . "' AND ac_resethash_tx = '" . $_GET['resetkey'] . "'")->Fetch();
+    $result = $zdbh->query("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = '" . $_POST['inConfEmail'] . "' AND ac_resethash_tx = '" . $_GET['resetkey'] . "' AND ac_resethash_tx IS NOT NULL")->Fetch();
     if ($result) {
         $zdbh->exec("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= '" . md5($_POST['inNewPass']) . "' WHERE ac_id_pk=" . $result['ac_id_pk'] . "");
         runtime_hook::Execute('OnSuccessfulPasswordReset');
