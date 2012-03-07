@@ -151,11 +151,11 @@ class sys_versions {
         passthru("perl -v", $result);
         $content_grabbed = ob_get_contents();
         ob_end_clean();
-		if (self::ShowOSPlatformVersion() == "Windows"){
-			preg_match_all("#(?<=\()(.*?)(?=\))#", $content_grabbed, $perlversion);
-		} else {
-        	preg_match_all("#(\d+).(\d+).(\d+)#", $content_grabbed, $perlversion);
-			}
+        if (self::ShowOSPlatformVersion() == "Windows") {
+            preg_match_all("#(?<=\()(.*?)(?=\))#", $content_grabbed, $perlversion);
+        } else {
+            preg_match_all("#(\d+).(\d+).(\d+)#", $content_grabbed, $perlversion);
+        }
         if (!empty($perlversion[0]) && !empty($perlversion[0][0])) {
             $retval = str_replace("v", "", $perlversion[0][0]);
         } else {
