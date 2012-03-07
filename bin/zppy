@@ -32,6 +32,10 @@ if (!runtime_controller::IsCLI())
     exit(1);
 
 if ((isset($argv[1])) && ($argv[1] == 'install')) {
+    if (!isset($argv[2])) {
+        fwrite(STDOUT, "No module specifed!\n");
+        exit(0);
+    }
     fwrite(STDOUT, "Module to be installed " . $argv[2] . "\n");
     $contents = file_get_contents($package_file);
     $lines = preg_split('/\r\n|\r|\n/', $contents);
@@ -79,6 +83,10 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
 }
 
 if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
+    if (!isset($argv[2])) {
+        fwrite(STDOUT, "No module specifed!\n");
+        exit(0);
+    }
     fwrite(STDOUT, "Module to be upgraded!\n");
     $contents = file_get_contents($package_file);
     $lines = preg_split('/\r\n|\r|\n/', $contents);
@@ -121,6 +129,10 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
 }
 
 if ((isset($argv[1])) && ($argv[1] == 'remove')) {
+    if (!isset($argv[2])) {
+        fwrite(STDOUT, "No module specifed!\n");
+        exit(0);
+    }
     if (fs_director::CheckFolderExists('modules/' . $argv[2])) {
         $sql = $zdbh->prepare("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '" . $argv[2] . "'");
         $sql->execute();
@@ -184,7 +196,7 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
             $newrepo = "" . $argv[3] . "\n";
             fwrite($handle, $newrepo);
             fclose($handle);
-            fwrite(STDOUT, "Added '" . $argv[3] . "' to list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
+            fwrite(STDOUT, "Added '" . $argv[3] . "' to list of repositories!\nRemember to execute 'zppy update' to grab the latest list of packages.");
             exit(0);
         }
     }
