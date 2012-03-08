@@ -94,6 +94,19 @@ CREATE TABLE `x_distlists` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
+-- Table structure for x_distlistusers
+-- ----------------------------
+DROP TABLE IF EXISTS `x_distlistusers`;
+CREATE TABLE `x_distlistusers` (
+  `du_id_pk` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `du_distlist_fk` int(6) DEFAULT NULL,
+  `du_address_vc` varchar(255) DEFAULT NULL,
+  `du_created_ts` int(30) DEFAULT NULL,
+  `du_deleted_ts` int(30) DEFAULT NULL,
+  PRIMARY KEY (`du_id_pk`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
 -- Table structure for x_dns
 -- ----------------------------
 DROP TABLE IF EXISTS `x_dns`;
