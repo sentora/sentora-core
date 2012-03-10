@@ -109,7 +109,7 @@ class module_controller {
 										   'postcode'   => $rowclients['ud_postcode_vc'],
 										   'address'   => $rowclients['ud_address_tx'],
 										   'phone'   => $rowclients['ud_phone_vc'],
-                    					   'email' => $rowclients['ud_email_vc']));
+                    					   'email' => $currentuser['email']));
             }
             return $res;
         } else {
@@ -262,6 +262,7 @@ class module_controller {
         $sql->execute();
 		}
         $sql = $zdbh->prepare("UPDATE x_accounts SET 
+										ac_email_vc=    '" . $email . "',
 										ac_package_fk= " . $package . " ,
 										ac_enabled_in= " . $enabled . ",
                                         ac_group_fk=   " . $group . "
@@ -270,7 +271,6 @@ class module_controller {
 
         $sql = $zdbh->prepare("UPDATE x_profiles SET 
 										ud_fullname_vc= '" . $fullname . "',
-                                        ud_email_vc=    '" . $email . "',
 										ud_group_fk=    " . $group . ",
 										ud_package_fk=  " . $package . ",
 										ud_address_tx=  '" . $address . "',
@@ -347,6 +347,7 @@ class module_controller {
         $sql = $zdbh->prepare("INSERT INTO x_accounts (
 										ac_user_vc,
 										ac_pass_vc,
+										ac_email_vc,
 										ac_package_fk,
                                         ac_group_fk,
 										ac_usertheme_vc,
@@ -355,6 +356,7 @@ class module_controller {
 										ac_created_ts) VALUES (
 										'" . $username . "',
 										'" . md5($password) . "',
+										'" . $email . "',
                                         '" . $packageid . "',
 										'" . $groupid . "',
 										'" . $reseller['usertheme'] . "',
@@ -366,7 +368,6 @@ class module_controller {
         $client = $zdbh->query("SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " ORDER BY ac_id_pk DESC")->Fetch();
         $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk,
 										ud_fullname_vc,
-										ud_email_vc,
 										ud_group_fk,
 										ud_package_fk,
 										ud_address_tx,
@@ -375,7 +376,6 @@ class module_controller {
 										ud_created_ts) VALUES (
 										 " . $client['ac_id_pk'] . ",
 										'" . $fullname . "',
-										'" . $email . "',
 										'" . $packageid . "',
 										'" . $groupid . "',
 										'" . $address . "',
@@ -504,7 +504,12 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inNewUserName'], $formvars['inNewPackage'], $formvars['inNewGroup'], $formvars['inNewFullName'], $formvars['inNewEmailAddress'], $formvars['inNewAddress'], $formvars['inNewPostCode'], $formvars['inNewPhone'], $formvars['inNewPassword'], $formvars['inSWE'], $formvars['inEmailSubject'], $formvars['inEmailBody'])) {
+		if (isset($formvars['inSWE'])){
+			$sendemail = $formvars['inSWE'];
+		} else {
+			$sendemail = 0;
+		}
+        if (self::ExecuteCreateClient($currentuser['userid'], $formvars['inNewUserName'], $formvars['inNewPackage'], $formvars['inNewGroup'], $formvars['inNewFullName'], $formvars['inNewEmailAddress'], $formvars['inNewAddress'], $formvars['inNewPostCode'], $formvars['inNewPhone'], $formvars['inNewPassword'], $sendemail, $formvars['inEmailSubject'], $formvars['inEmailBody'])) {
             unset($_POST['inNewUserName']);
             return true;
         } else {
