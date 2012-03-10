@@ -255,11 +255,16 @@ class module_controller {
     static function ExecuteUpdateClient($clientid, $package, $enabled, $group, $fullname, $email, $address, $post, $phone, $newpass) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeUpdateClient');
+		if ($newpass != ""){
+		$sql = $zdbh->prepare("UPDATE x_accounts SET 
+										ac_pass_vc=	   '" . md5($newpass) . "'
+										WHERE ac_id_pk=" . $clientid . "");
+        $sql->execute();
+		}
         $sql = $zdbh->prepare("UPDATE x_accounts SET 
 										ac_package_fk= " . $package . " ,
 										ac_enabled_in= " . $enabled . ",
-                                        ac_group_fk=   " . $group . ",
-										ac_pass_vc=	   '" . md5($newpass) . "'
+                                        ac_group_fk=   " . $group . "
 										WHERE ac_id_pk=" . $clientid . "");
         $sql->execute();
 
