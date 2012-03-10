@@ -1,5 +1,5 @@
 ﻿/*
-ZPanelX Database Schema
+* ZPanelX Database Schema
 */
 /*!40101 SET NAMES utf8 */;
 
