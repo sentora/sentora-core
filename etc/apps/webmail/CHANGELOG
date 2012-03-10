@@ -1,0 +1,94 @@
+CHANGELOG Roundcube Webmail
+===========================
+
+- Fix bug in handling of base href and inline content (#1488290)
+- Fix SQL Error when saving a contact with many email addresses (#1488286)
+- Fix strict email address searching if contact has more than one address
+- Remove duplicated 'organization' label (#1488287)
+- Fix so editor selector is hidden when 'htmleditor' is listed in 'dont_override'
+- Fix wrong (long) label usage (#1488283)
+- Fix handling of INBOX's subfolders in special folders config (#1488279)
+- Add ifModule statement for setting Options -Indexes in .htaccess file (#1488274)
+- Fix searching on IMAP servers without CHARSET specifier support (#1488271)
+- Fix crash with eAccelerator (#1488256)
+- Fix expanding folders during drag&drop (#1488260)
+- Fix wrong postgres sequence name in upgrade from 0.6
+- Fix broken CREATE INDEX queries in SQLite DDL files (#1488255)
+
+RELEASE 0.7
+-----------
+- Make Roundcube render the Email Standards Project Acid Test correctly
+- Replace prompt() with jQuery UI dialog (#1485135)
+- Fix navigation in messages search results
+- Improved handling of some malformed values encoded with quoted-printable (#1488232)
+- Add possibility to do LDAP bind before searching for bind DN
+- Fix handling of empty <U> tags in HTML messages (#1488225)
+- Add content filter for embedded attachments to protect from XSS on IE (#1487895)
+- Use strpos() instead of strstr() when possible (#1488211)
+- Fix handling HTML entities when converting HTML to text (#1488212)
+- Fix fit_string_to_size() renders browser and ui unresponsive (#1488207)
+- Fix handling of invalid characters in request (#1488124)
+- Fix merging some configuration options in update.sh script (#1485864)
+- Fix so TEXT key will remove all HEADER keys in IMAP SEARCH (#1488208)
+- Fix handling contact photo url with https:// prefix (#1488202)
+- Fix possible infinite redirect on attachment preview (#1488199)
+- Improved clickjacking protection for browsers which don't support X-Frame-Options headers
+- Fixed bug where similiar folder names were highlighted wrong (#1487860)
+- Fixed bug in handling link with '!' character in it (#1488195)
+- Fixed bug where session ID's length was limited to 40 characters (#1488196)
+- TinyMCE security issue: removed moxieplayer (embedding flv and mp4 is not supported anymore)
+
+RELEASE 0.7-beta
+----------------
+- Fix handling of HTML form elements in messages (#1485137)
+- Fix regression in setting recipient to self when replying to a Sent message (#1487074)
+- Fix listing of folders in hidden namespaces (#1486796)
+- Don't consider \Noselect flag when building folders tree (#1488004)
+- Fix sorting autocomplete results (#1488084)
+- Add option to set session name (#1486433)
+- Add option to skip alternative email addresses in autocompletion
+- Fix inconsistent behaviour of Compose button in Drafts folder, add Edit button for drafts
+- Fix problem with parsing HTML message body with non-unicode characters (#1487813)
+- Add option to define matching method for addressbook search (#1486564, #1487907)
+- Make email recipients separator configurable
+- Fix so folders with \Noinferiors attribute aren't listed in parent selector
+- Fix handling of curly brackets in URLs (#1488168)
+- Fix handling of dates (birthday/anniversary) in contact data (#1488147)
+- Fix error on opening searched LDAP contact (#1488144)
+- Fix redundant line break in flowed format (#1488146)
+- Fix IDN address validation issue (#1488137)
+- Fix JS error when dst_active checkbox doesn't exist (#1488133)
+- Autocomplete LDAP records when adding contacts from mail (#1488073)
+- Plugin API: added 'ready' hook (#1488063)
+- Ignore DSN request when it isn't supported by SMTP server (#1487800)
+- Make sure LDAP name fields aren't arrays (#1488108)
+- Fixed imap test to non-default port when using ssl (#1488118)
+- Force all files to be overwritten when updating (#1488117)
+- Fix issue where it wasn't possible to change list view mode in folder manager for INBOX (#1488107)
+- Fix namespace handling in special folders settings (#1488112)
+- Disable time limit for CLI scripts (#1488109)
+- Fix misleading display when chaning editor type (#1488104)
+- Add loading indicator on contact delete
+- Fix bug where after delete message rows can be added to the list of another folder (#1487752)
+- Add notice on autocompletion that not all records were displayed
+- Add option 'searchonly' for LDAP address books
+- Add Priority filter to the messages list
+- Cache synchronization using QRESYNC/CONDSTORE
+- Trigger 'new_messages' hook for all checked folders (#1488083)
+- Make date/time format user configurable; drop 'date_today' config option
+- Fix setting title for truncated subject in IE (#1487128)
+- Fix displaying multipart/alternative messages with only one part (#1487938)
+- Rewritten messages caching:
+  Indexes are stored in a separate table, so there's no need to store all messages in a folder
+  Added threads data caching
+  Flags are stored separately, so flag change doesn't cause DELETE+INSERT, just UPDATE
+- Improved FETCH response handling
+- Improvements in response tokenization method
+- Use 'From' and 'To' labels instead of 'Sender' and 'Recipient'
+- Fix username case-insensitivity issue in MySQL (#1488021)
+- Addressbook Saved Searches
+- Added spellchecker exceptions dictionary (shared or per-user)
+- Added possibility to ignore words containing caps, numbers, symbols (spellcheck_ignore_* options)
+- Added 'priority' column on messages list (#1486782)
+- Localize forwarded message header (#1488058)
+
