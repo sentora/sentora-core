@@ -85,11 +85,11 @@
                 // Get account package id vhost is create with
                 $packageid = $zdbh->query("SELECT ac_package_fk FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
 				// Get email and if blank set postmaster@userdomain as default.
-				$getuseremail = $zdbh->query("SELECT ud_email_vc FROM x_profiles where ud_user_fk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
-				if (fs_director::CheckForEmptyValue($getuseremail['ud_email_vc'])){
+				$getuseremail = $zdbh->query("SELECT ac_email_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
+				if (fs_director::CheckForEmptyValue($getuseremail['ac_email_vc'])){
 					$useremail = "postmaster@" . $rowvhost['vh_name_vc'];
 				} else {
-					$useremail = $getuseremail['ud_email_vc'];
+					$useremail = $getuseremail['ac_email_vc'];
 				}
 				// Check if domain or subdomain to see if we add an alias with 'www'
 				if($rowvhost['vh_type_in'] == 2){
