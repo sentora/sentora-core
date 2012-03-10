@@ -68,6 +68,7 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
                                 exit(0);
                             }
                         } else {
+                            fs_director::RemoveDirectory('modules/' . $argv[2]);
                             fwrite(STDOUT, "An error occured, The package archive could not be extracted!");
                             exit(1);
                         }

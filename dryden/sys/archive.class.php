@@ -20,15 +20,25 @@ class sys_archive {
      * @return boolean 
      */
     static function Unzip($archive, $dest) {
+        global $zlo;
         if (!class_exists('ZipArchive'))
             return false;
         $zip = new ZipArchive;
         $result = $zip->open($archive);
-        if ($result == true) {
-            $zip->extractTo($dest);
-            $zip->close();
-            return true;
+        if ($result) {
+            if (@$zip->extractTo($dest)) {
+                $zip->close();
+                return true;
+            } else {
+                $zlo->logcode = "623";
+                $zlo->detail = "Unable to extract file '" . $archive . "' to '" . $dest . "'.";
+                $zlo->writeLog();
+                return false;
+            }
         } else {
+            $zlo->logcode = "621";
+            $zlo->detail = "The archive file '" . $archive . "' appears to be invalid.";
+            $zlo->writeLog();
             return false;
         }
     }
