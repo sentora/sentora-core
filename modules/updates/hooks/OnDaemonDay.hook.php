@@ -10,7 +10,7 @@
 $live_version = ws_generic::ReadURLRequestResult(ctrl_options::GetOption('update_url'));
 if(!$live_version)
         return false;
-ctrl_options::SetSystemOption('latestzpversion', $live_version);
+$versionnumber = ws_generic::JSONToArray($live_version);
+ctrl_options::SetSystemOption('latestzpversion', $versionnumber[0]['version']);
 return true;
-
 ?>
