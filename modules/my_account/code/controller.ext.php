@@ -88,7 +88,6 @@ class module_controller {
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = '" . $email . "' WHERE ac_id_pk = '" . $userid . "'");
         $sql->execute();
         $sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc = '" . $fullname . "',
-												     ud_email_vc    = '" . $email . "',
 													 ud_language_vc = '" . $language . "',
 													 ud_phone_vc    = '" . $phone . "',
 													 ud_address_tx  = '" . $address . "',
