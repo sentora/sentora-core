@@ -1,157 +1,80 @@
-<?php
-/**
- *
- * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
- * @package ZPanel
- * @version $Id$
- * @author Bobby Allen - ballen@zpanelcp.com
- * @copyright (c) 2008-2011 ZPanel Group - http://www.zpanelcp.com/
- * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
- *
- * This program (ZPanel) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title><?php echo $_SERVER['HTTP_HOST'] . " is parked...."; ?></title>
         <link rel="shortcut icon" type="image/x-icon" href="data:image/icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD8/PwA5ubmF9DQ0C3Ozs4vzs7OMM7Ozi/g4OAc+vr6A/r6+gPi4uIa5ubmFfz8/AD///8A////AP///wD///8A8/LyCpyViHWKgXKKioFyi4qBcouLg3SKvLu4RPT09Ann5uQZlYx+fsvLyjL6+voD////AP///wD///8A////AN7c2CSCd2SZg3hml4h9bJKKgG6QioBukLq1rk/29vYGzMjCOoJ2ZJnGxcQ4+vr6A////wD///8A////AP///wDu7ewRh3xqk46FeIbDwsA85+bkGero5hXz8/IK/Pz8AMrGwDyCdmSYxMPCOvT09Af6+voD/Pz8AP///wD///8A/Pz8AKCYinSEeWiUt7a0SPDw8Az///8A////AP///wDKxsA8g3hmmLSzskrW1tYm2traIurq6hL6+voB////AP///wDNyMI6gndkmZyWjm7g4OAd/Pz8AP///wD///8AysbAPIJ2ZJmLg3aGkIl8gZmTinG8u7pD6OjoFfz8/AD///8A8O/uD4yBcI2KgXKMyMjINfj4+AX8/PwA////AMrGwDyCdmSahXpoloV6aJaCd2SZjoV4hM7Ozi/6+voD////APz8/ACtpppig3hmmKyqplfq6uoS/Pz8AP///wDKxsA8gnZkmbSxrFDZ1tIqq6SYZYN4Zpi5t7RK9vb2Bv///wD///8A3NrWJoR5ZpiUjYJ82NjYJPr6+gH///8AysbAPIR4ZpjGxcQ4+vr6A+Dd2iKEeWaYramkV/b29gf///8A////APf29gaXjX5+hntqlL++vj709PQJ////AMrGwDyEeGaYxsXEOPr6+gPm5OIag3hml6yoolz09PQH////AP///wD8/PwAw762RoJ3ZJqinphk5ubmF/z8/ADKxsA8gnZkmMbFxDj6+voD5uTiGoN4ZpesqKJa9vb2B////wD8/PwA+vr6Aezr6hOIfmySjoV4hdLS0iv6+voDysbAPIJ2ZJnAv74/9PT0CeLg3h+DeGaYrqqkWfb29gf8/PwA7u7uDuDg4B3c3Nwhn5iMcYN4Zpi7ubhE9PT0CcrGwDyCdmSZqaekWdTU1CnBvrpCgndkmbq3skz4+PgD9vb2B7OuplecloxxmpSKcpGJfIGCd2SarKiiWvLy8grMyMI6gndkmol/cI2Ykoh1i4Fyi4d8apPV1NIq/Pz8AODe2iOCd2SagXVim4F1YpuBdWKbgXVim8C8tkb4+PgFzcjCOoR5ZpiCd2SagXVim4J3ZJmzraRZ9PT0B/z8/ADz8/IK0c3IM9HNyDXRzcg10c3INdTRzDH09PQJ/Pz8AO3s6hPd29gk2tjUKc/LxjXc2dYm9vb2Bvz8/AD///8A//8AAMP/AACDvwAAn78AAN+/AADfjwAAz4MAAO+7AADvuwAA97sAAPe7AADzuwAA+7sAAPOTAACDhwAA//8AAA==">
-            <style type="text/css">
-                <!--
-                body {
-                    text-align:left;
-                    height:100%;
-                    background: #F3F3F3;
-                    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAADAFBMVEX///8AAAACAgIDAwMEBAQFBQUGBgYHBwcICAgJCQkKCgoLCwsMDAwNDQ0ODg4PDw8QEBARERESEhITExMUFBQVFRUWFhYXFxcYGBgZGRkaGhobGxscHBwdHR0eHh4fHx8gICAhISEiIiIjIyMkJCQlJSUmJiYnJycoKCgpKSkqKiorKyssLCwtLS0uLi4vLy8wMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlKSkpLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJTU1NUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBhYWFiYmJjY2NkZGRlZWVmZmZnZ2doaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N0dHR1dXV2dnZ3d3d4eHh5eXl6enp7e3t8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSVlZWWlpaXl5eYmJiZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWmpqanp6eoqKipqamqqqqrq6usrKytra2urq6vr6+wsLCxsbGysrKzs7O0tLS1tbW2tra3t7e4uLi5ubm6urq7u7u8vLy9vb2+vr6/v7/AwMDBwcHCwsLDw8PExMTFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbX19fY2NjZ2dna2trb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7///+VceJeAAAAAnRSTlP/AOW3MEoAAADaSURBVHjaYmRkYPgPxCCAkwYIICYi1DACBBATEWoYAAKImYGwGgaAAGIiQg0DQAAxEaGGASCAmIhQwwAQQExEqGEACCAmItT8BwggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACiKhwAgggosIJIICICieAACIqnAACDABXwp9Sg+8newAAAABJRU5ErkJggg==);
-                    font-size: 62.5%;
-                    font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
-                    margin-top:30px;
-                    margin-bottom:10px;
-                    margin-right:10px;
-                    margin-left:10px;
-                    padding:0px;
-                }
-                body,td,th {
-                    font-family: Verdana, Arial, Helvetica, sans-serif;
-                    font-size: 9pt;
-                    color: #333333;
-
-                }
-                h1,h2,h3,h4,h5,h6 {
-                    font-family: Geneva, Arial, Helvetica, sans-serif;
-                }
-                h1 {
-                    font-size: 28px;
-                    font-weight:bold;
-                    color: #039ACA;
-                    text-shadow:3px 3px 5px #BBBBBB;
-                }
-                a:link,a:visited,a:hover,a:active {
-                    color: #006699;
-                    text-decoration:none;
-                }
-                ol{
-                    color:#039ACA;
-                    font-size: 24px;
-                    font-weight:bold;
-                    text-shadow:3px 3px 5px #BBBBBB;
-                }
-                ol p{
-                    color:#CCCCCC;
-                    font: normal 12pt Verdana, Arial, Helvetica, sans-serif;
-                    color: #333333;
-                }
-                #header {
-                    border-bottom:solid 1px #B3B3B3;
-                    background: #dddddd repeat-x center top;
-                    height: 80px;
-                    width: 100%;
-                    position: fixed;
-                    top: 0px;
-                    left: 0px;
-                }
-                #header_top {
-                    background: url(./noimage.png) #4B4D4A repeat-x center top;
-                    height: 6px;
-                    border-bottom:solid 1px #FFFFFF;
-                    width: 100%;
-                    position: fixed;
-                    top: 0px;
-                    left: 0px;
-                }
-                #header_logo {
-                    background: url(./noimage.png) no-repeat center top;
-                    margin-left: 0px;
-                    margin-top: 0px;
-                    margin-right: 0px;
-                    margin-bottom: 0px;
-                    padding-bottom: 0px;
-                    padding-right: 0px;
-                    padding-top: 15px;
-                    padding-left: 0px;
-                    width:100%;
-                }
-                a.header_logo{
-                    color:#FFFFFF;
-                    font-size: 24px;
-                    font-weight:bold;
-                    text-decoration:none;
-                    padding-left:5px;
-                    text-shadow:2px 2px 5px #AAAAAA;
-                }
-                #content {
-                    margin-top: 90px;
-                }
-                .outerborder{
-                    border-top:solid 3px #E5F0F1;
-                    border-bottom:solid 3px #E5F0F1;
-                    border-right:solid 3px #E5F0F1;
-                    border-left:solid 3px #E5F0F1;
-                    background-color:#FFFFFF;
-                    padding:0px;
-                }
-                .innerborder{
-                    border-top:solid 1px #ACE7FA;
-                    border-bottom:solid 1px #ACE7FA;
-                    border-right:solid 1px #ACE7FA;
-                    border-left:solid 1px #ACE7FA;
-                }
-                .content{
-                    border-top:solid 3px #E5F0F1;
-                    border-bottom:solid 3px #E5F0F1;
-                    border-right:solid 3px #E5F0F1;
-                    border-left:solid 3px #E5F0F1;
-                    padding-top:0px;
-                    padding-bottom:20px;
-                    padding-right:20px;
-                    padding-left:20px;
-                    height:400px;
-                    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAnCAYAAAA2ANlVAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAACT0lEQVR42mJ88enzfwYiAEAAsTAyMEJYUIrhP5T9H8pg/A8WAwggFkZGmASQAnL+M0AtYITpBNJMDAwAAcTCxMQINwVEMTEi2YDkKIAAglgNRiCzGFEdhqQHIIBYQCZANDOCbWP8D3PqfxTVAAHEwsQI4TBCnYWQhhkAcRdAALEwQX0DFmRkQLccrhwggMBuhLmNEex19LCC8AECiAnse7ChUOX/kU1FsAACiAXJK3DfI4cOIzS4AAKICe4LNF8is0A0QABB3fgfGitIEYIGAAKIiQEpmFHNYkTxOUAAgeP6/39GJOH/SNEHsQ0EAQKICRZSqEkHEgoQz0HkAQKIBRbQyMELcxXE7RAFAAHEwoAUv+jxwghPfwwMAAHExIiWShihToDHFzQYAAKIBazvP2rSQkQoUDHQ2v9AxQABxISemMGaoI5m/M8I1wgQQCxwNYzw/ACPJeTABwggJri7GBExzMgIT6Fw1QABxPSfESmJweyHRQA0OYFsAwggFsb//zETAkoOhiR7gABiQXYIjgwI5gMEEBMDI2Zg/0c1Dxw8AAHEgghDRMnwH+z5/3BjQe4HCCBI6oGncohi1NwISSAAAcQEixlGJOvgiqASICMAAogJxav/keP8P4o7AQKICSW1MKIlfiTrAQKICSMdwiIAKdGCCIAAgkQh43/URMEAKx8R2QIggJgQUcEIL1OYGBkwykiAAGKCaPoPT07g4IMVQkhhBBBALCjxyohcpDAiIgHoDIAAYoJHHaxcROYyIgoYgAACJp7/RNUKAAEGAFHMeu4mFRCSAAAAAElFTkSuQmCC) repeat-x top;
-                }
-                -->
-            </style>
-    </head>
-
-    <body>
-        <div id="header">
-            <div id="header_top"></div>
-            <div id="header_logo" class="center">
-                <a class="header_logo" href="http://www.zpanelcp.com/" target="_blank">
-                    <img src="data:image/png;base64,
+<style type="text/css">
+<!--
+html {
+	height: 80%;
+}
+body {
+	text-align:left;
+    height:100%;
+    background: #F3F3F3;
+    font-size: 62.5%;
+    font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-right:10px;
+    margin-left:10px;
+    padding:0px;
+}
+body,td,th {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 9pt;
+    color: #333333;
+}
+h1,h2,h3,h4,h5,h6 {
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+}
+h1 {
+    font-size: 28px;
+    font-weight:bold;
+    color: #039ACA;
+    text-shadow:3px 3px 5px #BBBBBB;
+}
+a:link,a:visited,a:hover,a:active {
+    color: #006699;
+    text-decoration:none;
+}
+ol{
+    color:#039ACA;
+    font-size: 24px;
+    font-weight:bold;
+    text-shadow:3px 3px 5px #BBBBBB;
+}
+ol p{
+    color:#CCCCCC;
+    font: normal 12pt Verdana, Arial, Helvetica, sans-serif;
+    color: #333333;
+}
+.content{
+	background:#F1F4F6;
+	background: #F1F4F6 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAA6CAYAAAB4Q5OdAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABKklEQVR42mL8DwQMaAAggJgYsACAAMIqCBBAWAUBAgirIEAAYRUECCAWLJYzAAQQy38sKgECCKt2gADCKggQQFgFAQIIq0UAAYRVJUAAYRUECCCsggABhFUQIIBYsNjDABBAWFUCBBALAwOmUoAAwqoSIICwCgIEEFaLAAIIq0qAAMIqCBBAWAMEIICwqgQIIKyCAAGEVRAggLAKAgQQVkGAAMIqCBBAWJ0EEEBYVQIEEFZBgADCmmwAAgirSoAAwioIEEBYbQcIIKwqAQIIqyBAAGEVBAggrIIAAYQ14gACCKtKgADC6iSAAMKqEiCAsAoCBBBWQYAAwioIEEBYkyJAAGFVCRBAWAUBAgirjwACCGt0AAQQVu0AAYRVECCAsAoCBBDWAAEIMAAoCSZuy+v+UQAAAABJRU5ErkJggg==') repeat-x top;
+	border:solid 1px #DFDFDF;
+	margin-bottom:20px;
+	margin-top:20px;
+	padding-top:0px;
+	padding-bottom:20px;
+	padding-right:0px;
+	padding-left:20px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	height:90%;
+}
+.poweredbox {
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    color:#333333;
+	padding-left: 15px;
+}
+-->
+</style>
+</head>
+<body>
+<a class="header_logo" href="http://www.zpanelcp.com/" target="_blank">
+						 <img src="data:image/png;base64,
                          iVBORw0KGgoAAAANSUhEUgAAAMYAAAAyCAYAAAAHmKRSAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGOfPtRkwAAACBj
                          SFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAxzklEQVR42mL8//8/A6ng9tvfDOQCJkYGhvp97xl81bkZ
                          nn3+x6AiyOY9+cxnBj0ZxlgJXha/h19/Mbz++Zvh2y+guxghekBO5GRhZBDjZGEQYWdhEGRlfrXx6q9sK2mOL5fffD1YaiHIsOXm
@@ -325,17 +248,12 @@
                          2F/3rNOVxUnUXodOYy2Aj1JFjBw+L8j/RJ9bFm8Aj8c2bpx7e+bMRwBRZxEhfQAb1CMs0DYziL+VgUbHwFMIOKBuZYLWRqAEu4th
                          9KbVQQvQMwZAALEMIbfDOu6s0LbtjUGaKRiQRt+YoJ3V66OZYmgBgAADAD7SFWTaJnnBAAAAAElFTkSuQmCC" 
                          width="198" height="50" alt=" ZPanel - Taking Hosting to the Next level..." border="0" /></img></a>
-            </div>
-        </div>
-        <div id="content">
-            <div class="outerborder">
-                <div class="innerborder">
-                    <div class="content">
-                        <h1><?php echo strtolower($_SERVER['HTTP_HOST']); ?></h1>
-                        <p>This domain is registered and is currently parked.... </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
+<div class="content">
+	<h1><?php echo strtolower($_SERVER['HTTP_HOST']); ?></h1>
+	<p>This domain is registered and is currently parked.... </p>
+</div>
+<div class="poweredbox">
+	<p><strong>Powered by <a href="http://www.zpanelcp.com/" target="_blank" title="ZPanel - Taking hosting to the next level!">ZPanel</a></strong> - Taking hosting to the next level.</p>
+</div>
+</body>
 </html>
