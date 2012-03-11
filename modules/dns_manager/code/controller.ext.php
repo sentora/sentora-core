@@ -120,9 +120,14 @@ class module_controller {
         } else {
             $domainID = self::$editdomain;
         }
+		$zone_message=self::CheckZoneRecord($domainID);
+		if (strstr(strtoupper($zone_message), "OK")){
+			$zone_status = "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.png\" />";
+		} else {
+			$zone_status = "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.png\" />";
+		}
         $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
         $line = "";
-        //$line .= "<div class=\"zgrid_wrapper\">";
         $line .= "<!-- DNS FORM -->";
         //$line .= "<div style=\"margin-right:20px;\">";
         $line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
@@ -535,7 +540,16 @@ class module_controller {
         $line .= "</form>";
         //$line .= "</div>";
         $line .= "<!-- END DNS FORM -->";
-
+        $line .= "<div class=\"zgrid_wrapper\">";
+		$line .= "<h2>DNS Status for domain: " . $domain['vh_name_vc'] . "</h2>";
+		$line .= "<table class=\"none\" cellpadding=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";
+		$line .= $zone_status;
+		$line .= "</td><td><b>Output of DNS zone checker:</b><br>";
+		$zonecheck_file = ctrl_options::GetOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
+		$zone_message = str_replace($zonecheck_file, "", $zone_message);
+		$line .= $zone_message;
+		$line .= "</td></tr></table>";
+		$line .= "</div>";
         return $line;
     }
 
@@ -1407,6 +1421,78 @@ class module_controller {
 	        return true;
 		}
     }
+
+	static function CheckZoneRecord($domainID){
+		global $zdbh;
+		$hasrecords=false;
+            $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=" . $domainID . "  AND dn_deleted_ts IS NULL";
+            if ($numrows = $zdbh->query($sql)) {
+                if ($numrows->fetchColumn() <> 0) {
+				$hasrecords=true;
+                    $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
+                    $sql->execute();
+                    $domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();
+					
+
+                    $zonecheck_file = (ctrl_options::GetOption('temp_dir')) . $domain['dn_name_vc'] . ".txt";
+                    $checkline = "$" . "TTL 10800" . fs_filehandler::NewLine();
+                    $checkline .= "@ IN SOA " . $domain['dn_name_vc'] . ".    ";
+                    $checkline .= "postmaster@" . $domain['dn_name_vc'] . ". (" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . time() . "	;serial" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetOption('refresh_ttl') . "      ;refresh after 6 hours" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetOption('retry_ttl') . "       ;retry after 1 hour" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetOption('expire_ttl') . "     ;expire after 1 week" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetOption('minimum_ttl') . " )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();
+                    while ($rowdns = $sql->fetch()) {
+                        if ($rowdns['dn_type_vc'] == "A") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		A		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
+                        }
+                        if ($rowdns['dn_type_vc'] == "AAAA") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		AAAA		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
+                        }
+                        if ($rowdns['dn_type_vc'] == "CNAME") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		CNAME		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
+                        }
+                        if ($rowdns['dn_type_vc'] == "MX") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		MX		" . $rowdns['dn_priority_in'] . "	" . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
+                        }
+                        if ($rowdns['dn_type_vc'] == "TXT") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		TXT		\"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
+                        }
+                        if ($rowdns['dn_type_vc'] == "SRV") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		SRV		" . $rowdns['dn_priority_in'] . "	" . $rowdns['dn_weight_in'] . "	" . $rowdns['dn_port_in'] . "	" . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
+                        }
+                        if ($rowdns['dn_type_vc'] == "SPF") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		SPF		\"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
+                        }
+                        if ($rowdns['dn_type_vc'] == "NS") {
+                            $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		NS		" . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
+                        }
+                    }
+					fs_filehandler::UpdateFile($zonecheck_file, 0777, $checkline);
+                }
+            }
+			if ($hasrecords==true){
+			//Check the temp zone record for errors
+			if (file_exists($zonecheck_file)){
+			ob_start();
+        	system(ctrl_options::GetOption('named_checkzone') . " " . $domain['dn_name_vc'] . " " . $zonecheck_file, $retval);
+        	$content_grabbed = ob_get_contents();
+        	ob_end_clean();
+			//unlink($zonecheck_file);
+			if ($retval == 0){
+				//Syntax check passed.
+    			return $content_grabbed;
+			} else {
+				//Syntax ERROR.
+				return $content_grabbed;
+			}
+			}
+			}
+	
+	}
+	
+
 
 }
 
