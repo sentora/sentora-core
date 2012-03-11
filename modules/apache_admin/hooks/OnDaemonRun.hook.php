@@ -30,6 +30,14 @@
 		} catch (PDOException $e) {
 
 		}
+		
+		//Get email for server admin of zpanel
+		$getserveremail = $zdbh->query("SELECT ac_email_vc FROM x_accounts where ac_id_pk=1")->fetch();
+		if ($getserveremail['ac_email_vc'] != ""){
+			$serveremail = $getserveremail['ac_email_vc'];
+		} else {
+			$serveremail = "postmaster@" .ctrl_options::GetOption('zpanel_domain');
+		}
 
         $line = "################################################################" 			. fs_filehandler::NewLine();
         $line .= "# Apache VHOST configuration file" 		                      			. fs_filehandler::NewLine();
@@ -42,7 +50,7 @@
         $line .= "" 																		. fs_filehandler::NewLine();
         $line .= "# Configuration for ZPanel control panel." 								. fs_filehandler::NewLine();
         $line .= "<VirtualHost *:" . ctrl_options::GetOption('apache_port') . ">" 			. fs_filehandler::NewLine();
-        $line .= "ServerAdmin zadmin@ztest.com" . fs_filehandler::NewLine();
+        $line .= "ServerAdmin " . $serveremail                                              . fs_filehandler::NewLine();
         $line .= "DocumentRoot \"" . ctrl_options::GetOption('zpanel_root') . "\"" 			. fs_filehandler::NewLine();
         $line .= "ServerName " . ctrl_options::GetOption('zpanel_domain') . "" 				. fs_filehandler::NewLine();
         $line .= "ServerAlias *." . ctrl_options::GetOption('zpanel_domain') . "" 			. fs_filehandler::NewLine();
@@ -71,15 +79,11 @@
         $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
         $sql->execute();
         while ($rowvhost = $sql->fetch()) {
-            //Domain is enabled
-            if ($rowvhost['vh_enabled_in'] == 1 && ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || $rowvhost['vh_enabled_in'] == 1 && ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")) {
-			
 		
-				
+				//Grab some variables we will use for later...
 				// Set the vhosts to "LIVE"
         		$vsql = $zdbh->prepare("UPDATE x_vhosts SET vh_active_in=1 WHERE vh_id_pk=". $rowvhost['vh_id_pk'] . "");
         		$vsql->execute();
-
                 // Get account username vhost is create with
                 $username  = $zdbh->query("SELECT ac_user_vc FROM x_accounts where ac_id_pk=" . $rowvhost['vh_acc_fk'] . "")->fetch();
                 // Get account package id vhost is create with
@@ -97,7 +101,42 @@
 				} else {
 					$serveralias = $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'];
 				}
-
+				
+            //Domain is enabled
+            if ($rowvhost['vh_enabled_in'] == 1 && ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || 
+			    $rowvhost['vh_enabled_in'] == 1 && ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")){
+				
+			  //Domain is a PARKED domain.
+			  if ($rowvhost['vh_type_in'] == 3){
+                $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+                $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
+                // Server name, alias, email settings
+                $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+                $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+                $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
+                // Document root
+                $line .= "DocumentRoot \"" . ctrl_options::GetOption('parking_path') . "\"" . fs_filehandler::NewLine();
+                // Directory options
+                $line .= "<Directory />" . fs_filehandler::NewLine();
+                $line .= "Options FollowSymLinks Indexes" . fs_filehandler::NewLine();
+                $line .= "AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "Allow from all" . fs_filehandler::NewLine();
+                $line .= "</Directory>" . fs_filehandler::NewLine();
+				$line .= ctrl_options::GetOption('php_handler') . fs_filehandler::NewLine();
+                $line .= ctrl_options::GetOption('dir_index') . fs_filehandler::NewLine();
+                // Global custom global vh entry
+                $line .= "# Custom Global Settings (if any exist)" . fs_filehandler::NewLine();
+                $line .= ctrl_options::GetOption('global_vhcustom') . fs_filehandler::NewLine();
+                // Client custom vh entry
+                $line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
+                $line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
+                $line .= "</virtualhost>" . fs_filehandler::NewLine();
+                $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+                $line .= "################################################################" . fs_filehandler::NewLine();
+				
+			  //Domain is a regular domain or a subdomain.
+			  } else {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
 
@@ -107,10 +146,8 @@
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
-
                 // Document root
                 $line .= "DocumentRoot \"" . ctrl_options::GetOption('hosted_dir') . $username['ac_user_vc'] . "/public_html" . $rowvhost['vh_directory_vc'] . "\"" . fs_filehandler::NewLine();
-
                 // Get Package openbasedir and suhosin enabled options
                 if (ctrl_options::GetOption('use_openbase') == "true") {
                     if ($rowvhost['vh_obasedir_in'] <> 0) {
@@ -184,8 +221,7 @@
                 $line .= "</virtualhost>" . fs_filehandler::NewLine();
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
-				
-				
+			  }	
 				
             } else {
                 //Domain is NOT enabled
@@ -195,7 +231,7 @@
                 // Server name, alias, email settings
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "ServerAdmin postmaster@txt-clan.com" . fs_filehandler::NewLine();
+                $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
                 // Document root
                 $line .= "DocumentRoot \"" . ctrl_options::GetOption('static_dir') . "disabled\"" . fs_filehandler::NewLine();
                 // Directory options

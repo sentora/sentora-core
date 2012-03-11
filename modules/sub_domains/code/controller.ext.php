@@ -154,14 +154,6 @@ class module_controller {
 	        if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
 	        fs_filehandler::CopyFileSafe(ctrl_options::GetOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
 	        }
-            // Only run if the Server platform is Windows.
-            if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-                if (ctrl_options::GetOption('disable_hostsen') == 'false') {
-                    // Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
-                    @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe " . $domain . "");
-                    @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe www." . $domain . "");
-                }
-            }
             // If all has gone well we need to now create the domain in the database...
             $sql = $zdbh->prepare("INSERT INTO x_vhosts (vh_acc_fk,
 														 vh_name_vc,
@@ -174,6 +166,13 @@ class module_controller {
 														 2,
 														 " . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->execute();
+			# Only run if the Server platform is Windows.
+    		if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
+		        if (ctrl_options::GetOption('disable_hostsen') == 'false') {
+		            # Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
+		            @exec("C:/zpanel/bin/zpss/setroute.exe " . $domain . "");
+		        }
+		    }
 			self::SetWriteApacheConfigTrue();
         	$retval = TRUE;
 			runtime_hook::Execute('OnAfterAddSubDomain');

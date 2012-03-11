@@ -103,14 +103,6 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail($uid);
         $domain = strtolower(str_replace(' ', '', $domain));
         if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain))) {
-            // Only run if the Server platform is Windows.
-            if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-                if (ctrl_options::GetOption('disable_hostsen') == 'false') {
-                    // Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
-                    @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe " . $domain . "");
-                    @exec(ctrl_options::GetOption('root_drive') . "ZPanel/bin/zpanel/tools/setroute.exe www." . $domain . "");
-                }
-            }
             // If all has gone well we need to now create the domain in the database...
             $sql = $zdbh->prepare("INSERT INTO x_vhosts (vh_acc_fk,
 														 vh_name_vc,
@@ -123,6 +115,14 @@ class module_controller {
 														 3,
 														 " . time() . ")");
             $sql->execute();
+			# Only run if the Server platform is Windows.
+    		if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
+		        if (ctrl_options::GetOption('disable_hostsen') == 'false') {
+		            # Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
+		            @exec("C:/zpanel/bin/zpss/setroute.exe " . $domain . "");
+		            @exec("C:/zpanel/bin/zpss/setroute.exe www." . $domain . "");
+		        }
+		    }
 			self::SetWriteApacheConfigTrue();
         	$retval = TRUE;
 			runtime_hook::Execute('OnAfterAddParkedDomain');
