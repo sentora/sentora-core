@@ -120,13 +120,21 @@ class module_controller {
         } else {
             $domainID = self::$editdomain;
         }
+		$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
 		$zone_message=self::CheckZoneRecord($domainID);
+		$zonecheck_file = ctrl_options::GetOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
+		$zone_message = str_replace($zonecheck_file, "", $zone_message);
 		if (strstr(strtoupper($zone_message), "OK")){
+			if (substr_count($zone_message, ":") >= 3){
+				$zone_error_message = "<font color=\"orange\">Your DNS zone has been loaded, but with errors. Some features will not work until corrected.</font>";
+			} else {
+				$zone_error_message = "<font color=\"green\">Your DNS zone has been loaded without errors.</font>";
+			}
 			$zone_status = "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/up.png\" />";
 		} else {
+			$zone_error_message = "<font color=\"red\">Errors detected have prevented your DNS zone from being loaded. Please correct the error(s) listed below. Until these errors are fixed, your DNS will not work.</font>";
 			$zone_status = "<img src=\"modules/".$controller->GetControllerRequest('URL', 'module')."/assets/down.png\" />";
 		}
-        $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
         $line = "";
         $line .= "<!-- DNS FORM -->";
         //$line .= "<div style=\"margin-right:20px;\">";
@@ -544,9 +552,7 @@ class module_controller {
 		$line .= "<h2>DNS Status for domain: " . $domain['vh_name_vc'] . "</h2>";
 		$line .= "<table class=\"none\" cellpadding=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td>";
 		$line .= $zone_status;
-		$line .= "</td><td><b>Output of DNS zone checker:</b><br>";
-		$zonecheck_file = ctrl_options::GetOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
-		$zone_message = str_replace($zonecheck_file, "", $zone_message);
+		$line .= "</td><td>".$zone_error_message."<br><br>Please note that changes to your zone records can take up to 24 hours before they become \"live\".<br><br><b>Output of DNS zone checker:</b><br>";
 		$line .= $zone_message;
 		$line .= "</td></tr></table>";
 		$line .= "</div>";
@@ -1473,21 +1479,21 @@ class module_controller {
                 }
             }
 			if ($hasrecords==true){
-			//Check the temp zone record for errors
-			if (file_exists($zonecheck_file)){
-			ob_start();
-        	system(ctrl_options::GetOption('named_checkzone') . " " . $domain['dn_name_vc'] . " " . $zonecheck_file, $retval);
-        	$content_grabbed = ob_get_contents();
-        	ob_end_clean();
-			//unlink($zonecheck_file);
-			if ($retval == 0){
-				//Syntax check passed.
-    			return $content_grabbed;
-			} else {
-				//Syntax ERROR.
-				return $content_grabbed;
-			}
-			}
+				//Check the temp zone record for errors
+				if (file_exists($zonecheck_file)){
+					ob_start();
+		        	system(ctrl_options::GetOption('named_checkzone') . " " . $domain['dn_name_vc'] . " " . $zonecheck_file, $retval);
+		        	$content_grabbed = ob_get_contents();
+		        	ob_end_clean();
+					unlink($zonecheck_file);
+					if ($retval == 0){
+						//Syntax check passed.
+		    			return $content_grabbed;
+					} else {
+						//Syntax ERROR.
+						return $content_grabbed;
+					}
+				}
 			}
 	
 	}
