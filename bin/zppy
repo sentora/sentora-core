@@ -40,44 +40,53 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
     $contents = file_get_contents($package_file);
     $lines = preg_split('/\r\n|\r|\n/', $contents);
     $newconf = "";
+    $isfound = false;
     foreach ($lines as $line) {
         $this_line = preg_split('/\t/', $line);
         if ($this_line[0] == $argv[2]) {
+            $isfound = true;
             if (fs_director::CheckFileExists('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp')) {
                 unlink('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp');
             }
             chdir('etc/zppy-cache/package-downloads/');
             exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
             chdir($root_path);
+            if ($isfound) {
+                if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $argv[2])) {
+                    if (fs_director::CreateDirectory('modules/' . $argv[2])) {
+                        if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
+                            fs_director::SetFileSystemPermissions('modules/' . $argv[2] . '', 0777);
+                            if (!fs_director::CheckFileExists('modules/' . $argv[2] . '/module.xml')) {
+                                fwrite(STDOUT, "No module.xml file found in the unzipped archive.");
+                                exit(1);
+                            } else {
+                                ui_module::ModuleInfoToDB($argv[2]);
+                                $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/install.run";
+                                if (fs_director::CheckFileExists($extra_config))
+                                    exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
+                                fwrite(STDOUT, "Module installed successfully!");
+                                exit(0);
+                            }
+                        } else {
+                            fs_director::RemoveDirectory('modules/' . $argv[2]);
+                            fwrite(STDOUT, "An error occured, The package archive could not be extracted!");
+                            exit(1);
+                        }
+
+                        exit(1);
+                    } else {
+                        fwrite(STDOUT, "Cannot create directory for module!");
+                        exit(1);
+                    }
+                } else {
+                    fwrite(STDOUT, "Module already appears to be installed!");
+                    exit(1);
+                }
+            }
         }
     }
-    if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $argv[2])) {
-        if (fs_director::CreateDirectory('modules/' . $argv[2])) {
-            if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
-                fs_director::SetFileSystemPermissions('modules/' . $argv[2] . '', 0777);
-                if (!fs_director::CheckFileExists('modules/' . $argv[2] . '/module.xml')) {
-                    fwrite(STDOUT, "No module.xml file found in the unzipped archive.");
-                    exit(1);
-                } else {
-                    ui_module::ModuleInfoToDB($argv[2]);
-                    $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/install.run";
-                    if (fs_director::CheckFileExists($extra_config))
-                        exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
-                    fwrite(STDOUT, "Module installed successfully!");
-                    exit(0);
-                }
-            } else {
-                fwrite(STDOUT, "An error occured, The package archive could not be extracted!");
-                exit(1);
-            }
-
-            exit(1);
-        } else {
-            fwrite(STDOUT, "Cannot create directory for module!");
-            exit(1);
-        }
-    } else {
-        fwrite(STDOUT, "Module already appears to be installed!");
+    if (!$isfound) {
+        fwrite(STDOUT, "No package match, check you have added the correct repo!");
         exit(1);
     }
 }
