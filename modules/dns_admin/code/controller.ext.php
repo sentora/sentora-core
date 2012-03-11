@@ -90,10 +90,28 @@ class module_controller {
 		$line .= "<form action=\"./?module=dns_admin&action=UpdateTools\" method=\"post\">";
         $line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
-		$line .= "<th>Reset all records to default</th>";
+		$line .= "<th>Reset all Records to Default</th>";
 		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inResetAll\" value=\"1\">GO</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
+		$line .= "<tr>";
+		$line .= "<th>Reset Records to Default on Single Domain ";
+		$line .= "<select name=\"inResetDomainID\">";
+		$line .= "<option value=\"\">--- Select Domain ---</option>";
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
+                $sql->execute();
+                while ($row = $sql->fetch()) {
+				$line .= " <option value=\"".$row['vh_id_pk']."\">".$row['vh_name_vc']."</option>";
+				}
+			}
+		}
+		$line .= "</select>";
+		$line .= "</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inResetDomain\" value=\"1\">GO</button></td>";
+		$line .= "</tr>";
 		$line .= "<th>Add Default Records to Missing Domains";
 		$line .= "</th>";
 		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inAddMissing\" value=\"1\">GO</button></td>";
@@ -271,6 +289,10 @@ class module_controller {
 			self::ResetAll();
 			self::TriggerDNSUpdate("0");
 		}
+		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inResetDomain')) && !fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inResetDomainID'))) {
+			self::ResetDomain($controller->GetControllerRequest('FORM', 'inResetDomainID'));
+			self::TriggerDNSUpdate("0");
+		}
 		if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inAddMissing'))) {
 			self::AddMissing();
 			self::TriggerDNSUpdate("0");
@@ -366,6 +388,15 @@ class module_controller {
 		}
 	}
 
+	static function ResetDomain($dn_vhost_fk){
+        global $zdbh;
+		//Delete current records
+		self::DeleteDomainRecords($dn_vhost_fk);
+		//Create Default Records
+		self::CreateDefaultRecords($dn_vhost_fk);
+		self::$ok = true;
+	}
+
 	static function AddMissing(){
         global $zdbh;
         global $controller;
@@ -443,6 +474,25 @@ class module_controller {
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NULL");
+                $sql->execute();
+                while ($row = $sql->fetch()) {
+					$delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=".time()." WHERE dn_id_pk = ".$row['dn_id_pk']."");
+	                $delete_record->execute();
+					$numrecords++;
+				}
+				self::$deleted = $numrecords;
+			}
+		}
+	}
+
+	static function DeleteDomainRecords($domainid){
+        global $zdbh;
+        global $controller;
+		$numrecords = 0;
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=" . $domainid . " AND dn_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=" . $domainid . " AND dn_deleted_ts IS NULL");
                 $sql->execute();
                 while ($row = $sql->fetch()) {
 					$delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=".time()." WHERE dn_id_pk = ".$row['dn_id_pk']."");
@@ -893,6 +943,9 @@ class module_controller {
 	}
 
     static function getResult() {
+        if (!fs_director::CheckForEmptyValue(self::$ok)) {
+            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"), "zannounceok");
+        }
         if (!fs_director::CheckForEmptyValue(self::$notwritable)) {
             return ui_sysmessage::shout(ui_language::translate("No permission to write to log file."), "zannounceerror");
         }
@@ -913,9 +966,6 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue(self::$purged)) {
             return ui_sysmessage::shout(number_format(self::$purged) . " " . ui_language::translate("Records where purged from the database"), "zannounceok");
-        }
-        if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"), "zannounceok");
         }
         return;
     }
