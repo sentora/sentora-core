@@ -125,8 +125,8 @@ class module_controller {
 		$zonecheck_file = ctrl_options::GetOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
 		$zone_message = str_replace($zonecheck_file, "", $zone_message);
 		if (strstr(strtoupper($zone_message), "OK")){
-			if (substr_count($zone_message, ":") >= 3){
-				$zone_error_message = "<font color=\"orange\">Your DNS zone has been loaded, but with errors. Some features will not work until corrected.</font>";
+			if (substr_count($zone_message, ":") >= 2){
+				$zone_error_message = "<font color=\"orange\">Your DNS zone has been loaded, but with errors. Some features may not work until corrected.</font>";
 			} else {
 				$zone_error_message = "<font color=\"green\">Your DNS zone has been loaded without errors.</font>";
 			}
