@@ -199,7 +199,15 @@ if (isset($argv[1]) && ($argv[1] == 'checkperms')) {
 
 if ((isset($argv[1])) && ($argv[1] == 'repo')) {
     if ((isset($argv[2])) && ($argv[2] == 'add')) {
-        if ($argv[3]) {
+        $contents = file_get_contents($repo_file);
+        $lines = preg_split('/\r\n|\r|\n/', $contents);
+        $exists = false;
+        foreach ($lines as $line) {
+            if ($line == $argv[3]) {
+                $exists = true;
+            }
+        }
+        if ($argv[3] && !$exists) {
             $handle = fopen($repo_file, "r+");
             $contents = fread($handle, filesize($repo_file));
             $newrepo = "" . $argv[3] . "\n";
@@ -207,6 +215,9 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
             fclose($handle);
             fwrite(STDOUT, "Added '" . $argv[3] . "' to list of repositories!\nRemember to execute 'zppy update' to grab the latest list of packages.");
             exit(0);
+        } else {
+            fwrite(STDOUT, "The repository '" . $argv[3] . "' already exists or non specified.");
+            exit(1);
         }
     }
 
