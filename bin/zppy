@@ -214,16 +214,25 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
         $contents = file_get_contents($repo_file);
         $lines = preg_split('/\r\n|\r|\n/', $contents);
         $newconf = "";
+        $removed = false;
         foreach ($lines as $line) {
-            if (($line != $argv[3]) || ($line != '')) {
+            if ($line != $argv[3]) {
                 $newconf .= $line . "\n";
+            } else {
+                $removed = true;
             }
         }
+        $newconf = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $newconf);
         $handle = fopen($repo_file, "w");
         fwrite($handle, $newconf);
         fclose($handle);
-        fwrite(STDOUT, "Removed '" . $argv[3] . "' from the list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
-        exit(0);
+        if ($removed) {
+            fwrite(STDOUT, "Removed '" . $argv[3] . "' from the list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
+            exit(0);
+        } else {
+            fwrite(STDOUT, "The repository '" . $argv[3] . "' was not found in your list of repositories!");
+            exit(1);
+        }
     }
 
     if ((isset($argv[2])) && ($argv[2] == 'list')) {
