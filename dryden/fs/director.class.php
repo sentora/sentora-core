@@ -327,6 +327,44 @@ class fs_director {
         return pathinfo($filename, PATHINFO_FILENAME);
     }
 
+    /**
+     * Returns the full size of a directory and all child objects.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $directory The filesystem path to the directory
+     * @return int The directory size in bytes.
+     */
+    static function GetDirectorySize($directory) {
+        $size = 0;
+        if (substr($directory, -1) == '/') {
+            $directory = substr($directory, 0, -1);
+        }
+        if (!file_exists($directory) || !is_dir($directory) || !is_readable($directory)) {
+            return -1;
+        }
+        $handle = opendir($directory);
+        if ($handle) {
+            while (($file = readdir($handle)) !== false) {
+                $path = $directory . '/' . $file;
+                if ($file != '.' && $file != '..') {
+                    if (is_file($path)) {
+                        $size += filesize($path);
+                    } elseif (is_dir($path)) {
+                        $handlesize = self::GetDirectorySize($path);
+                        if ($handlesize >= 0) {
+                            $size += $handlesize;
+                        } else {
+                            return -1;
+                        }
+                    }
+                }
+            }
+            closedir($handle);
+            return $size;
+        } else {
+            return false;
+        }
+    }
+
 }
 
 ?>
