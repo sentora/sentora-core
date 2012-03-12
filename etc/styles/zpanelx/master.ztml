@@ -202,7 +202,7 @@
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedforwarders #></span>  <span class="Side_Info_max"><# ui_tpl_totalforwarders #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Distrubution lists:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Distribution lists:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_useddistlists #></span>  <span class="Side_Info_max"><# ui_tpl_totaldistlists #></span>&nbsp;</td>
                                                             </tr>
                                                     </table>

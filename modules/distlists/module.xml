@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-<name>Distrubution Lists</name>
+<name>Distribution Lists</name>
 <version>100</version>
 <defaultcat>Mail</defaultcat>
-<desc>This module enables you to create and manage email distrubution groups.</desc>
+<desc>This module enables you to create and manage email distribution groups.</desc>
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>
 <authorurl>http://www.zpanelcp.com/</authorurl>
