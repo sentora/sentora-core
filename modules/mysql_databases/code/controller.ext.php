@@ -28,7 +28,7 @@ class module_controller {
 
     static $alreadyexists;
     static $blank;
-	static $badname;
+    static $badname;
     static $ok;
 
     /**
@@ -43,11 +43,12 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-				$numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_acc_fk=" . $rowmysql['my_acc_fk'] . " AND mm_database_fk=" . $rowmysql['my_id_pk'] . "")->fetch();
+                $numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_acc_fk=" . $rowmysql['my_acc_fk'] . " AND mm_database_fk=" . $rowmysql['my_id_pk'] . "")->fetch();
                 array_push($res, array('mysqlid' => $rowmysql['my_id_pk'],
-					'totaldb' => $numrowdb[0],
+                    'totaldb' => $numrowdb[0],
                     'mysqlname' => $rowmysql['my_name_vc'],
-                    'mysqlsize' => $rowmysql['my_usedspace_bi']));
+                    'mysqlsize' => $rowmysql['my_usedspace_bi'],
+                    'mysqlfriendlysize' => fs_director::ShowHumanFileSize($rowmysql['my_usedspace_bi'])));
             }
             return $res;
         } else {
@@ -66,7 +67,8 @@ class module_controller {
             while ($rowmysql = $sql->fetch()) {
                 array_push($res, array('mysqlid' => $rowmysql['my_id_pk'],
                     'mysqlname' => $rowmysql['my_name_vc'],
-                    'mysqlsize' => $rowmysql['my_usedspace_bi']));
+                    'mysqlsize' => $rowmysql['my_usedspace_bi'],
+                    'mysqlfriendlysize' => fs_director::ShowHumanFileSize($rowmysql['my_usedspace_bi'])));
             }
             return $res;
         } else {
@@ -78,27 +80,27 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-		$databasename = strtolower(str_replace(' ', '', $databasename));
+        $databasename = strtolower(str_replace(' ', '', $databasename));
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($currentuser['username'], $databasename))) {
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateDatabase');
-		try {	
-       		$sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
-	        $sql->execute();
-	        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
-	        $sql->execute();
-	        $sql = $zdbh->prepare("INSERT INTO x_mysql_databases (
+        try {
+            $sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
+            $sql->execute();
+            $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+            $sql->execute();
+            $sql = $zdbh->prepare("INSERT INTO x_mysql_databases (
 									my_acc_fk,
 									my_name_vc,
 									my_created_ts) VALUES (
 									" . $currentuser['userid'] . ",
 									'" . $currentuser['username'] . "_" . $databasename . "',
 									" . time() . ")");
-	        $sql->execute();
-		} catch (PDOException $e) {
-			return false;
-		}
+            $sql->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
         runtime_hook::Execute('OnAfterCreateDatabase');
         self::$ok = true;
         return true;
@@ -132,23 +134,23 @@ class module_controller {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteDatabase');
         $rowmysql = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $my_id_pk . "")->fetch();
-		try {
-        $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `" . $rowmysql['my_name_vc'] . "`;");
-        $sql->execute();
-        $sql = $zdbh->prepare("FLUSH PRIVILEGES");
-        $sql->execute();
-        $sql = $zdbh->prepare("
+        try {
+            $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `" . $rowmysql['my_name_vc'] . "`;");
+            $sql->execute();
+            $sql = $zdbh->prepare("FLUSH PRIVILEGES");
+            $sql->execute();
+            $sql = $zdbh->prepare("
 			UPDATE x_mysql_databases 
 			SET my_deleted_ts = '" . time() . "' 
 			WHERE my_id_pk = '" . $my_id_pk . "'");
-        $sql->execute();
-        $sql = $zdbh->prepare("
+            $sql->execute();
+            $sql = $zdbh->prepare("
 			DELETE FROM x_mysql_dbmap 
 			WHERE mm_database_fk=" . $my_id_pk . "");
-        $sql->execute();
-		} catch (PDOException $e) {
-			return false;
-		}
+            $sql->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
         runtime_hook::Execute('OnAfterDeleteDatabase');
         self::$ok = true;
         return true;
