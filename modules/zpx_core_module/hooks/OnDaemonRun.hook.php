@@ -6,7 +6,6 @@ global $zdbh;
  * Calculate the home directory size for each 'active' user account on the server.
  */
 $userssql = $zdbh->query("SELECT ac_id_pk, ac_user_vc FROM x_accounts WHERE ac_deleted_ts IS NULL");
-$userssql->execute();
 while ($userdir = $userssql->fetch()) {
     $homedirectory = ctrl_options::GetOption('hosted_dir') . $userdir['ac_user_vc'];
     if (fs_director::CheckFolderExists($homedirectory)) {
