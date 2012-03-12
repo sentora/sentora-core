@@ -71,8 +71,8 @@
 			
 			<% if isEdit %>
 			<h2><: EDIT .htaccess Users in Directory :>:</h2>
-			<p><: From here you can add or remove users that are allowed to access this directory :></p>
 			<% if CurrentHTA %>
+			<p><: From here you can add or remove users that are allowed to access this directory :></p>
 			<form action="./?module=htpasswd&action=RemoveUserHTA" method="post">
 			<table class="zgrid">
 				<tr>
@@ -119,7 +119,7 @@
 			</tr>
 			</table>
 			<% else %>
-			<: .htaccess file not available. :>
+			<font color="red"><: .htaccess file is missing. Delete this password entry and recreate it to fix this error. :></font>
 			<% endif %>
 			<% endif %>
 			
