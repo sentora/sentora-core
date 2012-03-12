@@ -11,6 +11,17 @@
 <@ VhostConfig @>
 </div>
 
+<% if IsDisplayVhostOverrides %>
+<div class="zform_wrapper">
+<@ DisplayVhostOverrides @>
+</div>
+<% endif %>
+
+<% if IsDisplayDisabledVhostConfig %>
+<div class="zform_wrapper">
+<@ DisabledVhostConfig @>
+</div>
+<% endif %>
 </div>
 
 <script type="text/javascript">

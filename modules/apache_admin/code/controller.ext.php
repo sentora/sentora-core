@@ -43,6 +43,16 @@ class module_controller {
         return $display;
     }
 
+    static function getDisabledVhostConfig() {
+        $display = self::DisplayDisabledVhostConfig();
+        return $display;
+    }
+
+    static function getDisplayVhostOverrides() {
+        $display = self::DisplayVhostOverrides();
+        return $display;
+    }
+
     static function DisplayApacheConfig() {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Configure your Apache Settings") . "</h2>";
@@ -75,19 +85,108 @@ class module_controller {
     static function DisplayVhostConfig() {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Override a Virtual Host Setting") . "</h2>";
-        $line .= ui_language::translate("Select a Virtual Host below.");
-        $line .= "<br><br>";
         $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr><td>";
         $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
         $line .= "</td><td>";
         $line .= "<select name=\"inVhost\" id=\"inVhost\">";
+		$line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_enabled_in=1 AND vh_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+
+                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_enabled_in=1 AND vh_deleted_ts IS NULL");
+                $sql->execute();
+
+                while ($row = $sql->fetch()) {
+                    $line .= "<option value=\"" . $row['vh_name_vc'] . "\">" . $row['vh_name_vc'] . "</option>";
+                }
+            }
+        }
+        $line .= "</select>";
+        $line .= "</td></tr>";
+        $line .= "</table>";
+        $line .= "</form>";
+        return $line;
+    }
+	
+	static function getIsDisplayDisabledVhostConfig() {
+		global $zdbh;
+		$sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_enabled_in=0 AND vh_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+    static function DisplayVhostOverrides() {
+        global $zdbh;
+        $line = "<h2>" . ui_language::translate("All Virtual Hosts with Overrides") . "</h2>";
+        $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
+        $line .= "<table class=\"zform\">";
+        $line .= "<tr><td>";
+        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
+        $line .= "</td><td>";
+        $line .= "<select name=\"inVhost\" id=\"inVhost\">";
+		$line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
 
                 $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
+                $sql->execute();
+
+                while ($row = $sql->fetch()) {
+					if ($row['vh_suhosin_in'] == 0 || $row['vh_obasedir_in'] == 0 || $row['vh_custom_tx'] != ""){
+                    $line .= "<option value=\"" . $row['vh_name_vc'] . "\">" . $row['vh_name_vc'] . "</option>";
+					}
+                }
+            }
+        }
+        $line .= "</select>";
+        $line .= "</td></tr>";
+        $line .= "</table>";
+        $line .= "</form>";
+        return $line;
+    }
+	
+	static function getIsDisplayVhostOverrides() {
+		global $zdbh;
+		$sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+				$sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
+                $sql->execute();
+
+                while ($row = $sql->fetch()) {
+					if ($row['vh_suhosin_in'] == 0 || $row['vh_obasedir_in'] == 0 || $row['vh_custom_tx'] != ""){
+                    return true;
+					}
+                }
+			}
+		}
+		return false;
+	}
+
+    static function DisplayDisabledVhostConfig() {
+        global $zdbh;
+        $line = "<h2>" . ui_language::translate("Disabled Virtaul Hosts") . "</h2>";
+        //$line .= ui_language::translate("Select a Virtual Host below.");
+        $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
+        $line .= "<table class=\"zform\">";
+        $line .= "<tr><td>";
+        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
+        $line .= "</td><td>";
+        $line .= "<select name=\"inVhost\" id=\"inVhost\">";
+		$line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_enabled_in=0 AND vh_deleted_ts IS NULL";
+        if ($numrows = $zdbh->query($sql)) {
+            if ($numrows->fetchColumn() <> 0) {
+
+                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_enabled_in=0 AND vh_deleted_ts IS NULL");
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
