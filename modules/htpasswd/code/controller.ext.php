@@ -410,7 +410,12 @@ class module_controller {
     static function getCurrentHTA() {
         global $controller;
 		$urlvars = $controller->GetAllControllerRequests('URL');
-		return self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
+		$retval = self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
+		if ($retval){
+			return self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
+		} else {
+			return false;
+		}
     }
 
     static function getResult() {

@@ -72,11 +72,13 @@
 			<% if isEdit %>
 			<h2><: EDIT .htaccess Users in Directory :>:</h2>
 			<p><: From here you can add or remove users that are allowed to access this directory :></p>
+			<% if CurrentHTA %>
 			<form action="./?module=htpasswd&action=RemoveUserHTA" method="post">
 			<table class="zgrid">
 				<tr>
 					<th><: User :></th><th><: Encrypted Password :></th><th>&nbsp;<input type="hidden" name="inID" id="inID" value="<@ CurrentHTID @>"></th>
 				</tr>
+				
 				<% loop CurrentHTA %>
 				<tr>
 					<td><& htaccuser &></td><td><& htaccpass &></td>
@@ -116,6 +118,9 @@
 			</td>
 			</tr>
 			</table>
+			<% else %>
+			<: .htaccess file not available. :>
+			<% endif %>
 			<% endif %>
 			
 			<% if SelectedFolder %>
