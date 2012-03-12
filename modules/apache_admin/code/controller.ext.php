@@ -74,7 +74,9 @@ class module_controller {
                     }
                     $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td>" . $fieldhtml. "</td><td>" . $row['so_desc_tx'] . "</td></tr>";
                 }
+				$line .= "<tr><th>Force Update</th><td><input type=\"checkbox\"></td><td>Force vhost.conf to be updated on next daemon run. Any change in settings also triggers vhost.conf to be updated.</td></tr>";
                 $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></th></tr>";
+				
             }
         }
         $line .= "</table>";
@@ -173,7 +175,7 @@ class module_controller {
 
     static function DisplayDisabledVhostConfig() {
         global $zdbh;
-        $line = "<h2>" . ui_language::translate("Disabled Virtaul Hosts") . "</h2>";
+        $line = "<h2>" . ui_language::translate("Disabled Virtual Hosts") . "</h2>";
         //$line .= ui_language::translate("Select a Virtual Host below.");
         $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
         $line .= "<table class=\"zform\">";
