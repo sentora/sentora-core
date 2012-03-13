@@ -26,19 +26,26 @@ while ($userdir = $userssql->fetch()) {
 /*
  * Calculate the bandwidth used for each user.
  */
-
-
-
 $checksql = $zdbh->query("SELECT COUNT(*) AS total FROM x_vhosts WHERE vh_deleted_ts IS NULL")->fetch();
 if ($checksql['total'] > 0) {
-    
-    $thisamount = 0;
-    
-    
-    $zdbh->query("UPDATE x_bandwidth SET bd_transamount_bi=(bd_transamount_bi+" .$thisamount. ") WHERE bd_acc_fk = " . $userdir['ac_id_pk'] . " AND bd_month_in=" . date("Ym") . "");
+    $domainssql = $zdbh->query("SELECT vh_acc_fk, vh_name_vc FROM x_vhosts WHERE vh_deleted_ts IS NULL");
+    while ($domain = $domainssql->fetch()) {
+        $domainowner = ctrl_users::GetUserDetail($domain['vh_acc_fk']);
+        $bandwidthlog = ctrl_options::GetOption('log_dir') . 'domains/' . $domainowner['username'] . '/' . $domain['vh_name_vc'] . '-bandwidth.log';
+        $snapshotfile = ctrl_options::GetOption('log_dir') . 'domains/' . $domainowner['username'] . '/' . $domain['vh_name_vc'] . '-snapshot.bw';
+        $bandwidth = 0;
+        //echo "Processing domain:  " . $domain['vh_name_vc'] . "\n";
+        if (fs_director::CheckFileExists($bandwidthlog)) {
+            if (fs_director::RenameFileFolder($bandwidthlog, $snapshotfile)) {
+                //echo "Generating bandwidth for: " . $bandwidthlog . "\n";
+                $bandwidth = sys_bandwidth::CalculateFromApacheLog($snapshotfile);
+                unlink($snapshotfile);
+                //echo "Deleted file: " . $snapshotfile . "\n";
+            } else {
+                //echo "Couldn't rename the bandwidth log file!";
+            }
+        }
+        $zdbh->query("UPDATE x_bandwidth SET bd_transamount_bi=(bd_transamount_bi+" . $bandwidth . ") WHERE bd_acc_fk = " . $domain['vh_acc_fk'] . " AND bd_month_in = " . date("Ym") . "");
+    }
 }
-
-
-ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-bandwidth.log\";
-
 ?>

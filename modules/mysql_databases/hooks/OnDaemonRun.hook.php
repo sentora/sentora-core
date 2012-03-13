@@ -17,7 +17,7 @@ while ($database = $mysqlsql->fetch()) {
     while ($row = $dbsize->fetch()) {
         $dbgetsize = $dbgetsize + ($row['Data_length'] + $row['Index_length']);
     }
-    $updatesql = $zdbh->query("UPDATE x_mysql_databases SET my_usedspace_bi = '" . $dbgetsize . "' WHERE my_id_pk =" . $database['my_id_pk'] . "");
+    $zdbh->query("UPDATE x_mysql_databases SET my_usedspace_bi = '" . $dbgetsize . "' WHERE my_id_pk =" . $database['my_id_pk'] . "");
 #echo "Database found: " . $database['my_name_vc'] . " - " . $dbgetsize . " \n";
 }
 ?>

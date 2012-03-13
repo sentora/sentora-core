@@ -365,6 +365,19 @@ class fs_director {
         }
     }
 
+    /**
+     * Renames a file or a folder.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @param string $source The full filesystem path of the file to rename.
+     * @param string $target The full filesystem path of the new file (name).
+     * @return boolean If the rename was successful or not. 
+     */
+    static function RenameFileFolder($source, $target) {
+        if (rename($source, $target))
+            return true;
+        return false;
+    }
+
 }
 
 ?>
