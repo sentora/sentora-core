@@ -27,6 +27,7 @@
 class module_controller {
 
     static $error;
+	static $badpassword;
 
     static function doUpdatePassword() {
         global $zdbh;
@@ -39,14 +40,19 @@ class module_controller {
         $conpass = $controller->GetControllerRequest('FORM', 'inConPass');
 
         if (fs_director::CheckForEmptyValue($newpass)) {
-            # Current password is blank!
+            // Current password is blank!
             self::$error = "error";
         } elseif (md5($current_pass) <> $currentuser['password']) {
-            # Current password does not match!
+            // Current password does not match!
             self::$error = "error";
-        } else {
+        } else {	
             if ($newpass == $conpass) {
-                # Check that the new password matches the confirmation box.
+        		// Check for password length...
+	        	if (strlen($newpass) < ctrl_options::GetOption('password_minlength')) {
+	                self::$badpassword = true;
+	                return false;
+	            }
+                // Check that the new password matches the confirmation box.
                 $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($newpass) . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
                 $sql->execute();
                 self::$error = "ok";
@@ -65,6 +71,9 @@ class module_controller {
                 return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
             }
         } else {
+        	if (!fs_director::CheckForEmptyValue(self::$badpassword)) {
+	            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") .": " . ctrl_options::GetOption('password_minlength'), "zannounceerror");
+	        }
            return;
         }
     }
