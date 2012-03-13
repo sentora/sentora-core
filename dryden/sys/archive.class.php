@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Interface template selection class.
+ * Archive and file compression class.
  * @package zpanelx
- * @subpackage dryden -> ui
+ * @subpackage dryden -> sys
  * @version 1.0.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
