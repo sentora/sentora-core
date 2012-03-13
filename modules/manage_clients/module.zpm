@@ -277,7 +277,7 @@ $(document).ready(function() {
 	$('.link-password').click(function(e){
 		linkId = $(this).attr('id');
 		if (linkId == 'generate'){
-			password = $.password(9,false);
+			password = $.password(<@ MinPassLength @>,false);
 			$('#input-password').val(password);
 		}
 		e.preventDefault();

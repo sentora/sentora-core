@@ -31,8 +31,10 @@ class module_controller {
     static $alreadyexists;
     static $badname;
     static $bademail;
+	static $badpassword;
     static $userblank;
     static $emailblank;
+	static $passwordblank;
     static $packageblank;
     static $groupblank;
     static $ok;
@@ -339,7 +341,7 @@ class module_controller {
         $username = strtolower(str_replace(' ', '', $username));
 		$reseller = ctrl_users::GetUserDetail($uid);
         // Check for errors before we continue...
-        if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $packageid, $groupid, $email))) {
+        if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $packageid, $groupid, $email, $password))) {
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateClient');
@@ -414,7 +416,7 @@ class module_controller {
         return true;
     }
 
-    static function CheckCreateForErrors($username, $packageid, $groupid, $email) {
+    static function CheckCreateForErrors($username, $packageid, $groupid, $email, $password="") {
         global $zdbh;
         $username = strtolower(str_replace(' ', '', $username));
         // Check to make sure the username is not blank or exists before we go any further...
@@ -468,6 +470,16 @@ class module_controller {
             }
         } else {
             self::$emailblank = true;
+            return false;
+        }
+        // Check for password length...
+        if (!fs_director::CheckForEmptyValue($password)) {
+            if (strlen($password) < ctrl_options::GetOption('password_minlength')) {
+                self::$badpassword = true;
+                return false;
+            }
+        } else {
+            self::$passwordblank = true;
             return false;
         }
 
@@ -806,8 +818,26 @@ class module_controller {
     }
 
     static function getRandomPassword() {
-        $password = fs_director::GenerateRandomPassword(9, 4);
+		$minpasswordlength=ctrl_options::GetOption('password_minlength');
+		$trylength = 9;
+		if ($trylength < $minpasswordlength){
+			$uselength = $minpasswordlength;
+		} else {
+			$uselength = $trylength;
+		}
+        $password = fs_director::GenerateRandomPassword($uselength, 4);
         return $password;
+    }
+
+    static function getMinPassLength() {
+		$minpasswordlength=ctrl_options::GetOption('password_minlength');
+		$trylength = 9;
+		if ($trylength < $minpasswordlength){
+			$uselength = $minpasswordlength;
+		} else {
+			$uselength = $trylength;
+		}
+		return $uselength;
     }
 
     static function getResult() {
@@ -816,6 +846,9 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue(self::$emailblank)) {
             return ui_sysmessage::shout(ui_language::translate("You need to specify an email address to create a new client."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$passwordblank)) {
+            return ui_sysmessage::shout(ui_language::translate("Your password cannot be blank."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$packageblank)) {
             return ui_sysmessage::shout(ui_language::translate("You must select a package for your new client."), "zannounceerror");
@@ -828,6 +861,9 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue(self::$bademail)) {
             return ui_sysmessage::shout(ui_language::translate("Your email adress is not valid. Please enter a valid email address."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$badpassword)) {
+            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") .": " . ctrl_options::GetOption('password_minlength'), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate("A client with that name already appears to exsist on this server."), "zannounceerror");
