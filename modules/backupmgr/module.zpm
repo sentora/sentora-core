@@ -45,6 +45,7 @@
 <% if PurgeDate %>
 <p><: Archived files will automatically be deleted when they are older than :> <b><@ PurgeDate @></b> <: days :>.</p>
 <% endif %>
+<a href="./?module=backupmgr" title="<: Refresh archive list :>"><: Refresh archive list :></a><br><br>
 <form action="./?module=backupmgr&action=DeleteBackup" method="post">
     <table class="zgrid">
 		<tr>

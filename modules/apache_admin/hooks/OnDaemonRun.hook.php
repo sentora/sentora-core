@@ -12,7 +12,6 @@
 			}
 			echo "Begin writing Apache Config to: ".ctrl_options::GetOption('apache_vhost'). fs_filehandler::NewLine();
 			WriteVhostConfigFile();
-			echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
 		} else {
 			echo "Apache Config has NOT changed...nothing to do." . fs_filehandler::NewLine();
 		}
@@ -257,6 +256,7 @@
 									SET so_value_tx='".time()."'
 									WHERE so_name_vc='apache_changed'");
             $vsql->execute();
+			echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
 			if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                 system("".ctrl_options::GetOption('httpd_exe')." ".ctrl_options::GetOption('apache_restart')."");
             } else {
