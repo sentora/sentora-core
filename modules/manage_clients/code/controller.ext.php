@@ -258,6 +258,11 @@ class module_controller {
         global $zdbh;
         runtime_hook::Execute('OnBeforeUpdateClient');
 		if ($newpass != ""){
+        	// Check for password length...
+        	if (strlen($newpass) < ctrl_options::GetOption('password_minlength')) {
+                self::$badpassword = true;
+                return false;
+            }
 		$sql = $zdbh->prepare("UPDATE x_accounts SET 
 										ac_pass_vc=	   '" . md5($newpass) . "'
 										WHERE ac_id_pk=" . $clientid . "");
