@@ -21,4 +21,24 @@ while ($userdir = $userssql->fetch()) {
     $updatesql->execute();
     //echo "Disk usage for user \"" . $userdir['ac_user_vc'] . "\" is: " . $size . "\n";
 }
+
+
+/*
+ * Calculate the bandwidth used for each user.
+ */
+
+
+
+$checksql = $zdbh->query("SELECT COUNT(*) AS total FROM x_vhosts WHERE vh_deleted_ts IS NULL")->fetch();
+if ($checksql['total'] > 0) {
+    
+    $thisamount = 0;
+    
+    
+    $zdbh->query("UPDATE x_bandwidth SET bd_transamount_bi=(bd_transamount_bi+" .$thisamount. ") WHERE bd_acc_fk = " . $userdir['ac_id_pk'] . " AND bd_month_in=" . date("Ym") . "");
+}
+
+
+ctrl_options::GetOption('log_dir') . "domains/" . $username['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . "-bandwidth.log\";
+
 ?>
