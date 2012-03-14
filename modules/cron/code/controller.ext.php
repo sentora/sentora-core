@@ -81,7 +81,7 @@ class module_controller {
 		$line  = "<h2>Create a new task</h2>";
 		$line .= "<form action=\"./?module=cron&action=CreateCron\" method=\"post\">";
     	$line .= "<table class=\"zform\">";
-        $line .= "<tr>";
+        $line .= "<tr valign=\"top\">";
         $line .= "<th>".ui_language::translate("Script").":</th>";
         $line .= "<td><input name=\"inScript\" type=\"text\" id=\"inScript\" size=\"50\" /><br />".ui_language::translate("example").": /folder/task.php</td>";
         $line .= "</tr>";
