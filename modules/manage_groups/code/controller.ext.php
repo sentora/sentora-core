@@ -149,8 +149,9 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteGroup($gid, $mgid) {
+    static function ExecuteDeleteGroup($gid, $mgid="") {
         global $zdbh;
+		if ($mgid != ""){
         $sql = $zdbh->prepare("
             UPDATE x_accounts
             SET ac_group_fk = " . $mgid . "
@@ -161,6 +162,13 @@ class module_controller {
             WHERE ug_id_pk = " . $gid . "");
         $sql->execute();
         return true;
+		} else {
+        $sql = $zdbh->prepare("
+            DELETE FROM x_groups
+            WHERE ug_id_pk = " . $gid . "");
+        $sql->execute();
+		return true;		
+		}
     }
 
     /**
@@ -221,7 +229,12 @@ class module_controller {
     static function doDeleteGroup() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteDeleteGroup($formvars['inGroupID'], $formvars['inMoveGroup']))
+		if (isset($formvars['inMoveGroup'])){
+			$inMoveGroup = $formvars['inMoveGroup'];
+		} else {
+			$inMoveGroup = "";
+		}
+        if (self::ExecuteDeleteGroup($formvars['inGroupID'], $inMoveGroup))
             return true;
         return false;
     }

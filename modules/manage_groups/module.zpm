@@ -3,15 +3,47 @@
 
 <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: This module enables you to manage user groups for your client, User groups enable you to control what modules your users can see and access.  :></p></div>
 
+<% if isDeleteGroup %>
+<div class="zform_wrapper">
+<h2><: Delete user group :>: <@ EditCurrentName @> ?</h2>
+<% if GroupMoveToList %>
+<: Please confirm and choose a group to move any existing clients to before the selected group is deleted. :>
+<% else %>
+<: Please confirm that you want to delete this group. :>
+<% endif %>
+<p>&nbsp;</p>
+<form action="./?module=manage_groups&action=DeleteGroup" method="post">
+<table class="zform">
+<% if GroupMoveToList %>
+<tr>
+<th><: Move current group members to :>:</th>
+<td><select name="inMoveGroup" id="inMoveGroup">
+<% loop GroupMoveToList %>
+<option value="<& groupid &>"><& groupname &></option>"
+<% endloop %>
+</select>
+</td>
+</tr>
+<% endif %>
+<tr>
+<th colspan="2" align="right">
+<input type="hidden" name="inGroupID" value="<@ CurrentID @>">
+<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=manage_groups';return false;"><: Cancel :></button>
+</th>
+</tr>
+</table>
+</form>
+</div>
+<% endif %>
 
 <div class="zgrid_wrapper">
-<h2><: Current user groups :></h2>
 <% if DefaultGroupList %>
-<form action="./?module=manage_groups&action=EditGroup" method="post">
+<h2><: Default user groups :></h2>
 <table class="zgrid">
 <tr>
 <th><: Group :></th>
-<th nowrap="nowrap">#<: Users :></th>
+<th nowrap="nowrap"><: Users :></th>
 <th><: Description  :></th>
 <th></th>
 </tr>
@@ -23,6 +55,18 @@
 <td nowrap="nowrap"></td>
 </tr>
 <% endloop %>
+</table>
+<% endif %>
+<h2><: Current user groups :></h2>
+<% if GroupList %>
+<form action="./?module=manage_groups&action=EditGroup" method="post">
+<table class="zgrid">
+<tr>
+<th><: Group :></th>
+<th nowrap="nowrap"><: Users :></th>
+<th><: Description  :></th>
+<th></th>
+</tr>
 <% loop GroupList %>
 <tr>
 <td><& groupname &></td>
@@ -34,7 +78,7 @@
 </table>
 </form>
 <% else %>
-<: Sorry there are currently no user groups configured! :>
+<p><: There are currently no custom user groups configured! :></p>
 <% endif %>
 </div>
 
@@ -78,37 +122,6 @@
 <th colspan="2" align="right">
 <input type="hidden" name="inGroupID" value="<@ CurrentID @>">
 <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save :></button>
-</th>
-</tr>
-</table>
-</form>
-</div>
-<% endif %>
-
-<% if isDeleteGroup %>
-<div class="zform_wrapper">
-<h2><: Delete user group :></h2>
-<: Please confirm and choose a group to move any existing clients to before the selected group is deleted. :>
-<p>&nbsp;</p>
-<form action="./?module=manage_groups&action=DeleteGroup" method="post">
-<table class="zform">
-<tr>
-<th><: Group to delete :>:</th>
-<td><@ EditCurrentName @></td>
-</tr>
-<tr>
-<th><: Move current group members to :>:</th>
-<td><select name="inMoveGroup" id="inMoveGroup">
-<% loop GroupMoveToList %>
-<option value="<& groupid &>"><& groupname &></option>"
-<% endloop %>
-</select>
-</td>
-</tr>
-<tr>
-<th colspan="2" align="right">
-<input type="hidden" name="inGroupID" value="<@ CurrentID @>">
-<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
 </th>
 </tr>
 </table>
