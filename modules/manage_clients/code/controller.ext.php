@@ -70,6 +70,26 @@ class module_controller {
         }
     }
 
+    static function ListAllClients($uid) {
+        global $zdbh;
+        $sql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowclients = $sql->fetch()) {
+				if ($rowclients['ac_id_pk'] != $uid){
+                array_push($res, array( 'moveclientid'   => $rowclients['ac_id_pk'],
+										'moveclientname' => $rowclients['ac_user_vc']));
+				}
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
     static function ListDisabledClients($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_enabled_in=0 AND ac_deleted_ts IS NULL";
@@ -242,13 +262,23 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteClient($userid) {
+    static function ExecuteDeleteClient($userid, $moveid) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteClient');
         $sql = $zdbh->prepare("UPDATE x_accounts
 								SET ac_deleted_ts=" . time() . " 
 								WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
+		$sql = $zdbh->prepare("
+			UPDATE x_accounts 
+			SET ac_reseller_fk = " . $moveid . " 
+			WHERE ac_reseller_fk = ".$userid."");
+		$sql->execute();
+		$sql = $zdbh->prepare("
+			UPDATE x_packages 
+			SET pk_reseller_fk = " . $moveid . " 
+			WHERE pk_reseller_fk = ".$userid."");
+		$sql->execute();
         runtime_hook::Execute('OnAfterDeleteClient');
         self::$ok = true;
         return true;
@@ -571,7 +601,7 @@ class module_controller {
     static function doDeleteClient() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteDeleteClient($formvars['inDelete']))
+        if (self::ExecuteDeleteClient($formvars['inDelete'], $formvars['inMoveClient']))
             return true;
         return false;
     }
@@ -588,6 +618,17 @@ class module_controller {
     static function getClientList() {
         $currentuser = ctrl_users::GetUserDetail();
         $clientlist = self::ListClients($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($clientlist)) {
+            return $clientlist;
+        } else {
+            return false;
+        }
+    }
+
+    static function getAllClientList() {
+		global $controller;
+		$urlvars = $controller->GetAllControllerRequests('URL');
+        $clientlist = self::ListAllClients($urlvars['other']);
         if (!fs_director::CheckForEmptyValue($clientlist)) {
             return $clientlist;
         } else {
@@ -646,6 +687,12 @@ class module_controller {
     }
 
     static function getHasPackage() {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return self::CheckHasPackage($currentuser['userid']);
+    }
+
+    static function getIsReseller() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::CheckHasPackage($currentuser['userid']);

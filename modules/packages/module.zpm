@@ -20,7 +20,7 @@
 				<td>
 				<select name="inMovePackage" id="inMovePackage">
 				<% loop PackageList %>
-				<option value="<& packageid &>"><& packagename &></option>"
+				<option value="<& packageid &>"><& packagename &></option>
 				<% endloop %>
 				</select>
 				</td>
@@ -29,7 +29,7 @@
 				<th colspan="2" align="right">
 				<input type="hidden" name="inPackageID" value="<@ EditCurrentPackageID @>"/>
 				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
+				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
 				</th>
 			</tr>
 		</table>
