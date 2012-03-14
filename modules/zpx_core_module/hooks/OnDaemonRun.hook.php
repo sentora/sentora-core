@@ -22,7 +22,7 @@ while ($userdir = $userssql->fetch()) {
     $updatesql->execute();
     echo "Disk usage for user \"" . $userdir['ac_user_vc'] . "\" is: " . $size . " (" . fs_director::ShowHumanFileSize($size) . ")\n";
 }
-echo "FINISH Calculating disk usage\n";
+echo "END Calculating disk usage\n";
 
 
 /*
@@ -55,5 +55,5 @@ if ($checksql['total'] > 0) {
         }
     }
 }
-echo "FINISH Calculating bandwidth usage\n";
+echo "END Calculating bandwidth usage\n";
 ?>
