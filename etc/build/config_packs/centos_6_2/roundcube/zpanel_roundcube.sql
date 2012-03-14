@@ -16,10 +16,10 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `zpanelx_roundcube`
+-- Database: `zpanel_roundcube`
 --
-CREATE DATABASE `zpanelx_roundcube`;
-USE `zpanelx_roundcube`;
+CREATE DATABASE `zpanel_roundcube`;
+USE `zpanel_roundcube`;
 
 -- --------------------------------------------------------
 

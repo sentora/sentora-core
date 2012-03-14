@@ -35,7 +35,7 @@ useradd -u 2001 -s /bin/false -d /bin/null -c "proftpd user" -g ftpgroup ftpuser
 *** Edit /etc/zpanel/configs/proftpd/proftpd-mysql.conf, replace with your credentials: 
 *** You can use your MySQL root account if you wish or create a new restricted user account as you wish! ***
 *** Format is: SQLConnectInfo  DATABASE@localhost USER PASSWORD
-	SQLConnectInfo  zpanelx_proftpd@localhost root your_root_password
+	SQLConnectInfo  zpanel_proftpd@localhost root your_root_password
 *** 
 mv /etc/proftpd/proftpd.conf /etc/proftpd/proftpd.conf.orig
 touch /etc/proftpd.conf

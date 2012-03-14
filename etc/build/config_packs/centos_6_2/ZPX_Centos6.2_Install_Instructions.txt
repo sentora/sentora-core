@@ -50,12 +50,12 @@ CONFIGURE MYSQL
 SET ZPANEL DATABASE CONFIG:
 	edit /etc/zpanel/panel/cnf/db.php
 	$host = "localhost";
-	$dbname = "zpanelx_core";
+	$dbname = "zpanel_core";
 	$user = "root";
 	$pass = "YOUR_ROOT_MYSQL_PASSWORD";
 	
 	import zpanel database:
-	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/zpanelx_core.sql
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/zpanel_core.sql
 
 	
 SET ZPANEL APACHE CONFIG:
@@ -90,7 +90,7 @@ POSTFIX-DOVECOT:
 	useradd -m -g vmail -u 5000 -d /var/zpanel/vmail -s /bin/bash vmail
 	chown -R vmail.vmail /var/zpanel/vmail
 	
-	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/postfix/zpanelx_postfix.sql
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/postfix/zpanel_postfix.sql
 
 	# Postfix Master.cf
 	echo "# Dovecot LDA" >> /etc/postfix/master.cf
@@ -124,9 +124,9 @@ POSTFIX-DOVECOT:
 	*Server will need a reboot for postfix to be fully functional
 	
 	ROUNDCUBE
-	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/roundcube/zpanelx_roundcube.sql
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/roundcube/zpanel_roundcube.sql
 	edit /etc/zpanel/panel/etc/apps/webmail/config/db.inc.php
-	$rcmail_config['db_dsnw'] = 'mysql://root:YOUR_ROOT_MYSQL_PASSWORD@localhost/zpanelx_roundcube';
+	$rcmail_config['db_dsnw'] = 'mysql://root:YOUR_ROOT_MYSQL_PASSWORD@localhost/zpanel_roundcube';
 	
 	
 PROFTPD:
@@ -134,13 +134,13 @@ PROFTPD:
 	rpm -Uvh epel-release*rpm
 	yum install proftpd
 	yum install proftpd-mysql
-	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/proftpd/zpanelx_proftpd.sql
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/centos_6_2/proftpd/zpanel_proftpd.sql
 	groupadd -g 2001 ftpgroup
 	useradd -u 2001 -s /bin/false -d /bin/null -c "proftpd user" -g ftpgroup ftpuser
 	
 	/** IF WE WANT TO NOT USE ROOT THEN WE CAN DO THIS
 	mysql -u root -p
-	create database zpanelx_proftpd;
+	create database zpanel_proftpd;
 	GRANT SELECT, INSERT, UPDATE, DELETE ON ftp.* TO 'proftpd'@'localhost' IDENTIFIED BY 'password';
 	GRANT SELECT, INSERT, UPDATE, DELETE ON ftp.* TO 'proftpd'@'localhost.localdomain' IDENTIFIED BY 'password';
 	FLUSH PRIVILEGES;
@@ -148,7 +148,7 @@ PROFTPD:
 	**/
 	
 	edit /etc/zpanel/configs/centos_6_2/proftpd/proftpd-mysql.conf, replace with your credentials: SQLConnectInfo  DATABASE@localhost USER PASSWORD
-	SQLConnectInfo  zpanelx_proftpd@localhost proftpd password
+	SQLConnectInfo  zpanel_proftpd@localhost proftpd password
 	
 	mv /etc/proftpd.conf /etc/proftpd.old
 	touch /etc/proftpd.conf
