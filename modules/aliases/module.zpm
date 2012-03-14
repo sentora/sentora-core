@@ -14,7 +14,7 @@
 				<td colspan="2" align="right">
 				<input type="hidden" name="inDelete" value="<@ EditCurrentAliasID @>">
 				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=aliases';return false;"><: Cancel :></button>
+				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=aliases';return false;"><: Cancel :></button>
 				</td>
 			</tr>
 		</table>

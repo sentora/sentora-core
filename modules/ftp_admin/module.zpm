@@ -18,7 +18,7 @@
 			<tr>
 				<th colspan="3">
 				<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
-				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=moduleadmin';return false;"><: Cancel :></button>
+				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=moduleadmin';return false;"><: Cancel :></button>
 				</th>
 			</tr>
 		</table>
