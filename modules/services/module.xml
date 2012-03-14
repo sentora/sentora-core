@@ -7,5 +7,5 @@
 <authorname>ZPanel Project</authorname>
 <authoremail>developers@zpanelcp.com</authoremail>
 <authorurl>http://www.zpanelcp.com/</authorurl>
-<updateurl>http://www.ballen.co.uk/testupdate/update.xml</updateurl>
+<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>
