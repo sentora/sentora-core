@@ -56,11 +56,13 @@ class module_controller {
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
                 if ($rowclients['ac_user_vc'] != "zadmin") {
+					$numrowclients = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk=" . $rowclients['ac_id_pk'] . " AND ac_deleted_ts IS NULL")->fetch();
                     $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
                     $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
                     $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
                     $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']));
                     $currentuser['bandwidthquotareadable'] = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
+					$currentuser['numclients'] = $numrowclients[0];
                     array_push($res, $currentuser);
                 }
             }
@@ -70,16 +72,19 @@ class module_controller {
         }
     }
 
-    static function ListAllClients($uid) {
+    static function ListAllClients($moveid, $uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
+			$skipclients = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
-				if ($rowclients['ac_id_pk'] != $uid){
+			$getgroup = $zdbh->query("SELECT * FROM x_groups WHERE ug_id_pk=" . $rowclients['ac_group_fk'] . "")->fetch();			
+				if ($rowclients['ac_id_pk'] != $moveid && $getgroup['ug_name_vc'] == "Administrators" || 
+					$rowclients['ac_id_pk'] != $moveid && $getgroup['ug_name_vc'] == "Resellers"){
                 array_push($res, array( 'moveclientid'   => $rowclients['ac_id_pk'],
 										'moveclientname' => $rowclients['ac_user_vc']));
 				}
@@ -187,7 +192,11 @@ class module_controller {
 		                   					   'groupselected' => $selected));
 					}
 				} else{
-			                array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
+					    $selected = "";
+		                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
+		                    $selected = " selected";
+		                }
+			            array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
 						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
 		                   					   'groupselected' => $selected));			
 				}
@@ -265,9 +274,10 @@ class module_controller {
     static function ExecuteDeleteClient($userid, $moveid) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteClient');
-        $sql = $zdbh->prepare("UPDATE x_accounts
-								SET ac_deleted_ts=" . time() . " 
-								WHERE ac_id_pk=" . $userid . "");
+        $sql = $zdbh->prepare("
+			UPDATE x_accounts
+			SET ac_deleted_ts=" . time() . " 
+			WHERE ac_id_pk=" . $userid . "");
         $sql->execute();
 		$sql = $zdbh->prepare("
 			UPDATE x_accounts 
@@ -278,6 +288,11 @@ class module_controller {
 			UPDATE x_packages 
 			SET pk_reseller_fk = " . $moveid . " 
 			WHERE pk_reseller_fk = ".$userid."");
+		$sql->execute();
+		$sql = $zdbh->prepare("
+			UPDATE x_groups 
+			SET ug_reseller_fk = " . $moveid . " 
+			WHERE ug_reseller_fk = ".$userid."");
 		$sql->execute();
         runtime_hook::Execute('OnAfterDeleteClient');
         self::$ok = true;
@@ -627,8 +642,9 @@ class module_controller {
 
     static function getAllClientList() {
 		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
 		$urlvars = $controller->GetAllControllerRequests('URL');
-        $clientlist = self::ListAllClients($urlvars['other']);
+        $clientlist = self::ListAllClients($urlvars['other'], $currentuser['userid']);
         if (!fs_director::CheckForEmptyValue($clientlist)) {
             return $clientlist;
         } else {

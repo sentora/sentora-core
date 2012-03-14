@@ -115,6 +115,7 @@
             	<th><: Username :></th>
                 <th><: Package :></th>
 				<th><: Group :></th>
+				<th><: Clients :></th>
                 <th><: Current Disk :></th>
                 <th><: Current Bandwidth :></th>
                 <th></th>
@@ -124,6 +125,7 @@
 				<td><& username &></td>
 				<td><& packagename &></td>
 				<td><& usergroup &></td>
+				<td><& numclients &></td>
 				<td><& diskspacereadable &> / <& diskspacequotareadable &></td>
 				<td><& bandwidthreadable &> / <& bandwidthquotareadable &></td>
 				<td>
