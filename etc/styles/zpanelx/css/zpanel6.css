@@ -759,6 +759,15 @@ a.zannounce_a{
 	padding:10px;
 	color:#C11B17;
 }
+.dbwarning{
+	background-color: #FFCBCB;
+	border:solid 1px #C11B17;
+	font-weight:normal;
+	text-align: left;
+	margin: 10px;
+	padding:10px;
+	color:#C11B17;
+}
 .znotice{
 	min-height:20px;
 	background-color: #FFFFA3;
