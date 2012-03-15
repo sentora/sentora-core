@@ -35,7 +35,7 @@ try {
                     color: #666;
             }
             </style>
-            <div class=\"dbwarning\"><strong>Critical Error:</strong> [0100] - Unable to connect or authenticate to the ZPanel database (<em>$dbname</em>).<p>We advice that you contact the server administator to ensure that the dataase server is online and that the correct connection parameter are being used.</p></div>";
+            <div class=\"dbwarning\"><strong>Critical Error:</strong> [0100] - Unable to connect or authenticate to the ZPanel database (<em>$dbname</em>).<p>We advise that you contact the server administator to ensure that the dataase server is online and that the correct connection parameter are being used.</p></div>";
     die($error_html);
 }
 ?>
