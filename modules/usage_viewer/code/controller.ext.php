@@ -209,7 +209,7 @@ class module_controller {
 		$line .= " <td nowrap=\"nowrap\">".self::$forwarders." / ".self::$forwardersquota."</td><td>".self::DisplaypBar("forwarders", "forwardersquota")."</td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Distrubution lists").":</th>";
+		$line .= "<th nowrap=\"nowrap\">".ui_language::translate("Distribution lists").":</th>";
 		$line .= "<td nowrap=\"nowrap\">".self::$distlists." / ".self::$distrobutionlistsquota."</td><td>".self::DisplaypBar("distlists", "distrobutionlistsquota")."</td>";
 		$line .= "</tr>";
 		$line .= "</table>";
@@ -221,7 +221,7 @@ class module_controller {
     }
 
     static function DisplayDomainsUsagepChart() {
-		$line  = "<h2>Domain Usage</h2>";
+		$line  = "<h2>".ui_language::translate("Domain Usage")."</h2>";
 		$total= self::$domainsquota;
 		$used = self::$domains;
 		$free = $total - $used;		
@@ -230,7 +230,7 @@ class module_controller {
 	}
 
     static function DisplaySubDomainsUsagepChart() {
-		$line  = "<h2>Sub-Domain Usage</h2>";
+		$line  = "<h2>".ui_language::translate("Sub-Domain Usage")."</h2>";
 		$total= self::$subdomainsquota;
 		$used = self::$subdomains;
 		$free = $total - $used;		
@@ -239,7 +239,7 @@ class module_controller {
 	}
 
     static function DisplayParkedDomainsUsagepChart() {
-		$line  = "<h2>Parked-Domain Usage</h2>";
+		$line  = "<h2>".ui_language::translate("Parked-Domain Usage")."</h2>";
 		$total= self::$parkeddomainsquota;
 		$used = self::$parkeddomains;
 		$free = $total - $used;		
@@ -248,7 +248,7 @@ class module_controller {
 	}
 
     static function DisplayMysqlUsagepChart() {
-		$line  = "<h2>MySQL&reg Database Usage</h2>";
+		$line  = "<h2>".ui_language::translate("MySQL&reg Database Usage")."</h2>";
 		$total= self::$mysqlquota;
 		$used = self::$mysql;
 		$free = $total - $used;		
@@ -257,7 +257,7 @@ class module_controller {
 	}
 
     static function DisplayMailboxUsagepChart() {
-		$line  = "<h2>Mailbox Usage</h2>";
+		$line  = "<h2>".ui_language::translate("Mailbox Usage")."</h2>";
 		$total= self::$mailboxquota;
 		$used = self::$mailboxes;
 		$free = $total - $used;		
@@ -266,7 +266,7 @@ class module_controller {
 	}
 
     static function DisplayFTPUsagepChart() {
-		$line  = "<h2>FTP Usage</h2>";
+		$line  = "<h2>".ui_language::translate("FTP Usage")."</h2>";
 		$total= self::$ftpaccountsquota;
 		$used = self::$ftpaccounts;
 		$free = $total - $used;		
@@ -275,7 +275,7 @@ class module_controller {
 	}
 
     static function DisplayForwardersUsagepChart() {
-		$line  = "<h2>Forwarders Usage</h2>";
+		$line  = "<h2>".ui_language::translate("Forwarders Usage")."</h2>";
 		$total= self::$forwardersquota;
 		$used = self::$forwarders;
 		$free = $total - $used;		
@@ -284,7 +284,7 @@ class module_controller {
 	}
 
     static function DisplayDistListUsagepChart() {
-		$line  = "<h2>Distrubution List Usage</h2>";
+		$line  = "<h2>".ui_language::translate("Distribution List Usage")."</h2>";
 		$total= self::$distrobutionlistsquota;
 		$used = self::$distlists;
 		$free = $total - $used;		
