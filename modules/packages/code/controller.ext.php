@@ -268,6 +268,24 @@ class module_controller {
 		return true;
 		}
 	}
+
+	static function AddDefaultPackageTime($uid){
+		global $zdbh;
+        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $sql->execute();
+            while ($rowpackages = $sql->fetch()) {
+				if ($rowpackages['pk_created_ts'] == ""){
+					$add = $zdbh->prepare("UPDATE x_packages SET pk_created_ts=" . time() . "
+									WHERE pk_id_pk  =" . $rowpackages['pk_id_pk'] . "");
+					$add->execute();
+				}
+				
+            }
+        }	
+	}
 		
     /**
      * End 'worker' methods.
@@ -495,6 +513,11 @@ class module_controller {
         } else {
             return "";
         }
+    }
+
+    static function getAddDefaultPackageTime() {
+        $currentuser = ctrl_users::GetUserDetail();
+		self::AddDefaultPackageTime($currentuser['userid']);
     }
 
     static function getPHPChecked() {
