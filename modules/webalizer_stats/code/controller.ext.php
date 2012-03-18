@@ -1,0 +1,100 @@
+<?php
+
+/**
+ *
+ * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
+ *
+ */
+ 
+class module_controller {
+
+    static function ListDomains($uid) {
+        global $zdbh;
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk='" . $currentuser['userid'] . "' AND vh_deleted_ts IS NULL";
+        $numrows = $zdbh->query($sql);
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare($sql);
+            $res = array();
+            $sql->execute();
+            while ($rowclients = $sql->fetch()) {
+                array_push($res, array('vh_id_pk'     => $rowclients['vh_id_pk'],
+                    				   'vh_name_vc' => $rowclients['vh_name_vc']));
+            }
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
+    static function getDomains() {
+        $currentuser = ctrl_users::GetUserDetail();
+        $clientlist = self::ListDomains($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($clientlist)) {
+            return $clientlist;
+        } else {
+            return false;
+        }
+    }
+	
+    static function getCurrentDomain() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['domain'])) && ($urlvars['domain'] != ""))
+            return $urlvars['domain'];
+        return false;
+    }
+
+    static function getReportToShow() {
+		global $controller;
+	    $urlvars = $controller->GetAllControllerRequests('URL');
+        if (isset($urlvars['domain']) && $urlvars['domain'] != ""){
+			$currentuser = ctrl_users::GetUserDetail();
+			$report_to_show = "modules/webalizer_stats/stats/" . $currentuser['username'] . "/" .$urlvars['domain'] . "/index.html";
+	    	if (!file_exists($report_to_show)) {
+            	$report_to_show = false;
+        	}
+			return $report_to_show;
+		}
+    }
+
+    static function doShowStats() {
+		global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+        if(isset($formvars['inDomain'])){
+        	header("location: ./?module=" . $controller->GetCurrentModule() . "&show=true&domain=" . $formvars['inDomain'] . "");
+            exit;
+		} else {
+        	return false;
+		}
+    }
+
+    static function getIsShowStats() {
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "true"))
+            return true;
+        return false;
+    }
+
+	static function getInit() {
+
+    }
+			
+	static function getDescription() {
+			return ui_module::GetModuleDescription();
+    }
+
+	static function getModuleName() {
+		$module_name = ui_module::GetModuleName();
+        return $module_name;
+    }
+
+	static function getModuleIcon() {
+		global $controller;
+		$module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        return $module_icon;
+    }
+
+}
+?>

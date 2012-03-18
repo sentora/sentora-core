@@ -1,0 +1,419 @@
+--------------------------------------------------------------------
+2.01-xx changes from 1.30-04   (brad@mrunix.net)
+--------------------------------------------------------------------
+
+Fixes:
+ o Security fix for cross-site scripting vulnerability found by
+   Flavio Veloso (www.magnux.com).
+
+ o Fixed a TOTAL_RC off by one error, which would prevent the last
+   response code from being saved when using incremental mode.
+
+ o Fixed possible segfault condition in MangleAgent code on
+   some malformed user agent names.
+
+ o Fixed DNS to prevent hangs on blank and malformed hostnames.
+
+ o Fixed problem calculating visits.  Changed timestamps to use
+   seconds since epoch (1/1/1970) which results in more accurate
+   analysis.  Also changed normal out of sequence code to handle
+   up to 1 hour of 'slop' in the timestamps.  This changed the
+   semantics of the VisitTimeout and -m configuration options, as
+   the values are now specified in number of seconds.
+
+ o Fixed hostname lowercase problem (wasn't) when using DNS lookups.
+
+ o Fixed problem with incremental datafile which could cause a read
+   error under certain circumstances (removes control characters).
+   Also changed code to now abort on a read error.
+
+ o Fixed problem with hash table node creation where objects that
+   were exactly the maximum length would wind up leaving a garbage
+   byte at the end of the memory space allocated.  This was causing
+   some very infrequent and widely different problems.
+
+ o Fixed problem where country graph could be produced incorrectly
+   if using a non-english language and the country name overlapped
+   the pie chart.
+
+ o Found and fixed a problem with a possible 32-bit wrap around
+   problem using incremental mode on large sites.  The problem
+   would cause the KBytes data on large groups to become inaccuate.
+
+Changes/Additions:
+ o Modified configure to allow specification of the default config
+   directory.  If not given, will use /etc (/etc/webalizer.conf).
+
+ o Added DailyGraph and DailyStats configuration options to enable
+   or disable the Daily usage graph and stats table from output.
+
+ o Improved visit calculation logic to reduce 'false' counts generated
+   by external image referrals.
+
+ o Added reverse DNS lookup capability.  This adds the command
+   line switchs -D and -N, and configuration keywords "DNSCache"
+   and "DNSChildren".  See the DNS.README for additional info.
+   Based in part on code submitted by Henning P. Schmiedehausen
+   (hps@tanstaafl.de).
+
+ o Added ability to dump Sites, URL's, Referrers, User Agents,
+   Usernames and Search Strings to tab delimited files, suitable
+   for import into most database and spreadsheet programs.  The
+   location of this file may be specified using the "DumpPath"
+   configuration keyword, allowing the data to be kept someplace
+   outside the web servers document tree.  The configuration
+   keywords "DumpSites", "DumpURLs", "DumpReferrers", "DumpAgents",
+   "DumpUsers" and "DumpSearchStr"  have been added to control the
+   file dumps.  Column headers can be included in the file with
+   the "DumpHeader" keyword.  Dump filename extensions may be
+   specified using the "DumpExtension" keyword (default is .tab).
+
+ o Added username analysis, based on usernames found in the log,
+   and only available if username information is present in the
+   log (ie: http authentication or wu-ftpd xferlog).  The keywords
+   'GroupUser', 'HideUser', 'IgnoreUser', 'IncludeUser', 'AllUsers',
+   and 'TopUsers' have been added to the configuration file code.
+   This change also modified the format of the incremental data file.
+
+ o Added the ability to display ALL sites, URL's, Referrers,
+   User Agents and Search Strings on a seperate HTML page from
+   the normal statistics page.  This adds the configuration
+   keywords 'AllSites', 'AllURLs', 'AllReferrers', 'AllAgents'
+   and 'AllSearchStr', which can have either a "yes" or "no"
+   value (default is "no").  Will add a "View All..." link to
+   the bottom of the appropriate "Top" table if enabled.
+
+ o Added support for squid proxy logs, thanks to code submitted
+   by Steinar H. Gunderson (sgunderson@bigfoot.com).  To use
+   squid logs, specify a LogType of 'squid' in the configuration
+   file.  This also changed the behaviour of the '-F' command
+   line switch, which now requires a second argument of either
+   'clf', 'ftp' or 'squid'.
+
+ o Completely modified the way the various TOP tables are handled
+   and sorted, which now allows extremely large top tables without
+   any performance degredation.  Previously, tables greater than
+   a few hundred elements produced a noticable perfomance penalty
+   during processing.
+
+ o Added the ability to group domains automatically and to hide
+   individual host names from the report, using the 'GroupDomains'
+   and 'HideAllSites' configuration keywords (-g and -X command
+   line options).  Domain Grouping is configurable as to the level
+   of grouping (second level domain, third, etc...).  HideAllSites
+   forces only grouped site records to be displayed if any.  Based
+   on ideas/code by Michael Klemme (mklemme@gmx.de).  This changes
+   the behaviour of the '-g' switch, which previously was used to
+   force the use of GMT time for reports.
+
+ o Added user configurable search engine specification, used for
+   search string analysis.  This adds the 'SearchEngine' keyword
+   in configuration files.  Based on idea/code by Alexey Kizilov.
+
+ o Changed code to use the latest version of GD which supports PNG
+   images instead of GIF images.  Also included changes in configure
+   script to ensure the presence of the libpng and libz libraries.
+
+ o Added ability to override log file to STDIN by use of '-' on
+   the command line.
+
+ o Added gzipped logfile support.  The program will automatically
+   detect logfiles with a '.gz' extension and uncompress on the
+   fly.  Uses gz file support of zlib, since it's required for
+   our gd/png stuff anyway.  Please note that using gzipped logs
+   will incur a small performance penality.
+
+ o Minor changes to search string code to increase accuracy.  This
+   also removes a previous condition that would occasionally cause
+   search strings to incorrectly be counted twice or to be counted
+   as different search strings when only differing by a space.
+
+ o Minor changes to URL parse code to allow additional characters.
+   Also changed unescape code to properly handle extended chars.
+
+ o Major changes to hash table node format for reduced memory usage.
+   Instead of fixed size strings, the new format will dynamically
+   allocate string memory and use pointers to existing table data
+   under certain circumstances.  The memory savings is significant
+   and will be greatly noticed with large sites.  Because of these
+   changes, the formatting of the incremental data file had to be
+   changed, therefore it is incompatable with previous versions.
+
+ o Major code reorganization and cleanup.  This was to facilitate
+   future developent and make things more managable.
+
+ o Usual documentation updates for new features/functions.
+
+--------------------------------------------------------------------
+1.30-xx changes from 1.22-06   (brad@mrunix.net)
+--------------------------------------------------------------------
+
+Fixes:
+ o Fixed minor bug that would allow incorrect site totals for the
+   first day of the month under certain conditions.
+
+Changes/Additions:
+ o Added Top Entry and Exit Page tables.  Added configuration file
+   keywords TopEntry (-e command line) and TopExit (-E command line)
+   to specify the number of entries to display for each table.  The
+   default for both is 10.  See README for additional information.
+   
+ o Added 'Group' labels.  Allows display of a specified label for
+   grouped entries (in 'Top' tables).  Based on patch submitted
+   by Oliver Graf (ograf@rhein-zeitung.de).  See sample.conf for
+   examples.
+
+ o Added 'Visits' totals.  The length of time that constitutes a
+   'visit' can be set using the VisitTimeout configuration keyword
+   (-m command line option).  The value must be given in HHMMSS
+   format, you can omit leading zeros. Default is 30 minutes (3000).
+
+ o Added 'Pages' totals, based on user specified extensions.  Changes
+   made to generated graphs as well.  Configuration keyword PageType
+   (and command line -P switch) allows specification of extensions
+   to use (defaults to 'htm*' and 'cgi').  Also called "pageviews".
+
+ o Added Search String analysis.  Keyword 'TopSearch' defines how
+   many of the top search strings to display.  Default is 20. Can
+   be disabled by using zero (0).
+
+ o Added native support for ftp logs (xferlog ala wu-ftpd).  Added
+   'LogType' configuration file keyword (-F command line option)
+   to specify log type.  Values can be either 'web' or 'ftp', with
+   the default of 'web'.
+
+ o Changed graphs to handle pages and visits totals. Also  added
+   color coded legends, which can be disabled using the GraphLegend 
+   configuration keyword (-L command line option).  Default is to
+   display them.
+
+ o Added background lines to graphs.  Default is 2 lines, and can
+   be set to any number using the GraphLines configuration keyword
+   (-l command line option).  Can use anywhere from none (0) to
+   twenty lines.  They will be drawn in all but the country graph.
+
+ o Added CountryGraph configuration file keyword (-Y command line
+   option) to enable/disable display of country usage pie chart.
+
+ o Added FoldSeqErr keyword (-f command line option).  Normally,
+   the program will ignore log records that are out of sequence
+   (chronological order).  This option lets them be folded into
+   the analysis anyway, as if the were the same date/time as the
+   last good record.  Apache users can safely ignore :)
+
+ o Added additonal 'Top' tables for SITES and URL's, sorted by
+   KBytes instead of hits.  Two new configuration file keywords,
+   TopKSites and TopKURLs, can be used to specify the number of
+   entries for each (zero to disable).  Default for both is 10.
+
+ o Added additional calculations for max/avg files, pages, visits
+   and KBytes in monthly statistics.
+
+ o Updated generated HTML code to fully comply with the HTML 4.0
+   Transitional spec.  DOCTYPE header reflects this change as well.
+
+ o Changed code to use 4 digit years in filenames.  Purely for the
+   Y2K phobes who couldn't deal with only two digits (even though
+   it was _purely_ for humans, the program couldn't care less).
+   Unfortunately, this means that you will have to rename previous
+   month files to the new format.  Not a big deal if you plan on
+   re-running all your logs to take advantage of the new features.
+
+ o Major changes to both history file and incremental file formats
+   to handle additional totals (pages/visits data).  As a result,
+   this version is INCOMPATABLE with previous versions.  See the
+   file README.FIRST for important information on upgrading.
+
+ o Language files and documentation updated for new functions.
+
+--------------------------------------------------------------------
+1.22-xx changes from 1.20-11   (brad@mrunix.net)
+--------------------------------------------------------------------
+
+Fixes:
+ o Fixed bug in country total generation.  Caused country table
+   to show bogus entries if logs contain hostnames that were not
+   fully qualified (ie: don't have the domain name/TLD portion).
+
+ o Changed/fixed incremental data I/O routines to better detect and
+   handle error conditions.  This involved some minor incremental
+   data file format changes as well.  Fixes problem large sites were
+   having where random tables were getting munged.
+
+ o Fixed record parse code to better detect and strip query portion
+   from URL's and Referrer strings.
+
+ o Fixed segfault condition when more than MAX_CTRY entries were
+   specified for the "Top Countries" table.
+
+Changes/Additions:
+ o Added code to detect negative byte transfer sizes in logs (another
+   netscape server kludge :)  Could cause KByte xfer sizes to become
+   corrupt.
+
+ o Several small changes (mostly ifdef/endif's) to make code compile
+   clean 'out-of-the-box' across more platforms (ala SunOS).  Also
+   added a GNU autoconf 'configure' script which helps a bit as well.
+
+ o Added Include* keywords.  Allows forcing the inclusion of specified
+   log records.  Takes precedence over counterpart Ignore* keywords.
+
+ o Added HTMLPre, HTMLBody, HTMLEnd and HTMLExtension keywords, and
+   changed behaviour of HTMLHead keyword.  Previous versions need
+   only change the 'HTMLHead' keword in existing files to 'HTMLBody'
+   to upgrade.  Thanks to Colin Viebrock <cmv@privateworld.com> for
+   the idea and code examples.
+
+ o Changed mangle agent code to support Opera and other browsers.
+   Also updated response codes to IETF HTTP/1.1 Rev 6 draft.
+   Thanks to Yves Lafon <ylafon@w3.org> for this these.
+
+ o Added HistoryName and IncrementalName keywords, which allow the
+   specification of the history and incremental data filenames.
+
+ o Added UseHTTPS keyword, which allows using 'https://' instead
+   of 'http://' for links to URLS in the 'Top URL's' table.  Also
+   added check for URL's that already have the protocol specified
+   (such as on virtual web and proxy servers), and to use unmodified
+   if found (will only force to lowercase for matching).
+
+ o Added code to ignore out-of-sequence log records.
+
+ o Added code to force hostnames to lowercase (was causing country skew).
+
+ o Disabled display of blank (zero hit) days at start of daily stat table.
+
+ o Added records per second calculation to timing totals.
+
+ o ALT= tags now use translated strings instead of forcing english.
+
+ o Updated documentation for new functions/features.
+
+--------------------------------------------------------------------
+1.20-xx changes from 1.12-10   (brad@mrunix.net)
+--------------------------------------------------------------------
+
+Fixes:
+ o Modified record parse routine to not touch stuff between quotes
+   (").  Was causing problems parsing some malformed request fields.
+
+ o Fixed memory leak in MangleAgent code, and relocated to elimitate
+   un-necessary processing (causing segfault on some machines).
+
+Changes/Additions:
+ o Changed transfer totals on host/url structures to support large
+   groupings (such as *.gif) on heavly hit servers.  Hopefully, this
+   should cure the 32bit overflow problem large sites were having.
+
+ o Changed daily transfer totals to support transfers greater than
+   roughly 4.2 gigabytes a day.
+
+ o Added some missing HTML tags and altered the way totals are
+   calculated on the 'Top' tables (to correct for grouped records).
+
+ o Added incremental run capability (-p command line option or
+   "Incremental" configuration file keyword).
+
+--------------------------------------------------------------------
+1.1x-xx changes from 1.00-05   (brad@mrunix.net)
+--------------------------------------------------------------------
+
+Fixes:
+ o Re-wrote the Group* logic, fixing a bug that allowed hiding of
+   objects when they shouldn't be.
+
+ o Fixed broken IgnoreReferrer code.
+
+ o Modified config parse code to handle extended characters.
+
+ o Misc. minor bug fixes/changes.  Added a missing fclose.
+
+ o Cleaned up generated HTML.
+
+ o Fixed duplicate warnings on large referrer fields.
+
+ o Fixed country table bug adding grouped records to totals.
+
+Changes/Additions:
+ o Added GroupSite, GroupReferrer and GroupAgent keywords to round
+   out the Group* configuration options.
+
+ o Added GroupShading and GroupHighlight keywords to allow selective
+   highlight and shading on grouped rows in table.
+
+ o Removed the '-L' command line option.  Groupings can now only
+   be specified from a configuration file.  Language files changed
+   to reflect change.
+
+ o Added '-V' command line option (identical to '-v') for version.
+
+ o Added additional language support.  Language files will be marked
+   /* New for 1.1 */ where changes have been made.
+
+ o Various rewrites to streamline the code, accomidate the new
+   group options and make things easier down the road when I implement
+   incremental (partial log) processing.
+
+ o Usual README and CHANGES documentation updates.
+
+--------------------------------------------------------------------
+1.00-xx changes from 0.99-06   (brad@mrunix.net)
+--------------------------------------------------------------------
+
+Fixes:
+ o Modify record parser so that spaces in usernames (auth field)
+   don't cause record to be skipped (w/'Bad Record' message).
+
+ o Included various error conditions that were being ignored in
+   the timing statistics ('bad records' value) totals.
+
+Changes/Additions:
+ o Added GMTTime (-g) option to force display of timestamps in
+   GMT (UTC) time instead of local timezone.
+
+ o Added GroupURL (-L) option for grouping of URL's as if they
+   were a single object.  See README for details.
+
+ o Language support in the form of a language specific header
+   file containing all strings used by The Webalizer.  English
+   file is used by default unless changed.  Support for other
+   languages will be distributed as I receive them.
+
+--------------------------------------------------------------------
+0.99-xx changes from 0.98-16   (brad@mrunix.net)
+--------------------------------------------------------------------
+
+0.99 is mostly a bug-fix release, with a few added extra goodies.
+
+Fixes:
+ o Fixed monthly total transfer size (silent) overflow problem.
+
+ o Fixed the numerous fprintf format errors.  Only seemed to wreak havok
+   on non-intel machines though.
+
+ o Fixed core dump condition on certain machines when using stdin for
+   input.
+
+ o Fixed floating point code that caused divide by zero errors on some
+   platforms (most noticably on SCO OpenServer).
+
+ o Netscape server kludges:  Added code to deal with Netscape log header
+   record gracefully.  Also added workaround for timestamp error where
+   Netscape sometimes makes a day have 0-24 hours instead of 0-23.  The
+   Webalizer will now treat anything greater than 23 as 0.
+
+ o Resized some fixed field sizes to gain memory usage improvements.
+
+Changes/Additions:
+ o Ignore* config keywords added.  This allows you to completely ignore
+   certain log records based on site name, URL, user agent or referrer.
+   * Use will cause inaccurate statistics results.  See documentation.
+
+ o ReallyQuiet config keyword (-Q command line option) added.  Causes
+   The Webalizer to supress _all_ messages.  Useful for cron jobs.
+
+ o Removed the "Sites" total at the bottom of the summary by month.
+   The total for sites is a useless number and produces a misleadingly
+   high value which detracts from the accuracy of the other totals.
+
+ o Updated README and CHANGES

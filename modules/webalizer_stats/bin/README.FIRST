@@ -1,0 +1,192 @@
+Upgrade information for the Webalizer Version 2.01
+
+If you are using incremental mode, the data format for Version 2.01
+is incompatable with previous versions, so you should remove your data
+file (webalizer.current) and re-process from the beginning of the
+month to recreate it.  If you do not use incremental mode, then
+V2.00 should be a drop in replacement for 1.3x-xx, with the possible
+exception of the two changed command line switches, -g and -F.  In
+addition, there has been a number of new configuration keywords and
+command line options added.  Please see the CHANGES file for additional
+information regarding what has changed between versions.  You may also
+want to take a look at the DNS.README file for information on the new
+reverse DNS lookup capabilities.
+
+***********
+* NOTICE! *
+*********** Version 1.30 and higher are INCOMPATABLE with any and
+all previous versions of this program. File names have been changed,
+and file formats have been modified.  If you are upgrading from
+a previous version,  please read this ENTIRE DOCUMENT before you
+proceed, as it contains important information that you will need.
+
+Note: If you plan on re-processing all of your logs so they will
+contain the new statistics, you can safely ignore the rest of
+this document (although you really should read it anyway...).
+
+
+QUICK UPGRADE INSTRUCTIONS:
+
+1) If you use incremental mode, read the section below, then
+   delete your current incremental data file (webalizer.current).
+
+2) Modify your history file (webalizer.hist) as described below.
+
+3) Add any new configuration options that you want to your
+   configuration file(s).  (See sample.conf for examples)
+
+4) Rename existing files to use 4 digit year (see below).
+
+5) Re-process your logs from beginning of the month (minimum).
+
+
+INCREMENTAL PROCESSING CHANGE
+
+The incremental file format has changed, therefore you MUST
+REMOVE your current incremental file before running this
+version.  Doing so will also force you to re-process all logs
+from the beginning of the month, so if you have a large
+site, you may want to wait until the end/beginning of the
+month to perform the upgrade.
+
+
+HISTORY FILE CHANGE
+
+The history file format changed as well.  In order to use your
+existing history file, you must manually edit it to add two
+additional numbers to the end of each line.  These numbers
+represent the total 'pages' and 'visits' for that particular
+month.  You can do this using any standard text editor.
+
+For example, if your existing history file looks like:
+
+3 1999 56614 24758 234 180875 5 31
+4 1999 156711 90240 1529 931048 1 30
+
+You should change it to look like:
+
+3 1999 56614 24758 234 180875 5 31 0 0
+4 1999 156711 90240 1529 931048 1 30 0 0
+
+Notice the extra two zeros ('0') at the end of each line.  There
+will be _at most_ 12 lines for you to change.  You could of course
+put some fake values (or real ones if you have them) and they
+will show up on the main index page.  If you have access to a
+unix command prompt and sed, you could also simply type:
+
+cat webalizer.hist | sed "s/$/ 0 0/g" > webalizer.hist.tmp
+mv webalizer.hist.tmp webalizer.hist
+
+For those curious, the format of the history line is:
+Month# Year# Hits Files Sites KBytes Fdom Ldom Pages Visits
+(Fdom=First Ldom=Last day of month processed)
+
+Note: It may be possible to leave your existing history file
+in place, and the first run with the new version will convert
+it to the new format.  It works on my linux system, it may
+not work on yours...  It depends on how your particular platform
+handles the missing data.  Probably better to not chance it ;)
+
+
+CONFIGURATION FILE CHANGES
+
+Several new configuration and command line options have been
+added.  The default values for these should be suitable for
+most users,   however you might want to at least define the
+PageType extensions for your particular system (default is to
+use '.htm*' and '.cgi' extensions).  You should refer to the
+CHANGES file to see what has been changed/added. See the files
+README and sample.conf for additional details.
+
+
+GENERATED FILE NAME CHANGES
+
+Previous versions of the Webalizer created html and image files
+using a format that included the month and year as two digit
+strings (ie: 0399).  Even though the filenames themselves were
+_only_ for humans, the Y2K scare has people freaked out over
+such behaviour, and I'm tired of getting all the email about it :)
+As a result, any existing files need to be renamed to include
+the extra two digits.  The old format was MMYY, new format is
+YYYYMM (and now they will sort correctly in directory listings :)
+For example, change the file "usage_0599.html"to "usage_199905.html".
+Image files for previous months do not need to be changed unless you
+change the links in the previous month HTML pages as well.  The
+current month files will be automatically generated with the correct
+names.
+
+Mike Glover submitted this little shell script that helps automate the
+updating of files/filenames:
+
+------------------------ CUT HERE ------------------------
+#!/bin/sh
+#
+# Mike Glover
+# mpg4@duluoz.net
+#
+# fixalizer.sh -- automatically upgrade webalizer data files
+
+START=`pwd`
+
+#for each domain...
+while [ "$1" ]; do
+  DOM=$1
+  echo "Updating $DOM"
+  cd $DOM
+
+  # we don't use incremental mode, so don't worry about it
+
+  # modify the history files
+  cat webalizer.hist | sed "s/$/ 0 0/g" > tempfile
+  mv tempfile webalizer.hist 
+
+  # don't worry about new configuration options
+
+  # rename existing files to use 4 digit year.
+  for ENT in *usage_*; do
+    #fixes most names
+    NEW=`echo $ENT | sed 's/\(^.*_\)\([0-9]\{2\}\)\([0-9]\{1,2\}\)/\119\3\2/g'`
+    #pesky y2k names need repairs
+    NEW2=`echo $NEW | sed 's/\(^.*_\)\(190\)\([0-9]\{2\}\)/\12000\3/g'`
+    mv $ENT $NEW2
+  done
+
+  # next iteration
+  cd $START
+  shift
+done
+------------------------ CUT HERE ------------------------
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+The remainder of this document contains the prior V1.22 upgrade info.
+This should only be of interest to those who are upgrading from older
+versions of the software and need to see those changes as well.
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+Upgrade Information for Webalizer V1.21 and higher
+
+Some significant changes have occured between V1.20 and V1.21 of
+the Webalizer.  Additional configuration keywords have been added
+and incremental processing has been modified.  Due to these changes,
+the following must be observed:
+
+Old incremental data files are no longer compatable with the new
+version.  Remove any existing incremental data files before running
+the new version.  This version also adds the ability to define the
+name and location of the incremental data file.  It will default to
+the normal name and location (webalizer.current in the specified
+output directory), however can be changed to an alternate location.
+See "IncrementalName" and "HistoryName" configuration directives.
+Note: you may check existing data files by looking at the first
+line of the file... if it doesn't start with "# Webalizer ", then
+it is an old style file and needs to be removed.
+
+The configuration file has changed, however the only significant
+difference is the definition of the HTMLHead keyword, which has
+been changed in this version.  If you were using the HTMLHead
+keyword in previous versions, change it to "HTMLBody", in order
+to have it work as expected (as in previous versions).  See the
+README file for additional information.
+

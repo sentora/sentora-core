@@ -1,0 +1,185 @@
+The Webalizer - A log file analysis program  -- DNS information
+
+The webalizer now has the ability to perform reverse DNS lookups.  This
+document attempts to explain how it works and some things that you should
+be aware of when using the DNS lookup features.
+
+Note: The Reverse DNS feature may be enabled or disabled at compile
+      time.  It is enabled by using the -DUSE_DNS compiler switch, or
+      by specifing '--enable-dns' when "configure' is run.  DNS lookups
+      are disabled by default.
+      
+Another Note: DNS lookups will not work under Windows yet, see the
+      README.WIN file for more information.
+
+
+How it works
+------------
+
+DNS lookups are made against a DNS cache file containing IP addresses
+and resolved names.  If the IP address is not found in the cache file,
+it will be left as an IP address.  In order for this to happen, a
+cache file MUST be specified when the Webalizer is run, either using
+the '-D' command line switch, or a "DNSCache" configuration file
+keyword.  If no cache file is specified, no attempts to perform DNS
+lookups will be done. The cache file can be made in two different ways.
+
+1) You can have the Webalizer pre-process the specified log file at
+   run-time, creating the cache file before processing the log file
+   normally.  This is done by setting the number of DNS Children
+   processes to run, either by using the '-N' command line switch or
+   the "DNSChildren" configuration keyword.  This will cause the
+   Webalizer to spawn the specified number of processes which will
+   be used to do reverse DNS lookups.. generally, a larger number
+   of processes will result in faster resolution of the log, however
+   if set too high may cause overall system degredation.  A setting
+   of between 5 and 20 should be acceptable, and there is a maximum
+   limit of 100.   If used, a cache filename MUST be specified also,
+   using either the '-D' command line switch, or the "DNSCache"
+   configuration keyword.  Using this method, normal processing will
+   continue only after all IP addresses have been processed, and the
+   cache file is created/updated.
+
+2) You can pre-process the log file as a standalone process, creating
+   the cache file that will be used later by the Webalizer.  This is
+   done by running the Webalizer with a name of 'webazolver' (ie: the
+   name 'webazolver' is a symbolic link to 'webalizer') and specifing
+   the cache filename (either with '-D' or DNSCache).   If the number
+   of child processes is not given, the default of 5 will be used. In
+   this mode, the log will be read and processed, creating a DNS cache
+   file or updating an existing one, and the program will then exit
+   without any further processing.
+
+
+Run-time DNS cache file creation/update
+---------------------------------------
+
+The creation/update of a DNS cache file at run-time occurs as follows:
+
+1) The log file is read, creating a list of all IP addresses that are
+   not already cached and need to be resolved.
+
+2) The specified number of children processes are forked, and are used
+   to perform DNS lookups.
+
+3) Each IP address is given, one at a time, to the next available child
+   process until all IP addresses have been processed.  Each child will
+   update the cache file when a name is found.
+
+4) Once all IP addresses have been processed and the cache file updated,
+   the Webalizer will process the log normally.  Each record it finds
+   that has an unresolved IP address will be looked up in the cache file
+   to see if a hostname is available (ie: was previously found).
+
+Because there may be a significant amount of time between the inital
+unresolved IP list and normal processing, the Webalizer should not be
+run against live log files (ie: a log file that is activly being written
+to by a server), otherwise there may be additional records present that
+were not resolved.
+
+
+Stand-Alone DNS cache file creation/update
+------------------------------------------
+
+The creation/update of the DNS cache file, when run in stand-alone mode,
+occurs as follows:
+
+1) The log file is read, creating a list of all IP addresses that are
+   not already cached and need to be resolved.
+
+2) The specified number of children processes are forked, and are used
+   to perform DNS lookups.  If the number of processes was not specified,
+   the default of 5 will be used.
+
+3) Each IP address is given, one at a time, to the next available child
+   process until all IP addresses have been processed.  Each child will
+   update the cache file when a name is found.
+
+4) Once all IP addresses have been processed and the cache file updated,
+   the program will terminate without any further processing.
+
+
+Larger sites may prefer to use a stand-alone process to create the DNS
+cache file, and then run the Webalizer against the cache file.  This
+allows a single cache file to be used for many virtual hosts, and reduces
+the processing needed if many sites are being processed.  The Webalizer
+can be used in stand alone mode by running it as 'webazolver'.  When
+run in this fashion, it will only create the cache file and then exit
+without any further processing.  A cache filename MUST be specified,
+however unlike when running the Webalizer normally, the number of child
+processes does not have to be given (will default to 5).  All normal
+configuration and command line options are recognized, however, many
+of them will simply be ignored.. this allows the use of a standard
+configuration file for both normal use and stand alone use.
+
+
+Examples:
+---------
+
+webalizer -c test.conf -N 10 -D dns_cache.db /var/log/my_www_log
+
+   This will use the configuration file 'test.conf' to obtain normal
+   configuration options such as hostname and output directory.. it
+   will then either create or update the file 'dns_cache.db' in the
+   default output directory (using 10 child processes) based on the
+   IP addresses it finds in the log /var/lib/my_www_log, and then
+   process that log file normally.
+
+
+webalizer -o out -D dns_cache.db /var/log/my_www_log
+
+  This will process the log file /var/log/my_www_log, resolving IP
+  addresses from the cache file 'dns_cache.db' found in the default
+  output directory "out".  The cache file must be present as it will
+  not be created with this command.
+
+
+for i in /var/log/*/access_log; do
+  webazolver -N 20 -D /var/lib/dns_cache.db $i
+done
+
+  The above is an example of how to run through multiple log files
+  creating a single DNS cache file.. this might be typically used on
+  a larger site that has many virtual hosts, all keeping their log
+  files in a seperate directory.  It will process each access_log it
+  finds in /var/log/* and create a cache file (var/lib/dns_cache.db).
+  This cache file can then be used to process the logs normally with
+  with the Webalizer.
+
+
+for i in /etc/webalizer/*.conf; do webalizer -c $i -D /etc/cache.db; done
+
+  This will process each configuration file found in /etc/webalizer,
+  using the DNS cache file /etc/cache.db.  This will also typically be
+  used on a larger site with multiple hosts..  Each configration file
+  will specify a site specific log file, hostname, output directory, etc.
+  The cache file used will typically be created using a command similar
+  to the one previous to this example.
+
+
+Considerations
+--------------
+
+Processing of live log files is discouraged, as the chances of log records
+being written between the time of DNS resolution and normal processing will
+cause problems.
+
+Cached DNS addresses have a TTL (time to live) of 3 days.  This may be
+changed at compile time by editing the dns_resolv.h header file and
+changing the value for DNS_CACHE_TTL.
+
+There is an absolute maximum of 100 child processes that may be created,
+however the actual number of children should be significantly less than
+the maximum.. typical usage should be between 5 and 20.
+
+If you are using STDIN for the input stream (log file) and have run-time
+DNS cache file creation/update enabled.. the program will exit after the
+cache file has been created/updated and no output will be produced.  If
+you must use STDIN for the input log, you will need to process the stream
+twice, once to create/update the cache file, and again to produce the
+reports.
+
+Special thanks to Henning P. Schmiedehausen <hps@tanstaafl.de> for the
+original dns-resolver code he submitted,  which was the basis for this
+implementation.
+
