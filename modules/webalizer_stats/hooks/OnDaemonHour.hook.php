@@ -6,9 +6,9 @@
  *
  */
 
-	GenerateVisitorStats();
+	GenerateWebalizerStats();
 
-	function GenerateVisitorStats(){
+	function GenerateWebalizerStats(){
 		include('cnf/db.php');
 		$z_db_user = $user;
 		$z_db_pass = $pass;
