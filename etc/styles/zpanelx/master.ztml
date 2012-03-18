@@ -8,17 +8,17 @@
 
 
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.min.js"></script>
-	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>
+		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>
         <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.cookie.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
         <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
 		
-	<!-- TOOL TIPS (Styles title="" in links into nice boxes) -->
-	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
-	<!-- END TOOL TIPS -->
+		<!-- TOOL TIPS (Styles title="" in links into nice boxes) -->
+		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
+		<!-- END TOOL TIPS -->
 		
     	<!-- JQUERY NAVBAR REQUIREMENTS -->
-	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
+		<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
     	<script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.js"></script>
 		<!-- END JQUERY NAVBAR REQUIREMENTS -->
 		
