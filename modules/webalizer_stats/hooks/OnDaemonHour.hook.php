@@ -5,8 +5,13 @@
  * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
  *
  */
-
-	GenerateWebalizerStats();
+	echo fs_filehandler::NewLine() . "BEGIN Webalizer Stats" . fs_filehandler::NewLine();
+		if (ui_module::CheckModuleEnabled('Webalizer Stats')){
+			GenerateWebalizerStats();
+		} else {
+			echo "Webalizer Stats Module DISABLED." . fs_filehandler::NewLine();
+		}
+	echo "END Webalizer Stats" . fs_filehandler::NewLine();
 
 	function GenerateWebalizerStats(){
 		include('cnf/db.php');
@@ -19,7 +24,6 @@
 		}
         $sql = $zdbh->prepare("SELECT * FROM x_vhosts LEFT JOIN x_accounts ON x_vhosts.vh_acc_fk=x_accounts.ac_id_pk WHERE vh_deleted_ts IS NULL");
         $sql->execute();
-		echo fs_filehandler::NewLine() . "BEGIN WEBALIZER STATS" . fs_filehandler::NewLine();
 		echo "Generating webalizer stats html..." . fs_filehandler::NewLine();
         while ($rowvhost = $sql->fetch()) {
         	if (!file_exists(ctrl_options::GetOption('zpanel_root') . "modules/webalizer_stats/stats/" . $rowvhost['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'])) {
@@ -34,6 +38,5 @@
 			echo "Generating stats for: " . $rowvhost['ac_user_vc'] . "/" . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
         	system($runcommand);
 		}
-		echo fs_filehandler::NewLine() . "END WEBALIZER STATS" . fs_filehandler::NewLine();
 	}
 ?>
