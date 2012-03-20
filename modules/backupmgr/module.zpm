@@ -22,9 +22,9 @@
 <% endif %>
 </div>
 
-<% if BackUpList %>
 <div class="zgrid_wrapper">
 <h2><: Backup Archives :></h2>
+<% if BackUpList %>
 <% if PurgeDate %>
 <p><: Archived files will automatically be deleted when they are older than :> <b><@ PurgeDate @></b> <: days :>.</p>
 <% endif %>
@@ -52,6 +52,12 @@
 	<% endloop %>
     </table>
 </form>
-</div>
+<% else %>
+<% if DiskAllowed %>
+<p><: You have no backups at this time.  If you have just created a backup then try refreshing :>: <a href="./?module=backupmgr" title="<: Refresh archive list :>"><: Refresh archive list :></a></p>
+<% else %>
+<p><: Backup to disk is not enabled on the server. You may still download backups directly to your computer through your browser. :>
 <% endif %>
+<% endif %>
+</div>
 </div>

@@ -49,18 +49,24 @@ class module_controller {
             sort($dirFiles);
             foreach ($dirFiles as $file) {
                 $filesize = fs_director::ShowHumanFileSize(filesize($backupdir . $file));
-                $splitfile = explode("_", $file);
-                $filedate = $splitfile[1];
-                //$filecreated = date("M-d-Y", mktime(0, 0, 0, substr($filedate, 2, -2), substr($filedate, 0, -4), substr($filedate, -2)));
-                $filecreated = $splitfile[1];
+				$filedate = date ("F d Y H:i:s", filemtime($backupdir . $file)); 
                 array_push($res, array('backupfile' => substr($file, 0, -4),
-                    'created' => $filecreated,
-                    'filesize' => $filesize));
+                    					'created'   => $filedate,
+                    					'filesize'  => $filesize));
             }
         }
+		self::array_sort_by_column($res, 'created');
         return $res;
     }
 
+	static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+    	$sort_col = array();
+    	foreach ($arr as $key=> $row) {
+        	$sort_col[$key] = $row[$col];
+    	}
+    	array_multisort($sort_col, $dir, $arr);
+	}
+	
     static function CheckHasData($userid) {
         $currentuser = ctrl_users::GetUserDetail($userid);
         $datafolder = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/";
