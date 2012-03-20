@@ -61,34 +61,13 @@
 	    $dbvals = $rows->fetch();
 		if ($backup = ExecuteBackup($userid, $dbvals['ac_user_vc'], $download)){
 			echo "<p>Ready to download file: <b>" .basename($backup) . "<b></p>";
-			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" value=\"".$backup."\" id=\"getfile\" name=\"".$backup."\" onClick=\"return GetDownload();\">Download Now</button>";
+			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='http://".$_SERVER["HTTP_HOST"]."/modules/backupmgr/temp/".basename($backup)."';return false;\">Download Now</button>";
 			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" value=\"Close Window\" onClick=\"return window.close()\">Close Window</button>";
 		} else {
 			echo "Could not find user!";
 		}
-	} else {
-		$userid = NULL;
 	}
 	
-	function test($userid, $username, $download = 0) {
-		include($_SERVER['DOCUMENT_ROOT'] . '/cnf/db.php');
-		try {	
-			$zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $user, $pass);
-		} catch (PDOException $e) {
-			exit();
-		}
-		$homedir = ctrl_options::GetOption('hosted_dir') . $username;
-		$backupname = $username . "_" . date("M-d-Y_hms", time());
-        $dbstamp = date("dmy_Gi", time());
-		
-		echo $homedir . "<BR>";
-		echo $backupname . "<BR>";
-		echo $dbstamp = date("dmy_Gi", time()) . "<BR>";
-		echo ctrl_options::GetOption('temp_dir') . "<BR>";
-		echo fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html") . "<BR>";
-		echo $bkcommand = ctrl_options::GetOption('mysqldump_exe') . " -h " . $host . " -u " . $user . " -p" . $pass . " --no-create-db  > " . ctrl_options::GetOption('temp_dir') . "_" . $dbstamp . ".sql" . "<BR>";
-		return true;
-	}
 
 	function ExecuteBackup($userid, $username, $download = 0) {
 		include($_SERVER['DOCUMENT_ROOT'] . '/cnf/db.php');
@@ -100,16 +79,20 @@
 		if (!is_dir(ctrl_options::GetOption('temp_dir'))) {
         	fs_director::CreateDirectory(ctrl_options::GetOption('temp_dir'));
         }
+		if (!is_dir(ctrl_options::GetOption('zpanel_root') . "/modules/backupmgr/temp/")) {
+        	fs_director::CreateDirectory(ctrl_options::GetOption('zpanel_root') . "/modules/backupmgr/temp/");
+        }
+		$temp_dir = ctrl_options::GetOption('zpanel_root') . "/modules/backupmgr/temp/";
         // Lets grab and archive the user's web data....
         $homedir = ctrl_options::GetOption('hosted_dir') . $username;
         $backupname = $username . "_" . date("M-d-Y_hms", time());
         $dbstamp = date("dmy_Gi", time());
         // We now see what the OS is before we work out what compression command to use..
         if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-            $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " a -tzip -y-r " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
+            $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " a -tzip -y-r " . $temp_dir . $backupname . ".zip " . $homedir . "/public_html"));
         } else {//cd /var/zpanel/hostdata/zadmin/; zip -r backups/backup.zip public_html/
-            $resault = exec("cd ".$homedir ."/ && " . ctrl_options::GetOption('zip_exe') . " -r9 " . ctrl_options::GetOption('temp_dir') . $backupname . " public_html/*");
-            @chmod(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", 0777);
+            $resault = exec("cd ".$homedir ."/ && " . ctrl_options::GetOption('zip_exe') . " -r9 " . $temp_dir . $backupname . " public_html/*");
+            @chmod($temp_dir . $backupname . ".zip", 0777);
         }
         // Now lets backup all MySQL datbases for the user and add them to the archive...
         $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL";
@@ -118,20 +101,20 @@
                 $sql = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL");
                 $sql->execute();
                 while ($row_mysql = $sql->fetch()) {
-                    $bkcommand = ctrl_options::GetOption('mysqldump_exe') . " -h " . $host . " -u " . $user . " -p" . $pass . " --no-create-db " . $row_mysql['my_name_vc'] . " > " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql";
+                    $bkcommand = ctrl_options::GetOption('mysqldump_exe') . " -h " . $host . " -u " . $user . " -p" . $pass . " --no-create-db " . $row_mysql['my_name_vc'] . " > " . $temp_dir . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql";
                     passthru($bkcommand);
                     // Add it to the ZIP archive...
                     if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-                        $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " u " . ctrl_options::GetOption('temp_dir') . $backupname . ".zip " . ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql"));
+                        $resault = exec(fs_director::SlashesToWin(ctrl_options::GetOption('zip_exe') . " u " . $temp_dir . $backupname . ".zip " . $temp_dir . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql"));
                     } else {
-                        $resault = exec("cd ".ctrl_options::GetOption('temp_dir') ."/ && " . ctrl_options::GetOption('zip_exe') . " " . ctrl_options::GetOption('temp_dir') . $backupname . "  " .$row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
+                        $resault = exec("cd ".$temp_dir ."/ && " . ctrl_options::GetOption('zip_exe') . " " . $temp_dir . $backupname . "  " .$row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
                     }
-                    unlink(ctrl_options::GetOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
+                    unlink($temp_dir . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql");
                 }
             }
         }
         // We have the backup now lets output it to disk or download
-        if (file_exists(ctrl_options::GetOption('temp_dir') . $backupname . ".zip")) {
+        if (file_exists($temp_dir . $backupname . ".zip")) {
 
             // If Disk based backups are allowed in backup config
             if (strtolower(ctrl_options::GetOption('disk_bu')) == "true") {
@@ -140,15 +123,15 @@
                 if (!is_dir($backupdir)) {
                     fs_director::CreateDirectory($backupdir);
                 }
-                copy(ctrl_options::GetOption('temp_dir') . $backupname . ".zip", $backupdir . $backupname . ".zip");
+                copy($temp_dir . $backupname . ".zip", $backupdir . $backupname . ".zip");
                 fs_director::SetFileSystemPermissions($backupdir . $backupname . ".zip", 0777);
             } else {
-                $backupdir = ctrl_options::GetOption('temp_dir');
+                $backupdir = $temp_dir;
             }
 
             // If Client has checked to download file
             if ($download <> 0) {
-			/*
+			/* Ajax not supporting headers - changed to link in temp dir.
                 if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                     # Now we send the output (Windows)...
                     header('Pragma: public');
@@ -176,11 +159,13 @@
                     readfile_chunked($file);
                 }
 				*/
-				return ctrl_options::GetOption('temp_dir') . $backupname . ".zip";
+            	fs_director::SetFileSystemPermissions($backupdir . $backupname . ".zip", 0777);
+				return $temp_dir . $backupname . ".zip";
             }
-           unlink(ctrl_options::GetOption('temp_dir') . $backupname . ".zip");
+            unlink($temp_dir . $backupname . ".zip");
         } else {
-            //self::$filenotexist = true;
+			echo "File not found in temp directory!";
+            return FALSE;
         }
 		return TRUE;
     }

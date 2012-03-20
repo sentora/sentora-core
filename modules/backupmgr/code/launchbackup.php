@@ -62,36 +62,6 @@ $currentuser = ctrl_users::GetUserDetail($userid);
     	}); 
 	})
 </script>
-<script type="text/javascript">
-$(document).ready(function() { 
- $("#getfile").live('click',function(e){
- e.preventDefault();
- 		$filename = $("#getfile").attr("name");
-        $url = "getdownload.php?file="+$filename+"";
-        $.ajax({
-            type: 'GET',
-            url: $url,
-            success: function(data){
-                   if(data == true){
-                    alert('This file is not available for download.');
-                   }else{
-                    window.location =""+$url+"";
-                   }
-            }
- 
-        })
- });
-})
-</script>
-<script type="text/javascript">
-$(window).resize(function(){
-  $('#container').css({
-    position:'absolute',
-    left: ($(window).width() - $('#container').outerWidth())/2,
-    top: ($(window).height() - $('#container').outerHeight())/2
-  });
-});
-</script>
 <?php 
 function dirSize($directory) {
     $size = 0;
