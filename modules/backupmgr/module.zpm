@@ -9,30 +9,13 @@
 <div class="zform_wrapper">
 <h2><: Backup your hosting account files :></h2>
 <% if HasData %>
-<form action="./?module=backupmgr&action=Backup" method="post">
-	<% if DiskAllowed %>
+<form name="LaunchBackup" action="modules/backupmgr/code/launchbackup.php?id=<@ UserID @>" target="backup" method="post" onsubmit="var w=window.open('', 'backup', 'scrollbars=no,menubar=no,height=300,width=600,resizable=no,toolbar=no,location=no,status=no'); w.focus();">
     <table class="zform">
         <tr>
-        	<th nowrap="nowrap"><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inBackUp" value="<@ UserID @>"><: Backup Now :></button></th>
-        	<td><: Backups your data whilst you wait and then prompt's you to download the backup archive. Backups are also saved in your home directory. :></td>
-	    </tr>
-        <tr>
-	        <th></th>
-	        <td><input type="checkbox" name="inDownLoad" id="inDownLoad" value="1" /> <b><: Prompt to download when finished? :></b></td>
-        </tr>
-    </table>
-	<% else %>
-    <table class="zform">
-        <tr>
-        	<th nowrap="nowrap"><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inBackUp" value="<@ UserID @>"><: Backup Now :></button></th>
+        	<th nowrap="nowrap"><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inBackUp" value="<@ UserID @>"><: Launch :></button></th>
         	<td><: Backups your data whilst you wait and then prompt's you to download the backup archive. :></td>
 	    </tr>
-        <tr>
-	        <th></th>
-	        <td><input type="hidden" name="inDownLoad" id="inDownLoad" value="1" /></td>
-        </tr>
-    </table>	
-	<% endif %>
+    </table>
 </form>
 <% else %>
 	<: There are no files in your public folder to back up. :>
