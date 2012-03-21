@@ -76,7 +76,21 @@ class module_controller {
                 }
 
                 $line .= "</tr>";
+				$numline = 0;
                 while ($modules = $modsql->fetch()) {
+				  if ($numline == 20){
+                  	$line .= "<tr>";
+                  	$line .= "<th></th>";
+                  	$line .= "<th>" . ui_language::translate("Module") . "</th>";
+	                $line .= "<th>" . ui_language::translate("On") . "/" . ui_language::translate("Off") . "</th>";
+	                $line .= "<th>" . ui_language::translate("Category") . "</th>";
+	                $line .= "<th style=\"text-align:center\">" . ui_language::translate("Up-to-date?") . "</th>";
+	                $groupssql = $zdbh->query("SELECT * FROM x_groups ORDER BY ug_name_vc ASC");
+	                while ($groups = $groupssql->fetch()) {
+	                    $line .= "<th style=\"text-align:center\">" . $groups['ug_name_vc'] . "</th>";
+	                }
+					$line .= "</tr>";				
+				  }
                     $ismodadmin = 0;
                     $line .= "<tr>";
                     $line .= "<td>" . self::ModuleStatusIcon($modules['mo_id_pk']) . "</td>";
@@ -153,7 +167,11 @@ class module_controller {
                         }
                     }
                     $line .= "</tr>";
-                }
+					$numline++;
+					if ($numline == 21){
+						$numline = 0;					
+					}
+				}
                 $line .= "</table><br>";
                 $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSave\" value=\"inSave\">" . ui_language::translate("Save changes") . "</button></form>";
             } else {
