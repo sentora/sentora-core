@@ -24,6 +24,7 @@ if (strtolower(ctrl_options::GetOption('schedule_bu')) == "true") {
         $bsql = $zdbh->prepare($bsql);
         $bsql->execute();
         while ($rowclients = $bsql->fetch()) {
+		echo "Backing up client folder: ".$rowclients['ac_user_vc']."/public_html..." . fs_filehandler::NewLine();
             // User loop
             $username = $rowclients['ac_user_vc'];
             $userid = $rowclients['ac_id_pk'];
@@ -114,6 +115,33 @@ if (strtolower(ctrl_options::GetOption('purge_bu')) == "true") {
     echo "Backup Purging COMPLETE..." . fs_filehandler::NewLine();
     runtime_hook::Execute('OnAfterPurgeBackup');
 }
+
+
+	// Clean temp backups....
+    echo fs_filehandler::NewLine() . "Purging backups from temp folder..." . fs_filehandler::NewLine();
+    clearstatcache();
+    echo "[FILE][PURGE_DATE][FILE_DATE][ACTION]" . fs_filehandler::NewLine();
+    $temp_dir = ctrl_options::GetOption('zpanel_root') . "/modules/backupmgr/temp/";
+    if ($handle = @opendir($temp_dir)) {
+    	while (false !== ($file = readdir($handle))) {
+        	if ($file != "." && $file != "..") {
+            	$filetime = @filemtime($temp_dir . $file);
+                if ($filetime == NULL) {
+                	$filetime = @filemtime(utf8_decode($temp_dir . $file));
+                }
+                $filetime = floor((time() - $filetime) / 86400);
+                echo "" . $file . " - " . $purge_date . " - " . $filetime . "";
+                if (1 <= $filetime) {
+                	//delete the file
+                    echo " - Deleting file..." . fs_filehandler::NewLine();
+                    unlink($temp_dir . $file);
+                } else {
+                    echo " - Skipping file..." . fs_filehandler::NewLine();
+                }
+            }
+        }
+    }
+
 
 
 
