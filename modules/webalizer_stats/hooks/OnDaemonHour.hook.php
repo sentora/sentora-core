@@ -14,14 +14,7 @@
 	echo "END Webalizer Stats" . fs_filehandler::NewLine();
 
 	function GenerateWebalizerStats(){
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-			$zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-
-		}
+		global $zdbh;
         $sql = $zdbh->prepare("SELECT * FROM x_vhosts LEFT JOIN x_accounts ON x_vhosts.vh_acc_fk=x_accounts.ac_id_pk WHERE vh_deleted_ts IS NULL");
         $sql->execute();
 		echo "Generating webalizer stats html..." . fs_filehandler::NewLine();

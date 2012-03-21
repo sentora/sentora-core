@@ -114,6 +114,8 @@
 			}
 				
             //Domain is enabled
+			//Line1: Domain enabled - Client also is enabled.
+			//Line2: Domain enabled - Client may be disabled, but 'Allow Disabled' = 'true' in apache settings.
             if ($rowvhost['vh_enabled_in'] == 1 && ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || 
 			    $rowvhost['vh_enabled_in'] == 1 && ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")){
 
@@ -210,7 +212,7 @@
 				/*
 				* ##################################################
 				* #
-				* # Regular domain
+				* # Regular or Sub domain
 				* #
 				* ##################################################
 				*/
@@ -411,10 +413,10 @@
 						echo "" . $file . " - " . $purge_date ." - " . $filetime . "";
 						if ($purge_date < $filetime){
 							//delete the file
-							echo " - Deleting file...\r\n";
+							echo " - Deleting file..." . fs_filehandler::NewLine();
 							unlink(ctrl_options::GetOption('apache_budir') . $file);
 						} else {
-							echo " - Skipping file...\r\n";
+							echo " - Skipping file..." . fs_filehandler::NewLine();
 						}
     	      		}
 	       		}

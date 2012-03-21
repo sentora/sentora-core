@@ -3,14 +3,7 @@
 	DeleteDNSRecordsForDeletedClient();
 	
     function DeleteDNSRecordsForDeletedClient() {
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {
-		    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		
-		}
+		global $zdbh;
 		$deletedclients = array();
         $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_deleted_ts IS NOT NULL";
         if ($numrows = $zdbh->query($sql)) {
@@ -37,14 +30,7 @@
 	
 	
     function TriggerDNSUpdate($id) {
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {
-		    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		
-		}
+		global $zdbh;
         $GetRecords = ctrl_options::GetOption('dns_hasupdates');
 		$records = explode(",", $GetRecords);
 		foreach ($records as $record){

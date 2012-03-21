@@ -22,14 +22,7 @@
 
 
 	function WriteDNSZoneRecordsHook() {
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {
-		    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		    
-		}
+		global $zdbh;
 		$dnsrecords = array();
         $RecordsNeedingUpdateArray = array();
 		//Get all the records needing upadated and put them in an array.
@@ -111,14 +104,7 @@
 
 
 	function WriteDNSNamedHook() {
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {
-		    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		    
-		}
+		global $zdbh;
 		$domains = array();	
         //Get all the domain ID's we need and put them in an array.
         $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_deleted_ts IS NULL";
@@ -161,14 +147,7 @@
 
 
 	function ResetDNSRecordsUpatedHook() {
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {
-		    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		    
-		}
+		global $zdbh;
 	    $sql = $zdbh->prepare("UPDATE x_settings SET so_value_tx=NULL WHERE so_name_vc='dns_hasupdates'");
         $sql->execute();	
 	}
@@ -176,14 +155,7 @@
 
 
 	function PurgeOldZoneDNSRecordsHook() {
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {
-		    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		
-		}
+		global $zdbh;
 		$domains = array();
         $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {

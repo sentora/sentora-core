@@ -3,14 +3,7 @@
 	DeleteClientDatabaseUser();
 
     function DeleteClientDatabaseUser() {
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-			$zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-
-		}
+		global $zdbh;
         $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NOT NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
