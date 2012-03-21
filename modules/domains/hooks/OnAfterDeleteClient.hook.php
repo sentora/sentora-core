@@ -1,6 +1,9 @@
 <?php
-	
+	echo fs_filehandler::NewLine() . "START Domain hook" . fs_filehandler::NewLine();
+	echo "A client has been DELETED..." . fs_filehandler::NewLine();
+	echo "Removing domains for deleted all clients..." . fs_filehandler::NewLine();
 	DeleteDomainsForDeletedClient();
+	echo "END Domain hook" . fs_filehandler::NewLine();		
 	
     function DeleteDomainsForDeletedClient() {
 		global $zdbh;

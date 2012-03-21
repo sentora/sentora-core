@@ -1,6 +1,8 @@
 <?php
-	
+	echo fs_filehandler::NewLine() . "START MySQL Users hook" . fs_filehandler::NewLine();
+	echo "A client has been DELETED - Removing MySQL users for all deleted clients..." . fs_filehandler::NewLine();
 	DeleteClientDatabaseUser();
+	echo "END MySQL Users hook" . fs_filehandler::NewLine();	
 
     function DeleteClientDatabaseUser() {
 		global $zdbh;
