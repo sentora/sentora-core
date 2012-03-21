@@ -1,10 +1,8 @@
 <?php
-	echo fs_filehandler::NewLine() . "START Cron hook" . fs_filehandler::NewLine();
-	echo "A client has been DELETED - Updating cron file..." . fs_filehandler::NewLine();
-	echo "Removing all crons for deleted users..." . fs_filehandler::NewLine();
+
 	DeleteClientCronjobs();
 	WriteCronFile();
-	echo "END Cron hook" . fs_filehandler::NewLine();
+
 		
 	function WriteCronFile() {
 		global $zdbh;

@@ -1,9 +1,7 @@
 <?php
 
-	echo fs_filehandler::NewLine() . "START DNS Manager hook" . fs_filehandler::NewLine();
-	echo "Removing DNS records for deleted parked domain..." . fs_filehandler::NewLine();
 	DeleteDNSRecordsForDeletedDomain();
-	echo "END DNS Manager hook" . fs_filehandler::NewLine();
+
 	
     function DeleteDNSRecordsForDeletedDomain() {
 		global $zdbh;

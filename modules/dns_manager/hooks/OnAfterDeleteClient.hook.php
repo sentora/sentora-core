@@ -1,9 +1,7 @@
 <?php
-	echo fs_filehandler::NewLine() . "START DNS Manager hook" . fs_filehandler::NewLine();
-	echo "A client has been DELETED..." . fs_filehandler::NewLine();
-	echo "Removing DNS records for deleted all clients..." . fs_filehandler::NewLine();
+
 	DeleteDNSRecordsForDeletedClient();
-	echo "END DNS Manager hook" . fs_filehandler::NewLine();	
+
 	
     function DeleteDNSRecordsForDeletedClient() {
 		global $zdbh;

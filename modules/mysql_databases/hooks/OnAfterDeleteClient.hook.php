@@ -1,8 +1,7 @@
 <?php
-	echo fs_filehandler::NewLine() . "START MySQL Databases hook" . fs_filehandler::NewLine();
-	echo "A client has been DELETED - Removing MySQL databases for all deleted clients..." . fs_filehandler::NewLine();
+
 	DeleteClientDatabases();
-	echo "END MySQL Databases hook" . fs_filehandler::NewLine();	
+	
 
     function DeleteClientDatabases() {
 		global $zdbh;

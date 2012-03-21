@@ -1,8 +1,7 @@
 <?php
-	echo fs_filehandler::NewLine() . "START Cron hook" . fs_filehandler::NewLine();
-	echo "A client has been DISABLED - Updating cron file..." . fs_filehandler::NewLine();
+
 	WriteCronFile();
-	echo "END Cron hook" . fs_filehandler::NewLine();
+
 	
 	function WriteCronFile() {
 		global $zdbh;

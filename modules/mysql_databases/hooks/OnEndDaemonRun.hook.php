@@ -1,8 +1,7 @@
 <?php
-	echo fs_filehandler::NewLine() . "START MySQL Databases hook" . fs_filehandler::NewLine();
-	echo "Adding current MySQL database sizes to the user's current disk space..." . fs_filehandler::NewLine();
+
 	AddCurrentDatabaseSize();
-	echo "END MySQL Databases hook" . fs_filehandler::NewLine();
+
 
 	/*
 	 * Add the current MySQL database sizes to the user's current disk space amount.

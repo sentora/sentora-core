@@ -1,9 +1,7 @@
 <?php
-	echo fs_filehandler::NewLine() . "START Parked Domain hook" . fs_filehandler::NewLine();
-	echo "A client has been DELETED..." . fs_filehandler::NewLine();
-	echo "Removing parked domains for deleted all clients..." . fs_filehandler::NewLine();
+
 	DeleteParkedDomainsForDeletedClient();
-	echo "END Parked Domain hook" . fs_filehandler::NewLine();		
+		
 	
     function DeleteParkedDomainsForDeletedClient() {
 		global $zdbh;
