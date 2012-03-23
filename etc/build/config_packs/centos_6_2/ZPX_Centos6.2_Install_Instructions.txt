@@ -66,7 +66,7 @@ SET ZPANEL APACHE CONFIG:
 	edit /etc/httpd/conf/httpd.conf change Docroot to:
 	DocumentRoot "/etc/zpanel/panel"
 
-	edit /etc/zpanel/configs/apache/http-vhosts.cfg
+	edit /etc/zpanel/configs/apache/httpd-vhosts.cfg
 	ServerAdmin ZPANELADMIN@YOURDOMAIN.COM
 	DocumentRoot "/etc/zpanel/panel/"
 	ServerName CONTROLPANEL.YOURDOMAIN.COM
@@ -97,9 +97,6 @@ POSTFIX-DOVECOT:
 	echo "dovecot   unix  -       n       n       -       -       pipe" >> /etc/postfix/master.cf
 	echo '  flags=DRhu user=vmail:mail argv=/usr/libexec/dovecot/deliver -d ${recipient}' >> /etc/postfix/master.cf
 	
-	mv /etc/postfix/main.cf /etc/postfix/main.old
-	cp /etc/zpanel/configs/postfix/conf/main.cf /etc/postfix/main.cf
-	
 	edit these files and add mysql root and password:
 		/etc/zpanel/configs/postfix/conf/dovecot-sql.conf
 		/etc/zpanel/configs/postfix/conf/mysql_relay_domains_maps.cf
@@ -109,6 +106,9 @@ POSTFIX-DOVECOT:
 		/etc/zpanel/configs/postfix/conf/mysql_virtual_mailbox_maps.cf
 		/etc/zpanel/configs/postfix/conf/mysql_virtual_transport.cf
 		
+	mv /etc/postfix/main.cf /etc/postfix/main.old
+	cp /etc/zpanel/configs/postfix/conf/main.cf /etc/postfix/main.cf
+	cp /etc/zpanel/configs/postfix/conf/dovecot-sql.conf /etc/postfix/dovecot-sql.conf
 	mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.old
 	cp /etc/zpanel/configs/dovecot2/dovecot.conf /etc/dovecot/dovecot.conf
 	

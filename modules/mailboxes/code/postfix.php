@@ -34,7 +34,7 @@
 	
 		}
 
-		// Adding hMail Mailboxes
+		// Adding PostFix Mailboxes
 		if (!fs_director::CheckForEmptyValue(self::$create)) {
 			$result = $mail_db->query("SELECT domain FROM domain WHERE domain='" . $domain . "'")->Fetch();
 			if (!$result) {
@@ -101,7 +101,7 @@
 			}
 		}
 		
-		// Deleting hMail Mailboxes
+		// Deleting PostFix Mailboxes
 		if (!fs_director::CheckForEmptyValue(self::$delete)) {
         	$sql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
             $sql->execute();
@@ -109,7 +109,7 @@
 			$sql->execute();
 		}
 				
-		//Saving hMail Mailboxes
+		//Saving PostFix Mailboxes
 		if (!fs_director::CheckForEmptyValue(self::$update)) {
 			if (!fs_director::CheckForEmptyValue($password)) {
             	$sql = $mail_db->prepare("UPDATE mailbox SET password='{PLAIN-MD5}" . md5($password) . "' WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
