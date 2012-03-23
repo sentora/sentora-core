@@ -141,11 +141,11 @@ debugger_command =
 #########################################################################
 # ZPANEL CONFIGURATION
 #########################################################################
-#transport_maps                = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_transport.cf
-#relay_domains                 = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_relay_domains_maps.cf
-virtual_alias_maps             = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_alias_maps.cf
-virtual_mailbox_domains        = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_domains_maps.cf
-virtual_mailbox_maps           = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_mailbox_maps.cf
+#transport_maps                = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_transport.cf
+#relay_domains                 = mysql:/etc/zpanel/configs/postfix/conf/mysql_relay_domains_maps.cf
+virtual_alias_maps             = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains        = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps           = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_mailbox_maps.cf
 virtual_mailbox_limit          = 51200000
 virtual_minimum_uid            = 5000
 virtual_uid_maps               = static:5000
@@ -154,7 +154,7 @@ virtual_mailbox_base           = /var/zpanel/vmail
 virtual_transport              = virtual
 virtual_create_maildirsize     = yes
 virtual_mailbox_extended       = yes
-virtual_mailbox_limit_maps     = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_mailbox_limit_maps.cf
+virtual_mailbox_limit_maps     = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_mailbox_limit_maps.cf
 virtual_mailbox_limit_override = yes
 virtual_maildir_limit_message  = Sorry, the user's maildir has no space available in their inbox.
 virtual_overquota_bounce       = yes

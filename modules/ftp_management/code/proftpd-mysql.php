@@ -82,7 +82,7 @@
 												'');");
 			$sql->execute();
 		}
-		// Included after account is created
+		// Included after account is deleted
 		if (!fs_director::CheckForEmptyValue(self::$delete)) {
 			$sql = $ftp_db->prepare("DELETE FROM ftpuser 
 									 WHERE

@@ -10,7 +10,7 @@
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 $host = "localhost";
-$dbname = "zpanel";
+$dbname = "zpanel_core";
 $user = "root";
 $pass = "";
 ?>
