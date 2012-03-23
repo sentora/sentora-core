@@ -146,6 +146,10 @@
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usergroup #></span></td>
                                                             </tr>
                                                             <tr>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong>Last Logon:</strong></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_lastlogon #></span></td>
+                                                            </tr>
+                                                            <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
                                                                 <td nowrap="nowrap">&nbsp;</td>
                                                             </tr>

@@ -44,6 +44,7 @@ class ctrl_users {
         $userdetail->addItemValue('enabled', $dbvals['ac_enabled_in']);
         $userdetail->addItemValue('usertheme', $dbvals['ac_usertheme_vc']);
         $userdetail->addItemValue('usercss', $dbvals['ac_usercss_vc']);
+		$userdetail->addItemValue('lastlogon', $dbvals['ac_lastlogon_ts']);
         $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
         $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
         $userdetail->addItemValue('usergroup', $dbvals['ug_name_vc']);
