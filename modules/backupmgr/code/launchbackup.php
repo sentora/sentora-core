@@ -1,14 +1,14 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT'] . '/cnf/db.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/db/driver.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/debug/logger.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/runtime/dataobject.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/sys/versions.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/ctrl/options.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/ctrl/auth.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/ctrl/users.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/fs/director.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/inc/dbc.inc.php');
+include('../../../cnf/db.php');
+include('../../../dryden/db/driver.class.php');
+include('../../../dryden/debug/logger.class.php');
+include('../../../dryden/runtime/dataobject.class.php');
+include('../../../dryden/sys/versions.class.php');
+include('../../../dryden/ctrl/options.class.php');
+include('../../../dryden/ctrl/auth.class.php');
+include('../../../dryden/ctrl/users.class.php');
+include('../../../dryden/fs/director.class.php');
+include('../../../inc/dbc.inc.php');
 try {	
 	$zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $user, $pass);
 } catch (PDOException $e) {

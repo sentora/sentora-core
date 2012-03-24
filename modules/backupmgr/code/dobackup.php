@@ -27,16 +27,16 @@
  echo "<script src=\"http://code.jquery.com/jquery-latest.js\"></script>";
 	set_time_limit(0);
 	ini_set('memory_limit', '256M');
-	include($_SERVER['DOCUMENT_ROOT'] . '/cnf/db.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/db/driver.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/debug/logger.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/runtime/dataobject.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/runtime/hook.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/sys/versions.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/ctrl/options.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/fs/director.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/dryden/fs/filehandler.class.php');
-	include($_SERVER['DOCUMENT_ROOT'] . '/inc/dbc.inc.php');
+	require('../../../cnf/db.php');
+	include('../../../dryden/db/driver.class.php');
+	include('../../../dryden/debug/logger.class.php');
+	include('../../../dryden/runtime/dataobject.class.php');
+	include('../../../dryden/runtime/hook.class.php');
+	include('../../../dryden/sys/versions.class.php');
+	include('../../../dryden/ctrl/options.class.php');
+	include('../../../dryden/fs/director.class.php');
+	include('../../../dryden/fs/filehandler.class.php');
+	include('../../../inc/dbc.inc.php');
 	try {	
 		$zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $user, $pass);
 	} catch (PDOException $e) {
@@ -70,7 +70,7 @@
 	
 
 	function ExecuteBackup($userid, $username, $download = 0) {
-		include($_SERVER['DOCUMENT_ROOT'] . '/cnf/db.php');
+		include('../../../cnf/db.php');
 		try {	
 			$zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $user, $pass);
 		} catch (PDOException $e) {
