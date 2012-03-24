@@ -36,8 +36,6 @@ MAIN PACKAGES:
 	sudo chmod -R g+s /var/zpanel
 	sudo chmod -R 777 /etc/zpanel/
 	sudo chmod -R 777 /var/zpanel/
-	sudo chown root /etc/zpanel/panel/bin/zsudo
-	sudo chmod 4777 /etc/zpanel/panel/bin/zsudo
 	chmod 644 /etc/zpanel/panel/etc/apps/phpmyadmin/config.inc.php
 	
 CONFIGURE MYSQL
@@ -97,7 +95,7 @@ POSTFIX-DOVECOT:
 	echo "dovecot   unix  -       n       n       -       -       pipe" >> /etc/postfix/master.cf
 	echo '  flags=DRhu user=vmail:mail argv=/usr/libexec/dovecot/deliver -d ${recipient}' >> /etc/postfix/master.cf
 	
-	edit these files and add mysql root and password:
+	*Edit these files and add mysql root and password:
 		/etc/zpanel/configs/postfix/conf/dovecot-sql.conf
 		/etc/zpanel/configs/postfix/conf/mysql_relay_domains_maps.cf
 		/etc/zpanel/configs/postfix/conf/mysql_virtual_alias_maps.cf
@@ -161,13 +159,21 @@ BIND:
 	CONFIGURE BIND AS NEEDED - ONCE RUNNING INCLUDE ZPANEL NAMED PATH
 	echo 'include "/etc/zpanel/configs/bind/etc/named.conf";' >> /etc/named.conf
 
+	
+ZPANEL ZSUDO:
+	# Must be owned by root with 4777 permissions, or zsudo will not work!
+	cc -o /etc/zpanel/panel/bin/zsudo /etc/zpanel/configs/bin/zsudo.c
+	sudo chown root /etc/zpanel/panel/bin/zsudo
+	chmod +s /etc/zpanel/panel/bin/zsudo
 
+	
 ZPANEL DAEMON:
 	touch /etc/cron.d/zdaemon
 	echo "*/5 * * * * root /usr/bin/php -q /etc/zpanel/panel/bin/daemon.php >> /dev/null 2>&1" >> /etc/cron.d/zdaemon
 	# Permissions must be 644 or cron will not run!
 	sudo chmod 644 /etc/cron.d/zdaemon
 	service crond restart
+	
 	
 REBOOT SERVER
 	Browse to http://CONTROLPANEL.YOURDOMAIN.COM (Or by your server IP) http://xxx.xxx.xxx.xxx
