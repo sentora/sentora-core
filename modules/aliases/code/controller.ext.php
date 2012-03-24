@@ -172,11 +172,11 @@ class module_controller {
 		$destination = strtolower(str_replace(' ', '', $destination));
 		if (fs_director::CheckForEmptyValue($address)){
 			self::$noaddress = true;
-			return true;
+			return false;
 		}
 		if (!self::IsValidEmail($fulladdress)){
 			self::$validemail = true;
-			return true;
+			return false;
 		}
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc='" . $fulladdress . "' AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
