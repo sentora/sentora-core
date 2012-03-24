@@ -48,6 +48,7 @@ $currentuser = ctrl_users::GetUserDetail($userid);
 </form>
 </div>
 <div id="BackupResult" style="display:block;height:100%;margin:auto;">
+Compressing your data, please wait...<br><img src='../assets/bar.gif'>
 </div>
 
 </div>
