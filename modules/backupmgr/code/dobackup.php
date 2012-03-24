@@ -24,6 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+ 
  echo "<script src=\"http://code.jquery.com/jquery-latest.js\"></script>";
 	set_time_limit(0);
 	ini_set('memory_limit', '256M');
@@ -48,6 +49,8 @@
 		$download = 0;	
 	}
 	if (isset($_GET['id']) && $_GET['id'] != ""){
+		session_start();  
+	 if ($_SESSION['zpuid'] == $_GET['id']){
 		$userid = $_GET['id'];
 	    $rows = $zdbh->prepare("
 	    	SELECT * FROM x_accounts 
@@ -59,13 +62,19 @@
 	        ");
 	    $rows->execute();
 	    $dbvals = $rows->fetch();
-		if ($backup = ExecuteBackup($userid, $dbvals['ac_user_vc'], $download)){
-			echo "<p>Ready to download file: <b>" .basename($backup) . "<b></p>";
-			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='temp/".basename($backup)."';return false;\">Download Now</button>";
-			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" value=\"Close Window\" onClick=\"return window.close()\">Close Window</button>";
-		} else {
-			echo "Could not find user!";
-		}
+
+			if ($backup = ExecuteBackup($userid, $dbvals['ac_user_vc'], $download)){
+				echo "<p>Ready to download file: <b>" .basename($backup) . "<b></p>";
+				echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='../../../etc/tmp/".basename($backup)."';return false;\">Download Now</button>";
+				echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" value=\"Close Window\" onClick=\"return window.close()\">Close Window</button>";
+			} else {
+				echo "Could not find user!";
+			}
+
+	 } else {
+		echo "<h2>Unauthorized Access!</h2>";
+		echo "You have no permission to view this module.";
+	 }
 	}
 	
 
@@ -79,10 +88,10 @@
 		if (!is_dir(ctrl_options::GetOption('temp_dir'))) {
         	fs_director::CreateDirectory(ctrl_options::GetOption('temp_dir'));
         }
-		if (!is_dir(ctrl_options::GetOption('zpanel_root') . "/modules/backupmgr/temp/")) {
-        	fs_director::CreateDirectory(ctrl_options::GetOption('zpanel_root') . "/modules/backupmgr/temp/");
+		if (!is_dir(ctrl_options::GetOption('zpanel_root') . "etc/tmp/")) {
+        	fs_director::CreateDirectory(ctrl_options::GetOption('zpanel_root') . "etc/tmp/");
         }
-		$temp_dir = ctrl_options::GetOption('zpanel_root') . "/modules/backupmgr/temp/";
+		$temp_dir = ctrl_options::GetOption('zpanel_root') . "etc/tmp/";
         // Lets grab and archive the user's web data....
         $homedir = ctrl_options::GetOption('hosted_dir') . $username;
         $backupname = $username . "_" . date("M-d-Y_hms", time());

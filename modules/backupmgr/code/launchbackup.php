@@ -19,6 +19,8 @@ if (isset($_GET['id'])){
 } else {
 	$userid = NULL;
 }
+session_start();  
+if ($_SESSION['zpuid'] == $userid){
 $currentuser = ctrl_users::GetUserDetail($userid);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -52,7 +54,13 @@ $currentuser = ctrl_users::GetUserDetail($userid);
 </div>
 </body>
 </html>
-
+<?php
+} else { ?>
+<body style="background: #F3F3F3;">
+<h2>Unauthorized Access!</h2>
+You have no permission to view this module.
+</body>
+<?php } ?>
 <script type="text/javascript">
 	$(document).ready(function() { 
 		$("#BackupResult").hide();
