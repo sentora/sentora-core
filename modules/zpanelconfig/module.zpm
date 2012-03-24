@@ -24,4 +24,21 @@
 		</form>
 	</div>
 
+	<div class="zgrid_wrapper">
+		<h2><: ZPanel Daemon :></h2>
+		<form action="./?module=zpanelconfig&action=ForceDaemon" method="post">
+		<table class="zgrid">
+			<tr valign="top">
+				<th nowrap="nowrap"><: Last Daemon Run :>:</th><td><@ LastRunTime @></td>
+			</tr>
+			<tr valign="top">
+				<th nowrap="nowrap"><: Next Daemon Run :>:</th><td><@ NextRunTime @></td>
+			</tr>
+			<tr>
+				<th><: Force Full Daemon Run :>:</th><td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inForceFull"><: Go :></button></td>
+			</tr>
+		</table>
+		</form>
+	</div>
+
 </div>

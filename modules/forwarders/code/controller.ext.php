@@ -167,7 +167,7 @@ class module_controller {
 		$destination = strtolower(str_replace(' ', '', $dname . "@" . $ddomain));
 		if (fs_director::CheckForEmptyValue($address)){
 			self::$noaddress = true;
-			return true;
+			return false;
 		}
 		if (!self::IsValidEmail($destination)){
 			self::$validemail = true;

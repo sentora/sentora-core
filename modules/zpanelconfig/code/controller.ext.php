@@ -55,6 +55,15 @@ class module_controller {
         }
     }
 
+    static function getLastRunTime(){
+        return date(ctrl_options::GetOption('zpanel_df'),ctrl_options::GetOption('daemon_lastrun'));
+    }
+    
+    static function getNextRunTime(){
+        $new_time = ctrl_options::GetOption('daemon_lastrun') + ctrl_options::GetOption('daemon_run_interval');
+        return date(ctrl_options::GetOption('zpanel_df'),$new_time);
+    }
+	
     static function doUpdateConfig() {
         global $zdbh;
         global $controller;
@@ -70,6 +79,20 @@ class module_controller {
                 }
             }
         }
+        self::$ok = true;
+    }
+
+    static function doForceDaemon() {
+		global $zdbh;
+        global $controller;
+        $formvars = $controller->GetAllControllerRequests('FORM');
+		if (isset($formvars['inForceFull'])){
+        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_lastrun'");
+            $sql->execute();			
+		}
+		if (isset($formvars['inRunDaemon'])){
+			
+		}
         self::$ok = true;
     }
 
