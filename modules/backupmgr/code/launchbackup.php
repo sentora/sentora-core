@@ -26,7 +26,7 @@ $currentuser = ctrl_users::GetUserDetail($userid);
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>ZPanel &gt; Back-Ups</title>
-<link href="http://<?php echo $_SERVER['HTTP_HOST']; ?>/etc/styles/<?php echo $currentuser['usertheme']; ?>/css/<?php echo $currentuser['usercss']; ?>.css" rel="stylesheet" type="text/css">
+<link href="../../../etc/styles/<?php echo $currentuser['usertheme']; ?>/css/<?php echo $currentuser['usercss']; ?>.css" rel="stylesheet" type="text/css">
 <script src="../assets/ajaxsbmt.js" type="text/javascript"></script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <body style="background: #F3F3F3;">

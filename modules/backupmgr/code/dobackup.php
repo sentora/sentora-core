@@ -61,7 +61,7 @@
 	    $dbvals = $rows->fetch();
 		if ($backup = ExecuteBackup($userid, $dbvals['ac_user_vc'], $download)){
 			echo "<p>Ready to download file: <b>" .basename($backup) . "<b></p>";
-			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='http://".$_SERVER["HTTP_HOST"]."/modules/backupmgr/temp/".basename($backup)."';return false;\">Download Now</button>";
+			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='temp/".basename($backup)."';return false;\">Download Now</button>";
 			echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" value=\"Close Window\" onClick=\"return window.close()\">Close Window</button>";
 		} else {
 			echo "Could not find user!";
