@@ -17,6 +17,7 @@ PREPARING THE SERVER:
 	
 	yum update
 	
+	*May already be installed, but we will just make sure...
 	yum install sudo
 	yum install make
 	yum install zip

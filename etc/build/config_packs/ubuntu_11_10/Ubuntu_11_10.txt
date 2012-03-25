@@ -1,7 +1,14 @@
 Preparing the enviroment:-
 ===========================
+
+#Disable or remove apparmor
+sudo /etc/init.d/apparmor stop
+sudo update-rc.d -f apparmor remove
+sudo apt-get remove apparmor
+REBOOT
+
 Download and extract the archive to your machine (anywhere)
-	tar -xvf zpanel.tar.gz
+tar -xvf zpanel.tar.gz
 cd zpanel/etc/build/
 chmod +x prepare.sh
 ./prepare.sh
@@ -20,16 +27,76 @@ MySQL Server insatll:-
 apt-get install mysql-server mysql-server < I just do this seperatly out of personal preference.
 
 Web & PHP Install:-
-apt-get install apache2 libapache2-mod-php5 php5-common php5-suhosin php5-cli php5-mysql php5-gd php5-mcrypt
+apt-get install apache2 libapache2-mod-php5 libapache2-mod-bw php5-common php5-suhosin php5-cli php5-mysql php5-gd php5-mcrypt php5-curl php-pear php5-imap php5-xmlrpc php5-xsl zip webalizer
+
+SET ZPANEL DATABASE CONFIG:
+==========================
+	edit /etc/zpanel/panel/cnf/db.php
+	$host = "localhost";
+	$dbname = "zpanel_core";
+	$user = "root";
+	$pass = "YOUR_ROOT_MYSQL_PASSWORD";
+	
+	import zpanel database:
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/zpanel_core.sql
 
 Configure Apache Include:-
 ==========================
 To add the ZPanel generated Apache2 config, we need to add the following line:-
+edit /etc/apache2/apache2.conf
+comment out:
+#Include sites-enabled/
+add at bottom:
 Include /etc/zpanel/configs/apache/httpd.conf
+
+POSTFIX-DOVECOT:
+================
+	apt-get install postfix postfix-mysql dovecot-imapd dovecot-pop3d dovecot-common libsasl2-modules-sql libsasl2-modules (choose 'internet-site)
+	mkdir -p /var/zpanel/vmail
+	chmod -R 777 /var/zpanel/vmail
+	chmod -R g+s /var/zpanel/vmail
+	groupadd -g 5000 vmail
+	useradd -m -g vmail -u 5000 -d /var/zpanel/vmail -s /bin/bash vmail
+	chown -R vmail.vmail /var/zpanel/vmail
+	
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/postfix/zpanel_postfix.sql
+
+	# Postfix Master.cf
+	echo "# Dovecot LDA" >> /etc/postfix/master.cf
+	echo "dovecot   unix  -       n       n       -       -       pipe" >> /etc/postfix/master.cf
+	echo "  flags=DRhu user=vmail:mail argv=/usr/lib/dovecot/deliver -d ${recipient}" >> /etc/postfix/master.cf
+	
+	*Edit these files and add mysql root and password:
+		/etc/zpanel/configs/postfix/conf/dovecot-sql.conf
+		/etc/zpanel/configs/postfix/conf/mysql_relay_domains_maps.cf
+		/etc/zpanel/configs/postfix/conf/mysql_virtual_alias_maps.cf
+		/etc/zpanel/configs/postfix/conf/mysql_virtual_domains_maps.cf
+		/etc/zpanel/configs/postfix/conf/mysql_virtual_mailbox_limit_maps.cf
+		/etc/zpanel/configs/postfix/conf/mysql_virtual_mailbox_maps.cf
+		/etc/zpanel/configs/postfix/conf/mysql_virtual_transport.cf
+		
+	mv /etc/postfix/main.cf /etc/postfix/main.old
+	cp /etc/zpanel/configs/postfix/conf/main.cf /etc/postfix/main.cf
+	cp /etc/zpanel/configs/postfix/conf/dovecot-sql.conf /etc/postfix/dovecot-sql.conf
+	mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.old
+	cp /etc/zpanel/configs/dovecot2/dovecot.conf /etc/dovecot/dovecot.conf
+	
+	chkconfig --levels 345 postfix on
+	chkconfig --levels 345 dovecot on
+	service postfix start
+	service dovecot start
+	
+	*Server will need a reboot for postfix to be fully functional
+	
+	ROUNDCUBE
+	mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/roundcube/zpanel_roundcube.sql
+	edit /etc/zpanel/panel/etc/apps/webmail/config/db.inc.php
+	$rcmail_config['db_dsnw'] = 'mysql://root:YOUR_ROOT_MYSQL_PASSWORD@localhost/zpanel_roundcube';
 
 Install ProFTPD:-
 =================
 apt-get install proftpd-mod-mysql (When asked what mode, choose 'stand-alone')
+mysql -uroot -pYOUR_ROOT_MYSQL_PASSWORD < /etc/zpanel/configs/proftpd/zpanel_proftpd.sql
 groupadd -g 2001 ftpgroup
 useradd -u 2001 -s /bin/false -d /bin/null -c "proftpd user" -g ftpgroup ftpuser
 *** Edit /etc/zpanel/configs/proftpd/proftpd-mysql.conf, replace with your credentials: 
@@ -41,12 +108,26 @@ mv /etc/proftpd/proftpd.conf /etc/proftpd/proftpd.conf.orig
 touch /etc/proftpd.conf
 echo "include /etc/zpanel/configs/proftpd/proftpd-mysql.conf" >> /etc/proftpd/proftpd.conf
 touch /var/zpanel/logs/proftpd
-chmod -R 777 /var/zpanel/logs/proftpd
+chmod -R 644 /var/zpanel/logs/proftpd
 
 Install BIND DNS Server:-
 =========================
 apt-get install bind9 bind9utils
+mkdir /var/zpanel/logs/bind
+touch /var/zpanel/logs/bind/bind.log
+chmod -R 777 /var/zpanel/logs/bind/bind.log
+echo "include \"/etc/zpanel/configs/bind/etc/log.conf\";" >> /etc/bind/named.conf
 echo "include \"/etc/zpanel/configs/bind/etc/named.conf\";" >> /etc/bind/named.conf
+ln -s /etc/sbin/named-checkconf /usr/bin/named-checkconf
+ln -s /etc/sbin/named-checkzone /usr/bin/named-checkzone
+ln -s /etc/sbin/named-compilezone /usr/bin/named-compilezone
+
+ZPANEL ZSUDO:
+====================================
+# Must be owned by root with 4777 permissions, or zsudo will not work!
+cc -o /etc/zpanel/panel/bin/zsudo /etc/zpanel/configs/bin/zsudo.c
+sudo chown root /etc/zpanel/panel/bin/zsudo
+chmod +s /etc/zpanel/panel/bin/zsudo
 
 Setup the CRON job for the zdaemon:-
 ====================================
@@ -59,3 +140,8 @@ chmod 644 /etc/cron.d/zdaemon
 Registering the zppy client:-
 =============================
 ln -s /etc/zpanel/panel/bin/zppy /usr/bin/zppy
+
+REBOOT SERVER
+	Browse to http://CONTROLPANEL.YOURDOMAIN.COM (Or by your server IP) http://xxx.xxx.xxx.xxx
+	USER: zadmin
+	PASS: password (Change on 1st login!)

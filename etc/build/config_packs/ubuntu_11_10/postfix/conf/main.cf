@@ -4,15 +4,12 @@
 myhostname = control.yourdomain.com
 mydomain   = control.youromain.com
 myorigin   = $myhostname
-#########################################################################
-# MAIN CONFIGURATION
-#########################################################################
 mynetworks          = all
 inet_interfaces     = all
-mydestination       = $myhostname, localhost.$mydomain, localhost, $mydomain
+mydestination       = \$myhostname, localhost.\$mydomain, localhost, \$mydomain
 queue_directory     = /var/spool/postfix
 command_directory   = /usr/sbin
-daemon_directory    = /usr/libexec/postfix
+daemon_directory    = /usr/lib/postfix
 mail_owner          = postfix
 alias_maps          = hash:/etc/aliases
 alias_database      = hash:/etc/aliases
@@ -38,7 +35,7 @@ unknown_local_recipient_reject_code = 550
 #########################################################################
 smtpd_sasl_auth_enable         = yes
 broken_sasl_auth_clients       = yes
-smtpd_sasl_exceptions_networks = $mynetworks
+smtpd_sasl_exceptions_networks = \$mynetworks
 smtpd_sasl_type                = dovecot
 smtpd_sasl_path                = private/auth
 smtpd_sasl_security_options    = noanonymous
@@ -83,17 +80,17 @@ smtpd_data_restrictions        = reject_unauth_pipelining,
 #smtp_tls_cert_file                = /etc/pki/tls/certs/myserver.example.com.crt
 #smtp_tls_key_file                 = /etc/pki/tls/private/myserver.example.com.key
 ##Postfix 2.5 or greater must use:##
-##smtp_tls_session_cache_database  = btree:$data_directory/smtp_tls_session_cache
+##smtp_tls_session_cache_database  = btree:\$data_directory/smtp_tls_session_cache
 #smtp_tls_session_cache_database   = btree:/var/spool/postfix/smtp_tls_session_cache
 #smtp_tls_security_level = may
 #smtpd_tls_CAfile                  = /etc/pki/tls/certs/cert.pem
 #smtpd_tls_cert_file               = /etc/pki/tls/certs/myserver.example.com.crt
 #smtpd_tls_key_file                = /etc/pki/tls/private/myserver.example.com.key
 ##Postfix 2.5 or greater must use:##
-##smtpd_tls_session_cache_database = btree:$data_directory/smtpd_tls_session_cache
+##smtpd_tls_session_cache_database = btree:\$data_directory/smtpd_tls_session_cache
 #smtpd_tls_session_cache_database  = btree:/var/spool/postfix/smtpd_tls_session_cache
-#smtpd_tls_dh1024_param_file       = $config_directory/dh_1024.pem
-#smtpd_tls_dh512_param_file        = $config_directory/dh_512.pem
+#smtpd_tls_dh1024_param_file       = \$config_directory/dh_1024.pem
+#smtpd_tls_dh512_param_file        = \$config_directory/dh_512.pem
 #smtpd_tls_security_level          = may
 #smtpd_tls_received_header         = yes
 #smtpd_tls_ask_ccert               = yes
@@ -104,7 +101,7 @@ smtpd_data_restrictions        = reject_unauth_pipelining,
 #########################################################################
 #default_privs        = nobody
 #proxy_interfaces     = 1.2.3.4
-#relay_domains        = $mydestination
+#relay_domains        = \$mydestination
 #relayhost            = [gateway.my.domain]
 #relayhost            = [an.ip.add.ress]
 #relay_recipient_maps = hash:/etc/postfix/relay_recipients
@@ -115,10 +112,10 @@ smtpd_data_restrictions        = reject_unauth_pipelining,
 #mailbox_command      = /some/where/procmail
 #mailbox_transport    = cyrus
 #fallback_transport   = lmtp:unix:/var/lib/imap/socket/lmtp
-#luser_relay          = $user@other.host
+#luser_relay          = \$user@other.host
 #header_checks        = regexp:/etc/postfix/header_checks
-#fast_flush_domains   = $relay_domains
-#smtpd_banner         = $myhostname ESMTP  ()
+#fast_flush_domains   = \$relay_domains
+#smtpd_banner         = \$myhostname ESMTP $mail_name ($mail_version)
 #local_destination_concurrency_limit   = 2
 #default_destination_concurrency_limit = 20
 #########################################################################
@@ -128,24 +125,24 @@ smtpd_data_restrictions        = reject_unauth_pipelining,
 #debug_peer_list = some.domain
 debugger_command =
 	 PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
-	 xxgdb /$process_name $process_id & sleep 5
+	 xxgdb $daemon_directory/\$process_name \$process_id & sleep 5
 # debugger_command =
 #	PATH=/bin:/usr/bin:/usr/local/bin; export PATH; (echo cont;
-#	echo where) | gdb $daemon_directory/$process_name $process_id 2>&1
-#	>$config_directory/$process_name.$process_id.log & sleep 5
+#	echo where) | gdb \$daemon_directory/\$process_name \$process_id 2>&1
+#	>\$config_directory/\$process_name.\$process_id.log & sleep 5
 #
 # debugger_command =
 #	PATH=/bin:/usr/bin:/sbin:/usr/sbin; export PATH; screen
-#	-dmS $process_name gdb $daemon_directory/$process_name
-#	$process_id & sleep 1
+#	-dmS \$process_name gdb \$daemon_directory/\$process_name
+#	\$process_id & sleep 1
 #########################################################################
 # ZPANEL CONFIGURATION
 #########################################################################
-#transport_maps                = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_transport.cf
-#relay_domains                 = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_relay_domains_maps.cf
-virtual_alias_maps             = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_alias_maps.cf
-virtual_mailbox_domains        = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_domains_maps.cf
-virtual_mailbox_maps           = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_mailbox_maps.cf
+#transport_maps                = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_transport.cf
+#relay_domains                 = mysql:/etc/zpanel/configs/postfix/conf/mysql_relay_domains_maps.cf
+virtual_alias_maps             = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains        = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps           = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_mailbox_maps.cf
 virtual_mailbox_limit          = 51200000
 virtual_minimum_uid            = 5000
 virtual_uid_maps               = static:5000
@@ -154,7 +151,7 @@ virtual_mailbox_base           = /var/zpanel/vmail
 virtual_transport              = virtual
 virtual_create_maildirsize     = yes
 virtual_mailbox_extended       = yes
-virtual_mailbox_limit_maps     = mysql:/etc/zpanel/configs/centos_6_2/postfix/conf/mysql_virtual_mailbox_limit_maps.cf
+virtual_mailbox_limit_maps     = mysql:/etc/zpanel/configs/postfix/conf/mysql_virtual_mailbox_limit_maps.cf
 virtual_mailbox_limit_override = yes
 virtual_maildir_limit_message  = Sorry, the user's maildir has no space available in their inbox.
 virtual_overquota_bounce       = yes
