@@ -1,5 +1,5 @@
 user = root
-password = YOUR_ROOT_MYSQL_PASSWORD
+#password = YOUR_ROOT_MYSQL_PASSWORD
 hosts = 127.0.0.1
 dbname = zpanel_postfix
 table = domain
