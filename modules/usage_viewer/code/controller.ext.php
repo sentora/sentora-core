@@ -137,23 +137,59 @@ class module_controller {
 
         self::$diskquota = $currentuser['diskquota'];
         self::$diskspace = ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']);
-        self::$bandwidthquota = $currentuser['bandwidthquota'];
+        if (empty($currentuser['bandwidthquota'])) {
+            self::$bandwidthquota = 0;
+        } else {
+            self::$bandwidthquota = $currentuser['bandwidthquota'];
+        }
         self::$bandwidth = ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']);
-        self::$domainsquota = $currentuser['domainquota'];
+        if (empty($currentuser['domainquota'])) {
+            self::$domainsquota = 0;
+        } else {
+            self::$domainsquota = $currentuser['domainquota'];
+        }
         self::$domains = ctrl_users::GetQuotaUsages('domains', $currentuser['userid']);
-        self::$subdomainsquota = $currentuser['subdomainquota'];
+        if (empty($currentuser['subdomainquota'])) {
+            self::$subdomainsquota = 0;
+        } else {
+            self::$subdomainsquota = $currentuser['subdomainquota'];
+        }
         self::$subdomains = ctrl_users::GetQuotaUsages('subdomains', $currentuser['userid']);
-        self::$parkeddomainsquota = $currentuser['parkeddomainquota'];
+        if (empty($currentuser['parkeddomainquota'])) {
+            self::$parkeddomainsquota = 0;
+        } else {
+            self::$parkeddomainsquota = $currentuser['parkeddomainquota'];
+        }
         self::$parkeddomains = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
-        self::$mysqlquota = $currentuser['mysqlquota'];
+        if (empty($currentuser['mysqlquota'])) {
+            self::$mysqlquota = 0;
+        } else {
+            self::$mysqlquota = $currentuser['mysqlquota'];
+        }
         self::$mysql = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
-        self::$ftpaccountsquota = $currentuser['ftpaccountsquota'];
+        if (empty($currentuser['ftpaccountsquota'])) {
+            self::$ftpaccountsquota = 0;
+        } else {
+            self::$ftpaccountsquota = $currentuser['ftpaccountsquota'];
+        }
         self::$ftpaccounts = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
-        self::$mailboxquota = $currentuser['mailboxquota'];
+        if (empty($currentuser['mailboxquota'])) {
+            self::$mailboxquota = 0;
+        } else {
+            self::$mailboxquota = $currentuser['mailboxquota'];
+        }
         self::$mailboxes = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
-        self::$forwardersquota = $currentuser['forwardersquota'];
+        if (empty($currentuser['forwardersquota'])) {
+            self::$forwardersquota = 0;
+        } else {
+            self::$forwardersquota = $currentuser['forwardersquota'];
+        }
         self::$forwarders = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
-        self::$distrobutionlistsquota = $currentuser['distrobutionlistsquota'];
+        if (empty($currentuser['distrobutionlistsquota'])) {
+            self::$distrobutionlistsquota = 0;
+        } else {
+            self::$distrobutionlistsquota = $currentuser['distrobutionlistsquota'];
+        }
         self::$distlists = ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']);
 
         $total = self::$diskquota;
