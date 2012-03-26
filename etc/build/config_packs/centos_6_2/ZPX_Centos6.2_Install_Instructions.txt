@@ -30,7 +30,7 @@ MAIN PACKAGES:
 	DOWNLOAD EXTRACT ZPANEL
 	chmod +x /etc/zpanel/panel/etc/build/prepare.sh
 	/etc/zpanel/panel/etc/build/prepare.sh
-	cp /etc/zpanel/panel/etc/build/config_packs/centos_6_2/* /etc/zpanel/configs/
+	cp -R /etc/zpanel/panel/etc/build/config_packs/centos_6_2/* /etc/zpanel/configs/
 	sudo chown -R apache /etc/zpanel
 	sudo chmod -R g+s /etc/zpanel
 	sudo chown -R apache /var/zpanel
