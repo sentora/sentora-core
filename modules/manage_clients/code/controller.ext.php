@@ -154,16 +154,23 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-				if (strtoupper($currentuser['usergroup']) != "ADMINISTRATORS"){
-					if ($currentuser['usergroupid'] == $rowgroups['ug_id_pk'] || strtoupper($rowgroups['ug_name_vc']) == "USERS") {
-                		array_push($res, array('groupid'   => $rowgroups['ug_id_pk'],
-                    					   		'groupname' => ui_language::translate($rowgroups['ug_name_vc'])));
-					}
-				} else {
-                		array_push($res, array('groupid'   => $rowgroups['ug_id_pk'],
-                    					   		'groupname' => ui_language::translate($rowgroups['ug_name_vc'])));				
+				if (strtoupper($currentuser['usergroup']) == "ADMINISTRATORS"){
+					    $selected = "";
+		                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
+		                    $selected = " selected";
+		                }
+			            array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
+						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
+		                   					   'groupselected' => $selected));	
+		
+            	} else{
+					if (strtoupper($rowgroups['ug_name_vc']) == "USERS"){
+			            array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
+						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
+		                   					   'groupselected' => $selected));	
+					}		
 				}
-            }
+			}
             return $res;
         } else {
             return false;
@@ -181,24 +188,25 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-				if (strtoupper($reseller['usergroup']) != "ADMINISTRATORS"){
-					if ($reseller['usergroupid'] == $rowgroups['ug_id_pk'] || strtoupper($rowgroups['ug_name_vc']) == "USERS") {
-	                	$selected = "";
-		                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
-		                    $selected = " selected";
-		                }
-		                array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
-						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
-		                   					   'groupselected' => $selected));
-					}
-				} else{
+			if (strtoupper($reseller['usergroup']) == "ADMINISTRATORS"){
 					    $selected = "";
 		                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
 		                    $selected = " selected";
 		                }
 			            array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
 						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
+		                   					   'groupselected' => $selected));
+					
+				} else{
+					if (strtoupper($rowgroups['ug_name_vc']) == "USERS") {
+	                	$selected = "";
+		                if ($rowgroups['ug_id_pk'] == $currentuser['usergroupid']) {
+		                    $selected = " selected";
+		                }
+		                array_push($res, array('groupid'       => $rowgroups['ug_id_pk'],
+						                       'groupname'     => ui_language::translate($rowgroups['ug_name_vc']),
 		                   					   'groupselected' => $selected));			
+					}
 				}
             }
             return $res;

@@ -88,6 +88,12 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
 		if (isset($formvars['inForceFull'])){
         	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_lastrun'");
+            $sql->execute();
+        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_dayrun'");
+            $sql->execute();
+        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_weekrun'");
+            $sql->execute();
+        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_monthrun'");
             $sql->execute();			
 		}
 		if (isset($formvars['inRunDaemon'])){
