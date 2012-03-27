@@ -967,7 +967,7 @@ class module_controller {
             while ($numnew >= $id) {
                 if (isset($type['new_' . $id]) && !fs_director::CheckForEmptyValue($target['new_' . $id])) {
                     if ($delete['new_' . $id] != "true" && !fs_director::CheckForEmptyValue($type['new_' . $id])) {
-                        if (isset($hostName['new_' . $id]) && !fs_director::CheckForEmptyValue($hostName['new_' . $id])) {
+                        if (isset($hostName['new_' . $id]) /* && !fs_director::CheckForEmptyValue($hostName['new_' . $id]) */) {
                             $hostName_new = "'" . self::CleanRecord($hostName['new_' . $id], $type['new_' . $id]) . "'";
                         } else {
                             $hostName_new = "NULL";
@@ -1234,6 +1234,8 @@ class module_controller {
                             } elseif ($type['new_' . $id] == "TXT") {
                                 
                             } elseif ($type['new_' . $id] == "SPF") {
+							
+							} elseif ($type['new_' . $id] == "NS")  {
                                 
                             } else {
                                 if (!self::IsValidIP($target['new_' . $id])) {
@@ -1312,6 +1314,13 @@ class module_controller {
         } else {
             $data = str_replace(' ', '', $data);
         }
+		//Add '@' if hostname is blank on NS and MX records.
+		if ($type == 'NS' || $type == 'MX') {
+            if ($data == '') {
+            	$data = "@";
+            }
+		}
+
         $data = strtolower($data);
         return $data;
     }
