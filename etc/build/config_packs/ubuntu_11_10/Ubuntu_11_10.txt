@@ -139,13 +139,6 @@ chmod 644 /etc/cron.d/zdaemon
 
 ^ Must ensure the permissions are set to 644 or the job WILL NOT RUN!
 
-Create ZPanel Cron file and set permissions
-=============================================
-touch /var/spool/cron/crontabs/www-data
-sudo chmod 777 /var/spool/cron/crontabs
-sudo chown www-data /var/spool/cron/crontabs/www-data
-sudo chmod 644 /var/spool/cron/crontabs/www-data
-
 Registering the zppy client:-
 =============================
 ln -s /etc/zpanel/panel/bin/zppy /usr/bin/zppy

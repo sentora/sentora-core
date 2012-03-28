@@ -121,7 +121,7 @@ class module_controller {
 		$currentuser = ctrl_users::GetUserDetail();
 		if (fs_director::CheckForEmptyValue(self::CheckCronForErrors())){
 		
-    		# If the user submitted a 'new' request then we will simply add the cron task to the database...
+    		// If the user submitted a 'new' request then we will simply add the cron task to the database...
 	    	$sql = $zdbh->prepare("INSERT INTO x_cronjobs (ct_acc_fk,
 											ct_script_vc,
 											ct_description_tx,
@@ -171,28 +171,32 @@ class module_controller {
 		global $zdbh;
 		global $controller;
 		$retval = FALSE;
+		//Try to create the cron file if it doesnt exist...
+		if (!file_exists(ctrl_options::GetOption('cron_file'))){
+			fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, "");
+		}
 		$currentuser = ctrl_users::GetUserDetail();
-	    # Check to make sure the cron is not blank before we go any further...
+	    // Check to make sure the cron is not blank before we go any further...
 	    if ($controller->GetControllerRequest('FORM', 'inScript') == '') {
 			self::$blank = TRUE;
 			$retval = TRUE;
 	    }
-	    # Check to make sure the cron script exists before we go any further...
+	    // Check to make sure the cron script exists before we go any further...
 	    if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . '/public_html/' . $controller->GetControllerRequest('FORM', 'inScript'))))) {
 			self::$noexists = TRUE;
 			$retval = TRUE;
 	    }
-	    # Check to see if creating system cron file was successful...
+	    // Check to see if creating system cron file was successful...
 	    if (!is_file(ctrl_options::GetOption('cron_file'))) {
 			self::$cronnoexists = TRUE;
 			$retval = TRUE;
 	    }
-	    # Check to makesystem cron file is writable...
+	    // Check to makesystem cron file is writable...
 	    if (!is_writable(ctrl_options::GetOption('cron_file'))) {
 			self::$cronnowrite = TRUE;
 			$retval = TRUE;
 	    }
-	    # Check to make sure the cron is not a duplicate...
+	    // Check to make sure the cron is not a duplicate...
 			$sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_script_vc='".$controller->GetControllerRequest('FORM', 'inScript')."' AND ct_deleted_ts IS NULL";
 			if ($numrows = $zdbh->query($sql)) {
  				if ($numrows->fetchColumn() <> 0) {	
@@ -240,7 +244,7 @@ class module_controller {
 				}
             }
             
-			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0777, $line)) {
+			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, $line)) {
     	        return true;
 	        } else {
     	        return false;
@@ -265,7 +269,7 @@ class module_controller {
 			$line .= "# DO NOT MANUALLY REMOVE ANY OF THE CRON ENTRIES FROM THIS FILE, USE ZPANEL      ". fs_filehandler::NewLine();
 			$line .= "# INSTEAD! THE ABOVE ENTRIES ARE USED FOR ZPANEL TASKS, DO NOT REMOVE THEM!      ". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
-			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0777, $line)) {
+			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, $line)) {
     	        return true;
 	        } else {
     	        return false;
