@@ -9,7 +9,7 @@ try {
     
 }
 
-echo "START Backup Config." . fs_filehandler::NewLine();
+echo fs_filehandler::NewLine() . "START Backup Config." . fs_filehandler::NewLine();
 if (ui_module::CheckModuleEnabled('Backup Config')){
 echo "Backup Config module ENABLED..." . fs_filehandler::NewLine();
 

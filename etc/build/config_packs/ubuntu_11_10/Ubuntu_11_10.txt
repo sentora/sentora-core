@@ -49,11 +49,12 @@ comment out:
 add at bottom:
 Include /etc/zpanel/configs/apache/httpd.conf
 
+*Set ZPanel Network info and compile the default vhost.conf
 /etc/zpanel/panel/bin/setso --set zpanel_domain CONTROLPANEL.YOURDOMAIN.COM
 /etc/zpanel/panel/bin/setso --set server_ip YOUR_PUBLIC_IP_ADDRESS
 php /etc/zpanel/panel/bin/daemon.php
 
-POSTFIX-DOVECOT:
+POSTFIX-DOVECOT (Ubuntu 11.10 uses Dovecot2):
 ================
 	apt-get install postfix postfix-mysql dovecot-mysql dovecot-imapd dovecot-pop3d dovecot-common libsasl2-modules-sql libsasl2-modules (choose 'internet-site)
 	mkdir -p /var/zpanel/vmail
