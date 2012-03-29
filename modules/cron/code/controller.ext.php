@@ -245,6 +245,9 @@ class module_controller {
             }
             
 			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, $line)) {
+				if (sys_versions::ShowOSPlatformVersion() != "Windows") {
+					system(ctrl_options::GetOption('zsudo') . " " . ctrl_options::GetOption('cron_reload'));
+				}
     	        return true;
 	        } else {
     	        return false;
@@ -270,6 +273,9 @@ class module_controller {
 			$line .= "# INSTEAD! THE ABOVE ENTRIES ARE USED FOR ZPANEL TASKS, DO NOT REMOVE THEM!      ". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
 			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, $line)) {
+				if (sys_versions::ShowOSPlatformVersion() != "Windows") {
+					system(ctrl_options::GetOption('zsudo') . " " . ctrl_options::GetOption('cron_reload'));
+				}
     	        return true;
 	        } else {
     	        return false;
