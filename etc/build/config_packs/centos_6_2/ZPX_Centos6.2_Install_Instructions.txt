@@ -163,6 +163,9 @@ BIND:
 	yum install bind bind-utils bind-libs
 	CONFIGURE BIND AS NEEDED - ONCE RUNNING INCLUDE ZPANEL NAMED PATH
 	echo 'include "/etc/zpanel/configs/bind/etc/named.conf";' >> /etc/named.conf
+	
+	chkconfig --levels 345 named on
+	service named start
 
 	
 ZPANEL ZSUDO:
