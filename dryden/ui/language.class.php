@@ -23,11 +23,11 @@ class ui_language {
         global $zdbh;
         $message = addslashes($message);
         $currentuser = ctrl_users::GetUserDetail();
+		$lang = $currentuser['language'];
         $column_names = self::GetColumnNames('x_translations');
         foreach ($column_names as $column_name) {
             $result = $zdbh->query("SELECT * FROM x_translations WHERE " . $column_name . " LIKE '" . $message . "'")->Fetch();
             if ($result) {
-                $lang = $currentuser['language'];
                 if (!fs_director::CheckForEmptyValue($result['tr_' . $lang . '_tx'])) {
                     return $result['tr_' . $lang . '_tx'];
                 } else {
@@ -35,6 +35,10 @@ class ui_language {
                 }
             }
         }
+		if (!fs_director::CheckForEmptyValue($message) && $lang == "en") {
+			$sql = $zdbh->prepare("INSERT INTO x_translations (tr_en_tx) VALUES ('" . $message . "')");
+        	$sql->execute();
+		}
         return stripslashes($message);
     }
 
