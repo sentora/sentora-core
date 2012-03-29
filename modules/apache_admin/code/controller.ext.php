@@ -72,10 +72,10 @@ class module_controller {
                     } else {
                         $fieldhtml = ctrl_options::OutputSettingTextArea($row['so_name_vc'], $row['so_value_tx']);
                     }
-                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td>" . $fieldhtml. "</td><td>" . $row['so_desc_tx'] . "</td></tr>";
+                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . ui_language::translate($row['so_cleanname_vc']) . "</th><td>" . $fieldhtml. "</td><td>" . ui_language::translate($row['so_desc_tx']) . "</td></tr>";
                 }
-				$line .= "<tr><th>Force Update</th><td><input type=\"checkbox\"></td><td>Force vhost.conf to be updated on next daemon run. Any change in settings also triggers vhost.conf to be updated.</td></tr>";
-                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></th></tr>";
+				$line .= "<tr><th>".ui_language::translate("Force Update") ."</th><td><input type=\"checkbox\"></td><td>".ui_language::translate("Force vhost.conf to be updated on next daemon run. Any change in settings also triggers vhost.conf to be updated.")."</td></tr>";
+                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">".ui_language::translate("Save Changes")."</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\">".ui_language::translate("Cancel")."</button></th></tr>";
 				
             }
         }

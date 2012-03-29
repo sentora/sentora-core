@@ -43,9 +43,9 @@ class module_controller {
                 } else {
                     $fieldhtml = ctrl_options::OutputSettingTextArea($rowmailsettings['so_name_vc'], $rowmailsettings['so_value_tx']);
                 }
-                array_push($res, array('cleanname' => $rowmailsettings['so_cleanname_vc'],
+                array_push($res, array('cleanname' => ui_language::translate($rowmailsettings['so_cleanname_vc']),
                     'name' => $rowmailsettings['so_name_vc'],
-                    'description' => $rowmailsettings['so_desc_tx'],
+                    'description' => ui_language::translate($rowmailsettings['so_desc_tx']),
                     'value' => $rowmailsettings['so_value_tx'],
                     'fieldhtml' => $fieldhtml));
             }

@@ -54,10 +54,10 @@ class module_controller {
 		$line .= "<div style=\"display: block; margin-right:20px;\">";
 		$line .= "<div class=\"ui-tabs ui-widget ui-widget-content ui-corner-all\" id=\"dnsTabs\">";
 		$line .= "<ul class=\"domains ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all\">";
-		$line .= "<li><a href=\"#general\">General</a></li>";
-		$line .= "<li><a href=\"#tools\">Tools</a></li>";
-		$line .= "<li><a href=\"#services\">Services</a></li>";
-		$line .= "<li><a href=\"#logs\">Logs</a></li>";
+		$line .= "<li><a href=\"#general\">" . ui_language::translate("General")."</a></li>";
+		$line .= "<li><a href=\"#tools\">" . ui_language::translate("Tools")."</a></li>";
+		$line .= "<li><a href=\"#services\">" . ui_language::translate("Services")."</a></li>";
+		$line .= "<li><a href=\"#logs\">" . ui_language::translate("Logs")."</a></li>";
 		$line .= "</ul>";
 		//general
 		$line .= "<div class=\"ui-tabs-panel ui-widget-content ui-corner-bottom\" id=\"general\">";
@@ -77,9 +77,9 @@ class module_controller {
                     } else {
                         $fieldhtml = ctrl_options::OutputSettingTextArea($row['so_name_vc'], $row['so_value_tx']);
                     }
-                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . $row['so_cleanname_vc'] . "</th><td>" .$fieldhtml. "</td><td>" . $row['so_desc_tx'] . "</td></tr>";
+                    $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . ui_language::translate($row['so_cleanname_vc']) . "</th><td>" .$fieldhtml. "</td><td>" . ui_language::translate($row['so_desc_tx']) . "</td></tr>";
                 }
-                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">Save Changes</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\"><: Cancel :></button></tr>";
+                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">" . ui_language::translate("Save Changes")."</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\">" . ui_language::translate("Cancel")."</button></tr>";
             }
         }
         $line .= "</table>";
@@ -90,14 +90,14 @@ class module_controller {
 		$line .= "<form action=\"./?module=dns_admin&action=UpdateTools\" method=\"post\">";
         $line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
-		$line .= "<th>Reset all Records to Default</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inResetAll\" value=\"1\">GO</button></td>";
+		$line .= "<th>" . ui_language::translate("Reset all Records to Default")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inResetAll\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<tr>";
-		$line .= "<th>Reset Records to Default on Single Domain ";
+		$line .= "<th>" . ui_language::translate("Reset Records to Default on Single Domain")." ";
 		$line .= "<select name=\"inResetDomainID\">";
-		$line .= "<option value=\"\">--- Select Domain ---</option>";
+		$line .= "<option value=\"\">--- " . ui_language::translate("Select Domain")." ---</option>";
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
@@ -110,14 +110,14 @@ class module_controller {
 		}
 		$line .= "</select>";
 		$line .= "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inResetDomain\" value=\"1\">GO</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inResetDomain\" value=\"1\">" . ui_language::translate("GO") . "</button></td>";
 		$line .= "</tr>";
-		$line .= "<th>Add Default Records to Missing Domains";
+		$line .= "<th>" . ui_language::translate("Add Default Records to Missing Domains") ."";
 		$line .= "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inAddMissing\" value=\"1\">GO</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inAddMissing\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Delete Record Type from ALL Records ";
+		$line .= "<th>" . ui_language::translate("Delete Record Type from ALL Records")." ";
         $line .= "<select name=\"inType\" id=\"inType\">";
         $line .= "<option value=\"A\">A</option>";
 		$line .= "<option value=\"AAAA\">AAAA</option>";
@@ -129,18 +129,18 @@ class module_controller {
 		$line .= "<option value=\"NS\">NS</option>";
         $line .= "</select>";
 		$line .= "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDeleteType\" value=\"1\">GO</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDeleteType\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Purge Deleted Zone Records From Database</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inPurge\" value=\"1\">GO</button></td>";
+		$line .= "<th>" . ui_language::translate("Purge Deleted Zone Records From Database")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inPurge\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Delete ALL Zone Records</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDeleteAll\" value=\"1\">GO</button></td>";
+		$line .= "<th>" . ui_language::translate("Delete ALL Zone Records")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inDeleteAll\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
-		$line .= "<th>Force Records Update on Next Daemon Run</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inForceUpdate\" value=\"1\">GO</button></td>";
+		$line .= "<th>" . ui_language::translate("Force Records Update on Next Daemon Run")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inForceUpdate\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";
@@ -151,22 +151,22 @@ class module_controller {
 		$line .= "<table class=\"none\" border=\"0\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\"><tr valign=\"top\"><td width=\"100%\">";
         $line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
-		$line .= "<th>Start Service</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inStartService\" value=\"1\">GO</button></td>";
+		$line .= "<th>" . ui_language::translate("Start Service")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inStartService\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Stop Service</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inStopService\" value=\"1\">GO</button></td>";
+		$line .= "<th>" . ui_language::translate("Stop Service")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inStopService\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Reload BIND</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inReloadService\" value=\"1\">GO</button></td>";
+		$line .= "<th>" . ui_language::translate("Reload BIND")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inReloadService\" value=\"1\">" . ui_language::translate("GO")."</button></td>";
 		$line .= "</tr>";
-		$line .= "<th>Service Port Status</th>";
+		$line .= "<th>" . ui_language::translate("Service Port Status")."</th>";
         if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(53))) {
-        	$line .= "<td><font color=\"red\">STOPPED</font></td>";
+        	$line .= "<td><font color=\"red\">" . ui_language::translate("STOPPED")."</font></td>";
         } else {
-            $line .= "<td><font color=\"green\">RUNNING</font></td>";
+            $line .= "<td><font color=\"green\">" . ui_language::translate("RUNNING")."</font></td>";
         }
 		$line .= "</tr>";
         $line .= "</table>";
@@ -187,20 +187,20 @@ class module_controller {
         $line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
 		$line .= "<th style=\"width:350px;\">" . self::CheckLogReadable(ctrl_options::GetOption('bind_log')) . " " . self::CheckLogWritable(ctrl_options::GetOption('bind_log')) . "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSetPerms\" value=\"1\">Set Permissions</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSetPerms\" value=\"1\">" . ui_language::translate("Set Permissions")."</button></td>";
 		$line .= "<tr>";
-		$line .= "<th>Clear errors</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearErrors\" value=\"1\">Clear</button></td>";
+		$line .= "<th>" . ui_language::translate("Clear errors")."</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearErrors\" value=\"1\">" . ui_language::translate("Clear")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Clear warnings";
+		$line .= "<th>" . ui_language::translate("Clear warnings")."";
 		$line .= "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearWarnings\" value=\"1\">Clear</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearWarnings\" value=\"1\">" . ui_language::translate("Clear")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>Clear logs";
+		$line .= "<th>" . ui_language::translate("Clear logs")."";
 		$line .= "</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearLogs\" value=\"1\">Clear</button></td>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inClearLogs\" value=\"1\">" . ui_language::translate("Clear")."</button></td>";
 		$line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";
@@ -212,8 +212,8 @@ class module_controller {
 		} else {
 			$logerrorcolor = NULL;
 		}
-		$line .= "<th style=\"width:350px;\">View Errors (<font color=\"".$logerrorcolor."\">".count(self::$logerror)."</font>)</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logerror_a\" name=\"inViewErrors\" value=\"1\">View</button></td>";
+		$line .= "<th style=\"width:350px;\">" . ui_language::translate("View Errors")." (<font color=\"".$logerrorcolor."\">".count(self::$logerror)."</font>)</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logerror_a\" name=\"inViewErrors\" value=\"1\">" . ui_language::translate("View")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
 		if (count(self::$logwarning) > 0) {
@@ -221,12 +221,12 @@ class module_controller {
 		} else {
 			$logwarningcolor = NULL;
 		}
-		$line .= "<th>View warnings (<font color=\"".$logwarningcolor."\">".count(self::$logwarning)."</font>)</th>";
-		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logwarning_a\" name=\"inViewWarnings\" value=\"1\">View</button></td>";
+		$line .= "<th>" . ui_language::translate("View warnings")." (<font color=\"".$logwarningcolor."\">".count(self::$logwarning)."</font>)</th>";
+		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"logwarning_a\" name=\"inViewWarnings\" value=\"1\">" . ui_language::translate("View")."</button></td>";
 		$line .= "</tr>";
 		$line .= "<tr>";
-		$line .= "<th>View logs (".count(self::$getlog).")</th>";
-		$line .= "<td><input type=\"hidden\" name=\"inBindLog\" value=\"" . ctrl_options::GetOption('bind_log') . "\" /><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">View</button></td>";
+		$line .= "<th>" . ui_language::translate("View logs")." (".count(self::$getlog).")</th>";
+		$line .= "<td><input type=\"hidden\" name=\"inBindLog\" value=\"" . ctrl_options::GetOption('bind_log') . "\" /><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">" . ui_language::translate("View")."</button></td>";
 		$line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";				
