@@ -17,7 +17,7 @@ while ($userdir = $userssql->fetch()) {
 	$currentuser = ctrl_users::GetUserDetail($userdir['ac_id_pk']);
     $checksql = $zdbh->query("SELECT COUNT(*) AS total FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $userdir['ac_id_pk'] . "")->fetch();
     if ($checksql['total'] == 0) {
-        $zdbh->query("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transover_in ) VALUES (" . $userdir['ac_id_pk'] . "," . date("Ym") . ",0,0,0,0,0,0);");
+        $zdbh->query("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transcheck_in ) VALUES (" . $userdir['ac_id_pk'] . "," . date("Ym") . ",0,0,0,0,0,0);");
     }
 	
     $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskamount_bi = '" . $size . "' WHERE bd_acc_fk =" . $userdir['ac_id_pk'] . "");
