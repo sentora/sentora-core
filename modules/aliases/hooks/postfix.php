@@ -35,21 +35,16 @@
 		}
 
 		foreach ($deletedclients as $deletedclient){
-       	 $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $deletedclient . " AND mb_deleted_ts IS NULL";
+       	 $sql = "SELECT * FROM x_aliases WHERE al_acc_fk=" . $deletedclient . " AND al_deleted_ts IS NULL";
 	        $numrows = $zdbh->query($sql);
 	        if ($numrows->fetchColumn() <> 0) {
 	            $sql = $zdbh->prepare($sql);
 	            $sql->execute();
 	            while ($rowmailbox = $sql->fetch()) {
-					// Deleting PostFix Mailboxes
-			       	$msql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
-			        $msql->execute();
-			        $msql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
-					$msql->execute();
-					$domain = explode("@", $rowmailbox['mb_address_vc']);
-					$result = $mail_db->query("SELECT * FROM domain WHERE domain='" . $domain[1] . "'")->Fetch();
+		   			$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowmailbox['al_address_vc'] . "'")->Fetch();
 					if ($result) {
-				        $msql = $mail_db->prepare("DELETE FROM domain WHERE domain='" . $domain[1] . "'");
+						$msql = "DELETE FROM alias WHERE address='" . $rowmailbox['al_address_vc'] . "'";
+						$msql = $mail_db->prepare($msql);
 						$msql->execute();
 					}
 	            }

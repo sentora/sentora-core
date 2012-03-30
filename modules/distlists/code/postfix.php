@@ -71,7 +71,7 @@
 		if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
 	        $result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
 			if ($result) {
-			echo $rowdlu['du_address_vc'];
+			//echo $rowdlu['du_address_vc'];
                 $newlist = str_replace("," . $rowdlu['du_address_vc'], "", $result['goto']);
                 $newlist = str_replace(",,", ",", $newlist);
                 $sql = "UPDATE alias SET goto='" . $newlist . "', modified=NOW() WHERE address='" . $rowdl['dl_address_vc'] . "'";

@@ -24,6 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+ 
  		$mailserver_db = ctrl_options::GetOption('mailserver_db');
 		include('cnf/db.php');
 		$z_db_user = $user;
@@ -35,25 +36,23 @@
 		}
 
 		foreach ($deletedclients as $deletedclient){
-       	 $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $deletedclient . " AND mb_deleted_ts IS NULL";
+       	 $sql = "SELECT * FROM x_distlists WHERE dl_acc_fk=" . $deletedclient . " AND dl_deleted_ts IS NULL";
 	        $numrows = $zdbh->query($sql);
 	        if ($numrows->fetchColumn() <> 0) {
 	            $sql = $zdbh->prepare($sql);
 	            $sql->execute();
 	            while ($rowmailbox = $sql->fetch()) {
-					// Deleting PostFix Mailboxes
-			       	$msql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
-			        $msql->execute();
-			        $msql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
-					$msql->execute();
-					$domain = explode("@", $rowmailbox['mb_address_vc']);
-					$result = $mail_db->query("SELECT * FROM domain WHERE domain='" . $domain[1] . "'")->Fetch();
-					if ($result) {
-				        $msql = $mail_db->prepare("DELETE FROM domain WHERE domain='" . $domain[1] . "'");
+					//distlist
+	        		$result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'")->Fetch();
+					if ($result) {	
+		            	$msql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid='" . $result['distributionlistid'] . "'";
+						$msql = $mail_db->prepare($msql);
+						$msql->execute();
+			            $msql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'";
+						$msql = $mail_db->prepare($msql);
 						$msql->execute();
 					}
 	            }
 			}
-		}		
-							
+		}
 ?>
