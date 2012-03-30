@@ -1,9 +1,10 @@
 <?php
-
+	
 
 	echo fs_filehandler::NewLine() . "START Apache Config Hook." . fs_filehandler::NewLine();
 	if (ui_module::CheckModuleEnabled('Apache Config')){
 		echo "Apache Admin module ENABLED..." . fs_filehandler::NewLine();
+		TriggerApacheQuotaUsage();
 		if (ctrl_options::GetOption('apache_changed') == strtolower("true")){
 			echo "Apache Config has changed..." . fs_filehandler::NewLine();
 			if (ctrl_options::GetOption('apache_backup') == strtolower("true")){
@@ -130,7 +131,7 @@
 			   //Domain is beyond its diskusage
 			  if ($vhostuser['diskquota'] <= $diskspace) {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
+                $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR QUOTA OVERAGE" . fs_filehandler::NewLine();
                 $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
@@ -159,7 +160,7 @@
 			   //Domain is beyond its quota
 			  } elseif ($vhostuser['bandwidthquota'] <= $bandwidth) {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
+                $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR BANDWIDTH OVERAGE" . fs_filehandler::NewLine();
                 $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
@@ -425,4 +426,50 @@
 		}
 		echo "Apache backups complete..." . fs_filehandler::NewLine();
     }
+	
+	
+	
+	
+	function TriggerApacheQuotaUsage(){
+		global $zdbh;
+		global $controller;
+        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
+        $sql->execute();
+        while ($rowvhost = $sql->fetch()) {	
+			if ($rowvhost['vh_enabled_in'] == 1 && ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) || 
+				$rowvhost['vh_enabled_in'] == 1 && ctrl_options::GetOption('apache_allow_disabled') == strtolower("true")){
+				
+				$checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $rowvhost['vh_acc_fk'] . "")->fetch();
+				$currentuser = ctrl_users::GetUserDetail($rowvhost['vh_acc_fk']);
+				if ($checksize['bd_diskover_in'] != $checksize['bd_diskcheck_in'] && $checksize['bd_diskover_in'] == 1){
+					echo "Disk usage over quota, triggering Apache...". fs_filehandler::NewLine();
+		    		$updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+		    		$updateapache->execute();
+		    		$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+		    		$updateapache->execute();			
+				}
+				if ($checksize['bd_diskover_in'] != $checksize['bd_diskcheck_in'] && $checksize['bd_diskover_in'] == 0){
+					echo "Disk usage under quota, triggering Apache...". fs_filehandler::NewLine();
+		    		$updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+		    		$updateapache->execute();
+		    		$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+		    		$updateapache->execute();			
+				}
+				if ($checksize['bd_transover_in'] != $checksize['bd_transcheck_in'] && $checksize['bd_transover_in'] == 1){
+					echo "Bandwidth usage over quota, triggering Apache...". fs_filehandler::NewLine();
+		    		$updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+		    		$updateapache->execute();
+		    		$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+		    		$updateapache->execute();			
+				}
+				if ($checksize['bd_transover_in'] != $checksize['bd_transcheck_in'] && $checksize['bd_transover_in'] == 0){
+					echo "Bandwidth usage under quota, triggering Apache...". fs_filehandler::NewLine();
+		    		$updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+		    		$updateapache->execute();
+		    		$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+		    		$updateapache->execute();			
+				}
+			}
+		}
+	}
 ?>

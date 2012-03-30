@@ -67,6 +67,10 @@ CREATE TABLE `x_bandwidth` (
   `bd_month_in` int(6) DEFAULT NULL,
   `bd_transamount_bi` bigint(20) DEFAULT NULL,
   `bd_diskamount_bi` bigint(20) DEFAULT NULL,
+  `bd_diskover_in` int(6) DEFAULT NULL,
+  `bd_diskcheck_in` int(6) DEFAULT NULL,
+  `bd_transover_in` int(6) DEFAULT NULL,
+  `bd_transcheck_in` int(6) DEFAULT NULL,
   PRIMARY KEY (`bd_id_pk`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
