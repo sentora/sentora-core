@@ -294,7 +294,7 @@ class module_controller {
         runtime_hook::Execute('OnBeforeAddDatabaseAccess');
         $rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $dbid . " AND my_deleted_ts IS NULL")->fetch();
         $rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
-        $sql = $zdbh->prepare("GRANT ALTER, CREATE, CREATE TEMPORARY TABLES, DELETE, INDEX, INSERT, LOCK TABLES, SELECT, UPDATE ON " . $rowdb['my_name_vc'] . ".* TO '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
+        $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* TO '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
         $sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
