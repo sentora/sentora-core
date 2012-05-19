@@ -74,7 +74,10 @@ class ctrl_auth {
      */
     static function Authenticate($username, $password, $rememberme = false, $iscookie = false) {
         global $zdbh;
-        $rows = $zdbh->query("select * from x_accounts where ac_user_vc = '$username' AND ac_pass_vc = '$password' AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL")->fetch();
+        $sth = $zdbh->prepare("select * from x_accounts where ac_user_vc = ? AND ac_pass_vc = ? AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL");
+        $sth->execute(array($username, $password));
+        $rows = $sth->fetchAll();
+        $rows = $rows['0'];
         if ($rows) {
             ctrl_auth::SetUserSession($rows['ac_id_pk']);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");

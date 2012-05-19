@@ -320,7 +320,6 @@ class module_controller {
         $rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
         $sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* FROM '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
         $sql->execute();
-        //echo "NAME ".$rowdb['my_name_vc']." DBID ".$dbid." ROWDB " .$rowdbm['mm_database_fk'] . "RowUser " . $rowuser['mu_name_vc'] . " access " . $rowuser['mu_access_vc'];
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
         $sql = $zdbh->prepare("DELETE FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . " AND mm_user_fk=" . $myuserid . "");
