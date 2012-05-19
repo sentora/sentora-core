@@ -361,7 +361,7 @@
 			if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                 system("".ctrl_options::GetOption('httpd_exe')." ".ctrl_options::GetOption('apache_restart')."");
             } else {
-				system("".ctrl_options::GetOption('zsudo')." ".ctrl_options::GetOption('apache_sn')." ".ctrl_options::GetOption('apache_restart')."");
+				system("".ctrl_options::GetOption('zsudo')." service ".ctrl_options::GetOption('apache_sn')." ".ctrl_options::GetOption('apache_restart')."");
             }
 			
             return true;
