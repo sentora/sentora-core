@@ -113,6 +113,16 @@
 			} else {
 				$serveralias = $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'];
 			}
+			
+			if(fs_director::CheckForEmptyValue($rowvhost['vh_custom_port_in'])) {
+				$vhostPort = ctrl_options::GetOption('apache_port');
+			}
+			else {
+				$vhostPort = $rowvhost['vh_custom_port_in'];
+			}
+			
+			echo $vhostPort;
+			
 				
             //Domain is enabled
 			//Line1: Domain enabled - Client also is enabled.
@@ -132,7 +142,7 @@
 			  if ($vhostuser['diskquota'] <= $diskspace) {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR QUOTA OVERAGE" . fs_filehandler::NewLine();
-                $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
+                $line .= "<virtualhost *:" . $vhostPort . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -161,7 +171,7 @@
 			  } elseif ($vhostuser['bandwidthquota'] <= $bandwidth) {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR BANDWIDTH OVERAGE" . fs_filehandler::NewLine();
-                $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
+                $line .= "<virtualhost *:" . $vhostPort . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -189,7 +199,7 @@
 	     	    //Domain is a PARKED domain.
 			  } elseif ($rowvhost['vh_type_in'] == 3){
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
+                $line .= "<virtualhost *:" . $vhostPort . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -221,7 +231,7 @@
 			  	//Domain is a regular domain or a subdomain.
 			  } else {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-                $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
+                $line .= "<virtualhost *:" . $vhostPort . ">" . fs_filehandler::NewLine();
 
                 /*
 				* todo
@@ -322,7 +332,7 @@
                 //Domain is NOT enabled
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
-                $line .= "<virtualhost *:" . ctrl_options::GetOption('apache_port') . ">" . fs_filehandler::NewLine();
+                $line .= "<virtualhost *:" . $vhostPort . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAlias " . $rowvhost['vh_name_vc'] . " www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();

@@ -142,7 +142,7 @@ class module_controller {
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
-					if ($row['vh_suhosin_in'] == 0 || $row['vh_obasedir_in'] == 0 || $row['vh_custom_tx'] != ""){
+					if ($row['vh_suhosin_in'] == 0 || $row['vh_obasedir_in'] == 0 || $row['vh_custom_tx'] != "" || !fs_director::CheckForEmptyValue($row['vh_custom_port_in'])){
                     $line .= "<option value=\"" . $row['vh_name_vc'] . "\">" . $row['vh_name_vc'] . "</option>";
 					}
                 }
@@ -222,9 +222,11 @@ class module_controller {
                 $line .= "<tr><th>" . ui_language::translate("Domain Enabled") . ":</th><td><input type=\"checkbox\" name=\"vh_enabled_in\" id=\"vh_enabled_in\" value=\"1\" " . fs_director::IsChecked($row['vh_enabled_in']) . "/></td></tr>";
                 $line .= "<tr><th>" . ui_language::translate("Suhosin Enabled") . ":</th><td><input type=\"checkbox\" name=\"vh_suhosin_in\" id=\"vh_suhosin_in\" value=\"1\" " . fs_director::IsChecked($row['vh_suhosin_in']) . "/></td></tr>";
                 $line .= "<tr><th>" . ui_language::translate("OpenBase Enabled") . ":</th><td><input type=\"checkbox\" name=\"vh_obasedir_in\" id=\"vh_obasedir_in\" value=\"1\" " . fs_director::IsChecked($row['vh_obasedir_in']) . "/></td></tr>";
+				$line .= "<tr><th>" . ui_language::translate("Port Override") . "</th><td><input type=\"text\" name=\"vh_custom_port_in\" id=\"vh_custom_port_in\" maxlength=\"6\" value=\"" . $row['vh_custom_port_in'] ."\"/>";
                 $line .= "<tr valign=\"top\"><th>" . ui_language::translate("Custom Entry") . ":</th><td><textarea cols=\"60\" rows=\"10\" name=\"vh_custom_tx\">" . $row['vh_custom_tx'] . "</textarea></td></tr>";
             }
         }
+		
         $line .= "<tr><td colspan=\"2\">";
         $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=apache_admin';return false;\"><: Cancel :></button>";
         $line .= "</td></tr>";
@@ -265,6 +267,7 @@ class module_controller {
 			vh_enabled_in  = " . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_enabled_in')) . ",
 			vh_suhosin_in  = " . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_suhosin_in')) . ",
 			vh_obasedir_in = " . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_obasedir_in')) . ",
+			vh_custom_port_in   = " . $controller->GetControllerRequest('FORM', 'vh_custom_port_in') . ",
 			vh_custom_tx   = '" . $controller->GetControllerRequest('FORM', 'vh_custom_tx') . "'
 			WHERE
 			vh_id_pk = " . $controller->GetControllerRequest('FORM', 'vh_id_pk') . "
