@@ -819,6 +819,7 @@ CREATE TABLE `x_vhosts` (
   `vh_suhosin_in` int(1) DEFAULT '1',
   `vh_obasedir_in` int(1) DEFAULT '1',
   `vh_custom_tx` text,
+  `vh_custom_port_in` int(6) DEFAULT NULL,
   `vh_enabled_in` int(1) DEFAULT '1',
   `vh_created_ts` int(30) DEFAULT NULL,
   `vh_deleted_ts` int(30) DEFAULT NULL,
