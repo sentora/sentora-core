@@ -36,6 +36,13 @@
 			$serveremail = "postmaster@" .ctrl_options::GetOption('zpanel_domain');
 		}
 		
+		$customPort = array();
+		$portQuery = $zdbh->prepare("SELECT vh_custom_port_in, vh_deleted_ts FROM zpanel_core.x_vhosts WHERE vh_custom_port_in IS NOT NULL AND vh_deleted_ts IS NULL");
+		$portQuery->execute();
+        while ($rowport = $portQuery->fetch()) {
+			$customPort[] = $rowport['vh_custom_port_in'];
+		}
+		
 		/*
 		* ##############################################################################################################
 		* #
@@ -53,8 +60,11 @@
 
         // ZPanel default virtual host container
         $line .= "NameVirtualHost *:" . ctrl_options::GetOption('apache_port') . "" 		. fs_filehandler::NewLine();
-        $line .= "" 																		. fs_filehandler::NewLine();
-        $line .= "# Configuration for ZPanel control panel." 								. fs_filehandler::NewLine();
+        foreach($customPort as $port) {
+			$line .= "NameVirtualHost *:" . $port . "" 		. fs_filehandler::NewLine();
+		}
+		$line .= "" 																		. fs_filehandler::NewLine();
+		$line .= "# Configuration for ZPanel control panel." 								. fs_filehandler::NewLine();
         $line .= "<VirtualHost *:" . ctrl_options::GetOption('apache_port') . ">" 			. fs_filehandler::NewLine();
         $line .= "ServerAdmin " . $serveremail                                              . fs_filehandler::NewLine();
         $line .= "DocumentRoot \"" . ctrl_options::GetOption('zpanel_root') . "\"" 			. fs_filehandler::NewLine();

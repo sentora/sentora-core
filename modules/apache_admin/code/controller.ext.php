@@ -263,16 +263,29 @@ class module_controller {
     static function doSaveVhost() {
         global $zdbh;
         global $controller;
+		
+		$port = $controller->GetControllerRequest('FORM', 'vh_custom_port_in');
+		if (empty($port)) { $port = NULL; } 
+		else { $port = $controller->GetControllerRequest('FORM', 'vh_custom_port_in'); } 
         $sql = $zdbh->prepare("UPDATE x_vhosts SET 
-			vh_enabled_in  = " . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_enabled_in')) . ",
-			vh_suhosin_in  = " . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_suhosin_in')) . ",
-			vh_obasedir_in = " . fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_obasedir_in')) . ",
-			vh_custom_port_in   = " . $controller->GetControllerRequest('FORM', 'vh_custom_port_in') . ",
-			vh_custom_tx   = '" . $controller->GetControllerRequest('FORM', 'vh_custom_tx') . "'
+			vh_enabled_in  = ?,
+			vh_suhosin_in  = ?,
+			vh_obasedir_in = ?,
+			vh_custom_port_in   = ?,
+			vh_custom_tx   = ?
 			WHERE
-			vh_id_pk = " . $controller->GetControllerRequest('FORM', 'vh_id_pk') . "
+			vh_id_pk = ?
 			AND vh_deleted_ts IS NULL");
-        $sql->execute();
+        $sql->execute(
+				array(
+				fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_enabled_in')),
+				fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_suhosin_in')),
+				fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_obasedir_in')),
+				$port,
+				$controller->GetControllerRequest('FORM', 'vh_custom_tx'),
+				$controller->GetControllerRequest('FORM', 'vh_id_pk'),
+				)				
+				);
         self::SetWriteApacheConfigTrue();
         self::$ok = true;
         return true;
