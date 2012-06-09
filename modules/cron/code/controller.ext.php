@@ -66,7 +66,7 @@ class module_controller {
     			$line .= "</form>";
 
 				} else {
-    			$line .= ui_language::translate("You currently do no have any tasks setup.");
+    			$line .= ui_language::translate("You currently do not have any tasks setup.");
 				}
 				return $line;
 			}
