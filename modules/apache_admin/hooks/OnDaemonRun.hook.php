@@ -20,7 +20,6 @@ if (ui_module::CheckModuleEnabled('Apache Config')) {
 }
 echo "END Apache Config Hook." . fs_filehandler::NewLine();
 
-
 /**
  * 
  * @param string $vhostName
@@ -29,28 +28,26 @@ echo "END Apache Config Hook." . fs_filehandler::NewLine();
  * @return string
  * 
  */
-
 function BuildVhostPortForward($vhostName, $customPort, $userEmail) {
     $line = fs_filehandler::NewLine() . fs_filehandler::NewLine();
     $line .= "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
     $line .= "# PORT FORWARD FROM 80 TO: " . $customPort . fs_filehandler::NewLine();
-    $line .= "<virtualhost *:80>". fs_filehandler::NewLine();
+    $line .= "<virtualhost *:80>" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
     $line .= "ServerAlias " . $vhostName . " www." . $vhostName . fs_filehandler::NewLine();
     $line .= "ServerAdmin " . $userEmail . fs_filehandler::NewLine();
-    $line .= "RewriteEngine on". fs_filehandler::NewLine();
-    $line .= "ReWriteCond %{SERVER_PORT} !^" . $customPort . "$". fs_filehandler::NewLine();
-    if($customPort === "443") {
-        $line .= "RewriteRule ^/(.*) https://%{HTTP_HOST}/$1 [NC,R,L] ". fs_filehandler::NewLine();
+    $line .= "RewriteEngine on" . fs_filehandler::NewLine();
+    $line .= "ReWriteCond %{SERVER_PORT} !^" . $customPort . "$" . fs_filehandler::NewLine();
+    if ($customPort === "443") {
+        $line .= "RewriteRule ^/(.*) https://%{HTTP_HOST}/$1 [NC,R,L] " . fs_filehandler::NewLine();
     } else {
-        $line .= "RewriteRule ^/(.*) http://%{HTTP_HOST}:" . $customPort . "/$1 [NC,R,L] ". fs_filehandler::NewLine();
+        $line .= "RewriteRule ^/(.*) http://%{HTTP_HOST}:" . $customPort . "/$1 [NC,R,L] " . fs_filehandler::NewLine();
     }
     $line .= "</virtualhost>" . fs_filehandler::NewLine();
     $line .= "# END DOMAIN: " . $vhostName . fs_filehandler::NewLine() . fs_filehandler::NewLine();
-    
+
     return $line;
 }
-
 
 function WriteVhostConfigFile() {
     global $zdbh;
@@ -202,8 +199,8 @@ function WriteVhostConfigFile() {
                 $line .= "################################################################" . fs_filehandler::NewLine();
                 $line .= fs_filehandler::NewLine();
                 if ($rowvhost['vh_portforward_in'] <> 0) {
-                        $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
-                    }
+                    $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
+                }
                 $line .= fs_filehandler::NewLine();
                 /*
                  * ##################################################
@@ -235,8 +232,8 @@ function WriteVhostConfigFile() {
                 $line .= "################################################################" . fs_filehandler::NewLine();
                 $line .= fs_filehandler::NewLine();
                 if ($rowvhost['vh_portforward_in'] <> 0) {
-                        $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
-                    }
+                    $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
+                }
                 $line .= fs_filehandler::NewLine();
                 /*
                  * ##################################################
@@ -271,8 +268,8 @@ function WriteVhostConfigFile() {
                 $line .= "################################################################" . fs_filehandler::NewLine();
                 $line .= fs_filehandler::NewLine();
                 if ($rowvhost['vh_portforward_in'] <> 0) {
-                        $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
-                    }
+                    $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
+                }
                 $line .= fs_filehandler::NewLine();
                 /*
                  * ##################################################
@@ -341,7 +338,7 @@ function WriteVhostConfigFile() {
 
                 // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
                 // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
-                $errorpages = ctrl_options::GetOption('hosted_dir') . $vhostuser['username'] . $rowvhost['vh_directory_vc'] . "/_errorpages";
+                $errorpages = ctrl_options::GetOption('hosted_dir') . $vhostuser['username'] . "/public_html" . $rowvhost['vh_directory_vc'] . "/_errorpages";
                 if (is_dir($errorpages)) {
                     if ($handle = opendir($errorpages)) {
                         while (($file = readdir($handle)) !== false) {
@@ -373,10 +370,9 @@ function WriteVhostConfigFile() {
                 $line .= "################################################################" . fs_filehandler::NewLine();
                 $line .= fs_filehandler::NewLine();
                 if ($rowvhost['vh_portforward_in'] <> 0) {
-                        $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
-                    }
+                    $line .= BuildVhostPortForward($rowvhost['vh_name_vc'], $vhostPort, $useremail);
+                }
                 $line .= fs_filehandler::NewLine();
-                
             }
 
             /*
