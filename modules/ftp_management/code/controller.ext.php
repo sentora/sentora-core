@@ -82,7 +82,7 @@ class module_controller {
         }
     }
 
-	static function ListDomainDirs($uid){
+	static function ListMasterDirs($uid){
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
 		$res = array();
@@ -100,8 +100,28 @@ class module_controller {
 	        }
 	    closedir($handle);
 		}
-		return $res;	
+		return $res;
 	}
+    static function ListDomainDirs($uid) {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        $res = array();
+        $handle = @opendir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html");
+        $chkdir = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+        if (!$handle) {
+            # Log an error as the folder cannot be opened...
+        } else {
+            while ($file = @readdir($handle)) {
+                if ($file != "." && $file != ".." && $file != "_errorpages") {
+                    if (is_dir($chkdir . $file)) {
+                        array_push($res, array('domains' => $file));
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        return $res;
+    }
 
 	static function ExecuteResetPassword($ft_id_pk, $password){
 		global $zdbh;
@@ -265,12 +285,23 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-		$domaindirectories = self::ListDomainDirs($currentuser['userid']);
-		if (!fs_director::CheckForEmptyValue($domaindirectories)){
-			return $domaindirectories;
-		} else {
-			return false;
-		}
+        $domaindirectories = self::ListDomainDirs($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($domaindirectories)){
+        	return $domaindirectories;
+        } else {
+        	return false;
+        }
+    }
+    static function getMasterDirsList() {
+        global $zdbh;
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $domaindirectories = self::ListMasterDirs($currentuser['userid']);
+        if (!fs_director::CheckForEmptyValue($domaindirectories)){
+        	return $domaindirectories;
+        } else {
+        	return false;
+        }
     }
 
     static function doEditFTP() {

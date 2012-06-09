@@ -107,11 +107,28 @@
 				        </tr>
 		        <tr>
 			        <th nowrap="nowrap"><: Home directory :>:</th>
-			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
+			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showmasterselect')&hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
 		        </tr>
 		        <tr>
 			        <th>&nbsp;</th>
-			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showdomainselect');" />&nbsp;<: Use existing home directory :></td>
+			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showmasterselect')&hide_div('showdomainselect');" />&nbsp;<: Set Master home directory :></td>
+		        </tr>
+		        <tr>
+			        <th>&nbsp;</th>
+			        <td>
+			        	<div id="showmasterselect" style="display:none;">
+			        		<select name="inDestination" id="inDestination">
+			        		<option value="">/ (root)</option>
+							<% loop MasterDirsList %>
+							<option value="<& domains &>">/<& domains &></option>
+							<% endloop %>
+			        		</select>
+						</div>
+					</td>
+		        </tr>
+		        		        <tr>
+			        <th>&nbsp;</th>
+			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="3" onclick="show_div('showdomainselect')&hide_div('showmasterselect');" />&nbsp;<: Use Domain directory :></td>
 		        </tr>
 		        <tr>
 			        <th>&nbsp;</th>
@@ -120,7 +137,7 @@
 			        		<select name="inDestination" id="inDestination">
 			        		<option value="">/ (root)</option>
 							<% loop DomainDirsList %>
-							<option value="<& domains &>">/<& domains &></option>
+							<option value="public_html/<& domains &>">/<& domains &></option>
 							<% endloop %>
 			        		</select>
 						</div>
