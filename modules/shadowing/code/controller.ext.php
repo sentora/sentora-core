@@ -75,6 +75,7 @@ class module_controller {
                 $sql->execute();
                 while ($rowclients = $sql->fetch()) {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inShadow_' . $rowclients['ac_id_pk']))) {
+                        ctrl_auth::KillCookies();
                         ctrl_auth::SetSession('ruid', $currentuser['userid']);
                         ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
                         header("location: /");
