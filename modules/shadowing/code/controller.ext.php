@@ -32,7 +32,12 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+        if ($currentuser['username'] == 'zadmin') {
+            $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+        } else {
+            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+        }
+
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
@@ -59,10 +64,14 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL";
+        if ($currentuser['username'] == 'zadmin') {
+            $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+        } else {
+            $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL";
+        }
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL");
+                $sql = $zdbh->prepare($sql);
                 $sql->execute();
                 while ($rowclients = $sql->fetch()) {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inShadow_' . $rowclients['ac_id_pk']))) {
