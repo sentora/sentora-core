@@ -15,7 +15,7 @@ class db_builder {
     /**
      * Builds database schema from the module XML file (dbs.xml)
      * @author Russell Skinner (rustus@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      */
     static function moduledb_commit() {
         global $zdbh;
@@ -94,12 +94,16 @@ class db_builder {
     /**
      * Drops a database if not zpanel core
      * @author Russell Skinner (rustus@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @param string $database The name of the database to drop.
      */
+    
     static function moduledb_drop($database) {
         global $zdbh;
-        if ($database != 'zpanelx') { //Change to systemoption
+        /**
+         * @todo change to system option
+         */
+        if ($database != 'zpanelx') {
             $sql = $zdbh->prepare("DROP DATABASE IF EXISTS $database");
             $sql->execute();
         }

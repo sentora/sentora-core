@@ -65,7 +65,7 @@ class ctrl_auth {
     /**
      * The main authentication mechanism, checks username and password against the database and logs the user in on a successful authenitcation request.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @param string $username The username to use to authenticate with.
      * @param string $password The password to use to authenticate with.
      * @param bool $rememberme Remember the password for 30 days? (true/false)
@@ -74,8 +74,10 @@ class ctrl_auth {
      */
     static function Authenticate($username, $password, $rememberme = false, $iscookie = false) {
         global $zdbh;
-        $sth = $zdbh->prepare("select * from x_accounts where ac_user_vc = ? AND ac_pass_vc = ? AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL");
-        $sth->execute(array($username, $password));
+        $sth = $zdbh->prepare("select * from x_accounts where ac_user_vc = :username AND ac_pass_vc = :password AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL");
+        $sth->bindParam(':username', $username);
+        $sth->bindParam(':password', $password);
+        $sth->execute();
         $rows = $sth->fetchAll();
         $rows = $rows['0'];
         if ($rows) {

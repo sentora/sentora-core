@@ -12,6 +12,13 @@
  */
 class db_driver extends PDO {
 
+    /**
+     * 
+     * @param String $dsn
+     * @param String $username
+     * @param String $password
+     * @param $driver_options [optional]
+     */
     public function __construct($dsn, $username = null, $password = null, $driver_options = null) {
         parent::__construct($dsn, $username, $password, $driver_options);
     }
@@ -35,6 +42,12 @@ class db_driver extends PDO {
             }
             </style>";
 
+    /**
+     * 
+     * @param String $exception
+     * @return String
+     */
+    
     private function cleanexpmessage($exception) {
         $res = strstr($exception, "]: ", false);
         $res = str_replace(']: ', '', $res);
@@ -44,6 +57,12 @@ class db_driver extends PDO {
         $stack = str_replace("Stack trace:", "", $stack);
         return $res . $stack . "}";
     }
+    
+    /**
+     * 
+     * @param String $query
+     * @return type
+     */
 
     public function query($query) {
         try {
@@ -60,6 +79,12 @@ class db_driver extends PDO {
             die($error_html);
         }
     }
+    
+    /**
+     * 
+     * @param String $query
+     * @return type
+     */
 
     function exec($query) {
         try {
@@ -76,6 +101,13 @@ class db_driver extends PDO {
             die($error_html);
         }
     }
+    
+    /**
+     * 
+     * @param String $query
+     * @param Array $driver_options
+     * @return type
+     */
 
     function prepare($query, $driver_options = array()) {
         try {

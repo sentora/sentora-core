@@ -9,7 +9,16 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-global $zlo, $zdbh;
+
+/**
+ * @global debug_logger $zlo
+ */
+global $zlo;
+
+/**
+ * @global db_driver $zdbh
+ */
+global $zdbh;
 
 $zlo = new debug_logger();
 

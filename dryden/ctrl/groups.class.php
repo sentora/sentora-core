@@ -21,7 +21,12 @@ class ctrl_groups {
      */
     static function CheckGroupModulePermissions($groupid, $moduleid) {
         global $zdbh;
-        $rows = $zdbh->query("SELECT pe_id_pk FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid")->fetch();
+        $sth = $zdbh->prepare( "SELECT pe_id_pk FROM x_permissions WHERE pe_group_fk = :groupid AND pe_module_fk = :moduleid" );
+        $sth->bindParam( ':groupid' , $groupid );
+        $sth->bindParam( ':moduleid' , $moduleid );
+        $sth->execute();
+        $rows = $sth->fetchAll();
+        $rows = $rows['0'];
         if ($rows)
             return true;
         return false;

@@ -15,7 +15,7 @@ class ui_language {
     /**
      * Used to translate a text string into the language preference of the user.
      * @author Russell Skinner (rskinner@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @param $message The string to translate.
      * @return string The transalated string.
      */

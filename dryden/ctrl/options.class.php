@@ -15,7 +15,7 @@ class ctrl_options {
     /**
      * The main 'getter' class used to retrieve the value from the system options table.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @param string $name The name of the system option (eg. zpanel_root)
      * @return string The system option value.
      */
@@ -32,7 +32,7 @@ class ctrl_options {
     /**
      * The main 'setter' class used to write/update system options.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @param string $name The name of the system option (eg. zpanel_root)
      * @param string $value The value to set.
      * @param bool $create Instead of update the system option, create it instead?
@@ -59,7 +59,7 @@ class ctrl_options {
     /**
      * Gets user account information.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @param int $id The user account ID. 
      * @return mixed If the user exists it will return an array containing the account details for the user otherwise if the user doesn't exist will return 'false'.
      */
@@ -76,7 +76,7 @@ class ctrl_options {
     /**
      * Gets user package information.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @param int $id The user account ID.
      * @return mixed If the user and package details exist it will return an array containing the user's package details otherwise will return 'false'. 
      */

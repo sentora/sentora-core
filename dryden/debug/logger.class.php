@@ -42,7 +42,7 @@ class debug_logger {
     /**
      * Writes the log infomation out to a predefined logging medium (from $this->method)
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @global obj $zdbh The ZPX database handle.
+     * @global db_driver $zdbh The ZPX database handle.
      * @return boolean 
      */
     function writeLog() {
