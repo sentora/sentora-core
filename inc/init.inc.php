@@ -41,8 +41,8 @@ if (isset($_POST['inForgotPassword'])) {
     $sth->bindParam( ':forgotPass' , $forgotPass );
     $sth->execute();
     $rows = $sth->fetchAll();
-    $result = $rows['0'];
-    if ($result) {
+    if ($rows) {
+        $result = $rows['0'];
         $zdbh->exec("UPDATE x_accounts SET ac_resethash_tx = '" . $randomkey . "' WHERE ac_id_pk=" . $result['ac_id_pk'] . "");
 
         $phpmailer = new sys_email();
