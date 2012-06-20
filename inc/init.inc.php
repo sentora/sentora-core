@@ -36,7 +36,12 @@ if (isset($_GET['returnsession'])) {
 
 if (isset($_POST['inForgotPassword'])) {
     $randomkey = sha1(microtime());
-    $result = $zdbh->query("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = '" . $_POST['inForgotPassword'] . "'")->Fetch();
+    $forgotPass = $_POST['inForgotPassword'];
+    $sth = $zdbh->prepare("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = :forgotPass");
+    $sth->bindParam( ':forgotPass' , $forgotPass );
+    $sth->execute();
+    $rows = $sth->fetchAll();
+    $result = $rows['0'];
     if ($result) {
         $zdbh->exec("UPDATE x_accounts SET ac_resethash_tx = '" . $randomkey . "' WHERE ac_id_pk=" . $result['ac_id_pk'] . "");
 
