@@ -821,7 +821,7 @@ CREATE TABLE `x_vhosts` (
   `vh_custom_tx` text,
   `vh_custom_port_in` int(6) DEFAULT NULL,
   `vh_custom_ip_vc` varchar(45) DEFAULT NULL,
-  `vh_portforward_in` int(1) DEFAULT DEFAULT,
+  `vh_portforward_in` int(1) DEFAULT NULL,
   `vh_custom_port_in` int(6) DEFAULT NULL,
   `vh_enabled_in` int(1) DEFAULT '1',
   `vh_created_ts` int(30) DEFAULT NULL,
