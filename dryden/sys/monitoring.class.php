@@ -20,7 +20,7 @@ class sys_monitoring {
      * @return boolean 
      */
     static function PortStatus($port, $udp = false) {
-        $timeout = ctrl_options::GetOption('servicechk_to');
+        $timeout = ctrl_options::GetSystemOption('servicechk_to');
         if ($udp) {
             $ip = 'udp://' . $_SERVER['SERVER_ADDR'];
         } else {

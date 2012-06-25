@@ -60,7 +60,7 @@ class module_controller {
 					$status = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
 				}
                 array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
-									   'created' => date(ctrl_options::GetOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+									   'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
 									   'status'  => $status,
 									   'id' 	 => $rowmailboxes['mb_id_pk']));
             }
@@ -86,7 +86,7 @@ class module_controller {
 					$ischeck = NULL;
 				}
                 array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
-									   'created' => date(ctrl_options::GetOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+									   'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
 									   'ischeck'  => $ischeck,
 									   'id' 	 => $rowmailboxes['mb_id_pk']));
             }
@@ -127,8 +127,8 @@ class module_controller {
 			$fulladdress = strtolower(str_replace(' ', '', $address . "@" . $domain));
 			self::$create=true;
 			// Include mail server specific file here.
-			if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "")){
-				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
+			if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
+				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 			}
 			$sql = "INSERT INTO x_mailboxes (mb_acc_fk,
 											 mb_address_vc,
@@ -150,8 +150,8 @@ class module_controller {
 		self::$delete=true;
 		$rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->Fetch();
 		// Include mail server specific file here.
-		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
+		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 		}
 		$sql = "UPDATE x_mailboxes SET mb_deleted_ts=" . time() . " WHERE mb_id_pk=" . $mid . "";
 		$sql = $zdbh->prepare($sql);
@@ -172,8 +172,8 @@ class module_controller {
 		}
 		self::$update=true;
 		// Include mail server specific file here.
-		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
+		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 		}
 		runtime_hook::Execute('OnAfterUpdateMailbox');
 		self::$ok = true;

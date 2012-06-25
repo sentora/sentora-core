@@ -20,8 +20,8 @@
             $res = array();
             $sql->execute();
             while ($rowdeletedaccounts = $sql->fetch()) {
-				if (file_exists(ctrl_options::GetOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc'])) {
-        			fs_director::RemoveDirectory(ctrl_options::GetOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc']);
+				if (file_exists(ctrl_options::GetSystemOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc'])) {
+        			fs_director::RemoveDirectory(ctrl_options::GetSystemOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc']);
     			}
             }
         }

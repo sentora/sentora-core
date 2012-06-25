@@ -18,8 +18,8 @@
         }
 
 		// Include mail server specific file here.
-		if (file_exists("modules/aliases/hooks/" . ctrl_options::GetOption('mailserver_php') . "")){
-			include("modules/aliases/hooks/" . ctrl_options::GetOption('mailserver_php') . "");
+		if (file_exists("modules/aliases/hooks/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
+			include("modules/aliases/hooks/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 		}
 		
 		foreach ($deletedclients as $deletedclient){

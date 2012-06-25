@@ -13,8 +13,8 @@
 class ui_tpl_serveripaddress {
 
     public function Template() {
-        if (!fs_director::CheckForEmptyValue(ctrl_options::GetOption('server_ip'))) {
-            return ctrl_options::GetOption('server_ip');
+        if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
+            return ctrl_options::GetSystemOption('server_ip');
         } else {
             return sys_monitoring::ServerIPAddress();
         }

@@ -25,7 +25,7 @@
  *
  */
  
- 		$mailserver_db = ctrl_options::GetOption('mailserver_db');
+ 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
 		include('cnf/db.php');
 		$z_db_user = $user;
 		$z_db_pass = $pass;

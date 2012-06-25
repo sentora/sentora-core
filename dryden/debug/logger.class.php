@@ -51,12 +51,12 @@ class debug_logger {
         if ($this->method == "screen") {
             die($this->logcode . ' - ' . $this->detail);
         } elseif ($this->method == "file") {
-            fs_filehandler::AddTextToFile(ctrl_options::GetOption('logfile'), date('c') . ' - ' . $this->logcode . ' - ' . $this->detail, 1);
+            fs_filehandler::AddTextToFile(ctrl_options::GetSystemOption('logfile'), date('c') . ' - ' . $this->logcode . ' - ' . $this->detail, 1);
         } elseif ($this->method == "email") {
             $email_log = new sys_email();
             $email_log->Subject = "ZPanel Error Log";
             $email_log->Body = "" . date('c') . ' - ' . $this->logcode . ' - ' . $this->detail . "";
-            $email_log->AddAddress(ctrl_options::GetOption('email_from_address'));
+            $email_log->AddAddress(ctrl_options::GetSystemOption('email_from_address'));
             $email_log->SendEmail();
         } elseif ($this->method == "db") {
             $statement = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx) VALUES (0, '" . $this->logcode . "', 'NA', '" . $this->detail . "', '" . $this->mextra . "')";

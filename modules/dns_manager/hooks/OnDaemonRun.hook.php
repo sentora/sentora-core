@@ -4,7 +4,7 @@
 	echo fs_filehandler::NewLine() . "START DNS Manager Hook" . fs_filehandler::NewLine();
 	if (ui_module::CheckModuleEnabled('Backup Config')){
 		echo "DNS Manager module ENABLED..." . fs_filehandler::NewLine();
-		if (!fs_director::CheckForEmptyValue(ctrl_options::GetOption('dns_hasupdates'))){
+		if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('dns_hasupdates'))){
 			echo "DNS Records have changed... Writing new/updated records..." . fs_filehandler::NewLine();
 			WriteDNSZoneRecordsHook();
 			WriteDNSNamedHook();
@@ -26,7 +26,7 @@
 		$dnsrecords = array();
         $RecordsNeedingUpdateArray = array();
 		//Get all the records needing upadated and put them in an array.
-		$GetRecordsNeedingUpdate = ctrl_options::GetOption('dns_hasupdates');
+		$GetRecordsNeedingUpdate = ctrl_options::GetSystemOption('dns_hasupdates');
 		$RecordsNeedingUpdate = explode(",", $GetRecordsNeedingUpdate);
 		foreach ($RecordsNeedingUpdate as $RecordNeedingUpdate){
 			$RecordsNeedingUpdateArray[] = $RecordNeedingUpdate;
@@ -52,19 +52,19 @@
                     $sql->execute();
                     $domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $dnsrecord . " AND dn_deleted_ts IS NULL")->Fetch();
 					//Create zone directory if it doesnt exists...
-				    if (!is_dir(ctrl_options::GetOption('zone_dir'))) {
-                    	fs_director::CreateDirectory(ctrl_options::GetOption('zone_dir'));
-						fs_director::SetFileSystemPermissions(ctrl_options::GetOption('zone_dir'));
+				    if (!is_dir(ctrl_options::GetSystemOption('zone_dir'))) {
+                    	fs_director::CreateDirectory(ctrl_options::GetSystemOption('zone_dir'));
+						fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('zone_dir'));
                 	}
-                    $zone_file = (ctrl_options::GetOption('zone_dir')) . $domain['dn_name_vc'] . ".txt";
+                    $zone_file = (ctrl_options::GetSystemOption('zone_dir')) . $domain['dn_name_vc'] . ".txt";
                     $line = "$" . "TTL 10800" . fs_filehandler::NewLine();
                     $line .= "@ IN SOA " . $domain['dn_name_vc'] . ".    ";
                     $line .= "postmaster@" . $domain['dn_name_vc'] . ". (" . fs_filehandler::NewLine();
                     $line .= "                       " . time() . "	;serial" . fs_filehandler::NewLine();
-                    $line .= "                       " . ctrl_options::GetOption('refresh_ttl') . "      ;refresh after 6 hours" . fs_filehandler::NewLine();
-                    $line .= "                       " . ctrl_options::GetOption('retry_ttl') . "       ;retry after 1 hour" . fs_filehandler::NewLine();
-                    $line .= "                       " . ctrl_options::GetOption('expire_ttl') . "     ;expire after 1 week" . fs_filehandler::NewLine();
-                    $line .= "                       " . ctrl_options::GetOption('minimum_ttl') . " )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();
+                    $line .= "                       " . ctrl_options::GetSystemOption('refresh_ttl') . "      ;refresh after 6 hours" . fs_filehandler::NewLine();
+                    $line .= "                       " . ctrl_options::GetSystemOption('retry_ttl') . "       ;retry after 1 hour" . fs_filehandler::NewLine();
+                    $line .= "                       " . ctrl_options::GetSystemOption('expire_ttl') . "     ;expire after 1 week" . fs_filehandler::NewLine();
+                    $line .= "                       " . ctrl_options::GetSystemOption('minimum_ttl') . " )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();
                     while ($rowdns = $sql->fetch()) {
                         if ($rowdns['dn_type_vc'] == "A") {
                             $line .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		A		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
@@ -118,24 +118,24 @@
             }
         }
 		//Create named directory if it doesnt exists...
-		if (!is_dir(ctrl_options::GetOption('named_dir'))) {
-        	fs_director::CreateDirectory(ctrl_options::GetOption('named_dir'));
-			fs_director::SetFileSystemPermissions(ctrl_options::GetOption('named_dir'));
+		if (!is_dir(ctrl_options::GetSystemOption('named_dir'))) {
+        	fs_director::CreateDirectory(ctrl_options::GetSystemOption('named_dir'));
+			fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('named_dir'));
         }
-		$named_file = ctrl_options::GetOption('named_dir') . ctrl_options::GetOption('named_conf');
+		$named_file = ctrl_options::GetSystemOption('named_dir') . ctrl_options::GetSystemOption('named_conf');
 		echo "Updating " . $named_file . fs_filehandler::NewLine();
         //Now we have all domain ID's, loop through them and find records for each zone file.
 		$line = "";
         foreach ($domains as $domain) {
-			echo "CHECKING ZONE FILE: " . ctrl_options::GetOption('zone_dir') . $domain . ".txt..." . fs_filehandler::NewLine();
-			system(ctrl_options::GetOption('named_checkzone') . " " . $domain . " " . ctrl_options::GetOption('zone_dir') . $domain . ".txt", $retval);
+			echo "CHECKING ZONE FILE: " . ctrl_options::GetSystemOption('zone_dir') . $domain . ".txt..." . fs_filehandler::NewLine();
+			system(ctrl_options::GetSystemOption('named_checkzone') . " " . $domain . " " . ctrl_options::GetSystemOption('zone_dir') . $domain . ".txt", $retval);
 			echo $retval . fs_filehandler::NewLine();
 			if ($retval == 0){
-				echo "Syntax check passed. Adding zone to " . ctrl_options::GetOption('named_conf') . fs_filehandler::NewLine();
+				echo "Syntax check passed. Adding zone to " . ctrl_options::GetSystemOption('named_conf') . fs_filehandler::NewLine();
     		$line .= "zone \"" . $domain . "\" IN {" . fs_filehandler::NewLine();
 			$line .= "	type master;" . fs_filehandler::NewLine();
-			$line .= "	file \"" . ctrl_options::GetOption('zone_dir') . $domain . ".txt\";" . fs_filehandler::NewLine();
-			$line .= "	allow-transfer { " .ctrl_options::GetOption('allow_xfer') . "; };" . fs_filehandler::NewLine();
+			$line .= "	file \"" . ctrl_options::GetSystemOption('zone_dir') . $domain . ".txt\";" . fs_filehandler::NewLine();
+			$line .= "	allow-transfer { " .ctrl_options::GetSystemOption('allow_xfer') . "; };" . fs_filehandler::NewLine();
 			$line .= "};" . fs_filehandler::NewLine();
 			} else {
 				echo "Syntax ERROR. Skipping zone record." . fs_filehandler::NewLine();
@@ -167,12 +167,12 @@
                 }
             }
         }
-		$zonefiles = scandir(ctrl_options::GetOption('zone_dir'));
+		$zonefiles = scandir(ctrl_options::GetSystemOption('zone_dir'));
 		foreach ($zonefiles as $zonefile){
 			if (!in_array(substr($zonefile, 0 , -4), $domains) && $zonefile != "." && $zonefile != ".."){
-        		if (file_exists(ctrl_options::GetOption('zone_dir') . $zonefile)) {
+        		if (file_exists(ctrl_options::GetSystemOption('zone_dir') . $zonefile)) {
 					echo "Purging old zone record from disk: " . substr($zonefile, 0, -4) . fs_filehandler::NewLine();
-					unlink(ctrl_options::GetOption('zone_dir') . $zonefile);
+					unlink(ctrl_options::GetSystemOption('zone_dir') . $zonefile);
 				}
 			}
 		}
@@ -180,9 +180,9 @@
 
 	function ReloadBindHook(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			$reload_bind = ctrl_options::GetOption('bind_dir') . "rndc.exe reload";
+			$reload_bind = ctrl_options::GetSystemOption('bind_dir') . "rndc.exe reload";
 		}else{
-			$reload_bind = ctrl_options::GetOption('zsudo') . " service " . ctrl_options::GetOption('bind_service') . " reload";
+			$reload_bind = ctrl_options::GetSystemOption('zsudo') . " service " . ctrl_options::GetSystemOption('bind_service') . " reload";
 		}
 		echo "Reloading BIND now..." . fs_filehandler::NewLine();
 		pclose(popen($reload_bind,'r'));

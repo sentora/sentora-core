@@ -31,7 +31,7 @@ if((isset($argv[1])) && ($argv[1] == '--set')){
 }
 
 if((isset($argv[1])) && ($argv[1] == '--show')){
-    echo ctrl_options::GetOption($argv[2]);
+    echo ctrl_options::GetSystemOption($argv[2]);
 }
 
 if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {

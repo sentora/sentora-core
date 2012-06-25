@@ -83,8 +83,8 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
 		$res = array();
-	    $handle = @opendir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html");
-	    $chkdir = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+	    $handle = @opendir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html");
+	    $chkdir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
 	    if (!$handle) {
 			# Log an error as the folder cannot be opened...
 	    } else {
@@ -126,17 +126,17 @@ class module_controller {
             //** New Home Directory **//
             if ($autohome == 1) {
                 $destination = "/" . str_replace(".", "_", $domain);
-				$vhost_path = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+				$vhost_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
 				fs_director::CreateDirectory($vhost_path);
 			//** Existing Home Directory **//
 			} else {
 				$destination = "/" . $destination;
-				$vhost_path = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
+				$vhost_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
 			}
             // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
 	        // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
 	        fs_director::CreateDirectory($vhost_path . "/_errorpages/");
-	        $errorpages = ctrl_options::GetOption('static_dir') . "/errorpages/";
+	        $errorpages = ctrl_options::GetSystemOption('static_dir') . "/errorpages/";
 	        if (is_dir($errorpages)) {
 	        	if ($handle = @opendir($errorpages)) {
 			        while (($file = @readdir($handle)) !== false) {
@@ -152,7 +152,7 @@ class module_controller {
 	        }
 	        // Lets copy the default welcome page across...
 	        if ((!file_exists($vhost_path . "/index.html")) && (!file_exists($vhost_path . "/index.php")) && (!file_exists($vhost_path . "/index.htm"))) {
-	        fs_filehandler::CopyFileSafe(ctrl_options::GetOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
+	        fs_filehandler::CopyFileSafe(ctrl_options::GetSystemOption('static_dir') . "pages/welcome.html", $vhost_path . "/index.html");
 	        }
             // If all has gone well we need to now create the domain in the database...
             $sql = $zdbh->prepare("INSERT INTO x_vhosts (vh_acc_fk,
@@ -168,7 +168,7 @@ class module_controller {
             $sql->execute();
 			# Only run if the Server platform is Windows.
     		if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
-		        if (ctrl_options::GetOption('disable_hostsen') == 'false') {
+		        if (ctrl_options::GetSystemOption('disable_hostsen') == 'false') {
 		            # Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
 		            @exec("C:/zpanel/bin/zpss/setroute.exe " . $domain . "");
 		        }

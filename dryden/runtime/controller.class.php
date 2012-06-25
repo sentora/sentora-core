@@ -215,7 +215,7 @@ class runtime_controller {
             require_once $module_path . 'controller.ext.php';
         } else {
             $hook_log = new debug_logger();
-            $hook_log->method = ctrl_options::GetOption('logmode');
+            $hook_log->method = ctrl_options::GetSystemOption('logmode');
             $hook_log->logcode = "611";
             $hook_log->detail = "No hook controller.ext.php avaliable to import in (" . $root_path . 'controller.ext.php' . ")";
             $hook_log->writeLog();

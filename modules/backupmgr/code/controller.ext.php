@@ -36,7 +36,7 @@ class module_controller {
         $username = $currentuser['username'];
         $res = array();
         $dirFiles = array();
-        $backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/";
+        $backupdir = ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups/";
         if ($handle = opendir($backupdir)) {
             while (false !== ($file = readdir($handle))) {
                 if ($file != "." && $file != ".." && stristr($file, "_") && substr($file, -4) == ".zip") {
@@ -69,7 +69,7 @@ class module_controller {
 	
     static function CheckHasData($userid) {
         $currentuser = ctrl_users::GetUserDetail($userid);
-        $datafolder = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+        $datafolder = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
 		$dirFiles = array();
         if ($handle = opendir($datafolder)) {
             while (false !== ($file = readdir($handle))) {
@@ -110,21 +110,21 @@ class module_controller {
 
     static function ExecuteDeleteBackup($username, $file) {
         runtime_hook::Execute('OnBeforeDeleteBackup');
-        $backup_file_to_delete = ctrl_options::GetOption('hosted_dir') . $username . "/backups/" . $file . ".zip";
+        $backup_file_to_delete = ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups/" . $file . ".zip";
         unlink($backup_file_to_delete);
         runtime_hook::Execute('OnAfterDeleteBackup');
     }
 
     static function ExecuteCreateBackupDirectory($username) {
-        $backupdir = ctrl_options::GetOption('hosted_dir') . $username . "/backups/";
+        $backupdir = ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups/";
         if (!is_dir($backupdir)) {
             fs_director::CreateDirectory($backupdir);
         }
     }
 
     static function CheckPurgeDate() {
-		if (strtolower(ctrl_options::GetOption('purge_bu')) == "true") {
-    		return ctrl_options::GetOption('purge_date');
+		if (strtolower(ctrl_options::GetSystemOption('purge_bu')) == "true") {
+    		return ctrl_options::GetSystemOption('purge_date');
 		} else {
 			return false;
 		}
@@ -185,7 +185,7 @@ class module_controller {
 
     static function GetDiskAllowed() {
         global $controller;
-        if (strtolower(ctrl_options::GetOption('disk_bu')) == "true")
+        if (strtolower(ctrl_options::GetSystemOption('disk_bu')) == "true")
             return true;
         return false;
     }

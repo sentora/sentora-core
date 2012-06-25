@@ -50,7 +50,7 @@ class module_controller {
             while ($rowpackages = $sql->fetch()) {
 				$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . " AND ac_deleted_ts IS NULL")->fetchColumn(); 
                 array_push($res, array( 'packageid'   => $rowpackages['pk_id_pk'],
-										'created'     => date(ctrl_options::GetOption('zpanel_df'), $rowpackages['pk_created_ts']),
+										'created'     => date(ctrl_options::GetSystemOption('zpanel_df'), $rowpackages['pk_created_ts']),
 										'clients'     => $numrows[0],
                     					'packagename' => ui_language::translate($rowpackages['pk_name_vc'])));
             }

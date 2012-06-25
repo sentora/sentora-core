@@ -132,7 +132,7 @@ class module_controller {
 			$destination = strtolower(str_replace(' ', '', $destination));
 			self::$create=true;
 			// Include mail server specific file here.
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 			$sql = "INSERT INTO x_aliases (al_acc_fk,
 											  al_address_vc,
 											  al_destination_vc,
@@ -155,8 +155,8 @@ class module_controller {
 		runtime_hook::Execute('OnBeforeDeleteAlias');
 		$rowalias = $zdbh->query("SELECT * FROM x_aliases WHERE al_id_pk=" . $al_id_pk . "")->Fetch();
 		// Include mail server specific file here.
-		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
+		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 		}
 		$sql = "UPDATE x_aliases SET al_deleted_ts=" . time() . " WHERE al_id_pk=" . $al_id_pk . "";
 		$sql = $zdbh->prepare($sql);

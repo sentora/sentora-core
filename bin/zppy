@@ -52,7 +52,7 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
             exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
             chdir($root_path);
             if ($isfound) {
-                if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $argv[2])) {
+                if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $argv[2])) {
                     if (fs_director::CreateDirectory('modules/' . $argv[2])) {
                         if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
                             fs_director::SetFileSystemPermissions('modules/' . $argv[2] . '', 0777);
@@ -61,9 +61,9 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
                                 exit(1);
                             } else {
                                 ui_module::ModuleInfoToDB($argv[2]);
-                                $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/install.run";
+                                $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/install.run";
                                 if (fs_director::CheckFileExists($extra_config))
-                                    exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
+                                    exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
                                 fwrite(STDOUT, "Module installed successfully!");
                                 exit(0);
                             }
@@ -111,7 +111,7 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
             chdir($root_path);
         }
     }
-    if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $argv[2])) {
+    if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $argv[2])) {
         fwrite(STDOUT, "The module '" . $argv[2] . "' is not installed, install it first before you can upgrade it!");
         exit(1);
     } else {
@@ -124,9 +124,9 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
                 fwrite(STDOUT, "No module.xml file found in the unzipped archive.");
                 exit(1);
             } else {
-                $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
+                $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
                 if (fs_director::CheckFileExists($extra_config))
-                    exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
+                    exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
                 fwrite(STDOUT, "Module upgraded successfully!");
                 exit(0);
             }
@@ -151,9 +151,9 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
         $confirm = fgets(STDIN, 2);
         if ($confirm == 'y') {
             fwrite(STDOUT, "Removing " . $argv[2] . " module..\n");
-            $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/remove.run";
+            $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/remove.run";
             if (fs_director::CheckFileExists($extra_config))
-                exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
+                exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
             ctrl_groups::DeleteGroupModulePermissions(0, $moduleid['mo_id_pk']);
             $sql = $zdbh->prepare("DELETE FROM x_modules WHERE mo_folder_vc = '$argv[2]'");
             $sql->execute();
@@ -175,7 +175,7 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
 }
 
 if ((isset($argv[1])) && (($argv[1] == 'version') || ($argv[1] == '-v') || ($argv[1] == '--version'))) {
-    fwrite(STDOUT, "Version: " . ctrl_options::GetOption('dbversion') . "\n");
+    fwrite(STDOUT, "Version: " . ctrl_options::GetSystemOption('dbversion') . "\n");
     exit(0);
 }
 

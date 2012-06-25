@@ -19,7 +19,7 @@ class db_builder {
      */
     static function moduledb_commit() {
         global $zdbh;
-        $mod_db_dir = ctrl_options::GetOption('zpanel_root') . "modules/*/{dbs.xml}";
+        $mod_db_dir = ctrl_options::GetSystemOption('zpanel_root') . "modules/*/{dbs.xml}";
         try {
             foreach (glob($mod_db_dir, GLOB_BRACE) as $mod_db_file) {
 

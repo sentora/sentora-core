@@ -170,7 +170,7 @@ class sys_versions {
      * @return string ZPanel DB Version
      */
     static function ShowZpanelVersion() {
-        return ctrl_options::GetOption('dbversion');
+        return ctrl_options::GetSystemOption('dbversion');
     }
 
 }

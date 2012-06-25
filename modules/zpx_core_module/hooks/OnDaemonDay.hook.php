@@ -6,7 +6,7 @@ $modsql->execute();
 echo fs_filehandler::NewLine() . "START checking for any avaliable module updates..". fs_filehandler::NewLine();
 while ($modules = $modsql->fetch()) {
 	echo "Checking update for mod: " . $modules['mo_name_vc'] . fs_filehandler::NewLine();
-    $mod_config = new xml_reader(fs_filehandler::ReadFileContents(ctrl_options::GetOption('zpanel_root') . 'modules/' . $modules['mo_folder_vc'] . '/module.xml'));
+    $mod_config = new xml_reader(fs_filehandler::ReadFileContents(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $modules['mo_folder_vc'] . '/module.xml'));
     $mod_config->Parse();
     if (isset($mod_config->document->version[0]->tagData)) {
         $current_version = $mod_config->document->version[0]->tagData;
@@ -43,7 +43,7 @@ echo "END getting module version update information!". fs_filehandler::NewLine()
  * find out non-personal infomation about how people are running ZPanel. The only infomation
  * that we are passing back here is just your ZPanel version and what OS you are running it on.
  */
-ws_generic::DoPostRequest('http://api.zpanelcp.com/hello.json', "version=" . sys_versions::ShowZpanelVersion() . "&platform=" . sys_versions::ShowOSPlatformVersion() . "&url=" . ctrl_options::GetOption('zpanel_domain') . "");
+ws_generic::DoPostRequest('http://api.zpanelcp.com/hello.json', "version=" . sys_versions::ShowZpanelVersion() . "&platform=" . sys_versions::ShowOSPlatformVersion() . "&url=" . ctrl_options::GetSystemOption('zpanel_domain') . "");
 
 return true;
 ?>

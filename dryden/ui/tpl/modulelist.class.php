@@ -36,7 +36,7 @@ class ui_tpl_modulelist {
 	                $line .= "<td>";
 	                $line .= "<table align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
 	                $line .= "<tr>";
-	                $icons_per_row = ctrl_options::GetOption('module_icons_pr');
+	                $icons_per_row = ctrl_options::GetSystemOption('module_icons_pr');
 	                $num_icons = 0;
 	                foreach ($mods as $mod) {
 	                    $translatename = ui_language::translate($mod['mo_name_vc']);

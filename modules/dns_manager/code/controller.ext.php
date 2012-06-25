@@ -122,7 +122,7 @@ class module_controller {
         }
 		$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
 		$zone_message=self::CheckZoneRecord($domainID);
-		$zonecheck_file = ctrl_options::GetOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
+		$zonecheck_file = ctrl_options::GetSystemOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
 		$zone_message = str_replace($zonecheck_file, "", $zone_message);
 		if (strstr(strtoupper($zone_message), "OK")){
 			if (substr_count($zone_message, ":") >= 2){
@@ -191,7 +191,7 @@ class module_controller {
             $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='A' AND dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
             $sql->execute();
             while ($rowdns = $sql->fetch()) {
-                if (ctrl_options::GetOption('custom_ip') == strtolower("false")) {
+                if (ctrl_options::GetSystemOption('custom_ip') == strtolower("false")) {
                     $custom_ip = "READONLY";
                 } else {
                     $custom_ip = NULL;
@@ -633,8 +633,8 @@ class module_controller {
         $domainID = $controller->GetControllerRequest('FORM', 'inDomain');
         $domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
         $userID = $controller->GetControllerRequest('FORM', 'inUserID');
-        if (!fs_director::CheckForEmptyValue(ctrl_options::GetOption('server_ip'))) {
-            $target = ctrl_options::GetOption('server_ip');
+        if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
+            $target = ctrl_options::GetSystemOption('server_ip');
         } else {
             $target = $_SERVER["SERVER_ADDR"];
         }
@@ -985,9 +985,9 @@ class module_controller {
                         if (isset($target['new_' . $id]) && !fs_director::CheckForEmptyValue($target['new_' . $id])) {
                             //If Custom IP addresses are not allowed.
                             if ($type['new_' . $id] == 'A') {
-                                if (ctrl_options::GetOption('custom_ip') == strtolower("false")) {
-                                    if (!fs_director::CheckForEmptyValue(ctrl_options::GetOption('server_ip'))) {
-                                        $target['new_' . $id] = ctrl_options::GetOption('server_ip');
+                                if (ctrl_options::GetSystemOption('custom_ip') == strtolower("false")) {
+                                    if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
+                                        $target['new_' . $id] = ctrl_options::GetSystemOption('server_ip');
                                     } else {
                                         $target['new_' . $id] = $_SERVER["SERVER_ADDR"];
                                     }
@@ -1327,7 +1327,7 @@ class module_controller {
 
     static function IsTypeAllowed($type) {
         global $zdbh;
-        $record_types = ctrl_options::GetOption('allowed_types');
+        $record_types = ctrl_options::GetSystemOption('allowed_types');
         $record_types = explode(" ", $record_types);
         if (in_array($type, $record_types)) {
             return TRUE;
@@ -1422,7 +1422,7 @@ class module_controller {
     static function TriggerDNSUpdate($id) {
 		global $zdbh;
         global $controller;
-        $GetRecords = ctrl_options::GetOption('dns_hasupdates');
+        $GetRecords = ctrl_options::GetSystemOption('dns_hasupdates');
 		$records = explode(",", $GetRecords);
 		foreach ($records as $record){
 			$RecordArray[] = $record;
@@ -1449,15 +1449,15 @@ class module_controller {
                     $domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();
 					
 
-                    $zonecheck_file = (ctrl_options::GetOption('temp_dir')) . $domain['dn_name_vc'] . ".txt";
+                    $zonecheck_file = (ctrl_options::GetSystemOption('temp_dir')) . $domain['dn_name_vc'] . ".txt";
                     $checkline = "$" . "TTL 10800" . fs_filehandler::NewLine();
                     $checkline .= "@ IN SOA " . $domain['dn_name_vc'] . ".    ";
                     $checkline .= "postmaster@" . $domain['dn_name_vc'] . ". (" . fs_filehandler::NewLine();
                     $checkline .= "                       " . time() . "	;serial" . fs_filehandler::NewLine();
-                    $checkline .= "                       " . ctrl_options::GetOption('refresh_ttl') . "      ;refresh after 6 hours" . fs_filehandler::NewLine();
-                    $checkline .= "                       " . ctrl_options::GetOption('retry_ttl') . "       ;retry after 1 hour" . fs_filehandler::NewLine();
-                    $checkline .= "                       " . ctrl_options::GetOption('expire_ttl') . "     ;expire after 1 week" . fs_filehandler::NewLine();
-                    $checkline .= "                       " . ctrl_options::GetOption('minimum_ttl') . " )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetSystemOption('refresh_ttl') . "      ;refresh after 6 hours" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetSystemOption('retry_ttl') . "       ;retry after 1 hour" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetSystemOption('expire_ttl') . "     ;expire after 1 week" . fs_filehandler::NewLine();
+                    $checkline .= "                       " . ctrl_options::GetSystemOption('minimum_ttl') . " )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();
                     while ($rowdns = $sql->fetch()) {
                         if ($rowdns['dn_type_vc'] == "A") {
                             $checkline .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		A		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
@@ -1491,7 +1491,7 @@ class module_controller {
 				//Check the temp zone record for errors
 				if (file_exists($zonecheck_file)){
 					ob_start();
-		        	system(ctrl_options::GetOption('named_checkzone') . " " . $domain['dn_name_vc'] . " " . $zonecheck_file, $retval);
+		        	system(ctrl_options::GetSystemOption('named_checkzone') . " " . $domain['dn_name_vc'] . " " . $zonecheck_file, $retval);
 		        	$content_grabbed = ob_get_contents();
 		        	ob_end_clean();
 					unlink($zonecheck_file);

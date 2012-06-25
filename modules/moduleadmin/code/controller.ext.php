@@ -310,26 +310,26 @@ class module_controller {
         } else {
             $archive_ext = fs_director::GetFileExtension($_FILES['modulefile']['name']);
             $module_folder = fs_director::GetFileNameNoExtentsion($_FILES['modulefile']['name']);
-            if (!fs_director::CheckFolderExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder)) {
+            if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $module_folder)) {
                 if ($archive_ext != 'zpp') {
                     self::$error_message = "Package type was not detected as a .zpp (ZPanel Package) archive.";
                 } else {
-                    if (fs_director::CreateDirectory(ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder)) {
-                        if (sys_archive::Unzip($_FILES['modulefile']['tmp_name'], ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . '/')) {
-                            if (!fs_director::CheckFileExists(ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . '/module.xml')) {
+                    if (fs_director::CreateDirectory(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $module_folder)) {
+                        if (sys_archive::Unzip($_FILES['modulefile']['tmp_name'], ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $module_folder . '/')) {
+                            if (!fs_director::CheckFileExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $module_folder . '/module.xml')) {
                                 self::$error_message = "No module.xml file found in the unzipped archive.";
                             } else {
                                 ui_module::ModuleInfoToDB($module_folder);
-                                $extra_config = ctrl_options::GetOption('zpanel_root') . "modules/" . $module_folder . "/deploy/install.run";
+                                $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $module_folder . "/deploy/install.run";
                                 if (fs_director::CheckFileExists($extra_config))
-                                    exec(ctrl_options::GetOption('php_exer') . " " . $extra_config . "");
+                                    exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
                                 self::$ok = true;
                             }
                         } else {
-                            self::$error_message = "Couldn't unzip the archive (" . $_FILES['modulefile']['tmp_name'] . ") to " . ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . '/';
+                            self::$error_message = "Couldn't unzip the archive (" . $_FILES['modulefile']['tmp_name'] . ") to " . ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $module_folder . '/';
                         }
                     } else {
-                        self::$error_message = "Couldn't create module folder in " . ctrl_options::GetOption('zpanel_root') . 'modules/' . $module_folder . "";
+                        self::$error_message = "Couldn't create module folder in " . ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $module_folder . "";
                     }
                 }
             } else {

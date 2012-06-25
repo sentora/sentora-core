@@ -123,8 +123,8 @@ class module_controller {
 			runtime_hook::Execute('OnBeforeCreateForwarder');
 			self::$create=true;
 			// Include mail server specific file here.
-			if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "")){
-				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
+			if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
+				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 			}
 			$sql = "INSERT INTO x_forwarders (fw_acc_fk,
 											  fw_address_vc,
@@ -150,8 +150,8 @@ class module_controller {
 		$rowforwarder = $zdbh->query("SELECT * FROM x_forwarders WHERE fw_id_pk=" . $fw_id_pk . "")->fetch();
 		self::$delete=true;
 		// Include mail server specific file here.
-		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('mailserver_php') . "");
+		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
 		}
 		$sql = "UPDATE x_forwarders SET fw_deleted_ts=" . time() . " WHERE fw_id_pk=" . $fw_id_pk . "";
 		$sql = $zdbh->prepare($sql);

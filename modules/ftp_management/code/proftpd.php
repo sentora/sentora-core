@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$ftp_db = ctrl_options::GetOption('ftp_db');
+ 		$ftp_db = ctrl_options::GetSystemOption('ftp_db');
 		include('cnf/db.php');
 		$z_db_user = $user;
 		$z_db_pass = $pass;
@@ -36,7 +36,7 @@
 		
 		// Included after acount has been created
 		if (!fs_director::CheckForEmptyValue(self::$create)) {
-			$homedir=ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "";
+			$homedir=ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "";
 			$sql = $ftp_db->prepare("INSERT INTO ftpquotalimits (
 												name, 
 												quota_type, 

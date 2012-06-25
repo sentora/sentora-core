@@ -20,21 +20,21 @@ class sys_email extends PHPMailer {
      * @return boolean 
      */
     public function SendEmail() {
-        $this->Mailer = ctrl_options::GetOption('mailer_type');
-        $this->From = ctrl_options::GetOption('email_from_address');
-        $this->FromName = ctrl_options::GetOption('email_from_name');
-        if (ctrl_options::GetOption('email_smtp') <> 'false') {
+        $this->Mailer = ctrl_options::GetSystemOption('mailer_type');
+        $this->From = ctrl_options::GetSystemOption('email_from_address');
+        $this->FromName = ctrl_options::GetSystemOption('email_from_name');
+        if (ctrl_options::GetSystemOption('email_smtp') <> 'false') {
             $this->IsSMTP();
-            if (ctrl_options::GetOption('smtp_auth') <> 'false') {
+            if (ctrl_options::GetSystemOption('smtp_auth') <> 'false') {
                 $this->SMTPAuth = true;
-                $this->Username = ctrl_options::GetOption('smtp_username');
-                $this->Password = ctrl_options::GetOption('smtp_password');
+                $this->Username = ctrl_options::GetSystemOption('smtp_username');
+                $this->Password = ctrl_options::GetSystemOption('smtp_password');
             }
-            if (ctrl_options::GetOption('smtp_secure') <> 'false') {
-                $this->SMTPSecure = ctrl_options::GetOption('smtp_secure');
+            if (ctrl_options::GetSystemOption('smtp_secure') <> 'false') {
+                $this->SMTPSecure = ctrl_options::GetSystemOption('smtp_secure');
             }
-            $this->Host = ctrl_options::GetOption('smtp_server');
-            $this->Port = ctrl_options::GetOption('smtp_port');
+            $this->Host = ctrl_options::GetSystemOption('smtp_server');
+            $this->Port = ctrl_options::GetSystemOption('smtp_port');
         }
 
         ob_start();
@@ -46,7 +46,7 @@ class sys_email extends PHPMailer {
             return true;
         } else {
             $logger = new debug_logger();
-            $logger->method = ctrl_options::GetOption('logmode');
+            $logger->method = ctrl_options::GetSystemOption('logmode');
             $logger->logcode = "061";
             $logger->detail = 'Error sending email (using sys_email): ' . $error . '';
             $logger->writeLog();

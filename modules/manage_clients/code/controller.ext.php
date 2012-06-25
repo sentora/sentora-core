@@ -314,7 +314,7 @@ class module_controller {
         runtime_hook::Execute('OnBeforeUpdateClient');
         if ($newpass != "") {
             // Check for password length...
-            if (strlen($newpass) < ctrl_options::GetOption('password_minlength')) {
+            if (strlen($newpass) < ctrl_options::GetSystemOption('password_minlength')) {
                 self::$badpassword = true;
                 return false;
             }
@@ -449,12 +449,12 @@ class module_controller {
         $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
         $sql->execute();
         // Lets create the client diectories
-        fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username);
-        fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username, 0777);
-        fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/public_html");
-        fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/public_html", 0777);
-        fs_director::CreateDirectory(ctrl_options::GetOption('hosted_dir') . $username . "/backups");
-        fs_director::SetFileSystemPermissions(ctrl_options::GetOption('hosted_dir') . $username . "/backups", 0777);
+        fs_director::CreateDirectory(ctrl_options::GetSystemOption('hosted_dir') . $username);
+        fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('hosted_dir') . $username, 0777);
+        fs_director::CreateDirectory(ctrl_options::GetSystemOption('hosted_dir') . $username . "/public_html");
+        fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('hosted_dir') . $username . "/public_html", 0777);
+        fs_director::CreateDirectory(ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups");
+        fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups", 0777);
         // Send the user account details via. email (if requested)... 
         if ($sendemail <> 0) {
             $emailsubject = str_replace("{{username}}", $username, $emailsubject);
@@ -534,7 +534,7 @@ class module_controller {
         }
         // Check for password length...
         if (!fs_director::CheckForEmptyValue($password)) {
-            if (strlen($password) < ctrl_options::GetOption('password_minlength')) {
+            if (strlen($password) < ctrl_options::GetSystemOption('password_minlength')) {
                 self::$badpassword = true;
                 return false;
             }
@@ -896,7 +896,7 @@ class module_controller {
     }
 
     static function getRandomPassword() {
-        $minpasswordlength = ctrl_options::GetOption('password_minlength');
+        $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
         $trylength = 9;
         if ($trylength < $minpasswordlength) {
             $uselength = $minpasswordlength;
@@ -908,7 +908,7 @@ class module_controller {
     }
 
     static function getMinPassLength() {
-        $minpasswordlength = ctrl_options::GetOption('password_minlength');
+        $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
         $trylength = 9;
         if ($trylength < $minpasswordlength) {
             $uselength = $minpasswordlength;
@@ -941,7 +941,7 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Your email adress is not valid. Please enter a valid email address."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$badpassword)) {
-            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") . ": " . ctrl_options::GetOption('password_minlength'), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") . ": " . ctrl_options::GetSystemOption('password_minlength'), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate("A client with that name already appears to exsist on this server."), "zannounceerror");

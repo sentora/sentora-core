@@ -32,28 +32,28 @@ runtime_hook::Execute("OnStartDaemonRun");
 runtime_hook::Execute("OnDaemonRun");
 runtime_hook::Execute("OnEndDaemonRun");
 
-if (ctrl_options::GetOption('daemon_hourrun') < (time() + 3599)) {
+if (ctrl_options::GetSystemOption('daemon_hourrun') < (time() + 3599)) {
     runtime_hook::Execute("OnStartDaemonHour");
     runtime_hook::Execute("OnDaemonHour");
     runtime_hook::Execute("OnEndDaemonHour");
     ctrl_options::SetSystemOption('daemon_hourrun', time());
 }
 
-if (ctrl_options::GetOption('daemon_dayrun') < (time() - 86399)) {
+if (ctrl_options::GetSystemOption('daemon_dayrun') < (time() - 86399)) {
     runtime_hook::Execute("OnStartDaemonDay");
     runtime_hook::Execute("OnDaemonDay");
     runtime_hook::Execute("OnEndDaemonDay");
     ctrl_options::SetSystemOption('daemon_dayrun', time());
 }
 
-if (ctrl_options::GetOption('daemon_weekrun') < (time() - 604799)) {
+if (ctrl_options::GetSystemOption('daemon_weekrun') < (time() - 604799)) {
     runtime_hook::Execute("OnStartDaemonWeek");
     runtime_hook::Execute("OnDaemonWeek");
     runtime_hook::Execute("OnEndDaemonWeek");
     ctrl_options::SetSystemOption('daemon_weekrun', time());
 }
 
-if (ctrl_options::GetOption('daemon_monthrun') < (time() - 2419199)) {
+if (ctrl_options::GetSystemOption('daemon_monthrun') < (time() - 2419199)) {
     runtime_hook::Execute("OnStartDaemonMonth");
     runtime_hook::Execute("OnDaemonMonth");
     runtime_hook::Execute("OnEndDaemonMonth");

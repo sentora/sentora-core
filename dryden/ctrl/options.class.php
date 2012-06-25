@@ -19,7 +19,7 @@ class ctrl_options {
      * @param string $name The name of the system option (eg. zpanel_root)
      * @return string The system option value.
      */
-    static function GetOption($name) {
+    static function GetSystemOption($name) {
         global $zdbh;
         $sqlString = "SELECT so_value_tx FROM x_settings WHERE so_name_vc = :name";
         $bindArray = array( ':name' => $name, );

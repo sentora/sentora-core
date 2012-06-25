@@ -19,8 +19,8 @@
         }
 		
 		// Include FTP server specific file here.
-		if(file_exists("modules/ftp_management/hooks/" . ctrl_options::GetOption('ftp_php') . "")){
-			include("modules/ftp_management/hooks/" . ctrl_options::GetOption('ftp_php') . "");
+		if(file_exists("modules/ftp_management/hooks/" . ctrl_options::GetSystemOption('ftp_php') . "")){
+			include("modules/ftp_management/hooks/" . ctrl_options::GetSystemOption('ftp_php') . "");
 		}
     }
 ?>

@@ -27,8 +27,8 @@
 			}
 			if ($deletedir == true){
 				$currentuser = ctrl_users::GetUserDetail($deletedclient);
-				if (is_dir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'])){
-					fs_filehandler::RemoveDirectory(ctrl_options::GetOption('hosted_dir') . $currentuser['username']);
+				if (is_dir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'])){
+					fs_filehandler::RemoveDirectory(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username']);
 				}
 			}
 		}

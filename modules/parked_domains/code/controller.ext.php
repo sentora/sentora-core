@@ -117,7 +117,7 @@ class module_controller {
             $sql->execute();
 			# Only run if the Server platform is Windows.
     		if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
-		        if (ctrl_options::GetOption('disable_hostsen') == 'false') {
+		        if (ctrl_options::GetSystemOption('disable_hostsen') == 'false') {
 		            # Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
 		            @exec("C:/zpanel/bin/zpss/setroute.exe " . $domain . "");
 		            @exec("C:/zpanel/bin/zpss/setroute.exe www." . $domain . "");
@@ -161,7 +161,7 @@ class module_controller {
         // Check to make sure user not adding a subdomain and blocks stealing of subdomains....
 		// Get shared domain list
 		$SharedDomains = array();
-		$a = ctrl_options::GetOption('shared_domains');
+		$a = ctrl_options::GetSystemOption('shared_domains');
 		$a = explode(',', $a);
 		foreach ($a as $b) {
     		$SharedDomains[] = $b;
@@ -252,7 +252,7 @@ class module_controller {
 		if (!fs_director::CheckForEmptyValue($parkeddomains)){
 		foreach ($parkeddomains as $row) {
 		$status = self::getParkedDomainStatusHTML($row['active'], $row['id']);
-		$created = date(ctrl_Options::GetOption('zpanel_df'),  $row['created']);
+		$created = date(ctrl_Options::GetSystemOption('zpanel_df'),  $row['created']);
              array_push($res, array('name' => $row['name'],
 									'directory' => $row['directory'],
 									'active' => $row['active'],

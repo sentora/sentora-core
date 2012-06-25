@@ -8,7 +8,7 @@ global $zdbh;
 $userssql = $zdbh->query("SELECT ac_id_pk, ac_user_vc FROM x_accounts WHERE ac_deleted_ts IS NULL");
 echo fs_filehandler::NewLine() . "START Calculating disk Usage for all client accounts..". fs_filehandler::NewLine();
 while ($userdir = $userssql->fetch()) {
-    $homedirectory = ctrl_options::GetOption('hosted_dir') . $userdir['ac_user_vc'];
+    $homedirectory = ctrl_options::GetSystemOption('hosted_dir') . $userdir['ac_user_vc'];
     if (fs_director::CheckFolderExists($homedirectory)) {
         $size = fs_director::GetDirectorySize($homedirectory);
     } else {
@@ -46,8 +46,8 @@ if ($checksql['total'] > 0) {
     $domainssql = $zdbh->query("SELECT vh_acc_fk, vh_name_vc FROM x_vhosts WHERE vh_deleted_ts IS NULL");
     while ($domain = $domainssql->fetch()) {
         $domainowner = ctrl_users::GetUserDetail($domain['vh_acc_fk']);
-        $bandwidthlog = ctrl_options::GetOption('log_dir') . 'domains/' . $domainowner['username'] . '/' . $domain['vh_name_vc'] . '-bandwidth.log';
-        $snapshotfile = ctrl_options::GetOption('log_dir') . 'domains/' . $domainowner['username'] . '/' . $domain['vh_name_vc'] . '-snapshot.bw';
+        $bandwidthlog = ctrl_options::GetSystemOption('log_dir') . 'domains/' . $domainowner['username'] . '/' . $domain['vh_name_vc'] . '-bandwidth.log';
+        $snapshotfile = ctrl_options::GetSystemOption('log_dir') . 'domains/' . $domainowner['username'] . '/' . $domain['vh_name_vc'] . '-snapshot.bw';
         $bandwidth = 0;
         echo "Processing domain \"" . $domain['vh_name_vc'] . "\"". fs_filehandler::NewLine();
         if (fs_director::CheckFileExists($bandwidthlog)) {

@@ -12,7 +12,7 @@
 global $controller, $zdbh, $zlo;
 $controller = new runtime_controller();
 
-$zlo->method = ctrl_options::GetOption('logmode');
+$zlo->method = ctrl_options::GetSystemOption('logmode');
 if ($zlo->hasInfo()) {
     $zlo->writeLog();
     $zlo->reset();
@@ -49,11 +49,11 @@ if (isset($_POST['inForgotPassword'])) {
         $phpmailer->Subject = "Hosting Panel Password Reset";
         $phpmailer->Body = "Hi " . $result['ac_user_vc'] . ",
             
-        You or somebody pretending to be you has requested a password reset link to be sent for your web hosting control panel login at: " . ctrl_options::GetOption('cp_url') . "
+        You or somebody pretending to be you has requested a password reset link to be sent for your web hosting control panel login at: " . ctrl_options::GetSystemOption('cp_url') . "
             
         If you wish to proceed with the password reset on your account please use this link below to be taken to the password reset page.
             
-        http://" . ctrl_options::GetOption('zpanel_domain') . "/?resetkey=" . $randomkey . "
+        http://" . ctrl_options::GetSystemOption('zpanel_domain') . "/?resetkey=" . $randomkey . "
             
         ";
         $phpmailer->AddAddress($result['ac_email_vc']);

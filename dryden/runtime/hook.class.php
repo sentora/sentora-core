@@ -20,7 +20,7 @@ class runtime_hook {
     static function Execute($name) {
         $hook_log = new debug_logger();
         $mod_folder = "modules/*/hooks/{" . $name . ".hook.php}";
-        $hook_log->method = ctrl_options::GetOption('logmode');
+        $hook_log->method = ctrl_options::GetSystemOption('logmode');
         $hook_log->logcode = "861";
         foreach (glob($mod_folder, GLOB_BRACE) as $hook_file) {
             if (file_exists($hook_file)) {

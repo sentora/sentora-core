@@ -32,7 +32,7 @@
 	
     function TriggerDNSUpdate($id) {
 		global $zdbh;
-        $GetRecords = ctrl_options::GetOption('dns_hasupdates');
+        $GetRecords = ctrl_options::GetSystemOption('dns_hasupdates');
 		$records = explode(",", $GetRecords);
 		foreach ($records as $record){
 			$RecordArray[] = $record;

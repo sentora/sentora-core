@@ -186,7 +186,7 @@ class module_controller {
 		$line .= "<form action=\"./?module=dns_admin&action=Updatelogs\" method=\"post\">";
         $line .= "<table class=\"zgrid\">";
 		$line .= "<tr>";
-		$line .= "<th style=\"width:350px;\">" . self::CheckLogReadable(ctrl_options::GetOption('bind_log')) . " " . self::CheckLogWritable(ctrl_options::GetOption('bind_log')) . "</th>";
+		$line .= "<th style=\"width:350px;\">" . self::CheckLogReadable(ctrl_options::GetSystemOption('bind_log')) . " " . self::CheckLogWritable(ctrl_options::GetSystemOption('bind_log')) . "</th>";
 		$line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSetPerms\" value=\"1\">" . ui_language::translate("Set Permissions")."</button></td>";
 		$line .= "<tr>";
 		$line .= "<th>" . ui_language::translate("Clear errors")."</th>";
@@ -226,7 +226,7 @@ class module_controller {
 		$line .= "</tr>";
 		$line .= "<tr>";
 		$line .= "<th>" . ui_language::translate("View logs")." (".count(self::$getlog).")</th>";
-		$line .= "<td><input type=\"hidden\" name=\"inBindLog\" value=\"" . ctrl_options::GetOption('bind_log') . "\" /><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">" . ui_language::translate("View")."</button></td>";
+		$line .= "<td><input type=\"hidden\" name=\"inBindLog\" value=\"" . ctrl_options::GetSystemOption('bind_log') . "\" /><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inViewLogs\" value=\"1\">" . ui_language::translate("View")."</button></td>";
 		$line .= "</tr>";
         $line .= "</table>";
 		$line .= "</form>";				
@@ -337,27 +337,27 @@ class module_controller {
 	
 	static function StartBind(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			exec('net start '.ctrl_options::GetOption('bind_service').'', $out);
+			exec('net start '.ctrl_options::GetSystemOption('bind_service').'', $out);
 		}else{
-			system(ctrl_options::GetOption('zsudo') . ' service ' . ctrl_options::GetOption('bind_service') . ' start', $out);
+			system(ctrl_options::GetSystemOption('zsudo') . ' service ' . ctrl_options::GetSystemOption('bind_service') . ' start', $out);
 			sleep(2);
 		}
 	}
 
 	static function StopBind(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			exec('net stop '.ctrl_options::GetOption('bind_service').'', $out);
+			exec('net stop '.ctrl_options::GetSystemOption('bind_service').'', $out);
 		}else{
-			system(ctrl_options::GetOption('zsudo') . ' service ' . ctrl_options::GetOption('bind_service') . ' stop', $out);
+			system(ctrl_options::GetSystemOption('zsudo') . ' service ' . ctrl_options::GetSystemOption('bind_service') . ' stop', $out);
 			sleep(2);
 		}
 	}
 	
 	static function ReloadBind(){
 		if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-			$reload_bind = ctrl_options::GetOption('bind_dir') . 'rndc.exe reload';
+			$reload_bind = ctrl_options::GetSystemOption('bind_dir') . 'rndc.exe reload';
 		}else{
-			$reload_bind = ctrl_options::GetOption('zsudo') . " service " . ctrl_options::GetOption('bind_service') . " reload";
+			$reload_bind = ctrl_options::GetSystemOption('zsudo') . " service " . ctrl_options::GetSystemOption('bind_service') . " reload";
 		}
 		pclose(popen($reload_bind,'r'));
 	}
@@ -505,16 +505,16 @@ class module_controller {
 	}
 
 	static function SetPerms(){
-		$bindlog = ctrl_options::GetOption('bind_log');
+		$bindlog = ctrl_options::GetSystemOption('bind_log');
 		if (sys_versions::ShowOSPlatformVersion() <> "Windows") {
 		//exec(ctrl_options::GetOption('zsudo') . " chgrp " . ctrl_options::GetOption('zsudo') . " " . $bindlog);
-		exec(ctrl_options::GetOption('zsudo') . " chmod 0777 " . $bindlog);
+		exec(ctrl_options::GetSystemOption('zsudo') . " chmod 0777 " . $bindlog);
 		}
 
 	}
 
 	static function ClearErrors(){
-		$bindlog = ctrl_options::GetOption('bind_log');
+		$bindlog = ctrl_options::GetSystemOption('bind_log');
 		if (is_writable($bindlog)) {
 			$log = $bindlog;
 			if (file_exists($bindlog)){
@@ -544,7 +544,7 @@ class module_controller {
 	}
 
 	static function ClearWarnings(){
-		$bindlog = ctrl_options::GetOption('bind_log');
+		$bindlog = ctrl_options::GetSystemOption('bind_log');
 		if (is_writable($bindlog)) {
 			$log = $bindlog;
 			if (file_exists($bindlog)){
@@ -574,7 +574,7 @@ class module_controller {
 	}
 
 	static function ClearLog(){
-		$bindlog = ctrl_options::GetOption('bind_log');
+		$bindlog = ctrl_options::GetSystemOption('bind_log');
 		if (is_writable($bindlog)) {
 			$log = $bindlog;
 			if (file_exists($bindlog)){			
@@ -695,8 +695,8 @@ class module_controller {
 		$domainID = $vh_acc_fk;
 		$domainName = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_deleted_ts IS NULL")->Fetch();
 		$userID = $domainName['vh_acc_fk'];
-		if (!fs_director::CheckForEmptyValue(ctrl_options::GetOption('server_ip'))){
-			$target = ctrl_options::GetOption('server_ip');
+		if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))){
+			$target = ctrl_options::GetSystemOption('server_ip');
 		} else {
 			$target = $_SERVER["SERVER_ADDR"];
 		}
@@ -911,7 +911,7 @@ class module_controller {
 	}
 	
 	static function ViewErrors(){	
-		$bindlog = ctrl_options::GetOption('bind_log');
+		$bindlog = ctrl_options::GetSystemOption('bind_log');
 		$logerror = array();
 		$logwarning = array();
 		$getlog = array();
@@ -989,7 +989,7 @@ class module_controller {
     static function TriggerDNSUpdate($id) {
 		global $zdbh;
         global $controller;
-        $GetRecords = ctrl_options::GetOption('dns_hasupdates');
+        $GetRecords = ctrl_options::GetSystemOption('dns_hasupdates');
 		$records = explode(",", $GetRecords);
 		foreach ($records as $record){
 			$RecordArray[] = $record;

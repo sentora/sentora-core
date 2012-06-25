@@ -86,8 +86,8 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
 		$res = array();
-	    $handle = @opendir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "");
-	    $chkdir = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/";
+	    $handle = @opendir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "");
+	    $chkdir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/";
 	    if (!$handle) {
 			// Log an error as the folder cannot be opened...
 	    } else {
@@ -106,8 +106,8 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $res = array();
-        $handle = @opendir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html");
-        $chkdir = ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+        $handle = @opendir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html");
+        $chkdir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
         if (!$handle) {
             # Log an error as the folder cannot be opened...
         } else {
@@ -133,8 +133,8 @@ class module_controller {
 		$sql->execute();
 		self::$reset=true;
 		// Include FTP server specific file here.
-		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "");
+		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "");
 		}
 		$retval = TRUE;
 		runtime_hook::Execute('OnAfterResetFTPPassword');
@@ -152,9 +152,9 @@ class module_controller {
 	    	if ($home == 1) {
 		        $homedirectoy_to_use = "/" . str_replace(".", "_", $username);
 		        // Create the new home directory... (If it doesnt already exist.)		
-		        if (!file_exists(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/")) {
-		            @mkdir(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 777);
-		            @chmod(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 0777);
+		        if (!file_exists(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/")) {
+		            @mkdir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 777);
+		            @chmod(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 0777);
 		        }
 				
 		    } else {
@@ -175,8 +175,8 @@ class module_controller {
 			$sql->execute();
 			self::$create=true;
 			// Include FTP server specific file here.
-			if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "")){
-				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "");
+			if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")){
+				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "");
 			}
 			runtime_hook::Execute('OnAfterCreateFTPAccount');
 			return true;
@@ -226,8 +226,8 @@ class module_controller {
 		$sql->execute();
 		self::$delete=true;
 		// Include FTP server specific file here.
-		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetOption('ftp_php') . "");
+		if(file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")){
+			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "");
 		}
 		$retval = TRUE;
 		runtime_hook::Execute('OnAfterDeleteFTPAccount');

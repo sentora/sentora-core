@@ -132,7 +132,7 @@ class module_controller {
 											'" . $controller->GetControllerRequest('FORM', 'inScript') . "',
 											'" . $controller->GetControllerRequest('FORM', 'inDescription') . "',
 											'" . $controller->GetControllerRequest('FORM', 'inTiming') . "',
-											'" . ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $controller->GetControllerRequest('FORM', 'inScript') . "',
+											'" . ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $controller->GetControllerRequest('FORM', 'inScript') . "',
 											" . time() . ")");
 			$sql->execute();
 			self::WriteCronFile();
@@ -172,8 +172,8 @@ class module_controller {
 		global $controller;
 		$retval = FALSE;
 		//Try to create the cron file if it doesnt exist...
-		if (!file_exists(ctrl_options::GetOption('cron_file'))){
-			fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, "");
+		if (!file_exists(ctrl_options::GetSystemOption('cron_file'))){
+			fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, "");
 		}
 		$currentuser = ctrl_users::GetUserDetail();
 	    // Check to make sure the cron is not blank before we go any further...
@@ -182,17 +182,17 @@ class module_controller {
 			$retval = TRUE;
 	    }
 	    // Check to make sure the cron script exists before we go any further...
-	    if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetOption('hosted_dir') . $currentuser['username'] . '/public_html/' . $controller->GetControllerRequest('FORM', 'inScript'))))) {
+	    if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . '/public_html/' . $controller->GetControllerRequest('FORM', 'inScript'))))) {
 			self::$noexists = TRUE;
 			$retval = TRUE;
 	    }
 	    // Check to see if creating system cron file was successful...
-	    if (!is_file(ctrl_options::GetOption('cron_file'))) {
+	    if (!is_file(ctrl_options::GetSystemOption('cron_file'))) {
 			self::$cronnoexists = TRUE;
 			$retval = TRUE;
 	    }
 	    // Check to makesystem cron file is writable...
-	    if (!is_writable(ctrl_options::GetOption('cron_file'))) {
+	    if (!is_writable(ctrl_options::GetSystemOption('cron_file'))) {
 			self::$cronnowrite = TRUE;
 			$retval = TRUE;
 	    }
@@ -228,7 +228,7 @@ class module_controller {
 			$line .= "# Cron Debug infomation can be found in this file here:-                        ". fs_filehandler::NewLine();
 			$line .= "# C:\WINDOWS\System32\crontab.txt                                                ". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
-			$line .= "".ctrl_options::GetOption('daemon_timing')." ".ctrl_options::GetOption('php_exer')." ".ctrl_options::GetOption('daemon_exer')."". fs_filehandler::NewLine();
+			$line .= "".ctrl_options::GetSystemOption('daemon_timing')." ".ctrl_options::GetSystemOption('php_exer')." ".ctrl_options::GetSystemOption('daemon_exer')."". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
 			}
 			
@@ -239,14 +239,14 @@ class module_controller {
 				$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . $rowcron['ct_acc_fk'] . " AND ac_deleted_ts IS NULL")->fetch();
 				if ($rowclient && $rowclient['ac_enabled_in'] <> 0){
 					$line .= "# CRON ID: ".$rowcron['ct_id_pk'].""											. fs_filehandler::NewLine();
-					$line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetOption('php_exer') . " " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
+					$line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetSystemOption('php_exer') . " " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
 					$line .= "# END CRON ID: ".$rowcron['ct_id_pk'].""										. fs_filehandler::NewLine();
 				}
             }
             
-			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, $line)) {
+			if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, $line)) {
 				if (sys_versions::ShowOSPlatformVersion() != "Windows") {
-					system(ctrl_options::GetOption('zsudo') . " " . ctrl_options::GetOption('cron_reload'));
+					system(ctrl_options::GetSystemOption('zsudo') . " " . ctrl_options::GetSystemOption('cron_reload'));
 				}
     	        return true;
 	        } else {
@@ -265,16 +265,16 @@ class module_controller {
 			$line .= "# Cron Debug infomation can be found in this file here:-                        ". fs_filehandler::NewLine();
 			$line .= "# C:\WINDOWS\System32\crontab.txt                                                ". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
-			$line .= "".ctrl_options::GetOption('daemon_timing')." ".ctrl_options::GetOption('php_exer')." ".ctrl_options::GetOption('daemon_exer')."". fs_filehandler::NewLine();
+			$line .= "".ctrl_options::GetSystemOption('daemon_timing')." ".ctrl_options::GetSystemOption('php_exer')." ".ctrl_options::GetSystemOption('daemon_exer')."". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
 			}
 			
 			$line .= "# DO NOT MANUALLY REMOVE ANY OF THE CRON ENTRIES FROM THIS FILE, USE ZPANEL      ". fs_filehandler::NewLine();
 			$line .= "# INSTEAD! THE ABOVE ENTRIES ARE USED FOR ZPANEL TASKS, DO NOT REMOVE THEM!      ". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
-			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0644, $line)) {
+			if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, $line)) {
 				if (sys_versions::ShowOSPlatformVersion() != "Windows") {
-					system(ctrl_options::GetOption('zsudo') . " " . ctrl_options::GetOption('cron_reload'));
+					system(ctrl_options::GetSystemOption('zsudo') . " " . ctrl_options::GetSystemOption('cron_reload'));
 				}
     	        return true;
 	        } else {

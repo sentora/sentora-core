@@ -161,12 +161,12 @@ class module_controller {
     }
     
     static function getLastRunTime(){
-        return date(ctrl_options::GetOption('zpanel_df'),ctrl_options::GetOption('daemon_lastrun'));
+        return date(ctrl_options::GetSystemOption('zpanel_df'),ctrl_options::GetSystemOption('daemon_lastrun'));
     }
     
     static function getNextRunTime(){
-        $new_time = ctrl_options::GetOption('daemon_lastrun') + ctrl_options::GetOption('daemon_run_interval');
-        return date(ctrl_options::GetOption('zpanel_df'),$new_time);
+        $new_time = ctrl_options::GetSystemOption('daemon_lastrun') + ctrl_options::GetSystemOption('daemon_run_interval');
+        return date(ctrl_options::GetSystemOption('zpanel_df'),$new_time);
     }
     
 }

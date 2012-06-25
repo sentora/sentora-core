@@ -24,7 +24,7 @@
 			$line .= "# Cron Debug infomation can be found in this file here:-                        ". fs_filehandler::NewLine();
 			$line .= "# C:\WINDOWS\System32\crontab.txt                                                ". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
-			$line .= "".ctrl_options::GetOption('daemon_timing')." ".ctrl_options::GetOption('php_exer')." ".ctrl_options::GetOption('daemon_exer')."". fs_filehandler::NewLine();
+			$line .= "".ctrl_options::GetSystemOption('daemon_timing')." ".ctrl_options::GetSystemOption('php_exer')." ".ctrl_options::GetSystemOption('daemon_exer')."". fs_filehandler::NewLine();
 			$line .= "#################################################################################". fs_filehandler::NewLine();
 			}
 			
@@ -35,12 +35,12 @@
 				$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . $rowcron['ct_acc_fk'] . " AND ac_deleted_ts IS NULL")->fetch();
 				if ($rowclient && $rowclient['ac_enabled_in'] <> 0){
 					$line .= "# CRON ID: ".$rowcron['ct_id_pk'].""											. fs_filehandler::NewLine();
-					$line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetOption('php_exer') . " " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
+					$line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetSystemOption('php_exer') . " " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
 					$line .= "# END CRON ID: ".$rowcron['ct_id_pk'].""										. fs_filehandler::NewLine();
 				}
             }
             
-			if (fs_filehandler::UpdateFile(ctrl_options::GetOption('cron_file'), 0777, $line)) {
+			if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0777, $line)) {
     	        return true;
 	        } else {
     	        return false;

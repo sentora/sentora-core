@@ -12,7 +12,7 @@
 	
 	function CheckZPanelLAtestVersion(){
 		// Grab the latest version of ZPanel from the ZPanel API servers and cache it into the database.
-		$live_version = ws_generic::ReadURLRequestResult(ctrl_options::GetOption('update_url'));
+		$live_version = ws_generic::ReadURLRequestResult(ctrl_options::GetSystemOption('update_url'));
 		if(!$live_version)
 		        return false;
 		$versionnumber = ws_generic::JSONToArray($live_version);

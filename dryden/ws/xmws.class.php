@@ -66,7 +66,7 @@ class ws_xmws {
      * @return boolean
      */
     public function CheckServerAPIKey() {
-        if ($this->wsdataarray['apikey'] != ctrl_options::GetOption('apikey')) {
+        if ($this->wsdataarray['apikey'] != ctrl_options::GetSystemOption('apikey')) {
             runtime_hook::Execute('OnBadAPIKeyAuth');
             return false;
         } else {

@@ -48,7 +48,7 @@ class module_controller {
         } else {	
             if ($newpass == $conpass) {
         		// Check for password length...
-	        	if (strlen($newpass) < ctrl_options::GetOption('password_minlength')) {
+	        	if (strlen($newpass) < ctrl_options::GetSystemOption('password_minlength')) {
 	                self::$badpassword = true;
 	                return false;
 	            }
@@ -72,7 +72,7 @@ class module_controller {
             }
         } else {
         	if (!fs_director::CheckForEmptyValue(self::$badpassword)) {
-	            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") .": " . ctrl_options::GetOption('password_minlength'), "zannounceerror");
+	            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") .": " . ctrl_options::GetSystemOption('password_minlength'), "zannounceerror");
 	        }
            return;
         }

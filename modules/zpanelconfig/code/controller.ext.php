@@ -56,44 +56,44 @@ class module_controller {
     }
 
     static function getLastRunTime(){
-		$time = ctrl_options::GetOption('daemon_lastrun');
+		$time = ctrl_options::GetSystemOption('daemon_lastrun');
 		if ($time != '0'){
-        	return date(ctrl_options::GetOption('zpanel_df'), $time);
+        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
 		} else {
 			return false;
 		}
     }
     
     static function getNextRunTime(){
-        $time = ctrl_options::GetOption('daemon_lastrun');
+        $time = ctrl_options::GetSystemOption('daemon_lastrun');
 		if ($time != '0'){
-			$new_time = $time + ctrl_options::GetOption('daemon_run_interval');
-        	return date(ctrl_options::GetOption('zpanel_df'), $new_time);
+			$new_time = $time + ctrl_options::GetSystemOption('daemon_run_interval');
+        	return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
 		} else {
 			return false;
 		}
     }
 
     static function getLastDayRunTime(){
-		$time = ctrl_options::GetOption('daemon_dayrun');
+		$time = ctrl_options::GetSystemOption('daemon_dayrun');
 		if ($time != '0'){
-        	return date(ctrl_options::GetOption('zpanel_df'), $time);
+        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
 		} else {
 			return false;
 		}
     }
     static function getLastWeekRunTime(){
-		$time = ctrl_options::GetOption('daemon_weekrun');
+		$time = ctrl_options::GetSystemOption('daemon_weekrun');
 		if ($time != '0'){
-        	return date(ctrl_options::GetOption('zpanel_df'), $time);
+        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
 		} else {
 			return false;
 		}
     }
     static function getLastMonthRunTime(){
-		$time = ctrl_options::GetOption('daemon_monthrun');
+		$time = ctrl_options::GetSystemOption('daemon_monthrun');
 		if ($time != '0'){
-        	return date(ctrl_options::GetOption('zpanel_df'), $time);
+        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
 		} else {
 			return false;
 		}
