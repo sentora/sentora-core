@@ -50,12 +50,12 @@ class db_driver extends PDO {
     
     private function cleanexpmessage($exception) {
         $res = strstr($exception, "]: ", false);
-        $res = str_replace(']: ', '', $res);
-        $res = strstr($res, 'Stack', true);
+        $res1 = str_replace(']: ', '', $res);
+        $res2 = strstr($res1, 'Stack', true);
         $stack = strstr($exception, 'Stack trace:', false);
-        $stack = strstr($stack, '}', true);
-        $stack = str_replace("Stack trace:", "", $stack);
-        return $res . $stack . "}";
+        $stack1 = strstr($stack, '}', true);
+        $stack2 = str_replace("Stack trace:", "", $stack1);
+        return $res2 . $stack2 . "}";
     }
     
     /**
@@ -124,7 +124,29 @@ class db_driver extends PDO {
             die($error_html);
         }
     }
-
+    
+    /**
+     * The main query function using bind variables for SQL injection protection.
+     * Returns an array of results.
+     * @author Kevin Andrews (kandrews@zpanelcp.com)
+     * @param String $sqlString
+     * @param Array $bindArray
+     * @param Array $driver_options [optional]
+     * @return Array
+     */
+    function bindQuery( $sqlString, $bindArray, $driver_options = array() ) {
+        
+        $safeQuery = $this->prepare( $sqlString , $driver_options );
+        
+        foreach ( $bindArray as $bindKey => &$bindValue ) {
+            $safeQuery->bindParam($bindKey, $bindValue);
+        }
+        
+        $safeQuery->execute();
+        $resultRows = $safeQuery->fetchAll();
+        
+        return $resultRows;
+    }
 }
 
 ?>
