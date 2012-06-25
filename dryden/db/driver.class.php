@@ -86,7 +86,7 @@ class db_driver extends PDO {
      * @return type
      */
 
-    function exec($query) {
+    public function exec($query) {
         try {
             $result = parent::exec($query);
             return($result);
@@ -109,7 +109,7 @@ class db_driver extends PDO {
      * @return type
      */
 
-    function prepare($query, $driver_options = array()) {
+    public function prepare($query, $driver_options = array()) {
         try {
             $result = parent::prepare($query, $driver_options);
             return($result);
@@ -134,7 +134,7 @@ class db_driver extends PDO {
      * @param Array $driver_options [optional]
      * @return Array
      */
-    function bindQuery( $sqlString, $bindArray, $driver_options = array() ) {
+    public function bindQuery( $sqlString, $bindArray, $driver_options = array() ) {
         
         $safeQuery = $this->prepare( $sqlString , $driver_options );
         
