@@ -24,8 +24,13 @@ class ctrl_auth {
                 self::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true);
             }
             runtime_hook::Execute('OnRequireUserLogin');
-            $theme = $zdbh->query("SELECT ac_usertheme_vc, ac_usercss_vc FROM x_accounts WHERE ac_user_vc = 'zadmin'")->fetch();
-            include 'etc/styles/' . $theme['ac_usertheme_vc'] . '/login.ztml';
+            $sqlQuery = "SELECT ac_usertheme_vc, ac_usercss_vc FROM 
+                         x_accounts WHERE 
+                         ac_user_vc = :zadmin";
+            $bindArray = array( ':zadmin' => 'zadmin' );
+            $theme = $zdbh->bindQuery( $sqlQuery , $bindArray );
+            $themeRow = $theme['0'];
+            include 'etc/styles/' . $themeRow['ac_usertheme_vc'] . '/login.ztml';
             exit;
         }
         return true;
@@ -74,12 +79,21 @@ class ctrl_auth {
      */
     static function Authenticate($username, $password, $rememberme = false, $iscookie = false) {
         global $zdbh;
-        $sth = $zdbh->prepare("select * from x_accounts where ac_user_vc = :username AND ac_pass_vc = :password AND ac_enabled_in = 1 AND ac_deleted_ts IS NULL");
-        $sth->bindParam(':username', $username);
-        $sth->bindParam(':password', $password);
-        $sth->execute();
-        $rows = $sth->fetchAll();
-        $rows = $rows['0'];
+        
+        $sqlString = "SELECT * FROM 
+                      x_accounts WHERE 
+                      ac_user_vc = :username AND 
+                      ac_pass_vc = :password AND 
+                      ac_enabled_in = 1 AND 
+                      ac_deleted_ts IS NULL";
+        
+        $bindArray = array(':username' => $username, 
+                           ':password' => $password
+                          );
+        
+        $sth = $zdbh->bindQuery($sqlString, $bindArray);
+        $rows = $sth['0'];
+        
         if ($rows) {
             ctrl_auth::SetUserSession($rows['ac_id_pk']);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
