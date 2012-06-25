@@ -21,7 +21,10 @@ class ctrl_options {
      */
     static function GetOption($name) {
         global $zdbh;
-        $result = $zdbh->query("SELECT so_value_tx FROM x_settings WHERE so_name_vc = '$name'")->Fetch();
+        $sqlString = "SELECT so_value_tx FROM x_settings WHERE so_name_vc = :name";
+        $bindArray = array( ':name' => $name, );
+        $results = $zdbh->bindQuery($sqlString, $bindArray);
+        $result = $results['0'];
         if ($result) {
             return $result['so_value_tx'];
         } else {
