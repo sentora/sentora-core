@@ -15,39 +15,66 @@ class ctrl_groups {
     /**
      * Checks permissions to a module for a given user group.
      * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global db_driver $zdbh The ZPX database handle.
      * @param int $groupid The usergroup ID.
      * @param int $moduleid The module ID.
      * @return bool
      */
     static function CheckGroupModulePermissions($groupid, $moduleid) {
         global $zdbh;
-        $sth = $zdbh->prepare( "SELECT pe_id_pk FROM x_permissions WHERE pe_group_fk = :groupid AND pe_module_fk = :moduleid" );
-        $sth->bindParam( ':groupid' , $groupid );
-        $sth->bindParam( ':moduleid' , $moduleid );
-        $sth->execute();
-        $rows = $sth->fetchAll();
-        $rows = $rows['0'];
-        if ($rows)
+        $sqlString = "SELECT pe_id_pk FROM 
+                    x_permissions WHERE 
+                    pe_group_fk = :groupid AND 
+                    pe_module_fk = :moduleid";
+        $bindArray = array( 
+                    ':groupid' => $groupid,
+                    ':moduleid' => $moduleid,
+                );
+        $results = $zdbh->bindQuery($sqlString, $bindArray);
+        if($results) {
+        $rows = $results['0'];
+        if ($rows) {
             return true;
+            }
+        }
         return false;
+        
     }
 
     /**
      * Adds permission to enable a module for a given user group.
      * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global db_driver $zdbh The ZPX database handle.
      * @param int $groupid The usergroup ID.
      * @param int $moduleid The module ID.
      * @return bool
      */
     static function AddGroupModulePermissions($groupid, $moduleid) {
         global $zdbh;
-        $sql = "SELECT COUNT(*) FROM x_permissions WHERE pe_group_fk=$groupid AND pe_module_fk=$moduleid";
-        $numrows = $zdbh->query($sql);
-        if ($numrows->fetchColumn() < 1) {
-            $statement = "INSERT INTO x_permissions (pe_group_fk, pe_module_fk) VALUES ($groupid, $moduleid)";
-            if ($zdbh->exec($statement) > 0)
+        $sqlString = "SELECT COUNT(*) FROM 
+                     x_permissions WHERE 
+                     pe_group_fk = :groupid AND 
+                     pe_module_fk = :moduleid";
+        $sqlQuery = $zdbh->prepare($sqlString);
+        unset($sqlString);
+        $sqlQuery->bindParam( ':groupid' , $groupid );
+        $sqlQuery->bindParam( ':moduleid' , $moduleid );
+        $rowCount = $sqlQuery->rowCount();
+        unset($sqlQuery);
+        
+        if ( $rowCount < 1 ) {
+            $sqlString = "INSERT INTO x_permissions 
+                         ( pe_group_fk , pe_module_fk ) VALUES 
+                         ( :groupid , :moduleid )";
+            $sqlQuery = $zdbh->prepare($sqlString);
+            $sqlQuery->bindParam( ':groupid' , $groupid );
+            $sqlQuery->bindParam( ':moduleid' , $moduleid );
+            $result = $sqlQuery->execute();
+            if ($result > 0) {
                 return true;
+            } else {
             return false;
+            }
         }
     }
 
