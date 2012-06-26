@@ -91,11 +91,12 @@ class ctrl_auth {
                            ':password' => $password
                           );
         
-        $sth = $zdbh->bindQuery($sqlString, $bindArray);
-        $rows = $sth['0'];
+        $rows = $zdbh->bindQuery($sqlString, $bindArray);
         
-        if ($rows) {
-            ctrl_auth::SetUserSession($rows['ac_id_pk']);
+        $row = $rows['0'];
+        
+        if ($row) {
+            ctrl_auth::SetUserSession($row['ac_id_pk']);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
             $log_logon->execute();
             if ($rememberme) {
@@ -103,7 +104,7 @@ class ctrl_auth {
                 setcookie("zPass", $password, time() + 60 * 60 * 24 * 30, "/");
             }
             runtime_hook::Execute('OnGoodUserLogin');
-            return $rows['ac_id_pk'];
+            return $row['ac_id_pk'];
         } else {
             runtime_hook::Execute('OnBadUserLogin');
             return false;

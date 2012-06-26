@@ -142,13 +142,12 @@ class db_driver extends PDO {
             $safeQuery->bindParam($bindKey, $bindValue);
         }
         
+        $rowCount = $safeQuery->rowCount();
         $safeQuery->execute();
         
-        if($safeQuery->rowCount() > 1 ) {
-            $resultRows = $safeQuery->fetchAll();
-        } else {
-            $resultRows = $safeQuery->fetch();
-        }
+        $resultRows = $safeQuery->fetchAll();
+            
+        
         return $resultRows;
     }
 }
