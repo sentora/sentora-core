@@ -55,21 +55,27 @@ class ctrl_groups {
                      x_permissions WHERE 
                      pe_group_fk = :groupid AND 
                      pe_module_fk = :moduleid";
-        $sqlQuery = $zdbh->prepare($sqlString);
+        $bindArray = array( 
+            ':groupid' => $groupid, 
+            ':moduleid' => $moduleid, 
+        );
+        $sqlPrepare = $zdbh->prepare($sqlString);
+        $zdbh->bindParams($sqlPrepare, $bindArray);
         unset($sqlString);
-        $sqlQuery->bindParam( ':groupid' , $groupid );
-        $sqlQuery->bindParam( ':moduleid' , $moduleid );
-        $rowCount = $sqlQuery->rowCount();
-        unset($sqlQuery);
+        $rowCount = $sqlPrepare->rowCount();
+        unset($sqlPrepare);
         
         if ( $rowCount < 1 ) {
             $sqlString = "INSERT INTO x_permissions 
                          ( pe_group_fk , pe_module_fk ) VALUES 
                          ( :groupid , :moduleid )";
-            $sqlQuery = $zdbh->prepare($sqlString);
-            $sqlQuery->bindParam( ':groupid' , $groupid );
-            $sqlQuery->bindParam( ':moduleid' , $moduleid );
-            $result = $sqlQuery->execute();
+            $bindArray = array(
+                ':groupid' => $groupid, 
+                ':moduleid' => $moduleid, 
+            );
+            $sqlPrepare = $zdbh->prepare($sqlString);
+            $zdbh->bindParams($sqlPrepare, $bindArray);
+            $result = $sqlPrepare->execute();
             if ($result > 0) {
                 return true;
             } else {
