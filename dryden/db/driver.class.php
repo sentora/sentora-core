@@ -134,21 +134,27 @@ class db_driver extends PDO {
      * @param Array $driver_options [optional]
      * @return Array
      */
-    public function bindQuery( $sqlString, $bindArray, $driver_options = array() ) {
+    public function bindQuery( $sqlString, array $bindArray, $driver_options = array() ) {
         
-        $safeQuery = $this->prepare( $sqlString , $driver_options );
-        
-        foreach ( $bindArray as $bindKey => &$bindValue ) {
-            $safeQuery->bindParam($bindKey, $bindValue);
-        }
-        
-        $rowCount = $safeQuery->rowCount();
-        $safeQuery->execute();
-        
-        $resultRows = $safeQuery->fetchAll();
-            
-        
+        $sqlPrepare = $this->prepare( $sqlString , $driver_options );
+        $this->bindParams($sqlPrepare, $bindArray);
+        $sqlPrepare->execute();
+        $resultRows = $sqlPrepare->fetchAll();
         return $resultRows;
+    }
+    
+    /**
+     * Binding an array of bind variable pairs to a prepared sql statement.
+     * @author Kevin Andrews (kandrews@zpanelcp.com)
+     * @param PDOStatement $sqlPrepare
+     * @param array $bindArray
+     * @return \PDOStatement
+     */
+    
+    public function bindParams(PDOStatement $sqlPrepare , array $bindArray ) {
+        foreach ( $bindArray as $bindKey => &$bindValue ) {
+            $sqlPrepare->bindParam($bindKey, $bindValue);
+        }
     }
 }
 

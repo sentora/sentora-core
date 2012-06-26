@@ -79,7 +79,6 @@ class ctrl_auth {
      */
     static function Authenticate($username, $password, $rememberme = false, $iscookie = false) {
         global $zdbh;
-        
         $sqlString = "SELECT * FROM 
                       x_accounts WHERE 
                       ac_user_vc = :username AND 
@@ -92,12 +91,12 @@ class ctrl_auth {
                           );
         
         $rows = $zdbh->bindQuery($sqlString, $bindArray);
-        
+
         $row = $rows['0'];
         
         if ($row) {
             ctrl_auth::SetUserSession($row['ac_id_pk']);
-            $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $rows['ac_id_pk'] . "");
+            $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $row['ac_id_pk'] . "");
             $log_logon->execute();
             if ($rememberme) {
                 setcookie("zUser", $username, time() + 60 * 60 * 24 * 30, "/");
