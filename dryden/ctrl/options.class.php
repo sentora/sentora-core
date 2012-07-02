@@ -23,8 +23,8 @@ class ctrl_options {
         global $zdbh;
         $sqlString = "SELECT so_value_tx FROM x_settings WHERE so_name_vc = :name";
         $bindArray = array( ':name' => $name, );
-        $results = $zdbh->bindQuery($sqlString, $bindArray);
-        $result = $results['0'];
+        $zdbh->bindQuery($sqlString, $bindArray);
+        $result = $zdbh->returnRow();
         if ($result) {
             return $result['so_value_tx'];
         } else {
@@ -34,9 +34,10 @@ class ctrl_options {
     
     /**
      * An alias of 'GetSystemOption' to 'fix' the recent refactor of the ZPanel Code, this was affecting third-party modules which relied on this old function name.
+     * @author Bobby Allen <ballen@zpanelcp.com>
      * @param string $name The name of the system option.
      * @return string The system option value.
-     * @deprecated
+     * @deprecated since version 10.0.1
      */
     static function GetOption($name){
         return self::GetSystemOption($name);

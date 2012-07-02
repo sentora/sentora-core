@@ -30,13 +30,11 @@ class ctrl_groups {
                     ':groupid' => $groupid,
                     ':moduleid' => $moduleid,
                 );
-        $results = $zdbh->bindQuery($sqlString, $bindArray);
-        if($results) {
-        $rows = $results['0'];
-        if ($rows) {
+        $zdbh->bindQuery($sqlString, $bindArray);
+        $result = $zdbh->returnRow();
+        if($result) {
             return true;
             }
-        }
         return false;
         
     }

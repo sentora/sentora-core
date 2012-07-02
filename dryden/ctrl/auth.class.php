@@ -15,6 +15,7 @@ class ctrl_auth {
     /**
      * Checks that the server has a valid session for the user if not it will redirect to the login screen.
      * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global db_driver $zdbh The ZPX database handle.
      * return bool
      */
     static function RequireUser() {
@@ -28,8 +29,8 @@ class ctrl_auth {
                          x_accounts WHERE 
                          ac_user_vc = :zadmin";
             $bindArray = array( ':zadmin' => 'zadmin' );
-            $theme = $zdbh->bindQuery( $sqlQuery , $bindArray );
-            $themeRow = $theme['0'];
+            $zdbh->bindQuery( $sqlQuery , $bindArray );
+            $themeRow = $zdbh->returnRow();
             include 'etc/styles/' . $themeRow['ac_usertheme_vc'] . '/login.ztml';
             exit;
         }
@@ -90,9 +91,8 @@ class ctrl_auth {
                            ':password' => $password
                           );
         
-        $rows = $zdbh->bindQuery($sqlString, $bindArray);
-
-        $row = $rows['0'];
+        $zdbh->bindQuery($sqlString, $bindArray);
+        $row = $zdbh->returnRow();
         
         if ($row) {
             ctrl_auth::SetUserSession($row['ac_id_pk']);
