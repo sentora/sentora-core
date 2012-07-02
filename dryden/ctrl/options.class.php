@@ -31,6 +31,16 @@ class ctrl_options {
             return false;
         }
     }
+    
+    /**
+     * An alias of 'GetSystemOption' to 'fix' the recent refactor of the ZPanel Code, this was affecting third-party modules which relied on this old function name.
+     * @param string $name The name of the system option.
+     * @return string The system option value.
+     * @deprecated
+     */
+    static function GetOption($name){
+        return self::GetSystemOption($name);
+    }
 
     /**
      * The main 'setter' class used to write/update system options.
