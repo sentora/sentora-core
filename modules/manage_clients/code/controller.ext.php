@@ -510,7 +510,7 @@ class module_controller {
             return false;
         }
         // Check to make sure the groupname is not blank and exists before we go any further...
-        if (!fs_director::CheckForEmptyValue($packageid)) {
+	if (!fs_director::CheckForEmptyValue($groupid)) {
             $sql = "SELECT COUNT(*) FROM x_groups WHERE ug_id_pk='" . $groupid . "'";
             if ($numrows = $zdbh->query($sql)) {
                 if ($numrows->fetchColumn() == 0) {
