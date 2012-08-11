@@ -9,6 +9,9 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
+
+set_time_limit(0);
+
 $raw_path = str_replace("\\", "/", dirname(__FILE__));
 $root_path = str_replace("/bin", "/", $raw_path);
 chdir($root_path);
