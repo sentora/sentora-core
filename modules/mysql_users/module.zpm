@@ -172,7 +172,7 @@
 	        </table>
 	    	</form>
 		</td>
-		<td align="right"><@ MysqlUsagepChart @><br><b><: Databases Usage :></b></td>
+		<td align="right"><@ MysqlUsagepChart @></td>
 		</tr></table>
 	</div>
 	<% endif %>
