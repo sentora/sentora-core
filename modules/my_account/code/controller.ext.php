@@ -86,14 +86,17 @@ class module_controller {
             return false;
         }
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = '" . $email . "' WHERE ac_id_pk = '" . $userid . "'");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc = :email WHERE ac_id_pk = :userid");
+        $sql->bindParam(':email', $email);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
-        $sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc = '" . $fullname . "',
-													 ud_language_vc = '" . $language . "',
-													 ud_phone_vc    = '" . $phone . "',
-													 ud_address_tx  = '" . $address . "',
-													 ud_postcode_vc = '" . $postalCode . "' WHERE 
-													 ud_user_fk     = '" . $userid . "'");
+        $sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc = :fullname, ud_language_vc = :language, ud_phone_vc = :phone, ud_address_tx  = :address, ud_postcode_vc = :postcode WHERE ud_user_fk = :userid");
+        $sql->bindParam(':fullname', $fullname);
+        $sql->bindParam(':language', $language);
+        $sql->bindParam(':phone', $phone);
+        $sql->bindParam(':address', $address);
+        $sql->bindParam(':postcode', $postalCode);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         return true;
     }
