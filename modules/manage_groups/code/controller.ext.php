@@ -123,16 +123,10 @@ class module_controller {
     static function ExectuteCreateGroup($name, $desc, $uid) {
         global $zdbh;
         if (!fs_director::CheckForEmptyValue($name)) {
-            $sql = $zdbh->prepare("
-            INSERT INTO x_groups (
-            ug_name_vc,
-            ug_notes_tx,
-            ug_reseller_fk
-            ) VALUES (
-            '" . $name . "',
-            '" . $desc . "',
-            " . $uid . ")
-            ");
+            $sql = $zdbh->prepare("INSERT INTO x_groups (ug_name_vc, ug_notes_tx, ug_reseller_fk) VALUES (:name, :desc, :uid)");
+            $sql->bindParam(':name', $name);
+            $sql->bindParam(':desc', $desc);
+            $sql->bindParam(':uid', $uid);
             $sql->execute();
         }
         return true;
@@ -140,35 +134,34 @@ class module_controller {
 
     static function ExectuteUpdateGroup($gid, $name, $desc) {
         global $zdbh;
-        $sql = $zdbh->prepare("
-            UPDATE x_groups
-            SET ug_name_vc = '" . $name . "',
-            ug_notes_tx = '" . $desc . "'
-            WHERE ug_id_pk = " . $gid . "");
+        $sql = $zdbh->prepare("UPDATE x_groups SET ug_name_vc = :name, ug_notes_tx = :desc WHERE ug_id_pk = :groupid");
+        $sql->bindParam(':name', $name);
+        $sql->bindParam(':desc', $desc);
+        $sql->bindParam(':groupid', $gid);
         $sql->execute();
         return true;
     }
 
-    static function ExecuteDeleteGroup($gid, $mgid="") {
+    static function ExecuteDeleteGroup($gid, $mgid = "") {
         global $zdbh;
-		if ($mgid != ""){
-        $sql = $zdbh->prepare("
+        if ($mgid != "") {
+            $sql = $zdbh->prepare("
             UPDATE x_accounts
             SET ac_group_fk = " . $mgid . "
             WHERE ac_group_fk = " . $gid . "");
-        $sql->execute();
-        $sql = $zdbh->prepare("
+            $sql->execute();
+            $sql = $zdbh->prepare("
             DELETE FROM x_groups
             WHERE ug_id_pk = " . $gid . "");
-        $sql->execute();
-        return true;
-		} else {
-        $sql = $zdbh->prepare("
+            $sql->execute();
+            return true;
+        } else {
+            $sql = $zdbh->prepare("
             DELETE FROM x_groups
             WHERE ug_id_pk = " . $gid . "");
-        $sql->execute();
-		return true;		
-		}
+            $sql->execute();
+            return true;
+        }
     }
 
     /**
@@ -229,11 +222,11 @@ class module_controller {
     static function doDeleteGroup() {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-		if (isset($formvars['inMoveGroup'])){
-			$inMoveGroup = $formvars['inMoveGroup'];
-		} else {
-			$inMoveGroup = "";
-		}
+        if (isset($formvars['inMoveGroup'])) {
+            $inMoveGroup = $formvars['inMoveGroup'];
+        } else {
+            $inMoveGroup = "";
+        }
         if (self::ExecuteDeleteGroup($formvars['inGroupID'], $inMoveGroup))
             return true;
         return false;
