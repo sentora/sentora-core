@@ -273,9 +273,7 @@ class module_controller {
     static function SetClientProfile($userid, $column, $value) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeSetClientProfile');
-        $sql = $zdbh->prepare("UPDATE x_profiles
-								SET " . $column . "=" . $value . " 
-								WHERE ud_user_fk=" . $userid . "");
+        $sql = $zdbh->prepare("UPDATE x_profiles SET " . $column . "=" . $value . " WHERE ud_user_fk=" . $userid . "");
         $sql->execute();
         runtime_hook::Execute('OnAfterSetClientProfile');
         return true;
@@ -406,44 +404,26 @@ class module_controller {
         }
         runtime_hook::Execute('OnBeforeCreateClient');
         // No errors found, so we can add the user to the database...
-        $sql = $zdbh->prepare("INSERT INTO x_accounts (
-										ac_user_vc,
-										ac_pass_vc,
-										ac_email_vc,
-										ac_package_fk,
-                                        ac_group_fk,
-										ac_usertheme_vc,
-										ac_usercss_vc,
-										ac_reseller_fk,
-										ac_created_ts) VALUES (
-										'" . $username . "',
-										'" . md5($password) . "',
-										'" . $email . "',
-                                        '" . $packageid . "',
-										'" . $groupid . "',
-										'" . $reseller['usertheme'] . "',
-										'" . $reseller['usercss'] . "',
-										" . $uid . ",
-										" . time() . ")");
+        $sql = $zdbh->prepare("INSERT INTO x_accounts (ac_user_vc, ac_pass_vc, ac_email_vc, ac_package_fk, ac_group_fk, ac_usertheme_vc, ac_usercss_vc, ac_reseller_fk, ac_created_ts) VALUES (
+            :username, :password, :email, :packageid, :groupid, :resellertheme, :resellercss, " . $uid . ", " . time() . ")");
+        $sql->bindParam(':username', $username);
+        $sql->bindParam(':password', md5($password));
+        $sql->bindParam(':email', $email);
+        $sql->bindParam(':packageid', $packageid);
+        $sql->bindParam(':groupid', $groupid);
+        $sql->bindParam(':resellertheme', $reseller['usertheme']);
+        $sql->bindParam(':resellercss', $reseller['usercss']);
         $sql->execute();
         // Now lets pull back the client ID so that we can add their personal address details etc...
         $client = $zdbh->query("SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " ORDER BY ac_id_pk DESC")->Fetch();
-        $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk,
-										ud_fullname_vc,
-										ud_group_fk,
-										ud_package_fk,
-										ud_address_tx,
-										ud_postcode_vc,
-										ud_phone_vc,
-										ud_created_ts) VALUES (
-										 " . $client['ac_id_pk'] . ",
-										'" . $fullname . "',
-										'" . $packageid . "',
-										'" . $groupid . "',
-										'" . $address . "',
-										'" . $post . "',
-										'" . $phone . "',
-										 " . time() . ")");
+        $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk, ud_fullname_vc, ud_group_fk, ud_package_fk, ud_address_tx, ud_postcode_vc, ud_phone_vc, ud_created_ts) VALUES (:userid, :fullname, :packageid, :groupid, :address, :postcode, :phone, " . time() . ")");
+        $sql->bindParam(':userid', $client['ac_id_pk']);
+        $sql->bindParam(':fullname', $fullname);
+        $sql->bindParam(':packageid', $packageid);
+        $sql->bindParam(':groupid', $groupid);
+        $sql->bindParam(':address', $address);
+        $sql->bindParam(':postcode', $post);
+        $sql->bindParam(':phone', $phone);
         $sql->execute();
         // Now we add an entry into the bandwidth table, for the user for the upcoming month.
         $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
