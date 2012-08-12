@@ -55,50 +55,52 @@ class module_controller {
         }
     }
 
-    static function getLastRunTime(){
-		$time = ctrl_options::GetSystemOption('daemon_lastrun');
-		if ($time != '0'){
-        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
-		} else {
-			return false;
-		}
-    }
-    
-    static function getNextRunTime(){
+    static function getLastRunTime() {
         $time = ctrl_options::GetSystemOption('daemon_lastrun');
-		if ($time != '0'){
-			$new_time = $time + ctrl_options::GetSystemOption('daemon_run_interval');
-        	return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
-		} else {
-			return false;
-		}
+        if ($time != '0') {
+            return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
+        } else {
+            return false;
+        }
     }
 
-    static function getLastDayRunTime(){
-		$time = ctrl_options::GetSystemOption('daemon_dayrun');
-		if ($time != '0'){
-        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
-		} else {
-			return false;
-		}
+    static function getNextRunTime() {
+        $time = ctrl_options::GetSystemOption('daemon_lastrun');
+        if ($time != '0') {
+            $new_time = $time + ctrl_options::GetSystemOption('daemon_run_interval');
+            return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
+        } else {
+            return false;
+        }
     }
-    static function getLastWeekRunTime(){
-		$time = ctrl_options::GetSystemOption('daemon_weekrun');
-		if ($time != '0'){
-        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
-		} else {
-			return false;
-		}
+
+    static function getLastDayRunTime() {
+        $time = ctrl_options::GetSystemOption('daemon_dayrun');
+        if ($time != '0') {
+            return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
+        } else {
+            return false;
+        }
     }
-    static function getLastMonthRunTime(){
-		$time = ctrl_options::GetSystemOption('daemon_monthrun');
-		if ($time != '0'){
-        	return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
-		} else {
-			return false;
-		}
+
+    static function getLastWeekRunTime() {
+        $time = ctrl_options::GetSystemOption('daemon_weekrun');
+        if ($time != '0') {
+            return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
+        } else {
+            return false;
+        }
     }
-	
+
+    static function getLastMonthRunTime() {
+        $time = ctrl_options::GetSystemOption('daemon_monthrun');
+        if ($time != '0') {
+            return date(ctrl_options::GetSystemOption('zpanel_df'), $time);
+        } else {
+            return false;
+        }
+    }
+
     static function doUpdateConfig() {
         global $zdbh;
         global $controller;
@@ -109,7 +111,8 @@ class module_controller {
             $sql->execute();
             while ($row = $sql->fetch()) {
                 if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
-                    $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
+                    $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = :value WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
+                    $updatesql->bindParam(':value', $controller->GetControllerRequest('FORM', $row['so_name_vc']));
                     $updatesql->execute();
                 }
             }
@@ -118,22 +121,22 @@ class module_controller {
     }
 
     static function doForceDaemon() {
-		global $zdbh;
+        global $zdbh;
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-		if (isset($formvars['inForceFull'])){
-        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_lastrun'");
+        if (isset($formvars['inForceFull'])) {
+            $sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_lastrun'");
             $sql->execute();
-        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_dayrun'");
+            $sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_dayrun'");
             $sql->execute();
-        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_weekrun'");
+            $sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_weekrun'");
             $sql->execute();
-        	$sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_monthrun'");
-            $sql->execute();			
-		}
-		if (isset($formvars['inRunDaemon'])){
-			
-		}
+            $sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_monthrun'");
+            $sql->execute();
+        }
+        if (isset($formvars['inRunDaemon'])) {
+            
+        }
         self::$ok = true;
     }
 
