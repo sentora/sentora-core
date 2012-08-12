@@ -323,15 +323,15 @@ class module_controller {
             $sql->bindParam(':newpass', md5($newpass));
             $sql->execute();
         }
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc= :email', ac_package_fk= :package , ac_enabled_in= :isenabled, ac_group_fk= :group WHERE ac_id_pk= :accountid");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc= :email, ac_package_fk= :package, ac_enabled_in= :isenabled, ac_group_fk= :group WHERE ac_id_pk= " . $clientid . "");
         $sql->bindParam(':email', $email);
         $sql->bindParam(':package', $package);
         $sql->bindParam(':isenabled', $enabled);
         $sql->bindParam(':group', $group);
-        $sql->bindParam(':accountid', $clientid);
+        //$sql->bindParam(':accountid', $clientid);
         $sql->execute();
 
-        $sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc= :fullname, ud_group_fk= :group, ud_package_fk= :package, ud_address_tx= :address,ud_postcode_vc= :postcode,ud_phone_vc= :phone WHERE ud_user_fk=:accountid");
+        $sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc= :fullname, ud_group_fk= :group, ud_package_fk= :package, ud_address_tx= :address,ud_postcode_vc= :postcode, ud_phone_vc= :phone WHERE ud_user_fk=:accountid");
         $sql->bindParam(':fullname', $fullname);
         $sql->bindParam(':group', $group);
         $sql->bindParam(':package', $package);
