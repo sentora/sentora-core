@@ -24,81 +24,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$ftp_db = ctrl_options::GetSystemOption('ftp_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$ftp_db = new db_driver("mysql:host=localhost;dbname=$ftp_db", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		
-		}
-		
-		// Included after acount has been created
-		if (!fs_director::CheckForEmptyValue(self::$create)) {
-			$homedir=ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "";
-			$sql = $ftp_db->prepare("INSERT INTO ftpquotalimits (
-												name, 
-												quota_type, 
-												per_session, 
-												limit_type, 
-												bytes_in_avail, 
-												bytes_out_avail, 
-												bytes_xfer_avail, 
-												files_in_avail, 
-												files_out_avail, 
-												files_xfer_avail) VALUES (
-												'".$username."', 
-												'user', 
-												'true', 
-												'hard', 
-												0, 
-												0, 
-												0, 
-												0, 
-												0, 
-												0);");
-			$sql->execute();	
-			$sql = $ftp_db->prepare("INSERT INTO ftpuser (
-												id, 
-												userid, 
-												passwd, 
-												uid, 
-												gid, 
-												homedir, 
-												shell, 
-												count, 
-												accessed, 
-												modified) VALUES (
-												'', 
-												'".$username."', 
-												'".$password."', 
-												2001, 
-												2001, 
-												'".$homedir."', 
-												'/sbin/nologin', 
-												0, 
-												'', 
-												'');");
-			$sql->execute();
-		}
-		// Included after account is created
-		if (!fs_director::CheckForEmptyValue(self::$delete)) {
-			$sql = $ftp_db->prepare("DELETE FROM ftpuser 
-									 WHERE
-									 userid='".$rowftp['ft_user_vc']."'");
-			$sql->execute();
-			$sql = $ftp_db->prepare("DELETE FROM ftpquotalimits 
-									 WHERE
-									 name='".$rowftp['ft_user_vc']."'");
-			$sql->execute();
-		}
-		// Included after account password has been reset
-		if (!fs_director::CheckForEmptyValue(self::$reset)) {
-			$sql = $ftp_db->prepare("UPDATE ftpuser 
-									 SET
-									 passwd='".$password."'
-									 WHERE userid='".$rowftp['ft_user_vc']."'");
-			$sql->execute();
-		}
+$ftp_db = ctrl_options::GetSystemOption('ftp_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $ftp_db = new db_driver("mysql:host=localhost;dbname=$ftp_db", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
+
+// Included after acount has been created
+if (!fs_director::CheckForEmptyValue(self::$create)) {
+    $homedir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "";
+    $sql = $ftp_db->prepare("INSERT INTO ftpquotalimits (name, quota_type, per_session, limit_type, bytes_in_avail, bytes_out_avail, bytes_xfer_avail, files_in_avail, files_out_avail, files_xfer_avail) VALUES (:usename, 'user', 'true', 'hard', 0, 0, 0, 0, 0, 0);");
+    $sql->bindParam(':username', $username);
+    $sql->execute();
+    $sql = $ftp_db->prepare("INSERT INTO ftpuser (id, userid, passwd, uid, gid, homedir, shell, count, accessed, modified) VALUES ('', :username, :password, 2001, 2001, :homedir, '/sbin/nologin', 0, '', '');");
+    $sql->bindParam(':username', $username);
+    $sql->bindParam(':password', $password);
+    $sql->bindParam(':homedir', $homedir);
+    $sql->execute();
+}
+// Included after account is created
+if (!fs_director::CheckForEmptyValue(self::$delete)) {
+    $sql = $ftp_db->prepare("DELETE FROM ftpuser  WHERE userid=:userid");
+    $sql->bindParam(':userid', $rowftp['ft_user_vc']);
+    $sql->execute();
+    $sql = $ftp_db->prepare("DELETE FROM ftpquotalimits WHERE name=:username");
+    $sql->bindParam(':username', $rowftp['ft_user_vc']);
+    $sql->execute();
+}
+// Included after account password has been reset
+if (!fs_director::CheckForEmptyValue(self::$reset)) {
+    $sql = $ftp_db->prepare("UPDATE ftpuser SET passwd=:password WHERE userid=:username");
+    $sql->bindParam(':username', $rowftp['ft_user_vc']);
+    $sql->bindParam(':password', $password);
+    $sql->execute();
+}
 ?>
