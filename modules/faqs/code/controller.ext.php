@@ -25,10 +25,10 @@
  *
  */
 class module_controller {
-	
-	static $error;
-	static $delete;
-	static $ok;
+
+    static $error;
+    static $delete;
+    static $ok;
 
     function getFAQS() {
         global $zdbh;
@@ -191,33 +191,28 @@ class module_controller {
         $sql = "UPDATE x_faqs SET fq_deleted_ts=" . time() . " WHERE fq_id_pk=" . $fq_id_pk . "";
         $sql = $zdbh->prepare($sql);
         $sql->execute();
-		self::$delete = true;
+        self::$delete = true;
         return true;
     }
 
     static function ExecuteAddFaq($question, $answer, $userid, $global) {
         global $zdbh;
-		if ($question != "" && $answer != ""){
-        	$sql = "INSERT INTO x_faqs (fq_acc_fk,
-										fq_question_tx,
-										fq_answer_tx,
-										fq_global_in,
-										fq_created_ts) VALUES (
-										" . $userid . ",
-										'" . $question . "',
-										'" . $answer . "',
-										" . $global . ",
-										" . time() . ")";
-	        $sql = $zdbh->prepare($sql);
-	        $sql->execute();
-			self::$ok=true;
-	        return true;
-		} else {
-			self::$error = true;
-			return false;
-		}
+        if ($question != "" && $answer != "") {
+            $sql = "INSERT INTO x_faqs (fq_acc_fk, fq_question_tx, fq_answer_tx, fq_global_in, fq_created_ts) VALUES (:userid, :question, :answer, :global, " . time() . ")";
+            $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $userid);
+            $sql->bindParam(':question', $question);
+            $sql->bindParam(':answer', $answer);
+            $sql->bindParam(':global', $global);
+            $sql->execute();
+            self::$ok = true;
+            return true;
+        } else {
+            self::$error = true;
+            return false;
+        }
     }
-	
+
     static function getisDeleteFAQ() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
