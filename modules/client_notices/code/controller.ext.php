@@ -44,8 +44,9 @@ class module_controller {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_accounts
-            SET ac_notice_tx = '" . $notice . "'
+            SET ac_notice_tx = :notice
             WHERE ac_id_pk = " . $uid . "");
+        $sql->bindParam(':notice', $notice);
         $sql->execute();
         return true;
     }
