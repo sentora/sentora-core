@@ -215,7 +215,8 @@ class module_controller {
         runtime_hook::Execute('OnBeforeDeleteFTPAccount');
         $retval = FALSE;
         $rowftp = $zdbh->query("SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . $ft_id_pk . "")->fetch();
-        $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_id_pk=" . $ft_id_pk . "");
+        $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_id_pk=:ftpid");
+        $sql->bindParam(':ftpid', $ft_id_pk);
         $sql->execute();
         self::$delete = true;
         // Include FTP server specific file here.
