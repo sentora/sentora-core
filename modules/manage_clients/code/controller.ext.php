@@ -318,27 +318,27 @@ class module_controller {
                 self::$badpassword = true;
                 return false;
             }
-            $sql = $zdbh->prepare("UPDATE x_accounts SET 
-										ac_pass_vc=	   '" . md5($newpass) . "'
-										WHERE ac_id_pk=" . $clientid . "");
+            $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc= :newpass WHERE ac_id_pk= :clientid");
+            $sql->bindParam(':clientid', $clientid);
+            $sql->bindParam(':newpass', md5($newpass));
             $sql->execute();
         }
-        $sql = $zdbh->prepare("UPDATE x_accounts SET 
-										ac_email_vc=    '" . $email . "',
-										ac_package_fk= " . $package . " ,
-										ac_enabled_in= " . $enabled . ",
-                                        ac_group_fk=   " . $group . "
-										WHERE ac_id_pk=" . $clientid . "");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc= :email', ac_package_fk= :package , ac_enabled_in= :isenabled, ac_group_fk= :group WHERE ac_id_pk= :accountid");
+        $sql->bindParam(':email', $email);
+        $sql->bindParam(':package', $package);
+        $sql->bindParam(':isenabled', $enabled);
+        $sql->bindParam(':group', $group);
+        $sql->bindParam(':accountid', $clientid);
         $sql->execute();
 
-        $sql = $zdbh->prepare("UPDATE x_profiles SET 
-										ud_fullname_vc= '" . $fullname . "',
-										ud_group_fk=    " . $group . ",
-										ud_package_fk=  " . $package . ",
-										ud_address_tx=  '" . $address . "',
-										ud_postcode_vc= '" . $post . "',
-										ud_phone_vc=    '" . $phone . "'
-										WHERE ud_user_fk=" . $clientid . "");
+        $sql = $zdbh->prepare("UPDATE x_profiles SET ud_fullname_vc= :fullname, ud_group_fk= :group, ud_package_fk= :package, ud_address_tx= :address,ud_postcode_vc= :postcode,ud_phone_vc= :phone WHERE ud_user_fk=:accountid");
+        $sql->bindParam(':fullname', $fullname);
+        $sql->bindParam(':group', $group);
+        $sql->bindParam(':package', $package);
+        $sql->bindParam(':address', $address);
+        $sql->bindParam(':postcode', $post);
+        $sql->bindParam(':phone', $phone);
+        $sql->bindParam(':accountid', $clientid);
         $sql->execute();
         if ($enabled == 0) {
             self::DisableClient($clientid);
@@ -510,7 +510,7 @@ class module_controller {
             return false;
         }
         // Check to make sure the groupname is not blank and exists before we go any further...
-	if (!fs_director::CheckForEmptyValue($groupid)) {
+        if (!fs_director::CheckForEmptyValue($groupid)) {
             $sql = "SELECT COUNT(*) FROM x_groups WHERE ug_id_pk='" . $groupid . "'";
             if ($numrows = $zdbh->query($sql)) {
                 if ($numrows->fetchColumn() == 0) {
