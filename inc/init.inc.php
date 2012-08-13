@@ -38,7 +38,7 @@ if (isset($_POST['inForgotPassword'])) {
     $randomkey = sha1(microtime());
     $forgotPass = $_POST['inForgotPassword'];
     $sth = $zdbh->prepare("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = :forgotPass");
-    $sth->bindParam( ':forgotPass' , $forgotPass );
+    $sth->bindParam(':forgotPass', $forgotPass);
     $sth->execute();
     $rows = $sth->fetchAll();
     if ($rows) {
@@ -63,9 +63,15 @@ if (isset($_POST['inForgotPassword'])) {
 }
 
 if (isset($_POST['inConfEmail'])) {
-    $result = $zdbh->query("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = '" . $_POST['inConfEmail'] . "' AND ac_resethash_tx = '" . $_GET['resetkey'] . "' AND ac_resethash_tx IS NOT NULL")->Fetch();
+    $sql = $zdbh->prepare("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = :email AND ac_resethash_tx = :resetkey AND ac_resethash_tx IS NOT NULL");
+    $sql->bindParam(':email', $_POST['inConfEmail']);
+    $sql->bindParam(':resetkey', $_GET['resetkey']);
+    $result = $sql->execute();
     if ($result) {
-        $zdbh->exec("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= '" . md5($_POST['inNewPass']) . "' WHERE ac_id_pk=" . $result['ac_id_pk'] . "");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= :password WHERE ac_id_pk= :uid");
+        $sql->bindParam(':password', md5($_POST['inNewPass']));
+        $sql->bindParam(':uid', $result['ac_id_pk']);
+        $sql->execute();
         runtime_hook::Execute('OnSuccessfulPasswordReset');
     } else {
         runtime_hook::Execute('OnFailedPasswordReset');
