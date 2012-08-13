@@ -66,7 +66,8 @@ if (isset($_POST['inConfEmail'])) {
     $sql = $zdbh->prepare("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = :email AND ac_resethash_tx = :resetkey AND ac_resethash_tx IS NOT NULL");
     $sql->bindParam(':email', $_POST['inConfEmail']);
     $sql->bindParam(':resetkey', $_GET['resetkey']);
-    $result = $sql->execute();
+    $sql->execute();
+    $result = $sql->fetch();
     if ($result) {
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= :password WHERE ac_id_pk= :uid");
         $sql->bindParam(':password', md5($_POST['inNewPass']));
