@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/lv/messages.inc                                              |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Rūdolfs Ošiņš <dev.random@gmail.com>                          |
-|         Miķelis Zaļais <mik@prog.lv>                                  |
-|         Lauris Bukšis-Haberkorns <lauris@nix.lv>                      |
-|         Kaspars Tenters <kaspars.tenters@va.lv>                       |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/lv/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Rūdolfs Ošiņš <dev.random@gmail.com>                          |
+  |         Miķelis Zaļais <mik@prog.lv>                                  |
+  |         Lauris Bukšis-Haberkorns <lauris@nix.lv>                      |
+  |         Kaspars Tenters <kaspars.tenters@va.lv>                       |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5173 2011-09-05 18:41:04Z thomasb $
+  @version $Id: messages.inc 5173 2011-09-05 18:41:04Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Neizdevās pieslēgties';
@@ -154,5 +154,4 @@ $messages['foldercreated'] = 'Mape veiksmīgi izveidota.';
 $messages['invalidimageformat'] = 'Nederīgs attēla formāts.';
 $messages['mispellingsfound'] = 'Vēstulē atrastas pareizrakstības kļūdas.';
 $messages['parentnotwritable'] = 'Neizdevās izveidot/pārvietot mapi uz atzīmēto virsmapi. Nav piekļuves tiesību.';
-
 ?>

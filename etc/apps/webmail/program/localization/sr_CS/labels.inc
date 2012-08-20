@@ -2,20 +2,20 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/sr_cyrillic/labels.inc                                       |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Branko Kokanovic <branko.kokanovic@gmail.com                  |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/sr_cyrillic/labels.inc                                       |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Branko Kokanovic <branko.kokanovic@gmail.com                  |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4627 2011-03-31 13:47:22Z yllar $
+  @version $Id: labels.inc 4627 2011-03-31 13:47:22Z yllar $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Добродошли на $product';
@@ -344,5 +344,4 @@ $labels['vietnamese'] = 'Вијетнамски';
 $labels['japanese'] = 'Јапански';
 $labels['korean'] = 'Кореански';
 $labels['chinese'] = 'Кинески';
-
 ?>

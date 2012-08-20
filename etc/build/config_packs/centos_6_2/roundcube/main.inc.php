@@ -1,16 +1,16 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | Main configuration file                                               |
- |                                                                       |
- | This file is part of the RoundCube Webmail client                     |
- | Copyright (C) 2005-2009, RoundCube Dev. - Switzerland                 |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | Main configuration file                                               |
+  |                                                                       |
+  | This file is part of the RoundCube Webmail client                     |
+  | Copyright (C) 2005-2009, RoundCube Dev. - Switzerland                 |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $rcmail_config = array();
 
@@ -177,7 +177,7 @@ $rcmail_config['date_long'] = 'd.m.Y H:i';
 $rcmail_config['date_today'] = 'H:i';
 
 // add this user-agent to message headers when sending
-$rcmail_config['useragent'] = 'RoundCube Webmail/'.RCMAIL_VERSION;
+$rcmail_config['useragent'] = 'RoundCube Webmail/' . RCMAIL_VERSION;
 
 // use this name to compose page titles
 $rcmail_config['product_name'] = 'ZPanel Webmail';
@@ -282,10 +282,10 @@ $rcmail_config['ldap_public'] = array();
 //
 // So the base_dn would be uid=%fu,ou=people,o=root
 // The bind_dn would be the same as based_dn or some super user login.
-/* 
+/*
  * example config for Verisign directory
  *
-$rcmail_config['ldap_public']['Verisign'] = array(
+  $rcmail_config['ldap_public']['Verisign'] = array(
   'name'          => 'Verisign.com',
   'hosts'         => array('directory.verisign.com'),
   'port'          => 389,
@@ -314,7 +314,7 @@ $rcmail_config['ldap_public']['Verisign'] = array(
   'scope'         => 'sub',   // search mode: sub|base|list
   'filter'        => '',      // used for basic listing (if not empty) and will be &'d with search queries. example: status=act
   'fuzzy_search'  => true);   // server allows wildcard search
-*/
+ */
 
 // An ordered array of the ids of the addressbooks that should be searched
 // when populating address autocomplete fields server-side. ex: array('sql','Verisign');
@@ -372,7 +372,7 @@ $rcmail_config['min_keep_alive'] = 60;
 // Enable DNS checking for e-mail address validation
 $rcmail_config['email_dns_check'] = false;
 
-/***** these settings can be overwritten by user's preferences *****/
+/* * *** these settings can be overwritten by user's preferences **** */
 
 // skin name: folder from skins/
 $rcmail_config['skin'] = 'default';
@@ -384,7 +384,7 @@ $rcmail_config['pagesize'] = 40;
 $rcmail_config['timezone'] = 'auto';
 
 // is daylight saving On?
-$rcmail_config['dst_active'] = (bool)date('I');
+$rcmail_config['dst_active'] = (bool) date('I');
 
 // prefer displaying HTML messages
 $rcmail_config['prefer_html'] = TRUE;

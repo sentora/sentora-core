@@ -45,8 +45,8 @@ class ui_templateparser {
         if ($match) {
             foreach ($match[1] as $classes) {
                 #if (class_exists('' . $classes . '')) {
-               $method_name = "get" . $classes;
-               $output = module_controller::$method_name();
+                $method_name = "get" . $classes;
+                $output = module_controller::$method_name();
                 $raw = str_replace("<@ " . $classes . " @>", $output, $raw);
                 #}
             }

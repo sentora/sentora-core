@@ -79,16 +79,16 @@ function updatenotifier_request() {
         url: "xml.php?plugin=UpdateNotifier",
         dataType: "xml",
         error: function () {
-        $.jGrowl("Error loading XML document for Plugin UpdateNotifier!");
-    },
-    success: function updatenotifier_buildblock(xml) {
-        populateErrors(xml);
-        updatenotifier_populate(xml);
-        if (UpdateNotifier_show) {
-            plugin_translate("UpdateNotifier");
-            $("#Plugin_UpdateNotifier").show();
+            $.jGrowl("Error loading XML document for Plugin UpdateNotifier!");
+        },
+        success: function updatenotifier_buildblock(xml) {
+            populateErrors(xml);
+            updatenotifier_populate(xml);
+            if (UpdateNotifier_show) {
+                plugin_translate("UpdateNotifier");
+                $("#Plugin_UpdateNotifier").show();
+            }
         }
-    }
     });
 }
 

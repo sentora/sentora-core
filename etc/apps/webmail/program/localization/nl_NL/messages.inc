@@ -1,18 +1,18 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | localization/nl_NL/messages.inc                                       |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2012, The Roundcube Dev Team                            |
- | Licensed under the GNU General Public License                         |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Geert Wirken <Unknown>                                        |
- +-----------------------------------------------------------------------+
- @version $Id: messages.inc 5741 2012-01-08 16:20:12Z thomasb $
-*/
+  +-----------------------------------------------------------------------+
+  | localization/nl_NL/messages.inc                                       |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2012, The Roundcube Dev Team                            |
+  | Licensed under the GNU General Public License                         |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Geert Wirken <Unknown>                                        |
+  +-----------------------------------------------------------------------+
+  @version $Id: messages.inc 5741 2012-01-08 16:20:12Z thomasb $
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Inloggen mislukt.';

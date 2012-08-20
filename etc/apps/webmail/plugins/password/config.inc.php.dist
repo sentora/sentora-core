@@ -53,7 +53,6 @@ $rcmail_config['password_idn_ascii'] = false;
 
 // Path for dovecotpw (if not in $PATH)
 // $rcmail_config['password_dovecotpw'] = '/usr/local/sbin/dovecotpw';
-
 // Dovecot method (dovecotpw -s 'method')
 $rcmail_config['password_dovecotpw_method'] = 'CRAM-MD5';
 
@@ -205,7 +204,7 @@ $rcmail_config['password_ldap_lchattr'] = '';
 // LDAP Samba password attribute, e.g. sambaNTPassword
 // Name of the LDAP's Samba attribute used for storing user password
 $rcmail_config['password_ldap_samba_pwattr'] = '';
- 
+
 // LDAP Samba Password Last Change Date attribute, e.g. sambaPwdLastSet
 // Some places use an attribute to store the date of the last password change
 // The date is meassured in "seconds since epoch" (an integer value)

@@ -2,23 +2,23 @@
 
 /*
 
- +-----------------------------------------------------------------------+
- | language/vn/messages.inc                                              |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Vinh Bui <bqvinh@buivinh.info>                                |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/vn/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Vinh Bui <bqvinh@buivinh.info>                                |
+  +-----------------------------------------------------------------------+
 
- @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
-$messages['loginfailed']  = 'Không đăng nhập được';
+$messages['loginfailed'] = 'Không đăng nhập được';
 $messages['cookiesdisabled'] = 'Trình duyệt không hỗ trợ cookies';
 $messages['sessionerror'] = 'Phiên làm việc không hợp lệ hoặc đã hết hạn';
 $messages['imaperror'] = 'Không kết nối được với máy chủ IMAP';
@@ -42,15 +42,15 @@ $messages['sendingfailed'] = 'Không gửi được thư';
 $messages['errorsaving'] = 'Lỗi khi lưu';
 $messages['errormoving'] = 'Không thể chuyển được thư';
 $messages['errordeleting'] = 'Không thể xóa được thư';
-$messages['deletecontactconfirm']  = 'Xóa bỏ các địa chỉ được chọn?';
-$messages['deletefolderconfirm']  = 'Xóa bỏ thư mục này?';
-$messages['purgefolderconfirm']  = 'Xóa toàn bộ thư trong thư mục nào?';
+$messages['deletecontactconfirm'] = 'Xóa bỏ các địa chỉ được chọn?';
+$messages['deletefolderconfirm'] = 'Xóa bỏ thư mục này?';
+$messages['purgefolderconfirm'] = 'Xóa toàn bộ thư trong thư mục nào?';
 $messages['formincomplete'] = 'Mẫu chưa được điền xong';
 $messages['noemailwarning'] = 'Nhập địa chỉ email';
-$messages['nonamewarning']  = 'Nhập tên';
+$messages['nonamewarning'] = 'Nhập tên';
 $messages['nopagesizewarning'] = 'Nhập kích cỡ của trang';
 $messages['norecipientwarning'] = 'Thư cần có it nhất 1 người nhận';
-$messages['nosubjectwarning']  = 'Mục "Tiêu đề" chưa có. Điền tiêu đề ?';
+$messages['nosubjectwarning'] = 'Mục "Tiêu đề" chưa có. Điền tiêu đề ?';
 $messages['nobodywarning'] = 'Thư không nội dung, vẫn tiếp tục gửi?';
 $messages['notsentwarning'] = 'Thư chưa được gửi. Bỏ qua thư đang soạn?';
 $messages['noldapserver'] = 'Chọn máy chủ ldap server để tìm';
@@ -62,5 +62,4 @@ $messages['searching'] = 'Tìm kiếm...';
 $messages['checking'] = 'Kiểm tra...';
 $messages['nospellerrors'] = 'Không có lỗi chính tả';
 $messages['folderdeleted'] = 'Thư mục đã được xóa';
-
 ?>

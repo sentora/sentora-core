@@ -29,13 +29,12 @@ class module_controller {
     static $alreadyexists;
     static $blank;
     static $nomatch;
-	static $nowrite;
+    static $nowrite;
     static $ok;
 
     /**
      * The 'worker' methods.
      */
-
     static function ListProtectedDirectories($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_htaccess WHERE ht_acc_fk=" . $uid . " AND ht_deleted_ts IS NULL";
@@ -45,10 +44,10 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowhta = $sql->fetch()) {
-                array_push($res, array('id'     => $rowhta['ht_id_pk'],
-									   'htuser' => $rowhta['ht_user_vc'],
-									   'htdir'  => $rowhta['ht_dir_vc'],
-                    				   'userid' => $rowhta['ht_acc_fk']));
+                array_push($res, array('id' => $rowhta['ht_id_pk'],
+                    'htuser' => $rowhta['ht_user_vc'],
+                    'htdir' => $rowhta['ht_dir_vc'],
+                    'userid' => $rowhta['ht_acc_fk']));
             }
             return $res;
         } else {
@@ -58,15 +57,15 @@ class module_controller {
 
     static function ListCurrentHTA($id) {
         global $zdbh;
-		$res = array();
+        $res = array();
         $htpasswd = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $id . ".htpasswd";
-		if (file_exists($htpasswd)){
-        	$lines = file($htpasswd);
-	        foreach ($lines as $line_num => $line) {
-	        	$data = explode(":", $line);
-				array_push($res, array('htaccuser' => $data[0],
-									   'htaccpass' => $data[1]));
-    	    }
+        if (file_exists($htpasswd)) {
+            $lines = file($htpasswd);
+            foreach ($lines as $line_num => $line) {
+                $data = explode(":", $line);
+                array_push($res, array('htaccuser' => $data[0],
+                    'htaccpass' => $data[1]));
+            }
             return $res;
         } else {
             return false;
@@ -82,32 +81,32 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowhta = $sql->fetch()) {
-                array_push($res, array('id'     => $rowhta['ht_id_pk'],
-									   'htuser' => $rowhta['ht_user_vc'],
-									   'htdir'  => $rowhta['ht_dir_vc'],
-                    				   'userid' => $rowhta['ht_acc_fk']));
+                array_push($res, array('id' => $rowhta['ht_id_pk'],
+                    'htuser' => $rowhta['ht_user_vc'],
+                    'htdir' => $rowhta['ht_dir_vc'],
+                    'userid' => $rowhta['ht_acc_fk']));
             }
             return $res;
         } else {
             return false;
         }
     }
-	
+
     static function DirectoryIsProtected($uid, $folder) {
         global $zdbh;
-		$rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk=". $uid ." AND ht_dir_vc='".$folder."' AND ht_deleted_ts IS NULL")->fetch();
-		if ($rowpath){
-			if (file_exists(ctrl_options::GetSystemOption('hosted_dir') . $folder . "/.htaccess")){
-				header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "");
-	        	exit;
-			} else {
-			    if (file_exists(ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $rowpath['ht_id_pk'] . ".htpasswd")) {
-        			unlink(ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $rowpath['ht_id_pk'] . ".htpasswd");
-    			}
-				$sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=" . time() . " WHERE ht_id_pk=" . $rowpath['ht_id_pk'] . "");
-				$sql->execute();
-				return false;	
-			}	
+        $rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk=" . $uid . " AND ht_dir_vc='" . $folder . "' AND ht_deleted_ts IS NULL")->fetch();
+        if ($rowpath) {
+            if (file_exists(ctrl_options::GetSystemOption('hosted_dir') . $folder . "/.htaccess")) {
+                header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "");
+                exit;
+            } else {
+                if (file_exists(ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $rowpath['ht_id_pk'] . ".htpasswd")) {
+                    unlink(ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $rowpath['ht_id_pk'] . ".htpasswd");
+                }
+                $sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=" . time() . " WHERE ht_id_pk=" . $rowpath['ht_id_pk'] . "");
+                $sql->execute();
+                return false;
+            }
         } else {
             return false;
         }
@@ -115,31 +114,31 @@ class module_controller {
 
     static function ExecuteDeleteHTA($id) {
         global $zdbh;
-		runtime_hook::Execute('OnBeforeDeleteHTAccess');
-		$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "")->fetch();
-		$sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=" . time() . " WHERE ht_id_pk=" . $id . "");
-		$sql->execute();
-		$htpassword = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $id . ".htpasswd";
-		$htaccess   = ctrl_options::GetSystemOption('hosted_dir') . $row['ht_dir_vc'] . "/.htaccess";
-    	if (file_exists($htpassword)) {
-        	unlink($htpassword);
-    	}
-    	if (file_exists($htaccess)) {
-        	unlink($htaccess);
-    	}
-		runtime_hook::Execute('OnAfterDeleteHTAccess');
-		return true;
+        runtime_hook::Execute('OnBeforeDeleteHTAccess');
+        $row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "")->fetch();
+        $sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=" . time() . " WHERE ht_id_pk=" . $id . "");
+        $sql->execute();
+        $htpassword = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $id . ".htpasswd";
+        $htaccess = ctrl_options::GetSystemOption('hosted_dir') . $row['ht_dir_vc'] . "/.htaccess";
+        if (file_exists($htpassword)) {
+            unlink($htpassword);
+        }
+        if (file_exists($htaccess)) {
+            unlink($htaccess);
+        }
+        runtime_hook::Execute('OnAfterDeleteHTAccess');
+        return true;
     }
 
     static function ExecuteRemoveUserHTA($id, $username) {
-		runtime_hook::Execute('OnBeforeRemoveUserHTAccess');
-		$htpasswd_exe = ctrl_options::GetSystemOption('htpasswd_exe') . " -D " . 
-						ctrl_options::GetSystemOption('zpanel_root') . 
-						"/modules/htpasswd/assets/files/" . 
-						$id . ".htpasswd " . $username . "";
-		system($htpasswd_exe);
-		runtime_hook::Execute('OnAfterRemoveUserHTAccess');
-		header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "");
+        runtime_hook::Execute('OnBeforeRemoveUserHTAccess');
+        $htpasswd_exe = ctrl_options::GetSystemOption('htpasswd_exe') . " -D " .
+                ctrl_options::GetSystemOption('zpanel_root') .
+                "/modules/htpasswd/assets/files/" .
+                $id . ".htpasswd " . $username . "";
+        system($htpasswd_exe);
+        runtime_hook::Execute('OnAfterRemoveUserHTAccess');
+        header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "");
         exit;
     }
 
@@ -147,17 +146,17 @@ class module_controller {
         if (fs_director::CheckForEmptyValue(self::CheckAddForErrors($inHTPassword, $inConfirmHTPassword))) {
             return false;
         }
-		runtime_hook::Execute('OnBeforeAdUserHTAccess');
-		$htpasswd_exe = ctrl_options::GetSystemOption('htpasswd_exe') . " -b -m " . 
-						ctrl_options::GetSystemOption('zpanel_root') . 
-						"/modules/htpasswd/assets/files/" . 
-						$id . ".htpasswd " . strtolower(str_replace(' ', '', $inHTUsername)) . " " . $inHTPassword . "";
-		system($htpasswd_exe);
-		runtime_hook::Execute('OnAfterAddUserHTAccess');
-		header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "");
+        runtime_hook::Execute('OnBeforeAdUserHTAccess');
+        $htpasswd_exe = ctrl_options::GetSystemOption('htpasswd_exe') . " -b -m " .
+                ctrl_options::GetSystemOption('zpanel_root') .
+                "/modules/htpasswd/assets/files/" .
+                $id . ".htpasswd " . strtolower(str_replace(' ', '', $inHTUsername)) . " " . $inHTPassword . "";
+        system($htpasswd_exe);
+        runtime_hook::Execute('OnAfterAddUserHTAccess');
+        header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "");
         exit;
     }
-	
+
     static function ExecuteCreateHTA($userid, $inAuthName, $inHTUsername, $inHTPassword, $inConfirmHTPassword, $inPath) {
         global $zdbh;
         global $controller;
@@ -169,43 +168,43 @@ class module_controller {
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateHTAccess');
-		$sql = $zdbh->prepare("INSERT INTO x_htaccess (
+        $sql = $zdbh->prepare("INSERT INTO x_htaccess (
 								ht_acc_fk, 
 								ht_user_vc, 
 								ht_dir_vc,
 								ht_created_ts) VALUES (
-								".$userid.", 
-								'".$inHTUsername."', 
-								'".$inPath."',
-								".time().")");
+								" . $userid . ", 
+								'" . $inHTUsername . "', 
+								'" . $inPath . "',
+								" . time() . ")");
         $sql->execute();
-		$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk =" . $userid . " AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1")->fetch();
-		$htaccesfiledir = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/";
-		if (!is_dir($htaccesfiledir)) {
-        	fs_director::CreateDirectory($htaccesfiledir);
+        $row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk =" . $userid . " AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1")->fetch();
+        $htaccesfiledir = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/";
+        if (!is_dir($htaccesfiledir)) {
+            fs_director::CreateDirectory($htaccesfiledir);
         }
-		$htaccessfile = ctrl_options::GetSystemOption('hosted_dir') . $inPath . "/.htaccess";
-		$stringData  = "AuthUserFile " . $htaccesfiledir . $row['ht_id_pk'] . ".htpasswd" . fs_filehandler::NewLine();
-		$stringData .= "AuthType Basic" . fs_filehandler::NewLine();
-		$stringData .= "AuthName \"" . $inAuthName . "\"" . fs_filehandler::NewLine();
-		$stringData .= "Require valid-user" . fs_filehandler::NewLine();
-		if (is_writable(ctrl_options::GetSystemOption('hosted_dir') . $inPath)){
-        	fs_filehandler::UpdateFile($htaccessfile, 0777, $stringData);
-			fs_director::SetFileSystemPermissions($htaccessfile, 0777);
-		}
-		if(file_exists($htaccessfile)){
-			fs_director::SetFileSystemPermissions($htaccesfiledir, 0777);
-			$htpasswd_exe = ctrl_options::GetSystemOption('htpasswd_exe') . " -b -m -c " . 
-							$htaccesfiledir . 
-							$row['ht_id_pk'] . ".htpasswd " . 
-							$inHTUsername . " " . $inHTPassword . "";
-		
-    	    system($htpasswd_exe);
-		} else {
-			$sql = $zdbh->prepare("DELETE  FROM x_htaccess WHERE ht_id_pk=".$row['ht_id_pk']."");
-	        $sql->execute();
-			self::$nowrite = true;
-		}
+        $htaccessfile = ctrl_options::GetSystemOption('hosted_dir') . $inPath . "/.htaccess";
+        $stringData = "AuthUserFile " . $htaccesfiledir . $row['ht_id_pk'] . ".htpasswd" . fs_filehandler::NewLine();
+        $stringData .= "AuthType Basic" . fs_filehandler::NewLine();
+        $stringData .= "AuthName \"" . $inAuthName . "\"" . fs_filehandler::NewLine();
+        $stringData .= "Require valid-user" . fs_filehandler::NewLine();
+        if (is_writable(ctrl_options::GetSystemOption('hosted_dir') . $inPath)) {
+            fs_filehandler::UpdateFile($htaccessfile, 0777, $stringData);
+            fs_director::SetFileSystemPermissions($htaccessfile, 0777);
+        }
+        if (file_exists($htaccessfile)) {
+            fs_director::SetFileSystemPermissions($htaccesfiledir, 0777);
+            $htpasswd_exe = ctrl_options::GetSystemOption('htpasswd_exe') . " -b -m -c " .
+                    $htaccesfiledir .
+                    $row['ht_id_pk'] . ".htpasswd " .
+                    $inHTUsername . " " . $inHTPassword . "";
+
+            system($htpasswd_exe);
+        } else {
+            $sql = $zdbh->prepare("DELETE  FROM x_htaccess WHERE ht_id_pk=" . $row['ht_id_pk'] . "");
+            $sql->execute();
+            self::$nowrite = true;
+        }
         runtime_hook::Execute('OnAfterCreateHTAccess');
         self::$ok = true;
         return true;
@@ -235,10 +234,10 @@ class module_controller {
         }
         // Check to make sure the directory is writable...
         $htaccessfile = ctrl_options::GetSystemOption('hosted_dir') . $inPath . "";
-		if (!is_writable($htaccessfile)){
-			self::$nowrite = true;
-    		return false;
-		}
+        if (!is_writable($htaccessfile)) {
+            self::$nowrite = true;
+            return false;
+        }
         return true;
     }
 
@@ -269,20 +268,19 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-	
     static function doSelectFolder() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inFolder'])) {
-			if (!self::DirectoryIsProtected($currentuser['userid'], $formvars['inFolder'])){
-            header("location: ./?module=" . $controller->GetCurrentModule() . "&selected=Selected&path=" . $formvars['inFolder'] . "");
-            exit;
-			}
+            if (!self::DirectoryIsProtected($currentuser['userid'], $formvars['inFolder'])) {
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&selected=Selected&path=" . $formvars['inFolder'] . "");
+                exit;
+            }
         }
         return;
     }
-	
+
     static function doCreateHTA() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -332,7 +330,7 @@ class module_controller {
             return true;
         return false;
     }
-	
+
     static function getHTA() {
         global $controller;
         return self::ListHTA($controller->GetControllerRequest('URL', 'other'));
@@ -368,7 +366,7 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListProtectedDirectories($currentuser['userid']);
     }
-	
+
     static function getSelectedFolder() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -384,12 +382,12 @@ class module_controller {
         } else {
             return "";
         }
-	}
+    }
 
-	static function getRootPath(){
-		$currentuser = ctrl_users::GetUserDetail();
-		return ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
-	}
+    static function getRootPath() {
+        $currentuser = ctrl_users::GetUserDetail();
+        return ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+    }
 
     static function getCurrentUserName() {
         global $controller;
@@ -409,13 +407,13 @@ class module_controller {
 
     static function getCurrentHTA() {
         global $controller;
-		$urlvars = $controller->GetAllControllerRequests('URL');
-		$retval = self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
-		if ($retval){
-			return self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
-		} else {
-			return false;
-		}
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        $retval = self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
+        if ($retval) {
+            return self::ListCurrentHTA($controller->GetControllerRequest('URL', 'other'));
+        } else {
+            return false;
+        }
     }
 
     static function getResult() {

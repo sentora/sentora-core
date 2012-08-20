@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/cy_GB/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2008-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Dafydd Tomos <l10n@da.fydd.org>                               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/cy_GB/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Dafydd Tomos <l10n@da.fydd.org>                               |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Methwyd a\'ch mewngofnodi';
@@ -155,5 +155,4 @@ $messages['invalidimageformat'] = 'Ddim yn fformat llun dilys.';
 $messages['mispellingsfound'] = 'Gwelwyd camsillafu yn y neges.';
 $messages['parentnotwritable'] = 'Methwyd creu/symud ffolder i\'r ffolder rhiant ddewiswyd. Dim hawl mynediad.';
 $messages['messagetoobig'] = 'Mae darn y neges yn rhy fawr i\'w brosesu.';
-
 ?>

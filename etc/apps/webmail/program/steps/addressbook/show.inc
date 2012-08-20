@@ -1,31 +1,31 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/steps/addressbook/show.inc                                    |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Show contact details                                                |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/addressbook/show.inc                                    |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Show contact details                                                |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: show.inc 5681 2012-01-01 13:36:22Z alec $
+  $Id: show.inc 5681 2012-01-01 13:36:22Z alec $
 
-*/
+ */
 
 // Get contact ID and source ID from request
-$cids   = rcmail_get_cids();
+$cids = rcmail_get_cids();
 $source = key($cids);
-$cid    = array_shift($cids[$source]);
+$cid = array_shift($cids[$source]);
 
 // Initialize addressbook source
-$CONTACTS  = rcmail_contact_source($source, true);
+$CONTACTS = rcmail_contact_source($source, true);
 $SOURCE_ID = $source;
 
 // read contact record
@@ -58,9 +58,7 @@ if ($RCMAIL->action == 'photo') {
     exit;
 }
 
-
-function rcmail_contact_head($attrib)
-{
+function rcmail_contact_head($attrib) {
     global $CONTACTS, $RCMAIL;
 
     // check if we have a valid result
@@ -72,7 +70,7 @@ function rcmail_contact_head($attrib)
     $microformats = array('name' => 'fn', 'email' => 'email');
 
     $form = array(
-        'head' => array(  // section 'head' is magic!
+        'head' => array(// section 'head' is magic!
             'content' => array(
                 'prefix' => array('type' => 'text'),
                 'firstname' => array('type' => 'text'),
@@ -87,9 +85,7 @@ function rcmail_contact_head($attrib)
     return rcmail_contact_form($form, $record, $attrib);
 }
 
-
-function rcmail_contact_details($attrib)
-{
+function rcmail_contact_details($attrib) {
     global $CONTACTS, $RCMAIL, $CONTACT_COLTYPES;
 
     // check if we have a valid result
@@ -102,17 +98,17 @@ function rcmail_contact_details($attrib)
 
     $form = array(
         'contact' => array(
-            'name'    => rcube_label('properties'),
+            'name' => rcube_label('properties'),
             'content' => array(
-              'email' => array('size' => $i_size, 'render_func' => 'rcmail_render_email_value'),
-              'phone' => array('size' => $i_size),
-              'address' => array(),
-              'website' => array('size' => $i_size, 'render_func' => 'rcmail_render_url_value'),
-              'im' => array('size' => $i_size),
+                'email' => array('size' => $i_size, 'render_func' => 'rcmail_render_email_value'),
+                'phone' => array('size' => $i_size),
+                'address' => array(),
+                'website' => array('size' => $i_size, 'render_func' => 'rcmail_render_url_value'),
+                'im' => array('size' => $i_size),
             ),
         ),
         'personal' => array(
-            'name'    => rcube_label('personalinfo'),
+            'name' => rcube_label('personalinfo'),
             'content' => array(
                 'gender' => array('size' => $i_size),
                 'maidenname' => array('size' => $i_size),
@@ -124,19 +120,19 @@ function rcmail_contact_details($attrib)
             ),
         ),
     );
-    
+
     if (isset($CONTACT_COLTYPES['notes'])) {
         $form['notes'] = array(
-            'name'    => rcube_label('notes'),
+            'name' => rcube_label('notes'),
             'content' => array(
                 'notes' => array('type' => 'textarea', 'label' => false),
             ),
         );
     }
-    
+
     if ($CONTACTS->groups) {
         $form['groups'] = array(
-            'name'    => rcube_label('groups'),
+            'name' => rcube_label('groups'),
             'content' => rcmail_contact_record_groups($record['ID']),
         );
     }
@@ -144,31 +140,25 @@ function rcmail_contact_details($attrib)
     return rcmail_contact_form($form, $record);
 }
 
-
-function rcmail_render_email_value($email, $col)
-{
+function rcmail_render_email_value($email, $col) {
     return html::a(array(
-        'href' => 'mailto:' . $email,
-        'onclick' => sprintf("return %s.command('compose','%s',this)", JS_OBJECT_NAME, JQ($email)),
-        'title' => rcube_label('composeto'),
-        'class' => 'email',
-    ), Q($email));
+                'href' => 'mailto:' . $email,
+                'onclick' => sprintf("return %s.command('compose','%s',this)", JS_OBJECT_NAME, JQ($email)),
+                'title' => rcube_label('composeto'),
+                'class' => 'email',
+                    ), Q($email));
 }
 
-
-function rcmail_render_url_value($url, $col)
-{
+function rcmail_render_url_value($url, $col) {
     $prefix = preg_match('!^(http|ftp)s?://!', $url) ? '' : 'http://';
     return html::a(array(
-        'href' => $prefix . $url,
-        'target' => '_blank',
-        'class' => 'url',
-    ), Q($url));
+                'href' => $prefix . $url,
+                'target' => '_blank',
+                'class' => 'url',
+                    ), Q($url));
 }
 
-
-function rcmail_contact_record_groups($contact_id)
-{
+function rcmail_contact_record_groups($contact_id) {
     global $RCMAIL, $CONTACTS, $GROUPS;
 
     $GROUPS = $CONTACTS->list_groups();
@@ -181,12 +171,11 @@ function rcmail_contact_record_groups($contact_id)
 
     $members = $CONTACTS->get_record_groups($contact_id);
     $checkbox = new html_checkbox(array('name' => '_gid[]',
-        'class' => 'groupmember', 'disabled' => $CONTACTS->readonly));
+                'class' => 'groupmember', 'disabled' => $CONTACTS->readonly));
 
     foreach ($GROUPS as $group) {
         $gid = $group['ID'];
-        $table->add(null, $checkbox->show($members[$gid] ? $gid : null,
-            array('value' => $gid, 'id' => 'ff_gid' . $gid)));
+        $table->add(null, $checkbox->show($members[$gid] ? $gid : null, array('value' => $gid, 'id' => 'ff_gid' . $gid)));
         $table->add(null, html::label('ff_gid' . $gid, Q($group['name'])));
     }
 
@@ -196,7 +185,7 @@ function rcmail_contact_record_groups($contact_id)
     $form_start = $RCMAIL->output->request_form(array(
         'name' => "form", 'method' => "post",
         'task' => $RCMAIL->task, 'action' => 'save',
-        'request' => 'save.'.intval($contact_id),
+        'request' => 'save.' . intval($contact_id),
         'noclose' => true), $hiddenfields->show());
     $form_end = '</form>';
 
@@ -206,11 +195,10 @@ function rcmail_contact_record_groups($contact_id)
     return $form_start . $table->show() . $form_end;
 }
 
-
 $OUTPUT->add_handlers(array(
-    'contacthead'    => 'rcmail_contact_head',
+    'contacthead' => 'rcmail_contact_head',
     'contactdetails' => 'rcmail_contact_details',
-    'contactphoto'   => 'rcmail_contact_photo',
+    'contactphoto' => 'rcmail_contact_photo',
 ));
 
 $OUTPUT->send('contact');

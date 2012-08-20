@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd']  = 'Parolayı Değiştir';
-$labels['curpasswd']  = 'Şu anki Parola:';
-$labels['newpasswd']  = 'Yeni Parola:';
-$labels['confpasswd']  = 'Yeni Parolayı Onaylayın:';
+$labels['changepasswd'] = 'Parolayı Değiştir';
+$labels['curpasswd'] = 'Şu anki Parola:';
+$labels['newpasswd'] = 'Yeni Parola:';
+$labels['confpasswd'] = 'Yeni Parolayı Onaylayın:';
 
 $messages = array();
 $messages['nopassword'] = 'Lütfen yeni şifreyi girin.';
@@ -17,5 +17,4 @@ $messages['internalerror'] = 'Yeni şifre kaydedilemedi.';
 $messages['passwordshort'] = 'Parola en az $length karakterden oluşmalı.';
 $messages['passwordweak'] = 'Parola en az bir sayı ve bir noktalama işareti içermeli.';
 $messages['passwordforbidden'] = 'Parola uygunsuz karakter(ler) içeriyor.';
-
 ?>

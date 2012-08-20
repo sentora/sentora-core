@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/bs_BA/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Begzudin Omerovic <Begzudin.Omerovic@gmail.com>               |
-|	Tanja Dobričić <tanja.dobricic@everymail.info>			|
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/bs_BA/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Begzudin Omerovic <Begzudin.Omerovic@gmail.com>               |
+  |	Tanja Dobričić <tanja.dobricic@everymail.info>			|
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
+  @version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Prijava neuspješna';
@@ -140,5 +140,4 @@ $messages['nametoolong'] = 'Ime predugo.';
 $messages['folderupdated'] = 'Ažuriranje mape uspješno.';
 $messages['foldercreated'] = 'Kreiranje mape uspješno.';
 $messages['invalidimageformat'] = 'Format slike nije validan.';
-
 ?>

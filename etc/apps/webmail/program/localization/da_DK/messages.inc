@@ -1,22 +1,22 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/da_DK/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author : Martin Moeller <martin@liga.dk>                              |
-|         Jesper R. Meyer <jesper@upthere.dk>                           |
-|         Søren Aggeboe <soren@aggeboe.dk>                              |
-|         John Loft Christiansen <john@nansensvej.dk>                   |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/da_DK/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author : Martin Moeller <martin@liga.dk>                              |
+  |         Jesper R. Meyer <jesper@upthere.dk>                           |
+  |         Søren Aggeboe <soren@aggeboe.dk>                              |
+  |         John Loft Christiansen <john@nansensvej.dk>                   |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
-*/
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Det lykkedes ikke at logge på';
@@ -59,7 +59,7 @@ $messages['errorcopying'] = 'Beskeden kunne ikke kopieres';
 $messages['errordeleting'] = 'Beskeden kunne ikke slettes';
 $messages['errormarking'] = 'Beskeden kunne ikke markeres';
 $messages['deletecontactconfirm'] = 'Vil du virkelig slette den/de valgte kontakt(er)?';
-$messages['deletegroupconfirm']  = 'Vil du virkelig slette den/de valgte gruppe(r)?';
+$messages['deletegroupconfirm'] = 'Vil du virkelig slette den/de valgte gruppe(r)?';
 $messages['deletemessagesconfirm'] = 'Vil du virkelig slette den/de valgte besked(er)?';
 $messages['deletefolderconfirm'] = 'Vil du virkelig slette den valgte mappe';
 $messages['purgefolderconfirm'] = 'Vil du virkelig slette alle beskeder i denne mappe?';
@@ -159,5 +159,4 @@ $messages['invalidimageformat'] = 'Ikke et gyldigt billedformat';
 $messages['mispellingsfound'] = 'Der er fundet stavefejl i beskeden.';
 $messages['parentnotwritable'] = 'Kan ikke oprette/flytte mappe ind i valgt mappe. Ingen adgangsrettigheder.';
 $messages['messagetoobig'] = 'Besked delen er for stor til at behandle.';
-
 ?>

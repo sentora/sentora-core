@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * NetBSD System Class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.NetBSD.inc.php 287 2009-06-26 12:11:59Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * NetBSD sysinfo class
  * get all the required information from NetBSD systems
  *
@@ -24,13 +26,12 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class NetBSD extends BSDCommon
-{
+class NetBSD extends BSDCommon {
+
     /**
      * define the regexp for log parser
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->setCPURegExp1("^cpu(.*)\, (.*) MHz");
         $this->setCPURegExp2("/user = (.*), nice = (.*), sys = (.*), intr = (.*), idle = (.*)/");
@@ -39,26 +40,24 @@ class NetBSD extends BSDCommon
         $this->setPCIRegExp1("/(.*) at pci[0-9] dev [0-9]* function [0-9]*: (.*)$/");
         $this->setPCIRegExp2("/\"(.*)\" (.*).* at [.0-9]+ irq/");
     }
-    
+
     /**
      * UpTime
      * time the system is running
      *
      * @return void
      */
-    private function _uptime()
-    {
+    private function _uptime() {
         $a = $this->grabkey('kern.boottime');
         $this->sys->setUptime(time() - $a);
     }
-    
+
     /**
      * get network information
      *
      * @return void
      */
-    private function _network()
-    {
+    private function _network() {
         CommonFunctions::executeProgram('netstat', '-nbdi | cut -c1-25,44- | grep "^[a-z]*[0-9][ \t].*Link"', $netstat_b);
         CommonFunctions::executeProgram('netstat', '-ndi | cut -c1-25,44- | grep "^[a-z]*[0-9][ \t].*Link"', $netstat_n);
         $lines_b = preg_split("/\n/", $netstat_b, -1, PREG_SPLIT_NO_EMPTY);
@@ -66,7 +65,7 @@ class NetBSD extends BSDCommon
         for ($i = 0, $max = sizeof($lines_b); $i < $max; $i++) {
             $ar_buf_b = preg_split("/\s+/", $lines_b[$i]);
             $ar_buf_n = preg_split("/\s+/", $lines_n[$i]);
-            if (! empty($ar_buf_b[0]) && ! empty($ar_buf_n[3])) {
+            if (!empty($ar_buf_b[0]) && !empty($ar_buf_n[3])) {
                 $dev = new NetDevice();
                 $dev->setName($ar_buf_b[0]);
                 $dev->setTxBytes($ar_buf_b[4]);
@@ -77,23 +76,22 @@ class NetBSD extends BSDCommon
             }
         }
     }
-    
+
     /**
      * IDE information
      *
      * @return void
      */
-    protected function ide()
-    {
+    protected function ide() {
         foreach ($this->readdmesg() as $line) {
             if (preg_match('/^(.*) at (pciide|wdc|atabus|atapibus)[0-9] (.*): <(.*)>/', $line, $ar_buf)) {
                 $dev = new HWDevice();
                 $dev->setName($ar_buf[1]);
                 // now loop again and find the capacity
                 foreach ($this->readdmesg() as $line2) {
-                    if (preg_match("/^(".$ar_buf[1]."): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
+                    if (preg_match("/^(" . $ar_buf[1] . "): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
                         $dev->setCapacity($ar_buf_n[4] * 2048 * 1.049);
-                    } elseif (preg_match("/^(".$ar_buf[1]."): (.*) MB, (.*), (.*), .*$/", $line2, $ar_buf_n)) {
+                    } elseif (preg_match("/^(" . $ar_buf[1] . "): (.*) MB, (.*), (.*), .*$/", $line2, $ar_buf_n)) {
                         $dev->setCapacity($ar_buf_n[2] * 2048);
                     }
                 }
@@ -101,17 +99,16 @@ class NetBSD extends BSDCommon
             }
         }
     }
-    
+
     /**
      * get icon name
      *
      * @return void
      */
-    private function _distroicon()
-    {
+    private function _distroicon() {
         $this->sys->setDistributionIcon('NetBSD.png');
     }
-    
+
     /**
      * get the information
      *
@@ -119,12 +116,13 @@ class NetBSD extends BSDCommon
      *
      * @return Void
      */
-    function build()
-    {
+    function build() {
         parent::build();
         $this->_distroicon();
         $this->_network();
         $this->_uptime();
     }
+
 }
+
 ?>

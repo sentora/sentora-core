@@ -8,9 +8,9 @@
  *
  */
  
- jQuery.timer = function (interval, callback)
- {
- /**
+jQuery.timer = function (interval, callback)
+{
+    /**
   *
   * timer() provides a cleaner way to handle intervals  
   *
@@ -43,33 +43,33 @@
   * 
   */
 
-	var interval = interval || 100;
+    var interval = interval || 100;
 
-	if (!callback)
-		return false;
+    if (!callback)
+        return false;
 	
-	_timer = function (interval, callback) {
-		this.stop = function () {
-			clearInterval(self.id);
-		};
+    _timer = function (interval, callback) {
+        this.stop = function () {
+            clearInterval(self.id);
+        };
 		
-		this.internalCallback = function () {
-			callback(self);
-		};
+        this.internalCallback = function () {
+            callback(self);
+        };
 		
-		this.reset = function (val) {
-			if (self.id)
-				clearInterval(self.id);
+        this.reset = function (val) {
+            if (self.id)
+                clearInterval(self.id);
 			
-			var val = val || 100;
-			this.id = setInterval(this.internalCallback, val);
-		};
+            var val = val || 100;
+            this.id = setInterval(this.internalCallback, val);
+        };
 		
-		this.interval = interval;
-		this.id = setInterval(this.internalCallback, this.interval);
+        this.interval = interval;
+        this.id = setInterval(this.internalCallback, this.interval);
 		
-		var self = this;
-	};
+        var self = this;
+    };
 	
-	return new _timer(interval, callback);
- };
+    return new _timer(interval, callback);
+};

@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * Apcupsd class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.Apcupsd.inc.php 417 2011-01-14 12:57:16Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * getting ups information from apcupsd program
  *
  * @category  PHP
@@ -24,49 +26,47 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class Apcupsd extends UPS
-{
+class Apcupsd extends UPS {
+
     /**
      * internal storage for all gathered data
      *
      * @var Array
      */
     private $_output = array();
-    
+
     /**
      * get all information from all configured ups in config.php and store output in internal array
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $upses = preg_split('/,/', PSI_UPS_APCUPSD_LIST, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($upses as $ups) {
-            CommonFunctions::executeProgram('apcaccess', 'status '.trim($ups), $temp);
-            if (! empty($temp)) {
+            CommonFunctions::executeProgram('apcaccess', 'status ' . trim($ups), $temp);
+            if (!empty($temp)) {
                 $this->_output[] = $temp;
             }
         }
     }
-    
+
     /**
      * parse the input and store data in resultset for xml generation
      *
      * @return Void
      */
-    private function _info()
-    {
+    private function _info() {
         foreach ($this->_output as $ups) {
-        
+
             $dev = new UPSDevice();
-        
+
             // General info
             if (preg_match('/^UPSNAME\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setName(trim($data[1]));
             }
             if (preg_match('/^MODEL\s*:\s*(.*)$/m', $ups, $data)) {
-                $model=trim($data[1]);
+                $model = trim($data[1]);
                 if (preg_match('/^APCMODEL\s*:\s*(.*)$/m', $ups, $data)) {
-                    $dev->setModel($model.' ('.trim($data[1]).')');
+                    $dev->setModel($model . ' (' . trim($data[1]) . ')');
                 } else {
                     $dev->setModel($model);
                 }
@@ -113,7 +113,7 @@ class Apcupsd extends UPS
             $this->upsinfo->setUpsDevices($dev);
         }
     }
-    
+
     /**
      * get the information
      *
@@ -121,9 +121,10 @@ class Apcupsd extends UPS
      *
      * @return Void
      */
-    function build()
-    {
+    function build() {
         $this->_info();
     }
+
 }
+
 ?>

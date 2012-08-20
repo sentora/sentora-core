@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * manipulation of table data like inserting, replacing and updating
@@ -37,7 +38,6 @@
  * @uses    PMA_File::getRecentBLOBReference()
  * @package phpMyAdmin
  */
-
 /**
  * do not import request variable into global scope
  *
@@ -45,9 +45,9 @@
  * at the end of this script is not updated to work without imported request variables
  *
  * @todo uncomment this if all possible included files to rely on import request variables
-if (! defined('PMA_NO_VARIABLES_IMPORT')) {
-    define('PMA_NO_VARIABLES_IMPORT', true);
-}
+  if (! defined('PMA_NO_VARIABLES_IMPORT')) {
+  define('PMA_NO_VARIABLES_IMPORT', true);
+  }
  */
 /**
  * Gets some core libraries
@@ -77,7 +77,7 @@ if (isset($_REQUEST['insert_rows']) && is_numeric($_REQUEST['insert_rows']) && $
 }
 
 if (isset($_REQUEST['after_insert'])
- && in_array($_REQUEST['after_insert'], array('new_insert', 'same_insert', 'edit_next'))) {
+        && in_array($_REQUEST['after_insert'], array('new_insert', 'same_insert', 'edit_next'))) {
     $url_params['after_insert'] = $_REQUEST['after_insert'];
     //$GLOBALS['goto'] = 'tbl_change.php';
     $goto_include = 'tbl_change.php';
@@ -89,24 +89,24 @@ if (isset($_REQUEST['after_insert'])
             }
         } elseif ($_REQUEST['after_insert'] == 'edit_next') {
             foreach ($_REQUEST['where_clause'] as $one_where_clause) {
-                $local_query    = 'SELECT * FROM ' . PMA_backquote($GLOBALS['db']) . '.' . PMA_backquote($GLOBALS['table'])
-                                . ' WHERE ' . str_replace('` =', '` >', $one_where_clause)
-                                . ' LIMIT 1;';
-                $res            = PMA_DBI_query($local_query);
-                $row            = PMA_DBI_fetch_row($res);
-                $meta           = PMA_DBI_get_fields_meta($res);
+                $local_query = 'SELECT * FROM ' . PMA_backquote($GLOBALS['db']) . '.' . PMA_backquote($GLOBALS['table'])
+                        . ' WHERE ' . str_replace('` =', '` >', $one_where_clause)
+                        . ' LIMIT 1;';
+                $res = PMA_DBI_query($local_query);
+                $row = PMA_DBI_fetch_row($res);
+                $meta = PMA_DBI_get_fields_meta($res);
                 // must find a unique condition based on unique key,
                 // not a combination of all fields
                 list($unique_condition, $clause_is_unique) = PMA_getUniqueCondition($res, count($meta), $meta, $row, true);
-                if (! empty($unique_condition)) {
+                if (!empty($unique_condition)) {
                     $_SESSION['edit_next'] = $unique_condition;
                 }
                 unset($unique_condition, $clause_is_unique);
             }
         }
     }
-} elseif (! empty($GLOBALS['goto'])) {
-    if (! preg_match('@^[a-z_]+\.php$@', $GLOBALS['goto'])) {
+} elseif (!empty($GLOBALS['goto'])) {
+    if (!preg_match('@^[a-z_]+\.php$@', $GLOBALS['goto'])) {
         // this should NOT happen
         //$GLOBALS['goto'] = false;
         $goto_include = false;
@@ -118,8 +118,8 @@ if (isset($_REQUEST['after_insert'])
     }
 }
 
-if (! $goto_include) {
-    if (! strlen($GLOBALS['table'])) {
+if (!$goto_include) {
+    if (!strlen($GLOBALS['table'])) {
         $goto_include = 'db_sql.php';
     } else {
         $goto_include = 'tbl_sql.php';
@@ -139,17 +139,17 @@ if (isset($_REQUEST['err_url'])) {
 if (isset($_REQUEST['where_clause'])) {
     // we were editing something => use the WHERE clause
     $loop_array = (is_array($_REQUEST['where_clause']) ? $_REQUEST['where_clause'] : array($_REQUEST['where_clause']));
-    $using_key  = true;
-    $is_insert  = ($_REQUEST['submit_type'] == 'insert') || ($_REQUEST['submit_type'] == 'showinsert') || ($_REQUEST['submit_type'] == 'insertignore');
-    $is_insertignore  = ($_REQUEST['submit_type'] == 'insertignore');
+    $using_key = true;
+    $is_insert = ($_REQUEST['submit_type'] == 'insert') || ($_REQUEST['submit_type'] == 'showinsert') || ($_REQUEST['submit_type'] == 'insertignore');
+    $is_insertignore = ($_REQUEST['submit_type'] == 'insertignore');
 } else {
     // new row => use indexes
     $loop_array = array();
     foreach ($_REQUEST['fields']['multi_edit'] as $key => $dummy) {
         $loop_array[] = $key;
     }
-    $using_key  = false;
-    $is_insert  = true;
+    $using_key = false;
+    $is_insert = true;
     $is_insertignore = false;
 }
 
@@ -172,7 +172,7 @@ $func_no_param = array(
 
 foreach ($loop_array as $rownumber => $where_clause) {
     // skip fields to be ignored
-    if (! $using_key && isset($_REQUEST['insert_ignore_' . $where_clause])) {
+    if (!$using_key && isset($_REQUEST['insert_ignore_' . $where_clause])) {
         continue;
     }
 
@@ -181,37 +181,21 @@ foreach ($loop_array as $rownumber => $where_clause) {
 
     // Map multi-edit keys to single-level arrays, dependent on how we got the fields
     $me_fields =
-        isset($_REQUEST['fields']['multi_edit'][$rownumber])
-        ? $_REQUEST['fields']['multi_edit'][$rownumber]
-        : array();
+            isset($_REQUEST['fields']['multi_edit'][$rownumber]) ? $_REQUEST['fields']['multi_edit'][$rownumber] : array();
     $me_fields_name =
-        isset($_REQUEST['fields_name']['multi_edit'][$rownumber])
-        ? $_REQUEST['fields_name']['multi_edit'][$rownumber]
-        : null;
+            isset($_REQUEST['fields_name']['multi_edit'][$rownumber]) ? $_REQUEST['fields_name']['multi_edit'][$rownumber] : null;
     $me_fields_prev =
-        isset($_REQUEST['fields_prev']['multi_edit'][$rownumber])
-        ? $_REQUEST['fields_prev']['multi_edit'][$rownumber]
-        : null;
+            isset($_REQUEST['fields_prev']['multi_edit'][$rownumber]) ? $_REQUEST['fields_prev']['multi_edit'][$rownumber] : null;
     $me_funcs =
-        isset($_REQUEST['funcs']['multi_edit'][$rownumber])
-        ? $_REQUEST['funcs']['multi_edit'][$rownumber]
-        : null;
+            isset($_REQUEST['funcs']['multi_edit'][$rownumber]) ? $_REQUEST['funcs']['multi_edit'][$rownumber] : null;
     $me_fields_type =
-        isset($_REQUEST['fields_type']['multi_edit'][$rownumber])
-        ? $_REQUEST['fields_type']['multi_edit'][$rownumber]
-        : null;
+            isset($_REQUEST['fields_type']['multi_edit'][$rownumber]) ? $_REQUEST['fields_type']['multi_edit'][$rownumber] : null;
     $me_fields_null =
-        isset($_REQUEST['fields_null']['multi_edit'][$rownumber])
-        ? $_REQUEST['fields_null']['multi_edit'][$rownumber]
-        : null;
+            isset($_REQUEST['fields_null']['multi_edit'][$rownumber]) ? $_REQUEST['fields_null']['multi_edit'][$rownumber] : null;
     $me_fields_null_prev =
-        isset($_REQUEST['fields_null_prev']['multi_edit'][$rownumber])
-        ? $_REQUEST['fields_null_prev']['multi_edit'][$rownumber]
-        : null;
+            isset($_REQUEST['fields_null_prev']['multi_edit'][$rownumber]) ? $_REQUEST['fields_null_prev']['multi_edit'][$rownumber] : null;
     $me_auto_increment =
-        isset($_REQUEST['auto_increment']['multi_edit'][$rownumber])
-        ? $_REQUEST['auto_increment']['multi_edit'][$rownumber]
-        : null;
+            isset($_REQUEST['auto_increment']['multi_edit'][$rownumber]) ? $_REQUEST['auto_increment']['multi_edit'][$rownumber] : null;
 
     // Fetch the current values of a row to use in case we have a protected field
     // @todo possibly move to ./libraries/tbl_replace_fields.inc.php
@@ -230,7 +214,7 @@ foreach ($loop_array as $rownumber => $where_clause) {
             $upload_blob_repo = isset($_REQUEST['upload_blob_repo_' . $key]) ? $_REQUEST['upload_blob_repo_' . $key] : NULL;
 
             // checks if an existing blob repository reference should be removed
-            if (isset($remove_blob_repo) && ! isset($upload_blob_repo)) {
+            if (isset($remove_blob_repo) && !isset($upload_blob_repo)) {
                 $remove_blob_reference = $_REQUEST['remove_blob_ref_' . $key];
                 if (isset($remove_blob_reference)) {
                     $val = "NULL";
@@ -274,24 +258,24 @@ foreach ($loop_array as $rownumber => $where_clause) {
                 }
             }
 
-        //  u p d a t e
+            //  u p d a t e
         } elseif (!empty($me_fields_null_prev[$key])
-         && !isset($me_fields_null[$key])) {
+                && !isset($me_fields_null[$key])) {
             // field had the null checkbox before the update
             // field no longer has the null checkbox
             $query_values[] = PMA_backquote($me_fields_name[$key]) . ' = ' . $cur_value;
         } elseif (empty($me_funcs[$key])
-         && isset($me_fields_prev[$key])
-         && ("'" . PMA_sqlAddslashes($me_fields_prev[$key]) . "'" == $val)) {
+                && isset($me_fields_prev[$key])
+                && ("'" . PMA_sqlAddslashes($me_fields_prev[$key]) . "'" == $val)) {
             // No change for this column and no MySQL function is used -> next column
             continue;
-        } elseif (! empty($val)) {
+        } elseif (!empty($val)) {
             // avoid setting a field to NULL when it's already NULL
             // (field had the null checkbox before the update
             //  field still has the null checkbox)
-            if (!(! empty($me_fields_null_prev[$key])
-             && isset($me_fields_null[$key]))) {
-                 $query_values[] = PMA_backquote($me_fields_name[$key]) . ' = ' . $cur_value;
+            if (!(!empty($me_fields_null_prev[$key])
+                    && isset($me_fields_null[$key]))) {
+                $query_values[] = PMA_backquote($me_fields_name[$key]) . ' = ' . $cur_value;
             }
         }
     } // end foreach ($me_fields as $key => $val)
@@ -302,14 +286,11 @@ foreach ($loop_array as $rownumber => $where_clause) {
         } else {
             // build update query
             $query[] = 'UPDATE ' . PMA_backquote($GLOBALS['db']) . '.' . PMA_backquote($GLOBALS['table'])
-                . ' SET ' . implode(', ', $query_values) . ' WHERE ' . $where_clause . ($_REQUEST['clause_is_unique'] ? '' : ' LIMIT 1');
-
+                    . ' SET ' . implode(', ', $query_values) . ' WHERE ' . $where_clause . ($_REQUEST['clause_is_unique'] ? '' : ' LIMIT 1');
         }
     }
 } // end foreach ($loop_array as $where_clause)
-unset($me_fields_name, $me_fields_prev, $me_funcs, $me_fields_type, $me_fields_null, $me_fields_null_prev,
-    $me_auto_increment, $cur_value, $key, $val, $loop_array, $where_clause, $using_key,
-    $func_no_param);
+unset($me_fields_name, $me_fields_prev, $me_funcs, $me_fields_type, $me_fields_null, $me_fields_null_prev, $me_auto_increment, $cur_value, $key, $val, $loop_array, $where_clause, $using_key, $func_no_param);
 
 
 // Builds the sql query
@@ -320,7 +301,7 @@ if ($is_insert && count($value_sets) > 0) {
         $insert_command = 'INSERT ';
     }
     $query[] = $insert_command . 'INTO ' . PMA_backquote($GLOBALS['db']) . '.' . PMA_backquote($GLOBALS['table'])
-        . ' (' . implode(', ', $query_fields) . ') VALUES (' . implode('), (', $value_sets) . ')';
+            . ' (' . implode(', ', $query_fields) . ') VALUES (' . implode('), (', $value_sets) . ')';
     unset($insert_command);
 
     unset($query_fields);
@@ -330,7 +311,7 @@ if ($is_insert && count($value_sets) > 0) {
     // Note: logic passes here for inline edit
     $message = PMA_Message::success(__('No change'));
     $active_page = $goto_include;
-    if(! $GLOBALS['is_ajax_request'] == true) {
+    if (!$GLOBALS['is_ajax_request'] == true) {
         require_once './libraries/header.inc.php';
     }
     require './' . PMA_securePath($goto_include);
@@ -342,7 +323,7 @@ unset($me_fields, $is_insertignore);
  * Executes the sql query and get the result, then move back to the calling
  * page
  */
-if (! empty($GLOBALS['sql_query'])) {
+if (!empty($GLOBALS['sql_query'])) {
     $url_params['sql_query'] = $GLOBALS['sql_query'];
     $return_to_sql_query = $GLOBALS['sql_query'];
 }
@@ -367,7 +348,7 @@ foreach ($query as $single_query) {
         $result = PMA_DBI_query($single_query);
     }
 
-    if (! $result) {
+    if (!$result) {
         $error_messages[] = PMA_Message::sanitize(PMA_DBI_getError());
     } else {
         // The next line contains a real assignment, it's not a typo
@@ -393,7 +374,7 @@ foreach ($query as $single_query) {
 
     foreach (PMA_DBI_get_warnings() as $warning) {
         $warning_messages[] = PMA_Message::sanitize($warning['Level'] . ': #' . $warning['Code']
-            . ' ' . $warning['Message']);
+                        . ' ' . $warning['Message']);
     }
 
     unset($result);
@@ -408,17 +389,17 @@ if ($is_insert && count($value_sets) > 0) {
 
 $message->addMessages($last_messages, '<br />');
 
-if (! empty($warning_messages)) {
+if (!empty($warning_messages)) {
     $message->addMessages($warning_messages, '<br />');
     $message->isError(true);
 }
-if (! empty($error_messages)) {
+if (!empty($error_messages)) {
     $message->addMessages($error_messages);
     $message->isError(true);
 }
 unset($error_messages, $warning_messages, $total_affected_rows, $last_messages, $last_message);
 
-if($GLOBALS['is_ajax_request'] == true) {
+if ($GLOBALS['is_ajax_request'] == true) {
 
     $extra_data['sql_query'] = PMA_showMessage(NULL, $GLOBALS['display_query']);
     PMA_ajaxResponse($message, $message->isSuccess(), $extra_data);
@@ -443,7 +424,7 @@ $active_page = $goto_include;
  * to the current record
  */
 if (isset($_REQUEST['after_insert']) && 'new_insert' == $_REQUEST['after_insert']) {
-        unset($_REQUEST['where_clause']);
+    unset($_REQUEST['where_clause']);
 }
 
 /**

@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Specialized String Functions for phpMyAdmin
@@ -24,8 +25,7 @@
  * @access  public
  * @todo rename to PM_STR_len()
  */
-function PMA_strlen($string)
-{
+function PMA_strlen($string) {
     return mb_strlen($string);
 }
 
@@ -40,8 +40,7 @@ function PMA_strlen($string)
  * @access  public
  * @todo rename to PM_STR_sub()
  */
-function PMA_substr($string, $start, $length = 2147483647)
-{
+function PMA_substr($string, $start, $length = 2147483647) {
     return mb_substr($string, $start, $length);
 }
 
@@ -53,8 +52,7 @@ function PMA_substr($string, $start, $length = 2147483647)
  * @param   string  $haystack
  * @return  integer position of $needle in $haystack or false
  */
-function PMA_STR_pos($haystack, $needle, $offset = 0)
-{
+function PMA_STR_pos($haystack, $needle, $offset = 0) {
     return mb_strpos($haystack, $needle, $offset);
 }
 
@@ -66,8 +64,7 @@ function PMA_STR_pos($haystack, $needle, $offset = 0)
  * @param   string  $haystack
  * @return  integer position of $needle in $haystack or false
  */
-function PMA_STR_rPos($haystack, $needle, $offset = 0)
-{
+function PMA_STR_rPos($haystack, $needle, $offset = 0) {
     return mb_strrpos($haystack, $needle, $offset);
 }
 

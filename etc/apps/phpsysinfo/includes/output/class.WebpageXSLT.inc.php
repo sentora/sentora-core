@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * start page for webaccess
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.WebpageXSLT.inc.php 222 2009-05-25 09:12:08Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * generate a static webpage with xslt trasformation of the xml
  *
  * @category  PHP
@@ -23,23 +25,21 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class WebpageXSLT extends WebpageXML implements PSI_Interface_Output
-{
+class WebpageXSLT extends WebpageXML implements PSI_Interface_Output {
+
     /**
      * call the parent constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct(false, null);
     }
-    
+
     /**
      * generate the static page
      *
      * @return void
      */
-    public function run()
-    {
+    public function run() {
         CommonFunctions::checkForExtensions(array('xsl'));
         $xmlfile = $this->getXMLString();
         $xslfile = "phpsysinfo.xslt";
@@ -51,5 +51,7 @@ class WebpageXSLT extends WebpageXML implements PSI_Interface_Output
         $xsltproc->importStyleSheet($domxsl);
         echo $xsltproc->transformToXML($domxml);
     }
+
 }
+
 ?>

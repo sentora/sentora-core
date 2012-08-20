@@ -4,7 +4,7 @@
  *
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -54,53 +54,47 @@ if (isset($GLOBALS['is_ajax_request']) && !$GLOBALS['is_ajax_request']) {
         /* ]]> */
         </style>
         <![endif]-->
-    </head>
+        </head>
 
-    <body>
-        <?php
-
-        // Include possible custom headers
-        if (file_exists(CUSTOM_HEADER_FILE)) {
-            require CUSTOM_HEADER_FILE;
-        }
-
-
-        // message of "Cookies required" displayed for auth_type http or config
-        // note: here, the decoration won't work because without cookies,
-        // our standard CSS is not operational
-        if (empty($_COOKIE)) {
-            PMA_Message::notice(__('Cookies must be enabled past this point.'))->display();
-        }
-
-        // offer to load user preferences from localStorage
-        if ($userprefs_offer_import) {
-            require_once './libraries/user_preferences.lib.php';
-            PMA_userprefs_autoload_header();
-        }
-
-        if (!defined('PMA_DISPLAY_HEADING')) {
-            define('PMA_DISPLAY_HEADING', 1);
-        }
-
-        /**
-         * Display heading if needed. Design can be set in css file.
-         */
-
-        if (PMA_DISPLAY_HEADING && $GLOBALS['server'] > 0) {
-            $server_info = (!empty($GLOBALS['cfg']['Server']['verbose'])
-                            ? $GLOBALS['cfg']['Server']['verbose']
-                            : $GLOBALS['cfg']['Server']['host'] . (empty($GLOBALS['cfg']['Server']['port'])
-                                                                   ? ''
-                                                                   : ':' . $GLOBALS['cfg']['Server']['port']
-                                                                  )
-                           );
-            $item = '<a href="%1$s?%2$s" class="item">';
-            if ($GLOBALS['cfg']['NavigationBarIconic']) {
-                $separator = '        <span class="separator"><img class="icon" src="' . $GLOBALS['pmaThemeImage'] . 'item_' . $GLOBALS['text_dir'] . '.png" width="5" height="9" alt="-" /></span>' . "\n";
-                $item .= '        <img class="icon" src="' . $GLOBALS['pmaThemeImage'] . '%5$s" width="16" height="16" alt="" /> ' . "\n";
-            } else {
-                $separator = '        <span class="separator"> - </span>' . "\n";
+        <body>
+            <?php
+            // Include possible custom headers
+            if (file_exists(CUSTOM_HEADER_FILE)) {
+                require CUSTOM_HEADER_FILE;
             }
+
+
+            // message of "Cookies required" displayed for auth_type http or config
+            // note: here, the decoration won't work because without cookies,
+            // our standard CSS is not operational
+            if (empty($_COOKIE)) {
+                PMA_Message::notice(__('Cookies must be enabled past this point.'))->display();
+            }
+
+            // offer to load user preferences from localStorage
+            if ($userprefs_offer_import) {
+                require_once './libraries/user_preferences.lib.php';
+                PMA_userprefs_autoload_header();
+            }
+
+            if (!defined('PMA_DISPLAY_HEADING')) {
+                define('PMA_DISPLAY_HEADING', 1);
+            }
+
+            /**
+             * Display heading if needed. Design can be set in css file.
+             */
+            if (PMA_DISPLAY_HEADING && $GLOBALS['server'] > 0) {
+                $server_info = (!empty($GLOBALS['cfg']['Server']['verbose']) ? $GLOBALS['cfg']['Server']['verbose'] : $GLOBALS['cfg']['Server']['host'] . (empty($GLOBALS['cfg']['Server']['port']) ? '' : ':' . $GLOBALS['cfg']['Server']['port']
+                                )
+                        );
+                $item = '<a href="%1$s?%2$s" class="item">';
+                if ($GLOBALS['cfg']['NavigationBarIconic']) {
+                    $separator = '        <span class="separator"><img class="icon" src="' . $GLOBALS['pmaThemeImage'] . 'item_' . $GLOBALS['text_dir'] . '.png" width="5" height="9" alt="-" /></span>' . "\n";
+                    $item .= '        <img class="icon" src="' . $GLOBALS['pmaThemeImage'] . '%5$s" width="16" height="16" alt="" /> ' . "\n";
+                } else {
+                    $separator = '        <span class="separator"> - </span>' . "\n";
+                }
 
                 if ($GLOBALS['cfg']['NavigationBarIconic'] !== true) {
                     $item .= '%4$s: ';
@@ -108,34 +102,19 @@ if (isset($GLOBALS['is_ajax_request']) && !$GLOBALS['is_ajax_request']) {
                 $item .= '%3$s</a>' . "\n";
 
                 echo '<div id="serverinfo">' . "\n";
-                printf($item,
-                        $GLOBALS['cfg']['DefaultTabServer'],
-                        PMA_generate_common_url(),
-                        htmlspecialchars($server_info),
-                        __('Server'),
-                        's_host.png');
+                printf($item, $GLOBALS['cfg']['DefaultTabServer'], PMA_generate_common_url(), htmlspecialchars($server_info), __('Server'), 's_host.png');
 
                 if (strlen($GLOBALS['db'])) {
 
                     echo $separator;
-                    printf($item,
-                            $GLOBALS['cfg']['DefaultTabDatabase'],
-                            PMA_generate_common_url($GLOBALS['db']),
-                            htmlspecialchars($GLOBALS['db']),
-                            __('Database'),
-                            's_db.png');
+                    printf($item, $GLOBALS['cfg']['DefaultTabDatabase'], PMA_generate_common_url($GLOBALS['db']), htmlspecialchars($GLOBALS['db']), __('Database'), 's_db.png');
                     // if the table is being dropped, $_REQUEST['purge'] is set to '1'
                     // so do not display the table name in upper div
-                    if (strlen($GLOBALS['table']) && ! (isset($_REQUEST['purge']) && $_REQUEST['purge'] == '1')) {
+                    if (strlen($GLOBALS['table']) && !(isset($_REQUEST['purge']) && $_REQUEST['purge'] == '1')) {
                         require_once './libraries/tbl_info.inc.php';
 
                         echo $separator;
-                        printf($item,
-                            $GLOBALS['cfg']['DefaultTabTable'],
-                            PMA_generate_common_url($GLOBALS['db'], $GLOBALS['table']),
-                            str_replace(' ', '&nbsp;', htmlspecialchars($GLOBALS['table'])),
-                            (isset($GLOBALS['tbl_is_view']) && $GLOBALS['tbl_is_view'] ? __('View') : __('Table')),
-                            (isset($GLOBALS['tbl_is_view']) && $GLOBALS['tbl_is_view'] ? 'b_views' : 's_tbl') . '.png');
+                        printf($item, $GLOBALS['cfg']['DefaultTabTable'], PMA_generate_common_url($GLOBALS['db'], $GLOBALS['table']), str_replace(' ', '&nbsp;', htmlspecialchars($GLOBALS['table'])), (isset($GLOBALS['tbl_is_view']) && $GLOBALS['tbl_is_view'] ? __('View') : __('Table')), (isset($GLOBALS['tbl_is_view']) && $GLOBALS['tbl_is_view'] ? 'b_views' : 's_tbl') . '.png');
 
                         /**
                          * Displays table comment
@@ -147,8 +126,8 @@ if (isset($GLOBALS['is_ajax_request']) && !$GLOBALS['is_ajax_request']) {
                                 $show_comment = preg_replace('@; InnoDB free:.*?$@', '', $show_comment);
                             }
                             echo '<span class="table_comment" id="span_table_comment">'
-                                .'&quot;' . htmlspecialchars($show_comment)
-                                .'&quot;</span>' . "\n";
+                            . '&quot;' . htmlspecialchars($show_comment)
+                            . '&quot;</span>' . "\n";
                         } // end if
                     } else {
                         // no table selected, display database comment if present
@@ -165,11 +144,11 @@ if (isset($GLOBALS['is_ajax_request']) && !$GLOBALS['is_ajax_request']) {
                             /**
                              * Displays table comment
                              */
-                            if (! empty($comment)) {
+                            if (!empty($comment)) {
                                 echo '<span class="table_comment"'
-                                    . ' id="span_table_comment">&quot;'
-                                    . htmlspecialchars($comment)
-                                    . '&quot;</span>' . "\n";
+                                . ' id="span_table_comment">&quot;'
+                                . htmlspecialchars($comment)
+                                . '&quot;</span>' . "\n";
                             } // end if
                         }
                     }
@@ -181,11 +160,11 @@ if (isset($GLOBALS['is_ajax_request']) && !$GLOBALS['is_ajax_request']) {
          * Sets a variable to remember headers have been sent
          */
         $GLOBALS['is_header_sent'] = true;
-} //end if(!$GLOBALS['is_ajax_request'])
-else {
-    if (empty($GLOBALS['is_header_sent'])) {
-        require_once './libraries/header_http.inc.php';
-        $GLOBALS['is_header_sent'] = true;
+    } //end if(!$GLOBALS['is_ajax_request'])
+    else {
+        if (empty($GLOBALS['is_header_sent'])) {
+            require_once './libraries/header_http.inc.php';
+            $GLOBALS['is_header_sent'] = true;
+        }
     }
-}
-?>
+    ?>

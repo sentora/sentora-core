@@ -104,16 +104,16 @@ function ipmi_request() {
         url: "xml.php?plugin=ipmi",
         dataType: "xml",
         error: function ipmi_error() {
-        $.jGrowl("Error loading XML document for Plugin ipmi!");
-    },
-    success: function ipmi_buildblock(xml) {
-        populateErrors(xml);
-        ipmi_populate(xml);
-        if (ipmi_show) {
-            plugin_translate("ipmi");
-            $("#Plugin_ipmi").show();
+            $.jGrowl("Error loading XML document for Plugin ipmi!");
+        },
+        success: function ipmi_buildblock(xml) {
+            populateErrors(xml);
+            ipmi_populate(xml);
+            if (ipmi_show) {
+                plugin_translate("ipmi");
+                $("#Plugin_ipmi").show();
+            }
         }
-    }
     });
 }
 

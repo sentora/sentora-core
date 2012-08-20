@@ -1,51 +1,50 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/include/rcube_html_page.php                                   |
- |                                                                       |
- | This file is part of the Roundcube PHP suite                          |
- | Copyright (C) 2005-2011 The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | CONTENTS:                                                             |
- |   Class to build XHTML page output                                    |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/include/rcube_html_page.php                                   |
+  |                                                                       |
+  | This file is part of the Roundcube PHP suite                          |
+  | Copyright (C) 2005-2011 The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | CONTENTS:                                                             |
+  |   Class to build XHTML page output                                    |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: rcube_html_page.php 5135 2011-08-26 09:22:53Z alec $
+  $Id: rcube_html_page.php 5135 2011-08-26 09:22:53Z alec $
 
-*/
+ */
 
 /**
  * Class for HTML page creation
  *
  * @package HTML
  */
-class rcube_html_page
-{
+class rcube_html_page {
+
     protected $scripts_path = '';
     protected $script_files = array();
     protected $css_files = array();
     protected $scripts = array();
     protected $charset = RCMAIL_CHARSET;
-
     protected $script_tag_file = "<script type=\"text/javascript\" src=\"%s\"></script>\n";
-    protected $script_tag  =  "<script type=\"text/javascript\">\n/* <![CDATA[ */\n%s\n/* ]]> */\n</script>\n";
+    protected $script_tag = "<script type=\"text/javascript\">\n/* <![CDATA[ */\n%s\n/* ]]> */\n</script>\n";
     protected $link_css_file = "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />\n";
     protected $default_template = "<html>\n<head><title></title></head>\n<body></body>\n</html>";
-
     protected $title = '';
     protected $header = '';
     protected $footer = '';
     protected $body = '';
     protected $base_path = '';
 
-
     /** Constructor */
-    public function __construct() {}
+    public function __construct() {
+        
+    }
 
     /**
      * Link an external script file
@@ -53,12 +52,11 @@ class rcube_html_page
      * @param string File URL
      * @param string Target position [head|foot]
      */
-    public function include_script($file, $position='head')
-    {
+    public function include_script($file, $position = 'head') {
         static $sa_files = array();
-        
+
         if (!preg_match('|^https?://|i', $file) && $file[0] != '/')
-            $file = $this->scripts_path . $file . (($fs = @filemtime($this->scripts_path . $file)) ? '?s='.$fs : '');
+            $file = $this->scripts_path . $file . (($fs = @filemtime($this->scripts_path . $file)) ? '?s=' . $fs : '');
 
         if (in_array($file, $sa_files)) {
             return;
@@ -78,12 +76,11 @@ class rcube_html_page
      * @param string JS code snippet
      * @param string Target position [head|head_top|foot]
      */
-    public function add_script($script, $position='head')
-    {
+    public function add_script($script, $position = 'head') {
         if (!isset($this->scripts[$position])) {
-            $this->scripts[$position] = "\n".rtrim($script);
+            $this->scripts[$position] = "\n" . rtrim($script);
         } else {
-            $this->scripts[$position] .= "\n".rtrim($script);
+            $this->scripts[$position] .= "\n" . rtrim($script);
         }
     }
 
@@ -92,8 +89,7 @@ class rcube_html_page
      *
      * @param string File URL
      */
-    public function include_css($file)
-    {
+    public function include_css($file) {
         $this->css_files[] = $file;
     }
 
@@ -102,9 +98,8 @@ class rcube_html_page
      *
      * @param string $str HTML code
      */
-    public function add_header($str)
-    {
-        $this->header .= "\n".$str;
+    public function add_header($str) {
+        $this->header .= "\n" . $str;
     }
 
     /**
@@ -113,9 +108,8 @@ class rcube_html_page
      *
      * @param string $str HTML code
      */
-    public function add_footer($str)
-    {
-        $this->footer .= "\n".$str;
+    public function add_footer($str) {
+        $this->footer .= "\n" . $str;
     }
 
     /**
@@ -123,8 +117,7 @@ class rcube_html_page
      *
      * @param string $t Page title
      */
-    public function set_title($t)
-    {
+    public function set_title($t) {
         $this->title = $t;
     }
 
@@ -134,8 +127,7 @@ class rcube_html_page
      *
      * @param string $charset Charset
      */
-    public function set_charset($charset)
-    {
+    public function set_charset($charset) {
         $this->charset = $charset;
     }
 
@@ -144,22 +136,20 @@ class rcube_html_page
      *
      * @return string Output charset
      */
-    public function get_charset()
-    {
+    public function get_charset() {
         return $this->charset;
     }
 
     /**
      * Reset all saved properties
      */
-    public function reset()
-    {
+    public function reset() {
         $this->script_files = array();
-        $this->scripts      = array();
-        $this->title        = '';
-        $this->header       = '';
-        $this->footer       = '';
-        $this->body         = '';
+        $this->scripts = array();
+        $this->title = '';
+        $this->header = '';
+        $this->footer = '';
+        $this->body = '';
     }
 
     /**
@@ -168,8 +158,7 @@ class rcube_html_page
      * @param string HTML template
      * @param string Base for absolute paths
      */
-    public function write($templ='', $base_path='')
-    {
+    public function write($templ = '', $base_path = '') {
         $output = empty($templ) ? $this->default_template : trim($templ);
 
         // set default page title
@@ -178,7 +167,7 @@ class rcube_html_page
         }
 
         // replace specialchars in content
-        $page_title  = Q($this->title, 'show', FALSE);
+        $page_title = Q($this->title, 'show', FALSE);
         $page_header = '';
         $page_footer = '';
 
@@ -189,7 +178,7 @@ class rcube_html_page
             }
             $page_header = '<meta http-equiv="content-type"';
             $page_header.= ' content="text/html; charset=';
-            $page_header.= $this->charset . '" />'."\n";
+            $page_header.= $this->charset . '" />' . "\n";
         }
 
         // definition of the code to be placed in the document header and footer
@@ -230,8 +219,7 @@ class rcube_html_page
         // find page header
         if ($hpos = stripos($output, '</head>')) {
             $page_header .= "\n";
-        }
-        else {
+        } else {
             if (!is_numeric($hpos)) {
                 $hpos = stripos($output, '<body');
             }
@@ -247,22 +235,20 @@ class rcube_html_page
         // add page hader
         if ($hpos) {
             $output = substr_replace($output, $page_header, $hpos, 0);
-        }
-        else {
+        } else {
             $output = $page_header . $output;
         }
 
         // add page footer
         if (($fpos = strripos($output, '</body>')) || ($fpos = strripos($output, '</html>'))) {
-            $output = substr_replace($output, $page_footer."\n", $fpos, 0);
-        }
-        else {
-            $output .= "\n".$page_footer;
+            $output = substr_replace($output, $page_footer . "\n", $fpos, 0);
+        } else {
+            $output .= "\n" . $page_footer;
         }
 
         // add css files in head, before scripts, for speed up with parallel downloads
-        if (!empty($this->css_files) && 
-            (($pos = stripos($output, '<script ')) || ($pos = stripos($output, '</head>')))
+        if (!empty($this->css_files) &&
+                (($pos = stripos($output, '<script ')) || ($pos = stripos($output, '</head>')))
         ) {
             $css = '';
             foreach ($this->css_files as $file) {
@@ -276,8 +262,7 @@ class rcube_html_page
         // correct absolute paths in images and other tags
         // add timestamp to .js and .css filename
         $output = preg_replace_callback(
-            '!(src|href|background)=(["\']?)([a-z0-9/_.-]+)(["\'\s>])!i',
-            array($this, 'file_callback'), $output);
+                '!(src|href|background)=(["\']?)([a-z0-9/_.-]+)(["\'\s>])!i', array($this, 'file_callback'), $output);
         $output = str_replace('$__skin_path', $base_path, $output);
 
         // trigger hook with final HTML content to be sent
@@ -295,19 +280,19 @@ class rcube_html_page
      *
      * @return string Parsed string
      */
-    private function file_callback($matches)
-    {
-	    $file = $matches[3];
+    private function file_callback($matches) {
+        $file = $matches[3];
 
         // correct absolute paths
-	    if ($file[0] == '/')
-	        $file = $this->base_path . $file;
+        if ($file[0] == '/')
+            $file = $this->base_path . $file;
 
         // add file modification timestamp
-	    if (preg_match('/\.(js|css)$/', $file))
-    	    $file .= '?s=' . @filemtime($file);
+        if (preg_match('/\.(js|css)$/', $file))
+            $file .= '?s=' . @filemtime($file);
 
-	    return sprintf("%s=%s%s%s", $matches[1], $matches[2], $file, $matches[4]);
+        return sprintf("%s=%s%s%s", $matches[1], $matches[2], $file, $matches[4]);
     }
+
 }
 

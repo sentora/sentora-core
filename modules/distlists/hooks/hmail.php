@@ -24,35 +24,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
- 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-	
-		}
+$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
 
-		foreach ($deletedclients as $deletedclient){
-       	 $sql = "SELECT * FROM x_distlists WHERE dl_acc_fk=" . $deletedclient . " AND dl_deleted_ts IS NULL";
-	        $numrows = $zdbh->query($sql);
-	        if ($numrows->fetchColumn() <> 0) {
-	            $sql = $zdbh->prepare($sql);
-	            $sql->execute();
-	            while ($rowmailbox = $sql->fetch()) {
-					//distlist
-	        		$result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'")->Fetch();
-					if ($result) {	
-		            	$msql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid='" . $result['distributionlistid'] . "'";
-						$msql = $mail_db->prepare($msql);
-						$msql->execute();
-			            $msql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'";
-						$msql = $mail_db->prepare($msql);
-						$msql->execute();
-					}
-	            }
-			}
-		}
+foreach ($deletedclients as $deletedclient) {
+    $sql = "SELECT * FROM x_distlists WHERE dl_acc_fk=" . $deletedclient . " AND dl_deleted_ts IS NULL";
+    $numrows = $zdbh->query($sql);
+    if ($numrows->fetchColumn() <> 0) {
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        while ($rowmailbox = $sql->fetch()) {
+            //distlist
+            $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'")->Fetch();
+            if ($result) {
+                $msql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid='" . $result['distributionlistid'] . "'";
+                $msql = $mail_db->prepare($msql);
+                $msql->execute();
+                $msql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'";
+                $msql = $mail_db->prepare($msql);
+                $msql->execute();
+            }
+        }
+    }
+}
 ?>

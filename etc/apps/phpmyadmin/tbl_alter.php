@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Alter one or more table columns
@@ -8,7 +9,6 @@
  *
  * @package phpMyAdmin
  */
-
 /**
  * Gets some core libraries
  */
@@ -44,31 +44,9 @@ if (isset($_REQUEST['do_save_data'])) {
 
     for ($i = 0; $i < $field_cnt; $i++) {
         $changes[] = 'CHANGE ' . PMA_Table::generateAlter(
-            $_REQUEST['field_orig'][$i],
-            $_REQUEST['field_name'][$i],
-            $_REQUEST['field_type'][$i],
-            $_REQUEST['field_length'][$i],
-            $_REQUEST['field_attribute'][$i],
-            isset($_REQUEST['field_collation'][$i])
-                ? $_REQUEST['field_collation'][$i]
-                : '',
-            isset($_REQUEST['field_null'][$i])
-                ? $_REQUEST['field_null'][$i]
-                : 'NOT NULL',
-            $_REQUEST['field_default_type'][$i],
-            $_REQUEST['field_default_value'][$i],
-            isset($_REQUEST['field_extra'][$i])
-                ? $_REQUEST['field_extra'][$i]
-                : false,
-            isset($_REQUEST['field_comments'][$i])
-                ? $_REQUEST['field_comments'][$i]
-                : '',
-            $key_fields,
-            $i,
-            $_REQUEST['field_default_orig'][$i]
+                        $_REQUEST['field_orig'][$i], $_REQUEST['field_name'][$i], $_REQUEST['field_type'][$i], $_REQUEST['field_length'][$i], $_REQUEST['field_attribute'][$i], isset($_REQUEST['field_collation'][$i]) ? $_REQUEST['field_collation'][$i] : '', isset($_REQUEST['field_null'][$i]) ? $_REQUEST['field_null'][$i] : 'NOT NULL', $_REQUEST['field_default_type'][$i], $_REQUEST['field_default_value'][$i], isset($_REQUEST['field_extra'][$i]) ? $_REQUEST['field_extra'][$i] : false, isset($_REQUEST['field_comments'][$i]) ? $_REQUEST['field_comments'][$i] : '', $key_fields, $i, $_REQUEST['field_default_orig'][$i]
         );
     } // end for
-
     // Builds the primary keys statements and updates the table
     $key_query = '';
     /**
@@ -78,22 +56,21 @@ if (isset($_REQUEST['do_save_data'])) {
      *  - no other column with A_I
      *  - the column has an index, if not create one
      *
-    if (count($key_fields)) {
-        $fields = array();
-        foreach ($key_fields as $each_field) {
-            if (isset($_REQUEST['field_name'][$each_field]) && strlen($_REQUEST['field_name'][$each_field])) {
-                $fields[] = PMA_backquote($_REQUEST['field_name'][$each_field]);
-            }
-        } // end for
-        $key_query = ', ADD KEY (' . implode(', ', $fields) . ') ';
-    }
+      if (count($key_fields)) {
+      $fields = array();
+      foreach ($key_fields as $each_field) {
+      if (isset($_REQUEST['field_name'][$each_field]) && strlen($_REQUEST['field_name'][$each_field])) {
+      $fields[] = PMA_backquote($_REQUEST['field_name'][$each_field]);
+      }
+      } // end for
+      $key_query = ', ADD KEY (' . implode(', ', $fields) . ') ';
+      }
      */
-
     // To allow replication, we first select the db to use and then run queries
     // on this db.
     PMA_DBI_select_db($db) or PMA_mysqlDie(PMA_DBI_getError(), 'USE ' . PMA_backquote($db) . ';', '', $err_url);
     $sql_query = 'ALTER TABLE ' . PMA_backquote($table) . ' ' . implode(', ', $changes) . $key_query;
-    $result    = PMA_DBI_try_query($sql_query);
+    $result = PMA_DBI_try_query($sql_query);
 
     if ($result !== false) {
         $message = PMA_Message::success(__('Table %1$s has been altered successfully'));
@@ -109,28 +86,24 @@ if (isset($_REQUEST['do_save_data'])) {
         if (isset($_REQUEST['field_orig']) && is_array($_REQUEST['field_orig'])) {
             foreach ($_REQUEST['field_orig'] as $fieldindex => $fieldcontent) {
                 if ($_REQUEST['field_name'][$fieldindex] != $fieldcontent) {
-                    PMA_REL_renameField($db, $table, $fieldcontent,
-                        $_REQUEST['field_name'][$fieldindex]);
+                    PMA_REL_renameField($db, $table, $fieldcontent, $_REQUEST['field_name'][$fieldindex]);
                 }
             }
         }
 
         // update mime types
         if (isset($_REQUEST['field_mimetype'])
-         && is_array($_REQUEST['field_mimetype'])
-         && $cfg['BrowseMIME']) {
+                && is_array($_REQUEST['field_mimetype'])
+                && $cfg['BrowseMIME']) {
             foreach ($_REQUEST['field_mimetype'] as $fieldindex => $mimetype) {
                 if (isset($_REQUEST['field_name'][$fieldindex])
-                 && strlen($_REQUEST['field_name'][$fieldindex])) {
-                    PMA_setMIME($db, $table, $_REQUEST['field_name'][$fieldindex],
-                        $mimetype,
-                        $_REQUEST['field_transformation'][$fieldindex],
-                        $_REQUEST['field_transformation_options'][$fieldindex]);
+                        && strlen($_REQUEST['field_name'][$fieldindex])) {
+                    PMA_setMIME($db, $table, $_REQUEST['field_name'][$fieldindex], $mimetype, $_REQUEST['field_transformation'][$fieldindex], $_REQUEST['field_transformation_options'][$fieldindex]);
                 }
             }
         }
 
-        if( $GLOBALS['is_ajax_request'] == true) {
+        if ($GLOBALS['is_ajax_request'] == true) {
             PMA_ajaxResponse($message, $message->isSuccess());
         }
 
@@ -157,9 +130,9 @@ if (isset($_REQUEST['do_save_data'])) {
 if ($abort == false) {
     require_once './libraries/tbl_links.inc.php';
 
-    if (! isset($selected)) {
+    if (!isset($selected)) {
         PMA_checkParameters(array('field'));
-        $selected[]   = $_REQUEST['field'];
+        $selected[] = $_REQUEST['field'];
         $selected_cnt = 1;
     } else { // from a multiple submit
         $selected_cnt = count($selected);
@@ -170,14 +143,12 @@ if ($abort == false) {
      */
     for ($i = 0; $i < $selected_cnt; $i++) {
         $_REQUEST['field'] = PMA_sqlAddslashes($selected[$i], true);
-        $result        = PMA_DRIZZLE
-            ? PMA_DBI_query('SHOW COLUMNS FROM ' . PMA_backquote($table) . ' FROM ' . PMA_backquote($db) . ' WHERE Field = \'' . $_REQUEST['field'] . '\';')
-            : PMA_DBI_query('SHOW FULL COLUMNS FROM ' . PMA_backquote($table) . ' FROM ' . PMA_backquote($db) . ' LIKE \'' . $_REQUEST['field'] . '\';');
+        $result = PMA_DRIZZLE ? PMA_DBI_query('SHOW COLUMNS FROM ' . PMA_backquote($table) . ' FROM ' . PMA_backquote($db) . ' WHERE Field = \'' . $_REQUEST['field'] . '\';') : PMA_DBI_query('SHOW FULL COLUMNS FROM ' . PMA_backquote($table) . ' FROM ' . PMA_backquote($db) . ' LIKE \'' . $_REQUEST['field'] . '\';');
         $fields_meta[] = PMA_DBI_fetch_assoc($result);
         PMA_DBI_free_result($result);
     }
-    $num_fields  = count($fields_meta);
-    $action      = 'tbl_alter.php';
+    $num_fields = count($fields_meta);
+    $action = 'tbl_alter.php';
 
     // Get more complete field information.
     // For now, this is done to obtain MySQL 4.1.2+ new TIMESTAMP options
@@ -188,7 +159,6 @@ if ($abort == false) {
      * @todo put this code into a require()
      * or maybe make it part of PMA_DBI_get_fields();
      */
-
     // We also need this to correctly learn if a TIMESTAMP is NOT NULL, since
     // SHOW FULL FIELDS says NULL and SHOW CREATE TABLE says NOT NULL (tested
     // in MySQL 4.0.25).

@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/pt_PT/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Authors: Sergio Rocha <sergio.rocha@makeitsimple.pt>                  |
-|          João Vale <jpvale@gmail.com>                                |
-|          Nuno Costa <nuno@criacaoweb.net>                              |
-|          Teotónio Ricardo <teotonio.ricardo@webtuga.pt>               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/pt_PT/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Authors: Sergio Rocha <sergio.rocha@makeitsimple.pt>                  |
+  |          João Vale <jpvale@gmail.com>                                |
+  |          Nuno Costa <nuno@criacaoweb.net>                              |
+  |          Teotónio Ricardo <teotonio.ricardo@webtuga.pt>               |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'O utilizador ou palavra-passe que introduziu está incorrecto.';
@@ -161,5 +161,4 @@ $messages['invalidimageformat'] = 'Formato de imagem não suportado';
 $messages['mispellingsfound'] = 'Foram detectados erros de ortografia nesta mensagem';
 $messages['parentnotwritable'] = 'Não é possível criar/mover esta pasta para a pasta seleccionada. Acesso negado.';
 $messages['messagetoobig'] = 'A mensagem é demasiado grande para ser processada.';
-
 ?>

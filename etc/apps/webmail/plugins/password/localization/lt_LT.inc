@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd']  = 'Slaptažodžio keitimas';
-$labels['curpasswd']  = 'Dabartinis slaptažodis:';
-$labels['newpasswd']  = 'Naujasis slaptažodis:';
-$labels['confpasswd']  = 'Pakartokite naująjį slaptažodį:';
+$labels['changepasswd'] = 'Slaptažodžio keitimas';
+$labels['curpasswd'] = 'Dabartinis slaptažodis:';
+$labels['newpasswd'] = 'Naujasis slaptažodis:';
+$labels['confpasswd'] = 'Pakartokite naująjį slaptažodį:';
 
 $messages = array();
 $messages['nopassword'] = 'Prašom įvesti naująjį slaptažodį.';
@@ -17,5 +17,4 @@ $messages['internalerror'] = 'Nepavyko įrašyti naujojo slaptažodžio.';
 $messages['passwordshort'] = 'Slaptažodis turi būti sudarytas iš bent $length simbolių.';
 $messages['passwordweak'] = 'Slaptažodyje turi būti bent vienas skaitmuo ir vienas skyrybos ženklas.';
 $messages['passwordforbidden'] = 'Slaptažodyje rasta neleistinų simbolių.';
-
 ?>

@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/ru_RU/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Artur Smolkin <artsmolkin@ya.ru>                              |
-| Updates: Sergey Dukachev <iam@dukess.ru>                              |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ru_RU/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Artur Smolkin <artsmolkin@ya.ru>                              |
+  | Updates: Sergey Dukachev <iam@dukess.ru>                              |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
+  @version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Неудачная попытка входа';
@@ -152,5 +152,4 @@ $messages['foldercreated'] = 'Папка создана';
 $messages['invalidimageformat'] = 'Неверный формат изображения';
 $messages['mispellingsfound'] = 'В сообщении обнаружены орфографические ошибки';
 $messages['parentnotwritable'] = 'Не удается создать/переместить папку в выбранную родительскую папку. Нет прав доступа.';
-
 ?>

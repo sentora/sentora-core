@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * @package phpMyAdmin-Engines
@@ -8,24 +9,22 @@
  *
  * @package phpMyAdmin-Engines
  */
-class PMA_StorageEngine_ndbcluster extends PMA_StorageEngine
-{
+class PMA_StorageEngine_ndbcluster extends PMA_StorageEngine {
+
     /**
      * @return  array
      */
-    function getVariables()
-    {
+    function getVariables() {
         return array(
             'ndb_connectstring' => array(
             ),
-         );
+        );
     }
 
     /**
      * @return  string  SQL query LIKE pattern
      */
-    function getVariablesLikePattern()
-    {
+    function getVariablesLikePattern() {
         return 'ndb\\_%';
     }
 
@@ -35,10 +34,10 @@ class PMA_StorageEngine_ndbcluster extends PMA_StorageEngine
      *
      * @return  string  mysql helppage filename
      */
-    function getMysqlHelpPage()
-    {
+    function getMysqlHelpPage() {
         return 'ndbcluster';
     }
+
 }
 
 ?>

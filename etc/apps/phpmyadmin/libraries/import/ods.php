@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * OpenDocument Spreadsheet import plugin for phpMyAdmin
@@ -8,8 +9,7 @@
  * @version 0.5-beta
  * @package phpMyAdmin-Import
  */
-
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -23,21 +23,20 @@ if (!function_exists('libxml_disable_entity_loader')) {
 /**
  * The possible scopes for $plugin_param are: 'table', 'database', and 'server'
  */
-
 if (isset($plugin_list)) {
     $plugin_list['ods'] = array(
         'text' => __('Open Document Spreadsheet'),
         'extension' => 'ods',
         'options' => array(
-                array('type' => 'begin_group', 'name' => 'general_opts'),
-                array('type' => 'bool', 'name' => 'col_names', 'text' => __('The first line of the file contains the table column names <i>(if this is unchecked, the first line will become part of the data)</i>')),
-                array('type' => 'bool', 'name' => 'empty_rows', 'text' => __('Do not import empty rows')),
-                array('type' => 'bool', 'name' => 'recognize_percentages', 'text' => __('Import percentages as proper decimals <i>(ex. 12.00% to .12)</i>')),
-                array('type' => 'bool', 'name' => 'recognize_currency', 'text' => __('Import currencies <i>(ex. $5.00 to 5.00)</i>')),
-                array('type' => 'end_group')
-            ),
+            array('type' => 'begin_group', 'name' => 'general_opts'),
+            array('type' => 'bool', 'name' => 'col_names', 'text' => __('The first line of the file contains the table column names <i>(if this is unchecked, the first line will become part of the data)</i>')),
+            array('type' => 'bool', 'name' => 'empty_rows', 'text' => __('Do not import empty rows')),
+            array('type' => 'bool', 'name' => 'recognize_percentages', 'text' => __('Import percentages as proper decimals <i>(ex. 12.00% to .12)</i>')),
+            array('type' => 'bool', 'name' => 'recognize_currency', 'text' => __('Import currencies <i>(ex. $5.00 to 5.00)</i>')),
+            array('type' => 'end_group')
+        ),
         'options_text' => __('Options'),
-        );
+    );
     /* We do not define function when plugin is just queried for information above */
     return;
 }
@@ -50,7 +49,7 @@ $buffer = "";
  * Read in the file via PMA_importGetNextChunk so that
  * it can process compressed files
  */
-while (! ($finished && $i >= $len) && ! $error && ! $timeout_passed) {
+while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
     $data = PMA_importGetNextChunk();
     if ($data === FALSE) {
         /* subtract data we didn't handle yet and stop processing */
@@ -111,40 +110,39 @@ foreach ($sheets as $sheet) {
     /* Iterate over rows */
     foreach ($sheet as $row) {
         $type = $row->getName();
-        if (! strcmp('table-row', $type)) {
+        if (!strcmp('table-row', $type)) {
             /* Iterate over columns */
             foreach ($row as $cell) {
                 $text = $cell->children('text', true);
                 $cell_attrs = $cell->attributes('office', true);
 
                 if (count($text) != 0) {
-                    if (! $col_names_in_first_row) {
+                    if (!$col_names_in_first_row) {
                         if ($_REQUEST['ods_recognize_percentages'] && !strcmp('percentage', $cell_attrs['value-type'])) {
-                            $tempRow[] = (double)$cell_attrs['value'];
+                            $tempRow[] = (double) $cell_attrs['value'];
                         } elseif ($_REQUEST['ods_recognize_currency'] && !strcmp('currency', $cell_attrs['value-type'])) {
-                            $tempRow[] = (double)$cell_attrs['value'];
+                            $tempRow[] = (double) $cell_attrs['value'];
                         } else {
-                            $tempRow[] = (string)$text;
+                            $tempRow[] = (string) $text;
                         }
                     } else {
                         if ($_REQUEST['ods_recognize_percentages'] && !strcmp('percentage', $cell_attrs['value-type'])) {
-                            $col_names[] = (double)$cell_attrs['value'];
+                            $col_names[] = (double) $cell_attrs['value'];
                         } else if ($_REQUEST['ods_recognize_currency'] && !strcmp('currency', $cell_attrs['value-type'])) {
-                            $col_names[] = (double)$cell_attrs['value'];
+                            $col_names[] = (double) $cell_attrs['value'];
                         } else {
-                            $col_names[] = (string)$text;
+                            $col_names[] = (string) $text;
                         }
                     }
-
                     ++$col_count;
                 } else {
                     /* Number of blank columns repeated */
                     if ($col_count < count($row->children('table', true)) - 1) {
                         $attr = $cell->attributes('table', true);
-                        $num_null = (int)$attr['number-columns-repeated'];
+                        $num_null = (int) $attr['number-columns-repeated'];
 
                         if ($num_null) {
-                            if (! $col_names_in_first_row) {
+                            if (!$col_names_in_first_row) {
                                 for ($i = 0; $i < $num_null; ++$i) {
                                     $tempRow[] = 'NULL';
                                     ++$col_count;
@@ -156,12 +154,11 @@ foreach ($sheets as $sheet) {
                                 }
                             }
                         } else {
-                            if (! $col_names_in_first_row) {
+                            if (!$col_names_in_first_row) {
                                 $tempRow[] = 'NULL';
                             } else {
                                 $col_names[] = PMA_getColumnAlphaName($col_count + 1);
                             }
-
                             ++$col_count;
                         }
                     }
@@ -174,7 +171,7 @@ foreach ($sheets as $sheet) {
             }
 
             /* Don't include a row that is full of NULL values */
-            if (! $col_names_in_first_row) {
+            if (!$col_names_in_first_row) {
                 if ($_REQUEST['ods_empty_rows']) {
                     foreach ($tempRow as $cell) {
                         if (strcmp('NULL', $cell)) {
@@ -206,7 +203,6 @@ foreach ($sheets as $sheet) {
      * every one exactly as wide as the widest
      * row. This included column names.
      */
-
     /* Fill out column names */
     for ($i = count($col_names); $i < $max_cols; ++$i) {
         $col_names[] = PMA_getColumnAlphaName($i + 1);
@@ -222,10 +218,10 @@ foreach ($sheets as $sheet) {
 
     /* Store the table name so we know where to place the row set */
     $tbl_attr = $sheet->attributes('table', true);
-    $tables[] = array((string)$tbl_attr['name']);
+    $tables[] = array((string) $tbl_attr['name']);
 
     /* Store the current sheet in the accumulator */
-    $rows[] = array((string)$tbl_attr['name'], $col_names, $tempRows);
+    $rows[] = array((string) $tbl_attr['name'], $col_names, $tempRows);
     $tempRows = array();
     $col_names = array();
     $max_cols = 0;
@@ -243,8 +239,8 @@ unset($xml);
 $num_tbls = count($tables);
 for ($i = 0; $i < $num_tbls; ++$i) {
     for ($j = 0; $j < count($rows); ++$j) {
-        if (! strcmp($tables[$i][TBL_NAME], $rows[$j][TBL_NAME])) {
-            if (! isset($tables[$i][COL_NAMES])) {
+        if (!strcmp($tables[$i][TBL_NAME], $rows[$j][TBL_NAME])) {
+            if (!isset($tables[$i][COL_NAMES])) {
                 $tables[$i][] = $rows[$j][COL_NAMES];
             }
 
@@ -277,7 +273,6 @@ for ($i = 0; $i < $len; ++$i) {
  *
  * array $options = an associative array of options
  */
-
 /* Set database name to the currently selected one, if applicable */
 if (strlen($db)) {
     $db_name = $db;

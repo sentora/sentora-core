@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/el/labels.inc                                                |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Jim Deves <jim@cobaltblue.gr>                                 |
-|         John Economou <hsoc@irc.gr>                                   |
-|         Panagiotis Christias <p.christias@noc.ntua.gr>                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/el/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Jim Deves <jim@cobaltblue.gr>                                 |
+  |         John Economou <hsoc@irc.gr>                                   |
+  |         Panagiotis Christias <p.christias@noc.ntua.gr>                |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4627 2011-03-31 13:47:22Z yllar $
+  @version $Id: labels.inc 4627 2011-03-31 13:47:22Z yllar $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Καλώς ήρθατε στο $product';
@@ -244,5 +244,4 @@ $labels['specialfolders'] = 'Ειδικοί Φάκελοι';
 $labels['sortby'] = 'Ταξινόμηση κατά';
 $labels['sortasc'] = 'Αύξουσα ταξινόμηση';
 $labels['sortdesc'] = 'Φθίνουσα ταξινόμηση';
-
 ?>

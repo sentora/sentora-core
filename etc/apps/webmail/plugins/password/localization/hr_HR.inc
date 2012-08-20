@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd']  = 'Promijeni zaporku';
-$labels['curpasswd']  = 'Važeća zaporka:';
-$labels['newpasswd']  = 'Nova zaporka:';
-$labels['confpasswd']  = 'Potvrda nove zaporke:';
+$labels['changepasswd'] = 'Promijeni zaporku';
+$labels['curpasswd'] = 'Važeća zaporka:';
+$labels['newpasswd'] = 'Nova zaporka:';
+$labels['confpasswd'] = 'Potvrda nove zaporke:';
 
 $messages = array();
 $messages['nopassword'] = 'Molimo unesite novu zaporku.';
@@ -17,5 +17,4 @@ $messages['internalerror'] = 'Nemoguće promijeniti zaporku.';
 $messages['passwordshort'] = 'Zaporka mora sadržavati barem $length znakova.';
 $messages['passwordweak'] = 'Zaporka mora sadržavati barem jedanu znamenku i jedan interpunkcijski znak.';
 $messages['passwordforbidden'] = 'Zaporka sadrži nedozvoljene znakove.';
-
 ?>

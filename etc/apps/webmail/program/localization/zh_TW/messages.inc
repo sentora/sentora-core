@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| localization/zh_TW/messages.inc                                       |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: WayneSan <waynesan@zerozone.tw>                               |
-|         kourge <kourge@gmail.com>                                     |
-|         Ting-Hung Chiu <earrl@mmlab.cse.yzu.edu.tw>                   |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | localization/zh_TW/messages.inc                                       |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: WayneSan <waynesan@zerozone.tw>                               |
+  |         kourge <kourge@gmail.com>                                     |
+  |         Ting-Hung Chiu <earrl@mmlab.cse.yzu.edu.tw>                   |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
+  @version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = '登入失敗';
@@ -141,5 +141,4 @@ $messages['nametoolong'] = '名稱太長';
 $messages['folderupdated'] = '資料夾成功更新';
 $messages['foldercreated'] = '資料夾成功建立';
 $messages['invalidimageformat'] = '圖片格式錯誤';
-
 ?>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-<name>phpMyAdmin</name>
-<version>100</version>
-<defaultcat>Databases</defaultcat>
-<desc>phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.</desc>
-<authorname>ZPanel Project</authorname>
-<authoremail>developers@zpanelcp.com</authoremail>
-<authorurl>http://www.zpanelcp.com/</authorurl>
-<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <name>phpMyAdmin</name>
+    <version>100</version>
+    <defaultcat>Databases</defaultcat>
+    <desc>phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.</desc>
+    <authorname>ZPanel Project</authorname>
+    <authoremail>developers@zpanelcp.com</authoremail>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
+    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

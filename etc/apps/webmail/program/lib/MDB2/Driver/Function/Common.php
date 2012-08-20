@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -61,8 +62,7 @@
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Function_Common extends MDB2_Module_Common
-{
+class MDB2_Driver_Function_Common extends MDB2_Module_Common {
     // {{{ executeStoredProc()
 
     /**
@@ -78,15 +78,13 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return mixed a result handle or MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function &executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false)
-    {
-        $db =& $this->getDBInstance();
+    function &executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false) {
+        $db = & $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $error =& $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
-            'method not implemented', __FUNCTION__);
+        $error = & $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
         return $error;
     }
 
@@ -99,8 +97,7 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return string for internal table used when calling only a function
      * @access public
      */
-    function functionTable()
-    {
+    function functionTable() {
         return '';
     }
 
@@ -119,16 +116,15 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return string to call a variable with the current timestamp
      * @access public
      */
-    function now($type = 'timestamp')
-    {
+    function now($type = 'timestamp') {
         switch ($type) {
-        case 'time':
-            return 'CURRENT_TIME';
-        case 'date':
-            return 'CURRENT_DATE';
-        case 'timestamp':
-        default:
-            return 'CURRENT_TIMESTAMP';
+            case 'time':
+                return 'CURRENT_TIME';
+            case 'date':
+                return 'CURRENT_DATE';
+            case 'timestamp':
+            default:
+                return 'CURRENT_TIMESTAMP';
         }
     }
 
@@ -143,15 +139,13 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return string to call a variable with the timestamp
      * @access public
      */
-    function unixtimestamp($expression)
-    {
-        $db =& $this->getDBInstance();
+    function unixtimestamp($expression) {
+        $db = & $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $error =& $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
-            'method not implemented', __FUNCTION__);
+        $error = & $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
         return $error;
     }
 
@@ -164,8 +158,7 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return string to call a function to get a substring
      * @access public
      */
-    function substring($value, $position = 1, $length = null)
-    {
+    function substring($value, $position = 1, $length = null) {
         if (null !== $length) {
             return "SUBSTRING($value FROM $position FOR $length)";
         }
@@ -181,8 +174,7 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return string to call a function to get a replace
      * @access public
      */
-    function replace($str, $from_str, $to_str)
-    {
+    function replace($str, $from_str, $to_str) {
         return "REPLACE($str, $from_str , $to_str)";
     }
 
@@ -199,10 +191,9 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return string to concatenate two strings
      * @access public
      */
-    function concat($value1, $value2)
-    {
+    function concat($value1, $value2) {
         $args = func_get_args();
-        return "(".implode(' || ', $args).")";
+        return "(" . implode(' || ', $args) . ")";
     }
 
     // }}}
@@ -214,8 +205,7 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return return string to generate float between 0 and 1
      * @access public
      */
-    function random()
-    {
+    function random() {
         return 'RAND()';
     }
 
@@ -230,8 +220,7 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return return string to lower case of an expression
      * @access public
      */
-    function lower($expression)
-    {
+    function lower($expression) {
         return "LOWER($expression)";
     }
 
@@ -246,8 +235,7 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return return string to upper case of an expression
      * @access public
      */
-    function upper($expression)
-    {
+    function upper($expression) {
         return "UPPER($expression)";
     }
 
@@ -262,8 +250,7 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return return string to get the string expression length
      * @access public
      */
-    function length($expression)
-    {
+    function length($expression) {
         return "LENGTH($expression)";
     }
 
@@ -276,18 +263,17 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
      * @return string to get global unique identifier
      * @access public
      */
-    function guid()
-    {
-        $db =& $this->getDBInstance();
+    function guid() {
+        $db = & $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $error =& $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
-            'method not implemented', __FUNCTION__);
+        $error = & $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
         return $error;
     }
 
     // }}}
 }
+
 ?>

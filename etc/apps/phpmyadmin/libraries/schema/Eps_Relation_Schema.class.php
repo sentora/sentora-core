@@ -1,10 +1,10 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-
 include_once("Export_Relation_Schema.class.php");
 
 /**
@@ -17,9 +17,8 @@ include_once("Export_Relation_Schema.class.php");
  * @access public
  * @see http://php.net/manual/en/book.xmlwriter.php
  */
+class PMA_EPS {
 
-class PMA_EPS
-{
     public $font;
     public $fontSize;
     public $stringCommands;
@@ -36,8 +35,7 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function __construct()
-    {
+    function __construct() {
         $this->stringCommands = "";
         $this->stringCommands .= "%!PS-Adobe-3.0 EPSF-3.0 \n";
     }
@@ -49,8 +47,7 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function setTitle($value)
-    {
+    function setTitle($value) {
         $this->stringCommands .= '%%Title: ' . $value . "\n";
     }
 
@@ -61,8 +58,7 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function setAuthor($value)
-    {
+    function setAuthor($value) {
         $this->stringCommands .= '%%Creator: ' . $value . "\n";
     }
 
@@ -73,8 +69,7 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function setDate($value)
-    {
+    function setDate($value) {
         $this->stringCommands .= '%%CreationDate: ' . $value . "\n";
     }
 
@@ -85,13 +80,12 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function setOrientation($value)
-    {
+    function setOrientation($value) {
         $this->stringCommands .= "%%PageOrder: Ascend \n";
-        if($value == "L"){
+        if ($value == "L") {
             $value = "Landscape";
             $this->stringCommands .= '%%Orientation: ' . $value . "\n";
-        }else{
+        } else {
             $value = "Portrait";
             $this->stringCommands .= '%%Orientation: ' . $value . "\n";
         }
@@ -110,12 +104,11 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function setFont($value,$size)
-    {
+    function setFont($value, $size) {
         $this->font = $value;
         $this->fontSize = $size;
-        $this->stringCommands .= "/".$value." findfont   % Get the basic font\n";
-        $this->stringCommands .= "".$size." scalefont            % Scale the font to $size points\n";
+        $this->stringCommands .= "/" . $value . " findfont   % Get the basic font\n";
+        $this->stringCommands .= "" . $size . " scalefont            % Scale the font to $size points\n";
         $this->stringCommands .= "setfont                 % Make it the current font\n";
     }
 
@@ -125,8 +118,7 @@ class PMA_EPS
      * @return string return the font name e.g Arial
      * @access public
      */
-    function getFont()
-    {
+    function getFont() {
         return $this->font;
     }
 
@@ -136,8 +128,7 @@ class PMA_EPS
      * @return string return the size of the font e.g 10
      * @access public
      */
-    function getFontSize()
-    {
+    function getFontSize() {
         return $this->fontSize;
     }
 
@@ -148,22 +139,21 @@ class PMA_EPS
      * width of the line. lines helps in showing relationships of tables
      *
      * @param integer x_from The x_from attribute defines the start 
-                             left position of the element
+      left position of the element
      * @param integer y_from The y_from attribute defines the start 
-                             right position of the element
+      right position of the element
      * @param integer x_to The x_to attribute defines the end 
-                             left position of the element
+      left position of the element
      * @param integer y_to The y_to attribute defines the end 
-                             right position of the element
+      right position of the element
      * @param integer lineWidth sets the width of the line e.g 2
      * @return void
      * @access public
      */
-    function line($x_from=0, $y_from=0, $x_to=0, $y_to=0, $lineWidth=0)
-    {
+    function line($x_from = 0, $y_from = 0, $x_to = 0, $y_to = 0, $lineWidth = 0) {
         $this->stringCommands .= $lineWidth . " setlinewidth  \n";
-        $this->stringCommands .= $x_from . ' ' . $y_from  . " moveto \n";
-        $this->stringCommands .= $x_to . ' ' . $y_to  . " lineto \n";
+        $this->stringCommands .= $x_from . ' ' . $y_from . " moveto \n";
+        $this->stringCommands .= $x_to . ' ' . $y_to . " lineto \n";
         $this->stringCommands .= "stroke \n";
     }
 
@@ -174,27 +164,26 @@ class PMA_EPS
      * width of the line. rectangles drawn around the text shown of fields
      *
      * @param integer x_from The x_from attribute defines the start 
-                             left position of the element
+      left position of the element
      * @param integer y_from The y_from attribute defines the start 
-                             right position of the element
+      right position of the element
      * @param integer x_to The x_to attribute defines the end 
-                             left position of the element
+      left position of the element
      * @param integer y_to The y_to attribute defines the end 
-                             right position of the element
+      right position of the element
      * @param integer lineWidth sets the width of the line e.g 2
      * @return void
      * @access public
      */
-    function rect($x_from, $y_from, $x_to, $y_to, $lineWidth)
-    {
-          $this->stringCommands .= $lineWidth . " setlinewidth  \n";
-          $this->stringCommands .= "newpath \n";
-          $this->stringCommands .= $x_from . " " . $y_from  . " moveto \n";
-          $this->stringCommands .= "0 " . $y_to  . " rlineto \n";
-          $this->stringCommands .= $x_to . " 0 rlineto \n";
-          $this->stringCommands .= "0 -" . $y_to  . " rlineto \n";
-          $this->stringCommands .= "closepath \n";
-          $this->stringCommands .= "stroke \n";
+    function rect($x_from, $y_from, $x_to, $y_to, $lineWidth) {
+        $this->stringCommands .= $lineWidth . " setlinewidth  \n";
+        $this->stringCommands .= "newpath \n";
+        $this->stringCommands .= $x_from . " " . $y_from . " moveto \n";
+        $this->stringCommands .= "0 " . $y_to . " rlineto \n";
+        $this->stringCommands .= $x_to . " 0 rlineto \n";
+        $this->stringCommands .= "0 -" . $y_to . " rlineto \n";
+        $this->stringCommands .= "closepath \n";
+        $this->stringCommands .= "stroke \n";
     }
 
     /**
@@ -205,14 +194,13 @@ class PMA_EPS
      * specified become the current point.
      *
      * @param integer x The x attribute defines the 
-                             left position of the element
+      left position of the element
      * @param integer y The y attribute defines the 
-                             right position of the element
+      right position of the element
      * @return void
      * @access public
      */
-    function moveTo($x, $y)
-    {
+    function moveTo($x, $y) {
         $this->stringCommands .= $x . ' ' . $y . " moveto \n";
     }
 
@@ -223,27 +211,25 @@ class PMA_EPS
      * @return void
      * @access public
      */
-   function show($text)
-   {
-       $this->stringCommands .=  '(' . $text  . ") show \n";
-   }
+    function show($text) {
+        $this->stringCommands .= '(' . $text . ") show \n";
+    }
 
     /**
      * Output the text at specified co-ordinates
      *
      * @param string text  The string to be displayed
      * @param integer x The x attribute defines the 
-                             left position of the element
+      left position of the element
      * @param integer y The y attribute defines the 
-                             right position of the element
+      right position of the element
      * @return void
      * @access public
      */
-   function showXY($text, $x, $y)
-   {
-       $this->moveTo($x, $y);
-       $this->show($text);
-   }
+    function showXY($text, $x, $y) {
+        $this->moveTo($x, $y);
+        $this->show($text);
+    }
 
     /**
      * get width of string/text
@@ -261,56 +247,55 @@ class PMA_EPS
      * @return integer width of the text
      * @access public
      */
-    function getStringWidth($text,$font,$fontSize)
-    {
+    function getStringWidth($text, $font, $fontSize) {
         /*
          * Start by counting the width, giving each character a modifying value
          */
         $count = 0;
-        $count = $count + ((strlen($text) - strlen(str_replace(array("i","j","l"),"",$text)))*0.23);//ijl
-        $count = $count + ((strlen($text) - strlen(str_replace(array("f"),"",$text)))*0.27);//f
-        $count = $count + ((strlen($text) - strlen(str_replace(array("t","I"),"",$text)))*0.28);//tI
-        $count = $count + ((strlen($text) - strlen(str_replace(array("r"),"",$text)))*0.34);//r
-        $count = $count + ((strlen($text) - strlen(str_replace(array("1"),"",$text)))*0.49);//1
-        $count = $count + ((strlen($text) - strlen(str_replace(array("c","k","s","v","x","y","z","J"),"",$text)))*0.5);//cksvxyzJ
-        $count = $count + ((strlen($text) - strlen(str_replace(array("a","b","d","e","g","h","n","o","p","q","u","L","0","2","3","4","5","6","7","8","9"),"",$text)))*0.56);//abdeghnopquL023456789
-        $count = $count + ((strlen($text) - strlen(str_replace(array("F","T","Z"),"",$text)))*0.61);//FTZ
-        $count = $count + ((strlen($text) - strlen(str_replace(array("A","B","E","K","P","S","V","X","Y"),"",$text)))*0.67);//ABEKPSVXY
-        $count = $count + ((strlen($text) - strlen(str_replace(array("w","C","D","H","N","R","U"),"",$text)))*0.73);//wCDHNRU
-        $count = $count + ((strlen($text) - strlen(str_replace(array("G","O","Q"),"",$text)))*0.78);//GOQ
-        $count = $count + ((strlen($text) - strlen(str_replace(array("m","M"),"",$text)))*0.84);//mM
-        $count = $count + ((strlen($text) - strlen(str_replace("W","",$text)))*.95);//W
-        $count = $count + ((strlen($text) - strlen(str_replace(" ","",$text)))*.28);//" "
-        $text  = str_replace(" ","",$text);//remove the " "'s
-        $count = $count + (strlen(preg_replace("/[a-z0-9]/i","",$text))*0.3); //all other chrs
+        $count = $count + ((strlen($text) - strlen(str_replace(array("i", "j", "l"), "", $text))) * 0.23); //ijl
+        $count = $count + ((strlen($text) - strlen(str_replace(array("f"), "", $text))) * 0.27); //f
+        $count = $count + ((strlen($text) - strlen(str_replace(array("t", "I"), "", $text))) * 0.28); //tI
+        $count = $count + ((strlen($text) - strlen(str_replace(array("r"), "", $text))) * 0.34); //r
+        $count = $count + ((strlen($text) - strlen(str_replace(array("1"), "", $text))) * 0.49); //1
+        $count = $count + ((strlen($text) - strlen(str_replace(array("c", "k", "s", "v", "x", "y", "z", "J"), "", $text))) * 0.5); //cksvxyzJ
+        $count = $count + ((strlen($text) - strlen(str_replace(array("a", "b", "d", "e", "g", "h", "n", "o", "p", "q", "u", "L", "0", "2", "3", "4", "5", "6", "7", "8", "9"), "", $text))) * 0.56); //abdeghnopquL023456789
+        $count = $count + ((strlen($text) - strlen(str_replace(array("F", "T", "Z"), "", $text))) * 0.61); //FTZ
+        $count = $count + ((strlen($text) - strlen(str_replace(array("A", "B", "E", "K", "P", "S", "V", "X", "Y"), "", $text))) * 0.67); //ABEKPSVXY
+        $count = $count + ((strlen($text) - strlen(str_replace(array("w", "C", "D", "H", "N", "R", "U"), "", $text))) * 0.73); //wCDHNRU
+        $count = $count + ((strlen($text) - strlen(str_replace(array("G", "O", "Q"), "", $text))) * 0.78); //GOQ
+        $count = $count + ((strlen($text) - strlen(str_replace(array("m", "M"), "", $text))) * 0.84); //mM
+        $count = $count + ((strlen($text) - strlen(str_replace("W", "", $text))) * .95); //W
+        $count = $count + ((strlen($text) - strlen(str_replace(" ", "", $text))) * .28); //" "
+        $text = str_replace(" ", "", $text); //remove the " "'s
+        $count = $count + (strlen(preg_replace("/[a-z0-9]/i", "", $text)) * 0.3); //all other chrs
 
         $modifier = 1;
         $font = strtolower($font);
-        switch($font){
-        /*
-         * no modifier for arial and sans-serif
-         */
-        case 'arial':
-        case 'sans-serif':
-        break;
-        /*
-         * .92 modifer for time, serif, brushscriptstd, and californian fb
-         */
-        case 'times':
-        case 'serif':
-        case 'brushscriptstd':
-        case 'californian fb':
-            $modifier = .92;
-        break;
-        /*
-         * 1.23 modifier for broadway
-         */
-        case 'broadway':
-            $modifier = 1.23;
-        break;
+        switch ($font) {
+            /*
+             * no modifier for arial and sans-serif
+             */
+            case 'arial':
+            case 'sans-serif':
+                break;
+            /*
+             * .92 modifer for time, serif, brushscriptstd, and californian fb
+             */
+            case 'times':
+            case 'serif':
+            case 'brushscriptstd':
+            case 'californian fb':
+                $modifier = .92;
+                break;
+            /*
+             * 1.23 modifier for broadway
+             */
+            case 'broadway':
+                $modifier = 1.23;
+                break;
         }
-        $textWidth = $count*$fontSize;
-        return ceil($textWidth*$modifier);
+        $textWidth = $count * $fontSize;
+        return ceil($textWidth * $modifier);
     }
 
     /**
@@ -319,8 +304,7 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function endEpsDoc()
-    {
+    function endEpsDoc() {
         $this->stringCommands .= "showpage \n";
     }
 
@@ -331,17 +315,17 @@ class PMA_EPS
      * @return void
      * @access public
      */
-    function showOutput($fileName)
-    {
+    function showOutput($fileName) {
         // if(ob_get_clean()){
-            //ob_end_clean();
+        //ob_end_clean();
         //}
         $fileName = PMA_sanitize_filename($fileName);
         header('Content-type: image/x-eps');
-        header('Content-Disposition: attachment; filename="'.$fileName.'.eps"');
+        header('Content-Disposition: attachment; filename="' . $fileName . '.eps"');
         $output = $this->stringCommands;
         print $output;
     }
+
 }
 
 /**
@@ -355,15 +339,13 @@ class PMA_EPS
  * @license
  * @see PMA_EPS
  */
-class Table_Stats 
-{
+class Table_Stats {
+
     /**
      * Defines properties
      */
-
     private $_tableName;
     private $_showInfo = false;
-
     public $width = 0;
     public $height;
     public $fields = array();
@@ -388,28 +370,27 @@ class Table_Stats
      * @global string    The current db name
      * @access private
      * @see PMA_EPS, Table_Stats::Table_Stats_setWidth,
-            Table_Stats::Table_Stats_setHeight
+      Table_Stats::Table_Stats_setHeight
      */
-    function __construct($tableName, $font, $fontSize, $pageNumber, &$same_wide_width, $showKeys = false, $showInfo = false)
-    {
+    function __construct($tableName, $font, $fontSize, $pageNumber, &$same_wide_width, $showKeys = false, $showInfo = false) {
         global $eps, $cfgRelation, $db;
 
         $this->_tableName = $tableName;
         $sql = 'DESCRIBE ' . PMA_backquote($tableName);
         $result = PMA_DBI_try_query($sql, null, PMA_DBI_QUERY_STORE);
         if (!$result || !PMA_DBI_num_rows($result)) {
-            $eps->dieSchema($pageNumber,"EPS",sprintf(__('The %s table doesn\'t exist!'), $tableName));
+            $eps->dieSchema($pageNumber, "EPS", sprintf(__('The %s table doesn\'t exist!'), $tableName));
         }
 
         /*
-        * load fields
-        * check to see if it will load all fields or only the foreign keys
-        */
+         * load fields
+         * check to see if it will load all fields or only the foreign keys
+         */
         if ($showKeys) {
             $indexes = PMA_Index::getFromTable($this->_tableName, $db);
             $all_columns = array();
             foreach ($indexes as $index) {
-            $all_columns = array_merge($all_columns, array_flip(array_keys($index->getColumns())));
+                $all_columns = array_merge($all_columns, array_flip(array_keys($index->getColumns())));
             }
             $this->fields = array_keys($all_columns);
         } else {
@@ -425,21 +406,21 @@ class Table_Stats
 
         // setWidth must me after setHeight, because title
         // can include table height which changes table width
-        $this->_setWidthTable($font,$fontSize);
+        $this->_setWidthTable($font, $fontSize);
         if ($same_wide_width < $this->width) {
             $same_wide_width = $this->width;
         }
 
         // x and y
         $sql = 'SELECT x, y FROM '
-         . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['table_coords'])
-         . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
-         . ' AND   table_name = \'' . PMA_sqlAddslashes($tableName) . '\''
-         . ' AND   pdf_page_number = ' . $pageNumber;
+                . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['table_coords'])
+                . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
+                . ' AND   table_name = \'' . PMA_sqlAddslashes($tableName) . '\''
+                . ' AND   pdf_page_number = ' . $pageNumber;
         $result = PMA_query_as_controluser($sql, false, PMA_DBI_QUERY_STORE);
 
         if (!$result || !PMA_DBI_num_rows($result)) {
-            $eps->dieSchema($pageNumber,"EPS",sprintf(__('Please configure the coordinates for table %s'), $tableName));
+            $eps->dieSchema($pageNumber, "EPS", sprintf(__('Please configure the coordinates for table %s'), $tableName));
         }
         list($this->x, $this->y) = PMA_DBI_fetch_row($result);
         $this->x = (double) $this->x;
@@ -464,8 +445,7 @@ class Table_Stats
      * @return string The relation/table name
      * @access private
      */
-    private function _getTitle()
-    {
+    private function _getTitle() {
         return ($this->_showInfo ? sprintf('%.0f', $this->width) . 'x' . sprintf('%.0f', $this->heightCell) : '') . ' ' . $this->_tableName;
     }
 
@@ -479,19 +459,18 @@ class Table_Stats
      * @access private
      * @see PMA_EPS
      */
-    private function _setWidthTable($font,$fontSize)
-    {
+    private function _setWidthTable($font, $fontSize) {
         global $eps;
 
         foreach ($this->fields as $field) {
-            $this->width = max($this->width, $eps->getStringWidth($field,$font,$fontSize));
+            $this->width = max($this->width, $eps->getStringWidth($field, $font, $fontSize));
         }
-        $this->width += $eps->getStringWidth('      ',$font,$fontSize);
+        $this->width += $eps->getStringWidth('      ', $font, $fontSize);
         /*
          * it is unknown what value must be added, because
          * table title is affected by the tabe width value
-         */ 
-        while ($this->width < $eps->getStringWidth($this->_getTitle(),$font,$fontSize)) {
+         */
+        while ($this->width < $eps->getStringWidth($this->_getTitle(), $font, $fontSize)) {
             $this->width += 7;
         }
     }
@@ -503,8 +482,7 @@ class Table_Stats
      * @return void
      * @access private
      */
-    private function _setHeightTable($fontSize)
-    {
+    private function _setHeightTable($fontSize) {
         $this->heightCell = $fontSize + 4;
         $this->height = (count($this->fields) + 1) * $this->heightCell;
     }
@@ -518,31 +496,28 @@ class Table_Stats
      * @access public
      * @see PMA_EPS,PMA_EPS::line,PMA_EPS::rect
      */
-    public function tableDraw($showColor)
-    {
+    public function tableDraw($showColor) {
         global $eps;
         //echo $this->_tableName.'<br />';
-        $eps->rect($this->x,$this->y + 12,
-            $this->width,$this->heightCell,
-            1
-            );
-        $eps->showXY($this->_getTitle(),$this->x + 5,$this->y + 14);
+        $eps->rect($this->x, $this->y + 12, $this->width, $this->heightCell, 1
+        );
+        $eps->showXY($this->_getTitle(), $this->x + 5, $this->y + 14);
         foreach ($this->fields as $field) {
-                $this->currentCell += $this->heightCell;
-                $showColor    = 'none';
-                if ($showColor) {
-                    if (in_array($field, $this->primary)) {
-                        $showColor = '#0c0';
-                    }
-                    if ($field == $this->displayfield) {
-                        $showColor = 'none';
-                    }
+            $this->currentCell += $this->heightCell;
+            $showColor = 'none';
+            if ($showColor) {
+                if (in_array($field, $this->primary)) {
+                    $showColor = '#0c0';
                 }
-                $eps->rect($this->x,$this->y + 12  + $this->currentCell,
-                    $this->width, $this->heightCell,1);
-                $eps->showXY($field, $this->x + 5, $this->y + 14 + $this->currentCell);
+                if ($field == $this->displayfield) {
+                    $showColor = 'none';
+                }
+            }
+            $eps->rect($this->x, $this->y + 12 + $this->currentCell, $this->width, $this->heightCell, 1);
+            $eps->showXY($field, $this->x + 5, $this->y + 14 + $this->currentCell);
         }
     }
+
 }
 
 /**
@@ -558,13 +533,13 @@ class Table_Stats
  * @license
  * @see PMA_EPS
  */
-class Relation_Stats 
-{
+class Relation_Stats {
+
     /**
      * Defines properties
      */
-    public $xSrc, $ySrc;
-    public $srcDir ;
+            public $xSrc, $ySrc;
+    public $srcDir;
     public $destDir;
     public $xDest, $yDest;
     public $wTick = 10;
@@ -578,48 +553,47 @@ class Relation_Stats
      * @param string foreigh_field The relation field in the foreign table
      * @see Relation_Stats::_getXy
      */
-    function __construct($master_table, $master_field, $foreign_table, $foreign_field)
-    {
-        $src_pos  = $this->_getXy($master_table, $master_field);
+    function __construct($master_table, $master_field, $foreign_table, $foreign_field) {
+        $src_pos = $this->_getXy($master_table, $master_field);
         $dest_pos = $this->_getXy($foreign_table, $foreign_field);
         /*
-        * [0] is x-left
-        * [1] is x-right
-        * [2] is y
-        */
-        $src_left   = $src_pos[0] - $this->wTick;
-        $src_right  = $src_pos[1] + $this->wTick;
-        $dest_left  = $dest_pos[0] - $this->wTick;
+         * [0] is x-left
+         * [1] is x-right
+         * [2] is y
+         */
+        $src_left = $src_pos[0] - $this->wTick;
+        $src_right = $src_pos[1] + $this->wTick;
+        $dest_left = $dest_pos[0] - $this->wTick;
         $dest_right = $dest_pos[1] + $this->wTick;
 
         $d1 = abs($src_left - $dest_left);
         $d2 = abs($src_right - $dest_left);
         $d3 = abs($src_left - $dest_right);
         $d4 = abs($src_right - $dest_right);
-        $d  = min($d1, $d2, $d3, $d4);
+        $d = min($d1, $d2, $d3, $d4);
 
         if ($d == $d1) {
-            $this->xSrc    = $src_pos[0];
-            $this->srcDir  = -1;
-            $this->xDest   = $dest_pos[0];
+            $this->xSrc = $src_pos[0];
+            $this->srcDir = -1;
+            $this->xDest = $dest_pos[0];
             $this->destDir = -1;
         } elseif ($d == $d2) {
-            $this->xSrc    = $src_pos[1];
-            $this->srcDir  = 1;
-            $this->xDest   = $dest_pos[0];
+            $this->xSrc = $src_pos[1];
+            $this->srcDir = 1;
+            $this->xDest = $dest_pos[0];
             $this->destDir = -1;
         } elseif ($d == $d3) {
-            $this->xSrc    = $src_pos[0];
-            $this->srcDir  = -1;
-            $this->xDest   = $dest_pos[1];
+            $this->xSrc = $src_pos[0];
+            $this->srcDir = -1;
+            $this->xDest = $dest_pos[1];
             $this->destDir = 1;
         } else {
-            $this->xSrc    = $src_pos[1];
-            $this->srcDir  = 1;
-            $this->xDest   = $dest_pos[1];
+            $this->xSrc = $src_pos[1];
+            $this->srcDir = 1;
+            $this->xDest = $dest_pos[1];
             $this->destDir = 1;
         }
-        $this->ySrc   = $src_pos[2] + 10;
+        $this->ySrc = $src_pos[2] + 10;
         $this->yDest = $dest_pos[2] + 10;
     }
 
@@ -631,8 +605,7 @@ class Relation_Stats
      * @return array Arrows coordinates
      * @access private
      */
-    private function _getXy($table, $column)
-    {
+    private function _getXy($table, $column) {
         $pos = array_search($column, $table->fields);
         // x_left, x_right, y
         return array($table->x, $table->x + $table->width, $table->y + ($pos + 1.5) * $table->heightCell);
@@ -647,8 +620,7 @@ class Relation_Stats
      * @access public
      * @see PMA_EPS
      */
-    public function relationDraw($changeColor)
-    {
+    public function relationDraw($changeColor) {
         global $eps;
 
         if ($changeColor) {
@@ -659,53 +631,37 @@ class Relation_Stats
                 'yellow',
                 'green',
                 'cyan',
-            '    orange'
+                '    orange'
             );
             shuffle($listOfColors);
-            $color =  $listOfColors[0];
+            $color = $listOfColors[0];
         } else {
             $color = 'black';
         }
         // draw a line like -- to foreign field
-        $eps->line($this->xSrc,$this->ySrc,
-            $this->xSrc + $this->srcDir * $this->wTick,$this->ySrc,
-            1
-            );
+        $eps->line($this->xSrc, $this->ySrc, $this->xSrc + $this->srcDir * $this->wTick, $this->ySrc, 1
+        );
         // draw a line like -- to master field
-        $eps->line($this->xDest + $this->destDir * $this->wTick, $this->yDest,
-            $this->xDest, $this->yDest,
-            1
-            );
+        $eps->line($this->xDest + $this->destDir * $this->wTick, $this->yDest, $this->xDest, $this->yDest, 1
+        );
         // draw a line that connects to master field line and foreign field line
-        $eps->line($this->xSrc + $this->srcDir * $this->wTick,$this->ySrc,
-            $this->xDest + $this->destDir * $this->wTick, $this->yDest,
-            1
-            );
+        $eps->line($this->xSrc + $this->srcDir * $this->wTick, $this->ySrc, $this->xDest + $this->destDir * $this->wTick, $this->yDest, 1
+        );
         $root2 = 2 * sqrt(2);
-        $eps->line($this->xSrc + $this->srcDir * $this->wTick * 0.75, $this->ySrc,
-            $this->xSrc + $this->srcDir * (0.75 - 1 / $root2) * $this->wTick ,
-            $this->ySrc + $this->wTick / $root2 ,
-            1
-            );
-        $eps->line($this->xSrc + $this->srcDir * $this->wTick * 0.75, $this->ySrc,
-            $this->xSrc + $this->srcDir * (0.75 - 1 / $root2) * $this->wTick ,
-            $this->ySrc - $this->wTick / $root2 ,
-            1
-            );
-        $eps->line($this->xDest + $this->destDir * $this->wTick / 2 , $this->yDest ,
-            $this->xDest + $this->destDir * (0.5 + 1 / $root2) * $this->wTick,
-            $this->yDest + $this->wTick / $root2 ,
-            1);
-        $eps->line($this->xDest + $this->destDir * $this->wTick / 2 ,
-            $this->yDest , $this->xDest + $this->destDir * (0.5 + 1 / $root2) * $this->wTick ,
-            $this->yDest - $this->wTick / $root2 ,
-            1
-            );
+        $eps->line($this->xSrc + $this->srcDir * $this->wTick * 0.75, $this->ySrc, $this->xSrc + $this->srcDir * (0.75 - 1 / $root2) * $this->wTick, $this->ySrc + $this->wTick / $root2, 1
+        );
+        $eps->line($this->xSrc + $this->srcDir * $this->wTick * 0.75, $this->ySrc, $this->xSrc + $this->srcDir * (0.75 - 1 / $root2) * $this->wTick, $this->ySrc - $this->wTick / $root2, 1
+        );
+        $eps->line($this->xDest + $this->destDir * $this->wTick / 2, $this->yDest, $this->xDest + $this->destDir * (0.5 + 1 / $root2) * $this->wTick, $this->yDest + $this->wTick / $root2, 1);
+        $eps->line($this->xDest + $this->destDir * $this->wTick / 2, $this->yDest, $this->xDest + $this->destDir * (0.5 + 1 / $root2) * $this->wTick, $this->yDest - $this->wTick / $root2, 1
+        );
     }
-} 
+
+}
+
 /*
-* end of the "Relation_Stats" class
-*/
+ * end of the "Relation_Stats" class
+ */
 
 /**
  * EPS Relation Schema Class
@@ -722,11 +678,11 @@ class Relation_Stats
  * @copyright
  * @license
  */
-class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
-{
+class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema {
+
     private $tables = array();
     private $_relations = array();
-    
+
     /**
      * The "PMA_EPS_Relation_Schema" constructor
      *
@@ -736,9 +692,8 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * @return void
      * @see PMA_EPS
      */
-    function __construct()
-    {
-        global $eps,$db;
+    function __construct() {
+        global $eps, $db;
 
         $this->setPageNumber($_POST['pdf_page_number']);
         $this->setShowColor(isset($_POST['show_color']));
@@ -753,15 +708,15 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
         $eps->setAuthor('phpMyAdmin ' . PMA_VERSION);
         $eps->setDate(date("j F Y, g:i a"));
         $eps->setOrientation($this->orientation);
-        $eps->setFont('Verdana','10');
-        
-        
-        
-        $alltables = $this->getAllTables($db,$this->pageNumber);
+        $eps->setFont('Verdana', '10');
+
+
+
+        $alltables = $this->getAllTables($db, $this->pageNumber);
 
         foreach ($alltables AS $table) {
             if (!isset($this->tables[$table])) {
-                $this->tables[$table] = new Table_Stats($table,$eps->getFont(),$eps->getFontSize(), $this->pageNumber, $this->_tablewidth, $this->showKeys, $this->tableDimension);
+                $this->tables[$table] = new Table_Stats($table, $eps->getFont(), $eps->getFontSize(), $this->pageNumber, $this->_tablewidth, $this->showKeys, $this->tableDimension);
             }
 
             if ($this->sameWide) {
@@ -776,12 +731,12 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
                 $seen_a_relation = true;
                 foreach ($exist_rel as $master_field => $rel) {
                     /* put the foreign table on the schema only if selected
-                    * by the user
-                    * (do not use array_search() because we would have to
-                    * to do a === FALSE and this is not PHP3 compatible)
-                    */
+                     * by the user
+                     * (do not use array_search() because we would have to
+                     * to do a === FALSE and this is not PHP3 compatible)
+                     */
                     if (in_array($rel['foreign_table'], $alltables)) {
-                        $this->_addRelation($one_table,$eps->getFont(),$eps->getFontSize(), $master_field, $rel['foreign_table'], $rel['foreign_field'], $this->tableDimension);
+                        $this->_addRelation($one_table, $eps->getFont(), $eps->getFontSize(), $master_field, $rel['foreign_table'], $rel['foreign_field'], $this->tableDimension);
                     }
                 }
             }
@@ -792,7 +747,7 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
 
         $this->_drawTables($this->showColor);
         $eps->endEpsDoc();
-        $eps->showOutput($db.'-'.$this->pageNumber);
+        $eps->showOutput($db . '-' . $this->pageNumber);
         exit();
     }
 
@@ -808,13 +763,12 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * @access private
      * @see _setMinMax,Table_Stats::__construct(),Relation_Stats::__construct()
      */
-    private function _addRelation($masterTable,$font,$fontSize, $masterField, $foreignTable, $foreignField, $showInfo)
-    {
+    private function _addRelation($masterTable, $font, $fontSize, $masterField, $foreignTable, $foreignField, $showInfo) {
         if (!isset($this->tables[$masterTable])) {
             $this->tables[$masterTable] = new Table_Stats($masterTable, $font, $fontSize, $this->pageNumber, $this->_tablewidth, false, $showInfo);
         }
         if (!isset($this->tables[$foreignTable])) {
-            $this->tables[$foreignTable] = new Table_Stats($foreignTable,$font,$fontSize,$this->pageNumber, $this->_tablewidth, false, $showInfo);
+            $this->tables[$foreignTable] = new Table_Stats($foreignTable, $font, $fontSize, $this->pageNumber, $this->_tablewidth, false, $showInfo);
         }
         $this->_relations[] = new Relation_Stats($this->tables[$masterTable], $masterField, $this->tables[$foreignTable], $foreignField);
     }
@@ -829,8 +783,7 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * @access private
      * @see Relation_Stats::relationDraw()
      */
-    private function _drawRelations($changeColor)
-    {
+    private function _drawRelations($changeColor) {
         foreach ($this->_relations as $relation) {
             $relation->relationDraw($changeColor);
         }
@@ -844,11 +797,12 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * @access private
      * @see Table_Stats::Table_Stats_tableDraw()
      */
-    private function _drawTables($changeColor)
-    {
+    private function _drawTables($changeColor) {
         foreach ($this->tables as $table) {
             $table->tableDraw($changeColor);
         }
     }
+
 }
+
 ?>

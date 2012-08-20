@@ -11,47 +11,57 @@
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 class db_driver extends PDO {
-    
+
     /**
      *
      * @var \PDOStatement 
      */
     private $_prepared = null;
+
     /**
      *
      * @var \PDOStatement 
      */
     private $_executed = null;
+
     /**
      *
      * @var array 
      */
     private $_result = null;
-    
+
     /**
      * 
      * @param type $prepared
      */
-    private function setPrepared( $prepared ) { $this->_prepared = $prepared; }
-    
+    private function setPrepared($prepared) {
+        $this->_prepared = $prepared;
+    }
+
     /**
      * 
      * @param type $executed
      */
-    private function setExecuted( $executed ) { $this->_executed = $executed; }
-    
+    private function setExecuted($executed) {
+        $this->_executed = $executed;
+    }
+
     /**
      * 
      * @return \PDOStatement
      */
-    private function getPrepared() { return $this->_prepared; }
-    
+    private function getPrepared() {
+        return $this->_prepared;
+    }
+
     /**
      * 
      * @return \PDOStatement
      */
-    private function getExecuted() { return $this->_executed; }
-    
+    private function getExecuted() {
+        return $this->_executed;
+    }
+
     /**
      * 
      * @param String $dsn
@@ -96,7 +106,7 @@ class db_driver extends PDO {
         $stack2 = str_replace("Stack trace:", "", $stack1);
         return $res2 . $stack2 . "}";
     }
-    
+
     /**
      * 
      * @param String $query
@@ -117,7 +127,7 @@ class db_driver extends PDO {
             die($error_html);
         }
     }
-    
+
     /**
      * 
      * @param String $query
@@ -139,7 +149,7 @@ class db_driver extends PDO {
             die($error_html);
         }
     }
-    
+
     /**
      * The main query function using bind variables for SQL injection protection.
      * Returns an array of results.
@@ -149,18 +159,18 @@ class db_driver extends PDO {
      * @param Array $driver_options [optional]
      * @return \PDOStatement
      */
-    public function bindQuery( $sqlString, array $bindArray, $driver_options = array() ) {
-        $sqlPrepare = $this->prepare( $sqlString , $driver_options );
+    public function bindQuery($sqlString, array $bindArray, $driver_options = array()) {
+        $sqlPrepare = $this->prepare($sqlString, $driver_options);
         $this->setPrepared($sqlPrepare);
-        
+
         $this->bindParams($sqlPrepare, $bindArray);
-        
+
         $sqlPrepare->execute();
         $this->setExecuted($sqlPrepare);
-        
+
         return $sqlPrepare;
     }
-    
+
     /**
      * 
      * @param String $query
@@ -182,7 +192,7 @@ class db_driver extends PDO {
             die($error_html);
         }
     }
-    
+
     /**
      * Binding an array of bind variable pairs to a prepared sql statement.
      * @author Kevin Andrews (kandrews@zpanelcp.com)
@@ -190,8 +200,8 @@ class db_driver extends PDO {
      * @param array $bindArray
      * @return \PDOStatement
      */
-    public function bindParams(PDOStatement $sqlPrepare , array $bindArray ) {
-        foreach ( $bindArray as $bindKey => &$bindValue ) {
+    public function bindParams(PDOStatement $sqlPrepare, array $bindArray) {
+        foreach ($bindArray as $bindKey => &$bindValue) {
             $sqlPrepare->bindParam($bindKey, $bindValue);
         }
     }
@@ -203,7 +213,7 @@ class db_driver extends PDO {
     public function returnRow() {
         return $this->getExecuted()->fetch();
     }
-    
+
     /**
      * Returns a multidimensional array of results.
      * @return array
@@ -211,7 +221,7 @@ class db_driver extends PDO {
     public function returnRows() {
         return $this->getExecuted()->fetchAll();
     }
-    
+
     /**
      * Returns the rows affected by any query.
      * @return int
@@ -219,7 +229,7 @@ class db_driver extends PDO {
     public function returnResult() {
         return $this->getExecuted()->rowCount();
     }
-    
+
 }
 
 ?>

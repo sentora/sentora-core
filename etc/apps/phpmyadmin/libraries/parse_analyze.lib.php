@@ -1,10 +1,11 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -25,7 +26,6 @@ $analyzed_sql = PMA_SQP_analyze($parsed_sql);
 //  first varchar(64) NOT NULL default '',
 //  PRIMARY KEY  (`id`)
 // )
-
 // check for a real SELECT ... FROM
 $is_select = isset($analyzed_sql[0]['queryflags']['select_from']);
 
@@ -46,14 +46,14 @@ if ($is_select) {
         $table = $analyzed_sql[0]['table_ref'][0]['table_true_name'];
     }
     if (isset($analyzed_sql[0]['table_ref'][0]['db'])
-      && strlen($analyzed_sql[0]['table_ref'][0]['db'])) {
-        $db    = $analyzed_sql[0]['table_ref'][0]['db'];
+            && strlen($analyzed_sql[0]['table_ref'][0]['db'])) {
+        $db = $analyzed_sql[0]['table_ref'][0]['db'];
     } else {
         $db = $prev_db;
     }
     // Nijel: don't change reload, if we already decided to reload in import
     if (empty($reload)) {
-        $reload  = ($db == $prev_db) ? 0 : 1;
+        $reload = ($db == $prev_db) ? 0 : 1;
     }
 }
 ?>

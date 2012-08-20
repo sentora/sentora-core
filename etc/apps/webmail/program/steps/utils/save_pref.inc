@@ -1,23 +1,24 @@
 <?php
+
 /*
 
- +-----------------------------------------------------------------------+
- | program/steps/utils/save_pref.inc                                     |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Save preferences setting in database                                |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Aleksander Machniak <alec@alec.pl>                            |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/utils/save_pref.inc                                     |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Save preferences setting in database                                |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Aleksander Machniak <alec@alec.pl>                            |
+  +-----------------------------------------------------------------------+
 
- $Id: save_pref.inc 4410 2011-01-12 18:25:02Z thomasb $
+  $Id: save_pref.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $name = get_input_value('_name', RCUBE_INPUT_POST);
 $value = get_input_value('_value', RCUBE_INPUT_POST);

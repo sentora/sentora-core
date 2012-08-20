@@ -2,25 +2,25 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/pl_PL/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Tomasz Pajor        <t.pajor@kei.pl>                          |
-| Author: Sławomir Cichoń     <slawek.cichon@gmail.com>                 |
-|         Janusz Zamecki      <janusz@zamecki.eu>                       |
-|         Mariusz Szulerecki  <nob@force.eu.org>                        |
-|         Wojciech Szczepucha <donkoyote@gmail.com>                     |
-|         Aleksander Machniak <alec@alec.pl>                            |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/pl_PL/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Tomasz Pajor        <t.pajor@kei.pl>                          |
+  | Author: Sławomir Cichoń     <slawek.cichon@gmail.com>                 |
+  |         Janusz Zamecki      <janusz@zamecki.eu>                       |
+  |         Mariusz Szulerecki  <nob@force.eu.org>                        |
+  |         Wojciech Szczepucha <donkoyote@gmail.com>                     |
+  |         Aleksander Machniak <alec@alec.pl>                            |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Błąd logowania!';
@@ -164,5 +164,4 @@ $messages['contactsearchonly'] = 'Użyj wyszukiwarki aby wyświetlić kontakty.'
 $messages['contactdeleting'] = 'Usuwanie kontaktów...';
 $messages['autocompletemore'] = 'Znaleziono więcej pasujących wpisów. Wprowadź więcej znaków.';
 $messages['messagetoobig'] = 'Ta część wiadomości jest zbyt duża aby ją przetworzyć.';
-
 ?>

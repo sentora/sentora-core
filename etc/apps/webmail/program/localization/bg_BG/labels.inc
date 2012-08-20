@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/bg_BG/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Todor Dragnev <todor.dragnev@gmail.com>                       |
-|   Nickolay Bunev <just4nick@gmail.com>                                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/bg_BG/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Todor Dragnev <todor.dragnev@gmail.com>                       |
+  |   Nickolay Bunev <just4nick@gmail.com>                                |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Добре дошли в $product';
@@ -428,5 +428,4 @@ $labels['vietnamese'] = 'Виетнамски';
 $labels['japanese'] = 'Японски';
 $labels['korean'] = 'Корейски';
 $labels['chinese'] = 'Китайски';
-
 ?>

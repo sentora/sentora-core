@@ -1,28 +1,29 @@
 <?php
-/*
- +-------------------------------------------------------------------------+
- | Abstract driver for the Enigma Plugin                                   |
- |                                                                         |
- | This program is free software; you can redistribute it and/or modify    |
- | it under the terms of the GNU General Public License version 2          |
- | as published by the Free Software Foundation.                           |
- |                                                                         |
- | This program is distributed in the hope that it will be useful,         |
- | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
- | GNU General Public License for more details.                            |
- |                                                                         |
- | You should have received a copy of the GNU General Public License along |
- | with this program; if not, write to the Free Software Foundation, Inc., |
- | 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.             |
- |                                                                         |
- +-------------------------------------------------------------------------+
- | Author: Aleksander Machniak <alec@alec.pl>                              |
- +-------------------------------------------------------------------------+
-*/
 
-abstract class enigma_driver
-{
+/*
+  +-------------------------------------------------------------------------+
+  | Abstract driver for the Enigma Plugin                                   |
+  |                                                                         |
+  | This program is free software; you can redistribute it and/or modify    |
+  | it under the terms of the GNU General Public License version 2          |
+  | as published by the Free Software Foundation.                           |
+  |                                                                         |
+  | This program is distributed in the hope that it will be useful,         |
+  | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
+  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
+  | GNU General Public License for more details.                            |
+  |                                                                         |
+  | You should have received a copy of the GNU General Public License along |
+  | with this program; if not, write to the Free Software Foundation, Inc., |
+  | 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.             |
+  |                                                                         |
+  +-------------------------------------------------------------------------+
+  | Author: Aleksander Machniak <alec@alec.pl>                              |
+  +-------------------------------------------------------------------------+
+ */
+
+abstract class enigma_driver {
+
     /**
      * Class constructor.
      *
@@ -70,7 +71,7 @@ abstract class enigma_driver
      *
      * @return mixed Import status array or enigma_error
      */
-    abstract function import($content, $isfile=false);
+    abstract function import($content, $isfile = false);
 
     /**
      * Keys listing.
@@ -79,8 +80,8 @@ abstract class enigma_driver
      *
      * @return mixed Array of enigma_key objects or enigma_error
      */
-    abstract function list_keys($pattern='');
-    
+    abstract function list_keys($pattern = '');
+
     /**
      * Single key information.
      *
@@ -98,7 +99,7 @@ abstract class enigma_driver
      * @return mixed Key (enigma_key) object or enigma_error
      */
     abstract function gen_key($data);
-    
+
     /**
      * Key deletion.
      */

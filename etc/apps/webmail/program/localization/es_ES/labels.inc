@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/es_ES/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Javier Smaldone <javier@smaldone.com.ar>                      |
-|         David Grajal Blanco <dgrabla@gmail.com>                       |
-|         Ángel Bueno Prieto <info@mediaiberia.com>                     |
-|         José M. Ciordia <ciordia@gmail.com>                           |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/es_ES/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Javier Smaldone <javier@smaldone.com.ar>                      |
+  |         David Grajal Blanco <dgrabla@gmail.com>                       |
+  |         Ángel Bueno Prieto <info@mediaiberia.com>                     |
+  |         José M. Ciordia <ciordia@gmail.com>                           |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5290 2011-09-28 17:09:50Z thomasb $
+  @version $Id: labels.inc 5290 2011-09-28 17:09:50Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Bienvenido a $product';
@@ -428,5 +428,4 @@ $labels['vietnamese'] = 'Vietnamita';
 $labels['japanese'] = 'Japonés';
 $labels['korean'] = 'Coreano';
 $labels['chinese'] = 'Chino';
-
 ?>

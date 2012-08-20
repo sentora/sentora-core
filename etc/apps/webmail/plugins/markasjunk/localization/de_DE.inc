@@ -1,4 +1,5 @@
 <?php
+
 // translation done by Ulli Heist - http://heist.hobby-site.org/
 $labels = array();
 $labels['buttontitle'] = 'als SPAM markieren';

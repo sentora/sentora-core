@@ -27,23 +27,22 @@ if body :text :contains "project schedule"
 
 $s = new rcube_sieve_script($txt);
 echo $s->as_text();
-
 ?>
 --EXPECT--
 require ["body","fileinto"];
 if body :raw :contains "MAKE MONEY FAST"
 {
-	stop;
+stop;
 }
 if body :content "text" :contains ["missile","coordinates"]
 {
-	fileinto "secrets";
+fileinto "secrets";
 }
 if body :content "audio/mp3" :contains ""
 {
-	fileinto "jukebox";
+fileinto "jukebox";
 }
 if body :text :contains "project schedule"
 {
-	fileinto "project/schedule";
+fileinto "project/schedule";
 }

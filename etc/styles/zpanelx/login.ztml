@@ -65,7 +65,7 @@
                                             </table>
                                         </div>
                                         <!-- END CONFIRMATION- -->
-                                        <?php } else {
+                                    <?php } else {
                                         ?>
                                         <!-- BEGIN LOGIN -->
                                         <div class="login_wrapper" id="login_wrapper" style="display:block;">
@@ -149,7 +149,7 @@
                                             </table>
                                         </div>
                                         <!-- END FORGOT PASSWORD- -->
-                                        <?php }
+                                    <?php }
                                     ?>
                                 </td>
                                 <td width="233px">
@@ -177,72 +177,72 @@
     document.frmZLogin.inUsername.focus();
 </script>
 <script language="JavaScript" type="text/javascript">
-	<!--
-	function toggleVisibility(sId, lId){
-	  var me=document.getElementById(sId);
-	  var le=document.getElementById(lId);
-	  if (me.style.display=="none"){
-	     me.style.display="block";
-	  }
-	  else {
-	     me.style.display="none";
-	  }
-	   if (le.style.display=="block"){
-	     le.style.display="none";
-	  }
-	  else {
-	     le.style.display="block";
-	  }
-	}
-	// -->
+    <!--
+    function toggleVisibility(sId, lId){
+        var me=document.getElementById(sId);
+        var le=document.getElementById(lId);
+        if (me.style.display=="none"){
+            me.style.display="block";
+        }
+        else {
+            me.style.display="none";
+        }
+        if (le.style.display=="block"){
+            le.style.display="none";
+        }
+        else {
+            le.style.display="block";
+        }
+    }
+    // -->
 </script>
 <style type="text/css">
-.focusField{
-    border:solid 1px #55A7C8;
-    background:#ECF5F9;
-    color:#000;
-	outline:none;
-}
-.idleField{
-    background:#FFFFFF;
-    color: #6F6F6F;
-    border: solid 1px #DFDFDF;
-	outline:none;
-}
+    .focusField{
+        border:solid 1px #55A7C8;
+        background:#ECF5F9;
+        color:#000;
+        outline:none;
+    }
+    .idleField{
+        background:#FFFFFF;
+        color: #6F6F6F;
+        border: solid 1px #DFDFDF;
+        outline:none;
+    }
 </style>
 <script language="JavaScript" type="text/javascript">
-		$(document).ready(function() {
-			$('input[type="text"]').addClass("idleField");
-       		$('input[type="text"]').focus(function() {
-       			$(this).removeClass("idleField").addClass("focusField");
+    $(document).ready(function() {
+        $('input[type="text"]').addClass("idleField");
+        $('input[type="text"]').focus(function() {
+            $(this).removeClass("idleField").addClass("focusField");
     		    
-				if(this.value != this.defaultValue){
-	    			this.select();
-	    		}
-    		});
-    		$('input[type="text"]').blur(function() {
-    			$(this).removeClass("focusField").addClass("idleField");
+            if(this.value != this.defaultValue){
+                this.select();
+            }
+        });
+        $('input[type="text"]').blur(function() {
+            $(this).removeClass("focusField").addClass("idleField");
 
-    		});
-		});	
+        });
+    });	
 </script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('input[type="password"]').addClass("idleField");
-       		$('input[type="password"]').focus(function() {
-       			$(this).removeClass("idleField").addClass("focusField");
-    		    if (this.value == this.defaultValue){ 
-    		    	this.value = '';
-				}
-				if(this.value != this.defaultValue){
-	    			this.select();
-	    		}
-    		});
-    		$('input[type="password"]').blur(function() {
-    			$(this).removeClass("focusField").addClass("idleField");
-    		    if ($.trim(this.value) == ''){
-			    	this.value = (this.defaultValue ? this.defaultValue : '');
-				}
-    		});
-		});			
-	</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('input[type="password"]').addClass("idleField");
+        $('input[type="password"]').focus(function() {
+            $(this).removeClass("idleField").addClass("focusField");
+            if (this.value == this.defaultValue){ 
+                this.value = '';
+            }
+            if(this.value != this.defaultValue){
+                this.select();
+            }
+        });
+        $('input[type="password"]').blur(function() {
+            $(this).removeClass("focusField").addClass("idleField");
+            if ($.trim(this.value) == ''){
+                this.value = (this.defaultValue ? this.defaultValue : '');
+            }
+        });
+    });			
+</script>

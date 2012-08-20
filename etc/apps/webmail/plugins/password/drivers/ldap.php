@@ -13,9 +13,7 @@
  * function randomSalt based on code from the phpLDAPadmin development team (http://phpldapadmin.sourceforge.net/).
  *
  */
-
-function password_save($curpass, $passwd)
-{
+function password_save($curpass, $passwd) {
     $rcmail = rcmail::get_instance();
     require_once ('Net/LDAP2.php');
 
@@ -31,7 +29,7 @@ function password_save($curpass, $passwd)
     }
 
     // Connection Method
-    switch($rcmail->config->get('password_ldap_method')) {
+    switch ($rcmail->config->get('password_ldap_method')) {
         case 'admin':
             $binddn = $rcmail->config->get('password_ldap_adminDN');
             $bindpw = $rcmail->config->get('password_ldap_adminPW');
@@ -44,14 +42,14 @@ function password_save($curpass, $passwd)
     }
 
     // Configuration array
-    $ldapConfig = array (
-        'binddn'    => $binddn,
-        'bindpw'    => $bindpw,
-        'basedn'    => $rcmail->config->get('password_ldap_basedn'),
-        'host'      => $rcmail->config->get('password_ldap_host'),
-        'port'      => $rcmail->config->get('password_ldap_port'),
-        'starttls'  => $rcmail->config->get('password_ldap_starttls'),
-        'version'   => $rcmail->config->get('password_ldap_version'),
+    $ldapConfig = array(
+        'binddn' => $binddn,
+        'bindpw' => $bindpw,
+        'basedn' => $rcmail->config->get('password_ldap_basedn'),
+        'host' => $rcmail->config->get('password_ldap_host'),
+        'port' => $rcmail->config->get('password_ldap_port'),
+        'starttls' => $rcmail->config->get('password_ldap_starttls'),
+        'version' => $rcmail->config->get('password_ldap_version'),
     );
 
     // Connecting using the configuration array
@@ -63,16 +61,16 @@ function password_save($curpass, $passwd)
     }
 
     $crypted_pass = hashPassword($passwd, $rcmail->config->get('password_ldap_encodage'));
-    $force        = $rcmail->config->get('password_ldap_force_replace');
-    $pwattr       = $rcmail->config->get('password_ldap_pwattr');
-    $lchattr      = $rcmail->config->get('password_ldap_lchattr');
-    $smbpwattr    = $rcmail->config->get('password_ldap_samba_pwattr');
-    $smblchattr   = $rcmail->config->get('password_ldap_samba_lchattr');
-    $samba        = $rcmail->config->get('password_ldap_samba');
+    $force = $rcmail->config->get('password_ldap_force_replace');
+    $pwattr = $rcmail->config->get('password_ldap_pwattr');
+    $lchattr = $rcmail->config->get('password_ldap_lchattr');
+    $smbpwattr = $rcmail->config->get('password_ldap_samba_pwattr');
+    $smblchattr = $rcmail->config->get('password_ldap_samba_lchattr');
+    $samba = $rcmail->config->get('password_ldap_samba');
 
     // Support password_ldap_samba option for backward compat.
     if ($samba && !$smbpwattr) {
-        $smbpwattr  = 'sambaNTPassword';
+        $smbpwattr = 'sambaNTPassword';
         $smblchattr = 'sambaPwdLastSet';
     }
 
@@ -83,7 +81,7 @@ function password_save($curpass, $passwd)
 
     // Crypt new samba password
     if ($smbpwattr && !($samba_pass = hashPassword($passwd, 'samba'))) {
-	    return PASSWORD_CRYPT_ERROR;
+        return PASSWORD_CRYPT_ERROR;
     }
 
     // Writing new crypted password to LDAP
@@ -98,10 +96,10 @@ function password_save($curpass, $passwd)
 
     // Updating PasswordLastChange Attribute if desired
     if ($lchattr) {
-       $current_day = (int)(time() / 86400);
-       if (!$userEntry->replace(array($lchattr => $current_day), $force)) {
-           return PASSWORD_CONNECT_ERROR;
-       }
+        $current_day = (int) (time() / 86400);
+        if (!$userEntry->replace(array($lchattr => $current_day), $force)) {
+            return PASSWORD_CONNECT_ERROR;
+        }
     }
 
     // Update Samba password and last change fields
@@ -126,16 +124,15 @@ function password_save($curpass, $passwd)
  * Use search_base and search_filter defined in config file.
  * Return the found DN.
  */
-function search_userdn($rcmail)
-{
-    $ldapConfig = array (
-        'binddn'    => $rcmail->config->get('password_ldap_searchDN'),
-        'bindpw'    => $rcmail->config->get('password_ldap_searchPW'),
-        'basedn'    => $rcmail->config->get('password_ldap_basedn'),
-        'host'      => $rcmail->config->get('password_ldap_host'),
-        'port'      => $rcmail->config->get('password_ldap_port'),
-        'starttls'  => $rcmail->config->get('password_ldap_starttls'),
-        'version'   => $rcmail->config->get('password_ldap_version'),
+function search_userdn($rcmail) {
+    $ldapConfig = array(
+        'binddn' => $rcmail->config->get('password_ldap_searchDN'),
+        'bindpw' => $rcmail->config->get('password_ldap_searchPW'),
+        'basedn' => $rcmail->config->get('password_ldap_basedn'),
+        'host' => $rcmail->config->get('password_ldap_host'),
+        'port' => $rcmail->config->get('password_ldap_port'),
+        'starttls' => $rcmail->config->get('password_ldap_starttls'),
+        'version' => $rcmail->config->get('password_ldap_version'),
     );
 
     $ldap = Net_LDAP2::connect($ldapConfig);
@@ -146,9 +143,9 @@ function search_userdn($rcmail)
 
     $base = $rcmail->config->get('password_ldap_search_base');
     $filter = substitute_vars($rcmail->config->get('password_ldap_search_filter'));
-    $options = array (
-            'scope' => 'sub',
-            'attributes' => array(),
+    $options = array(
+        'scope' => 'sub',
+        'attributes' => array(),
     );
 
     $result = $ldap->search($base, $filter, $options);
@@ -164,28 +161,26 @@ function search_userdn($rcmail)
  * Substitute %login, %name, %domain, %dc in $str.
  * See plugin config for details.
  */
-function substitute_vars($str)
-{
+function substitute_vars($str) {
     $rcmail = rcmail::get_instance();
     $domain = $rcmail->user->get_username('domain');
-    $dc     = 'dc='.strtr($domain, array('.' => ',dc=')); // hierarchal domain string
+    $dc = 'dc=' . strtr($domain, array('.' => ',dc=')); // hierarchal domain string
 
     $str = str_replace(array(
-            '%login',
-            '%name',
-            '%domain',
-            '%dc',
-        ), array(
-            $_SESSION['username'],
-            $rcmail->user->get_username('local'),
-            $domain,
-            $dc,
-        ), $str
+        '%login',
+        '%name',
+        '%domain',
+        '%dc',
+            ), array(
+        $_SESSION['username'],
+        $rcmail->user->get_username('local'),
+        $domain,
+        $dc,
+            ), $str
     );
 
     return $str;
 }
-
 
 /**
  * Code originaly from the phpLDAPadmin development team
@@ -199,71 +194,69 @@ function substitute_vars($str)
  * @return string The hashed password.
  *
  */
-
-function hashPassword( $passwordClear, $encodageType )
-{
-    $encodageType = strtolower( $encodageType );
-    switch( $encodageType ) {
-        case 'crypt': 
-            $cryptedPassword = '{CRYPT}' . crypt($passwordClear,randomSalt(2)); 
+function hashPassword($passwordClear, $encodageType) {
+    $encodageType = strtolower($encodageType);
+    switch ($encodageType) {
+        case 'crypt':
+            $cryptedPassword = '{CRYPT}' . crypt($passwordClear, randomSalt(2));
             break;
 
         case 'ext_des':
             // extended des crypt. see OpenBSD crypt man page.
-            if ( ! defined( 'CRYPT_EXT_DES' ) || CRYPT_EXT_DES == 0 ) {
+            if (!defined('CRYPT_EXT_DES') || CRYPT_EXT_DES == 0) {
                 // Your system crypt library does not support extended DES encryption.
                 return FALSE;
             }
-            $cryptedPassword = '{CRYPT}' . crypt( $passwordClear, '_' . randomSalt(8) );
+            $cryptedPassword = '{CRYPT}' . crypt($passwordClear, '_' . randomSalt(8));
             break;
 
         case 'md5crypt':
-            if( ! defined( 'CRYPT_MD5' ) || CRYPT_MD5 == 0 ) {
+            if (!defined('CRYPT_MD5') || CRYPT_MD5 == 0) {
                 // Your system crypt library does not support md5crypt encryption.
                 return FALSE;
             }
-            $cryptedPassword = '{CRYPT}' . crypt( $passwordClear , '$1$' . randomSalt(9) );
+            $cryptedPassword = '{CRYPT}' . crypt($passwordClear, '$1$' . randomSalt(9));
             break;
 
         case 'blowfish':
-            if( ! defined( 'CRYPT_BLOWFISH' ) || CRYPT_BLOWFISH == 0 ) {
+            if (!defined('CRYPT_BLOWFISH') || CRYPT_BLOWFISH == 0) {
                 // Your system crypt library does not support blowfish encryption.
                 return FALSE;
             }
             // hardcoded to second blowfish version and set number of rounds
-            $cryptedPassword = '{CRYPT}' . crypt( $passwordClear , '$2a$12$' . randomSalt(13) );
+            $cryptedPassword = '{CRYPT}' . crypt($passwordClear, '$2a$12$' . randomSalt(13));
             break;
 
         case 'md5':
-            $cryptedPassword = '{MD5}' . base64_encode( pack( 'H*' , md5( $passwordClear) ) );
+            $cryptedPassword = '{MD5}' . base64_encode(pack('H*', md5($passwordClear)));
             break;
 
         case 'sha':
-            if( function_exists('sha1') ) {
+            if (function_exists('sha1')) {
                 // use php 4.3.0+ sha1 function, if it is available.
-                $cryptedPassword = '{SHA}' . base64_encode( pack( 'H*' , sha1( $passwordClear) ) );
-            } elseif( function_exists( 'mhash' ) ) {
-                $cryptedPassword = '{SHA}' . base64_encode( mhash( MHASH_SHA1, $passwordClear) );
+                $cryptedPassword = '{SHA}' . base64_encode(pack('H*', sha1($passwordClear)));
+            } elseif (function_exists('mhash')) {
+                $cryptedPassword = '{SHA}' . base64_encode(mhash(MHASH_SHA1, $passwordClear));
             } else {
                 return FALSE; //Your PHP install does not have the mhash() function. Cannot do SHA hashes.
             }
             break;
 
         case 'ssha':
-            if( function_exists( 'mhash' ) && function_exists( 'mhash_keygen_s2k' ) ) {
-                mt_srand( (double) microtime() * 1000000 );
-                $salt = mhash_keygen_s2k( MHASH_SHA1, $passwordClear, substr( pack( 'h*', md5( mt_rand() ) ), 0, 8 ), 4 );
-                $cryptedPassword = '{SSHA}'.base64_encode( mhash( MHASH_SHA1, $passwordClear.$salt ).$salt );
+            if (function_exists('mhash') && function_exists('mhash_keygen_s2k')) {
+                mt_srand((double) microtime() * 1000000);
+                $salt = mhash_keygen_s2k(MHASH_SHA1, $passwordClear, substr(pack('h*', md5(mt_rand())), 0, 8), 4);
+                $cryptedPassword = '{SSHA}' . base64_encode(mhash(MHASH_SHA1, $passwordClear . $salt) . $salt);
             } else {
                 return FALSE; //Your PHP install does not have the mhash() function. Cannot do SHA hashes.
             }
             break;
 
         case 'smd5':
-            if( function_exists( 'mhash' ) && function_exists( 'mhash_keygen_s2k' ) ) {
-                mt_srand( (double) microtime() * 1000000 );
-                $salt = mhash_keygen_s2k( MHASH_MD5, $passwordClear, substr( pack( 'h*', md5( mt_rand() ) ), 0, 8 ), 4 );
-                $cryptedPassword = '{SMD5}'.base64_encode( mhash( MHASH_MD5, $passwordClear.$salt ).$salt );
+            if (function_exists('mhash') && function_exists('mhash_keygen_s2k')) {
+                mt_srand((double) microtime() * 1000000);
+                $salt = mhash_keygen_s2k(MHASH_MD5, $passwordClear, substr(pack('h*', md5(mt_rand())), 0, 8), 4);
+                $cryptedPassword = '{SMD5}' . base64_encode(mhash(MHASH_MD5, $passwordClear . $salt) . $salt);
             } else {
                 return FALSE; //Your PHP install does not have the mhash() function. Cannot do SHA hashes.
             }
@@ -274,8 +267,8 @@ function hashPassword( $passwordClear, $encodageType )
                 $cryptedPassword = hash('md4', rcube_charset_convert($passwordClear, RCMAIL_CHARSET, 'UTF-16LE'));
                 $cryptedPassword = strtoupper($cryptedPassword);
             } else {
-				/* Your PHP install does not have the hash() function */
-				return false;
+                /* Your PHP install does not have the hash() function */
+                return false;
             }
             break;
 
@@ -302,12 +295,11 @@ function hashPassword( $passwordClear, $encodageType )
  * @param int $length The length of the salt string to generate.
  * @return string The generated salt string.
  */
-function randomSalt( $length )
-{
-    $possible = '0123456789'.
-        'abcdefghijklmnopqrstuvwxyz'.
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.
-        './';
+function randomSalt($length) {
+    $possible = '0123456789' .
+            'abcdefghijklmnopqrstuvwxyz' .
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
+            './';
     $str = '';
 //    mt_srand((double)microtime() * 1000000);
 

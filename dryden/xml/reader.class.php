@@ -1,17 +1,18 @@
 <?php
+
 /**
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU LesserGeneral Public License as published
-    by the Free Software Foundation; either version 3 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU LesserGeneral Public License as published
+  by the Free Software Foundation; either version 3 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    For support, please visit http://www.criticaldevelopment.net/xml/
-*/
+  For support, please visit http://www.criticaldevelopment.net/xml/
+ */
 
 /**
  * XML Parser Class (php5)
@@ -23,8 +24,8 @@
  *
  * @version 1.3.0
  */
-class xml_reader 
-{
+class xml_reader {
+
     /**
      * The XML parser
      *
@@ -33,26 +34,26 @@ class xml_reader
     private $parser;
 
     /**
-    * The XML document
-    *
-    * @var string
-    */
+     * The XML document
+     *
+     * @var string
+     */
     private $xml;
 
     /**
-    * Document tag
-    *
-    * @var object
-    */
+     * Document tag
+     *
+     * @var object
+     */
     public $document;
 
     /**
-    * Current object depth
-    *
-    * @var array
-    */
+     * Current object depth
+     *
+     * @var array
+     */
     private $stack;
-    
+
     /**
      * Whether or not to replace dashes and colons in tag
      * names with underscores.
@@ -61,21 +62,19 @@ class xml_reader
      */
     private $cleanTagNames;
 
-    
     /**
      * Constructor. Loads XML document.
      *
      * @param string $xml The string of the XML document
      * @return xml_reader
      */
-    function __construct($xml = '', $cleanTagNames = true)
-    {
+    function __construct($xml = '', $cleanTagNames = true) {
         //Load XML document
         $this->xml = $xml;
 
         //Set stack to an array
         $this->stack = array();
-        
+
         //Set whether or not to clean tag names
         $this->cleanTagNames = $cleanTagNames;
     }
@@ -83,11 +82,10 @@ class xml_reader
     /**
      * Initiates and runs PHP's XML parser
      */
-    public function Parse()
-    {
+    public function Parse() {
         //Create the parser resource
         $this->parser = xml_parser_create();
-        
+
         //Set the handlers
         xml_set_object($this->parser, $this);
         xml_set_element_handler($this->parser, 'StartElement', 'EndElement');
@@ -100,7 +98,7 @@ class xml_reader
         //Free the parser
         xml_parser_free($this->parser);
     }
-    
+
     /**
      * Handles an XML parsing error
      *
@@ -108,19 +106,16 @@ class xml_reader
      * @param int $line Line on which the error happened
      * @param int $col Column on which the error happened
      */
-    private function HandleError($code, $line, $col)
-    {
-        trigger_error('XML Parsing Error at '.$line.':'.$col.'. Error '.$code.': '.xml_error_string($code));
+    private function HandleError($code, $line, $col) {
+        trigger_error('XML Parsing Error at ' . $line . ':' . $col . '. Error ' . $code . ': ' . xml_error_string($code));
     }
 
-    
     /**
      * Gets the XML output of the PHP structure within $this->document
      *
      * @return string
      */
-    public function GenerateXML()
-    {
+    public function GenerateXML() {
         return $this->document->GetXML();
     }
 
@@ -129,8 +124,7 @@ class xml_reader
      *
      * @return object
      */
-    private function GetStackLocation()
-    {
+    private function GetStackLocation() {
         //Returns the reference to the current direct parent
         return end($this->stack);
     }
@@ -142,14 +136,12 @@ class xml_reader
      * @param string $name
      * @param array $attrs
      */
-    private function StartElement($parser, $name, $attrs = array())
-    {
+    private function StartElement($parser, $name, $attrs = array()) {
         //Make the name of the tag lower case
         $name = strtolower($name);
-        
+
         //Check to see if tag is root-level
-        if (count($this->stack) == 0) 
-        {
+        if (count($this->stack) == 0) {
             //If so, set the document as the current tag
             $this->document = new XMLTag($name, $attrs);
 
@@ -157,19 +149,18 @@ class xml_reader
             $this->stack = array(&$this->document);
         }
         //If it isn't root level, use the stack to find the parent
-        else
-        {
+        else {
             //Get the reference to the current direct parent
             $parent = $this->GetStackLocation();
-            
+
             $parent->AddChild($name, $attrs, count($this->stack), $this->cleanTagNames);
 
             //If the cleanTagName feature is on, clean the tag names
-            if($this->cleanTagNames)
+            if ($this->cleanTagNames)
                 $name = str_replace(array(':', '-'), '_', $name);
 
             //Update the stack
-            $this->stack[] = end($parent->$name);        
+            $this->stack[] = end($parent->$name);
         }
     }
 
@@ -179,8 +170,7 @@ class xml_reader
      * @param resource $parser
      * @param string $name
      */
-    private function EndElement($parser, $name)
-    {
+    private function EndElement($parser, $name) {
         //Update stack by removing the end value from it as the parent
         array_pop($this->stack);
     }
@@ -191,16 +181,15 @@ class xml_reader
      * @param resource $parser
      * @param string $data
      */
-    private function CharacterData($parser, $data)
-    {
+    private function CharacterData($parser, $data) {
         //Get the reference to the current parent object
         $tag = $this->GetStackLocation();
 
         //Assign data to it
         $tag->tagData .= trim($data);
     }
-}
 
+}
 
 /**
  * XML Tag Object (php5)
@@ -219,22 +208,22 @@ class xml_reader
  *
  * @version 1.3.0
  */
-class XMLTag
-{
+class XMLTag {
+
     /**
      * Array with the attributes of this XML tag
      *
      * @var array
      */
     public $tagAttrs;
-    
+
     /**
      * The name of the tag
      *
      * @var string
      */
     public $tagName;
-    
+
     /**
      * The data the tag contains 
      * 
@@ -243,14 +232,14 @@ class XMLTag
      * @var stat
      */
     public $tagData;
-    
+
     /**
      * Array of references to the objects of all direct children of this XML object
      *
      * @var array
      */
     public $tagChildren;
-    
+
     /**
      * The number of parents this XML object has (number of levels from this tag to the root tag)
      *
@@ -259,7 +248,7 @@ class XMLTag
      * @var int
      */
     public $tagParents;
-    
+
     /**
      * Constructor, sets up all the default values
      *
@@ -268,22 +257,21 @@ class XMLTag
      * @param int $parents
      * @return XMLTag
      */
-    function __construct($name, $attrs = array(), $parents = 0)
-    {
+    function __construct($name, $attrs = array(), $parents = 0) {
         //Make the keys of the attr array lower case, and store the value
         $this->tagAttrs = array_change_key_case($attrs, CASE_LOWER);
-        
+
         //Make the name lower case and store the value
         $this->tagName = strtolower($name);
-        
+
         //Set the number of parents
         $this->tagParents = $parents;
-        
+
         //Set the types for children and data
         $this->tagChildren = array();
         $this->tagData = '';
     }
-    
+
     /**
      * Adds a direct child to this object
      *
@@ -292,12 +280,10 @@ class XMLTag
      * @param int $parents
      * @param bool $cleanTagName
      */
-    public function AddChild($name, $attrs, $parents, $cleanTagName = true)
-    {    
+    public function AddChild($name, $attrs, $parents, $cleanTagName = true) {
         //If the tag is a reserved name, output an error
-        if(in_array($name, array('tagChildren', 'tagAttrs', 'tagParents', 'tagData', 'tagName')))
-        {
-            trigger_error('You have used a reserved name as the name of an XML tag. Please consult the documentation (http://www.criticaldevelopment.net/xml/) and rename the tag named "'.$name.'" to something other than a reserved name.', E_USER_ERROR);
+        if (in_array($name, array('tagChildren', 'tagAttrs', 'tagParents', 'tagData', 'tagName'))) {
+            trigger_error('You have used a reserved name as the name of an XML tag. Please consult the documentation (http://www.criticaldevelopment.net/xml/) and rename the tag named "' . $name . '" to something other than a reserved name.', E_USER_ERROR);
 
             return;
         }
@@ -306,28 +292,28 @@ class XMLTag
         $child = new XMLTag($name, $attrs, $parents);
 
         //If the cleanTagName feature is on, replace colons and dashes with underscores
-        if($cleanTagName)
+        if ($cleanTagName)
             $name = str_replace(array(':', '-'), '_', $name);
-        
+
         //Toss up a notice if someone's trying to to use a colon or dash in a tag name
-        elseif(strstr($name, ':') || strstr($name, '-'))
-            trigger_error('Your tag named "'.$name.'" contains either a dash or a colon. Neither of these characters are friendly with PHP variable names, and, as such, you may have difficulty accessing them. You might want to think about enabling the cleanTagName feature (pass true as the second argument of the xml_reader constructor). For more details, see http://www.criticaldevelopment.net/xml/', E_USER_NOTICE);
-        
+        elseif (strstr($name, ':') || strstr($name, '-'))
+            trigger_error('Your tag named "' . $name . '" contains either a dash or a colon. Neither of these characters are friendly with PHP variable names, and, as such, you may have difficulty accessing them. You might want to think about enabling the cleanTagName feature (pass true as the second argument of the xml_reader constructor). For more details, see http://www.criticaldevelopment.net/xml/', E_USER_NOTICE);
+
         //If there is no array already set for the tag name being added, 
         //create an empty array for it
-        if(!isset($this->$name))
+        if (!isset($this->$name))
             $this->$name = array();
-        
+
         //Add the reference of it to the end of an array member named for the tag's name
         $this->{$name}[] = &$child;
-        
+
         //Add the reference to the children array member
         $this->tagChildren[] = &$child;
-        
+
         //Return a reference to this object for the stack
         return $this;
     }
-    
+
     /**
      * Returns the string of the XML document which would be generated from this object
      * 
@@ -341,48 +327,45 @@ class XMLTag
      *
      * @return string
      */
-    public function GetXML()
-    {
+    public function GetXML() {
         //Start a new line, indent by the number indicated in $this->parents, add a <, and add the name of the tag
-        $out = "\n".str_repeat("\t", $this->tagParents).'<'.$this->tagName;
+        $out = "\n" . str_repeat("\t", $this->tagParents) . '<' . $this->tagName;
 
         //For each attribute, add attr="value"
-        foreach($this->tagAttrs as $attr => $value)
-            $out .= ' '.$attr.'="'.$value.'"';
-        
+        foreach ($this->tagAttrs as $attr => $value)
+            $out .= ' ' . $attr . '="' . $value . '"';
+
         //If there are no children and it contains no data, end it off with a />
-        if(empty($this->tagChildren) && empty($this->tagData))
+        if (empty($this->tagChildren) && empty($this->tagData))
             $out .= " />";
-        
+
         //Otherwise...
-        else
-        {    
+        else {
             //If there are children
-            if(!empty($this->tagChildren))
-            {
+            if (!empty($this->tagChildren)) {
                 //Close off the start tag
                 $out .= '>';
-                
+
                 //For each child, call the GetXML function (this will ensure that all children are added recursively)
-                foreach($this->tagChildren as $child)
+                foreach ($this->tagChildren as $child)
                     $out .= $child->GetXML();
 
                 //Add the newline and indentation to go along with the close tag
-                $out .= "\n".str_repeat("\t", $this->tagParents);
+                $out .= "\n" . str_repeat("\t", $this->tagParents);
             }
-            
+
             //If there is data, close off the start tag and add the data
-            elseif(!empty($this->tagData))
-                $out .= '>'.$this->tagData;
-            
+            elseif (!empty($this->tagData))
+                $out .= '>' . $this->tagData;
+
             //Add the end tag    
-            $out .= '</'.$this->tagName.'>';
+            $out .= '</' . $this->tagName . '>';
         }
-        
+
         //Return the final output
         return $out;
     }
-    
+
     /**
      * Deletes this tag's child with a name of $childName and an index
      * of $childIndex
@@ -390,41 +373,39 @@ class XMLTag
      * @param string $childName
      * @param int $childIndex
      */
-    public function Delete($childName, $childIndex = 0)
-    {
+    public function Delete($childName, $childIndex = 0) {
         //Delete all of the children of that child
         $this->{$childName}[$childIndex]->DeleteChildren();
-        
+
         //Destroy the child's value
         $this->{$childName}[$childIndex] = null;
-        
+
         //Remove the child's name from the named array
         unset($this->{$childName}[$childIndex]);
-        
+
         //Loop through the tagChildren array and remove any null
         //values left behind from the above operation
-        for($x = 0; $x < count($this->tagChildren); $x ++)
-        {
-            if(is_null($this->tagChildren[$x]))
+        for ($x = 0; $x < count($this->tagChildren); $x++) {
+            if (is_null($this->tagChildren[$x]))
                 unset($this->tagChildren[$x]);
         }
     }
-    
+
     /**
      * Removes all of the children of this tag in both name and value
      */
-    private function DeleteChildren()
-    {
+    private function DeleteChildren() {
         //Loop through all child tags
-        for($x = 0; $x < count($this->tagChildren); $x ++)
-        {
+        for ($x = 0; $x < count($this->tagChildren); $x++) {
             //Do this recursively
             $this->tagChildren[$x]->DeleteChildren();
-            
+
             //Delete the name and value
             $this->tagChildren[$x] = null;
             unset($this->tagChildren[$x]);
         }
     }
+
 }
+
 ?>

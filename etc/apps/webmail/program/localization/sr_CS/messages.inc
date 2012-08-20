@@ -2,20 +2,20 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/sr_cyrillic/messages.inc                                     |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Branko Kokanovic <branko.kokanovic@gmail.com>                 |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/sr_cyrillic/messages.inc                                     |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Branko Kokanovic <branko.kokanovic@gmail.com>                 |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
+  @version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Неуспешно пријављивање';
@@ -139,5 +139,4 @@ $messages['nametoolong'] = 'Предугачко име';
 $messages['folderupdated'] = 'фасцикла успешно ажурирана';
 $messages['foldercreated'] = 'Фасцикла успешно креирана';
 $messages['invalidimageformat'] = 'Формат слике није валидан';
-
 ?>

@@ -5,20 +5,20 @@
 <![endif]-->
 
 <div id="aclmanager">
-<div id="aclcontainer" class="boxlistcontent" style="top:0">
-    <roundcube:object name="acltable" id="acltable" class="records-table" />
-</div>
-<div class="boxfooter">
-    <roundcube:button command="acl-create" id="aclcreatelink" type="link" title="acl.newuser" class="buttonPas addgroup" classAct="button addgroup" content=" " />
-    <roundcube:button name="aclmenulink" id="aclmenulink" type="link" title="acl.actions" class="button groupactions" onclick="show_aclmenu(); return false" content=" " />
-    <roundcube:if condition="!in_array('acl_advanced_mode', (array)config:dont_override)" />
-    <div id="acladvswitch" class="pagenav">
-        <span><label for="acl-switch"><roundcube:label name="acl.advanced" /></label>
-        <input type="checkbox" id="acl-switch" onclick="rcmail.command('acl-mode-switch')"<roundcube:exp expression="config:acl_advanced_mode == true ? ' checked=checked' : ''" /> />
-        </span>
+    <div id="aclcontainer" class="boxlistcontent" style="top:0">
+        <roundcube:object name="acltable" id="acltable" class="records-table" />
     </div>
-    <roundcube:endif />
-</div>
+    <div class="boxfooter">
+        <roundcube:button command="acl-create" id="aclcreatelink" type="link" title="acl.newuser" class="buttonPas addgroup" classAct="button addgroup" content=" " />
+        <roundcube:button name="aclmenulink" id="aclmenulink" type="link" title="acl.actions" class="button groupactions" onclick="show_aclmenu(); return false" content=" " />
+        <roundcube:if condition="!in_array('acl_advanced_mode', (array)config:dont_override)" />
+        <div id="acladvswitch" class="pagenav">
+            <span><label for="acl-switch"><roundcube:label name="acl.advanced" /></label>
+                <input type="checkbox" id="acl-switch" onclick="rcmail.command('acl-mode-switch')"<roundcube:exp expression="config:acl_advanced_mode == true ? ' checked=checked' : ''" /> />
+            </span>
+        </div>
+        <roundcube:endif />
+    </div>
 </div>
 
 <div id="aclmenu" class="popupmenu">
@@ -42,13 +42,13 @@
 </div>
 
 <script type="text/javascript">
-function show_aclmenu()
-{
-    if (!rcmail_ui) {
-        rcube_init_mail_ui();
-        rcmail_ui.popups.aclmenu = {id:'aclmenu', above:1, obj: $('#aclmenu')};
-    }
+    function show_aclmenu()
+    {
+        if (!rcmail_ui) {
+            rcube_init_mail_ui();
+            rcmail_ui.popups.aclmenu = {id:'aclmenu', above:1, obj: $('#aclmenu')};
+        }
 
-    rcmail_ui.show_popup('aclmenu');
-}
+        rcmail_ui.show_popup('aclmenu');
+    }
 </script>

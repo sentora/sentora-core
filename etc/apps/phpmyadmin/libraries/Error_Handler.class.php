@@ -1,11 +1,11 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Holds class PMA_Error_Handler
  *
  * @package phpMyAdmin
  */
-
 /**
  *
  */
@@ -16,8 +16,8 @@ require_once './libraries/Error.class.php';
  *
  * @package phpMyAdmin
  */
-class PMA_Error_Handler
-{
+class PMA_Error_Handler {
+
     /**
      * holds errors to be displayed or reported later ...
      *
@@ -30,8 +30,7 @@ class PMA_Error_Handler
      *
      * @uses    set_error_handler()
      */
-    public function __construct()
-    {
+    public function __construct() {
         set_error_handler(array($this, 'handleError'));
     }
 
@@ -45,10 +44,9 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::$_errors
      * @uses    PMA_Error::isDisplayed()
      */
-    public function __destruct()
-    {
+    public function __destruct() {
         if (isset($_SESSION)) {
-            if (! isset($_SESSION['errors'])) {
+            if (!isset($_SESSION['errors'])) {
                 $_SESSION['errors'] = array();
             }
 
@@ -58,7 +56,7 @@ class PMA_Error_Handler
             } else {
                 // remember only not displayed errors
                 foreach ($this->_errors as $key => $error) {
-                    if (($error instanceof PMA_Error) && ! $error->isDisplayed()) {
+                    if (($error instanceof PMA_Error) && !$error->isDisplayed()) {
                         $_SESSION['errors'][$key] = $error;
                     }
                 }
@@ -73,8 +71,7 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::_checkSavedErrors()
      * @return array PMA_Error_Handler::$_errors
      */
-    protected function getErrors()
-    {
+    protected function getErrors() {
         $this->_checkSavedErrors();
         return $this->_errors;
     }
@@ -113,8 +110,7 @@ class PMA_Error_Handler
      * @param   string  $errfile
      * @param   integer $errline
      */
-    public function handleError($errno, $errstr, $errfile, $errline)
-    {
+    public function handleError($errno, $errstr, $errfile, $errline) {
         // create error object
         $error = new PMA_Error($errno, $errstr, $errfile, $errline);
 
@@ -155,8 +151,7 @@ class PMA_Error_Handler
      * @uses    error_log()
      * @param   PMA_Error $error
      */
-    protected function _logError($error)
-    {
+    protected function _logError($error) {
         return error_log($error->getMessage());
     }
 
@@ -169,8 +164,7 @@ class PMA_Error_Handler
      * @param   string  $file
      * @param   integer $line
      */
-    public function triggerError($errorInfo, $errorNumber = null, $file = null, $line = null)
-    {
+    public function triggerError($errorInfo, $errorNumber = null, $file = null, $line = null) {
         // we could also extract file and line from backtrace and call handleError() directly
         trigger_error($errorInfo, $errorNumber);
     }
@@ -184,9 +178,8 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::_dispPageEnd()
      * @param   PMA_Error $error
      */
-    protected function _dispFatalError($error)
-    {
-        if (! headers_sent()) {
+    protected function _dispFatalError($error) {
+        if (!headers_sent()) {
             $this->_dispPageStart($error);
         }
         $error->display();
@@ -202,9 +195,8 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::_dispPageStart()
      * @uses    PMA_Error_Handler::_dispPageEnd()
      */
-    public function dispErrorPage()
-    {
-        if (! headers_sent()) {
+    public function dispErrorPage() {
+        if (!headers_sent()) {
             $this->_dispPageStart();
         }
         $this->dispAllErrors();
@@ -219,10 +211,9 @@ class PMA_Error_Handler
      * @uses    PMA_Error::isUserError()
      * @uses    PMA_Error::display()
      */
-    public function dispUserErrors()
-    {
+    public function dispUserErrors() {
         foreach ($this->getErrors() as $error) {
-            if ($error->isUserError() && ! $error->isDisplayed()) {
+            if ($error->isUserError() && !$error->isDisplayed()) {
                 $error->display();
             }
         }
@@ -234,8 +225,7 @@ class PMA_Error_Handler
      * @uses    PMA_Error::getTitle()
      * @param   PMA_error $error
      */
-    protected function _dispPageStart($error = null)
-    {
+    protected function _dispPageStart($error = null) {
         echo '<html><head><title>';
         if ($error) {
             echo $error->getTitle();
@@ -249,8 +239,7 @@ class PMA_Error_Handler
      * display HTML footer
      *
      */
-    protected function _dispPageEnd()
-    {
+    protected function _dispPageEnd() {
         echo '</body></html>';
     }
 
@@ -260,8 +249,7 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::getErrors()
      * @uses    PMA_Error::display()
      */
-    public function dispAllErrors()
-    {
+    public function dispAllErrors() {
         foreach ($this->getErrors() as $error) {
             $error->display();
         }
@@ -276,12 +264,11 @@ class PMA_Error_Handler
      * @uses    PMA_Error::isDisplayed()
      * @uses    PMA_Error::display()
      */
-    public function dispErrors()
-    {
+    public function dispErrors() {
         if ($GLOBALS['cfg']['Error_Handler']['display']) {
             foreach ($this->getErrors() as $error) {
                 if ($error instanceof PMA_Error) {
-                    if (! $error->isDisplayed()) {
+                    if (!$error->isDisplayed()) {
                         $error->display();
                     }
                 } else {
@@ -300,18 +287,16 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::$_errors
      * @uses    array_merge()
      */
-    protected function _checkSavedErrors()
-    {
+    protected function _checkSavedErrors() {
         if (isset($_SESSION['errors'])) {
 
             // restore saved errors
             foreach ($_SESSION['errors'] as $hash => $error) {
-                if ($error instanceof PMA_Error && ! isset($this->_errors[$hash])) {
+                if ($error instanceof PMA_Error && !isset($this->_errors[$hash])) {
                     $this->_errors[$hash] = $error;
                 }
             }
             //$this->_errors = array_merge($_SESSION['errors'], $this->_errors);
-
             // delet stored errors
             $_SESSION['errors'] = array();
             unset($_SESSION['errors']);
@@ -325,8 +310,7 @@ class PMA_Error_Handler
      * @uses    count()
      * @return  integer number of errors occoured
      */
-    public function countErrors()
-    {
+    public function countErrors() {
         return count($this->getErrors());
     }
 
@@ -338,8 +322,7 @@ class PMA_Error_Handler
      * @uses    PMA_Error::isUserError()
      * @return  integer number of user errors occoured
      */
-    public function countUserErrors()
-    {
+    public function countUserErrors() {
         $count = 0;
         if ($this->countErrors()) {
             foreach ($this->getErrors() as $error) {
@@ -358,8 +341,7 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::countUserErrors()
      * @return  boolean
      */
-    public function hasUserErrors()
-    {
+    public function hasUserErrors() {
         return (bool) $this->countUserErrors();
     }
 
@@ -369,8 +351,7 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::countErrors()
      * @return  boolean
      */
-    public function hasErrors()
-    {
+    public function hasErrors() {
         return (bool) $this->countErrors();
     }
 
@@ -382,8 +363,7 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::countUserErrors()
      * @return integer number of errors to be displayed
      */
-    public function countDisplayErrors()
-    {
+    public function countDisplayErrors() {
         if ($GLOBALS['cfg']['Error_Handler']['display']) {
             return $this->countErrors();
         } else {
@@ -397,9 +377,10 @@ class PMA_Error_Handler
      * @uses    PMA_Error_Handler::countDisplayErrors()
      * @return boolean
      */
-    public function hasDisplayErrors()
-    {
+    public function hasDisplayErrors() {
         return (bool) $this->countDisplayErrors();
     }
+
 }
+
 ?>

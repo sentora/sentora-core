@@ -24,36 +24,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-	
-		}
+$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
 
-		foreach ($deletedclients as $deletedclient){
-       	 $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $deletedclient . " AND mb_deleted_ts IS NULL";
-	        $numrows = $zdbh->query($sql);
-	        if ($numrows->fetchColumn() <> 0) {
-	            $sql = $zdbh->prepare($sql);
-	            $sql->execute();
-	            while ($rowmailbox = $sql->fetch()) {
-					// Deleting PostFix Mailboxes
-			       	$msql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
-			        $msql->execute();
-			        $msql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
-					$msql->execute();
-					$domain = explode("@", $rowmailbox['mb_address_vc']);
-					$result = $mail_db->query("SELECT * FROM domain WHERE domain='" . $domain[1] . "'")->Fetch();
-					if ($result) {
-				        $msql = $mail_db->prepare("DELETE FROM domain WHERE domain='" . $domain[1] . "'");
-						$msql->execute();
-					}
-	            }
-			}
-		}		
-							
+foreach ($deletedclients as $deletedclient) {
+    $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $deletedclient . " AND mb_deleted_ts IS NULL";
+    $numrows = $zdbh->query($sql);
+    if ($numrows->fetchColumn() <> 0) {
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        while ($rowmailbox = $sql->fetch()) {
+            // Deleting PostFix Mailboxes
+            $msql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+            $msql->execute();
+            $msql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
+            $msql->execute();
+            $domain = explode("@", $rowmailbox['mb_address_vc']);
+            $result = $mail_db->query("SELECT * FROM domain WHERE domain='" . $domain[1] . "'")->Fetch();
+            if ($result) {
+                $msql = $mail_db->prepare("DELETE FROM domain WHERE domain='" . $domain[1] . "'");
+                $msql->execute();
+            }
+        }
+    }
+}
 ?>

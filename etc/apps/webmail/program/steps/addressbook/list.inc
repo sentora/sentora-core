@@ -1,28 +1,27 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/steps/addressbook/list.inc                                    |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Send contacts list to client (as remote response)                   |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/addressbook/list.inc                                    |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Send contacts list to client (as remote response)                   |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: list.inc 5967 2012-03-05 19:59:07Z alec $
+  $Id: list.inc 5967 2012-03-05 19:59:07Z alec $
 
-*/
+ */
 
 // Use search result
-if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search']]))
-{
-    $search  = (array)$_SESSION['search'][$_REQUEST['_search']];
+if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search']])) {
+    $search = (array) $_SESSION['search'][$_REQUEST['_search']];
     $records = array();
 
     if (!empty($_GET['_page']))
@@ -57,8 +56,8 @@ if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search
     ksort($records, SORT_LOCALE_STRING);
 
     // create resultset object
-    $count  = count($records);
-    $first  = ($page-1) * $CONFIG['pagesize'];
+    $count = count($records);
+    $first = ($page - 1) * $CONFIG['pagesize'];
     $result = new rcube_result_set($count, $first);
 
     // we need only records for current page
@@ -74,7 +73,7 @@ else {
 
     // get contacts for this user
     $result = $CONTACTS->list_records(array('name'));
-    
+
     if (!$result->count && $result->searchonly) {
         $OUTPUT->show_message('contactsearchonly', 'notice');
         $OUTPUT->command('command', 'advanced-search');

@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * HP-UX System Class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.HPUX.inc.php 287 2009-06-26 12:11:59Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * HP-UX sysinfo class
  * get all the required information from HP-UX system
  *
@@ -24,15 +26,14 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class HPUX extends OS
-{
+class HPUX extends OS {
+
     /**
      * Virtual Host Name
      *
      * @return void
      */
-    private function _hostname()
-    {
+    private function _hostname() {
         if (PSI_USE_VHOST === true) {
             $this->sys->setHostname(getenv('SERVER_NAME'));
         } else {
@@ -41,14 +42,13 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * IP of the Virtual Host Name
      *
      *  @return void
      */
-    private function _ip()
-    {
+    private function _ip() {
         if (PSI_USE_VHOST === true) {
             $this->sys->setIp(gethostbyname($this->_hostname()));
         } else {
@@ -59,27 +59,25 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * HP-UX Version
      *
      * @return void
      */
-    private function _kernel()
-    {
+    private function _kernel() {
         if (CommonFunctions::executeProgram('uname', '-srvm', $ret)) {
             $this->sys->setKernel($ret);
         }
     }
-    
+
     /**
      * UpTime
      * time the system is running
      *
      * @return void
      */
-    private function _uptime()
-    {
+    private function _uptime() {
         if (CommonFunctions::executeProgram('uptime', '', $buf)) {
             if (preg_match("/up (\d+) days,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
                 $min = $ar_buf[3];
@@ -89,43 +87,40 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Number of Users
      *
      * @return void
      */
-    private function _users()
-    {
+    private function _users() {
         if (CommonFunctions::executeProgram('who', '-q', $ret)) {
             $who = preg_split('/=/', $ret, -1, PREG_SPLIT_NO_EMPTY);
             $this->sys->setUsers($who[1]);
         }
     }
-    
+
     /**
      * Processor Load
      * optionally create a loadbar
      *
      * @return void
      */
-    private function _loadavg()
-    {
+    private function _loadavg() {
         if (CommonFunctions::executeProgram('uptime', '', $buf)) {
             if (preg_match("/average: (.*), (.*), (.*)$/", $buf, $ar_buf)) {
-                $this->sys->setLoad($ar_buf[1].' '.$ar_buf[2].' '.$ar_buf[3]);
+                $this->sys->setLoad($ar_buf[1] . ' ' . $ar_buf[2] . ' ' . $ar_buf[3]);
             }
         }
     }
-    
+
     /**
      * CPU information
      * All of the tags here are highly architecture dependant
      *
      * @return void
      */
-    private function _cpuinfo()
-    {
+    private function _cpuinfo() {
         if (CommonFunctions::rfts('/proc/cpuinfo', $bufr)) {
             $processors = preg_split('/\s?\n\s?\n/', trim($bufr));
             foreach ($processors as $processor) {
@@ -135,42 +130,41 @@ class HPUX extends OS
                     $arrBuff = preg_split('/\s+:\s+/', trim($detail));
                     if (count($arrBuff) == 2) {
                         switch (strtolower($arrBuff[0])) {
-                        case 'model name':
-                        case 'cpu':
-                            $dev->setModel($arrBuff[1]);
-                            break;
-                        case 'cpu mhz':
-                        case 'clock':
-                            $dev->setCpuSpeed($arrBuff[1]);
-                            break;
-                        case 'cycle frequency [hz]':
-                            $dev->setCpuSpeed($arrBuff[1] / 1000000);
-                            break;
-                        case 'cpu0clktck':
-                            $dev->setCpuSpeed(hexdec($arrBuff[1]) / 1000000); // Linux sparc64
-                            break;
-                        case 'l2 cache':
-                        case 'cache size':
-                            $dev->setCache(preg_replace("/[a-zA-Z]/", "", $arrBuff[1]) * 1024);
-                            break;
-                        case 'bogomips':
-                        case 'cpu0bogo':
-                            $dev->setBogomips($arrBuff[1]);
-                            break;
+                            case 'model name':
+                            case 'cpu':
+                                $dev->setModel($arrBuff[1]);
+                                break;
+                            case 'cpu mhz':
+                            case 'clock':
+                                $dev->setCpuSpeed($arrBuff[1]);
+                                break;
+                            case 'cycle frequency [hz]':
+                                $dev->setCpuSpeed($arrBuff[1] / 1000000);
+                                break;
+                            case 'cpu0clktck':
+                                $dev->setCpuSpeed(hexdec($arrBuff[1]) / 1000000); // Linux sparc64
+                                break;
+                            case 'l2 cache':
+                            case 'cache size':
+                                $dev->setCache(preg_replace("/[a-zA-Z]/", "", $arrBuff[1]) * 1024);
+                                break;
+                            case 'bogomips':
+                            case 'cpu0bogo':
+                                $dev->setBogomips($arrBuff[1]);
+                                break;
                         }
                     }
                 }
             }
         }
     }
-    
+
     /**
      * PCI devices
      *
      * @return void
      */
-    private function _pci()
-    {
+    private function _pci() {
         if (CommonFunctions::rfts('/proc/pci', $bufr)) {
             $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($bufe as $buf) {
@@ -190,22 +184,21 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * IDE devices
      *
      * @return void
      */
-    private function _ide()
-    {
+    private function _ide() {
         $bufd = CommonFunctions::gdc('/proc/ide', false);
         foreach ($bufd as $file) {
             if (preg_match('/^hd/', $file)) {
                 $dev = new HWDevice();
                 $dev->setName(trim($file));
-                if (CommonFunctions::rfts("/proc/ide/".$file."/media", $buf, 1)) {
+                if (CommonFunctions::rfts("/proc/ide/" . $file . "/media", $buf, 1)) {
                     if (trim($buf) == 'disk') {
-                        if (CommonFunctions::rfts("/proc/ide/".$file."/capacity", $buf, 1, 4096, false)) {
+                        if (CommonFunctions::rfts("/proc/ide/" . $file . "/capacity", $buf, 1, 4096, false)) {
                             $dev->setCapacity(trim($buf) * 512 / 1024);
                         }
                     }
@@ -214,14 +207,13 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * SCSI devices
      *
      * @return void
      */
-    private function _scsi()
-    {
+    private function _scsi() {
         $get_type = false;
         if (CommonFunctions::rfts('/proc/scsi/scsi', $bufr, 0, 4096, PSI_DEBUG)) {
             $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
@@ -233,21 +225,20 @@ class HPUX extends OS
                 if ($get_type) {
                     preg_match('/Type:\s+(\S+)/i', $buf, $dev_type);
                     $dev = new HWDevice();
-                    $dev->setName($dev[1].' '.$dev[2].' ('.$dev_type[1].')');
+                    $dev->setName($dev[1] . ' ' . $dev[2] . ' (' . $dev_type[1] . ')');
                     $this->sys->setScsiDevices($dev);
                     $get_type = false;
                 }
             }
         }
     }
-    
+
     /**
      * USB devices
      *
      * @return void
      */
-    private function _usb()
-    {
+    private function _usb() {
         if (CommonFunctions::rfts('/proc/bus/usb/devices', $bufr, 0, 4096, false)) {
             $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($bufe as $buf) {
@@ -258,7 +249,7 @@ class HPUX extends OS
                     list($key, $value) = preg_split('/: /', $buf, 2);
                     list($key, $value2) = preg_split('/=/', $value, 2);
                     if (trim($key) != "SerialNumber") {
-                        $results[$devnum] .= " ".trim($value2);
+                        $results[$devnum] .= " " . trim($value2);
                     }
                 }
             }
@@ -269,20 +260,19 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Network devices
      * includes also rx/tx bytes
      *
      * @return void
      */
-    private function _network()
-    {
+    private function _network() {
         if (CommonFunctions::executeProgram('netstat', '-ni | tail -n +2', $netstat)) {
             $lines = preg_split("/\n/", $netstat, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($lines as $line) {
                 $ar_buf = preg_split("/\s+/", $line);
-                if (! empty($ar_buf[0]) && ! empty($ar_buf[3])) {
+                if (!empty($ar_buf[0]) && !empty($ar_buf[3])) {
                     $dev = new NetDevice();
                     $dev->setName($ar_buf[0]);
                     $dev->setRxBytes($ar_buf[4]);
@@ -294,14 +284,13 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Physical memory information and Swap Space information
      *
      * @return void
      */
-    private function _memory()
-    {
+    private function _memory() {
         if (CommonFunctions::rfts('/proc/meminfo', $bufr)) {
             $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($bufe as $buf) {
@@ -332,14 +321,13 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * filesystem information
      *
      * @return void
      */
-    private function _filesystems()
-    {
+    private function _filesystems() {
         if (CommonFunctions::executeProgram('df', '-kP', $df, PSI_DEBUG)) {
             $mounts = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
             if (CommonFunctions::executeProgram('mount', '-v', $s, PSI_DEBUG)) {
@@ -364,18 +352,16 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Distribution
      *
      * @return void
      */
-    private function _distro()
-    {
+    private function _distro() {
         $this->sys->setDistribution('HP-UX');
     }
 
-    
     /**
      * get the information
      *
@@ -383,8 +369,7 @@ class HPUX extends OS
      *
      * @return Void
      */
-    function build()
-    {
+    function build() {
         $this->_distro();
         $this->_ip();
         $this->_hostname();
@@ -401,5 +386,7 @@ class HPUX extends OS
         $this->_memory();
         $this->_filesystems();
     }
+
 }
+
 ?>

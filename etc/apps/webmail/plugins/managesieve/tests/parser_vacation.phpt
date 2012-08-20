@@ -22,18 +22,17 @@ test
 
 $s = new rcube_sieve_script($txt);
 echo $s->as_text();
-
 ?>
 --EXPECT--
 require ["vacation"];
 # rule:[test-vacation]
 if header :contains "Subject" "vacation"
 {
-	vacation :days 1 text:
+vacation :days 1 text:
 # test
 test test /* test */
 test
 .
 ;
-	stop;
+stop;
 }

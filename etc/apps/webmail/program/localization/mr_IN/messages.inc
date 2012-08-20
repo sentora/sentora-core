@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/mr_IN/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2009, The Roundcube Dev Team                            |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:Nitin Nimkar <nvncom at yahoo.com>                             |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/mr_IN/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2009, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:Nitin Nimkar <nvncom at yahoo.com>                             |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'प्रवेश करता आला नाही';
@@ -108,5 +108,4 @@ $messages['emailformaterror'] = 'अवैध ईमेल पत्‍ता : 
 $messages['toomanyrecipients'] = 'खूप जास्‍त प्राप्‍तकर्ते. प्राप्‍तकर्त्‍यांची संख्‍या $max पर्यंत कमी करा';
 $messages['maxgroupmembersreached'] = 'गट सभासद संख्‍या $max पेक्षा जास्‍त झाली आहे';
 $messages['internalerror'] = 'अंतर्गत चूक झाली. कृपया परत प्रयत्‍न करा.';
-
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 ###############################################
 # PHPMyAdmin Configuration for ZPanel         #
 # Last updated: 26/03/2011                    #

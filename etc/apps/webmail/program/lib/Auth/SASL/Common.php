@@ -1,4 +1,5 @@
 <?php
+
 // +-----------------------------------------------------------------------+ 
 // | Copyright (c) 2002-2003 Richard Heyes                                 | 
 // | All rights reserved.                                                  | 
@@ -35,25 +36,23 @@
 // $Id: Common.php 584 2007-05-24 03:49:19Z estadtherr $
 
 /**
-* Common functionality to SASL mechanisms
-*
-* @author  Richard Heyes <richard@php.net>
-* @access  public
-* @version 1.0
-* @package Auth_SASL
-*/
+ * Common functionality to SASL mechanisms
+ *
+ * @author  Richard Heyes <richard@php.net>
+ * @access  public
+ * @version 1.0
+ * @package Auth_SASL
+ */
+class Auth_SASL_Common {
 
-class Auth_SASL_Common
-{
     /**
-    * Function which implements HMAC MD5 digest
-    *
-    * @param  string $key  The secret key
-    * @param  string $data The data to protect
-    * @return string       The HMAC MD5 digest
-    */
-    function _HMAC_MD5($key, $data)
-    {
+     * Function which implements HMAC MD5 digest
+     *
+     * @param  string $key  The secret key
+     * @param  string $data The data to protect
+     * @return string       The HMAC MD5 digest
+     */
+    function _HMAC_MD5($key, $data) {
         if (strlen($key) > 64) {
             $key = pack('H32', md5($key));
         }
@@ -65,10 +64,12 @@ class Auth_SASL_Common
         $k_ipad = substr($key, 0, 64) ^ str_repeat(chr(0x36), 64);
         $k_opad = substr($key, 0, 64) ^ str_repeat(chr(0x5C), 64);
 
-        $inner  = pack('H32', md5($k_ipad . $data));
+        $inner = pack('H32', md5($k_ipad . $data));
         $digest = md5($k_opad . $inner);
 
         return $digest;
     }
+
 }
+
 ?>

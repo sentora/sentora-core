@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/gl_ES/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:    David Garabana Barro <david garabana com>                  |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/gl_ES/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:    David Garabana Barro <david garabana com>                  |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'O contrasinal ou o nome de usuario son incorrectos.';
@@ -155,5 +155,4 @@ $messages['foldercreated'] = 'O cartafol creouse correctamente.';
 $messages['invalidimageformat'] = 'O formato da imaxe non é válido.';
 $messages['mispellingsfound'] = 'Atopáronse erros ortográficos na mensaxe.';
 $messages['parentnotwritable'] = 'Non foi posible crear/mover o cartafol no cartafol padre escollido porque non ten permisos.';
-
 ?>

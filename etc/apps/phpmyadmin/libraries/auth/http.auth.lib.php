@@ -7,7 +7,6 @@
  * @package phpMyAdmin-Auth-HTTP
  */
 
-
 /**
  * Displays authentication form
  *
@@ -19,8 +18,7 @@
  *
  * @access  public
  */
-function PMA_auth()
-{
+function PMA_auth() {
     /* Perform logout to custom URL */
     if (!empty($_REQUEST['old_usr']) && !empty($GLOBALS['cfg']['Server']['LogoutURL'])) {
         PMA_sendHeaderLocation($GLOBALS['cfg']['Server']['LogoutURL']);
@@ -39,10 +37,10 @@ function PMA_auth()
     }
     // remove non US-ASCII to respect RFC2616
     $realm_message = preg_replace('/[^\x20-\x7e]/i', '', $realm_message);
-    header('WWW-Authenticate: Basic realm="' . $realm_message .  '"');
+    header('WWW-Authenticate: Basic realm="' . $realm_message . '"');
     header('HTTP/1.0 401 Unauthorized');
     if (php_sapi_name() !== 'cgi-fcgi') {
-	header('status: 401 Unauthorized');
+        header('status: 401 Unauthorized');
     }
 
     // Defines the charset to be used
@@ -51,19 +49,19 @@ function PMA_auth()
     $page_title = __('Access denied');
     require './libraries/header_meta_style.inc.php';
     ?>
-</head>
-<body>
+    </head>
+    <body>
     <?php
     if (file_exists(CUSTOM_HEADER_FILE)) {
         require CUSTOM_HEADER_FILE;
     }
     ?>
 
-<br /><br />
-<center>
-    <h1><?php echo sprintf(__('Welcome to %s'), ' phpMyAdmin'); ?></h1>
-</center>
-<br />
+        <br /><br />
+    <center>
+        <h1><?php echo sprintf(__('Welcome to %s'), ' phpMyAdmin'); ?></h1>
+    </center>
+    <br />
 
     <?php
     PMA_Message::error(__('Wrong username/password. Access denied.'))->display();
@@ -73,12 +71,13 @@ function PMA_auth()
     }
     ?>
 
-</body>
-</html>
+    </body>
+    </html>
     <?php
     exit();
-} // end of the 'PMA_auth()' function
+}
 
+// end of the 'PMA_auth()' function
 
 /**
  * Gets advanced authentication settings
@@ -99,8 +98,7 @@ function PMA_auth()
  *
  * @access  public
  */
-function PMA_auth_check()
-{
+function PMA_auth_check() {
     global $PHP_AUTH_USER, $PHP_AUTH_PW;
     global $old_usr;
 
@@ -144,7 +142,7 @@ function PMA_auth_check()
     // (do not use explode() because a user might have a colon in his password
     if (strcmp(substr($PHP_AUTH_USER, 0, 6), 'Basic ') == 0) {
         $usr_pass = base64_decode(substr($PHP_AUTH_USER, 6));
-        if (! empty($usr_pass)) {
+        if (!empty($usr_pass)) {
             $colon = strpos($usr_pass, ':');
             if ($colon) {
                 $PHP_AUTH_USER = substr($usr_pass, 0, $colon);
@@ -157,7 +155,7 @@ function PMA_auth_check()
 
     // User logged out -> ensure the new username is not the same
     if (!empty($old_usr)
-        && (isset($PHP_AUTH_USER) && $old_usr == $PHP_AUTH_USER)) {
+            && (isset($PHP_AUTH_USER) && $old_usr == $PHP_AUTH_USER)) {
         $PHP_AUTH_USER = '';
         // -> delete user's choices that were stored in session
         session_destroy();
@@ -169,8 +167,9 @@ function PMA_auth_check()
     } else {
         return true;
     }
-} // end of the 'PMA_auth_check()' function
+}
 
+// end of the 'PMA_auth_check()' function
 
 /**
  * Set the user and password after last checkings if required
@@ -185,8 +184,7 @@ function PMA_auth_check()
  *
  * @access  public
  */
-function PMA_auth_set_user()
-{
+function PMA_auth_set_user() {
     global $cfg, $server;
     global $PHP_AUTH_USER, $PHP_AUTH_PW;
 
@@ -196,15 +194,15 @@ function PMA_auth_set_user()
         $servers_cnt = count($cfg['Servers']);
         for ($i = 1; $i <= $servers_cnt; $i++) {
             if (isset($cfg['Servers'][$i])
-                && ($cfg['Servers'][$i]['host'] == $cfg['Server']['host'] && $cfg['Servers'][$i]['user'] == $PHP_AUTH_USER)) {
-                $server        = $i;
+                    && ($cfg['Servers'][$i]['host'] == $cfg['Server']['host'] && $cfg['Servers'][$i]['user'] == $PHP_AUTH_USER)) {
+                $server = $i;
                 $cfg['Server'] = $cfg['Servers'][$i];
                 break;
             }
         } // end for
     } // end if
 
-    $cfg['Server']['user']     = $PHP_AUTH_USER;
+    $cfg['Server']['user'] = $PHP_AUTH_USER;
     $cfg['Server']['password'] = $PHP_AUTH_PW;
 
     // Avoid showing the password in phpinfo()'s output
@@ -212,8 +210,9 @@ function PMA_auth_set_user()
     unset($_SERVER['PHP_AUTH_PW']);
 
     return true;
-} // end of the 'PMA_auth_set_user()' function
+}
 
+// end of the 'PMA_auth_set_user()' function
 
 /**
  * User is not allowed to login to MySQL -> authentication failed
@@ -222,8 +221,7 @@ function PMA_auth_set_user()
  *
  * @access  public
  */
-function PMA_auth_fails()
-{
+function PMA_auth_fails() {
     $error = PMA_DBI_getError();
     if ($error && $GLOBALS['errno'] != 1045) {
         PMA_fatalError($error);
@@ -231,7 +229,7 @@ function PMA_auth_fails()
         PMA_auth();
         return true;
     }
+}
 
-} // end of the 'PMA_auth_fails()' function
-
+// end of the 'PMA_auth_fails()' function
 ?>

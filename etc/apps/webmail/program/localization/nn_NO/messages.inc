@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/nn_NO/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Per-Stian Vatne <psv@orsta.org>                               |
-| Update: Odin Omdal Hørthe <odin.omdal@gmail.com>                      |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/nn_NO/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Per-Stian Vatne <psv@orsta.org>                               |
+  | Update: Odin Omdal Hørthe <odin.omdal@gmail.com>                      |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Feil ved innlogging';
@@ -111,5 +111,4 @@ $messages['smtperror'] = 'SMTP-feil: $msg';
 $messages['emailformaterror'] = 'Ukorrekt e-postadresse: $email';
 $messages['toomanyrecipients'] = 'For mange mottakarar. Senk talet til maksimalt $max.';
 $messages['maxgroupmembersreached'] = 'Du kan berre ha $max grupper, du er over grensa søta.';
-
 ?>

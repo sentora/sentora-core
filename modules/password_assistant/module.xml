@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-<name>Change Password</name>
-<version>100</version>
-<defaultcat>Account Information</defaultcat>
-<desc>Change your current control panel password.</desc>
-<authorname>ZPanel Project</authorname>
-<authoremail>developers@zpanelcp.com</authoremail>
-<authorurl>http://www.zpanelcp.com/</authorurl>
-<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <name>Change Password</name>
+    <version>100</version>
+    <defaultcat>Account Information</defaultcat>
+    <desc>Change your current control panel password.</desc>
+    <authorname>ZPanel Project</authorname>
+    <authoremail>developers@zpanelcp.com</authoremail>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
+    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

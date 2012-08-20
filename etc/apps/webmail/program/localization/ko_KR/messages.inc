@@ -2,20 +2,20 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| localization/kr/messages.inc                                            |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: lordmiss <lordmiss@lordmiss.com>                              |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | localization/kr/messages.inc                                            |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: lordmiss <lordmiss@lordmiss.com>                              |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages['loginfailed'] = '로그인 실패';
 $messages['loginfailed'] = '로그인 실패';
@@ -91,5 +91,4 @@ $messages['importconfirm'] = '<b>$inserted 연락처를 성공적으로 가져�
 $messages['opnotpermitted'] = '작업이 허가되지 않았습니다!';
 $messages['nofromaddress'] = '선택한 신원에 이메일 주소가 없음';
 $messages['editorwarning'] = '일반 텍스트 편집기로 바꾸면 모든 서식이 사라집니다. 계속할까요?';
-
 ?>

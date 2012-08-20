@@ -24,37 +24,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
- 		$result = $zdbh->query("SELECT * FROM x_settings WHERE so_name_vc='ftp_db'")->Fetch();
-		$ftp_db = $result['so_value_tx'];
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$ftp_db = new db_driver("mysql:host=localhost;dbname=$ftp_db", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-		
-		}
-		
- 		foreach ($deletedclients as $deletedclient){	
-			$sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_acc_fk=" . $deletedclient . " AND ft_deleted_ts IS NULL";
-		    if ($numrows = $zdbh->query($sql)) {
-		    	if ($numrows->fetchColumn() <> 0) {
-		        	$sql = $zdbh->prepare("SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $deletedclient . " AND ft_deleted_ts IS NULL");
-		            $sql->execute();
-		            while ($rowclient = $sql->fetch()) {		
-						$fsql = $ftp_db->prepare("DELETE FROM ftpquotalimits 
+$result = $zdbh->query("SELECT * FROM x_settings WHERE so_name_vc='ftp_db'")->Fetch();
+$ftp_db = $result['so_value_tx'];
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $ftp_db = new db_driver("mysql:host=localhost;dbname=$ftp_db", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
+
+foreach ($deletedclients as $deletedclient) {
+    $sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_acc_fk=" . $deletedclient . " AND ft_deleted_ts IS NULL";
+    if ($numrows = $zdbh->query($sql)) {
+        if ($numrows->fetchColumn() <> 0) {
+            $sql = $zdbh->prepare("SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $deletedclient . " AND ft_deleted_ts IS NULL");
+            $sql->execute();
+            while ($rowclient = $sql->fetch()) {
+                $fsql = $ftp_db->prepare("DELETE FROM ftpquotalimits 
 												 WHERE
-												 name='".$rowclient['ft_user_vc']."'");
-						$fsql->execute();
-						$fsql = $ftp_db->prepare("DELETE FROM ftpuser 
+												 name='" . $rowclient['ft_user_vc'] . "'");
+                $fsql->execute();
+                $fsql = $ftp_db->prepare("DELETE FROM ftpuser 
 												 WHERE
-												 userid='".$rowclient['ft_user_vc']."'");
-						$fsql->execute();				
-		           }
-				$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_acc_fk=".$deletedclient."");
-                $sql->execute();
-		    	}
-			}
-		}
+												 userid='" . $rowclient['ft_user_vc'] . "'");
+                $fsql->execute();
+            }
+            $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_acc_fk=" . $deletedclient . "");
+            $sql->execute();
+        }
+    }
+}
 ?>

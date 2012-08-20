@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/en_GB/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Weiran Zhang (weiran@weiran.co.uk)                            |
-|         Phil Weir                                                     |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/en_GB/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Weiran Zhang (weiran@weiran.co.uk)                            |
+  |         Phil Weir                                                     |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5173 2011-09-05 18:41:04Z thomasb $
+  @version $Id: messages.inc 5173 2011-09-05 18:41:04Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Login failed.';
@@ -152,5 +152,4 @@ $messages['foldercreated'] = 'Successfully created folder.';
 $messages['invalidimageformat'] = 'Not a valid image format.';
 $messages['mispellingsfound'] = 'Spelling errors detected in the message.';
 $messages['parentnotwritable'] = 'Unable to create/move folder into selected parent folder. No access rights.';
-
 ?>

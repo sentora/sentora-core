@@ -1,21 +1,21 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/eu_ES/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: pi <pi@beobide.net>                                           |
-|         Bihar <gaurdabihar@gmail.com>                                 |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/eu_ES/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: pi <pi@beobide.net>                                           |
+  |         Bihar <gaurdabihar@gmail.com>                                 |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Saio sarrerak huts egin du';
@@ -79,5 +79,4 @@ $messages['receiptsent'] = 'Ondo bidalia irakurritako agiria';
 $messages['errorsendingreceipt'] = 'Ezin da agiria bidali';
 $messages['nodeletelastidentity'] = 'Ezin da izaera hau ezabatu, zure bakarra da';
 $messages['forbiddencharacter'] = 'Karpeta izenak debekatutako karaktereak ditu';
-
 ?>

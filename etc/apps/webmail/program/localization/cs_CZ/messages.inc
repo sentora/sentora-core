@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/cs_CZ/messages.inc                                              |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Martin Mrajca <martin@moonlake.cz>                            |
-|        joe <joe@humlak.cz>                                            |
-|        Jiri Kaderavek <jiri.kaderavek@webstep.net>                    |
-|        Ales Pospichal <ales@pospichalales.info>                       |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/cs_CZ/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Martin Mrajca <martin@moonlake.cz>                            |
+  |        joe <joe@humlak.cz>                                            |
+  |        Jiri Kaderavek <jiri.kaderavek@webstep.net>                    |
+  |        Ales Pospichal <ales@pospichalales.info>                       |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Přihlášení selhalo';
@@ -161,5 +161,4 @@ $messages['foldercreated'] = 'Složka byla úspěšně vytvořena';
 $messages['invalidimageformat'] = 'Formát obrázku není podporován';
 $messages['mispellingsfound'] = 'Ve zprávě byly zjištěny pravopisné chyby';
 $messages['parentnotwritable'] = 'Nelze vytvořit/přesunout složku do vybrané rodičovské složky. Nemáte práva.';
-
 ?>

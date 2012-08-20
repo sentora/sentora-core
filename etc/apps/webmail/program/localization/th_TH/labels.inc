@@ -2,20 +2,20 @@
 
 /*
 
- +-----------------------------------------------------------------------+
- | language/th_TH/labels.inc                                             |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Wiraphan Treeratphan <webmaster@modoeye.com>                  |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/th_TH/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Wiraphan Treeratphan <webmaster@modoeye.com>                  |
+  +-----------------------------------------------------------------------+
 
- @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'ยินดีต้อนรับสู่ $product';
@@ -166,5 +166,4 @@ $labels['managefolders'] = 'จัดการกล่องจดหมาย'
 $labels['sortby'] = 'เรียงตาม';
 $labels['sortasc'] = 'เรียงจากหน้าไปหลัง';
 $labels['sortdesc'] = 'เรียงจากหลังไปหน้า';
-
 ?>

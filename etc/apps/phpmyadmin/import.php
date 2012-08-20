@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Core script for import, this is just the glue around all other stuff
@@ -6,13 +7,11 @@
  * @uses    PMA_Bookmark_getList()
  * @package phpMyAdmin
  */
-
 /**
  * Get the variables sent or posted to this script and a core script
  */
 require_once './libraries/common.inc.php';
 //require_once './libraries/display_import_functions.lib.php';
-
 // reset import messages for ajax request
 $_SESSION['Import_message']['message'] = null;
 $_SESSION['Import_message']['go_back_url'] = null;
@@ -106,9 +105,9 @@ if ($import_type == 'table') {
     } else {
         $common = PMA_generate_common_url();
     }
-    $err_url  = $goto
-              . '?' . $common
-              . (preg_match('@^tbl_[a-z]*\.php$@', $goto) ? '&amp;table=' . htmlspecialchars($table) : '');
+    $err_url = $goto
+            . '?' . $common
+            . (preg_match('@^tbl_[a-z]*\.php$@', $goto) ? '&amp;table=' . htmlspecialchars($table) : '');
     $_SESSION['Import_message']['go_back_url'] = $err_url;
 }
 
@@ -148,7 +147,7 @@ $bookmark_created = FALSE;
 
 // Bookmark Support: get a query back from bookmark if required
 if (!empty($id_bookmark)) {
-    $id_bookmark = (int)$id_bookmark;
+    $id_bookmark = (int) $id_bookmark;
     require_once './libraries/bookmark.lib.php';
     switch ($action_bookmark) {
         case 0: // bookmarked query that have to be run
@@ -175,7 +174,6 @@ if (!empty($id_bookmark)) {
             break;
     }
 } // end bookmarks reading
-
 // Do no run query if we show PHP code
 if (isset($GLOBALS['show_as_php'])) {
     $run_query = FALSE;
@@ -186,10 +184,10 @@ if (isset($GLOBALS['show_as_php'])) {
 if (!empty($bkm_label) && !empty($import_text)) {
     require_once './libraries/bookmark.lib.php';
     $bfields = array(
-                 'dbase' => $db,
-                 'user'  => $cfg['Bookmark']['user'],
-                 'query' => urlencode($import_text),
-                 'label' => $bkm_label
+        'dbase' => $db,
+        'user' => $cfg['Bookmark']['user'],
+        'query' => urlencode($import_text),
+        'label' => $bkm_label
     );
 
     // Should we replace bookmark?
@@ -206,7 +204,6 @@ if (!empty($bkm_label) && !empty($import_text)) {
 
     $bookmark_created = TRUE;
 } // end store bookmarks
-
 // We can not read all at once, otherwise we can run out of memory
 $memory_limit = trim(@ini_get('memory_limit'));
 // 2 MB as default
@@ -220,26 +217,25 @@ if ($memory_limit == -1) {
 
 // Calculate value of the limit
 if (strtolower(substr($memory_limit, -1)) == 'm') {
-    $memory_limit = (int)substr($memory_limit, 0, -1) * 1024 * 1024;
+    $memory_limit = (int) substr($memory_limit, 0, -1) * 1024 * 1024;
 } elseif (strtolower(substr($memory_limit, -1)) == 'k') {
-    $memory_limit = (int)substr($memory_limit, 0, -1) * 1024;
+    $memory_limit = (int) substr($memory_limit, 0, -1) * 1024;
 } elseif (strtolower(substr($memory_limit, -1)) == 'g') {
-    $memory_limit = (int)substr($memory_limit, 0, -1) * 1024 * 1024 * 1024;
+    $memory_limit = (int) substr($memory_limit, 0, -1) * 1024 * 1024 * 1024;
 } else {
-    $memory_limit = (int)$memory_limit;
+    $memory_limit = (int) $memory_limit;
 }
 
 $read_limit = $memory_limit / 8; // Just to be sure, there might be lot of memory needed for uncompression
-
 // handle filenames
 if (!empty($local_import_file) && !empty($cfg['UploadDir'])) {
 
     // sanitize $local_import_file as it comes from a POST
     $local_import_file = PMA_securePath($local_import_file);
 
-    $import_file  = PMA_userDir($cfg['UploadDir']) . $local_import_file;
-} elseif (empty($import_file) || !is_uploaded_file($import_file))  {
-    $import_file  = 'none';
+    $import_file = PMA_userDir($cfg['UploadDir']) . $local_import_file;
+} elseif (empty($import_file) || !is_uploaded_file($import_file)) {
+    $import_file = 'none';
 }
 
 // Do we have file to import?
@@ -265,7 +261,7 @@ if ($import_file != 'none' && !$error) {
                 $file_to_unlink = $import_file_new;
             }
 
-	    $size = filesize($import_file);
+            $size = filesize($import_file);
         }
     }
 
@@ -304,7 +300,7 @@ if ($import_file != 'none' && !$error) {
                      */
                     include_once './libraries/zip_extension.lib.php';
                     $result = PMA_getZipContents($import_file);
-                    if (! empty($result['error'])) {
+                    if (!empty($result['error'])) {
                         $message = PMA_Message::rawError($result['error']);
                         $error = TRUE;
                     } else {
@@ -340,7 +336,6 @@ if ($import_file != 'none' && !$error) {
 
 // so we can obtain the message
 //$_SESSION['Import_message'] = $message->getDisplay();
-
 // Convert the file's charset if necessary
 if ($GLOBALS['PMA_recoding_engine'] != PMA_CHARSET_NONE && isset($charset_of_file)) {
     if ($charset_of_file != $charset) {
@@ -376,7 +371,7 @@ if (!$error) {
     }
 }
 
-if (! $error && FALSE !== $import_handle && NULL !== $import_handle) {
+if (!$error && FALSE !== $import_handle && NULL !== $import_handle) {
     fclose($import_handle);
 }
 
@@ -405,7 +400,7 @@ if (!empty($id_bookmark) && $action_bookmark == 2) {
         $message = PMA_Message::success();
     } else {
         if ($import_notice) {
-            $message = PMA_Message::success('<em>'.__('Import has been successfully finished, %d queries executed.').'</em>');
+            $message = PMA_Message::success('<em>' . __('Import has been successfully finished, %d queries executed.') . '</em>');
             $message->addParam($executed_queries);
 
             $message->addString($import_notice);
@@ -447,7 +442,7 @@ if (isset($my_die)) {
 }
 
 // we want to see the results of the last query that returned at least a row
-if (! empty($last_query_with_results)) {
+if (!empty($last_query_with_results)) {
     // but we want to show intermediate results too
     $disp_query = $sql_query;
     $disp_message = __('Your SQL query has been executed successfully');

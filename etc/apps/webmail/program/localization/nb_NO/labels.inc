@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/nb_NO/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Kjetil Waage - Nextline AS <kjetil@nextline.no>               |
-| Author: Tor Erik Linnerud - JKLM <tel@jklm.no>                        |
-| Author: Axel Sjøstedt <roundcube@sjostedt.no>                         |
-| Author: Odd Henriksen <odd@digicon.no>                                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/nb_NO/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Kjetil Waage - Nextline AS <kjetil@nextline.no>               |
+  | Author: Tor Erik Linnerud - JKLM <tel@jklm.no>                        |
+  | Author: Axel Sjøstedt <roundcube@sjostedt.no>                         |
+  | Author: Odd Henriksen <odd@digicon.no>                                |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Velkommen til $product';
@@ -339,5 +339,4 @@ $labels['vietnamese'] = 'Vietnamesisk';
 $labels['japanese'] = 'Japansk';
 $labels['korean'] = 'Koreansk';
 $labels['chinese'] = 'Kinesisk';
-
 ?>

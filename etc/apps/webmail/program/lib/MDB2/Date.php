@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -60,8 +61,7 @@
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Date
-{
+class MDB2_Date {
     // {{{ mdbNow()
 
     /**
@@ -70,12 +70,11 @@ class MDB2_Date
      * @return string current datetime in the MDB2 format
      * @access public
      */
-    function mdbNow()
-    {
+    function mdbNow() {
         return date('Y-m-d H:i:s');
     }
-    // }}}
 
+    // }}}
     // {{{ mdbToday()
 
     /**
@@ -84,12 +83,11 @@ class MDB2_Date
      * @return string current date in the MDB2 format
      * @access public
      */
-    function mdbToday()
-    {
+    function mdbToday() {
         return date('Y-m-d');
     }
-    // }}}
 
+    // }}}
     // {{{ mdbTime()
 
     /**
@@ -98,12 +96,11 @@ class MDB2_Date
      * @return string current time in the MDB2 format
      * @access public
      */
-    function mdbTime()
-    {
+    function mdbTime() {
         return date('H:i:s');
     }
-    // }}}
 
+    // }}}
     // {{{ date2Mdbstamp()
 
     /**
@@ -119,13 +116,11 @@ class MDB2_Date
      * @return string a valid MDB2 timestamp
      * @access public
      */
-    function date2Mdbstamp($hour = null, $minute = null, $second = null,
-        $month = null, $day = null, $year = null)
-    {
+    function date2Mdbstamp($hour = null, $minute = null, $second = null, $month = null, $day = null, $year = null) {
         return MDB2_Date::unix2Mdbstamp(mktime($hour, $minute, $second, $month, $day, $year, -1));
     }
-    // }}}
 
+    // }}}
     // {{{ unix2Mdbstamp()
 
     /**
@@ -136,12 +131,11 @@ class MDB2_Date
      * @return string a valid MDB2 timestamp
      * @access public
      */
-    function unix2Mdbstamp($unix_timestamp)
-    {
+    function unix2Mdbstamp($unix_timestamp) {
         return date('Y-m-d H:i:s', $unix_timestamp);
     }
-    // }}}
 
+    // }}}
     // {{{ mdbstamp2Unix()
 
     /**
@@ -152,14 +146,13 @@ class MDB2_Date
      *
      * @access public
      */
-    function mdbstamp2Unix($mdb_timestamp)
-    {
+    function mdbstamp2Unix($mdb_timestamp) {
         $arr = MDB2_Date::mdbstamp2Date($mdb_timestamp);
 
         return mktime($arr['hour'], $arr['minute'], $arr['second'], $arr['month'], $arr['day'], $arr['year'], -1);
     }
-    // }}}
 
+    // }}}
     // {{{ mdbstamp2Date()
 
     /**
@@ -171,12 +164,12 @@ class MDB2_Date
      * @return array with the time split
      * @access public
      */
-    function mdbstamp2Date($mdb_timestamp)
-    {
+    function mdbstamp2Date($mdb_timestamp) {
         list($arr['year'], $arr['month'], $arr['day'], $arr['hour'], $arr['minute'], $arr['second']) =
-            sscanf($mdb_timestamp, "%04u-%02u-%02u %02u:%02u:%02u");
+                sscanf($mdb_timestamp, "%04u-%02u-%02u %02u:%02u:%02u");
         return $arr;
     }
+
     // }}}
 }
 

@@ -2,22 +2,22 @@
 
 /*
 
- +-----------------------------------------------------------------------+
- | language/bzg/labels.inc                                                |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: aldweb <info@aldweb.com>                                      |
- |         Pierre HAEGELI <pierre@haegeli.net>                           |
- |         Mickaël Wolff <rcw@lupusmic.org>                              |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/bzg/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: aldweb <info@aldweb.com>                                      |
+  |         Pierre HAEGELI <pierre@haegeli.net>                           |
+  |         Mickaël Wolff <rcw@lupusmic.org>                              |
+  +-----------------------------------------------------------------------+
 
- @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Degemer mat war $product';
@@ -175,5 +175,4 @@ $labels['managefolders'] = 'Aozañ ar renkelloù';
 $labels['sortby'] = 'Rummañ dre';
 $labels['sortasc'] = 'Rumm diagentad';
 $labels['sortdesc'] = 'Rumm diskennad';
-
 ?>

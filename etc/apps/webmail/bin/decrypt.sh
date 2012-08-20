@@ -2,24 +2,24 @@
 <?php
 /*
 
- +-----------------------------------------------------------------------+
- | bin/decrypt.sh                                                        |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Decrypt the encrypted parts of the HTTP Received: headers           |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Tomas Tevesz <ice@extreme.hu>                                 |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | bin/decrypt.sh                                                        |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Decrypt the encrypted parts of the HTTP Received: headers           |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Tomas Tevesz <ice@extreme.hu>                                 |
+  +-----------------------------------------------------------------------+
 
- $Id: decrypt.sh 4677 2011-04-20 13:10:45Z alec $
-*/
+  $Id: decrypt.sh 4677 2011-04-20 13:10:45Z alec $
+ */
 
-/*-
+/* -
  * If http_received_header_encrypt is configured, the IP address and the
  * host name of the added Received: header is encrypted with 3DES, to
  * protect information that some could consider sensitve, yet their
@@ -29,7 +29,7 @@
  *
  * Received: from DzgkvJBO5+bw+oje5JACeNIa/uSI4mRw2cy5YoPBba73eyBmjtyHnQ==
  * 	[my0nUbjZXKtl7KVBZcsvWOxxtyVFxza4]
- *	with HTTP/1.1 (POST); Thu, 14 May 2009 19:17:28 +0200
+ * 	with HTTP/1.1 (POST); Thu, 14 May 2009 19:17:28 +0200
  *
  * In this example, the two encrypted components are the sender host name
  * (DzgkvJBO5+bw+oje5JACeNIa/uSI4mRw2cy5YoPBba73eyBmjtyHnQ==) and the IP
@@ -52,16 +52,16 @@
  *  - you are dealing with counterfeit header data.
  */
 
-define('INSTALL_PATH', realpath(dirname(__FILE__).'/..') . '/');
+define('INSTALL_PATH', realpath(dirname(__FILE__) . '/..') . '/');
 
 require INSTALL_PATH . 'program/include/clisetup.php';
 
 if ($argc < 2) {
-	die("Usage: " . basename($argv[0]) . " encrypted-hdr-part [encrypted-hdr-part ...]\n");
+    die("Usage: " . basename($argv[0]) . " encrypted-hdr-part [encrypted-hdr-part ...]\n");
 }
 
 $RCMAIL = rcmail::get_instance();
 
 for ($i = 1; $i < $argc; $i++) {
-	printf("%s\n", $RCMAIL->decrypt($argv[$i]));
+    printf("%s\n", $RCMAIL->decrypt($argv[$i]));
 };

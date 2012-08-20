@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * OpenBSD System Class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.OpenBSD.inc.php 371 2010-05-16 08:35:28Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * OpenBSD sysinfo class
  * get all the required information from OpenBSD systems
  *
@@ -24,13 +26,12 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class OpenBSD extends BSDCommon
-{
+class OpenBSD extends BSDCommon {
+
     /**
      * define the regexp for log parser
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->setCPURegExp1("^cpu(.*) (.*) MHz");
         $this->setCPURegExp2("/(.*),(.*),(.*),(.*),(.*)/");
@@ -39,26 +40,24 @@ class OpenBSD extends BSDCommon
         $this->setPCIRegExp1("/(.*) at pci[0-9] .* \"(.*)\"/");
         $this->setPCIRegExp2("/\"(.*)\" (.*).* at [.0-9]+ irq/");
     }
-    
+
     /**
      * UpTime
      * time the system is running
      *
      * @return void
      */
-    private function _uptime()
-    {
+    private function _uptime() {
         $a = $this->grabkey('kern.boottime');
         $this->sys->setUptime(time() - $a);
     }
-    
+
     /**
      * get network information
      *
      * @return void
      */
-    private function _network()
-    {
+    private function _network() {
         CommonFunctions::executeProgram('netstat', '-nbdi | cut -c1-25,44- | grep Link | grep -v \'* \'', $netstat_b, PSI_DEBUG);
         CommonFunctions::executeProgram('netstat', '-ndi | cut -c1-25,44- | grep Link | grep -v \'* \'', $netstat_n, PSI_DEBUG);
         $lines_b = preg_split("/\n/", $netstat_b, -1, PREG_SPLIT_NO_EMPTY);
@@ -66,7 +65,7 @@ class OpenBSD extends BSDCommon
         for ($i = 0, $max = sizeof($lines_b); $i < $max; $i++) {
             $ar_buf_b = preg_split("/\s+/", $lines_b[$i]);
             $ar_buf_n = preg_split("/\s+/", $lines_n[$i]);
-            if (! empty($ar_buf_b[0]) && ! empty($ar_buf_n[3])) {
+            if (!empty($ar_buf_b[0]) && !empty($ar_buf_n[3])) {
                 $dev = new NetDevice();
                 $dev->setName($ar_buf_b[0]);
                 $dev->setTxBytes($ar_buf_b[4]);
@@ -78,21 +77,19 @@ class OpenBSD extends BSDCommon
         }
     }
 
-    
     /**
      * IDE information
      *
      * @return void
      */
-    protected function ide()
-    {
+    protected function ide() {
         foreach ($this->readdmesg() as $line) {
             if (preg_match('/^(.*) at pciide[0-9] (.*): <(.*)>/', $line, $ar_buf)) {
                 $dev = new HWDevice();
                 $dev->setName($ar_buf[0]);
                 // now loop again and find the capacity
                 foreach ($this->readdmesg() as $line2) {
-                    if (preg_match("/^(".$ar_buf[0]."): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
+                    if (preg_match("/^(" . $ar_buf[0] . "): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
                         $dev->setCapacity($ar_buf_n[4] * 2048 * 1.049);
                     }
                 }
@@ -100,30 +97,28 @@ class OpenBSD extends BSDCommon
             }
         }
     }
-    
+
     /**
      * get CPU information
      *
      * @return void
      */
-    protected function cpuinfo()
-    {
+    protected function cpuinfo() {
         $dev = new CpuDevice();
         $dev->setModel($this->grabkey('hw.model'));
         $dev->setCpuSpeed($this->grabkey('hw.cpuspeed'));
         $this->sys->setCpus($dev);
     }
-    
+
     /**
      * get icon name
      *
      * @return void
      */
-    private function _distroicon()
-    {
+    private function _distroicon() {
         $this->sys->setDistributionIcon('OpenBSD.png');
     }
-    
+
     /**
      * get the information
      *
@@ -131,12 +126,13 @@ class OpenBSD extends BSDCommon
      *
      * @return Void
      */
-    function build()
-    {
+    function build() {
         parent::build();
         $this->_distroicon();
         $this->_network();
         $this->_uptime();
     }
+
 }
+
 ?>

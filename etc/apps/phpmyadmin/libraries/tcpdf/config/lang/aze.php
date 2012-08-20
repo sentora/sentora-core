@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : aze.php
 // Begin       : 2010-10-26
@@ -27,7 +28,6 @@
  * @author Nicola Asuni
  * @since 2010-10-26
  */
-
 // Azerbaijani
 
 global $l;

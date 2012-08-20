@@ -1,20 +1,20 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/mk_MK/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:  Ivan Mishev - mishevivan@gmail.com                           |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/mk_MK/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:  Ivan Mishev - mishevivan@gmail.com                           |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Добредојдовте во $product';
@@ -283,5 +283,4 @@ $labels['B'] = 'Б';
 $labels['KB'] = 'КБ';
 $labels['MB'] = 'МБ';
 $labels['GB'] = 'ГБ';
-
 ?>

@@ -1,20 +1,20 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| localization/ka_GE/messages.inc                                       |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Zaza Zviadadze, George Machitidze                             |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | localization/ka_GE/messages.inc                                       |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Zaza Zviadadze, George Machitidze                             |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 842 2009-10-03 19:30:00  zaza$
+  @version $Id: messages.inc 842 2009-10-03 19:30:00  zaza$
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'შესვლა შეუძლებელია';
@@ -120,5 +120,4 @@ $messages['nametoolong'] = 'სახელი ძალიან მოკლ�
 $messages['folderupdated'] = 'დასტა წარმატებით განახლდა.';
 $messages['foldercreated'] = 'დასტა წარმატებით შეიქმნა.';
 $messages['invalidimageformat'] = 'გამოსახულების ფორმატი არასწორია.';
-
 ?>

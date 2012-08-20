@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * PSSTATUS Plugin
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.PSStatus.inc.php 455 2011-04-14 20:10:58Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * process Plugin, which displays the status of configured processes
  * a simple view which shows a process name and the status
  * status determined by calling the "pidof" command line utility, another way is to provide
@@ -29,63 +31,62 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class PSStatus extends PSI_Plugin
-{
+class PSStatus extends PSI_Plugin {
+
     /**
      * variable, which holds the content of the command
      * @var array
      */
     private $_filecontent = array();
-    
+
     /**
      * variable, which holds the result before the xml is generated out of this array
      * @var array
      */
     private $_result = array();
-    
+
     /**
      * read the data into an internal array and also call the parent constructor
      *
      * @param String $enc target encoding
      */
-    public function __construct($enc)
-    {
+    public function __construct($enc) {
         parent::__construct(__CLASS__, $enc);
         switch (PSI_PLUGIN_PSSTATUS_ACCESS) {
-        case 'command':
-            if (PHP_OS == 'WINNT') {
-                $objLocator = new COM("WbemScripting.SWbemLocator");
-                $wmi = $objLocator->ConnectServer();
-                $process_wmi = $wmi->InstancesOf('Win32_Process');
-                foreach ($process_wmi as $process) {
-                    $this->_filecontent[] = array(trim($process->Caption), trim($process->ProcessId));
-                }
-            } else {
-                $processes = preg_split("/([\s]+)?,([\s]+)?/", PSI_PLUGIN_PSSTATUS_PROCESSES, -1, PREG_SPLIT_NO_EMPTY);
-                foreach ($processes as $process) {
-                    CommonFunctions::executeProgram("pidof", "-s ".$process, $buffer, PSI_DEBUG);
-                    if (strlen(trim($buffer)) > 0) {
-                        $this->_filecontent[] = array($process, trim($buffer));
+            case 'command':
+                if (PHP_OS == 'WINNT') {
+                    $objLocator = new COM("WbemScripting.SWbemLocator");
+                    $wmi = $objLocator->ConnectServer();
+                    $process_wmi = $wmi->InstancesOf('Win32_Process');
+                    foreach ($process_wmi as $process) {
+                        $this->_filecontent[] = array(trim($process->Caption), trim($process->ProcessId));
+                    }
+                } else {
+                    $processes = preg_split("/([\s]+)?,([\s]+)?/", PSI_PLUGIN_PSSTATUS_PROCESSES, -1, PREG_SPLIT_NO_EMPTY);
+                    foreach ($processes as $process) {
+                        CommonFunctions::executeProgram("pidof", "-s " . $process, $buffer, PSI_DEBUG);
+                        if (strlen(trim($buffer)) > 0) {
+                            $this->_filecontent[] = array($process, trim($buffer));
+                        }
                     }
                 }
-            }
-            break;
-        case 'data':
-            CommonFunctions::rfts(APP_ROOT."/data/psstatus.txt", $buffer);
-            $processes = preg_split("/\n/", $buffer, -1, PREG_SPLIT_NO_EMPTY);
-            foreach ($processes as $process) {
-                $ps = preg_split("/[\s]?\|[\s]?/", $process, -1, PREG_SPLIT_NO_EMPTY);
-                if (count($ps) == 2) {
-                    $this->_filecontent[] = array(trim($ps[0]), trim($ps[1]));
+                break;
+            case 'data':
+                CommonFunctions::rfts(APP_ROOT . "/data/psstatus.txt", $buffer);
+                $processes = preg_split("/\n/", $buffer, -1, PREG_SPLIT_NO_EMPTY);
+                foreach ($processes as $process) {
+                    $ps = preg_split("/[\s]?\|[\s]?/", $process, -1, PREG_SPLIT_NO_EMPTY);
+                    if (count($ps) == 2) {
+                        $this->_filecontent[] = array(trim($ps[0]), trim($ps[1]));
+                    }
                 }
-            }
-            break;
-        default:
-            $this->global_error->addError("switch(PSI_PLUGIN_PSSTATUS_ACCESS)", "Bad psstatus configuration in psstatus.config.php");
-            break;
+                break;
+            default:
+                $this->global_error->addError("switch(PSI_PLUGIN_PSSTATUS_ACCESS)", "Bad psstatus configuration in psstatus.config.php");
+                break;
         }
     }
-    
+
     /**
      * doing all tasks to get the required informations that the plugin needs
      * result is stored in an internal array<br>the array is build like a tree,
@@ -93,9 +94,8 @@ class PSStatus extends PSI_Plugin
      *
      * @return void
      */
-    public function execute()
-    {
-        if ( empty($this->_filecontent)) {
+    public function execute() {
+        if (empty($this->_filecontent)) {
             return;
         }
         foreach (preg_split("/([\s]+)?,([\s]+)?/", PSI_PLUGIN_PSSTATUS_PROCESSES, -1, PREG_SPLIT_NO_EMPTY) as $process) {
@@ -106,14 +106,13 @@ class PSStatus extends PSI_Plugin
             }
         }
     }
-    
+
     /**
      * generates the XML content for the plugin
      *
      * @return SimpleXMLElement entire XML content for the plugin
      */
-    public function xml()
-    {
+    public function xml() {
         foreach ($this->_result as $ps) {
             $xmlps = $this->xml->addChild("Process");
             $xmlps->addAttribute("Name", $ps[0]);
@@ -121,7 +120,7 @@ class PSStatus extends PSI_Plugin
         }
         return $this->xml->getSimpleXmlElement();
     }
-    
+
     /**
      * checks an array recursive if an value is in, extended version of in_array()
      *
@@ -130,8 +129,7 @@ class PSStatus extends PSI_Plugin
      *
      * @return boolean true - found<br>false - not found
      */
-    private function _recursiveinarray($needle, $haystack)
-    {
+    private function _recursiveinarray($needle, $haystack) {
         foreach ($haystack as $stalk) {
             if ($needle == $stalk || (is_array($stalk) && $this->_recursiveinarray($needle, $stalk))) {
                 return true;
@@ -139,5 +137,7 @@ class PSStatus extends PSI_Plugin
         }
         return false;
     }
+
 }
+
 ?>

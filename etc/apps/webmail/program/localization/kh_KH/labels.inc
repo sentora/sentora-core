@@ -1,21 +1,21 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/kh_KH/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2008-2009, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-| Language: Khmer (ភាសាខ្មែរ)                                               |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Mr. SENGTHA CHAY - <sengtha@gmail.com>                        |
-| based on some words translated by Mr. KOSAL SOVAN VISAL               |
-|- <sal@sovanvisal.com>                                                 |
-+-----------------------------------------------------------------------+
-*/
+  +-----------------------------------------------------------------------+
+  | language/kh_KH/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2008-2009, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | Language: Khmer (ភាសាខ្មែរ)                                               |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Mr. SENGTHA CHAY - <sengtha@gmail.com>                        |
+  | based on some words translated by Mr. KOSAL SOVAN VISAL               |
+  |- <sal@sovanvisal.com>                                                 |
+  +-----------------------------------------------------------------------+
+ */
 
 $labels = array();
 $labels['welcome'] = '$product សូមស្វាគមន៍';
@@ -399,5 +399,4 @@ $labels['vietnamese'] = 'ភាសាវៀតណាម';
 $labels['japanese'] = 'ភាសាជប៉ុន';
 $labels['korean'] = 'ភាសាកូរ៉េ';
 $labels['chinese'] = 'ភាសាចិន';
-
 ?>

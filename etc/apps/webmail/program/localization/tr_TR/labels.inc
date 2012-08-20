@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/tr_TR/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Hasan Cansız <hasancansiz@yahoo.com>                          |
-| Author: Gökdeniz Karadağ <gokdenizk@gmail.com>                        |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/tr_TR/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Hasan Cansız <hasancansiz@yahoo.com>                          |
+  | Author: Gökdeniz Karadağ <gokdenizk@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5290 2011-09-28 17:09:50Z thomasb $
+  @version $Id: labels.inc 5290 2011-09-28 17:09:50Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = '$product, Hoş Geldiniz';
@@ -418,5 +418,4 @@ $labels['vietnamese'] = 'Vietnamca';
 $labels['japanese'] = 'Japonca';
 $labels['korean'] = 'Korece';
 $labels['chinese'] = 'Çince';
-
 ?>

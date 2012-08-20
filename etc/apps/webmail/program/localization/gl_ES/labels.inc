@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/gl_ES/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:    David Garabana Barro <david garabana com>                  |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/gl_ES/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:    David Garabana Barro <david garabana com>                  |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Benvido a $product';
@@ -430,5 +430,4 @@ $labels['vietnamese'] = 'Vietnamita';
 $labels['japanese'] = 'Xaponés';
 $labels['korean'] = 'Coreano';
 $labels['chinese'] = 'Chinés';
-
 ?>

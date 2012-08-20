@@ -1,6 +1,5 @@
 <?php
 
 $labels = array();
-$labels['useimapsubscriptions']  = 'Nur abonnierte Ordner anzeigen';
-
+$labels['useimapsubscriptions'] = 'Nur abonnierte Ordner anzeigen';
 ?>

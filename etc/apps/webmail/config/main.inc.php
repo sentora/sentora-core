@@ -1,23 +1,22 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | Main configuration file                                               |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | Main configuration file                                               |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $rcmail_config = array();
 
 // ----------------------------------
 // LOGGING/DEBUGGING
 // ----------------------------------
-
 // system error reporting: 1 = log; 2 = report (not implemented yet), 4 = show, 8 = trace
 $rcmail_config['debug_level'] = 1;
 
@@ -59,7 +58,6 @@ $rcmail_config['smtp_debug'] = false;
 // ----------------------------------
 // IMAP
 // ----------------------------------
-
 // the mail host chosen to perform the log-in
 // leave blank to show a textbox at login, give a list of hosts
 // to display a pulldown menu or set one host as string.
@@ -89,8 +87,8 @@ $rcmail_config['imap_delimiter'] = null;
 // (special directory "~" is an exception to this rule)
 // These can be used also to overwrite server's namespaces
 $rcmail_config['imap_ns_personal'] = null;
-$rcmail_config['imap_ns_other']    = null;
-$rcmail_config['imap_ns_shared']   = null;
+$rcmail_config['imap_ns_other'] = null;
+$rcmail_config['imap_ns_shared'] = null;
 
 // By default IMAP capabilities are readed after connection to IMAP server
 // In some cases, e.g. when using IMAP proxy, there's a need to refresh the list
@@ -122,7 +120,6 @@ $rcmail_config['messages_cache'] = false;
 // ----------------------------------
 // SMTP
 // ----------------------------------
-
 // SMTP server host (for sending mails).
 // To use SSL/TLS connection, enter hostname with prefix ssl:// or tls://
 // If left blank, the PHP mail() function is used
@@ -167,7 +164,6 @@ $rcmail_config['smtp_timeout'] = 0;
 // ----------------------------------
 // SYSTEM
 // ----------------------------------
-
 // THIS OPTION WILL ALLOW THE INSTALLER TO RUN AND CAN EXPOSE SENSITIVE CONFIG DATA.
 // ONLY ENABLE IT IF YOU'RE REALLY SURE WHAT YOU'RE DOING!
 $rcmail_config['enable_installer'] = false;
@@ -233,7 +229,6 @@ $rcmail_config['session_storage'] = 'db';
 // Use these hosts for accessing memcached
 // Define any number of hosts in the form hostname:port
 $rcmail_config['memcache_hosts'] = null; // e.g. array( 'localhost:11211', '192.168.1.12:11211' );
-
 // check client IP in session athorization
 $rcmail_config['ip_check'] = false;
 
@@ -279,14 +274,14 @@ $rcmail_config['password_charset'] = 'ISO-8859-1';
 $rcmail_config['sendmail_delay'] = 0;
 
 // Maximum number of recipients per message. Default: 0 (no limit)
-$rcmail_config['max_recipients'] = 0; 
+$rcmail_config['max_recipients'] = 0;
 
 // Maximum allowednumber of members of an address group. Default: 0 (no limit)
 // If 'max_recipients' is set this value should be less or equal
-$rcmail_config['max_group_members'] = 0; 
+$rcmail_config['max_group_members'] = 0;
 
 // add this user-agent to message headers when sending
-$rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;
+$rcmail_config['useragent'] = 'Roundcube Webmail/' . RCMAIL_VERSION;
 
 // use this name to compose page titles
 $rcmail_config['product_name'] = 'Roundcube Webmail';
@@ -337,7 +332,6 @@ $rcmail_config['identities_level'] = 0;
 // attachments of these types will open in a preview window
 // either a comma-separated list or an array: 'text/plain,text/html,text/xml,image/jpeg,image/gif,image/png,application/pdf'
 $rcmail_config['client_mimetypes'] = null;  # null == default
-
 // mime magic database
 $rcmail_config['mime_magic'] = '/usr/share/misc/magic';
 
@@ -356,14 +350,12 @@ $rcmail_config['email_dns_check'] = false;
 // ----------------------------------
 // PLUGINS
 // ----------------------------------
-
 // List of active plugins (in plugins/ directory)
 $rcmail_config['plugins'] = array();
 
 // ----------------------------------
 // USER INTERFACE
 // ----------------------------------
-
 // default messages sort column. Use empty value for default server's sorting, 
 // or 'arrival', 'date', 'subject', 'from', 'to', 'size', 'cc'
 $rcmail_config['message_sort_col'] = '';
@@ -486,7 +478,6 @@ $rcmail_config['undo_timeout'] = 0;
 // ----------------------------------
 // ADDRESSBOOK SETTINGS
 // ----------------------------------
-
 // This indicates which type of address book to use. Possible choises:
 // 'sql' (default) and 'ldap'.
 // If set to 'ldap' then it will look at using the first writable LDAP
@@ -512,10 +503,10 @@ $rcmail_config['ldap_public'] = array();
 //
 // So the base_dn would be uid=%fu,ou=people,o=root
 // The bind_dn would be the same as based_dn or some super user login.
-/* 
+/*
  * example config for Verisign directory
  *
-$rcmail_config['ldap_public']['Verisign'] = array(
+  $rcmail_config['ldap_public']['Verisign'] = array(
   'name'          => 'Verisign.com',
   // Replacement variables supported in host names:
   // %h - user's IMAP hostname
@@ -573,19 +564,19 @@ $rcmail_config['ldap_public']['Verisign'] = array(
   'search_fields'   => array('mail', 'cn'),  // fields to search in
   // mapping of contact fields to directory attributes
   'fieldmap' => array(
-    // Roundcube  => LDAP
-    'name'        => 'cn',
-    'surname'     => 'sn',
-    'firstname'   => 'givenName',
-    'email'       => 'mail',
-    'phone:home'  => 'homePhone',
-    'phone:work'  => 'telephoneNumber',
-    'phone:mobile' => 'mobile',
-    'street'      => 'street',
-    'zipcode'     => 'postalCode',
-    'locality'    => 'l',
-    'country'     => 'c',
-    'organization' => 'o',
+  // Roundcube  => LDAP
+  'name'        => 'cn',
+  'surname'     => 'sn',
+  'firstname'   => 'givenName',
+  'email'       => 'mail',
+  'phone:home'  => 'homePhone',
+  'phone:work'  => 'telephoneNumber',
+  'phone:mobile' => 'mobile',
+  'street'      => 'street',
+  'zipcode'     => 'postalCode',
+  'locality'    => 'l',
+  'country'     => 'c',
+  'organization' => 'o',
   ),
   'sort'          => 'cn',    // The field to sort the listing by.
   'scope'         => 'sub',   // search mode: sub|base|list
@@ -600,17 +591,17 @@ $rcmail_config['ldap_public']['Verisign'] = array(
   // definition for contact groups (uncomment if no groups are supported)
   // for the groups base_dn, the user replacements %fu, %u, $d and %dc work as for base_dn (see above)
   // if the groups base_dn is empty, the contact base_dn is used for the groups as well
-  // -> in this case, assure that groups and contacts are separated due to the concernig filters! 
+  // -> in this case, assure that groups and contacts are separated due to the concernig filters!
   'groups'        => array(
-    'base_dn'     => '',
-    'scope'       => 'sub',   // search mode: sub|base|list
-    'filter'      => '(objectClass=groupOfNames)',
-    'object_classes' => array("top", "groupOfNames"),
-    'member_attr'  => 'member',   // name of the member attribute, e.g. uniqueMember
-    'name_attr'    => 'cn',       // attribute to be used as group name
+  'base_dn'     => '',
+  'scope'       => 'sub',   // search mode: sub|base|list
+  'filter'      => '(objectClass=groupOfNames)',
+  'object_classes' => array("top", "groupOfNames"),
+  'member_attr'  => 'member',   // name of the member attribute, e.g. uniqueMember
+  'name_attr'    => 'cn',       // attribute to be used as group name
   ),
-);
-*/
+  );
+ */
 
 // An ordered array of the ids of the addressbooks that should be searched
 // when populating address autocomplete fields server-side. ex: array('sql','Verisign');
@@ -644,7 +635,6 @@ $rcmail_config['addressbook_search_mode'] = 0;
 // ----------------------------------
 // USER PREFERENCES
 // ----------------------------------
-
 // Use this charset as fallback for message decoding
 $rcmail_config['default_charset'] = 'ISO-8859-1';
 
@@ -762,10 +752,8 @@ $rcmail_config['force_7bit'] = false;
 // The entry with key '*' stands for all folders which do not have a specific list set.
 // Please note that folder names should to be in sync with $rcmail_config['default_imap_folders']
 $rcmail_config['search_mods'] = null;  // Example: array('*' => array('subject'=>1, 'from'=>1), 'Sent' => array('subject'=>1, 'to'=>1));
-
 // Defaults of the addressbook search field configuration.
 $rcmail_config['addressbook_search_mods'] = null;  // Example: array('name'=>1, 'firstname'=>1, 'surname'=>1, 'email'=>1, '*'=>1);
-
 // 'Delete always'
 // This setting reflects if mail should be always deleted
 // when moving to Trash fails. This is necessary in some setups

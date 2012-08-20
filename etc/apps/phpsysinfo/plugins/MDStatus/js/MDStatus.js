@@ -102,24 +102,24 @@ function mdstatus_diskicon(xml) {
         diskstatus = $(this).attr("Status");
         diskname = $(this).attr("Name");
         switch (diskstatus) {
-        case " ":
-        case "":
-            img = "harddriveok.png";
-            alt = "ok";
-            break;
-        case "F":
-            img = "harddrivefail.png";
-            alt = "fail";
-            break;
-        case "S":
-            img = "harddrivespare.png";
-            alt = "spare";
-            break;
-        default:
-            alert("--" + diskstatus + "--");
-            img = "error.png";
-            alt = "error";
-            break;
+            case " ":
+            case "":
+                img = "harddriveok.png";
+                alt = "ok";
+                break;
+            case "F":
+                img = "harddrivefail.png";
+                alt = "fail";
+                break;
+            case "S":
+                img = "harddrivespare.png";
+                alt = "spare";
+                break;
+            default:
+                alert("--" + diskstatus + "--");
+                img = "error.png";
+                alt = "error";
+                break;
         }
         html += "<img class=\"plugin_mdstatus_biun\" src=\"./plugins/MDStatus/gfx/" + img + "\" alt=\"" + alt + "\" />";
         html += "<small>" + diskname + "</small>";

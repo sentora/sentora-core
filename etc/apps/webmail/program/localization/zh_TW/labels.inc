@@ -1,18 +1,18 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | localization/zh_TW/labels.inc                                         |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2012, The Roundcube Dev Team                            |
- | Licensed under the GNU General Public License                         |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Nansen <Unknown>                                              |
- +-----------------------------------------------------------------------+
- @version $Id: labels.inc 5741 2012-01-08 16:20:12Z thomasb $
-*/
+  +-----------------------------------------------------------------------+
+  | localization/zh_TW/labels.inc                                         |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2012, The Roundcube Dev Team                            |
+  | Licensed under the GNU General Public License                         |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Nansen <Unknown>                                              |
+  +-----------------------------------------------------------------------+
+  @version $Id: labels.inc 5741 2012-01-08 16:20:12Z thomasb $
+ */
 
 $labels = array();
 $labels['welcome'] = '歡迎使用 $product';

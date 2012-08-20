@@ -1,23 +1,23 @@
 <?php
- 
+
 /*
-+-----------------------------------------------------------------------+
-| language/kh_KH/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2008-2009, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-| Language: Khmer (ភាសាខ្មែរ)                                               |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Mr. SENGTHA CHAY - <sengtha@gmail.com>                        |
-| based on some words translated by Mr. KOSAL SOVAN VISAL               |
-|- <sal@sovanvisal.com>                                                 |
-+-----------------------------------------------------------------------+
- 
-*/
- 
+  +-----------------------------------------------------------------------+
+  | language/kh_KH/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2008-2009, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | Language: Khmer (ភាសាខ្មែរ)                                               |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Mr. SENGTHA CHAY - <sengtha@gmail.com>                        |
+  | based on some words translated by Mr. KOSAL SOVAN VISAL               |
+  |- <sal@sovanvisal.com>                                                 |
+  +-----------------------------------------------------------------------+
+
+ */
+
 $messages = array();
 $messages['loginfailed'] = 'ការពិនិត្យចូលមិនបានសំរេច ព្រោះមានបញ្ហាកើតឡើង';
 $messages['cookiesdisabled'] = 'កម្មវិធីមើលគេហទំព័រនេះមិនទទួលយក Cookies';
@@ -139,5 +139,4 @@ $messages['nametoolong'] = 'ឈ្មោះវែងពេក';
 $messages['folderupdated'] = 'ផ្លាស់ប្តូរថតបានដោយជោគជ័យ';
 $messages['foldercreated'] = 'បង្កើតថតបានដោយជោគជ័យ';
 $messages['invalidimageformat'] = 'ប្រភេទរូបភាពមិនត្រឹមត្រូវ';
- 
 ?>

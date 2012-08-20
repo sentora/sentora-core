@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SMART Plugin
  *
@@ -24,8 +25,8 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class SMART extends PSI_Plugin
-{
+class SMART extends PSI_Plugin {
+
     /**
      * variable, which holds the content of the command
      * @var array
@@ -49,15 +50,14 @@ class SMART extends PSI_Plugin
      *
      * @param String $enc target encoding
      */
-    public function __construct($enc)
-    {
+    public function __construct($enc) {
         parent::__construct(__CLASS__, $enc);
         switch (PSI_PLUGIN_SMART_ACCESS) {
             case 'command':
                 $disks = preg_split('/([\s]+)?,([\s]+)?/', PSI_PLUGIN_SMART_DEVICES, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($disks as $disk) {
                     $buffer = "";
-                    if (CommonFunctions::executeProgram('smartctl', '--all'.((PSI_PLUGIN_SMART_DEVICE) ? ' --device '.PSI_PLUGIN_SMART_DEVICE : '').' '.$disk, $buffer, PSI_DEBUG)) {
+                    if (CommonFunctions::executeProgram('smartctl', '--all' . ((PSI_PLUGIN_SMART_DEVICE) ? ' --device ' . PSI_PLUGIN_SMART_DEVICE : '') . ' ' . $disk, $buffer, PSI_DEBUG)) {
                         $this->_filecontent[$disk] = $buffer;
                     }
                 }
@@ -69,10 +69,10 @@ class SMART extends PSI_Plugin
                 break;
             case 'data':
                 $disks = preg_split('/([\s]+)?,([\s]+)?/', PSI_PLUGIN_SMART_DEVICES, -1, PREG_SPLIT_NO_EMPTY);
-                $dn=0;
+                $dn = 0;
                 foreach ($disks as $disk) {
-                    $buffer="";
-                    if ((CommonFunctions::rfts(APP_ROOT."/data/SMART{$dn}.txt", $buffer))&&(!empty($buffer))){
+                    $buffer = "";
+                    if ((CommonFunctions::rfts(APP_ROOT . "/data/SMART{$dn}.txt", $buffer)) && (!empty($buffer))) {
                         $this->_filecontent[$disk] = $buffer;
                     }
                     $dn++;
@@ -95,16 +95,15 @@ class SMART extends PSI_Plugin
      *
      * @return void
      */
-    public function execute()
-    {
-        if ( empty($this->_filecontent) || empty($this->_ids)) {
+    public function execute() {
+        if (empty($this->_filecontent) || empty($this->_ids)) {
             return;
         }
-        foreach ($this->_filecontent as $disk=>$result) {
+        foreach ($this->_filecontent as $disk => $result) {
             preg_match('/Vendor Specific SMART Attributes with Thresholds\:\n(.*)\n((.|\n)*)\n\nSMART Error Log Version\:/', $result, $vendorInfos);
             if (!empty($vendorInfos)) {
                 $labels = preg_split('/[\s]+/', $vendorInfos[1]);
-                foreach ($labels as $k=>$v) {
+                foreach ($labels as $k => $v) {
                     $labels[$k] = str_replace('#', '', strtolower($v));
                 }
                 $lines = preg_split('/\n/', $vendorInfos[2]);
@@ -128,44 +127,44 @@ class SMART extends PSI_Plugin
                 }
             } else {
                 //SCSI devices
-                if ((!empty($this->_ids[1]))&&($this->_ids[1]=="raw_value")) {
+                if ((!empty($this->_ids[1])) && ($this->_ids[1] == "raw_value")) {
                     preg_match('/read\: (.*)\n/', $result, $lines);
-                    if ((!empty($lines))&&(!empty($lines[0]))) {
-                        $values=preg_split('/[\s,]+/',$lines[0]);
-                        if ((!empty($values))&&($values[7]!=null)){
+                    if ((!empty($lines)) && (!empty($lines[0]))) {
+                        $values = preg_split('/[\s,]+/', $lines[0]);
+                        if ((!empty($values)) && ($values[7] != null)) {
                             $this->_result[$disk][0]['id'] = 1;
                             $this->_result[$disk][0]['attribute_name'] = "Raw_Read_Error_Rate";
                             $this->_result[$disk][0]['raw_value'] = $values[7];
                         }
                     }
                 }
-                if ((!empty($this->_ids[5]))&&($this->_ids[5]=="raw_value")) {
+                if ((!empty($this->_ids[5])) && ($this->_ids[5] == "raw_value")) {
                     preg_match('/Elements in grown defect list\: (.*)\n/', $result, $lines);
-                    if ((!empty($lines))&&(!empty($lines[0]))) {
-                        $values=preg_split('/[\s,]+/',$lines[0]);
-                        if ((!empty($values))&&($values[5]!=null)){
+                    if ((!empty($lines)) && (!empty($lines[0]))) {
+                        $values = preg_split('/[\s,]+/', $lines[0]);
+                        if ((!empty($values)) && ($values[5] != null)) {
                             $this->_result[$disk][1]['id'] = 5;
                             $this->_result[$disk][1]['attribute_name'] = "Reallocated_Sector_Ct";
                             $this->_result[$disk][1]['raw_value'] = $values[5];
                         }
                     }
                 }
-                if ((!empty($this->_ids[9]))&&($this->_ids[9]=="raw_value")) {
+                if ((!empty($this->_ids[9])) && ($this->_ids[9] == "raw_value")) {
                     preg_match('/ number of hours powered up = (.*)\n/', $result, $lines);
-                    if ((!empty($lines))&&(!empty($lines[0]))) {
-                        $values=preg_split('/[\s,.]+/',$lines[0]);
-                        if ((!empty($values))&&($values[7]!=null)){
+                    if ((!empty($lines)) && (!empty($lines[0]))) {
+                        $values = preg_split('/[\s,.]+/', $lines[0]);
+                        if ((!empty($values)) && ($values[7] != null)) {
                             $this->_result[$disk][2]['id'] = 9;
                             $this->_result[$disk][2]['attribute_name'] = "Power_On_Hours";
-                            $this->_result[$disk][2]['raw_value'] =  $values[7];
+                            $this->_result[$disk][2]['raw_value'] = $values[7];
                         }
                     }
                 }
-                if ((!empty($this->_ids[194]))&&($this->_ids[194]=="raw_value")) {
+                if ((!empty($this->_ids[194])) && ($this->_ids[194] == "raw_value")) {
                     preg_match('/Current Drive Temperature\: (.*)\n/', $result, $lines);
-                    if ((!empty($lines))&&(!empty($lines[0]))) {
-                        $values=preg_split('/[\s,]+/',$lines[0]);
-                        if ((!empty($values))&&($values[3]!=null)){
+                    if ((!empty($lines)) && (!empty($lines[0]))) {
+                        $values = preg_split('/[\s,]+/', $lines[0]);
+                        if ((!empty($values)) && ($values[3] != null)) {
                             $this->_result[$disk][3]['id'] = 194;
                             $this->_result[$disk][3]['attribute_name'] = "Temperature_Celsius";
                             $this->_result[$disk][3]['raw_value'] = $values[3];
@@ -176,22 +175,24 @@ class SMART extends PSI_Plugin
         }
         //Usage test
         $newIds = array();
-        foreach ($this->_ids as $id=>$column_name) {
+        foreach ($this->_ids as $id => $column_name) {
             $found = 0;
-            foreach ($this->_result as $diskName=>$diskInfos) {
-                if ($found!=2) foreach ($diskInfos as $lineInfos) {
-                    if ($found!=2) {
-                        $found = 0;
-                        foreach ($lineInfos as $label=>$value) {
-                            if (($found==0)&&($label=="id")&&($value==$id))
-                            $found = 1;
-                            if (($found==1)&&($label==$column_name))
-                            $found = 2;
+            foreach ($this->_result as $diskName => $diskInfos) {
+                if ($found != 2)
+                    foreach ($diskInfos as $lineInfos) {
+                        if ($found != 2) {
+                            $found = 0;
+                            foreach ($lineInfos as $label => $value) {
+                                if (($found == 0) && ($label == "id") && ($value == $id))
+                                    $found = 1;
+                                if (($found == 1) && ($label == $column_name))
+                                    $found = 2;
+                            }
                         }
                     }
-                }
             }
-            if ($found==2) $newIds[$id] = $this->_ids[$id];
+            if ($found == 2)
+                $newIds[$id] = $this->_ids[$id];
         }
         $this->_ids = $newIds;
     }
@@ -201,15 +202,14 @@ class SMART extends PSI_Plugin
      *
      * @return SimpleXMLObject entire XML content for the plugin
      */
-    public function xml()
-    {
-        if ( empty($this->_result) || empty($this->_ids)) {
+    public function xml() {
+        if (empty($this->_result) || empty($this->_ids)) {
             return $this->xml->getSimpleXmlElement();
         }
 
         $columnsChild = $this->xml->addChild('columns');
         // Fill the xml with preferences
-        foreach ($this->_ids as $id=>$column_name) {
+        foreach ($this->_ids as $id => $column_name) {
             $columnChild = $columnsChild->addChild('column');
             $columnChild->addAttribute('id', $id);
             $columnChild->addAttribute('name', $column_name);
@@ -217,17 +217,19 @@ class SMART extends PSI_Plugin
 
         $disksChild = $this->xml->addChild('disks');
         // Now fill the xml with S.M.A.R.T datas
-        foreach ($this->_result as $diskName=>$diskInfos) {
+        foreach ($this->_result as $diskName => $diskInfos) {
             $diskChild = $disksChild->addChild('disk');
             $diskChild->addAttribute('name', $diskName);
             foreach ($diskInfos as $lineInfos) {
                 $lineChild = $diskChild->addChild('attribute');
-                foreach ($lineInfos as $label=>$value) {
+                foreach ($lineInfos as $label => $value) {
                     $lineChild->addAttribute($label, $value);
                 }
             }
         }
         return $this->xml->getSimpleXmlElement();
     }
+
 }
+
 ?>

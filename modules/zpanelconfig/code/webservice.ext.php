@@ -20,7 +20,7 @@ class webservice extends ws_xmws {
         $response_xml = "\n";
         $sql = $zdbh->prepare("SELECT * FROM x_settings ORDER BY so_id_pk ASC");
         $sql->execute();
-        
+
         while ($rowoptions = $sql->fetch()) {
 
             if ($rowoptions['so_value_tx'] == "") {
@@ -44,7 +44,7 @@ class webservice extends ws_xmws {
 
         return $dataobject->getDataObject();
     }
-    
+
 }
 
 ?>

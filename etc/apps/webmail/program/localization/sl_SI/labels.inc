@@ -1,22 +1,22 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/sl_SI/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Andrej Sossi <asossi@dotcom.ts.it>                            |
-|         Andrej Mocilnik <amocilnik@dotcom.ts.it>                      |
-|         Barbara Krasovec <barbarak@arnes.si>                          |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/sl_SI/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Andrej Sossi <asossi@dotcom.ts.it>                            |
+  |         Andrej Mocilnik <amocilnik@dotcom.ts.it>                      |
+  |         Barbara Krasovec <barbarak@arnes.si>                          |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Dobrodošli v $product';
@@ -434,5 +434,4 @@ $labels['vietnamese'] = 'Vietnamsko';
 $labels['japanese'] = 'Japonsko';
 $labels['korean'] = 'Korejsko';
 $labels['chinese'] = 'Kitajsko';
-
 ?>

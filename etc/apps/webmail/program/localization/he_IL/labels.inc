@@ -1,19 +1,19 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/he_IL/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Moshe Leibovitch  <moish@mln.co.il>                           |
-| Updates: Noor Dawod <noor@comrax.com>                                 |
-| Updates: Moshe Leibovitch  <moish@mln.co.il>  28112011                |
-+-----------------------------------------------------------------------+
-*/
+  +-----------------------------------------------------------------------+
+  | language/he_IL/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Moshe Leibovitch  <moish@mln.co.il>                           |
+  | Updates: Noor Dawod <noor@comrax.com>                                 |
+  | Updates: Moshe Leibovitch  <moish@mln.co.il>  28112011                |
+  +-----------------------------------------------------------------------+
+ */
 
 $labels = array();
 $labels['welcome'] = 'ברוך בואך אל $product';
@@ -431,5 +431,4 @@ $labels['vietnamese'] = 'וויטנאמי';
 $labels['japanese'] = 'יפני';
 $labels['korean'] = 'קוריאני';
 $labels['chinese'] = 'סיני';
-
 ?>

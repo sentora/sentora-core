@@ -1,4 +1,5 @@
 <?php
+
 // +-----------------------------------------------------------------------+ 
 // | Copyright (c) 2002-2003 Richard Heyes                                 | 
 // | All rights reserved.                                                  | 
@@ -35,29 +36,29 @@
 // $Id: Plain.php 584 2007-05-24 03:49:19Z estadtherr $
 
 /**
-* Implmentation of PLAIN SASL mechanism
-*
-* @author  Richard Heyes <richard@php.net>
-* @access  public
-* @version 1.0
-* @package Auth_SASL
-*/
-
+ * Implmentation of PLAIN SASL mechanism
+ *
+ * @author  Richard Heyes <richard@php.net>
+ * @access  public
+ * @version 1.0
+ * @package Auth_SASL
+ */
 require_once('Auth/SASL/Common.php');
 
-class Auth_SASL_Plain extends Auth_SASL_Common
-{
+class Auth_SASL_Plain extends Auth_SASL_Common {
+
     /**
-    * Returns PLAIN response
-    *
-    * @param  string $authcid   Authentication id (username)
-    * @param  string $pass      Password
-    * @param  string $authzid   Autorization id
-    * @return string            PLAIN Response
-    */
-    function getResponse($authcid, $pass, $authzid = '')
-    {
+     * Returns PLAIN response
+     *
+     * @param  string $authcid   Authentication id (username)
+     * @param  string $pass      Password
+     * @param  string $authzid   Autorization id
+     * @return string            PLAIN Response
+     */
+    function getResponse($authcid, $pass, $authzid = '') {
         return $authzid . chr(0) . $authcid . chr(0) . $pass;
     }
+
 }
+
 ?>

@@ -24,25 +24,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
-
-	
-	static $ok;
-	static $password;
-	static $alreadyexists;
-	static $validemail;
-	static $noaddress;
-	static $editmailbox;
-	static $update;
-	static $delete;
-	static $create;
+    static $ok;
+    static $password;
+    static $alreadyexists;
+    static $validemail;
+    static $noaddress;
+    static $editmailbox;
+    static $update;
+    static $delete;
+    static $create;
 
     /**
      * The 'worker' methods.
      */
-	 
     static function ListMailboxes($uid) {
         global $zdbh;
         global $controller;
@@ -54,15 +50,15 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
-				if ($rowmailboxes['mb_enabled_in'] == 1){
-					$status = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-				} else {
-					$status = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
-				}
+                if ($rowmailboxes['mb_enabled_in'] == 1) {
+                    $status = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
+                } else {
+                    $status = "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
+                }
                 array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
-									   'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
-									   'status'  => $status,
-									   'id' 	 => $rowmailboxes['mb_id_pk']));
+                    'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+                    'status' => $status,
+                    'id' => $rowmailboxes['mb_id_pk']));
             }
             return $res;
         } else {
@@ -80,22 +76,22 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
-				if ($rowmailboxes['mb_enabled_in'] == 1){
-					$ischeck = "CHECKED";
-				} else {
-					$ischeck = NULL;
-				}
+                if ($rowmailboxes['mb_enabled_in'] == 1) {
+                    $ischeck = "CHECKED";
+                } else {
+                    $ischeck = NULL;
+                }
                 array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
-									   'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
-									   'ischeck'  => $ischeck,
-									   'id' 	 => $rowmailboxes['mb_id_pk']));
+                    'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+                    'ischeck' => $ischeck,
+                    'id' => $rowmailboxes['mb_id_pk']));
             }
             return $res;
         } else {
             return false;
         }
     }
-	
+
     static function ListDomains($uid) {
         global $zdbh;
         global $controller;
@@ -114,137 +110,137 @@ class module_controller {
             return false;
         }
     }
-	
-	static function ExecuteAddMailbox($uid, $address, $domain, $password){
-		global $zdbh;
+
+    static function ExecuteAddMailbox($uid, $address, $domain, $password) {
+        global $zdbh;
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail($uid);
-		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $domain, $password))) {
-			return false;
-		}
-			runtime_hook::Execute('OnBeforeCreateMailbox');
-			$address = strtolower(str_replace(' ', '', $address));
-			$fulladdress = strtolower(str_replace(' ', '', $address . "@" . $domain));
-			self::$create=true;
-			// Include mail server specific file here.
-			if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
-				include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-			}
-			$sql = "INSERT INTO x_mailboxes (mb_acc_fk,
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $domain, $password))) {
+            return false;
+        }
+        runtime_hook::Execute('OnBeforeCreateMailbox');
+        $address = strtolower(str_replace(' ', '', $address));
+        $fulladdress = strtolower(str_replace(' ', '', $address . "@" . $domain));
+        self::$create = true;
+        // Include mail server specific file here.
+        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
+            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        }
+        $sql = "INSERT INTO x_mailboxes (mb_acc_fk,
 											 mb_address_vc,
 											 mb_created_ts) VALUES (
 											 " . $currentuser['userid'] . ",
 											 '" . $fulladdress . "',
 											 " . time() . ")";
-			$sql = $zdbh->prepare($sql);
-			$sql->execute();
-			runtime_hook::Execute('OnAfterCreateMailbox');
-			self::$ok = true;
-			return true;
-	}
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        runtime_hook::Execute('OnAfterCreateMailbox');
+        self::$ok = true;
+        return true;
+    }
 
-	static function ExecuteDeleteMailbox($mid){
-		global $zdbh;
-		global $controller;
-		runtime_hook::Execute('OnBeforeDeleteMailbox');
-		self::$delete=true;
-		$rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->Fetch();
-		// Include mail server specific file here.
-		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-		}
-		$sql = "UPDATE x_mailboxes SET mb_deleted_ts=" . time() . " WHERE mb_id_pk=" . $mid . "";
-		$sql = $zdbh->prepare($sql);
-		$sql->execute();
-		runtime_hook::Execute('OnAfterDeleteMailbox');
-		self::$ok = true;
-	}
-	
-	static function ExecuteUpdateMailbox($mid, $password, $enabled){
-		global $zdbh;
-		global $controller;
-		runtime_hook::Execute('OnBeforeUpdateMailbox');
-		$rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->fetch();
-		if ($enabled <> 0){
-			self::ExecuteEnableMailbox($mid);
-		} else {
-			self::ExecuteDisableMailbox($mid);			
-		}
-		self::$update=true;
-		// Include mail server specific file here.
-		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-		}
-		runtime_hook::Execute('OnAfterUpdateMailbox');
-		self::$ok = true;
-		return;
-	}
-	
-	static function ExecuteEnableMailbox($mid){
-		global $zdbh;
-		runtime_hook::Execute('OnBeforeEnableMailbox');
-		$retval = false;
-		$sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=1 WHERE mb_id_pk='" . $mid . "'");
-		$sql->execute();
-		$retval = true;
-		runtime_hook::Execute('OnAfterEnableMailbox');
-		return $retval;
-	}
-
-	static function ExecuteDisableMailbox($mid){
-		global $zdbh;
-		runtime_hook::Execute('OnBeforeDisableMailbox');
-		$retval = false;
-		$sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=0 WHERE mb_id_pk='" . $mid . "'");
-		$sql->execute();
-		$retval = true;
-		runtime_hook::Execute('OnAfterDisableMailbox');
-		return $retval;	
-	}
-
-	static function CheckCreateForErrors($address, $domain, $password){
-		global $zdbh;
+    static function ExecuteDeleteMailbox($mid) {
+        global $zdbh;
         global $controller;
-		$fulladdress = str_replace(' ', '', $address . "@" . $domain);
-		$fulladdress = strtolower($fulladdress);
-		if (fs_director::CheckForEmptyValue($address)){
-			self::$noaddress = true;
-			return false;
-		}
-		if (fs_director::CheckForEmptyValue($password)){
-			self::$password = true;
-			return false;
-		}
-		if (!self::IsValidEmail($fulladdress)){
-			self::$validemail = true;
-			return false;
-		}
+        runtime_hook::Execute('OnBeforeDeleteMailbox');
+        self::$delete = true;
+        $rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->Fetch();
+        // Include mail server specific file here.
+        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
+            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        }
+        $sql = "UPDATE x_mailboxes SET mb_deleted_ts=" . time() . " WHERE mb_id_pk=" . $mid . "";
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        runtime_hook::Execute('OnAfterDeleteMailbox');
+        self::$ok = true;
+    }
+
+    static function ExecuteUpdateMailbox($mid, $password, $enabled) {
+        global $zdbh;
+        global $controller;
+        runtime_hook::Execute('OnBeforeUpdateMailbox');
+        $rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->fetch();
+        if ($enabled <> 0) {
+            self::ExecuteEnableMailbox($mid);
+        } else {
+            self::ExecuteDisableMailbox($mid);
+        }
+        self::$update = true;
+        // Include mail server specific file here.
+        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
+            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        }
+        runtime_hook::Execute('OnAfterUpdateMailbox');
+        self::$ok = true;
+        return;
+    }
+
+    static function ExecuteEnableMailbox($mid) {
+        global $zdbh;
+        runtime_hook::Execute('OnBeforeEnableMailbox');
+        $retval = false;
+        $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=1 WHERE mb_id_pk='" . $mid . "'");
+        $sql->execute();
+        $retval = true;
+        runtime_hook::Execute('OnAfterEnableMailbox');
+        return $retval;
+    }
+
+    static function ExecuteDisableMailbox($mid) {
+        global $zdbh;
+        runtime_hook::Execute('OnBeforeDisableMailbox');
+        $retval = false;
+        $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=0 WHERE mb_id_pk='" . $mid . "'");
+        $sql->execute();
+        $retval = true;
+        runtime_hook::Execute('OnAfterDisableMailbox');
+        return $retval;
+    }
+
+    static function CheckCreateForErrors($address, $domain, $password) {
+        global $zdbh;
+        global $controller;
+        $fulladdress = str_replace(' ', '', $address . "@" . $domain);
+        $fulladdress = strtolower($fulladdress);
+        if (fs_director::CheckForEmptyValue($address)) {
+            self::$noaddress = true;
+            return false;
+        }
+        if (fs_director::CheckForEmptyValue($password)) {
+            self::$password = true;
+            return false;
+        }
+        if (!self::IsValidEmail($fulladdress)) {
+            self::$validemail = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc='" . $fulladdress . "' AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
+            self::$alreadyexists = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
+            self::$alreadyexists = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_distlists WHERE dl_address_vc='" . $fulladdress . "' AND dl_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
+            self::$alreadyexists = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $fulladdress . "' AND al_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
-		return true;
-	}
+            self::$alreadyexists = true;
+            return false;
+        }
+        return true;
+    }
 
     static function IsValidEmail($email) {
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
@@ -252,22 +248,21 @@ class module_controller {
         }
         return true;
     }
-	
+
     /**
      * End 'worker' methods.
      */
-	
+
     /**
      * Webinterface sudo methods.
      */
-
     static function doAddMailbox() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddMailbox($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain'], $formvars['inPassword']))
-			self::$ok = true;
-            return true;
+            self::$ok = true;
+        return true;
         return false;
     }
 
@@ -290,16 +285,16 @@ class module_controller {
 
     static function doUpdateMailbox() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-		if (isset($formvars['inEnabled'])){
-			$enabled = fs_director::GetCheckboxValue($formvars['inEnabled']);
-		} else {
-			$enabled = 0;
-		}
+        if (isset($formvars['inEnabled'])) {
+            $enabled = fs_director::GetCheckboxValue($formvars['inEnabled']);
+        } else {
+            $enabled = 0;
+        }
         if (self::ExecuteUpdateMailbox($formvars['inSave'], $formvars['inPassword'], $enabled))
-			self::$ok = true;
-            return true;
+            self::$ok = true;
+        return true;
         return false;
     }
 
@@ -312,23 +307,23 @@ class module_controller {
     }
 
     static function getMailboxList() {
-		global $controller;
+        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListMailboxes($currentuser['userid']);
     }
 
     static function getDomainList() {
-		global $controller;
+        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDomains($currentuser['userid']);
     }
-	
+
     static function getCurrentMailboxList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListCurrentMailboxes($controller->GetControllerRequest('URL', 'other'));
     }
-	
+
     static function GetMailOption($name) {
         global $zdbh;
         $result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
@@ -358,11 +353,11 @@ class module_controller {
     static function getisEditMailbox() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")){
-			return true;
-		} else {
-        	return false;
-		}
+        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static function getEditCurrentMailboxName() {
@@ -385,14 +380,14 @@ class module_controller {
         }
     }
 
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
@@ -400,7 +395,7 @@ class module_controller {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
-	
+
     static function getQuotaLimit() {
         global $zdbh;
         global $controller;
@@ -442,11 +437,11 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your mailboxes have been saved successfully!"), "zannounceok");
         }
         return;
-    } 
-	
+    }
+
     /**
      * Webinterface sudo methods.
-     */		
+     */
 }
 
 ?>

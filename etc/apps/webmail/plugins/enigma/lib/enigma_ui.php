@@ -1,37 +1,36 @@
 <?php
-/*
- +-------------------------------------------------------------------------+
- | User Interface for the Enigma Plugin                                    |
- |                                                                         |
- | This program is free software; you can redistribute it and/or modify    |
- | it under the terms of the GNU General Public License version 2          |
- | as published by the Free Software Foundation.                           |
- |                                                                         |
- | This program is distributed in the hope that it will be useful,         |
- | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
- | GNU General Public License for more details.                            |
- |                                                                         |
- | You should have received a copy of the GNU General Public License along |
- | with this program; if not, write to the Free Software Foundation, Inc., |
- | 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.             |
- |                                                                         |
- +-------------------------------------------------------------------------+
- | Author: Aleksander Machniak <alec@alec.pl>                              |
- +-------------------------------------------------------------------------+
-*/
 
-class enigma_ui
-{
+/*
+  +-------------------------------------------------------------------------+
+  | User Interface for the Enigma Plugin                                    |
+  |                                                                         |
+  | This program is free software; you can redistribute it and/or modify    |
+  | it under the terms of the GNU General Public License version 2          |
+  | as published by the Free Software Foundation.                           |
+  |                                                                         |
+  | This program is distributed in the hope that it will be useful,         |
+  | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
+  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
+  | GNU General Public License for more details.                            |
+  |                                                                         |
+  | You should have received a copy of the GNU General Public License along |
+  | with this program; if not, write to the Free Software Foundation, Inc., |
+  | 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.             |
+  |                                                                         |
+  +-------------------------------------------------------------------------+
+  | Author: Aleksander Machniak <alec@alec.pl>                              |
+  +-------------------------------------------------------------------------+
+ */
+
+class enigma_ui {
+
     private $rc;
     private $enigma;
     private $home;
     private $css_added;
     private $data;
 
-
-    function __construct($enigma_plugin, $home='')
-    {
+    function __construct($enigma_plugin, $home = '') {
         $this->enigma = $enigma_plugin;
         $this->rc = $enigma_plugin->rc;
         // we cannot use $enigma_plugin->home here
@@ -43,8 +42,7 @@ class enigma_ui
      *
      * @param string Preferences section
      */
-    function init($section='')
-    {
+    function init($section = '') {
         $this->enigma->include_script('enigma.js');
 
         // Enigma actions
@@ -81,9 +79,8 @@ class enigma_ui
                     'searchform' => array($this->rc->output, 'search_form'),
                 ));
                 $this->rc->output->set_pagetitle($this->enigma->gettext('enigmacerts'));
-                $this->rc->output->send('enigma.certs'); 
-            }
-            else {
+                $this->rc->output->send('enigma.certs');
+            } else {
                 $this->rc->output->add_handlers(array(
                     'keyslist' => array($this, 'tpl_keys_list'),
                     'keyframe' => array($this, 'tpl_key_frame'),
@@ -91,16 +88,15 @@ class enigma_ui
                     'searchform' => array($this->rc->output, 'search_form'),
                 ));
                 $this->rc->output->set_pagetitle($this->enigma->gettext('enigmakeys'));
-                $this->rc->output->send('enigma.keys'); 
+                $this->rc->output->send('enigma.keys');
             }
         }
     }
 
-   /**
+    /**
      * Adds CSS style file to the page header.
      */
-    function add_css()
-    {
+    function add_css() {
         if ($this->css_loaded)
             return;
 
@@ -119,8 +115,7 @@ class enigma_ui
      *
      * @return string HTML output
      */
-    function tpl_key_frame($attrib)
-    {
+    function tpl_key_frame($attrib) {
         if (!$attrib['id']) {
             $attrib['id'] = 'rcmkeysframe';
         }
@@ -128,8 +123,8 @@ class enigma_ui
         $attrib['name'] = $attrib['id'];
 
         $this->rc->output->set_env('contentframe', $attrib['name']);
-        $this->rc->output->set_env('blankpage', $attrib['src'] ? 
-            $this->rc->output->abs_url($attrib['src']) : 'program/blank.gif');
+        $this->rc->output->set_env('blankpage', $attrib['src'] ?
+                        $this->rc->output->abs_url($attrib['src']) : 'program/blank.gif');
 
         return html::tag('iframe', $attrib);
     }
@@ -141,8 +136,7 @@ class enigma_ui
      *
      * @return string HTML content
      */
-    function tpl_keys_list($attrib)
-    {
+    function tpl_keys_list($attrib) {
         // add id to message list table if not specified
         if (!strlen($attrib['id'])) {
             $attrib['id'] = 'rcmenigmakeyslist';
@@ -167,13 +161,12 @@ class enigma_ui
     /**
      * Key listing (and searching) request handler
      */
-    private function key_list()
-    {
+    private function key_list() {
         $this->enigma->load_engine();
 
         $pagesize = $this->rc->config->get('pagesize', 100);
-        $page     = max(intval(get_input_value('_p', RCUBE_INPUT_GPC)), 1);
-        $search   = get_input_value('_q', RCUBE_INPUT_GPC);
+        $page = max(intval(get_input_value('_p', RCUBE_INPUT_GPC)), 1);
+        $search = get_input_value('_q', RCUBE_INPUT_GPC);
 
         // define list of cols to be displayed
         $a_show_cols = array('name');
@@ -200,18 +193,16 @@ class enigma_ui
                 $size = count($list);
 
                 // Add rows
-                foreach($list as $idx => $key) {
-                    $this->rc->output->command('enigma_add_list_row',
-                        array('name' => Q($key->name), 'id' => $key->id));
+                foreach ($list as $idx => $key) {
+                    $this->rc->output->command('enigma_add_list_row', array('name' => Q($key->name), 'id' => $key->id));
                 }
             }
         }
 
         $this->rc->output->set_env('search_request', $search);
-        $this->rc->output->set_env('pagecount', ceil($listsize/$pagesize));
+        $this->rc->output->set_env('pagecount', ceil($listsize / $pagesize));
         $this->rc->output->set_env('current_page', $page);
-        $this->rc->output->command('set_rowcount',
-            $this->get_rowcount_text($listsize, $size, $page));
+        $this->rc->output->command('set_rowcount', $this->get_rowcount_text($listsize, $size, $page));
 
         $this->rc->output->send();
     }
@@ -223,8 +214,7 @@ class enigma_ui
      *
      * @return string HTML output
      */
-    function tpl_keys_rowcount($attrib)
-    {
+    function tpl_keys_rowcount($attrib) {
         if (!$attrib['id'])
             $attrib['id'] = 'rcmcountdisplay';
 
@@ -236,8 +226,7 @@ class enigma_ui
     /**
      * Returns text representation of list records counter
      */
-    private function get_rowcount_text($all=0, $curr_count=0, $page=1)
-    {
+    private function get_rowcount_text($all = 0, $curr_count = 0, $page = 1) {
         if (!$curr_count)
             $out = $this->enigma->gettext('nokeysfound');
         else {
@@ -247,10 +236,10 @@ class enigma_ui
             $out = $this->enigma->gettext(array(
                 'name' => 'keysfromto',
                 'vars' => array(
-                    'from'  => $first + 1,
-                    'to'    => $first + $curr_count,
+                    'from' => $first + 1,
+                    'to' => $first + $curr_count,
                     'count' => $all)
-            ));
+                    ));
         }
 
         return $out;
@@ -259,8 +248,7 @@ class enigma_ui
     /**
      * Key information page handler
      */
-    private function key_info()
-    {
+    private function key_info() {
         $id = get_input_value('_id', RCUBE_INPUT_GET);
 
         $this->enigma->load_engine();
@@ -286,18 +274,16 @@ class enigma_ui
     /**
      * Template object for key name
      */
-    function tpl_key_name($attrib)
-    {
+    function tpl_key_name($attrib) {
         return Q($this->data->name);
     }
 
     /**
      * Template object for key information page content
      */
-    function tpl_key_data($attrib)
-    {
+    function tpl_key_data($attrib) {
         $out = '';
-        $table = new html_table(array('cols' => 2)); 
+        $table = new html_table(array('cols' => 2));
 
         // Key user ID
         $table->add('title', $this->enigma->gettext('keyuserid'));
@@ -317,25 +303,19 @@ class enigma_ui
         $table->add('title', $this->enigma->gettext('fingerprint'));
         $table->add(null, $this->data->subkeys[0]->get_fingerprint());
 
-        $out .= html::tag('fieldset', null,
-            html::tag('legend', null,
-                $this->enigma->gettext('basicinfo')) . $table->show($attrib));
+        $out .= html::tag('fieldset', null, html::tag('legend', null, $this->enigma->gettext('basicinfo')) . $table->show($attrib));
 
         // Subkeys
-        $table = new html_table(array('cols' => 6)); 
+        $table = new html_table(array('cols' => 6));
         // Columns: Type, ID, Algorithm, Size, Created, Expires
 
-        $out .= html::tag('fieldset', null,
-            html::tag('legend', null, 
-                $this->enigma->gettext('subkeys')) . $table->show($attrib));
+        $out .= html::tag('fieldset', null, html::tag('legend', null, $this->enigma->gettext('subkeys')) . $table->show($attrib));
 
         // Additional user IDs
         $table = new html_table(array('cols' => 2));
         // Columns: User ID, Validity
 
-        $out .= html::tag('fieldset', null,
-            html::tag('legend', null, 
-                $this->enigma->gettext('userids')) . $table->show($attrib));
+        $out .= html::tag('fieldset', null, html::tag('legend', null, $this->enigma->gettext('userids')) . $table->show($attrib));
 
         return $out;
     }
@@ -343,8 +323,7 @@ class enigma_ui
     /**
      * Key import page handler
      */
-    private function key_import()
-    {
+    private function key_import() {
         // Import process
         if ($_FILES['_file']['tmp_name'] && is_uploaded_file($_FILES['_file']['tmp_name'])) {
             $this->enigma->load_engine();
@@ -358,8 +337,7 @@ class enigma_ui
                 else
                     $this->rc->output->command('parent.enigma_loadframe');
 
-                $this->rc->output->show_message('enigma.keysimportsuccess', 'confirmation',
-                    array('new' => $result['imported'], 'old' => $result['unchanged']));
+                $this->rc->output->show_message('enigma.keysimportsuccess', 'confirmation', array('new' => $result['imported'], 'old' => $result['unchanged']));
 
                 $this->rc->output->send('iframe');
             }
@@ -368,8 +346,7 @@ class enigma_ui
         }
         else if ($err = $_FILES['_file']['error']) {
             if ($err == UPLOAD_ERR_INI_SIZE || $err == UPLOAD_ERR_FORM_SIZE) {
-                $this->rc->output->show_message('filesizeerror', 'error',
-                    array('size' => show_bytes(parse_bytes(ini_get('upload_max_filesize')))));
+                $this->rc->output->show_message('filesizeerror', 'error', array('size' => show_bytes(parse_bytes(ini_get('upload_max_filesize')))));
             } else {
                 $this->rc->output->show_message('fileuploaderror', 'error');
             }
@@ -386,16 +363,14 @@ class enigma_ui
     /**
      * Template object for key import (upload) form
      */
-    function tpl_key_import_form($attrib)
-    {
+    function tpl_key_import_form($attrib) {
         $attrib += array('id' => 'rcmKeyImportForm');
 
         $upload = new html_inputfield(array('type' => 'file', 'name' => '_file',
-            'id' => 'rcmimportfile', 'size' => 30));
+                    'id' => 'rcmimportfile', 'size' => 30));
 
-        $form = html::p(null,
-            Q($this->enigma->gettext('keyimporttext'), 'show')
-            . html::br() . html::br() . $upload->show()
+        $form = html::p(null, Q($this->enigma->gettext('keyimporttext'), 'show')
+                        . html::br() . html::br() . $upload->show()
         );
 
         $this->rc->output->add_label('selectimportfile', 'importwait');
@@ -404,14 +379,12 @@ class enigma_ui
         $out = $this->rc->output->form_tag(array(
             'action' => $this->rc->url(array('action' => 'plugin.enigma', 'a' => 'keyimport')),
             'method' => 'post',
-            'enctype' => 'multipart/form-data') + $attrib,
-            $form);
+            'enctype' => 'multipart/form-data') + $attrib, $form);
 
         return $out;
     }
 
-    private function compose_ui()
-    {
+    private function compose_ui() {
         // Options menu button
         // @TODO: make this work with non-default skins
         $this->enigma->add_button(array(
@@ -421,36 +394,30 @@ class enigma_ui
             'onclick' => "rcmail_ui.show_popup('enigmamenu', true); return false",
             'title' => 'securityoptions',
             'domain' => 'enigma',
-            ), 'toolbar');
+                ), 'toolbar');
 
         // Options menu contents
         $this->enigma->add_hook('render_page', array($this, 'compose_menu'));
     }
 
-    function compose_menu($p)
-    {
+    function compose_menu($p) {
         $menu = new html_table(array('cols' => 2));
         $chbox = new html_checkbox(array('value' => 1));
 
-        $menu->add(null, html::label(array('for' => 'enigmadefaultopt'),
-            Q($this->enigma->gettext('identdefault'))));
+        $menu->add(null, html::label(array('for' => 'enigmadefaultopt'), Q($this->enigma->gettext('identdefault'))));
         $menu->add(null, $chbox->show(1, array('name' => '_enigma_default', 'id' => 'enigmadefaultopt')));
 
-        $menu->add(null, html::label(array('for' => 'enigmasignopt'),
-            Q($this->enigma->gettext('signmsg'))));
+        $menu->add(null, html::label(array('for' => 'enigmasignopt'), Q($this->enigma->gettext('signmsg'))));
         $menu->add(null, $chbox->show(1, array('name' => '_enigma_sign', 'id' => 'enigmasignopt')));
 
-        $menu->add(null, html::label(array('for' => 'enigmacryptopt'),
-            Q($this->enigma->gettext('encryptmsg'))));
+        $menu->add(null, html::label(array('for' => 'enigmacryptopt'), Q($this->enigma->gettext('encryptmsg'))));
         $menu->add(null, $chbox->show(1, array('name' => '_enigma_crypt', 'id' => 'enigmacryptopt')));
 
-        $menu = html::div(array('id' => 'enigmamenu', 'class' => 'popupmenu'),
-            $menu->show());
+        $menu = html::div(array('id' => 'enigmamenu', 'class' => 'popupmenu'), $menu->show());
 
-        $p['content'] = preg_replace('/(<form name="form"[^>]+>)/i', '\\1'."\n$menu", $p['content']);
+        $p['content'] = preg_replace('/(<form name="form"[^>]+>)/i', '\\1' . "\n$menu", $p['content']);
 
         return $p;
-
     }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * This is in a separate script because it's called from a number of scripts
@@ -27,30 +28,29 @@
  *
  * @access  public
  */
-function PMA_sanitize($message, $escape = false, $safe = false)
-{
+function PMA_sanitize($message, $escape = false, $safe = false) {
     if (!$safe) {
         $message = strtr($message, array('<' => '&lt;', '>' => '&gt;'));
     }
     $replace_pairs = array(
-        '[i]'       => '<em>',      // deprecated by em
-        '[/i]'      => '</em>',     // deprecated by em
-        '[em]'      => '<em>',
-        '[/em]'     => '</em>',
-        '[b]'       => '<strong>',  // deprecated by strong
-        '[/b]'      => '</strong>', // deprecated by strong
-        '[strong]'  => '<strong>',
+        '[i]' => '<em>', // deprecated by em
+        '[/i]' => '</em>', // deprecated by em
+        '[em]' => '<em>',
+        '[/em]' => '</em>',
+        '[b]' => '<strong>', // deprecated by strong
+        '[/b]' => '</strong>', // deprecated by strong
+        '[strong]' => '<strong>',
         '[/strong]' => '</strong>',
-        '[tt]'      => '<code>',    // deprecated by CODE or KBD
-        '[/tt]'     => '</code>',   // deprecated by CODE or KBD
-        '[code]'    => '<code>',
-        '[/code]'   => '</code>',
-        '[kbd]'     => '<kbd>',
-        '[/kbd]'    => '</kbd>',
-        '[br]'      => '<br />',
-        '[/a]'      => '</a>',
-        '[sup]'      => '<sup>',
-        '[/sup]'      => '</sup>',
+        '[tt]' => '<code>', // deprecated by CODE or KBD
+        '[/tt]' => '</code>', // deprecated by CODE or KBD
+        '[code]' => '<code>',
+        '[/code]' => '</code>',
+        '[kbd]' => '<kbd>',
+        '[/kbd]' => '</kbd>',
+        '[br]' => '<br />',
+        '[/a]' => '</a>',
+        '[sup]' => '<sup>',
+        '[/sup]' => '</sup>',
     );
     $message = strtr($message, $replace_pairs);
 
@@ -58,18 +58,18 @@ function PMA_sanitize($message, $escape = false, $safe = false)
 
     if (preg_match_all($pattern, $message, $founds, PREG_SET_ORDER)) {
         $valid_links = array(
-            'http',  // default http:// links (and https://)
-            './Do',  // ./Documentation
-            './ur',  // url.php redirector
+            'http', // default http:// links (and https://)
+            './Do', // ./Documentation
+            './ur', // url.php redirector
         );
 
         foreach ($founds as $found) {
             // only http... and ./Do... allowed
-            if (! in_array(substr($found[1], 0, 4), $valid_links)) {
+            if (!in_array(substr($found[1], 0, 4), $valid_links)) {
                 return $message;
             }
             // a-z and _ allowed in target
-            if (! empty($found[2]) && preg_match('/[^a-z_]+/i', $found[2])) {
+            if (!empty($found[2]) && preg_match('/[^a-z_]+/i', $found[2])) {
                 return $message;
             }
         }
@@ -87,7 +87,6 @@ function PMA_sanitize($message, $escape = false, $safe = false)
 
     return $message;
 }
-
 
 /**
  * Sanitize a filename by removing anything besides A-Za-z0-9_.-

@@ -15,15 +15,13 @@
  * @version 1.0
  * @author Thomas Bruederli
  */
- 
-function password_save($currpass, $newpass)
-{
+function password_save($currpass, $newpass) {
     $curdir = realpath(dirname(__FILE__));
     $username = escapeshellcmd($_SESSION['username']);
     $args = rcmail::get_instance()->config->get('password_saslpasswd_args', '');
 
     if ($fh = popen("$curdir/chgsaslpasswd -p $args $username", 'w')) {
-        fwrite($fh, $newpass."\n");
+        fwrite($fh, $newpass . "\n");
         $code = pclose($fh);
 
         if ($code == 0)
@@ -35,7 +33,7 @@ function password_save($currpass, $newpass)
             'type' => 'php',
             'file' => __FILE__, 'line' => __LINE__,
             'message' => "Password plugin: Unable to execute $curdir/chgsaslpasswd"
-            ), true, false);
+                ), true, false);
     }
 
     return PASSWORD_ERROR;

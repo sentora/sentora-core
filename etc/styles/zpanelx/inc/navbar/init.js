@@ -9,46 +9,54 @@
 */
 
 $(function(){
-	// NAVBUTTONS
+    // NAVBUTTONS
     $('.fg-navbutton').hover(
-    	function(){ $(this).removeClass('ui-state-default').addClass('ui-state-focus'); },
-    	function(){ $(this).removeClass('ui-state-focus').addClass('ui-state-default'); }
-    );
-	// BUTTONS
+        function(){
+            $(this).removeClass('ui-state-default').addClass('ui-state-focus');
+        },
+        function(){
+            $(this).removeClass('ui-state-focus').addClass('ui-state-default');
+        }
+        );
+    // BUTTONS
     $('.fg-button').hover(
-    	function(){ $(this).removeClass('ui-state-default').addClass('ui-state-focus'); },
-    	function(){ $(this).removeClass('ui-state-focus').addClass('ui-state-default'); }
-    );
-   	// MENUS    	
-	$('#account_information').menu({ 
-	//ADD ADDITIONAL JQUERY HERE
-	});
+        function(){
+            $(this).removeClass('ui-state-default').addClass('ui-state-focus');
+        },
+        function(){
+            $(this).removeClass('ui-state-focus').addClass('ui-state-default');
+        }
+        );
+    // MENUS    	
+    $('#account_information').menu({ 
+        //ADD ADDITIONAL JQUERY HERE
+        });
 	
-	$('#account_information').menu({ 
-	//ADD ADDITIONAL JQUERY HERE
-	});
+    $('#account_information').menu({ 
+        //ADD ADDITIONAL JQUERY HERE
+        });
 	
-	$('#server_admin').menu({ 
-	//ADD ADDITIONAL JQUERY HERE
-	});
+    $('#server_admin').menu({ 
+        //ADD ADDITIONAL JQUERY HERE
+        });
 		
-	$('#advanced').menu({ 
-	//ADD ADDITIONAL JQUERY HERE
-	});
+    $('#advanced').menu({ 
+        //ADD ADDITIONAL JQUERY HERE
+        });
 		
-	$('#database_management').menu({ 
-	//ADD ADDITIONAL JQUERY HERE
-	});
+    $('#database_management').menu({ 
+        //ADD ADDITIONAL JQUERY HERE
+        });
 		
-	$('#domain_management').menu({ 
-	//ADD ADDITIONAL JQUERY HERE
-	});
+    $('#domain_management').menu({ 
+        //ADD ADDITIONAL JQUERY HERE
+        });
 		
-	$('#mail').menu({ 
-	//ADD ADDITIONAL JQUERY HERE
-	});
+    $('#mail').menu({ 
+        //ADD ADDITIONAL JQUERY HERE
+        });
 	
-	/* EXAMPLES
+/* EXAMPLES
 	$('#hierarchy').menu({
 		content: $('#hierarchy').next().html(),
 		crumbDefaultText: ' '

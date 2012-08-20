@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * CSV import plugin for phpMyAdmin
@@ -6,7 +7,7 @@
  * @todo    add an option for handling NULL values
  * @package phpMyAdmin-Import
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -28,17 +29,17 @@ if (isset($plugin_list)) {
             array('type' => 'text', 'name' => 'enclosed', 'text' => __('Columns enclosed with:'), 'size' => 2, 'len' => 2),
             array('type' => 'text', 'name' => 'escaped', 'text' => __('Columns escaped with:'), 'size' => 2, 'len' => 2),
             array('type' => 'text', 'name' => 'new_line', 'text' => __('Lines terminated with:'), 'size' => 2),
-            ),
+        ),
         'options_text' => __('Options'),
-        );
+    );
 
     if ($plugin_param !== 'table') {
         $plugin_list['csv']['options'][] =
-            array('type' => 'bool', 'name' => 'col_names', 'text' => __('The first line of the file contains the table column names <i>(if this is unchecked, the first line will become part of the data)</i>'));
+                array('type' => 'bool', 'name' => 'col_names', 'text' => __('The first line of the file contains the table column names <i>(if this is unchecked, the first line will become part of the data)</i>'));
     } else {
         $hint = new PMA_Message(__('If the data in each row of the file is not in the same order as in the database, list the corresponding column names here. Column names must be separated by commas and not enclosed in quotations.'));
         $plugin_list['csv']['options'][] =
-            array('type' => 'text', 'name' => 'columns', 'text' => __('Column names: ') . PMA_showHint($hint));
+                array('type' => 'text', 'name' => 'columns', 'text' => __('Column names: ') . PMA_showHint($hint));
     }
     $plugin_list['csv']['options'][] = array('type' => 'end_group');
 
@@ -47,12 +48,12 @@ if (isset($plugin_list)) {
 }
 
 $replacements = array(
-    '\\n'   => "\n",
-    '\\t'   => "\t",
-    '\\r'   => "\r",
-    );
+    '\\n' => "\n",
+    '\\t' => "\t",
+    '\\r' => "\r",
+);
 $csv_terminated = strtr($csv_terminated, $replacements);
-$csv_enclosed = strtr($csv_enclosed,  $replacements);
+$csv_enclosed = strtr($csv_enclosed, $replacements);
 $csv_escaped = strtr($csv_escaped, $replacements);
 $csv_new_line = strtr($csv_new_line, $replacements);
 
@@ -113,7 +114,7 @@ if (!$analyze) {
     } else {
         $sql_template .= ' (';
         $fields = array();
-        $tmp   = preg_split('/,( ?)/', $csv_columns);
+        $tmp = preg_split('/,( ?)/', $csv_columns);
         foreach ($tmp as $key => $val) {
             if (count($fields) > 0) {
                 $sql_template .= ', ';
@@ -128,7 +129,7 @@ if (!$analyze) {
                 }
             }
             if (!$found) {
-                $message = PMA_Message::error(__('Invalid column (%s) specified! Ensure that columns names are spelled correctly, separated by commas, and not enclosed in quotes.' ));
+                $message = PMA_Message::error(__('Invalid column (%s) specified! Ensure that columns names are spelled correctly, separated by commas, and not enclosed in quotes.'));
                 $message->addParam($val);
                 $error = TRUE;
                 break;
@@ -174,7 +175,7 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
         unset($data);
         // Do not parse string when we're not at the end and don't have new line inside
         if (($csv_new_line == 'auto' && strpos($buffer, "\r") === FALSE && strpos($buffer, "\n") === FALSE)
-            || ($csv_new_line != 'auto' && strpos($buffer, $csv_new_line) === FALSE)) {
+                || ($csv_new_line != 'auto' && strpos($buffer, $csv_new_line) === FALSE)) {
             continue;
         }
     }
@@ -222,9 +223,9 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
             $fail = FALSE;
             $value = '';
             while (($need_end && $ch != $csv_enclosed)
-             || (!$need_end && !($ch == $csv_terminated
-               || $ch == $csv_new_line || ($csv_new_line == 'auto'
-                && ($ch == "\r" || $ch == "\n"))))) {
+            || (!$need_end && !($ch == $csv_terminated
+            || $ch == $csv_new_line || ($csv_new_line == 'auto'
+            && ($ch == "\r" || $ch == "\n"))))) {
                 if ($ch == $csv_escaped) {
                     if ($i == $len - 1) {
                         $fail = TRUE;
@@ -379,13 +380,13 @@ if ($analyze) {
     if ((isset($col_names) && count($col_names) != $max_cols) || !isset($col_names)) {
         // Fill out column names
         for ($i = 0; $i < $max_cols; ++$i) {
-            $col_names[] = 'COL '.($i+1);
+            $col_names[] = 'COL ' . ($i + 1);
         }
     }
 
     if (strlen($db)) {
         $result = PMA_DBI_fetch_result('SHOW TABLES');
-        $tbl_name = 'TABLE '.(count($result) + 1);
+        $tbl_name = 'TABLE ' . (count($result) + 1);
     } else {
         $tbl_name = 'TBL_NAME';
     }
@@ -409,7 +410,6 @@ if ($analyze) {
      *
      * array $options = an associative array of options
      */
-
     /* Set database name to the currently selected one, if applicable */
     if (strlen($db)) {
         $db_name = $db;

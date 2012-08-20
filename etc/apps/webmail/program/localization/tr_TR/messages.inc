@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/tr_TR/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Hasan Cansız <hasancansiz@yahoo.com>                          |
-| Author: Gökdeniz Karadağ <gokdenizk@gmail.com>                        |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/tr_TR/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Hasan Cansız <hasancansiz@yahoo.com>                          |
+  | Author: Gökdeniz Karadağ <gokdenizk@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
+  @version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Giriş Başarısız';
@@ -152,5 +152,4 @@ $messages['foldercreated'] = 'Klasör oluşturuldu';
 $messages['invalidimageformat'] = 'Geçerli bir resim biçimi değil.';
 $messages['mispellingsfound'] = 'Postada yazım hataları tespit edildi.';
 $messages['parentnotwritable'] = 'Klasör, seçilen üst klasöre taşınamıyor. Erişim izni yok.';
-
 ?>

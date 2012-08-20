@@ -1,32 +1,31 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/steps/mail/check_recent.inc                                   |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Check for recent messages, in all mailboxes                         |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/mail/check_recent.inc                                   |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Check for recent messages, in all mailboxes                         |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: check_recent.inc 5266 2011-09-22 07:49:33Z alec $
+  $Id: check_recent.inc 5266 2011-09-22 07:49:33Z alec $
 
-*/
+ */
 
 $current = $IMAP->get_mailbox_name();
-$check_all = !empty($_GET['_refresh']) || (bool)$RCMAIL->config->get('check_all_folders');
+$check_all = !empty($_GET['_refresh']) || (bool) $RCMAIL->config->get('check_all_folders');
 
 // list of folders to check
 if ($check_all) {
     $a_mailboxes = $IMAP->list_mailboxes('', '*', 'mail');
-}
-else {
+} else {
     $a_mailboxes = (array) $current;
     if ($a_mailboxes[0] != 'INBOX')
         $a_mailboxes[] = 'INBOX';
@@ -45,8 +44,7 @@ foreach ($a_mailboxes as $mbox_name) {
 
     if ($status & 1) {
         // trigger plugin hook
-        $RCMAIL->plugins->exec_hook('new_messages',
-            array('mailbox' => $mbox_name, 'is_current' => $is_current));
+        $RCMAIL->plugins->exec_hook('new_messages', array('mailbox' => $mbox_name, 'is_current' => $is_current));
     }
 
     rcmail_send_unread_count($mbox_name, true);
@@ -55,7 +53,7 @@ foreach ($a_mailboxes as $mbox_name) {
         // refresh saved search set
         $search_request = get_input_value('_search', RCUBE_INPUT_GPC);
         if ($search_request && isset($_SESSION['search'])
-            && $_SESSION['search_request'] == $search_request
+                && $_SESSION['search_request'] == $search_request
         ) {
             $_SESSION['search'] = $IMAP->refresh_search();
         }
@@ -74,13 +72,13 @@ foreach ($a_mailboxes as $mbox_name) {
         if ($all_count && $IMAP->list_page > 1) {
             $remaining = $all_count - $IMAP->page_size * ($IMAP->list_page - 1);
             if ($remaining <= 0) {
-                $IMAP->set_page($IMAP->list_page-1);
+                $IMAP->set_page($IMAP->list_page - 1);
                 $_SESSION['page'] = $IMAP->list_page;
             }
         }
 
         $OUTPUT->set_env('messagecount', $all_count);
-        $OUTPUT->set_env('pagecount', ceil($all_count/$IMAP->page_size));
+        $OUTPUT->set_env('pagecount', ceil($all_count / $IMAP->page_size));
         $OUTPUT->command('set_rowcount', rcmail_get_messagecount_text($all_count), $mbox_name);
         $OUTPUT->set_env('current_page', $all_count ? $IMAP->list_page : 1);
 

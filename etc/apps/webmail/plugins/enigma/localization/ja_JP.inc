@@ -51,5 +51,4 @@ $messages['keysimportfailed'] = '鍵のインポートに失敗しました! 内
 $messages['keysimportsuccess'] = '鍵をインポートしました。インポート: $new, 未変更: $old';
 $messages['keyconfirmdelete'] = '選択した鍵を本当に削除しますか?';
 $messages['keyimporttext'] = '秘密鍵と公開鍵のインポート、または ASCII 形式の署名を無効にできます。';
-
 ?>

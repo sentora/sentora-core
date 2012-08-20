@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PSSTATUS Plugin Config File
  *
@@ -12,7 +13,7 @@
  * @version   SVN: $Id: PSStatus.config.php 152 2009-03-25 13:12:25Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+/**
  * define how to access the psstatus statistic data
  * - 'command' pidof command is run everytime the block gets refreshed or build / on WINNT information is retrieved everytime through WMI
  * - 'data' a file must be available in the data directory of the phpsysinfo installation with the filename "psstatus.txt"; content is the output from

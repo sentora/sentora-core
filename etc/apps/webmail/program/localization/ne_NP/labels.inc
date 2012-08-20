@@ -1,19 +1,19 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | localization/ne/labels.inc                                            |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2007, The Roundcube Dev Team                            |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Nepali Translation by:                                                |
- | Prasanna Singh <prasanna@bhunet.com>, <prasanna@bhunet.com>           |
- | RoundcubeAuthor: Thomas Bruederli <roundcube@gmail.com>               |
- +-----------------------------------------------------------------------+
-*/
+  +-----------------------------------------------------------------------+
+  | localization/ne/labels.inc                                            |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2007, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Nepali Translation by:                                                |
+  | Prasanna Singh <prasanna@bhunet.com>, <prasanna@bhunet.com>           |
+  | RoundcubeAuthor: Thomas Bruederli <roundcube@gmail.com>               |
+  +-----------------------------------------------------------------------+
+ */
 
 $labels = array();
 $labels['welcome'] = '$product मा स्वागत छ';
@@ -170,5 +170,4 @@ $labels['managefolders'] = 'फोलडर व्यवस्थित गर�
 $labels['sortby'] = 'यसरी तय गर्नुहोस';
 $labels['sortasc'] = 'पहिलो देखि अन्तिम सम्म तय गर्नुहोस';
 $labels['sortdesc'] = 'अन्तिम देखि पहिलो सम्म तय गर्नुहोस';
-
 ?>

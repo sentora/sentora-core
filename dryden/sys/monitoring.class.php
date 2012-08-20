@@ -110,8 +110,8 @@ class sys_monitoring {
     static function ServerIPAddress() {
         return $_SERVER['SERVER_ADDR'];
     }
-    
-        /**
+
+    /**
      * Checks that an IP address is valid (IPv6 and IPv4).
      * @author Bobby Allen (ballen@zpanelcp.com) 
      * @param string $ip The IP address of which to check.

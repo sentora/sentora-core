@@ -1,11 +1,12 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * SQL import plugin for phpMyAdmin
  *
  * @package phpMyAdmin-Import
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -14,38 +15,37 @@ if (! defined('PHPMYADMIN')) {
  */
 if (isset($plugin_list)) {
     $plugin_list['sql'] = array(
-        'text'          => __('SQL'),
-        'extension'     => 'sql',
-        'options_text'  => __('Options'),
+        'text' => __('SQL'),
+        'extension' => 'sql',
+        'options_text' => __('Options'),
     );
     $compats = PMA_DBI_getCompatibilities();
     if (count($compats) > 0) {
         $values = array();
-        foreach($compats as $val) {
+        foreach ($compats as $val) {
             $values[$val] = $val;
         }
         $plugin_list['sql']['options'] = array(
             array('type' => 'begin_group', 'name' => 'general_opts'),
             array(
-                'type'      => 'select',
-                'name'      => 'compatibility',
-                'text'      => __('SQL compatibility mode:'),
-                'values'    => $values,
-                'doc'       => array(
+                'type' => 'select',
+                'name' => 'compatibility',
+                'text' => __('SQL compatibility mode:'),
+                'values' => $values,
+                'doc' => array(
                     'manual_MySQL_Database_Administration',
                     'Server_SQL_mode',
                 ),
             ),
             array(
-                'type' => 'bool', 
-                'name' => 'no_auto_value_on_zero', 
+                'type' => 'bool',
+                'name' => 'no_auto_value_on_zero',
                 'text' => __('Do not use <code>AUTO_INCREMENT</code> for zero values'),
-                'doc'       => array(
+                'doc' => array(
                     'manual_MySQL_Database_Administration',
                     'Server_SQL_mode',
                     'sqlmode_no_auto_value_on_zero'
                 ),
-
             ),
             array('type' => 'end_group'),
         );
@@ -60,7 +60,7 @@ $buffer = '';
 $sql = '';
 $start_pos = 0;
 $i = 0;
-$len= 0;
+$len = 0;
 $big_value = 2147483647;
 $delimiter_keyword = 'DELIMITER '; // include the space because it's mandatory
 $length_of_delimiter_keyword = strlen($delimiter_keyword);
@@ -105,7 +105,7 @@ while (!($GLOBALS['finished'] && $i >= $len) && !$error && !$timeout_passed) {
         // free memory
         unset($data);
         // Do not parse string when we're not at the end and don't have ; inside
-        if ((strpos($buffer, $sql_delimiter, $i) === FALSE) && !$GLOBALS['finished'])  {
+        if ((strpos($buffer, $sql_delimiter, $i) === FALSE) && !$GLOBALS['finished']) {
             continue;
         }
     }
@@ -180,7 +180,7 @@ while (!($GLOBALS['finished'] && $i >= $len) && !$error && !$timeout_passed) {
                  */
                 if ($pos === FALSE && $quote == '`' && $found_delimiter) {
                     $pos = $first_sql_delimiter - 1;
-                // No quote? Too short string
+                    // No quote? Too short string
                 } elseif ($pos === FALSE) {
                     // We hit end of string => unclosed quote, but we handle it as end of query
                     if ($GLOBALS['finished']) {
@@ -192,7 +192,8 @@ while (!($GLOBALS['finished'] && $i >= $len) && !$error && !$timeout_passed) {
                 }
                 // Was not the quote escaped?
                 $j = $pos - 1;
-                while ($buffer[$j] == '\\') $j--;
+                while ($buffer[$j] == '\\')
+                    $j--;
                 // Even count means it was not escaped
                 $endq = (((($pos - 1) - $j) % 2) == 0);
                 // Skip the string
@@ -216,18 +217,18 @@ while (!($GLOBALS['finished'] && $i >= $len) && !$error && !$timeout_passed) {
 
         // Not enough data to decide
         if ((($i == ($len - 1) && ($ch == '-' || $ch == '/'))
-          || ($i == ($len - 2) && (($ch == '-' && $buffer[$i + 1] == '-')
-            || ($ch == '/' && $buffer[$i + 1] == '*')))) && !$GLOBALS['finished']) {
+                || ($i == ($len - 2) && (($ch == '-' && $buffer[$i + 1] == '-')
+                || ($ch == '/' && $buffer[$i + 1] == '*')))) && !$GLOBALS['finished']) {
             break;
         }
 
         // Comments
         if ($ch == '#'
-         || ($i < ($len - 1) && $ch == '-' && $buffer[$i + 1] == '-'
-          && (($i < ($len - 2) && $buffer[$i + 2] <= ' ')
-           || ($i == ($len - 1)  && $GLOBALS['finished'])))
-         || ($i < ($len - 1) && $ch == '/' && $buffer[$i + 1] == '*')
-                ) {
+                || ($i < ($len - 1) && $ch == '-' && $buffer[$i + 1] == '-'
+                && (($i < ($len - 2) && $buffer[$i + 2] <= ' ')
+                || ($i == ($len - 1) && $GLOBALS['finished'])))
+                || ($i < ($len - 1) && $ch == '/' && $buffer[$i + 1] == '*')
+        ) {
             // Copy current string to SQL
             if ($start_pos != $i) {
                 $sql .= substr($buffer, $start_pos, $i - $start_pos);
@@ -265,19 +266,19 @@ while (!($GLOBALS['finished'] && $i >= $len) && !$error && !$timeout_passed) {
         }
         // Change delimiter, if redefined, and skip it (don't send to server!)
         if (strtoupper(substr($buffer, $i, $length_of_delimiter_keyword)) == $delimiter_keyword
-         && ($i + $length_of_delimiter_keyword < $len)) {
-             // look for EOL on the character immediately after 'DELIMITER '
-             // (see previous comment about PHP_EOL)
-           $new_line_pos = strpos($buffer, "\n", $i + $length_of_delimiter_keyword);
-           // it might happen that there is no EOL
-           if (FALSE === $new_line_pos) {
-               $new_line_pos = $len;
-           }
-           $sql_delimiter = substr($buffer, $i + $length_of_delimiter_keyword, $new_line_pos - $i - $length_of_delimiter_keyword);
-           $i = $new_line_pos + 1;
-           // Next query part will start here
-           $start_pos = $i;
-           continue;
+                && ($i + $length_of_delimiter_keyword < $len)) {
+            // look for EOL on the character immediately after 'DELIMITER '
+            // (see previous comment about PHP_EOL)
+            $new_line_pos = strpos($buffer, "\n", $i + $length_of_delimiter_keyword);
+            // it might happen that there is no EOL
+            if (FALSE === $new_line_pos) {
+                $new_line_pos = $len;
+            }
+            $sql_delimiter = substr($buffer, $i + $length_of_delimiter_keyword, $new_line_pos - $i - $length_of_delimiter_keyword);
+            $i = $new_line_pos + 1;
+            // Next query part will start here
+            $start_pos = $i;
+            continue;
         }
 
         // End of SQL
@@ -286,14 +287,14 @@ while (!($GLOBALS['finished'] && $i >= $len) && !$error && !$timeout_passed) {
             if ($start_pos < $len) {
                 $length_to_grab = $i - $start_pos;
 
-                if (! $found_delimiter) {
+                if (!$found_delimiter) {
                     $length_to_grab++;
                 }
                 $tmp_sql .= substr($buffer, $start_pos, $length_to_grab);
                 unset($length_to_grab);
             }
             // Do not try to execute empty SQL
-            if (! preg_match('/^([\s]*;)*$/', trim($tmp_sql))) {
+            if (!preg_match('/^([\s]*;)*$/', trim($tmp_sql))) {
                 $sql = $tmp_sql;
                 PMA_importRunQuery($sql, substr($buffer, 0, $i + strlen($sql_delimiter)));
                 $buffer = substr($buffer, $i + strlen($sql_delimiter));

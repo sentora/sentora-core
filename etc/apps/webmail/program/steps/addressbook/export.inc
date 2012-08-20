@@ -1,31 +1,30 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/steps/addressbook/export.inc                                  |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2011, The Roundcube Dev Team                       |
- | Copyright (C) 2011, Kolab Systems AG                                  |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Export the selected address book as vCard file                      |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- | Author: Aleksander Machniak <machniak@kolabsys.com>                   |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/addressbook/export.inc                                  |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2008-2011, The Roundcube Dev Team                       |
+  | Copyright (C) 2011, Kolab Systems AG                                  |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Export the selected address book as vCard file                      |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  | Author: Aleksander Machniak <machniak@kolabsys.com>                   |
+  +-----------------------------------------------------------------------+
 
- $Id$
+  $Id$
 
-*/
+ */
 
 // Use search result
-if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search']]))
-{
+if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search']])) {
     $sort_col = $RCMAIL->config->get('addressbook_sort_col', 'name');
-    $search  = (array)$_SESSION['search'][$_REQUEST['_search']];
+    $search = (array) $_SESSION['search'][$_REQUEST['_search']];
     $records = array();
 
     // Get records from all sources
@@ -52,7 +51,7 @@ if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search
     ksort($records, SORT_LOCALE_STRING);
 
     // create resultset object
-    $count  = count($records);
+    $count = count($records);
     $result = new rcube_result_set($count);
     $result->records = array_values($records);
 }
@@ -67,7 +66,7 @@ else {
 }
 
 // send downlaod headers
-header('Content-Type: text/x-vcard; charset='.RCMAIL_CHARSET);
+header('Content-Type: text/x-vcard; charset=' . RCMAIL_CHARSET);
 header('Content-Disposition: attachment; filename="rcube_contacts.vcf"');
 
 while ($result && ($row = $result->next())) {
@@ -85,7 +84,7 @@ while ($result && ($row = $result->next())) {
 
         foreach ($row as $key => $values) {
             list($field, $section) = explode(':', $key);
-            foreach ((array)$values as $value) {
+            foreach ((array) $values as $value) {
                 if (is_array($value) || strlen($value))
                     $vcard->set($field, $value, strtoupper($section));
             }

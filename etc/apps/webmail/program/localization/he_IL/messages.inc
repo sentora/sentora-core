@@ -1,20 +1,20 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/he_IL/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Moshe Leibovitch    <moish@mln.co.il>                         |
-| Updates: Noor Dawod <noor@comrax.com>                                 |
-| Updates: Moshe Leibovitch  <moish@mln.co.il>  28112011                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/he_IL/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Moshe Leibovitch    <moish@mln.co.il>                         |
+  | Updates: Noor Dawod <noor@comrax.com>                                 |
+  | Updates: Moshe Leibovitch  <moish@mln.co.il>  28112011                |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'הכניסה נכשלה';
@@ -157,5 +157,4 @@ $messages['invalidimageformat'] = 'פורמט תמונה לא חוקי';
 $messages['mispellingsfound'] = 'התגלו שגיאות כתיב בהודעה';
 $messages['parentnotwritable'] = 'לא ניתן ליצור/להעביר תיקיה לתוך תיקית האב שנבחרה. אין הרשאה לגישה.';
 $messages['messagetoobig'] = 'ההודעה גדולה מעבר ליכולת העיבוד של התוכנה';
-
 ?>

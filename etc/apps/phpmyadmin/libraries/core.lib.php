@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Core functions used all over the scripts.
@@ -36,9 +37,8 @@
  * @param   mixed   $type       var type or array of values to check against $var
  * @return  mixed   $var or $default
  */
-function PMA_ifSetOr(&$var, $default = null, $type = 'similar')
-{
-    if (! PMA_isValid($var, $type, $default)) {
+function PMA_ifSetOr(&$var, $default = null, $type = 'similar') {
+    if (!PMA_isValid($var, $type, $default)) {
         return $default;
     }
 
@@ -92,9 +92,8 @@ function PMA_ifSetOr(&$var, $default = null, $type = 'similar')
  * @param   mixed   $compare    var to compare with $var
  * @return  boolean whether valid or not
  */
-function PMA_isValid(&$var, $type = 'length', $compare = null)
-{
-    if (! isset($var)) {
+function PMA_isValid(&$var, $type = 'length', $compare = null) {
+    if (!isset($var)) {
         // var is not even set
         return false;
     }
@@ -184,13 +183,14 @@ function PMA_isValid(&$var, $type = 'length', $compare = null)
  *
  * @access  public
  */
-function PMA_securePath($path)
-{
+function PMA_securePath($path) {
     // change .. to .
     $path = preg_replace('@\.\.*@', '.', $path);
 
     return $path;
-} // end function
+}
+
+// end function
 
 /**
  * displays the given error message on phpMyAdmin error page in foreign language,
@@ -218,8 +218,7 @@ function PMA_securePath($path)
  * @param   string|array $message_args arguments applied to $error_message
  * @return  exit
  */
-function PMA_fatalError($error_message, $message_args = null)
-{
+function PMA_fatalError($error_message, $message_args = null) {
     /* Use format string if applicable */
     if (is_string($message_args)) {
         $error_message = sprintf($error_message, $message_args);
@@ -276,18 +275,16 @@ function PMA_getPHPDocLink($target) {
  *
  * @param string $extension Extension name
  * @param bool $fatal Whether the error is fatal.
- / @param string $extra Extra string to append to messsage.
+  / @param string $extra Extra string to append to messsage.
  */
-function PMA_warnMissingExtension($extension, $fatal = false, $extra = '')
-{
+function PMA_warnMissingExtension($extension, $fatal = false, $extra = '') {
     /* Gettext does not have to be loaded yet here */
     if (function_exists('__')) {
         $message = __('The %s extension is missing. Please check your PHP configuration.');
     } else {
         $message = 'The %s extension is missing. Please check your PHP configuration.';
     }
-    $message = sprintf($message,
-        '[a@' . PMA_getPHPDocLink('book.' . $extension . '.php') . '@Documentation][em]' . $extension . '[/em][/a]');
+    $message = sprintf($message, '[a@' . PMA_getPHPDocLink('book.' . $extension . '.php') . '@Documentation][em]' . $extension . '[/em][/a]');
     if ($extra != '') {
         $message .= ' ' . $extra;
     }
@@ -309,11 +306,9 @@ function PMA_warnMissingExtension($extension, $fatal = false, $extra = '')
  * @param   string  $db database to count tables for
  * @return  integer count of tables in $db
  */
-function PMA_getTableCount($db)
-{
+function PMA_getTableCount($db) {
     $tables = PMA_DBI_try_query(
-        'SHOW TABLES FROM ' . PMA_backquote($db) . ';',
-        null, PMA_DBI_QUERY_STORE);
+            'SHOW TABLES FROM ' . PMA_backquote($db) . ';', null, PMA_DBI_QUERY_STORE);
     if ($tables) {
         $num_tables = PMA_DBI_num_rows($tables);
 
@@ -344,29 +339,30 @@ function PMA_getTableCount($db)
  * @param   string  $size
  * @return  integer $size
  */
-function PMA_get_real_size($size = 0)
-{
-    if (! $size) {
+function PMA_get_real_size($size = 0) {
+    if (!$size) {
         return 0;
     }
 
     $scan['gb'] = 1073741824; //1024 * 1024 * 1024;
-    $scan['g']  = 1073741824; //1024 * 1024 * 1024;
+    $scan['g'] = 1073741824; //1024 * 1024 * 1024;
     $scan['mb'] = 1048576;
-    $scan['m']  = 1048576;
-    $scan['kb'] =    1024;
-    $scan['k']  =    1024;
-    $scan['b']  =       1;
+    $scan['m'] = 1048576;
+    $scan['kb'] = 1024;
+    $scan['k'] = 1024;
+    $scan['b'] = 1;
 
     foreach ($scan as $unit => $factor) {
         if (strlen($size) > strlen($unit)
-         && strtolower(substr($size, strlen($size) - strlen($unit))) == $unit) {
+                && strtolower(substr($size, strlen($size) - strlen($unit))) == $unit) {
             return substr($size, 0, strlen($size) - strlen($unit)) * $factor;
         }
     }
 
     return $size;
-} // end function PMA_get_real_size()
+}
+
+// end function PMA_get_real_size()
 
 /**
  * merges array recursive like array_merge_recursive() but keyed-values are
@@ -385,9 +381,8 @@ function PMA_get_real_size($size = 0)
  * @param   array   ...
  * @return  array   merged array
  */
-function PMA_array_merge_recursive()
-{
-    switch(func_num_args()) {
+function PMA_array_merge_recursive() {
+    switch (func_num_args()) {
         case 0 :
             return false;
             break;
@@ -402,8 +397,7 @@ function PMA_array_merge_recursive()
             }
             foreach ($args[1] as $key2 => $value2) {
                 if (isset($args[0][$key2]) && !is_int($key2)) {
-                    $args[0][$key2] = PMA_array_merge_recursive($args[0][$key2],
-                        $value2);
+                    $args[0][$key2] = PMA_array_merge_recursive($args[0][$key2], $value2);
                 } else {
                     // we erase the parent array, otherwise we cannot override a directive that
                     // contains array elements, like this:
@@ -441,8 +435,7 @@ function PMA_array_merge_recursive()
  * @param   array   $array      array to walk
  * @param   string  $function   function to call for every array element
  */
-function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
-{
+function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false) {
     static $recursive_counter = 0;
     if (++$recursive_counter > 1000) {
         die('possible deep recursion attack');
@@ -479,9 +472,8 @@ function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
  * @param   array   $whitelist  whitelist to check page against
  * @return  boolean whether $page is valid or not (in $whitelist or not)
  */
-function PMA_checkPageValidity(&$page, $whitelist)
-{
-    if (! isset($page) || !is_string($page)) {
+function PMA_checkPageValidity(&$page, $whitelist) {
+    if (!isset($page) || !is_string($page)) {
         return false;
     }
 
@@ -520,7 +512,7 @@ function PMA_getenv($var_name) {
     } elseif (getenv($var_name)) {
         return getenv($var_name);
     } elseif (function_exists('apache_getenv')
-     && apache_getenv($var_name, true)) {
+            && apache_getenv($var_name, true)) {
         return apache_getenv($var_name, true);
     }
 
@@ -546,8 +538,7 @@ function PMA_getenv($var_name) {
  * @param   string   $uri the header to send
  * @return  boolean  always true
  */
-function PMA_sendHeaderLocation($uri)
-{
+function PMA_sendHeaderLocation($uri) {
     if (PMA_IS_IIS && strlen($uri) > 600) {
         require_once './libraries/js_escape.lib.php';
 
@@ -555,7 +546,7 @@ function PMA_sendHeaderLocation($uri)
         echo '<meta http-equiv="expires" content="0">' . "\n";
         echo '<meta http-equiv="Pragma" content="no-cache">' . "\n";
         echo '<meta http-equiv="Cache-Control" content="no-cache">' . "\n";
-        echo '<meta http-equiv="Refresh" content="0;url=' .  htmlspecialchars($uri) . '">' . "\n";
+        echo '<meta http-equiv="Refresh" content="0;url=' . htmlspecialchars($uri) . '">' . "\n";
         echo '<script type="text/javascript">' . "\n";
         echo '//<![CDATA[' . "\n";
         echo 'setTimeout("window.location = unescape(\'"' . PMA_escapeJsString($uri) . '"\')", 2000);' . "\n";
@@ -568,7 +559,6 @@ function PMA_sendHeaderLocation($uri)
         echo 'document.write(\'<p><a href="' . htmlspecialchars($uri) . '">' . __('Go') . '</a></p>\');' . "\n";
         echo '//]]>' . "\n";
         echo '</script></body></html>' . "\n";
-
     } else {
         if (SID) {
             if (strpos($uri, '?') === false) {
@@ -609,15 +599,14 @@ function PMA_sendHeaderLocation($uri)
  * @param  mixed    $default
  * @return mixed    array element or $default
  */
-function PMA_array_read($path, $array, $default = null)
-{
+function PMA_array_read($path, $array, $default = null) {
     $keys = explode('/', $path);
-    $value =& $array;
+    $value = & $array;
     foreach ($keys as $key) {
         if (!isset($value[$key])) {
             return $default;
         }
-        $value =& $value[$key];
+        $value = & $value[$key];
     }
     return $value;
 }
@@ -629,16 +618,15 @@ function PMA_array_read($path, $array, $default = null)
  * @param  array    &$array
  * @param  mixed    $value
  */
-function PMA_array_write($path, &$array, $value)
-{
+function PMA_array_write($path, &$array, $value) {
     $keys = explode('/', $path);
     $last_key = array_pop($keys);
-    $a =& $array;
+    $a = & $array;
     foreach ($keys as $key) {
         if (!isset($a[$key])) {
             $a[$key] = array();
         }
-        $a =& $a[$key];
+        $a = & $a[$key];
     }
     $a[$last_key] = $value;
 }
@@ -650,14 +638,13 @@ function PMA_array_write($path, &$array, $value)
  * @param  array    &$array
  * @param  mixed    $value
  */
-function PMA_array_remove($path, &$array)
-{
+function PMA_array_remove($path, &$array) {
     $keys = explode('/', $path);
     $keys_last = array_pop($keys);
     $path = array();
     $depth = 0;
 
-    $path[0] =& $array;
+    $path[0] = & $array;
     $found = true;
     // go as deep as required or possible
     foreach ($keys as $key) {
@@ -666,7 +653,7 @@ function PMA_array_remove($path, &$array)
             break;
         }
         $depth++;
-        $path[$depth] =& $path[$depth-1][$key];
+        $path[$depth] = & $path[$depth - 1][$key];
     }
     // if element found, remove it
     if ($found) {
@@ -676,7 +663,7 @@ function PMA_array_remove($path, &$array)
 
     // remove empty nested arrays
     for (; $depth >= 0; $depth--) {
-        if (!isset($path[$depth+1]) || count($path[$depth+1]) == 0) {
+        if (!isset($path[$depth + 1]) || count($path[$depth + 1]) == 0) {
             unset($path[$depth][$keys[$depth]]);
         } else {
             break;
@@ -718,4 +705,5 @@ function PMA_includeJS($url) {
         return '<script src="./js/' . $url . '" type="text/javascript"></script>' . "\n";
     }
 }
+
 ?>

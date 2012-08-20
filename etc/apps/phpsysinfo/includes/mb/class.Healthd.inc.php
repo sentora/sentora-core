@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * healthd sensor class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.Healthd.inc.php 287 2009-06-26 12:11:59Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * getting information from healthd
  *
  * @category  PHP
@@ -23,40 +25,38 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class Healthd extends Sensors
-{
+class Healthd extends Sensors {
+
     /**
      * content to parse
      *
      * @var array
      */
     private $_lines = array();
-    
+
     /**
      * fill the private content var through tcp or file access
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         switch (strtolower(PSI_SENSOR_ACCESS)) {
-        case 'command':
-            $lines = "";
-            CommonFunctions::executeProgram('healthdc', '-t', $lines);
-            $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
-            break;
-        default:
-            $this->error->addConfigError('__construct()', 'PSI_SENSOR_ACCESS');
-            break;
+            case 'command':
+                $lines = "";
+                CommonFunctions::executeProgram('healthdc', '-t', $lines);
+                $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
+                break;
+            default:
+                $this->error->addConfigError('__construct()', 'PSI_SENSOR_ACCESS');
+                break;
         }
     }
-    
+
     /**
      * get temperature information
      *
      * @return void
      */
-    private function _temperature()
-    {
+    private function _temperature() {
         $ar_buf = preg_split("/\t+/", $this->_lines);
         $dev1 = new SensorDevice();
         $dev1->setName('temp1');
@@ -74,14 +74,13 @@ class Healthd extends Sensors
         $dev3->setMax(70);
         $this->mbinfo->setMbTemp($dev3);
     }
-    
+
     /**
      * get fan information
      *
      * @return void
      */
-    private function _fans()
-    {
+    private function _fans() {
         $ar_buf = preg_split("/\t+/", $this->_lines);
         $dev1 = new SensorDevice();
         $dev1->setName('fan1');
@@ -99,14 +98,13 @@ class Healthd extends Sensors
         $dev3->setMin(3000);
         $this->mbinfo->setMbFan($dev3);
     }
-    
+
     /**
      * get voltage information
      *
      * @return array voltage in array with lable
      */
-    private function _voltage()
-    {
+    private function _voltage() {
         $ar_buf = preg_split("/\t+/", $this->_lines);
         $dev1 = new SensorDevice();
         $dev1->setName('Vcore1');
@@ -137,7 +135,7 @@ class Healthd extends Sensors
         $dev7->setValue($ar_buf[13]);
         $this->mbinfo->setMbVolt($dev7);
     }
-    
+
     /**
      * get the information
      *
@@ -145,11 +143,12 @@ class Healthd extends Sensors
      *
      * @return Void
      */
-    public function build()
-    {
+    public function build() {
         $this->_temperature();
         $this->_fans();
         $this->_voltage();
     }
+
 }
+
 ?>

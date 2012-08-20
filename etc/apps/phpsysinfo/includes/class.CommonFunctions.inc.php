@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * common Functions class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.CommonFunctions.inc.php 394 2010-11-12 14:22:42Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * class with common functions used in all places
  *
  * @category  PHP
@@ -23,15 +25,15 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class CommonFunctions
-{
+class CommonFunctions {
     /**
      * phpSysInfo version
      *
      * @var string
      */
+
     const PSI_VERSION = '3.0.16';
-    
+
     /**
      * Find a system program, do also path checking when not running on WINNT
      * on WINNT we simply return the name with the exe extension to the program name
@@ -40,8 +42,7 @@ class CommonFunctions
      *
      * @return string complete path and name of the program
      */
-    private static function _findProgram($strProgram)
-    {
+    private static function _findProgram($strProgram) {
         $arrPath = array();
         if (PHP_OS == 'WINNT') {
             $strProgram .= '.exe';
@@ -54,11 +55,11 @@ class CommonFunctions
             $arrPath = array_merge($addpaths, $arrPath); // In this order so $addpaths is before $arrPath when looking for a program
         }
         //add some default paths if we still have no paths here
-        if ( empty($arrPath) && PHP_OS != 'WINNT') {
+        if (empty($arrPath) && PHP_OS != 'WINNT') {
             array_push($arrPath, '/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin');
         }
         // If open_basedir defined, fill the $open_basedir array with authorized paths,. (Not tested when no open_basedir restriction)
-        if ((bool)ini_get('open_basedir')) {
+        if ((bool) ini_get('open_basedir')) {
             $open_basedir = preg_split('/:/', ini_get('open_basedir'), -1, PREG_SPLIT_NO_EMPTY);
         }
         foreach ($arrPath as $strPath) {
@@ -66,13 +67,13 @@ class CommonFunctions
             if ((isset($open_basedir) && !in_array($strPath, $open_basedir)) || !is_dir($strPath)) {
                 continue;
             }
-            $strProgrammpath = $strPath."/".$strProgram;
+            $strProgrammpath = $strPath . "/" . $strProgram;
             if (is_executable($strProgrammpath)) {
                 return $strProgrammpath;
             }
         }
     }
-    
+
     /**
      * Execute a system program. return a trim()'d result.
      * does very crude pipe checking.  you need ' | ' for it to work
@@ -86,8 +87,7 @@ class CommonFunctions
      *
      * @return boolean command successfull or not
      */
-    public static function executeProgram($strProgramname, $strArgs, &$strBuffer, $booErrorRep = true)
-    {
+    public static function executeProgram($strProgramname, $strArgs, &$strBuffer, $booErrorRep = true) {
         $strBuffer = '';
         $strError = '';
         $pipes = array();
@@ -95,7 +95,7 @@ class CommonFunctions
         $error = Error::singleton();
         if (!$strProgram) {
             if ($booErrorRep) {
-                $error->addError('find_program('.$strProgramname.')', 'program not found on the machine');
+                $error->addError('find_program(' . $strProgramname . ')', 'program not found on the machine');
             }
             return false;
         }
@@ -106,33 +106,33 @@ class CommonFunctions
                 if ($arrArgs[$i] == '|') {
                     $strCmd = $arrArgs[$i + 1];
                     $strNewcmd = self::_findProgram($strCmd);
-                    $strArgs = preg_replace("/\| ".$strCmd.'/', "| ".$strNewcmd, $strArgs);
+                    $strArgs = preg_replace("/\| " . $strCmd . '/', "| " . $strNewcmd, $strArgs);
                 }
             }
         }
-        $descriptorspec = array(0=>array("pipe", "r"), 1=>array("pipe", "w"), 2=>array("pipe", "w"));
-        $process = proc_open($strProgram." ".$strArgs, $descriptorspec, $pipes);
+        $descriptorspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"), 2 => array("pipe", "w"));
+        $process = proc_open($strProgram . " " . $strArgs, $descriptorspec, $pipes);
         if (is_resource($process)) {
             $strBuffer .= self::_timeoutfgets($pipes, $strBuffer, $strError);
             $return_value = proc_close($process);
         }
         $strError = trim($strError);
         $strBuffer = trim($strBuffer);
-        if (! empty($strError) && $return_value <> 0) {
+        if (!empty($strError) && $return_value <> 0) {
             if ($booErrorRep) {
-                $error->addError($strProgram, $strError."\nReturn value: ".$return_value);
+                $error->addError($strProgram, $strError . "\nReturn value: " . $return_value);
             }
             return false;
         }
-        if (! empty($strError)) {
+        if (!empty($strError)) {
             if ($booErrorRep) {
-                $error->addError($strProgram, $strError."\nReturn value: ".$return_value);
+                $error->addError($strProgram, $strError . "\nReturn value: " . $return_value);
             }
             return true;
         }
         return true;
     }
-    
+
     /**
      * read a file and return the content as a string
      *
@@ -144,8 +144,7 @@ class CommonFunctions
      *
      * @return boolean command successfull or not
      */
-    public static function rfts($strFileName, &$strRet, $intLines = 0, $intBytes = 4096, $booErrorRep = true)
-    {
+    public static function rfts($strFileName, &$strRet, $intLines = 0, $intBytes = 4096, $booErrorRep = true) {
         $strFile = "";
         $intCurLine = 1;
         $error = Error::singleton();
@@ -163,19 +162,19 @@ class CommonFunctions
                 $strRet = $strFile;
             } else {
                 if ($booErrorRep) {
-                    $error->addError('fopen('.$strFileName.')', 'file can not read by phpsysinfo');
+                    $error->addError('fopen(' . $strFileName . ')', 'file can not read by phpsysinfo');
                 }
                 return false;
             }
         } else {
             if ($booErrorRep) {
-                $error->addError('file_exists('.$strFileName.')', 'the file does not exist on your machine');
+                $error->addError('file_exists(' . $strFileName . ')', 'the file does not exist on your machine');
             }
             return false;
         }
         return true;
     }
-    
+
     /**
      * reads a directory and return the name of the files and directorys in it
      *
@@ -184,8 +183,7 @@ class CommonFunctions
      *
      * @return array content of the directory excluding . and ..
      */
-    public static function gdc($strPath, $booErrorRep = true)
-    {
+    public static function gdc($strPath, $booErrorRep = true) {
         $arrDirectoryContent = array();
         $error = Error::singleton();
         if (is_dir($strPath)) {
@@ -198,17 +196,17 @@ class CommonFunctions
                 closedir($handle);
             } else {
                 if ($booErrorRep) {
-                    $error->addError('opendir('.$strPath.')', 'directory can not be read by phpsysinfo');
+                    $error->addError('opendir(' . $strPath . ')', 'directory can not be read by phpsysinfo');
                 }
             }
         } else {
             if ($booErrorRep) {
-                $error->addError('is_dir('.$strPath.')', 'directory does not exist on your machine');
+                $error->addError('is_dir(' . $strPath . ')', 'directory does not exist on your machine');
             }
         }
         return $arrDirectoryContent;
     }
-    
+
     /**
      * Check for needed php extensions
      *
@@ -222,8 +220,7 @@ class CommonFunctions
      *
      * @return void
      */
-    public static function checkForExtensions($arrExt = array())
-    {
+    public static function checkForExtensions($arrExt = array()) {
         $arrReq = array('simplexml', 'pcre', 'xml', 'mbstring');
         $extensions = array_merge($arrExt, $arrReq);
         $text = "";
@@ -234,7 +231,7 @@ class CommonFunctions
         foreach ($extensions as $extension) {
             if (!extension_loaded($extension)) {
                 $text .= "    <Function>checkForExtensions</Function>\n";
-                $text .= "    <Message>phpSysInfo requires the ".$extension." extension to php in order to work properly.</Message>\n";
+                $text .= "    <Message>phpSysInfo requires the " . $extension . " extension to php in order to work properly.</Message>\n";
                 $error = true;
             }
         }
@@ -247,7 +244,6 @@ class CommonFunctions
         }
     }
 
-    
     /**
      * get the content of stdout/stderr with the option to set a timeout for reading
      *
@@ -258,13 +254,12 @@ class CommonFunctions
      *
      * @return void
      */
-    private static function _timeoutfgets($pipes, &$out, &$err, $sek = 10)
-    {
+    private static function _timeoutfgets($pipes, &$out, &$err, $sek = 10) {
         // fill output string
         $time = $sek;
         $w = null;
         $e = null;
-        
+
         while ($time >= 0) {
             $read = array($pipes[1]);
             while (!feof($read[0]) && ($n = stream_select($read, $w, $e, $time)) !== false && $n > 0 && strlen($c = fgetc($read[0])) > 0) {
@@ -282,16 +277,17 @@ class CommonFunctions
             --$time;
         }
     }
-    
+
     /**
      * get all configured plugins from config.php (file must be included before calling this function)
      *
      * @return array
      */
-    public static function getPlugins()
-    {
+    public static function getPlugins() {
         $plugins = preg_split("/[\s]?,[\s]?/", PSI_PLUGINS, -1, PREG_SPLIT_NO_EMPTY);
         return $plugins;
     }
+
 }
+
 ?>

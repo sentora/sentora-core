@@ -1,10 +1,10 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-
 /**
  *
  */
@@ -21,7 +21,7 @@ $url_query .= '&amp;goto=tbl_sql.php&amp;back=tbl_sql.php';
 
 require_once './libraries/sql_query_form.lib.php';
 
-$err_url   = 'tbl_sql.php' . $err_url;
+$err_url = 'tbl_sql.php' . $err_url;
 // After a syntax error, we return to this script
 // with the typed query in the textarea.
 $goto = 'tbl_sql.php';

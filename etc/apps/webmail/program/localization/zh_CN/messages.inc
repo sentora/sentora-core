@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| localization/zh_CN/messages.inc                                       |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Xue zhong sheng <xue.zhongsheng@gmail.com>                    |
-|         Zhang Huang bin <michaelbibby@gmail.com>                      |
-|         Kelphon Tang <kelphon@kingstor.com>	                        |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | localization/zh_CN/messages.inc                                       |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Xue zhong sheng <xue.zhongsheng@gmail.com>                    |
+  |         Zhang Huang bin <michaelbibby@gmail.com>                      |
+  |         Kelphon Tang <kelphon@kingstor.com>	                        |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = '登录失败';
@@ -59,7 +59,7 @@ $messages['errorcopying'] = '无法复制邮件';
 $messages['errordeleting'] = '无法删除邮件';
 $messages['errormarking'] = '无法标记邮件';
 $messages['deletecontactconfirm'] = '确定要删除已选中的联系人？';
-$messages['deletegroupconfirm']  = '确定要删除以选中的组?';
+$messages['deletegroupconfirm'] = '确定要删除以选中的组?';
 $messages['deletemessagesconfirm'] = '确定要删除已选中的邮件？';
 $messages['deletefolderconfirm'] = '确定要删除已选中的邮件夹？';
 $messages['purgefolderconfirm'] = '是否确认要删除当前邮件夹中的所有邮件？';

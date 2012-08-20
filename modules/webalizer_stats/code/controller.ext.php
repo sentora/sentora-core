@@ -5,7 +5,6 @@
  * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
  *
  */
- 
 class module_controller {
 
     static function ListDomains($uid) {
@@ -18,8 +17,8 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
-                array_push($res, array('vh_id_pk'     => $rowclients['vh_id_pk'],
-                    				   'vh_name_vc' => $rowclients['vh_name_vc']));
+                array_push($res, array('vh_id_pk' => $rowclients['vh_id_pk'],
+                    'vh_name_vc' => $rowclients['vh_name_vc']));
             }
             return $res;
         } else {
@@ -36,7 +35,7 @@ class module_controller {
             return false;
         }
     }
-	
+
     static function getCurrentDomain() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -46,27 +45,27 @@ class module_controller {
     }
 
     static function getReportToShow() {
-		global $controller;
-	    $urlvars = $controller->GetAllControllerRequests('URL');
-        if (isset($urlvars['domain']) && $urlvars['domain'] != ""){
-			$currentuser = ctrl_users::GetUserDetail();
-			$report_to_show = "modules/webalizer_stats/stats/" . $currentuser['username'] . "/" .$urlvars['domain'] . "/index.html";
-	    	if (!file_exists($report_to_show)) {
-            	$report_to_show = false;
-        	}
-			return $report_to_show;
-		}
+        global $controller;
+        $urlvars = $controller->GetAllControllerRequests('URL');
+        if (isset($urlvars['domain']) && $urlvars['domain'] != "") {
+            $currentuser = ctrl_users::GetUserDetail();
+            $report_to_show = "modules/webalizer_stats/stats/" . $currentuser['username'] . "/" . $urlvars['domain'] . "/index.html";
+            if (!file_exists($report_to_show)) {
+                $report_to_show = false;
+            }
+            return $report_to_show;
+        }
     }
 
     static function doShowStats() {
-		global $controller;
+        global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if(isset($formvars['inDomain'])){
-        	header("location: ./?module=" . $controller->GetCurrentModule() . "&show=true&domain=" . $formvars['inDomain'] . "");
+        if (isset($formvars['inDomain'])) {
+            header("location: ./?module=" . $controller->GetCurrentModule() . "&show=true&domain=" . $formvars['inDomain'] . "");
             exit;
-		} else {
-        	return false;
-		}
+        } else {
+            return false;
+        }
     }
 
     static function getIsShowStats() {
@@ -77,24 +76,25 @@ class module_controller {
         return false;
     }
 
-	static function getInit() {
-
-    }
-			
-	static function getDescription() {
-			return ui_module::GetModuleDescription();
+    static function getInit() {
+        
     }
 
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+    static function getDescription() {
+        return ui_module::GetModuleDescription();
+    }
+
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
 }
+
 ?>

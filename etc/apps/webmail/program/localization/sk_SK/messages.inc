@@ -2,24 +2,24 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/sk/messages.inc                                              |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Marek Kutnar <marek19@zmail.sk>                               |
-|         Lukas Kraic  <lukas.kraic@truni.sk>                           |
-|         Peter Mann   <peter.mann@tuke.sk>                             |
-|         Ales Pospichal   <ales@pospichalales.info>                    |
-|         Martin Lacina	<martin@whistler.sk>                            |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/sk/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Marek Kutnar <marek19@zmail.sk>                               |
+  |         Lukas Kraic  <lukas.kraic@truni.sk>                           |
+  |         Peter Mann   <peter.mann@tuke.sk>                             |
+  |         Ales Pospichal   <ales@pospichalales.info>                    |
+  |         Martin Lacina	<martin@whistler.sk>                            |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
+  @version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Chybné prihlásenie';
@@ -149,5 +149,4 @@ $messages['foldercreated'] = 'Adresár bol vytvorený';
 $messages['invalidimageformat'] = 'Zlý formát obrázku';
 $messages['mispellingsfound'] = 'V správe boli nájdené pravopisné chyby';
 $messages['itemsdeleted'] = 'Bolo vymazaných $num položiek.';
-
 ?>

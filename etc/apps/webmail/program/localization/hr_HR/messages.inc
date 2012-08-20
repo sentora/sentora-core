@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/hr/messages.inc                                              |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Edi Budimilic <edi@gemstudio.hr>                              |
-|       Tanja Dobričić <tanja.dobricic@everymail.info>                  |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/hr/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Edi Budimilic <edi@gemstudio.hr>                              |
+  |       Tanja Dobričić <tanja.dobricic@everymail.info>                  |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
+  @version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Prijava neuspješna';
@@ -142,5 +142,4 @@ $messages['nametoolong'] = 'Ime predugo.';
 $messages['folderupdated'] = 'Ažuriranje mape uspješno.';
 $messages['foldercreated'] = 'Kreiranje mape uspješno.';
 $messages['invalidimageformat'] = 'Format slike nije ispravan.';
-
 ?>

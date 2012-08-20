@@ -1,23 +1,23 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/steps/mail/pagenav.inc                                        |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Updates message page navigation controls                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Aleksander Machniak <alec@alec.pl>                            |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/mail/pagenav.inc                                        |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Updates message page navigation controls                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Aleksander Machniak <alec@alec.pl>                            |
+  +-----------------------------------------------------------------------+
 
- $Id: show.inc 4176 2010-11-04 09:59:55Z alec $
+  $Id: show.inc 4176 2010-11-04 09:59:55Z alec $
 
-*/
+ */
 
 $uid = get_input_value('_uid', RCUBE_INPUT_GET);
 
@@ -26,31 +26,30 @@ $mbox_name = $IMAP->get_mailbox_name();
 $IMAP->select_mailbox($mbox_name);
 
 // Get messages count (only messages, no threads here)
-$cnt  = $IMAP->messagecount(NULL, 'ALL');
+$cnt = $IMAP->messagecount(NULL, 'ALL');
 
 if ($_SESSION['sort_col'] == 'date' && $_SESSION['sort_order'] == 'DESC'
-    && empty($_REQUEST['_search']) && !$CONFIG['skip_deleted'] && !$IMAP->threading
+        && empty($_REQUEST['_search']) && !$CONFIG['skip_deleted'] && !$IMAP->threading
 ) {
     // this assumes that we are sorted by date_DESC
-    $seq   = $IMAP->get_id($uid);
+    $seq = $IMAP->get_id($uid);
     $index = $cnt - $seq;
 
-    $prev  = $IMAP->get_uid($seq + 1);
+    $prev = $IMAP->get_uid($seq + 1);
     $first = $IMAP->get_uid($cnt);
-    $next  = $IMAP->get_uid($seq - 1);
-    $last  = $IMAP->get_uid(1);
-}
-else {
+    $next = $IMAP->get_uid($seq - 1);
+    $last = $IMAP->get_uid(1);
+} else {
     // Only if we use custom sorting
     $a_msg_index = $IMAP->message_index(NULL, $_SESSION['sort_col'], $_SESSION['sort_order']);
 
     $index = array_search($IMAP->get_id($uid), $a_msg_index);
 
     $count = count($a_msg_index);
-    $prev  = isset($a_msg_index[$index-1]) ? $IMAP->get_uid($a_msg_index[$index-1]) : -1;
+    $prev = isset($a_msg_index[$index - 1]) ? $IMAP->get_uid($a_msg_index[$index - 1]) : -1;
     $first = $count > 1 ? $IMAP->get_uid($a_msg_index[0]) : -1;
-    $next  = isset($a_msg_index[$index+1]) ? $IMAP->get_uid($a_msg_index[$index+1]) : -1;
-    $last  = $count > 1 ? $IMAP->get_uid($a_msg_index[$count-1]) : -1;
+    $next = isset($a_msg_index[$index + 1]) ? $IMAP->get_uid($a_msg_index[$index + 1]) : -1;
+    $last = $count > 1 ? $IMAP->get_uid($a_msg_index[$count - 1]) : -1;
 }
 
 // Set UIDs and activate navigation buttons
@@ -72,9 +71,9 @@ $OUTPUT->set_env('messagecount', 1);
 
 // Set rowcount text
 $OUTPUT->command('set_rowcount', rcube_label(array(
-    'name' => 'messagenrof',
-    'vars' => array('nr'  => $index+1, 'count' => $cnt)
-)));
+            'name' => 'messagenrof',
+            'vars' => array('nr' => $index + 1, 'count' => $cnt)
+        )));
 
 $OUTPUT->send();
 

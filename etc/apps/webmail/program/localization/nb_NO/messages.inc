@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/nb_NO/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Kjetil Waage - Nextline AS <kjetil@nextline.no>               |
-| Author: Tor Erik Linnerud - JKLM <tel@jklm.no>                        |
-| Author: Axel Sjøstedt <roundcube@sjostedt.no>                         |
-| Author: Odd Henriksen <odd@digicon.no>                                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/nb_NO/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Kjetil Waage - Nextline AS <kjetil@nextline.no>               |
+  | Author: Tor Erik Linnerud - JKLM <tel@jklm.no>                        |
+  | Author: Axel Sjøstedt <roundcube@sjostedt.no>                         |
+  | Author: Odd Henriksen <odd@digicon.no>                                |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Pålogging mislyktes';
@@ -113,5 +113,4 @@ $messages['smtperror'] = 'SMTP-feil ($code): $msg';
 $messages['emailformaterror'] = 'Feil e-postadresse: $email';
 $messages['toomanyrecipients'] = 'For mange mottakere. Reduser antall mottakere til $max.';
 $messages['maxgroupmembersreached'] = 'Antall gruppemedlemmer overskrider maksgrensen på $max';
-
 ?>

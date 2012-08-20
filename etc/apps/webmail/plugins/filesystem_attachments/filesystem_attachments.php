@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Filesystem Attachments
  * 
@@ -17,12 +18,11 @@
  * @author Thomas Bruederli <roundcube@gmail.com>
  * 
  */
-class filesystem_attachments extends rcube_plugin
-{
+class filesystem_attachments extends rcube_plugin {
+
     public $task = '?(?!login).*';
 
-    function init()
-    {
+    function init() {
         // Save a newly uploaded attachment
         $this->add_hook('attachment_upload', array($this, 'upload'));
 
@@ -46,8 +46,7 @@ class filesystem_attachments extends rcube_plugin
     /**
      * Save a newly uploaded attachment
      */
-    function upload($args)
-    {
+    function upload($args) {
         $args['status'] = false;
         $group = $args['group'];
         $rcmail = rcmail::get_instance();
@@ -71,8 +70,7 @@ class filesystem_attachments extends rcube_plugin
     /**
      * Save an attachment from a non-upload source (draft or forward)
      */
-    function save($args)
-    {
+    function save($args) {
         $group = $args['group'];
         $args['status'] = false;
 
@@ -102,8 +100,7 @@ class filesystem_attachments extends rcube_plugin
      * Remove an attachment from storage
      * This is triggered by the remove attachment button on the compose screen
      */
-    function remove($args)
-    {
+    function remove($args) {
         $args['status'] = @unlink($args['path']);
         return $args;
     }
@@ -113,8 +110,7 @@ class filesystem_attachments extends rcube_plugin
      * For this plugin, the file is already in place, just check for
      * the existance of the proper metadata
      */
-    function display($args)
-    {
+    function display($args) {
         $args['status'] = file_exists($args['path']);
         return $args;
     }
@@ -124,25 +120,23 @@ class filesystem_attachments extends rcube_plugin
      * on disk for use.  This stub function is kept here to make this 
      * class handy as a parent class for other plugins which may need it.
      */
-    function get($args)
-    {
+    function get($args) {
         return $args;
     }
 
     /**
      * Delete all temp files associated with this user
      */
-    function cleanup($args)
-    {
+    function cleanup($args) {
         // $_SESSION['compose']['attachments'] is not a complete record of
         // temporary files because loading a draft or starting a forward copies
         // the file to disk, but does not make an entry in that array
-        if (is_array($_SESSION['plugins']['filesystem_attachments'])){
+        if (is_array($_SESSION['plugins']['filesystem_attachments'])) {
             foreach ($_SESSION['plugins']['filesystem_attachments'] as $group => $files) {
                 if ($args['group'] && $args['group'] != $group)
                     continue;
-                foreach ((array)$files as $filename){
-                    if(file_exists($filename)){
+                foreach ((array) $files as $filename) {
+                    if (file_exists($filename)) {
                         unlink($filename);
                     }
                 }
@@ -152,10 +146,10 @@ class filesystem_attachments extends rcube_plugin
         return $args;
     }
 
-    function file_id()
-    {
+    function file_id() {
         $userid = rcmail::get_instance()->user->ID;
-	    list($usec, $sec) = explode(' ', microtime()); 
+        list($usec, $sec) = explode(' ', microtime());
         return preg_replace('/[^0-9]/', '', $userid . $sec . $usec);
     }
+
 }

@@ -1,10 +1,10 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-
 /**
  * Get some core libraries
  */
@@ -47,29 +47,28 @@ if (isset($_REQUEST['do_save_data'])) {
     $definitions = array();
 
     // Transforms the radio button field_key into 3 arrays
-    $field_cnt      = count($_REQUEST['field_name']);
-    $field_primary  = array();
-    $field_index    = array();
-    $field_unique   = array();
+    $field_cnt = count($_REQUEST['field_name']);
+    $field_primary = array();
+    $field_index = array();
+    $field_unique = array();
     $field_fulltext = array();
     for ($i = 0; $i < $field_cnt; ++$i) {
         if (isset($_REQUEST['field_key'][$i])
-         && strlen($_REQUEST['field_name'][$i])) {
+                && strlen($_REQUEST['field_name'][$i])) {
             if ($_REQUEST['field_key'][$i] == 'primary_' . $i) {
                 $field_primary[] = $i;
             }
             if ($_REQUEST['field_key'][$i] == 'index_' . $i) {
-                $field_index[]   = $i;
+                $field_index[] = $i;
             }
             if ($_REQUEST['field_key'][$i] == 'unique_' . $i) {
-                $field_unique[]  = $i;
+                $field_unique[] = $i;
             }
             if ($_REQUEST['field_key'][$i] == 'fulltext_' . $i) {
-                $field_fulltext[]  = $i;
+                $field_fulltext[] = $i;
             }
         } // end if
     } // end for
-
     // Builds the field creation statement and alters the table
     for ($i = 0; $i < $field_cnt; ++$i) {
         // '0' is also empty for php :-(
@@ -78,26 +77,7 @@ if (isset($_REQUEST['do_save_data'])) {
         }
 
         $definition = ' ADD ' . PMA_Table::generateFieldSpec(
-            $_REQUEST['field_name'][$i],
-            $_REQUEST['field_type'][$i],
-            $_REQUEST['field_length'][$i],
-            $_REQUEST['field_attribute'][$i],
-            isset($_REQUEST['field_collation'][$i])
-                ? $_REQUEST['field_collation'][$i]
-                : '',
-            isset($_REQUEST['field_null'][$i])
-                ? $_REQUEST['field_null'][$i]
-                : 'NOT NULL',
-            $_REQUEST['field_default_type'][$i],
-            $_REQUEST['field_default_value'][$i],
-            isset($_REQUEST['field_extra'][$i])
-                ? $_REQUEST['field_extra'][$i]
-                : false,
-            isset($_REQUEST['field_comments'][$i])
-                ? $_REQUEST['field_comments'][$i]
-                : '',
-            $field_primary,
-            $i
+                        $_REQUEST['field_name'][$i], $_REQUEST['field_type'][$i], $_REQUEST['field_length'][$i], $_REQUEST['field_attribute'][$i], isset($_REQUEST['field_collation'][$i]) ? $_REQUEST['field_collation'][$i] : '', isset($_REQUEST['field_null'][$i]) ? $_REQUEST['field_null'][$i] : 'NOT NULL', $_REQUEST['field_default_type'][$i], $_REQUEST['field_default_value'][$i], isset($_REQUEST['field_extra'][$i]) ? $_REQUEST['field_extra'][$i] : false, isset($_REQUEST['field_comments'][$i]) ? $_REQUEST['field_comments'][$i] : '', $field_primary, $i
         );
 
         if ($_REQUEST['field_where'] != 'last') {
@@ -109,12 +89,11 @@ if (isset($_REQUEST['do_save_data'])) {
                     $definition .= ' AFTER ' . PMA_backquote($_REQUEST['after_field']);
                 }
             } else {
-                $definition .= ' AFTER ' . PMA_backquote($_REQUEST['field_name'][$i-1]);
+                $definition .= ' AFTER ' . PMA_backquote($_REQUEST['field_name'][$i - 1]);
             }
         }
         $definitions[] = $definition;
     } // end for
-
     // Builds the primary keys statements and updates the table
     if (count($field_primary)) {
         $fields = array();
@@ -158,7 +137,7 @@ if (isset($_REQUEST['do_save_data'])) {
     // To allow replication, we first select the db to use and then run queries
     // on this db.
     PMA_DBI_select_db($db) or PMA_mysqlDie(PMA_getError(), 'USE ' . PMA_backquotes($db), '', $err_url);
-    $sql_query    = 'ALTER TABLE ' . PMA_backquote($table) . ' ' . implode(', ', $definitions);
+    $sql_query = 'ALTER TABLE ' . PMA_backquote($table) . ' ' . implode(', ', $definitions);
     $result = PMA_DBI_try_query($sql_query);
 
     if ($result === true) {
@@ -167,16 +146,12 @@ if (isset($_REQUEST['do_save_data'])) {
 
         // Update comment table for mime types [MIME]
         if (isset($_REQUEST['field_mimetype'])
-         && is_array($_REQUEST['field_mimetype'])
-         && $cfg['BrowseMIME']) {
+                && is_array($_REQUEST['field_mimetype'])
+                && $cfg['BrowseMIME']) {
             foreach ($_REQUEST['field_mimetype'] as $fieldindex => $mimetype) {
                 if (isset($_REQUEST['field_name'][$fieldindex])
-                 && strlen($_REQUEST['field_name'][$fieldindex])) {
-                    PMA_setMIME($db, $table,
-                        $_REQUEST['field_name'][$fieldindex],
-                        $mimetype,
-                        $_REQUEST['field_transformation'][$fieldindex],
-                        $_REQUEST['field_transformation_options'][$fieldindex]);
+                        && strlen($_REQUEST['field_name'][$fieldindex])) {
+                    PMA_setMIME($db, $table, $_REQUEST['field_name'][$fieldindex], $mimetype, $_REQUEST['field_transformation'][$fieldindex], $_REQUEST['field_transformation_options'][$fieldindex]);
                 }
             }
         }
@@ -225,5 +200,4 @@ if ($abort == false) {
     // Diplays the footer
     require './libraries/footer.inc.php';
 }
-
 ?>

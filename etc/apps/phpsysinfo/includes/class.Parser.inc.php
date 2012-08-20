@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * parser Class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.Parser.inc.php 521 2011-11-06 17:29:25Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * parser class with common used parsing metods
  *
  * @category  PHP
@@ -23,15 +25,14 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class Parser
-{
+class Parser {
+
     /**
      * parsing the output of lspci command
      *
      * @return Array
      */
-    public static function lspci()
-    {
+    public static function lspci() {
         $arrResults = array();
         if (CommonFunctions::executeProgram("lspci", "", $strBuf, PSI_DEBUG)) {
             $arrLines = preg_split("/\n/", $strBuf, -1, PREG_SPLIT_NO_EMPTY);
@@ -45,14 +46,13 @@ class Parser
         }
         return $arrResults;
     }
-    
+
     /**
      * parsing the output of pciconf command
      *
      * @return Array
      */
-    public static function pciconf()
-    {
+    public static function pciconf() {
         $arrResults = array();
         $intS = 0;
         if (CommonFunctions::executeProgram("pciconf", "-lv", $strBuf, PSI_DEBUG)) {
@@ -63,7 +63,7 @@ class Parser
                     if (trim($arrParts[1]) == "vendor") {
                         $arrTemp[$intS] = trim($arrParts[2]);
                     } elseif (trim($arrParts[1]) == "device") {
-                        $arrTemp[$intS] .= " - ".trim($arrParts[2]);
+                        $arrTemp[$intS] .= " - " . trim($arrParts[2]);
                         $intS++;
                     }
                 }
@@ -76,7 +76,7 @@ class Parser
         }
         return $arrResults;
     }
-    
+
     /**
      * parsing the output of df command
      *
@@ -84,13 +84,12 @@ class Parser
      *
      * @return array
      */
-    public static function df($df_param = "")
-    {
+    public static function df($df_param = "") {
         $arrResult = array();
-        if (CommonFunctions::executeProgram('df', '-k '.$df_param, $df, PSI_DEBUG)) {
+        if (CommonFunctions::executeProgram('df', '-k ' . $df_param, $df, PSI_DEBUG)) {
             $df = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
             if (PSI_SHOW_INODES) {
-                if (CommonFunctions::executeProgram('df', '-i '.$df_param, $df2, PSI_DEBUG)) {
+                if (CommonFunctions::executeProgram('df', '-i ' . $df_param, $df2, PSI_DEBUG)) {
                     $df2 = preg_split("/\n/", $df2, -1, PREG_SPLIT_NO_EMPTY);
                     // Store inode use% in an associative array (df_inodes) for later use
                     foreach ($df2 as $df2_line) {
@@ -105,13 +104,16 @@ class Parser
                 foreach ($mount as $mount_line) {
                     if (preg_match("/\S+ on (\S+) type (.*) \((.*)\)/", $mount_line, $mount_buf)) {
                         $mount_parm[$mount_buf[1]]['fstype'] = $mount_buf[2];
-                        if (PSI_SHOW_MOUNT_OPTION) $mount_parm[$mount_buf[1]]['options'] = $mount_buf[3];
+                        if (PSI_SHOW_MOUNT_OPTION)
+                            $mount_parm[$mount_buf[1]]['options'] = $mount_buf[3];
                     } elseif (preg_match("/\S+ (.*) on (\S+) \((.*)\)/", $mount_line, $mount_buf)) {
                         $mount_parm[$mount_buf[2]]['fstype'] = $mount_buf[1];
-                        if (PSI_SHOW_MOUNT_OPTION) $mount_parm[$mount_buf[2]]['options'] = $mount_buf[3];
+                        if (PSI_SHOW_MOUNT_OPTION)
+                            $mount_parm[$mount_buf[2]]['options'] = $mount_buf[3];
                     } elseif (preg_match("/\S+ on ([\S ]+) \((\S+)(,\s(.*))?\)/", $mount_line, $mount_buf)) {
                         $mount_parm[$mount_buf[1]]['fstype'] = $mount_buf[2];
-                        if (PSI_SHOW_MOUNT_OPTION) $mount_parm[$mount_buf[1]]['options'] = isset($mount_buf[4]) ? $mount_buf[4] : '';
+                        if (PSI_SHOW_MOUNT_OPTION)
+                            $mount_parm[$mount_buf[1]]['options'] = isset($mount_buf[4]) ? $mount_buf[4] : '';
                     }
                 }
                 foreach ($df as $df_line) {
@@ -133,24 +135,25 @@ class Parser
                                 $dev->setUsed($df_buf[2] * 1024);
                                 $dev->setFree($df_buf[3] * 1024);
                             }
-                            if (PSI_SHOW_MOUNT_POINT) $dev->setMountPoint($df_buf[5]);
+                            if (PSI_SHOW_MOUNT_POINT)
+                                $dev->setMountPoint($df_buf[5]);
 
-                            if(isset($mount_parm[$df_buf[5]])) {
+                            if (isset($mount_parm[$df_buf[5]])) {
                                 $dev->setFsType($mount_parm[$df_buf[5]]['fstype']);
                                 if (PSI_SHOW_MOUNT_OPTION) {
                                     if (PSI_SHOW_MOUNT_CREDENTIALS) {
                                         $dev->setOptions($mount_parm[$df_buf[5]]['options']);
                                     } else {
-                                        $mpo=$mount_parm[$df_buf[5]]['options'];
+                                        $mpo = $mount_parm[$df_buf[5]]['options'];
 
-                                        $mpo=preg_replace('/(^guest,)|(^guest$)|(,guest$)/i', '', $mpo);
-                                        $mpo=preg_replace('/,guest,/i', ',', $mpo);
+                                        $mpo = preg_replace('/(^guest,)|(^guest$)|(,guest$)/i', '', $mpo);
+                                        $mpo = preg_replace('/,guest,/i', ',', $mpo);
 
-                                        $mpo=preg_replace('/(^user=[^,]*,)|(^user=[^,]*$)|(,user=[^,]*$)/i', '', $mpo);
-                                        $mpo=preg_replace('/,user=[^,]*,/i', ',', $mpo);
+                                        $mpo = preg_replace('/(^user=[^,]*,)|(^user=[^,]*$)|(,user=[^,]*$)/i', '', $mpo);
+                                        $mpo = preg_replace('/,user=[^,]*,/i', ',', $mpo);
 
-                                        $mpo=preg_replace('/(^password=[^,]*,)|(^password=[^,]*$)|(,password=[^,]*$)/i', '', $mpo);
-                                        $mpo=preg_replace('/,password=[^,]*,/i', ',', $mpo);
+                                        $mpo = preg_replace('/(^password=[^,]*,)|(^password=[^,]*$)|(,password=[^,]*$)/i', '', $mpo);
+                                        $mpo = preg_replace('/,password=[^,]*,/i', ',', $mpo);
 
                                         $dev->setOptions($mpo);
                                     }
@@ -167,5 +170,7 @@ class Parser
         }
         return $arrResult;
     }
+
 }
+
 ?>

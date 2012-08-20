@@ -1,10 +1,10 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Provides download to a given field defined in parameters.
  * @package phpMyAdmin
  */
-
 /**
  * Common functions.
  */
@@ -16,8 +16,7 @@ PMA_checkParameters(array('db', 'table', 'where_clause', 'transform_key'));
 
 /* Select database */
 if (!PMA_DBI_select_db($db)) {
-    PMA_mysqlDie(sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)),
-        '', '');
+    PMA_mysqlDie(sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)), '', '');
 }
 
 /* Check if table exists */
@@ -39,7 +38,7 @@ if ($result === false) {
 
 header('Content-Type: ' . PMA_detectMIME($result));
 header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-$filename = PMA_sanitize_filename($table . '-' .  $transform_key . '.bin');
+$filename = PMA_sanitize_filename($table . '-' . $transform_key . '.bin');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
 if (PMA_USR_BROWSER_AGENT == 'IE') {
     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

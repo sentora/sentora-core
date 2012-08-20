@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * lmsensor sensor class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.LMSensors.inc.php 316 2009-09-03 08:09:18Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * getting information from lmsensor
  *
  * @category  PHP
@@ -23,51 +25,49 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class LMSensors extends Sensors
-{
+class LMSensors extends Sensors {
+
     /**
      * content to parse
      *
      * @var array
      */
     private $_lines = array();
-    
+
     /**
      * fill the private content var through tcp or file access
      */
-    function __construct()
-    {
+    function __construct() {
         parent::__construct();
         switch (strtolower(PSI_SENSOR_ACCESS)) {
-        case 'command':
-            if (CommonFunctions::executeProgram("sensors", "", $lines)) {
-                // Martijn Stolk: Dirty fix for misinterpreted output of sensors,
-                // where info could come on next line when the label is too long.
-                $lines = str_replace(":\n", ":", $lines);
-                $lines = str_replace("\n\n", "\n", $lines);
-                $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
-            }
-            break;
-        case 'file':
-            if (CommonFunctions::rfts(APP_ROOT.'/data/lmsensors.txt', $lines)) {
-                $lines = str_replace(":\n", ":", $lines);
-                $lines = str_replace("\n\n", "\n", $lines);
-                $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
-            }
-            break;
-        default:
-            $this->error->addConfigError('__construct()', 'PSI_SENSOR_ACCESS');
-            break;
+            case 'command':
+                if (CommonFunctions::executeProgram("sensors", "", $lines)) {
+                    // Martijn Stolk: Dirty fix for misinterpreted output of sensors,
+                    // where info could come on next line when the label is too long.
+                    $lines = str_replace(":\n", ":", $lines);
+                    $lines = str_replace("\n\n", "\n", $lines);
+                    $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
+                }
+                break;
+            case 'file':
+                if (CommonFunctions::rfts(APP_ROOT . '/data/lmsensors.txt', $lines)) {
+                    $lines = str_replace(":\n", ":", $lines);
+                    $lines = str_replace("\n\n", "\n", $lines);
+                    $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
+                }
+                break;
+            default:
+                $this->error->addConfigError('__construct()', 'PSI_SENSOR_ACCESS');
+                break;
         }
     }
-    
+
     /**
      * get temperature information
      *
      * @return void
      */
-    private function _temperature()
-    {
+    private function _temperature() {
         $ar_buf = array();
         foreach ($this->_lines as $line) {
             $data = array();
@@ -81,9 +81,9 @@ class LMSensors extends Sensors
             if (count($data) > 1) {
                 $temp = substr(trim($data[2]), -1);
                 switch ($temp) {
-                case "C":
-                case "F":
-                    array_push($ar_buf, $line);
+                    case "C":
+                    case "F":
+                        array_push($ar_buf, $line);
                 }
             }
         }
@@ -98,7 +98,7 @@ class LMSensors extends Sensors
             } else {
                 (preg_match("/(.*):(.*).C/", $line, $data));
             }
-            foreach ($data as $key=>$value) {
+            foreach ($data as $key => $value) {
                 if (preg_match("/^\+?([0-9\.]+).?$/", trim($value), $newvalue)) {
                     $data[$key] = trim($newvalue[1]);
                 } else {
@@ -125,14 +125,13 @@ class LMSensors extends Sensors
             $this->mbinfo->setMbTemp($dev);
         }
     }
-    
+
     /**
      * get fan information
      *
      * @return void
      */
-    private function _fans()
-    {
+    private function _fans() {
         $ar_buf = array();
         foreach ($this->_lines as $line) {
             $data = array();
@@ -150,8 +149,8 @@ class LMSensors extends Sensors
                 }
                 if (isset($temp[1])) {
                     switch ($temp[1]) {
-                    case "RPM":
-                        array_push($ar_buf, $line);
+                        case "RPM":
+                            array_push($ar_buf, $line);
                     }
                 }
             }
@@ -176,14 +175,13 @@ class LMSensors extends Sensors
             $this->mbinfo->setMbFan($dev);
         }
     }
-    
+
     /**
      * get voltage information
      *
      * @return void
      */
-    private function _voltage()
-    {
+    private function _voltage() {
         $ar_buf = array();
         foreach ($this->_lines as $line) {
             $data = array();
@@ -199,8 +197,8 @@ class LMSensors extends Sensors
                 }
                 if (isset($temp[1])) {
                     switch ($temp[1]) {
-                    case "V":
-                        array_push($ar_buf, $line);
+                        case "V":
+                            array_push($ar_buf, $line);
                     }
                 }
             }
@@ -214,7 +212,7 @@ class LMSensors extends Sensors
             } else {
                 preg_match("/(.*):(.*) V$/", $line, $data);
             }
-            foreach ($data as $key=>$value) {
+            foreach ($data as $key => $value) {
                 if (preg_match("/^\+?([0-9\.]+)$/", trim($value), $newvalue)) {
                     $data[$key] = trim($newvalue[1]);
                 } else {
@@ -235,7 +233,7 @@ class LMSensors extends Sensors
             }
         }
     }
-    
+
     /**
      * get the information
      *
@@ -243,11 +241,12 @@ class LMSensors extends Sensors
      *
      * @return Void
      */
-    function build()
-    {
+    function build() {
         $this->_temperature();
         $this->_voltage();
         $this->_fans();
     }
+
 }
+
 ?>

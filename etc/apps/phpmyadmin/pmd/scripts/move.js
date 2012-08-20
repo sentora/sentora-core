@@ -52,7 +52,9 @@ var isN4 = document.layers;
 
 if (isIE) {
     window.onscroll = General_scroll;
-    document.onselectstart = function () {return false;};
+    document.onselectstart = function () {
+        return false;
+    };
 }
 
 //document.onmouseup = function(){General_scroll_end();}
@@ -116,8 +118,8 @@ function MouseMove(e)
 
     if (layer_menu_cur_click) {
         document.getElementById("layer_menu").style.width = ((Glob_X - dx) >= 150 ? Glob_X - dx : 150) + 'px';
-        //document.getElementById("layer_menu").style.height = Glob_Y - dy>=200?Glob_Y - dy:200;
-        //document.getElementById("id_scroll_tab").style.height = Glob_Y - dy2;
+    //document.getElementById("layer_menu").style.height = Glob_Y - dy>=200?Glob_Y - dy:200;
+    //document.getElementById("id_scroll_tab").style.height = Glob_Y - dy2;
     }
 }
 
@@ -130,7 +132,7 @@ function MouseUp(e)
         cur_click = null;
     }
     layer_menu_cur_click = 0;
-    //window.releaseEvents(Event.MOUSEMOVE);
+//window.releaseEvents(Event.MOUSEMOVE);
 }
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -275,8 +277,8 @@ function Re_load()
                     }
 
                     var y1 = document.getElementById(key2).offsetTop
-                         + row_offset_top
-                         + height_field;
+                    + row_offset_top
+                    + height_field;
                     //alert(1);
 
                     row_offset_top = 0;
@@ -287,9 +289,9 @@ function Re_load()
                     }
 
                     var y2 =
-                          document.getElementById(contr[K][key][key2][key3][0]).offsetTop
-                        + row_offset_top
-                        + height_field;
+                    document.getElementById(contr[K][key][key2][key3][0]).offsetTop
+                    + row_offset_top
+                    + height_field;
 
                     //alert(y1 + ' - ' + key2 + "." + key3);
                     Line0(x1 - sm_x, y1 - sm_y, x2 - sm_x, y2 - sm_y, getColorByTarget( contr[K][key][key2][key3][0]+'.'+contr[K][key][key2][key3][1] ) );
@@ -534,8 +536,8 @@ function Click_field(T, f, PK) // table field
             old_class = 'tab_field';
             //display_field.splice(T, 1);
             delete display_field[T];
-            //s = '';for(k in display_field)s += k + ' = ' + display_field[k] + ', ';alert(s);
-            //n = 0;for(k in display_field)n++;alert(n);
+        //s = '';for(k in display_field)s += k + ' = ' + display_field[k] + ', ';alert(s);
+        //n = 0;for(k in display_field)n++;alert(n);
         } else {
             old_class = 'tab_field_3';
             if (display_field[T]) {
@@ -609,12 +611,12 @@ function Small_tab_invert() // invert max/min all tables
 
 function Small_tab_refresh()
 {
-     for (key in j_tabs) {
-         if(document.getElementById('id_hide_tbody_'+key).innerHTML != "v") {
-             Small_tab(key, 0);
-             Small_tab(key, 0);
-         }
-     }
+    for (key in j_tabs) {
+        if(document.getElementById('id_hide_tbody_'+key).innerHTML != "v") {
+            Small_tab(key, 0);
+            Small_tab(key, 0);
+        }
+    }
 }
 
 function Small_tab(t, re_load)
@@ -647,7 +649,9 @@ function Select_tab(t)
     //----------
     var id_t = document.getElementById(t);
     window.scrollTo(parseInt(id_t.style.left) - 300, parseInt(id_t.style.top) - 300);
-    setTimeout(function(){document.getElementById('id_zag_' + t).className = 'tab_zag';}, 800);
+    setTimeout(function(){
+        document.getElementById('id_zag_' + t).className = 'tab_zag';
+    }, 800);
 }
 //------------------------------------------------------------------------------
 
@@ -706,14 +710,15 @@ function Canvas_click(id)
 
                     var y1 = document.getElementById(key2).offsetTop + document.getElementById(key2+"."+key3).offsetTop + height_field;
                     var y2 = document.getElementById(contr[K][key][key2][key3][0]).offsetTop +
-                                     document.getElementById(contr[K][key][key2][key3][0]+"."+contr[K][key][key2][key3][1]).offsetTop + height_field;
+                    document.getElementById(contr[K][key][key2][key3][0]+"."+contr[K][key][key2][key3][1]).offsetTop + height_field;
                     if (!selected && Glob_X > x1 - 10 && Glob_X < x1 + 10 && Glob_Y > y1 - 7 && Glob_Y < y1 + 7) {
                         Line0(x1 - sm_x, y1 - sm_y, x2 - sm_x, y2 - sm_y, "rgba(255,0,0,1)");
                         selected = 1; // Rect(x1-sm_x,y1-sm_y,10,10,"rgba(0,255,0,1)");
                         relation_name = key; //
                         Key0 = contr[K][key][key2][key3][0];
                         Key1 = contr[K][key][key2][key3][1];
-                        Key2 = key2; Key3 = key3;
+                        Key2 = key2;
+                        Key3 = key3;
                         Key = K;
                     } else {
                         Line0(x1 - sm_x, y1 - sm_y, x2 - sm_x, y2 - sm_y, getColorByTarget( contr[K][key][key2][key3][0]+'.'+contr[K][key][key2][key3][1] ));
@@ -807,13 +812,13 @@ function No_have_constr(id_this)
         if (E.elements[i].type == "checkbox" && E.elements[i].id.substring(0, 10) == 'check_vis_')
         {
             if (!in_array_k(E.elements[i].value, a))
-            if (id_this.alt == 'v') {
-                E.elements[i].checked = true;
-                document.getElementById(E.elements[i].value).style.visibility = 'visible';
-            } else {
-                E.elements[i].checked = false;
-                document.getElementById(E.elements[i].value).style.visibility = 'hidden';
-            }
+                if (id_this.alt == 'v') {
+                    E.elements[i].checked = true;
+                    document.getElementById(E.elements[i].value).style.visibility = 'visible';
+                } else {
+                    E.elements[i].checked = false;
+                    document.getElementById(E.elements[i].value).style.visibility = 'hidden';
+                }
         }
     }
 }
@@ -851,7 +856,7 @@ function General_scroll()
             document.getElementById('layer_menu').style.top  = (document.body.scrollTop + document.getElementById('top_menu').offsetHeight) + 'px';
         }
         ,200
-    );
+        );
 }
 
 /*
@@ -923,46 +928,46 @@ function Start_display_field()
 var TargetColors = new Array();
 function getColorByTarget( target )
 {
-  var color = '';  //"rgba(0,100,150,1)";
+    var color = '';  //"rgba(0,100,150,1)";
 
-  for (i in TargetColors)
-   if (TargetColors[i][0]==target) {
-    color = TargetColors[i][1];
-    break;
-   }
-
-
-  if (color.length==0)
-  {
-   var i = TargetColors.length+1;
-   var d = i % 6;
-   var j = (i - d) / 6;
-   j = j % 4;
-   j++;
-   var color_case = new Array(
-                        new Array(1, 0, 0),
-                        new Array(0, 1, 0),
-                        new Array(0, 0, 1),
-                        new Array(1, 1, 0),
-                        new Array(1, 0, 1),
-                        new Array(0, 1, 1)
-                        );
-    var a = color_case[d][0];
-    var b = color_case[d][1];
-    var c = color_case[d][2];
-    e = (1 - (j - 1) / 6);
-
-    var r = Math.round(a * 200 * e);
-    var g = Math.round(b * 200 * e);
-    var b = Math.round(c * 200 * e);
-    var color = "rgba("+r+","+g+","+b+",1)";
-
-    TargetColors.push( new Array(target, color) );
+    for (i in TargetColors)
+        if (TargetColors[i][0]==target) {
+            color = TargetColors[i][1];
+            break;
+        }
 
 
-  }
+    if (color.length==0)
+    {
+        var i = TargetColors.length+1;
+        var d = i % 6;
+        var j = (i - d) / 6;
+        j = j % 4;
+        j++;
+        var color_case = new Array(
+            new Array(1, 0, 0),
+            new Array(0, 1, 0),
+            new Array(0, 0, 1),
+            new Array(1, 1, 0),
+            new Array(1, 0, 1),
+            new Array(0, 1, 1)
+            );
+        var a = color_case[d][0];
+        var b = color_case[d][1];
+        var c = color_case[d][2];
+        e = (1 - (j - 1) / 6);
 
-  return color;
+        var r = Math.round(a * 200 * e);
+        var g = Math.round(b * 200 * e);
+        var b = Math.round(c * 200 * e);
+        var color = "rgba("+r+","+g+","+b+",1)";
+
+        TargetColors.push( new Array(target, color) );
+
+
+    }
+
+    return color;
 }
 
 function Click_option(id_this,column_name,table_name) 
@@ -994,11 +999,11 @@ function Select_all(id_this,owner)
                 parent.elements[i].checked = true;
                 parent.elements[i].disabled = true;
                 var temp = '`' + id_this.substring(owner.length +1) + '`.*';
-           }	
-           else {
-               parent.elements[i].checked = false;
-               parent.elements[i].disabled = false;	
-           }
+            }	
+            else {
+                parent.elements[i].checked = false;
+                parent.elements[i].disabled = false;	
+            }
         }
     }
     if(document.getElementById('select_all_' + id_this).checked == true) {
@@ -1059,10 +1064,10 @@ function store_column(id_this,owner,col) {
         for(k =0 ;k < from_array.length;k++){
             if(from_array[k] == id_this){ 
                 from_array.splice(k,1); 
-			    break;
+                break;
             }
         }
-     }
+    }
 }
 
 /**
@@ -1101,24 +1106,24 @@ function add_object() {
         sum = sum + 1;
         document.getElementById('new_name').value = "" ;
     }
-	if (document.getElementById('operator').value != '---') {
+    if (document.getElementById('operator').value != '---') {
         var aggregate_obj = new aggregate(document.getElementById('operator').value) ;
         history_array.push(new history(col_name,aggregate_obj,tab_name,h_tabs[downer + '.' + tab_name],"Aggregate"));
         sum = sum + 1;
         document.getElementById('operator').value = '---';
-		//make aggregate operator
+    //make aggregate operator
     }
     if (document.getElementById('groupby').checked == true ) {
         history_array.push(new history(col_name,'GroupBy',tab_name,h_tabs[downer + '.' +tab_name],"GroupBy"));
         sum = sum + 1;
         document.getElementById('groupby').checked = false;
-	//make groupby
+    //make groupby
     }
     if (document.getElementById('h_rel_opt').value != '--') {
         if (document.getElementById('having').value == "") {
             document.getElementById('hint').innerHTML = "value/subQuery is empty" ;
             document.getElementById('hint').style.visibility = "visible";
-           return;
+            return;
         }
         var p = document.getElementById('having');
         var where_obj = new having(document.getElementById('h_rel_opt').value,p.value,document.getElementById('h_operator').value);//make where object
@@ -1132,11 +1137,11 @@ function add_object() {
         history_array.push(new history(col_name,'OrderBy',tab_name,h_tabs[downer + '.' + tab_name],"OrderBy"));
         sum = sum + 1;
         document.getElementById('orderby').checked = false;
-		//make orderby
+    //make orderby
     }
     document.getElementById('hint').innerHTML = sum + "object created" ;
     document.getElementById('hint').style.visibility = "visible";
-	//output sum new objects created
+    //output sum new objects created
     var existingDiv = document.getElementById('ab');
     existingDiv.innerHTML = display(init,history_array.length);
     Close_option();

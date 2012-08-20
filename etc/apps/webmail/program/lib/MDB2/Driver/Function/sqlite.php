@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -54,15 +55,13 @@ require_once 'MDB2/Driver/Function/Common.php';
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Function_sqlite extends MDB2_Driver_Function_Common
-{
+class MDB2_Driver_Function_sqlite extends MDB2_Driver_Function_Common {
     // {{{ constructor
 
     /**
      * Constructor
      */
-    function __construct($db_index)
-    {
+    function __construct($db_index) {
         parent::__construct($db_index);
         // create all sorts of UDFs
     }
@@ -76,16 +75,15 @@ class MDB2_Driver_Function_sqlite extends MDB2_Driver_Function_Common
      * @return string to call a variable with the current timestamp
      * @access public
      */
-    function now($type = 'timestamp')
-    {
+    function now($type = 'timestamp') {
         switch ($type) {
-        case 'time':
-            return 'time(\'now\')';
-        case 'date':
-            return 'date(\'now\')';
-        case 'timestamp':
-        default:
-            return 'datetime(\'now\')';
+            case 'time':
+                return 'time(\'now\')';
+            case 'date':
+                return 'date(\'now\')';
+            case 'timestamp':
+            default:
+                return 'datetime(\'now\')';
         }
     }
 
@@ -100,9 +98,8 @@ class MDB2_Driver_Function_sqlite extends MDB2_Driver_Function_Common
      * @return string to call a variable with the timestamp
      * @access public
      */
-    function unixtimestamp($expression)
-    {
-        return 'strftime("%s",'. $expression.', "utc")';
+    function unixtimestamp($expression) {
+        return 'strftime("%s",' . $expression . ', "utc")';
     }
 
     // }}}
@@ -114,8 +111,7 @@ class MDB2_Driver_Function_sqlite extends MDB2_Driver_Function_Common
      * @return string to call a function to get a substring
      * @access public
      */
-    function substring($value, $position = 1, $length = null)
-    {
+    function substring($value, $position = 1, $length = null) {
         if (null !== $length) {
             return "substr($value, $position, $length)";
         }
@@ -131,8 +127,7 @@ class MDB2_Driver_Function_sqlite extends MDB2_Driver_Function_Common
      * @return return string to generate float between 0 and 1
      * @access public
      */
-    function random()
-    {
+    function random() {
         return '((RANDOM()+2147483648)/4294967296)';
     }
 
@@ -145,18 +140,17 @@ class MDB2_Driver_Function_sqlite extends MDB2_Driver_Function_Common
      * @return string to call a function to get a replace
      * @access public
      */
-    function replace($str, $from_str, $to_str)
-    {
+    function replace($str, $from_str, $to_str) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $error = $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
-            'method not implemented', __FUNCTION__);
+        $error = $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
         return $error;
     }
 
     // }}}
 }
+
 ?>

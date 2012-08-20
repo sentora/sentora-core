@@ -31,7 +31,6 @@
  * @version   CVS: $Id: Key.php 295621 2010-03-01 04:18:54Z gauthierm $
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-
 /**
  * Sub-key class definition
  */
@@ -58,8 +57,7 @@ require_once 'Crypt/GPG/UserId.php';
  * @link      http://pear.php.net/package/Crypt_GPG
  * @see       Crypt_GPG::getKeys()
  */
-class Crypt_GPG_Key
-{
+class Crypt_GPG_Key {
     // {{{ class properties
 
     /**
@@ -96,8 +94,7 @@ class Crypt_GPG_Key
      *
      * @see Crypt_GPG_Key::addSubKey()
      */
-    public function getSubKeys()
-    {
+    public function getSubKeys() {
         return $this->_subKeys;
     }
 
@@ -111,8 +108,7 @@ class Crypt_GPG_Key
      *
      * @see Crypt_GPG_Key::addUserId()
      */
-    public function getUserIds()
-    {
+    public function getUserIds() {
         return $this->_userIds;
     }
 
@@ -126,8 +122,7 @@ class Crypt_GPG_Key
      *
      * @return Crypt_GPG_SubKey the primary sub-key of this key.
      */
-    public function getPrimaryKey()
-    {
+    public function getPrimaryKey() {
         $primary_key = null;
         if (count($this->_subKeys) > 0) {
             $primary_key = $this->_subKeys[0];
@@ -146,8 +141,7 @@ class Crypt_GPG_Key
      * @return boolean true if this key can sign data and false if this key
      *                 cannot sign data.
      */
-    public function canSign()
-    {
+    public function canSign() {
         $canSign = false;
         foreach ($this->_subKeys as $subKey) {
             if ($subKey->canSign()) {
@@ -169,8 +163,7 @@ class Crypt_GPG_Key
      * @return boolean true if this key can encrypt data and false if this
      *                 key cannot encrypt data.
      */
-    public function canEncrypt()
-    {
+    public function canEncrypt() {
         $canEncrypt = false;
         foreach ($this->_subKeys as $subKey) {
             if ($subKey->canEncrypt()) {
@@ -193,8 +186,7 @@ class Crypt_GPG_Key
      *
      * @return Crypt_GPG_Key the current object, for fluent interface.
      */
-    public function addSubKey(Crypt_GPG_SubKey $subKey)
-    {
+    public function addSubKey(Crypt_GPG_SubKey $subKey) {
         $this->_subKeys[] = $subKey;
         return $this;
     }
@@ -209,8 +201,7 @@ class Crypt_GPG_Key
      *
      * @return Crypt_GPG_Key the current object, for fluent interface.
      */
-    public function addUserId(Crypt_GPG_UserId $userId)
-    {
+    public function addUserId(Crypt_GPG_UserId $userId) {
         $this->_userIds[] = $userId;
         return $this;
     }
@@ -219,5 +210,4 @@ class Crypt_GPG_Key
 }
 
 // }}}
-
 ?>

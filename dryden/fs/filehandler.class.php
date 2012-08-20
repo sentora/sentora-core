@@ -99,12 +99,12 @@ class fs_filehandler {
      * @return string The contents of the file. 
      */
     static function ReadFileContents($file) {
-		$retval = @file_get_contents($file);
-		if ($retval){
-        return $retval;
-		} else {
-			return false;
-		}
+        $retval = @file_get_contents($file);
+        if ($retval) {
+            return $retval;
+        } else {
+            return false;
+        }
     }
 
     /**

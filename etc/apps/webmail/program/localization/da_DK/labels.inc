@@ -1,22 +1,22 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/da_DK/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Martin Moeller <martin@liga.dk>                               |
-|         Jesper R. Meyer <jrm@upthere.dk>                              |
-|         Søren Aggeboe <soren@aggeboe.dk>                              |
-|         John Loft Christiansen <john@nansensvej.dk>                   |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/da_DK/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Martin Moeller <martin@liga.dk>                               |
+  |         Jesper R. Meyer <jrm@upthere.dk>                              |
+  |         Søren Aggeboe <soren@aggeboe.dk>                              |
+  |         John Loft Christiansen <john@nansensvej.dk>                   |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
-*/
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+ */
 
 $labels = array();
 
@@ -124,7 +124,7 @@ $labels['replytomessage'] = 'Svar på denne besked';
 $labels['replytoallmessage'] = 'Svar til alle modtagere';
 $labels['replyall'] = 'Svar alle';
 $labels['replylist'] = 'Svar til listen';
-$labels['forwardinline']    = 'Videresend';
+$labels['forwardinline'] = 'Videresend';
 $labels['forwardattachment'] = 'Videresend som vedhæftning';
 $labels['forwardmessage'] = 'Videresend denne besked';
 $labels['deletemessage'] = 'Slet besked';
@@ -226,7 +226,7 @@ $labels['highest'] = 'Højest';
 $labels['nosubject'] = '(intet emne)';
 $labels['showimages'] = 'Vis billeder';
 $labels['alwaysshow'] = 'Vis altid billeder fra $sender';
-$labels['isdraft']    = 'Dette er en kladde.';
+$labels['isdraft'] = 'Dette er en kladde.';
 
 $labels['htmltoggle'] = 'HTML';
 $labels['plaintoggle'] = 'Almindelig tekst';
@@ -250,8 +250,8 @@ $labels['name'] = 'Vist navn';
 $labels['firstname'] = 'Fornavn';
 $labels['surname'] = 'Efternavn';
 $labels['middlename'] = 'Mellemnavn';
-$labels['nameprefix']   = 'Præfiks';
-$labels['namesuffix']   = 'Suffiks';
+$labels['nameprefix'] = 'Præfiks';
+$labels['namesuffix'] = 'Suffiks';
 $labels['nickname'] = 'Alias/Kaldenavn';
 $labels['jobtitle'] = 'Job titel';
 $labels['organization'] = 'Firma';
@@ -281,18 +281,18 @@ $labels['search'] = 'Søg';
 $labels['advsearch'] = 'Avanceret søg';
 $labels['other'] = 'Andet';
 
-$labels['typehome']   = 'Hjem';
-$labels['typework']   = 'Arbejde';
-$labels['typeother']  = 'Andet';
-$labels['typemobile']  = 'Mobil';
-$labels['typemain']  = 'Fastnet';
-$labels['typehomefax']  = 'Hjemme fax';
-$labels['typeworkfax']  = 'Arbejde Fax';
-$labels['typecar']  = 'Bil';
-$labels['typepager']  = 'Personsøger';
-$labels['typevideo']  = 'Video';
-$labels['typeassistant']  = 'Assistent';
-$labels['typehomepage']  = 'Hjemmeside';
+$labels['typehome'] = 'Hjem';
+$labels['typework'] = 'Arbejde';
+$labels['typeother'] = 'Andet';
+$labels['typemobile'] = 'Mobil';
+$labels['typemain'] = 'Fastnet';
+$labels['typehomefax'] = 'Hjemme fax';
+$labels['typeworkfax'] = 'Arbejde Fax';
+$labels['typecar'] = 'Bil';
+$labels['typepager'] = 'Personsøger';
+$labels['typevideo'] = 'Video';
+$labels['typeassistant'] = 'Assistent';
+$labels['typehomepage'] = 'Hjemmeside';
 $labels['typeblog'] = 'Blog';
 $labels['typeprofile'] = 'Profil';
 
@@ -320,7 +320,7 @@ $labels['export'] = 'Eksport';
 $labels['exportvcards'] = 'Eksportér kontakter i vCard format';
 $labels['newcontactgroup'] = 'Opret ny kontaktgruppe';
 $labels['groupactions'] = 'Funktioner for kontaktgrupper...';
-$labels['groupdelete']    = 'Slet gruppe';
+$labels['groupdelete'] = 'Slet gruppe';
 
 $labels['previouspage'] = 'Vis forrige sæt';
 $labels['firstpage'] = 'Vis første sæt';
@@ -457,9 +457,9 @@ $labels['info'] = 'Information';
 $labels['getfoldersize'] = 'Klik for at hente mappestørrelse';
 $labels['changesubscription'] = 'Klik for at ændre abonnement';
 $labels['foldertype'] = 'Mappe Type';
-$labels['personalfolder']  = 'Privat mappe';
-$labels['otherfolder']  = 'Anden brugers mappe';
-$labels['sharedfolder']  = 'Offentlig mappe';
+$labels['personalfolder'] = 'Privat mappe';
+$labels['otherfolder'] = 'Anden brugers mappe';
+$labels['sharedfolder'] = 'Offentlig mappe';
 
 $labels['sortby'] = 'Sortér efter';
 $labels['sortasc'] = 'Ældste først';
@@ -497,5 +497,4 @@ $labels['vietnamese'] = 'Vietnamesisk';
 $labels['japanese'] = 'Japansk';
 $labels['korean'] = 'Koreansk';
 $labels['chinese'] = 'Kinesisk';
-
 ?>

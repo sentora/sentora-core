@@ -1,11 +1,12 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * CSV import plugin for phpMyAdmin
  *
  * @package phpMyAdmin-Import
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -44,9 +45,9 @@ if (isset($plugin_list)) {
             array('type' => 'text', 'name' => 'columns', 'text' => __('Column names')),
             array('type' => 'bool', 'name' => 'local_option', 'text' => __('Use LOCAL keyword')),
             array('type' => 'end_group')
-            ),
+        ),
         'options_text' => __('Options'),
-        );
+    );
     /* We do not define function when plugin is just queried for information above */
     return;
 }
@@ -79,7 +80,7 @@ if (strlen($ldi_enclosed) > 0) {
 if (strlen($ldi_escaped) > 0) {
     $sql .= ' ESCAPED BY \'' . PMA_sqlAddslashes($ldi_escaped) . '\'';
 }
-if (strlen($ldi_new_line) > 0){
+if (strlen($ldi_new_line) > 0) {
     if ($ldi_new_line == 'auto') {
         $ldi_new_line = PMA_whichCrlf() == "\n" ? '\n' : '\r\n';
     }
@@ -91,14 +92,14 @@ if ($skip_queries > 0) {
 }
 if (strlen($ldi_columns) > 0) {
     $sql .= ' (';
-    $tmp   = preg_split('/,( ?)/', $ldi_columns);
+    $tmp = preg_split('/,( ?)/', $ldi_columns);
     $cnt_tmp = count($tmp);
     for ($i = 0; $i < $cnt_tmp; $i++) {
         if ($i > 0) {
             $sql .= ', ';
         }
         /* Trim also `, if user already included backquoted fields */
-        $sql     .= PMA_backquote(trim($tmp[$i], " \t\r\n\0\x0B`"));
+        $sql .= PMA_backquote(trim($tmp[$i], " \t\r\n\0\x0B`"));
     } // end for
     $sql .= ')';
 }

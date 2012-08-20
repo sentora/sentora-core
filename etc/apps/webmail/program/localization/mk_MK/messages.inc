@@ -1,20 +1,20 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/mk_MK/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:  Ivan Mishev - mishevivan@gmail.com                           |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/mk_MK/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:  Ivan Mishev - mishevivan@gmail.com                           |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Најавата не успеа';
@@ -103,5 +103,4 @@ $messages['smtptoerror'] = 'SMTP грешка ($code): Не успеав да г
 $messages['smtprecipientserror'] = 'SMTP грешка: Не успеав да ја испарсирам листата на примачи';
 $messages['smtperror'] = 'SMTP Error: $msg';
 $messages['emailformaterror'] = 'Неправилна поштенска адреса: $email';
-
 ?>

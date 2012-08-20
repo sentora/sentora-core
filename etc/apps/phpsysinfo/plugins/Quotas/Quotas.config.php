@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PSSTATUS Plugin Config File
  *
@@ -12,7 +13,7 @@
  * @version   SVN: $Id: Quotas.config.php 313 2009-08-02 11:24:58Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+/**
  * define how to access the repquota statistic data
  * - 'command' repquota command is run everytime the block gets refreshed or build
  * - 'data' (a file must be available in the data directory of the phpsysinfo installation with the filename "quotas.txt"; content is the output from "repquota -au")

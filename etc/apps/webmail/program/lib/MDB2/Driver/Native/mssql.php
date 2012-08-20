@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -54,7 +55,8 @@ require_once 'MDB2/Driver/Native/Common.php';
  * @category Database
  * @author  Lukas Smith <smith@dybnet.de>
  */
-class MDB2_Driver_Native_mssql extends MDB2_Driver_Native_Common
-{
+class MDB2_Driver_Native_mssql extends MDB2_Driver_Native_Common {
+    
 }
+
 ?>

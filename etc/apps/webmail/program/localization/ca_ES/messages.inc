@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/ca_ES/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Miguel Canteras i Cañizares <miguel@canteras.org>             |
-|         Simo <sim6@graciasensefils.net>                               |
-|         Jordi Sanfeliu <jordi@fibranet.cat>                           |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ca_ES/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Miguel Canteras i Cañizares <miguel@canteras.org>             |
+  |         Simo <sim6@graciasensefils.net>                               |
+  |         Jordi Sanfeliu <jordi@fibranet.cat>                           |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
+  @version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Contrasenya incorrecta';
@@ -157,5 +157,4 @@ $messages['foldercreated'] = 'La carpeta ha estat creada satisfactòriament';
 $messages['invalidimageformat'] = 'No és un format d\'imatge vàlid.';
 $messages['mispellingsfound'] = 'S\'han detectat errors d\'ortografia al misstage.';
 $messages['parentnotwritable'] = 'No ha etsat possible crear/moure la carpeta dins de la carpeta ascendent seleccionada. No hi ha permisos d\'escriptura.';
-
 ?>

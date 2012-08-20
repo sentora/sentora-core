@@ -134,5 +134,4 @@ $messages['nametoolong'] = 'Name too long.';
 $messages['namereserved'] = 'Reserved name.';
 $messages['setexist'] = 'Set already exists.';
 $messages['nodata'] = 'At least one position must be selected!';
-
 ?>

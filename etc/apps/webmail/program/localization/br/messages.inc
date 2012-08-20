@@ -2,22 +2,22 @@
 
 /*
 
- +-----------------------------------------------------------------------+
- | language/bzg/messages.inc                                              |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: aldweb <info@aldweb.com>                                      |
- |         Pierre HAEGELI <pierre@haegeli.net>                           |
- |         Mickaël Wolff <rcw@lupusmic.org>                              |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/bzg/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: aldweb <info@aldweb.com>                                      |
+  |         Pierre HAEGELI <pierre@haegeli.net>                           |
+  |         Mickaël Wolff <rcw@lupusmic.org>                              |
+  +-----------------------------------------------------------------------+
 
- @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Fazi dilesadur';
@@ -75,5 +75,4 @@ $messages['copysuccess'] = 'Kopiañ mat $nr chomlec\'h';
 $messages['copyerror'] = 'Ne c\'hall ket kopiañ chomlec\'hioù';
 $messages['sourceisreadonly'] = 'Lenn hepken eo an tarzh chomlec\'h se';
 $messages['errorsavingcontact'] = 'Ne c\'haller ket gwarediñ chomlec\'h darempred';
-
 ?>

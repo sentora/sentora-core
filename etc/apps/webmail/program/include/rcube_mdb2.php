@@ -1,25 +1,24 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/include/rcube_mdb2.php                                        |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   PEAR:DB wrapper class that implements PEAR MDB2 functions           |
- |   See http://pear.php.net/package/MDB2                                |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Lukas Kahwe Smith <smith@pooteeweet.org>                      |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/include/rcube_mdb2.php                                        |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   PEAR:DB wrapper class that implements PEAR MDB2 functions           |
+  |   See http://pear.php.net/package/MDB2                                |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Lukas Kahwe Smith <smith@pooteeweet.org>                      |
+  +-----------------------------------------------------------------------+
 
- $Id: rcube_mdb2.php 5872 2012-02-11 11:38:46Z thomasb $
+  $Id: rcube_mdb2.php 5872 2012-02-11 11:38:46Z thomasb $
 
-*/
-
+ */
 
 /**
  * Database independent query interface
@@ -33,8 +32,8 @@
  * @version    1.18
  * @link       http://pear.php.net/package/MDB2
  */
-class rcube_mdb2
-{
+class rcube_mdb2 {
+
     public $db_dsnw;               // DSN for write operations
     public $db_dsnr;               // DSN for read operations
     public $db_connected = false;  // Already connected ?
@@ -42,13 +41,11 @@ class rcube_mdb2
     public $db_handle = 0;         // Connection handle
     public $db_error = false;
     public $db_error_msg = '';
-
     private $debug_mode = false;
     private $conn_failure = false;
     private $a_query_results = array('dummy');
     private $last_res_id = 0;
     private $tables;
-
 
     /**
      * Object constructor
@@ -56,8 +53,7 @@ class rcube_mdb2
      * @param  string $db_dsnw DSN for read/write operations
      * @param  string $db_dsnr Optional DSN for read only operations
      */
-    function __construct($db_dsnw, $db_dsnr='', $pconn=false)
-    {
+    function __construct($db_dsnw, $db_dsnr = '', $pconn = false) {
         if (empty($db_dsnr))
             $db_dsnr = $db_dsnw;
 
@@ -69,7 +65,6 @@ class rcube_mdb2
         $this->db_provider = $dsn_array['phptype'];
     }
 
-
     /**
      * Connect to specific database
      *
@@ -77,21 +72,20 @@ class rcube_mdb2
      * @return MDB2 PEAR database handle
      * @access private
      */
-    private function dsn_connect($dsn)
-    {
+    private function dsn_connect($dsn) {
         // Use persistent connections if available
         $db_options = array(
-            'persistent'       => $this->db_pconn,
+            'persistent' => $this->db_pconn,
             'emulate_prepared' => $this->debug_mode,
-            'debug'            => $this->debug_mode,
-            'debug_handler'    => array($this, 'debug_handler'),
-            'portability'      => MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
+            'debug' => $this->debug_mode,
+            'debug_handler' => array($this, 'debug_handler'),
+            'portability' => MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
 
         if ($this->db_provider == 'pgsql') {
             $db_options['disable_smart_seqname'] = true;
             $db_options['seqname_format'] = '%s';
         }
-        $this->db_error     = false;
+        $this->db_error = false;
         $this->db_error_msg = null;
 
         $dbh = MDB2::connect($dsn, $db_options);
@@ -103,18 +97,16 @@ class rcube_mdb2
             raise_error(array('code' => 500, 'type' => 'db',
                 'line' => __LINE__, 'file' => __FILE__,
                 'message' => $dbh->getUserInfo()), true, false);
-        }
-        else if ($this->db_provider == 'sqlite') {
+        } else if ($this->db_provider == 'sqlite') {
             $dsn_array = MDB2::parseDSN($dsn);
             if (!filesize($dsn_array['database']) && !empty($this->sqlite_initials))
                 $this->_sqlite_create_database($dbh, $this->sqlite_initials);
         }
-        else if ($this->db_provider!='mssql' && $this->db_provider!='sqlsrv')
+        else if ($this->db_provider != 'mssql' && $this->db_provider != 'sqlsrv')
             $dbh->setCharset('utf8');
 
         return $dbh;
     }
-
 
     /**
      * Connect to appropiate database depending on the operation
@@ -122,8 +114,7 @@ class rcube_mdb2
      * @param  string $mode Connection mode (r|w)
      * @access public
      */
-    function db_connect($mode)
-    {
+    function db_connect($mode) {
         // previous connection failed, don't attempt to connect again
         if ($this->conn_failure) {
             return;
@@ -144,13 +135,13 @@ class rcube_mdb2
 
         $dsn = ($mode == 'r') ? $this->db_dsnr : $this->db_dsnw;
 
-        $this->db_handle    = $this->dsn_connect($dsn);
+        $this->db_handle = $this->dsn_connect($dsn);
         $this->db_connected = !PEAR::isError($this->db_handle);
 
         // use write-master when read-only fails
         if (!$this->db_connected && $mode == 'r') {
             $mode = 'w';
-            $this->db_handle    = $this->dsn_connect($this->db_dsnw);
+            $this->db_handle = $this->dsn_connect($this->db_dsnw);
             $this->db_connected = !PEAR::isError($this->db_handle);
         }
 
@@ -160,15 +151,13 @@ class rcube_mdb2
             $this->conn_failure = true;
     }
 
-
     /**
      * Activate/deactivate debug mode
      *
      * @param boolean $dbg True if SQL queries should be logged
      * @access public
      */
-    function set_debug($dbg = true)
-    {
+    function set_debug($dbg = true) {
         $this->debug_mode = $dbg;
         if ($this->db_connected) {
             $this->db_handle->setOption('debug', $dbg);
@@ -176,18 +165,15 @@ class rcube_mdb2
         }
     }
 
-
     /**
      * Getter for error state
      *
      * @param  boolean  True on error
      * @access public
      */
-    function is_error()
-    {
+    function is_error() {
         return $this->db_error ? $this->db_error_msg : false;
     }
-
 
     /**
      * Connection state checker
@@ -195,21 +181,17 @@ class rcube_mdb2
      * @param  boolean  True if in connected state
      * @access public
      */
-    function is_connected()
-    {
+    function is_connected() {
         return PEAR::isError($this->db_handle) ? false : $this->db_connected;
     }
-
 
     /**
      * Is database replication configured?
      * This returns true if dsnw != dsnr
      */
-    function is_replicated()
-    {
-      return !empty($this->db_dsnr) && $this->db_dsnw != $this->db_dsnr;
+    function is_replicated() {
+        return !empty($this->db_dsnr) && $this->db_dsnw != $this->db_dsnr;
     }
-
 
     /**
      * Execute a SQL query
@@ -219,8 +201,7 @@ class rcube_mdb2
      * @return number  Query handle identifier
      * @access public
      */
-    function query()
-    {
+    function query() {
         $params = func_get_args();
         $query = array_shift($params);
 
@@ -230,7 +211,6 @@ class rcube_mdb2
 
         return $this->_query($query, 0, 0, $params);
     }
-
 
     /**
      * Execute a SQL query with limits
@@ -242,16 +222,14 @@ class rcube_mdb2
      * @return number  Query handle identifier
      * @access public
      */
-    function limitquery()
-    {
-        $params  = func_get_args();
-        $query   = array_shift($params);
-        $offset  = array_shift($params);
+    function limitquery() {
+        $params = func_get_args();
+        $query = array_shift($params);
+        $offset = array_shift($params);
         $numrows = array_shift($params);
 
         return $this->_query($query, $offset, $numrows, $params);
     }
-
 
     /**
      * Execute a SQL query with limits
@@ -263,10 +241,9 @@ class rcube_mdb2
      * @return number  Query handle identifier
      * @access private
      */
-    private function _query($query, $offset, $numrows, $params)
-    {
+    private function _query($query, $offset, $numrows, $params) {
         // Read or write ?
-        $mode = (strtolower(substr(trim($query),0,6)) == 'select') ? 'r' : 'w';
+        $mode = (strtolower(substr(trim($query), 0, 6)) == 'select') ? 'r' : 'w';
 
         $this->db_connect($mode);
 
@@ -278,13 +255,13 @@ class rcube_mdb2
             $this->_sqlite_prepare();
 
         if ($numrows || $offset)
-            $result = $this->db_handle->setLimit($numrows,$offset);
+            $result = $this->db_handle->setLimit($numrows, $offset);
 
         if (empty($params))
             $result = $mode == 'r' ? $this->db_handle->query($query) : $this->db_handle->exec($query);
         else {
-            $params = (array)$params;
-            $q = $this->db_handle->prepare($query, null, $mode=='w' ? MDB2_PREPARE_MANIP : null);
+            $params = (array) $params;
+            $q = $this->db_handle->prepare($query, null, $mode == 'w' ? MDB2_PREPARE_MANIP : null);
             if ($this->db_handle->isError($q)) {
                 $this->db_error = true;
                 $this->db_error_msg = $q->userinfo;
@@ -294,8 +271,7 @@ class rcube_mdb2
                     'message' => $this->db_error_msg), true, false);
 
                 $result = false;
-            }
-            else {
+            } else {
                 $result = $q->execute($params);
                 $q->free();
             }
@@ -305,7 +281,6 @@ class rcube_mdb2
         return $this->_add_result($result);
     }
 
-
     /**
      * Get number of rows for a SQL query
      * If no query handle is specified, the last query will be taken as reference
@@ -314,8 +289,7 @@ class rcube_mdb2
      * @return mixed   Number of rows or false on failure
      * @access public
      */
-    function num_rows($res_id=null)
-    {
+    function num_rows($res_id = null) {
         if (!$this->db_connected)
             return false;
 
@@ -325,7 +299,6 @@ class rcube_mdb2
             return false;
     }
 
-
     /**
      * Get number of affected rows for the last query
      *
@@ -333,14 +306,12 @@ class rcube_mdb2
      * @return mixed   Number of rows or false on failure
      * @access public
      */
-    function affected_rows($res_id = null)
-    {
+    function affected_rows($res_id = null) {
         if (!$this->db_connected)
             return false;
 
         return $this->_get_result($res_id);
     }
-
 
     /**
      * Get last inserted record ID
@@ -350,17 +321,16 @@ class rcube_mdb2
      * @return mixed   ID or false on failure
      * @access public
      */
-    function insert_id($table = '')
-    {
+    function insert_id($table = '') {
         if (!$this->db_connected || $this->db_mode == 'r')
             return false;
 
         if ($table) {
             if ($this->db_provider == 'pgsql')
-                // find sequence name
+            // find sequence name
                 $table = get_sequence_name($table);
             else
-                // resolve table name
+            // resolve table name
                 $table = get_table_name($table);
         }
 
@@ -368,7 +338,6 @@ class rcube_mdb2
 
         return $this->db_handle->isError($id) ? null : $id;
     }
-
 
     /**
      * Get an associative array for one row
@@ -378,12 +347,10 @@ class rcube_mdb2
      * @return mixed   Array with col values or false on failure
      * @access public
      */
-    function fetch_assoc($res_id=null)
-    {
+    function fetch_assoc($res_id = null) {
         $result = $this->_get_result($res_id);
         return $this->_fetch_row($result, MDB2_FETCHMODE_ASSOC);
     }
-
 
     /**
      * Get an index array for one row
@@ -393,12 +360,10 @@ class rcube_mdb2
      * @return mixed   Array with col values or false on failure
      * @access public
      */
-    function fetch_array($res_id=null)
-    {
+    function fetch_array($res_id = null) {
         $result = $this->_get_result($res_id);
         return $this->_fetch_row($result, MDB2_FETCHMODE_ORDERED);
     }
-
 
     /**
      * Get col values for a result row
@@ -408,14 +373,12 @@ class rcube_mdb2
      * @return mixed   Array with col values or false on failure
      * @access private
      */
-    private function _fetch_row($result, $mode)
-    {
+    private function _fetch_row($result, $mode) {
         if ($result === false || PEAR::isError($result) || !$this->is_connected())
             return false;
 
         return $result->fetchRow($mode);
     }
-
 
     /**
      * Wrapper for the SHOW TABLES command
@@ -424,8 +387,7 @@ class rcube_mdb2
      * @access public
      * @since 0.4-beta
      */
-    function list_tables()
-    {
+    function list_tables() {
         // get tables if not cached
         if (!$this->tables) {
             $this->db_handle->loadModule('Manager');
@@ -438,15 +400,13 @@ class rcube_mdb2
         return $this->tables;
     }
 
-
     /**
      * Wrapper for SHOW COLUMNS command
      *
      * @param string Table name
      * @return array List of table cols
      */
-    function list_cols($table)
-    {
+    function list_cols($table) {
         $this->db_handle->loadModule('Manager');
         if (!PEAR::isError($result = $this->db_handle->listTableFields($table))) {
             return $result;
@@ -454,7 +414,6 @@ class rcube_mdb2
 
         return null;
     }
-
 
     /**
      * Formats input so it can be safely used in a query
@@ -464,8 +423,7 @@ class rcube_mdb2
      * @return string  Quoted/converted string for use in query
      * @access public
      */
-    function quote($input, $type = null)
-    {
+    function quote($input, $type = null) {
         // handle int directly for better performance
         if ($type == 'integer')
             return intval($input);
@@ -477,7 +435,6 @@ class rcube_mdb2
         return $this->db_connected ? $this->db_handle->quote($input, $type) : addslashes($input);
     }
 
-
     /**
      * Quotes a string so it can be safely used as a table or column name
      *
@@ -487,11 +444,9 @@ class rcube_mdb2
      * @see            rcube_mdb2::quote_identifier
      * @access public
      */
-    function quoteIdentifier($str)
-    {
+    function quoteIdentifier($str) {
         return $this->quote_identifier($str);
     }
-
 
     /**
      * Quotes a string so it can be safely used as a table or column name
@@ -500,14 +455,12 @@ class rcube_mdb2
      * @return string  Quoted string for use in query
      * @access public
      */
-    function quote_identifier($str)
-    {
+    function quote_identifier($str) {
         if (!$this->db_handle)
             $this->db_connect('r');
 
         return $this->db_connected ? $this->db_handle->quoteIdentifier($str) : $str;
     }
-
 
     /**
      * Escapes a string
@@ -517,14 +470,12 @@ class rcube_mdb2
      * @access public
      * @since  0.1.1
      */
-    function escapeSimple($str)
-    {
+    function escapeSimple($str) {
         if (!$this->db_handle)
             $this->db_connect('r');
 
         return $this->db_handle->escape($str);
     }
-
 
     /**
      * Return SQL function for current time and date
@@ -532,8 +483,7 @@ class rcube_mdb2
      * @return string SQL function to use in query
      * @access public
      */
-    function now()
-    {
+    function now() {
         switch ($this->db_provider) {
             case 'mssql':
             case 'sqlsrv':
@@ -544,7 +494,6 @@ class rcube_mdb2
         }
     }
 
-
     /**
      * Return list of elements for use with SQL's IN clause
      *
@@ -553,8 +502,7 @@ class rcube_mdb2
      * @return string Comma-separated list of quoted values for use in query
      * @access public
      */
-    function array2list($arr, $type = null)
-    {
+    function array2list($arr, $type = null) {
         if (!is_array($arr))
             return $this->quote($arr, $type);
 
@@ -563,7 +511,6 @@ class rcube_mdb2
 
         return implode(',', $arr);
     }
-
 
     /**
      * Return SQL statement to convert a field value into a unix timestamp
@@ -575,9 +522,8 @@ class rcube_mdb2
      * @return string  SQL statement to use in query
      * @deprecated
      */
-    function unixtimestamp($field)
-    {
-        switch($this->db_provider) {
+    function unixtimestamp($field) {
+        switch ($this->db_provider) {
             case 'pgsql':
                 return "EXTRACT (EPOCH FROM $field)";
 
@@ -590,7 +536,6 @@ class rcube_mdb2
         }
     }
 
-
     /**
      * Return SQL statement to convert from a unix timestamp
      *
@@ -598,11 +543,9 @@ class rcube_mdb2
      * @return string  SQL statement to use in query
      * @access public
      */
-    function fromunixtime($timestamp)
-    {
+    function fromunixtime($timestamp) {
         return date("'Y-m-d H:i:s'", $timestamp);
     }
-
 
     /**
      * Return SQL statement for case insensitive LIKE
@@ -612,14 +555,13 @@ class rcube_mdb2
      * @return string  SQL statement to use in query
      * @access public
      */
-    function ilike($column, $value)
-    {
+    function ilike($column, $value) {
         // TODO: use MDB2's matchPattern() function
-        switch($this->db_provider) {
+        switch ($this->db_provider) {
             case 'pgsql':
-                return $this->quote_identifier($column).' ILIKE '.$this->quote($value);
+                return $this->quote_identifier($column) . ' ILIKE ' . $this->quote($value);
             default:
-                return $this->quote_identifier($column).' LIKE '.$this->quote($value);
+                return $this->quote_identifier($column) . ' LIKE ' . $this->quote($value);
         }
     }
 
@@ -629,14 +571,13 @@ class rcube_mdb2
      * @return string SQL statement to be used in query
      * @access public
      */
-    function concat(/* col1, col2, ... */)
-    {
+    function concat(/* col1, col2, ... */) {
         $func = '';
         $args = func_get_args();
         if (is_array($args[0]))
             $args = $args[0];
 
-        switch($this->db_provider) {
+        switch ($this->db_provider) {
             case 'mysql':
             case 'mysqli':
                 $func = 'CONCAT';
@@ -653,7 +594,6 @@ class rcube_mdb2
         return $func . '(' . join($delim, $args) . ')';
     }
 
-
     /**
      * Encodes non-UTF-8 characters in string/array/object (recursive)
      *
@@ -661,22 +601,19 @@ class rcube_mdb2
      * @return mixed  Properly UTF-8 encoded data
      * @access public
      */
-    function encode($input)
-    {
+    function encode($input) {
         if (is_object($input)) {
             foreach (get_object_vars($input) as $idx => $value)
                 $input->$idx = $this->encode($value);
             return $input;
-        }
-        else if (is_array($input)) {
+        } else if (is_array($input)) {
             foreach ($input as $idx => $value)
                 $input[$idx] = $this->encode($value);
-            return $input;	
+            return $input;
         }
 
         return utf8_encode($input);
     }
-
 
     /**
      * Decodes encoded UTF-8 string/object/array (recursive)
@@ -685,22 +622,19 @@ class rcube_mdb2
      * @return mixed  Decoded data
      * @access public
      */
-    function decode($input)
-    {
+    function decode($input) {
         if (is_object($input)) {
             foreach (get_object_vars($input) as $idx => $value)
                 $input->$idx = $this->decode($value);
             return $input;
-        }
-        else if (is_array($input)) {
+        } else if (is_array($input)) {
             foreach ($input as $idx => $value)
                 $input[$idx] = $this->decode($value);
-            return $input;	
+            return $input;
         }
 
         return utf8_decode($input);
     }
-
 
     /**
      * Adds a query result and returns a handle ID
@@ -709,17 +643,15 @@ class rcube_mdb2
      * @return mixed   Handle ID
      * @access private
      */
-    private function _add_result($res)
-    {
+    private function _add_result($res) {
         // sql error occured
         if (PEAR::isError($res)) {
             $this->db_error = true;
             $this->db_error_msg = $res->getMessage();
             raise_error(array('code' => 500, 'type' => 'db',
                 'line' => __LINE__, 'file' => __FILE__,
-                'message' => $res->getMessage() . " Query: " 
-                . substr(preg_replace('/[\r\n]+\s*/', ' ', $res->userinfo), 0, 512)),
-                true, false);
+                'message' => $res->getMessage() . " Query: "
+                . substr(preg_replace('/[\r\n]+\s*/', ' ', $res->userinfo), 0, 512)), true, false);
         }
 
         $res_id = sizeof($this->a_query_results);
@@ -727,7 +659,6 @@ class rcube_mdb2
         $this->a_query_results[$res_id] = $res;
         return $res_id;
     }
-
 
     /**
      * Resolves a given handle ID and returns the according query handle
@@ -737,8 +668,7 @@ class rcube_mdb2
      * @return mixed   Resource handle or false on failure
      * @access private
      */
-    private function _get_result($res_id = null)
-    {
+    private function _get_result($res_id = null) {
         if ($res_id == null)
             $res_id = $this->last_res_id;
 
@@ -749,7 +679,6 @@ class rcube_mdb2
         return false;
     }
 
-
     /**
      * Create a sqlite database from a file
      *
@@ -757,20 +686,18 @@ class rcube_mdb2
      * @param  string $file_name File path to use for DB creation
      * @access private
      */
-    private function _sqlite_create_database($dbh, $file_name)
-    {
+    private function _sqlite_create_database($dbh, $file_name) {
         if (empty($file_name) || !is_string($file_name))
             return;
 
         $data = file_get_contents($file_name);
 
         if (strlen($data))
-            if (!sqlite_exec($dbh->connection, $data, $error) || MDB2::isError($dbh)) 
+            if (!sqlite_exec($dbh->connection, $data, $error) || MDB2::isError($dbh))
                 raise_error(array('code' => 500, 'type' => 'db',
                     'line' => __LINE__, 'file' => __FILE__,
-                    'message' => $error), true, false); 
+                    'message' => $error), true, false);
     }
-
 
     /**
      * Add some proprietary database functions to the current SQLite handle
@@ -778,32 +705,26 @@ class rcube_mdb2
      *
      * @access private
      */
-    private function _sqlite_prepare()
-    {
+    private function _sqlite_prepare() {
         include_once(INSTALL_PATH . 'program/include/rcube_sqlite.inc');
 
         // we emulate via callback some missing MySQL function
-        sqlite_create_function($this->db_handle->connection,
-            'from_unixtime', 'rcube_sqlite_from_unixtime');
-        sqlite_create_function($this->db_handle->connection,
-            'unix_timestamp', 'rcube_sqlite_unix_timestamp');
-        sqlite_create_function($this->db_handle->connection,
-            'now', 'rcube_sqlite_now');
-        sqlite_create_function($this->db_handle->connection,
-            'md5', 'rcube_sqlite_md5');
+        sqlite_create_function($this->db_handle->connection, 'from_unixtime', 'rcube_sqlite_from_unixtime');
+        sqlite_create_function($this->db_handle->connection, 'unix_timestamp', 'rcube_sqlite_unix_timestamp');
+        sqlite_create_function($this->db_handle->connection, 'now', 'rcube_sqlite_now');
+        sqlite_create_function($this->db_handle->connection, 'md5', 'rcube_sqlite_md5');
     }
-
 
     /**
      * Debug handler for the MDB2
      */
-    function debug_handler(&$db, $scope, $message, $context = array())
-    {
+    function debug_handler(&$db, $scope, $message, $context = array()) {
         if ($scope != 'prepare') {
-            $debug_output = sprintf('%s(%d): %s;',
-                $scope, $db->db_index, rtrim($message, ';'));
+            $debug_output = sprintf('%s(%d): %s;', $scope, $db->db_index, rtrim($message, ';'));
             write_log('sql', $debug_output);
         }
     }
 
-}  // end class rcube_db
+}
+
+// end class rcube_db

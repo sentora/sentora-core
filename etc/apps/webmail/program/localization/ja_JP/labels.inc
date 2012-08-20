@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/ja_JP/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Tadashi Jokagi <elf2000@users.sourceforge.net>                |
-|         Takashi Takamatsu <taka717@gmail.com>                         |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ja_JP/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Tadashi Jokagi <elf2000@users.sourceforge.net>                |
+  |         Takashi Takamatsu <taka717@gmail.com>                         |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-EN-Revision: 5490
+  EN-Revision: 5490
 
-*/
+ */
 
 // login page
 $labels = array();
@@ -125,7 +125,7 @@ $labels['replytomessage'] = '返信';
 $labels['replytoallmessage'] = '差出人とすべての宛先に返信';
 $labels['replyall'] = '全員に返信';
 $labels['replylist'] = 'ML に返信';
-$labels['forwardinline']    = '本文に挿入して転送';
+$labels['forwardinline'] = '本文に挿入して転送';
 $labels['forwardattachment'] = '添付形式で転送';
 $labels['forwardmessage'] = '転送';
 $labels['deletemessage'] = '削除';
@@ -226,7 +226,7 @@ $labels['highest'] = '最高';
 $labels['nosubject'] = '(件名なし)';
 $labels['showimages'] = '画像の表示';
 $labels['alwaysshow'] = '$sender から届いた画像は常に表示';
-$labels['isdraft']    = 'これは下書きのメッセージです。';
+$labels['isdraft'] = 'これは下書きのメッセージです。';
 
 $labels['htmltoggle'] = 'HTML';
 $labels['plaintoggle'] = 'テキスト';
@@ -246,32 +246,32 @@ $labels['yourmessage'] = 'これはあなたが送信したメールに対する
 $labels['receiptnote'] = '注意: この開封確認はメールが受信者に表示されたことの通知です。受信者がメールを読んだこと、内容を理解したことを保証するものではありません。';
 
 // address boook
-$labels['name']         = '表示名';
-$labels['firstname']    = '名 (ファーストネーム)';
-$labels['surname']      = '姓 (ラストネーム)';
-$labels['middlename']   = 'ミドルネーム';
-$labels['nameprefix']   = '敬称 (名前の前)';
-$labels['namesuffix']   = '敬称 (名前の後)';
-$labels['nickname']     = 'ニックネーム';
-$labels['jobtitle']     = '肩書き';
+$labels['name'] = '表示名';
+$labels['firstname'] = '名 (ファーストネーム)';
+$labels['surname'] = '姓 (ラストネーム)';
+$labels['middlename'] = 'ミドルネーム';
+$labels['nameprefix'] = '敬称 (名前の前)';
+$labels['namesuffix'] = '敬称 (名前の後)';
+$labels['nickname'] = 'ニックネーム';
+$labels['jobtitle'] = '肩書き';
 $labels['organization'] = '企業名';
-$labels['department']   = '部署名';
-$labels['gender']       = '性別';
-$labels['maidenname']   = '旧姓';
-$labels['email']        = 'メールアドレス';
-$labels['phone']        = '電話番号';
-$labels['address']      = '住所';
-$labels['street']       = '通り';
-$labels['locality']     = '都市';
-$labels['zipcode']      = '郵便番号';
-$labels['region']       = '州';
-$labels['country']      = '国';
-$labels['birthday']     = '誕生日';
-$labels['anniversary']  = '記念日';
-$labels['website']      = 'ウェブサイト';
+$labels['department'] = '部署名';
+$labels['gender'] = '性別';
+$labels['maidenname'] = '旧姓';
+$labels['email'] = 'メールアドレス';
+$labels['phone'] = '電話番号';
+$labels['address'] = '住所';
+$labels['street'] = '通り';
+$labels['locality'] = '都市';
+$labels['zipcode'] = '郵便番号';
+$labels['region'] = '州';
+$labels['country'] = '国';
+$labels['birthday'] = '誕生日';
+$labels['anniversary'] = '記念日';
+$labels['website'] = 'ウェブサイト';
 $labels['instantmessenger'] = 'IM';
 $labels['notes'] = 'メモ';
-$labels['male']   = '男性';
+$labels['male'] = '男性';
 $labels['female'] = '女性';
 $labels['manager'] = '管理者';
 $labels['assistant'] = 'アシスタント';
@@ -281,18 +281,18 @@ $labels['search'] = '検索';
 $labels['advsearch'] = '高度な検索';
 $labels['other'] = 'その他';
 
-$labels['typehome']   = '自宅';
-$labels['typework']   = '職場';
-$labels['typeother']  = '他';
-$labels['typemobile']  = 'モバイル';
-$labels['typemain']  = '主要回線';
-$labels['typehomefax']  = '自宅 Fax';
-$labels['typeworkfax']  = '職場 Fax';
-$labels['typecar']  = '車';
-$labels['typepager']  = 'ポケベル(ページャー)';
-$labels['typevideo']  = 'ビデオ';
-$labels['typeassistant']  = 'アシスタント';
-$labels['typehomepage']  = 'ホームページ';
+$labels['typehome'] = '自宅';
+$labels['typework'] = '職場';
+$labels['typeother'] = '他';
+$labels['typemobile'] = 'モバイル';
+$labels['typemain'] = '主要回線';
+$labels['typehomefax'] = '自宅 Fax';
+$labels['typeworkfax'] = '職場 Fax';
+$labels['typecar'] = '車';
+$labels['typepager'] = 'ポケベル(ページャー)';
+$labels['typevideo'] = 'ビデオ';
+$labels['typeassistant'] = 'アシスタント';
+$labels['typehomepage'] = 'ホームページ';
 $labels['typeblog'] = 'ブログ';
 $labels['typeprofile'] = 'プロフィール';
 
@@ -303,29 +303,29 @@ $labels['contacts'] = '連絡先';
 $labels['contactproperties'] = '連絡先のプロパティ';
 $labels['personalinfo'] = '個人情報';
 
-$labels['edit']   = '編集';
+$labels['edit'] = '編集';
 $labels['cancel'] = 'キャンセル';
-$labels['save']   = '保存';
+$labels['save'] = '保存';
 $labels['delete'] = '削除';
 $labels['rename'] = '名前の変更';
 $labels['addphoto'] = '追加';
 $labels['replacephoto'] = '置換';
 
-$labels['newcontact']     = '連絡先の新規作成';
-$labels['deletecontact']  = '連絡先の削除';
-$labels['composeto']      = 'この連絡先へメールの送信';
+$labels['newcontact'] = '連絡先の新規作成';
+$labels['deletecontact'] = '連絡先の削除';
+$labels['composeto'] = 'この連絡先へメールの送信';
 $labels['contactsfromto'] = '連絡先: $from ～ $to (全: $count 件)';
-$labels['print']          = '印刷';
-$labels['export']         = 'エクスポート';
-$labels['exportvcards']   = 'vCard 形式でエクスポート';
+$labels['print'] = '印刷';
+$labels['export'] = 'エクスポート';
+$labels['exportvcards'] = 'vCard 形式でエクスポート';
 $labels['newcontactgroup'] = '連絡先グループの新規作成';
-$labels['grouprename']    = 'グループ名の変更';
-$labels['groupdelete']    = 'グループの削除';
+$labels['grouprename'] = 'グループ名の変更';
+$labels['groupdelete'] = 'グループの削除';
 
-$labels['previouspage']   = '前のページへ';
-$labels['firstpage']      = '最初のページへ';
-$labels['nextpage']       = '次のページへ';
-$labels['lastpage']       = '最後のページへ';
+$labels['previouspage'] = '前のページへ';
+$labels['firstpage'] = '最初のページへ';
+$labels['nextpage'] = '次のページへ';
+$labels['lastpage'] = '最後のページへ';
 
 $labels['group'] = 'グループ';
 $labels['groups'] = 'グループ';
@@ -343,18 +343,18 @@ $labels['importtext'] = '既存のアドレス帳の連絡先をアップロー�
 $labels['done'] = '完了';
 
 // settings
-$labels['settingsfor']  = '次の設定:';
+$labels['settingsfor'] = '次の設定:';
 $labels['about'] = 'Roundcube Webmail について';
-$labels['preferences']  = '設定';
-$labels['userpreferences']  = 'ユーザー設定';
-$labels['editpreferences']  = 'ユーザー設定の変更';
+$labels['preferences'] = '設定';
+$labels['userpreferences'] = 'ユーザー設定';
+$labels['editpreferences'] = 'ユーザー設定の変更';
 
-$labels['identities']  = '個人情報';
-$labels['manageidentities']  = 'アカウントの個人情報管理';
-$labels['newidentity']  = '個人情報の新規作成';
+$labels['identities'] = '個人情報';
+$labels['manageidentities'] = 'アカウントの個人情報管理';
+$labels['newidentity'] = '個人情報の新規作成';
 
-$labels['newitem']  = '新しい項目';
-$labels['edititem']  = '項目の編集';
+$labels['newitem'] = '新しい項目';
+$labels['edititem'] = '項目の編集';
 
 $labels['preferhtml'] = 'HTML を表示する';
 $labels['defaultcharset'] = '標準の文字セット';
@@ -440,14 +440,14 @@ $labels['spellcheckignorenums'] = '数字の単語を無視する';
 $labels['spellcheckignorecaps'] = 'すべて大文字の単語を無視する';
 $labels['addtodict'] = '辞書に追加';
 
-$labels['folder']  = 'フォルダー';
-$labels['folders']  = 'フォルダー一覧';
-$labels['foldername']  = 'フォルダー名';
-$labels['subscribed']  = '購読済み';
+$labels['folder'] = 'フォルダー';
+$labels['folders'] = 'フォルダー一覧';
+$labels['foldername'] = 'フォルダー名';
+$labels['subscribed'] = '購読済み';
 $labels['messagecount'] = 'メール';
-$labels['create']  = '作成';
-$labels['createfolder']  = 'フォルダーの新規作成';
-$labels['managefolders']  = 'フォルダーの管理';
+$labels['create'] = '作成';
+$labels['createfolder'] = 'フォルダーの新規作成';
+$labels['managefolders'] = 'フォルダーの管理';
 $labels['specialfolders'] = '特殊なフォルダー';
 $labels['properties'] = 'プロパティ';
 $labels['folderproperties'] = 'フォルダーのプロパティ';
@@ -457,12 +457,12 @@ $labels['info'] = '情報';
 $labels['getfoldersize'] = 'クリックでフォルダー サイズの取得';
 $labels['changesubscription'] = 'クリックで購読の変更';
 $labels['foldertype'] = 'フォルダーの種類';
-$labels['personalfolder']  = '個人フォルダー';
-$labels['otherfolder']  = '他のユーザーのフォルダー';
-$labels['sharedfolder']  = '公開フォルダー';     
+$labels['personalfolder'] = '個人フォルダー';
+$labels['otherfolder'] = '他のユーザーのフォルダー';
+$labels['sharedfolder'] = '公開フォルダー';
 
 $labels['sortby'] = '並び替えの基準';
-$labels['sortasc']  = '昇順で並び替え';
+$labels['sortasc'] = '昇順で並び替え';
 $labels['sortdesc'] = '降順で並び替え';
 $labels['undo'] = '取り消し';
 
@@ -497,5 +497,4 @@ $labels['vietnamese'] = 'ベトナム語';
 $labels['japanese'] = '日本語';
 $labels['korean'] = '韓国語';
 $labels['chinese'] = '中国語';
-
 ?>

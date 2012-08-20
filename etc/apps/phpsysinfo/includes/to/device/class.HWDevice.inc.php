@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * HWDevice TO class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.HWDevice.inc.php 255 2009-06-17 13:39:41Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * HWDevice TO class
  *
  * @category  PHP
@@ -23,29 +25,29 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class HWDevice
-{
+class HWDevice {
+
     /**
      * name of the device
      *
      * @var String
      */
     private $_name = "";
-    
+
     /**
      * capacity of the device, if not available it will be null
      *
      * @var Integer
      */
     private $_capacity = null;
-    
+
     /**
      * count of the device
      *
      * @var Integer
      */
     private $_count = 1;
-    
+
     /**
      * compare a given device with the internal one
      *
@@ -53,15 +55,14 @@ class HWDevice
      *
      * @return boolean
      */
-    public function equals($dev)
-    {
+    public function equals($dev) {
         if ($dev->getName() === $this->_name && $dev->getCapacity() === $this->_capacity) {
             return true;
         } else {
             return false;
         }
     }
-    
+
     /**
      * Returns $_capacity.
      *
@@ -69,11 +70,10 @@ class HWDevice
      *
      * @return Integer
      */
-    public function getCapacity()
-    {
+    public function getCapacity() {
         return $this->_capacity;
     }
-    
+
     /**
      * Sets $_capacity.
      *
@@ -83,11 +83,10 @@ class HWDevice
      *
      * @return Void
      */
-    public function setCapacity($capacity)
-    {
+    public function setCapacity($capacity) {
         $this->_capacity = $capacity;
     }
-    
+
     /**
      * Returns $_name.
      *
@@ -95,11 +94,10 @@ class HWDevice
      *
      * @return String
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->_name;
     }
-    
+
     /**
      * Sets $_name.
      *
@@ -109,12 +107,10 @@ class HWDevice
      *
      * @return Void
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->_name = $name;
     }
 
-    
     /**
      * Returns $_count.
      *
@@ -122,11 +118,10 @@ class HWDevice
      *
      * @return Integer
      */
-    public function getCount()
-    {
+    public function getCount() {
         return $this->_count;
     }
-    
+
     /**
      * Sets $_count.
      *
@@ -136,9 +131,10 @@ class HWDevice
      *
      * @return Void
      */
-    public function setCount($count)
-    {
+    public function setCount($count) {
         $this->_count = $count;
     }
+
 }
+
 ?>

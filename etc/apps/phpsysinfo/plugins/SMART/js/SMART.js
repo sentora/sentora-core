@@ -89,7 +89,7 @@ function smart_populate(xml) {
 
         // On "columns" so we get the right order
         // fixed for Firefox (fix wrong order)
-//      for (i in columns) {
+        //      for (i in columns) {
         $("Plugins Plugin_SMART columns column", xml).each(function smart_find_columns() {
             i  = parseInt($(this).attr("id"), 10);
             if (typeof(values[i])==='undefined') {
@@ -101,7 +101,7 @@ function smart_populate(xml) {
             else {
                 display.push("<span style=\"display:none;\">" + values[i] + "</span>" + values[i]);
             }
-//          }
+        //          }
         });
         smart_table.fnAddData(display);
     });
@@ -116,16 +116,16 @@ function smart_initTable() {
         url: "xml.php?plugin=SMART",
         dataType: "xml",
         error: function smart_error() {
-        $.jGrowl("Error loading XML document for Plugin SMART");
-    },
-    success: function smart_initBlock(xml) {
-        smart_buildTable(xml);
-        smart_populate(xml);
-        if (smart_show) {
-            plugin_translate("SMART");
-            $("#Plugin_SMART").show();
+            $.jGrowl("Error loading XML document for Plugin SMART");
+        },
+        success: function smart_initBlock(xml) {
+            smart_buildTable(xml);
+            smart_populate(xml);
+            if (smart_show) {
+                plugin_translate("SMART");
+                $("#Plugin_SMART").show();
+            }
         }
-    }
     });
 }
 

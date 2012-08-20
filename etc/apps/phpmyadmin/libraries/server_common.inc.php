@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * @uses    PMA_generate_common_url()
@@ -9,7 +10,7 @@
  * @uses    $userlink
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -56,6 +57,5 @@ if ($is_superuser) {
 /**
  * @global array binary log files
  */
-$binary_logs = PMA_DBI_fetch_result('SHOW MASTER LOGS', 'Log_name', null, null,
-    PMA_DBI_QUERY_STORE);
+$binary_logs = PMA_DBI_fetch_result('SHOW MASTER LOGS', 'Log_name', null, null, PMA_DBI_QUERY_STORE);
 ?>

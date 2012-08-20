@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -53,8 +54,7 @@ require_once 'MDB2/Driver/Native/Common.php';
  * @category Database
  * @author  Paul Cooper <pgc@ucecom.com>
  */
-class MDB2_Driver_Native_pgsql extends MDB2_Driver_Native_Common
-{
+class MDB2_Driver_Native_pgsql extends MDB2_Driver_Native_Common {
     // }}}
     // {{{ deleteOID()
 
@@ -65,8 +65,7 @@ class MDB2_Driver_Native_pgsql extends MDB2_Driver_Native_Common
      * @return mixed MDB2_OK on success or MDB2 Error Object on failure
      * @access public
      */
-    function deleteOID($OID)
-    {
+    function deleteOID($OID) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -78,11 +77,11 @@ class MDB2_Driver_Native_pgsql extends MDB2_Driver_Native_Common
         }
 
         if (!@pg_lo_unlink($connection, $OID)) {
-            return $db->raiseError(null, null, null,
-                'Unable to unlink OID: '.$OID, __FUNCTION__);
+            return $db->raiseError(null, null, null, 'Unable to unlink OID: ' . $OID, __FUNCTION__);
         }
         return MDB2_OK;
     }
 
 }
+
 ?>

@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| localization/zh_CN/labels.inc                                         |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Xue zhong sheng <xue.zhongsheng@gmail.com>                    |
-|         Zhang Huang bin <michaelbibby@gmail.com>                      |
-|         Kelphon Tang <kelphon@kingstor.com>	                        |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | localization/zh_CN/labels.inc                                         |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Xue zhong sheng <xue.zhongsheng@gmail.com>                    |
+  |         Zhang Huang bin <michaelbibby@gmail.com>                      |
+  |         Kelphon Tang <kelphon@kingstor.com>	                        |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $labels = array();
 
@@ -119,13 +119,13 @@ $labels['longdec'] = '十二月';
 $labels['today'] = '今日';
 
 // toolbar buttons
-$labels['checkmail']        = '收取新邮件';
+$labels['checkmail'] = '收取新邮件';
 $labels['writenewmessage'] = '写新邮件';
 $labels['replytomessage'] = '回复发件人';
 $labels['replytoallmessage'] = '回复所有';
-$labels['replyall']         = '回复全部';
-$labels['replylist']        = '回复列表';
-$labels['forwardinline']    = '直接转发';
+$labels['replyall'] = '回复全部';
+$labels['replylist'] = '回复列表';
+$labels['forwardinline'] = '直接转发';
 $labels['forwardattachment'] = '以附件转发';
 $labels['forwardmessage'] = '转发邮件';
 $labels['deletemessage'] = '删除邮件';
@@ -195,7 +195,7 @@ $labels['openinextwin'] = '在新窗口中打开';
 $labels['emlsave'] = '下载（.eml）';
 
 // message compose
-$labels['compose']        = '写新邮件';
+$labels['compose'] = '写新邮件';
 $labels['editasnew'] = '编辑为新邮件';
 $labels['savemessage'] = '保存为草稿';
 $labels['sendmessage'] = '立即发送';
@@ -203,10 +203,10 @@ $labels['addattachment'] = '添加附件';
 $labels['charset'] = '字符集';
 $labels['editortype'] = '编辑器类型';
 $labels['returnreceipt'] = '邮件回执';
-$labels['dsn']            = '投递状态提示';
+$labels['dsn'] = '投递状态提示';
 $labels['mailreplyintro'] = '于 $date, $sender 回复:';
 
-$labels['editidents']    = '编辑身份';
+$labels['editidents'] = '编辑身份';
 $labels['checkspelling'] = '拼写检查';
 $labels['resumeediting'] = '重新编辑';
 $labels['revertto'] = '恢复至';
@@ -215,7 +215,7 @@ $labels['attachments'] = '附件';
 $labels['upload'] = '上传';
 $labels['uploadprogress'] = '$percent ($current / $total)';
 $labels['close'] = '关闭';
-$labels['messageoptions']  = '邮件选项...';
+$labels['messageoptions'] = '邮件选项...';
 
 $labels['low'] = '低';
 $labels['lowest'] = '最低';
@@ -248,29 +248,29 @@ $labels['receiptnote'] = '注意：回执只表示邮件在收件人的电脑上
 $labels['name'] = '显示名称';
 $labels['firstname'] = '名字';
 $labels['surname'] = '姓氏';
-$labels['middlename']   = '中名';
-$labels['nameprefix']   = '前缀';
-$labels['namesuffix']   = '后缀';
-$labels['nickname']     = '昵称';
-$labels['jobtitle']     = '职位';
+$labels['middlename'] = '中名';
+$labels['nameprefix'] = '前缀';
+$labels['namesuffix'] = '后缀';
+$labels['nickname'] = '昵称';
+$labels['jobtitle'] = '职位';
 $labels['organization'] = '公司';
-$labels['department']   = '部门';
-$labels['gender']       = 'Gender';
-$labels['maidenname']   = '娘家姓';
-$labels['email']        = 'Email';
-$labels['phone']        = '电话';
-$labels['address']      = '地址';
-$labels['street']       = '街道';
-$labels['locality']     = '城市';
-$labels['zipcode']      = '邮编';
-$labels['region']       = '省份';
-$labels['country']      = '国家';
-$labels['birthday']     = '生日';
-$labels['anniversary']  = '纪念日';
-$labels['website']      = '主页';
+$labels['department'] = '部门';
+$labels['gender'] = 'Gender';
+$labels['maidenname'] = '娘家姓';
+$labels['email'] = 'Email';
+$labels['phone'] = '电话';
+$labels['address'] = '地址';
+$labels['street'] = '街道';
+$labels['locality'] = '城市';
+$labels['zipcode'] = '邮编';
+$labels['region'] = '省份';
+$labels['country'] = '国家';
+$labels['birthday'] = '生日';
+$labels['anniversary'] = '纪念日';
+$labels['website'] = '主页';
 $labels['instantmessenger'] = 'QQ';
 $labels['notes'] = '备注';
-$labels['male']   = '男';
+$labels['male'] = '男';
 $labels['female'] = '女';
 $labels['manager'] = '经理';
 $labels['assistant'] = '助理';
@@ -280,18 +280,18 @@ $labels['search'] = '查询';
 $labels['advsearch'] = '高级查询';
 $labels['other'] = '其他';
 
-$labels['typehome']   = '家庭';
-$labels['typework']   = '工作';
-$labels['typeother']  = '其他';
-$labels['typemobile']  = '手机';
-$labels['typemain']  = '主';
-$labels['typehomefax']  = '家庭传真';
-$labels['typeworkfax']  = '工作传真';
-$labels['typecar']  = '车牌';
-$labels['typepager']  = '呼机';
-$labels['typevideo']  = '视频';
-$labels['typeassistant']  = '助理';
-$labels['typehomepage']  = '主页';
+$labels['typehome'] = '家庭';
+$labels['typework'] = '工作';
+$labels['typeother'] = '其他';
+$labels['typemobile'] = '手机';
+$labels['typemain'] = '主';
+$labels['typehomefax'] = '家庭传真';
+$labels['typeworkfax'] = '工作传真';
+$labels['typecar'] = '车牌';
+$labels['typepager'] = '呼机';
+$labels['typevideo'] = '视频';
+$labels['typeassistant'] = '助理';
+$labels['typehomepage'] = '主页';
 $labels['typeblog'] = '博客';
 $labels['typeprofile'] = '资历';
 
@@ -319,8 +319,8 @@ $labels['export'] = '导出';
 $labels['exportvcards'] = '以 vCard 格式导出联系人';
 $labels['newcontactgroup'] = '创建新的组';
 $labels['groupactions'] = '组操作...';
-$labels['grouprename']    = '重命名组';
-$labels['groupdelete']    = '删除组';
+$labels['grouprename'] = '重命名组';
+$labels['groupdelete'] = '删除组';
 
 $labels['previouspage'] = '上一页';
 $labels['firstpage'] = '第一页';
@@ -446,9 +446,9 @@ $labels['info'] = '信息';
 $labels['getfoldersize'] = '获得文件夹容量';
 $labels['changesubscription'] = '更改订阅';
 $labels['foldertype'] = '目录类型';
-$labels['personalfolder']  = '私有目录';
-$labels['otherfolder']  = '他人目录';
-$labels['sharedfolder']  = '共享目录';
+$labels['personalfolder'] = '私有目录';
+$labels['otherfolder'] = '他人目录';
+$labels['sharedfolder'] = '共享目录';
 
 $labels['sortby'] = '排序';
 $labels['sortasc'] = '递增排序';
@@ -480,5 +480,4 @@ $labels['vietnamese'] = '越南语';
 $labels['japanese'] = '日文';
 $labels['korean'] = '韩语';
 $labels['chinese'] = '中文';
-
 ?>

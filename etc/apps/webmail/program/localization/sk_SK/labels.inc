@@ -2,24 +2,24 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/sk_SK/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Marek Kutnar <marek19@zmail.sk>                               |
-|         Lukas Kraic  <lukas.kraic@truni.sk>                           |
-|         Peter Mann   <peter.mann@tuke.sk>                             |
-|         Ales Pospichal   <ales@pospichalales.info>                    |
-|         Martin Lacina	<martin@whistler.sk>                            |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/sk_SK/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Marek Kutnar <marek19@zmail.sk>                               |
+  |         Lukas Kraic  <lukas.kraic@truni.sk>                           |
+  |         Peter Mann   <peter.mann@tuke.sk>                             |
+  |         Ales Pospichal   <ales@pospichalales.info>                    |
+  |         Martin Lacina	<martin@whistler.sk>                            |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5585 2011-12-09 19:28:20Z alec $
+  @version $Id: labels.inc 5585 2011-12-09 19:28:20Z alec $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Vitajte v $product';
@@ -417,5 +417,4 @@ $labels['vietnamese'] = 'Vietnamčina';
 $labels['japanese'] = 'Japončina';
 $labels['korean'] = 'Korejčina';
 $labels['chinese'] = 'Čínština';
-
 ?>

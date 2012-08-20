@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Specialized String Functions for phpMyAdmin
@@ -20,7 +21,7 @@
  * @todo a .lib filename should not have code in main(), split or rename file
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -35,12 +36,12 @@ if ($GLOBALS['PMA_allow_mbstr']) {
  * Load proper code for handling input.
  */
 if (defined('PMA_MULTIBYTE_ENCODING') || $GLOBALS['PMA_allow_mbstr']) {
-    $GLOBALS['PMA_strpos']      = 'mb_strpos';
-    $GLOBALS['PMA_substr']      = 'mb_substr';
+    $GLOBALS['PMA_strpos'] = 'mb_strpos';
+    $GLOBALS['PMA_substr'] = 'mb_substr';
     require './libraries/string_mb.lib.php';
 } else {
-    $GLOBALS['PMA_strpos']      = 'strpos';
-    $GLOBALS['PMA_substr']      = 'substr';
+    $GLOBALS['PMA_strpos'] = 'strpos';
+    $GLOBALS['PMA_substr'] = 'substr';
     require './libraries/string_native.lib.php';
 }
 
@@ -71,8 +72,7 @@ if ($GLOBALS['PMA_allow_ctype']) {
  * @param   integer  starting position in the string
  * @return  boolean  whether the character is escaped or not
  */
-function PMA_STR_charIsEscaped($string, $pos, $start = 0)
-{
+function PMA_STR_charIsEscaped($string, $pos, $start = 0) {
     $pos = max(intval($pos), 0);
     $start = max(intval($start), 0);
     $len = PMA_strlen($string);
@@ -84,15 +84,16 @@ function PMA_STR_charIsEscaped($string, $pos, $start = 0)
     }
 
     $pos--;
-    $escaped     = false;
+    $escaped = false;
     while ($pos >= $start && PMA_substr($string, $pos, 1) == '\\') {
         $escaped = !$escaped;
         $pos--;
     } // end while
 
     return $escaped;
-} // end of the "PMA_STR_charIsEscaped()" function
+}
 
+// end of the "PMA_STR_charIsEscaped()" function
 
 /**
  * Checks if a number is in a range
@@ -102,10 +103,11 @@ function PMA_STR_charIsEscaped($string, $pos, $start = 0)
  * @param   integer  upper bound
  * @return  boolean  whether the number is in the range or not
  */
-function PMA_STR_numberInRangeInclusive($num, $lower, $upper)
-{
+function PMA_STR_numberInRangeInclusive($num, $lower, $upper) {
     return ($num >= $lower && $num <= $upper);
-} // end of the "PMA_STR_numberInRangeInclusive()" function
+}
+
+// end of the "PMA_STR_numberInRangeInclusive()" function
 
 /**
  * Checks if a character is an SQL identifier
@@ -115,15 +117,15 @@ function PMA_STR_numberInRangeInclusive($num, $lower, $upper)
  * @param   boolean  whether the dot character is valid or not
  * @return  boolean  whether the character is an SQL identifier or not
  */
-function PMA_STR_isSqlIdentifier($c, $dot_is_valid = false)
-{
+function PMA_STR_isSqlIdentifier($c, $dot_is_valid = false) {
     return ($GLOBALS['PMA_STR_isAlnum']($c)
-        || ($ord_c = ord($c)) && $ord_c >= 192 && $ord_c != 215 && $ord_c != 249
-        || $c == '_'
-        || $c == '$'
-        || ($dot_is_valid != false && $c == '.'));
-} // end of the "PMA_STR_isSqlIdentifier()" function
+            || ($ord_c = ord($c)) && $ord_c >= 192 && $ord_c != 215 && $ord_c != 249
+            || $c == '_'
+            || $c == '$'
+            || ($dot_is_valid != false && $c == '.'));
+}
 
+// end of the "PMA_STR_isSqlIdentifier()" function
 
 /**
  * Binary search of a value in a sorted array
@@ -136,25 +138,25 @@ function PMA_STR_isSqlIdentifier($c, $dot_is_valid = false)
  *
  * @return  boolean  whether the string has been found or not
  */
-function PMA_STR_binarySearchInArr($str, $arr, $arrsize)
-{
-    $top    = $arrsize - 1;
+function PMA_STR_binarySearchInArr($str, $arr, $arrsize) {
+    $top = $arrsize - 1;
     $bottom = 0;
-    $found  = false;
+    $found = false;
 
     while ($top >= $bottom && $found == false) {
-        $mid        = intval(($top + $bottom) / 2);
-        $res        = strcmp($str, $arr[$mid]);
+        $mid = intval(($top + $bottom) / 2);
+        $res = strcmp($str, $arr[$mid]);
         if ($res == 0) {
-            $found  = true;
+            $found = true;
         } elseif ($res < 0) {
-            $top    = $mid - 1;
+            $top = $mid - 1;
         } else {
             $bottom = $mid + 1;
         }
     } // end while
 
     return $found;
-} // end of the "PMA_STR_binarySearchInArr()" function
+}
 
+// end of the "PMA_STR_binarySearchInArr()" function
 ?>

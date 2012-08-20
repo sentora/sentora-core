@@ -24,22 +24,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
 class module_controller {
 
+    static $ok;
+    static $alreadyexists;
+    static $validemail;
+    static $noaddress;
+    static $delete;
+    static $create;
 
-	
-	static $ok;
-	static $alreadyexists;
-	static $validemail;
-	static $noaddress;
-	static $delete;
-	static $create;
-	
     /**
      * The 'worker' methods.
      */
-
     static function ListAliases($uid) {
         global $zdbh;
         global $controller;
@@ -51,9 +47,9 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowaliases = $sql->fetch()) {
-                array_push($res, array('address'     => $rowaliases['al_address_vc'],
-									   'destination' => $rowaliases['al_destination_vc'],
-									   'id' 	     => $rowaliases['al_id_pk']));
+                array_push($res, array('address' => $rowaliases['al_address_vc'],
+                    'destination' => $rowaliases['al_destination_vc'],
+                    'id' => $rowaliases['al_id_pk']));
             }
             return $res;
         } else {
@@ -71,16 +67,16 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowaliases = $sql->fetch()) {
-                array_push($res, array('address'     => $rowaliases['al_address_vc'],
-									   'destination' => $rowaliases['al_destination_vc'],
-									   'id' 	     => $rowaliases['al_id_pk']));
+                array_push($res, array('address' => $rowaliases['al_address_vc'],
+                    'destination' => $rowaliases['al_destination_vc'],
+                    'id' => $rowaliases['al_id_pk']));
             }
             return $res;
         } else {
             return false;
         }
     }
-	
+
     static function getMailboxList($uid) {
         global $zdbh;
         global $controller;
@@ -93,7 +89,7 @@ class module_controller {
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
                 array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
-									   'id' 	 => $rowmailboxes['mb_id_pk']));
+                    'id' => $rowmailboxes['mb_id_pk']));
             }
             return $res;
         } else {
@@ -120,20 +116,20 @@ class module_controller {
         }
     }
 
-	static function ExecuteCreateAlias($uid, $address, $domain, $destination){
-		global $zdbh;
+    static function ExecuteCreateAlias($uid, $address, $domain, $destination) {
+        global $zdbh;
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail($uid);
-		if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $domain, $destination))) {
-			return false;
-		}
-			runtime_hook::Execute('OnBeforeCreateAlias');
-			$fulladdress = $address . "@". $domain;
-			$destination = strtolower(str_replace(' ', '', $destination));
-			self::$create=true;
-			// Include mail server specific file here.
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-			$sql = "INSERT INTO x_aliases (al_acc_fk,
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $domain, $destination))) {
+            return false;
+        }
+        runtime_hook::Execute('OnBeforeCreateAlias');
+        $fulladdress = $address . "@" . $domain;
+        $destination = strtolower(str_replace(' ', '', $destination));
+        self::$create = true;
+        // Include mail server specific file here.
+        include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        $sql = "INSERT INTO x_aliases (al_acc_fk,
 											  al_address_vc,
 											  al_destination_vc,
 											  al_created_ts) VALUES (
@@ -141,75 +137,75 @@ class module_controller {
 											  '" . $fulladdress . "',
 											  '" . $destination . "',
 											  " . time() . ")";
-			$sql = $zdbh->prepare($sql);
-			$sql->execute();
-			runtime_hook::Execute('OnAfterCreateAlias');
-			self::$ok = true;
-  			return true;
-	}
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        runtime_hook::Execute('OnAfterCreateAlias');
+        self::$ok = true;
+        return true;
+    }
 
-	static function ExecuteDeleteAlias($al_id_pk){
-		global $zdbh;
-		global $controller;
-		self::$delete=true;
-		runtime_hook::Execute('OnBeforeDeleteAlias');
-		$rowalias = $zdbh->query("SELECT * FROM x_aliases WHERE al_id_pk=" . $al_id_pk . "")->Fetch();
-		// Include mail server specific file here.
-		if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")){
-			include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-		}
-		$sql = "UPDATE x_aliases SET al_deleted_ts=" . time() . " WHERE al_id_pk=" . $al_id_pk . "";
-		$sql = $zdbh->prepare($sql);
-		$sql->execute();
-		runtime_hook::Execute('OnAfterDeleteAlias');
-		self::$ok = true;
-	}
-	
-	static function CheckCreateForErrors($address, $domain, $destination){
-		global $zdbh;
+    static function ExecuteDeleteAlias($al_id_pk) {
+        global $zdbh;
         global $controller;
-		$fulladdress = $address . "@". $domain;
-		$destination = strtolower(str_replace(' ', '', $destination));
-		if (fs_director::CheckForEmptyValue($address)){
-			self::$noaddress = true;
-			return false;
-		}
-		if (!self::IsValidEmail($fulladdress)){
-			self::$validemail = true;
-			return false;
-		}
+        self::$delete = true;
+        runtime_hook::Execute('OnBeforeDeleteAlias');
+        $rowalias = $zdbh->query("SELECT * FROM x_aliases WHERE al_id_pk=" . $al_id_pk . "")->Fetch();
+        // Include mail server specific file here.
+        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
+            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        }
+        $sql = "UPDATE x_aliases SET al_deleted_ts=" . time() . " WHERE al_id_pk=" . $al_id_pk . "";
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        runtime_hook::Execute('OnAfterDeleteAlias');
+        self::$ok = true;
+    }
+
+    static function CheckCreateForErrors($address, $domain, $destination) {
+        global $zdbh;
+        global $controller;
+        $fulladdress = $address . "@" . $domain;
+        $destination = strtolower(str_replace(' ', '', $destination));
+        if (fs_director::CheckForEmptyValue($address)) {
+            self::$noaddress = true;
+            return false;
+        }
+        if (!self::IsValidEmail($fulladdress)) {
+            self::$validemail = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc='" . $fulladdress . "' AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
+            self::$alreadyexists = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
+            self::$alreadyexists = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_forwarders WHERE fw_destination_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
+            self::$alreadyexists = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_distlists WHERE dl_address_vc='" . $fulladdress . "' AND dl_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
+            self::$alreadyexists = true;
+            return false;
+        }
         $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $fulladdress . "' AND al_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
-			self::$alreadyexists = true;
-			return false;
-		}
-		return true;
-	}
+            self::$alreadyexists = true;
+            return false;
+        }
+        return true;
+    }
 
     static function IsValidEmail($email) {
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
@@ -221,18 +217,17 @@ class module_controller {
     /**
      * End 'worker' methods.
      */
-	
+
     /**
      * Webinterface sudo methods.
      */
-
     static function doCreateAlias() {
         global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteCreateAlias($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain'], $formvars['inDestination']))
-			self::$ok = true;
-            return true;
+            self::$ok = true;
+        return true;
         return false;
     }
 
@@ -272,11 +267,11 @@ class module_controller {
     }
 
     static function getAliasList() {
-		global $controller;
+        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListAliases($currentuser['userid']);
     }
-	
+
     static function getCurrentAliasList() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -319,14 +314,14 @@ class module_controller {
         }
     }
 
-	static function getModuleName() {
-		$module_name = ui_module::GetModuleName();
+    static function getModuleName() {
+        $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-	static function getModuleIcon() {
-		global $controller;
-		$module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+    static function getModuleIcon() {
+        global $controller;
+        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
@@ -358,7 +353,7 @@ class module_controller {
             return false;
         }
     }
-	
+
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate("A mailbox, alias, forwarder or distrubution list already exists with that name."), "zannounceerror");
@@ -379,8 +374,7 @@ class module_controller {
 
     /**
      * Webinterface sudo methods.
-     */		
-		
+     */
 }
 
 ?>

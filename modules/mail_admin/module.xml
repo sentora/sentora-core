@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-<name>Mail Admin</name>
-<version>100</version>
-<defaultcat>Admin</defaultcat>
-<desc>This module enables you to configure mail settings for your hosting accounts.</desc>
-<authorname>ZPanel Project</authorname>
-<authoremail>developers@zpanelcp.com</authoremail>
-<authorurl>http://www.zpanelcp.com/</authorurl>
-<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <name>Mail Admin</name>
+    <version>100</version>
+    <defaultcat>Admin</defaultcat>
+    <desc>This module enables you to configure mail settings for your hosting accounts.</desc>
+    <authorname>ZPanel Project</authorname>
+    <authoremail>developers@zpanelcp.com</authoremail>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
+    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

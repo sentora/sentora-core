@@ -1,20 +1,20 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | language/ga/labels.inc                                                |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author:   Noel Bourke  (cros13)                                       |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ga/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:   Noel Bourke  (cros13)                                       |
+  +-----------------------------------------------------------------------+
 
- @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Fáilte go $product';
@@ -171,5 +171,4 @@ $labels['managefolders'] = 'Stiúir na fillteán';
 $labels['sortby'] = 'Sórtáil trí';
 $labels['sortasc'] = 'Sórtáil in ord méadaitheach';
 $labels['sortdesc'] = 'Sórtáil in ord neartaitheach';
-
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 // +-----------------------------------------------------------------------+ 
 // | Copyright (c) 2008 Christoph Schulz                                   | 
 // | All rights reserved.                                                  | 
@@ -35,29 +36,29 @@
 // $Id: External.php 286825 2009-08-05 06:23:42Z cweiske $
 
 /**
-* Implmentation of EXTERNAL SASL mechanism
-*
-* @author  Christoph Schulz <develop@kristov.de>
-* @access  public
-* @version 1.0.3
-* @package Auth_SASL
-*/
-
+ * Implmentation of EXTERNAL SASL mechanism
+ *
+ * @author  Christoph Schulz <develop@kristov.de>
+ * @access  public
+ * @version 1.0.3
+ * @package Auth_SASL
+ */
 require_once('Auth/SASL/Common.php');
 
-class Auth_SASL_External extends Auth_SASL_Common
-{
+class Auth_SASL_External extends Auth_SASL_Common {
+
     /**
-    * Returns EXTERNAL response
-    *
-    * @param  string $authcid   Authentication id (username)
-    * @param  string $pass      Password
-    * @param  string $authzid   Autorization id
-    * @return string            EXTERNAL Response
-    */
-    function getResponse($authcid, $pass, $authzid = '')
-    {
+     * Returns EXTERNAL response
+     *
+     * @param  string $authcid   Authentication id (username)
+     * @param  string $pass      Password
+     * @param  string $authzid   Autorization id
+     * @return string            EXTERNAL Response
+     */
+    function getResponse($authcid, $pass, $authzid = '') {
         return $authzid;
     }
+
 }
+
 ?>

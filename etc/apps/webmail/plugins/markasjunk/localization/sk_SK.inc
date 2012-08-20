@@ -7,9 +7,7 @@
  * @author panda <admin@whistler.sk>
  *
  */
-
 $labels = array();
 $labels['buttontitle'] = 'Označiť ako Spam';
 $labels['reportedasjunk'] = 'Úspešne nahlásené ako Spam';
-
 ?>

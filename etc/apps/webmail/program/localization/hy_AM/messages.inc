@@ -1,20 +1,20 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/hy_AM/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Vahan Yerkanian <vahan@arminco.com>                           |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/hy_AM/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Vahan Yerkanian <vahan@arminco.com>                           |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Մուտքը ձախողվեց';
@@ -90,5 +90,4 @@ $messages['importconfirm'] = '$inserted նոր ներկրված հասցեներ
 $messages['opnotpermitted'] = 'Գործողությունը անթույլատրելի է։';
 $messages['nofromaddress'] = 'Նշված անձը հասցե չունի։';
 $messages['editorwarning'] = 'Դեպի պարզ տեքստի խմբագրիչ անցման դեպքում կկորի տեքստի ձևավորումը։ Շարունակե՞լ։';
-
 ?>

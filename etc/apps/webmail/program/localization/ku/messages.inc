@@ -1,18 +1,18 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | language/ku/messages.inc                                              |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2006, The Roundcube Dev Team                            |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Amed çeko Jiyan <amedcj@kurdistan.name>                       |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ku/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2006, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Amed çeko Jiyan <amedcj@kurdistan.name>                       |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Têketin têk çû';
@@ -74,5 +74,4 @@ $messages['movingmessage'] = 'Ciyê peyamê tê guhertin...';
 $messages['receiptsent'] = 'Rapora şandina serkeftî';
 $messages['errorsendingreceipt'] = 'Rapor nehat şandin';
 $messages['nodeletelastidentity'] = 'Nikarî vê nasnameyê jê bibî. Ew ya dawî ye.';
-
 ?>

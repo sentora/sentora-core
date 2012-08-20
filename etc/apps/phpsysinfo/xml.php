@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * generate the xml
  *
@@ -12,8 +13,7 @@
  * @version   SVN: $Id: xml.php 390 2010-11-11 14:19:21Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- 
- /**
+/**
  * application root path
  *
  * @var string
@@ -28,7 +28,7 @@ define('APP_ROOT', dirname(__FILE__));
  */
 define('PSI_INTERNAL_XML', true);
 
-require_once APP_ROOT.'/includes/autoloader.inc.php';
+require_once APP_ROOT . '/includes/autoloader.inc.php';
 
 // check what xml part should be generated
 if (isset($_GET['plugin'])) {

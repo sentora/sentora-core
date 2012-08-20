@@ -27,7 +27,7 @@
 class module_controller {
 
     static $error;
-	static $badpassword;
+    static $badpassword;
 
     static function doUpdatePassword() {
         global $zdbh;
@@ -45,19 +45,19 @@ class module_controller {
         } elseif (md5($current_pass) <> $currentuser['password']) {
             // Current password does not match!
             self::$error = "error";
-        } else {	
+        } else {
             if ($newpass == $conpass) {
-        		// Check for password length...
-	        	if (strlen($newpass) < ctrl_options::GetSystemOption('password_minlength')) {
-	                self::$badpassword = true;
-	                return false;
-	            }
+                // Check for password length...
+                if (strlen($newpass) < ctrl_options::GetSystemOption('password_minlength')) {
+                    self::$badpassword = true;
+                    return false;
+                }
                 // Check that the new password matches the confirmation box.
                 $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($newpass) . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
                 $sql->execute();
                 self::$error = "ok";
             } else {
-              	self::$error = "error";
+                self::$error = "error";
             }
         }
     }
@@ -71,10 +71,10 @@ class module_controller {
                 return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
             }
         } else {
-        	if (!fs_director::CheckForEmptyValue(self::$badpassword)) {
-	            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") .": " . ctrl_options::GetSystemOption('password_minlength'), "zannounceerror");
-	        }
-           return;
+            if (!fs_director::CheckForEmptyValue(self::$badpassword)) {
+                return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") . ": " . ctrl_options::GetSystemOption('password_minlength'), "zannounceerror");
+            }
+            return;
         }
     }
 
@@ -96,8 +96,8 @@ class module_controller {
         return true;
     }
 
-	static function getModuleDesc() {
-		$message = ui_language::translate(ui_module::GetModuleDescription());
+    static function getModuleDesc() {
+        $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 

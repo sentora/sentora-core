@@ -1,25 +1,26 @@
 <?php
+
 /*
 
-+-----------------------------------------------------------------------+
-| language/es_AR/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Javier Smaldone <javier@smaldone.com.ar>                      |
-|         http://www.smaldone.com.ar                                    |
-|         David Grajal Blanco <dgrabla@gmail.com>                       |
-|         http://david.grajal.net                                       |
-|         Pablo Rosciani <pablo@netsud.com>                             |
-|         http://www.netsud.com                                         |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/es_AR/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Javier Smaldone <javier@smaldone.com.ar>                      |
+  |         http://www.smaldone.com.ar                                    |
+  |         David Grajal Blanco <dgrabla@gmail.com>                       |
+  |         http://david.grajal.net                                       |
+  |         Pablo Rosciani <pablo@netsud.com>                             |
+  |         http://www.netsud.com                                         |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Bienvenido a $product';
@@ -328,5 +329,4 @@ $labels['vietnamese'] = 'Vietnamita';
 $labels['japanese'] = 'Japonés';
 $labels['korean'] = 'Coreano';
 $labels['chinese'] = 'Chino';
-
 ?>

@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * modified XML Element
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.SimpleXMLExtended.inc.php 439 2011-02-11 18:43:51Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * class extends the SimpleXML element for including some special functions, like encoding stuff and cdata support
  *
  * @category  PHP
@@ -23,22 +25,22 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class SimpleXMLExtended
-{
+class SimpleXMLExtended {
+
     /**
      * store the encoding that is used for conversation to utf8
      *
      * @var String base encoding
      */
     private $_encoding = null;
-    
+
     /**
      * SimpleXMLElement to which every call is delegated
      *
      * @var SimpleXMLElement delegated SimpleXMLElement
      */
     private $_SimpleXmlElement = null;
-    
+
     /**
      * create a new extended SimpleXMLElement and set encoding if specified
      *
@@ -47,14 +49,13 @@ class SimpleXMLExtended
      *
      * @return void
      */
-    public function __construct($xml, $encoding = null)
-    {
+    public function __construct($xml, $encoding = null) {
         if ($encoding != null) {
             $this->_encoding = $encoding;
         }
         $this->_SimpleXmlElement = $xml;
     }
-    
+
     /**
      * insert a child element with or without a value, also doing conversation of name and if value is set to utf8
      *
@@ -63,8 +64,7 @@ class SimpleXMLExtended
      *
      * @return SimpleXMLExtended extended child SimpleXMLElement
      */
-    public function addChild($name, $value = null)
-    {
+    public function addChild($name, $value = null) {
         $nameUtf8 = $this->_toUTF8($name);
         if ($value == null) {
             return new SimpleXMLExtended($this->_SimpleXmlElement->addChild($nameUtf8), $this->_encoding);
@@ -73,7 +73,7 @@ class SimpleXMLExtended
             return new SimpleXMLExtended($this->_SimpleXmlElement->addChild($nameUtf8, $valueUtf8), $this->_encoding);
         }
     }
-    
+
     /**
      * insert a child with cdata section
      *
@@ -82,8 +82,7 @@ class SimpleXMLExtended
      *
      * @return SimpleXMLExtended extended child SimpleXMLElement
      */
-    public function addCData($name, $cdata)
-    {
+    public function addCData($name, $cdata) {
         $nameUtf8 = $this->_toUTF8($name);
         $node = $this->_SimpleXmlElement->addChild($nameUtf8);
         $domnode = dom_import_simplexml($node);
@@ -91,7 +90,7 @@ class SimpleXMLExtended
         $domnode->appendChild($no->createCDATASection($cdata));
         return new SimpleXMLExtended($node, $this->_encoding);
     }
-    
+
     /**
      * add a attribute to a child and convert name and value to utf8
      *
@@ -100,13 +99,12 @@ class SimpleXMLExtended
      *
      * @return Void
      */
-    public function addAttribute($name, $value)
-    {
+    public function addAttribute($name, $value) {
         $nameUtf8 = $this->_toUTF8($name);
         $valueUtf8 = htmlspecialchars($this->_toUTF8($value));
         $this->_SimpleXmlElement->addAttribute($nameUtf8, $valueUtf8);
     }
-    
+
     /**
      * append a xml-tree to another xml-tree
      *
@@ -114,14 +112,13 @@ class SimpleXMLExtended
      *
      * @return Void
      */
-    public function combinexml(SimpleXMLElement $new_child)
-    {
+    public function combinexml(SimpleXMLElement $new_child) {
         $node1 = dom_import_simplexml($this->_SimpleXmlElement);
         $dom_sxe = dom_import_simplexml($new_child);
         $node2 = $node1->ownerDocument->importNode($dom_sxe, true);
         $node1->appendChild($node2);
     }
-    
+
     /**
      * convert a string into an UTF-8 string
      *
@@ -129,32 +126,30 @@ class SimpleXMLExtended
      *
      * @return String UTF-8 string
      */
-    private function _toUTF8($str)
-    {
+    private function _toUTF8($str) {
         if ($this->_encoding != null) {
             $enclist = mb_list_encodings();
             if (in_array($this->_encoding, $enclist)) {
                 return mb_convert_encoding(trim($str), 'UTF-8', $this->_encoding);
-            }
-            else if (function_exists("iconv")) {
+            } else if (function_exists("iconv")) {
                 return iconv($this->_encoding, 'UTF-8', trim($str));
-            }
-            else {
+            } else {
                 return mb_convert_encoding(trim($str), 'UTF-8');
             }
         } else {
             return mb_convert_encoding(trim($str), 'UTF-8');
         }
     }
-    
+
     /**
      * Returns the SimpleXmlElement
      *
      * @return SimpleXmlElement entire xml as SimpleXmlElement
      */
-    public function getSimpleXmlElement()
-    {
+    public function getSimpleXmlElement() {
         return $this->_SimpleXmlElement;
     }
+
 }
+
 ?>

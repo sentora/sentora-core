@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/cy_GB/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2008-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Dafydd Tomos <l10n@da.fydd.org>                               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/cy_GB/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Dafydd Tomos <l10n@da.fydd.org>                               |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Croeso i $product';
@@ -430,5 +430,4 @@ $labels['vietnamese'] = 'Fietnamaidd';
 $labels['japanese'] = 'Japaneaidd';
 $labels['korean'] = 'Corëeg';
 $labels['chinese'] = 'Tsieineaidd';
-
 ?>

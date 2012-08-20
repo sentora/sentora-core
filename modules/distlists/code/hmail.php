@@ -24,24 +24,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-	
-		}
-		
-		
-		
-		// Adding hMail DistList
-		if (!fs_director::CheckForEmptyValue(self::$create)) {
-		   	$result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $inDomain . "'")->Fetch();
-			if ($result) {
-        		$domain_id = $result['domainid'];
-        		$sql = "INSERT INTO hm_distributionlists (
+$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
+
+
+
+// Adding hMail DistList
+if (!fs_director::CheckForEmptyValue(self::$create)) {
+    $result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $inDomain . "'")->Fetch();
+    if ($result) {
+        $domain_id = $result['domainid'];
+        $sql = "INSERT INTO hm_distributionlists (
 		    						distributionlistdomainid,
 									distributionlistaddress,
 									distributionlistenabled,
@@ -54,47 +54,47 @@
 									 0,
 									 '',
 									 0)";
-									 
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}
-		}
 
-		// Adding hMail DistListUser
-		if (!fs_director::CheckForEmptyValue(self::$createuser)) {
-	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
-			if ($result) {	
-                $sql = "INSERT INTO hm_distributionlistsrecipients (
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
+
+// Adding hMail DistListUser
+if (!fs_director::CheckForEmptyValue(self::$createuser)) {
+    $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    if ($result) {
+        $sql = "INSERT INTO hm_distributionlistsrecipients (
 									distributionlistrecipientlistid,
 									distributionlistrecipientaddress) VALUES (
 									" . $result['distributionlistid'] . ",
 									'" . $fulladdress . "')";
 
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}			
-		}
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
 
-		// Deleting hMail DistList
-		if (!fs_director::CheckForEmptyValue(self::$delete)) {
-	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
-			if ($result) {	
-            	$sql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid='" . $result['distributionlistid'] . "'";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-	            $sql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}			
-		}
+// Deleting hMail DistList
+if (!fs_director::CheckForEmptyValue(self::$delete)) {
+    $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    if ($result) {
+        $sql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid='" . $result['distributionlistid'] . "'";
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+        $sql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'";
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
 
-		// Deleting hMail DistListUser
-		if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
-	        $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
-			if ($result) {	
-                $sql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientaddress='" . $rowdlu['du_address_vc'] . "' AND distributionlistrecipientlistid=" . $result['distributionlistid'] . "";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}			
-		}
+// Deleting hMail DistListUser
+if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
+    $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    if ($result) {
+        $sql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientaddress='" . $rowdlu['du_address_vc'] . "' AND distributionlistrecipientlistid=" . $result['distributionlistid'] . "";
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
 ?>

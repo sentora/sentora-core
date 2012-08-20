@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <!--  $Id: phpsysinfo.xslt 518 2011-10-28 08:09:07Z namiltd $ -->
+<!--  $Id: phpsysinfo.xslt 518 2011-10-28 08:09:07Z namiltd $ -->
 <xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fn="http://www.w3.org/2005/xpath-functions"
-    xmlns:xdt="http://www.w3.org/2005/xpath-datatypes" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:xdt="http://www.w3.org/2005/xpath-datatypes" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <xsl:output version="4.0" method="html" indent="no"
-        encoding="UTF-8" doctype-public="-//W3C//DTD HTML 4.0 Transitional//EN"
-        doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
+                encoding="UTF-8" doctype-public="-//W3C//DTD HTML 4.0 Transitional//EN"
+                doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
     <xsl:param name="SV_OutputFormat" select="'HTML'" />
     <xsl:variable name="XML" select="/" />
     <xsl:template match="/">
@@ -49,8 +49,8 @@
                                         </span>
                                     </h2>
                                     <table border="0" style="border-spacing:0;"
-                                        class="stripMe" id="vitalsTable"
-                                        width="100%">
+                                           class="stripMe" id="vitalsTable"
+                                           width="100%">
                                         <tbody>
                                             <tr>
                                                 <td style="width:160px;">
@@ -97,11 +97,11 @@
                                                         <xsl:attribute
                                                             name="src">
                                                             <xsl:if
-                                                            test="substring(string(concat(&apos;gfx/images/&apos;,@Distroicon)), 2, 1) = ':'">
+                                                                test="substring(string(concat(&apos;gfx/images/&apos;,@Distroicon)), 2, 1) = ':'">
                                                                 <xsl:text>file:///</xsl:text>
                                                             </xsl:if>
                                                             <xsl:value-of
-                                                            select="translate(string(concat(&apos;gfx/images/&apos;,@Distroicon)), '&#x5c;', '/')" />
+                                                                select="translate(string(concat(&apos;gfx/images/&apos;,@Distroicon)), '&#x5c;', '/')" />
                                                         </xsl:attribute>
                                                         <xsl:attribute
                                                             name="alt" />
@@ -202,7 +202,7 @@
                                     </h2>
                                     <xsl:for-each select="CPU">
                                         <table border="0" style="border-spacing:0;"
-                                    	    width="100%">
+                                               width="100%">
                                             <tbody>
                                                 <tr class="odd">
                                                     <td style="width:160px;">
@@ -310,8 +310,8 @@
                                             </span>
                                         </h3>
                                         <table style="display:block; border-spacing:0;"
-                                            id="pciTable"
-                                            width="100%">
+                                               id="pciTable"
+                                               width="100%">
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -337,8 +337,8 @@
                                             </span>
                                         </h3>
                                         <table style="display:block; border-spacing:0;"
-                                            class="odd" id="ideTable"
-                                            width="100%">
+                                               class="odd" id="ideTable"
+                                               width="100%">
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -374,8 +374,8 @@
                                             </span>
                                         </h3>
                                         <table style="border-spacing:0;"
-                                            id="scsiTable"
-                                            width="100%">
+                                               id="scsiTable"
+                                               width="100%">
                                             <tbody>
                                                 <tr>
                                                     <td
@@ -412,8 +412,8 @@
                                             </span>
                                         </h3>
                                         <table style="border-spacing:0;"
-                                            class="odd" id="usbTable"
-                                            width="100%">
+                                               class="odd" id="usbTable"
+                                               width="100%">
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -442,7 +442,7 @@
                                         </span>
                                     </h2>
                                     <table border="0" 
-                            		style="border-spacing:0;">
+                                           style="border-spacing:0;">
                                         <thead>
                                             <tr>
                                                 <th style="width:200px;">
@@ -668,8 +668,8 @@
                                     </table>
                                     <xsl:for-each select="Swap">
                                         <table border="0"
-                                            style="border-spacing:0;"
-                                            width="100%">
+                                               style="border-spacing:0;"
+                                               width="100%">
                                             <tbody>
                                                 <tr class="odd">
                                                     <td style="width:200px;">
@@ -796,7 +796,7 @@
                                     </span>
                                 </h2>
                                 <table style="border-spacing:0;" 
-                            	    class="stripMe" id="filesystemTable">
+                                       class="stripMe" id="filesystemTable">
                                     <thead>
                                         <tr>
                                             <th style="width:100px;">
@@ -889,7 +889,7 @@
                                                                 </span>
                                                                 <span>
                                                                     <xsl:text>%)</xsl:text>
-                                                        </span>
+                                                                </span>
                                                             </xsl:if>
                                                         </div>
                                                     </td>
@@ -924,7 +924,7 @@
                                     </span>
                                 </h2>
                                 <table style="border-spacing:0;"
-                            	    class="stripMe" id="networkTable">
+                                       class="stripMe" id="networkTable">
                                     <thead>
                                         <tr>
                                             <th>

@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | PHP version 5                                                        |
 // +----------------------------------------------------------------------+
@@ -51,8 +52,8 @@
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Iterator implements Iterator
-{
+class MDB2_Iterator implements Iterator {
+
     protected $fetchmode;
     protected $result;
     protected $row;
@@ -62,13 +63,12 @@ class MDB2_Iterator implements Iterator
     /**
      * Constructor
      */
-    public function __construct($result, $fetchmode = MDB2_FETCHMODE_DEFAULT)
-    {
+    public function __construct($result, $fetchmode = MDB2_FETCHMODE_DEFAULT) {
         $this->result = $result;
         $this->fetchmode = $fetchmode;
     }
-    // }}}
 
+    // }}}
     // {{{ seek()
 
     /**
@@ -79,15 +79,14 @@ class MDB2_Iterator implements Iterator
      * @return void
      * @access public
      */
-    public function seek($rownum)
-    {
+    public function seek($rownum) {
         $this->row = null;
         if ($this->result) {
             $this->result->seek($rownum);
         }
     }
-    // }}}
 
+    // }}}
     // {{{ next()
 
     /**
@@ -96,12 +95,11 @@ class MDB2_Iterator implements Iterator
      * @return void
      * @access public
      */
-    public function next()
-    {
+    public function next() {
         $this->row = null;
     }
-    // }}}
 
+    // }}}
     // {{{ current()
 
     /**
@@ -110,8 +108,7 @@ class MDB2_Iterator implements Iterator
      * @return void
      * @access public
      */
-    public function current()
-    {
+    public function current() {
         if (null === $this->row) {
             $row = $this->result->fetchRow($this->fetchmode);
             if (PEAR::isError($row)) {
@@ -121,8 +118,8 @@ class MDB2_Iterator implements Iterator
         }
         return $this->row;
     }
-    // }}}
 
+    // }}}
     // {{{ valid()
 
     /**
@@ -131,12 +128,11 @@ class MDB2_Iterator implements Iterator
      * @return bool true/false, false is also returned on failure
      * @access public
      */
-    public function valid()
-    {
-        return (bool)$this->current();
+    public function valid() {
+        return (bool) $this->current();
     }
-    // }}}
 
+    // }}}
     // {{{ free()
 
     /**
@@ -145,8 +141,7 @@ class MDB2_Iterator implements Iterator
      * @return bool|MDB2_Error true on success, false|MDB2_Error if result is invalid
      * @access public
      */
-    public function free()
-    {
+    public function free() {
         if ($this->result) {
             return $this->result->free();
         }
@@ -154,8 +149,8 @@ class MDB2_Iterator implements Iterator
         $this->row = null;
         return false;
     }
-    // }}}
 
+    // }}}
     // {{{ key()
 
     /**
@@ -164,15 +159,14 @@ class MDB2_Iterator implements Iterator
      * @return int|bool|MDB2_Error true on success, false|MDB2_Error if result is invalid
      * @access public
      */
-    public function key()
-    {
+    public function key() {
         if ($this->result) {
             return $this->result->rowCount();
         }
         return false;
     }
-    // }}}
 
+    // }}}
     // {{{ rewind()
 
     /**
@@ -181,20 +175,20 @@ class MDB2_Iterator implements Iterator
      * @return void
      * @access public
      */
-    public function rewind()
-    {
+    public function rewind() {
+        
     }
-    // }}}
 
+    // }}}
     // {{{ destructor
 
     /**
      * Destructor
      */
-    public function __destruct()
-    {
+    public function __destruct() {
         $this->free();
     }
+
     // }}}
 }
 
@@ -205,8 +199,7 @@ class MDB2_Iterator implements Iterator
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
-{
+class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator {
     // {{{ valid()
 
     /**
@@ -215,15 +208,14 @@ class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
      * @return bool|MDB2_Error true on success, false|MDB2_Error if result is invalid
      * @access public
      */
-    public function valid()
-    {
+    public function valid() {
         if ($this->result) {
             return $this->result->valid();
         }
         return false;
     }
-    // }}}
 
+    // }}}
     // {{{count()
 
     /**
@@ -232,15 +224,14 @@ class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
      * @return int|MDB2_Error number of rows, false|MDB2_Error if result is invalid
      * @access public
      */
-    public function count()
-    {
+    public function count() {
         if ($this->result) {
             return $this->result->numRows();
         }
         return false;
     }
-    // }}}
 
+    // }}}
     // {{{ rewind()
 
     /**
@@ -249,10 +240,10 @@ class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
      * @return void
      * @access public
      */
-    public function rewind()
-    {
+    public function rewind() {
         $this->seek(0);
     }
+
     // }}}
 }
 

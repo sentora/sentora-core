@@ -9,7 +9,6 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-
 /**
  * @global debug_logger $zlo
  */

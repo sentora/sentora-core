@@ -2,24 +2,24 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/cs_CZ/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Martin Mrajca <martin@moonlake.cz>                            |
-|        joe <joe@humlak.cz>                                            |
-|        Jiri Kaderavek <jiri.kaderavek@webstep.net>                    |
-|        Milan Kozak <hodza@hodza.net>                                  |
-|        Ales Pospichal <ales@pospichalales.info>                       |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/cs_CZ/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Martin Mrajca <martin@moonlake.cz>                            |
+  |        joe <joe@humlak.cz>                                            |
+  |        Jiri Kaderavek <jiri.kaderavek@webstep.net>                    |
+  |        Milan Kozak <hodza@hodza.net>                                  |
+  |        Ales Pospichal <ales@pospichalales.info>                       |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Vítejte v $product';
@@ -428,5 +428,4 @@ $labels['vietnamese'] = 'Vietnamština';
 $labels['japanese'] = 'Japonština';
 $labels['korean'] = 'Korejština';
 $labels['chinese'] = 'Čínština';
-
 ?>

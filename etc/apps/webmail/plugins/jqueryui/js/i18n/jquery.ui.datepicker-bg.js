@@ -5,7 +5,7 @@ jQuery(function($){
         closeText: 'затвори',
         prevText: '&#x3c;назад',
         nextText: 'напред&#x3e;',
-		nextBigText: '&#x3e;&#x3e;',
+        nextBigText: '&#x3e;&#x3e;',
         currentText: 'днес',
         monthNames: ['Януари','Февруари','Март','Април','Май','Юни',
         'Юли','Август','Септември','Октомври','Ноември','Декември'],
@@ -14,11 +14,12 @@ jQuery(function($){
         dayNames: ['Неделя','Понеделник','Вторник','Сряда','Четвъртък','Петък','Събота'],
         dayNamesShort: ['Нед','Пон','Вто','Сря','Чет','Пет','Съб'],
         dayNamesMin: ['Не','По','Вт','Ср','Че','Пе','Съ'],
-		weekHeader: 'Wk',
+        weekHeader: 'Wk',
         dateFormat: 'dd.mm.yy',
-		firstDay: 1,
+        firstDay: 1,
         isRTL: false,
-		showMonthAfterYear: false,
-		yearSuffix: ''};
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
     $.datepicker.setDefaults($.datepicker.regional['bg']);
 });

@@ -1,19 +1,19 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | localization/ne/messages.inc                                          |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2007, The Roundcube Dev Team                            |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Nepali Translation by:                                                |
- | Prasanna Singh <prasanna@bhunet.com>, <prasanna@bhunet.com>           |
- | RoundcubeAuthor: Thomas Bruederli <roundcube@gmail.com>               |
- +-----------------------------------------------------------------------+
-*/
+  +-----------------------------------------------------------------------+
+  | localization/ne/messages.inc                                          |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2007, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Nepali Translation by:                                                |
+  | Prasanna Singh <prasanna@bhunet.com>, <prasanna@bhunet.com>           |
+  | RoundcubeAuthor: Thomas Bruederli <roundcube@gmail.com>               |
+  +-----------------------------------------------------------------------+
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'लागईन हुन पाएन';
@@ -71,5 +71,4 @@ $messages['copysuccess'] = 'सफल्तापूर्वक $nr ठेग�
 $messages['copyerror'] = 'कुनै पनि ठेगानाहरु उतार्न सकिएन';
 $messages['sourceisreadonly'] = 'यो ठेगाना को श्रोत पढ्नको लागि मात्र उपलब्ध छ';
 $messages['errorsavingcontact'] = 'स्मपर्कको ठेगाना जोगाउन सकिएन';
-
 ?>

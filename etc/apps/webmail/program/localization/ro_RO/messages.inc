@@ -1,22 +1,22 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/ro_RO/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Daniel Anechitoaie - danieLs <daniels@safereaction.ro>        |
-|         Zeno Popovici <zeno.popovici at ulbsibiu.ro>                  |
-|         Cristian Nastase <cristian.nastase@itcaffe.net>               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ro_RO/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Daniel Anechitoaie - danieLs <daniels@safereaction.ro>        |
+  |         Zeno Popovici <zeno.popovici at ulbsibiu.ro>                  |
+  |         Cristian Nastase <cristian.nastase@itcaffe.net>               |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Autentificare eşuată';
@@ -111,5 +111,4 @@ $messages['smtperror'] = 'Eroare SMTP: $msg';
 $messages['emailformaterror'] = 'Adresă de e-mail incorectă: $email';
 $messages['toomanyrecipients'] = 'Prea mulţi destinatari. Reduceţi numărul de destinatari la $max.';
 $messages['maxgroupmembersreached'] = 'Numărul de membri ai grupului depăşeşte maximul de $max.';
-
 ?>

@@ -2,23 +2,23 @@
 
 /*
 
- +-----------------------------------------------------------------------+
- | language/en_US/messages.inc                                           |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/en_US/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
-$messages['loginfailed']  = 'Login failed.';
+$messages['loginfailed'] = 'Login failed.';
 $messages['cookiesdisabled'] = 'Your browser does not accept cookies.';
 $messages['sessionerror'] = 'Your session is invalid or expired.';
 $messages['imaperror'] = 'Connection to IMAP server failed.';
@@ -57,11 +57,11 @@ $messages['errormoving'] = 'Could not move the message(s).';
 $messages['errorcopying'] = 'Could not copy the message(s).';
 $messages['errordeleting'] = 'Could not delete the message(s).';
 $messages['errormarking'] = 'Could not mark the message(s).';
-$messages['deletecontactconfirm']  = 'Do you really want to delete selected contact(s)?';
-$messages['deletegroupconfirm']  = 'Do you really want to delete selected group?';
+$messages['deletecontactconfirm'] = 'Do you really want to delete selected contact(s)?';
+$messages['deletegroupconfirm'] = 'Do you really want to delete selected group?';
 $messages['deletemessagesconfirm'] = 'Do you really want to delete selected message(s)?';
-$messages['deletefolderconfirm']  = 'Do you really want to delete this folder?';
-$messages['purgefolderconfirm']  = 'Do you really want to delete all messages in this folder?';
+$messages['deletefolderconfirm'] = 'Do you really want to delete this folder?';
+$messages['purgefolderconfirm'] = 'Do you really want to delete all messages in this folder?';
 $messages['contactdeleting'] = 'Deleting contact(s)...';
 $messages['groupdeleting'] = 'Deleting group...';
 $messages['folderdeleting'] = 'Deleting folder...';
@@ -70,11 +70,11 @@ $messages['foldersubscribing'] = 'Subscribing folder...';
 $messages['folderunsubscribing'] = 'Unsubscribing folder...';
 $messages['formincomplete'] = 'The form was not completely filled out.';
 $messages['noemailwarning'] = 'Please enter a valid email address.';
-$messages['nonamewarning']  = 'Please enter a name.';
+$messages['nonamewarning'] = 'Please enter a name.';
 $messages['nopagesizewarning'] = 'Please enter a page size.';
 $messages['nosenderwarning'] = 'Please enter sender e-mail address.';
 $messages['norecipientwarning'] = 'Please enter at least one recipient.';
-$messages['nosubjectwarning']  = 'The "Subject" field is empty. Would you like to enter one now?';
+$messages['nosubjectwarning'] = 'The "Subject" field is empty. Would you like to enter one now?';
 $messages['nobodywarning'] = 'Send this message without text?';
 $messages['notsentwarning'] = 'Message has not been sent. Do you want to discard your message?';
 $messages['noldapserver'] = 'Please select an ldap server to search.';
@@ -158,5 +158,4 @@ $messages['invalidimageformat'] = 'Not a valid image format.';
 $messages['mispellingsfound'] = 'Spelling errors detected in the message.';
 $messages['parentnotwritable'] = 'Unable to create/move folder into selected parent folder. No access rights.';
 $messages['messagetoobig'] = 'The message part is too big to process it.';
-
 ?>

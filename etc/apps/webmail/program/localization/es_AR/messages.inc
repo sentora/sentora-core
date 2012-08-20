@@ -1,24 +1,25 @@
 <?php
+
 /*
 
-+-----------------------------------------------------------------------+
-| language/es_ES/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Javier Smaldone <javier@smaldone.com.ar>                      |
-|         David Grajal Blanco <dgrabla@gmail.com>                       |
-|         Lito Jornero <jornero@gmail.com>                              |
-|         Pablo Rosciani <pablo@netsud.com>                             |
-|         http://www.netsud.com                                         |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/es_ES/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Javier Smaldone <javier@smaldone.com.ar>                      |
+  |         David Grajal Blanco <dgrabla@gmail.com>                       |
+  |         Lito Jornero <jornero@gmail.com>                              |
+  |         Pablo Rosciani <pablo@netsud.com>                             |
+  |         http://www.netsud.com                                         |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Contraseña o nombre de usuario incorrecto';
@@ -113,5 +114,4 @@ $messages['smtperror'] = 'Error SMTP: $msg';
 $messages['emailformaterror'] = 'La dirección $email no es válida';
 $messages['toomanyrecipients'] = 'Demasiados destinatarios. Reduzca la cantidad a un máximo de $max.';
 $messages['maxgroupmembersreached'] = 'El número de miembros del grupo excede el máximo de $max';
-
 ?>

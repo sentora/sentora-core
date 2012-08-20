@@ -1,20 +1,20 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | language/si/labels.inc                                                |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Melanga Dissanayake <Melanga.Dissanayake@pabcbank.com>        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/si/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Melanga Dissanayake <Melanga.Dissanayake@pabcbank.com>        |
+  +-----------------------------------------------------------------------+
 
- @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = '$product ආයුබොවන්';
@@ -183,5 +183,4 @@ $labels['managefolders'] = 'හැසිරවීම හැසිරවීම';
 $labels['sortby'] = 'චිසින් වර්ග කිරීම';
 $labels['sortasc'] = 'ආරෝහණ වර්ග කිරීම';
 $labels['sortdesc'] = 'අවරෝහණ වර්ග කිරීම';
-
 ?>

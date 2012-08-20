@@ -1,4 +1,5 @@
 <?php
+
 /**
  * XMail Password Driver
  *
@@ -16,11 +17,9 @@
  * $rcmail_config['xmail_port'] = 6017;
  *
  */
-
-function password_save($currpass, $newpass)
-{
+function password_save($currpass, $newpass) {
     $rcmail = rcmail::get_instance();
-    list($user,$domain) = explode('@', $_SESSION['username']);
+    list($user, $domain) = explode('@', $_SESSION['username']);
 
     $xmail = new XMail;
 
@@ -35,16 +34,16 @@ function password_save($currpass, $newpass)
             'type' => 'php',
             'file' => __FILE__, 'line' => __LINE__,
             'message' => "Password plugin: Unable to connect to mail server"
-        ), true, false);
+                ), true, false);
         return PASSWORD_CONNECT_ERROR;
-    } else if (!$xmail->send("userpasswd\t".$domain."\t".$user."\t".$newpass."\n")) {
+    } else if (!$xmail->send("userpasswd\t" . $domain . "\t" . $user . "\t" . $newpass . "\n")) {
         $xmail->close();
         raise_error(array(
             'code' => 600,
             'type' => 'php',
             'file' => __FILE__, 'line' => __LINE__,
             'message' => "Password plugin: Unable to change password"
-        ), true, false);
+                ), true, false);
         return PASSWORD_ERROR;
     } else {
         $xmail->close();
@@ -53,23 +52,22 @@ function password_save($currpass, $newpass)
 }
 
 class XMail {
+
     var $socket;
     var $hostname = 'localhost';
     var $username = 'xmail';
     var $password = '';
     var $port = 6017;
 
-    function send($msg)
-    {
-        socket_write($this->socket,$msg);
-        if (substr($in = socket_read($this->socket, 512, PHP_BINARY_READ),0,1) != "+") {
+    function send($msg) {
+        socket_write($this->socket, $msg);
+        if (substr($in = socket_read($this->socket, 512, PHP_BINARY_READ), 0, 1) != "+") {
             return false;
         }
         return true;
     }
 
-    function connect()
-    {
+    function connect() {
         $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
         if ($this->socket < 0)
             return false;
@@ -80,7 +78,7 @@ class XMail {
             return false;
         }
 
-        if (substr($in = socket_read($this->socket, 512, PHP_BINARY_READ),0,1) != "+") {
+        if (substr($in = socket_read($this->socket, 512, PHP_BINARY_READ), 0, 1) != "+") {
             socket_close($this->socket);
             return false;
         }
@@ -92,10 +90,10 @@ class XMail {
         return true;
     }
 
-    function close()
-    {
+    function close() {
         $this->send("quit\n");
         socket_close($this->socket);
     }
+
 }
 

@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/hr/labels.inc                                                |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Edi Budimilic <edi@gemstudio.hr>                              |
-|       Tanja Dobričić <tanja.dobricic@everymail.info>                  |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/hr/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Edi Budimilic <edi@gemstudio.hr>                              |
+  |       Tanja Dobričić <tanja.dobricic@everymail.info>                  |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5067 2011-08-14 18:47:58Z thomasb $
+  @version $Id: labels.inc 5067 2011-08-14 18:47:58Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Dobrodošli na $product';
@@ -402,5 +402,4 @@ $labels['vietnamese'] = 'Vijetnamski';
 $labels['japanese'] = 'Japanski';
 $labels['korean'] = 'Korejski';
 $labels['chinese'] = 'Kineski';
-
 ?>

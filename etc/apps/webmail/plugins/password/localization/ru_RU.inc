@@ -1,24 +1,25 @@
 <?php
+
 /*
 
-+-----------------------------------------------------------------------+
-| plugins/password/localization/ru_RU.inc                               |
-|                                                                       |
-| Language file of the Roundcube help plugin                            |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Sergey Dukachev <iam@dukess.ru>                               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | plugins/password/localization/ru_RU.inc                               |
+  |                                                                       |
+  | Language file of the Roundcube help plugin                            |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Sergey Dukachev <iam@dukess.ru>                               |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $labels = array();
-$labels['changepasswd']  = 'Изменить пароль';
-$labels['curpasswd']  = 'Текущий пароль:';
-$labels['newpasswd']  = 'Новый пароль:';
-$labels['confpasswd']  = 'Подтвердите новый пароль:';
+$labels['changepasswd'] = 'Изменить пароль';
+$labels['curpasswd'] = 'Текущий пароль:';
+$labels['newpasswd'] = 'Новый пароль:';
+$labels['confpasswd'] = 'Подтвердите новый пароль:';
 
 $messages = array();
 $messages['nopassword'] = 'Пожалуйста, введите новый пароль.';
@@ -31,5 +32,4 @@ $messages['internalerror'] = 'Не могу сохранить новый пар
 $messages['passwordshort'] = 'Пароль должен быть длиной как минимум $length символов.';
 $messages['passwordweak'] = 'Пароль должен включать в себя как минимум одну цифру и один знак пунктуации.';
 $messages['passwordforbidden'] = 'Пароль содержит недопустимые символы.';
-
 ?>

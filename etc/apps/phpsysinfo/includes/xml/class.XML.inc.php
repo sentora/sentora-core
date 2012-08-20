@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * XML Generation class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.XML.inc.php 423 2011-01-21 12:53:46Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * class for generation of the xml
  *
  * @category  PHP
@@ -23,62 +25,62 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class XML
-{
+class XML {
+
     /**
      * Sysinfo object where the information retrieval methods are included
      *
      * @var PSI_Interface_OS
      */
     private $_sysinfo;
-    
+
     /**
      * @var System
      */
     private $_sys = null;
-    
+
     /**
      * xml object with the xml content
      *
      * @var SimpleXMLExtended
      */
     private $_xml;
-    
+
     /**
      * object for error handling
      *
      * @var Error
      */
     private $_errors;
-    
+
     /**
      * array with all enabled plugins (name)
      *
      * @var array
      */
     private $_plugins;
-    
+
     /**
      * plugin name if pluginrequest
      *
      * @var string
      */
     private $_plugin = '';
-    
+
     /**
      * generate a xml for a plugin or for the main app
      *
      * @var boolean
      */
     private $_plugin_request = false;
-    
+
     /**
      * generate the entire xml with all plugins or only a part of the xml (main or plugin)
      *
      * @var boolean
      */
     private $_complete_request = false;
-    
+
     /**
      * doing some initial tasks
      * - generate the xml structure with the right header elements
@@ -90,8 +92,7 @@ class XML
      *
      * @return void
      */
-    public function __construct($complete = false, $pluginname = "")
-    {
+    public function __construct($complete = false, $pluginname = "") {
         $this->_errors = Error::singleton();
         if ($pluginname == "") {
             $this->_plugin_request = false;
@@ -110,14 +111,13 @@ class XML
         $this->_plugins = CommonFunctions::getPlugins();
         $this->_xmlbody();
     }
-    
+
     /**
      * generate common information
      *
      * @return void
      */
-    private function _buildVitals()
-    {
+    private function _buildVitals() {
         $vitals = $this->_xml->addChild('Vitals');
         $vitals->addAttribute('Hostname', $this->_sys->getHostname());
         $vitals->addAttribute('IPAddr', $this->_sys->getIp());
@@ -131,14 +131,13 @@ class XML
             $vitals->addAttribute('CPULoad', $this->_sys->getLoadPercent());
         }
     }
-    
+
     /**
      * generate the network information
      *
      * @return void
      */
-    private function _buildNetwork()
-    {
+    private function _buildNetwork() {
         $network = $this->_xml->addChild('Network');
         $hideDevices = preg_split("/[\s]?,[\s]?/", PSI_HIDE_NETWORK_INTERFACE, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($this->_sys->getNetDevices() as $dev) {
@@ -152,14 +151,13 @@ class XML
             }
         }
     }
-    
+
     /**
      * generate the hardware information
      *
      * @return void
      */
-    private function _buildHardware()
-    {
+    private function _buildHardware() {
         $dev = new HWDevice();
         $hardware = $this->_xml->addChild('Hardware');
         $pci = $hardware->addChild('PCI');
@@ -220,14 +218,13 @@ class XML
             }
         }
     }
-    
+
     /**
      * generate the memory information
      *
      * @return void
      */
-    private function _buildMemory()
-    {
+    private function _buildMemory() {
         $memory = $this->_xml->addChild('Memory');
         $memory->addAttribute('Free', $this->_sys->getMemFree());
         $memory->addAttribute('Used', $this->_sys->getMemUsed());
@@ -259,7 +256,7 @@ class XML
             }
         }
     }
-    
+
     /**
      * fill a xml element with atrributes from a disk device
      *
@@ -269,12 +266,11 @@ class XML
      *
      * @return Void
      */
-    private function _fillDevice($mount, $dev, $i)
-    {
+    private function _fillDevice($mount, $dev, $i) {
         $mount->addAttribute('MountPointID', $i);
         $mount->addAttribute('FSType', $dev->getFsType());
         $mount->addAttribute('Name', $dev->getName());
-        $mount->addAttribute('Free', sprintf("%.0f", $dev->getFree()));    
+        $mount->addAttribute('Free', sprintf("%.0f", $dev->getFree()));
         $mount->addAttribute('Used', sprintf("%.0f", $dev->getUsed()));
         $mount->addAttribute('Total', sprintf("%.0f", $dev->getTotal()));
         $mount->addAttribute('Percent', $dev->getPercentUsed());
@@ -290,14 +286,13 @@ class XML
             $mount->addAttribute('MountPoint', $dev->getMountPoint());
         }
     }
-    
+
     /**
      * generate the filesysteminformation
      *
      * @return void
      */
-    private function _buildFilesystems()
-    {
+    private function _buildFilesystems() {
         $hideMounts = $hideFstypes = $hideDisks = array();
         $i = 1;
         if (PSI_HIDE_MOUNTS !== "") {
@@ -317,14 +312,13 @@ class XML
             }
         }
     }
-    
+
     /**
      * generate the motherboard information
      *
      * @return void
      */
-    private function _buildMbinfo()
-    {
+    private function _buildMbinfo() {
         $mbinfo = $this->_xml->addChild('MBInfo');
         if (PSI_MBINFO || PSI_HDDTEMP) {
             $temp = $mbinfo->addChild('Temperature');
@@ -370,14 +364,13 @@ class XML
             }
         }
     }
-    
+
     /**
      * generate the ups information
      *
      * @return void
      */
-    private function _buildUpsinfo()
-    {
+    private function _buildUpsinfo() {
         $upsinfo = $this->_xml->addChild('UPSInfo');
         if (PSI_UPSINFO) {
             $upsinfoclass = PSI_UPS_PROGRAM;
@@ -420,14 +413,13 @@ class XML
             }
         }
     }
-    
+
     /**
      * generate the xml document
      *
      * @return void
      */
-    private function _buildXml()
-    {
+    private function _buildXml() {
         if (!$this->_plugin_request || $this->_complete_request) {
             if ($this->_sys === null) {
                 $this->_sys = $this->_sysinfo->getSys();
@@ -443,25 +435,23 @@ class XML
         $this->_buildPlugins();
         $this->_xml->combinexml($this->_errors->errorsAddToXML($this->_sysinfo->getEncoding()));
     }
-    
+
     /**
      * get the xml object
      *
      * @return string
      */
-    public function getXml()
-    {
+    public function getXml() {
         $this->_buildXml();
         return $this->_xml->getSimpleXmlElement();
     }
-    
+
     /**
      * include xml-trees of the plugins to the main xml
      *
      * @return void
      */
-    private function _buildPlugins()
-    {
+    private function _buildPlugins() {
         $pluginroot = $this->_xml->addChild("Plugins");
         if (($this->_plugin_request || $this->_complete_request) && count($this->_plugins) > 0) {
             $plugins = array();
@@ -478,14 +468,13 @@ class XML
             }
         }
     }
-    
+
     /**
      * build the xml structure where the content can be inserted
      *
      * @return void
      */
-    private function _xmlbody()
-    {
+    private function _xmlbody() {
         $dom = new DOMDocument('1.0', 'UTF-8');
         $root = $dom->createElement("tns:phpsysinfo");
         $root->setAttribute('xmlns:tns', 'http://phpsysinfo.sourceforge.net/');
@@ -493,7 +482,7 @@ class XML
         $root->setAttribute('xsi:schemaLocation', 'http://phpsysinfo.sourceforge.net/phpsysinfo3.xsd');
         $dom->appendChild($root);
         $this->_xml = new SimpleXMLExtended(simplexml_import_dom($dom), $this->_sysinfo->getEncoding());
-        
+
         $generation = $this->_xml->addChild('Generation');
         $generation->addAttribute('version', CommonFunctions::PSI_VERSION);
         $generation->addAttribute('timestamp', time());
@@ -512,5 +501,7 @@ class XML
             $plug->addChild('Plugin')->addAttribute('name', $this->_plugin);
         }
     }
+
 }
+
 ?>

@@ -1,20 +1,19 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
 /**
  *
  */
-if (! PMA_cacheExists('mysql_charsets_count', true)) {
-    $sql = PMA_DRIZZLE
-        ? 'SELECT * FROM data_dictionary.CHARACTER_SETS'
-        : 'SELECT * FROM information_schema.CHARACTER_SETS';
+if (!PMA_cacheExists('mysql_charsets_count', true)) {
+    $sql = PMA_DRIZZLE ? 'SELECT * FROM data_dictionary.CHARACTER_SETS' : 'SELECT * FROM information_schema.CHARACTER_SETS';
     $res = PMA_DBI_query($sql);
 
     $mysql_charsets = array();
@@ -32,9 +31,7 @@ if (! PMA_cacheExists('mysql_charsets_count', true)) {
     $mysql_collations = array_flip($mysql_charsets);
     $mysql_default_collations = $mysql_collations_flat = $mysql_charsets_available = $mysql_collations_available = array();
 
-    $sql = PMA_DRIZZLE
-        ? 'SELECT * FROM data_dictionary.COLLATIONS'
-        : 'SELECT * FROM information_schema.COLLATIONS';
+    $sql = PMA_DRIZZLE ? 'SELECT * FROM data_dictionary.COLLATIONS' : 'SELECT * FROM information_schema.COLLATIONS';
     $res = PMA_DBI_query($sql);
     while ($row = PMA_DBI_fetch_assoc($res)) {
         if (!is_array($mysql_collations[$row['CHARACTER_SET_NAME']])) {
@@ -49,8 +46,8 @@ if (! PMA_cacheExists('mysql_charsets_count', true)) {
         //$mysql_collations_available[$row['Collation']] = !isset($row['Compiled']) || $row['Compiled'] == 'Yes';
         $mysql_collations_available[$row['COLLATION_NAME']] = true;
         $mysql_charsets_available[$row['CHARACTER_SET_NAME']] =
-            !empty($mysql_charsets_available[$row['CHARACTER_SET_NAME']])
-            || !empty($mysql_collations_available[$row['COLLATION_NAME']]);
+                !empty($mysql_charsets_available[$row['CHARACTER_SET_NAME']])
+                || !empty($mysql_collations_available[$row['COLLATION_NAME']]);
     }
     PMA_DBI_free_result($res);
     unset($res, $row);
@@ -78,26 +75,23 @@ if (! PMA_cacheExists('mysql_charsets_count', true)) {
     PMA_cacheSet('mysql_collations_count', $GLOBALS['mysql_collations_count'], true);
     PMA_cacheSet('mysql_collations_available', $GLOBALS['mysql_collations_available'], true);
 } else {
-    $GLOBALS['mysql_charsets']                  = PMA_cacheGet('mysql_charsets', true);
-    $GLOBALS['mysql_charsets_descriptions']     = PMA_cacheGet('mysql_charsets_descriptions', true);
-    $GLOBALS['mysql_charsets_count']            = PMA_cacheGet('mysql_charsets_count', true);
-    $GLOBALS['mysql_charsets_available']        = PMA_cacheGet('mysql_charsets_available', true);
-    $GLOBALS['mysql_collations']                = PMA_cacheGet('mysql_collations', true);
-    $GLOBALS['mysql_default_collations']        = PMA_cacheGet('mysql_default_collations', true);
-    $GLOBALS['mysql_collations_flat']           = PMA_cacheGet('mysql_collations_flat', true);
-    $GLOBALS['mysql_collations_count']          = PMA_cacheGet('mysql_collations_count', true);
-    $GLOBALS['mysql_collations_available']      = PMA_cacheGet('mysql_collations_available', true);
+    $GLOBALS['mysql_charsets'] = PMA_cacheGet('mysql_charsets', true);
+    $GLOBALS['mysql_charsets_descriptions'] = PMA_cacheGet('mysql_charsets_descriptions', true);
+    $GLOBALS['mysql_charsets_count'] = PMA_cacheGet('mysql_charsets_count', true);
+    $GLOBALS['mysql_charsets_available'] = PMA_cacheGet('mysql_charsets_available', true);
+    $GLOBALS['mysql_collations'] = PMA_cacheGet('mysql_collations', true);
+    $GLOBALS['mysql_default_collations'] = PMA_cacheGet('mysql_default_collations', true);
+    $GLOBALS['mysql_collations_flat'] = PMA_cacheGet('mysql_collations_flat', true);
+    $GLOBALS['mysql_collations_count'] = PMA_cacheGet('mysql_collations_count', true);
+    $GLOBALS['mysql_collations_available'] = PMA_cacheGet('mysql_collations_available', true);
 }
 
 define('PMA_CSDROPDOWN_COLLATION', 0);
-define('PMA_CSDROPDOWN_CHARSET',   1);
+define('PMA_CSDROPDOWN_CHARSET', 1);
 
-function PMA_generateCharsetDropdownBox($type = PMA_CSDROPDOWN_COLLATION,
-    $name = null, $id = null, $default = null, $label = TRUE, $indent = 0,
-    $submitOnChange = FALSE, $displayUnavailable = FALSE)
-{
+function PMA_generateCharsetDropdownBox($type = PMA_CSDROPDOWN_COLLATION, $name = null, $id = null, $default = null, $label = TRUE, $indent = 0, $submitOnChange = FALSE, $displayUnavailable = FALSE) {
     global $mysql_charsets, $mysql_charsets_descriptions,
-        $mysql_charsets_available, $mysql_collations, $mysql_collations_available;
+    $mysql_charsets_available, $mysql_collations, $mysql_collations_available;
 
     if (empty($name)) {
         if ($type == PMA_CSDROPDOWN_COLLATION) {
@@ -107,14 +101,14 @@ function PMA_generateCharsetDropdownBox($type = PMA_CSDROPDOWN_COLLATION,
         }
     }
 
-    $return_str  = '<select xml:lang="en" dir="ltr" name="'
-        . htmlspecialchars($name) . '"'
-        . (empty($id) ? '' : ' id="' . htmlspecialchars($id) . '"')
-        . ($submitOnChange ? ' onchange="this.form.submit();"' : '') . '>' . "\n";
+    $return_str = '<select xml:lang="en" dir="ltr" name="'
+            . htmlspecialchars($name) . '"'
+            . (empty($id) ? '' : ' id="' . htmlspecialchars($id) . '"')
+            . ($submitOnChange ? ' onchange="this.form.submit();"' : '') . '>' . "\n";
     if ($label) {
         $return_str .= '<option value="">'
-            . ($type == PMA_CSDROPDOWN_COLLATION ? __('Collation') : __('Charset'))
-            . '</option>' . "\n";
+                . ($type == PMA_CSDROPDOWN_COLLATION ? __('Collation') : __('Charset'))
+                . '</option>' . "\n";
     }
     $return_str .= '<option value=""></option>' . "\n";
     foreach ($mysql_charsets as $current_charset) {
@@ -122,28 +116,26 @@ function PMA_generateCharsetDropdownBox($type = PMA_CSDROPDOWN_COLLATION,
             continue;
         }
         $current_cs_descr =
-            empty($mysql_charsets_descriptions[$current_charset])
-            ? $current_charset
-            : $mysql_charsets_descriptions[$current_charset];
+                empty($mysql_charsets_descriptions[$current_charset]) ? $current_charset : $mysql_charsets_descriptions[$current_charset];
 
         if ($type == PMA_CSDROPDOWN_COLLATION) {
             $return_str .= '<optgroup label="' . $current_charset
-                . '" title="' . $current_cs_descr . '">' . "\n";
+                    . '" title="' . $current_cs_descr . '">' . "\n";
             foreach ($mysql_collations[$current_charset] as $current_collation) {
                 if (!$mysql_collations_available[$current_collation]) {
                     continue;
                 }
                 $return_str .= '<option value="' . $current_collation
-                    . '" title="' . PMA_getCollationDescr($current_collation) . '"'
-                    . ($default == $current_collation ? ' selected="selected"' : '') . '>'
-                    . $current_collation . '</option>' . "\n";
+                        . '" title="' . PMA_getCollationDescr($current_collation) . '"'
+                        . ($default == $current_collation ? ' selected="selected"' : '') . '>'
+                        . $current_collation . '</option>' . "\n";
             }
             $return_str .= '</optgroup>' . "\n";
         } else {
             $return_str .= '<option value="' . $current_charset
-                . '" title="' . $current_cs_descr . '"'
-                . ($default == $current_charset ? ' selected="selected"' : '') . '>'
-                . $current_charset . '</option>' . "\n";
+                    . '" title="' . $current_cs_descr . '"'
+                    . ($default == $current_charset ? ' selected="selected"' : '') . '>'
+                    . $current_charset . '</option>' . "\n";
         }
     }
     $return_str .= '</select>' . "\n";
@@ -173,7 +165,7 @@ function PMA_getDbCollation($db) {
         return 'utf8_general_ci';
     }
 
-    if (! $GLOBALS['cfg']['Server']['DisableIS']) {
+    if (!$GLOBALS['cfg']['Server']['DisableIS']) {
         // this is slow with thousands of databases
         return PMA_DBI_fetch_value('SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = \'' . PMA_sqlAddSlashes($db) . '\' LIMIT 1;');
     } else {
@@ -194,7 +186,7 @@ function PMA_getDbCollation($db) {
  */
 function PMA_getServerCollation() {
     return PMA_DBI_fetch_value(
-        'SHOW VARIABLES LIKE \'collation_server\'', 0, 1);
+                    'SHOW VARIABLES LIKE \'collation_server\'', 0, 1);
 }
 
 /**
@@ -425,4 +417,5 @@ function PMA_getCollationDescr($collation) {
 
     return $descr;
 }
+
 ?>

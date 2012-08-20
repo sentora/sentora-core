@@ -1,10 +1,10 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-
 /**
  *
  */
@@ -26,7 +26,7 @@ $export_page_title = __('View dump (schema) of table');
 // When we have some query, we need to remove LIMIT from that and possibly
 // generate WHERE clause (if we are asked to export specific rows)
 
-if (! empty($sql_query)) {
+if (!empty($sql_query)) {
     // Parse query so we can work with tokens
     $parsed_sql = PMA_SQP_parse($sql_query);
     $analyzed_sql = PMA_SQP_analyze($parsed_sql);
@@ -50,11 +50,11 @@ if (! empty($sql_query)) {
         $wheres = array();
 
         if (isset($where_clause) && is_array($where_clause)
-         && count($where_clause) > 0) {
-            $wheres[] = '(' . implode(') OR (',$where_clause) . ')';
+                && count($where_clause) > 0) {
+            $wheres[] = '(' . implode(') OR (', $where_clause) . ')';
         }
 
-        if (!empty($analyzed_sql[0]['where_clause']))  {
+        if (!empty($analyzed_sql[0]['where_clause'])) {
             $wheres[] = $analyzed_sql[0]['where_clause'];
         }
 

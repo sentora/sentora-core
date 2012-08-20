@@ -97,7 +97,6 @@ class db_builder {
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $database The name of the database to drop.
      */
-    
     static function moduledb_drop($database) {
         global $zdbh;
         /**

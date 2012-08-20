@@ -38,7 +38,7 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListDomains($uid=0) {
+    static function ListDomains($uid = 0) {
         global $zdbh;
         if ($uid == 0) {
             $sql = "SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL AND vh_type_in=1 ORDER BY vh_name_vc ASC";
@@ -152,14 +152,14 @@ class module_controller {
 														 1,
 														 " . time() . ")"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->execute();
-			# Only run if the Server platform is Windows.
-    		if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
-		        if (ctrl_options::GetSystemOption('disable_hostsen') == 'false') {
-		            # Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
-		            @exec("C:/zpanel/bin/zpss/setroute.exe " . $domain . "");
-		            @exec("C:/zpanel/bin/zpss/setroute.exe www." . $domain . "");
-		        }
-		    }
+            # Only run if the Server platform is Windows.
+            if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
+                if (ctrl_options::GetSystemOption('disable_hostsen') == 'false') {
+                    # Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
+                    @exec("C:/zpanel/bin/zpss/setroute.exe " . $domain . "");
+                    @exec("C:/zpanel/bin/zpss/setroute.exe www." . $domain . "");
+                }
+            }
             self::SetWriteApacheConfigTrue();
             $retval = TRUE;
             runtime_hook::Execute('OnAfterAddDomain');

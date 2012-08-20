@@ -22,7 +22,6 @@ set :quotewildcard "b" "Rock*";
 
 $s = new rcube_sieve_script($txt, array(), array('variables'));
 echo $s->as_text();
-
 ?>
 --EXPECT--
 require ["variables"];

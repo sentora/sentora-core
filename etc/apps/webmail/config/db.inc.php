@@ -1,16 +1,16 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | Configuration file for database access                                |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | Configuration file for database access                                |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $rcmail_config = array();
 
@@ -18,19 +18,16 @@ $rcmail_config = array();
 // format is db_provider://user:password@host/database 
 // For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
 // currently supported db_providers: mysql, mysqli, pgsql, sqlite, mssql or sqlsrv
-
 #$rcmail_config['db_dsnw'] = 'mysql://root:YOUR_ROOT_MYSQL_PASSWORD@localhost/zpanel_roundcube';
 // postgres example: 'pgsql://roundcube:pass@localhost/roundcubemail';
 // Warning: for SQLite use absolute path in DSN:
 // sqlite example: 'sqlite:////full/path/to/sqlite.db?mode=0646';
-
 // PEAR database DSN for read only operations (if empty write database will be used)
 // useful for database replication
 $rcmail_config['db_dsnr'] = '';
 
 // maximum length of a query in bytes
 $rcmail_config['db_max_length'] = 512000;  // 500K
-
 // use persistent db-connections
 // beware this will not "always" work as expected
 // see: http://www.php.net/manual/en/features.persistent-connections.php

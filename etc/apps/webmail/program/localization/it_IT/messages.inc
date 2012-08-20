@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/it_IT/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Andrej Mocilnik <amocilnik@dotcom.ts.it>                      |
-|         Yusef Maali <contact@yusefmaali.net>                          |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/it_IT/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Andrej Mocilnik <amocilnik@dotcom.ts.it>                      |
+  |         Yusef Maali <contact@yusefmaali.net>                          |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Impossibile accedere. Utente o password non corretti';
@@ -159,5 +159,4 @@ $messages['invalidimageformat'] = 'Formato immagine non valido';
 $messages['mispellingsfound'] = 'Sono stati riscontrati errori ortografici nel messaggio';
 $messages['parentnotwritable'] = 'Impossibile creare o muovere la cartella: accesso negato';
 $messages['messagetoobig'] = 'La parte del messaggio è troppo grande per essere processata.';
-
 ?>

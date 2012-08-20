@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/_NEW_/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2008-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:                                                               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/_NEW_/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:                                                               |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'நுழைவு தோல்வியடைந்தது';
@@ -101,5 +101,4 @@ $messages['smtptoerror'] = 'SMTP பிழை ($code): "$to" பெறுனர�
 $messages['smtprecipientserror'] = 'SMTP பிழை : பெறுனர் பட்டியலை பிரிக்க முடியவில்லை';
 $messages['smtperror'] = 'SMTP பிழை: $msg';
 $messages['emailformaterror'] = 'தவறான மின்னஞ்சல் முகவரி: $email	';
-
 ?>

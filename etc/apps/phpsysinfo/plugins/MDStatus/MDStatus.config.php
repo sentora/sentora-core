@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MDSTAT Plugin Config File
  *
@@ -12,7 +13,7 @@
  * @version   SVN: $Id: MDStatus.config.php 313 2009-08-02 11:24:58Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+/**
  * define how to access the mdstat statistic data
  * - 'file' /proc/mdstat is read
  * - 'data' (a file must be available in the data directory of the phpsysinfo installation with the filename "mdstat.txt"; content is the output from "cat /proc/mdstat")

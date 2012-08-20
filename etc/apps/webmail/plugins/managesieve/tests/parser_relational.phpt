@@ -14,12 +14,11 @@ if header :value "ge" :comparator "i;ascii-numeric"
 
 $s = new rcube_sieve_script($txt);
 echo $s->as_text();
-
 ?>
 --EXPECT--
 require ["relational","comparator-i;ascii-numeric"];
 # rule:[redirect]
 if header :value "ge" :comparator "i;ascii-numeric" "X-Spam-score" "14"
 {
-	redirect "test@test.tld";
+redirect "test@test.tld";
 }

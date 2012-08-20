@@ -1,22 +1,22 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/fa/messages.inc                                              |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Mohammad Ebrahim Mohammadi Panah <mebrahim at gmail.com>      |
-|         Anoosh <anoosher2003 at yahoo.com>                            |
-|         Nader Aghazadeh <Nader.aghazadeh at gmail.com>                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/fa/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Mohammad Ebrahim Mohammadi Panah <mebrahim at gmail.com>      |
+  |         Anoosh <anoosher2003 at yahoo.com>                            |
+  |         Nader Aghazadeh <Nader.aghazadeh at gmail.com>                |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'ورود ناموفق بود';
@@ -92,5 +92,4 @@ $messages['importconfirm'] = 'p><em>$names</em></p> </b>: متوقف شد$skippe
 $messages['opnotpermitted'] = '!عملیات مجاز نیست';
 $messages['nofromaddress'] = 'ایمیل های گم شده در گزینه انتخاب شده';
 $messages['editorwarning'] = 'تغییر ویرایشگر متن باعث ابطال فرمت همه متن ها می شود ، آیا می خواهید با این وجود عملیات را ادامه بدهید ؟';
-
 ?>

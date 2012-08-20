@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : nob.php
 // Begin       : 2004-03-03
@@ -27,7 +28,6 @@
  * @author Nicola Asuni
  * @since 2004-03-03
  */
-
 // Norwegian Bokmål
 
 global $l;

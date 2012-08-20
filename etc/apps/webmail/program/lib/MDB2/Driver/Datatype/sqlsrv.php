@@ -1,4 +1,5 @@
 <?php
+
 // vim: set et ts=4 sw=4 fdm=marker:
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
@@ -52,8 +53,7 @@ require_once 'MDB2/Driver/Datatype/Common.php';
  * @package MDB2
  * @category Database
  */
-class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
-{
+class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common {
     // {{{ _baseConvertResult()
 
     /**
@@ -65,24 +65,23 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      * @return object a MDB2 error on failure
      * @access protected
      */
-    function _baseConvertResult($value, $type, $rtrim = true)
-    {
+    function _baseConvertResult($value, $type, $rtrim = true) {
         if (null === $value) {
             return null;
         }
         switch ($type) {
-        case 'boolean':
-            return $value == '1';
-        case 'date':
-            if (strlen($value) > 10) {
-                $value = substr($value,0,10);
-            }
-            return $value;
-        case 'time':
-            if (strlen($value) > 8) {
-                $value = substr($value,11,8);
-            }
-            return $value;
+            case 'boolean':
+                return $value == '1';
+            case 'date':
+                if (strlen($value) > 10) {
+                    $value = substr($value, 0, 10);
+                }
+                return $value;
+            case 'time':
+                if (strlen($value) > 8) {
+                    $value = substr($value, 11, 8);
+                }
+                return $value;
         }
         return parent::_baseConvertResult($value, $type, $rtrim);
     }
@@ -99,9 +98,8 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      * @return string DBMS specific SQL code portion needed to set the COLLATION
      *                of a field declaration.
      */
-    function _getCollationFieldDeclaration($collation)
-    {
-        return 'COLLATE '.$collation;
+    function _getCollationFieldDeclaration($collation) {
+        return 'COLLATE ' . $collation;
     }
 
     // }}}
@@ -130,52 +128,49 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      *      declare the specified field.
      * @access public
      */
-    function getTypeDeclaration($field)
-    {
+    function getTypeDeclaration($field) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         switch ($field['type']) {
-        case 'text':
-            $length = !empty($field['length'])
-                ? $field['length'] : false;
-            $fixed = !empty($field['fixed']) ? $field['fixed'] : false;
-            return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$db->options['default_text_field_length'].')')
-                : ($length ? 'VARCHAR('.$length.')' : 'VARCHAR(MAX)');
-        case 'clob':
-            if (!empty($field['length'])) {
-                $length = $field['length'];
-                if ($length <= 8000) {
-                    return 'VARCHAR('.$length.')';
+            case 'text':
+                $length = !empty($field['length']) ? $field['length'] : false;
+                $fixed = !empty($field['fixed']) ? $field['fixed'] : false;
+                return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(' . $db->options['default_text_field_length'] . ')') : ($length ? 'VARCHAR(' . $length . ')' : 'VARCHAR(MAX)');
+            case 'clob':
+                if (!empty($field['length'])) {
+                    $length = $field['length'];
+                    if ($length <= 8000) {
+                        return 'VARCHAR(' . $length . ')';
+                    }
                 }
-             }
-             return 'VARCHAR(MAX)';
-        case 'blob':
-            if (!empty($field['length'])) {
-                $length = $field['length'];
-                if ($length <= 8000) {
-                    return "VARBINARY($length)";
+                return 'VARCHAR(MAX)';
+            case 'blob':
+                if (!empty($field['length'])) {
+                    $length = $field['length'];
+                    if ($length <= 8000) {
+                        return "VARBINARY($length)";
+                    }
                 }
-            }
-            return 'IMAGE';
-        case 'integer':
-            return 'INT';
-        case 'boolean':
-            return 'BIT';
-        case 'date':
-            return 'CHAR ('.strlen('YYYY-MM-DD').')';
-        case 'time':
-            return 'CHAR ('.strlen('HH:MM:SS').')';
-        case 'timestamp':
-            return 'CHAR ('.strlen('YYYY-MM-DD HH:MM:SS').')';
-        case 'float':
-            return 'FLOAT';
-        case 'decimal':
-            $length = !empty($field['length']) ? $field['length'] : 18;
-            $scale = !empty($field['scale']) ? $field['scale'] : $db->options['decimal_places'];
-            return 'DECIMAL('.$length.','.$scale.')';
+                return 'IMAGE';
+            case 'integer':
+                return 'INT';
+            case 'boolean':
+                return 'BIT';
+            case 'date':
+                return 'CHAR (' . strlen('YYYY-MM-DD') . ')';
+            case 'time':
+                return 'CHAR (' . strlen('HH:MM:SS') . ')';
+            case 'timestamp':
+                return 'CHAR (' . strlen('YYYY-MM-DD HH:MM:SS') . ')';
+            case 'float':
+                return 'FLOAT';
+            case 'decimal':
+                $length = !empty($field['length']) ? $field['length'] : 18;
+                $scale = !empty($field['scale']) ? $field['scale'] : $db->options['decimal_places'];
+                return 'DECIMAL(' . $length . ',' . $scale . ')';
         }
         return '';
     }
@@ -209,8 +204,7 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      *                 declare the specified field.
      * @access protected
      */
-    function _getIntegerDeclaration($name, $field)
-    {
+    function _getIntegerDeclaration($name, $field) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -236,7 +230,7 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
         }
 
         $name = $db->quoteIdentifier($name, true);
-        return $name.' '.$this->getTypeDeclaration($field).$notnull.$default.$autoinc;
+        return $name . ' ' . $this->getTypeDeclaration($field) . $notnull . $default . $autoinc;
     }
 
     // }}}
@@ -263,8 +257,7 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      *        declare the specified field.
      * @access public
      */
-    function _getCLOBDeclaration($name, $field)
-    {
+    function _getCLOBDeclaration($name, $field) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -272,7 +265,7 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
 
         $notnull = empty($field['notnull']) ? ' NULL' : ' NOT NULL';
         $name = $db->quoteIdentifier($name, true);
-        return $name.' '.$this->getTypeDeclaration($field).$notnull;
+        return $name . ' ' . $this->getTypeDeclaration($field) . $notnull;
     }
 
     // }}}
@@ -299,8 +292,7 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      *        declare the specified field.
      * @access protected
      */
-    function _getBLOBDeclaration($name, $field)
-    {
+    function _getBLOBDeclaration($name, $field) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -308,7 +300,7 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
 
         $notnull = empty($field['notnull']) ? ' NULL' : ' NOT NULL';
         $name = $db->quoteIdentifier($name, true);
-        return $name.' '.$this->getTypeDeclaration($field).$notnull;
+        return $name . ' ' . $this->getTypeDeclaration($field) . $notnull;
     }
 
     // }}}
@@ -325,12 +317,11 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      *                 a DBMS specific format.
      * @access protected
      */
-    function _quoteBLOB($value, $quote, $escape_wildcards)
-    {
+    function _quoteBLOB($value, $quote, $escape_wildcards) {
         if (!$quote) {
             return $value;
         }
-        $value = '0x'.bin2hex($this->_readFile($value));
+        $value = '0x' . bin2hex($this->_readFile($value));
         return $value;
     }
 
@@ -344,8 +335,7 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
      * @return array containing the various possible types, length, sign, fixed
      * @access public
      */
-    function _mapNativeDatatype($field)
-    {
+    function _mapNativeDatatype($field) {
         // todo: handle length of various int variations
         $db_type = $field['type'];
         $length = $field['length'];
@@ -353,98 +343,98 @@ class MDB2_Driver_Datatype_sqlsrv extends MDB2_Driver_Datatype_Common
         // todo: unsigned handling seems to be missing
         $unsigned = $fixed = null;
         switch ($db_type) {
-        case 'bit':
-        case SQLSRV_SQLTYPE_BIT:
-            $type[0] = 'boolean';
-            break;
-        case 'tinyint':
-        case SQLSRV_SQLTYPE_TINYINT:
-            $type[0] = 'integer';
-            $length = 1;
-            break;
-        case 'smallint':
-        case SQLSRV_SQLTYPE_SMALLINT:
-            $type[0] = 'integer';
-            $length = 2;
-            break;
-        case 'int':
-        case SQLSRV_SQLTYPE_INT:
-            $type[0] = 'integer';
-            $length = 4;
-            break;
-        case 'bigint':
-        case SQLSRV_SQLTYPE_BIGINT:
-            $type[0] = 'integer';
-            $length = 8;
-            break;
-        case 'datetime':
-        case SQLSRV_SQLTYPE_DATETIME:
-            $type[0] = 'timestamp';
-            break;
-        case 'float':
-        case SQLSRV_SQLTYPE_FLOAT:
-        case 'real':
-        case SQLSRV_SQLTYPE_REAL:
-            $type[0] = 'float';
-            break;
-        case 'numeric':
-        case SQLSRV_SQLTYPE_NUMERIC:
-        case 'decimal':
-        case SQLSRV_SQLTYPE_DECIMAL:
-        case 'money':
-        case SQLSRV_SQLTYPE_MONEY:
-            $type[0] = 'decimal';
-            $length = $field['numeric_precision'].','.$field['numeric_scale'];
-            break;
-        case 'text':
-        case SQLSRV_SQLTYPE_TEXT:
-        case 'ntext':
-        case SQLSRV_SQLTYPE_NTEXT:
-        case 'varchar':
-        case SQLSRV_SQLTYPE_VARCHAR:
-        case 'nvarchar':
-        case SQLSRV_SQLTYPE_NVARCHAR:
-            $fixed = false;
-        case 'char':
-        case SQLSRV_SQLTYPE_CHAR:
-        case 'nchar':
-        case SQLSRV_SQLTYPE_NCHAR:
-            $type[0] = 'text';
-            if ($length == '1') {
-                $type[] = 'boolean';
-                if (preg_match('/^(is|has)/', $field['name'])) {
+            case 'bit':
+            case SQLSRV_SQLTYPE_BIT:
+                $type[0] = 'boolean';
+                break;
+            case 'tinyint':
+            case SQLSRV_SQLTYPE_TINYINT:
+                $type[0] = 'integer';
+                $length = 1;
+                break;
+            case 'smallint':
+            case SQLSRV_SQLTYPE_SMALLINT:
+                $type[0] = 'integer';
+                $length = 2;
+                break;
+            case 'int':
+            case SQLSRV_SQLTYPE_INT:
+                $type[0] = 'integer';
+                $length = 4;
+                break;
+            case 'bigint':
+            case SQLSRV_SQLTYPE_BIGINT:
+                $type[0] = 'integer';
+                $length = 8;
+                break;
+            case 'datetime':
+            case SQLSRV_SQLTYPE_DATETIME:
+                $type[0] = 'timestamp';
+                break;
+            case 'float':
+            case SQLSRV_SQLTYPE_FLOAT:
+            case 'real':
+            case SQLSRV_SQLTYPE_REAL:
+                $type[0] = 'float';
+                break;
+            case 'numeric':
+            case SQLSRV_SQLTYPE_NUMERIC:
+            case 'decimal':
+            case SQLSRV_SQLTYPE_DECIMAL:
+            case 'money':
+            case SQLSRV_SQLTYPE_MONEY:
+                $type[0] = 'decimal';
+                $length = $field['numeric_precision'] . ',' . $field['numeric_scale'];
+                break;
+            case 'text':
+            case SQLSRV_SQLTYPE_TEXT:
+            case 'ntext':
+            case SQLSRV_SQLTYPE_NTEXT:
+            case 'varchar':
+            case SQLSRV_SQLTYPE_VARCHAR:
+            case 'nvarchar':
+            case SQLSRV_SQLTYPE_NVARCHAR:
+                $fixed = false;
+            case 'char':
+            case SQLSRV_SQLTYPE_CHAR:
+            case 'nchar':
+            case SQLSRV_SQLTYPE_NCHAR:
+                $type[0] = 'text';
+                if ($length == '1') {
+                    $type[] = 'boolean';
+                    if (preg_match('/^(is|has)/', $field['name'])) {
+                        $type = array_reverse($type);
+                    }
+                } elseif (strstr($db_type, 'text') || strstr($db_type, SQLSRV_SQLTYPE_TEXT)) {
+                    $type[] = 'clob';
                     $type = array_reverse($type);
                 }
-            } elseif (strstr($db_type, 'text') || strstr($db_type, SQLSRV_SQLTYPE_TEXT)) {
-                $type[] = 'clob';
-                $type = array_reverse($type);
-            }
-            if ($fixed !== false) {
-                $fixed = true;
-            }
-            break;
-        case 'image':
-        case SQLSRV_SQLTYPE_IMAGE:
-        case 'varbinary':
-        case SQLSRV_SQLTYPE_VARBINARY:
-            $type[] = 'blob';
-            $length = null;
-            break;
-        default:
-            $db = $this->getDBInstance();
-            if (PEAR::isError($db)) {
-                return $db;
-            }
-            return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
-                'unknown database attribute type: '.$db_type, __FUNCTION__);
+                if ($fixed !== false) {
+                    $fixed = true;
+                }
+                break;
+            case 'image':
+            case SQLSRV_SQLTYPE_IMAGE:
+            case 'varbinary':
+            case SQLSRV_SQLTYPE_VARBINARY:
+                $type[] = 'blob';
+                $length = null;
+                break;
+            default:
+                $db = $this->getDBInstance();
+                if (PEAR::isError($db)) {
+                    return $db;
+                }
+                return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'unknown database attribute type: ' . $db_type, __FUNCTION__);
         }
 
-        if ((int)$length <= 0) {
+        if ((int) $length <= 0) {
             $length = null;
         }
 
         return array($type, $length, $unsigned, $fixed);
     }
+
     // }}}
 }
 

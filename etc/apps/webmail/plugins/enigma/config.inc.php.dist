@@ -2,7 +2,6 @@
 
 // Enigma Plugin options
 // --------------------
-
 // A driver to use for PGP. Default: "gnupg".
 $rcmail_config['enigma_pgp_driver'] = 'gnupg';
 

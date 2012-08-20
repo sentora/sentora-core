@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/hu_HU/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Zark Bonfire <ikkhares at gmail dot com>                      |
-|         Peter Szabo <pete at teamlupus dot hu>                        |
-|         Barnabas Bona <bsi at hosember dot hu>                        |
-|         Gabor Veliczky <hosting at jugiter dot net>                   |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/hu_HU/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Zark Bonfire <ikkhares at gmail dot com>                      |
+  |         Peter Szabo <pete at teamlupus dot hu>                        |
+  |         Barnabas Bona <bsi at hosember dot hu>                        |
+  |         Gabor Veliczky <hosting at jugiter dot net>                   |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Sikertelen belépés';
@@ -160,5 +160,4 @@ $messages['foldercreated'] = 'Mappa sikeresen létrehozva';
 $messages['invalidimageformat'] = 'Érvénytelen képformátum';
 $messages['mispellingsfound'] = 'Az üzenetben helyesírási hibák találhatók';
 $messages['parentnotwritable'] = 'Nem sikerült a mappa létrehozása/mozgatása a kijelölt mappába. Nincs jogosultsága a művelethez!';
-
 ?>

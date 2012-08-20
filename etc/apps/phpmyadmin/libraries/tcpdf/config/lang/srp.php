@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : srp.php
 // Begin       : 2004-03-03
@@ -27,7 +28,6 @@
  * @author Nicola Asuni
  * @since 2004-03-03
  */
-
 // Serbian
 
 global $l;

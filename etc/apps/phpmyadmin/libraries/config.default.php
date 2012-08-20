@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * <code>
@@ -18,7 +19,6 @@
  *
  * @package phpMyAdmin
  */
-
 /**
  * Your phpMyAdmin URL.
  *
@@ -87,7 +87,7 @@ $cfg['AllowThirdPartyFraming'] = false;
 $cfg['blowfish_secret'] = '';
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Server(s) configuration
  *
  * The $cfg['Servers'] array starts with $cfg['Servers'][1].  Do not use
@@ -439,7 +439,6 @@ $cfg['Servers'][$i]['CountTables'] = false;
  *
  * @global bool $cfg['Servers'][$i]['tracking_version_auto_create']
  */
-
 $cfg['Servers'][$i]['tracking_version_auto_create'] = false;
 
 /**
@@ -447,19 +446,17 @@ $cfg['Servers'][$i]['tracking_version_auto_create'] = false;
  *
  * @global string $cfg['Servers'][$i]['tracking_default_statements']
  */
-
 $cfg['Servers'][$i]['tracking_default_statements'] = 'CREATE TABLE,ALTER TABLE,DROP TABLE,RENAME TABLE,' .
-                                          'CREATE INDEX,DROP INDEX,' .
-                                          'INSERT,UPDATE,DELETE,TRUNCATE,REPLACE,' .
-                                          'CREATE VIEW,ALTER VIEW,DROP VIEW,' .
-                                          'CREATE DATABASE,ALTER DATABASE,DROP DATABASE';
+        'CREATE INDEX,DROP INDEX,' .
+        'INSERT,UPDATE,DELETE,TRUNCATE,REPLACE,' .
+        'CREATE VIEW,ALTER VIEW,DROP VIEW,' .
+        'CREATE DATABASE,ALTER DATABASE,DROP DATABASE';
 
 /**
  * Whether a DROP VIEW IF EXISTS statement will be added as first line to the log when creating a view.
  *
  * @global bool $cfg['Servers'][$i]['tracking_add_drop_view']
  */
-
 $cfg['Servers'][$i]['tracking_add_drop_view'] = true;
 
 /**
@@ -467,7 +464,6 @@ $cfg['Servers'][$i]['tracking_add_drop_view'] = true;
  *
  * @global bool $cfg['Servers'][$i]['tracking_add_drop_table']
  */
-
 $cfg['Servers'][$i]['tracking_add_drop_table'] = true;
 
 /**
@@ -475,7 +471,6 @@ $cfg['Servers'][$i]['tracking_add_drop_table'] = true;
  *
  * @global bool $cfg['Servers'][$i]['tracking_add_drop_database']
  */
-
 $cfg['Servers'][$i]['tracking_add_drop_database'] = true;
 
 /**
@@ -663,7 +658,7 @@ $cfg['VerboseMultiSubmit'] = true;
 $cfg['AllowArbitraryServer'] = false;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Error handler configuration
  *
  * this configures phpMyAdmin's own error handler, it is used to avoid information
@@ -709,7 +704,7 @@ $cfg['Error_Handler']['display'] = false;
 $cfg['Error_Handler']['gather'] = false;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Left frame setup
  */
 
@@ -740,7 +735,7 @@ $cfg['LeftFrameDBSeparator'] = '_';
  *
  * @global string $cfg['LeftFrameTableSeparator']
  */
-$cfg['LeftFrameTableSeparator']= '__';
+$cfg['LeftFrameTableSeparator'] = '__';
 
 /**
  * How many sublevels should be displayed when splitting up tables by the above Separator
@@ -838,7 +833,7 @@ $cfg['DisplayDatabasesList'] = 'auto';
 $cfg['LeftDefaultTabTable'] = 'tbl_structure.php';
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * In the main frame, at startup...
  */
 
@@ -886,7 +881,7 @@ $cfg['ShowCreateDb'] = true;
 $cfg['SuggestDBName'] = true;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * In browse mode...
  */
 
@@ -931,7 +926,7 @@ $cfg['Order'] = 'SMART';
 $cfg['DisplayBinaryAsHex'] = true;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * In edit mode...
  */
 
@@ -992,7 +987,7 @@ $cfg['ForeignKeyDropdownOrder'] = array('content-id', 'id-content');
 $cfg['ForeignKeyMaxLimit'] = 100;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * For the export features...
  */
 
@@ -1026,7 +1021,7 @@ $cfg['BZipDump'] = true;
 $cfg['CompressOnFly'] = true;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Tabs display settings
  */
 
@@ -1089,7 +1084,7 @@ $cfg['DefaultTabDatabase'] = 'db_structure.php';
  */
 $cfg['DefaultTabTable'] = 'sql.php';
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Export defaults
  */
 $cfg['Export'] = array();
@@ -1736,7 +1731,7 @@ $cfg['Export']['pdf_report_title'] = '';
 /**
  *
  *
- *@global string $cfg['Export']['xml_structure_or_data']
+ * @global string $cfg['Export']['xml_structure_or_data']
  */
 $cfg['Export']['xml_structure_or_data'] = 'data';
 
@@ -1796,7 +1791,7 @@ $cfg['Export']['xml_export_contents'] = true;
  */
 $cfg['Export']['yaml_structure_or_data'] = 'data';
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Import defaults
  */
 $cfg['Import'] = array();
@@ -2029,7 +2024,7 @@ $cfg['MySQLManualBase'] = 'http://dev.mysql.com/doc/refman';
 $cfg['MySQLManualType'] = 'viewable';
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * PDF options
  */
 
@@ -2048,7 +2043,7 @@ $cfg['PDFPageSizes'] = array('A3', 'A4', 'A5', 'letter', 'legal');
 $cfg['PDFDefaultPageSize'] = 'A4';
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Language and character set conversion settings
  */
 
@@ -2142,7 +2137,7 @@ $cfg['AvailableCharsets'] = array(
 );
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Customization & design
  *
  * The graphical settings are now located in themes/theme-name/layout.inc.php
@@ -2279,7 +2274,7 @@ $cfg['ShowBrowseComments'] = true;
  *
  * @global boolean $cfg['ShowPropertyComments']
  */
-$cfg['ShowPropertyComments']= true;
+$cfg['ShowPropertyComments'] = true;
 
 /**
  * repeat header names every X cells? (0 = deactivate)
@@ -2382,7 +2377,7 @@ $cfg['UserprefsDisallow'] = array();
  */
 $cfg['UserprefsDeveloperTab'] = false;
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Window title settings
  */
 
@@ -2435,7 +2430,7 @@ $cfg['MainPageIconic'] = true;
 $cfg['ReplaceHelpImg'] = true;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * theme manager
  */
 
@@ -2470,7 +2465,7 @@ $cfg['ThemeDefault'] = 'pmahomme';
 $cfg['ThemePerServer'] = false;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  *
  */
 
@@ -2489,7 +2484,7 @@ $cfg['DefaultQueryTable'] = 'SELECT * FROM @TABLE@ WHERE 1';
 $cfg['DefaultQueryDatabase'] = '';
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * SQL Query box settings
  * These are the links display in all of the SQL Query boxes
  *
@@ -2533,7 +2528,7 @@ $cfg['SQLQuery']['Validate'] = false;
 $cfg['SQLQuery']['Refresh'] = true;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Web server upload/save/import directories
  */
 
@@ -2567,7 +2562,6 @@ $cfg['TempDir'] = '';
 /**
  * Misc. settings
  */
-
 /**
  * Is GD >= 2 available? Set to yes/no/auto. 'auto' does auto-detection,
  * which is the only safe way to determine GD version.
@@ -2602,7 +2596,7 @@ $cfg['CheckConfigurationPermissions'] = true;
  */
 $cfg['LinkLengthLimit'] = 1000;
 
-/*******************************************************************************
+/* * *****************************************************************************
  * SQL Parser Settings
  *
  * @global array $cfg['SQP']
@@ -2631,7 +2625,7 @@ $cfg['SQP']['fmtInd'] = '1';
 $cfg['SQP']['fmtIndUnit'] = 'em';
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * If you wish to use the SQL Validator service, you should be aware of the
  * following:
  * All SQL statements are stored anonymously for statistical purposes.
@@ -2664,7 +2658,7 @@ $cfg['SQLValidator']['username'] = '';
 $cfg['SQLValidator']['password'] = '';
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * Developers ONLY!
  *
  * @global array $cfg['DBG']
@@ -2679,7 +2673,7 @@ $cfg['DBG'] = array();
 $cfg['DBG']['sql'] = false;
 
 
-/*******************************************************************************
+/* * *****************************************************************************
  * MySQL settings
  */
 
@@ -2695,7 +2689,6 @@ $cfg['ColumnTypes'] = array(
     'VARCHAR',
     'TEXT',
     'DATE',
-
     // numeric
     'NUMERIC' => array(
         'TINYINT',
@@ -2713,8 +2706,6 @@ $cfg['ColumnTypes'] = array(
         'BOOLEAN',
         'SERIAL',
     ),
-
-
     // Date/Time
     'DATE and TIME' => array(
         'DATE',
@@ -2723,7 +2714,6 @@ $cfg['ColumnTypes'] = array(
         'TIME',
         'YEAR',
     ),
-
     // Text
     'STRING' => array(
         'CHAR',
@@ -2745,7 +2735,6 @@ $cfg['ColumnTypes'] = array(
         'ENUM',
         'SET',
     ),
-
     'SPATIAL' => array(
         'GEOMETRY',
         'POINT',
@@ -2764,11 +2753,11 @@ $cfg['ColumnTypes'] = array(
  * @global array $cfg['AttributeTypes']
  */
 $cfg['AttributeTypes'] = array(
-   '',
-   'BINARY',
-   'UNSIGNED',
-   'UNSIGNED ZEROFILL',
-   'on update CURRENT_TIMESTAMP',
+    '',
+    'BINARY',
+    'UNSIGNED',
+    'UNSIGNED ZEROFILL',
+    'on update CURRENT_TIMESTAMP',
 );
 
 
@@ -2856,49 +2845,45 @@ if ($cfg['ShowFunctionFields']) {
      * @global array $cfg['RestrictColumnTypes']
      */
     $cfg['RestrictColumnTypes'] = array(
-        'TINYINT'   => 'FUNC_NUMBER',
-        'SMALLINT'  => 'FUNC_NUMBER',
+        'TINYINT' => 'FUNC_NUMBER',
+        'SMALLINT' => 'FUNC_NUMBER',
         'MEDIUMINT' => 'FUNC_NUMBER',
-        'INT'       => 'FUNC_NUMBER',
-        'BIGINT'    => 'FUNC_NUMBER',
-        'DECIMAL'   => 'FUNC_NUMBER',
-        'FLOAT'     => 'FUNC_NUMBER',
-        'DOUBLE'    => 'FUNC_NUMBER',
-        'REAL'      => 'FUNC_NUMBER',
-        'BIT'       => 'FUNC_NUMBER',
-        'BOOLEAN'   => 'FUNC_NUMBER',
-        'SERIAL'    => 'FUNC_NUMBER',
-
-        'DATE'      => 'FUNC_DATE',
-        'DATETIME'  => 'FUNC_DATE',
+        'INT' => 'FUNC_NUMBER',
+        'BIGINT' => 'FUNC_NUMBER',
+        'DECIMAL' => 'FUNC_NUMBER',
+        'FLOAT' => 'FUNC_NUMBER',
+        'DOUBLE' => 'FUNC_NUMBER',
+        'REAL' => 'FUNC_NUMBER',
+        'BIT' => 'FUNC_NUMBER',
+        'BOOLEAN' => 'FUNC_NUMBER',
+        'SERIAL' => 'FUNC_NUMBER',
+        'DATE' => 'FUNC_DATE',
+        'DATETIME' => 'FUNC_DATE',
         'TIMESTAMP' => 'FUNC_DATE',
-        'TIME'      => 'FUNC_DATE',
-        'YEAR'      => 'FUNC_DATE',
-
-        'CHAR'          => 'FUNC_CHAR',
-        'VARCHAR'       => 'FUNC_CHAR',
-        'TINYTEXT'      => 'FUNC_CHAR',
-        'TEXT'          => 'FUNC_CHAR',
-        'MEDIUMTEXT'    => 'FUNC_CHAR',
-        'LONGTEXT'      => 'FUNC_CHAR',
-        'BINARY'        => 'FUNC_CHAR',
-        'VARBINARY'     => 'FUNC_CHAR',
-        'TINYBLOB'      => 'FUNC_CHAR',
-        'MEDIUMBLOB'    => 'FUNC_CHAR',
-        'BLOB'          => 'FUNC_CHAR',
-        'LONGBLOB'      => 'FUNC_CHAR',
-        'ENUM'          => '',
-        'SET'           => '',
-
-        'GEOMETRY'              => 'FUNC_SPATIAL',
-        'POINT'                 => 'FUNC_SPATIAL',
-        'LINESTRING'            => 'FUNC_SPATIAL',
-        'POLYGON'               => 'FUNC_SPATIAL',
-        'MULTIPOINT'            => 'FUNC_SPATIAL',
-        'MULTILINESTRING'       => 'FUNC_SPATIAL',
-        'MULTIPOLYGON'          => 'FUNC_SPATIAL',
-        'GEOMETRYCOLLECTION'    => 'FUNC_SPATIAL',
-
+        'TIME' => 'FUNC_DATE',
+        'YEAR' => 'FUNC_DATE',
+        'CHAR' => 'FUNC_CHAR',
+        'VARCHAR' => 'FUNC_CHAR',
+        'TINYTEXT' => 'FUNC_CHAR',
+        'TEXT' => 'FUNC_CHAR',
+        'MEDIUMTEXT' => 'FUNC_CHAR',
+        'LONGTEXT' => 'FUNC_CHAR',
+        'BINARY' => 'FUNC_CHAR',
+        'VARBINARY' => 'FUNC_CHAR',
+        'TINYBLOB' => 'FUNC_CHAR',
+        'MEDIUMBLOB' => 'FUNC_CHAR',
+        'BLOB' => 'FUNC_CHAR',
+        'LONGBLOB' => 'FUNC_CHAR',
+        'ENUM' => '',
+        'SET' => '',
+        'GEOMETRY' => 'FUNC_SPATIAL',
+        'POINT' => 'FUNC_SPATIAL',
+        'LINESTRING' => 'FUNC_SPATIAL',
+        'POLYGON' => 'FUNC_SPATIAL',
+        'MULTIPOINT' => 'FUNC_SPATIAL',
+        'MULTILINESTRING' => 'FUNC_SPATIAL',
+        'MULTIPOLYGON' => 'FUNC_SPATIAL',
+        'GEOMETRYCOLLECTION' => 'FUNC_SPATIAL',
     );
 
     /**
@@ -2932,7 +2917,6 @@ if ($cfg['ShowFunctionFields']) {
             'USER',
             'UUID',
         ),
-
         'FUNC_DATE' => array(
             'CURDATE',
             'CURTIME',
@@ -2947,7 +2931,6 @@ if ($cfg['ShowFunctionFields']) {
             'UTC_TIMESTAMP',
             'YEAR',
         ),
-
         'FUNC_NUMBER' => array(
             'ABS',
             'ACOS',
@@ -2984,11 +2967,9 @@ if ($cfg['ShowFunctionFields']) {
             'VAR_POP',
             'VAR_SAMP',
         ),
-
         'FUNC_SPATIAL' => array(
             'GeomFromText',
             'GeomFromWKB',
-
             'GeomCollFromText',
             'LineFromText',
             'MLineFromText',
@@ -2996,7 +2977,6 @@ if ($cfg['ShowFunctionFields']) {
             'MPointFromText',
             'PolyFromText',
             'MPolyFromText',
-
             'GeomCollFromWKB',
             'LineFromWKB',
             'MLineFromWKB',
@@ -3019,8 +2999,6 @@ if ($cfg['ShowFunctionFields']) {
         'first_timestamp' => 'NOW',
         'pk_char36' => 'UUID',
     );
-
-
 } // end if
 
 /**
@@ -3029,18 +3007,18 @@ if ($cfg['ShowFunctionFields']) {
  * @global array $cfg['NumOperators']
  */
 $cfg['NumOperators'] = array(
-   '=',
-   '>',
-   '>=',
-   '<',
-   '<=',
-   '!=',
-   'LIKE',
-   'NOT LIKE',
-   'IN (...)',
-   'NOT IN (...)',
-   'BETWEEN',
-   'NOT BETWEEN',
+    '=',
+    '>',
+    '>=',
+    '<',
+    '<=',
+    '!=',
+    'LIKE',
+    'NOT LIKE',
+    'IN (...)',
+    'NOT IN (...)',
+    'BETWEEN',
+    'NOT BETWEEN',
 );
 
 /**
@@ -3049,20 +3027,20 @@ $cfg['NumOperators'] = array(
  * @global array $cfg['TextOperators']
  */
 $cfg['TextOperators'] = array(
-   'LIKE',
-   'LIKE %...%',
-   'NOT LIKE',
-   '=',
-   '!=',
-   'REGEXP',
-   'REGEXP ^...$',
-   'NOT REGEXP',
-   "= ''",
-   "!= ''",
-   'IN (...)',
-   'NOT IN (...)',
-   'BETWEEN',
-   'NOT BETWEEN',
+    'LIKE',
+    'LIKE %...%',
+    'NOT LIKE',
+    '=',
+    '!=',
+    'REGEXP',
+    'REGEXP ^...$',
+    'NOT REGEXP',
+    "= ''",
+    "!= ''",
+    'IN (...)',
+    'NOT IN (...)',
+    'BETWEEN',
+    'NOT BETWEEN',
 );
 
 /**
@@ -3071,8 +3049,8 @@ $cfg['TextOperators'] = array(
  * @global array $cfg['EnumOperators']
  */
 $cfg['EnumOperators'] = array(
-   '=',
-   '!=',
+    '=',
+    '!=',
 );
 
 /**
@@ -3081,8 +3059,8 @@ $cfg['EnumOperators'] = array(
  * @global array $cfg['SetOperators']
  */
 $cfg['SetOperators'] = array(
-   'IN',
-   'NOT IN',
+    'IN',
+    'NOT IN',
 );
 
 /**
@@ -3091,8 +3069,8 @@ $cfg['SetOperators'] = array(
  * @global array $cfg['NullOperators']
  */
 $cfg['NullOperators'] = array(
-   'IS NULL',
-   'IS NOT NULL',
+    'IS NULL',
+    'IS NOT NULL',
 );
 
 /**
@@ -3101,10 +3079,9 @@ $cfg['NullOperators'] = array(
  * @global array $cfg['UnaryOperators']
  */
 $cfg['UnaryOperators'] = array(
-   'IS NULL' => 1,
-   'IS NOT NULL' => 1,
-   "= ''" => 1,
-   "!= ''" => 1
+    'IS NULL' => 1,
+    'IS NOT NULL' => 1,
+    "= ''" => 1,
+    "!= ''" => 1
 );
-
 ?>

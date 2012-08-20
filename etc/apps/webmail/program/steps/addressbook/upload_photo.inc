@@ -1,27 +1,27 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/steps/addressbook/upload_photo.inc                            |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Handles contact photo uploads                                       |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/addressbook/upload_photo.inc                            |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Handles contact photo uploads                                       |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: upload_photo.inc 5110 2011-08-22 14:33:02Z alec $
+  $Id: upload_photo.inc 5110 2011-08-22 14:33:02Z alec $
 
-*/
+ */
 
 // Supported image format types
 // ImageMagick works with other non-image types (e.g.pdf) we don't want here
-$IMAGE_TYPES = explode(',', 'jpeg,jpg,jp2,tiff,tif,bmp,eps,gif,png,png8,png24,png32,svg,ico'); 
+$IMAGE_TYPES = explode(',', 'jpeg,jpg,jp2,tiff,tif,bmp,eps,gif,png,png8,png24,png32,svg,ico');
 
 // clear all stored output properties (like scripts and env vars)
 $OUTPUT->reset();
@@ -31,7 +31,7 @@ if ($filepath = $_FILES['_photo']['tmp_name']) {
     $imageprop = rcmail::imageprops($_FILES['_photo']['tmp_name']);
 
     if (in_array(strtolower($imageprop['type']), $IMAGE_TYPES)
-	&& $imageprop['width'] && $imageprop['height']
+            && $imageprop['width'] && $imageprop['height']
     ) {
         $maxsize = intval($RCMAIL->config->get('contact_photo_size', 160));
         $tmpfname = tempnam($RCMAIL->config->get('temp_dir'), 'rcmImgConvert');
@@ -39,8 +39,8 @@ if ($filepath = $_FILES['_photo']['tmp_name']) {
 
         // scale image to a maximum size
         if (($imageprop['width'] > $maxsize || $imageprop['height'] > $maxsize) &&
-            (rcmail::imageconvert(array('in' => $filepath, 'out' => $tmpfname,
-                'size' => $maxsize.'x'.$maxsize, 'type' => $imageprop['type'])) !== false)) {
+                (rcmail::imageconvert(array('in' => $filepath, 'out' => $tmpfname,
+                    'size' => $maxsize . 'x' . $maxsize, 'type' => $imageprop['type'])) !== false)) {
             $filepath = $tmpfname;
             $save_hook = 'attachment_save';
         }
@@ -52,7 +52,7 @@ if ($filepath = $_FILES['_photo']['tmp_name']) {
             'name' => $_FILES['_photo']['name'],
             'mimetype' => 'image/' . $imageprop['type'],
             'group' => 'contact',
-        ));
+                ));
     }
     else
         $attachment['error'] = rcube_label('invalidimageformat');
@@ -61,8 +61,7 @@ if ($filepath = $_FILES['_photo']['tmp_name']) {
         $file_id = $attachment['id'];
         $_SESSION['contacts']['files'][$file_id] = $attachment;
         $OUTPUT->command('replace_contact_photo', $file_id);
-    }
-    else {  // upload failed
+    } else {  // upload failed
         $err = $_FILES['_photo']['error'];
         if ($err == UPLOAD_ERR_INI_SIZE || $err == UPLOAD_ERR_FORM_SIZE)
             $msg = rcube_label(array('name' => 'filesizeerror', 'vars' => array('size' => show_bytes(parse_bytes(ini_get('upload_max_filesize'))))));
@@ -70,7 +69,7 @@ if ($filepath = $_FILES['_photo']['tmp_name']) {
             $msg = $attachment['error'];
         else
             $msg = rcube_label('fileuploaderror');
-            
+
         $OUTPUT->command('display_message', $msg, 'error');
     }
 }

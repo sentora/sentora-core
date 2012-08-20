@@ -1,10 +1,10 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Chart functions used to generate various types of charts.
  * @package phpMyAdmin
  */
-
 /**
  * 
  */
@@ -25,19 +25,18 @@ require_once './libraries/chart/pma_pchart_multi_radar.php';
  * @param array $data data for the status chart
  * @return string HTML and JS code for the chart
  */
-function PMA_chart_status($data)
-{
+function PMA_chart_status($data) {
     // format keys which will be shown in the chart
     $chartData = array();
-    foreach($data as $dataKey => $dataValue) {
+    foreach ($data as $dataKey => $dataValue) {
         $key = ucwords(str_replace(array('Com_', '_'), array('', ' '), $dataKey));
-        $value = (int)$dataValue;
+        $value = (int) $dataValue;
         $chartData[$key] = $value;
     }
-    
+
     $chart = new PMA_pChart_Pie(
-            $chartData,
-            array('titleText' => __('Query statistics'))
+                    $chartData,
+                    array('titleText' => __('Query statistics'))
     );
     $chartCode = $chart->toString();
     PMA_handle_chart_err($chart->getErrors());
@@ -49,18 +48,17 @@ function PMA_chart_status($data)
  * @param array $data data for the status chart
  * @return string HTML and JS code for the chart
  */
-function PMA_chart_profiling($data)
-{
+function PMA_chart_profiling($data) {
     $chartData = array();
-    foreach($data as $dataValue) {
-        $value = (int)($dataValue['Duration'] * 1000000);
+    foreach ($data as $dataValue) {
+        $value = (int) ($dataValue['Duration'] * 1000000);
         $key = ucwords($dataValue['Status']);
         $chartData[$key] = $value;
     }
 
     $chart = new PMA_pChart_Pie(
-            $chartData,
-            array('titleText' => __('Query execution time comparison (in microseconds)'))
+                    $chartData,
+                    array('titleText' => __('Query execution time comparison (in microseconds)'))
     );
     $chartCode = $chart->toString();
     PMA_handle_chart_err($chart->getErrors());
@@ -73,8 +71,7 @@ function PMA_chart_profiling($data)
  * @param array $chartSettings settings used to generate the chart
  * @return string HTML and JS code for the chart
  */
-function PMA_chart_results($data, &$chartSettings)
-{
+function PMA_chart_results($data, &$chartSettings) {
     $chartData = array();
     $chart = null;
 
@@ -121,16 +118,14 @@ function PMA_chart_results($data, &$chartSettings)
 
                 if (count($row) == 1) {
                     $chartData[$rowKey] = $values[0];
-                }
-                else {
+                } else {
                     $chartData[$values[1]] = $values[0];
                 }
             }
 
             $chartSettings['legend'] = true;
             $chart = new PMA_pChart_pie($chartData, $chartSettings);
-        }
-        else {
+        } else {
             // loop through the rows
             foreach ($data as $rowKey => $row) {
 
@@ -158,9 +153,8 @@ function PMA_chart_results($data, &$chartSettings)
                     $chart = new PMA_pChart_single_radar($chartData, $chartSettings);
                     break;
             }
-        }        
-    }
-    else if (count($data[0]) == 3) {
+        }
+    } else if (count($data[0]) == 3) {
         // Three columns (x axis, y axis, series) in every row.
         // This data is suitable for a stacked bar chart.
         $chartSettings['multi'] = true;
@@ -169,7 +163,7 @@ function PMA_chart_results($data, &$chartSettings)
         $yAxisKey = $keys[0];
         $xAxisKey = $keys[1];
         $seriesKey = $keys[2];
-        
+
         // get all the series labels
         $seriesLabels = array();
         foreach ($data as $row) {
@@ -186,13 +180,12 @@ function PMA_chart_results($data, &$chartSettings)
             $chartData[$xAxisKey][$row[$xAxisKey]] = $row[$xAxisKey];
 
             // make sure to set value to every serie
-            $currentSeriesLabel = (string)$row[$seriesKey];
+            $currentSeriesLabel = (string) $row[$seriesKey];
             foreach ($seriesLabels as $seriesLabelsValue) {
                 if ($currentSeriesLabel == $seriesLabelsValue) {
                     // the value os for this serie
-                    $chartData[$yAxisKey][$seriesLabelsValue][$row[$xAxisKey]] = (int)$row[$yAxisKey];
-                }
-                else if (!isset($chartData[$yAxisKey][$seriesLabelsValue][$row[$xAxisKey]])) {
+                    $chartData[$yAxisKey][$seriesLabelsValue][$row[$xAxisKey]] = (int) $row[$yAxisKey];
+                } else if (!isset($chartData[$yAxisKey][$seriesLabelsValue][$row[$xAxisKey]])) {
                     // if the value for this serie is not set, set it to 0
                     $chartData[$yAxisKey][$seriesLabelsValue][$row[$xAxisKey]] = 0;
                 }
@@ -217,7 +210,7 @@ function PMA_chart_results($data, &$chartSettings)
                         break;
                 }
                 break;
-            
+
             case 'line':
                 $chart = new PMA_pChart_multi_line($chartData, $chartSettings);
                 break;
@@ -225,8 +218,7 @@ function PMA_chart_results($data, &$chartSettings)
                 $chart = new PMA_pChart_multi_radar($chartData, $chartSettings);
                 break;
         }
-    }
-    else {
+    } else {
         // unknown data format
         return '';
     }
@@ -235,7 +227,7 @@ function PMA_chart_results($data, &$chartSettings)
     $chartSettings = $chart->getSettings();
     $chartErrors = $chart->getErrors();
     PMA_handle_chart_err($chartErrors);
-    
+
     return $chartCode;
 }
 
@@ -243,12 +235,10 @@ function PMA_chart_results($data, &$chartSettings)
  * Simple handler of chart errors.
  * @param array $errors all occured errors
  */
-function PMA_handle_chart_err($errors)
-{
+function PMA_handle_chart_err($errors) {
     if (in_array(ERR_NO_GD, $errors)) {
         PMA_warnMissingExtension('GD', false, __('GD extension is needed for charts.'));
-    }
-    else if (in_array(ERR_NO_JSON, $errors)) {
+    } else if (in_array(ERR_NO_JSON, $errors)) {
         PMA_warnMissingExtension('JSON', false, __('JSON encoder is needed for chart tooltips.'));
     }
 }

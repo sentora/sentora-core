@@ -25,9 +25,13 @@ function makeRequest(url, parameters)
         }
     } else if (window.ActiveXObject) {
         // IE
-        try { http_request = new ActiveXObject("Msxml2.XMLHTTP"); }
+        try {
+            http_request = new ActiveXObject("Msxml2.XMLHTTP");
+        }
         catch (e) {
-            try { http_request = new ActiveXObject("Microsoft.XMLHTTP"); }
+            try {
+                http_request = new ActiveXObject("Microsoft.XMLHTTP");
+            }
             catch (e) {}
         }
     }
@@ -54,7 +58,8 @@ function alertContents()
     if (http_request.readyState == 1) {
         document.getElementById("layer_action").style.left = (document.body.clientWidth + document.body.scrollLeft - 85) + 'px';
         document.getElementById("layer_action").style.top = (document.body.scrollTop + 10) + 'px';
-        document.getElementById("layer_action").style.visibility = 'visible'; document.getElementById("layer_action").innerHTML = 'Loading...';
+        document.getElementById("layer_action").style.visibility = 'visible';
+        document.getElementById("layer_action").innerHTML = 'Loading...';
     }
     if (http_request.readyState == 2) {
         document.getElementById("layer_action").innerHTML = 'Loaded';
@@ -68,7 +73,7 @@ function alertContents()
             //alert(textdoc);
             xmldoc    = http_request.responseXML;
             PrintXML();
-            //document.getElementById("layer_action").style.visibility = 'hidden';
+        //document.getElementById("layer_action").style.visibility = 'hidden';
         } else {
             alert('There was a problem with the request.');
         }
@@ -80,7 +85,9 @@ function layer_alert(text)
     document.getElementById("layer_action").innerHTML = text;
     document.getElementById("layer_action").style.left = (document.body.clientWidth + document.body.scrollLeft - 20 - document.getElementById("layer_action").offsetWidth) + 'px';
     document.getElementById("layer_action").style.visibility = 'visible'; 
-    setTimeout(function(){document.getElementById("layer_action").style.visibility = 'hidden';}, 2000);
+    setTimeout(function(){
+        document.getElementById("layer_action").style.visibility = 'hidden';
+    }, 2000);
 }
 
 /**

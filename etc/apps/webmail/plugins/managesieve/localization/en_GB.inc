@@ -1,18 +1,18 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | localization/en_GB/labels.inc                                         |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2012, The Roundcube Dev Team                            |
- | Licensed under the GNU General Public License                         |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Vibhav Pant <vibhavp@gmail.com>                               |
- +-----------------------------------------------------------------------+
- @version $Id$
-*/
+  +-----------------------------------------------------------------------+
+  | localization/en_GB/labels.inc                                         |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2012, The Roundcube Dev Team                            |
+  | Licensed under the GNU General Public License                         |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Vibhav Pant <vibhavp@gmail.com>                               |
+  +-----------------------------------------------------------------------+
+  @version $Id$
+ */
 
 $labels = array();
 $labels['filters'] = 'Filters';

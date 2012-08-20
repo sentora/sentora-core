@@ -1,11 +1,11 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Holds the base class that all charts inherit from and some widely used
  * constants.
  * @package phpMyAdmin
  */
-
 /**
  *
  */
@@ -18,19 +18,16 @@ define('BLUE', 2);
  * @abstract
  * @package phpMyAdmin
  */
-abstract class PMA_chart
-{
+abstract class PMA_chart {
+
     /**
      * @var array   All the default settigs values are here.
      */
     protected $settings = array(
-
         // Default title for every chart.
         'titleText' => 'Chart',
-
         // The style of the chart title.
         'titleColor' => '#FAFAFA',
-
         // Colors for the different slices in the pie chart.
         'colors' => array(
             '#BCE02E',
@@ -52,19 +49,14 @@ abstract class PMA_chart
             '#4C489B',
             '#87C9BF',
         ),
-
         // Chart background color.
         'bgColor' => '#84AD83',
-
         // The width of the chart.
         'width' => 520,
-
-         // The height of the chart.
+        // The height of the chart.
         'height' => 325,
-
         // Default X Axis label. If empty, label will be taken from the data.
         'xLabel' => '',
-
         // Default Y Axis label. If empty, label will be taken from the data.
         'yLabel' => '',
     );
@@ -83,16 +75,14 @@ abstract class PMA_chart
      * Store user specified options
      * @param array $options users specified options
      */
-    function __construct($options = null)
-    {
+    function __construct($options = null) {
         $this->userSpecifiedSettings = $options;
     }
 
     /**
      * All the variable initialization has to be done here.
      */
-    protected function init()
-    {
+    protected function init() {
         $this->handleOptions();
     }
 
@@ -100,8 +90,7 @@ abstract class PMA_chart
      * A function which handles passed parameters. Useful if desired
      * chart needs to be a little bit different from the default one.
      */
-    private function handleOptions()
-    {
+    private function handleOptions() {
         if (is_null($this->userSpecifiedSettings)) {
             return;
         }
@@ -109,63 +98,51 @@ abstract class PMA_chart
         $this->settings = array_merge($this->settings, $this->userSpecifiedSettings);
     }
 
-    protected function getTitleText()
-    {
+    protected function getTitleText() {
         return $this->settings['titleText'];
     }
 
-    protected function getTitleColor($component)
-    {
+    protected function getTitleColor($component) {
         return $this->hexStrToDecComp($this->settings['titleColor'], $component);
     }
 
-    protected function getColors()
-    {
+    protected function getColors() {
         return $this->settings['colors'];
     }
 
-    protected function getWidth()
-    {
+    protected function getWidth() {
         return $this->settings['width'];
     }
 
-    protected function getHeight()
-    {
+    protected function getHeight() {
         return $this->settings['height'];
     }
 
-    protected function getBgColor($component)
-    {
+    protected function getBgColor($component) {
         return $this->hexStrToDecComp($this->settings['bgColor'], $component);
     }
 
-    protected function setXLabel($label)
-    {
+    protected function setXLabel($label) {
         $this->settings['xLabel'] = $label;
     }
 
-    protected function getXLabel()
-    {
+    protected function getXLabel() {
         return $this->settings['xLabel'];
     }
 
-    protected function setYLabel($label)
-    {
+    protected function setYLabel($label) {
         $this->settings['yLabel'] = $label;
     }
 
-    protected function getYLabel()
-    {
+    protected function getYLabel() {
         return $this->settings['yLabel'];
     }
 
-    public function getSettings()
-    {
+    public function getSettings() {
         return $this->settings;
     }
 
-    public function getErrors()
-    {
+    public function getErrors() {
         return $this->errors;
     }
 
@@ -174,10 +151,10 @@ abstract class PMA_chart
      * @param string $colorString   color string, i.e. #5F22A99
      * @param int    $component     color component to get, i.e. 0 gets red.
      */
-    protected function hexStrToDecComp($colorString, $component)
-    {
+    protected function hexStrToDecComp($colorString, $component) {
         return hexdec(substr($colorString, ($component * 2) + 1, 2));
     }
+
 }
 
 ?>

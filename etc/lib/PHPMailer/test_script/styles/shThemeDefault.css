@@ -26,7 +26,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with SyntaxHighlighter.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 /************************************
  * Default Syntax Highlighter theme.
  * 
@@ -35,84 +35,84 @@
 
 .syntaxhighlighter
 {
-	background-color: #E7E5DC !important;
+    background-color: #E7E5DC !important;
 }
 
 /* Highlighed line number */
 .syntaxhighlighter .line.highlighted .number
 {
-	background-color: #6CE26C !important;
-	color: black !important;
+    background-color: #6CE26C !important;
+    color: black !important;
 }
 
 /* Highlighed line */
 .syntaxhighlighter .line.highlighted.alt1 .content,
 .syntaxhighlighter .line.highlighted.alt2 .content
 {
-	background-color: #6CE26C !important;
+    background-color: #6CE26C !important;
 }
 
 /* Gutter line numbers */
 .syntaxhighlighter .line .number
 {
-	color: #5C5C5C !important;
+    color: #5C5C5C !important;
 }
 
 /* Add border to the lines */
 .syntaxhighlighter .line .content
 {
-	border-left: 3px solid #6CE26C !important;
-	color: #000 !important;
+    border-left: 3px solid #6CE26C !important;
+    color: #000 !important;
 }
 
 .syntaxhighlighter.printing .line .content 
 {
-	border: 0 !important;
+    border: 0 !important;
 }
 
 /* First line */
 .syntaxhighlighter .line.alt1 .content
 {
-	background-color: #fff !important;
+    background-color: #fff !important;
 }
 
 /* Second line */
 .syntaxhighlighter .line.alt2 .content
 {
-	background-color: #F8F8F8 !important;
+    background-color: #F8F8F8 !important;
 }
 
 .syntaxhighlighter .line .content .block
 {
-	background: url(wrapping.png) 0 1.1em no-repeat !important;
+    background: url(wrapping.png) 0 1.1em no-repeat !important;
 }
 
 .syntaxhighlighter .ruler
 {
-	color: silver !important;
-	background-color: #F8F8F8 !important;
-	border-left: 3px solid #6CE26C !important;
+    color: silver !important;
+    background-color: #F8F8F8 !important;
+    border-left: 3px solid #6CE26C !important;
 }
 
 .syntaxhighlighter.nogutter .ruler
 {
-	border: 0 !important;
+    border: 0 !important;
 }
 
 .syntaxhighlighter .toolbar
 {
-	background-color: #F8F8F8 !important;
-	border: #E7E5DC solid 1px !important;
+    background-color: #F8F8F8 !important;
+    border: #E7E5DC solid 1px !important;
 }
 
 .syntaxhighlighter .toolbar a
 {
-	color: #a0a0a0 !important;
+    color: #a0a0a0 !important;
 }
 
 .syntaxhighlighter .toolbar a:hover
 {
-	color: red !important;
+    color: red !important;
 }
 
 /************************************
@@ -121,71 +121,71 @@
 .syntaxhighlighter .plain,
 .syntaxhighlighter .plain a
 { 
-	color: #000 !important;
+    color: #000 !important;
 }
 
 .syntaxhighlighter .comments,
 .syntaxhighlighter .comments a
 { 
-	color: #008200 !important;
+    color: #008200 !important;
 }
 
 .syntaxhighlighter .string,
 .syntaxhighlighter .string a
 {
-	color: blue !important; 
+    color: blue !important; 
 }
 
 .syntaxhighlighter .keyword
 { 
-	color: #069 !important; 
-	font-weight: bold !important; 
+    color: #069 !important; 
+    font-weight: bold !important; 
 }
 
 .syntaxhighlighter .preprocessor 
 { 
-	color: gray !important; 
+    color: gray !important; 
 }
 
 .syntaxhighlighter .variable 
 { 
-	color: #a70 !important; 
+    color: #a70 !important; 
 }
 
 .syntaxhighlighter .value
 { 
-	color: #090 !important; 
+    color: #090 !important; 
 }
 
 .syntaxhighlighter .functions
 { 
-	color: #ff1493 !important; 
+    color: #ff1493 !important; 
 }
 
 .syntaxhighlighter .constants
 { 
-	color: #0066CC !important; 
+    color: #0066CC !important; 
 }
 
 .syntaxhighlighter .script
 { 
-	background-color: yellow !important;
+    background-color: yellow !important;
 }
 
 .syntaxhighlighter .color1,
 .syntaxhighlighter .color1 a
 { 
-	color: #808080 !important; 
+    color: #808080 !important; 
 }
 
 .syntaxhighlighter .color2,
 .syntaxhighlighter .color2 a
 { 
-	color: #ff1493 !important; 
+    color: #ff1493 !important; 
 }
 
 .syntaxhighlighter .color3,
 .syntaxhighlighter .color3 a
 { 
-	color: red !important; 
+    color: red !important; 
 }

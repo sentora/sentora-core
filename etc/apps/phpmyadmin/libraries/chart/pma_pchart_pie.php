@@ -1,9 +1,9 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * @package phpMyAdmin
  */
-
 /**
  *
  */
@@ -13,10 +13,9 @@ require_once 'pma_pchart_multi.php';
  * implements pie chart
  * @package phpMyAdmin
  */
-class PMA_pChart_Pie extends PMA_pChart_multi
-{
-    public function __construct($data, $options = null)
-    {
+class PMA_pChart_Pie extends PMA_pChart_multi {
+
+    public function __construct($data, $options = null) {
         // limit data size, no more than 18 pie slices
         $data = array_slice($data, 0, 18, true);
         parent::__construct($data, $options);
@@ -27,8 +26,7 @@ class PMA_pChart_Pie extends PMA_pChart_multi
     /**
      * prepare data set for the pie chart
      */
-    protected function prepareDataSet()
-    {
+    protected function prepareDataSet() {
         // Dataset definition 
         $this->dataSet->AddPoint(array_values($this->data), "Values");
         $this->dataSet->AddPoint(array_keys($this->data), "Keys");
@@ -39,71 +37,52 @@ class PMA_pChart_Pie extends PMA_pChart_multi
     /**
      * graph area for the pie chart does not include grid lines
      */
-    protected function drawGraphArea()
-    {
+    protected function drawGraphArea() {
         $this->chart->drawGraphArea(
-                $this->getGraphAreaColor(RED),
-                $this->getGraphAreaColor(GREEN),
-                $this->getGraphAreaColor(BLUE),
-                FALSE
+                $this->getGraphAreaColor(RED), $this->getGraphAreaColor(GREEN), $this->getGraphAreaColor(BLUE), FALSE
         );
-        
-        if($this->settings['gradientIntensity']>0)
+
+        if ($this->settings['gradientIntensity'] > 0)
             $this->chart->drawGraphAreaGradient(
-                    $this->getGraphAreaGradientColor(RED),
-                    $this->getGraphAreaGradientColor(GREEN),
-                    $this->getGraphAreaGradientColor(BLUE),
-                    $this->settings['gradientIntensity']
+                    $this->getGraphAreaGradientColor(RED), $this->getGraphAreaGradientColor(GREEN), $this->getGraphAreaGradientColor(BLUE), $this->settings['gradientIntensity']
             );
         else
             $this->chart->drawGraphArea(
-                    $this->getGraphAreaGradientColor(RED),
-                    $this->getGraphAreaGradientColor(GREEN),
-                    $this->getGraphAreaGradientColor(BLUE)
+                    $this->getGraphAreaGradientColor(RED), $this->getGraphAreaGradientColor(GREEN), $this->getGraphAreaGradientColor(BLUE)
             );
-        
     }
 
     /**
      * draw the pie chart
      */
-    protected function drawChart()
-    {
+    protected function drawChart() {
         parent::drawChart();
 
-         // draw pie chart in the middle of graph area
+        // draw pie chart in the middle of graph area
         $middleX = ($this->chart->GArea_X1 + $this->chart->GArea_X2) / 2;
         $middleY = ($this->chart->GArea_Y1 + $this->chart->GArea_Y2) / 2;
 
         $this->chart->drawPieGraph(
-                $this->dataSet->GetData(),
-                $this->dataSet->GetDataDescription(),
-                $middleX,
+                $this->dataSet->GetData(), $this->dataSet->GetDataDescription(), $middleX,
                 // pie graph is skewed. Upper part is shorter than the
                 // lower part. This is why we set an offset to the
                 // Y middle coordiantes.
-                $middleY - 15,
-                120, PIE_PERCENTAGE, FALSE, 60, 30, 10, 1);
+                $middleY - 15, 120, PIE_PERCENTAGE, FALSE, 60, 30, 10, 1);
     }
 
     /**
      * draw legend for the pie chart
      */
-    protected function drawLegend()
-    {
+    protected function drawLegend() {
         $this->chart->drawPieLegend(
-                $this->getWidth() - $this->getLegendMargin(RIGHT) - $this->getLegendBoxWidth(),
-                $this->getLabelHeight() + $this->getLegendMargin(TOP),
-                $this->dataSet->GetData(),
-                $this->dataSet->GetDataDescription(),
-                250, 250, 250);
+                $this->getWidth() - $this->getLegendMargin(RIGHT) - $this->getLegendBoxWidth(), $this->getLabelHeight() + $this->getLegendMargin(TOP), $this->dataSet->GetData(), $this->dataSet->GetDataDescription(), 250, 250, 250);
     }
 
-    protected function getLegendBoxWidth()
-    {
+    protected function getLegendBoxWidth() {
         $legendSize = $this->chart->getPieLegendBoxSize($this->dataSet->GetData());
         return $legendSize[0];
     }
+
 }
 
 ?>

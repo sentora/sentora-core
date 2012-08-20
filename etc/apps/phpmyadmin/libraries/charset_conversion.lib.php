@@ -1,11 +1,12 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Charset conversion functions.
  *
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -73,7 +74,7 @@ function PMA_convert_string($src_charset, $dest_charset, $what) {
     }
     switch ($GLOBALS['PMA_recoding_engine']) {
         case PMA_CHARSET_RECODE:
-            return recode_string($src_charset . '..'  . $dest_charset, $what);
+            return recode_string($src_charset . '..' . $dest_charset, $what);
         case PMA_CHARSET_ICONV:
             return iconv($src_charset, $dest_charset . $GLOBALS['cfg']['IconvExtraParams'], $what);
         case PMA_CHARSET_ICONV_AIX:
@@ -81,6 +82,7 @@ function PMA_convert_string($src_charset, $dest_charset, $what) {
         default:
             return $what;
     }
-} //  end of the "PMA_convert_string()" function
+}
 
+//  end of the "PMA_convert_string()" function
 ?>

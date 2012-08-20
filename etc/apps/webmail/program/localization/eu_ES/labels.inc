@@ -1,21 +1,21 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/eu_ES/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Bicyus <bicyus@tenkanet.com>                                  |
-|         Bihar <gaurdabihar@gmail.com>                                 |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/eu_ES/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Bicyus <bicyus@tenkanet.com>                                  |
+  |         Bihar <gaurdabihar@gmail.com>                                 |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Ongietorri Roundcube|Mail-era';
@@ -229,5 +229,4 @@ $labels['specialfolders'] = 'Karpeta bereziak';
 $labels['sortby'] = 'Honela ordenatu';
 $labels['sortasc'] = 'Goraka ordenatu';
 $labels['sortdesc'] = 'Beheraka ordenatu';
-
 ?>

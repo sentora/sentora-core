@@ -1,6 +1,5 @@
 <?php
 
 $labels = array();
-$labels['useimapsubscriptions']  = 'Kasuta IMAP tellimusi';
-
+$labels['useimapsubscriptions'] = 'Kasuta IMAP tellimusi';
 ?>

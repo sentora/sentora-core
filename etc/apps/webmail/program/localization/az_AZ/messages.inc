@@ -2,18 +2,18 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/az_AZ/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Orkhan Guliyev, OUR Technology, LLC.<office@ourtechnology.net>|
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/az_AZ/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Orkhan Guliyev, OUR Technology, LLC.<office@ourtechnology.net>|
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Giriş uğursuz oldu';
@@ -137,5 +137,4 @@ $messages['nametoolong'] = 'Ad çox uzundur';
 $messages['folderupdated'] = 'Qovluq yeniləndi';
 $messages['foldercreated'] = 'Qovluq yaradıldı';
 $messages['invalidimageformat'] = 'Şəkil formatı düzgün deyil';
-
 ?>

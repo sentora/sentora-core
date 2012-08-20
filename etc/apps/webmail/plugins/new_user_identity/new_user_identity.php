@@ -1,4 +1,5 @@
 <?php
+
 /**
  * New user identity
  *
@@ -24,21 +25,18 @@
  *  // the new user record.
  *  $rcmail_config['new_user_identity_alias'] = 'alias';
  */
-class new_user_identity extends rcube_plugin
-{
-    public $task = 'login';
+class new_user_identity extends rcube_plugin {
 
+    public $task = 'login';
     private $ldap;
 
-    function init()
-    {
+    function init() {
         $this->add_hook('user_create', array($this, 'lookup_user_name'));
     }
 
-    function lookup_user_name($args)
-    {
+    function lookup_user_name($args) {
         $rcmail = rcmail::get_instance();
-        
+
         if ($this->init_ldap($args['host'])) {
             $results = $this->ldap->search('*', $args['user'], TRUE);
             if (count($results->records) == 1) {
@@ -47,43 +45,43 @@ class new_user_identity extends rcube_plugin
                     $args['user_email'] = rcube_idn_to_ascii($results->records[0]['email']);
                 }
                 if (($alias_col = $rcmail->config->get('new_user_identity_alias')) && $results->records[0][$alias_col]) {
-                  $args['alias'] = $results->records[0][$alias_col];
+                    $args['alias'] = $results->records[0][$alias_col];
                 }
             }
         }
         return $args;
     }
 
-    private function init_ldap($host)
-    {
+    private function init_ldap($host) {
         if ($this->ldap)
             return $this->ldap->ready;
 
         $rcmail = rcmail::get_instance();
 
         $addressbook = $rcmail->config->get('new_user_identity_addressbook');
-        $ldap_config = (array)$rcmail->config->get('ldap_public');
-        $match       = $rcmail->config->get('new_user_identity_match');
+        $ldap_config = (array) $rcmail->config->get('ldap_public');
+        $match = $rcmail->config->get('new_user_identity_match');
 
         if (empty($addressbook) || empty($match) || empty($ldap_config[$addressbook])) {
             return false;
         }
 
         $this->ldap = new new_user_identity_ldap_backend(
-            $ldap_config[$addressbook],
-            $rcmail->config->get('ldap_debug'),
-            $rcmail->config->mail_domain($host),
-            $match);
+                        $ldap_config[$addressbook],
+                        $rcmail->config->get('ldap_debug'),
+                        $rcmail->config->mail_domain($host),
+                        $match);
 
         return $this->ldap->ready;
     }
+
 }
 
-class new_user_identity_ldap_backend extends rcube_ldap
-{
-    function __construct($p, $debug, $mail_domain, $search)
-    {
+class new_user_identity_ldap_backend extends rcube_ldap {
+
+    function __construct($p, $debug, $mail_domain, $search) {
         parent::__construct($p, $debug, $mail_domain);
-        $this->prop['search_fields'] = (array)$search;
+        $this->prop['search_fields'] = (array) $search;
     }
+
 }

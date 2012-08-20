@@ -2,18 +2,18 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/eo/labels.inc                                                |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Andreas van Cranenburgh <andreas@unstable.nl>                 |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/eo/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Andreas van Cranenburgh <andreas@unstable.nl>                 |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Bonvenon al $product';
@@ -224,5 +224,4 @@ $labels['managefolders'] = 'Administru dosierujon';
 $labels['sortby'] = 'Ordigu per';
 $labels['sortasc'] = 'Ordigu kreskante';
 $labels['sortdesc'] = 'Ordigu malkreskante';
-
 ?>

@@ -1,20 +1,20 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| localization/ka_GE/labels.inc                                         |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Zaza Zviadadze, George Machitidze 	                        |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | localization/ka_GE/labels.inc                                         |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Zaza Zviadadze, George Machitidze 	                        |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 842 2009-10-03 19:00:00  zaza$
+  @version $Id: labels.inc 842 2009-10-03 19:00:00  zaza$
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'მოგესალმებათ $product';
@@ -361,5 +361,4 @@ $labels['vietnamese'] = 'ვიეტნამური';
 $labels['japanese'] = 'იაპონური';
 $labels['korean'] = 'კორეული';
 $labels['chinese'] = 'ჩინური';
-
 ?>

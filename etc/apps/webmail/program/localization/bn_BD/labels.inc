@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/bn_BD/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2008, The Roundcube Dev Team                            |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:                                                               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/bn_BD/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2008, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:                                                               |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'স্বাগতম';
@@ -256,5 +256,4 @@ $labels['B'] = 'বাইট';
 $labels['KB'] = 'কিলোবাইট';
 $labels['MB'] = 'মেগাবাইট';
 $labels['GB'] = 'গিগাবাইট';
-
 ?>

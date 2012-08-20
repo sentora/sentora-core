@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/en_GB/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Weiran Zhang (weiran@weiran.co.uk)                            |
-|         Phil Weir                                                     |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/en_GB/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Weiran Zhang (weiran@weiran.co.uk)                            |
+  |         Phil Weir                                                     |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5184 2011-09-07 06:33:15Z alec $
+  @version $Id: labels.inc 5184 2011-09-07 06:33:15Z alec $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Welcome to $product';
@@ -417,5 +417,4 @@ $labels['vietnamese'] = 'Vietnamese';
 $labels['japanese'] = 'Japanese';
 $labels['korean'] = 'Korean';
 $labels['chinese'] = 'Chinese';
-
 ?>

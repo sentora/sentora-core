@@ -1,11 +1,11 @@
 <?php
+
 /**
  * generate an WebApp file for Prism / WebRunner
  *
  * @see http://wiki.mozilla.org/Prism
  * @package phpMyAdmin
  */
-
 /**
  * @ignore
  */
@@ -21,18 +21,17 @@ require './libraries/zip.lib.php';
 
 // ini file
 $parameters = array(
-    'id'        => 'phpMyAdmin@' . $_SERVER['HTTP_HOST'],
-    'uri'       => $GLOBALS['PMA_Config']->get('PmaAbsoluteUri'),
-    'status'    => 'yes',
-    'location'  => 'no',
-    'sidebar'   => 'no',
+    'id' => 'phpMyAdmin@' . $_SERVER['HTTP_HOST'],
+    'uri' => $GLOBALS['PMA_Config']->get('PmaAbsoluteUri'),
+    'status' => 'yes',
+    'location' => 'no',
+    'sidebar' => 'no',
     'navigation' => 'no',
-    'icon'      => 'phpMyAdmin',
+    'icon' => 'phpMyAdmin',
 );
 
 // dom sript file
 // none need yet
-
 // icon
 $icon = 'favicon.ico';
 

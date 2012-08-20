@@ -1,6 +1,5 @@
 <?php
 
 $labels = array();
-$labels['useimapsubscriptions']  = 'Use IMAP Subscriptions';
-
+$labels['useimapsubscriptions'] = 'Use IMAP Subscriptions';
 ?>

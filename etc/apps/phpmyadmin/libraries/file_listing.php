@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Functions for listing directories
@@ -14,16 +15,15 @@
  * @param   string  regular expression to match files
  * @returns array   sorted file list on success, FALSE on failure
  */
-function PMA_getDirContent($dir, $expression = '')
-{
+function PMA_getDirContent($dir, $expression = '') {
     if (file_exists($dir) && $handle = @opendir($dir)) {
         $result = array();
         if (substr($dir, -1) != '/') {
             $dir .= '/';
         }
         while ($file = @readdir($handle)) {
-        // for PHP < 5.2.4, is_file() gives a warning when using open_basedir
-        // and verifying '..' or '.'
+            // for PHP < 5.2.4, is_file() gives a warning when using open_basedir
+            // and verifying '..' or '.'
             if ('.' != $file && '..' != $file && is_file($dir . $file) && ($expression == '' || preg_match($expression, $file))) {
                 $result[] = $file;
             }
@@ -44,15 +44,14 @@ function PMA_getDirContent($dir, $expression = '')
  * @param   string  currently active choice
  * @returns array   sorted file list on success, FALSE on failure
  */
-function PMA_getFileSelectOptions($dir, $extensions = '', $active = '')
-{
+function PMA_getFileSelectOptions($dir, $extensions = '', $active = '') {
     $list = PMA_getDirContent($dir, $extensions);
     if ($list === FALSE) {
         return FALSE;
     }
     $result = '';
     foreach ($list as $key => $val) {
-        $result .= '<option value="'. htmlspecialchars($val) . '"';
+        $result .= '<option value="' . htmlspecialchars($val) . '"';
         if ($val == $active) {
             $result .= ' selected="selected"';
         }
@@ -66,8 +65,7 @@ function PMA_getFileSelectOptions($dir, $extensions = '', $active = '')
  *
  * @returns string | separated list of extensions usable in PMA_getDirContent
  */
-function PMA_supportedDecompressions()
-{
+function PMA_supportedDecompressions() {
     global $cfg;
 
     $compressions = '';

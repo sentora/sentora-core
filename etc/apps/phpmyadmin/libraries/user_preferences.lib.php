@@ -16,8 +16,7 @@
  * @uses ConfigFile::updateWithGlobalConfig()
  * @uses PMA_read_userprefs_fieldnames()
  */
-function PMA_userprefs_pageinit()
-{
+function PMA_userprefs_pageinit() {
     $forms_all_keys = PMA_read_userprefs_fieldnames($GLOBALS['forms']);
     $cf = ConfigFile::getInstance();
     $cf->resetConfigData(); // start with a clean instance
@@ -46,8 +45,7 @@ function PMA_userprefs_pageinit()
  * @uses $GLOBALS['controllink']
  * @return array
  */
-function PMA_load_userprefs()
-{
+function PMA_load_userprefs() {
     $cfgRelation = PMA_getRelationsParam();
     if (!$cfgRelation['userconfigwork']) {
         // no pmadb table, use session storage
@@ -70,7 +68,7 @@ function PMA_load_userprefs()
     $row = PMA_DBI_fetch_single_row($query, 'ASSOC', $GLOBALS['controllink']);
 
     return array(
-        'config_data' => $row ? (array)json_decode($row['config_data']) : array(),
+        'config_data' => $row ? (array) json_decode($row['config_data']) : array(),
         'mtime' => $row ? $row['ts'] : time(),
         'type' => 'db');
 }
@@ -97,12 +95,9 @@ function PMA_load_userprefs()
  * @param array $config_data
  * @return true|PMA_Message
  */
-function PMA_save_userprefs(array $config_array)
-{
+function PMA_save_userprefs(array $config_array) {
     $cfgRelation = PMA_getRelationsParam();
-    $server = isset($GLOBALS['server'])
-        ? $GLOBALS['server']
-        : $GLOBALS['cfg']['ServerDefault'];
+    $server = isset($GLOBALS['server']) ? $GLOBALS['server'] : $GLOBALS['cfg']['ServerDefault'];
     $cache_key = 'server_' . $server;
     if (!$cfgRelation['userconfigwork']) {
         // no pmadb table, use session storage
@@ -110,7 +105,7 @@ function PMA_save_userprefs(array $config_array)
             'db' => $config_array,
             'ts' => time());
         if (isset($_SESSION['cache'][$cache_key]['userprefs'])) {
-           unset($_SESSION['cache'][$cache_key]['userprefs']);
+            unset($_SESSION['cache'][$cache_key]['userprefs']);
         }
         return true;
     }
@@ -156,8 +151,7 @@ function PMA_save_userprefs(array $config_array)
  * @param array $config_data path => value pairs
  * @return array
  */
-function PMA_apply_userprefs(array $config_data)
-{
+function PMA_apply_userprefs(array $config_data) {
     $cfg = array();
     $blacklist = array_flip($GLOBALS['cfg']['UserprefsDisallow']);
     if (!$GLOBALS['cfg']['UserprefsDeveloperTab']) {
@@ -189,8 +183,7 @@ function PMA_apply_userprefs(array $config_data)
  * @param array|null $forms
  * @return array
  */
-function PMA_read_userprefs_fieldnames(array $forms = null)
-{
+function PMA_read_userprefs_fieldnames(array $forms = null) {
     static $names;
 
     // return cached results
@@ -223,8 +216,7 @@ function PMA_read_userprefs_fieldnames(array $forms = null)
  * @param mixed $value
  * @return void
  */
-function PMA_persist_option($path, $value, $default_value)
-{
+function PMA_persist_option($path, $value, $default_value) {
     $prefs = PMA_load_userprefs();
     if ($value === $default_value) {
         if (isset($prefs['config_data'][$path])) {
@@ -251,21 +243,17 @@ function PMA_persist_option($path, $value, $default_value)
  * @param array  $params
  * @param string $hash
  */
-function PMA_userprefs_redirect(array $forms, array $old_settings, $file_name, $params = null, $hash = null)
-{
+function PMA_userprefs_redirect(array $forms, array $old_settings, $file_name, $params = null, $hash = null) {
     $reload_left_frame = isset($params['reload_left_frame']) && $params['reload_left_frame'];
     if (!$reload_left_frame) {
         // compute differences and check whether left frame should be refreshed
-        $old_settings = isset($old_settings['config_data'])
-                ? $old_settings['config_data']
-                : array();
+        $old_settings = isset($old_settings['config_data']) ? $old_settings['config_data'] : array();
         $new_settings = ConfigFile::getInstance()->getConfigArray();
         $diff_keys = array_keys(array_diff_assoc($old_settings, $new_settings)
                 + array_diff_assoc($new_settings, $old_settings));
         $check_keys = array('NaturalOrder', 'MainPageIconic', 'DefaultTabDatabase',
             'Server/hide_db', 'Server/only_db');
-        $check_keys = array_merge($check_keys, $forms['Left_frame']['Left_frame'],
-             $forms['Left_frame']['Left_databases']);
+        $check_keys = array_merge($check_keys, $forms['Left_frame']['Left_frame'], $forms['Left_frame']['Left_databases']);
         $diff = array_intersect($check_keys, $diff_keys);
         $reload_left_frame = !empty($diff);
     }
@@ -291,8 +279,7 @@ function PMA_userprefs_redirect(array $forms, array $old_settings, $file_name, $
  * @uses $_SESSION['userprefs_autoload']
  * @uses PMA_generate_common_hidden_inputs()
  */
-function PMA_userprefs_autoload_header()
-{
+function PMA_userprefs_autoload_header() {
     if (isset($_REQUEST['prefs_autoload']) && $_REQUEST['prefs_autoload'] == 'hide') {
         $_SESSION['userprefs_autoload'] = true;
         exit;
@@ -302,11 +289,11 @@ function PMA_userprefs_autoload_header()
     ?>
     <div id="prefs_autoload" class="notice" style="display:none">
         <form action="prefs_manage.php" method="post">
-            <?php echo PMA_generate_common_hidden_inputs() . "\n"; ?>
+    <?php echo PMA_generate_common_hidden_inputs() . "\n"; ?>
             <input type="hidden" name="json" value="" />
             <input type="hidden" name="submit_import" value="1" />
             <input type="hidden" name="return_url" value="<?php echo htmlspecialchars($return_url) ?>" />
-            <?php echo __('Your browser has phpMyAdmin configuration for this domain. Would you like to import it for current session?') ?>
+    <?php echo __('Your browser has phpMyAdmin configuration for this domain. Would you like to import it for current session?') ?>
             <br />
             <a href="#yes"><?php echo __('Yes') ?></a> / <a href="#no"><?php echo __('No') ?></a>
         </form>

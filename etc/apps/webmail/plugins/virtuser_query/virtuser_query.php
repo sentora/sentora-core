@@ -18,15 +18,14 @@
  * @author Aleksander Machniak
  * @author Steffen Vogel
  */
-class virtuser_query extends rcube_plugin
-{
+class virtuser_query extends rcube_plugin {
+
     private $config;
     private $app;
 
-    function init()
-    {
-	    $this->app = rcmail::get_instance();
-	    $this->config = $this->app->config->get('virtuser_query');
+    function init() {
+        $this->app = rcmail::get_instance();
+        $this->config = $this->app->config->get('virtuser_query');
 
         if (!empty($this->config)) {
             if (is_string($this->config)) {
@@ -48,44 +47,41 @@ class virtuser_query extends rcube_plugin
     /**
      * User > Email
      */
-    function user2email($p)
-    {
-	    $dbh = $this->app->get_dbh();
+    function user2email($p) {
+        $dbh = $this->app->get_dbh();
 
-	    $sql_result = $dbh->query(preg_replace('/%u/', $dbh->escapeSimple($p['user']), $this->config['email']));
+        $sql_result = $dbh->query(preg_replace('/%u/', $dbh->escapeSimple($p['user']), $this->config['email']));
 
-	    while ($sql_arr = $dbh->fetch_array($sql_result)) {
-	        if (strpos($sql_arr[0], '@')) {
-		        if ($p['extended'] && count($sql_arr) > 1) {
-		            $result[] = array(
-			            'email' 	    => rcube_idn_to_ascii($sql_arr[0]),
-            			'name' 		    => $sql_arr[1],
-			            'organization'  => $sql_arr[2],
-            			'reply-to' 	    => rcube_idn_to_ascii($sql_arr[3]),
-			            'bcc' 		    => rcube_idn_to_ascii($sql_arr[4]),
-        			    'signature' 	=> $sql_arr[5],
-		            	'html_signature' => (int)$sql_arr[6],
-    		        );
-		        }
-		        else {
-		            $result[] = $sql_arr[0];
-		        }
+        while ($sql_arr = $dbh->fetch_array($sql_result)) {
+            if (strpos($sql_arr[0], '@')) {
+                if ($p['extended'] && count($sql_arr) > 1) {
+                    $result[] = array(
+                        'email' => rcube_idn_to_ascii($sql_arr[0]),
+                        'name' => $sql_arr[1],
+                        'organization' => $sql_arr[2],
+                        'reply-to' => rcube_idn_to_ascii($sql_arr[3]),
+                        'bcc' => rcube_idn_to_ascii($sql_arr[4]),
+                        'signature' => $sql_arr[5],
+                        'html_signature' => (int) $sql_arr[6],
+                    );
+                } else {
+                    $result[] = $sql_arr[0];
+                }
 
-		        if ($p['first'])
-		            break;
-	        }
-	    }
+                if ($p['first'])
+                    break;
+            }
+        }
 
-	    $p['email'] = $result;
+        $p['email'] = $result;
 
-	    return $p;
+        return $p;
     }
 
     /**
      * EMail > User
      */
-    function email2user($p)
-    {
+    function email2user($p) {
         $dbh = $this->app->get_dbh();
 
         $sql_result = $dbh->query(preg_replace('/%m/', $dbh->escapeSimple($p['email']), $this->config['user']));
@@ -100,8 +96,7 @@ class virtuser_query extends rcube_plugin
     /**
      * User > Host
      */
-    function user2host($p)
-    {
+    function user2host($p) {
         $dbh = $this->app->get_dbh();
 
         $sql_result = $dbh->query(preg_replace('/%u/', $dbh->escapeSimple($p['user']), $this->config['host']));

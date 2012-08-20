@@ -18,7 +18,6 @@ if true
 
 $s = new rcube_sieve_script($txt, array(), array('variables'));
 echo $s->as_text();
-
 ?>
 --EXPECT--
 require ["include"];
@@ -26,5 +25,5 @@ include "script.sieve";
 # rule:[two]
 if true
 {
-	include :optional "second.sieve";
+include :optional "second.sieve";
 }

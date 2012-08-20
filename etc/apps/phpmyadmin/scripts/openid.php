@@ -15,7 +15,6 @@
  * @package phpMyAdmin
  * @subpackage Example
  */
-
 require_once 'OpenID/RelyingParty.php';
 
 /**
@@ -25,8 +24,8 @@ $AUTH_MAP = array(
     'http://launchpad.net/~username' => array(
         'user' => 'root',
         'password' => '',
-        ),
-    );
+    ),
+);
 
 /**
  * Simple function to show HTML page with given content.
@@ -35,25 +34,25 @@ function show_page($contents) {
     header('Content-Type: text/html; charset=utf-8');
     echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
     ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
-<head>
-    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
-    <title>phpMyAdmin OpenID signon example</title>
-</head>
-<body>
-<?php
-if (isset($_SESSION) && isset($_SESSION['PMA_single_signon_error_message'])) {
-    echo '<p class="error">' . $_SESSION['PMA_single_signon_message'] . '</p>';
-    unset($_SESSION['PMA_single_signon_message']);
-}
-echo $contents;
-?>
-</body>
-</html>
-<?php
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+        <head>
+            <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+            <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+            <title>phpMyAdmin OpenID signon example</title>
+        </head>
+        <body>
+            <?php
+            if (isset($_SESSION) && isset($_SESSION['PMA_single_signon_error_message'])) {
+                echo '<p class="error">' . $_SESSION['PMA_single_signon_message'] . '</p>';
+                unset($_SESSION['PMA_single_signon_message']);
+            }
+            echo $contents;
+            ?>
+        </body>
+    </html>
+    <?php
 }
 
 /* Need to have cookie visible from parent directory */

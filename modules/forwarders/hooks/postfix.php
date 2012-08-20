@@ -24,31 +24,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-	
-		}
+$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
 
-		foreach ($deletedclients as $deletedclient){
-       	 $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=" . $deletedclient . " AND fw_deleted_ts IS NULL";
-	        $numrows = $zdbh->query($sql);
-	        if ($numrows->fetchColumn() <> 0) {
-	            $sql = $zdbh->prepare($sql);
-	            $sql->execute();
-	            while ($rowforwarder = $sql->fetch()) {
-		        	$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
-					if ($result) {
-						$sql = "DELETE * FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'";
-						$sql = $mail_db->prepare($sql);
-						$sql->execute();
-					}
-	            }
-			}
-		}		
-							
+foreach ($deletedclients as $deletedclient) {
+    $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=" . $deletedclient . " AND fw_deleted_ts IS NULL";
+    $numrows = $zdbh->query($sql);
+    if ($numrows->fetchColumn() <> 0) {
+        $sql = $zdbh->prepare($sql);
+        $sql->execute();
+        while ($rowforwarder = $sql->fetch()) {
+            $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+            if ($result) {
+                $sql = "DELETE * FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'";
+                $sql = $mail_db->prepare($sql);
+                $sql->execute();
+            }
+        }
+    }
+}
 ?>

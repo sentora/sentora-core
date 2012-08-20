@@ -2,25 +2,25 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/pl_PL/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Tomasz Pajor        <t.pajor@kei.pl>                          |
-|         Sławomir Cichoń     <slawek.cichon@gmail.com>                 |
-|         Janusz Zamecki      <janusz@zamecki.eu>                       |
-|         Mariusz Szulerecki  <nob@force.eu.org>                        |
-|         Wojciech Szczepucha <donkoyote@gmail.com>                     |
-|         Aleksander Machniak <alec@alec.pl>                            |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/pl_PL/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Tomasz Pajor        <t.pajor@kei.pl>                          |
+  |         Sławomir Cichoń     <slawek.cichon@gmail.com>                 |
+  |         Janusz Zamecki      <janusz@zamecki.eu>                       |
+  |         Mariusz Szulerecki  <nob@force.eu.org>                        |
+  |         Wojciech Szczepucha <donkoyote@gmail.com>                     |
+  |         Aleksander Machniak <alec@alec.pl>                            |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5681 2012-01-01 13:36:22Z alec $
+  @version $Id: labels.inc 5681 2012-01-01 13:36:22Z alec $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Witamy w $product';
@@ -407,7 +407,7 @@ $labels['addphoto'] = 'Dodaj';
 $labels['replacephoto'] = 'Zamień';
 $labels['foldertype'] = 'Typ folderu';
 $labels['personalfolder'] = 'Folder prywatny';
-$labels['otherfolder'] = 'Folder innego użytkownika'; 
+$labels['otherfolder'] = 'Folder innego użytkownika';
 $labels['sharedfolder'] = 'Folder współdzielony';
 $labels['defaultaddressbook'] = 'Nowe kontakty dodawaj do wybranej książki adresowej';
 $labels['spellcheckbeforesend'] = 'Przed wysłaniem wiadomości sprawdzaj pisownię';
@@ -441,5 +441,4 @@ $labels['license'] = 'Licencja';
 $labels['about'] = 'O programie';
 $labels['support'] = 'Wsparcie techniczne';
 $labels['defaultfont'] = 'Czcionka wiadomości HTML';
-
 ?>

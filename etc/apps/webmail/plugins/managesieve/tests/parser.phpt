@@ -70,51 +70,51 @@ require ["fileinto","reject","envelope"];
 # rule:[spam]
 if header :contains "X-DSPAM-Result" "Spam"
 {
-	fileinto "Spam";
-	stop;
+fileinto "Spam";
+stop;
 }
 # rule:[test1]
 if header :contains ["From","To"] "test@domain.tld"
 {
-	discard;
-	stop;
+discard;
+stop;
 }
 # rule:[test2]
 if anyof (not header :comparator "i;octet" :contains "Subject" "[test]", header :contains "Subject" "[test2]")
 {
-	fileinto "test";
-	stop;
+fileinto "test";
+stop;
 }
 # rule:[comments]
 if true
 {
-	stop;
+stop;
 }
 # rule:[reject]
 if size :over 5000K
 {
-	reject "Message over 5MB size limit. Please contact me before sending this.";
+reject "Message over 5MB size limit. Please contact me before sending this.";
 }
 # rule:[false]
 if false # size :over 5000K
 {
-	stop;
+stop;
 }
 # rule:[true]
 if true
 {
-	stop;
+stop;
 }
 fileinto "Test";
 # rule:[address test]
 if address :all :is "From" "nagios@domain.tld"
 {
-	fileinto "domain.tld";
-	stop;
+fileinto "domain.tld";
+stop;
 }
 # rule:[envelope test]
 if envelope :domain :is "From" "domain.tld"
 {
-	fileinto "domain.tld";
-	stop;
+fileinto "domain.tld";
+stop;
 }

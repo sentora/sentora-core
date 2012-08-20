@@ -5,7 +5,6 @@
  *
  * @package phpMyAdmin
  */
-
 /**
  * Gets some core libraries and displays a top message if required
  */

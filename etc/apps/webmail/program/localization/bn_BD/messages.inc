@@ -1,18 +1,18 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/bn_BD/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2008, The Roundcube Dev Team                            |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author:                                                               |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/bn_BD/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2008, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:                                                               |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'ঢোকা গেল না';
@@ -88,5 +88,4 @@ $messages['importconfirm'] = '<b>ঠিকমতো $inserted ঠিকানা
 $messages['opnotpermitted'] = 'এই কাজটা করার অনুমতি নাই আপনার';
 $messages['nofromaddress'] = 'বেছে নেওয়া যে পরিচিতিটা, তাতে ই-মেইল নেই';
 $messages['editorwarning'] = 'যদি আপনি শুধু লেখার স্টাইলে যান তাহলে বর্তমানের কোনো বিন্যাস হারিয়ে যাবে';
-
 ?>

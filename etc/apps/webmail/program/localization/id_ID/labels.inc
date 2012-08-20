@@ -2,20 +2,20 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/id_ID/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Putu Arya Sabda Wijaya <ptaryasw@isi-dps.ac.id>                    |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/id_ID/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Putu Arya Sabda Wijaya <ptaryasw@isi-dps.ac.id>                    |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4671 2011-04-20 08:47:44Z thomasb $
+  @version $Id: labels.inc 4671 2011-04-20 08:47:44Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Selamat datang di $product';
@@ -399,5 +399,4 @@ $labels['vietnamese'] = 'Vietnam';
 $labels['japanese'] = 'Jepang';
 $labels['korean'] = 'Korea';
 $labels['chinese'] = 'Cina';
-
 ?>

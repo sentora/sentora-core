@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/nl_BE/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Dennis Heeren <dennis.heeren@gmail.com>                       |
-|         Simon De Schoenmaeker <sds@simonds.be>                        |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/nl_BE/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Dennis Heeren <dennis.heeren@gmail.com>                       |
+  |         Simon De Schoenmaeker <sds@simonds.be>                        |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Aanmelden mislukt...';
@@ -133,5 +133,4 @@ $messages['namecannotbeempty'] = 'Naam kan niet leeg zijn';
 $messages['nametoolong'] = 'Naam is te lang';
 $messages['folderupdated'] = 'Map succesvol geüpdatet';
 $messages['foldercreated'] = 'Map succesvol aangemaakt';
-
 ?>

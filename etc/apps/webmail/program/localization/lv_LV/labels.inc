@@ -2,23 +2,23 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/lv/labels.inc                                                |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Rūdolfs Ošiņš <dev.random@gmail.com>                          |
-|         Miķelis Zaļais <mik@prog.lv>                                  |
-|         Lauris Bukšis-Haberkorns <lauris@nix.lv>                      |
-|         Kaspars Tenters <kaspars.tenters@va.lv>                       |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/lv/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Rūdolfs Ošiņš <dev.random@gmail.com>                          |
+  |         Miķelis Zaļais <mik@prog.lv>                                  |
+  |         Lauris Bukšis-Haberkorns <lauris@nix.lv>                      |
+  |         Kaspars Tenters <kaspars.tenters@va.lv>                       |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5173 2011-09-05 18:41:04Z thomasb $
+  @version $Id: labels.inc 5173 2011-09-05 18:41:04Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Esiet laipni lūgti $product';
@@ -417,5 +417,4 @@ $labels['vietnamese'] = 'Vjetnamiešu';
 $labels['japanese'] = 'Japāņu';
 $labels['korean'] = 'Korejiešu';
 $labels['chinese'] = 'Ķīniešu';
-
 ?>

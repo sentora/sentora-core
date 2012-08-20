@@ -1,10 +1,11 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -13,7 +14,7 @@ if (! defined('PHPMYADMIN')) {
  */
 # GNU iconv code set to IBM AIX libiconv code set table
 # Keys of this table should be in lowercase, and searches should be performed using lowercase!
-$gnu_iconv_to_aix_iconv_codepage_map = array (
+$gnu_iconv_to_aix_iconv_codepage_map = array(
     // "iso-8859-[1-9]" --> "ISO8859-[1-9]" according to http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
     'iso-8859-1' => 'ISO8859-1',
     'iso-8859-2' => 'ISO8859-2',
@@ -24,10 +25,8 @@ $gnu_iconv_to_aix_iconv_codepage_map = array (
     'iso-8859-7' => 'ISO8859-7',
     'iso-8859-8' => 'ISO8859-8',
     'iso-8859-9' => 'ISO8859-9',
-
     // "big5" --> "IBM-eucTW" according to http://kadesh.cepba.upc.es/mancpp/classref/ref/ITranscoder_DSC.htm
     'big5' => 'IBM-eucTW',
-
     // Other mappings corresponding to the phpMyAdmin dropdown box when using the charset conversion feature
     'euc-jp' => 'IBM-eucJP',
     'koi8-r' => 'IBM-eucKR',
@@ -80,6 +79,7 @@ function PMA_aix_iconv_wrapper($in_charset, $out_charset, $str) {
     // Call iconv() with the possibly modified parameters
     $result = iconv($in_charset, $out_charset, $str);
     return $result;
-} //  end of the "PMA_aix_iconv_wrapper()" function
+}
 
+//  end of the "PMA_aix_iconv_wrapper()" function
 ?>

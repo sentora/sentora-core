@@ -93,7 +93,7 @@ class module_controller {
         $line .= "<tr>";
         $line .= "<th>MySQL</th>";
         $line .= "<td>";
-		/* MySQL has to be on-line as you are viewing this page, we made this 'static' to save on port queries (saves time) amongst other reasons. */
+        /* MySQL has to be on-line as you are viewing this page, we made this 'static' to save on port queries (saves time) amongst other reasons. */
         $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
 
         $line .= "</td>";
@@ -107,7 +107,7 @@ class module_controller {
         } else {
             $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
         }
-		
+
         $line .= "</td>";
         $line .= "</tr>";
         $line .= "</table>";
@@ -131,44 +131,44 @@ class module_controller {
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
-    
-    static function getIsWebServerUp(){
+
+    static function getIsWebServerUp() {
         return sys_monitoring::PortStatus(80);
     }
-    
-    static function getIsMySQLUp(){
+
+    static function getIsMySQLUp() {
         return sys_monitoring::PortStatus(3306);
     }
-    
-    static function getIsFTPUp(){
+
+    static function getIsFTPUp() {
         return sys_monitoring::PortStatus(21);
     }
-    
-    static function getIsSMTPUp(){
+
+    static function getIsSMTPUp() {
         return sys_monitoring::PortStatus(25);
     }
-    
-    static function getIsPOP3Up(){
+
+    static function getIsPOP3Up() {
         return sys_monitoring::PortStatus(110);
     }
-    
-    static function getIsIMAPUp(){
+
+    static function getIsIMAPUp() {
         return sys_monitoring::PortStatus(143);
     }
 
-    static function getUptime(){
-       return sys_monitoring::ServerUptime();
+    static function getUptime() {
+        return sys_monitoring::ServerUptime();
     }
-    
-    static function getLastRunTime(){
-        return date(ctrl_options::GetSystemOption('zpanel_df'),ctrl_options::GetSystemOption('daemon_lastrun'));
+
+    static function getLastRunTime() {
+        return date(ctrl_options::GetSystemOption('zpanel_df'), ctrl_options::GetSystemOption('daemon_lastrun'));
     }
-    
-    static function getNextRunTime(){
+
+    static function getNextRunTime() {
         $new_time = ctrl_options::GetSystemOption('daemon_lastrun') + ctrl_options::GetSystemOption('daemon_run_interval');
-        return date(ctrl_options::GetSystemOption('zpanel_df'),$new_time);
+        return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
     }
-    
+
 }
 
 ?>

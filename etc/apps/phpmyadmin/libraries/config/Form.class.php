@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Form handling code.
@@ -12,8 +13,8 @@
  *
  * @package    phpMyAdmin
  */
-class Form
-{
+class Form {
+
     /**
      * Form name
      * @var string
@@ -51,8 +52,7 @@ class Form
      * @param array   $form
      * @param int     $index      arbitrary index, stored in Form::$index
      */
-    public function __construct($form_name, array $form, $index = null)
-    {
+    public function __construct($form_name, array $form, $index = null) {
         $this->index = $index;
         $this->loadForm($form_name, $form);
     }
@@ -63,12 +63,9 @@ class Form
      * @param   string  $option_name path or field name
      * @return  string|null  one of: boolean, integer, double, string, select, array
      */
-    public function getOptionType($option_name)
-    {
+    public function getOptionType($option_name) {
         $key = ltrim(substr($option_name, strrpos($option_name, '/')), '/');
-        return isset($this->fieldsTypes[$key])
-            ? $this->fieldsTypes[$key]
-            : null;
+        return isset($this->fieldsTypes[$key]) ? $this->fieldsTypes[$key] : null;
     }
 
     /**
@@ -79,8 +76,7 @@ class Form
      * @param   string  $option_path
      * @return  array
      */
-    public function getOptionValueList($option_path)
-    {
+    public function getOptionValueList($option_path) {
         $value = ConfigFile::getInstance()->getDbEntry($option_path);
         if ($value === null) {
             trigger_error("$option_path - select options not defined", E_USER_ERROR);
@@ -103,7 +99,7 @@ class Form
                     $has_string_keys = true;
                     break;
                 }
-                $keys[] = is_bool($value[$i]) ? (int)$value[$i] : $value[$i];
+                $keys[] = is_bool($value[$i]) ? (int) $value[$i] : $value[$i];
             }
             if (!$has_string_keys) {
                 $value = array_combine($keys, $value);
@@ -122,8 +118,7 @@ class Form
      * @param   mixed   $key
      * @param   mixed   $prefix
      */
-    private function _readFormPathsCallback($value, $key, $prefix)
-    {
+    private function _readFormPathsCallback($value, $key, $prefix) {
         static $group_counter = 0;
 
         if (is_array($value)) {
@@ -147,8 +142,7 @@ class Form
      *
      * @param array $form
      */
-    protected function readFormPaths($form)
-    {
+    protected function readFormPaths($form) {
         // flatten form fields' paths and save them to $fields
         $this->fields = array();
         array_walk($form, array($this, '_readFormPathsCallback'), '');
@@ -171,8 +165,7 @@ class Form
      * @uses ConfigFile::getDefault()
      * @uses ConfigFile::getInstance()
      */
-    protected function readTypes()
-    {
+    protected function readTypes() {
         $cf = ConfigFile::getInstance();
         foreach ($this->fields as $name => $path) {
             if (strpos($name, ':group:') === 0) {
@@ -196,11 +189,12 @@ class Form
      * @param string $form_name
      * @param array  $form
      */
-    public function loadForm($form_name, $form)
-    {
+    public function loadForm($form_name, $form) {
         $this->name = $form_name;
         $this->readFormPaths($form);
         $this->readTypes();
     }
+
 }
+
 ?>

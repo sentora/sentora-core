@@ -8,12 +8,11 @@
  * @author Tomáš Šafařík <safarik@server.cz>
  *
  */
-
 $labels = array();
-$labels['changepasswd']  = 'Změna hesla';
-$labels['curpasswd']  = 'Aktuální heslo:';
-$labels['newpasswd']  = 'Nové heslo:';
-$labels['confpasswd']  = 'Nové heslo (pro kontrolu):';
+$labels['changepasswd'] = 'Změna hesla';
+$labels['curpasswd'] = 'Aktuální heslo:';
+$labels['newpasswd'] = 'Nové heslo:';
+$labels['confpasswd'] = 'Nové heslo (pro kontrolu):';
 
 $messages = array();
 $messages['nopassword'] = 'Prosím zadejte nové heslo.';
@@ -26,5 +25,4 @@ $messages['internalerror'] = 'Heslo se nepodařilo uložit.';
 $messages['passwordshort'] = 'Heslo musí mít alespoň $length znaků.';
 $messages['passwordweak'] = 'Heslo musí obsahovat alespoň jedno číslo a jedno interpuknční znaménko.';
 $messages['passwordforbidden'] = 'Heslo obsahuje nepovolené znaky.';
-
 ?>

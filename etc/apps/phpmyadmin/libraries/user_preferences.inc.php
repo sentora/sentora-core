@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Common header for user preferences pages
@@ -20,12 +21,12 @@ if (!isset($forms[$form_param])) {
     $form_param = array_shift($forms_keys);
 }
 $tabs_icons = array(
-    'Features'    => 'b_tblops.png',
+    'Features' => 'b_tblops.png',
     'Sql_queries' => 'b_sql.png',
-    'Left_frame'  => 'b_select.png',
-    'Main_frame'  => 'b_props.png',
-    'Import'      => 'b_import.png',
-    'Export'      => 'b_export.png');
+    'Left_frame' => 'b_select.png',
+    'Main_frame' => 'b_props.png',
+    'Import' => 'b_import.png',
+    'Export' => 'b_export.png');
 echo '<ul id="topmenu2">';
 echo PMA_generate_html_tab(array(
     'link' => 'prefs_manage.php',
@@ -49,18 +50,18 @@ if (!empty($_GET['saved'])) {
 }
 
 /* debug code
-$arr = ConfigFile::getInstance()->getConfigArray();
-$arr2 = array();
-foreach ($arr as $k => $v) {
-    $arr2[] = "<b>$k</b> " . var_export($v, true);
-}
-$arr2 = implode(', ', $arr2);
-$arr2 .= '<br />Blacklist: ' . (empty($cfg['UserprefsDisallow'])
-        ? '<i>empty</i>'
-        : implode(', ', $cfg['UserprefsDisallow']));
-$msg = PMA_Message::notice('Settings: ' . $arr2);
-$msg->display();
-//*/
+  $arr = ConfigFile::getInstance()->getConfigArray();
+  $arr2 = array();
+  foreach ($arr as $k => $v) {
+  $arr2[] = "<b>$k</b> " . var_export($v, true);
+  }
+  $arr2 = implode(', ', $arr2);
+  $arr2 .= '<br />Blacklist: ' . (empty($cfg['UserprefsDisallow'])
+  ? '<i>empty</i>'
+  : implode(', ', $cfg['UserprefsDisallow']));
+  $msg = PMA_Message::notice('Settings: ' . $arr2);
+  $msg->display();
+  // */
 
 // warn about using session storage for settings
 $cfgRelation = PMA_getRelationsParam();

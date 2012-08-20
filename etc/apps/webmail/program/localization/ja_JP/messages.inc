@@ -2,26 +2,26 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/ja_JP/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Tadashi Jokagi <elf2000@users.sourceforge.net>                |
-|         Takashi Takamatsu <taka717@gmail.com>                         |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ja_JP/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, Roundcube Dev. - Switzerland                 |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Tadashi Jokagi <elf2000@users.sourceforge.net>                |
+  |         Takashi Takamatsu <taka717@gmail.com>                         |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-//  EN-Revision: 5490
+  //  EN-Revision: 5490
 
-*/
+ */
 
 $messages = array();
-$messages['loginfailed']  = 'ログインに失敗しました。';
+$messages['loginfailed'] = 'ログインに失敗しました。';
 $messages['cookiesdisabled'] = 'ブラウザーで Cookie が無効に設定されています。';
 $messages['sessionerror'] = 'セッションが正しくないか期限切れです。';
 $messages['imaperror'] = 'IMAP サーバーへの接続に失敗しました。';
@@ -64,8 +64,8 @@ $messages['errormoving'] = 'メールを移動できません。';
 $messages['errorcopying'] = 'メールをコピーできません。';
 $messages['errordeleting'] = 'メールを削除できません。';
 $messages['errormarking'] = 'メールのマークを設定できません。';
-$messages['deletecontactconfirm']  = '選択した連絡先を本当に削除しますか?';
-$messages['deletegroupconfirm']  = 'このグループを本当に削除しますか?';
+$messages['deletecontactconfirm'] = '選択した連絡先を本当に削除しますか?';
+$messages['deletegroupconfirm'] = 'このグループを本当に削除しますか?';
 $messages['deletemessagesconfirm'] = '選択したメールを本当に削除しますか?';
 $messages['deletefolderconfirm'] = 'このフォルダーを本当に削除しますか?';
 $messages['purgefolderconfirm'] = 'このフォルダーの全メールを本当に削除しますか?';
@@ -77,7 +77,7 @@ $messages['foldersubscribing'] = 'フォルダーを購読しています...';
 $messages['folderunsubscribing'] = 'フォルダーの購読をやめています...';
 $messages['formincomplete'] = 'フォームの全項目を入力していません。';
 $messages['noemailwarning'] = '正しいメールアドレスを入力してください。';
-$messages['nonamewarning']  = '名前を入力してください。';
+$messages['nonamewarning'] = '名前を入力してください。';
 $messages['nopagesizewarning'] = 'ページのサイズを入力してください。';
 $messages['nosenderwarning'] = '差出人のメールアドレスを入力してください。';
 $messages['norecipientwarning'] = '宛先は少なくともひとり分は入力してください。';
@@ -166,5 +166,4 @@ $messages['invalidimageformat'] = '画像の形式が正しくありません。
 $messages['mispellingsfound'] = 'メッセージにスペル エラーを見つけました。';
 $messages['parentnotwritable'] = '選択した親フォルダーへの作成、移動に失敗しました。アクセス権限がありません。';
 $messages['messagetoobig'] = 'その処理をするにはメッセージ部分が大きすぎます。';
-
 ?>

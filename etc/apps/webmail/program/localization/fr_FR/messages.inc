@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/fr_FR/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Joel S. <joel.s@spijoprod.com>                                |
-|         Jerome Lipowicz <jerome@yayel.com>                            |
-|         Maximilien Cuony <theglu@theglu.org>                          |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/fr_FR/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Joel S. <joel.s@spijoprod.com>                                |
+  |         Jerome Lipowicz <jerome@yayel.com>                            |
+  |         Maximilien Cuony <theglu@theglu.org>                          |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5609 2011-12-14 12:58:13Z thomasb $
+  @version $Id: messages.inc 5609 2011-12-14 12:58:13Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Erreur d\'authentification';
@@ -160,5 +160,4 @@ $messages['invalidimageformat'] = 'Format d\'image invalide';
 $messages['mispellingsfound'] = 'Des fautes d\'orthographe ont été détectées dans le message.';
 $messages['parentnotwritable'] = 'Impossible de créer/déplacer le dossier dans le dossier parent sélectionné. Aucun droit d\'accès.';
 $messages['messagetoobig'] = 'Le message est trop gros pour être traité.';
-
 ?>

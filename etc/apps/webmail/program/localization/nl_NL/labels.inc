@@ -2,24 +2,24 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/nl_NL/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Mark Moses <mark@katmoda.com>                                 |
-|         Lazlo Westerhof <roundcube@lazlo.me>                          |
-|         Laurens Vets <laurens@daemon.be>                              |
-|         Frits Letteboer <f.letteboer@radiotwenterand.nl>              |
-|         Justin van Beusekom <j.v.beusekom@beus-it.nl>                 |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/nl_NL/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Mark Moses <mark@katmoda.com>                                 |
+  |         Lazlo Westerhof <roundcube@lazlo.me>                          |
+  |         Laurens Vets <laurens@daemon.be>                              |
+  |         Frits Letteboer <f.letteboer@radiotwenterand.nl>              |
+  |         Justin van Beusekom <j.v.beusekom@beus-it.nl>                 |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Welkom bij $product';
@@ -431,5 +431,4 @@ $labels['vietnamese'] = 'Vietnamees';
 $labels['japanese'] = 'Japans';
 $labels['korean'] = 'Koreaans';
 $labels['chinese'] = 'Chinees';
-
 ?>

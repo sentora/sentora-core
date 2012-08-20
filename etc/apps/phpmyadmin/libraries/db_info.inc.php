@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Gets the list of the table in the current db and informations about these
@@ -33,7 +34,7 @@
  * @uses    addslashes()
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -45,7 +46,7 @@ require_once './libraries/common.inc.php';
 /**
  * limits for table list
  */
-if (! isset($_SESSION['tmp_user_values']['table_limit_offset']) || $_SESSION['tmp_user_values']['table_limit_offset_db'] != $db) {
+if (!isset($_SESSION['tmp_user_values']['table_limit_offset']) || $_SESSION['tmp_user_values']['table_limit_offset_db'] != $db) {
     $_SESSION['tmp_user_values']['table_limit_offset'] = 0;
     $_SESSION['tmp_user_values']['table_limit_offset_db'] = $db;
 }
@@ -64,8 +65,7 @@ $pos = $_SESSION['tmp_user_values']['table_limit_offset'];
  * @param   array   $tooltip_aliasname  tooltip data
  * @param   array   $table              tabledata
  */
-function PMA_fillTooltip(&$tooltip_truename, &$tooltip_aliasname, $table)
-{
+function PMA_fillTooltip(&$tooltip_truename, &$tooltip_aliasname, $table) {
     if (strstr($table['Comment'], '; InnoDB free') === false) {
         if (!strstr($table['Comment'], 'InnoDB free') === false) {
             // here we have just InnoDB generated part
@@ -87,7 +87,7 @@ function PMA_fillTooltip(&$tooltip_truename, &$tooltip_aliasname, $table)
     }
 
     if ($GLOBALS['cfg']['ShowTooltipAliasTB']
-     && $GLOBALS['cfg']['ShowTooltipAliasTB'] !== 'nested') {
+            && $GLOBALS['cfg']['ShowTooltipAliasTB'] !== 'nested') {
         $tooltip_truename[$table['Name']] = $table['Comment'];
         $tooltip_aliasname[$table['Name']] = $table['Name'];
     } else {
@@ -97,17 +97,17 @@ function PMA_fillTooltip(&$tooltip_truename, &$tooltip_aliasname, $table)
 
     if (isset($table['Create_time']) && !empty($table['Create_time'])) {
         $tooltip_aliasname[$table['Name']] .= ', ' . __('Creation')
-             . ': ' . PMA_localisedDate(strtotime($table['Create_time']));
+                . ': ' . PMA_localisedDate(strtotime($table['Create_time']));
     }
 
-    if (! empty($table['Update_time'])) {
+    if (!empty($table['Update_time'])) {
         $tooltip_aliasname[$table['Name']] .= ', ' . __('Last update')
-             . ': ' . PMA_localisedDate(strtotime($table['Update_time']));
+                . ': ' . PMA_localisedDate(strtotime($table['Update_time']));
     }
 
-    if (! empty($table['Check_time'])) {
+    if (!empty($table['Check_time'])) {
         $tooltip_aliasname[$table['Name']] .= ', ' . __('Last check')
-             . ': ' . PMA_localisedDate(strtotime($table['Check_time']));
+                . ': ' . PMA_localisedDate(strtotime($table['Check_time']));
     }
 }
 
@@ -161,24 +161,23 @@ if (true === $cfg['SkipLockedTables']) {
 
         if (isset($sot_cache)) {
             $db_info_result = PMA_DBI_query(
-                'SHOW TABLES FROM ' . PMA_backquote($db) . $tbl_group_sql . ';',
-                null, PMA_DBI_QUERY_STORE);
+                    'SHOW TABLES FROM ' . PMA_backquote($db) . $tbl_group_sql . ';', null, PMA_DBI_QUERY_STORE);
             if ($db_info_result && PMA_DBI_num_rows($db_info_result) > 0) {
                 while ($tmp = PMA_DBI_fetch_row($db_info_result)) {
                     if (!isset($sot_cache[$tmp[0]])) {
-                        $sts_result  = PMA_DBI_query(
-                            'SHOW TABLE STATUS FROM ' . PMA_backquote($db)
-                             . ' LIKE \'' . addslashes($tmp[0]) . '\';');
-                        $sts_tmp     = PMA_DBI_fetch_assoc($sts_result);
+                        $sts_result = PMA_DBI_query(
+                                'SHOW TABLE STATUS FROM ' . PMA_backquote($db)
+                                . ' LIKE \'' . addslashes($tmp[0]) . '\';');
+                        $sts_tmp = PMA_DBI_fetch_assoc($sts_result);
                         PMA_DBI_free_result($sts_result);
                         unset($sts_result);
 
                         if (!isset($sts_tmp['Type']) && isset($sts_tmp['Engine'])) {
-                            $sts_tmp['Type'] =& $sts_tmp['Engine'];
+                            $sts_tmp['Type'] = & $sts_tmp['Engine'];
                         }
 
                         if (!empty($tbl_group) && $cfg['ShowTooltipAliasTB']
-                         && !preg_match('@' . preg_quote($tbl_group, '@') . '@i', $sts_tmp['Comment'])) {
+                                && !preg_match('@' . preg_quote($tbl_group, '@') . '@i', $sts_tmp['Comment'])) {
                             continue;
                         }
 
@@ -186,9 +185,9 @@ if (true === $cfg['SkipLockedTables']) {
                             PMA_fillTooltip($tooltip_truename, $tooltip_aliasname, $sts_tmp);
                         }
 
-                        $tables[$sts_tmp['Name']]    = $sts_tmp;
+                        $tables[$sts_tmp['Name']] = $sts_tmp;
                     } else { // table in use
-                        $tables[$tmp[0]]    = array('Name' => $tmp[0]);
+                        $tables[$tmp[0]] = array('Name' => $tmp[0]);
                     }
                 }
                 if ($GLOBALS['cfg']['NaturalOrder']) {
@@ -207,7 +206,7 @@ if (true === $cfg['SkipLockedTables']) {
     }
 }
 
-if (! isset($sot_ready)) {
+if (!isset($sot_ready)) {
 
     // Set some sorting defaults
     $sort = 'Name';
@@ -215,12 +214,12 @@ if (! isset($sot_ready)) {
 
     if (isset($_REQUEST['sort'])) {
         $sortable_name_mappings = array(
-            'table'     => 'Name',
-            'records'   => 'Rows',
-            'type'      => 'Engine',
+            'table' => 'Name',
+            'records' => 'Rows',
+            'type' => 'Engine',
             'collation' => 'Collation',
-            'size'      => 'Data_length',
-            'overhead'  => 'Data_free'
+            'size' => 'Data_length',
+            'overhead' => 'Data_free'
         );
 
         // Make sure the sort type is implemented
@@ -232,10 +231,10 @@ if (! isset($sot_ready)) {
         }
     }
 
-    if (! empty($tbl_group) && ! $cfg['ShowTooltipAliasTB']) {
+    if (!empty($tbl_group) && !$cfg['ShowTooltipAliasTB']) {
         // only tables for selected group
         $tables = PMA_DBI_get_tables_full($db, $tbl_group, true, null, 0, false, $sort, $sort_order);
-    } elseif (! empty($tbl_group) && $cfg['ShowTooltipAliasTB']) {
+    } elseif (!empty($tbl_group) && $cfg['ShowTooltipAliasTB']) {
         // only tables for selected group,
         // but grouping is done on comment ...
         $tables = PMA_DBI_get_tables_full($db, $tbl_group, 'comment', null, 0, false, $sort, $sort_order);
@@ -272,7 +271,7 @@ if (! isset($sot_ready)) {
  */
 $num_tables = count($tables);
 //  (needed for proper working of the MaxTableList feature)
-if (! isset($total_num_tables)) {
+if (!isset($total_num_tables)) {
     $total_num_tables = $num_tables;
 }
 
@@ -285,7 +284,7 @@ unset($each_table, $tbl_group_sql, $db_info_result);
  * Displays top menu links
  * If in an Ajax request, we do not need to show this
  */
-if($GLOBALS['is_ajax_request'] != true) {
+if ($GLOBALS['is_ajax_request'] != true) {
     require './libraries/db_links.inc.php';
 }
 ?>

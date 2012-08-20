@@ -1,29 +1,29 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/steps/addressbook/edit.inc                                    |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Show edit form for a contact entry or to add a new one              |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/addressbook/edit.inc                                    |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Show edit form for a contact entry or to add a new one              |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: edit.inc 5681 2012-01-01 13:36:22Z alec $
+  $Id: edit.inc 5681 2012-01-01 13:36:22Z alec $
 
-*/
+ */
 
 if ($RCMAIL->action == 'edit') {
     // Get contact ID and source ID from request
-    $cids   = rcmail_get_cids();
+    $cids = rcmail_get_cids();
     $source = key($cids);
-    $cid    = array_shift($cids[$source]);
+    $cid = array_shift($cids[$source]);
 
     // Initialize addressbook
     $CONTACTS = rcmail_contact_source($source, true);
@@ -39,8 +39,7 @@ if ($RCMAIL->action == 'edit') {
         rcmail_overwrite_action('show');
         return;
     }
-}
-else {
+} else {
     $source = get_input_value('_source', RCUBE_INPUT_GPC);
 
     if (!strlen($source)) {
@@ -61,26 +60,23 @@ else {
 $SOURCE_ID = $source;
 rcmail_set_sourcename($CONTACTS);
 
-function rcmail_get_edit_record()
-{
+function rcmail_get_edit_record() {
     global $RCMAIL, $CONTACTS;
 
-     // check if we have a valid result
-     if ($GLOBALS['EDIT_RECORD']) {
-         $record = $GLOBALS['EDIT_RECORD'];
-     }
-     else if ($RCMAIL->action != 'add'
-         && !(($result = $CONTACTS->get_result()) && ($record = $result->first()))
-     ) {
-         $RCMAIL->output->show_message('contactnotfound');
-         return false;
-     }
+    // check if we have a valid result
+    if ($GLOBALS['EDIT_RECORD']) {
+        $record = $GLOBALS['EDIT_RECORD'];
+    } else if ($RCMAIL->action != 'add'
+            && !(($result = $CONTACTS->get_result()) && ($record = $result->first()))
+    ) {
+        $RCMAIL->output->show_message('contactnotfound');
+        return false;
+    }
 
-     return $record;
+    return $record;
 }
 
-function rcmail_contact_edithead($attrib)
-{
+function rcmail_contact_edithead($attrib) {
     // check if we have a valid result
     $record = rcmail_get_edit_record();
     $i_size = !empty($attrib['size']) ? $attrib['size'] : 20;
@@ -93,11 +89,11 @@ function rcmail_contact_edithead($attrib)
                 'middlename' => array('size' => $i_size),
                 'surname' => array('size' => $i_size, 'visible' => true),
                 'suffix' => array('size' => $i_size),
-                'name' => array('size' => 2*$i_size),
-                'nickname' => array('size' => 2*$i_size),
-                'organization' => array('size' => 2*$i_size),
-                'department' => array('size' => 2*$i_size),
-                'jobtitle' => array('size' => 2*$i_size),
+                'name' => array('size' => 2 * $i_size),
+                'nickname' => array('size' => 2 * $i_size),
+                'organization' => array('size' => 2 * $i_size),
+                'department' => array('size' => 2 * $i_size),
+                'jobtitle' => array('size' => 2 * $i_size),
             )
         )
     );
@@ -111,8 +107,7 @@ function rcmail_contact_edithead($attrib)
     return $form_start . $out . $form_end;
 }
 
-function rcmail_contact_editform($attrib)
-{
+function rcmail_contact_editform($attrib) {
     global $RCMAIL, $CONTACT_COLTYPES;
 
     $record = rcmail_get_edit_record();
@@ -122,7 +117,7 @@ function rcmail_contact_editform($attrib)
 
     // copy (parsed) address template to client
     if (preg_match_all('/\{([a-z0-9]+)\}([^{]*)/i', $RCMAIL->config->get('address_template', ''), $templ, PREG_SET_ORDER))
-      $RCMAIL->output->set_env('address_template', $templ);
+        $RCMAIL->output->set_env('address_template', $templ);
 
     $i_size = !empty($attrib['size']) ? $attrib['size'] : 40;
     $t_rows = !empty($attrib['textarearows']) ? $attrib['textarearows'] : 10;
@@ -130,7 +125,7 @@ function rcmail_contact_editform($attrib)
 
     $form = array(
         'contact' => array(
-            'name'    => rcube_label('properties'),
+            'name' => rcube_label('properties'),
             'content' => array(
                 'email' => array('size' => $i_size, 'visible' => true),
                 'phone' => array('size' => $i_size, 'visible' => true),
@@ -140,7 +135,7 @@ function rcmail_contact_editform($attrib)
             ),
         ),
         'personal' => array(
-            'name'    => rcube_label('personalinfo'),
+            'name' => rcube_label('personalinfo'),
             'content' => array(
                 'gender' => array('visible' => true),
                 'maidenname' => array('size' => $i_size),
@@ -155,7 +150,7 @@ function rcmail_contact_editform($attrib)
 
     if (isset($CONTACT_COLTYPES['notes'])) {
         $form['notes'] = array(
-            'name'    => rcube_label('notes'),
+            'name' => rcube_label('notes'),
             'content' => array(
                 'notes' => array('size' => $t_cols, 'rows' => $t_rows, 'label' => false, 'visible' => true, 'limit' => 1),
             ),
@@ -172,45 +167,40 @@ function rcmail_contact_editform($attrib)
     return $form_start . $out . $form_end;
 }
 
-function rcmail_upload_photo_form($attrib)
-{
-  global $OUTPUT;
+function rcmail_upload_photo_form($attrib) {
+    global $OUTPUT;
 
-  // add ID if not given
-  if (!$attrib['id'])
-    $attrib['id'] = 'rcmUploadbox';
+    // add ID if not given
+    if (!$attrib['id'])
+        $attrib['id'] = 'rcmUploadbox';
 
-  // find max filesize value
-  $max_filesize = parse_bytes(ini_get('upload_max_filesize'));
-  $max_postsize = parse_bytes(ini_get('post_max_size'));
-  if ($max_postsize && $max_postsize < $max_filesize)
-    $max_filesize = $max_postsize;
-  $max_filesize = show_bytes($max_filesize);
+    // find max filesize value
+    $max_filesize = parse_bytes(ini_get('upload_max_filesize'));
+    $max_postsize = parse_bytes(ini_get('post_max_size'));
+    if ($max_postsize && $max_postsize < $max_filesize)
+        $max_filesize = $max_postsize;
+    $max_filesize = show_bytes($max_filesize);
 
-  $hidden = new html_hiddenfield(array('name' => '_cid', 'value' => $GLOBALS['cid']));
-  $input = new html_inputfield(array('type' => 'file', 'name' => '_photo', 'size' => $attrib['size']));
-  $button = new html_inputfield(array('type' => 'button'));
+    $hidden = new html_hiddenfield(array('name' => '_cid', 'value' => $GLOBALS['cid']));
+    $input = new html_inputfield(array('type' => 'file', 'name' => '_photo', 'size' => $attrib['size']));
+    $button = new html_inputfield(array('type' => 'button'));
 
-  $out = html::div($attrib,
-    $OUTPUT->form_tag(array('name' => 'uploadform', 'method' => 'post', 'enctype' => 'multipart/form-data'),
-      $hidden->show() .
-      html::div(null, $input->show()) .
-      html::div('hint', rcube_label(array('name' => 'maxuploadsize', 'vars' => array('size' => $max_filesize)))) .
-      html::div('buttons',
-        $button->show(rcube_label('close'), array('class' => 'button', 'onclick' => "$('#$attrib[id]').hide()")) . ' ' .
-        $button->show(rcube_label('upload'), array('class' => 'button mainaction', 'onclick' => JS_OBJECT_NAME . ".command('upload-photo', this.form)"))
-      )
-    )
-  );
+    $out = html::div($attrib, $OUTPUT->form_tag(array('name' => 'uploadform', 'method' => 'post', 'enctype' => 'multipart/form-data'), $hidden->show() .
+                            html::div(null, $input->show()) .
+                            html::div('hint', rcube_label(array('name' => 'maxuploadsize', 'vars' => array('size' => $max_filesize)))) .
+                            html::div('buttons', $button->show(rcube_label('close'), array('class' => 'button', 'onclick' => "$('#$attrib[id]').hide()")) . ' ' .
+                                    $button->show(rcube_label('upload'), array('class' => 'button mainaction', 'onclick' => JS_OBJECT_NAME . ".command('upload-photo', this.form)"))
+                            )
+                    )
+    );
 
-  $OUTPUT->add_label('addphoto','replacephoto');
-  $OUTPUT->add_gui_object('uploadbox', $attrib['id']);
-  return $out;
+    $OUTPUT->add_label('addphoto', 'replacephoto');
+    $OUTPUT->add_gui_object('uploadbox', $attrib['id']);
+    return $out;
 }
 
 // similar function as in /steps/settings/edit_identity.inc
-function get_form_tags($attrib)
-{
+function get_form_tags($attrib) {
     global $CONTACTS, $EDIT_FORM, $RCMAIL, $SOURCE_ID;
 
     $form_start = $form_end = '';
@@ -228,7 +218,7 @@ function get_form_tags($attrib)
         $form_start = $RCMAIL->output->request_form(array(
             'name' => "form", 'method' => "post",
             'task' => $RCMAIL->task, 'action' => 'save',
-            'request' => 'save.'.intval($record['ID']),
+            'request' => 'save.' . intval($record['ID']),
             'noclose' => true) + $attrib, $hiddenfields->show());
         $form_end = !strlen($attrib['form']) ? '</form>' : '';
 
@@ -236,11 +226,10 @@ function get_form_tags($attrib)
         $RCMAIL->output->add_gui_object('editform', $EDIT_FORM);
     }
 
-    return array($form_start, $form_end); 
+    return array($form_start, $form_end);
 }
 
-function rcmail_source_selector($attrib)
-{
+function rcmail_source_selector($attrib) {
     global $RCMAIL, $SOURCE_ID;
 
     $sources_list = $RCMAIL->get_address_sources(true);
@@ -262,13 +251,12 @@ function rcmail_source_selector($attrib)
     return $select->show($SOURCE_ID);
 }
 
-
 $OUTPUT->add_handlers(array(
     'contactedithead' => 'rcmail_contact_edithead',
     'contacteditform' => 'rcmail_contact_editform',
-    'contactphoto'    => 'rcmail_contact_photo',
+    'contactphoto' => 'rcmail_contact_photo',
     'photouploadform' => 'rcmail_upload_photo_form',
-    'sourceselector'  => 'rcmail_source_selector',
+    'sourceselector' => 'rcmail_source_selector',
 ));
 
 if ($RCMAIL->action == 'add' && $OUTPUT->template_exists('contactadd'))

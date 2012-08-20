@@ -1,52 +1,48 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | program/include/rcube_config.php                                      |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Class to read configuration settings                                |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/include/rcube_config.php                                      |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Class to read configuration settings                                |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: rcube_config.php 5499 2011-11-28 09:03:27Z alec $
+  $Id: rcube_config.php 5499 2011-11-28 09:03:27Z alec $
 
-*/
+ */
 
 /**
  * Configuration class for Roundcube
  *
  * @package Core
  */
-class rcube_config
-{
+class rcube_config {
+
     private $prop = array();
     private $errors = array();
     private $userprefs = array();
 
-
     /**
      * Object constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->load();
     }
-
 
     /**
      * Load config from local config file
      *
      * @todo Remove global $CONFIG
      */
-    private function load()
-    {
+    private function load() {
         // load main config file
         if (!$this->load_from_file(RCMAIL_CONFIG_DIR . '/main.inc.php'))
             $this->errors[] = 'main.inc.php was not found.';
@@ -82,9 +78,8 @@ class rcube_config
 
             if ($this->prop['log_driver'] == 'syslog') {
                 ini_set('error_log', 'syslog');
-            }
-            else {
-                ini_set('error_log', $this->prop['log_dir'].'/errors');
+            } else {
+                ini_set('error_log', $this->prop['log_dir'] . '/errors');
             }
         }
 
@@ -93,11 +88,10 @@ class rcube_config
 
         // set timezone auto settings values
         if ($this->prop['timezone'] == 'auto') {
-          $this->prop['dst_active'] = intval(date('I'));
-          $this->prop['_timezone_value'] = date('Z') / 3600 - $this->prop['dst_active'];
-        }
-        else if ($this->prop['dst_active'] === null) {
-          $this->prop['dst_active'] = intval(date('I'));
+            $this->prop['dst_active'] = intval(date('I'));
+            $this->prop['_timezone_value'] = date('Z') / 3600 - $this->prop['dst_active'];
+        } else if ($this->prop['dst_active'] === null) {
+            $this->prop['dst_active'] = intval(date('I'));
         }
 
         // export config data
@@ -108,14 +102,12 @@ class rcube_config
      * Load a host-specific config file if configured
      * This will merge the host specific configuration with the given one
      */
-    private function load_host_config()
-    {
+    private function load_host_config() {
         $fname = null;
 
         if (is_array($this->prop['include_host_config'])) {
             $fname = $this->prop['include_host_config'][$_SERVER['HTTP_HOST']];
-        }
-        else if (!empty($this->prop['include_host_config'])) {
+        } else if (!empty($this->prop['include_host_config'])) {
             $fname = preg_replace('/[^a-z0-9\.\-_]/i', '', $_SERVER['HTTP_HOST']) . '.inc.php';
         }
 
@@ -124,7 +116,6 @@ class rcube_config
         }
     }
 
-
     /**
      * Read configuration from a file
      * and merge with the already stored config values
@@ -132,8 +123,7 @@ class rcube_config
      * @param string $fpath Full path to the config file to be loaded
      * @return booelan True on success, false on failure
      */
-    public function load_from_file($fpath)
-    {
+    public function load_from_file($fpath) {
         if (is_file($fpath) && is_readable($fpath)) {
             // use output buffering, we don't need any output here 
             ob_start();
@@ -149,7 +139,6 @@ class rcube_config
         return false;
     }
 
-
     /**
      * Getter for a specific config parameter
      *
@@ -157,11 +146,10 @@ class rcube_config
      * @param  mixed  $def  Default value if not set
      * @return mixed  The requested config value
      */
-    public function get($name, $def = null)
-    {
+    public function get($name, $def = null) {
         $result = isset($this->prop[$name]) ? $this->prop[$name] : $def;
         $rcmail = rcmail::get_instance();
-        
+
         if ($name == 'timezone' && isset($this->prop['_timezone_value']))
             $result = $this->prop['_timezone_value'];
 
@@ -175,29 +163,24 @@ class rcube_config
         return $result;
     }
 
-
     /**
      * Setter for a config parameter
      *
      * @param string $name  Parameter name
      * @param mixed  $value Parameter value
      */
-    public function set($name, $value)
-    {
+    public function set($name, $value) {
         $this->prop[$name] = $value;
     }
-
 
     /**
      * Override config options with the given values (eg. user prefs)
      *
      * @param array $prefs Hash array with config props to merge over
      */
-    public function merge($prefs)
-    {
+    public function merge($prefs) {
         $this->prop = array_merge($this->prop, $prefs, $this->userprefs);
     }
-
 
     /**
      * Merge the given prefs over the current config
@@ -205,8 +188,7 @@ class rcube_config
      *
      * @param array $prefs Hash array with user prefs
      */
-    public function set_user_prefs($prefs)
-    {
+    public function set_user_prefs($prefs) {
         // Honor the dont_override setting for any existing user preferences
         $dont_override = $this->get('dont_override');
         if (is_array($dont_override) && !empty($dont_override)) {
@@ -218,25 +200,22 @@ class rcube_config
         }
 
         $this->userprefs = $prefs;
-        $this->prop      = array_merge($this->prop, $prefs);
+        $this->prop = array_merge($this->prop, $prefs);
 
         // override timezone settings with client values
         if ($this->prop['timezone'] == 'auto') {
             $this->prop['_timezone_value'] = isset($_SESSION['timezone']) ? $_SESSION['timezone'] : $this->prop['_timezone_value'];
             $this->prop['dst_active'] = $this->userprefs['dst_active'] = isset($_SESSION['dst_active']) ? $_SESSION['dst_active'] : $this->prop['dst_active'];
-        }
-        else if (isset($this->prop['_timezone_value']))
-           unset($this->prop['_timezone_value']);
+        } else if (isset($this->prop['_timezone_value']))
+            unset($this->prop['_timezone_value']);
     }
-
 
     /**
      * Getter for all config options
      *
      * @return array  Hash array containg all config properties
      */
-    public function all()
-    {
+    public function all() {
         return $this->prop;
     }
 
@@ -245,9 +224,8 @@ class rcube_config
      *
      * @return float  Timezone offset (in hours)
      */
-    public function get_timezone()
-    {
-      return floatval($this->get('timezone')) + intval($this->get('dst_active'));
+    public function get_timezone() {
+        return floatval($this->get('timezone')) + intval($this->get('dst_active'));
     }
 
     /**
@@ -256,15 +234,14 @@ class rcube_config
      * @param string $key Crypto key name
      * @return string Crypto key
      */
-    public function get_crypto_key($key)
-    {
+    public function get_crypto_key($key) {
         // Bomb out if the requested key does not exist
         if (!array_key_exists($key, $this->prop)) {
             raise_error(array(
                 'code' => 500, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Request for unconfigured crypto key \"$key\""
-            ), true, true);
+                    ), true, true);
         }
 
         $key = $this->prop[$key];
@@ -273,22 +250,20 @@ class rcube_config
         if (strlen($key) != 24) {
             raise_error(array(
                 'code' => 500, 'type' => 'php',
-	            'file' => __FILE__, 'line' => __LINE__,
+                'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Configured crypto key '$key' is not exactly 24 bytes long"
-            ), true, true);
+                    ), true, true);
         }
 
         return $key;
     }
-
 
     /**
      * Try to autodetect operating system and find the correct line endings
      *
      * @return string The appropriate mail header delimiter
      */
-    public function header_delimiter()
-    {
+    public function header_delimiter() {
         // use the configured delimiter for headers
         if (!empty($this->prop['mail_header_delimiter'])) {
             $delim = $this->prop['mail_header_delimiter'];
@@ -297,9 +272,9 @@ class rcube_config
             else
                 raise_error(array(
                     'code' => 500, 'type' => 'php',
-	                'file' => __FILE__, 'line' => __LINE__,
+                    'file' => __FILE__, 'line' => __LINE__,
                     'message' => "Invalid mail_header_delimiter setting"
-                ), true, false);
+                        ), true, false);
         }
 
         $php_os = strtolower(substr(PHP_OS, 0, 3));
@@ -313,7 +288,6 @@ class rcube_config
         return "\n";
     }
 
-
     /**
      * Return the mail domain configured for the given host
      *
@@ -321,8 +295,7 @@ class rcube_config
      * @param boolean $encode If true, domain name will be converted to IDN ASCII
      * @return string Resolved SMTP host
      */
-    public function mail_domain($host, $encode=true)
-    {
+    public function mail_domain($host, $encode = true) {
         $domain = $host;
 
         if (is_array($this->prop['mail_domain'])) {
@@ -338,14 +311,12 @@ class rcube_config
         return $domain;
     }
 
-
     /**
      * Getter for error state
      *
      * @return mixed Error message on error, False if no errors
      */
-    public function get_error()
-    {
+    public function get_error() {
         return empty($this->errors) ? false : join("\n", $this->errors);
     }
 

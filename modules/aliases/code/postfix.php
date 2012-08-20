@@ -24,31 +24,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-	
-		}
-			
-		// Deleting Postfix Alias
-		if (!fs_director::CheckForEmptyValue(self::$delete)) {
-		   	$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'")->Fetch();
-			if ($result) {
-				$sql = "DELETE FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}
-		}
+$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
 
-		// Adding Postfix Alias
-		if (!fs_director::CheckForEmptyValue(self::$create)) {
-	        $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
-			if (!$result) {				
-            	$sql = "INSERT INTO alias  (address,
+// Deleting Postfix Alias
+if (!fs_director::CheckForEmptyValue(self::$delete)) {
+    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'")->Fetch();
+    if ($result) {
+        $sql = "DELETE FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'";
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
+
+// Adding Postfix Alias
+if (!fs_director::CheckForEmptyValue(self::$create)) {
+    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
+    if (!$result) {
+        $sql = "INSERT INTO alias  (address,
 										 	goto,
 										 	domain,
 											created,
@@ -60,8 +60,8 @@
 										 	NOW(),
 										 	NOW(),
 										 	'1')";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}			
-		}	
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
 ?>

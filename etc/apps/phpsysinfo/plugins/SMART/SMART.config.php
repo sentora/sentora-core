@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SMART Plugin Config File
  *
@@ -12,7 +13,6 @@
  * @version   SVN: $Id: SMART.config.php 361 2010-01-31 11:32:30Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
 /**
  * Smartctl program
  * If the smartctl program is available we can read S.M.A.R.T informations

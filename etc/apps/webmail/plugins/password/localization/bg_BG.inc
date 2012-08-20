@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd']  = 'Смяна на парола';
-$labels['curpasswd']  = 'Текуща парола:';
-$labels['newpasswd']  = 'Нова парола:';
-$labels['confpasswd']  = 'Повторете:';
+$labels['changepasswd'] = 'Смяна на парола';
+$labels['curpasswd'] = 'Текуща парола:';
+$labels['newpasswd'] = 'Нова парола:';
+$labels['confpasswd'] = 'Повторете:';
 
 $messages = array();
 $messages['nopassword'] = 'Моля въведете нова парола.';
@@ -14,5 +14,4 @@ $messages['passwordinconsistency'] = 'Паролите не съвпадат, о
 $messages['crypterror'] = 'Паролата не може да бъде сменена. Грешка в криптирането.';
 $messages['connecterror'] = 'Паролата не може да бъде сменена. Грешка в свързването.';
 $messages['internalerror'] = 'Паролата не може да бъде сменена.';
-
 ?>

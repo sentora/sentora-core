@@ -2,20 +2,20 @@
 
 /*
 
- +-----------------------------------------------------------------------+
- | language/sq_AL/messages.inc                                           |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Dashamir Hoxha <dhoxha@albaniaonline.net>                     |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/sq_AL/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Dashamir Hoxha <dhoxha@albaniaonline.net>                     |
+  +-----------------------------------------------------------------------+
 
- @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Hyrja dështoi';
@@ -77,5 +77,4 @@ $messages['movingmessage'] = 'Po lëviz mesazhin...';
 $messages['receiptsent'] = 'U dërgua me sukses një njoftim leximi';
 $messages['errorsendingreceipt'] = 'Nuk mund të dërgohet njoftimi';
 $messages['nodeletelastidentity'] = 'Ju nuk mund ta fshini këtë identitet sepse nuk ju ka mbetur tjetër.';
-
 ?>

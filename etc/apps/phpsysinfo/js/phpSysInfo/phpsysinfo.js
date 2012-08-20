@@ -406,101 +406,101 @@ function formatBytes(bytes, xml) {
     });
     
     switch (byteFormat) {
-    case "PiB":
-        show += round(bytes / Math.pow(1024, 5), 2);
-        show += "&nbsp;" + genlang(90, true);
-        break;
-    case "TiB":
-        show += round(bytes / Math.pow(1024, 4), 2);
-        show += "&nbsp;" + genlang(86, true);
-        break;
-    case "GiB":
-        show += round(bytes / Math.pow(1024, 3), 2);
-        show += "&nbsp;" + genlang(87, true);
-        break;
-    case "MiB":
-        show += round(bytes / Math.pow(1024, 2), 2);
-        show += "&nbsp;" + genlang(88, true);
-        break;
-    case "KiB":
-        show += round(bytes / Math.pow(1024, 1), 2);
-        show += "&nbsp;" + genlang(89, true);
-        break;
-    case "PB":
-        show += round(bytes / Math.pow(1000, 5), 2);
-        show += "&nbsp;" + genlang(91, true);
-        break;
-    case "TB":
-        show += round(bytes / Math.pow(1000, 4), 2);
-        show += "&nbsp;" + genlang(85, true);
-        break;
-    case "GB":
-        show += round(bytes / Math.pow(1000, 3), 2);
-        show += "&nbsp;" + genlang(41, true);
-        break;
-    case "MB":
-        show += round(bytes / Math.pow(1000, 2), 2);
-        show += "&nbsp;" + genlang(40, true);
-        break;
-    case "KB":
-        show += round(bytes / Math.pow(1000, 1), 2);
-        show += "&nbsp;" + genlang(39, true);
-        break;
-    case "auto_decimal":
-        if (bytes > Math.pow(1000, 5)) {
-            show += round(bytes / Math.pow(1000, 5), 2);
-            show += "&nbsp;" + genlang(91, true);
-        }
-        else {
-            if (bytes > Math.pow(1000, 4)) {
-                show += round(bytes / Math.pow(1000, 4), 2);
-                show += "&nbsp;" + genlang(85, true);
-            }
-            else {
-                if (bytes > Math.pow(1000, 3)) {
-                    show += round(bytes / Math.pow(1000, 3), 2);
-                    show += "&nbsp;" + genlang(41, true);
-                }
-                else {
-                    if (bytes > Math.pow(1000, 2)) {
-                        show += round(bytes / Math.pow(1000, 2), 2);
-                        show += "&nbsp;" + genlang(40, true);
-                    }
-                    else {
-                        show += round(bytes / Math.pow(1000, 1), 2);
-                        show += "&nbsp;" + genlang(39, true);
-                    }
-                }
-            }
-        }
-        break;
-    default:
-        if (bytes > Math.pow(1024, 5)) {
+        case "PiB":
             show += round(bytes / Math.pow(1024, 5), 2);
             show += "&nbsp;" + genlang(90, true);
-        }
-        else {
-            if (bytes > Math.pow(1024, 4)) {
-                show += round(bytes / Math.pow(1024, 4), 2);
-                show += "&nbsp;" + genlang(86, true);
+            break;
+        case "TiB":
+            show += round(bytes / Math.pow(1024, 4), 2);
+            show += "&nbsp;" + genlang(86, true);
+            break;
+        case "GiB":
+            show += round(bytes / Math.pow(1024, 3), 2);
+            show += "&nbsp;" + genlang(87, true);
+            break;
+        case "MiB":
+            show += round(bytes / Math.pow(1024, 2), 2);
+            show += "&nbsp;" + genlang(88, true);
+            break;
+        case "KiB":
+            show += round(bytes / Math.pow(1024, 1), 2);
+            show += "&nbsp;" + genlang(89, true);
+            break;
+        case "PB":
+            show += round(bytes / Math.pow(1000, 5), 2);
+            show += "&nbsp;" + genlang(91, true);
+            break;
+        case "TB":
+            show += round(bytes / Math.pow(1000, 4), 2);
+            show += "&nbsp;" + genlang(85, true);
+            break;
+        case "GB":
+            show += round(bytes / Math.pow(1000, 3), 2);
+            show += "&nbsp;" + genlang(41, true);
+            break;
+        case "MB":
+            show += round(bytes / Math.pow(1000, 2), 2);
+            show += "&nbsp;" + genlang(40, true);
+            break;
+        case "KB":
+            show += round(bytes / Math.pow(1000, 1), 2);
+            show += "&nbsp;" + genlang(39, true);
+            break;
+        case "auto_decimal":
+            if (bytes > Math.pow(1000, 5)) {
+                show += round(bytes / Math.pow(1000, 5), 2);
+                show += "&nbsp;" + genlang(91, true);
             }
             else {
-                if (bytes > Math.pow(1024, 3)) {
-                    show += round(bytes / Math.pow(1024, 3), 2);
-                    show += "&nbsp;" + genlang(87, true);
+                if (bytes > Math.pow(1000, 4)) {
+                    show += round(bytes / Math.pow(1000, 4), 2);
+                    show += "&nbsp;" + genlang(85, true);
                 }
                 else {
-                    if (bytes > Math.pow(1024, 2)) {
-                        show += round(bytes / Math.pow(1024, 2), 2);
-                        show += "&nbsp;" + genlang(88, true);
+                    if (bytes > Math.pow(1000, 3)) {
+                        show += round(bytes / Math.pow(1000, 3), 2);
+                        show += "&nbsp;" + genlang(41, true);
                     }
                     else {
-                        show += round(bytes / Math.pow(1024, 1), 2);
-                        show += "&nbsp;" + genlang(89, true);
+                        if (bytes > Math.pow(1000, 2)) {
+                            show += round(bytes / Math.pow(1000, 2), 2);
+                            show += "&nbsp;" + genlang(40, true);
+                        }
+                        else {
+                            show += round(bytes / Math.pow(1000, 1), 2);
+                            show += "&nbsp;" + genlang(39, true);
+                        }
                     }
                 }
             }
-        }
+            break;
+        default:
+            if (bytes > Math.pow(1024, 5)) {
+                show += round(bytes / Math.pow(1024, 5), 2);
+                show += "&nbsp;" + genlang(90, true);
+            }
+            else {
+                if (bytes > Math.pow(1024, 4)) {
+                    show += round(bytes / Math.pow(1024, 4), 2);
+                    show += "&nbsp;" + genlang(86, true);
+                }
+                else {
+                    if (bytes > Math.pow(1024, 3)) {
+                        show += round(bytes / Math.pow(1024, 3), 2);
+                        show += "&nbsp;" + genlang(87, true);
+                    }
+                    else {
+                        if (bytes > Math.pow(1024, 2)) {
+                            show += round(bytes / Math.pow(1024, 2), 2);
+                            show += "&nbsp;" + genlang(88, true);
+                        }
+                        else {
+                            show += round(bytes / Math.pow(1024, 1), 2);
+                            show += "&nbsp;" + genlang(89, true);
+                        }
+                    }
+                }
+            }
     }
     return show;
 }
@@ -524,14 +524,14 @@ function formatTemp(degreeC, xml) {
     }
     else {
         switch (tempFormat) {
-        case "f":
-            return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true);
-        case "c":
-            return round(degree, 1) + "&nbsp;" + genlang(60, true);
-        case "c-f":
-            return round(degree, 1) + "&nbsp;" + genlang(60, true) + "<br><i>(" + round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + ")</i>";
-        case "f-c":
-            return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + "<br><i>(" + round(degree, 1) + "&nbsp;" + genlang(60, true) + ")</i>";
+            case "f":
+                return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true);
+            case "c":
+                return round(degree, 1) + "&nbsp;" + genlang(60, true);
+            case "c-f":
+                return round(degree, 1) + "&nbsp;" + genlang(60, true) + "<br><i>(" + round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + ")</i>";
+            case "f-c":
+                return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + "<br><i>(" + round(degree, 1) + "&nbsp;" + genlang(60, true) + ")</i>";
         }
     }
 }

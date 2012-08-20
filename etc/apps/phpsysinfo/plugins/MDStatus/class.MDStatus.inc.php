@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * MDSTAT Plugin
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.MDStatus.inc.php 329 2009-09-07 11:21:44Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * mdstat Plugin, which displays a snapshot of the kernel's RAID/md state
  * a simple view which shows supported types and RAID-Devices which are determined by
  * parsing the "/proc/mdstat" file, another way is to provide
@@ -28,39 +30,38 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class MDStatus extends PSI_Plugin
-{
+class MDStatus extends PSI_Plugin {
+
     /**
      * variable, which holds the content of the command
      * @var array
      */
     private $_filecontent = "";
-    
+
     /**
      * variable, which holds the result before the xml is generated out of this array
      * @var array
      */
     private $_result = array();
-    
+
     /**
      * read the data into an internal array and also call the parent constructor
      *
      * @param String $enc encoding
      */
-    public function __construct($enc)
-    {
+    public function __construct($enc) {
         $buffer = "";
         parent::__construct(__CLASS__, $enc);
         switch (PSI_PLUGIN_MDSTAT_ACCESS) {
-        case 'file':
-            CommonFunctions::rfts("/proc/mdstat", $buffer);
-            break;
-        case 'data':
-            CommonFunctions::rfts(APP_ROOT."/data/mdstat.txt", $buffer);
-            break;
-        default:
-            $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_MDSTAT_ACCESS");
-            break;
+            case 'file':
+                CommonFunctions::rfts("/proc/mdstat", $buffer);
+                break;
+            case 'data':
+                CommonFunctions::rfts(APP_ROOT . "/data/mdstat.txt", $buffer);
+                break;
+            default:
+                $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_MDSTAT_ACCESS");
+                break;
         }
         if (trim($buffer) != "") {
             $this->_filecontent = preg_split("/\n/", $buffer, -1, PREG_SPLIT_NO_EMPTY);
@@ -68,7 +69,7 @@ class MDStatus extends PSI_Plugin
             $this->_filecontent = array();
         }
     }
-    
+
     /**
      * doing all tasks to get the required informations that the plugin needs
      * result is stored in an internal array<br>the array is build like a tree,
@@ -76,9 +77,8 @@ class MDStatus extends PSI_Plugin
      *
      * @return void
      */
-    public function execute()
-    {
-        if ( empty($this->_filecontent)) {
+    public function execute() {
+        if (empty($this->_filecontent)) {
             return;
         }
         // get the supported types
@@ -122,7 +122,7 @@ class MDStatus extends PSI_Plugin
                     }
                 }
                 $count++;
-                $optionline = $this->_filecontent[$count - 1].$this->_filecontent[$count];
+                $optionline = $this->_filecontent[$count - 1] . $this->_filecontent[$count];
                 if ($pos = strpos($optionline, "k chunk")) {
                     $this->_result['devices'][$dev]['chunk_size'] = trim(substr($optionline, $pos - 3, 3));
                 } else {
@@ -175,15 +175,14 @@ class MDStatus extends PSI_Plugin
             $this->_result['unused_devs'] = -1;
         }
     }
-    
+
     /**
      * generates the XML content for the plugin
      *
      * @return SimpleXMLObject entire XML content for the plugin
      */
-    public function xml()
-    {
-        if ( empty($this->_result)) {
+    public function xml() {
+        if (empty($this->_result)) {
             return $this->xml->getSimpleXmlElement();
         }
         $sup = $this->xml->addChild("Supported_Types");
@@ -191,7 +190,7 @@ class MDStatus extends PSI_Plugin
             $typ = $sup->addChild("Type");
             $typ->addAttribute("Name", $type);
         }
-        foreach ($this->_result['devices'] as $key=>$device) {
+        foreach ($this->_result['devices'] as $key => $device) {
             $dev = $this->xml->addChild("Raid");
             $dev->addAttribute("Device_Name", $key);
             $dev->addAttribute("Level", $device["level"]);
@@ -207,7 +206,7 @@ class MDStatus extends PSI_Plugin
             $action->addAttribute("Time_To_Finish", $device['action']['finish_time']);
             $action->addAttribute("Time_Unit", $device['action']['finish_unit']);
             $disks = $dev->addChild("Disks");
-            foreach ($device['partitions'] as $diskkey=>$disk) {
+            foreach ($device['partitions'] as $diskkey => $disk) {
                 $disktemp = $disks->addChild("Disk");
                 $disktemp->addAttribute("Name", $diskkey);
                 $disktemp->addAttribute("Status", $disk['status']);
@@ -220,5 +219,7 @@ class MDStatus extends PSI_Plugin
         }
         return $this->xml->getSimpleXmlElement();
     }
+
 }
+
 ?>

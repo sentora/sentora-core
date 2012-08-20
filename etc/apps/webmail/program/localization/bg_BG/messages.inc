@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/bg_BG/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Todor Dragnev <todor.dragnev@gmail.com>                       |
-|	  Nickolay Bunev <just4nick@gmail.com>								|
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/bg_BG/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Todor Dragnev <todor.dragnev@gmail.com>                       |
+  |	  Nickolay Bunev <just4nick@gmail.com>								|
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Вход неуспешен';
@@ -158,5 +158,4 @@ $messages['foldercreated'] = 'Папката е създадена';
 $messages['invalidimageformat'] = 'Невалиден формат на изображението';
 $messages['mispellingsfound'] = 'В съобщението са намерени правописни грешки.';
 $messages['parentnotwritable'] = 'Създаването/преместването на папка в избраната родителска папка е неуспешно. Няма права за достъп.';
-
 ?>

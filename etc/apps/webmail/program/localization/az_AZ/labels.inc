@@ -2,18 +2,18 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/az_AZ/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Orkhan Guliyev, OUR Technology, LLC.<office@ourtechnology.net>|
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/az_AZ/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Orkhan Guliyev, OUR Technology, LLC.<office@ourtechnology.net>|
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = '$product-a xoş gəldiniz!';
@@ -397,5 +397,4 @@ $labels['vietnamese'] = 'Vyetnamca';
 $labels['japanese'] = 'Yaponca';
 $labels['korean'] = 'Koreya';
 $labels['chinese'] = 'Çincə';
-
 ?>

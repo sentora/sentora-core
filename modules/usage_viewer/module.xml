@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-<name>Usage Viewer</name>
-<version>100</version>
-<defaultcat>Account Information</defaultcat>
-<desc>The account usage screen enables you to see exactly what you are currently using on your hosting package.</desc>
-<authorname>ZPanel Project</authorname>
-<authoremail>developers@zpanelcp.com</authoremail>
-<authorurl>http://www.zpanelcp.com/</authorurl>
-<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <name>Usage Viewer</name>
+    <version>100</version>
+    <defaultcat>Account Information</defaultcat>
+    <desc>The account usage screen enables you to see exactly what you are currently using on your hosting package.</desc>
+    <authorname>ZPanel Project</authorname>
+    <authoremail>developers@zpanelcp.com</authoremail>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
+    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

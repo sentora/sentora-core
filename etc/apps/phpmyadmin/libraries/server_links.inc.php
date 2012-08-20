@@ -1,10 +1,11 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -49,7 +50,7 @@ if (!$GLOBALS['is_ajax_request']) {
     $tabs['status']['link'] = 'server_status.php';
     $tabs['status']['text'] = __('Status');
 
-    if (! empty($binary_logs)) {
+    if (!empty($binary_logs)) {
         $tabs['binlog']['icon'] = 's_tbl.png';
         $tabs['binlog']['link'] = 'server_binlog.php';
         $tabs['binlog']['text'] = __('Binary log');
@@ -97,8 +98,7 @@ if (!$GLOBALS['is_ajax_request']) {
     $tabs['settings']['icon'] = 'b_tblops.png';
     $tabs['settings']['link'] = 'prefs_manage.php';
     $tabs['settings']['text'] = __('Settings');
-    $tabs['settings']['active'] = in_array(basename($GLOBALS['PMA_PHP_SELF']),
-        array('prefs_forms.php', 'prefs_manage.php'));
+    $tabs['settings']['active'] = in_array(basename($GLOBALS['PMA_PHP_SELF']), array('prefs_forms.php', 'prefs_manage.php'));
 
     echo PMA_generate_html_tabs($tabs, array());
     unset($tabs);

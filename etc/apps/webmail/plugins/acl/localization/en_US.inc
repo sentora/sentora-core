@@ -79,5 +79,4 @@ $messages['createerror'] = 'Unable to add access rights';
 $messages['deleteconfirm'] = 'Are you sure, you want to remove access rights of selected user(s)?';
 $messages['norights'] = 'No rights has been specified!';
 $messages['nouser'] = 'No username has been specified!';
-
 ?>

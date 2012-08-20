@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-<name>My Account</name>
-<version>100</version>
-<defaultcat>Account Information</defaultcat>
-<desc>Current personal details that you have provided us with, We ask that you keep these upto date in case we require to contact you regarding your hosting package.</desc>
-<authorname>ZPanel Project</authorname>
-<authoremail>developers@zpanelcp.com</authoremail>
-<authorurl>http://www.zpanelcp.com/</authorurl>
-<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <name>My Account</name>
+    <version>100</version>
+    <defaultcat>Account Information</defaultcat>
+    <desc>Current personal details that you have provided us with, We ask that you keep these upto date in case we require to contact you regarding your hosting package.</desc>
+    <authorname>ZPanel Project</authorname>
+    <authoremail>developers@zpanelcp.com</authoremail>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
+    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

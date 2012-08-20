@@ -1,21 +1,22 @@
 <?php
+
 /*
-+-----------------------------------------------------------------------+
-| language/el/messages.inc                                              |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Jim Deves <jim@cobaltblue.gr>                                 |
-|         John Economou <hsoc@irc.gr>                                   |
-|         Panagiotis Christias <p.christias@noc.ntua.gr>                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/el/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Jim Deves <jim@cobaltblue.gr>                                 |
+  |         John Economou <hsoc@irc.gr>                                   |
+  |         Panagiotis Christias <p.christias@noc.ntua.gr>                |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
+  @version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Είσοδος απέτυχε';
@@ -102,5 +103,4 @@ $messages['smtptoerror'] = 'Σφάλμα SMTP ($code): Αποτυχία προσ
 $messages['smtprecipientserror'] = 'Σφάλμα SMTP: Αδύνατο να προσπελαστεί η λίστα παραληπτών';
 $messages['smtperror'] = 'Σφάλμα SMTP: $msg';
 $messages['emailformaterror'] = 'Λανθασμένη διεύθνση email: $email';
-
 ?>

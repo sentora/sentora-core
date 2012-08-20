@@ -1,10 +1,10 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
  * @package phpMyAdmin
  */
-
 /**
  * Gets some core libraries
  */
@@ -39,7 +39,7 @@ $sql_query .= ';';
 
 $result = PMA_DBI_try_query($sql_query);
 
-if (! $result) {
+if (!$result) {
     $message = PMA_Message::rawError(PMA_DBI_getError());
     // avoid displaying the not-created db name in header or navi panel
     $GLOBALS['db'] = '';
@@ -48,7 +48,7 @@ if (! $result) {
     /**
      * If in an Ajax request, just display the message with {@link PMA_ajaxResponse}
      */
-    if($GLOBALS['is_ajax_request'] == true) {
+    if ($GLOBALS['is_ajax_request'] == true) {
         PMA_ajaxResponse($message, FALSE);
     }
 
@@ -62,7 +62,7 @@ if (! $result) {
     /**
      * If in an Ajax request, build the output and send it
      */
-    if($GLOBALS['is_ajax_request'] == true) {
+    if ($GLOBALS['is_ajax_request'] == true) {
 
         /**
          * String containing the SQL Query formatted in pretty HTML
@@ -95,7 +95,7 @@ if (! $result) {
         }
 
         // $dbstats comes from the create table dialog
-        if (! empty($dbstats)) {
+        if (!empty($dbstats)) {
             $current = array(
                 'SCHEMA_NAME' => $new_db,
                 'DEFAULT_COLLATION_NAME' => $db_collation_for_ajax,

@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/ast/labels.inc                                               |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Mikel González <dangerous_piper@softastur.org>                |
-|         http://blogs.altuxa.com/gyg                                   |
-|         http://softastur.org                                          |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ast/labels.inc                                               |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Mikel González <dangerous_piper@softastur.org>                |
+  |         http://blogs.altuxa.com/gyg                                   |
+  |         http://softastur.org                                          |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Bienllegáu a $product';
@@ -274,5 +274,4 @@ $labels['B'] = 'B';
 $labels['KB'] = 'KB';
 $labels['MB'] = 'MB';
 $labels['GB'] = 'GB';
-
 ?>

@@ -2,20 +2,20 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| localization/kr/labels.inc                                            |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: lordmiss <lordmiss@lordmiss.com>                              |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | localization/kr/labels.inc                                            |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: lordmiss <lordmiss@lordmiss.com>                              |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels['welcome'] = '$product에 오신 것을 환영합니다';
 $labels['welcome'] = '$product에 오신 것을 환영합니다';
@@ -259,5 +259,4 @@ $labels['B'] = '바이트';
 $labels['KB'] = '킬로바이트';
 $labels['MB'] = '메가바이트';
 $labels['GB'] = '기가바이트';
-
 ?>

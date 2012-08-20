@@ -2,25 +2,25 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/pt_BR/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Anderson S. Ferreira <anderson@cnpm.embrapa.br>               |
-|         Robson F. Ramaldes <rframaldes@gmail.com>                     |
-|         Alessandro Lenzi <alessandro@mistymountain.com.br>            |
-|         Gervasio Antonio <gdsa32-translations@yahoo.com.br>           |
-|         Victor Benincasa <vbenincasa@gmail.com>                       |
-|         Jarbas Peixoto Junior <jarbas.peixoto@gmail.com>              |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/pt_BR/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Anderson S. Ferreira <anderson@cnpm.embrapa.br>               |
+  |         Robson F. Ramaldes <rframaldes@gmail.com>                     |
+  |         Alessandro Lenzi <alessandro@mistymountain.com.br>            |
+  |         Gervasio Antonio <gdsa32-translations@yahoo.com.br>           |
+  |         Victor Benincasa <vbenincasa@gmail.com>                       |
+  |         Jarbas Peixoto Junior <jarbas.peixoto@gmail.com>              |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5326 2011-10-10 09:39:58Z netbit $
+  @version $Id: labels.inc 5326 2011-10-10 09:39:58Z netbit $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Bem-vindo ao $product';
@@ -430,5 +430,4 @@ $labels['vietnamese'] = 'Vietnamita';
 $labels['japanese'] = 'Japonês';
 $labels['korean'] = 'Coreano';
 $labels['chinese'] = 'Chinês';
-
 ?>

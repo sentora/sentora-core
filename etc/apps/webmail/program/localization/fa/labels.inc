@@ -1,22 +1,22 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/fa/labels.inc                                                |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Mohammad Ebrahim Mohammadi Panah <mebrahim at gmail.com>      |
-|         Anoosh <anoosher2003 at yahoo.com>                            |
-|         Nader Aghazadeh <Nader.aghazadeh at gmail.com>                |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/fa/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Mohammad Ebrahim Mohammadi Panah <mebrahim at gmail.com>      |
+  |         Anoosh <anoosher2003 at yahoo.com>                            |
+  |         Nader Aghazadeh <Nader.aghazadeh at gmail.com>                |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'خوش آمدید $product به';
@@ -259,5 +259,4 @@ $labels['B'] = 'بایت';
 $labels['KB'] = 'کیلو بایت';
 $labels['MB'] = 'مگابایت';
 $labels['GB'] = 'گیگا بایت';
-
 ?>

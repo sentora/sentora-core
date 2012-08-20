@@ -24,9 +24,9 @@ class ui_tpl_progbardisk {
         } else {
             $line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=0\"/>";
         }
-		if ($diskspace == $diskquota){
-			$line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=100\"/>";
-		}
+        if ($diskspace == $diskquota) {
+            $line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=100\"/>";
+        }
         return $line;
     }
 

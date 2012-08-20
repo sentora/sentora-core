@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
@@ -14,11 +15,11 @@
  *       Also, support DEFINER (like we do in export).
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
-$routines = PMA_DBI_fetch_result('SELECT SPECIFIC_NAME,ROUTINE_NAME,ROUTINE_TYPE,DTD_IDENTIFIER FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA= \'' . PMA_sqlAddslashes($db,true) . '\';');
+$routines = PMA_DBI_fetch_result('SELECT SPECIFIC_NAME,ROUTINE_NAME,ROUTINE_TYPE,DTD_IDENTIFIER FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA= \'' . PMA_sqlAddslashes($db, true) . '\';');
 
 if ($routines) {
     PMA_generate_slider_effect('routines', __('Routines'));
@@ -31,11 +32,8 @@ if ($routines) {
                       <th>&nbsp;</th>
                       <th>%s</th>
                       <th>%s</th>
-                </tr>',
-          __('Name'),
-          __('Type'),
-          __('Return type'));
-    $ct=0;
+                </tr>', __('Name'), __('Type'), __('Return type'));
+    $ct = 0;
     $delimiter = '//';
     if ($GLOBALS['cfg']['AjaxEnable']) {
         $conditional_class = 'class="drop_procedure_anchor"';
@@ -51,19 +49,19 @@ if ($routines) {
         // uses SHOW CREATE
 
         $definition = 'DROP ' . $routine['ROUTINE_TYPE'] . ' ' . PMA_backquote($routine['SPECIFIC_NAME']) . $delimiter . "\n"
-            .  PMA_DBI_get_definition($db, $routine['ROUTINE_TYPE'], $routine['SPECIFIC_NAME'])
-            . "\n";
+                . PMA_DBI_get_definition($db, $routine['ROUTINE_TYPE'], $routine['SPECIFIC_NAME'])
+                . "\n";
 
         //if ($routine['ROUTINE_TYPE'] == 'PROCEDURE') {
         //    $sqlUseProc  = 'CALL ' . $routine['SPECIFIC_NAME'] . '()';
         //} else {
         //    $sqlUseProc = 'SELECT ' . $routine['SPECIFIC_NAME'] . '()';
-            /* this won't get us far: to really use the function
-               i'd need to know how many parameters the function needs and then create
-               something to ask for them. As i don't see this directly in
-               the table i am afraid that requires parsing the ROUTINE_DEFINITION
-               and i don't really need that now so i simply don't offer
-               a method for running the function*/
+        /* this won't get us far: to really use the function
+          i'd need to know how many parameters the function needs and then create
+          something to ask for them. As i don't see this directly in
+          the table i am afraid that requires parsing the ROUTINE_DEFINITION
+          and i don't really need that now so i simply don't offer
+          a method for running the function */
         //}
         if ($routine['ROUTINE_TYPE'] == 'PROCEDURE') {
             $sqlDropProc = 'DROP PROCEDURE ' . PMA_backquote($routine['SPECIFIC_NAME']);
@@ -77,14 +75,7 @@ if ($routines) {
                           <td>%s</td>
                           <td>%s</td>
                           <td>%s</td>
-                     </tr>',
-                     ($ct%2 == 0) ? 'even' : 'odd',
-                     $sqlDropProc,
-                     $routine['ROUTINE_NAME'],
-                     ! empty($definition) ? PMA_linkOrButton('db_sql.php?' . $url_query . '&amp;sql_query=' . urlencode($definition) . '&amp;show_query=1&amp;db_query_force=1&amp;delimiter=' . urlencode($delimiter), $titles['Edit']) : '&nbsp;',
-                     '<a ' . $conditional_class . ' href="sql.php?' . $url_query . '&amp;sql_query=' . urlencode($sqlDropProc) . '" >' . $titles['Drop'] . '</a>',
-                     $routine['ROUTINE_TYPE'],
-                     $routine['DTD_IDENTIFIER']);
+                     </tr>', ($ct % 2 == 0) ? 'even' : 'odd', $sqlDropProc, $routine['ROUTINE_NAME'], !empty($definition) ? PMA_linkOrButton('db_sql.php?' . $url_query . '&amp;sql_query=' . urlencode($definition) . '&amp;show_query=1&amp;db_query_force=1&amp;delimiter=' . urlencode($delimiter), $titles['Edit']) : '&nbsp;', '<a ' . $conditional_class . ' href="sql.php?' . $url_query . '&amp;sql_query=' . urlencode($sqlDropProc) . '" >' . $titles['Drop'] . '</a>', $routine['ROUTINE_TYPE'], $routine['DTD_IDENTIFIER']);
         $ct++;
     }
     echo '</table>';

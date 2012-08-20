@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * Nut class
  *
@@ -13,7 +14,8 @@
  * @version   SVN: $Id: class.Nut.inc.php 287 2009-06-26 12:11:59Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * getting ups information from upsc program
  *
  * @category  PHP
@@ -25,20 +27,19 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class Nut extends UPS
-{
+class Nut extends UPS {
+
     /**
      * internal storage for all gathered data
      *
      * @var array
      */
     private $_output = array();
-    
+
     /**
      * get all information from all configured ups and store output in internal array
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         CommonFunctions::executeProgram('upsc', '-l', $output);
         $ups_names = preg_split("/\n/", $output, -1, PREG_SPLIT_NO_EMPTY);
@@ -47,7 +48,7 @@ class Nut extends UPS
             $this->_output[$value] = $temp;
         }
     }
-    
+
     /**
      * check if a specific value is set in an array
      *
@@ -56,20 +57,18 @@ class Nut extends UPS
      *
      * @return array
      */
-    private function _checkIsSet($hash, $key)
-    {
+    private function _checkIsSet($hash, $key) {
         return isset($hash[$key]) ? $hash[$key] : '';
     }
-    
+
     /**
      * parse the input and store data in resultset for xml generation
      *
      * @return array
      */
-    private function _info()
-    {
-        if (! empty($this->_output)) {
-            foreach ($this->_output as $name=>$value) {
+    private function _info() {
+        if (!empty($this->_output)) {
+            foreach ($this->_output as $name => $value) {
                 $temp = preg_split("/\n/", $value, -1, PREG_SPLIT_NO_EMPTY);
                 $ups_data = array();
                 foreach ($temp as $value) {
@@ -82,20 +81,20 @@ class Nut extends UPS
                 $dev->setModel($this->_checkIsSet($ups_data, 'ups.model'));
                 $dev->setMode($this->_checkIsSet($ups_data, 'driver.name'));
                 $dev->setStatus($this->_checkIsSet($ups_data, 'ups.status'));
-                
+
                 //Line
                 $dev->setLineVoltage($this->_checkIsSet($ups_data, 'input.voltage'));
                 $dev->setLoad($this->_checkIsSet($ups_data, 'ups.load'));
-                
+
                 //Battery
                 $dev->setBatteryVoltage($this->_checkIsSet($ups_data, 'battery.voltage'));
                 $dev->setBatterCharge($this->_checkIsSet($ups_data, 'battery.charge'));
-                
+
                 $this->upsinfo->setUpsDevices($dev);
             }
         }
     }
-    
+
     /**
      * get the information
      *
@@ -103,9 +102,10 @@ class Nut extends UPS
      *
      * @return Void
      */
-    function build()
-    {
+    function build() {
         $this->_info();
     }
+
 }
+
 ?>

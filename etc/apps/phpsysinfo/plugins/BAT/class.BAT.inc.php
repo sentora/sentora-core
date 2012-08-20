@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * BAT Plugin
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.BAT.inc.php 334 2009-09-16 15:21:39Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * BAT Plugin, which displays battery state
  *
  * @category  PHP
@@ -23,54 +25,52 @@
  * @version   $Id: class.BAT.inc.php 334 2009-09-16 15:21:39Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
-class BAT extends PSI_Plugin
-{
+class BAT extends PSI_Plugin {
+
     /**
      * variable, which holds the content of the command
      * @var array
      */
     private $_filecontent = array();
-    
+
     /**
      * variable, which holds the result before the xml is generated out of this array
      * @var array
      */
     private $_result = array();
-    
+
     /**
      * read the data into an internal array and also call the parent constructor
      *
      * @param String $enc encoding
      */
-    public function __construct($enc)
-    {
+    public function __construct($enc) {
         parent::__construct(__CLASS__, $enc);
         switch (PSI_PLUGIN_BAT_ACCESS) {
-        case 'command':
-            CommonFunctions::rfts('/proc/acpi/battery/'.PSI_PLUGIN_BAT_DEVICE.'/info', $buffer_info);
-            CommonFunctions::rfts('/proc/acpi/battery/'.PSI_PLUGIN_BAT_DEVICE.'/state', $buffer_state);
-            break;
-        case 'data':
-            CommonFunctions::rfts(APP_ROOT."/data/bat_info.txt", $buffer_info);
-            CommonFunctions::rfts(APP_ROOT."/data/bat_state.txt", $buffer_state);
-            break;
-        default:
-            $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_BAT_ACCESS");
-            break;
+            case 'command':
+                CommonFunctions::rfts('/proc/acpi/battery/' . PSI_PLUGIN_BAT_DEVICE . '/info', $buffer_info);
+                CommonFunctions::rfts('/proc/acpi/battery/' . PSI_PLUGIN_BAT_DEVICE . '/state', $buffer_state);
+                break;
+            case 'data':
+                CommonFunctions::rfts(APP_ROOT . "/data/bat_info.txt", $buffer_info);
+                CommonFunctions::rfts(APP_ROOT . "/data/bat_state.txt", $buffer_state);
+                break;
+            default:
+                $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_BAT_ACCESS");
+                break;
         }
         $this->_filecontent['info'] = preg_split("/\n/", $buffer_info, -1, PREG_SPLIT_NO_EMPTY);
         $this->_filecontent['state'] = preg_split("/\n/", $buffer_state, -1, PREG_SPLIT_NO_EMPTY);
     }
-    
+
     /**
      * doing all tasks to get the required informations that the plugin needs
      * result is stored in an internal array
      *
      * @return void
      */
-    public function execute()
-    {
-        if ( empty($this->_filecontent)) {
+    public function execute() {
+        if (empty($this->_filecontent)) {
             return;
         }
         foreach ($this->_filecontent['info'] as $roworig) {
@@ -94,14 +94,13 @@ class BAT extends PSI_Plugin
         }
         $this->_result[0] = $bat;
     }
-    
+
     /**
      * generates the XML content for the plugin
      *
      * @return SimpleXMLElement entire XML content for the plugin
      */
-    public function xml()
-    {
+    public function xml() {
         foreach ($this->_result as $bat_item) {
             $xmlbat = $this->xml->addChild("Bat");
             $xmlbat->addAttribute("DesignCapacity", $bat_item['design_capacity']);
@@ -112,5 +111,7 @@ class BAT extends PSI_Plugin
         }
         return $this->xml->getSimpleXmlElement();
     }
+
 }
+
 ?>

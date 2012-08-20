@@ -2,20 +2,20 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/id_ID/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Putu Arya Sabda Wijaya <ptaryasw@isi-dps.ac.id>                    |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/id_ID/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Putu Arya Sabda Wijaya <ptaryasw@isi-dps.ac.id>                    |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
+  @version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Gagal masuk';
@@ -141,5 +141,4 @@ $messages['nametoolong'] = 'Nama terlalu panjang';
 $messages['folderupdated'] = 'Folder berhasil diperbarui';
 $messages['foldercreated'] = 'Folder berhasil dibuat';
 $messages['invalidimageformat'] = 'Bukan format gambar yang valid';
-
 ?>

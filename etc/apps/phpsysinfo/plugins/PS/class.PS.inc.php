@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * PSSTATUS Plugin
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.PS.inc.php 481 2011-08-14 20:51:54Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * process Plugin, which displays all running processes
  * a simple tree view which is filled with the running processes which are determined by
  * calling the "ps" command line utility, another way is to provide
@@ -28,65 +30,66 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class PS extends PSI_Plugin
-{
+class PS extends PSI_Plugin {
+
     /**
      * variable, which holds the content of the command
      * @var array
      */
     private $_filecontent = array();
+
     /**
      * variable, which holds the result before the xml is generated out of this array
      * @var array
      */
     private $_result = array();
+
     /**
      * read the data into an internal array and also call the parent constructor
      *
      * @param String $enc encoding
      */
-    public function __construct($enc)
-    {
+    public function __construct($enc) {
         parent::__construct(__CLASS__, $enc);
         switch (PSI_PLUGIN_PS_ACCESS) {
-        case 'command':
-            if (PHP_OS == 'WINNT') {
-                $objLocator = new COM("WbemScripting.SWbemLocator");
-                $wmi = $objLocator->ConnectServer();
-                $os_wmi = $wmi->InstancesOf('Win32_OperatingSystem');
-                foreach ($os_wmi as $os) {
-                    $memtotal = $os->TotalVisibleMemorySize * 1024;
-                }
-                $process_wmi = $wmi->InstancesOf('Win32_Process');
-                foreach ($process_wmi as $process) {
-                    if (strlen(trim($process->CommandLine)) > 0) {
-                        $ps = trim($process->CommandLine);
-                    } else {
-                        $ps = trim($process->Caption);
+            case 'command':
+                if (PHP_OS == 'WINNT') {
+                    $objLocator = new COM("WbemScripting.SWbemLocator");
+                    $wmi = $objLocator->ConnectServer();
+                    $os_wmi = $wmi->InstancesOf('Win32_OperatingSystem');
+                    foreach ($os_wmi as $os) {
+                        $memtotal = $os->TotalVisibleMemorySize * 1024;
                     }
-                    if (trim($process->ProcessId) != 0) {
-                        $memusage = round(trim($process->WorkingSetSize) * 100 / $memtotal, 1);
-                        //ParentProcessId
-                        //Unique identifier of the process that creates a process. Process identifier numbers are reused, so they
-                        //only identify a process for the lifetime of that process. It is possible that the process identified by
-                        //ParentProcessId is terminated, so ParentProcessId may not refer to a running process. It is also
-                        //possible that ParentProcessId incorrectly refers to a process that reuses a process identifier. You can
-                        //use the CreationDate property to determine whether the specified parent was created after the process
-                        //represented by this Win32_Process instance was created.
-                        //=> subtrees of processes may be missing (WHAT TODO?!?)
-                        $this->_filecontent[] = trim($process->ProcessId)." ".trim($process->ParentProcessId)." ".$memusage." ".$ps;
+                    $process_wmi = $wmi->InstancesOf('Win32_Process');
+                    foreach ($process_wmi as $process) {
+                        if (strlen(trim($process->CommandLine)) > 0) {
+                            $ps = trim($process->CommandLine);
+                        } else {
+                            $ps = trim($process->Caption);
+                        }
+                        if (trim($process->ProcessId) != 0) {
+                            $memusage = round(trim($process->WorkingSetSize) * 100 / $memtotal, 1);
+                            //ParentProcessId
+                            //Unique identifier of the process that creates a process. Process identifier numbers are reused, so they
+                            //only identify a process for the lifetime of that process. It is possible that the process identified by
+                            //ParentProcessId is terminated, so ParentProcessId may not refer to a running process. It is also
+                            //possible that ParentProcessId incorrectly refers to a process that reuses a process identifier. You can
+                            //use the CreationDate property to determine whether the specified parent was created after the process
+                            //represented by this Win32_Process instance was created.
+                            //=> subtrees of processes may be missing (WHAT TODO?!?)
+                            $this->_filecontent[] = trim($process->ProcessId) . " " . trim($process->ParentProcessId) . " " . $memusage . " " . $ps;
+                        }
                     }
+                } else {
+                    CommonFunctions::executeProgram("ps", "axo pid,ppid,pmem,args", $buffer, PSI_DEBUG);
                 }
-            } else {
-                CommonFunctions::executeProgram("ps", "axo pid,ppid,pmem,args", $buffer, PSI_DEBUG);
-            }
-            break;
-        case 'data':
-            CommonFunctions::rfts(APP_ROOT."/data/ps.txt", $buffer);
-            break;
-        default:
-            $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_PS_ACCESS");
-            break;
+                break;
+            case 'data':
+                CommonFunctions::rfts(APP_ROOT . "/data/ps.txt", $buffer);
+                break;
+            default:
+                $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_PS_ACCESS");
+                break;
         }
         if (PHP_OS != 'WINNT') {
             if (trim($buffer) != "") {
@@ -97,6 +100,7 @@ class PS extends PSI_Plugin
             }
         }
     }
+
     /**
      * doing all tasks to get the required informations that the plugin needs
      * result is stored in an internal array<br>the array is build like a tree,
@@ -104,9 +108,8 @@ class PS extends PSI_Plugin
      *
      * @return void
      */
-    public function execute()
-    {
-        if ( empty($this->_filecontent)) {
+    public function execute() {
+        if (empty($this->_filecontent)) {
             return;
         }
         foreach ($this->_filecontent as $roworig) {
@@ -114,7 +117,7 @@ class PS extends PSI_Plugin
             if (count($row) != 4) {
                 break;
             }
-            foreach ($row as $key=>$val) {
+            foreach ($row as $key => $val) {
                 $items[$row[0]][$key] = $val;
             }
             if ($row[1] !== $row[0]) {
@@ -123,17 +126,18 @@ class PS extends PSI_Plugin
         }
         $this->_result = $items[0];
     }
+
     /**
      * generates the XML content for the plugin
      *
      * @return SimpleXMLElement entire XML content for the plugin
      */
-    public function xml()
-    {
-        $positions = array(0=>0);
+    public function xml() {
+        $positions = array(0 => 0);
         $xml = $this->_addchild($this->_result['childs'], $this->xml, $positions);
         return $this->xml->getSimpleXmlElement();
     }
+
     /**
      * recursive function to allow appending child processes to a parent process
      *
@@ -143,27 +147,26 @@ class PS extends PSI_Plugin
      *
      * @return SimpleXMLExtended Object with the appended array content
      */
-    private function _addchild($child, $xml, &$positions)
-    {
-        foreach ($child as $key=>$value) {
+    private function _addchild($child, $xml, &$positions) {
+        foreach ($child as $key => $value) {
             $xmlnode = $xml->addChild("Process");
-            foreach ($value as $key2=>$value2) {
+            foreach ($value as $key2 => $value2) {
                 if (!is_array($value2)) {
                     switch ($key2) {
-                    case 0:
-                        array_push($positions, $value2);
-                        $xmlnode->addAttribute('PID', $value2);
-                        break;
-                    case 1:
-                        $xmlnode->addAttribute('ParentID', array_search($value2, $positions));
-                        $xmlnode->addAttribute('PPID', $value2);
-                        break;
-                    case 2:
-                        $xmlnode->addAttribute('MemoryUsage', $value2);
-                        break;
-                    case 3:
-                        $xmlnode->addAttribute('Name', $value2);
-                        break;
+                        case 0:
+                            array_push($positions, $value2);
+                            $xmlnode->addAttribute('PID', $value2);
+                            break;
+                        case 1:
+                            $xmlnode->addAttribute('ParentID', array_search($value2, $positions));
+                            $xmlnode->addAttribute('PPID', $value2);
+                            break;
+                        case 2:
+                            $xmlnode->addAttribute('MemoryUsage', $value2);
+                            break;
+                        case 3:
+                            $xmlnode->addAttribute('Name', $value2);
+                            break;
                     }
                 } else {
                     $this->_addChild($value2, $xml, $positions);
@@ -172,5 +175,7 @@ class PS extends PSI_Plugin
         }
         return $xml;
     }
+
 }
+
 ?>

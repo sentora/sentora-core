@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * QUOTAS Plugin
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.Quotas.inc.php 329 2009-09-07 11:21:44Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * quota Plugin, which displays all quotas on the machine
  * display all quotas in a sortable table with the current values which are determined by
  * calling the "repquota" command line utility, another way is to provide
@@ -28,38 +30,37 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class Quotas extends PSI_Plugin
-{
+class Quotas extends PSI_Plugin {
+
     /**
      * variable, which holds the content of the command
      * @var array
      */
     private $_filecontent = array();
-    
+
     /**
      * variable, which holds the result before the xml is generated out of this array
      * @var array
      */
     private $_result = array();
-    
+
     /**
      * read the data into an internal array and also call the parent constructor
      *
      * @param String $enc target encoding
      */
-    public function __construct($enc)
-    {
+    public function __construct($enc) {
         parent::__construct(__CLASS__, $enc);
         switch (PSI_PLUGIN_QUOTAS_ACCESS) {
-        case 'command':
-            CommonFunctions::executeProgram("repquota", "-au", $buffer, PSI_DEBUG);
-            break;
-        case 'data':
-            CommonFunctions::rfts(APP_ROOT."/data/quotas.txt", $buffer);
-            break;
-        default:
-            $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_QUOTAS_ACCESS");
-            break;
+            case 'command':
+                CommonFunctions::executeProgram("repquota", "-au", $buffer, PSI_DEBUG);
+                break;
+            case 'data':
+                CommonFunctions::rfts(APP_ROOT . "/data/quotas.txt", $buffer);
+                break;
+            default:
+                $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_QUOTAS_ACCESS");
+                break;
         }
         if (trim($buffer) != "") {
             $this->_filecontent = preg_split("/\n/", $buffer, -1, PREG_SPLIT_NO_EMPTY);
@@ -68,7 +69,7 @@ class Quotas extends PSI_Plugin
             $this->_filecontent = array();
         }
     }
-    
+
     /**
      * doing all tasks to get the required informations that the plugin needs
      * result is stored in an internal array<br>the array is build like a tree,
@@ -76,8 +77,7 @@ class Quotas extends PSI_Plugin
      *
      * @return void
      */
-    public function execute()
-    {
+    public function execute() {
         $i = 0;
         $quotas = array();
         foreach ($this->_filecontent as $thisline) {
@@ -106,14 +106,13 @@ class Quotas extends PSI_Plugin
         }
         $this->_result = $quotas;
     }
-    
+
     /**
      * generates the XML content for the plugin
      *
      * @return SimpleXMLElement entire XML content for the plugin
      */
-    public function xml()
-    {
+    public function xml() {
         foreach ($this->_result as $quota) {
             $quotaChild = $this->xml->addChild("Quota");
             $quotaChild->addAttribute("User", $quota['user']);
@@ -128,5 +127,7 @@ class Quotas extends PSI_Plugin
         }
         return $this->xml->getSimpleXmlElement();
     }
+
 }
+
 ?>

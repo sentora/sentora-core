@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/sv_SE/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Jonas Nasholm <rcm@bitfuse.net>                               |
-|         Fredrik Nygren <f.nygren@gmail.com>                           |
-|         Andreas Henriksson <andreas@fatal.se>                         |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/sv_SE/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Jonas Nasholm <rcm@bitfuse.net>                               |
+  |         Fredrik Nygren <f.nygren@gmail.com>                           |
+  |         Andreas Henriksson <andreas@fatal.se>                         |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
+  @version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Inloggningen misslyckades';
@@ -160,5 +160,4 @@ $messages['foldercreated'] = 'Katalog skapad';
 $messages['invalidimageformat'] = 'Ogiltigt bildfilsformat';
 $messages['mispellingsfound'] = 'Stavfel hittades i meddelandet';
 $messages['parentnotwritable'] = 'Katalogen kunde inte skapas eller flyttas. Åtkomsträttighet saknas.';
-
 ?>

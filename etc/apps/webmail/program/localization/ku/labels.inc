@@ -1,18 +1,18 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | language/ku/labels.inc                                                |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2006, The Roundcube Dev Team                            |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Amed Çeko Jiyan <amedcj@kurdistan.name>                       |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ku/labels.inc                                                |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2006, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Amed Çeko Jiyan <amedcj@kurdistan.name>                       |
+  +-----------------------------------------------------------------------+
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Bixêr hatî $product \\\'ê';
@@ -181,5 +181,4 @@ $labels['managefolders'] = 'Rêveberiya peldankan';
 $labels['sortby'] = 'Şêweyê rêzkirinê';
 $labels['sortasc'] = 'Wekî zêde dibe';
 $labels['sortdesc'] = 'Wekî kêm dibe';
-
 ?>

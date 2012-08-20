@@ -28,8 +28,8 @@ class ctrl_auth {
             $sqlQuery = "SELECT ac_usertheme_vc, ac_usercss_vc FROM 
                          x_accounts WHERE 
                          ac_user_vc = :zadmin";
-            $bindArray = array( ':zadmin' => 'zadmin' );
-            $zdbh->bindQuery( $sqlQuery , $bindArray );
+            $bindArray = array(':zadmin' => 'zadmin');
+            $zdbh->bindQuery($sqlQuery, $bindArray);
             $themeRow = $zdbh->returnRow();
             include 'etc/styles/' . $themeRow['ac_usertheme_vc'] . '/login.ztml';
             exit;
@@ -86,14 +86,14 @@ class ctrl_auth {
                       ac_pass_vc = :password AND 
                       ac_enabled_in = 1 AND 
                       ac_deleted_ts IS NULL";
-        
-        $bindArray = array(':username' => $username, 
-                           ':password' => $password
-                          );
-        
+
+        $bindArray = array(':username' => $username,
+            ':password' => $password
+        );
+
         $zdbh->bindQuery($sqlString, $bindArray);
         $row = $zdbh->returnRow();
-        
+
         if ($row) {
             ctrl_auth::SetUserSession($row['ac_id_pk']);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $row['ac_id_pk'] . "");

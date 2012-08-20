@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd']  = 'Canviar contrasenya';
-$labels['curpasswd']  = 'Contrasenya actual:';
-$labels['newpasswd']  = 'Nova contrasenya:';
-$labels['confpasswd']  = 'Confirmar nova contrasenya:';
+$labels['changepasswd'] = 'Canviar contrasenya';
+$labels['curpasswd'] = 'Contrasenya actual:';
+$labels['newpasswd'] = 'Nova contrasenya:';
+$labels['confpasswd'] = 'Confirmar nova contrasenya:';
 
 $messages = array();
 $messages['nopassword'] = 'Si us plau, introdueix la nova contrasenya.';
@@ -16,5 +16,4 @@ $messages['connecterror'] = 'No es pot desar la nova contrasenya. Error de conne
 $messages['internalerror'] = 'No es pot desar la nova contrasenya.';
 $messages['passwordshort'] = 'La nova contrasenya ha de tenir com a mínim $length caràcters de llarg.';
 $messages['passwordweak'] = 'La nova contrasenya ha d\'incloure com a mínim un nombre i un caràcter de puntuació.';
-
 ?>

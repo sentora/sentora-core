@@ -45,7 +45,7 @@ function newmail_notifier_basic()
 
     // we cannot simply change a href attribute, we must to replace the link element (at least in FF)
     var link = $('<link rel="shortcut icon" href="plugins/newmail_notifier/favicon.ico"/>'),
-        oldlink = $('link[rel="shortcut icon"]', w.document);
+    oldlink = $('link[rel="shortcut icon"]', w.document);
 
     rcmail.env.favicon_href = oldlink.attr('href');
     link.replaceAll(oldlink);
@@ -83,7 +83,9 @@ function newmail_notifier_desktop(body)
             this.cancel();
         }
         popup.show();
-        setTimeout(function() { popup.cancel(); }, 10000); // close after 10 seconds
+        setTimeout(function() {
+            popup.cancel();
+        }, 10000); // close after 10 seconds
         rcmail.newmail_popup = popup;
         return true;
     }
@@ -94,7 +96,7 @@ function newmail_notifier_desktop(body)
 function newmail_notifier_test_desktop()
 {
     var dn = window.webkitNotifications,
-        txt = rcmail.gettext('testbody', 'newmail_notifier');
+    txt = rcmail.gettext('testbody', 'newmail_notifier');
 
     if (dn) {
         if (!dn.checkPermission())

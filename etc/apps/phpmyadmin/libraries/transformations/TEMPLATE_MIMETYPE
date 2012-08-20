@@ -1,4 +1,5 @@
 <?php
+
 // vim: expandtab sw=4 ts=4 sts=4:
 
 /**
@@ -8,5 +9,4 @@
  * This files serves no function. It's only kept here to add a mimetype value for selection.
  * You can still use global or other mimetype's transforms with this mimetype.
  */
-
 ?>

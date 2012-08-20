@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * session handling
@@ -11,7 +12,7 @@
  * @uses    ini_set()
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -28,10 +29,8 @@ if (!@function_exists('session_name')) {
 // disable starting of sessions before all settings are done
 // does not work, besides how it is written in php manual
 //ini_set('session.auto_start', 0);
-
 // session cookie settings
-session_set_cookie_params(0, $GLOBALS['PMA_Config']->getCookiePath(),
-    '', $GLOBALS['PMA_Config']->isHttps(), true);
+session_set_cookie_params(0, $GLOBALS['PMA_Config']->getCookiePath(), '', $GLOBALS['PMA_Config']->isHttps(), true);
 
 // cookies are safer (use @ini_set() in case this function is disabled)
 @ini_set('session.use_cookies', true);
@@ -46,10 +45,8 @@ if (!empty($path)) {
 @ini_set('session.use_only_cookies', false);
 // do not force transparent session ids, see bug #3398788
 //@ini_set('session.use_trans_sid', true);
-@ini_set('url_rewriter.tags',
-    'a=href,frame=src,input=src,form=fakeentry,fieldset=');
+@ini_set('url_rewriter.tags', 'a=href,frame=src,input=src,form=fakeentry,fieldset=');
 //ini_set('arg_separator.output', '&amp;');
-
 // delete session/cookies when browser is closed
 @ini_set('session.cookie_lifetime', 0);
 
@@ -67,14 +64,13 @@ session_cache_limiter('private');
 // start the session
 // on some servers (for example, sourceforge.net), we get a permission error
 // on the session data directory, so I add some "@"
-
 // See bug #1538132. This would block normal behavior on a cluster
 //ini_set('session.save_handler', 'files');
 
 $session_name = 'phpMyAdmin';
 @session_name($session_name);
 
-if (! isset($_COOKIE[$session_name])) {
+if (!isset($_COOKIE[$session_name])) {
     // on first start of session we check for errors
     // f.e. session dir cannot be accessed - session file not created
     $orig_error_count = $GLOBALS['error_handler']->countErrors();
@@ -107,10 +103,10 @@ if (!isset($_SESSION[' PMA_token '])) {
  *
  * @uses    session_regenerate_id() to secure session from fixation
  */
-function PMA_secureSession()
-{
+function PMA_secureSession() {
     // prevent session fixation and XSS
     session_regenerate_id(true);
     $_SESSION[' PMA_token '] = md5(uniqid(rand(), true));
 }
+
 ?>

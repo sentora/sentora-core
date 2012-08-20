@@ -2,18 +2,18 @@
 
 #taskbar
 {
-  background: url(images/taskbar.gif) top right no-repeat;
+    background: url(images/taskbar.gif) top right no-repeat;
 }
 
 img
 {
-  behavior: url(skins/default/pngbehavior.htc);
+    behavior: url(skins/default/pngbehavior.htc);
 }
 
 #logo
 {
-  width: 178px;
-  height: 47px;
+    width: 178px;
+    height: 47px;
 }
 
 body > #message div.notice,
@@ -25,108 +25,108 @@ body > #message div.confirmation,
 #message-objects div.warning,
 #message-objects div.confirmation
 {
-  background-image: url(images/display/icons.gif);
+    background-image: url(images/display/icons.gif);
 }
 
 #messagemenu li a
 {
-  background-image: url(images/messageactions.gif);
+    background-image: url(images/messageactions.gif);
 }
 
 #mailboxlist li
 {
-  background-image: url(images/icons/folders.gif);
+    background-image: url(images/icons/folders.gif);
 }
 
 #attachment-list
 {
-  height: expression(Math.min(16, parseInt(document.documentElement.clientHeight))+'px');
+    height: expression(Math.min(16, parseInt(document.documentElement.clientHeight))+'px');
 }
 
 #messagetoolbar a
 {
-  display: block;
-  float: left;
-  padding-right: 10px;
+    display: block;
+    float: left;
+    padding-right: 10px;
 }
 
 .boxfooter a.button,
 .boxfooter a.buttonPas
 {
-  background-image: url(images/icons/groupactions.gif);
+    background-image: url(images/icons/groupactions.gif);
 }
 
 .pagenav
 {
-  width: 250px;
+    width: 250px;
 }
 
 .pagenav a.button,
 .pagenav a.buttonPas
 {
-  background-image: url(images/pagenav.gif);
+    background-image: url(images/pagenav.gif);
 }
 
 #listcontrols a.button,
 #listcontrols a.buttonPas {
-  background-image: url(images/mail_footer.gif);
+    background-image: url(images/mail_footer.gif);
 }
 
 #messagetoolbar a.button,
 #messagetoolbar a.buttonPas {
-  background-image: url(images/mail_toolbar.gif);
+    background-image: url(images/mail_toolbar.gif);
 }
 
 #abooktoolbar a.button,
 #abooktoolbar a.buttonPas,
 #abooktoolbar span.separator {
-  background-image: url(images/abook_toolbar.gif);
+    background-image: url(images/abook_toolbar.gif);
 }
 
 ul.toolbarmenu li a,
 .popupmenu li a
 {
-  clear: left;
-  height: expression(Math.min(14, parseInt(document.documentElement.clientHeight))+'px');
-  width: expression(Math.min(130, parseInt(document.documentElement.clientWidth))+'px');
+    clear: left;
+    height: expression(Math.min(14, parseInt(document.documentElement.clientHeight))+'px');
+    width: expression(Math.min(130, parseInt(document.documentElement.clientWidth))+'px');
 }
 
 ul.toolbarmenu li.separator_below
 {
-  padding-bottom: 3px;
+    padding-bottom: 3px;
 }
 
 .boxfooter
 {
-  width: 100%;
-  bottom: -1px;
+    width: 100%;
+    bottom: -1px;
 }
 
 .boxtitle,
 #directorylist li a
 {
-  width: auto;
+    width: auto;
 }
 
 #directorylist li
 {
-  background-image: url(images/icons/folders.gif);
+    background-image: url(images/icons/folders.gif);
 }
 
 .boxlistcontent
 {
-  top: 21px;
-  height: expression((parseInt(this.parentNode.offsetHeight)-24-parseInt(this.style.top?this.style.top:21))+'px');
+    top: 21px;
+    height: expression((parseInt(this.parentNode.offsetHeight)-24-parseInt(this.style.top?this.style.top:21))+'px');
 }
 
 #compose-div .boxlistcontent
 {
-  height: expression((parseInt(this.parentNode.offsetHeight)-23-parseInt(this.style.top?this.style.top:21))+'px');
+    height: expression((parseInt(this.parentNode.offsetHeight)-23-parseInt(this.style.top?this.style.top:21))+'px');
 }
 
 #folder-manager
 {
-  height: expression((parseInt(document.documentElement.clientHeight)-105)+'px');
+    height: expression((parseInt(document.documentElement.clientHeight)-105)+'px');
 }
 
 #messagelist tr td div.collapsed,
@@ -154,25 +154,25 @@ ul.toolbarmenu li.separator_below
 #messagelist tr td.subject span.forwarded,
 #messagelist tr td.subject span.unreadchildren
 {
-  background-image: url(images/messageicons.gif);
+    background-image: url(images/messageicons.gif);
 }
 
 #messagelist tr td div.collapsed,
 #messagelist tr td div.expanded {
-	background-color: #fff;
+    background-color: #fff;
 }
 
 body.iframe .boxtitle
 {
-  position: absolute;
+    position: absolute;
 }
 
 #subscription-table
 {
-  width: auto;
+    width: auto;
 }
 
 #sourcename
 {
-  zoom: 1;
+    zoom: 1;
 }

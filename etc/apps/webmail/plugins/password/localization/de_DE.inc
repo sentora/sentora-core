@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd']  = 'Passwort ändern';
-$labels['curpasswd']  = 'Aktuelles Passwort';
-$labels['newpasswd']  = 'Neues Passwort';
-$labels['confpasswd']  = 'Passwort Wiederholung';
+$labels['changepasswd'] = 'Passwort ändern';
+$labels['curpasswd'] = 'Aktuelles Passwort';
+$labels['newpasswd'] = 'Neues Passwort';
+$labels['confpasswd'] = 'Passwort Wiederholung';
 
 $messages = array();
 $messages['nopassword'] = "Bitte geben Sie ein neues Passwort ein";
@@ -14,6 +14,4 @@ $messages['passwordinconsistency'] = "Das neue Passwort und dessen Wiederholung 
 $messages['crypterror'] = "Neues Passwort nicht gespeichert: Verschlüsselungsfunktion fehlt";
 $messages['connecterror'] = "Neues Passwort nicht gespeichert: Verbindungsfehler";
 $messages['internalerror'] = "Neues Passwort nicht gespeichert";
-
-
 ?>

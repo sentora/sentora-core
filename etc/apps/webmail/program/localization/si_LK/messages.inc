@@ -1,20 +1,21 @@
 <?php
+
 /*
 
- +-----------------------------------------------------------------------+
- | language/si/messages.inc                                              |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Melanga Dissanayake <Melanga.Dissanayake@pabcbank.com>        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/si/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Melanga Dissanayake <Melanga.Dissanayake@pabcbank.com>        |
+  +-----------------------------------------------------------------------+
 
- @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'ඇතුල්වීම අසාර්ථකයි';
@@ -76,5 +77,4 @@ $messages['movingmessage'] = 'පනිවුඩය ගෙනයමින් ප
 $messages['receiptsent'] = 'කියවීම් භාර ගැනීම සාර්ථකව යවන ලදී';
 $messages['errorsendingreceipt'] = 'කියවීම් භාර ගැනීම යැවීමට නොහැක';
 $messages['nodeletelastidentity'] = 'අවසාන අනන්‍යතාවය මකා දැමිය නොහැක';
-
 ?>

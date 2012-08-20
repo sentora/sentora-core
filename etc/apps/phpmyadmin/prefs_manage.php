@@ -5,7 +5,6 @@
  *
  * @package phpMyAdmin
  */
-
 /**
  * Gets some core libraries and displays a top message if required
  */
@@ -120,10 +119,10 @@ if (isset($_POST['submit_export']) && filter_input(INPUT_POST, 'export_type') ==
                 <input type="hidden" name="json" value="<?php echo htmlspecialchars($json) ?>" />
                 <input type="hidden" name="fix_errors" value="1" />
                 <?php if (!empty($_POST['import_merge'])): ?>
-                <input type="hidden" name="import_merge" value="1" />
+                    <input type="hidden" name="import_merge" value="1" />
                 <?php endif; ?>
                 <?php if ($return_url): ?>
-                <input type="hidden" name="return_url" value="<?php echo htmlspecialchars($return_url) ?>" />
+                    <input type="hidden" name="return_url" value="<?php echo htmlspecialchars($return_url) ?>" />
                 <?php endif; ?>
                 <p><?php echo __('Do you want to import remaining settings?') ?></p>
                 <input type="submit" name="submit_import" value="<?php echo __('Yes') ?>" />
@@ -172,7 +171,7 @@ if (isset($_POST['submit_export']) && filter_input(INPUT_POST, 'export_type') ==
                     if ($k == 'token') {
                         continue;
                     }
-                    $params[$k] = substr($q, $pos+1);
+                    $params[$k] = substr($q, $pos + 1);
                 }
             } else {
                 $return_url = 'prefs_manage.php';
@@ -251,7 +250,7 @@ PMA_printJsValue("PMA_messages['strSavedOn']", __('Saved on: @DATE@'));
                             <?php echo __('Saved on: @DATE@') ?>
                         </span>
                         <span class="localStorage-empty">
-                            <?php  PMA_Message::notice(__('You have no saved settings!'))->display() ?>
+                            <?php PMA_Message::notice(__('You have no saved settings!'))->display() ?>
                         </span>
                     </div>
                     <span class="localStorage-unsupported">
@@ -269,17 +268,17 @@ PMA_printJsValue("PMA_messages['strSavedOn']", __('Saved on: @DATE@'));
         if (file_exists('./setup/index.php')) {
             // show only if setup script is available, allows to disable this message
             // by simply removing setup directory
-        ?>
-        <div class="group">
-            <h2><?php echo __('More settings') ?></h2>
-            <div class="group-cnt">
-                <?php
-                echo sprintf(__('You can set more settings by modifying config.inc.php, eg. by using %sSetup script%s.'), '<a href="setup/index.php">', '</a>');
-                echo PMA_showDocu('setup_script');
-                ?>
+            ?>
+            <div class="group">
+                <h2><?php echo __('More settings') ?></h2>
+                <div class="group-cnt">
+                    <?php
+                    echo sprintf(__('You can set more settings by modifying config.inc.php, eg. by using %sSetup script%s.'), '<a href="setup/index.php">', '</a>');
+                    echo PMA_showDocu('setup_script');
+                    ?>
+                </div>
             </div>
-        </div>
-        <?php
+            <?php
         }
         ?>
     </div>
@@ -293,7 +292,7 @@ PMA_printJsValue("PMA_messages['strSavedOn']", __('Saved on: @DATE@'));
                 ?>
             </div>
             <form class="group-cnt prefs-form" name="prefs_export" action="prefs_manage.php" method="post">
-            <?php echo PMA_generate_common_hidden_inputs() . "\n" ?>
+                <?php echo PMA_generate_common_hidden_inputs() . "\n" ?>
                 <div style="padding-bottom:0.5em">
                     <input type="radio" id="export_text_file" name="export_type" value="text_file" checked="checked" />
                     <label for="export_text_file"><?php echo __('Save as file') ?></label>
@@ -319,7 +318,7 @@ PMA_printJsValue("PMA_messages['strSavedOn']", __('Saved on: @DATE@'));
         <div class="group">
             <h2><?php echo __('Reset') ?></h2>
             <form class="group-cnt prefs-form" name="prefs_reset" action="prefs_manage.php" method="post">
-            <?php echo PMA_generate_common_hidden_inputs() . "\n" ?>
+                <?php echo PMA_generate_common_hidden_inputs() . "\n" ?>
                 <?php echo __('You can reset all your settings and restore them to default values.') ?>
                 <br /><br />
                 <input type="submit" name="submit_clear" value="<?php echo __('Reset') ?>" />

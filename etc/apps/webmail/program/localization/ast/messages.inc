@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/ast/messages.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2008, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Mikel González <dangerous_piper@softastur.org>                |
-|         http://blogs.altuxa.com/gyg                                   |
-|         http://softastur.org                                          |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ast/messages.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2008, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Mikel González <dangerous_piper@softastur.org>                |
+  |         http://blogs.altuxa.com/gyg                                   |
+  |         http://softastur.org                                          |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'La clave nun val';
@@ -103,5 +103,4 @@ $messages['smtpfromerror'] = 'Fallu SMTP ($code): Fallu al aficar el remitente "
 $messages['smtptoerror'] = 'Fallu SMTP ($code): Fallu al amestar el destinatariu "$to" ($msg)';
 $messages['smtprecipientserror'] = 'Fallu SMTP: Nun soi a amosar la llista de destinatarios';
 $messages['smtperror'] = 'Fallu SMTP: $msg';
-
 ?>

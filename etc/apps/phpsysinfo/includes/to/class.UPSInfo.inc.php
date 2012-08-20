@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * MBInfo TO class
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.UPSInfo.inc.php 329 2009-09-07 11:21:44Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * MBInfo TO class
  *
  * @category  PHP
@@ -23,8 +25,8 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class UPSInfo
-{
+class UPSInfo {
+
     /**
      * array with upsdivices
      *
@@ -33,7 +35,7 @@ class UPSInfo
      * @var Array
      */
     private $_upsDevices = array();
-    
+
     /**
      * Returns $_upsDevices.
      *
@@ -41,11 +43,10 @@ class UPSInfo
      *
      * @return Array
      */
-    public function getUpsDevices()
-    {
+    public function getUpsDevices() {
         return $this->_upsDevices;
     }
-    
+
     /**
      * Sets $_upsDevices.
      *
@@ -55,9 +56,10 @@ class UPSInfo
      *
      * @return Void
      */
-    public function setUpsDevices($upsDevices)
-    {
+    public function setUpsDevices($upsDevices) {
         array_push($this->_upsDevices, $upsDevices);
     }
+
 }
+
 ?>

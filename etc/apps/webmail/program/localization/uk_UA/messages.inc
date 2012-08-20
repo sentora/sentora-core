@@ -2,20 +2,20 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/uk_UA/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Volodymyr M. Kononenko aka kvm <vmkononenko@gmail.com>        |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/uk_UA/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Volodymyr M. Kononenko aka kvm <vmkononenko@gmail.com>        |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Невдала спроба входу';
@@ -158,5 +158,4 @@ $messages['foldercreated'] = 'Папка створена';
 $messages['invalidimageformat'] = 'Невірний формат зображення';
 $messages['mispellingsfound'] = 'Знайдено орфографічні помилки у повідомленні.';
 $messages['parentnotwritable'] = 'Неможливо створити/перемістити папку до обраної батьківської папки. Нема прав доступу.';
-
 ?>

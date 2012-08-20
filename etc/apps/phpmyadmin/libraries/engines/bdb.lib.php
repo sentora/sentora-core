@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * @package phpMyAdmin-Engines
@@ -8,29 +9,28 @@
  *
  * @package phpMyAdmin-Engines
  */
-class PMA_StorageEngine_bdb extends PMA_StorageEngine
-{
+class PMA_StorageEngine_bdb extends PMA_StorageEngine {
+
     /**
      * @return  array   variable names
      */
-    function getVariables()
-    {
+    function getVariables() {
         return array(
             'version_bdb' => array(
                 'title' => __('Version information'),
             ),
             'bdb_cache_size' => array(
-                'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
+                'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
             ),
             'bdb_home' => array(
             ),
             'bdb_log_buffer_size' => array(
-                'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
+                'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
             ),
             'bdb_logdir' => array(
             ),
             'bdb_max_lock' => array(
-                'type'  => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
+                'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
             ),
             'bdb_shared_data' => array(
             ),
@@ -56,8 +56,7 @@ class PMA_StorageEngine_bdb extends PMA_StorageEngine
     /**
      * @return string   LIKE pattern
      */
-    function getVariablesLikePattern()
-    {
+    function getVariablesLikePattern() {
         return '%bdb%';
     }
 
@@ -67,10 +66,10 @@ class PMA_StorageEngine_bdb extends PMA_StorageEngine
      *
      * @return  string  mysql helppage filename
      */
-    function getMysqlHelpPage()
-    {
+    function getMysqlHelpPage() {
         return 'bdb';
     }
+
 }
 
 ?>

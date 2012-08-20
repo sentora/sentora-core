@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * Basic Plugin Functions
  *
@@ -12,7 +13,8 @@
  * @version   SVN: $Id: class.PSI_Interface_Plugin.inc.php 273 2009-06-24 11:40:09Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+
+/**
  * define which methods a plugin class for phpsysinfo must implement
  * to be recognized and fully work without errors, these are the methods which
  * are called from outside to include the information in the main application
@@ -25,15 +27,15 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-interface PSI_Interface_Plugin
-{
+interface PSI_Interface_Plugin {
+
     /**
      * doing all tasks before the xml can be build
      *
      * @return void
      */
     function execute();
-    
+
     /**
      * build the xml
      *
@@ -41,4 +43,5 @@ interface PSI_Interface_Plugin
      */
     function xml();
 }
+
 ?>

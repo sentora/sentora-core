@@ -2,21 +2,21 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/nn_NO/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Per-Stian Vatne <psv@orsta.org>                               |
-| Update: Odin Omdal Hørthe <odin.omdal@gmail.com>                      |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/nn_NO/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Per-Stian Vatne <psv@orsta.org>                               |
+  | Update: Odin Omdal Hørthe <odin.omdal@gmail.com>                      |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5290 2011-09-28 17:09:50Z thomasb $
+  @version $Id: labels.inc 5290 2011-09-28 17:09:50Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Velkomen til $product';
@@ -399,5 +399,4 @@ $labels['vietnamese'] = 'Vietnamesisk';
 $labels['japanese'] = 'Japansk';
 $labels['korean'] = 'Koreansk';
 $labels['chinese'] = 'Kinesisk';
-
 ?>

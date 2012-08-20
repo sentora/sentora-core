@@ -6,9 +6,7 @@
  * @version 1.0
  * @author Aleksander Machniak
  */
- 
-function password_save($currpass, $newpass)
-{
+function password_save($currpass, $newpass) {
     $user = $_SESSION['username'];
 
     if (extension_loaded('pam')) {
@@ -16,23 +14,21 @@ function password_save($currpass, $newpass)
             if (pam_chpass($user, $currpass, $newpass)) {
                 return PASSWORD_SUCCESS;
             }
-        }
-        else {
+        } else {
             raise_error(array(
                 'code' => 600,
                 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Password plugin: PAM authentication failed for user $user: $error"
-                ), true, false);
+                    ), true, false);
         }
-    }
-    else {
+    } else {
         raise_error(array(
             'code' => 600,
             'type' => 'php',
             'file' => __FILE__, 'line' => __LINE__,
             'message' => "Password plugin: PECL-PAM module not loaded"
-            ), true, false);
+                ), true, false);
     }
 
     return PASSWORD_ERROR;

@@ -1,11 +1,11 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Set of functions used to run single signon authentication.
  *
  * @package phpMyAdmin-Auth-Signon
  */
-
 
 /**
  * Displays authentication form
@@ -29,8 +29,9 @@ function PMA_auth() {
         PMA_sendHeaderLocation($GLOBALS['cfg']['Server']['SignonURL']);
     }
     exit();
-} // end of the 'PMA_auth()' function
+}
 
+// end of the 'PMA_auth()' function
 
 /**
  * Gets advanced authentication settings
@@ -51,8 +52,7 @@ function PMA_auth() {
  *
  * @access  public
  */
-function PMA_auth_check()
-{
+function PMA_auth_check() {
     global $PHP_AUTH_USER, $PHP_AUTH_PW;
 
     /* Check if we're using same sigon server */
@@ -109,7 +109,7 @@ function PMA_auth_check()
             }
         }
         if (isset($_SESSION['PMA_single_signon_host'])) {
-	        $single_signon_host = $_SESSION['PMA_single_signon_host'];
+            $single_signon_host = $_SESSION['PMA_single_signon_host'];
         }
 
         if (isset($_SESSION['PMA_single_signon_port'])) {
@@ -165,8 +165,9 @@ function PMA_auth_check()
         $_SESSION['LAST_SIGNON_URL'] = $GLOBALS['cfg']['Server']['SignonURL'];
         return true;
     }
-} // end of the 'PMA_auth_check()' function
+}
 
+// end of the 'PMA_auth_check()' function
 
 /**
  * Set the user and password after last checkings if required
@@ -181,17 +182,17 @@ function PMA_auth_check()
  *
  * @access  public
  */
-function PMA_auth_set_user()
-{
+function PMA_auth_set_user() {
     global $cfg;
     global $PHP_AUTH_USER, $PHP_AUTH_PW;
 
-    $cfg['Server']['user']     = $PHP_AUTH_USER;
+    $cfg['Server']['user'] = $PHP_AUTH_USER;
     $cfg['Server']['password'] = $PHP_AUTH_PW;
 
     return true;
-} // end of the 'PMA_auth_set_user()' function
+}
 
+// end of the 'PMA_auth_set_user()' function
 
 /**
  * User is not allowed to login to MySQL -> authentication failed
@@ -200,8 +201,7 @@ function PMA_auth_set_user()
  *
  * @access  public
  */
-function PMA_auth_fails()
-{
+function PMA_auth_fails() {
     /* Session name */
     $session_name = $GLOBALS['cfg']['Server']['SignonSession'];
 
@@ -218,11 +218,11 @@ function PMA_auth_fails()
         session_start();
 
         /* Set error message */
-        if (! empty($GLOBALS['login_without_password_is_forbidden'])) {
+        if (!empty($GLOBALS['login_without_password_is_forbidden'])) {
             $_SESSION['PMA_single_signon_error_message'] = __('Login without a password is forbidden by configuration (see AllowNoPassword)');
-        } elseif (! empty($GLOBALS['allowDeny_forbidden'])) {
+        } elseif (!empty($GLOBALS['allowDeny_forbidden'])) {
             $_SESSION['PMA_single_signon_error_message'] = __('Access denied');
-        } elseif (! empty($GLOBALS['no_activity'])) {
+        } elseif (!empty($GLOBALS['no_activity'])) {
             $_SESSION['PMA_single_signon_error_message'] = sprintf(__('No activity within %s seconds; please log in again'), $GLOBALS['cfg']['LoginCookieValidity']);
         } elseif (PMA_DBI_getError()) {
             $_SESSION['PMA_single_signon_error_message'] = PMA_sanitize(PMA_DBI_getError());
@@ -233,6 +233,7 @@ function PMA_auth_fails()
         }
     }
     PMA_auth();
-} // end of the 'PMA_auth_fails()' function
+}
 
+// end of the 'PMA_auth_fails()' function
 ?>

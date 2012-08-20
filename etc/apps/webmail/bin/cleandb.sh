@@ -2,27 +2,27 @@
 <?php
 /*
 
- +-----------------------------------------------------------------------+
- | bin/cleandb.sh                                                        |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2010, The Roundcube Dev Team                            |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Finally remove all db records marked as deleted some time ago       |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Thomas Bruederli <roundcube@gmail.com>                        |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | bin/cleandb.sh                                                        |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2010, The Roundcube Dev Team                            |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Finally remove all db records marked as deleted some time ago       |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+  +-----------------------------------------------------------------------+
 
- $Id: cleandb.sh 4677 2011-04-20 13:10:45Z alec $
+  $Id: cleandb.sh 4677 2011-04-20 13:10:45Z alec $
 
-*/
+ */
 
-define('INSTALL_PATH', realpath(dirname(__FILE__) . '/..') . '/' );
+define('INSTALL_PATH', realpath(dirname(__FILE__) . '/..') . '/');
 
-require INSTALL_PATH.'program/include/clisetup.php';
+require INSTALL_PATH . 'program/include/clisetup.php';
 
 // mapping for table name => primary key
 $primary_keys = array(
@@ -46,25 +46,24 @@ else
 // remove all deleted records older than two days
 $threshold = date('Y-m-d 00:00:00', time() - $days * 86400);
 
-foreach (array('contacts','contactgroups','identities') as $table) {
+foreach (array('contacts', 'contactgroups', 'identities') as $table) {
 
     $sqltable = get_table_name($table);
 
     // also delete linked records
     // could be skipped for databases which respect foreign key constraints
     if ($db->db_provider == 'sqlite'
-        && ($table == 'contacts' || $table == 'contactgroups')
+            && ($table == 'contacts' || $table == 'contactgroups')
     ) {
         $pk = $primary_keys[$table];
         $memberstable = get_table_name('contactgroupmembers');
 
         $db->query(
-            "DELETE FROM $memberstable".
-            " WHERE $pk IN (".
-                "SELECT $pk FROM $sqltable".
-                " WHERE del=1 AND changed < ?".
-            ")",
-            $threshold);
+                "DELETE FROM $memberstable" .
+                " WHERE $pk IN (" .
+                "SELECT $pk FROM $sqltable" .
+                " WHERE del=1 AND changed < ?" .
+                ")", $threshold);
 
         echo $db->affected_rows() . " records deleted from '$memberstable'\n";
     }
@@ -74,5 +73,4 @@ foreach (array('contacts','contactgroups','identities') as $table) {
 
     echo $db->affected_rows() . " records deleted from '$table'\n";
 }
-
 ?>

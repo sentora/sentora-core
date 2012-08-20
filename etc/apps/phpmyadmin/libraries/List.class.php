@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * hold the PMA_List base class
@@ -12,15 +13,14 @@
  * @abstract
  * @package phpMyAdmin
  */
-abstract class PMA_List extends ArrayObject
-{
+abstract class PMA_List extends ArrayObject {
+
     /**
      * @var mixed   empty item
      */
     protected $item_empty = '';
 
-    public function __construct($array = array(), $flags = 0, $iterator_class = "ArrayIterator")
-    {
+    public function __construct($array = array(), $flags = 0, $iterator_class = "ArrayIterator") {
         parent::__construct($array, $flags, $iterator_class);
     }
 
@@ -32,8 +32,7 @@ abstract class PMA_List extends ArrayObject
      * @uses    PMA_List::getEmpty() to return it
      * @return  single item
      */
-    public function getSingleItem()
-    {
+    public function getSingleItem() {
         if (count($this) === 1) {
             return reset($this);
         }
@@ -47,8 +46,7 @@ abstract class PMA_List extends ArrayObject
      * @uses    PMA_List::$item_empty as return value
      * @return  mixed   an empty item
      */
-    public function getEmpty()
-    {
+    public function getEmpty() {
         return $this->item_empty;
     }
 
@@ -62,11 +60,10 @@ abstract class PMA_List extends ArrayObject
      * @param   string  $db_name,..     one or more mysql result resources
      * @return  boolean true if all items exists, otheriwse false
      */
-    public function exists()
-    {
+    public function exists() {
         $this_elements = $this->getArrayCopy();
         foreach (func_get_args() as $result) {
-            if (! in_array($result, $this_elements)) {
+            if (!in_array($result, $this_elements)) {
                 return false;
             }
         }
@@ -84,8 +81,7 @@ abstract class PMA_List extends ArrayObject
      * @param   boolean $include_information_schema
      * @return  string  HTML option tags
      */
-    public function getHtmlOptions($selected = '', $include_information_schema = true)
-    {
+    public function getHtmlOptions($selected = '', $include_information_schema = true) {
         if (true === $selected) {
             $selected = $this->getDefault();
         }
@@ -111,8 +107,7 @@ abstract class PMA_List extends ArrayObject
      * @uses    PMA_List::getEmpty() as fallback
      * @return  string  default item
      */
-    public function getDefault()
-    {
+    public function getDefault() {
         return $this->getEmpty();
     }
 
@@ -122,4 +117,5 @@ abstract class PMA_List extends ArrayObject
      */
     abstract public function build();
 }
+
 ?>

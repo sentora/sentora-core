@@ -11,7 +11,9 @@ if (window.rcmail) {
             rcmail.acl_list_init();
             // enable autocomplete on user input
             if (rcmail.env.acl_users_source) {
-                rcmail.init_address_input_events($('#acluser'), {action:'settings/plugin.acl-autocomplete'});
+                rcmail.init_address_input_events($('#acluser'), {
+                    action:'settings/plugin.acl-autocomplete'
+                });
                 // fix inserted value
                 rcmail.addEventListener('autocomplete_insert', function(e) {
                     if (e.field.id != 'acluser')
@@ -130,10 +132,21 @@ rcube_webmail.prototype.acl_mode_switch = function(elem)
 rcube_webmail.prototype.acl_list_init = function()
 {
     this.acl_list = new rcube_list_widget(this.gui_objects.acltable,
-        {multiselect:true, draggable:false, keyboard:true, toggleselect:true});
-    this.acl_list.addEventListener('select', function(o) { rcmail.acl_list_select(o); });
-    this.acl_list.addEventListener('dblclick', function(o) { rcmail.acl_list_dblclick(o); });
-    this.acl_list.addEventListener('keypress', function(o) { rcmail.acl_list_keypress(o); });
+    {
+        multiselect:true, 
+        draggable:false, 
+        keyboard:true, 
+        toggleselect:true
+    });
+    this.acl_list.addEventListener('select', function(o) {
+        rcmail.acl_list_select(o);
+    });
+    this.acl_list.addEventListener('dblclick', function(o) {
+        rcmail.acl_list_dblclick(o);
+    });
+    this.acl_list.addEventListener('keypress', function(o) {
+        rcmail.acl_list_keypress(o);
+    });
     this.acl_list.init();
 }
 
@@ -172,8 +185,8 @@ rcube_webmail.prototype.acl_list_update = function(html)
 rcube_webmail.prototype.acl_get_usernames = function()
 {
     var users = [], n, len, cell, row,
-        list = this.acl_list,
-        selection = list.get_selection();
+    list = this.acl_list,
+    selection = list.get_selection();
 
     for (n=0, len=selection.length; n<len; n++) {
         if (this.env.acl_specials.length && $.inArray(selection[n], this.env.acl_specials) >= 0) {
@@ -209,9 +222,9 @@ rcube_webmail.prototype.acl_remove_row = function(id)
 rcube_webmail.prototype.acl_add_row = function(o, sel)
 {
     var n, len, ids = [], spec = [], id = o.id, list = this.acl_list,
-        items = this.env.acl_advanced ? [] : this.env.acl_items,
-        table = this.gui_objects.acltable,
-        row = $('thead > tr', table).clone();
+    items = this.env.acl_advanced ? [] : this.env.acl_items,
+    table = this.gui_objects.acltable,
+    row = $('thead > tr', table).clone();
 
     // Update new row
     $('td', row).map(function() {
@@ -266,11 +279,13 @@ rcube_webmail.prototype.acl_add_row = function(o, sel)
 rcube_webmail.prototype.acl_init_form = function(id)
 {
     var ul, row, td, val = '', type = 'user', li_elements, body = $('body'),
-        adv_ul = $('#advancedrights'), sim_ul = $('#simplerights'),
-        name_input = $('#acluser');
+    adv_ul = $('#advancedrights'), sim_ul = $('#simplerights'),
+    name_input = $('#acluser');
 
     if (!this.acl_form) {
-        var fn = function () { $('input[value=user]').prop('checked', true); };
+        var fn = function () {
+            $('input[value=user]').prop('checked', true);
+        };
         name_input.click(fn).keypress(fn);
     }
 
@@ -308,7 +323,9 @@ rcube_webmail.prototype.acl_init_form = function(id)
     }
     // mark read (lrs) rights by default
     else
-        li_elements.filter(function() { return this.id.match(/^acl([lrs]|read)$/); }).prop('checked', true);
+        li_elements.filter(function() {
+            return this.id.match(/^acl([lrs]|read)$/);
+        }).prop('checked', true);
 
     name_input.val(val);
     $('input[value='+type+']').prop('checked', true);
@@ -319,7 +336,9 @@ rcube_webmail.prototype.acl_init_form = function(id)
     var bw = body.width(), mw = this.acl_form.width();
 
     if (bw >= mw)
-        this.acl_form.css({left: parseInt((bw - mw)/2)+'px'});
+        this.acl_form.css({
+            left: parseInt((bw - mw)/2)+'px'
+            });
 
     // display it
     this.acl_form.show();

@@ -26,17 +26,16 @@ class ctrl_groups {
                     x_permissions WHERE 
                     pe_group_fk = :groupid AND 
                     pe_module_fk = :moduleid";
-        $bindArray = array( 
-                    ':groupid' => $groupid,
-                    ':moduleid' => $moduleid,
-                );
+        $bindArray = array(
+            ':groupid' => $groupid,
+            ':moduleid' => $moduleid,
+        );
         $zdbh->bindQuery($sqlString, $bindArray);
         $result = $zdbh->returnRow();
-        if($result) {
+        if ($result) {
             return true;
-            }
+        }
         return false;
-        
     }
 
     /**
@@ -53,23 +52,23 @@ class ctrl_groups {
                      x_permissions WHERE 
                      pe_group_fk = :groupid AND 
                      pe_module_fk = :moduleid";
-        $bindArray = array( 
-            ':groupid' => $groupid, 
-            ':moduleid' => $moduleid, 
+        $bindArray = array(
+            ':groupid' => $groupid,
+            ':moduleid' => $moduleid,
         );
         $sqlPrepare = $zdbh->prepare($sqlString);
         $zdbh->bindParams($sqlPrepare, $bindArray);
         unset($sqlString);
         $rowCount = $sqlPrepare->rowCount();
         unset($sqlPrepare);
-        
-        if ( $rowCount < 1 ) {
+
+        if ($rowCount < 1) {
             $sqlString = "INSERT INTO x_permissions 
                          ( pe_group_fk , pe_module_fk ) VALUES 
                          ( :groupid , :moduleid )";
             $bindArray = array(
-                ':groupid' => $groupid, 
-                ':moduleid' => $moduleid, 
+                ':groupid' => $groupid,
+                ':moduleid' => $moduleid,
             );
             $sqlPrepare = $zdbh->prepare($sqlString);
             $zdbh->bindParams($sqlPrepare, $bindArray);
@@ -77,7 +76,7 @@ class ctrl_groups {
             if ($result > 0) {
                 return true;
             } else {
-            return false;
+                return false;
             }
         }
     }
@@ -101,13 +100,14 @@ class ctrl_groups {
             $sqlQuery = $zdbh->prepare($sqlString);
         }
         $sqlQuery->bindParam(':moduleid', $moduleid);
-        
+
         if ($sqlQuery->execute() > 0) {
             return true;
         } else {
             return false;
-        }  
+        }
     }
+
 }
 
 ?>

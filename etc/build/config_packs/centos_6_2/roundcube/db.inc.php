@@ -1,4 +1,5 @@
 <?php
+
 $rcmail_config = array();
 $rcmail_config['db_dsnw'] = 'mysql://root:YOUR_MYSQL_ROOT_PASSWOR@localhost/zpanel_roundcube';
 $rcmail_config['db_dsnr'] = '';

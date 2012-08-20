@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Update Notifier Plugin
  *
@@ -12,6 +13,7 @@
  * @version   SVN: $Id: class.UpdateNotifier.inc.php 525 2011-11-26 10:19:27Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
+
 /**
  * Update Notifier Plugin, which displays update notification from Ubuntu Landscape system
  *
@@ -23,8 +25,8 @@
  * @version   $Id: class.UpdateNotifier.inc.php 525 2011-11-26 10:19:27Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-class UpdateNotifier extends PSI_Plugin
-{
+class UpdateNotifier extends PSI_Plugin {
+
     /**
      * variable, which holds the content of the command
      * @var array
@@ -42,10 +44,9 @@ class UpdateNotifier extends PSI_Plugin
      *
      * @param String $enc encoding
      */
-    public function __construct($enc)
-    {
+    public function __construct($enc) {
         parent::__construct(__CLASS__, $enc);
-        
+
         CommonFunctions::rfts(PSI_PLUGIN_UPDATE_NOTIFIER_FILE, $buffer_info);
         // Remove blank lines
         $this->_filecontent = preg_split("/\n/", $buffer_info, -1, PREG_SPLIT_NO_EMPTY);
@@ -57,38 +58,34 @@ class UpdateNotifier extends PSI_Plugin
      *
      * @return void
      */
-    public function execute()
-    {
+    public function execute() {
         if (empty($this->_filecontent)) {
             return;
         }
-        
+
         if (PSI_PLUGIN_UPDATE_NOTIFIER_UBUNTU_LANDSCAPE_FORMAT === true) {
             /*
-             Ubuntu Landscape format:
-             - line 1: packages to update
-             - line 2: security packages to update
+              Ubuntu Landscape format:
+              - line 1: packages to update
+              - line 2: security packages to update
              */
             if (count($this->_filecontent) == 2) {
-                foreach($this->_filecontent as $line) {
+                foreach ($this->_filecontent as $line) {
                     list($num, $text) = explode(" ", $line, 2);
                     $this->_result[] = $num;
                 }
-            }
-            else {
+            } else {
                 $this->global_error->addWarning("Unable to parse UpdateNotifier file");
             }
-        }
-        else {
+        } else {
             /*
-             Universal format: A;B
-             - A: packages to update
-             - B: security packages to update
+              Universal format: A;B
+              - A: packages to update
+              - B: security packages to update
              */
             if (count($this->_filecontent) == 1 && strpos($this->_filecontent[0], ";") !== false) {
                 $this->_result = explode(";", $this->_filecontent[0]);
-            }
-            else {
+            } else {
                 $this->global_error->addWarning("Unable to parse UpdateNotifier file");
             }
         }
@@ -99,8 +96,7 @@ class UpdateNotifier extends PSI_Plugin
      *
      * @return SimpleXMLElement entire XML content for the plugin
      */
-    public function xml()
-    {
+    public function xml() {
         if (!empty($this->_result)) {
             $xmluu = $this->xml->addChild("UpdateNotifier");
             $xmluu->addChild("packages", $this->_result[0]);
@@ -109,5 +105,7 @@ class UpdateNotifier extends PSI_Plugin
 
         return $this->xml->getSimpleXmlElement();
     }
+
 }
+
 ?>

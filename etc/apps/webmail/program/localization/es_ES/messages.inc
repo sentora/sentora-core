@@ -2,23 +2,23 @@
 
 /*
 
-+------------------------------------------------------------------------+
-| language/es_ES/messages.inc                                            |
-|                                                                        |
-| Language file of the Roundcube Webmail client                          |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                        |
-| Licensed under the GNU GPL                                             |
-|                                                                        |
-+------------------------------------------------------------------------+
-| Authors: Javier Smaldone <javier@smaldone.com.ar>                      |
-|          David Grajal Blanco <dgrabla@gmail.com>                       |
-|          Lito Jornero <jornero@gmail.com>                              |
-|          Ángel Bueno Prieto <info@mediaiberia.com>                     |
-|          José M. Ciordia <ciordia@gmail.com>                           |
-+------------------------------------------------------------------------+
+  +------------------------------------------------------------------------+
+  | language/es_ES/messages.inc                                            |
+  |                                                                        |
+  | Language file of the Roundcube Webmail client                          |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                        |
+  | Licensed under the GNU GPL                                             |
+  |                                                                        |
+  +------------------------------------------------------------------------+
+  | Authors: Javier Smaldone <javier@smaldone.com.ar>                      |
+  |          David Grajal Blanco <dgrabla@gmail.com>                       |
+  |          Lito Jornero <jornero@gmail.com>                              |
+  |          Ángel Bueno Prieto <info@mediaiberia.com>                     |
+  |          José M. Ciordia <ciordia@gmail.com>                           |
+  +------------------------------------------------------------------------+
 
-@version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
-*/
+  @version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Contraseña o nombre de usuario incorrecto';
@@ -158,5 +158,4 @@ $messages['foldercreated'] = 'Bandeja creada correctamente';
 $messages['invalidimageformat'] = 'No es un formato de imagen válido';
 $messages['mispellingsfound'] = 'Se han detectado errores ortográficos en el mensaje.';
 $messages['parentnotwritable'] = 'No se puede crear/mover la carpeta a la carpeta superior elegida. No tiene permisos de acceso.';
-
 ?>

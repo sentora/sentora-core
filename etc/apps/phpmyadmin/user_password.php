@@ -20,12 +20,11 @@
  * @uses    define()
  * @package phpMyAdmin
  */
-
 /**
  * no need for variables importing
  * @ignore
  */
-if (! defined('PMA_NO_VARIABLES_IMPORT')) {
+if (!defined('PMA_NO_VARIABLES_IMPORT')) {
     define('PMA_NO_VARIABLES_IMPORT', true);
 }
 
@@ -70,37 +69,35 @@ if (isset($_REQUEST['nopass'])) {
         $password = $_REQUEST['pma_pw'];
     }
 
-    if($GLOBALS['is_ajax_request'] == true && $_error == true) {
+    if ($GLOBALS['is_ajax_request'] == true && $_error == true) {
         /**
          * If in an Ajax request, we don't need to show the rest of the page
          */
         PMA_ajaxResponse($message, false);
     }
 
-    if (! $_error) {
+    if (!$_error) {
 
         // Defines the url to return to in case of error in the sql statement
         $_url_params = array();
 
-        $err_url          = 'user_password.php' . PMA_generate_common_url($_url_params);
+        $err_url = 'user_password.php' . PMA_generate_common_url($_url_params);
         if (PMA_isValid($_REQUEST['pw_hash'], 'identical', 'old')) {
             $hashing_function = 'OLD_PASSWORD';
         } else {
             $hashing_function = 'PASSWORD';
         }
 
-        $sql_query        = 'SET password = ' . (($password == '') ? '\'\'' : $hashing_function . '(\'***\')');
-        $local_query      = 'SET password = ' . (($password == '') ? '\'\'' : $hashing_function . '(\'' . PMA_sqlAddslashes($password) . '\')');
-        $result           = @PMA_DBI_try_query($local_query)
-            or PMA_mysqlDie(PMA_DBI_getError(), $sql_query, false, $err_url);
+        $sql_query = 'SET password = ' . (($password == '') ? '\'\'' : $hashing_function . '(\'***\')');
+        $local_query = 'SET password = ' . (($password == '') ? '\'\'' : $hashing_function . '(\'' . PMA_sqlAddslashes($password) . '\')');
+        $result = @PMA_DBI_try_query($local_query)
+                or PMA_mysqlDie(PMA_DBI_getError(), $sql_query, false, $err_url);
 
         // Changes password cookie if required
         // Duration = till the browser is closed for password (we don't want this to be saved)
         if ($cfg['Server']['auth_type'] == 'cookie') {
-            $GLOBALS['PMA_Config']->setCookie('pmaPass-' . $server,
-                PMA_blowfish_encrypt($password, $GLOBALS['cfg']['blowfish_secret']));
+            $GLOBALS['PMA_Config']->setCookie('pmaPass-' . $server, PMA_blowfish_encrypt($password, $GLOBALS['cfg']['blowfish_secret']));
         } // end if
-
         // For http auth. mode, the "back" link will also enforce new
         // authentication
         if ($cfg['Server']['auth_type'] == 'http') {
@@ -109,7 +106,7 @@ if (isset($_REQUEST['nopass'])) {
 
         $message = PMA_Message::success(__('The profile has been updated.'));
 
-        if($GLOBALS['is_ajax_request'] == true) {
+        if ($GLOBALS['is_ajax_request'] == true) {
             $extra_data['sql_query'] = PMA_showMessage($message, $sql_query, 'success');
             PMA_ajaxResponse($message, true, $extra_data);
         }

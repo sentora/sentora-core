@@ -24,33 +24,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-	
-		}
-		
+$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
 
-			
-		// Deleting Postfix Distubution List
-		if (!fs_director::CheckForEmptyValue(self::$delete)) {
-		   	$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
-			if ($result) {
-				$sql = "DELETE FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}
-		}
 
-		// Adding Postfix Distubution List
-		if (!fs_director::CheckForEmptyValue(self::$create)) {
-	        $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
-			if (!$result) {				
-            	$sql = "INSERT INTO alias  (address,
+
+// Deleting Postfix Distubution List
+if (!fs_director::CheckForEmptyValue(self::$delete)) {
+    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    if ($result) {
+        $sql = "DELETE FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'";
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
+
+// Adding Postfix Distubution List
+if (!fs_director::CheckForEmptyValue(self::$create)) {
+    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
+    if (!$result) {
+        $sql = "INSERT INTO alias  (address,
 								 	goto,
 								 	domain,
 									created,
@@ -62,33 +62,33 @@
 								 	NOW(),
 								 	NOW(),
 								 	'1')";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}			
-		}
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
 
-		// Deleting Postfix Distubution List User
-		if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
-	        $result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
-			if ($result) {
-			//echo $rowdlu['du_address_vc'];
-                $newlist = str_replace("," . $rowdlu['du_address_vc'], "", $result['goto']);
-                $newlist = str_replace(",,", ",", $newlist);
-                $sql = "UPDATE alias SET goto='" . $newlist . "', modified=NOW() WHERE address='" . $rowdl['dl_address_vc'] . "'";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();
-			}	
-		}
+// Deleting Postfix Distubution List User
+if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
+    $result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    if ($result) {
+        //echo $rowdlu['du_address_vc'];
+        $newlist = str_replace("," . $rowdlu['du_address_vc'], "", $result['goto']);
+        $newlist = str_replace(",,", ",", $newlist);
+        $sql = "UPDATE alias SET goto='" . $newlist . "', modified=NOW() WHERE address='" . $rowdl['dl_address_vc'] . "'";
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
 
-		// Adding Postfix Distubution List User
-		if (!fs_director::CheckForEmptyValue(self::$createuser)) {
-	        $result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
-			if ($result) {
-                $newlist = $result['goto'] . "," . $fulladdress;
-                $newlist = str_replace(",,", ",", $newlist);
-                $sql = "UPDATE alias SET goto='" . $newlist . "', modified=NOW() WHERE address='" . $rowdl['dl_address_vc'] . "'";
-				$sql = $mail_db->prepare($sql);
-				$sql->execute();		
-			}			
-		}	
+// Adding Postfix Distubution List User
+if (!fs_director::CheckForEmptyValue(self::$createuser)) {
+    $result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    if ($result) {
+        $newlist = $result['goto'] . "," . $fulladdress;
+        $newlist = str_replace(",,", ",", $newlist);
+        $sql = "UPDATE alias SET goto='" . $newlist . "', modified=NOW() WHERE address='" . $rowdl['dl_address_vc'] . "'";
+        $sql = $mail_db->prepare($sql);
+        $sql->execute();
+    }
+}
 ?>

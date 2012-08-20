@@ -65,10 +65,9 @@ class webservice extends ws_xmws {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $response_xml = "";
         $userExits = module_controller::getUserExits(ws_generic::GetTagValue('username', $request_data['content']));
-        if($userExits === true){
-            module_controller::ExecuteCreateClient(ws_generic::GetTagValue('resellerid', $request_data['content']), ws_generic::GetTagValue('username', $request_data['content']), ws_generic::GetTagValue('packageid', $request_data['content']), ws_generic::GetTagValue('groupid', $request_data['content']), ws_generic::GetTagValue('fullname', $request_data['content']), ws_generic::GetTagValue('email', $request_data['content']), ws_generic::GetTagValue('address', $request_data['content']), ws_generic::GetTagValue('postcode', $request_data['content']), ws_generic::GetTagValue('phone', $request_data['content']), ws_generic::GetTagValue('password', $request_data['content']),ws_generic::GetTagValue('sendemail', $request_data['content']),ws_generic::GetTagValue('emailsubject', $request_data['content']), ws_generic::GetTagValue('emailbody', $request_data['content']));
-        }
-        else{
+        if ($userExits === true) {
+            module_controller::ExecuteCreateClient(ws_generic::GetTagValue('resellerid', $request_data['content']), ws_generic::GetTagValue('username', $request_data['content']), ws_generic::GetTagValue('packageid', $request_data['content']), ws_generic::GetTagValue('groupid', $request_data['content']), ws_generic::GetTagValue('fullname', $request_data['content']), ws_generic::GetTagValue('email', $request_data['content']), ws_generic::GetTagValue('address', $request_data['content']), ws_generic::GetTagValue('postcode', $request_data['content']), ws_generic::GetTagValue('phone', $request_data['content']), ws_generic::GetTagValue('password', $request_data['content']), ws_generic::GetTagValue('sendemail', $request_data['content']), ws_generic::GetTagValue('emailsubject', $request_data['content']), ws_generic::GetTagValue('emailbody', $request_data['content']));
+        } else {
             $response_xml = $userExits;
         }
         $dataobject = new runtime_dataobject();
@@ -83,11 +82,11 @@ class webservice extends ws_xmws {
         $response = null;
 
         $UsernameExits = module_controller::getUserExits($contenttags['username']);
-        if ($UsernameExits === true){
+        if ($UsernameExits === true) {
             $response = "true";
         } else {
             $respons = $UsernameExits;
-        }  
+        }
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', $respons);

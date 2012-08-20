@@ -2,22 +2,22 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/et_EE/messages.inc                                           |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Üllar Pajus <yllar.pajus@gmail.com>                           |
-|         Raivo Hool <raivo.hool@gmail.com>                             |
-|         Elan Ruusamäe <glen@delfi.ee>                                 |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/et_EE/messages.inc                                           |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Üllar Pajus <yllar.pajus@gmail.com>                           |
+  |         Raivo Hool <raivo.hool@gmail.com>                             |
+  |         Elan Ruusamäe <glen@delfi.ee>                                 |
+  +-----------------------------------------------------------------------+
 
-@version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
+  @version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Sisselogimine ebaõnnestus';
@@ -144,5 +144,4 @@ $messages['folderupdated'] = 'Kaust uuendatud edukalt';
 $messages['foldercreated'] = 'Kaust loodud edukalt';
 $messages['invalidimageformat'] = 'Pole õige pildi formaat';
 $messages['mispellingsfound'] = 'Kiri sisaldab õigekirjavigu';
-
 ?>

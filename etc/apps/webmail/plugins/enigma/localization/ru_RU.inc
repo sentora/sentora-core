@@ -1,21 +1,22 @@
 <?php
+
 /*
 
-+-----------------------------------------------------------------------+
-| plugins/enigma/localization/ru_RU.inc                                 |
-|                                                                       |
-| Russian translation for roundcube/enigma plugin                       |
-| Copyright (C) 2010                                                    |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Sergey Dukachev <iam@dukess.ru>                               |
-| Updates:                                                              |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | plugins/enigma/localization/ru_RU.inc                                 |
+  |                                                                       |
+  | Russian translation for roundcube/enigma plugin                       |
+  | Copyright (C) 2010                                                    |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Sergey Dukachev <iam@dukess.ru>                               |
+  | Updates:                                                              |
+  +-----------------------------------------------------------------------+
 
-@version 2010-12-23
+  @version 2010-12-23
 
-*/
+ */
 
 $labels = array();
 $labels['enigmasettings'] = 'Enigma: Настройки';
@@ -61,5 +62,4 @@ $messages['keysimportfailed'] = 'Невозможно импортировать
 $messages['keysimportsuccess'] = 'Ключи успешно импортированы. Импортировано: $new, без изменений: $old.';
 $messages['keyconfirmdelete'] = 'Вы точно хотите удалить выбранные ключи?';
 $messages['keyimporttext'] = 'Вы можете импортировать открытые и секретные ключи или сообщения об отзыве ключей в формате ASCII-Armor.';
-
 ?>

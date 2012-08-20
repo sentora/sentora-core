@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * URL/hidden inputs generating.
@@ -30,14 +31,13 @@
  * @access  public
  *
  */
-function PMA_generate_common_hidden_inputs($db = '', $table = '', $indent = 0, $skip = array())
-{
+function PMA_generate_common_hidden_inputs($db = '', $table = '', $indent = 0, $skip = array()) {
     if (is_array($db)) {
-        $params  =& $db;
+        $params = & $db;
         $_indent = empty($table) ? $indent : $table;
-        $_skip   = empty($indent) ? $skip : $indent;
-        $indent  =& $_indent;
-        $skip    =& $_skip;
+        $_skip = empty($indent) ? $skip : $indent;
+        $indent = & $_indent;
+        $skip = & $_skip;
     } else {
         $params = array();
         if (strlen($db)) {
@@ -48,22 +48,22 @@ function PMA_generate_common_hidden_inputs($db = '', $table = '', $indent = 0, $
         }
     }
 
-    if (! empty($GLOBALS['server'])
-    &&  $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']) {
+    if (!empty($GLOBALS['server'])
+            && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']) {
         $params['server'] = $GLOBALS['server'];
     }
     if (empty($_COOKIE['pma_lang'])
-    && ! empty($GLOBALS['lang'])) {
+            && !empty($GLOBALS['lang'])) {
         $params['lang'] = $GLOBALS['lang'];
     }
     if (empty($_COOKIE['pma_collation_connection'])
-    && ! empty($GLOBALS['collation_connection'])) {
+            && !empty($GLOBALS['collation_connection'])) {
         $params['collation_connection'] = $GLOBALS['collation_connection'];
     }
 
     $params['token'] = $_SESSION[' PMA_token '];
 
-    if (! is_array($skip)) {
+    if (!is_array($skip)) {
         if (isset($params[$skip])) {
             unset($params[$skip]);
         }
@@ -107,13 +107,12 @@ function PMA_generate_common_hidden_inputs($db = '', $table = '', $indent = 0, $
  * @param string $pre
  * @return string form fields of type hidden
  */
-function PMA_getHiddenFields($values, $pre = '')
-{
+function PMA_getHiddenFields($values, $pre = '') {
     $fields = '';
 
     foreach ($values as $name => $value) {
-        if (! empty($pre)) {
-            $name = $pre. '[' . $name . ']';
+        if (!empty($pre)) {
+            $name = $pre . '[' . $name . ']';
         }
 
         if (is_array($value)) {
@@ -123,7 +122,7 @@ function PMA_getHiddenFields($values, $pre = '')
             // PMA_generate_common_hidden_inputs() is sometimes called
             // from a JS document.write()
             $fields .= '<input type="hidden" name="' . htmlspecialchars($name)
-                . '" value="' . htmlspecialchars($value) . '" />';
+                    . '" value="' . htmlspecialchars($value) . '" />';
         }
     }
 
@@ -190,8 +189,7 @@ function PMA_getHiddenFields($values, $pre = '')
  * @return  string   string with URL parameters
  * @access  public
  */
-function PMA_generate_common_url()
-{
+function PMA_generate_common_url() {
     $args = func_get_args();
 
     if (isset($args[0]) && is_array($args[0])) {
@@ -232,18 +230,18 @@ function PMA_generate_common_url()
     $separator = PMA_get_arg_separator();
 
     if (isset($GLOBALS['server'])
-        && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']
+            && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']
             // avoid overwriting when creating navi panel links to servers
-        && ! isset($params['server'])) {
+            && !isset($params['server'])) {
         $params['server'] = $GLOBALS['server'];
     }
 
     if (empty($_COOKIE['pma_lang'])
-      && ! empty($GLOBALS['lang'])) {
+            && !empty($GLOBALS['lang'])) {
         $params['lang'] = $GLOBALS['lang'];
     }
     if (empty($_COOKIE['pma_collation_connection'])
-      && ! empty($GLOBALS['collation_connection'])) {
+            && !empty($GLOBALS['collation_connection'])) {
         $params['collation_connection'] = $GLOBALS['collation_connection'];
     }
 
@@ -277,8 +275,7 @@ function PMA_generate_common_url()
  * @return  string  character used for separating url parts usally ; or &
  * @access  public
  */
-function PMA_get_arg_separator($encode = 'none')
-{
+function PMA_get_arg_separator($encode = 'none') {
     static $separator = null;
 
     if (null === $separator) {

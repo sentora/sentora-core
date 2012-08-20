@@ -1,20 +1,20 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | language/ga/messages.inc                                              |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author:   Noel Bourke  (cros13)                                       |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/ga/messages.inc                                              |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author:   Noel Bourke  (cros13)                                       |
+  +-----------------------------------------------------------------------+
 
- @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $messages = array();
 $messages['loginfailed'] = 'Theip an iarraidh chun logáil tú isteach';
@@ -72,5 +72,4 @@ $messages['copysuccess'] = 'D\'éirigh mé agus chuir mé $nr seolagh i do Leabh
 $messages['copyerror'] = 'Theip mé agus níor dfhag mé aon seolagh';
 $messages['sourceisreadonly'] = 'Tá an foinse seolaigh seo inléite amháin';
 $messages['errorsavingcontact'] = 'Theip mé, Níl an cumas agam an seolagh seo a sábháil';
-
 ?>

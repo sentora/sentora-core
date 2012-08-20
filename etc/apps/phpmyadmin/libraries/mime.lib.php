@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * MIME detection code.
@@ -23,4 +24,5 @@ function PMA_detectMIME(&$test) {
     }
     return 'application/octet-stream';
 }
+
 ?>

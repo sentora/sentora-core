@@ -4,7 +4,6 @@
  *
  * @package phpMyAdmin
  */
-
 /**
  *
  */
@@ -22,7 +21,6 @@ $url_params['goto'] = $url_params['back'] = 'view_operations.php';
 /**
  * Gets tables informations
  */
-
 require './libraries/tbl_info.inc.php';
 $reread_info = false;
 
@@ -61,7 +59,7 @@ if (isset($result)) {
         // $result should exist, regardless of $_message
         $_type = $result ? 'success' : 'error';
     }
-    if (! empty($warning_messages)) {
+    if (!empty($warning_messages)) {
         $_message = new PMA_Message;
         $_message->addMessages($warning_messages);
         $_message->isError(true);
@@ -80,25 +78,25 @@ $url_params['back'] = 'view_operations.php';
 ?>
 <!-- Table operations -->
 <div class="operations_half_width">
-<form method="post" action="view_operations.php">
+    <form method="post" action="view_operations.php">
 <?php echo PMA_generate_common_hidden_inputs($GLOBALS['db'], $GLOBALS['table']); ?>
-<input type="hidden" name="reload" value="1" />
-<fieldset>
-    <legend><?php echo __('Operations'); ?></legend>
+        <input type="hidden" name="reload" value="1" />
+        <fieldset>
+            <legend><?php echo __('Operations'); ?></legend>
 
-    <table>
-    <!-- Change view name -->
-    <tr><td><?php echo __('Rename view to'); ?></td>
-        <td><input type="text" size="20" name="new_name" onfocus="this.select()"
-                value="<?php echo htmlspecialchars($GLOBALS['table']); ?>" />
-        </td>
-    </tr>
-    </table>
-</fieldset>
-<fieldset class="tblFooters">
-        <input type="submit" name="submitoptions" value="<?php echo __('Go'); ?>" />
-</fieldset>
-</form>
+            <table>
+                <!-- Change view name -->
+                <tr><td><?php echo __('Rename view to'); ?></td>
+                    <td><input type="text" size="20" name="new_name" onfocus="this.select()"
+                               value="<?php echo htmlspecialchars($GLOBALS['table']); ?>" />
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset class="tblFooters">
+            <input type="submit" name="submitoptions" value="<?php echo __('Go'); ?>" />
+        </fieldset>
+    </form>
 </div>
 
 <?php

@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Javascript escaping functions.
@@ -25,8 +26,7 @@
  *
  * @access  public
  */
-function PMA_jsFormat($a_string = '', $add_backquotes = true)
-{
+function PMA_jsFormat($a_string = '', $add_backquotes = true) {
     if (is_string($a_string)) {
         $a_string = htmlspecialchars($a_string);
         $a_string = PMA_escapeJsString($a_string);
@@ -37,7 +37,9 @@ function PMA_jsFormat($a_string = '', $add_backquotes = true)
     }
 
     return (($add_backquotes) ? PMA_backquote($a_string) : $a_string);
-} // end of the 'PMA_jsFormat()' function
+}
+
+// end of the 'PMA_jsFormat()' function
 
 /**
  * escapes a string to be inserted as string a JavaScript block
@@ -52,16 +54,14 @@ function PMA_jsFormat($a_string = '', $add_backquotes = true)
  * @param   string  $string the string to be escaped
  * @return  string  the escaped string
  */
-function PMA_escapeJsString($string)
-{
-    return preg_replace('@</script@i', '</\' + \'script',
-                        strtr($string, array(
-                                "\000" => '',
-                                '\\' => '\\\\',
-                                '\'' => '\\\'',
-                                '"' => '\"',
-                                "\n" => '\n',
-                                "\r" => '\r')));
+function PMA_escapeJsString($string) {
+    return preg_replace('@</script@i', '</\' + \'script', strtr($string, array(
+                        "\000" => '',
+                        '\\' => '\\\\',
+                        '\'' => '\\\'',
+                        '"' => '\"',
+                        "\n" => '\n',
+                        "\r" => '\r')));
 }
 
 /**

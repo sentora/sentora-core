@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 
 /**
@@ -7,15 +8,13 @@
  */
 
 /**
-  * Gets zip file contents
-  *
-  * @param   string  $file
-  * @return  array  ($error_message, $file_data); $error_message
-  *                  is empty if no error
-  */
-
-function PMA_getZipContents($file)
-{
+ * Gets zip file contents
+ *
+ * @param   string  $file
+ * @return  array  ($error_message, $file_data); $error_message
+ *                  is empty if no error
+ */
+function PMA_getZipContents($file) {
     $error_message = '';
     $file_data = '';
     $zip_handle = zip_open($file);
@@ -29,7 +28,7 @@ function PMA_getZipContents($file)
             $ods_mime = 'application/vnd.oasis.opendocument.spreadsheet';
             if (!strcmp($ods_mime, $read)) {
                 /* Return the correct contents, not just the first entry */
-                for ( ; ; ) {
+                for (;;) {
                     $entry = zip_read($zip_handle);
                     if (is_resource($entry)) {
                         if (!strcmp('content.xml', zip_entry_name($entry))) {
@@ -49,7 +48,7 @@ function PMA_getZipContents($file)
                         } else {
                             $error_message = __('Error in ZIP archive:') . ' ' . PMA_getZipError($zip_handle);
                         }
-                        
+
                         break;
                     }
                 }
@@ -69,33 +68,33 @@ function PMA_getZipContents($file)
 }
 
 /**
-  * Gets zip error message
-  *
-  * @param   integer  error code
-  * @return  string  error message
+ * Gets zip error message
+ *
+ * @param   integer  error code
+ * @return  string  error message
  */
-function PMA_getZipError($code)
-{
+function PMA_getZipError($code) {
     // I don't think this needs translation
     switch ($code) {
         case ZIPARCHIVE::ER_MULTIDISK:
             $message = 'Multi-disk zip archives not supported';
-             break;
+            break;
         case ZIPARCHIVE::ER_READ:
             $message = 'Read error';
-             break;
+            break;
         case ZIPARCHIVE::ER_CRC:
             $message = 'CRC error';
-             break;
+            break;
         case ZIPARCHIVE::ER_NOZIP:
             $message = 'Not a zip archive';
-             break;
+            break;
         case ZIPARCHIVE::ER_INCONS:
             $message = 'Zip archive inconsistent';
-             break;
+            break;
         default:
             $message = $code;
     }
     return $message;
 }
+
 ?>

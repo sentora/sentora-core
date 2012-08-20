@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -53,8 +54,7 @@ require_once 'MDB2/Driver/Reverse/Common.php';
  * @author  Lukas Smith <smith@dybnet.de>
  * @author  Lorenzo Alberton <l.alberton@quipo.it>
  */
-class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
-{
+class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common {
     // {{{ getTableFieldDefinition()
 
     /**
@@ -65,8 +65,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    function getTableFieldDefinition($table_name, $field_name)
-    {
+    function getTableFieldDefinition($table_name, $field_name) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -98,7 +97,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
                      AND t.table_name = '$table'
                      AND c.column_name = '$fldname'";
         if (!empty($schema)) {
-            $query .= " AND t.table_schema = '" .$db->quoteIdentifier($schema, true) ."'";
+            $query .= " AND t.table_schema = '" . $db->quoteIdentifier($schema, true) . "'";
         }
         $query .= ' ORDER BY t.table_name';
         $column = $db->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
@@ -106,8 +105,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
             return $column;
         }
         if (empty($column)) {
-            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
-                'it was not specified an existing table column', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null, 'it was not specified an existing table column', __FUNCTION__);
         }
 
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
@@ -134,8 +132,8 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
             if ((null === $default) && $notnull) {
                 $default = '';
             } elseif (strlen($default) > 4
-                   && substr($default, 0, 1) == '('
-                   &&  substr($default, -1, 1) == ')'
+                    && substr($default, 0, 1) == '('
+                    && substr($default, -1, 1) == ')'
             ) {
                 //mssql wraps the default value in parentheses: "((1234))", "(NULL)"
                 $default = trim($default, '()');
@@ -182,8 +180,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    function getTableIndexDefinition($table_name, $index_name)
-    {
+    function getTableIndexDefinition($table_name, $index_name) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -212,7 +209,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
                              WHERE k.table_name = OBJECT_NAME(i.id)
                                AND k.constraint_name = i.name";
         if (!empty($schema)) {
-            $query .= " AND k.table_schema = '" .$db->quoteIdentifier($schema, true) ."'";
+            $query .= " AND k.table_schema = '" . $db->quoteIdentifier($schema, true) . "'";
         }
         $query .= ')
                 ORDER BY tablename, indexname, ik.keyno';
@@ -240,17 +237,15 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
                 }
             }
             $definition['fields'][$column_name] = array(
-                'position' => (int)$row['position'],
+                'position' => (int) $row['position'],
             );
             if (!empty($row['collation'])) {
-                $definition['fields'][$column_name]['sorting'] = ($row['collation'] == 'ASC'
-                    ? 'ascending' : 'descending');
+                $definition['fields'][$column_name]['sorting'] = ($row['collation'] == 'ASC' ? 'ascending' : 'descending');
             }
         }
         $result->free();
         if (empty($definition['fields'])) {
-            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
-                'it was not specified an existing table index', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null, 'it was not specified an existing table index', __FUNCTION__);
         }
         return $definition;
     }
@@ -266,8 +261,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    function getTableConstraintDefinition($table_name, $constraint_name)
-    {
+    function getTableConstraintDefinition($table_name, $constraint_name) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -310,7 +304,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
                      AND k.table_name = '$table'
                      AND k.constraint_name = '%s'";
         if (!empty($schema)) {
-            $query .= " AND k.table_schema = '" .$db->quoteIdentifier($schema, true) ."'";
+            $query .= " AND k.table_schema = '" . $db->quoteIdentifier($schema, true) . "'";
         }
         $query .= ' ORDER BY k.constraint_name,
                              k.ordinal_position';
@@ -341,7 +335,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
                 }
             }
             $definition['fields'][$column_name] = array(
-                'position' => (int)$row['field_position']
+                'position' => (int) $row['field_position']
             );
             if ($row['foreign']) {
                 $ref_column_name = $row['references_field'];
@@ -354,34 +348,33 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
                 }
                 $definition['references']['table'] = $row['references_table'];
                 $definition['references']['fields'][$ref_column_name] = array(
-                    'position' => (int)$row['field_position']
+                    'position' => (int) $row['field_position']
                 );
             }
             //collation?!?
             /*
-            if (!empty($row['collation'])) {
-                $definition['fields'][$column_name]['sorting'] = ($row['collation'] == 'ASC'
-                    ? 'ascending' : 'descending');
-            }
-            */
+              if (!empty($row['collation'])) {
+              $definition['fields'][$column_name]['sorting'] = ($row['collation'] == 'ASC'
+              ? 'ascending' : 'descending');
+              }
+             */
             $lastrow = $row;
             // otherwise $row is no longer usable on exit from loop
         }
         $result->free();
         if (empty($definition['fields'])) {
-            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
-                $constraint_name . ' is not an existing table constraint', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null, $constraint_name . ' is not an existing table constraint', __FUNCTION__);
         }
 
-        $definition['primary'] = (boolean)$lastrow['primary'];
-        $definition['unique']  = (boolean)$lastrow['unique'];
-        $definition['foreign'] = (boolean)$lastrow['foreign'];
-        $definition['check']   = (boolean)$lastrow['check'];
-        $definition['deferrable'] = (boolean)$lastrow['deferrable'];
-        $definition['initiallydeferred'] = (boolean)$lastrow['initiallydeferred'];
+        $definition['primary'] = (boolean) $lastrow['primary'];
+        $definition['unique'] = (boolean) $lastrow['unique'];
+        $definition['foreign'] = (boolean) $lastrow['foreign'];
+        $definition['check'] = (boolean) $lastrow['check'];
+        $definition['deferrable'] = (boolean) $lastrow['deferrable'];
+        $definition['initiallydeferred'] = (boolean) $lastrow['initiallydeferred'];
         $definition['onupdate'] = $lastrow['onupdate'];
         $definition['ondelete'] = $lastrow['ondelete'];
-        $definition['match']    = $lastrow['match'];
+        $definition['match'] = $lastrow['match'];
 
         return $definition;
     }
@@ -401,8 +394,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    function getTriggerDefinition($trigger)
-    {
+    function getTriggerDefinition($trigger) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -432,24 +424,24 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
                     JOIN sysobjects sys2 ON sys1.parent_obj = sys2.id
                     JOIN syscomments c ON sys1.id = c.id
                    WHERE sys1.xtype = 'TR'
-                     AND sys1.name = ". $db->quote($trigger, 'text');
+                     AND sys1.name = " . $db->quote($trigger, 'text');
 
         $types = array(
-            'trigger_name'    => 'text',
-            'table_name'      => 'text',
-            'trigger_body'    => 'text',
-            'trigger_type'    => 'text',
-            'trigger_event'   => 'text',
+            'trigger_name' => 'text',
+            'table_name' => 'text',
+            'trigger_body' => 'text',
+            'trigger_type' => 'text',
+            'trigger_event' => 'text',
             'trigger_comment' => 'text',
             'trigger_enabled' => 'boolean',
-            'is_encripted'    => 'boolean',
+            'is_encripted' => 'boolean',
         );
 
         $def = $db->queryRow($query, $types, MDB2_FETCHMODE_ASSOC);
         if (PEAR::isError($def)) {
             return $def;
         }
-        $trg_body = $db->queryCol('EXEC sp_helptext '. $db->quote($trigger, 'text'), 'text');
+        $trg_body = $db->queryCol('EXEC sp_helptext ' . $db->quote($trigger, 'text'), 'text');
         if (!PEAR::isError($trg_body)) {
             $def['trigger_body'] = implode(' ', $trg_body);
         }
@@ -477,10 +469,9 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
      *
      * @see MDB2_Driver_Common::tableInfo()
      */
-    function tableInfo($result, $mode = null)
-    {
+    function tableInfo($result, $mode = null) {
         if (is_string($result)) {
-           return parent::tableInfo($result, $mode);
+            return parent::tableInfo($result, $mode);
         }
 
         $db = $this->getDBInstance();
@@ -490,8 +481,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
 
         $resource = MDB2::isResultCommon($result) ? $result->getResource() : $result;
         if (!is_resource($resource)) {
-            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
-                'Could not generate result resource', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null, 'Could not generate result resource', __FUNCTION__);
         }
 
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
@@ -506,7 +496,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
 
         $meta = @sqlsrv_field_metadata($resource);
         $count = count($meta);
-        $res   = array();
+        $res = array();
 
         if ($mode) {
             $res['num_fields'] = $count;
@@ -516,16 +506,16 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
         for ($i = 0; $i < $count; $i++) {
             $res[$i] = array(
                 'table' => '',
-                'name'              => $case_func($meta[$i]['Name']),
-                'type'              => $meta[$i]['Type'],
-                'length'            => $meta[$i]['Size'],
+                'name' => $case_func($meta[$i]['Name']),
+                'type' => $meta[$i]['Type'],
+                'length' => $meta[$i]['Size'],
                 'numeric_precision' => $meta[$i]['Precision'],
-                'numeric_scale'     => $meta[$i]['Scale'],
-                'flags'             => ''
+                'numeric_scale' => $meta[$i]['Scale'],
+                'flags' => ''
             );
             $mdb2type_info = $db->datatype->mapNativeDatatype($res[$i]);
             if (PEAR::isError($mdb2type_info)) {
-               return $mdb2type_info;
+                return $mdb2type_info;
             }
             $res[$i]['mdb2type'] = $mdb2type_info[0][0];
             if ($mode & MDB2_TABLEINFO_ORDER) {
@@ -562,8 +552,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
      * @access protected
      * @author Joern Barthel <j_barthel@web.de>
      */
-    function _mssql_field_flags($table, $column)
-    {
+    function _mssql_field_flags($table, $column) {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -639,8 +628,7 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
      * @access protected
      * @author Joern Barthel <j_barthel@web.de>
      */
-    function _add_flag(&$array, $value)
-    {
+    function _add_flag(&$array, $value) {
         if (!is_array($array)) {
             $array = array($value);
         } elseif (!in_array($value, $array)) {
@@ -650,4 +638,5 @@ class MDB2_Driver_Reverse_sqlsrv extends MDB2_Driver_Reverse_Common
 
     // }}}
 }
+
 ?>

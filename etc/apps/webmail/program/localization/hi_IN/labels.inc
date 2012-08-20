@@ -1,18 +1,18 @@
 <?php
 
 /*
- +-----------------------------------------------------------------------+
- | localization/hi_IN/labels.inc                                         |
- |                                                                       |
- | Language file of the Roundcube Webmail client                         |
- | Copyright (C) 2012, The Roundcube Dev Team                            |
- | Licensed under the GNU General Public License                         |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Vibhav Pant <vibhavp@gmail.com>                               |
- +-----------------------------------------------------------------------+
- @version $Id: labels.inc 5741 2012-01-08 16:20:12Z thomasb $
-*/
+  +-----------------------------------------------------------------------+
+  | localization/hi_IN/labels.inc                                         |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2012, The Roundcube Dev Team                            |
+  | Licensed under the GNU General Public License                         |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Vibhav Pant <vibhavp@gmail.com>                               |
+  +-----------------------------------------------------------------------+
+  @version $Id: labels.inc 5741 2012-01-08 16:20:12Z thomasb $
+ */
 
 $labels = array();
 $labels['welcome'] = '$product में स्वागत है';

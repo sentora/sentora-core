@@ -49,5 +49,4 @@ $messages['keysimportfailed'] = 'Unable to import key(s)! Internal error.';
 $messages['keysimportsuccess'] = 'Key(s) imported successfully. Imported: $new, unchanged: $old.';
 $messages['keyconfirmdelete'] = 'Are you sure, you want to delete selected key(s)?';
 $messages['keyimporttext'] = 'You can import private and public key(s) or revocation signatures in ASCII-Armor format.';
-
 ?>

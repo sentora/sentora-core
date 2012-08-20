@@ -1,23 +1,24 @@
 <?php
+
 /*
 
- +-----------------------------------------------------------------------+
- | program/steps/utils/killcache.inc                                     |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
- |                                                                       |
- | PURPOSE:                                                              |
- |   Delete rows from cache tables                                       |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Author: Dennis P. Nikolaenko <dennis@nikolaenko.ru>                   |
- +-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | program/steps/utils/killcache.inc                                     |
+  |                                                                       |
+  | This file is part of the Roundcube Webmail client                     |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  | PURPOSE:                                                              |
+  |   Delete rows from cache tables                                       |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Dennis P. Nikolaenko <dennis@nikolaenko.ru>                   |
+  +-----------------------------------------------------------------------+
 
- $Id: killcache.inc 5578 2011-12-09 07:23:04Z alec $
+  $Id: killcache.inc 5578 2011-12-09 07:23:04Z alec $
 
-*/
+ */
 
 // don't allow public access if not in devel_mode
 if (!$RCMAIL->config->get('devel_mode')) {

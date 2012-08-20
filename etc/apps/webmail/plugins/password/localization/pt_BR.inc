@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd']  = 'Alterar senha';
-$labels['curpasswd']  = 'Senha atual:';
-$labels['newpasswd']  = 'Nova senha:';
-$labels['confpasswd']  = 'Confirmar nova senha:';
+$labels['changepasswd'] = 'Alterar senha';
+$labels['curpasswd'] = 'Senha atual:';
+$labels['newpasswd'] = 'Nova senha:';
+$labels['confpasswd'] = 'Confirmar nova senha:';
 
 $messages = array();
 $messages['nopassword'] = 'Por favor, informe a nova senha.';
@@ -17,5 +17,4 @@ $messages['internalerror'] = 'Não foi possível gravar a nova senha.';
 $messages['passwordshort'] = 'A senha precisa ter ao menos $length caracteres.';
 $messages['passwordweak'] = 'A senha precisa conter ao menos um número e um caractere de pontuação.';
 $messages['passwordforbidden'] = 'A senha contém caracteres proibidos.';
-
 ?>

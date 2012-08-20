@@ -26,11 +26,11 @@ require_once 'inc/dbc.inc.php';
 if (!runtime_controller::IsCLI())
     exit(1);
 
-if((isset($argv[1])) && ($argv[1] == '--set')){
+if ((isset($argv[1])) && ($argv[1] == '--set')) {
     ctrl_options::SetSystemOption($argv[2], $argv[3], false);
 }
 
-if((isset($argv[1])) && ($argv[1] == '--show')){
+if ((isset($argv[1])) && ($argv[1] == '--show')) {
     echo ctrl_options::GetSystemOption($argv[2]);
 }
 

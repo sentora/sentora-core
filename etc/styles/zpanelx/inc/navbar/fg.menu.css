@@ -55,10 +55,10 @@ Date:		September 2008
 .fg-menu-breadcrumb .fg-menu-prev-list a:visited,
 .fg-menu-breadcrumb .fg-menu-prev-list a:hover,
 .fg-menu-breadcrumb .fg-menu-prev-list a:active { background-image: none; text-decoration:none; }
-	
+
 .fg-menu-breadcrumb .fg-menu-prev-list a { float: left; padding-right: .4em; }
 .fg-menu-breadcrumb .fg-menu-prev-list a .ui-icon { float: left; }
-	
+
 .fg-menu-breadcrumb .fg-menu-current-crumb a:link,
 .fg-menu-breadcrumb .fg-menu-current-crumb a:visited,
 .fg-menu-breadcrumb .fg-menu-current-crumb a:hover,
@@ -67,7 +67,7 @@ Date:		September 2008
 
 
 /* REQUIRED LINK STYLES: links are "display:block" by default; if the menu options are split into 
-	selectable node links and 'next' links, the script floats the node links left and floats the 'next' links to the right	*/
+        selectable node links and 'next' links, the script floats the node links left and floats the 'next' links to the right	*/
 
 .fg-menu a:link,
 .fg-menu a:visited,
@@ -84,16 +84,16 @@ Date:		September 2008
 .fg-menu a.ui-state-hover:visited,
 .fg-menu a.ui-state-hover:hover,
 .fg-menu a.ui-state-hover:active,
- .fg-menu a.ui-state-active:link,
- .fg-menu a.ui-state-active:visited,
- .fg-menu a.ui-state-active:hover,
+.fg-menu a.ui-state-active:link,
+.fg-menu a.ui-state-active:visited,
+.fg-menu a.ui-state-active:hover,
 .fg-menu a.ui-state-active:active { border-style: solid; font-weight: normal; }
 
 .fg-menu a span { display:block; cursor:pointer; }
 
 
- /* SUGGESTED STYLES - for use with jQuery UI Themeroller CSS */	
- 
+/* SUGGESTED STYLES - for use with jQuery UI Themeroller CSS */	
+
 .fg-menu-indicator span { float:left; }
 .fg-menu-indicator span.ui-icon { float:right; }
 

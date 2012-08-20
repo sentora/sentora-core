@@ -2,24 +2,24 @@
 
 /*
 
-+-----------------------------------------------------------------------+
-| language/pt_PT/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Authors: Sergio Rocha <sergio.rocha@makeitsimple.pt>                  |
-|          João Vale <jpvale@gmail.com>                                |
-|          Fernando Silva <fernando.silva@openquest.pt>                 |
-|          Nuno Costa <nuno@criacaoweb.net>                             |
-|          Teotónio Ricardo <teotonio.ricardo@webtuga.pt>              |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/pt_PT/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Authors: Sergio Rocha <sergio.rocha@makeitsimple.pt>                  |
+  |          João Vale <jpvale@gmail.com>                                |
+  |          Fernando Silva <fernando.silva@openquest.pt>                 |
+  |          Nuno Costa <nuno@criacaoweb.net>                             |
+  |          Teotónio Ricardo <teotonio.ricardo@webtuga.pt>              |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
+  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Bem-vindo ao $product';
@@ -437,5 +437,4 @@ $labels['vietnamese'] = 'Vietnamita';
 $labels['japanese'] = 'Japonês';
 $labels['korean'] = 'Coreano';
 $labels['chinese'] = 'Chinês';
-
 ?>

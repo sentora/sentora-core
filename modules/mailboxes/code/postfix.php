@@ -24,21 +24,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 		$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
-		include('cnf/db.php');
-		$z_db_user = $user;
-		$z_db_pass = $pass;
-		try {	
-  			$mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
-		} catch (PDOException $e) {
-	
-		}
+$mailserver_db = ctrl_options::GetSystemOption('mailserver_db');
+include('cnf/db.php');
+$z_db_user = $user;
+$z_db_pass = $pass;
+try {
+    $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
+} catch (PDOException $e) {
+    
+}
 
-		// Adding PostFix Mailboxes
-		if (!fs_director::CheckForEmptyValue(self::$create)) {
-			$result = $mail_db->query("SELECT domain FROM domain WHERE domain='" . $domain . "'")->Fetch();
-			if (!$result) {
-				$sql = $mail_db->prepare("INSERT INTO domain (domain,
+// Adding PostFix Mailboxes
+if (!fs_director::CheckForEmptyValue(self::$create)) {
+    $result = $mail_db->query("SELECT domain FROM domain WHERE domain='" . $domain . "'")->Fetch();
+    if (!$result) {
+        $sql = $mail_db->prepare("INSERT INTO domain (domain,
 									 							description,
 															 	aliases,
 																mailboxes,
@@ -60,11 +60,11 @@
 															 	NOW(),
 																NOW(),
 															 	'1')");
-	            $sql->execute();			
-			}
-			$result = $mail_db->query("SELECT username FROM mailbox WHERE username='" . $fulladdress . "'")->Fetch();
-			if (!$result) {
-            $sql = $mail_db->prepare("INSERT INTO mailbox (username,
+        $sql->execute();
+    }
+    $result = $mail_db->query("SELECT username FROM mailbox WHERE username='" . $fulladdress . "'")->Fetch();
+    if (!$result) {
+        $sql = $mail_db->prepare("INSERT INTO mailbox (username,
 								 							password,
 														 	name,
 															maildir,
@@ -84,8 +84,8 @@
 														 	NOW(),
 														 	NOW(),
 														 	'1')");
-            $sql->execute();
-            $sql = $mail_db->prepare("INSERT INTO alias  (address,
+        $sql->execute();
+        $sql = $mail_db->prepare("INSERT INTO alias  (address,
 														 	goto,
 														 	domain,
 															created,
@@ -97,25 +97,25 @@
 														 	NOW(),
 														 	NOW(),
 														 	'1')");
-			$sql->execute();
-			}
-		}
-		
-		// Deleting PostFix Mailboxes
-		if (!fs_director::CheckForEmptyValue(self::$delete)) {
-        	$sql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
-            $sql->execute();
-            $sql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
-			$sql->execute();
-		}
-				
-		//Saving PostFix Mailboxes
-		if (!fs_director::CheckForEmptyValue(self::$update)) {
-			if (!fs_director::CheckForEmptyValue($password)) {
-            	$sql = $mail_db->prepare("UPDATE mailbox SET password='{PLAIN-MD5}" . md5($password) . "' WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
-				$sql->execute();		
-			}
-            $sql = $mail_db->prepare("UPDATE mailbox SET active=".$enabled." WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
-			$sql->execute();
-		}			
+        $sql->execute();
+    }
+}
+
+// Deleting PostFix Mailboxes
+if (!fs_director::CheckForEmptyValue(self::$delete)) {
+    $sql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+    $sql->execute();
+    $sql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
+    $sql->execute();
+}
+
+//Saving PostFix Mailboxes
+if (!fs_director::CheckForEmptyValue(self::$update)) {
+    if (!fs_director::CheckForEmptyValue($password)) {
+        $sql = $mail_db->prepare("UPDATE mailbox SET password='{PLAIN-MD5}" . md5($password) . "' WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+        $sql->execute();
+    }
+    $sql = $mail_db->prepare("UPDATE mailbox SET active=" . $enabled . " WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+    $sql->execute();
+}
 ?>

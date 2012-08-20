@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Update Notifier Plugin Config File
  *
@@ -12,7 +13,6 @@
  * @version   SVN: $Id: UpdateNotifier.config.php 525 2011-11-26 10:19:27Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
 /**
  * define the update info file format
  * - true: Ubuntu Landscape format (file: /var/lib/update-notifier/updates-available)

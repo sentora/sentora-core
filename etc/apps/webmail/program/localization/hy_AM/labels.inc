@@ -1,20 +1,20 @@
 <?php
 
 /*
-+-----------------------------------------------------------------------+
-| language/hy_AM/labels.inc                                             |
-|                                                                       |
-| Language file of the Roundcube Webmail client                         |
-| Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-| Licensed under the GNU GPL                                            |
-|                                                                       |
-+-----------------------------------------------------------------------+
-| Author: Vahan Yerkanian <vahan@arminco.com>                           |
-+-----------------------------------------------------------------------+
+  +-----------------------------------------------------------------------+
+  | language/hy_AM/labels.inc                                             |
+  |                                                                       |
+  | Language file of the Roundcube Webmail client                         |
+  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+  | Licensed under the GNU GPL                                            |
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+  | Author: Vahan Yerkanian <vahan@arminco.com>                           |
+  +-----------------------------------------------------------------------+
 
-@version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
+  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
 
-*/
+ */
 
 $labels = array();
 $labels['welcome'] = 'Բարի գալուստ $product';
@@ -258,5 +258,4 @@ $labels['B'] = 'Բ';
 $labels['KB'] = 'ԿԲ';
 $labels['MB'] = 'ՄԲ';
 $labels['GB'] = 'ԳԲ';
-
 ?>
