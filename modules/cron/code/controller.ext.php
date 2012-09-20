@@ -124,7 +124,8 @@ class module_controller {
             $sql->bindParam(':script', $controller->GetControllerRequest('FORM', 'inScript'));
             $sql->bindParam(':desc', $controller->GetControllerRequest('FORM', 'inDescription'));
             $sql->bindParam(':timing', $controller->GetControllerRequest('FORM', 'inTiming'));
-            $sql->bindParam(':fullpath', ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $controller->GetControllerRequest('FORM', 'inScript'));
+            $full_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $controller->GetControllerRequest('FORM', 'inScript');
+            $sql->bindParam(':fullpath', $full_path);
             $sql->execute();
             self::WriteCronFile();
             self::$ok = TRUE;
@@ -146,7 +147,7 @@ class module_controller {
                 while ($rowcrons = $sql->fetch()) {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $rowcrons['ct_id_pk'] . ''))) {
                         $sql2 = $zdbh->prepare("UPDATE x_cronjobs SET ct_deleted_ts=" . time() . " WHERE ct_id_pk=:cronid");
-                        $sql2 = bindParam(':cronid', $rowcrons['ct_id_pk']);
+                        $sql2->bindParam(':cronid', $rowcrons['ct_id_pk']);
                         $sql2->execute();
                         self::WriteCronFile();
                         self::$ok = TRUE;
