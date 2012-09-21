@@ -1,0 +1,5 @@
+hosts = localhost
+user = postfix
+password = postfix
+dbname = zpanel_postfix
+query = SELECT domain FROM domain WHERE domain='%s' AND backupmx = '0' AND active = '1'

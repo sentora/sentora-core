@@ -1,0 +1,5 @@
+hosts = localhost
+user = postfix
+password = postfix
+dbname = zpanel_postfix
+query = SELECT goto FROM alias WHERE address='%s' AND active = '1'
