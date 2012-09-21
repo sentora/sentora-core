@@ -70,7 +70,7 @@ class module_controller {
         global $zdbh;
         $result = $zdbh->query("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_pk = " . $uid . "")->Fetch();
         if ($result) {
-            return $result['ac_usertheme_tx'];
+            return $result['ac_usercss_vc'];
         } else {
             return false;
         }
@@ -81,7 +81,8 @@ class module_controller {
     }
 
     static function ExecuteCSSList() {
-        return ui_template::ListAvaliableCSS(self::ExecuteShowCurrentTheme());
+        $currentuser = ctrl_users::GetUserDetail();
+        return ui_template::ListAvaliableCSS(self::ExecuteShowCurrentTheme($currentuser['userid']));
     }
 
     /**
