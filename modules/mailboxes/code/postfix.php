@@ -31,35 +31,35 @@ $z_db_pass = $pass;
 try {
     $mail_db = new db_driver("mysql:host=localhost;dbname=" . $mailserver_db . "", $z_db_user, $z_db_pass);
 } catch (PDOException $e) {
-    
+    echo $e;
 }
 
 // Adding PostFix Mailboxes
 if (!fs_director::CheckForEmptyValue(self::$create)) {
     $result = $mail_db->query("SELECT domain FROM domain WHERE domain='" . $domain . "'")->Fetch();
     if (!$result) {
-        $sql = $mail_db->prepare("INSERT INTO domain (domain,
-									 							description,
-															 	aliases,
-																mailboxes,
-															 	maxquota,
-															 	quota,
-															 	transport,
-															 	backupmx,
-																created,
-															 	modified,
-															 	active) VALUES (
-															 	'" . $domain . "',
-															 	'',
-															 	0,
-															 	0,
-															 	0,
-															 	0,
-															 	'',
-															 	0,
-															 	NOW(),
-																NOW(),
-															 	'1')");
+        $sql = $mail_db->prepare("INSERT INTO domain (  domain,
+                                                        description,
+                                                        aliases,
+                                                        mailboxes,
+                                                        maxquota,
+                                                        quota,
+                                                        transport,
+                                                        backupmx,
+                                                        created,
+                                                        modified,
+                                                        active) VALUES (
+                                                        '" . $domain . "',
+                                                        '',
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        '',
+                                                        0,
+                                                        NOW(),
+                                                        NOW(),
+                                                        '1')");
         $sql->execute();
     }
     $result = $mail_db->query("SELECT username FROM mailbox WHERE username='" . $fulladdress . "'")->Fetch();

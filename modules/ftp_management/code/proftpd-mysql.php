@@ -40,7 +40,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
     $sql = $ftp_db->prepare("INSERT INTO ftpquotalimits (name, quota_type, per_session, limit_type, bytes_in_avail, bytes_out_avail, bytes_xfer_avail, files_in_avail, files_out_avail, files_xfer_avail) VALUES (:usename, 'user', 'true', 'hard', 0, 0, 0, 0, 0, 0);");
     $sql->bindParam(':username', $username);
     $sql->execute();
-    $sql = $ftp_db->prepare("INSERT INTO ftpuser (id, userid, passwd, uid, gid, homedir, shell, count, accessed, modified) VALUES ('', :username, :password, 2001, 2001, :homedir, '/sbin/nologin', 0, '', '');");
+    $sql = $ftp_db->prepare("INSERT INTO ftpuser (id, userid, passwd, homedir, shell, count, accessed, modified) VALUES ('', :username, :password, :homedir, '/sbin/nologin', 0, '', '');");
     $sql->bindParam(':username', $username);
     $sql->bindParam(':password', $password);
     $sql->bindParam(':homedir', $homedir);
