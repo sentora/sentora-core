@@ -39,7 +39,7 @@ $rcmail_config['log_dir'] = '/var/zpanel/logs/roundcube/';
 $rcmail_config['temp_dir'] = '/var/zpanel/temp/';
 
 // List of active plugins (in plugins/ directory)
-$rcmail_config['plugins'] = array();
+$rcmail_config['plugins'] = array('managesieve');
 
 // enable caching of messages and mailbox data in the local database.
 // this is recommended if the IMAP server does not run on the same machine
@@ -393,16 +393,16 @@ $rcmail_config['prefer_html'] = TRUE;
 // 0 - Never, always ask
 // 1 - Ask if sender is not in address book
 // 2 - Always show inline images
-$rcmail_config['show_images'] = 0;
+$rcmail_config['show_images'] = 2;
 
 // compose html formatted messages by default
-$rcmail_config['htmleditor'] = FALSE;
+$rcmail_config['htmleditor'] = true;
 
 // show pretty dates as standard
 $rcmail_config['prettydate'] = TRUE;
 
 // save compose message every 300 seconds (5min)
-$rcmail_config['draft_autosave'] = 300;
+$rcmail_config['draft_autosave'] = 120;
 
 // default setting if preview pane is enabled
 $rcmail_config['preview_pane'] = FALSE;
