@@ -1,27 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/uk_UA/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Volodymyr M. Kononenko aka kvm <vmkononenko@gmail.com>        |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/uk_UA/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Невдала спроба входу';
 $messages['cookiesdisabled'] = 'Ваш переглядач не приймає cookie';
 $messages['sessionerror'] = 'Ваша сесія застаріла';
-$messages['imaperror'] = 'Невдале з`єднання з IMAP сервером';
+$messages['storageerror'] = 'Невдале з`єднання з IMAP сервером';
 $messages['servererror'] = 'Помилка сервера!';
 $messages['servererrormsg'] = 'Помилка сервера: $msg';
 $messages['dberror'] = 'Помилка бази даних!';
@@ -128,7 +125,6 @@ $messages['smtpautherror'] = 'Помилка SMTP-сервера ($code): Нев
 $messages['smtpfromerror'] = 'Помилка SMTP-сервера ($code): Не вдалося вказати відправника "$from" ($msg)';
 $messages['smtptoerror'] = 'Помилка SMTP-сервера ($code): Не вдалося додати отримувача "$to" ($msg)';
 $messages['smtprecipientserror'] = 'Помилка SMTP: Не вдалося обробити список отримувачів';
-$messages['smtpdsnerror'] = 'Помилка SMTP: Не підтримуються повідомлення про статус доставки';
 $messages['smtperror'] = 'Помилка SMTP: $msg';
 $messages['emailformaterror'] = 'Невірна електронна адреса: $email';
 $messages['toomanyrecipients'] = 'Занадто багато отримувачів. Зменшіть їх число до $max.';
@@ -144,7 +140,7 @@ $messages['groupcreated'] = 'Група створена успішно';
 $messages['savedsearchdeleted'] = 'Збережений пошук вдало видалено.';
 $messages['savedsearchdeleteerror'] = 'Неможливо видалити збережений пошук.';
 $messages['savedsearchcreated'] = 'Збережений пошук вдало створено.';
-$messages['savedsearchcreateerror'] = 'Не вдалось створити збережений пошук. ';
+$messages['savedsearchcreateerror'] = 'Не вдалось створити збережений пошук.';
 $messages['messagedeleted'] = 'Лист(и) видалено успішно';
 $messages['messagemoved'] = 'Лист(и) переміщено успішно';
 $messages['messagecopied'] = 'Лист(и) скопійовано успішно';
@@ -158,4 +154,5 @@ $messages['foldercreated'] = 'Папка створена';
 $messages['invalidimageformat'] = 'Невірний формат зображення';
 $messages['mispellingsfound'] = 'Знайдено орфографічні помилки у повідомленні.';
 $messages['parentnotwritable'] = 'Неможливо створити/перемістити папку до обраної батьківської папки. Нема прав доступу.';
-?>
+$messages['messagetoobig'] = 'Частина повідомлення занадто велика для опрацювання.';
+

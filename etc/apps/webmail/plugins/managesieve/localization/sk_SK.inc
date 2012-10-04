@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/sk_SK/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/sk_SK/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['filters'] = 'Filtre';
@@ -23,13 +23,13 @@ $labels['filteradd'] = 'Pridaj filter';
 $labels['filterdel'] = 'Zmaž filter';
 $labels['moveup'] = 'Presuň vyššie';
 $labels['movedown'] = 'Presuň nižšie';
-$labels['filterallof'] = 'vyhovujúcu VŠETKÝM nasledujúcim pravidlám';
-$labels['filteranyof'] = 'vyhovujúcu ĽUBOVOĽNÉMU z nasledujúcich pravidiel';
+$labels['filterallof'] = 'vyhovujúca všetkým z nasledujúcich pravidiel';
+$labels['filteranyof'] = 'vyhovujúca ľubovoľnému z nasledujúcich pravidiel';
 $labels['filterany'] = 'všetky správy';
 $labels['filtercontains'] = 'obsahuje';
 $labels['filternotcontains'] = 'neobsahuje';
-$labels['filteris'] = 'je';
-$labels['filterisnot'] = 'nie je';
+$labels['filteris'] = 'rovná sa';
+$labels['filterisnot'] = 'nerovná sa';
 $labels['filterexists'] = 'existuje';
 $labels['filternotexists'] = 'neexistuje';
 $labels['filtermatches'] = 'vyhovuje výrazu';
@@ -101,7 +101,9 @@ $labels['advancedopts'] = 'Rozšírené nastavenia';
 $labels['body'] = 'Telo';
 $labels['address'] = 'adresa';
 $labels['envelope'] = 'obálka';
+$labels['modifier'] = 'modifikátor:';
 $labels['text'] = 'text';
+$labels['undecoded'] = 'nedekódované (raw)';
 $labels['contenttype'] = 'typ obsahu';
 $labels['modtype'] = 'typ:';
 $labels['allparts'] = 'všetko';
@@ -109,7 +111,11 @@ $labels['domain'] = 'doména';
 $labels['localpart'] = 'lokálna časť';
 $labels['user'] = 'užívateľ';
 $labels['detail'] = 'detail';
+$labels['comparator'] = 'porovnávač:';
 $labels['default'] = 'predvolené';
+$labels['octet'] = 'striktný (osmičkovo)';
+$labels['asciicasemap'] = 'nerozlišuje veľké a malé písmená (ascii tabuľka znakov)';
+$labels['asciinumeric'] = 'numerické (ascii čísla)';
 $labels['filterunknownerror'] = 'Neznáma chyba serveru';
 $labels['filterconnerror'] = 'Nepodarilo sa pripojiť k managesieve serveru';
 $labels['filterdeleteerror'] = 'Nepodarilo sa zmazať filter, server ohlásil chybu';
@@ -121,6 +127,7 @@ $labels['ruledeleteconfirm'] = 'Naozaj si prajete zamzať toto pravidlo?';
 $labels['actiondeleteconfirm'] = 'Naozaj si prajete zmazať túto akciu?';
 $labels['forbiddenchars'] = 'Pole obsahuje nepovolené znaky';
 $labels['cannotbeempty'] = 'Pole nemôže byť prázdne';
+$labels['ruleexist'] = 'Filter so zadaným menom už existuje.';
 $labels['setactivateerror'] = 'Nepodarilo sa aktivovať zvolenú sadu filtrov, server ohlásil chybu';
 $labels['setdeactivateerror'] = 'Nepodarilo sa deaktivovať zvolenú sadu filtrov, server ohlásil chybu';
 $labels['setdeleteerror'] = 'Nepodarilo sa zmazať zvolenú sadu filtrov, server ohlásil chybu';
@@ -130,5 +137,14 @@ $labels['setdeleted'] = 'Sada filtrov bola zmazaná';
 $labels['setdeleteconfirm'] = 'Naozaj si prajete zmazať túto sadu filtrov?';
 $labels['setcreateerror'] = 'Nepodarilo sa vytvoriť sadu filtrov, server ohlásil chybu';
 $labels['setcreated'] = 'Sada filtrov bola vytvorená';
+$labels['activateerror'] = 'Nepodarilo sa povoliť vybraný filter(e). Chyba servera.';
+$labels['deactivateerror'] = 'Nepodarilo sa vypnúť vybraný filter(e). Chyba servera.';
+$labels['activated'] = 'Filter(e) úspešne vypnutý.';
+$labels['deactivated'] = 'Filter(e) povolený.';
+$labels['moved'] = 'Filter presunutý.';
+$labels['moveerror'] = 'Nemôžem presunúť zvolený filter. Chyba servera.';
 $labels['nametoolong'] = 'Názov sady filtrov je príliš dlhý';
+$labels['namereserved'] = 'Rezervovaný názov.';
+$labels['setexist'] = 'Množina už existuje.';
+$labels['nodata'] = 'Aspoň jedna pozícia musí byť zvolená.';
 

@@ -1,29 +1,22 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/sv_SE/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Jonas Nasholm <rcm@bitfuse.net>                               |
-  |         Fredrik Nygren <f.nygren@gmail.com>                           |
-  |         Andreas Henriksson <andreas@fatal.se>                         |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5290 2011-09-28 17:09:50Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/sv_SE/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Jonas Nasholm                                                 |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Inloggningen misslyckades';
 $messages['cookiesdisabled'] = 'Din webbläsare accepterar inte cookies';
 $messages['sessionerror'] = 'Din inloggning är felaktig eller har gått ut';
-$messages['imaperror'] = 'Anslutning till IMAP-servern misslyckades';
 $messages['servererror'] = 'Serverfel!';
 $messages['servererrormsg'] = 'Serverfel: $msg';
 $messages['dberror'] = 'Databasfel!';
@@ -81,7 +74,6 @@ $messages['nobodywarning'] = 'Skicka det här meddelandet utan text?';
 $messages['notsentwarning'] = 'Meddelandet har inte skickats. Vill du avbryta meddelandet?';
 $messages['noldapserver'] = 'Ange en LDAP-server för att söka';
 $messages['nosearchname'] = 'Ange ett kontaktnamn eller en adress';
-$messages['notuploadedwarning'] = 'Alla bilagor har inte överförts ännu. Vänligen vänta eller avbryt överföringen.';
 $messages['searchsuccessful'] = '$nr meddelanden hittades';
 $messages['contactsearchsuccessful'] = '$nr kontakter hittades';
 $messages['searchnomatch'] = 'Sökningen gav inget resultat';
@@ -119,18 +111,15 @@ $messages['contactaddedtogroup'] = 'Kontakterna har lagts till i gruppen';
 $messages['contactremovedfromgroup'] = 'Kontakterna har tagits bort från gruppen';
 $messages['importwait'] = 'Importerar, var god vänta...';
 $messages['importerror'] = 'Importen misslyckades! Filen är inte i vCard-format.';
-$messages['importconfirm'] = '<b>Lyckad import av $inserted kontakter, $skipped dubbletter har ignorerats:</b><p><em>$names</em></p>';
+$messages['importconfirm'] = '<b>Lyckad import av $inserted kontakter, $skipped dubbletter harignorerats:</b><p><em>$names</em></p>';
 $messages['importconfirmskipped'] = '<b>Hoppade över $skipped befintliga poster</b>';
 $messages['opnotpermitted'] = 'Otillåten operation!';
 $messages['nofromaddress'] = 'Adress saknas i den valda identiteten';
-$messages['editorwarning'] = 'Genom att växla till text-läge går formateringen förlorad. Vill du fortsätta?';
-$messages['httpreceivedencrypterror'] = 'Ett irreparabelt fel har uppstått. Kontakta administratören omgående. <b>Meddelandet kan inte skickas.</b>';
 $messages['smtpconnerror'] = 'SMTP-fel ($code): Anslutning till servern misslyckades';
 $messages['smtpautherror'] = 'SMTP-fel ($code): Inloggningen misslyckades';
-$messages['smtpfromerror'] = 'SMTP-fel ($code): Kan inte sätta avsändaradress till "$from"';
-$messages['smtptoerror'] = 'SMTP-fel ($code): Kan inte lägga till mottagaradress "$to"';
+$messages['smtpfromerror'] = 'SMTP-fel ($code): Kan inte sätta avsändaradress till "$from';
+$messages['smtptoerror'] = 'SMTP-fel ($code): Kan inte lägga till mottagaradress "$to';
 $messages['smtprecipientserror'] = 'SMTP-fel: Felaktigt formaterad lista med mottagaradresser';
-$messages['smtpdsnerror'] = 'SMTP-fel: Inget stöd för leveransstatusmeddelande';
 $messages['smtperror'] = 'SMTP-fel: $msg';
 $messages['emailformaterror'] = 'Felaktig adress: $email';
 $messages['toomanyrecipients'] = 'Förmånga mottagare. Minska antalet till högst $max.';
@@ -160,4 +149,5 @@ $messages['foldercreated'] = 'Katalog skapad';
 $messages['invalidimageformat'] = 'Ogiltigt bildfilsformat';
 $messages['mispellingsfound'] = 'Stavfel hittades i meddelandet';
 $messages['parentnotwritable'] = 'Katalogen kunde inte skapas eller flyttas. Åtkomsträttighet saknas.';
-?>
+$messages['messagetoobig'] = 'Denna del av meddelandet är alltför stor för att hantera.';
+

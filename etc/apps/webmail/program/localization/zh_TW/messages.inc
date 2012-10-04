@@ -1,31 +1,28 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | localization/zh_TW/messages.inc                                       |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: WayneSan <waynesan@zerozone.tw>                               |
-  |         kourge <kourge@gmail.com>                                     |
-  |         Ting-Hung Chiu <earrl@mmlab.cse.yzu.edu.tw>                   |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/zh_TW/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Nansen                                                        |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = '發生錯誤！';
 $messages['loginfailed'] = '登入失敗';
 $messages['cookiesdisabled'] = '你的瀏覽器不接受 cookies';
 $messages['sessionerror'] = '你的工作階段已失效或過期';
-$messages['imaperror'] = '連線到 IMAP 伺服器失敗';
+$messages['storageerror'] = '連線到 IMAP 伺服器失敗';
 $messages['servererror'] = '伺服器錯誤！';
 $messages['servererrormsg'] = '伺服器錯誤：$msg';
+$messages['dberror'] = '資料庫錯誤!';
+$messages['requesttimedout'] = '要求逾時';
 $messages['errorreadonly'] = '動作無法完成。資料夾唯讀';
 $messages['errornoperm'] = '動作無法完成。權限不符';
 $messages['invalidrequest'] = '要求無效！未儲存任何資料。';
@@ -33,7 +30,8 @@ $messages['nomessagesfound'] = '此郵件匣沒有任何郵件';
 $messages['loggedout'] = '你已成功地登出並結束工作階段了。再見！';
 $messages['mailboxempty'] = '郵件匣是空的';
 $messages['loading'] = '載入中...';
-$messages['uploading'] = '上傳檔案中…';
+$messages['uploading'] = '上傳檔案中...';
+$messages['uploadingmany'] = '上傳檔案中...';
 $messages['loadingdata'] = '載入資料中...';
 $messages['checkingmail'] = '檢查新郵件...';
 $messages['sendingmessage'] = '寄出郵件中...';
@@ -43,10 +41,12 @@ $messages['messagesaved'] = '訊息已經存至';
 $messages['successfullysaved'] = '儲存成功';
 $messages['addedsuccessfully'] = '聯絡人已經成功地新增至通訊錄';
 $messages['contactexists'] = '此聯絡人的電子郵件位址已存在';
+$messages['contactnameexists'] = '已存在相同名稱的連絡人';
 $messages['blockedimages'] = '為了保護你的隱私，此郵件中的遠端圖片已經被阻擋。';
 $messages['encryptedmessage'] = '此郵件經過加密，因此無法顯示。抱歉！';
 $messages['nocontactsfound'] = '沒有找到任何聯絡人';
 $messages['contactnotfound'] = '找不到要求的聯絡人';
+$messages['contactsearchonly'] = '輸入關鍵字找尋連絡人';
 $messages['sendingfailed'] = '郵件寄出失敗';
 $messages['senttooquickly'] = '你寄出的郵件太過於頻繁，請稍候 $sec 秒後再試一次。';
 $messages['errorsavingsent'] = '儲存寄件備份時發生錯誤';
@@ -56,9 +56,12 @@ $messages['errorcopying'] = '無法訊息';
 $messages['errordeleting'] = '無法刪除此郵件';
 $messages['errormarking'] = '無法標上旗標';
 $messages['deletecontactconfirm'] = '你確定要刪除已選擇的聯絡人？';
+$messages['deletegroupconfirm'] = '您確定要刪除選擇的群組嗎?';
 $messages['deletemessagesconfirm'] = '你確定要刪除已選擇的郵件？';
 $messages['deletefolderconfirm'] = '你確定要刪除這個資料夾嗎？';
 $messages['purgefolderconfirm'] = '你確定要刪除這個資料夾裡面所有的郵件嗎？';
+$messages['contactdeleting'] = '刪除連絡人...';
+$messages['groupdeleting'] = '刪除存組...';
 $messages['folderdeleting'] = '刪除資料夾中...';
 $messages['foldermoving'] = '移動資料夾中...';
 $messages['foldersubscribing'] = '訂閱資料夾...';
@@ -73,10 +76,10 @@ $messages['nosubjectwarning'] = '「主旨」欄是空的。你要輸入一個�
 $messages['nobodywarning'] = '要傳送沒有內文的郵件嗎？';
 $messages['notsentwarning'] = '郵件尚未寄出。你確定要離開並且捨棄此郵件？';
 $messages['noldapserver'] = '請選擇一個 LDAP 伺服器進行搜尋';
-$messages['nocontactsreturned'] = '沒有找到任何聯絡人';
 $messages['nosearchname'] = '請輸入一個聯絡人姓名或電子郵件位址';
 $messages['notuploadedwarning'] = '尚有附加檔案未上傳完畢，請等待或取消上傳';
 $messages['searchsuccessful'] = '共找到 $nr 封郵件';
+$messages['contactsearchsuccessful'] = '找到連絡人 $nr';
 $messages['searchnomatch'] = '找不到任何符合的郵件';
 $messages['searching'] = '搜尋中...';
 $messages['checking'] = '檢查中...';
@@ -97,10 +100,14 @@ $messages['sourceisreadonly'] = '此來源位址是唯讀的';
 $messages['errorsavingcontact'] = '無法儲存連絡人的位址';
 $messages['movingmessage'] = '移動郵件中...';
 $messages['copyingmessage'] = '複製訊息...';
+$messages['copyingcontact'] = '複製群組...';
 $messages['deletingmessage'] = '刪除訊息...';
 $messages['markingmessage'] = '標示訊息...';
+$messages['addingmember'] = '新增連絡人至群組';
+$messages['removingmember'] = '從群組刪除連絡人';
 $messages['receiptsent'] = '閱讀回條傳送成功';
 $messages['errorsendingreceipt'] = '無法傳送回條';
+$messages['deleteidentityconfirm'] = '您確定要刪除這位連絡人嗎?';
 $messages['nodeletelastidentity'] = '你不能刪除此身份，因為只剩一個身份。';
 $messages['forbiddencharacter'] = '資料夾名稱中包含非法的字元';
 $messages['selectimportfile'] = '請選擇一個上傳的檔案';
@@ -120,7 +127,6 @@ $messages['smtpautherror'] = 'SMTP 錯誤（$code）：認證失敗';
 $messages['smtpfromerror'] = 'SMTP 錯誤（$code）：無法設寄建者「$from」（$msg）';
 $messages['smtptoerror'] = 'SMTP 錯誤（$code）：無法加收件者「$to」（$msg）';
 $messages['smtprecipientserror'] = 'SMTP 錯誤：無法分析收件者';
-$messages['smtpdsnerror'] = 'SMTP 錯誤：不支援傳送狀態通知';
 $messages['smtperror'] = 'SMTP 錯誤：$msg';
 $messages['emailformaterror'] = '錯誤電子郵件：$email';
 $messages['toomanyrecipients'] = '太多收件人。請減少至 $max 人';
@@ -128,17 +134,27 @@ $messages['maxgroupmembersreached'] = '太多群組成員，超過最大人數 $
 $messages['internalerror'] = '內部發生錯誤。請再次嘗試';
 $messages['contactdelerror'] = '無法刪除聯絡人';
 $messages['contactdeleted'] = '聯絡人成功刪除';
+$messages['contactrestoreerror'] = '無法復原刪除的連絡人';
+$messages['contactrestored'] = '連絡人復原完成';
 $messages['groupdeleted'] = '群組成功刪除';
 $messages['grouprenamed'] = '群組重新命名成功';
 $messages['groupcreated'] = '群組建立成功';
+$messages['savedsearchdeleted'] = '搜尋結果刪除完成';
+$messages['savedsearchdeleteerror'] = '無法刪除搜尋結果';
+$messages['savedsearchcreated'] = '搜尋結果建立完成';
+$messages['savedsearchcreateerror'] = '無法建立搜尋結果';
 $messages['messagedeleted'] = '訊息成功刪除';
 $messages['messagemoved'] = '訊息成功移動';
 $messages['messagecopied'] = '訊息成功複製';
 $messages['messagemarked'] = '訊息成功標示';
 $messages['autocompletechars'] = '輸入至少 $min 字元才能自動完成自動完成';
+$messages['autocompletemore'] = '過多相符資訊，請輸入更多文字';
 $messages['namecannotbeempty'] = '名稱不可空白';
 $messages['nametoolong'] = '名稱太長';
 $messages['folderupdated'] = '資料夾成功更新';
 $messages['foldercreated'] = '資料夾成功建立';
 $messages['invalidimageformat'] = '圖片格式錯誤';
-?>
+$messages['mispellingsfound'] = '郵件中偵測到拼字錯誤';
+$messages['parentnotwritable'] = '無法建立/移動資料夾至指定的上層目錄 (No access rights)';
+$messages['messagetoobig'] = '郵件太大無法處理';
+

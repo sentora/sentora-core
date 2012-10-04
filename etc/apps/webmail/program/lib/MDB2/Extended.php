@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -50,6 +49,7 @@
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
+
 /**
  * Used by autoPrepare()
  */
@@ -65,7 +65,8 @@ define('MDB2_AUTOQUERY_SELECT', 4);
  * @category Database
  * @author Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Extended extends MDB2_Module_Common {
+class MDB2_Extended extends MDB2_Module_Common
+{
     // {{{ autoPrepare()
 
     /**
@@ -88,17 +89,19 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @see buildManipSQL
      * @access public
      */
-    function autoPrepare($table, $table_fields, $mode = MDB2_AUTOQUERY_INSERT, $where = false, $types = null, $result_types = MDB2_PREPARE_MANIP) {
+    function autoPrepare($table, $table_fields, $mode = MDB2_AUTOQUERY_INSERT,
+        $where = false, $types = null, $result_types = MDB2_PREPARE_MANIP)
+    {
         $query = $this->buildManipSQL($table, $table_fields, $mode, $where);
         if (PEAR::isError($query)) {
             return $query;
         }
-        $db = & $this->getDBInstance();
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
         $lobs = array();
-        foreach ((array) $types as $param => $type) {
+        foreach ((array)$types as $param => $type) {
             if (($type == 'clob') || ($type == 'blob')) {
                 $lobs[$param] = $table_fields[$param];
             }
@@ -130,9 +133,11 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @see buildManipSQL
      * @see autoPrepare
      * @access public
-     */
-    function &autoExecute($table, $fields_values, $mode = MDB2_AUTOQUERY_INSERT, $where = false, $types = null, $result_class = true, $result_types = MDB2_PREPARE_MANIP) {
-        $fields_values = (array) $fields_values;
+    */
+    function &autoExecute($table, $fields_values, $mode = MDB2_AUTOQUERY_INSERT,
+        $where = false, $types = null, $result_class = true, $result_types = MDB2_PREPARE_MANIP)
+    {
+        $fields_values = (array)$fields_values;
         if ($mode == MDB2_AUTOQUERY_SELECT) {
             if (is_array($result_types)) {
                 $keys = array_keys($result_types);
@@ -148,12 +153,12 @@ class MDB2_Extended extends MDB2_Module_Common {
         if (empty($params)) {
             $query = $this->buildManipSQL($table, $keys, $mode, $where);
 
-            $db = & $this->getDBInstance();
+            $db =& $this->getDBInstance();
             if (PEAR::isError($db)) {
                 return $db;
             }
             if ($mode == MDB2_AUTOQUERY_SELECT) {
-                $result = & $db->query($query, $result_types, $result_class);
+                $result =& $db->query($query, $result_types, $result_class);
             } else {
                 $result = $db->exec($query);
             }
@@ -162,7 +167,7 @@ class MDB2_Extended extends MDB2_Module_Common {
             if (PEAR::isError($stmt)) {
                 return $stmt;
             }
-            $result = & $stmt->execute($params, $result_class);
+            $result =& $stmt->execute($params, $result_class);
             $stmt->free();
         }
         return $result;
@@ -192,8 +197,9 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return string sql query for prepare()
      * @access public
      */
-    function buildManipSQL($table, $table_fields, $mode, $where = false) {
-        $db = & $this->getDBInstance();
+    function buildManipSQL($table, $table_fields, $mode, $where = false)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -212,37 +218,40 @@ class MDB2_Extended extends MDB2_Module_Common {
             if (is_array($where)) {
                 $where = implode(' AND ', $where);
             }
-            $where = ' WHERE ' . $where;
+            $where = ' WHERE '.$where;
         }
 
         switch ($mode) {
-            case MDB2_AUTOQUERY_INSERT:
-                if (empty($table_fields)) {
-                    return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null, 'Insert requires table fields', __FUNCTION__);
-                }
-                $cols = implode(', ', $table_fields);
-                $values = '?' . str_repeat(', ?', (count($table_fields) - 1));
-                return 'INSERT INTO ' . $table . ' (' . $cols . ') VALUES (' . $values . ')';
-                break;
-            case MDB2_AUTOQUERY_UPDATE:
-                if (empty($table_fields)) {
-                    return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null, 'Update requires table fields', __FUNCTION__);
-                }
-                $set = implode(' = ?, ', $table_fields) . ' = ?';
-                $sql = 'UPDATE ' . $table . ' SET ' . $set . $where;
-                return $sql;
-                break;
-            case MDB2_AUTOQUERY_DELETE:
-                $sql = 'DELETE FROM ' . $table . $where;
-                return $sql;
-                break;
-            case MDB2_AUTOQUERY_SELECT:
-                $cols = !empty($table_fields) ? implode(', ', $table_fields) : '*';
-                $sql = 'SELECT ' . $cols . ' FROM ' . $table . $where;
-                return $sql;
-                break;
+        case MDB2_AUTOQUERY_INSERT:
+            if (empty($table_fields)) {
+                return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
+                'Insert requires table fields', __FUNCTION__);
+            }
+            $cols = implode(', ', $table_fields);
+            $values = '?'.str_repeat(', ?', (count($table_fields) - 1));
+            return 'INSERT INTO '.$table.' ('.$cols.') VALUES ('.$values.')';
+            break;
+        case MDB2_AUTOQUERY_UPDATE:
+            if (empty($table_fields)) {
+                return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
+                'Update requires table fields', __FUNCTION__);
+            }
+            $set = implode(' = ?, ', $table_fields).' = ?';
+            $sql = 'UPDATE '.$table.' SET '.$set.$where;
+            return $sql;
+            break;
+        case MDB2_AUTOQUERY_DELETE:
+            $sql = 'DELETE FROM '.$table.$where;
+            return $sql;
+            break;
+        case MDB2_AUTOQUERY_SELECT:
+            $cols = !empty($table_fields) ? implode(', ', $table_fields) : '*';
+            $sql = 'SELECT '.$cols.' FROM '.$table.$where;
+            return $sql;
+            break;
         }
-        return $db->raiseError(MDB2_ERROR_SYNTAX, null, null, 'Non existant mode', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_SYNTAX, null, null,
+                'Non existant mode', __FUNCTION__);
     }
 
     // }}}
@@ -261,8 +270,10 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return MDB2_Result|MDB2_Error result set on success, a MDB2 error on failure
      * @access public
      */
-    function &limitQuery($query, $types, $limit, $offset = 0, $result_class = true, $result_wrap_class = false) {
-        $db = & $this->getDBInstance();
+    function &limitQuery($query, $types, $limit, $offset = 0, $result_class = true,
+        $result_wrap_class = false)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -271,7 +282,7 @@ class MDB2_Extended extends MDB2_Module_Common {
         if (PEAR::isError($result)) {
             return $result;
         }
-        $result = & $db->query($query, $types, $result_class, $result_wrap_class);
+        $result =& $db->query($query, $types, $result_class, $result_wrap_class);
         return $result;
     }
 
@@ -289,8 +300,9 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return int|MDB2_Error affected rows on success, a MDB2 error on failure
      * @access public
      */
-    function execParam($query, $params = array(), $param_types = null) {
-        $db = & $this->getDBInstance();
+    function execParam($query, $params = array(), $param_types = null)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -331,8 +343,10 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return scalar|MDB2_Error data on success, a MDB2 error on failure
      * @access public
      */
-    function getOne($query, $type = null, $params = array(), $param_types = null, $colnum = 0) {
-        $db = & $this->getDBInstance();
+    function getOne($query, $type = null, $params = array(),
+        $param_types = null, $colnum = 0)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -376,8 +390,10 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return array|MDB2_Error data on success, a MDB2 error on failure
      * @access public
      */
-    function getRow($query, $types = null, $params = array(), $param_types = null, $fetchmode = MDB2_FETCHMODE_DEFAULT) {
-        $db = & $this->getDBInstance();
+    function getRow($query, $types = null, $params = array(),
+        $param_types = null, $fetchmode = MDB2_FETCHMODE_DEFAULT)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -420,8 +436,10 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return array|MDB2_Error data on success, a MDB2 error on failure
      * @access public
      */
-    function getCol($query, $type = null, $params = array(), $param_types = null, $colnum = 0) {
-        $db = & $this->getDBInstance();
+    function getCol($query, $type = null, $params = array(),
+        $param_types = null, $colnum = 0)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -473,8 +491,11 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return array|MDB2_Error data on success, a MDB2 error on failure
      * @access public
      */
-    function getAll($query, $types = null, $params = array(), $param_types = null, $fetchmode = MDB2_FETCHMODE_DEFAULT, $rekey = false, $force_array = false, $group = false) {
-        $db = & $this->getDBInstance();
+    function getAll($query, $types = null, $params = array(),
+        $param_types = null, $fetchmode = MDB2_FETCHMODE_DEFAULT,
+        $rekey = false, $force_array = false, $group = false)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -576,8 +597,10 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return array|MDB2_Error data on success, a MDB2 error on failure
      * @access public
      */
-    function getAssoc($query, $types = null, $params = array(), $param_types = null, $fetchmode = MDB2_FETCHMODE_DEFAULT, $force_array = false, $group = false) {
-        $db = & $this->getDBInstance();
+    function getAssoc($query, $types = null, $params = array(), $param_types = null,
+        $fetchmode = MDB2_FETCHMODE_DEFAULT, $force_array = false, $group = false)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -621,7 +644,8 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @access public
      * @see prepare(), execute()
      */
-    function executeMultiple(&$stmt, $params = null) {
+    function executeMultiple(&$stmt, $params = null)
+    {
         for ($i = 0, $j = count($params); $i < $j; $i++) {
             $result = $stmt->execute($params[$i]);
             if (PEAR::isError($result)) {
@@ -646,14 +670,15 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return int|MDB2_Error id on success, a MDB2 error on failure
      * @access public
      */
-    function getBeforeID($table, $field = null, $ondemand = true, $quote = true) {
-        $db = & $this->getDBInstance();
+    function getBeforeID($table, $field = null, $ondemand = true, $quote = true)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         if ($db->supports('auto_increment') !== true) {
-            $seq = $table . (empty($field) ? '' : '_' . $field);
+            $seq = $table.(empty($field) ? '' : '_'.$field);
             $id = $db->nextID($seq, $ondemand);
             if (!$quote || PEAR::isError($id)) {
                 return $id;
@@ -678,8 +703,9 @@ class MDB2_Extended extends MDB2_Module_Common {
      * @return int|MDB2_Error id on success, a MDB2 error on failure
      * @access public
      */
-    function getAfterID($id, $table, $field = null) {
-        $db = & $this->getDBInstance();
+    function getAfterID($id, $table, $field = null)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -692,5 +718,4 @@ class MDB2_Extended extends MDB2_Module_Common {
 
     // }}}
 }
-
 ?>

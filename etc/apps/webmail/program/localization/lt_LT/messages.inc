@@ -1,31 +1,28 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/lt_LT/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Authors: Martynas Bendorius <martynas@evanet.lt>                      |
-  |          Rimas Kudelis <rq@akl.lt>                                    |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/lt_LT/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Rimas Kudelis <rq@akl.lt>                                     |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Įvyko klaida!';
 $messages['loginfailed'] = 'Prisijungti nepavyko.';
 $messages['cookiesdisabled'] = 'Jūsų naršyklė nepriima slapukų.';
 $messages['sessionerror'] = 'Jūsų sesija negaliojanti.';
-$messages['imaperror'] = 'Nepavyko prisijungti prie IMAP serverio.';
+$messages['storageerror'] = 'Nepavyko prisijungti prie IMAP serverio.';
 $messages['servererror'] = 'Serverio klaida!';
 $messages['servererrormsg'] = 'Serverio klaida: $msg';
 $messages['dberror'] = 'Duomenų bazės klaida!';
+$messages['requesttimedout'] = 'Baigėsi užklausai skirtas laikas';
 $messages['errorreadonly'] = 'Nepavyko atlikti veiksmo – aplankas prieinamas tik skaitymui.';
 $messages['errornoperm'] = 'Nepavyko atlikti veiksmo – nepakanka teisių.';
 $messages['invalidrequest'] = 'Netinkama užklausa! Duomenys neišsaugoti.';
@@ -110,9 +107,10 @@ $messages['addingmember'] = 'Adresatas(-ai) įtraukiamas(-i) į grupę…';
 $messages['removingmember'] = 'Adresatas(-ai) šalinamas(-i) iš grupės…';
 $messages['receiptsent'] = 'Laiško perskaitymo pažyma sėkmingai išsiųsta.';
 $messages['errorsendingreceipt'] = 'Laiško perskaitymo pažymos išsiųsti nepavyko.';
-$messages['nodeletelastidentity'] = 'Jūs negalite ištrinti šios tapatybės, nes ji yra vienintelė likusi.';
-$messages['forbiddencharacter'] = 'Aplanko varde rasta neleistinų simbolių.';
-$messages['selectimportfile'] = 'Parinkite įkelti norimą failą.';
+$messages['deleteidentityconfirm'] = 'Ar tikrai norite pašalinti šią tapatybę?';
+$messages['nodeletelastidentity'] = 'Šios tapatybės šalinti negalima, nes ji vienintelė likusi.';
+$messages['forbiddencharacter'] = 'Aplanko varde aptikta neleistinų simbolių.';
+$messages['selectimportfile'] = 'Parinkite norimą įkelti failą.';
 $messages['addresswriterror'] = 'Pasirinktoji adresų knyga prieinama tik skaitymui.';
 $messages['contactaddedtogroup'] = 'Adresatai sėkmingai įtraukti į šią grupę.';
 $messages['contactremovedfromgroup'] = 'Adresatai sėkmingai pašalinti iš šios grupės.';
@@ -159,4 +157,4 @@ $messages['invalidimageformat'] = 'Paveikslo formatas netinkamas.';
 $messages['mispellingsfound'] = 'Laiške rasta rašybos klaidų.';
 $messages['parentnotwritable'] = 'Nepavyko sukurti arba perkelti aplanko į parinktą tėvinį aplanką. Trūksta prieigos teisių.';
 $messages['messagetoobig'] = 'Laiško dalis yra per didelė, kad galėtų būti apdorota.';
-?>
+

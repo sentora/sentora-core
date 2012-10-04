@@ -1,27 +1,28 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/sl_SI/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author:   Barbara Krasovec -  barbarak@arnes.si                       |
-  +-----------------------------------------------------------------------+
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/sl_SI/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Teja Cetinski <teja.cetinski@gmail.com>                       |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Prišlo je do napake!';
 $messages['loginfailed'] = 'Prijava ni uspela';
 $messages['cookiesdisabled'] = 'Vaš spletni brskalnik ne sprejema piškotkov.';
 $messages['sessionerror'] = 'Seja je neveljavna ali je potekla.';
-$messages['imaperror'] = 'Povezava z IMAP strežnikom je spodletela.';
+$messages['storageerror'] = 'Povezava z IMAP strežnikom je spodletela.';
 $messages['servererror'] = 'Napaka strežnika!';
-$messages['servererrormsg'] = 'Napaka strežnikaČ $msg';
+$messages['servererrormsg'] = 'Napaka strežnika $msg';
 $messages['dberror'] = 'Napaka v bazi';
+$messages['requesttimedout'] = 'Zahteva je potekla';
 $messages['errorreadonly'] = 'Operacije ni bilo mogoče izvršiti. Mapa je na voljo samo za branje.';
 $messages['errornoperm'] = 'Operacije ni bilo mogoče izvršiti. Dostop zavrnjen.';
 $messages['invalidrequest'] = 'Neveljavna zahteva. Podatki niso bili shranjeni.';
@@ -106,6 +107,7 @@ $messages['addingmember'] = 'Dodajanje stika/ov v skupino...';
 $messages['removingmember'] = 'Odstranjevanje stika/ov iz skupine..';
 $messages['receiptsent'] = 'Sporočilo o branju je bilo uspešno poslano';
 $messages['errorsendingreceipt'] = 'Sporočila o branju ni bilo mogoče poslati';
+$messages['deleteidentityconfirm'] = 'Ste prepričani, da želite izbrisati to identiteto?';
 $messages['nodeletelastidentity'] = 'Te identitete ni mogoče izbrisati, saj je edina.';
 $messages['forbiddencharacter'] = 'Ime mape vsebuje nedovoljen znak';
 $messages['selectimportfile'] = 'Izberite datoteko, ki jo želite prenesti';
@@ -154,4 +156,5 @@ $messages['foldercreated'] = 'Mapa je bila uspešno ustvarjena';
 $messages['invalidimageformat'] = 'Neveljaven format slike';
 $messages['mispellingsfound'] = 'V sporočilu so bile najdene napake v črkovanju';
 $messages['parentnotwritable'] = 'Podmape v tej mapi ni bilo mogoče ustvariti/premakniti. Nimate pravic.';
-?>
+$messages['messagetoobig'] = 'Sporočilo je preveliko za obdelavo.';
+

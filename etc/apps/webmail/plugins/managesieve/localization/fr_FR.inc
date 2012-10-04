@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/fr_FR/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Nicolas Delvaux <Unknown>                                     |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/fr_FR/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: François Charlier <Unknown>                                  |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['filters'] = 'Filtres';
@@ -127,6 +127,7 @@ $labels['ruledeleteconfirm'] = 'Voulez-vous vraiment supprimer la règle sélect
 $labels['actiondeleteconfirm'] = 'Voulez-vous vraiment supprimer l\'action sélectionnée?';
 $labels['forbiddenchars'] = 'Caractères interdits dans le champ';
 $labels['cannotbeempty'] = 'Le champ ne peut pas être vide';
+$labels['ruleexist'] = 'Un filtre existe déjà avec ce nom.';
 $labels['setactivateerror'] = 'Impossible d\'aactiver le groupe de filtres sélectionné. Le serveur a rencontré une erreur.';
 $labels['setdeactivateerror'] = 'Impossible de désactiver le groupe de filtres sélectionné. Le serveur a rencontré une erreur.';
 $labels['setdeleteerror'] = 'Impossible de supprimer le groupe de filtres sélectionné. Le serveur a rencontré une erreur.';
@@ -136,4 +137,14 @@ $labels['setdeleted'] = 'Le groupe de filtres a bien été supprimé.';
 $labels['setdeleteconfirm'] = 'Voulez vous vraiment supprimer le groupe de filtres sélectionné ?';
 $labels['setcreateerror'] = 'Impossible de créer le groupe de filtres. Le serveur a rencontré une erreur.';
 $labels['setcreated'] = 'Le groupe de filtres a bien été créé.';
+$labels['activateerror'] = 'Impossible d\'activer le(s) filtre(s) sélectionné(s). Une erreur serveur s\'est produite.';
+$labels['deactivateerror'] = 'Impossible de désactiver le(s) filtre(s) sélectionné(s). Une erreur serveur s\'est produite.';
+$labels['activated'] = 'Filtre(s) désactivé(s) avec succès';
+$labels['deactivated'] = 'Filtre(s) activé(s) avec succès';
+$labels['moved'] = 'Filtre déplacé avec succès.';
+$labels['moveerror'] = 'Déplacement du filtre sélectionné impossible. Le serveur a renvoyé une erreur.';
+$labels['nametoolong'] = 'Nom trop long.';
+$labels['namereserved'] = 'Nom réservé.';
+$labels['setexist'] = 'Ce groupe existe déjà.';
+$labels['nodata'] = 'Au moins un élément doit être selectionné !';
 

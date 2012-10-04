@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -56,7 +55,8 @@ require_once 'MDB2/Driver/Reverse/Common.php';
  * @author   Paul Cooper <pgc@ucecom.com>
  * @author   Lorenzo Alberton <l.alberton@quipo.it>
  */
-class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
+class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common
+{
     // {{{ getTableFieldDefinition()
 
     /**
@@ -67,7 +67,8 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    function getTableFieldDefinition($table_name, $field_name) {
+    function getTableFieldDefinition($table_name, $field_name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -113,12 +114,12 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
                     FROM pg_attribute a,
                          pg_class c,
                          pg_type t
-                   WHERE c.relname = " . $db->quote($table, 'text') . "
+                   WHERE c.relname = ".$db->quote($table, 'text')."
                      AND a.atttypid = t.oid
                      AND c.oid = a.attrelid
                      AND NOT a.attisdropped
                      AND a.attnum > 0
-                     AND a.attname = " . $db->quote($field_name, 'text') . "
+                     AND a.attname = ".$db->quote($field_name, 'text')."
                 ORDER BY a.attnum";
         $column = $db->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
         if (PEAR::isError($column)) {
@@ -126,7 +127,8 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
         }
 
         if (empty($column)) {
-            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null, 'it was not specified an existing table column', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
+                'it was not specified an existing table column', __FUNCTION__);
         }
 
         $column = array_change_key_case($column, CASE_LOWER);
@@ -141,16 +143,16 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
         }
         $default = null;
         if ($column['atthasdef'] === 't'
-                && strpos($column['default'], 'NULL') !== 0
-                && !preg_match("/nextval\('([^']+)'/", $column['default'])
+            && strpos($column['default'], 'NULL') !== 0
+            && !preg_match("/nextval\('([^']+)'/", $column['default'])
         ) {
             $pattern = '/^\'(.*)\'::[\w ]+$/i';
-            $default = $column['default']; #substr($column['adsrc'], 1, -1);
+            $default = $column['default'];#substr($column['adsrc'], 1, -1);
             if ((null === $default) && $notnull) {
                 $default = '';
             } elseif (!empty($default) && preg_match($pattern, $default)) {
                 //remove data type cast
-                $default = preg_replace($pattern, '\\1', $default);
+                $default = preg_replace ($pattern, '\\1', $default);
             }
         }
         $autoincrement = false;
@@ -195,12 +197,13 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    function getTableIndexDefinition($table_name, $index_name) {
+    function getTableIndexDefinition($table_name, $index_name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
-
+        
         list($schema, $table) = $this->splitTableSchema($table_name);
 
         $query = 'SELECT relname, indkey FROM pg_index, pg_class';
@@ -218,7 +221,8 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
         }
 
         if (empty($row)) {
-            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null, 'it was not specified an existing table index', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
+                'it was not specified an existing table index', __FUNCTION__);
         }
 
         $row = array_change_key_case($row, CASE_LOWER);
@@ -251,12 +255,13 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    function getTableConstraintDefinition($table_name, $constraint_name) {
+    function getTableConstraintDefinition($table_name, $constraint_name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
-
+        
         list($schema, $table) = $this->splitTableSchema($table_name);
 
         $query = "SELECT c.oid,
@@ -337,7 +342,8 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
                 return $row;
             }
             if (empty($row)) {
-                return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null, $constraint_name . ' is not an existing table constraint', __FUNCTION__);
+                return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
+                    $constraint_name . ' is not an existing table constraint', __FUNCTION__);
             }
             $uniqueIndex = true;
         }
@@ -345,20 +351,20 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
         $row = array_change_key_case($row, CASE_LOWER);
 
         $definition = array(
-            'primary' => (boolean) $row['primary'],
-            'unique' => (boolean) $row['unique'],
-            'foreign' => (boolean) $row['foreign'],
-            'check' => (boolean) $row['check'],
-            'fields' => array(),
+            'primary' => (boolean)$row['primary'],
+            'unique'  => (boolean)$row['unique'],
+            'foreign' => (boolean)$row['foreign'],
+            'check'   => (boolean)$row['check'],
+            'fields'  => array(),
             'references' => array(
-                'table' => $row['references_table'],
+                'table'  => $row['references_table'],
                 'fields' => array(),
             ),
-            'deferrable' => (boolean) $row['deferrable'],
-            'initiallydeferred' => (boolean) $row['initiallydeferred'],
+            'deferrable' => (boolean)$row['deferrable'],
+            'initiallydeferred' => (boolean)$row['initiallydeferred'],
             'onupdate' => $row['onupdate'],
             'ondelete' => $row['ondelete'],
-            'match' => $row['match'],
+            'match'    => $row['match'],
         );
 
         if ($uniqueIndex) {
@@ -369,7 +375,7 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
             foreach ($index_column_numbers as $number) {
                 $definition['fields'][$columns[($number - 1)]] = array(
                     'position' => $colpos++,
-                    'sorting' => 'ascending',
+                    'sorting'  => 'ascending',
                 );
             }
             return $definition;
@@ -392,7 +398,7 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
                 'sorting' => 'ascending',
             );
         }
-
+        
         if ($definition['foreign']) {
             $query = 'SELECT a.attname
                         FROM pg_constraint c
@@ -411,7 +417,7 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
                 );
             }
         }
-
+        
         if ($definition['check']) {
             $check_def = $db->queryOne("SELECT pg_get_constraintdef(" . $row['oid'] . ", 't')");
             // ...
@@ -436,7 +442,8 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
      *
      * @TODO: add support for plsql functions and functions with args
      */
-    function getTriggerDefinition($trigger) {
+    function getTriggerDefinition($trigger)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -471,19 +478,19 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
                          pg_proc p
                    WHERE trg.tgrelid = tbl.oid
                      AND trg.tgfoid = p.oid
-                     AND trg.tgname = " . $db->quote($trigger, 'text');
+                     AND trg.tgname = ". $db->quote($trigger, 'text');
         $types = array(
-            'trigger_name' => 'text',
-            'table_name' => 'text',
-            'trigger_body' => 'text',
-            'trigger_type' => 'text',
-            'trigger_event' => 'text',
+            'trigger_name'    => 'text',
+            'table_name'      => 'text',
+            'trigger_body'    => 'text',
+            'trigger_type'    => 'text',
+            'trigger_event'   => 'text',
             'trigger_comment' => 'text',
             'trigger_enabled' => 'boolean',
         );
         return $db->queryRow($query, $types, MDB2_FETCHMODE_ASSOC);
     }
-
+    
     // }}}
     // {{{ tableInfo()
 
@@ -505,9 +512,10 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
      *
      * @see MDB2_Driver_Common::tableInfo()
      */
-    function tableInfo($result, $mode = null) {
+    function tableInfo($result, $mode = null)
+    {
         if (is_string($result)) {
-            return parent::tableInfo($result, $mode);
+           return parent::tableInfo($result, $mode);
         }
 
         $db = $this->getDBInstance();
@@ -517,7 +525,8 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
 
         $resource = MDB2::isResultCommon($result) ? $result->getResource() : $result;
         if (!is_resource($resource)) {
-            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null, 'Could not generate result resource', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
+                'Could not generate result resource', __FUNCTION__);
         }
 
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
@@ -531,7 +540,7 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
         }
 
         $count = @pg_num_fields($resource);
-        $res = array();
+        $res   = array();
 
         if ($mode) {
             $res['num_fields'] = $count;
@@ -541,14 +550,14 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
         for ($i = 0; $i < $count; $i++) {
             $res[$i] = array(
                 'table' => function_exists('pg_field_table') ? @pg_field_table($resource, $i) : '',
-                'name' => $case_func(@pg_field_name($resource, $i)),
-                'type' => @pg_field_type($resource, $i),
+                'name'  => $case_func(@pg_field_name($resource, $i)),
+                'type'  => @pg_field_type($resource, $i),
                 'length' => @pg_field_size($resource, $i),
                 'flags' => '',
             );
             $mdb2type_info = $db->datatype->mapNativeDatatype($res[$i]);
             if (PEAR::isError($mdb2type_info)) {
-                return $mdb2type_info;
+               return $mdb2type_info;
             }
             $res[$i]['mdb2type'] = $mdb2type_info[0][0];
             if ($mode & MDB2_TABLEINFO_ORDER) {
@@ -561,7 +570,5 @@ class MDB2_Driver_Reverse_pgsql extends MDB2_Driver_Reverse_Common {
 
         return $res;
     }
-
 }
-
 ?>

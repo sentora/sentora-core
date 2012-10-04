@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -52,7 +51,8 @@ require_once 'MDB2/Driver/Function/Common.php';
  * @package MDB2
  * @category Database
  */
-class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
+class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common
+{
     // {{{ executeStoredProc()
 
     /**
@@ -67,14 +67,15 @@ class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
      * @return mixed a result handle or MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false) {
+    function executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $query = 'EXECUTE ' . $name;
-        $query .= $params ? ' ' . implode(', ', $params) : '';
+        $query = 'EXECUTE '.$name;
+        $query .= $params ? ' '.implode(', ', $params) : '';
         return $db->query($query, $types, $result_class, $result_wrap_class);
     }
 
@@ -91,13 +92,14 @@ class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
      * @return string to call a variable with the current timestamp
      * @access public
      */
-    function now($type = 'timestamp') {
+    function now($type = 'timestamp')
+    {
         switch ($type) {
-            case 'time':
-            case 'date':
-            case 'timestamp':
-            default:
-                return 'GETDATE()';
+        case 'time':
+        case 'date':
+        case 'timestamp':
+        default:
+            return 'GETDATE()';
         }
     }
 
@@ -112,8 +114,9 @@ class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
      * @return string to call a variable with the timestamp
      * @access public
      */
-    function unixtimestamp($expression) {
-        return 'DATEDIFF(second, \'19700101\', ' . $expression . ') + DATEDIFF(second, GETDATE(), GETUTCDATE())';
+    function unixtimestamp($expression)
+    {
+        return 'DATEDIFF(second, \'19700101\', '. $expression.') + DATEDIFF(second, GETDATE(), GETUTCDATE())';
     }
 
     // }}}
@@ -125,7 +128,8 @@ class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
      * @return string to call a function to get a substring
      * @access public
      */
-    function substring($value, $position = 1, $length = null) {
+    function substring($value, $position = 1, $length = null)
+    {
         if (null !== $length) {
             return "SUBSTRING($value, $position, $length)";
         }
@@ -143,10 +147,11 @@ class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
      * @param string $values...
      * @return string to concatenate two strings
      * @access public
-     * */
-    function concat($value1, $value2) {
+     **/
+    function concat($value1, $value2)
+    {
         $args = func_get_args();
-        return "(" . implode(' + ', $args) . ")";
+        return "(".implode(' + ', $args).")";
     }
 
     // }}}
@@ -159,7 +164,8 @@ class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
      * @return return string to get the string expression length
      * @access public
      */
-    function length($expression) {
+    function length($expression)
+    {
         return "LEN($expression)";
     }
 
@@ -172,12 +178,12 @@ class MDB2_Driver_Function_sqlsrv extends MDB2_Driver_Function_Common {
      * @return string to get global unique identifier
      * @access public
      */
-    function guid() {
+    function guid()
+    {
         return 'NEWID()';
     }
 
     // }}}
 }
-
 // }}}
 ?>

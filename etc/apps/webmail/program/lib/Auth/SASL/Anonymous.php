@@ -1,5 +1,4 @@
 <?php
-
 // +-----------------------------------------------------------------------+ 
 // | Copyright (c) 2002-2003 Richard Heyes                                 | 
 // | All rights reserved.                                                  | 
@@ -33,40 +32,40 @@
 // | Author: Richard Heyes <richard@php.net>                               | 
 // +-----------------------------------------------------------------------+ 
 // 
-// $Id: Anonymous.php 584 2007-05-24 03:49:19Z estadtherr $
+// $Id$
 
 /**
- * Implmentation of ANONYMOUS SASL mechanism
- *
- * @author  Richard Heyes <richard@php.net>
- * @access  public
- * @version 1.0
- * @package Auth_SASL
- */
+* Implmentation of ANONYMOUS SASL mechanism
+*
+* @author  Richard Heyes <richard@php.net>
+* @access  public
+* @version 1.0
+* @package Auth_SASL
+*/
+
 require_once('Auth/SASL/Common.php');
 
-class Auth_SASL_Anonymous extends Auth_SASL_Common {
-
+class Auth_SASL_Anonymous extends Auth_SASL_Common
+{
     /**
-     * Not much to do here except return the token supplied.
-     * No encoding, hashing or encryption takes place for this
-     * mechanism, simply one of:
-     *  o An email address
-     *  o An opaque string not containing "@" that can be interpreted
-     *    by the sysadmin
-     *  o Nothing
-     *
-     * We could have some logic here for the second option, but this
-     * would by no means create something interpretable.
-     *
-     * @param  string $token Optional email address or string to provide
-     *                       as trace information.
-     * @return string        The unaltered input token
-     */
-    function getResponse($token = '') {
+    * Not much to do here except return the token supplied.
+    * No encoding, hashing or encryption takes place for this
+    * mechanism, simply one of:
+    *  o An email address
+    *  o An opaque string not containing "@" that can be interpreted
+    *    by the sysadmin
+    *  o Nothing
+    *
+    * We could have some logic here for the second option, but this
+    * would by no means create something interpretable.
+    *
+    * @param  string $token Optional email address or string to provide
+    *                       as trace information.
+    * @return string        The unaltered input token
+    */
+    function getResponse($token = '')
+    {
         return $token;
     }
-
 }
-
 ?>

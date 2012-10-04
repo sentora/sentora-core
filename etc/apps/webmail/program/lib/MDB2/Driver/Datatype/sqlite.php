@@ -1,5 +1,4 @@
 <?php
-
 // vim: set et ts=4 sw=4 fdm=marker:
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
@@ -56,7 +55,8 @@ require_once 'MDB2/Driver/Datatype/Common.php';
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
+class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common
+{
     // {{{ _getCollationFieldDeclaration()
 
     /**
@@ -68,8 +68,9 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
      * @return string DBMS specific SQL code portion needed to set the COLLATION
      *                of a field declaration.
      */
-    function _getCollationFieldDeclaration($collation) {
-        return 'COLLATE ' . $collation;
+    function _getCollationFieldDeclaration($collation)
+    {
+        return 'COLLATE '.$collation;
     }
 
     // }}}
@@ -98,68 +99,71 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
      *      declare the specified field.
      * @access public
      */
-    function getTypeDeclaration($field) {
+    function getTypeDeclaration($field)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         switch ($field['type']) {
-            case 'text':
-                $length = !empty($field['length']) ? $field['length'] : false;
-                $fixed = !empty($field['fixed']) ? $field['fixed'] : false;
-                return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(' . $db->options['default_text_field_length'] . ')') : ($length ? 'VARCHAR(' . $length . ')' : 'TEXT');
-            case 'clob':
-                if (!empty($field['length'])) {
-                    $length = $field['length'];
-                    if ($length <= 255) {
-                        return 'TINYTEXT';
-                    } elseif ($length <= 65532) {
-                        return 'TEXT';
-                    } elseif ($length <= 16777215) {
-                        return 'MEDIUMTEXT';
-                    }
+        case 'text':
+            $length = !empty($field['length'])
+                ? $field['length'] : false;
+            $fixed = !empty($field['fixed']) ? $field['fixed'] : false;
+            return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$db->options['default_text_field_length'].')')
+                : ($length ? 'VARCHAR('.$length.')' : 'TEXT');
+        case 'clob':
+            if (!empty($field['length'])) {
+                $length = $field['length'];
+                if ($length <= 255) {
+                    return 'TINYTEXT';
+                } elseif ($length <= 65532) {
+                    return 'TEXT';
+                } elseif ($length <= 16777215) {
+                    return 'MEDIUMTEXT';
                 }
-                return 'LONGTEXT';
-            case 'blob':
-                if (!empty($field['length'])) {
-                    $length = $field['length'];
-                    if ($length <= 255) {
-                        return 'TINYBLOB';
-                    } elseif ($length <= 65532) {
-                        return 'BLOB';
-                    } elseif ($length <= 16777215) {
-                        return 'MEDIUMBLOB';
-                    }
+            }
+            return 'LONGTEXT';
+        case 'blob':
+            if (!empty($field['length'])) {
+                $length = $field['length'];
+                if ($length <= 255) {
+                    return 'TINYBLOB';
+                } elseif ($length <= 65532) {
+                    return 'BLOB';
+                } elseif ($length <= 16777215) {
+                    return 'MEDIUMBLOB';
                 }
-                return 'LONGBLOB';
-            case 'integer':
-                if (!empty($field['length'])) {
-                    $length = $field['length'];
-                    if ($length <= 2) {
-                        return 'SMALLINT';
-                    } elseif ($length == 3 || $length == 4) {
-                        return 'INTEGER';
-                    } elseif ($length > 4) {
-                        return 'BIGINT';
-                    }
+            }
+            return 'LONGBLOB';
+        case 'integer':
+            if (!empty($field['length'])) {
+                $length = $field['length'];
+                if ($length <= 2) {
+                    return 'SMALLINT';
+                } elseif ($length == 3 || $length == 4) {
+                    return 'INTEGER';
+                } elseif ($length > 4) {
+                    return 'BIGINT';
                 }
-                return 'INTEGER';
-            case 'boolean':
-                return 'BOOLEAN';
-            case 'date':
-                return 'DATE';
-            case 'time':
-                return 'TIME';
-            case 'timestamp':
-                return 'DATETIME';
-            case 'float':
-                return 'DOUBLE' . ($db->options['fixed_float'] ? '(' .
-                                ($db->options['fixed_float'] + 2) . ',' . $db->options['fixed_float'] . ')' : '');
-            case 'decimal':
-                $length = !empty($field['length']) ? $field['length'] : 18;
-                $scale = !empty($field['scale']) ? $field['scale'] : $db->options['decimal_places'];
-                return 'DECIMAL(' . $length . ',' . $scale . ')';
+            }
+            return 'INTEGER';
+        case 'boolean':
+            return 'BOOLEAN';
+        case 'date':
+            return 'DATE';
+        case 'time':
+            return 'TIME';
+        case 'timestamp':
+            return 'DATETIME';
+        case 'float':
+            return 'DOUBLE'.($db->options['fixed_float'] ? '('.
+                ($db->options['fixed_float']+2).','.$db->options['fixed_float'].')' : '');
+        case 'decimal':
+            $length = !empty($field['length']) ? $field['length'] : 18;
+            $scale = !empty($field['scale']) ? $field['scale'] : $db->options['decimal_places'];
+            return 'DECIMAL('.$length.','.$scale.')';
         }
         return '';
     }
@@ -193,7 +197,8 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
      *                 declare the specified field.
      * @access protected
      */
-    function _getIntegerDeclaration($name, $field) {
+    function _getIntegerDeclaration($name, $field)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -206,7 +211,7 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
             if ($field['default'] === '') {
                 $field['default'] = empty($field['notnull']) ? null : 0;
             }
-            $default = ' DEFAULT ' . $this->quote($field['default'], 'integer');
+            $default = ' DEFAULT '.$this->quote($field['default'], 'integer');
         }
 
         $notnull = empty($field['notnull']) ? '' : ' NOT NULL';
@@ -215,7 +220,7 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
             $default = ' DEFAULT NULL';
         }
         $name = $db->quoteIdentifier($name, true);
-        return $name . ' ' . $this->getTypeDeclaration($field) . $unsigned . $default . $notnull . $autoinc;
+        return $name.' '.$this->getTypeDeclaration($field).$unsigned.$default.$notnull.$autoinc;
     }
 
     // }}}
@@ -233,7 +238,8 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
      *
      * @return string SQL pattern
      */
-    function matchPattern($pattern, $operator = null, $field = null) {
+    function matchPattern($pattern, $operator = null, $field = null)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -241,25 +247,26 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
 
         $match = '';
         if (null !== $operator) {
-            $field = (null === $field) ? '' : $field . ' ';
+            $field = (null === $field) ? '' : $field.' ';
             $operator = strtoupper($operator);
             switch ($operator) {
-                // case insensitive
-                case 'ILIKE':
-                    $match = $field . 'LIKE ';
-                    break;
-                case 'NOT ILIKE':
-                    $match = $field . 'NOT LIKE ';
-                    break;
-                // case sensitive
-                case 'LIKE':
-                    $match = $field . 'LIKE ';
-                    break;
-                case 'NOT LIKE':
-                    $match = $field . 'NOT LIKE ';
-                    break;
-                default:
-                    return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'not a supported operator type:' . $operator, __FUNCTION__);
+            // case insensitive
+            case 'ILIKE':
+                $match = $field.'LIKE ';
+                break;
+            case 'NOT ILIKE':
+                $match = $field.'NOT LIKE ';
+                break;
+            // case sensitive
+            case 'LIKE':
+                $match = $field.'LIKE ';
+                break;
+            case 'NOT LIKE':
+                $match = $field.'NOT LIKE ';
+                break;
+            default:
+                return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+                    'not a supported operator type:'. $operator, __FUNCTION__);
             }
         }
         $match.= "'";
@@ -285,118 +292,120 @@ class MDB2_Driver_Datatype_sqlite extends MDB2_Driver_Datatype_Common {
      * @return array containing the various possible types, length, sign, fixed
      * @access public
      */
-    function _mapNativeDatatype($field) {
+    function _mapNativeDatatype($field)
+    {
         $db_type = strtolower($field['type']);
         $length = !empty($field['length']) ? $field['length'] : null;
         $unsigned = !empty($field['unsigned']) ? $field['unsigned'] : null;
         $fixed = null;
         $type = array();
         switch ($db_type) {
-            case 'boolean':
-                $type[] = 'boolean';
-                break;
-            case 'tinyint':
-                $type[] = 'integer';
+        case 'boolean':
+            $type[] = 'boolean';
+            break;
+        case 'tinyint':
+            $type[] = 'integer';
+            $type[] = 'boolean';
+            if (preg_match('/^(is|has)/', $field['name'])) {
+                $type = array_reverse($type);
+            }
+            $unsigned = preg_match('/ unsigned/i', $field['type']);
+            $length = 1;
+            break;
+        case 'smallint':
+            $type[] = 'integer';
+            $unsigned = preg_match('/ unsigned/i', $field['type']);
+            $length = 2;
+            break;
+        case 'mediumint':
+            $type[] = 'integer';
+            $unsigned = preg_match('/ unsigned/i', $field['type']);
+            $length = 3;
+            break;
+        case 'int':
+        case 'integer':
+        case 'serial':
+            $type[] = 'integer';
+            $unsigned = preg_match('/ unsigned/i', $field['type']);
+            $length = 4;
+            break;
+        case 'bigint':
+        case 'bigserial':
+            $type[] = 'integer';
+            $unsigned = preg_match('/ unsigned/i', $field['type']);
+            $length = 8;
+            break;
+        case 'clob':
+            $type[] = 'clob';
+            $fixed  = false;
+            break;
+        case 'tinytext':
+        case 'mediumtext':
+        case 'longtext':
+        case 'text':
+        case 'varchar':
+        case 'varchar2':
+            $fixed = false;
+        case 'char':
+            $type[] = 'text';
+            if ($length == '1') {
                 $type[] = 'boolean';
                 if (preg_match('/^(is|has)/', $field['name'])) {
                     $type = array_reverse($type);
                 }
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
-                $length = 1;
-                break;
-            case 'smallint':
-                $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
-                $length = 2;
-                break;
-            case 'mediumint':
-                $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
-                $length = 3;
-                break;
-            case 'int':
-            case 'integer':
-            case 'serial':
-                $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
-                $length = 4;
-                break;
-            case 'bigint':
-            case 'bigserial':
-                $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
-                $length = 8;
-                break;
-            case 'clob':
+            } elseif (strstr($db_type, 'text')) {
                 $type[] = 'clob';
-                $fixed = false;
-                break;
-            case 'tinytext':
-            case 'mediumtext':
-            case 'longtext':
-            case 'text':
-            case 'varchar':
-            case 'varchar2':
-                $fixed = false;
-            case 'char':
-                $type[] = 'text';
-                if ($length == '1') {
-                    $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/', $field['name'])) {
-                        $type = array_reverse($type);
-                    }
-                } elseif (strstr($db_type, 'text')) {
-                    $type[] = 'clob';
-                    $type = array_reverse($type);
-                }
-                if ($fixed !== false) {
-                    $fixed = true;
-                }
-                break;
-            case 'date':
-                $type[] = 'date';
-                $length = null;
-                break;
-            case 'datetime':
-            case 'timestamp':
-                $type[] = 'timestamp';
-                $length = null;
-                break;
-            case 'time':
-                $type[] = 'time';
-                $length = null;
-                break;
-            case 'float':
-            case 'double':
-            case 'real':
-                $type[] = 'float';
-                break;
-            case 'decimal':
-            case 'numeric':
-                $type[] = 'decimal';
-                $length = $length . ',' . $field['decimal'];
-                break;
-            case 'tinyblob':
-            case 'mediumblob':
-            case 'longblob':
-            case 'blob':
-                $type[] = 'blob';
-                $length = null;
-                break;
-            case 'year':
-                $type[] = 'integer';
-                $type[] = 'date';
-                $length = null;
-                break;
-            default:
-                $db = $this->getDBInstance();
-                if (PEAR::isError($db)) {
-                    return $db;
-                }
-                return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'unknown database attribute type: ' . $db_type, __FUNCTION__);
+                $type = array_reverse($type);
+            }
+            if ($fixed !== false) {
+                $fixed = true;
+            }
+            break;
+        case 'date':
+            $type[] = 'date';
+            $length = null;
+            break;
+        case 'datetime':
+        case 'timestamp':
+            $type[] = 'timestamp';
+            $length = null;
+            break;
+        case 'time':
+            $type[] = 'time';
+            $length = null;
+            break;
+        case 'float':
+        case 'double':
+        case 'real':
+            $type[] = 'float';
+            break;
+        case 'decimal':
+        case 'numeric':
+            $type[] = 'decimal';
+            $length = $length.','.$field['decimal'];
+            break;
+        case 'tinyblob':
+        case 'mediumblob':
+        case 'longblob':
+        case 'blob':
+            $type[] = 'blob';
+            $length = null;
+            break;
+        case 'year':
+            $type[] = 'integer';
+            $type[] = 'date';
+            $length = null;
+            break;
+        default:
+            $db = $this->getDBInstance();
+            if (PEAR::isError($db)) {
+                return $db;
+            }
+            return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+                'unknown database attribute type: '.$db_type, __FUNCTION__);
         }
 
-        if ((int) $length <= 0) {
+        if ((int)$length <= 0) {
             $length = null;
         }
 

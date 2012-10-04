@@ -4,13 +4,14 @@
  * Help Plugin
  *
  * @author Aleksander 'A.L.E.C' Machniak
- * @licence GNU GPL
+ * @license GNU GPLv3+
  *
  * Configuration (see config.inc.php.dist)
  * 
- * */
-class help extends rcube_plugin {
+ **/
 
+class help extends rcube_plugin
+{
     // all task excluding 'login' and 'logout'
     public $task = '?(?!login|logout).*';
     // we've got no ajax handlers
@@ -18,7 +19,8 @@ class help extends rcube_plugin {
     // skip frames
     public $noframe = true;
 
-    function init() {
+    function init()
+    {
         $rcmail = rcmail::get_instance();
 
         $this->add_texts('localization/', false);
@@ -33,26 +35,23 @@ class help extends rcube_plugin {
 
         // add taskbar button
         $this->add_button(array(
-            'name' => 'helptask',
-            'class' => 'button-help',
-            'label' => 'help.help',
-            'href' => './?_task=help',
-            'onclick' => sprintf("return %s.command('help')", JS_OBJECT_NAME)
-                ), 'taskbar');
-
-        $rcmail->output->add_script(
-                JS_OBJECT_NAME . ".enable_command('help', true);\n" .
-                JS_OBJECT_NAME . ".help = function () { location.href = './?_task=help'; }", 'head');
+            'command'    => 'help',
+            'class'      => 'button-help',
+            'classsel'   => 'button-help button-selected',
+            'innerclass' => 'button-inner',
+            'label'      => 'help.help',
+        ), 'taskbar');
 
         $skin = $rcmail->config->get('skin');
-        if (!file_exists($this->home . "/skins/$skin/help.css"))
+        if (!file_exists($this->home."/skins/$skin/help.css"))
             $skin = 'default';
 
         // add style for taskbar button (must be here) and Help UI    
         $this->include_stylesheet("skins/$skin/help.css");
     }
 
-    function action() {
+    function action()
+    {
         $rcmail = rcmail::get_instance();
 
         $this->load_config();
@@ -72,30 +71,28 @@ class help extends rcube_plugin {
         $rcmail->output->send('help.help');
     }
 
-    function content($attrib) {
+    function content($attrib)
+    {
         $rcmail = rcmail::get_instance();
 
         if ($rcmail->action == 'about') {
-            return @file_get_contents($this->home . '/content/about.html');
-        } else if ($rcmail->action == 'license') {
-            return @file_get_contents($this->home . '/content/license.html');
+            return @file_get_contents($this->home.'/content/about.html');
+        }
+        else if ($rcmail->action == 'license') {
+            return @file_get_contents($this->home.'/content/license.html');
         }
 
         // default content: iframe
-
         if ($src = $rcmail->config->get('help_source'))
             $attrib['src'] = $src;
 
         if (empty($attrib['id']))
             $attrib['id'] = 'rcmailhelpcontent';
 
-        // allow the following attributes to be added to the <iframe> tag
-        $attrib_str = create_attrib_string($attrib, array(
+        $attrib['name'] = $attrib['id'];
+
+        return html::tag('iframe', $attrib, '', array(
             'id', 'class', 'style', 'src', 'width', 'height', 'frameborder'));
-
-        $out = sprintf('<iframe name="%s"%s></iframe>' . "\n", $attrib['id'], $attrib_str);
-
-        return $out;
     }
 
 }

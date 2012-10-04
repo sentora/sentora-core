@@ -32,6 +32,7 @@
  * @version   CVS: $Id: SubKey.php 302768 2010-08-25 13:45:52Z gauthierm $
  * @link      http://pear.php.net/package/Crypt_GPG
  */
+
 // {{{ class Crypt_GPG_SubKey
 
 /**
@@ -50,13 +51,13 @@
  * @see       Crypt_GPG::getKeys()
  * @see       Crypt_GPG_Key::getSubKeys()
  */
-class Crypt_GPG_SubKey {
+class Crypt_GPG_SubKey
+{
     // {{{ class constants
 
     /**
      * RSA encryption algorithm.
      */
-
     const ALGORITHM_RSA = 1;
 
     /**
@@ -189,7 +190,8 @@ class Crypt_GPG_SubKey {
      *        sub-key object, which is copied; a sub-key string, which is
      *        parsed; or an array of initial values.
      */
-    public function __construct($key = null) {
+    public function __construct($key = null)
+    {
         // parse from string
         if (is_string($key)) {
             $key = self::parse($key);
@@ -197,16 +199,16 @@ class Crypt_GPG_SubKey {
 
         // copy from object
         if ($key instanceof Crypt_GPG_SubKey) {
-            $this->_id = $key->_id;
-            $this->_algorithm = $key->_algorithm;
-            $this->_fingerprint = $key->_fingerprint;
-            $this->_length = $key->_length;
-            $this->_creationDate = $key->_creationDate;
+            $this->_id             = $key->_id;
+            $this->_algorithm      = $key->_algorithm;
+            $this->_fingerprint    = $key->_fingerprint;
+            $this->_length         = $key->_length;
+            $this->_creationDate   = $key->_creationDate;
             $this->_expirationDate = $key->_expirationDate;
-            $this->_canSign = $key->_canSign;
-            $this->_canEncrypt = $key->_canEncrypt;
-            $this->_hasPrivate = $key->_hasPrivate;
-            $this->_isRevoked = $key->_isRevoked;
+            $this->_canSign        = $key->_canSign;
+            $this->_canEncrypt     = $key->_canEncrypt;
+            $this->_hasPrivate     = $key->_hasPrivate;
+            $this->_isRevoked      = $key->_isRevoked;
         }
 
         // initialize from array
@@ -261,7 +263,8 @@ class Crypt_GPG_SubKey {
      *
      * @return string the id of this sub-key.
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->_id;
     }
 
@@ -276,7 +279,8 @@ class Crypt_GPG_SubKey {
      *
      * @return integer the algorithm used by this sub-key.
      */
-    public function getAlgorithm() {
+    public function getAlgorithm()
+    {
         return $this->_algorithm;
     }
 
@@ -290,7 +294,8 @@ class Crypt_GPG_SubKey {
      *
      * @return integer the creation date of this sub-key.
      */
-    public function getCreationDate() {
+    public function getCreationDate()
+    {
         return $this->_creationDate;
     }
 
@@ -305,7 +310,8 @@ class Crypt_GPG_SubKey {
      *
      * @return integer the date this sub-key expires.
      */
-    public function getExpirationDate() {
+    public function getExpirationDate()
+    {
         return $this->_expirationDate;
     }
 
@@ -317,7 +323,8 @@ class Crypt_GPG_SubKey {
      *
      * @return string the fingerprint of this sub-key.
      */
-    public function getFingerprint() {
+    public function getFingerprint()
+    {
         return $this->_fingerprint;
     }
 
@@ -329,7 +336,8 @@ class Crypt_GPG_SubKey {
      *
      * @return integer the length of this sub-key in bits.
      */
-    public function getLength() {
+    public function getLength()
+    {
         return $this->_length;
     }
 
@@ -342,7 +350,8 @@ class Crypt_GPG_SubKey {
      * @return boolean true if this sub-key can sign data and false if this
      *                 sub-key can not sign data.
      */
-    public function canSign() {
+    public function canSign()
+    {
         return $this->_canSign;
     }
 
@@ -355,7 +364,8 @@ class Crypt_GPG_SubKey {
      * @return boolean true if this sub-key can encrypt data and false if this
      *                 sub-key can not encrypt data.
      */
-    public function canEncrypt() {
+    public function canEncrypt()
+    {
         return $this->_canEncrypt;
     }
 
@@ -369,7 +379,8 @@ class Crypt_GPG_SubKey {
      * @return boolean true the private key for this sub-key exists in the
      *                 keyring and false if it does not.
      */
-    public function hasPrivate() {
+    public function hasPrivate()
+    {
         return $this->_hasPrivate;
     }
 
@@ -381,7 +392,8 @@ class Crypt_GPG_SubKey {
      *
      * @return boolean true if this sub-key is revoked and false if it is not.
      */
-    public function isRevoked() {
+    public function isRevoked()
+    {
         return $this->_isRevoked;
     }
 
@@ -397,7 +409,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setCreationDate($creationDate) {
+    public function setCreationDate($creationDate)
+    {
         $this->_creationDate = intval($creationDate);
         return $this;
     }
@@ -415,7 +428,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setExpirationDate($expirationDate) {
+    public function setExpirationDate($expirationDate)
+    {
         $this->_expirationDate = intval($expirationDate);
         return $this;
     }
@@ -430,7 +444,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->_id = strval($id);
         return $this;
     }
@@ -445,7 +460,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setAlgorithm($algorithm) {
+    public function setAlgorithm($algorithm)
+    {
         $this->_algorithm = intval($algorithm);
         return $this;
     }
@@ -460,7 +476,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setFingerprint($fingerprint) {
+    public function setFingerprint($fingerprint)
+    {
         $this->_fingerprint = strval($fingerprint);
         return $this;
     }
@@ -475,7 +492,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setLength($length) {
+    public function setLength($length)
+    {
         $this->_length = intval($length);
         return $this;
     }
@@ -491,7 +509,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setCanSign($canSign) {
+    public function setCanSign($canSign)
+    {
         $this->_canSign = ($canSign) ? true : false;
         return $this;
     }
@@ -507,7 +526,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setCanEncrypt($canEncrypt) {
+    public function setCanEncrypt($canEncrypt)
+    {
         $this->_canEncrypt = ($canEncrypt) ? true : false;
         return $this;
     }
@@ -525,7 +545,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setHasPrivate($hasPrivate) {
+    public function setHasPrivate($hasPrivate)
+    {
         $this->_hasPrivate = ($hasPrivate) ? true : false;
         return $this;
     }
@@ -540,7 +561,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the current object, for fluent interface.
      */
-    public function setRevoked($isRevoked) {
+    public function setRevoked($isRevoked)
+    {
         $this->_isRevoked = ($isRevoked) ? true : false;
         return $this;
     }
@@ -559,7 +581,8 @@ class Crypt_GPG_SubKey {
      *
      * @return Crypt_GPG_SubKey the sub-key object parsed from the string.
      */
-    public static function parse($string) {
+    public static function parse($string)
+    {
         $tokens = explode(':', $string);
 
         $subKey = new Crypt_GPG_SubKey();
@@ -596,7 +619,8 @@ class Crypt_GPG_SubKey {
      * @return integer the UNIX timestamp corresponding to the provided date
      *                 string.
      */
-    private static function _parseDate($string) {
+    private static function _parseDate($string)
+    {
         if ($string == '') {
             $timestamp = 0;
         } else {
@@ -621,4 +645,5 @@ class Crypt_GPG_SubKey {
 }
 
 // }}}
+
 ?>

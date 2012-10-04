@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/en_GB/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Vibhav Pant <vibhavp@gmail.com>                               |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/en_GB/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Vibhav Pant <vibhavp@gmail.com>                               |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['filters'] = 'Filters';
@@ -93,6 +93,10 @@ $labels['flagdeleted'] = 'Deleted';
 $labels['flaganswered'] = 'Answered';
 $labels['flagflagged'] = 'Flagged';
 $labels['flagdraft'] = 'Draft';
+$labels['setvariable'] = 'Set variable';
+$labels['setvarname'] = 'Variable name:';
+$labels['setvarvalue'] = 'Variable value:';
+$labels['setvarmodifiers'] = 'Modifiers:';
 $labels['filtercreate'] = 'Create filter';
 $labels['usedata'] = 'Use following data in the filter:';
 $labels['nextstep'] = 'Next Step';

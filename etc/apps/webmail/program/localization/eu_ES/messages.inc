@@ -1,27 +1,24 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/eu_ES/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: pi <pi@beobide.net>                                           |
-  |         Bihar <gaurdabihar@gmail.com>                                 |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/eu_ES/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Saio sarrerak huts egin du';
 $messages['cookiesdisabled'] = 'Zure nabigatzaileak ez ditu cookie-ak onartzen';
 $messages['sessionerror'] = 'Zure saioa baliogabea da edo iraungita dago';
-$messages['imaperror'] = 'Huts IMAP zerbitzarira konektatzean';
+$messages['storageerror'] = 'Huts IMAP zerbitzarira konektatzean';
 $messages['nomessagesfound'] = 'Ez da mezurik aurkitu posta kutxa honetan';
 $messages['loggedout'] = 'Saioa behar bezala amaitu duzu. Agur!';
 $messages['mailboxempty'] = 'Posta kutxa hutsik dago';
@@ -53,11 +50,10 @@ $messages['noemailwarning'] = 'Mesedez idatzi baliozko eposta helbide bat';
 $messages['nonamewarning'] = 'Mesedez izen bat idatzi';
 $messages['nopagesizewarning'] = 'Mesedez paper tamaina idatzi';
 $messages['norecipientwarning'] = 'Mesedez behintzat hartzaile bat idatzi';
-$messages['nosubjectwarning'] = '\"Gaia\" eremua hutsik dago. Bat idatzi nahi al duzu?';
+$messages['nosubjectwarning'] = '"Gaia" eremua hutsik dago. Bat idatzi nahi al duzu?';
 $messages['nobodywarning'] = 'Testu gabeko mezu hau bidali?';
 $messages['notsentwarning'] = 'Mezua ez da bidali. Mezua ezeztatu nahi al duzu?';
 $messages['noldapserver'] = 'Mesedez hautatu bilaketa egiteko LDAP zerbitzari bat';
-$messages['nocontactsreturned'] = 'Ez da kontakturik aurkitu';
 $messages['nosearchname'] = 'Mesedez idatzi kontaktu izen bat edo eposta helbide bat';
 $messages['searchsuccessful'] = '$nr mezu aurkiturik';
 $messages['searchnomatch'] = 'Bilaketak ez du emaitzarik itzuli';
@@ -79,4 +75,4 @@ $messages['receiptsent'] = 'Ondo bidalia irakurritako agiria';
 $messages['errorsendingreceipt'] = 'Ezin da agiria bidali';
 $messages['nodeletelastidentity'] = 'Ezin da izaera hau ezabatu, zure bakarra da';
 $messages['forbiddencharacter'] = 'Karpeta izenak debekatutako karaktereak ditu';
-?>
+

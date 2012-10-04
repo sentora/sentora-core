@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -56,8 +55,7 @@
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Native_Common extends MDB2_Module_Common {
-    
+class MDB2_Driver_Native_Common extends MDB2_Module_Common
+{
 }
-
 ?>

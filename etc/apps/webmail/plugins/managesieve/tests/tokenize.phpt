@@ -25,7 +25,7 @@ test
 $txt[7] = array(1, '"\\a\\\\\\"a"');
 
 foreach ($txt as $idx => $t) {
-    echo "[$idx]---------------\n";
+    echo "[$idx]---------------\n"; 
     var_dump(rcube_sieve_script::tokenize($t[1], $t[0]));
 }
 ?>
@@ -35,32 +35,32 @@ string(34) "This is test ; message;
 Multi line"
 [2]---------------
 array(1) {
-[0]=>
-array(2) {
-[0]=>
-string(5) "test1"
-[1]=>
-string(5) "test2"
-}
+  [0]=>
+  array(2) {
+    [0]=>
+    string(5) "test1"
+    [1]=>
+    string(5) "test2"
+  }
 }
 [3]---------------
 array(1) {
-[0]=>
-string(4) "test"
+  [0]=>
+  string(4) "test"
 }
 [4]---------------
 string(5) "te"st"
 [5]---------------
 array(1) {
-[0]=>
-string(4) "test"
+  [0]=>
+  string(4) "test"
 }
 [6]---------------
 array(2) {
-[0]=>
-string(4) "test"
-[1]=>
-string(4) "test"
+  [0]=>
+  string(4) "test"
+  [1]=>
+  string(4) "test"
 }
 [7]---------------
 string(4) "a\"a"

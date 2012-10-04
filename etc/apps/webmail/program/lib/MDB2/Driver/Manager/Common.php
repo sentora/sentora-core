@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -64,7 +63,8 @@
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
+class MDB2_Driver_Manager_Common extends MDB2_Module_Common
+{
     // {{{ splitTableSchema()
 
     /**
@@ -75,7 +75,8 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return array array(schema, table)
      * @access private
      */
-    function splitTableSchema($table) {
+    function splitTableSchema($table)
+    {
         $ret = array();
         if (strpos($table, '.') !== false) {
             return explode('.', $table);
@@ -105,14 +106,16 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed string on success, a MDB2 error on failure
      * @access public
      */
-    function getFieldDeclarationList($fields) {
-        $db = & $this->getDBInstance();
+    function getFieldDeclarationList($fields)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         if (!is_array($fields) || empty($fields)) {
-            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null, 'missing any fields', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
+                'missing any fields', __FUNCTION__);
         }
         foreach ($fields as $field_name => $field) {
             $query = $db->getDeclaration($field['type'], $field_name, $field);
@@ -135,13 +138,14 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return string name of the sequence with possible formatting removed
      * @access protected
      */
-    function _fixSequenceName($sqn, $check = false) {
-        $db = & $this->getDBInstance();
+    function _fixSequenceName($sqn, $check = false)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $seq_pattern = '/^' . preg_replace('/%s/', '([a-z0-9_]+)', $db->options['seqname_format']) . '$/i';
+        $seq_pattern = '/^'.preg_replace('/%s/', '([a-z0-9_]+)', $db->options['seqname_format']).'$/i';
         $seq_name = preg_replace($seq_pattern, '\\1', $sqn);
         if ($seq_name && !strcasecmp($sqn, $db->getSequenceName($seq_name))) {
             return $seq_name;
@@ -162,13 +166,14 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return string name of the index with eventual formatting removed
      * @access protected
      */
-    function _fixIndexName($idx) {
-        $db = & $this->getDBInstance();
+    function _fixIndexName($idx)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $idx_pattern = '/^' . preg_replace('/%s/', '([a-z0-9_]+)', $db->options['idxname_format']) . '$/i';
+        $idx_pattern = '/^'.preg_replace('/%s/', '([a-z0-9_]+)', $db->options['idxname_format']).'$/i';
         $idx_name = preg_replace($idx_pattern, '\\1', $idx);
         if ($idx_name && !strcasecmp($idx, $db->getIndexName($idx_name))) {
             return $idx_name;
@@ -188,13 +193,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createDatabase($database, $options = array()) {
-        $db = & $this->getDBInstance();
+    function createDatabase($database, $options = array())
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -209,13 +216,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function alterDatabase($database, $options = array()) {
-        $db = & $this->getDBInstance();
+    function alterDatabase($database, $options = array())
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -228,13 +237,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropDatabase($database) {
-        $db = & $this->getDBInstance();
+    function dropDatabase($database)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -250,24 +261,27 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed string (the SQL query) on success, a MDB2 error on failure
      * @see createTable()
      */
-    function _getCreateTableQuery($name, $fields, $options = array()) {
-        $db = & $this->getDBInstance();
+    function _getCreateTableQuery($name, $fields, $options = array())
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         if (!$name) {
-            return $db->raiseError(MDB2_ERROR_CANNOT_CREATE, null, null, 'no valid table name specified', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_CANNOT_CREATE, null, null,
+                'no valid table name specified', __FUNCTION__);
         }
         if (empty($fields)) {
-            return $db->raiseError(MDB2_ERROR_CANNOT_CREATE, null, null, 'no fields specified for table "' . $name . '"', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_CANNOT_CREATE, null, null,
+                'no fields specified for table "'.$name.'"', __FUNCTION__);
         }
         $query_fields = $this->getFieldDeclarationList($fields);
         if (PEAR::isError($query_fields)) {
             return $query_fields;
         }
         if (!empty($options['primary'])) {
-            $query_fields.= ', PRIMARY KEY (' . implode(', ', array_keys($options['primary'])) . ')';
+            $query_fields.= ', PRIMARY KEY ('.implode(', ', array_keys($options['primary'])).')';
         }
 
         $name = $db->quoteIdentifier($name, true);
@@ -296,7 +310,8 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return string The string required to be placed between "CREATE" and "TABLE"
      *                to generate a temporary table, if possible.
      */
-    function _getTemporaryTableQuery() {
+    function _getTemporaryTableQuery()
+    {
         return 'TEMPORARY';
     }
 
@@ -335,12 +350,13 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createTable($name, $fields, $options = array()) {
+    function createTable($name, $fields, $options = array())
+    {
         $query = $this->_getCreateTableQuery($name, $fields, $options);
         if (PEAR::isError($query)) {
             return $query;
         }
-        $db = & $this->getDBInstance();
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -361,8 +377,9 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropTable($name) {
-        $db = & $this->getDBInstance();
+    function dropTable($name)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -382,8 +399,9 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function truncateTable($name) {
-        $db = & $this->getDBInstance();
+    function truncateTable($name)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -409,13 +427,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK success, a MDB2 error on failure
      * @access public
      */
-    function vacuum($table = null, $options = array()) {
-        $db = & $this->getDBInstance();
+    function vacuum($table = null, $options = array())
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -509,15 +529,17 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      *                             actually perform them otherwise.
      * @access public
      *
-     * @return mixed MDB2_OK on success, a MDB2 error on failure
+      * @return mixed MDB2_OK on success, a MDB2 error on failure
      */
-    function alterTable($name, $changes, $check) {
-        $db = & $this->getDBInstance();
+    function alterTable($name, $changes, $check)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -529,13 +551,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of database names on success, a MDB2 error on failure
      * @access public
      */
-    function listDatabases() {
-        $db = & $this->getDBInstance();
+    function listDatabases()
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implementedd', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implementedd', __FUNCTION__);
     }
 
     // }}}
@@ -547,13 +571,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of user names on success, a MDB2 error on failure
      * @access public
      */
-    function listUsers() {
-        $db = & $this->getDBInstance();
+    function listUsers()
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -568,13 +594,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of view names on success, a MDB2 error on failure
      * @access public
      */
-    function listViews($database = null) {
-        $db = & $this->getDBInstance();
+    function listViews($database = null)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -587,13 +615,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of view names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableViews($table) {
-        $db = & $this->getDBInstance();
+    function listTableViews($table)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -606,13 +636,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of trigger names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableTriggers($table = null) {
-        $db = & $this->getDBInstance();
+    function listTableTriggers($table = null)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -624,13 +656,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of function names on success, a MDB2 error on failure
      * @access public
      */
-    function listFunctions() {
-        $db = & $this->getDBInstance();
+    function listFunctions()
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -645,13 +679,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of table names on success, a MDB2 error on failure
      * @access public
      */
-    function listTables($database = null) {
-        $db = & $this->getDBInstance();
+    function listTables($database = null)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -664,13 +700,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of field names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableFields($table) {
-        $db = & $this->getDBInstance();
+    function listTableFields($table)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -708,8 +746,9 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createIndex($table, $name, $definition) {
-        $db = & $this->getDBInstance();
+    function createIndex($table, $name, $definition)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -721,7 +760,7 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
         foreach (array_keys($definition['fields']) as $field) {
             $fields[] = $db->quoteIdentifier($field, true);
         }
-        $query .= ' (' . implode(', ', $fields) . ')';
+        $query .= ' ('. implode(', ', $fields) . ')';
         return $db->exec($query);
     }
 
@@ -736,8 +775,9 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropIndex($table, $name) {
-        $db = & $this->getDBInstance();
+    function dropIndex($table, $name)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -756,13 +796,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of index names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableIndexes($table) {
-        $db = & $this->getDBInstance();
+    function listTableIndexes($table)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -776,7 +818,8 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return string
      * @access protected
      */
-    function _getAdvancedFKOptions($definition) {
+    function _getAdvancedFKOptions($definition)
+    {
         return '';
     }
 
@@ -822,8 +865,9 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createConstraint($table, $name, $definition) {
-        $db = & $this->getDBInstance();
+    function createConstraint($table, $name, $definition)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -841,14 +885,14 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
         foreach (array_keys($definition['fields']) as $field) {
             $fields[] = $db->quoteIdentifier($field, true);
         }
-        $query .= ' (' . implode(', ', $fields) . ')';
+        $query .= ' ('. implode(', ', $fields) . ')';
         if (!empty($definition['foreign'])) {
             $query.= ' REFERENCES ' . $db->quoteIdentifier($definition['references']['table'], true);
             $referenced_fields = array();
             foreach (array_keys($definition['references']['fields']) as $field) {
                 $referenced_fields[] = $db->quoteIdentifier($field, true);
             }
-            $query .= ' (' . implode(', ', $referenced_fields) . ')';
+            $query .= ' ('. implode(', ', $referenced_fields) . ')';
             $query .= $this->_getAdvancedFKOptions($definition);
         }
         return $db->exec($query);
@@ -866,8 +910,9 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropConstraint($table, $name, $primary = false) {
-        $db = & $this->getDBInstance();
+    function dropConstraint($table, $name, $primary = false)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -887,13 +932,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of constraint names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableConstraints($table) {
-        $db = & $this->getDBInstance();
+    function listTableConstraints($table)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -907,13 +954,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createSequence($seq_name, $start = 1) {
-        $db = & $this->getDBInstance();
+    function createSequence($seq_name, $start = 1)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -926,13 +975,15 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropSequence($name) {
-        $db = & $this->getDBInstance();
+    function dropSequence($name)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -947,16 +998,17 @@ class MDB2_Driver_Manager_Common extends MDB2_Module_Common {
      * @return mixed array of sequence names on success, a MDB2 error on failure
      * @access public
      */
-    function listSequences($database = null) {
-        $db = & $this->getDBInstance();
+    function listSequences($database = null)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
 }
-
 ?>

@@ -1,8 +1,7 @@
 <?php
-
 /**
  * Filesystem Attachments
- * 
+ *
  * This plugin which provides database backed storage for temporary
  * attachment file handling.  The primary advantage of this plugin
  * is its compatibility with round-robin dns multi-server roundcube
@@ -11,11 +10,12 @@
  * This plugin relies on the core filesystem_attachments plugin
  *
  * @author Ziba Scott <ziba@umich.edu>
- * 
+ * @author Aleksander Machniak <alec@alec.pl>
+ * @version @package_version@
  */
 require_once('plugins/filesystem_attachments/filesystem_attachments.php');
-
-class database_attachments extends filesystem_attachments {
+class database_attachments extends filesystem_attachments
+{
 
     // A prefix for the cache key used in the session and in the key field of the cache table
     private $cache_prefix = "db_attach";
@@ -23,15 +23,17 @@ class database_attachments extends filesystem_attachments {
     /**
      * Helper method to generate a unique key for the given attachment file
      */
-    private function _key($args) {
+    private function _key($args)
+    {
         $uname = $args['path'] ? $args['path'] : $args['name'];
-        return $this->cache_prefix . $args['group'] . md5(mktime() . $uname . $_SESSION['user_id']);
+        return  $this->cache_prefix . $args['group'] . md5(mktime() . $uname . $_SESSION['user_id']);
     }
 
     /**
      * Save a newly uploaded attachment
      */
-    function upload($args) {
+    function upload($args)
+    {
         $args['status'] = false;
         $rcmail = rcmail::get_instance();
         $key = $this->_key($args);
@@ -44,9 +46,12 @@ class database_attachments extends filesystem_attachments {
         $data = base64_encode($data);
 
         $status = $rcmail->db->query(
-                "INSERT INTO " . get_table_name('cache') . "
+            "INSERT INTO ".get_table_name('cache')."
              (created, user_id, cache_key, data)
-             VALUES (" . $rcmail->db->now() . ", ?, ?, ?)", $_SESSION['user_id'], $key, $data);
+             VALUES (".$rcmail->db->now().", ?, ?, ?)",
+            $_SESSION['user_id'],
+            $key,
+            $data);
 
         if ($status) {
             $args['id'] = $key;
@@ -60,7 +65,8 @@ class database_attachments extends filesystem_attachments {
     /**
      * Save an attachment from a non-upload source (draft or forward)
      */
-    function save($args) {
+    function save($args)
+    {
         $args['status'] = false;
         $rcmail = rcmail::get_instance();
 
@@ -76,9 +82,12 @@ class database_attachments extends filesystem_attachments {
         $data = base64_encode($args['data']);
 
         $status = $rcmail->db->query(
-                "INSERT INTO " . get_table_name('cache') . "
+            "INSERT INTO ".get_table_name('cache')."
              (created, user_id, cache_key, data)
-             VALUES (" . $rcmail->db->now() . ", ?, ?, ?)", $_SESSION['user_id'], $key, $data);
+             VALUES (".$rcmail->db->now().", ?, ?, ?)",
+            $_SESSION['user_id'],
+            $key,
+            $data);
 
         if ($status) {
             $args['id'] = $key;
@@ -92,13 +101,16 @@ class database_attachments extends filesystem_attachments {
      * Remove an attachment from storage
      * This is triggered by the remove attachment button on the compose screen
      */
-    function remove($args) {
+    function remove($args)
+    {
         $args['status'] = false;
         $rcmail = rcmail::get_instance();
         $status = $rcmail->db->query(
-                "DELETE FROM " . get_table_name('cache') . "
+            "DELETE FROM ".get_table_name('cache')."
              WHERE  user_id=?
-             AND    cache_key=?", $_SESSION['user_id'], $args['id']);
+             AND    cache_key=?",
+            $_SESSION['user_id'],
+            $args['id']);
 
         if ($status) {
             $args['status'] = true;
@@ -112,7 +124,8 @@ class database_attachments extends filesystem_attachments {
      * For this plugin, $this->get() will check the file and
      * return it's contents
      */
-    function display($args) {
+    function display($args)
+    {
         return $this->get($args);
     }
 
@@ -120,14 +133,17 @@ class database_attachments extends filesystem_attachments {
      * When displaying or sending the attachment the file contents are fetched
      * using this method. This is also called by the attachment_display hook.
      */
-    function get($args) {
+    function get($args)
+    {
         $rcmail = rcmail::get_instance();
 
         $sql_result = $rcmail->db->query(
-                "SELECT cache_id, data
-             FROM " . get_table_name('cache') . "
+            "SELECT cache_id, data
+             FROM ".get_table_name('cache')."
              WHERE  user_id=?
-             AND    cache_key=?", $_SESSION['user_id'], $args['id']);
+             AND    cache_key=?",
+            $_SESSION['user_id'],
+            $args['id']);
 
         if ($sql_arr = $rcmail->db->fetch_assoc($sql_result)) {
             $args['data'] = base64_decode($sql_arr['data']);
@@ -140,13 +156,14 @@ class database_attachments extends filesystem_attachments {
     /**
      * Delete all temp files associated with this user
      */
-    function cleanup($args) {
+    function cleanup($args)
+    {
         $prefix = $this->cache_prefix . $args['group'];
         $rcmail = rcmail::get_instance();
         $rcmail->db->query(
-                "DELETE FROM " . get_table_name('cache') . "
+            "DELETE FROM ".get_table_name('cache')."
              WHERE  user_id=?
-             AND cache_key like '{$prefix}%'", $_SESSION['user_id']);
+             AND cache_key like '{$prefix}%'",
+            $_SESSION['user_id']);
     }
-
 }

@@ -15,6 +15,7 @@ set "b" "c";
 
 $s = new rcube_sieve_script($txt, array(), array('variables'));
 echo $s->as_text();
+
 ?>
 --EXPECT--
 # this is a comment

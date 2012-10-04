@@ -1,27 +1,28 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/nl_NL/messages.inc                                       |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Geert Wirken <Unknown>                                        |
-  +-----------------------------------------------------------------------+
-  @version $Id: messages.inc 5741 2012-01-08 16:20:12Z thomasb $
- */
+ +-----------------------------------------------------------------------+
+ | localization/nl_NL/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Geert Wirken                                                  |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Er is een fout opgetreden!';
 $messages['loginfailed'] = 'Inloggen mislukt.';
 $messages['cookiesdisabled'] = 'Uw browser accepteert geen cookies.';
 $messages['sessionerror'] = 'Uw sessie is verlopen of ongeldig.';
-$messages['imaperror'] = 'Verbinding met IMAP-server mislukt.';
+$messages['storageerror'] = 'Verbinding met IMAP-server mislukt.';
 $messages['servererror'] = 'Serverfout!';
 $messages['servererrormsg'] = 'Serverfout: $msg';
 $messages['dberror'] = 'Databasefout!';
+$messages['requesttimedout'] = 'Opdracht duurde te lang';
 $messages['errorreadonly'] = 'Niet in staat om de bewerking uit te voeren. Map is alleen-lezen.';
 $messages['errornoperm'] = 'Niet in staat om de bewerking uit te voeren. Toestemming geweigerd.';
 $messages['invalidrequest'] = 'Ongeldige aanvraag! Er zijn geen gegevens opgeslagen.';
@@ -84,8 +85,8 @@ $messages['searching'] = 'Zoeken...';
 $messages['checking'] = 'Controleren...';
 $messages['nospellerrors'] = 'Geen spelfouten gevonden.';
 $messages['folderdeleted'] = 'Map successvol verwijderd.';
-$messages['foldersubscribed'] = 'Folder succesvol geabonneerd.';
-$messages['folderunsubscribed'] = 'Folder succesvol uitgeschreven.';
+$messages['foldersubscribed'] = 'Succesvol geabonneerd op map.';
+$messages['folderunsubscribed'] = 'Abonnement op map succesvol opgezegd.';
 $messages['folderpurged'] = 'Folder met succes geleegd.';
 $messages['folderexpunged'] = 'Folder succesvol geleegd.';
 $messages['deletedsuccessfully'] = 'Met succes verwijderd.';

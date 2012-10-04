@@ -1,27 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/ms_MY/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Muhammad Zamri MS <myzamri@gmail.com>                        |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/ms_MY/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: abuyop <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Log masuk gagal';
 $messages['cookiesdisabled'] = 'Pelayar anda tidak menerima cookies';
 $messages['sessionerror'] = 'Sesi anda tidak sah atau telah tamat';
-$messages['imaperror'] = 'Sambungan ke pelayan IMAP gagal';
+$messages['storageerror'] = 'Sambungan ke pelayan IMAP gagal';
 $messages['nomessagesfound'] = 'Tiada mesej dijumpai dalam kotak mel ini';
 $messages['loggedout'] = 'Sesi anda telah tamat. Selamat tinggal!';
 $messages['mailboxempty'] = 'Kotak mail kosong';
@@ -52,15 +49,14 @@ $messages['noemailwarning'] = 'Sila masukkan alamat emel yang sah';
 $messages['nonamewarning'] = 'Sila masukkan nama';
 $messages['nopagesizewarning'] = 'Sila masukkan saiz halaman';
 $messages['norecipientwarning'] = 'Sila masukkan sekurang-kurangnya satu penerima';
-$messages['nosubjectwarning'] = 'Ruang \"Subjek\" kosong. Adakah anda ingin masukkannya sekarang?';
+$messages['nosubjectwarning'] = 'Ruang "Subjek" kosong. Adakah anda ingin masukkannya sekarang?';
 $messages['nobodywarning'] = 'Hantar mesej ini tanpa teks?';
 $messages['notsentwarning'] = 'Mesej tidak dihantar. Adakah anda ingin menyingkir mesej anda?';
 $messages['noldapserver'] = 'Sila pilih satu pelayan ldap untuk carian';
-$messages['nocontactsreturned'] = 'Tiada kontek dijumpai';
 $messages['nosearchname'] = 'Sila masukkan nama kontek atau alamat emel';
 $messages['searchsuccessful'] = '$nr mesej dijumpai';
 $messages['searchnomatch'] = 'Carian tiada padanan';
-$messages['searching'] = 'Mencari...';
+$messages['searching'] = 'Menggelintar...';
 $messages['checking'] = 'Menyemak...';
 $messages['nospellerrors'] = 'Tiada kesalah ejaan dijumpai';
 $messages['folderdeleted'] = 'Kabinet fail berjaya dihapuskan';
@@ -77,4 +73,4 @@ $messages['movingmessage'] = 'Memindah mesej...';
 $messages['receiptsent'] = 'Berjaya menghantar resip bacaan';
 $messages['errorsendingreceipt'] = 'Tidak dapat menghantar resip';
 $messages['nodeletelastidentity'] = 'Anda tidak boleh membuang identiti ini, ia milik anda yang terakhir.';
-?>
+

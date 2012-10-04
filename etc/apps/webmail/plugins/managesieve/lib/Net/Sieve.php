@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file contains the Net_Sieve class.
  *
@@ -43,6 +42,7 @@
  * @version   SVN: $Id: Sieve.php 300898 2010-07-01 09:49:02Z yunosh $
  * @link      http://pear.php.net/package/Net_Sieve
  */
+
 require_once 'PEAR.php';
 require_once 'Net/Socket.php';
 
@@ -51,6 +51,7 @@ require_once 'Net/Socket.php';
  *
  * o supportsAuthMech()
  */
+
 /**
  * Disconnected state
  * @const NET_SIEVE_STATE_DISCONNECTED
@@ -68,6 +69,7 @@ define('NET_SIEVE_STATE_AUTHORISATION', 2, true);
  * @const NET_SIEVE_STATE_TRANSACTION
  */
 define('NET_SIEVE_STATE_TRANSACTION', 3, true);
+
 
 /**
  * A class for talking to the timsieved server which comes with Cyrus IMAP.
@@ -88,8 +90,8 @@ define('NET_SIEVE_STATE_TRANSACTION', 3, true);
  * @link      http://tools.ietf.org/html/draft-ietf-sieve-managesieve A
  *            Protocol for Remotely Managing Sieve Scripts
  */
-class Net_Sieve {
-
+class Net_Sieve
+{
     /**
      * The authentication methods this class supports.
      *
@@ -98,7 +100,7 @@ class Net_Sieve {
      * @var array
      */
     var $supportedAuthMethods = array('DIGEST-MD5', 'CRAM-MD5', 'EXTERNAL',
-        'PLAIN', 'LOGIN');
+                                      'PLAIN' , 'LOGIN');
 
     /**
      * SASL authentication methods that require Auth_SASL.
@@ -204,18 +206,22 @@ class Net_Sieve {
      *                            stream_context_create().
      * @param mixed   $handler    A callback handler for the debug output.
      */
-    function Net_Sieve($user = null, $pass = null, $host = 'localhost', $port = 2000, $logintype = '', $euser = '', $debug = false, $bypassAuth = false, $useTLS = true, $options = null, $handler = null) {
-        $this->_state = NET_SIEVE_STATE_DISCONNECTED;
-        $this->_data['user'] = $user;
-        $this->_data['pass'] = $pass;
-        $this->_data['host'] = $host;
-        $this->_data['port'] = $port;
+    function Net_Sieve($user = null, $pass  = null, $host = 'localhost',
+                       $port = 2000, $logintype = '', $euser = '',
+                       $debug = false, $bypassAuth = false, $useTLS = true,
+                       $options = null, $handler = null)
+    {
+        $this->_state             = NET_SIEVE_STATE_DISCONNECTED;
+        $this->_data['user']      = $user;
+        $this->_data['pass']      = $pass;
+        $this->_data['host']      = $host;
+        $this->_data['port']      = $port;
         $this->_data['logintype'] = $logintype;
-        $this->_data['euser'] = $euser;
-        $this->_sock = new Net_Socket();
-        $this->_bypassAuth = $bypassAuth;
-        $this->_useTLS = $useTLS;
-        $this->_options = $options;
+        $this->_data['euser']     = $euser;
+        $this->_sock              = new Net_Socket();
+        $this->_bypassAuth        = $bypassAuth;
+        $this->_useTLS            = $useTLS;
+        $this->_options           = $options;
         $this->setDebug($debug, $handler);
 
         /* Try to include the Auth_SASL package.  If the package is not
@@ -240,7 +246,8 @@ class Net_Sieve {
      *
      * @return boolean|PEAR_Error  False if no error, PEAR_Error otherwise.
      */
-    function getError() {
+    function getError()
+    {
         return PEAR::isError($this->_error) ? $this->_error : false;
     }
 
@@ -252,7 +259,8 @@ class Net_Sieve {
      *
      * @return void
      */
-    function setDebug($debug = true, $handler = null) {
+    function setDebug($debug = true, $handler = null)
+    {
         $this->_debug = $debug;
         $this->_debug_handler = $handler;
     }
@@ -262,7 +270,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error on failure.
      */
-    function _handleConnectAndLogin() {
+    function _handleConnectAndLogin()
+    {
         if (PEAR::isError($res = $this->connect($this->_data['host'], $this->_data['port'], $this->_options, $this->_useTLS))) {
             return $res;
         }
@@ -285,10 +294,11 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error otherwise.
      */
-    function connect($host, $port, $options = null, $useTLS = true) {
+    function connect($host, $port, $options = null, $useTLS = true)
+    {
         $this->_data['host'] = $host;
         $this->_data['port'] = $port;
-        $this->_useTLS = $useTLS;
+        $this->_useTLS       = $useTLS;
         if (!empty($options) && is_array($options)) {
             $this->_options = array_merge($this->_options, $options);
         }
@@ -314,13 +324,13 @@ class Net_Sieve {
         // picked up from an existing connection.
         if (PEAR::isError($res = $this->_cmdCapability())) {
             return PEAR::raiseError(
-                            'Failed to connect, server said: ' . $res->getMessage(), 2
+                'Failed to connect, server said: ' . $res->getMessage(), 2
             );
         }
 
         // Check if we can enable TLS via STARTTLS.
         if ($useTLS && !empty($this->_capability['starttls'])
-                && function_exists('stream_socket_enable_crypto')
+            && function_exists('stream_socket_enable_crypto')
         ) {
             if (PEAR::isError($res = $this->_startTLS())) {
                 return $res;
@@ -338,7 +348,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error otherwise.
      */
-    function disconnect($sendLogoutCMD = true) {
+    function disconnect($sendLogoutCMD = true)
+    {
         return $this->_cmdLogout($sendLogoutCMD);
     }
 
@@ -353,18 +364,19 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error otherwise.
      */
-    function login($user, $pass, $logintype = null, $euser = '', $bypassAuth = false) {
-        $this->_data['user'] = $user;
-        $this->_data['pass'] = $pass;
+    function login($user, $pass, $logintype = null, $euser = '', $bypassAuth = false)
+    {
+        $this->_data['user']      = $user;
+        $this->_data['pass']      = $pass;
         $this->_data['logintype'] = $logintype;
-        $this->_data['euser'] = $euser;
-        $this->_bypassAuth = $bypassAuth;
+        $this->_data['euser']     = $euser;
+        $this->_bypassAuth        = $bypassAuth;
 
         if (NET_SIEVE_STATE_AUTHORISATION != $this->_state) {
             return PEAR::raiseError('Not currently in AUTHORISATION state', 1);
         }
 
-        if (!$bypassAuth) {
+        if (!$bypassAuth ) {
             if (PEAR::isError($res = $this->_cmdAuthenticate($user, $pass, $logintype, $euser))) {
                 return $res;
             }
@@ -379,7 +391,8 @@ class Net_Sieve {
      *
      * @return array  Indexed array of scriptnames.
      */
-    function listScripts() {
+    function listScripts()
+    {
         if (is_array($scripts = $this->_cmdListScripts())) {
             $this->_active = $scripts[1];
             return $scripts[0];
@@ -393,7 +406,8 @@ class Net_Sieve {
      *
      * @return string  The active scriptname.
      */
-    function getActive() {
+    function getActive()
+    {
         if (!empty($this->_active)) {
             return $this->_active;
         }
@@ -410,7 +424,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error on failure.
      */
-    function setActive($scriptname) {
+    function setActive($scriptname)
+    {
         return $this->_cmdSetActive($scriptname);
     }
 
@@ -420,8 +435,9 @@ class Net_Sieve {
      * @param string $scriptname The name of the script to be retrieved.
      *
      * @return string  The script on success, PEAR_Error on failure.
-     */
-    function getScript($scriptname) {
+    */
+    function getScript($scriptname)
+    {
         return $this->_cmdGetScript($scriptname);
     }
 
@@ -434,7 +450,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error on failure.
      */
-    function installScript($scriptname, $script, $makeactive = false) {
+    function installScript($scriptname, $script, $makeactive = false)
+    {
         if (PEAR::isError($res = $this->_cmdPutScript($scriptname, $script))) {
             return $res;
         }
@@ -451,7 +468,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error on failure.
      */
-    function removeScript($scriptname) {
+    function removeScript($scriptname)
+    {
         return $this->_cmdDeleteScript($scriptname);
     }
 
@@ -465,7 +483,8 @@ class Net_Sieve {
      *
      * @todo Rename to hasSpace()
      */
-    function haveSpace($scriptname, $size) {
+    function haveSpace($scriptname, $size)
+    {
         if (NET_SIEVE_STATE_TRANSACTION != $this->_state) {
             return PEAR::raiseError('Not currently in TRANSACTION state', 1);
         }
@@ -482,7 +501,8 @@ class Net_Sieve {
      *
      * @return array  List of extensions or PEAR_Error on failure.
      */
-    function getExtensions() {
+    function getExtensions()
+    {
         if (NET_SIEVE_STATE_DISCONNECTED == $this->_state) {
             return PEAR::raiseError('Not currently connected', 7);
         }
@@ -497,7 +517,8 @@ class Net_Sieve {
      * @return boolean  Whether the extension is supported or PEAR_Error on
      *                  failure.
      */
-    function hasExtension($extension) {
+    function hasExtension($extension)
+    {
         if (NET_SIEVE_STATE_DISCONNECTED == $this->_state) {
             return PEAR::raiseError('Not currently connected', 7);
         }
@@ -519,7 +540,8 @@ class Net_Sieve {
      *
      * @return array  List of authentication methods or PEAR_Error on failure.
      */
-    function getAuthMechs() {
+    function getAuthMechs()
+    {
         if (NET_SIEVE_STATE_DISCONNECTED == $this->_state) {
             return PEAR::raiseError('Not currently connected', 7);
         }
@@ -534,7 +556,8 @@ class Net_Sieve {
      * @return boolean  Whether the method is supported or PEAR_Error on
      *                  failure.
      */
-    function hasAuthMech($method) {
+    function hasAuthMech($method)
+    {
         if (NET_SIEVE_STATE_DISCONNECTED == $this->_state) {
             return PEAR::raiseError('Not currently connected', 7);
         }
@@ -562,30 +585,31 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _cmdAuthenticate($uid, $pwd, $userMethod = null, $euser = '') {
+    function _cmdAuthenticate($uid, $pwd, $userMethod = null, $euser = '')
+    {
         if (PEAR::isError($method = $this->_getBestAuthMethod($userMethod))) {
             return $method;
         }
         switch ($method) {
-            case 'DIGEST-MD5':
-                return $this->_authDigestMD5($uid, $pwd, $euser);
-            case 'CRAM-MD5':
-                $result = $this->_authCRAMMD5($uid, $pwd, $euser);
-                break;
-            case 'LOGIN':
-                $result = $this->_authLOGIN($uid, $pwd, $euser);
-                break;
-            case 'PLAIN':
-                $result = $this->_authPLAIN($uid, $pwd, $euser);
-                break;
-            case 'EXTERNAL':
-                $result = $this->_authEXTERNAL($uid, $pwd, $euser);
-                break;
-            default :
-                $result = PEAR::raiseError(
-                                $method . ' is not a supported authentication method'
-                );
-                break;
+        case 'DIGEST-MD5':
+            return $this->_authDigestMD5($uid, $pwd, $euser);
+        case 'CRAM-MD5':
+            $result = $this->_authCRAMMD5($uid, $pwd, $euser);
+            break;
+        case 'LOGIN':
+            $result = $this->_authLOGIN($uid, $pwd, $euser);
+            break;
+        case 'PLAIN':
+            $result = $this->_authPLAIN($uid, $pwd, $euser);
+            break;
+        case 'EXTERNAL':
+            $result = $this->_authEXTERNAL($uid, $pwd, $euser);
+            break;
+        default :
+            $result = PEAR::raiseError(
+                $method . ' is not a supported authentication method'
+            );
+            break;
         }
 
         if (PEAR::isError($res = $this->_doCmd())) {
@@ -604,11 +628,13 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _authPLAIN($user, $pass, $euser) {
+    function _authPLAIN($user, $pass, $euser)
+    {
         return $this->_sendCmd(
-                        sprintf(
-                                'AUTHENTICATE "PLAIN" "%s"', base64_encode($euser . chr(0) . $user . chr(0) . $pass)
-                        )
+            sprintf(
+                'AUTHENTICATE "PLAIN" "%s"',
+                base64_encode($euser . chr(0) . $user . chr(0) . $pass)
+            )
         );
     }
 
@@ -621,7 +647,8 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _authLOGIN($user, $pass, $euser) {
+    function _authLOGIN($user, $pass, $euser)
+    {
         if (PEAR::isError($result = $this->_sendCmd('AUTHENTICATE "LOGIN"'))) {
             return $result;
         }
@@ -640,7 +667,8 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _authCRAMMD5($user, $pass, $euser) {
+    function _authCRAMMD5($user, $pass, $euser)
+    {
         if (PEAR::isError($challenge = $this->_doCmd('AUTHENTICATE "CRAM-MD5"', true))) {
             return $challenge;
         }
@@ -663,7 +691,8 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _authDigestMD5($user, $pass, $euser) {
+    function _authDigestMD5($user, $pass, $euser)
+    {
         if (PEAR::isError($challenge = $this->_doCmd('AUTHENTICATE "DIGEST-MD5"', true))) {
             return $challenge;
         }
@@ -705,9 +734,11 @@ class Net_Sieve {
      *
      * @since  1.1.7
      */
-    function _authEXTERNAL($user, $pass, $euser) {
+    function _authEXTERNAL($user, $pass, $euser)
+    {
         $cmd = sprintf(
-                'AUTHENTICATE "EXTERNAL" "%s"', base64_encode(strlen($euser) ? $euser : $user)
+            'AUTHENTICATE "EXTERNAL" "%s"',
+            base64_encode(strlen($euser) ? $euser : $user)
         );
         return $this->_sendCmd($cmd);
     }
@@ -719,7 +750,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error otherwise.
      */
-    function _cmdDeleteScript($scriptname) {
+    function _cmdDeleteScript($scriptname)
+    {
         if (NET_SIEVE_STATE_TRANSACTION != $this->_state) {
             return PEAR::raiseError('Not currently in AUTHORISATION state', 1);
         }
@@ -738,7 +770,8 @@ class Net_Sieve {
      *
      * @return string  The script if successful, PEAR_Error otherwise.
      */
-    function _cmdGetScript($scriptname) {
+    function _cmdGetScript($scriptname)
+    {
         if (NET_SIEVE_STATE_TRANSACTION != $this->_state) {
             return PEAR::raiseError('Not currently in AUTHORISATION state', 1);
         }
@@ -758,8 +791,9 @@ class Net_Sieve {
      * @param string $scriptname The name of the script to mark as active.
      *
      * @return boolean  True on success, PEAR_Error otherwise.
-     */
-    function _cmdSetActive($scriptname) {
+    */
+    function _cmdSetActive($scriptname)
+    {
         if (NET_SIEVE_STATE_TRANSACTION != $this->_state) {
             return PEAR::raiseError('Not currently in AUTHORISATION state', 1);
         }
@@ -780,7 +814,8 @@ class Net_Sieve {
      *                and the active script in the second element on success,
      *                PEAR_Error otherwise.
      */
-    function _cmdListScripts() {
+    function _cmdListScripts()
+    {
         if (NET_SIEVE_STATE_TRANSACTION != $this->_state) {
             return PEAR::raiseError('Not currently in AUTHORISATION state', 1);
         }
@@ -813,13 +848,15 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error otherwise.
      */
-    function _cmdPutScript($scriptname, $scriptdata) {
+    function _cmdPutScript($scriptname, $scriptdata)
+    {
         if (NET_SIEVE_STATE_TRANSACTION != $this->_state) {
             return PEAR::raiseError('Not currently in AUTHORISATION state', 1);
         }
 
         $stringLength = $this->_getLineLength($scriptdata);
-        $command = sprintf("PUTSCRIPT %s {%d+}\r\n%s", $this->_escape($scriptname), $stringLength, $scriptdata);
+        $command      = sprintf("PUTSCRIPT %s {%d+}\r\n%s",
+            $this->_escape($scriptname), $stringLength, $scriptdata);
 
         if (PEAR::isError($res = $this->_doCmd($command))) {
             return $res;
@@ -836,7 +873,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error otherwise.
      */
-    function _cmdLogout($sendLogoutCMD = true) {
+    function _cmdLogout($sendLogoutCMD = true)
+    {
         if (NET_SIEVE_STATE_DISCONNECTED == $this->_state) {
             return PEAR::raiseError('Not currently connected', 1);
         }
@@ -858,7 +896,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error otherwise.
      */
-    function _cmdCapability() {
+    function _cmdCapability()
+    {
         if (NET_SIEVE_STATE_DISCONNECTED == $this->_state) {
             return PEAR::raiseError('Not currently connected', 1);
         }
@@ -877,10 +916,11 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _parseCapability($data) {
+    function _parseCapability($data)
+    {
         // Clear the cached capabilities.
         $this->_capability = array('sasl' => array(),
-            'extensions' => array());
+                                   'extensions' => array());
 
         $data = preg_split('/\r?\n/', $this->_toUpper($data), -1, PREG_SPLIT_NO_EMPTY);
 
@@ -889,21 +929,21 @@ class Net_Sieve {
                 continue;
             }
             switch ($matches[1]) {
-                case 'IMPLEMENTATION':
-                    $this->_capability['implementation'] = $matches[3];
-                    break;
+            case 'IMPLEMENTATION':
+                $this->_capability['implementation'] = $matches[3];
+                break;
 
-                case 'SASL':
-                    $this->_capability['sasl'] = preg_split('/\s+/', $matches[3]);
-                    break;
+            case 'SASL':
+                $this->_capability['sasl'] = preg_split('/\s+/', $matches[3]);
+                break;
 
-                case 'SIEVE':
-                    $this->_capability['extensions'] = preg_split('/\s+/', $matches[3]);
-                    break;
+            case 'SIEVE':
+                $this->_capability['extensions'] = preg_split('/\s+/', $matches[3]);
+                break;
 
-                case 'STARTTLS':
-                    $this->_capability['starttls'] = true;
-                    break;
+            case 'STARTTLS':
+                $this->_capability['starttls'] = true;
+                break;
             }
         }
     }
@@ -915,14 +955,15 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _sendCmd($cmd) {
+    function _sendCmd($cmd)
+    {
         $status = $this->_sock->getStatus();
         if (PEAR::isError($status) || $status['eof']) {
             return PEAR::raiseError('Failed to write to socket: connection lost');
         }
         if (PEAR::isError($error = $this->_sock->write($cmd . "\r\n"))) {
             return PEAR::raiseError(
-                            'Failed to write to socket: ' . $error->getMessage()
+                'Failed to write to socket: ' . $error->getMessage()
             );
         }
         $this->_debug("C: $cmd");
@@ -935,7 +976,8 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _sendStringResponse($str) {
+    function _sendStringResponse($str)
+    {
         return $this->_sendCmd('{' . $this->_getLineLength($str) . "+}\r\n" . $str);
     }
 
@@ -944,10 +986,11 @@ class Net_Sieve {
      *
      * @return string  The server response line.
      */
-    function _recvLn() {
+    function _recvLn()
+    {
         if (PEAR::isError($lastline = $this->_sock->gets(8192))) {
             return PEAR::raiseError(
-                            'Failed to read from socket: ' . $lastline->getMessage()
+                'Failed to read from socket: ' . $lastline->getMessage()
             );
         }
 
@@ -968,7 +1011,8 @@ class Net_Sieve {
      *
      * @return string  The server response.
      */
-    function _recvBytes($length) {
+    function _recvBytes($length)
+    {
         $response = '';
         $response_length = 0;
 
@@ -991,7 +1035,8 @@ class Net_Sieve {
      * @return string|PEAR_Error  Reponse string if an OK response, PEAR_Error
      *                            if a NO response.
      */
-    function _doCmd($cmd = '', $auth = false) {
+    function _doCmd($cmd = '', $auth = false)
+    {
         $referralCount = 0;
         while ($referralCount < $this->_maxReferralCount) {
             if (strlen($cmd)) {
@@ -1015,10 +1060,10 @@ class Net_Sieve {
                 if ('NO' == substr($uc_line, 0, 2)) {
                     // Check for string literal error message.
                     if (preg_match('/{([0-9]+)}$/i', $line, $matches)) {
-                        $line = substr($line, 0, -(strlen($matches[1]) + 2))
-                                . str_replace(
-                                        "\r\n", ' ', $this->_recvBytes($matches[1] + 2)
-                        );
+                        $line = substr($line, 0, -(strlen($matches[1])+2))
+                            . str_replace(
+                                "\r\n", ' ', $this->_recvBytes($matches[1] + 2)
+                            );
                     }
                     return PEAR::raiseError(trim($response . substr($line, 2)), 3);
                 }
@@ -1026,8 +1071,9 @@ class Net_Sieve {
                 if ('BYE' == substr($uc_line, 0, 3)) {
                     if (PEAR::isError($error = $this->disconnect(false))) {
                         return PEAR::raiseError(
-                                        'Cannot handle BYE, the error was: '
-                                        . $error->getMessage(), 4
+                            'Cannot handle BYE, the error was: '
+                            . $error->getMessage(),
+                            4
                         );
                     }
                     // Check for referral, then follow it.  Otherwise, carp an
@@ -1036,13 +1082,15 @@ class Net_Sieve {
                         // Replace the old host with the referral host
                         // preserving any protocol prefix.
                         $this->_data['host'] = preg_replace(
-                                '/\w+(?!(\w|\:\/\/)).*/', $matches[2], $this->_data['host']
+                            '/\w+(?!(\w|\:\/\/)).*/', $matches[2],
+                            $this->_data['host']
                         );
                         if (PEAR::isError($error = $this->_handleConnectAndLogin())) {
                             return PEAR::raiseError(
-                                            'Cannot follow referral to '
-                                            . $this->_data['host'] . ', the error was: '
-                                            . $error->getMessage(), 5
+                                'Cannot follow referral to '
+                                . $this->_data['host'] . ', the error was: '
+                                . $error->getMessage(),
+                                5
                             );
                         }
                         break;
@@ -1050,7 +1098,9 @@ class Net_Sieve {
                     return PEAR::raiseError(trim($response . $line), 6);
                 }
 
-                if (preg_match('/^{([0-9]+)}/i', $line, $matches)) {
+                // "\+?" is added in the regexp to workaround DBMail bug
+                // http://dbmail.org/mantis/view.php?id=963
+                if (preg_match('/^{([0-9]+)\+?}/i', $line, $matches)) {
                     // Matches literal string responses.
                     $line = $this->_recvBytes($matches[1] + 2);
 
@@ -1087,7 +1137,8 @@ class Net_Sieve {
      * @return string  The name of the best supported authentication method or
      *                 a PEAR_Error object on failure.
      */
-    function _getBestAuthMethod($userMethod = null) {
+    function _getBestAuthMethod($userMethod = null)
+    {
         if (!isset($this->_capability['sasl'])) {
             return PEAR::raiseError('This server doesn\'t support any authentication methods. SASL problem?');
         }
@@ -1100,7 +1151,9 @@ class Net_Sieve {
                 return $userMethod;
             }
             return PEAR::raiseError(
-                            sprintf('No supported authentication method found. The server supports these methods: %s, but we want to use: %s', implode(', ', $this->_capability['sasl']), $userMethod));
+                sprintf('No supported authentication method found. The server supports these methods: %s, but we want to use: %s',
+                        implode(', ', $this->_capability['sasl']),
+                        $userMethod));
         }
 
         foreach ($this->supportedAuthMethods as $method) {
@@ -1110,7 +1163,9 @@ class Net_Sieve {
         }
 
         return PEAR::raiseError(
-                        sprintf('No supported authentication method found. The server supports these methods: %s, but we only support: %s', implode(', ', $this->_capability['sasl']), implode(', ', $this->supportedAuthMethods)));
+            sprintf('No supported authentication method found. The server supports these methods: %s, but we only support: %s',
+                    implode(', ', $this->_capability['sasl']),
+                    implode(', ', $this->supportedAuthMethods)));
     }
 
     /**
@@ -1118,7 +1173,8 @@ class Net_Sieve {
      *
      * @return boolean  True on success, PEAR_Error on failure.
      */
-    function _startTLS() {
+    function _startTLS()
+    {
         if (PEAR::isError($res = $this->_doCmd('STARTTLS'))) {
             return $res;
         }
@@ -1134,7 +1190,7 @@ class Net_Sieve {
         // Doesn't work with older timsieved versions
         $regexp = '/^CYRUS TIMSIEVED V([0-9.]+)/';
         if (!preg_match($regexp, $this->_capability['implementation'], $matches)
-                || version_compare($matches[1], '2.3.10', '>=')
+            || version_compare($matches[1], '2.3.10', '>=')
         ) {
             $this->_doCmd();
         }
@@ -1143,7 +1199,7 @@ class Net_Sieve {
         // are under encryption.
         if (PEAR::isError($res = $this->_cmdCapability())) {
             return PEAR::raiseError(
-                            'Failed to connect, server said: ' . $res->getMessage(), 2
+                'Failed to connect, server said: ' . $res->getMessage(), 2
             );
         }
 
@@ -1157,7 +1213,8 @@ class Net_Sieve {
      *
      * @return integer  The length of the string.
      */
-    function _getLineLength($string) {
+    function _getLineLength($string)
+    {
         if (extension_loaded('mbstring')) {
             return mb_strlen($string, 'latin1');
         } else {
@@ -1172,7 +1229,8 @@ class Net_Sieve {
      *
      * @return string  The lowercased string, based on ASCII encoding.
      */
-    function _toUpper($string) {
+    function _toUpper($string)
+    {
         $language = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, 'C');
         $string = strtoupper($string);
@@ -1187,7 +1245,8 @@ class Net_Sieve {
      *
      * @return string Result string
      */
-    function _escape($string) {
+    function _escape($string)
+    {
         // Some implementations doesn't allow UTF-8 characters in quoted-string
         // It's safe to use literal-c2s
         if (preg_match('/[^\x01-\x09\x0B-\x0C\x0E-\x7F]/', $string)) {
@@ -1204,7 +1263,8 @@ class Net_Sieve {
      *
      * @return void
      */
-    function _debug($message) {
+    function _debug($message)
+    {
         if ($this->_debug) {
             if ($this->_debug_handler) {
                 call_user_func_array($this->_debug_handler, array(&$this, $message));
@@ -1213,5 +1273,4 @@ class Net_Sieve {
             }
         }
     }
-
 }

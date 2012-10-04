@@ -1,23 +1,18 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/bzg/labels.inc                                                |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: aldweb <info@aldweb.com>                                      |
-  |         Pierre HAEGELI <pierre@haegeli.net>                           |
-  |         Mickaël Wolff <rcw@lupusmic.org>                              |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/br/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = 'Degemer mat war $product';
@@ -44,17 +39,15 @@ $labels['date'] = 'Deiz';
 $labels['size'] = 'Ment';
 $labels['priority'] = 'Kentwir';
 $labels['organization'] = 'Aozadur';
-$labels['reply-to'] = 'Respont ouzh';
 $labels['mailboxlist'] = 'Renkelloù';
+$labels['folders'] = 'Renkelloù';
 $labels['messagesfromto'] = 'Kemennadoù eus $from ouzh $to war $count';
 $labels['messagenrof'] = 'Kemennad $nr war $count';
+$labels['copy'] = 'Cc';
 $labels['moveto'] = 'Dilec\'hiañ ouzh...';
 $labels['download'] = 'Pellgargañ';
 $labels['filename'] = 'Anv ar restr';
 $labels['filesize'] = 'Ment ar restr';
-$labels['preferhtml'] = 'Diskouez en HTML';
-$labels['htmlmessage'] = 'Kemennad en HTML';
-$labels['prettydate'] = 'Diskouez berr deizioù';
 $labels['addtoaddressbook'] = 'Ouzhpennañ er c\'harned chomlec\'hioù';
 $labels['sun'] = 'Sul';
 $labels['mon'] = 'Lun';
@@ -72,37 +65,33 @@ $labels['friday'] = 'Gwener';
 $labels['saturday'] = 'Sadorn';
 $labels['today'] = 'Hiziv';
 $labels['checkmail'] = 'Gwiriañ kemennadoù nevez';
+$labels['compose'] = 'Skrivañ ur c\'hemennad nevez';
 $labels['writenewmessage'] = 'Skrivañ ur c\'hemennad nevez';
 $labels['replytomessage'] = 'Respont kemennad';
 $labels['replytoallmessage'] = 'Respont d\'an holl';
 $labels['forwardmessage'] = 'Treuzkas ar c\'hemennad';
 $labels['deletemessage'] = 'Dilec\'hiañ ar c\'hemennad er pod-lastez';
 $labels['printmessage'] = 'Moulañ ar c\'hemennad-se';
-$labels['previousmessage'] = 'Gwelout ar c\"hemennad a-raok';
-$labels['previousmessages'] = 'Gwelout ar c\'hemennadoù a-raok';
+$labels['previousmessage'] = 'Gwelout ar c"hemennad a-raok';
 $labels['firstmessage'] = 'Gwelout ar c\'hemennad kentañ';
-$labels['firstmessages'] = 'Gwelout ar bajenn gentañ kemennadoù';
 $labels['nextmessage'] = 'Gwelout ar c\'hemennad da heul';
-$labels['nextmessages'] = 'Gwelout ar c\'hemennadoù da heul';
 $labels['lastmessage'] = 'Gwelout ar c\'hemennad diwezhañ';
-$labels['lastmessages'] = 'Gwelout ar bajenn diwezhañ kemennadoù';
 $labels['backtolist'] = 'Distreiñ el listenn kemennadoù';
 $labels['viewsource'] = 'Gwelout an tarzh';
 $labels['select'] = 'Diuzañ';
 $labels['all'] = 'An holl';
 $labels['none'] = 'Ebet';
+$labels['nonesort'] = 'Ebet';
 $labels['unread'] = 'Na lennet';
 $labels['compact'] = 'Stummaat';
 $labels['empty'] = 'Skarzhañ';
-$labels['purge'] = 'Spurjañ';
 $labels['quota'] = 'Implijadur pladenn';
 $labels['unknown'] = 'Dianav';
 $labels['unlimited'] = 'didermen';
 $labels['quicksearch'] = 'Klask prim';
 $labels['resetsearch'] = 'Aderaouekaat ar glask';
-$labels['compose'] = 'Skrivañ ur c\'hemennad nevez';
-$labels['sendmessage'] = 'Kas ar c\'hemennad diouzhtu';
 $labels['savemessage'] = 'Gwarediñ ar brouilhed-se';
+$labels['sendmessage'] = 'Kas ar c\'hemennad diouzhtu';
 $labels['addattachment'] = 'Stagañ ur restr';
 $labels['charset'] = 'Engodadur';
 $labels['editortype'] = 'Furmad aozer';
@@ -153,6 +142,9 @@ $labels['manageidentities'] = 'Merañ an identelezhioù evit ar c\'hont-se';
 $labels['newidentity'] = 'Identelezh nevez';
 $labels['newitem'] = 'Elfenn nevez';
 $labels['edititem'] = 'Cheñch an elfenn';
+$labels['preferhtml'] = 'Diskouez en HTML';
+$labels['htmlmessage'] = 'Kemennad en HTML';
+$labels['prettydate'] = 'Diskouez berr deizioù';
 $labels['setdefault'] = 'Arventennoù dre ziouer';
 $labels['language'] = 'Yezh';
 $labels['timezone'] = 'Gwerzhid-eur';
@@ -166,7 +158,6 @@ $labels['autosavedraft'] = 'Gwarediñ emgefre brouilhedoù';
 $labels['everynminutes'] = 'Bep $n munutoù';
 $labels['never'] = 'ebet';
 $labels['folder'] = 'Renkell';
-$labels['folders'] = 'Renkelloù';
 $labels['foldername'] = 'Anv ar renkell';
 $labels['subscribed'] = 'Koumananer';
 $labels['create'] = 'Krouiñ';
@@ -175,4 +166,4 @@ $labels['managefolders'] = 'Aozañ ar renkelloù';
 $labels['sortby'] = 'Rummañ dre';
 $labels['sortasc'] = 'Rumm diagentad';
 $labels['sortdesc'] = 'Rumm diskennad';
-?>
+

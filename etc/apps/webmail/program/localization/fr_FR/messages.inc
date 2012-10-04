@@ -1,32 +1,28 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/fr_FR/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Joel S. <joel.s@spijoprod.com>                                |
-  |         Jerome Lipowicz <jerome@yayel.com>                            |
-  |         Maximilien Cuony <theglu@theglu.org>                          |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5609 2011-12-14 12:58:13Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/fr_FR/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Nicolas Delvaux                                               |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Une erreur est survenue !';
 $messages['loginfailed'] = 'Erreur d\'authentification';
 $messages['cookiesdisabled'] = 'Votre navigateur n\'accepte pas les cookies';
 $messages['sessionerror'] = 'Votre session est invalide ou a expiré';
-$messages['imaperror'] = 'Erreur de connexion au serveur IMAP';
+$messages['storageerror'] = 'Erreur de connexion au serveur IMAP';
 $messages['servererror'] = 'Erreur Serveur !';
 $messages['servererrormsg'] = 'Erreur du serveur: $msg';
 $messages['dberror'] = 'Erreur avec la base de donnée!';
+$messages['requesttimedout'] = 'Délai de la requête expiré';
 $messages['errorreadonly'] = 'Impossible d\'effectuer cette opération. Le dossier est en lecture seule';
 $messages['errornoperm'] = 'Impossible d\'effectuer cette opération. Permission refusée';
 $messages['invalidrequest'] = 'Requête invalide ! Aucune donnée n\'a été sauvegardée.';
@@ -111,6 +107,7 @@ $messages['addingmember'] = 'Ajout des contacts dans le groupe ...';
 $messages['removingmember'] = 'Suppression des contacts du groupe ...';
 $messages['receiptsent'] = 'L\'accusé de réception a bien été envoyé';
 $messages['errorsendingreceipt'] = 'L\'accusé de réception n\'a pas pu être envoyé';
+$messages['deleteidentityconfirm'] = 'Voulez vous vraiment supprimer cette identités ?';
 $messages['nodeletelastidentity'] = 'Vous ne pouvez pas effacer votre seule identité.';
 $messages['forbiddencharacter'] = 'Le nom du dossier contient un caractère interdit';
 $messages['selectimportfile'] = 'Veuillez sélectionner un fichier à envoyer';
@@ -160,4 +157,4 @@ $messages['invalidimageformat'] = 'Format d\'image invalide';
 $messages['mispellingsfound'] = 'Des fautes d\'orthographe ont été détectées dans le message.';
 $messages['parentnotwritable'] = 'Impossible de créer/déplacer le dossier dans le dossier parent sélectionné. Aucun droit d\'accès.';
 $messages['messagetoobig'] = 'Le message est trop gros pour être traité.';
-?>
+

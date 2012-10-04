@@ -1,21 +1,18 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/sq_AL/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Dashamir Hoxha <dhoxha@albaniaonline.net>                     |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/sq_AL/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = 'Mirëseerdhe te $product';
@@ -42,17 +39,15 @@ $labels['date'] = 'Data';
 $labels['size'] = 'Madhësia';
 $labels['priority'] = 'Përparësia';
 $labels['organization'] = 'Organizata';
-$labels['reply-to'] = 'Reply-To';
-$labels['mailboxlist'] = 'Dosjet';
+$labels['mailboxlist'] = 'Kutitë';
+$labels['folders'] = 'Kutitë';
 $labels['messagesfromto'] = 'Mesazhet $from në $to nga $count';
 $labels['messagenrof'] = 'Mesazhi $nr nga $count';
+$labels['copy'] = 'Kopje';
 $labels['moveto'] = 'ço te...';
 $labels['download'] = 'shkarko';
 $labels['filename'] = 'Emër skedari';
 $labels['filesize'] = 'Madhësi skedari';
-$labels['preferhtml'] = 'Shfaq HTML';
-$labels['htmlmessage'] = 'Mesazh HTML';
-$labels['prettydate'] = 'Data të këndshme';
 $labels['addtoaddressbook'] = 'Shto në librin e adresave';
 $labels['sun'] = 'Dje';
 $labels['mon'] = 'Hën';
@@ -70,6 +65,7 @@ $labels['friday'] = 'e premte';
 $labels['saturday'] = 'e shtunë';
 $labels['today'] = 'sot';
 $labels['checkmail'] = 'Shiko për mesazhe të reja';
+$labels['compose'] = 'Shkruaj një mesazh';
 $labels['writenewmessage'] = 'Krijo një mesazh të ri';
 $labels['replytomessage'] = 'Ktheji përgjigje mesazhit';
 $labels['replytoallmessage'] = 'Ktheji përgjigje dërguesit dhe të gjithë marrësve';
@@ -78,13 +74,9 @@ $labels['deletemessage'] = 'Fshije mesazhin';
 $labels['movemessagetotrash'] = 'Hidhe mesazhin në kosh';
 $labels['printmessage'] = 'Shtype këtë mesazh';
 $labels['previousmessage'] = 'Shfaq mesazhin e mëparshëm';
-$labels['previousmessages'] = 'Shfaq grupin e mëparshëm të mesazheve';
 $labels['firstmessage'] = 'Shfaq mesazhin e parë';
-$labels['firstmessages'] = 'Shfaq grupin e parë të mesazheve';
 $labels['nextmessage'] = 'Shfaq mesazhin pasardhës';
-$labels['nextmessages'] = 'Shfaq grupin tjetër të mesazheve';
 $labels['lastmessage'] = 'Shfaq mesazhin e fundit';
-$labels['lastmessages'] = 'Shfaq grupin e fundit të mesazheve';
 $labels['backtolist'] = 'Kthehu te lista e mesazheve';
 $labels['viewsource'] = 'Shfaq tekstin';
 $labels['markmessages'] = 'Shëno mesazhet';
@@ -93,16 +85,15 @@ $labels['markunread'] = 'Si të palexuara';
 $labels['select'] = 'Zgjidh';
 $labels['all'] = 'Të gjitha';
 $labels['none'] = 'Asnjë';
+$labels['nonesort'] = 'Asnjë';
 $labels['unread'] = 'Palexuar';
 $labels['compact'] = 'Zvogëlo';
 $labels['empty'] = 'Boshatis';
-$labels['purge'] = 'Pastro';
 $labels['quota'] = 'Përdorimi i diskut';
 $labels['unknown'] = 'i panjohur';
 $labels['unlimited'] = 'i pakufizuar';
 $labels['quicksearch'] = 'Kërkim i shpejtë';
 $labels['resetsearch'] = 'Pastro kërkimin';
-$labels['compose'] = 'Shkruaj një mesazh';
 $labels['savemessage'] = 'Ruaje si draft';
 $labels['sendmessage'] = 'Dërgoje mesazhin tani';
 $labels['addattachment'] = 'Bashkangjit një skedar';
@@ -162,6 +153,9 @@ $labels['manageidentities'] = 'Manaxho identitetet per këtë llogari';
 $labels['newidentity'] = 'Identitet i ri';
 $labels['newitem'] = 'Element i ri';
 $labels['edititem'] = 'Ndrysho element';
+$labels['preferhtml'] = 'Shfaq HTML';
+$labels['htmlmessage'] = 'Mesazh HTML';
+$labels['prettydate'] = 'Data të këndshme';
 $labels['setdefault'] = 'Bëje identitet kryesor';
 $labels['language'] = 'Gjuha';
 $labels['timezone'] = 'Brezi orar';
@@ -174,7 +168,6 @@ $labels['previewpane'] = 'Shiko si duket';
 $labels['autosavedraft'] = 'Ruaje automatikisht si draft';
 $labels['never'] = 'kurrë';
 $labels['folder'] = 'Kutia';
-$labels['folders'] = 'Kutitë';
 $labels['foldername'] = 'Emër kutie';
 $labels['subscribed'] = 'Regjistruar';
 $labels['messagecount'] = 'Mesazhe';
@@ -184,4 +177,4 @@ $labels['managefolders'] = 'Sistemo kutitë';
 $labels['sortby'] = 'Rradhit sipas';
 $labels['sortasc'] = 'Rradhitje rritëse';
 $labels['sortdesc'] = 'Rradhitje zbritëse';
-?>
+

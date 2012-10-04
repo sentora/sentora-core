@@ -1,38 +1,42 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | program/steps/addressbook/copy.inc                                    |
-  |                                                                       |
-  | This file is part of the Roundcube Webmail client                     |
-  | Copyright (C) 2007, The Roundcube Dev Team                            |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  | PURPOSE:                                                              |
-  |   Copy a contact record from one direcotry to another                 |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | program/steps/addressbook/copy.inc                                    |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) 2007, The Roundcube Dev Team                            |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ | PURPOSE:                                                              |
+ |   Copy a contact record from one direcotry to another                 |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+ +-----------------------------------------------------------------------+
 
-  $Id: copy.inc 471 2007-02-09 21:25:50Z thomasb $
+ $Id: copy.inc 471 2007-02-09 21:25:50Z thomasb $
 
- */
+*/
 
 // only process ajax requests
 if (!$OUTPUT->ajax_call)
-    return;
+  return;
 
 
-$cids = rcmail_get_cids();
-$target = get_input_value('_to', RCUBE_INPUT_POST);
+$cids         = rcmail_get_cids();
+$target       = get_input_value('_to', RCUBE_INPUT_POST);
 $target_group = get_input_value('_togid', RCUBE_INPUT_POST);
 
-$success = 0;
+$success  = 0;
 $errormsg = 'copyerror';
-$maxnum = $RCMAIL->config->get('max_group_members', 0);
+$maxnum   = $RCMAIL->config->get('max_group_members', 0);
 
-foreach ($cids as $source => $cid) {
+foreach ($cids as $source => $cid)
+{
     // Something wrong, target not specified
     if (!strlen($target)) {
         break;
@@ -40,12 +44,12 @@ foreach ($cids as $source => $cid) {
 
     // It maight happen when copying records from search result
     // Do nothing, go to next source
-    if ((string) $target == (string) $source) {
+    if ((string)$target == (string)$source) {
         continue;
     }
 
     $CONTACTS = $RCMAIL->get_address_book($source);
-    $TARGET = $RCMAIL->get_address_book($target);
+    $TARGET   = $RCMAIL->get_address_book($target);
 
     if (!$TARGET || !$TARGET->ready || $TARGET->readonly) {
         break;
@@ -75,11 +79,13 @@ foreach ($cids as $source => $cid) {
                     $ids[] = $insert_id;
                     $success++;
                 }
-            } else if ($plugin['result']) {
+            }
+            else if ($plugin['result']) {
                 $ids = array_merge($ids, $plugin['result']);
                 $success++;
             }
-        } else {
+        }
+        else {
             $record = $result->first();
             $ids[] = $record['ID'];
             $errormsg = empty($a_record['email']) ? 'contactnameexists' : 'contactexists';

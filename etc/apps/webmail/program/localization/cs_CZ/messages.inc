@@ -1,33 +1,28 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/cs_CZ/messages.inc                                              |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Martin Mrajca <martin@moonlake.cz>                            |
-  |        joe <joe@humlak.cz>                                            |
-  |        Jiri Kaderavek <jiri.kaderavek@webstep.net>                    |
-  |        Ales Pospichal <ales@pospichalales.info>                       |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/cs_CZ/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Tomáš Kyzlink                                               |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Došlo k chybě!';
 $messages['loginfailed'] = 'Přihlášení selhalo';
 $messages['cookiesdisabled'] = 'Váš prohlížeč nepodporuje cookies, které jsou pro přihlášení nezbytné';
 $messages['sessionerror'] = 'Vaše přihlášení je neplatné nebo vypršelo';
-$messages['imaperror'] = 'Připojení na IMAP server selhalo';
+$messages['storageerror'] = 'Připojení na IMAP server selhalo';
 $messages['servererror'] = 'Chyba serveru!';
 $messages['servererrormsg'] = 'Chyba serveru: $msg';
 $messages['dberror'] = 'Chyba v databázi!';
+$messages['requesttimedout'] = 'Došlo k vypršení požadavku';
 $messages['errorreadonly'] = 'Příkaz nelze provést, složka je určena jen ke čtení.';
 $messages['errornoperm'] = 'Příkaz nelze provést, nemáte oprávnění.';
 $messages['invalidrequest'] = 'Nesprávný požadavek. Data nebyla uložena.';
@@ -112,6 +107,7 @@ $messages['addingmember'] = 'Přidávám kontakty do skupiny...';
 $messages['removingmember'] = 'Odstraňuji kontakty ze skupiny...';
 $messages['receiptsent'] = 'Potvrzení o přřijetí zprávy odesláno';
 $messages['errorsendingreceipt'] = 'Potvrzení o přijetí zprávy nebylo možné odeslat';
+$messages['deleteidentityconfirm'] = 'Opravdu chcete odstranit tuto identitu?';
 $messages['nodeletelastidentity'] = 'Alespoň jedna identita musí být ponechána. Identitu nelze odstranit.';
 $messages['forbiddencharacter'] = 'Název složky obsahuje zakázaný znak';
 $messages['selectimportfile'] = 'Prosím vyberte soubor k nahrání';
@@ -131,7 +127,6 @@ $messages['smtpautherror'] = 'Chyba SMTP ($code): Chyba přihlášení';
 $messages['smtpfromerror'] = 'Chyba SMTP ($code): Nelze nastavit odesílatele "$from" ($msg)';
 $messages['smtptoerror'] = 'Chyba SMTP ($code): Nelze přidat příjemce "$to" ($msg)';
 $messages['smtprecipientserror'] = 'Chyba SMTP: Nelze zpracovat seznam příjemců';
-$messages['smtpdsnerror'] = 'Chyba SMTP: Není podporováno oznamení o stavu doručení (DSN)';
 $messages['smtperror'] = 'Chyba SMTP: $msg';
 $messages['emailformaterror'] = 'Neplatná e-mailová adresa: $email';
 $messages['toomanyrecipients'] = 'Příliš mnoho příjemců. Změňte počet příjemců na $max.';
@@ -161,4 +156,5 @@ $messages['foldercreated'] = 'Složka byla úspěšně vytvořena';
 $messages['invalidimageformat'] = 'Formát obrázku není podporován';
 $messages['mispellingsfound'] = 'Ve zprávě byly zjištěny pravopisné chyby';
 $messages['parentnotwritable'] = 'Nelze vytvořit/přesunout složku do vybrané rodičovské složky. Nemáte práva.';
-?>
+$messages['messagetoobig'] = 'Část zprávy je příliš velká pro zpracování.';
+

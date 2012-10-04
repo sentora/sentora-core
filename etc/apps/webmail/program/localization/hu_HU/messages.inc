@@ -1,33 +1,28 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/hu_HU/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Zark Bonfire <ikkhares at gmail dot com>                      |
-  |         Peter Szabo <pete at teamlupus dot hu>                        |
-  |         Barnabas Bona <bsi at hosember dot hu>                        |
-  |         Gabor Veliczky <hosting at jugiter dot net>                   |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/hu_HU/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Németh András <narzym@hotmail.com>                          |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
-$messages['loginfailed'] = 'Sikertelen belépés';
+$messages['errortitle'] = 'Hiba történt';
+$messages['loginfailed'] = 'Sikertelen bejelentkezés.';
 $messages['cookiesdisabled'] = 'A böngésző nem támogatja a sütik használatát';
 $messages['sessionerror'] = 'Érvénytelen vagy lejárt munkamenet';
-$messages['imaperror'] = 'Nem sikerült csatlakozni az IMAP szerverhez';
+$messages['storageerror'] = 'Nem sikerült csatlakozni az IMAP szerverhez';
 $messages['servererror'] = 'Szerverhiba!';
 $messages['servererrormsg'] = 'Szerverhiba: $msg';
 $messages['dberror'] = 'Adatbázishiba!';
+$messages['requesttimedout'] = 'A kérés túllépte az időkorlátot';
 $messages['errorreadonly'] = 'A műveletet nem sikerült végrehajtani. A mappa írásvédett.';
 $messages['errornoperm'] = 'A műveletet nem sikerült végrehajtani. Hozzáférés megtagadva.';
 $messages['invalidrequest'] = 'Érvénytelen kérés! Az adatok nem lettek elmentve.';
@@ -112,6 +107,7 @@ $messages['addingmember'] = 'Kapcsolat(ok) hozzáadása a csoporthoz...';
 $messages['removingmember'] = 'Kapcsolat(ok) törlése a csoportból...';
 $messages['receiptsent'] = 'Az olvasási visszaigazolás el lett küldve';
 $messages['errorsendingreceipt'] = 'Az olvasási visszaigazolást nem sikerült elküldeni';
+$messages['deleteidentityconfirm'] = 'Biztosan törli ezt az azonosítót?';
 $messages['nodeletelastidentity'] = 'Az azonosító nem törölhető, lennie kell legalább egy azonosítónak!';
 $messages['forbiddencharacter'] = 'A mappa neve tiltott karaktert tartalmaz';
 $messages['selectimportfile'] = 'Kérjük válassza ki a feltölteni kívánt fájlt';
@@ -123,7 +119,7 @@ $messages['importerror'] = 'Az importálás sikertelen! A feltöltött állomán
 $messages['importconfirm'] = '<b>Sikeresen importálásra került $inserted kapcsolat, kihagyva $skipped már létező bejegyzés</b>:<p><em>$names</em></p>';
 $messages['importconfirmskipped'] = '<b>Kihagyva $skipped már létező bejegyzés</b>';
 $messages['opnotpermitted'] = 'A művelet nem megengedett!';
-$messages['nofromaddress'] = 'A kiválasztott feladónál hiányzik az e-mail cím!';
+$messages['nofromaddress'] = 'A kiválasztott azonosítónál nincs  email beállítva.';
 $messages['editorwarning'] = 'Az egyszerű szöveges formátumra való váltás az összes formázás elvesztésével jár. Biztosan folytatja?';
 $messages['httpreceivedencrypterror'] = 'Végzetes konfigurációs hiba történt, azonnal lépjen kapcsolatba az üzemeltetővel. <b>Az üzenet nem küldhető el.</b>';
 $messages['smtpconnerror'] = 'SMTP hiba ($code): Sikertelen kapcsolódás a szerverhez';
@@ -160,4 +156,5 @@ $messages['foldercreated'] = 'Mappa sikeresen létrehozva';
 $messages['invalidimageformat'] = 'Érvénytelen képformátum';
 $messages['mispellingsfound'] = 'Az üzenetben helyesírási hibák találhatók';
 $messages['parentnotwritable'] = 'Nem sikerült a mappa létrehozása/mozgatása a kijelölt mappába. Nincs jogosultsága a művelethez!';
-?>
+$messages['messagetoobig'] = 'Az üzenetrész túl nagy a feldolgozáshoz.';
+

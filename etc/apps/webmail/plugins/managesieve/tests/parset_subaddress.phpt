@@ -28,11 +28,11 @@ echo $s->as_text();
 require ["envelope","subaddress","fileinto"];
 if envelope :user "To" "postmaster"
 {
-fileinto "postmaster";
-stop;
+	fileinto "postmaster";
+	stop;
 }
 if envelope :detail :is "To" "mta-filters"
 {
-fileinto "mta-filters";
-stop;
+	fileinto "mta-filters";
+	stop;
 }

@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/nb_NO/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/nb_NO/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Martin Bore <Unknown>                                         |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['filters'] = 'Filtre';
@@ -25,10 +25,10 @@ $labels['moveup'] = 'Flytt opp';
 $labels['movedown'] = 'Flytt ned';
 $labels['filterallof'] = 'som treffer alle følgende regler';
 $labels['filteranyof'] = 'som treffer en av følgende regler';
-$labels['filterany'] = 'og alle meldinger';
+$labels['filterany'] = 'alle meldinger';
 $labels['filtercontains'] = 'inneholder';
-$labels['filternotcontains'] = 'ikke innehold';
-$labels['filteris'] = 'er';
+$labels['filternotcontains'] = 'ikke inneholder';
+$labels['filteris'] = 'er lik';
 $labels['filterisnot'] = 'ikke er';
 $labels['filterexists'] = 'eksisterer';
 $labels['filternotexists'] = 'ikke eksisterer';
@@ -44,7 +44,7 @@ $labels['messagereply'] = 'Svar med melding';
 $labels['messagedelete'] = 'Slett melding';
 $labels['messagediscard'] = 'Avvis med melding';
 $labels['messagesrules'] = 'For innkommende e-post';
-$labels['messagesactions'] = '...gjør følgende';
+$labels['messagesactions'] = '... gjør følgende:';
 $labels['add'] = 'Legg til';
 $labels['del'] = 'Slett';
 $labels['sender'] = 'Avsender';

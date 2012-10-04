@@ -1,21 +1,21 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/ku/labels.inc                                                |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2006, The Roundcube Dev Team                            |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Amed Çeko Jiyan <amedcj@kurdistan.name>                       |
-  +-----------------------------------------------------------------------+
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/ku/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
-$labels['welcome'] = 'Bixêr hatî $product \\\'ê';
+$labels['welcome'] = 'Bixêr hatî $product \'ê';
 $labels['username'] = 'Bikarhêner';
 $labels['password'] = 'Nasnav';
 $labels['server'] = 'Pêşkêşkar';
@@ -39,17 +39,15 @@ $labels['date'] = 'Dîrok';
 $labels['size'] = 'Mezinahî';
 $labels['priority'] = 'Girîngî';
 $labels['organization'] = 'Sazî';
-$labels['reply-to'] = 'Navnîşanên Standyar';
 $labels['mailboxlist'] = 'Peldank';
+$labels['folders'] = 'Peldank';
 $labels['messagesfromto'] = 'Peyam $count ên di navbera $from - $to';
 $labels['messagenrof'] = '$nr a peyama $count';
+$labels['copy'] = 'Kopiya Karbon';
 $labels['moveto'] = 'bibe...';
 $labels['download'] = 'daxe';
 $labels['filename'] = 'Navê pelê';
 $labels['filesize'] = 'Mezinahiya pelê';
-$labels['preferhtml'] = 'Wekî HTML nîşan bide';
-$labels['htmlmessage'] = 'Peyama HTML';
-$labels['prettydate'] = 'Kurtenivîsa Dîrokê';
 $labels['addtoaddressbook'] = 'Têxe lênûska navnîşanan';
 $labels['sun'] = 'Yş';
 $labels['mon'] = 'Dş';
@@ -67,6 +65,7 @@ $labels['friday'] = 'În';
 $labels['saturday'] = 'Şemî';
 $labels['today'] = 'Îro';
 $labels['checkmail'] = 'Li peyamên nû venihêre';
+$labels['compose'] = 'Peyamekê biafirîne';
 $labels['writenewmessage'] = 'Peyameke nû biafirîne';
 $labels['replytomessage'] = 'Bersivê bide peyamê';
 $labels['replytoallmessage'] = 'Bersivê ji bo hemû kesên ku ev peyan standine bişîne';
@@ -75,13 +74,9 @@ $labels['deletemessage'] = 'Peyamê jê bibe';
 $labels['movemessagetotrash'] = 'Peyamê dake çopê';
 $labels['printmessage'] = 'Vê peyamê çap bike';
 $labels['previousmessage'] = 'Peyama berê nîşan bide';
-$labels['previousmessages'] = 'Peyamên berê nîşan bide';
 $labels['firstmessage'] = 'Peyama yekemîn nîşan bide';
-$labels['firstmessages'] = 'Peyamên yekemîn nîşan bide';
 $labels['nextmessage'] = 'Peyama di rêzê de nîşan bide';
-$labels['nextmessages'] = 'Peyamên di rêzê de nîşan bide';
 $labels['lastmessage'] = 'Peyama dawî nîşan bide';
-$labels['lastmessages'] = 'Peyamên dawî nîşan bide';
 $labels['backtolist'] = 'Vegere lîsteya peyaman';
 $labels['viewsource'] = 'Çavkaniyê nîşan bide';
 $labels['markmessages'] = 'Peyamê nîşan bike';
@@ -90,16 +85,15 @@ $labels['markunread'] = 'Wekî nexwendî';
 $labels['select'] = 'Hilbijêre';
 $labels['all'] = 'Hemû';
 $labels['none'] = 'Ne yek jî';
+$labels['nonesort'] = 'Ne yek jî';
 $labels['unread'] = 'Nexwendî';
 $labels['compact'] = 'Kompakt';
 $labels['empty'] = 'Vala Bike';
-$labels['purge'] = 'Jê bibe';
 $labels['quota'] = 'Bikaranîna dîskê';
 $labels['unknown'] = 'nayê zanîn';
 $labels['unlimited'] = 'bêsînor';
 $labels['quicksearch'] = 'Lêgerîna bilez';
 $labels['resetsearch'] = 'Lêgerînê reset bike';
-$labels['compose'] = 'Peyamekê biafirîne';
 $labels['savemessage'] = 'Hilîne';
 $labels['sendmessage'] = 'Peyamê niha bişîne';
 $labels['addattachment'] = 'Pelekê lê zêde bike';
@@ -159,6 +153,9 @@ $labels['manageidentities'] = 'Nasnameyên vê hesabê serast bike';
 $labels['newidentity'] = 'Nasnameya nû';
 $labels['newitem'] = 'Parçeya nû';
 $labels['edititem'] = 'Parçeyê serast bike';
+$labels['preferhtml'] = 'Wekî HTML nîşan bide';
+$labels['htmlmessage'] = 'Peyama HTML';
+$labels['prettydate'] = 'Kurtenivîsa Dîrokê';
 $labels['setdefault'] = 'Wekî standard tomar bike';
 $labels['language'] = 'Ziman';
 $labels['timezone'] = 'Herêma demê';
@@ -171,7 +168,6 @@ $labels['previewpane'] = 'Panela berê nîşan bide';
 $labels['autosavedraft'] = 'Xweber hilîne';
 $labels['never'] = 'qet';
 $labels['folder'] = 'Peldank';
-$labels['folders'] = 'Peldank';
 $labels['foldername'] = 'Navê peldankê';
 $labels['subscribed'] = 'Ni şanenav';
 $labels['messagecount'] = 'Peyam';
@@ -181,4 +177,4 @@ $labels['managefolders'] = 'Rêveberiya peldankan';
 $labels['sortby'] = 'Şêweyê rêzkirinê';
 $labels['sortasc'] = 'Wekî zêde dibe';
 $labels['sortdesc'] = 'Wekî kêm dibe';
-?>
+

@@ -1,26 +1,24 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/ga/messages.inc                                              |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author:   Noel Bourke  (cros13)                                       |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/ga_IE/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Theip an iarraidh chun logáil tú isteach';
 $messages['cookiesdisabled'] = 'Níor glac do sracléitheoir an fianán seisiúin';
 $messages['sessionerror'] = 'Tá an seisiúin neamhbhailí nó as feidhm';
-$messages['imaperror'] = 'Theip an iarraidh chun nasc go dtí an freastalaí Prótacal Rochtana Teachtaireachtaí Idirlín (IMAP)';
+$messages['storageerror'] = 'Theip an iarraidh chun nasc go dtí an freastalaí Prótacal Rochtana Teachtaireachtaí Idirlín (IMAP)';
 $messages['nomessagesfound'] = 'Ní bhfuair mé aon teachtaireacht i bosca postas seo';
 $messages['loggedout'] = 'D\'éirigh tú logáil amach. Slán Leat!';
 $messages['mailboxempty'] = 'Tá an bosca postas folamh';
@@ -34,7 +32,7 @@ $messages['messagesaved'] = 'Sábháil mé an teachtaireacht i dréachtaí';
 $messages['successfullysaved'] = 'D\'éirigh mé agus sábháil mé';
 $messages['addedsuccessfully'] = 'D\'éirigh mé agus shábháil mé duine nua go dtí an Leabhair Seoltaí';
 $messages['contactexists'] = 'Tá duine i do Leabhair Seoltaí agus tá an seoladh ríomhphost seo aige';
-$messages['blockedimages'] = 'Chun do príobháide a cosain, choiscinn na híomhánna san teachtaireacht seo ';
+$messages['blockedimages'] = 'Chun do príobháide a cosain, choiscinn na híomhánna san teachtaireacht seo';
 $messages['encryptedmessage'] = 'Tá an teachtaireacht seo i criptiúchán, Níl an cumas agam chun é a tionscail';
 $messages['nocontactsfound'] = 'Ní raibh aon buine san Leabhair Seoltaí seo';
 $messages['contactnotfound'] = 'Ní bhfuair mé an duine seo';
@@ -55,7 +53,6 @@ $messages['nosubjectwarning'] = 'Níl aon ábhair ar an teachtaireacht, ba mhait
 $messages['nobodywarning'] = 'Níl aon teacs san teachtaireacht, ba mhaith tú déarfaidh mé teachtaireacht ar bith?';
 $messages['notsentwarning'] = 'Theip an iarraidh chun an teachtaireacht a seo. ba mhaith tú scrios do teachtaireacht?';
 $messages['noldapserver'] = 'Abair liom eolaire LDAP chun é a cuardaigh';
-$messages['nocontactsreturned'] = 'Ní bhfuair mé aon duine as an ceist seo';
 $messages['nosearchname'] = 'Abair liom ainm duine nó seoladh ríomhphost';
 $messages['searchsuccessful'] = 'Fuair mé $n teachtaireacht';
 $messages['searchnomatch'] = 'Ní bhfuair mé aon rud as an ceist seo';
@@ -72,4 +69,4 @@ $messages['copysuccess'] = 'D\'éirigh mé agus chuir mé $nr seolagh i do Leabh
 $messages['copyerror'] = 'Theip mé agus níor dfhag mé aon seolagh';
 $messages['sourceisreadonly'] = 'Tá an foinse seolaigh seo inléite amháin';
 $messages['errorsavingcontact'] = 'Theip mé, Níl an cumas agam an seolagh seo a sábháil';
-?>
+

@@ -1,18 +1,17 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/zh_CN/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/zh_CN/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Christopher Meng <cickumqt@gmail.com>                         |
+ +-----------------------------------------------------------------------+
+*/
 
 $labels = array();
 $labels['filters'] = '过滤器';
@@ -127,4 +126,20 @@ $labels['ruledeleteconfirm'] = '您确定要删除所选择的规则吗？';
 $labels['actiondeleteconfirm'] = '您确定要删除所选择的动作吗？';
 $labels['forbiddenchars'] = '内容中包含禁用的字符';
 $labels['cannotbeempty'] = '内容不能为空';
+$labels['ruleexist'] = '指定过滤器名称已存在。';
+$labels['setactivateerror'] = '无法启用指定过滤器，服务器错误。';
+$labels['setdeactivateerror'] = '无法停用指定过滤器，服务器错误。';
+$labels['setdeleteerror'] = '无法删除指定过滤器，服务器错误。';
+$labels['setactivated'] = '过滤器成功启用。';
+$labels['setdeactivated'] = '过滤器成功停用。';
+$labels['setdeleted'] = '过滤器成功删除。';
+$labels['setdeleteconfirm'] = '你确定要删除指定过滤器？';
+$labels['setcreateerror'] = '无法创建过滤器，服务器错误。';
+$labels['setcreated'] = '过滤器成功创建。';
+$labels['activateerror'] = '无法启用选中的过滤器，因为服务器发生错误。';
+$labels['deactivateerror'] = '无法禁用选中的过滤器，因为服务器发生错误。';
+$labels['activated'] = '禁用过滤器成功。';
+$labels['deactivated'] = '启用过滤器成功。';
+$labels['moved'] = '过滤器移动成功。';
+$labels['moveerror'] = '无法移动选中的过滤器，因为服务器发生错误。';
 

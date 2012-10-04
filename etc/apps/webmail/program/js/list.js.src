@@ -4,7 +4,10 @@
  |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
  | Copyright (C) 2006-2009, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
  |                                                                       |
  +-----------------------------------------------------------------------+
  | Authors: Thomas Bruederli <roundcube@gmail.com>                       |
@@ -13,7 +16,7 @@
  | Requires: common.js                                                   |
  +-----------------------------------------------------------------------+
 
-  $Id: list.js 5757 2012-01-12 07:29:48Z alec $
+  $Id$
 */
 
 
@@ -231,7 +234,7 @@ focus: function(e)
   }
 
   // Un-focus already focused elements
-  $('*:focus', window).blur();
+  $(document.activeElement).blur();
   $('iframe').each(function() { this.blur(); });
 
   if (e || (e = window.event))
@@ -249,7 +252,7 @@ blur: function()
   for (n in this.selection) {
     id = this.selection[n];
     if (this.rows[id] && this.rows[id].obj) {
-      $(this.rows[id].obj).removeClass('selected').addClass('unfocused');
+      $(this.rows[id].obj).removeClass('selected focused').addClass('unfocused');
     }
   }
 },
@@ -354,8 +357,10 @@ click_row: function(e, id)
   this.in_selection_before = false;
 
   // row was double clicked
-  if (this.rows && dblclicked && this.in_selection(id))
+  if (this.rows && dblclicked && this.in_selection(id)) {
     this.triggerEvent('dblclick');
+    now = 0;
+  }
   else
     this.triggerEvent('click');
 
@@ -414,7 +419,7 @@ expand_row: function(e, id)
 collapse: function(row)
 {
   row.expanded = false;
-  this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded });
+  this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded, obj:row.obj });
   var depth = row.depth;
   var new_row = row ? row.obj.nextSibling : null;
   var r;
@@ -427,7 +432,7 @@ collapse: function(row)
       $(new_row).css('display', 'none');
       if (r.expanded) {
         r.expanded = false;
-        this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded });
+        this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded, obj:new_row });
       }
     }
     new_row = new_row.nextSibling;
@@ -445,7 +450,7 @@ expand: function(row)
     depth = row.depth;
     new_row = row.obj.nextSibling;
     this.update_expando(row.uid, true);
-    this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded });
+    this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded, obj:row.obj });
   }
   else {
     var tbody = this.list.tBodies[0];
@@ -468,7 +473,7 @@ expand: function(row)
               last_expanded_parent_depth = p.depth;
               $(new_row).css('display', '');
               r.expanded = true;
-              this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded });
+              this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded, obj:new_row });
             }
           }
           else
@@ -493,7 +498,7 @@ collapse_all: function(row)
     depth = row.depth;
     new_row = row.obj.nextSibling;
     this.update_expando(row.uid);
-    this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded });
+    this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded, obj:row.obj });
 
     // don't collapse sub-root tree in multiexpand mode 
     if (depth && this.multiexpand)
@@ -515,7 +520,7 @@ collapse_all: function(row)
         if (r.has_children && r.expanded) {
           r.expanded = false;
           this.update_expando(r.uid, false);
-          this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded });
+          this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded, obj:new_row });
         }
       }
     }
@@ -534,7 +539,7 @@ expand_all: function(row)
     depth = row.depth;
     new_row = row.obj.nextSibling;
     this.update_expando(row.uid, true);
-    this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded });
+    this.triggerEvent('expandcollapse', { uid:row.uid, expanded:row.expanded, obj:row.obj });
   }
   else {
     new_row = this.list.tBodies[0].firstChild;
@@ -551,7 +556,7 @@ expand_all: function(row)
         if (r.has_children && !r.expanded) {
           r.expanded = true;
           this.update_expando(r.uid, true);
-          this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded });
+          this.triggerEvent('expandcollapse', { uid:r.uid, expanded:r.expanded, obj:new_row });
         }
       }
     }
@@ -606,7 +611,7 @@ get_first_row: function()
 
     for (i=0, len=rows.length-1; i<len; i++)
       if (rows[i].id && String(rows[i].id).match(/^rcmrow([a-z0-9\-_=\+\/]+)/i) && this.rows[RegExp.$1] != null)
-	    return RegExp.$1;
+        return RegExp.$1;
   }
 
   return null;

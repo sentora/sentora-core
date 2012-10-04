@@ -1,23 +1,26 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | program/steps/utils/spell_html.inc                                    |
-  |                                                                       |
-  | This file is part of the Roundcube Webmail client                     |
-  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  | PURPOSE:                                                              |
-  |   Spellchecker for TinyMCE                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Aleksander Machniak <alec@alec.pl>                            |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | program/steps/utils/spell_html.inc                                    |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ | PURPOSE:                                                              |
+ |   Spellchecker for TinyMCE                                            |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Aleksander Machniak <alec@alec.pl>                            |
+ +-----------------------------------------------------------------------+
 
-  $Id: spell_html.inc 5181 2011-09-06 13:39:45Z alec $
+ $Id$
 
- */
+*/
 
 // read input data
 $data = file_get_contents('php://input');
@@ -36,9 +39,11 @@ $spellchecker = new rcube_spellchecker($lang);
 
 if ($request['method'] == 'checkWords') {
     $result['result'] = $spellchecker->get_words($data);
-} else if ($request['method'] == 'getSuggestions') {
+}
+else if ($request['method'] == 'getSuggestions') {
     $result['result'] = $spellchecker->get_suggestions($data);
-} else if ($request['method'] == 'learnWord') {
+}
+else if ($request['method'] == 'learnWord') {
     $spellchecker->add_word($data);
     $result['result'] = true;
 }
@@ -49,7 +54,7 @@ if ($error = $spellchecker->error()) {
 }
 
 // send output
-header("Content-Type: text/xml; charset=" . RCMAIL_CHARSET);
+header("Content-Type: text/xml; charset=".RCMAIL_CHARSET);
 echo json_encode($result);
 exit;
 

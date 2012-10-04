@@ -1,31 +1,28 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/en_GB/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Weiran Zhang (weiran@weiran.co.uk)                            |
-  |         Phil Weir                                                     |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5173 2011-09-05 18:41:04Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/en_GB/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Kevin Beynon                                                  |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'An error occured.';
 $messages['loginfailed'] = 'Login failed.';
 $messages['cookiesdisabled'] = 'Your browser does not accept cookies.';
 $messages['sessionerror'] = 'Your session is invalid or has expired.';
-$messages['imaperror'] = 'Connection to IMAP server failed.';
+$messages['storageerror'] = 'Connection to IMAP server failed.';
 $messages['servererror'] = 'Server Error!';
 $messages['servererrormsg'] = 'Server Error: $msg';
 $messages['dberror'] = 'Database Error!';
+$messages['requesttimedout'] = 'Request timed out';
 $messages['errorreadonly'] = 'Unable to perform operation. Folder is read-only.';
 $messages['errornoperm'] = 'Unable to perform operation. Permission denied.';
 $messages['invalidrequest'] = 'Invalid request! No data was saved.';
@@ -49,6 +46,7 @@ $messages['blockedimages'] = 'To protect your privacy, remote images are blocked
 $messages['encryptedmessage'] = 'This is an encrypted message and can not be displayed. Sorry!';
 $messages['nocontactsfound'] = 'No contacts found.';
 $messages['contactnotfound'] = 'The requested contact was not found.';
+$messages['contactsearchonly'] = 'Enter some search terms to find contacts';
 $messages['sendingfailed'] = 'Failed to send message.';
 $messages['senttooquickly'] = 'Please wait $sec sec(s). before sending this message.';
 $messages['errorsavingsent'] = 'An error occurred while saving sent message.';
@@ -62,6 +60,7 @@ $messages['deletegroupconfirm'] = 'Do you really want to delete the selected gro
 $messages['deletemessagesconfirm'] = 'Do you really want to delete the selected message(s)?';
 $messages['deletefolderconfirm'] = 'Do you really want to delete this folder?';
 $messages['purgefolderconfirm'] = 'Do you really want to delete all messages in this folder?';
+$messages['contactdeleting'] = 'Deleting contact(s)...';
 $messages['groupdeleting'] = 'Deleting group...';
 $messages['folderdeleting'] = 'Deleting folder...';
 $messages['foldermoving'] = 'Moving folder...';
@@ -77,10 +76,10 @@ $messages['nosubjectwarning'] = 'The "Subject" field is empty. Would you like to
 $messages['nobodywarning'] = 'Send this message without any text?';
 $messages['notsentwarning'] = 'Your message has not been sent. Do you want to discard it?';
 $messages['noldapserver'] = 'Please select an LDAP server to search.';
-$messages['nocontactsreturned'] = 'No contacts were found.';
 $messages['nosearchname'] = 'Please enter a contact name or email address.';
 $messages['notuploadedwarning'] = 'Not all attachments have been uploaded yet. Please wait or cancel the upload.';
 $messages['searchsuccessful'] = '$nr messages found.';
+$messages['contactsearchsuccessful'] = '$nr contacts found.';
 $messages['searchnomatch'] = 'Search found no matches.';
 $messages['searching'] = 'Searching...';
 $messages['checking'] = 'Checking...';
@@ -108,6 +107,7 @@ $messages['addingmember'] = 'Adding contact(s) to the group...';
 $messages['removingmember'] = 'Removing contact(s) from the group...';
 $messages['receiptsent'] = 'Successfully sent a read receipt.';
 $messages['errorsendingreceipt'] = 'Could not send the receipt.';
+$messages['deleteidentityconfirm'] = 'Do you really want to delete this identity?';
 $messages['nodeletelastidentity'] = 'You cannot delete this identity, it\'s your last one.';
 $messages['forbiddencharacter'] = 'Folder name contains a forbidden character.';
 $messages['selectimportfile'] = 'Please select a file to upload.';
@@ -127,7 +127,6 @@ $messages['smtpautherror'] = 'SMTP Error ($code): Authentication failed.';
 $messages['smtpfromerror'] = 'SMTP Error ($code): Failed to set sender "$from" ($msg).';
 $messages['smtptoerror'] = 'SMTP Error ($code): Failed to add recipient "$to" ($msg).';
 $messages['smtprecipientserror'] = 'SMTP Error: Unable to parse recipients list.';
-$messages['smtpdsnerror'] = 'SMTP Error: Server does not support Delivery Status Notifications.';
 $messages['smtperror'] = 'SMTP Error: $msg';
 $messages['emailformaterror'] = 'Incorrect e-mail address: $email';
 $messages['toomanyrecipients'] = 'Too many recipients. Reduce the number of recipients to $max.';
@@ -140,11 +139,16 @@ $messages['contactrestored'] = 'Contact(s) successfully restored.';
 $messages['groupdeleted'] = 'Group deleted successfully.';
 $messages['grouprenamed'] = 'Group renamed successfully.';
 $messages['groupcreated'] = 'Group created successfully.';
+$messages['savedsearchdeleted'] = 'Saved search deleted successfully.';
+$messages['savedsearchdeleteerror'] = 'Could not delete saved search.';
+$messages['savedsearchcreated'] = 'Saved search created successfully.';
+$messages['savedsearchcreateerror'] = 'Could not create saved search.';
 $messages['messagedeleted'] = 'Message(s) deleted successfully.';
 $messages['messagemoved'] = 'Message(s) moved successfully.';
 $messages['messagecopied'] = 'Message(s) copied successfully.';
 $messages['messagemarked'] = 'Message(s) marked successfully.';
 $messages['autocompletechars'] = 'Enter at least $min characters for autocompletion.';
+$messages['autocompletemore'] = 'More matching entries found. Please type more characters.';
 $messages['namecannotbeempty'] = 'Name cannot be empty.';
 $messages['nametoolong'] = 'Name is too long.';
 $messages['folderupdated'] = 'Successfully updated folder.';
@@ -152,4 +156,5 @@ $messages['foldercreated'] = 'Successfully created folder.';
 $messages['invalidimageformat'] = 'Not a valid image format.';
 $messages['mispellingsfound'] = 'Spelling errors detected in the message.';
 $messages['parentnotwritable'] = 'Unable to create/move folder into selected parent folder. No access rights.';
-?>
+$messages['messagetoobig'] = 'The message part is too big to process it.';
+

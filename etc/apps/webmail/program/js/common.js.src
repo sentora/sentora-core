@@ -3,14 +3,17 @@
  | Roundcube common js library                                           |
  |                                                                       |
  | This file is part of the Roundcube web development suite              |
- | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
- | Licensed under the GNU GPL                                            |
+ | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
  |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
  
- $Id: common.js 5481 2011-11-24 07:53:00Z alec $
+ $Id$
 */
 
 // Constants
@@ -52,14 +55,15 @@ function roundcube_browser()
   this.ie4 = (this.ie && !this.dom);
   this.ie5 = (this.dom && this.appver.indexOf('MSIE 5')>0);
   this.ie8 = (this.dom && this.appver.indexOf('MSIE 8')>0);
+  this.ie9 = (this.dom && this.appver.indexOf('MSIE 9')>0);
   this.ie7 = (this.dom && this.appver.indexOf('MSIE 7')>0);
   this.ie6 = (this.dom && !this.ie8 && !this.ie7 && this.appver.indexOf('MSIE 6')>0);
 
   this.ns = ((this.ver < 5 && this.name == 'Netscape') || (this.ver >= 5 && this.vendor.indexOf('Netscape') >= 0));
   this.chrome = (this.agent_lc.indexOf('chrome') > 0);
   this.safari = (!this.chrome && (this.agent_lc.indexOf('safari') > 0 || this.agent_lc.indexOf('applewebkit') > 0));
-  this.mz = (this.dom && !this.ie && !this.ns && !this.chrome && !this.safari && this.agent.indexOf('Mozilla') >= 0);
-  this.konq   = (this.agent_lc.indexOf('konqueror') > 0);
+  this.konq = (this.agent_lc.indexOf('konqueror') > 0);
+  this.mz = (this.dom && !this.ie && !this.ns && !this.chrome && !this.safari && !this.konq && this.agent.indexOf('Mozilla') >= 0);
   this.iphone = (this.safari && this.agent_lc.indexOf('iphone') > 0);
   this.ipad = (this.safari && this.agent_lc.indexOf('ipad') > 0);
   this.opera = window.opera ? true : false;
@@ -102,30 +106,23 @@ function roundcube_browser()
   {
     var classname = ' js';
 
-    if (this.ie) {
-      classname += ' ie';
-      if (this.ie5)
-        classname += ' ie5';
-      else if (this.ie6)
-        classname += ' ie6';
-      else if (this.ie7)
-        classname += ' ie7';
-      else if (this.ie8)
-        classname += ' ie8';
-    }
+    if (this.ie)
+      classname += ' ie ie'+parseInt(this.vendver);
     else if (this.opera)
       classname += ' opera';
     else if (this.konq)
       classname += ' konqueror';
     else if (this.safari)
-      classname += ' safari';
-
-    if (this.chrome)
       classname += ' chrome';
-    else if (this.iphone)
+    else if (this.chrome)
+      classname += ' chrome';
+
+    if (this.iphone)
       classname += ' iphone';
     else if (this.ipad)
       classname += ' ipad';
+    else if (this.safari || this.chrome)
+      classname += ' webkit';
 
     if (document.documentElement)
       document.documentElement.className += classname;
@@ -697,11 +694,9 @@ Date.prototype.getStdTimezoneOffset = function()
 }
 
 // Make getElementById() case-sensitive on IE
-if (bw.ie)
-{
+if (bw.ie) {
   document._getElementById = document.getElementById;
-  document.getElementById = function(id)
-  {
+  document.getElementById = function(id) {
     var i = 0, obj = document._getElementById(id);
 
     if (obj && obj.id != id)
@@ -711,6 +706,39 @@ if (bw.ie)
     return obj;
   }
 }
+
+// jQuery plugin to emulate HTML5 placeholder attributes on input elements
+jQuery.fn.placeholder = function(text) {
+  return this.each(function() {
+    var elem = $(this);
+    this.title = text;
+
+    if ('placeholder' in this) {
+      elem.attr('placeholder', text);  // Try HTML5 placeholder attribute first
+    }
+    else {  // Fallback to Javascript emulation of placeholder
+      this._placeholder = text;
+      elem.blur(function(e) {
+        if ($.trim(elem.val()) == "")
+          elem.val(text);
+        elem.triggerHandler('change');
+      })
+      .focus(function(e) {
+        if ($.trim(elem.val()) == text)
+          elem.val("");
+        elem.triggerHandler('change');
+      })
+      .change(function(e) {
+        var active = elem.val() == text;
+        elem[(active ? 'addClass' : 'removeClass')]('placeholder').attr('spellcheck', active);
+      });
+
+      if (this != document.activeElement) // Do not blur currently focused element
+        elem.blur();
+    }
+  });
+};
+
 
 // This code was written by Tyler Akins and has been placed in the
 // public domain.  It would be nice if you left this header intact.

@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -54,7 +53,8 @@ require_once 'MDB2/Driver/Datatype/Common.php';
  * @category Database
  * @author  Paul Cooper <pgc@ucecom.com>
  */
-class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
+class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common
+{
     // {{{ _baseConvertResult()
 
     /**
@@ -66,24 +66,25 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      * @return object a MDB2 error on failure
      * @access protected
      */
-    function _baseConvertResult($value, $type, $rtrim = true) {
+    function _baseConvertResult($value, $type, $rtrim = true)
+    {
         if (null === $value) {
             return null;
         }
         switch ($type) {
-            case 'boolean':
-                return $value == 't';
-            case 'float':
-                return doubleval($value);
-            case 'date':
-                return $value;
-            case 'time':
-                return substr($value, 0, strlen('HH:MM:SS'));
-            case 'timestamp':
-                return substr($value, 0, strlen('YYYY-MM-DD HH:MM:SS'));
-            case 'blob':
-                $value = pg_unescape_bytea($value);
-                return parent::_baseConvertResult($value, $type, $rtrim);
+        case 'boolean':
+            return $value == 't';
+        case 'float':
+            return doubleval($value);
+        case 'date':
+            return $value;
+        case 'time':
+            return substr($value, 0, strlen('HH:MM:SS'));
+        case 'timestamp':
+            return substr($value, 0, strlen('YYYY-MM-DD HH:MM:SS'));
+        case 'blob':
+            $value = pg_unescape_bytea($value);
+            return parent::_baseConvertResult($value, $type, $rtrim);
         }
         return parent::_baseConvertResult($value, $type, $rtrim);
     }
@@ -114,56 +115,58 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      *      declare the specified field.
      * @access public
      */
-    function getTypeDeclaration($field) {
+    function getTypeDeclaration($field)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         switch ($field['type']) {
-            case 'text':
-                $length = !empty($field['length']) ? $field['length'] : false;
-                $fixed = !empty($field['fixed']) ? $field['fixed'] : false;
-                return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(' . $db->options['default_text_field_length'] . ')') : ($length ? 'VARCHAR(' . $length . ')' : 'TEXT');
-            case 'clob':
-                return 'TEXT';
-            case 'blob':
-                return 'BYTEA';
-            case 'integer':
-                if (!empty($field['autoincrement'])) {
-                    if (!empty($field['length'])) {
-                        $length = $field['length'];
-                        if ($length > 4) {
-                            return 'BIGSERIAL PRIMARY KEY';
-                        }
-                    }
-                    return 'SERIAL PRIMARY KEY';
-                }
+        case 'text':
+            $length = !empty($field['length']) ? $field['length'] : false;
+            $fixed = !empty($field['fixed']) ? $field['fixed'] : false;
+            return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$db->options['default_text_field_length'].')')
+                : ($length ? 'VARCHAR('.$length.')' : 'TEXT');
+        case 'clob':
+            return 'TEXT';
+        case 'blob':
+            return 'BYTEA';
+        case 'integer':
+            if (!empty($field['autoincrement'])) {
                 if (!empty($field['length'])) {
                     $length = $field['length'];
-                    if ($length <= 2) {
-                        return 'SMALLINT';
-                    } elseif ($length == 3 || $length == 4) {
-                        return 'INT';
-                    } elseif ($length > 4) {
-                        return 'BIGINT';
+                    if ($length > 4) {
+                        return 'BIGSERIAL PRIMARY KEY';
                     }
                 }
-                return 'INT';
-            case 'boolean':
-                return 'BOOLEAN';
-            case 'date':
-                return 'DATE';
-            case 'time':
-                return 'TIME without time zone';
-            case 'timestamp':
-                return 'TIMESTAMP without time zone';
-            case 'float':
-                return 'FLOAT8';
-            case 'decimal':
-                $length = !empty($field['length']) ? $field['length'] : 18;
-                $scale = !empty($field['scale']) ? $field['scale'] : $db->options['decimal_places'];
-                return 'NUMERIC(' . $length . ',' . $scale . ')';
+                return 'SERIAL PRIMARY KEY';
+            }
+            if (!empty($field['length'])) {
+                $length = $field['length'];
+                if ($length <= 2) {
+                    return 'SMALLINT';
+                } elseif ($length == 3 || $length == 4) {
+                    return 'INT';
+                } elseif ($length > 4) {
+                    return 'BIGINT';
+                }
+            }
+            return 'INT';
+        case 'boolean':
+            return 'BOOLEAN';
+        case 'date':
+            return 'DATE';
+        case 'time':
+            return 'TIME without time zone';
+        case 'timestamp':
+            return 'TIMESTAMP without time zone';
+        case 'float':
+            return 'FLOAT8';
+        case 'decimal':
+            $length = !empty($field['length']) ? $field['length'] : 18;
+            $scale = !empty($field['scale']) ? $field['scale'] : $db->options['decimal_places'];
+            return 'NUMERIC('.$length.','.$scale.')';
         }
     }
 
@@ -193,7 +196,8 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      *       declare the specified field.
      * @access protected
      */
-    function _getIntegerDeclaration($name, $field) {
+    function _getIntegerDeclaration($name, $field)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -204,14 +208,14 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
         }
         if (!empty($field['autoincrement'])) {
             $name = $db->quoteIdentifier($name, true);
-            return $name . ' ' . $this->getTypeDeclaration($field);
+            return $name.' '.$this->getTypeDeclaration($field);
         }
         $default = '';
         if (array_key_exists('default', $field)) {
             if ($field['default'] === '') {
                 $field['default'] = empty($field['notnull']) ? null : 0;
             }
-            $default = ' DEFAULT ' . $this->quote($field['default'], 'integer');
+            $default = ' DEFAULT '.$this->quote($field['default'], 'integer');
         }
 
         $notnull = empty($field['notnull']) ? '' : ' NOT NULL';
@@ -219,7 +223,7 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
             $default = ' DEFAULT NULL';
         }
         $name = $db->quoteIdentifier($name, true);
-        return $name . ' ' . $this->getTypeDeclaration($field) . $default . $notnull;
+        return $name.' '.$this->getTypeDeclaration($field).$default.$notnull;
     }
 
     // }}}
@@ -236,7 +240,8 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      *      a DBMS specific format.
      * @access protected
      */
-    function _quoteCLOB($value, $quote, $escape_wildcards) {
+    function _quoteCLOB($value, $quote, $escape_wildcards)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -264,7 +269,8 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      *      a DBMS specific format.
      * @access protected
      */
-    function _quoteBLOB($value, $quote, $escape_wildcards) {
+    function _quoteBLOB($value, $quote, $escape_wildcards)
+    {
         if (!$quote) {
             return $value;
         }
@@ -287,7 +293,7 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
         } else {
             $value = @pg_escape_bytea($value);
         }
-        return "'" . $value . "'";
+        return "'".$value."'";
     }
 
     // }}}
@@ -304,12 +310,13 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      *       a DBMS specific format.
      * @access protected
      */
-    function _quoteBoolean($value, $quote, $escape_wildcards) {
+    function _quoteBoolean($value, $quote, $escape_wildcards)
+    {
         $value = $value ? 't' : 'f';
         if (!$quote) {
             return $value;
         }
-        return "'" . $value . "'";
+        return "'".$value."'";
     }
 
     // }}}
@@ -327,7 +334,8 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      *
      * @return string SQL pattern
      */
-    function matchPattern($pattern, $operator = null, $field = null) {
+    function matchPattern($pattern, $operator = null, $field = null)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -335,25 +343,26 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
 
         $match = '';
         if (null !== $operator) {
-            $field = (null === $field) ? '' : $field . ' ';
+            $field = (null === $field) ? '' : $field.' ';
             $operator = strtoupper($operator);
             switch ($operator) {
-                // case insensitive
-                case 'ILIKE':
-                    $match = $field . 'ILIKE ';
-                    break;
-                case 'NOT ILIKE':
-                    $match = $field . 'NOT ILIKE ';
-                    break;
-                // case sensitive
-                case 'LIKE':
-                    $match = $field . 'LIKE ';
-                    break;
-                case 'NOT LIKE':
-                    $match = $field . 'NOT LIKE ';
-                    break;
-                default:
-                    return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'not a supported operator type:' . $operator, __FUNCTION__);
+            // case insensitive
+            case 'ILIKE':
+                $match = $field.'ILIKE ';
+                break;
+            case 'NOT ILIKE':
+                $match = $field.'NOT ILIKE ';
+                break;
+            // case sensitive
+            case 'LIKE':
+                $match = $field.'LIKE ';
+                break;
+            case 'NOT LIKE':
+                $match = $field.'NOT LIKE ';
+                break;
+            default:
+                return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+                    'not a supported operator type:'. $operator, __FUNCTION__);
             }
         }
         $match.= "'";
@@ -380,12 +389,13 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      *
      * @return string define escape pattern
      */
-    function patternEscapeString() {
+    function patternEscapeString()
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
-        return ' ESCAPE ' . $this->quote($db->string_quoting['escape_pattern']);
+        return ' ESCAPE '.$this->quote($db->string_quoting['escape_pattern']);
     }
 
     // }}}
@@ -398,122 +408,124 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      * @return array containing the various possible types, length, sign, fixed
      * @access public
      */
-    function _mapNativeDatatype($field) {
+    function _mapNativeDatatype($field)
+    {
         $db_type = strtolower($field['type']);
         $length = $field['length'];
         $type = array();
         $unsigned = $fixed = null;
         switch ($db_type) {
-            case 'smallint':
-            case 'int2':
-                $type[] = 'integer';
-                $unsigned = false;
-                $length = 2;
-                if ($length == '2') {
-                    $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/', $field['name'])) {
-                        $type = array_reverse($type);
-                    }
-                }
-                break;
-            case 'int':
-            case 'int4':
-            case 'integer':
-            case 'serial':
-            case 'serial4':
-                $type[] = 'integer';
-                $unsigned = false;
-                $length = 4;
-                break;
-            case 'bigint':
-            case 'int8':
-            case 'bigserial':
-            case 'serial8':
-                $type[] = 'integer';
-                $unsigned = false;
-                $length = 8;
-                break;
-            case 'bool':
-            case 'boolean':
+        case 'smallint':
+        case 'int2':
+            $type[] = 'integer';
+            $unsigned = false;
+            $length = 2;
+            if ($length == '2') {
                 $type[] = 'boolean';
-                $length = null;
-                break;
-            case 'text':
-            case 'varchar':
-                $fixed = false;
-            case 'unknown':
-            case 'char':
-            case 'bpchar':
-                $type[] = 'text';
-                if ($length == '1') {
-                    $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/', $field['name'])) {
-                        $type = array_reverse($type);
-                    }
-                } elseif (strstr($db_type, 'text')) {
-                    $type[] = 'clob';
+                if (preg_match('/^(is|has)/', $field['name'])) {
                     $type = array_reverse($type);
                 }
-                if ($fixed !== false) {
-                    $fixed = true;
+            }
+            break;
+        case 'int':
+        case 'int4':
+        case 'integer':
+        case 'serial':
+        case 'serial4':
+            $type[] = 'integer';
+            $unsigned = false;
+            $length = 4;
+            break;
+        case 'bigint':
+        case 'int8':
+        case 'bigserial':
+        case 'serial8':
+            $type[] = 'integer';
+            $unsigned = false;
+            $length = 8;
+            break;
+        case 'bool':
+        case 'boolean':
+            $type[] = 'boolean';
+            $length = null;
+            break;
+        case 'text':
+        case 'varchar':
+            $fixed = false;
+        case 'unknown':
+        case 'char':
+        case 'bpchar':
+            $type[] = 'text';
+            if ($length == '1') {
+                $type[] = 'boolean';
+                if (preg_match('/^(is|has)/', $field['name'])) {
+                    $type = array_reverse($type);
                 }
-                break;
-            case 'date':
-                $type[] = 'date';
-                $length = null;
-                break;
-            case 'datetime':
-            case 'timestamp':
-            case 'timestamptz':
-                $type[] = 'timestamp';
-                $length = null;
-                break;
-            case 'time':
-                $type[] = 'time';
-                $length = null;
-                break;
-            case 'float':
-            case 'float4':
-            case 'float8':
-            case 'double':
-            case 'real':
-                $type[] = 'float';
-                break;
-            case 'decimal':
-            case 'money':
-            case 'numeric':
-                $type[] = 'decimal';
-                if (isset($field['scale'])) {
-                    $length = $length . ',' . $field['scale'];
-                }
-                break;
-            case 'tinyblob':
-            case 'mediumblob':
-            case 'longblob':
-            case 'blob':
-            case 'bytea':
-                $type[] = 'blob';
-                $length = null;
-                break;
-            case 'oid':
-                $type[] = 'blob';
+            } elseif (strstr($db_type, 'text')) {
                 $type[] = 'clob';
-                $length = null;
-                break;
-            case 'year':
-                $type[] = 'integer';
-                $type[] = 'date';
-                $length = null;
-                break;
-            default:
-                $db = $this->getDBInstance();
-                if (PEAR::isError($db)) {
-                    return $db;
-                }
-                return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'unknown database attribute type: ' . $db_type, __FUNCTION__);
+                $type = array_reverse($type);
+            }
+            if ($fixed !== false) {
+                $fixed = true;
+            }
+            break;
+        case 'date':
+            $type[] = 'date';
+            $length = null;
+            break;
+        case 'datetime':
+        case 'timestamp':
+        case 'timestamptz':
+            $type[] = 'timestamp';
+            $length = null;
+            break;
+        case 'time':
+            $type[] = 'time';
+            $length = null;
+            break;
+        case 'float':
+        case 'float4':
+        case 'float8':
+        case 'double':
+        case 'real':
+            $type[] = 'float';
+            break;
+        case 'decimal':
+        case 'money':
+        case 'numeric':
+            $type[] = 'decimal';
+            if (isset($field['scale'])) {
+                $length = $length.','.$field['scale'];
+            }
+            break;
+        case 'tinyblob':
+        case 'mediumblob':
+        case 'longblob':
+        case 'blob':
+        case 'bytea':
+            $type[] = 'blob';
+            $length = null;
+            break;
+        case 'oid':
+            $type[] = 'blob';
+            $type[] = 'clob';
+            $length = null;
+            break;
+        case 'year':
+            $type[] = 'integer';
+            $type[] = 'date';
+            $length = null;
+            break;
+        default:
+            $db = $this->getDBInstance();
+            if (PEAR::isError($db)) {
+                return $db;
+            }
+            return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+                'unknown database attribute type: '.$db_type, __FUNCTION__);
         }
 
-        if ((int) $length <= 0) {
+        if ((int)$length <= 0) {
             $length = null;
         }
 
@@ -530,7 +542,8 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
      * @return string
      * @access public
      */
-    function mapPrepareDatatype($type) {
+    function mapPrepareDatatype($type)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -561,8 +574,6 @@ class MDB2_Driver_Datatype_pgsql extends MDB2_Driver_Datatype_Common {
         }
         return $type;
     }
-
     // }}}
 }
-
 ?>

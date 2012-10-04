@@ -1,25 +1,30 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/eo/messages.inc                                              |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Andreas van Cranenburgh <andreas@unstable.nl                  |
-  +-----------------------------------------------------------------------+
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/eo/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Andreas van Cranenburgh <andreas@unstable.nl>                 |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Eraro okazis!';
 $messages['loginfailed'] = 'Malsukcesis ensaluti';
 $messages['cookiesdisabled'] = 'Via foliumilo ne akceptas kuketojn';
 $messages['sessionerror'] = 'Via seanco estas nevalida aŭ finita';
-$messages['imaperror'] = 'Konekto kun IMAP-servilo malsukcesis';
+$messages['storageerror'] = 'Konekto kun IMAP-servilo malsukcesis';
+$messages['servererror'] = 'Servil-eraro!';
+$messages['servererrormsg'] = 'Servil-eraro: $msg';
+$messages['dberror'] = 'Datumbaz-eraro!';
+$messages['errorreadonly'] = 'Ne povis fari agon. Dosierujo estas nurlega';
+$messages['errornoperm'] = 'Ne povis fari agon. Ne havas permeson.';
+$messages['invalidrequest'] = 'Nevalida peto';
 $messages['nomessagesfound'] = 'Neniu mesaĝo en ĉi tiu dosierujo';
 $messages['loggedout'] = 'Vi sukcese finis la seancon. Ĝis!';
 $messages['mailboxempty'] = 'Dosierujo estas malplena';
@@ -54,7 +59,6 @@ $messages['nosubjectwarning'] = 'La temkampo estas malplena. Ĉu vi volas skribi
 $messages['nobodywarning'] = 'Ĉu sendi ĉi tiun mesaĝon sen teksto?';
 $messages['notsentwarning'] = 'Mesaĝo ne estas sendita. Ĉu vi volas forigi vian mesaĝon?';
 $messages['noldapserver'] = 'Bonvolu elekti ldap-servilon por serĉado';
-$messages['nocontactsreturned'] = 'Trovis neniun kontakton';
 $messages['nosearchname'] = 'Bonvolu enmeti kontakt-nomon aŭ retpoŝt-adreson.';
 $messages['searchsuccessful'] = 'trovis $nr mesaĝojn';
 $messages['searchnomatch'] = 'Serĉo donis nenion';
@@ -76,4 +80,4 @@ $messages['receiptsent'] = 'Sukcese sendis konfirmon';
 $messages['errorsendingreceipt'] = 'Ne povis sendi konfirmon';
 $messages['nodeletelastidentity'] = 'Vi ne povas forigi ĉi tiun identon, ĉar ĝi estas la lasta';
 $messages['forbiddencharacter'] = 'Dosierujo-nomo enhavas malpermesitan karaktron';
-?>
+

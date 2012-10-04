@@ -1,31 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/hu_HU/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Zark Bonfire <ikkhares at gmail dot com>                      |
-  |         Peter Szabo <pete at teamlupus dot hu>                        |
-  |         Barnabas Bona <bsi at hosember dot hu>                        |
-  |         Gabor Veliczky <hosting at jugiter dot net>                   |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/hu_HU/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: bela                                                          |
+ +-----------------------------------------------------------------------+
+*/
 
 $labels = array();
 $labels['welcome'] = 'Üdvözli a $product';
 $labels['username'] = 'Felhasználónév';
 $labels['password'] = 'Jelszó';
 $labels['server'] = 'Szerver';
-$labels['login'] = 'Belépés';
+$labels['login'] = 'Bejelentkezés';
 $labels['logout'] = 'Kijelentkezés';
 $labels['mail'] = 'E-mail';
 $labels['settings'] = 'Beállítások';
@@ -47,10 +40,13 @@ $labels['size'] = 'Méret';
 $labels['priority'] = 'Sürgősség';
 $labels['organization'] = 'Szervezet';
 $labels['readstatus'] = 'Olvasott';
+$labels['listoptions'] = 'Üzenetlista beállítások...';
 $labels['mailboxlist'] = 'Mappák';
+$labels['folders'] = 'Mappák';
 $labels['messagesfromto'] = 'Üzenetek: $from - $to / $count';
 $labels['threadsfromto'] = 'Témák ($from - $to, összesen $count)';
 $labels['messagenrof'] = '$nr / $count üzenet';
+$labels['fromtoshort'] = '$from – $to / $count';
 $labels['copy'] = 'Másolás';
 $labels['move'] = 'Áthelyezés';
 $labels['moveto'] = 'Áthelyezés...';
@@ -76,7 +72,8 @@ $labels['jan'] = 'Jan';
 $labels['feb'] = 'Febr';
 $labels['mar'] = 'Márc';
 $labels['apr'] = 'Ápr';
-$labels['may'] = 'Máj';
+$labels['may'] = 'Május';
+$labels['longmay'] = 'Május';
 $labels['jun'] = 'Jún';
 $labels['jul'] = 'Júl';
 $labels['aug'] = 'Aug';
@@ -88,7 +85,6 @@ $labels['longjan'] = 'Január';
 $labels['longfeb'] = 'Február';
 $labels['longmar'] = 'Március';
 $labels['longapr'] = 'Április';
-$labels['longmay'] = 'Május';
 $labels['longjun'] = 'Június';
 $labels['longjul'] = 'Július';
 $labels['longaug'] = 'Augusztus';
@@ -97,12 +93,16 @@ $labels['longoct'] = 'Október';
 $labels['longnov'] = 'November';
 $labels['longdec'] = 'December';
 $labels['today'] = 'Ma';
+$labels['refresh'] = 'Frissítés';
 $labels['checkmail'] = 'Új üzenetek ellenőrzése';
+$labels['compose'] = 'Üzenet létrehozása';
 $labels['writenewmessage'] = 'Új üzenet';
+$labels['reply'] = 'Válasz';
 $labels['replytomessage'] = 'Válasz';
 $labels['replytoallmessage'] = 'Válasz a listának vagy a feladónak és az összes címzettnek';
 $labels['replyall'] = 'Válasz mindenkinek';
 $labels['replylist'] = 'Válasz a listának';
+$labels['forward'] = 'Továbbítás';
 $labels['forwardinline'] = 'Továbbítás beágyazva';
 $labels['forwardattachment'] = 'Továbbítás csatolmányként';
 $labels['forwardmessage'] = 'Továbbítás';
@@ -115,15 +115,20 @@ $labels['nextmessage'] = 'Következő levél mutatása';
 $labels['lastmessage'] = 'Utolsó levél mutatása';
 $labels['backtolist'] = 'Vissza az üzenetekhez';
 $labels['viewsource'] = 'Forrás megtekintése';
+$labels['mark'] = 'Jelölés';
 $labels['markmessages'] = 'Üzenetek megjelölése';
 $labels['markread'] = 'Olvasottként';
 $labels['markunread'] = 'Olvasatlanként';
 $labels['markflagged'] = 'Jelöltként';
 $labels['markunflagged'] = 'Jelöletlenként';
 $labels['moreactions'] = 'További műveletek...';
+$labels['more'] = 'Még egy';
+$labels['back'] = 'Vissza';
+$labels['options'] = 'Beállítások';
 $labels['select'] = 'Kijelölés';
 $labels['all'] = 'Összes';
 $labels['none'] = 'Nincs';
+$labels['nonesort'] = 'Nincs';
 $labels['currpage'] = 'Aktuális oldal';
 $labels['unread'] = 'Olvasatlan';
 $labels['flagged'] = 'Megjelölt';
@@ -143,7 +148,6 @@ $labels['expand_only_unread'] = 'csak ahol van olvasatlan üzenet';
 $labels['fromto'] = 'Feladó/Címzett';
 $labels['flag'] = 'Megjelölés';
 $labels['attachment'] = 'Csatolmány';
-$labels['nonesort'] = 'Nincs';
 $labels['sentdate'] = 'Feladva';
 $labels['arrival'] = 'Kézbesítve';
 $labels['asc'] = 'Emelkedő';
@@ -164,7 +168,6 @@ $labels['searchmod'] = 'Keresési opciók';
 $labels['msgtext'] = 'Teljes üzenet';
 $labels['openinextwin'] = 'Megnyitás új ablakban';
 $labels['emlsave'] = 'Letöltés (.eml)';
-$labels['compose'] = 'Üzenet létrehozása';
 $labels['editasnew'] = 'Szerkesztés újként';
 $labels['savemessage'] = 'Vázlat mentése';
 $labels['sendmessage'] = 'Üzenet küldése';
@@ -176,9 +179,11 @@ $labels['dsn'] = 'Kézbesítési visszaigazolás';
 $labels['mailreplyintro'] = '$date időpontban $sender ezt írta:';
 $labels['originalmessage'] = 'Eredeti üzenet';
 $labels['editidents'] = 'Azonosítók szerkesztése';
+$labels['spellcheck'] = 'Helyesírás ellenőrzés';
 $labels['checkspelling'] = 'Helyesírás-ellenőrzés';
 $labels['resumeediting'] = 'Helyesírás-ellenőrzés vége';
 $labels['revertto'] = 'Visszaállítás erre';
+$labels['attach'] = 'Csatolás';
 $labels['attachments'] = 'Csatolmányok';
 $labels['upload'] = 'Feltöltés';
 $labels['uploadprogress'] = '$percent ($current / $total)';
@@ -233,15 +238,17 @@ $labels['notes'] = 'Megjegyzések';
 $labels['male'] = 'férfi';
 $labels['female'] = 'nő';
 $labels['manager'] = 'Menedzser';
-$labels['assistant'] = 'Titkár';
+$labels['assistant'] = 'Asszisztens';
+$labels['typeassistant'] = 'Asszisztens';
 $labels['spouse'] = 'Házastárs';
 $labels['allfields'] = 'Összes mező';
 $labels['search'] = 'Keresés';
 $labels['advsearch'] = 'Részletes keresés';
+$labels['advanced'] = 'Haladó';
 $labels['other'] = 'Egyéb';
+$labels['typeother'] = 'Egyéb';
 $labels['typehome'] = 'Otthon';
 $labels['typework'] = 'Munkahely';
-$labels['typeother'] = 'Egyéb';
 $labels['typemobile'] = 'Mobil';
 $labels['typemain'] = 'Vezetékes';
 $labels['typehomefax'] = 'Otthoni fax';
@@ -249,7 +256,6 @@ $labels['typeworkfax'] = 'Munkahelyi fax';
 $labels['typecar'] = 'Gépkocsi';
 $labels['typepager'] = 'Személyhívó';
 $labels['typevideo'] = 'Videó';
-$labels['typeassistant'] = 'Asszisztens';
 $labels['typehomepage'] = 'Weboldal';
 $labels['typeblog'] = 'Blog';
 $labels['typeprofile'] = 'Profil';
@@ -257,7 +263,7 @@ $labels['addfield'] = 'Új mező hozzáadása...';
 $labels['addcontact'] = 'Új kapcsolat hozzáadása';
 $labels['editcontact'] = 'Kapcsolat szerkesztése';
 $labels['contacts'] = 'Kapcsolatok';
-$labels['contactproperties'] = 'Kapcsolatok tulajdonságai';
+$labels['contactproperties'] = 'Kapcsolat tulajdonságai';
 $labels['personalinfo'] = 'Személyes adatok';
 $labels['edit'] = 'Szerkesztés';
 $labels['cancel'] = 'Mégsem';
@@ -266,6 +272,7 @@ $labels['delete'] = 'Törlés';
 $labels['rename'] = 'Átnevezés';
 $labels['addphoto'] = 'Kép hozzáadása';
 $labels['replacephoto'] = 'Kép cseréje';
+$labels['uploadphoto'] = 'Fotó feltöltése';
 $labels['newcontact'] = 'Új kapcsolat létrehozása';
 $labels['deletecontact'] = 'Kijelölt kapcsolatok törlése';
 $labels['composeto'] = 'E-mail küldése erre a címre';
@@ -276,6 +283,7 @@ $labels['exportvcards'] = 'Kapcsolatok exportálása vCard formátumban';
 $labels['newcontactgroup'] = 'Új csoport';
 $labels['grouprename'] = 'Csoport átnevezése';
 $labels['groupdelete'] = 'Csoport törlése';
+$labels['groupremoveselected'] = 'A kijelölt partnerek törlése a csopotból';
 $labels['previouspage'] = 'Előző oldal';
 $labels['firstpage'] = 'Első oldal';
 $labels['nextpage'] = 'Következő oldal';
@@ -293,6 +301,7 @@ $labels['importreplace'] = 'A teljes címjegyzék cseréje';
 $labels['importtext'] = 'Feltölthet kapcsolatokat egy már létező címjegyzékből. <br/> Jelenleg a <a href="http://en.wikipedia.org/wiki/VCard">vCard</a>  formátumú adatok importálása támogatott.';
 $labels['done'] = 'Kész';
 $labels['settingsfor'] = 'Beállítás';
+$labels['about'] = 'Névjegy';
 $labels['preferences'] = 'Beállítások';
 $labels['userpreferences'] = 'Felhasználói beállítások';
 $labels['editpreferences'] = 'Felhasználói beállítások szerkesztése';
@@ -334,7 +343,8 @@ $labels['readwhendeleted'] = 'Üzenet olvasottként jelölése törléskor';
 $labels['flagfordeletion'] = 'Üzenet törlendőnek jelölése törlés helyett';
 $labels['skipdeleted'] = 'Törölt üzenetek ne legyenek megjelenítve';
 $labels['deletealways'] = 'Üzenet törlése, ha nem sikerül áthelyezni a törölt elemek mappába';
-$labels['showremoteimages'] = 'Távoli beágyazott képek mutatása';
+$labels['deletejunk'] = 'Közvetlen törlése az üzeneteknek a levélszemét mappában';
+$labels['showremoteimages'] = 'Távoli beágyazott képek megjelenítése';
 $labels['fromknownsenders'] = 'csak ismert feladóktól';
 $labels['always'] = 'mindig';
 $labels['showinlineimages'] = 'Csatolt képek megjelenítése az üzenet alatt';
@@ -354,11 +364,12 @@ $labels['advancedoptions'] = 'Haladó beállítások';
 $labels['focusonnewmessage'] = 'Beérkező új üzenet ablakának fókuszba hozása';
 $labels['checkallfolders'] = 'Új üzenetek ellenőrzése minden mappában';
 $labels['displaynext'] = 'Levél törlése/mozgatása után jelenjen meg a következő üzenet';
+$labels['defaultfont'] = 'HTML üzenet alap karakterkészlete';
 $labels['mainoptions'] = 'Általános beállítások';
+$labels['browseroptions'] = 'Böngésző beállításai';
 $labels['section'] = 'Beállítások';
 $labels['maintenance'] = 'Karbantartás';
 $labels['newmessage'] = 'Új üzenet';
-$labels['listoptions'] = 'Listabeállítások';
 $labels['signatureoptions'] = 'Aláírás beállításai';
 $labels['whenreplying'] = 'Válasznál';
 $labels['replytopposting'] = 'üzenet írása az eredeti felett';
@@ -378,16 +389,17 @@ $labels['reqdsn'] = 'Kézbesítési visszaigazolás megkövetelése';
 $labels['replysamefolder'] = 'Válaszok azonos mappába helyezése';
 $labels['defaultaddressbook'] = 'Új kapcsolatok hozzáadása a kiválasztott címjegyzékhez';
 $labels['autocompletesingle'] = 'TRANSLATE!';
+$labels['listnamedisplay'] = 'Névjegyek listázása';
 $labels['spellcheckbeforesend'] = 'Helyesírás-ellenőrzés az üzenet elküldése előtt';
 $labels['spellcheckoptions'] = 'Helyesírás-ellenőrzés opciók';
 $labels['spellcheckignoresyms'] = 'Speciális karaktereket tartalmazó szavak kihagyása';
 $labels['spellcheckignorenums'] = 'Számot tartalmazó szavak kihagyása';
 $labels['spellcheckignorecaps'] = 'Csak nagybetűt tartalmazó szavak kihagyása';
 $labels['addtodict'] = 'Hozzáadás a szótárhoz';
+$labels['mailtoprotohandler'] = 'Beállítás a mailto: linkek kezelőjeként';
 $labels['folder'] = 'Mappa';
-$labels['folders'] = 'Mappák';
 $labels['foldername'] = 'Mappa neve';
-$labels['subscribed'] = 'Feliratkozott';
+$labels['subscribed'] = 'Feliratkozva';
 $labels['messagecount'] = 'Üzenet';
 $labels['create'] = 'Létrehozás';
 $labels['createfolder'] = 'Új mappa létrehozása';
@@ -408,6 +420,11 @@ $labels['sortby'] = 'Rendezés';
 $labels['sortasc'] = 'növekvő';
 $labels['sortdesc'] = 'csökkenő';
 $labels['undo'] = 'Visszavonás';
+$labels['plugin'] = 'Bővítmény';
+$labels['version'] = 'Verzió';
+$labels['source'] = 'Forrás';
+$labels['license'] = 'Licensz';
+$labels['support'] = 'Támogatás';
 $labels['B'] = 'B';
 $labels['KB'] = 'KB';
 $labels['MB'] = 'MB';
@@ -430,4 +447,4 @@ $labels['vietnamese'] = 'Vietnámi';
 $labels['japanese'] = 'Japán';
 $labels['korean'] = 'Koreai';
 $labels['chinese'] = 'Kínai';
-?>
+

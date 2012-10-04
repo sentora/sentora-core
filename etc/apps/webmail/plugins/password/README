@@ -39,6 +39,11 @@
  2.11. Chpasswd (chpasswd)
  2.12. LDAP - no PEAR (ldap_simple)
  2.13. XMail (xmail)
+ 2.14. Pw (pw_usermod)
+ 2.15. domainFACTORY (domainfactory)
+ 2.16. DBMail (dbmail)
+ 2.17. Expect (expect)
+ 2.18. Samba (smb)
  3.	Driver API
 
 
@@ -133,7 +138,7 @@
 
  Installation:
 
- Change into the drivers directory. Edit the chgsaslpasswd.c file as is
+ Change into the helpers directory. Edit the chgsaslpasswd.c file as is
  documented within it.
 
  Compile the wrapper program:
@@ -202,7 +207,7 @@
  ----------------------------
 
  As in sasl driver this one allows to change password using shell
- utility called "virtualmin". See drivers/chgvirtualminpasswd.c for
+ utility called "virtualmin". See helpers/chgvirtualminpasswd.c for
  installation instructions. See also config.inc.php.dist file.
 
 
@@ -227,7 +232,7 @@
  Driver that adds functionality to change the systems user password via 
  the 'chpasswd' command. See config.inc.php.dist file.
 
- Attached wrapper script (chpass-wrapper.py) restricts password changes
+ Attached wrapper script (helpers/chpass-wrapper.py) restricts password changes
  to uids >= 1000 and can deny requests based on a blacklist.
 
 
@@ -251,6 +256,46 @@
 
  Driver for XMail (www.xmailserver.org). See config.inc.php.dist file
  for configuration description.
+
+
+ 2.14.  Pw (pw_usermod)
+ -----------------------------------
+
+ Driver to change the systems user password via the 'pw usermod' command.
+ See config.inc.php.dist file for configuration description.
+
+
+ 2.15.  domainFACTORY (domainfactory)
+ -----------------------------------
+
+ Driver for the hosting provider domainFACTORY (www.df.eu).
+ No configuration options.
+
+
+ 2.16.  DBMail (dbmail)
+ -----------------------------------
+
+ Driver that adds functionality to change the users DBMail password.
+ It only works with dbmail-users on the same host where Roundcube runs
+ and requires shell access and gcc in order to compile the binary
+ (see instructions in chgdbmailusers.c file).
+ See config.inc.php.dist file for configuration description.
+
+ Note: DBMail users can also use sql driver.
+
+
+ 2.17.  Expect (expect)
+ -----------------------------------
+
+ Driver to change user password via the 'expect' command.
+ See config.inc.php.dist file for configuration description.
+
+
+ 2.18.  Samba (smb)
+ -----------------------------------
+
+ Driver to change Samba user password via the 'smbpasswd' command.
+ See config.inc.php.dist file for configuration description.
 
 
  3. Driver API

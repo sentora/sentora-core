@@ -1,24 +1,28 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | program/include/rcube_user.inc                                        |
-  |                                                                       |
-  | This file is part of the Roundcube Webmail client                     |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  | PURPOSE:                                                              |
-  |   This class represents a system user linked and provides access      |
-  |   to the related database records.                                    |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | program/include/rcube_user.inc                                        |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ | PURPOSE:                                                              |
+ |   This class represents a system user linked and provides access      |
+ |   to the related database records.                                    |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+ +-----------------------------------------------------------------------+
 
-  $Id: rcube_user.php 5183 2011-09-06 17:18:12Z alec $
+ $Id$
 
- */
+*/
+
 
 /**
  * Class representing a system user
@@ -26,8 +30,8 @@
  * @package    Core
  * @author     Thomas Bruederli <roundcube@gmail.com>
  */
-class rcube_user {
-
+class rcube_user
+{
     public $ID;
     public $data;
     public $language;
@@ -55,22 +59,24 @@ class rcube_user {
      * @param int   $id      User id
      * @param array $sql_arr SQL result set
      */
-    function __construct($id = null, $sql_arr = null) {
+    function __construct($id = null, $sql_arr = null)
+    {
         $this->rc = rcmail::get_instance();
         $this->db = $this->rc->get_dbh();
 
         if ($id && !$sql_arr) {
             $sql_result = $this->db->query(
-                    "SELECT * FROM " . get_table_name('users') . " WHERE user_id = ?", $id);
+                "SELECT * FROM ".get_table_name('users')." WHERE user_id = ?", $id);
             $sql_arr = $this->db->fetch_assoc($sql_result);
         }
 
         if (!empty($sql_arr)) {
-            $this->ID = $sql_arr['user_id'];
-            $this->data = $sql_arr;
+            $this->ID       = $sql_arr['user_id'];
+            $this->data     = $sql_arr;
             $this->language = $sql_arr['language'];
         }
     }
+
 
     /**
      * Build a user name string (as e-mail address)
@@ -78,7 +84,8 @@ class rcube_user {
      * @param  string $part Username part (empty or 'local' or 'domain')
      * @return string Full user name or its part
      */
-    function get_username($part = null) {
+    function get_username($part = null)
+    {
         if ($this->data['username']) {
             list($local, $domain) = explode('@', $this->data['username']);
 
@@ -104,12 +111,14 @@ class rcube_user {
         return false;
     }
 
+
     /**
      * Get the preferences saved for this user
      *
      * @return array Hash array with prefs
      */
-    function get_prefs() {
+    function get_prefs()
+    {
         if (!empty($this->language))
             $prefs = array('language' => $this->language);
 
@@ -118,22 +127,24 @@ class rcube_user {
             if (!empty($_SESSION['preferences'])) {
                 // Check last write attempt time, try to write again (every 5 minutes)
                 if ($_SESSION['preferences_time'] < time() - 5 * 60) {
-                    $saved_prefs = unserialize($_SESSION['preferences']);
+		    $saved_prefs = unserialize($_SESSION['preferences']);
                     $this->rc->session->remove('preferences');
-                    $this->rc->session->remove('preferences_time');
+	            $this->rc->session->remove('preferences_time');
                     $this->save_prefs($saved_prefs);
-                } else {
+                }
+                else {
                     $this->data['preferences'] = $_SESSION['preferences'];
                 }
             }
 
             if ($this->data['preferences']) {
-                $prefs += (array) unserialize($this->data['preferences']);
+                $prefs += (array)unserialize($this->data['preferences']);
             }
         }
 
         return $prefs;
     }
+
 
     /**
      * Write the given user prefs to the user's record
@@ -141,12 +152,13 @@ class rcube_user {
      * @param array $a_user_prefs User prefs to save
      * @return boolean True on success, False on failure
      */
-    function save_prefs($a_user_prefs) {
+    function save_prefs($a_user_prefs)
+    {
         if (!$this->ID)
             return false;
 
-        $config = $this->rc->config;
-        $old_prefs = (array) $this->get_prefs();
+        $config    = $this->rc->config;
+        $old_prefs = (array)$this->get_prefs();
 
         // merge (partial) prefs array with existing settings
         $save_prefs = $a_user_prefs + $old_prefs;
@@ -161,10 +173,13 @@ class rcube_user {
         $save_prefs = serialize($save_prefs);
 
         $this->db->query(
-                "UPDATE " . get_table_name('users') .
-                " SET preferences = ?" .
-                ", language = ?" .
-                " WHERE user_id = ?", $save_prefs, $_SESSION['language'], $this->ID);
+            "UPDATE ".get_table_name('users').
+            " SET preferences = ?".
+                ", language = ?".
+            " WHERE user_id = ?",
+            $save_prefs,
+            $_SESSION['language'],
+            $this->ID);
 
         $this->language = $_SESSION['language'];
 
@@ -192,16 +207,19 @@ class rcube_user {
         return false;
     }
 
+
     /**
      * Get default identity of this user
      *
      * @param  int   $id Identity ID. If empty, the default identity is returned
      * @return array Hash array with all cols of the identity record
      */
-    function get_identity($id = null) {
+    function get_identity($id = null)
+    {
         $result = $this->list_identities($id ? sprintf('AND identity_id = %d', $id) : '');
         return $result[0];
     }
+
 
     /**
      * Return a list of all identities linked with this user
@@ -209,14 +227,16 @@ class rcube_user {
      * @param string $sql_add Optional WHERE clauses
      * @return array List of identities
      */
-    function list_identities($sql_add = '') {
+    function list_identities($sql_add = '')
+    {
         $result = array();
 
         $sql_result = $this->db->query(
-                "SELECT * FROM " . get_table_name('identities') .
-                " WHERE del <> 1 AND user_id = ?" .
-                ($sql_add ? " " . $sql_add : "") .
-                " ORDER BY " . $this->db->quoteIdentifier('standard') . " DESC, name ASC, identity_id ASC", $this->ID);
+            "SELECT * FROM ".get_table_name('identities').
+            " WHERE del <> 1 AND user_id = ?".
+            ($sql_add ? " ".$sql_add : "").
+            " ORDER BY ".$this->db->quoteIdentifier('standard')." DESC, name ASC, identity_id ASC",
+            $this->ID);
 
         while ($sql_arr = $this->db->fetch_assoc($sql_result)) {
             $result[] = $sql_arr;
@@ -225,6 +245,7 @@ class rcube_user {
         return $result;
     }
 
+
     /**
      * Update a specific identity record
      *
@@ -232,29 +253,32 @@ class rcube_user {
      * @param array  $data Hash array with col->value pairs to save
      * @return boolean True if saved successfully, false if nothing changed
      */
-    function update_identity($iid, $data) {
+    function update_identity($iid, $data)
+    {
         if (!$this->ID)
             return false;
 
         $query_cols = $query_params = array();
 
-        foreach ((array) $data as $col => $value) {
-            $query_cols[] = $this->db->quoteIdentifier($col) . ' = ?';
+        foreach ((array)$data as $col => $value) {
+            $query_cols[]   = $this->db->quoteIdentifier($col) . ' = ?';
             $query_params[] = $value;
         }
         $query_params[] = $iid;
         $query_params[] = $this->ID;
 
-        $sql = "UPDATE " . get_table_name('identities') .
-                " SET changed = " . $this->db->now() . ", " . join(', ', $query_cols) .
-                " WHERE identity_id = ?" .
-                " AND user_id = ?" .
+        $sql = "UPDATE ".get_table_name('identities').
+            " SET changed = ".$this->db->now().", ".join(', ', $query_cols).
+            " WHERE identity_id = ?".
+                " AND user_id = ?".
                 " AND del <> 1";
 
-        call_user_func_array(array($this->db, 'query'), array_merge(array($sql), $query_params));
+        call_user_func_array(array($this->db, 'query'),
+            array_merge(array($sql), $query_params));
 
         return $this->db->affected_rows();
     }
+
 
     /**
      * Create a new identity record linked with this user
@@ -262,28 +286,31 @@ class rcube_user {
      * @param array $data Hash array with col->value pairs to save
      * @return int  The inserted identity ID or false on error
      */
-    function insert_identity($data) {
+    function insert_identity($data)
+    {
         if (!$this->ID)
             return false;
 
         unset($data['user_id']);
 
         $insert_cols = $insert_values = array();
-        foreach ((array) $data as $col => $value) {
-            $insert_cols[] = $this->db->quoteIdentifier($col);
+        foreach ((array)$data as $col => $value) {
+            $insert_cols[]   = $this->db->quoteIdentifier($col);
             $insert_values[] = $value;
         }
-        $insert_cols[] = 'user_id';
+        $insert_cols[]   = 'user_id';
         $insert_values[] = $this->ID;
 
-        $sql = "INSERT INTO " . get_table_name('identities') .
-                " (changed, " . join(', ', $insert_cols) . ")" .
-                " VALUES (" . $this->db->now() . ", " . join(', ', array_pad(array(), sizeof($insert_values), '?')) . ")";
+        $sql = "INSERT INTO ".get_table_name('identities').
+            " (changed, ".join(', ', $insert_cols).")".
+            " VALUES (".$this->db->now().", ".join(', ', array_pad(array(), sizeof($insert_values), '?')).")";
 
-        call_user_func_array(array($this->db, 'query'), array_merge(array($sql), $insert_values));
+        call_user_func_array(array($this->db, 'query'),
+            array_merge(array($sql), $insert_values));
 
         return $this->db->insert_id('identities');
     }
+
 
     /**
      * Mark the given identity as deleted
@@ -291,13 +318,15 @@ class rcube_user {
      * @param  int     $iid Identity ID
      * @return boolean True if deleted successfully, false if nothing changed
      */
-    function delete_identity($iid) {
+    function delete_identity($iid)
+    {
         if (!$this->ID)
             return false;
 
         $sql_result = $this->db->query(
-                "SELECT count(*) AS ident_count FROM " . get_table_name('identities') .
-                " WHERE user_id = ? AND del <> 1", $this->ID);
+            "SELECT count(*) AS ident_count FROM ".get_table_name('identities').
+            " WHERE user_id = ? AND del <> 1",
+            $this->ID);
 
         $sql_arr = $this->db->fetch_assoc($sql_result);
 
@@ -306,49 +335,61 @@ class rcube_user {
             return -1;
 
         $this->db->query(
-                "UPDATE " . get_table_name('identities') .
-                " SET del = 1, changed = " . $this->db->now() .
-                " WHERE user_id = ?" .
-                " AND identity_id = ?", $this->ID, $iid);
+            "UPDATE ".get_table_name('identities').
+            " SET del = 1, changed = ".$this->db->now().
+            " WHERE user_id = ?".
+                " AND identity_id = ?",
+            $this->ID,
+            $iid);
 
         return $this->db->affected_rows();
     }
+
 
     /**
      * Make this identity the default one for this user
      *
      * @param int $iid The identity ID
      */
-    function set_default($iid) {
+    function set_default($iid)
+    {
         if ($this->ID && $iid) {
             $this->db->query(
-                    "UPDATE " . get_table_name('identities') .
-                    " SET " . $this->db->quoteIdentifier('standard') . " = '0'" .
-                    " WHERE user_id = ?" .
-                    " AND identity_id <> ?" .
-                    " AND del <> 1", $this->ID, $iid);
+                "UPDATE ".get_table_name('identities').
+                " SET ".$this->db->quoteIdentifier('standard')." = '0'".
+                " WHERE user_id = ?".
+                    " AND identity_id <> ?".
+                    " AND del <> 1",
+                $this->ID,
+                $iid);
         }
     }
+
 
     /**
      * Update user's last_login timestamp
      */
-    function touch() {
+    function touch()
+    {
         if ($this->ID) {
             $this->db->query(
-                    "UPDATE " . get_table_name('users') .
-                    " SET last_login = " . $this->db->now() .
-                    " WHERE user_id = ?", $this->ID);
+                "UPDATE ".get_table_name('users').
+                " SET last_login = ".$this->db->now().
+                " WHERE user_id = ?",
+                $this->ID);
         }
     }
+
 
     /**
      * Clear the saved object state
      */
-    function reset() {
+    function reset()
+    {
         $this->ID = null;
         $this->data = null;
     }
+
 
     /**
      * Find a user record matching the given name and host
@@ -357,11 +398,12 @@ class rcube_user {
      * @param string $host IMAP host name
      * @return rcube_user New user instance
      */
-    static function query($user, $host) {
+    static function query($user, $host)
+    {
         $dbh = rcmail::get_instance()->get_dbh();
 
         // query for matching user name
-        $query = "SELECT * FROM " . get_table_name('users') . " WHERE mail_host = ? AND %s = ?";
+        $query = "SELECT * FROM ".get_table_name('users')." WHERE mail_host = ? AND %s = ?";
         $sql_result = $dbh->query(sprintf($query, 'username'), $host, $user);
 
         // query for matching alias
@@ -377,6 +419,7 @@ class rcube_user {
             return false;
     }
 
+
     /**
      * Create a new user record and return a rcube_user instance
      *
@@ -384,8 +427,9 @@ class rcube_user {
      * @param string $host IMAP host
      * @return rcube_user New user instance
      */
-    static function create($user, $host) {
-        $user_name = '';
+    static function create($user, $host)
+    {
+        $user_name  = '';
         $user_email = '';
         $rcmail = rcmail::get_instance();
 
@@ -394,26 +438,31 @@ class rcube_user {
             $user_email = is_array($email_list[0]) ? $email_list[0]['email'] : $email_list[0];
         }
 
-        $data = $rcmail->plugins->exec_hook('user_create', array('user' => $user, 'user_name' => $user_name, 'user_email' => $user_email, 'host' => $host));
+        $data = $rcmail->plugins->exec_hook('user_create',
+	        array('user'=>$user, 'user_name'=>$user_name, 'user_email'=>$user_email, 'host'=>$host));
 
         // plugin aborted this operation
         if ($data['abort'])
             return false;
 
-        $user_name = $data['user_name'];
+        $user_name  = $data['user_name'];
         $user_email = $data['user_email'];
 
         $dbh = $rcmail->get_dbh();
 
         $dbh->query(
-                "INSERT INTO " . get_table_name('users') .
-                " (created, last_login, username, mail_host, alias, language)" .
-                " VALUES (" . $dbh->now() . ", " . $dbh->now() . ", ?, ?, ?, ?)", strip_newlines($user), strip_newlines($host), strip_newlines($data['alias'] ? $data['alias'] : $user_email), strip_newlines($data['language'] ? $data['language'] : $_SESSION['language']));
+            "INSERT INTO ".get_table_name('users').
+            " (created, last_login, username, mail_host, alias, language)".
+            " VALUES (".$dbh->now().", ".$dbh->now().", ?, ?, ?, ?)",
+            strip_newlines($user),
+            strip_newlines($host),
+            strip_newlines($data['alias'] ? $data['alias'] : $user_email),
+            strip_newlines($data['language'] ? $data['language'] : $_SESSION['language']));
 
         if ($user_id = $dbh->insert_id('users')) {
             // create rcube_user instance to make plugin hooks work
             $user_instance = new rcube_user($user_id);
-            $rcmail->user = $user_instance;
+            $rcmail->user  = $user_instance;
 
             $mail_domain = $rcmail->config->mail_domain($host);
 
@@ -433,28 +482,31 @@ class rcube_user {
             // create new identities records
             $standard = 1;
             foreach ($email_list as $row) {
-                $record = array();
+	            $record = array();
 
                 if (is_array($row)) {
-                    $record = $row;
-                } else {
+	                $record = $row;
+                }
+                else {
                     $record['email'] = $row;
                 }
 
-                if (empty($record['name']))
-                    $record['name'] = $user_name;
+	            if (empty($record['name']))
+	                $record['name'] = $user_name;
                 $record['name'] = strip_newlines($record['name']);
                 $record['user_id'] = $user_id;
                 $record['standard'] = $standard;
 
-                $plugin = $rcmail->plugins->exec_hook('identity_create', array('login' => true, 'record' => $record));
+                $plugin = $rcmail->plugins->exec_hook('identity_create',
+	                array('login' => true, 'record' => $record));
 
                 if (!$plugin['abort'] && $plugin['record']['email']) {
                     $rcmail->user->insert_identity($plugin['record']);
                 }
                 $standard = 0;
             }
-        } else {
+        }
+        else {
             raise_error(array(
                 'code' => 500,
                 'type' => 'php',
@@ -466,18 +518,22 @@ class rcube_user {
         return $user_id ? $user_instance : false;
     }
 
+
     /**
      * Resolve username using a virtuser plugins
      *
      * @param string $email E-mail address to resolve
      * @return string Resolved IMAP username
      */
-    static function email2user($email) {
+    static function email2user($email)
+    {
         $rcmail = rcmail::get_instance();
-        $plugin = $rcmail->plugins->exec_hook('email2user', array('email' => $email, 'user' => NULL));
+        $plugin = $rcmail->plugins->exec_hook('email2user',
+            array('email' => $email, 'user' => NULL));
 
         return $plugin['user'];
     }
+
 
     /**
      * Resolve e-mail address from virtuser plugins
@@ -487,13 +543,16 @@ class rcube_user {
      * @param boolean $extended If true returns email as array (email and name for identity)
      * @return mixed Resolved e-mail address string or array of strings
      */
-    static function user2email($user, $first = true, $extended = false) {
+    static function user2email($user, $first=true, $extended=false)
+    {
         $rcmail = rcmail::get_instance();
-        $plugin = $rcmail->plugins->exec_hook('user2email', array('email' => NULL, 'user' => $user,
-            'first' => $first, 'extended' => $extended));
+        $plugin = $rcmail->plugins->exec_hook('user2email',
+            array('email' => NULL, 'user' => $user,
+                'first' => $first, 'extended' => $extended));
 
         return empty($plugin['email']) ? NULL : $plugin['email'];
     }
+
 
     /**
      * Return a list of saved searches linked with this user
@@ -502,7 +561,8 @@ class rcube_user {
      *
      * @return array List of saved searches indexed by search ID
      */
-    function list_searches($type) {
+    function list_searches($type)
+    {
         $plugin = $this->rc->plugins->exec_hook('saved_search_list', array('type' => $type));
 
         if ($plugin['abort']) {
@@ -512,11 +572,12 @@ class rcube_user {
         $result = array();
 
         $sql_result = $this->db->query(
-                "SELECT search_id AS id, " . $this->db->quoteIdentifier('name')
-                . " FROM " . get_table_name('searches')
-                . " WHERE user_id = ?"
-                . " AND " . $this->db->quoteIdentifier('type') . " = ?"
-                . " ORDER BY " . $this->db->quoteIdentifier('name'), (int) $this->ID, (int) $type);
+            "SELECT search_id AS id, ".$this->db->quoteIdentifier('name')
+            ." FROM ".get_table_name('searches')
+            ." WHERE user_id = ?"
+                ." AND ".$this->db->quoteIdentifier('type')." = ?"
+            ." ORDER BY ".$this->db->quoteIdentifier('name'),
+            (int) $this->ID, (int) $type);
 
         while ($sql_arr = $this->db->fetch_assoc($sql_result)) {
             $sql_arr['data'] = unserialize($sql_arr['data']);
@@ -526,6 +587,7 @@ class rcube_user {
         return $result;
     }
 
+
     /**
      * Return saved search data.
      *
@@ -533,7 +595,8 @@ class rcube_user {
      *
      * @return array Data
      */
-    function get_search($id) {
+    function get_search($id)
+    {
         $plugin = $this->rc->plugins->exec_hook('saved_search_get', array('id' => $id));
 
         if ($plugin['abort']) {
@@ -541,16 +604,17 @@ class rcube_user {
         }
 
         $sql_result = $this->db->query(
-                "SELECT " . $this->db->quoteIdentifier('name')
-                . ", " . $this->db->quoteIdentifier('data')
-                . ", " . $this->db->quoteIdentifier('type')
-                . " FROM " . get_table_name('searches')
-                . " WHERE user_id = ?"
-                . " AND search_id = ?", (int) $this->ID, (int) $id);
+            "SELECT ".$this->db->quoteIdentifier('name')
+                .", ".$this->db->quoteIdentifier('data')
+                .", ".$this->db->quoteIdentifier('type')
+            ." FROM ".get_table_name('searches')
+            ." WHERE user_id = ?"
+                ." AND search_id = ?",
+            (int) $this->ID, (int) $id);
 
         while ($sql_arr = $this->db->fetch_assoc($sql_result)) {
             return array(
-                'id' => $id,
+                'id'   => $id,
                 'name' => $sql_arr['name'],
                 'type' => $sql_arr['type'],
                 'data' => unserialize($sql_arr['data']),
@@ -560,6 +624,7 @@ class rcube_user {
         return null;
     }
 
+
     /**
      * Deletes given saved search record
      *
@@ -567,17 +632,20 @@ class rcube_user {
      *
      * @return boolean True if deleted successfully, false if nothing changed
      */
-    function delete_search($sid) {
+    function delete_search($sid)
+    {
         if (!$this->ID)
             return false;
 
         $this->db->query(
-                "DELETE FROM " . get_table_name('searches')
-                . " WHERE user_id = ?"
-                . " AND search_id = ?", (int) $this->ID, $sid);
+            "DELETE FROM ".get_table_name('searches')
+            ." WHERE user_id = ?"
+                ." AND search_id = ?",
+            (int) $this->ID, $sid);
 
         return $this->db->affected_rows();
     }
+
 
     /**
      * Create a new saved search record linked with this user
@@ -586,24 +654,26 @@ class rcube_user {
      *
      * @return int  The inserted search ID or false on error
      */
-    function insert_search($data) {
+    function insert_search($data)
+    {
         if (!$this->ID)
             return false;
 
-        $insert_cols[] = 'user_id';
+        $insert_cols[]   = 'user_id';
         $insert_values[] = (int) $this->ID;
-        $insert_cols[] = $this->db->quoteIdentifier('type');
+        $insert_cols[]   = $this->db->quoteIdentifier('type');
         $insert_values[] = (int) $data['type'];
-        $insert_cols[] = $this->db->quoteIdentifier('name');
+        $insert_cols[]   = $this->db->quoteIdentifier('name');
         $insert_values[] = $data['name'];
-        $insert_cols[] = $this->db->quoteIdentifier('data');
+        $insert_cols[]   = $this->db->quoteIdentifier('data');
         $insert_values[] = serialize($data['data']);
 
-        $sql = "INSERT INTO " . get_table_name('searches')
-                . " (" . join(', ', $insert_cols) . ")"
-                . " VALUES (" . join(', ', array_pad(array(), sizeof($insert_values), '?')) . ")";
+        $sql = "INSERT INTO ".get_table_name('searches')
+            ." (".join(', ', $insert_cols).")"
+            ." VALUES (".join(', ', array_pad(array(), sizeof($insert_values), '?')).")";
 
-        call_user_func_array(array($this->db, 'query'), array_merge(array($sql), $insert_values));
+        call_user_func_array(array($this->db, 'query'),
+            array_merge(array($sql), $insert_values));
 
         return $this->db->insert_id('searches');
     }

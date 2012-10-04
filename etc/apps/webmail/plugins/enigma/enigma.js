@@ -5,62 +5,34 @@ if (window.rcmail)
     rcmail.addEventListener('init', function(evt)
     {
         if (rcmail.env.task == 'settings') {
-            rcmail.register_command('plugin.enigma', function() {
-                rcmail.goto_url('plugin.enigma')
-            }, true);
-            rcmail.register_command('plugin.enigma-key-import', function() {
-                rcmail.enigma_key_import()
-            }, true);
-            rcmail.register_command('plugin.enigma-key-export', function() {
-                rcmail.enigma_key_export()
-            }, true);
+            rcmail.register_command('plugin.enigma', function() { rcmail.goto_url('plugin.enigma') }, true);
+            rcmail.register_command('plugin.enigma-key-import', function() { rcmail.enigma_key_import() }, true);
+            rcmail.register_command('plugin.enigma-key-export', function() { rcmail.enigma_key_export() }, true);
 
             if (rcmail.gui_objects.keyslist)
             {
                 var p = rcmail;
                 rcmail.keys_list = new rcube_list_widget(rcmail.gui_objects.keyslist,
-                {
-                    multiselect:false, 
-                    draggable:false, 
-                    keyboard:false
-                });
-                rcmail.keys_list.addEventListener('select', function(o){
-                    p.enigma_key_select(o);
-                });
+                    {multiselect:false, draggable:false, keyboard:false});
+                rcmail.keys_list.addEventListener('select', function(o){ p.enigma_key_select(o); });
                 rcmail.keys_list.init();
                 rcmail.keys_list.focus();
 
                 rcmail.enigma_list();
 
-                rcmail.register_command('firstpage', function(props) {
-                    return rcmail.enigma_list_page('first');
-                });
-                rcmail.register_command('previouspage', function(props) {
-                    return rcmail.enigma_list_page('previous');
-                });
-                rcmail.register_command('nextpage', function(props) {
-                    return rcmail.enigma_list_page('next');
-                });
-                rcmail.register_command('lastpage', function(props) {
-                    return rcmail.enigma_list_page('last');
-                });
+                rcmail.register_command('firstpage', function(props) {return rcmail.enigma_list_page('first'); });
+                rcmail.register_command('previouspage', function(props) {return rcmail.enigma_list_page('previous'); });
+                rcmail.register_command('nextpage', function(props) {return rcmail.enigma_list_page('next'); });
+                rcmail.register_command('lastpage', function(props) {return rcmail.enigma_list_page('last'); });
             }
 
             if (rcmail.env.action == 'edit-prefs') {
-                rcmail.register_command('search', function(props) {
-                    return rcmail.enigma_search(props);
-                }, true);
-                rcmail.register_command('reset-search', function(props) {
-                    return rcmail.enigma_search_reset(props);
-                }, true);
+                rcmail.register_command('search', function(props) {return rcmail.enigma_search(props); }, true);
+                rcmail.register_command('reset-search', function(props) {return rcmail.enigma_search_reset(props); }, true);
             }
             else if (rcmail.env.action == 'plugin.enigma') {
-                rcmail.register_command('plugin.enigma-import', function() {
-                    rcmail.enigma_import()
-                }, true);
-                rcmail.register_command('plugin.enigma-export', function() {
-                    rcmail.enigma_export()
-                }, true);
+                rcmail.register_command('plugin.enigma-import', function() { rcmail.enigma_import() }, true);
+                rcmail.register_command('plugin.enigma-export', function() { rcmail.enigma_export() }, true);
             }
         }
     });
@@ -89,7 +61,7 @@ rcube_webmail.prototype.enigma_import = function()
         form.submit();
         this.set_busy(true, 'importwait');
         this.lock_form(form, true);
-    }
+   }
 };
 
 // list row selection handler
@@ -124,13 +96,10 @@ rcube_webmail.prototype.enigma_search = function(props)
         props = this.gui_objects.qsearchbox.value;
 
     if (props || this.env.search_request) {
-        var params = {
-            '_a': 'keysearch', 
-            '_q': urlencode(props)
-            },
-        lock = this.set_busy(true, 'searching');
-        //        if (this.gui_objects.search_filter)
-        //          addurl += '&_filter=' + this.gui_objects.search_filter.value;
+        var params = {'_a': 'keysearch', '_q': urlencode(props)},
+          lock = this.set_busy(true, 'searching');
+//        if (this.gui_objects.search_filter)
+  //          addurl += '&_filter=' + this.gui_objects.search_filter.value;
         this.env.current_page = 1;  
         this.enigma_loadframe();
         this.enigma_clear_list();
@@ -160,10 +129,8 @@ rcube_webmail.prototype.enigma_search_reset = function(props)
 // Keys/certs listing
 rcube_webmail.prototype.enigma_list = function(page)
 {
-    var params = {
-        '_a': 'keylist'
-    },
-    lock = this.set_busy(true, 'loading');
+    var params = {'_a': 'keylist'},
+      lock = this.set_busy(true, 'loading');
 
     this.env.current_page = page ? page : 1;
 
@@ -206,14 +173,14 @@ rcube_webmail.prototype.enigma_add_list_row = function(r)
         return false;
 
     var list = this.keys_list,
-    tbody = this.gui_objects.keyslist.tBodies[0],
-    rowcount = tbody.rows.length,
-    even = rowcount%2,
-    css_class = 'message'
-    + (even ? ' even' : ' odd'),
-    // for performance use DOM instead of jQuery here
-    row = document.createElement('tr'),
-    col = document.createElement('td');
+        tbody = this.gui_objects.keyslist.tBodies[0],
+        rowcount = tbody.rows.length,
+        even = rowcount%2,
+        css_class = 'message'
+            + (even ? ' even' : ' odd'),
+        // for performance use DOM instead of jQuery here
+        row = document.createElement('tr'),
+        col = document.createElement('td');
 
     row.id = 'rcmrow' + r.id;
     row.className = css_class;

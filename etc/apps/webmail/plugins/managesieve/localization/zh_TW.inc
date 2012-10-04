@@ -1,18 +1,17 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/zh_TW/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Nansen <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/zh_TW/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Nansen                                                        |
+ +-----------------------------------------------------------------------+
+*/
 
 $labels = array();
 $labels['filters'] = '篩選器';
@@ -125,5 +124,11 @@ $labels['setdeleted'] = '篩選器集合成功刪除';
 $labels['setdeleteconfirm'] = '你確定要刪除選擇的篩選器集合嗎？';
 $labels['setcreateerror'] = '無法建立篩選器集合。 伺服器發生錯誤';
 $labels['setcreated'] = '篩選器集合成功建立';
+$labels['activateerror'] = '無法啟用選擇的篩選器。伺服器錯誤';
+$labels['deactivateerror'] = '無法停用選擇的篩選器。伺服器錯誤';
+$labels['activated'] = '篩選器已停用';
+$labels['deactivated'] = '篩選器已啟用';
+$labels['moved'] = '篩選器已移動';
+$labels['moveerror'] = '無法移動選擇的篩選器。伺服器錯誤';
 $labels['nametoolong'] = '無法建立篩選器集合。 名稱太長';
 

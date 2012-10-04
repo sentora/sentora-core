@@ -1,28 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/bg_BG/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Todor Dragnev <todor.dragnev@gmail.com>                       |
-  |	  Nickolay Bunev <just4nick@gmail.com>								|
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/bg_BG/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Вход неуспешен';
 $messages['cookiesdisabled'] = 'Вашият браузър не приема cookies';
 $messages['sessionerror'] = 'Невалидна или изтекла сесия';
-$messages['imaperror'] = 'Неуспешно свързване към IMAP сървъра';
+$messages['storageerror'] = 'Неуспешно свързване към IMAP сървъра';
 $messages['servererror'] = 'Грешка!';
 $messages['servererrormsg'] = 'Сървърна грешка: $msg';
 $messages['dberror'] = 'Грешка с базата данни!';
@@ -139,7 +135,7 @@ $messages['contactdeleted'] = 'Контактът беше изтрит';
 $messages['contactrestoreerror'] = 'Неуспешно възстановяване на изтрите контакт(и).';
 $messages['contactrestored'] = 'Контактът(-ите) са възстановени успешно';
 $messages['groupdeleted'] = 'Групата беше  изтрита';
-$messages['grouprenamed'] = 'Групата беше преименувана ';
+$messages['grouprenamed'] = 'Групата беше преименувана';
 $messages['groupcreated'] = 'Групата беше създадена';
 $messages['savedsearchdeleted'] = 'Запазаните търсения са изтрити успешно.';
 $messages['savedsearchdeleteerror'] = 'Изтриването на запазените търсения е неуспешно.';
@@ -158,4 +154,4 @@ $messages['foldercreated'] = 'Папката е създадена';
 $messages['invalidimageformat'] = 'Невалиден формат на изображението';
 $messages['mispellingsfound'] = 'В съобщението са намерени правописни грешки.';
 $messages['parentnotwritable'] = 'Създаването/преместването на папка в избраната родителска папка е неуспешно. Няма права за достъп.';
-?>
+

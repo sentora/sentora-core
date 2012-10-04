@@ -1,18 +1,17 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/de_CH/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id: labels.inc 5873 2012-02-11 13:50:04Z thomasb $
- */
+ +-----------------------------------------------------------------------+
+ | localization/de_CH/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas                                                        |
+ +-----------------------------------------------------------------------+
+*/
 
 $labels = array();
 $labels['welcome'] = 'Willkommen bei $product';
@@ -41,6 +40,7 @@ $labels['size'] = 'Grösse';
 $labels['priority'] = 'Priorität';
 $labels['organization'] = 'Organisation';
 $labels['readstatus'] = 'Gelesen/Ungelesen';
+$labels['listoptions'] = 'Listenoptionen...';
 $labels['mailboxlist'] = 'Ordner';
 $labels['folders'] = 'Ordner';
 $labels['messagesfromto'] = 'Nachrichten $from bis $to von $count';
@@ -119,8 +119,8 @@ $labels['mark'] = 'Markieren';
 $labels['markmessages'] = 'Nachrichten markieren';
 $labels['markread'] = 'Als gelesen';
 $labels['markunread'] = 'Als ungelesen';
-$labels['markflagged'] = 'Stern hinzufügen';
-$labels['markunflagged'] = 'Stern entfernen';
+$labels['markflagged'] = 'Markierung hinzufügen';
+$labels['markunflagged'] = 'Markierung entfernen';
 $labels['moreactions'] = 'Mehr ...';
 $labels['more'] = 'Mehr';
 $labels['back'] = 'Zurück';
@@ -272,6 +272,7 @@ $labels['delete'] = 'Löschen';
 $labels['rename'] = 'Umbenennen';
 $labels['addphoto'] = 'Hinzufügen';
 $labels['replacephoto'] = 'Ersetzen';
+$labels['uploadphoto'] = 'Bild hochladen';
 $labels['newcontact'] = 'Neuen Kontakt erfassen';
 $labels['deletecontact'] = 'Gewählte Kontakte löschen';
 $labels['composeto'] = 'Nachricht verfassen';
@@ -282,6 +283,7 @@ $labels['exportvcards'] = 'Kontakte im vCard-Format exportieren';
 $labels['newcontactgroup'] = 'Neue Adressgruppe erstellen';
 $labels['grouprename'] = 'Gruppe umbenennen';
 $labels['groupdelete'] = 'Gruppe löschen';
+$labels['groupremoveselected'] = 'Gewählte Kontakte aus Gruppe entfernen';
 $labels['previouspage'] = 'Eine Seite zurück';
 $labels['firstpage'] = 'Erste Seite';
 $labels['nextpage'] = 'Nächste Seite';
@@ -341,6 +343,7 @@ $labels['readwhendeleted'] = 'Beim Löschen als gelesen markieren';
 $labels['flagfordeletion'] = 'Als gelöscht markieren anstatt in den Papierkorb verschieben';
 $labels['skipdeleted'] = 'Zeige keine gelöschten Nachrichten an';
 $labels['deletealways'] = 'Löschen wenn Verschieben in den Papierkorb nicht möglich';
+$labels['deletejunk'] = 'Nachrichten in Spam direkt löschen';
 $labels['showremoteimages'] = 'Eingebettete Bilder vom Internet laden';
 $labels['fromknownsenders'] = 'bei bekannten Absendern';
 $labels['always'] = 'immer';
@@ -363,6 +366,7 @@ $labels['checkallfolders'] = 'Alle Ordner auf neue Nachrichten prüfen';
 $labels['displaynext'] = 'Zeige nächste Nachricht nach verschieben/löschen';
 $labels['defaultfont'] = 'Standardschrift in HTML-Nachrichten';
 $labels['mainoptions'] = 'Allgemein';
+$labels['browseroptions'] = 'Browsereinstellungen';
 $labels['section'] = 'Bereich';
 $labels['maintenance'] = 'Wartung';
 $labels['newmessage'] = 'Neue Nachrichten';
@@ -392,6 +396,7 @@ $labels['spellcheckignoresyms'] = 'Wörter mit Symbolen überspringen';
 $labels['spellcheckignorenums'] = 'Wörter mit Ziffern überspringen';
 $labels['spellcheckignorecaps'] = 'Wörter überspringen, die nur aus Grossbuchstaben bestehen';
 $labels['addtodict'] = 'Zum Wörterbuch hinzufügen';
+$labels['mailtoprotohandler'] = 'Als Empfänger für mailto: Links einrichten';
 $labels['folder'] = 'Ordner';
 $labels['foldername'] = 'Ordnername';
 $labels['subscribed'] = 'Abonniert';

@@ -1,58 +1,59 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/ms_MY/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Muhammad Zamri MS <myzamri@gmail.com>                        |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/ms_MY/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: nawawi <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = 'Selamat datang ke $product';
 $labels['username'] = 'Nama Pengguna';
-$labels['password'] = 'Kata Laluan';
+$labels['password'] = 'Katalaluan';
 $labels['server'] = 'Pelayan';
 $labels['login'] = 'Log Masuk';
 $labels['logout'] = 'Log Keluar';
-$labels['mail'] = 'E-Mel';
-$labels['settings'] = 'Tetapan Peribadi';
+$labels['mail'] = 'Mel';
+$labels['settings'] = 'Tetapan';
 $labels['addressbook'] = 'Buku Alamat';
-$labels['inbox'] = 'Masuk';
+$labels['inbox'] = 'Peti Masuk';
 $labels['drafts'] = 'Draf';
-$labels['sent'] = 'Keluar';
-$labels['trash'] = 'Sampah';
-$labels['junk'] = 'Remeh';
+$labels['sent'] = 'Hantar';
+$labels['trash'] = 'Tong Sampah';
+$labels['junk'] = 'Junk';
 $labels['subject'] = 'Subjek';
-$labels['from'] = 'Penghantar';
-$labels['to'] = 'Penerima';
-$labels['cc'] = 'Salinan';
+$labels['from'] = 'Daripada';
+$labels['to'] = 'Kepada';
+$labels['cc'] = 'Cc';
 $labels['bcc'] = 'Bcc';
-$labels['replyto'] = 'Balas kepada';
+$labels['replyto'] = 'Balasan Kepada';
+$labels['followupto'] = 'Susulan Ke';
 $labels['date'] = 'Tarikh';
 $labels['size'] = 'Saiz';
-$labels['priority'] = 'Keutamaan';
+$labels['priority'] = 'Prioriti';
 $labels['organization'] = 'Organisasi';
-$labels['reply-to'] = 'Balas kepada';
-$labels['mailboxlist'] = 'Kabinet Fail';
+$labels['readstatus'] = 'Status baca';
+$labels['listoptions'] = 'Senarai pilihan';
+$labels['mailboxlist'] = 'Folder';
+$labels['folders'] = 'Folder';
 $labels['messagesfromto'] = 'Mesej $from ke $to dari $count';
+$labels['threadsfromto'] = 'Urutan $from ke $to dari $count';
 $labels['messagenrof'] = 'Mesej $nr dari $count';
-$labels['moveto'] = 'pindah ke...';
-$labels['download'] = 'muat turun';
+$labels['fromtoshort'] = '$from - $to dari $count';
+$labels['copy'] = 'Salin';
+$labels['move'] = 'Alih';
+$labels['moveto'] = 'Alih ke...';
+$labels['download'] = 'Muat Turun';
 $labels['filename'] = 'Nama Fail';
 $labels['filesize'] = 'Saiz Fail';
-$labels['preferhtml'] = 'Papar HTML';
-$labels['htmlmessage'] = 'Mesej HTML';
-$labels['prettydate'] = 'Tarikh-tarikh cantik';
 $labels['addtoaddressbook'] = 'Tambah ke buku alamat';
 $labels['sun'] = 'Aha';
 $labels['mon'] = 'Isn';
@@ -73,6 +74,7 @@ $labels['feb'] = 'Feb';
 $labels['mar'] = 'Mac';
 $labels['apr'] = 'Apr';
 $labels['may'] = 'Mei';
+$labels['longmay'] = 'Mei';
 $labels['jun'] = 'Jun';
 $labels['jul'] = 'Jul';
 $labels['aug'] = 'Ogo';
@@ -84,7 +86,6 @@ $labels['longjan'] = 'Januari';
 $labels['longfeb'] = 'Februari';
 $labels['longmar'] = 'March';
 $labels['longapr'] = 'April';
-$labels['longmay'] = 'Mei';
 $labels['longjun'] = 'Jun';
 $labels['longjul'] = 'Julai';
 $labels['longaug'] = 'Ogos';
@@ -93,52 +94,102 @@ $labels['longoct'] = 'Oktober';
 $labels['longnov'] = 'November';
 $labels['longdec'] = 'Disember';
 $labels['today'] = 'Hari Ini';
+$labels['refresh'] = 'Refresh';
 $labels['checkmail'] = 'Semak mesej baru';
+$labels['compose'] = 'Karang mesej';
 $labels['writenewmessage'] = 'Cipta mesej baru';
+$labels['reply'] = 'Balas';
 $labels['replytomessage'] = 'Balas mesej';
 $labels['replytoallmessage'] = 'Balas kepada penghantar dan semua penerima';
+$labels['replyall'] = 'Balas semua';
+$labels['replylist'] = 'Senarai balas';
+$labels['forward'] = 'Majukan';
+$labels['forwardinline'] = 'Majukan dalam mesej';
+$labels['forwardattachment'] = 'Majukan sebagai lampiran';
 $labels['forwardmessage'] = 'Marakan mesej';
 $labels['deletemessage'] = 'Pindah mesej ke sampah';
 $labels['movemessagetotrash'] = 'Pindah mesej ke Tong Sampah';
 $labels['printmessage'] = 'Cetak mesej ini';
 $labels['previousmessage'] = 'Papar mesej sebelumnya';
-$labels['previousmessages'] = 'Papar set mesej sebelumnya';
 $labels['firstmessage'] = 'Papar mesej pertama';
-$labels['firstmessages'] = 'Papar set mesej pertama';
 $labels['nextmessage'] = 'Papat mesej seterusnya';
-$labels['nextmessages'] = 'Papar set mesej seterusnya';
 $labels['lastmessage'] = 'Papat mesej terakhir';
-$labels['lastmessages'] = 'Papar set mesej terakhir';
 $labels['backtolist'] = 'Kembali ke senarai mesej';
 $labels['viewsource'] = 'Papar sumber';
+$labels['mark'] = 'Tanda';
 $labels['markmessages'] = 'Tanda mesej';
-$labels['markread'] = 'dibaca';
-$labels['markunread'] = 'belum/tidak dibaca';
+$labels['markread'] = 'Sebagai Dibaca';
+$labels['markunread'] = 'Sebagai Tidak dibaca';
+$labels['markflagged'] = 'Seperti  ditanda';
+$labels['markunflagged'] = 'Seperti tidak ditanda';
+$labels['moreactions'] = 'Tindakan lanjut..';
+$labels['more'] = 'Seterusnya';
+$labels['back'] = 'Kembali';
+$labels['options'] = 'Opsyen';
 $labels['select'] = 'Pilih';
 $labels['all'] = 'Semua';
 $labels['none'] = 'Tiada';
-$labels['unread'] = 'Tidak dibaca';
-$labels['compact'] = 'Padat';
+$labels['nonesort'] = 'Tiada';
+$labels['currpage'] = 'Muka terkini';
+$labels['unread'] = 'Belum dibaca';
+$labels['flagged'] = 'Ditanda';
+$labels['unanswered'] = 'Belum dijawab';
+$labels['deleted'] = 'Telah dipadam';
+$labels['invert'] = 'Songsangkan';
+$labels['filter'] = 'Tapis';
+$labels['list'] = 'Senarai';
+$labels['threads'] = 'Urutan';
+$labels['expand-all'] = 'Buka Semua';
+$labels['expand-unread'] = 'Buka yang belum dibaca';
+$labels['collapse-all'] = 'Tutup Semua';
+$labels['threaded'] = 'Telah urutan';
+$labels['autoexpand_threads'] = 'Buka mesej mengikut urutan';
+$labels['do_expand'] = 'Kesemua urutan';
+$labels['expand_only_unread'] = 'hanya dengan mesej yang belum dibaca';
+$labels['fromto'] = 'Daripada/Kepada';
+$labels['flag'] = 'Tanda';
+$labels['attachment'] = 'Lampiran';
+$labels['sentdate'] = 'Tarikh dihantar';
+$labels['arrival'] = 'Tarikh terima';
+$labels['asc'] = 'menaik';
+$labels['desc'] = 'menurun';
+$labels['listcolumns'] = 'Senarai ruang';
+$labels['listsorting'] = 'pengisihan ruang';
+$labels['listorder'] = 'Urutan pengisihan';
+$labels['listmode'] = 'Mod senarai paparan';
+$labels['folderactions'] = 'Aksi folder';
+$labels['compact'] = 'Kompak';
 $labels['empty'] = 'Kosong';
-$labels['purge'] = 'Singkir';
 $labels['quota'] = 'Penggunaan cakera';
-$labels['unknown'] = 'tidak dikenali';
-$labels['unlimited'] = 'tidak terhad';
+$labels['unknown'] = 'tidak diketahui';
+$labels['unlimited'] = 'Tidak terhad';
 $labels['quicksearch'] = 'Carian pantas';
 $labels['resetsearch'] = 'Set semula carian';
-$labels['compose'] = 'Karang mesej';
-$labels['savemessage'] = 'Simpan draf ini';
-$labels['sendmessage'] = 'Hantar mesej sekarang';
+$labels['searchmod'] = 'Pengubah carian';
+$labels['msgtext'] = 'Keseluruhan mesej';
+$labels['openinextwin'] = 'Buka dalam tetingkap baru';
+$labels['emlsave'] = 'Muat-turun (.eml)';
+$labels['editasnew'] = 'Ubah seperti baharu';
+$labels['savemessage'] = 'Simapan sebagai draf';
+$labels['sendmessage'] = 'Hantar mesej';
 $labels['addattachment'] = 'Lampir fail';
-$labels['charset'] = 'Charset';
+$labels['charset'] = 'Set aksara';
 $labels['editortype'] = 'Jenis Editor';
-$labels['returnreceipt'] = 'Resit kembali';
+$labels['returnreceipt'] = 'Penerimaan semula';
+$labels['dsn'] = 'Status pemberitahuan penghantaran';
+$labels['mailreplyintro'] = 'Pada $date, $sender menulis';
+$labels['originalmessage'] = 'Mesej Asal';
+$labels['editidents'] = 'Ubah identiti';
+$labels['spellcheck'] = 'Eja';
 $labels['checkspelling'] = 'Semak ejaan';
 $labels['resumeediting'] = 'Sambung pengeditan';
 $labels['revertto'] = 'Kembali kepada';
+$labels['attach'] = 'Lampirkan';
 $labels['attachments'] = 'Lampiran';
 $labels['upload'] = 'Muat naik';
+$labels['uploadprogress'] = '$percent ($current dari $total)';
 $labels['close'] = 'Tutup';
+$labels['messageoptions'] = 'Opsyen mesej';
 $labels['low'] = 'Rendah';
 $labels['lowest'] = 'Paling Rendah';
 $labels['normal'] = 'Normal';
@@ -146,11 +197,17 @@ $labels['high'] = 'Tinggi';
 $labels['highest'] = 'Paling Tinggi';
 $labels['nosubject'] = '(tiada subjek)';
 $labels['showimages'] = 'Papar imej';
+$labels['alwaysshow'] = 'selalu paparkan imej dari $sender';
+$labels['isdraft'] = 'Ini adalah draf mesej';
 $labels['htmltoggle'] = 'HTML';
 $labels['plaintoggle'] = 'Teks kosong';
+$labels['savesentmessagein'] = 'Simpan mesej yang telah dihantar dalam';
+$labels['dontsave'] = 'Jangan simpan';
+$labels['maxuploadsize'] = 'maksimum saiz fail yang dibenarkan ialah $size';
 $labels['addcc'] = 'Tambah Cc';
 $labels['addbcc'] = 'Tambah Bcc';
 $labels['addreplyto'] = 'Tambah Reply-To';
+$labels['addfollowupto'] = 'Tambah Followup-To';
 $labels['mdnrequest'] = 'Pengirim mesej ini mahu diberitahu apabila anda membaca mesej ini. Adakah anda ingin memberitahu pengirim?';
 $labels['receiptread'] = 'Balas Resip (dibaca)';
 $labels['yourmessage'] = 'Ini adalah Resip Balasan untuk mesej anda';
@@ -161,10 +218,10 @@ $labels['surname'] = 'Nama akhir';
 $labels['email'] = 'E-Mel';
 $labels['addcontact'] = 'Tambah kontek baru';
 $labels['editcontact'] = 'Ubahsuai Kontek';
-$labels['edit'] = 'Ubahsuai';
+$labels['edit'] = 'Sunting';
 $labels['cancel'] = 'Batal';
 $labels['save'] = 'Simpan';
-$labels['delete'] = 'Hapus';
+$labels['delete'] = 'Padam';
 $labels['newcontact'] = 'Cipta kad kontek baru';
 $labels['deletecontact'] = 'Hapus kontek yang dipilih';
 $labels['composeto'] = 'Karang mel kepada';
@@ -178,14 +235,17 @@ $labels['lastpage'] = 'Papar set akhir';
 $labels['groups'] = 'Kumpulan';
 $labels['personaladrbook'] = 'Alamat-alamat Peribadi';
 $labels['settingsfor'] = 'Tetapan bagi';
-$labels['preferences'] = 'Pilihan';
-$labels['userpreferences'] = 'Pilihan pengguna';
-$labels['editpreferences'] = 'Ubahsuai pilihan pengguna';
+$labels['preferences'] = 'Keutamaan';
+$labels['userpreferences'] = 'Keutamaan pengguna';
+$labels['editpreferences'] = 'Sunting keutamaan pengguna';
 $labels['identities'] = 'Identiti';
 $labels['manageidentities'] = 'Urus identiti bagi akaun ini';
 $labels['newidentity'] = 'Identiti baru';
 $labels['newitem'] = 'Butiran baru';
 $labels['edititem'] = 'Ubahsuai butiran';
+$labels['preferhtml'] = 'Papar HTML';
+$labels['htmlmessage'] = 'Mesej HTML';
+$labels['prettydate'] = 'Tarikh-tarikh cantik';
 $labels['setdefault'] = 'Tetap asal';
 $labels['language'] = 'Bahasa';
 $labels['timezone'] = 'Zon Masa';
@@ -209,7 +269,6 @@ $labels['flagfordeletion'] = 'Tanda mesej untuk pembuangan (tidak delete terus)'
 $labels['autosavedraft'] = 'Simpan draf dengan automatik';
 $labels['never'] = 'tidak pernah';
 $labels['folder'] = 'Kabinet Fail';
-$labels['folders'] = 'Kabinet Fail';
 $labels['foldername'] = 'Nama Kabinet Fail';
 $labels['subscribed'] = 'Dilanggan';
 $labels['messagecount'] = 'Mesej-mesej';
@@ -219,4 +278,4 @@ $labels['managefolders'] = 'Urus kabinet fail';
 $labels['sortby'] = 'Susun dengan';
 $labels['sortasc'] = 'Susun menaik';
 $labels['sortdesc'] = 'Susun menurun';
-?>
+

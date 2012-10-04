@@ -1,0 +1,54 @@
+<roundcube:object name="doctype" value="html5" />
+<html>
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+</head>
+<body class="iframe fullheight">
+
+<div id="messagepreviewheader">
+<h3 class="subject"><roundcube:object name="messageHeaders" valueOf="subject" /></h3>
+
+<a href="#details" id="previewheaderstoggle"><span class="iconlink"></span></a>
+
+<table class="headers-table" id="preview-shortheaders"><tbody><tr>
+<roundcube:if condition="env:mailbox == config:drafts_mbox || env:mailbox == config:sent_mbox">
+	<td class="header-title"><roundcube:label name="to" /></td>
+	<td class="header from"><roundcube:object name="messageHeaders" valueOf="to" addicon="/images/addcontact.png" /></td>
+<roundcube:else />
+	<td class="header-title"><roundcube:label name="from" /></td>
+	<td class="header from"><roundcube:object name="messageHeaders" valueOf="from" addicon="/images/addcontact.png" /></td>
+<roundcube:endif />
+	<td class="header-title"><roundcube:label name="date" /></td>
+	<td class="header from"><roundcube:object name="messageHeaders" valueOf="date" /></td>
+</tr></tbody></table>
+
+<roundcube:object name="messageHeaders" id="preview-allheaders" class="headers-table" addicon="/images/addcontact.png" exclude="subject,replyto" />
+
+<!-- record navigation -->
+<div id="countcontrols" class="pagenav">
+<roundcube:if condition="env:mailbox != config:drafts_mbox">
+	<roundcube:button command="reply" type="link" class="button reply" classSel="button reply pressed" innerClass="inner" title="replytomessage" content="&lt;-" />
+	<roundcube:button command="reply-all" type="link" class="button replyall" classSel="button replyall pressed" innerClass="inner" title="replytoallmessage" content="&lt;&lt;-" />
+	<roundcube:button command="forward" type="link" class="button forward" classSel="button forward pressed" innerClass="inner" title="forwardmessage" content="-&gt;" />
+	&nbsp;
+<roundcube:endif />
+	<roundcube:button command="permaurl" type="link" class="button extwin" classSel="button extwin pressed" innerClass="inner" title="openinextwin" content="[]" target="_blank" />
+</div>
+
+</div>
+
+<div id="messagepreview">
+<div class="rightcol">
+<roundcube:object name="messageAttachments" id="attachment-list" class="attachmentslist" />
+</div>
+<div class="leftcol">
+<roundcube:object name="messageObjects" id="message-objects" />
+<roundcube:object name="messageBody" id="messagebody" />
+</div>
+</div>
+
+<roundcube:include file="/includes/footer.html" />
+
+</body>
+</html>

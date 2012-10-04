@@ -21,6 +21,7 @@
 // | USA.                                                                 |
 // +----------------------------------------------------------------------+
 //
+
 // }}}
 require_once 'Net/IDNA2/Exception.php';
 require_once 'Net/IDNA2/Exception/Nameprep.php';
@@ -54,8 +55,8 @@ require_once 'Net/IDNA2/Exception/Nameprep.php';
  * @author  Stefan Neufeind <pear.neufeind@speedpartner.de>
  * @version $Id: IDNA2.php 305344 2010-11-14 23:52:42Z neufeind $
  */
-class Net_IDNA2 {
-
+class Net_IDNA2
+{
     // {{{ npdata
     /**
      * These Unicode codepoints are
@@ -270,16 +271,16 @@ class Net_IDNA2 {
      * @access private
      */
     private static $_np_prohibit_ranges = array(
-        array(0x80, 0x9F),
-        array(0x2060, 0x206F),
-        array(0x1D173, 0x1D17A),
-        array(0xE000, 0xF8FF),
-        array(0xF0000, 0xFFFFD),
+        array(0x80,     0x9F    ),
+        array(0x2060,   0x206F  ),
+        array(0x1D173,  0x1D17A ),
+        array(0xE000,   0xF8FF  ),
+        array(0xF0000,  0xFFFFD ),
         array(0x100000, 0x10FFFD),
-        array(0xFDD0, 0xFDEF),
-        array(0xD800, 0xDFFF),
-        array(0x2FF0, 0x2FFB),
-        array(0xE0020, 0xE007F)
+        array(0xFDD0,   0xFDEF  ),
+        array(0xD800,   0xDFFF  ),
+        array(0x2FF0,   0x2FFB  ),
+        array(0xE0020,  0xE007F )
     );
 
     /**
@@ -290,892 +291,892 @@ class Net_IDNA2 {
      * @access private
      */
     private static $_np_replacemaps = array(
-        0x41 => array(0x61),
-        0x42 => array(0x62),
-        0x43 => array(0x63),
-        0x44 => array(0x64),
-        0x45 => array(0x65),
-        0x46 => array(0x66),
-        0x47 => array(0x67),
-        0x48 => array(0x68),
-        0x49 => array(0x69),
-        0x4A => array(0x6A),
-        0x4B => array(0x6B),
-        0x4C => array(0x6C),
-        0x4D => array(0x6D),
-        0x4E => array(0x6E),
-        0x4F => array(0x6F),
-        0x50 => array(0x70),
-        0x51 => array(0x71),
-        0x52 => array(0x72),
-        0x53 => array(0x73),
-        0x54 => array(0x74),
-        0x55 => array(0x75),
-        0x56 => array(0x76),
-        0x57 => array(0x77),
-        0x58 => array(0x78),
-        0x59 => array(0x79),
-        0x5A => array(0x7A),
-        0xB5 => array(0x3BC),
-        0xC0 => array(0xE0),
-        0xC1 => array(0xE1),
-        0xC2 => array(0xE2),
-        0xC3 => array(0xE3),
-        0xC4 => array(0xE4),
-        0xC5 => array(0xE5),
-        0xC6 => array(0xE6),
-        0xC7 => array(0xE7),
-        0xC8 => array(0xE8),
-        0xC9 => array(0xE9),
-        0xCA => array(0xEA),
-        0xCB => array(0xEB),
-        0xCC => array(0xEC),
-        0xCD => array(0xED),
-        0xCE => array(0xEE),
-        0xCF => array(0xEF),
-        0xD0 => array(0xF0),
-        0xD1 => array(0xF1),
-        0xD2 => array(0xF2),
-        0xD3 => array(0xF3),
-        0xD4 => array(0xF4),
-        0xD5 => array(0xF5),
-        0xD6 => array(0xF6),
-        0xD8 => array(0xF8),
-        0xD9 => array(0xF9),
-        0xDA => array(0xFA),
-        0xDB => array(0xFB),
-        0xDC => array(0xFC),
-        0xDD => array(0xFD),
-        0xDE => array(0xFE),
-        0xDF => array(0x73, 0x73),
-        0x100 => array(0x101),
-        0x102 => array(0x103),
-        0x104 => array(0x105),
-        0x106 => array(0x107),
-        0x108 => array(0x109),
-        0x10A => array(0x10B),
-        0x10C => array(0x10D),
-        0x10E => array(0x10F),
-        0x110 => array(0x111),
-        0x112 => array(0x113),
-        0x114 => array(0x115),
-        0x116 => array(0x117),
-        0x118 => array(0x119),
-        0x11A => array(0x11B),
-        0x11C => array(0x11D),
-        0x11E => array(0x11F),
-        0x120 => array(0x121),
-        0x122 => array(0x123),
-        0x124 => array(0x125),
-        0x126 => array(0x127),
-        0x128 => array(0x129),
-        0x12A => array(0x12B),
-        0x12C => array(0x12D),
-        0x12E => array(0x12F),
-        0x130 => array(0x69, 0x307),
-        0x132 => array(0x133),
-        0x134 => array(0x135),
-        0x136 => array(0x137),
-        0x139 => array(0x13A),
-        0x13B => array(0x13C),
-        0x13D => array(0x13E),
-        0x13F => array(0x140),
-        0x141 => array(0x142),
-        0x143 => array(0x144),
-        0x145 => array(0x146),
-        0x147 => array(0x148),
-        0x149 => array(0x2BC, 0x6E),
-        0x14A => array(0x14B),
-        0x14C => array(0x14D),
-        0x14E => array(0x14F),
-        0x150 => array(0x151),
-        0x152 => array(0x153),
-        0x154 => array(0x155),
-        0x156 => array(0x157),
-        0x158 => array(0x159),
-        0x15A => array(0x15B),
-        0x15C => array(0x15D),
-        0x15E => array(0x15F),
-        0x160 => array(0x161),
-        0x162 => array(0x163),
-        0x164 => array(0x165),
-        0x166 => array(0x167),
-        0x168 => array(0x169),
-        0x16A => array(0x16B),
-        0x16C => array(0x16D),
-        0x16E => array(0x16F),
-        0x170 => array(0x171),
-        0x172 => array(0x173),
-        0x174 => array(0x175),
-        0x176 => array(0x177),
-        0x178 => array(0xFF),
-        0x179 => array(0x17A),
-        0x17B => array(0x17C),
-        0x17D => array(0x17E),
-        0x17F => array(0x73),
-        0x181 => array(0x253),
-        0x182 => array(0x183),
-        0x184 => array(0x185),
-        0x186 => array(0x254),
-        0x187 => array(0x188),
-        0x189 => array(0x256),
-        0x18A => array(0x257),
-        0x18B => array(0x18C),
-        0x18E => array(0x1DD),
-        0x18F => array(0x259),
-        0x190 => array(0x25B),
-        0x191 => array(0x192),
-        0x193 => array(0x260),
-        0x194 => array(0x263),
-        0x196 => array(0x269),
-        0x197 => array(0x268),
-        0x198 => array(0x199),
-        0x19C => array(0x26F),
-        0x19D => array(0x272),
-        0x19F => array(0x275),
-        0x1A0 => array(0x1A1),
-        0x1A2 => array(0x1A3),
-        0x1A4 => array(0x1A5),
-        0x1A6 => array(0x280),
-        0x1A7 => array(0x1A8),
-        0x1A9 => array(0x283),
-        0x1AC => array(0x1AD),
-        0x1AE => array(0x288),
-        0x1AF => array(0x1B0),
-        0x1B1 => array(0x28A),
-        0x1B2 => array(0x28B),
-        0x1B3 => array(0x1B4),
-        0x1B5 => array(0x1B6),
-        0x1B7 => array(0x292),
-        0x1B8 => array(0x1B9),
-        0x1BC => array(0x1BD),
-        0x1C4 => array(0x1C6),
-        0x1C5 => array(0x1C6),
-        0x1C7 => array(0x1C9),
-        0x1C8 => array(0x1C9),
-        0x1CA => array(0x1CC),
-        0x1CB => array(0x1CC),
-        0x1CD => array(0x1CE),
-        0x1CF => array(0x1D0),
-        0x1D1 => array(0x1D2),
-        0x1D3 => array(0x1D4),
-        0x1D5 => array(0x1D6),
-        0x1D7 => array(0x1D8),
-        0x1D9 => array(0x1DA),
-        0x1DB => array(0x1DC),
-        0x1DE => array(0x1DF),
-        0x1E0 => array(0x1E1),
-        0x1E2 => array(0x1E3),
-        0x1E4 => array(0x1E5),
-        0x1E6 => array(0x1E7),
-        0x1E8 => array(0x1E9),
-        0x1EA => array(0x1EB),
-        0x1EC => array(0x1ED),
-        0x1EE => array(0x1EF),
-        0x1F0 => array(0x6A, 0x30C),
-        0x1F1 => array(0x1F3),
-        0x1F2 => array(0x1F3),
-        0x1F4 => array(0x1F5),
-        0x1F6 => array(0x195),
-        0x1F7 => array(0x1BF),
-        0x1F8 => array(0x1F9),
-        0x1FA => array(0x1FB),
-        0x1FC => array(0x1FD),
-        0x1FE => array(0x1FF),
-        0x200 => array(0x201),
-        0x202 => array(0x203),
-        0x204 => array(0x205),
-        0x206 => array(0x207),
-        0x208 => array(0x209),
-        0x20A => array(0x20B),
-        0x20C => array(0x20D),
-        0x20E => array(0x20F),
-        0x210 => array(0x211),
-        0x212 => array(0x213),
-        0x214 => array(0x215),
-        0x216 => array(0x217),
-        0x218 => array(0x219),
-        0x21A => array(0x21B),
-        0x21C => array(0x21D),
-        0x21E => array(0x21F),
-        0x220 => array(0x19E),
-        0x222 => array(0x223),
-        0x224 => array(0x225),
-        0x226 => array(0x227),
-        0x228 => array(0x229),
-        0x22A => array(0x22B),
-        0x22C => array(0x22D),
-        0x22E => array(0x22F),
-        0x230 => array(0x231),
-        0x232 => array(0x233),
-        0x345 => array(0x3B9),
-        0x37A => array(0x20, 0x3B9),
-        0x386 => array(0x3AC),
-        0x388 => array(0x3AD),
-        0x389 => array(0x3AE),
-        0x38A => array(0x3AF),
-        0x38C => array(0x3CC),
-        0x38E => array(0x3CD),
-        0x38F => array(0x3CE),
-        0x390 => array(0x3B9, 0x308, 0x301),
-        0x391 => array(0x3B1),
-        0x392 => array(0x3B2),
-        0x393 => array(0x3B3),
-        0x394 => array(0x3B4),
-        0x395 => array(0x3B5),
-        0x396 => array(0x3B6),
-        0x397 => array(0x3B7),
-        0x398 => array(0x3B8),
-        0x399 => array(0x3B9),
-        0x39A => array(0x3BA),
-        0x39B => array(0x3BB),
-        0x39C => array(0x3BC),
-        0x39D => array(0x3BD),
-        0x39E => array(0x3BE),
-        0x39F => array(0x3BF),
-        0x3A0 => array(0x3C0),
-        0x3A1 => array(0x3C1),
-        0x3A3 => array(0x3C3),
-        0x3A4 => array(0x3C4),
-        0x3A5 => array(0x3C5),
-        0x3A6 => array(0x3C6),
-        0x3A7 => array(0x3C7),
-        0x3A8 => array(0x3C8),
-        0x3A9 => array(0x3C9),
-        0x3AA => array(0x3CA),
-        0x3AB => array(0x3CB),
-        0x3B0 => array(0x3C5, 0x308, 0x301),
-        0x3C2 => array(0x3C3),
-        0x3D0 => array(0x3B2),
-        0x3D1 => array(0x3B8),
-        0x3D2 => array(0x3C5),
-        0x3D3 => array(0x3CD),
-        0x3D4 => array(0x3CB),
-        0x3D5 => array(0x3C6),
-        0x3D6 => array(0x3C0),
-        0x3D8 => array(0x3D9),
-        0x3DA => array(0x3DB),
-        0x3DC => array(0x3DD),
-        0x3DE => array(0x3DF),
-        0x3E0 => array(0x3E1),
-        0x3E2 => array(0x3E3),
-        0x3E4 => array(0x3E5),
-        0x3E6 => array(0x3E7),
-        0x3E8 => array(0x3E9),
-        0x3EA => array(0x3EB),
-        0x3EC => array(0x3ED),
-        0x3EE => array(0x3EF),
-        0x3F0 => array(0x3BA),
-        0x3F1 => array(0x3C1),
-        0x3F2 => array(0x3C3),
-        0x3F4 => array(0x3B8),
-        0x3F5 => array(0x3B5),
-        0x400 => array(0x450),
-        0x401 => array(0x451),
-        0x402 => array(0x452),
-        0x403 => array(0x453),
-        0x404 => array(0x454),
-        0x405 => array(0x455),
-        0x406 => array(0x456),
-        0x407 => array(0x457),
-        0x408 => array(0x458),
-        0x409 => array(0x459),
-        0x40A => array(0x45A),
-        0x40B => array(0x45B),
-        0x40C => array(0x45C),
-        0x40D => array(0x45D),
-        0x40E => array(0x45E),
-        0x40F => array(0x45F),
-        0x410 => array(0x430),
-        0x411 => array(0x431),
-        0x412 => array(0x432),
-        0x413 => array(0x433),
-        0x414 => array(0x434),
-        0x415 => array(0x435),
-        0x416 => array(0x436),
-        0x417 => array(0x437),
-        0x418 => array(0x438),
-        0x419 => array(0x439),
-        0x41A => array(0x43A),
-        0x41B => array(0x43B),
-        0x41C => array(0x43C),
-        0x41D => array(0x43D),
-        0x41E => array(0x43E),
-        0x41F => array(0x43F),
-        0x420 => array(0x440),
-        0x421 => array(0x441),
-        0x422 => array(0x442),
-        0x423 => array(0x443),
-        0x424 => array(0x444),
-        0x425 => array(0x445),
-        0x426 => array(0x446),
-        0x427 => array(0x447),
-        0x428 => array(0x448),
-        0x429 => array(0x449),
-        0x42A => array(0x44A),
-        0x42B => array(0x44B),
-        0x42C => array(0x44C),
-        0x42D => array(0x44D),
-        0x42E => array(0x44E),
-        0x42F => array(0x44F),
-        0x460 => array(0x461),
-        0x462 => array(0x463),
-        0x464 => array(0x465),
-        0x466 => array(0x467),
-        0x468 => array(0x469),
-        0x46A => array(0x46B),
-        0x46C => array(0x46D),
-        0x46E => array(0x46F),
-        0x470 => array(0x471),
-        0x472 => array(0x473),
-        0x474 => array(0x475),
-        0x476 => array(0x477),
-        0x478 => array(0x479),
-        0x47A => array(0x47B),
-        0x47C => array(0x47D),
-        0x47E => array(0x47F),
-        0x480 => array(0x481),
-        0x48A => array(0x48B),
-        0x48C => array(0x48D),
-        0x48E => array(0x48F),
-        0x490 => array(0x491),
-        0x492 => array(0x493),
-        0x494 => array(0x495),
-        0x496 => array(0x497),
-        0x498 => array(0x499),
-        0x49A => array(0x49B),
-        0x49C => array(0x49D),
-        0x49E => array(0x49F),
-        0x4A0 => array(0x4A1),
-        0x4A2 => array(0x4A3),
-        0x4A4 => array(0x4A5),
-        0x4A6 => array(0x4A7),
-        0x4A8 => array(0x4A9),
-        0x4AA => array(0x4AB),
-        0x4AC => array(0x4AD),
-        0x4AE => array(0x4AF),
-        0x4B0 => array(0x4B1),
-        0x4B2 => array(0x4B3),
-        0x4B4 => array(0x4B5),
-        0x4B6 => array(0x4B7),
-        0x4B8 => array(0x4B9),
-        0x4BA => array(0x4BB),
-        0x4BC => array(0x4BD),
-        0x4BE => array(0x4BF),
-        0x4C1 => array(0x4C2),
-        0x4C3 => array(0x4C4),
-        0x4C5 => array(0x4C6),
-        0x4C7 => array(0x4C8),
-        0x4C9 => array(0x4CA),
-        0x4CB => array(0x4CC),
-        0x4CD => array(0x4CE),
-        0x4D0 => array(0x4D1),
-        0x4D2 => array(0x4D3),
-        0x4D4 => array(0x4D5),
-        0x4D6 => array(0x4D7),
-        0x4D8 => array(0x4D9),
-        0x4DA => array(0x4DB),
-        0x4DC => array(0x4DD),
-        0x4DE => array(0x4DF),
-        0x4E0 => array(0x4E1),
-        0x4E2 => array(0x4E3),
-        0x4E4 => array(0x4E5),
-        0x4E6 => array(0x4E7),
-        0x4E8 => array(0x4E9),
-        0x4EA => array(0x4EB),
-        0x4EC => array(0x4ED),
-        0x4EE => array(0x4EF),
-        0x4F0 => array(0x4F1),
-        0x4F2 => array(0x4F3),
-        0x4F4 => array(0x4F5),
-        0x4F8 => array(0x4F9),
-        0x500 => array(0x501),
-        0x502 => array(0x503),
-        0x504 => array(0x505),
-        0x506 => array(0x507),
-        0x508 => array(0x509),
-        0x50A => array(0x50B),
-        0x50C => array(0x50D),
-        0x50E => array(0x50F),
-        0x531 => array(0x561),
-        0x532 => array(0x562),
-        0x533 => array(0x563),
-        0x534 => array(0x564),
-        0x535 => array(0x565),
-        0x536 => array(0x566),
-        0x537 => array(0x567),
-        0x538 => array(0x568),
-        0x539 => array(0x569),
-        0x53A => array(0x56A),
-        0x53B => array(0x56B),
-        0x53C => array(0x56C),
-        0x53D => array(0x56D),
-        0x53E => array(0x56E),
-        0x53F => array(0x56F),
-        0x540 => array(0x570),
-        0x541 => array(0x571),
-        0x542 => array(0x572),
-        0x543 => array(0x573),
-        0x544 => array(0x574),
-        0x545 => array(0x575),
-        0x546 => array(0x576),
-        0x547 => array(0x577),
-        0x548 => array(0x578),
-        0x549 => array(0x579),
-        0x54A => array(0x57A),
-        0x54B => array(0x57B),
-        0x54C => array(0x57C),
-        0x54D => array(0x57D),
-        0x54E => array(0x57E),
-        0x54F => array(0x57F),
-        0x550 => array(0x580),
-        0x551 => array(0x581),
-        0x552 => array(0x582),
-        0x553 => array(0x583),
-        0x554 => array(0x584),
-        0x555 => array(0x585),
-        0x556 => array(0x586),
-        0x587 => array(0x565, 0x582),
-        0x1E00 => array(0x1E01),
-        0x1E02 => array(0x1E03),
-        0x1E04 => array(0x1E05),
-        0x1E06 => array(0x1E07),
-        0x1E08 => array(0x1E09),
-        0x1E0A => array(0x1E0B),
-        0x1E0C => array(0x1E0D),
-        0x1E0E => array(0x1E0F),
-        0x1E10 => array(0x1E11),
-        0x1E12 => array(0x1E13),
-        0x1E14 => array(0x1E15),
-        0x1E16 => array(0x1E17),
-        0x1E18 => array(0x1E19),
-        0x1E1A => array(0x1E1B),
-        0x1E1C => array(0x1E1D),
-        0x1E1E => array(0x1E1F),
-        0x1E20 => array(0x1E21),
-        0x1E22 => array(0x1E23),
-        0x1E24 => array(0x1E25),
-        0x1E26 => array(0x1E27),
-        0x1E28 => array(0x1E29),
-        0x1E2A => array(0x1E2B),
-        0x1E2C => array(0x1E2D),
-        0x1E2E => array(0x1E2F),
-        0x1E30 => array(0x1E31),
-        0x1E32 => array(0x1E33),
-        0x1E34 => array(0x1E35),
-        0x1E36 => array(0x1E37),
-        0x1E38 => array(0x1E39),
-        0x1E3A => array(0x1E3B),
-        0x1E3C => array(0x1E3D),
-        0x1E3E => array(0x1E3F),
-        0x1E40 => array(0x1E41),
-        0x1E42 => array(0x1E43),
-        0x1E44 => array(0x1E45),
-        0x1E46 => array(0x1E47),
-        0x1E48 => array(0x1E49),
-        0x1E4A => array(0x1E4B),
-        0x1E4C => array(0x1E4D),
-        0x1E4E => array(0x1E4F),
-        0x1E50 => array(0x1E51),
-        0x1E52 => array(0x1E53),
-        0x1E54 => array(0x1E55),
-        0x1E56 => array(0x1E57),
-        0x1E58 => array(0x1E59),
-        0x1E5A => array(0x1E5B),
-        0x1E5C => array(0x1E5D),
-        0x1E5E => array(0x1E5F),
-        0x1E60 => array(0x1E61),
-        0x1E62 => array(0x1E63),
-        0x1E64 => array(0x1E65),
-        0x1E66 => array(0x1E67),
-        0x1E68 => array(0x1E69),
-        0x1E6A => array(0x1E6B),
-        0x1E6C => array(0x1E6D),
-        0x1E6E => array(0x1E6F),
-        0x1E70 => array(0x1E71),
-        0x1E72 => array(0x1E73),
-        0x1E74 => array(0x1E75),
-        0x1E76 => array(0x1E77),
-        0x1E78 => array(0x1E79),
-        0x1E7A => array(0x1E7B),
-        0x1E7C => array(0x1E7D),
-        0x1E7E => array(0x1E7F),
-        0x1E80 => array(0x1E81),
-        0x1E82 => array(0x1E83),
-        0x1E84 => array(0x1E85),
-        0x1E86 => array(0x1E87),
-        0x1E88 => array(0x1E89),
-        0x1E8A => array(0x1E8B),
-        0x1E8C => array(0x1E8D),
-        0x1E8E => array(0x1E8F),
-        0x1E90 => array(0x1E91),
-        0x1E92 => array(0x1E93),
-        0x1E94 => array(0x1E95),
-        0x1E96 => array(0x68, 0x331),
-        0x1E97 => array(0x74, 0x308),
-        0x1E98 => array(0x77, 0x30A),
-        0x1E99 => array(0x79, 0x30A),
-        0x1E9A => array(0x61, 0x2BE),
-        0x1E9B => array(0x1E61),
-        0x1EA0 => array(0x1EA1),
-        0x1EA2 => array(0x1EA3),
-        0x1EA4 => array(0x1EA5),
-        0x1EA6 => array(0x1EA7),
-        0x1EA8 => array(0x1EA9),
-        0x1EAA => array(0x1EAB),
-        0x1EAC => array(0x1EAD),
-        0x1EAE => array(0x1EAF),
-        0x1EB0 => array(0x1EB1),
-        0x1EB2 => array(0x1EB3),
-        0x1EB4 => array(0x1EB5),
-        0x1EB6 => array(0x1EB7),
-        0x1EB8 => array(0x1EB9),
-        0x1EBA => array(0x1EBB),
-        0x1EBC => array(0x1EBD),
-        0x1EBE => array(0x1EBF),
-        0x1EC0 => array(0x1EC1),
-        0x1EC2 => array(0x1EC3),
-        0x1EC4 => array(0x1EC5),
-        0x1EC6 => array(0x1EC7),
-        0x1EC8 => array(0x1EC9),
-        0x1ECA => array(0x1ECB),
-        0x1ECC => array(0x1ECD),
-        0x1ECE => array(0x1ECF),
-        0x1ED0 => array(0x1ED1),
-        0x1ED2 => array(0x1ED3),
-        0x1ED4 => array(0x1ED5),
-        0x1ED6 => array(0x1ED7),
-        0x1ED8 => array(0x1ED9),
-        0x1EDA => array(0x1EDB),
-        0x1EDC => array(0x1EDD),
-        0x1EDE => array(0x1EDF),
-        0x1EE0 => array(0x1EE1),
-        0x1EE2 => array(0x1EE3),
-        0x1EE4 => array(0x1EE5),
-        0x1EE6 => array(0x1EE7),
-        0x1EE8 => array(0x1EE9),
-        0x1EEA => array(0x1EEB),
-        0x1EEC => array(0x1EED),
-        0x1EEE => array(0x1EEF),
-        0x1EF0 => array(0x1EF1),
-        0x1EF2 => array(0x1EF3),
-        0x1EF4 => array(0x1EF5),
-        0x1EF6 => array(0x1EF7),
-        0x1EF8 => array(0x1EF9),
-        0x1F08 => array(0x1F00),
-        0x1F09 => array(0x1F01),
-        0x1F0A => array(0x1F02),
-        0x1F0B => array(0x1F03),
-        0x1F0C => array(0x1F04),
-        0x1F0D => array(0x1F05),
-        0x1F0E => array(0x1F06),
-        0x1F0F => array(0x1F07),
-        0x1F18 => array(0x1F10),
-        0x1F19 => array(0x1F11),
-        0x1F1A => array(0x1F12),
-        0x1F1B => array(0x1F13),
-        0x1F1C => array(0x1F14),
-        0x1F1D => array(0x1F15),
-        0x1F28 => array(0x1F20),
-        0x1F29 => array(0x1F21),
-        0x1F2A => array(0x1F22),
-        0x1F2B => array(0x1F23),
-        0x1F2C => array(0x1F24),
-        0x1F2D => array(0x1F25),
-        0x1F2E => array(0x1F26),
-        0x1F2F => array(0x1F27),
-        0x1F38 => array(0x1F30),
-        0x1F39 => array(0x1F31),
-        0x1F3A => array(0x1F32),
-        0x1F3B => array(0x1F33),
-        0x1F3C => array(0x1F34),
-        0x1F3D => array(0x1F35),
-        0x1F3E => array(0x1F36),
-        0x1F3F => array(0x1F37),
-        0x1F48 => array(0x1F40),
-        0x1F49 => array(0x1F41),
-        0x1F4A => array(0x1F42),
-        0x1F4B => array(0x1F43),
-        0x1F4C => array(0x1F44),
-        0x1F4D => array(0x1F45),
-        0x1F50 => array(0x3C5, 0x313),
-        0x1F52 => array(0x3C5, 0x313, 0x300),
-        0x1F54 => array(0x3C5, 0x313, 0x301),
-        0x1F56 => array(0x3C5, 0x313, 0x342),
-        0x1F59 => array(0x1F51),
-        0x1F5B => array(0x1F53),
-        0x1F5D => array(0x1F55),
-        0x1F5F => array(0x1F57),
-        0x1F68 => array(0x1F60),
-        0x1F69 => array(0x1F61),
-        0x1F6A => array(0x1F62),
-        0x1F6B => array(0x1F63),
-        0x1F6C => array(0x1F64),
-        0x1F6D => array(0x1F65),
-        0x1F6E => array(0x1F66),
-        0x1F6F => array(0x1F67),
-        0x1F80 => array(0x1F00, 0x3B9),
-        0x1F81 => array(0x1F01, 0x3B9),
-        0x1F82 => array(0x1F02, 0x3B9),
-        0x1F83 => array(0x1F03, 0x3B9),
-        0x1F84 => array(0x1F04, 0x3B9),
-        0x1F85 => array(0x1F05, 0x3B9),
-        0x1F86 => array(0x1F06, 0x3B9),
-        0x1F87 => array(0x1F07, 0x3B9),
-        0x1F88 => array(0x1F00, 0x3B9),
-        0x1F89 => array(0x1F01, 0x3B9),
-        0x1F8A => array(0x1F02, 0x3B9),
-        0x1F8B => array(0x1F03, 0x3B9),
-        0x1F8C => array(0x1F04, 0x3B9),
-        0x1F8D => array(0x1F05, 0x3B9),
-        0x1F8E => array(0x1F06, 0x3B9),
-        0x1F8F => array(0x1F07, 0x3B9),
-        0x1F90 => array(0x1F20, 0x3B9),
-        0x1F91 => array(0x1F21, 0x3B9),
-        0x1F92 => array(0x1F22, 0x3B9),
-        0x1F93 => array(0x1F23, 0x3B9),
-        0x1F94 => array(0x1F24, 0x3B9),
-        0x1F95 => array(0x1F25, 0x3B9),
-        0x1F96 => array(0x1F26, 0x3B9),
-        0x1F97 => array(0x1F27, 0x3B9),
-        0x1F98 => array(0x1F20, 0x3B9),
-        0x1F99 => array(0x1F21, 0x3B9),
-        0x1F9A => array(0x1F22, 0x3B9),
-        0x1F9B => array(0x1F23, 0x3B9),
-        0x1F9C => array(0x1F24, 0x3B9),
-        0x1F9D => array(0x1F25, 0x3B9),
-        0x1F9E => array(0x1F26, 0x3B9),
-        0x1F9F => array(0x1F27, 0x3B9),
-        0x1FA0 => array(0x1F60, 0x3B9),
-        0x1FA1 => array(0x1F61, 0x3B9),
-        0x1FA2 => array(0x1F62, 0x3B9),
-        0x1FA3 => array(0x1F63, 0x3B9),
-        0x1FA4 => array(0x1F64, 0x3B9),
-        0x1FA5 => array(0x1F65, 0x3B9),
-        0x1FA6 => array(0x1F66, 0x3B9),
-        0x1FA7 => array(0x1F67, 0x3B9),
-        0x1FA8 => array(0x1F60, 0x3B9),
-        0x1FA9 => array(0x1F61, 0x3B9),
-        0x1FAA => array(0x1F62, 0x3B9),
-        0x1FAB => array(0x1F63, 0x3B9),
-        0x1FAC => array(0x1F64, 0x3B9),
-        0x1FAD => array(0x1F65, 0x3B9),
-        0x1FAE => array(0x1F66, 0x3B9),
-        0x1FAF => array(0x1F67, 0x3B9),
-        0x1FB2 => array(0x1F70, 0x3B9),
-        0x1FB3 => array(0x3B1, 0x3B9),
-        0x1FB4 => array(0x3AC, 0x3B9),
-        0x1FB6 => array(0x3B1, 0x342),
-        0x1FB7 => array(0x3B1, 0x342, 0x3B9),
-        0x1FB8 => array(0x1FB0),
-        0x1FB9 => array(0x1FB1),
-        0x1FBA => array(0x1F70),
-        0x1FBB => array(0x1F71),
-        0x1FBC => array(0x3B1, 0x3B9),
-        0x1FBE => array(0x3B9),
-        0x1FC2 => array(0x1F74, 0x3B9),
-        0x1FC3 => array(0x3B7, 0x3B9),
-        0x1FC4 => array(0x3AE, 0x3B9),
-        0x1FC6 => array(0x3B7, 0x342),
-        0x1FC7 => array(0x3B7, 0x342, 0x3B9),
-        0x1FC8 => array(0x1F72),
-        0x1FC9 => array(0x1F73),
-        0x1FCA => array(0x1F74),
-        0x1FCB => array(0x1F75),
-        0x1FCC => array(0x3B7, 0x3B9),
-        0x1FD2 => array(0x3B9, 0x308, 0x300),
-        0x1FD3 => array(0x3B9, 0x308, 0x301),
-        0x1FD6 => array(0x3B9, 0x342),
-        0x1FD7 => array(0x3B9, 0x308, 0x342),
-        0x1FD8 => array(0x1FD0),
-        0x1FD9 => array(0x1FD1),
-        0x1FDA => array(0x1F76),
-        0x1FDB => array(0x1F77),
-        0x1FE2 => array(0x3C5, 0x308, 0x300),
-        0x1FE3 => array(0x3C5, 0x308, 0x301),
-        0x1FE4 => array(0x3C1, 0x313),
-        0x1FE6 => array(0x3C5, 0x342),
-        0x1FE7 => array(0x3C5, 0x308, 0x342),
-        0x1FE8 => array(0x1FE0),
-        0x1FE9 => array(0x1FE1),
-        0x1FEA => array(0x1F7A),
-        0x1FEB => array(0x1F7B),
-        0x1FEC => array(0x1FE5),
-        0x1FF2 => array(0x1F7C, 0x3B9),
-        0x1FF3 => array(0x3C9, 0x3B9),
-        0x1FF4 => array(0x3CE, 0x3B9),
-        0x1FF6 => array(0x3C9, 0x342),
-        0x1FF7 => array(0x3C9, 0x342, 0x3B9),
-        0x1FF8 => array(0x1F78),
-        0x1FF9 => array(0x1F79),
-        0x1FFA => array(0x1F7C),
-        0x1FFB => array(0x1F7D),
-        0x1FFC => array(0x3C9, 0x3B9),
-        0x20A8 => array(0x72, 0x73),
-        0x2102 => array(0x63),
-        0x2103 => array(0xB0, 0x63),
-        0x2107 => array(0x25B),
-        0x2109 => array(0xB0, 0x66),
-        0x210B => array(0x68),
-        0x210C => array(0x68),
-        0x210D => array(0x68),
-        0x2110 => array(0x69),
-        0x2111 => array(0x69),
-        0x2112 => array(0x6C),
-        0x2115 => array(0x6E),
-        0x2116 => array(0x6E, 0x6F),
-        0x2119 => array(0x70),
-        0x211A => array(0x71),
-        0x211B => array(0x72),
-        0x211C => array(0x72),
-        0x211D => array(0x72),
-        0x2120 => array(0x73, 0x6D),
-        0x2121 => array(0x74, 0x65, 0x6C),
-        0x2122 => array(0x74, 0x6D),
-        0x2124 => array(0x7A),
-        0x2126 => array(0x3C9),
-        0x2128 => array(0x7A),
-        0x212A => array(0x6B),
-        0x212B => array(0xE5),
-        0x212C => array(0x62),
-        0x212D => array(0x63),
-        0x2130 => array(0x65),
-        0x2131 => array(0x66),
-        0x2133 => array(0x6D),
-        0x213E => array(0x3B3),
-        0x213F => array(0x3C0),
-        0x2145 => array(0x64),
-        0x2160 => array(0x2170),
-        0x2161 => array(0x2171),
-        0x2162 => array(0x2172),
-        0x2163 => array(0x2173),
-        0x2164 => array(0x2174),
-        0x2165 => array(0x2175),
-        0x2166 => array(0x2176),
-        0x2167 => array(0x2177),
-        0x2168 => array(0x2178),
-        0x2169 => array(0x2179),
-        0x216A => array(0x217A),
-        0x216B => array(0x217B),
-        0x216C => array(0x217C),
-        0x216D => array(0x217D),
-        0x216E => array(0x217E),
-        0x216F => array(0x217F),
-        0x24B6 => array(0x24D0),
-        0x24B7 => array(0x24D1),
-        0x24B8 => array(0x24D2),
-        0x24B9 => array(0x24D3),
-        0x24BA => array(0x24D4),
-        0x24BB => array(0x24D5),
-        0x24BC => array(0x24D6),
-        0x24BD => array(0x24D7),
-        0x24BE => array(0x24D8),
-        0x24BF => array(0x24D9),
-        0x24C0 => array(0x24DA),
-        0x24C1 => array(0x24DB),
-        0x24C2 => array(0x24DC),
-        0x24C3 => array(0x24DD),
-        0x24C4 => array(0x24DE),
-        0x24C5 => array(0x24DF),
-        0x24C6 => array(0x24E0),
-        0x24C7 => array(0x24E1),
-        0x24C8 => array(0x24E2),
-        0x24C9 => array(0x24E3),
-        0x24CA => array(0x24E4),
-        0x24CB => array(0x24E5),
-        0x24CC => array(0x24E6),
-        0x24CD => array(0x24E7),
-        0x24CE => array(0x24E8),
-        0x24CF => array(0x24E9),
-        0x3371 => array(0x68, 0x70, 0x61),
-        0x3373 => array(0x61, 0x75),
-        0x3375 => array(0x6F, 0x76),
-        0x3380 => array(0x70, 0x61),
-        0x3381 => array(0x6E, 0x61),
-        0x3382 => array(0x3BC, 0x61),
-        0x3383 => array(0x6D, 0x61),
-        0x3384 => array(0x6B, 0x61),
-        0x3385 => array(0x6B, 0x62),
-        0x3386 => array(0x6D, 0x62),
-        0x3387 => array(0x67, 0x62),
-        0x338A => array(0x70, 0x66),
-        0x338B => array(0x6E, 0x66),
-        0x338C => array(0x3BC, 0x66),
-        0x3390 => array(0x68, 0x7A),
-        0x3391 => array(0x6B, 0x68, 0x7A),
-        0x3392 => array(0x6D, 0x68, 0x7A),
-        0x3393 => array(0x67, 0x68, 0x7A),
-        0x3394 => array(0x74, 0x68, 0x7A),
-        0x33A9 => array(0x70, 0x61),
-        0x33AA => array(0x6B, 0x70, 0x61),
-        0x33AB => array(0x6D, 0x70, 0x61),
-        0x33AC => array(0x67, 0x70, 0x61),
-        0x33B4 => array(0x70, 0x76),
-        0x33B5 => array(0x6E, 0x76),
-        0x33B6 => array(0x3BC, 0x76),
-        0x33B7 => array(0x6D, 0x76),
-        0x33B8 => array(0x6B, 0x76),
-        0x33B9 => array(0x6D, 0x76),
-        0x33BA => array(0x70, 0x77),
-        0x33BB => array(0x6E, 0x77),
-        0x33BC => array(0x3BC, 0x77),
-        0x33BD => array(0x6D, 0x77),
-        0x33BE => array(0x6B, 0x77),
-        0x33BF => array(0x6D, 0x77),
-        0x33C0 => array(0x6B, 0x3C9),
-        0x33C1 => array(0x6D, 0x3C9),
+        0x41    => array(0x61),
+        0x42    => array(0x62),
+        0x43    => array(0x63),
+        0x44    => array(0x64),
+        0x45    => array(0x65),
+        0x46    => array(0x66),
+        0x47    => array(0x67),
+        0x48    => array(0x68),
+        0x49    => array(0x69),
+        0x4A    => array(0x6A),
+        0x4B    => array(0x6B),
+        0x4C    => array(0x6C),
+        0x4D    => array(0x6D),
+        0x4E    => array(0x6E),
+        0x4F    => array(0x6F),
+        0x50    => array(0x70),
+        0x51    => array(0x71),
+        0x52    => array(0x72),
+        0x53    => array(0x73),
+        0x54    => array(0x74),
+        0x55    => array(0x75),
+        0x56    => array(0x76),
+        0x57    => array(0x77),
+        0x58    => array(0x78),
+        0x59    => array(0x79),
+        0x5A    => array(0x7A),
+        0xB5    => array(0x3BC),
+        0xC0    => array(0xE0),
+        0xC1    => array(0xE1),
+        0xC2    => array(0xE2),
+        0xC3    => array(0xE3),
+        0xC4    => array(0xE4),
+        0xC5    => array(0xE5),
+        0xC6    => array(0xE6),
+        0xC7    => array(0xE7),
+        0xC8    => array(0xE8),
+        0xC9    => array(0xE9),
+        0xCA    => array(0xEA),
+        0xCB    => array(0xEB),
+        0xCC    => array(0xEC),
+        0xCD    => array(0xED),
+        0xCE    => array(0xEE),
+        0xCF    => array(0xEF),
+        0xD0    => array(0xF0),
+        0xD1    => array(0xF1),
+        0xD2    => array(0xF2),
+        0xD3    => array(0xF3),
+        0xD4    => array(0xF4),
+        0xD5    => array(0xF5),
+        0xD6    => array(0xF6),
+        0xD8    => array(0xF8),
+        0xD9    => array(0xF9),
+        0xDA    => array(0xFA),
+        0xDB    => array(0xFB),
+        0xDC    => array(0xFC),
+        0xDD    => array(0xFD),
+        0xDE    => array(0xFE),
+        0xDF    => array(0x73, 0x73),
+        0x100   => array(0x101),
+        0x102   => array(0x103),
+        0x104   => array(0x105),
+        0x106   => array(0x107),
+        0x108   => array(0x109),
+        0x10A   => array(0x10B),
+        0x10C   => array(0x10D),
+        0x10E   => array(0x10F),
+        0x110   => array(0x111),
+        0x112   => array(0x113),
+        0x114   => array(0x115),
+        0x116   => array(0x117),
+        0x118   => array(0x119),
+        0x11A   => array(0x11B),
+        0x11C   => array(0x11D),
+        0x11E   => array(0x11F),
+        0x120   => array(0x121),
+        0x122   => array(0x123),
+        0x124   => array(0x125),
+        0x126   => array(0x127),
+        0x128   => array(0x129),
+        0x12A   => array(0x12B),
+        0x12C   => array(0x12D),
+        0x12E   => array(0x12F),
+        0x130   => array(0x69, 0x307),
+        0x132   => array(0x133),
+        0x134   => array(0x135),
+        0x136   => array(0x137),
+        0x139   => array(0x13A),
+        0x13B   => array(0x13C),
+        0x13D   => array(0x13E),
+        0x13F   => array(0x140),
+        0x141   => array(0x142),
+        0x143   => array(0x144),
+        0x145   => array(0x146),
+        0x147   => array(0x148),
+        0x149   => array(0x2BC, 0x6E),
+        0x14A   => array(0x14B),
+        0x14C   => array(0x14D),
+        0x14E   => array(0x14F),
+        0x150   => array(0x151),
+        0x152   => array(0x153),
+        0x154   => array(0x155),
+        0x156   => array(0x157),
+        0x158   => array(0x159),
+        0x15A   => array(0x15B),
+        0x15C   => array(0x15D),
+        0x15E   => array(0x15F),
+        0x160   => array(0x161),
+        0x162   => array(0x163),
+        0x164   => array(0x165),
+        0x166   => array(0x167),
+        0x168   => array(0x169),
+        0x16A   => array(0x16B),
+        0x16C   => array(0x16D),
+        0x16E   => array(0x16F),
+        0x170   => array(0x171),
+        0x172   => array(0x173),
+        0x174   => array(0x175),
+        0x176   => array(0x177),
+        0x178   => array(0xFF),
+        0x179   => array(0x17A),
+        0x17B   => array(0x17C),
+        0x17D   => array(0x17E),
+        0x17F   => array(0x73),
+        0x181   => array(0x253),
+        0x182   => array(0x183),
+        0x184   => array(0x185),
+        0x186   => array(0x254),
+        0x187   => array(0x188),
+        0x189   => array(0x256),
+        0x18A   => array(0x257),
+        0x18B   => array(0x18C),
+        0x18E   => array(0x1DD),
+        0x18F   => array(0x259),
+        0x190   => array(0x25B),
+        0x191   => array(0x192),
+        0x193   => array(0x260),
+        0x194   => array(0x263),
+        0x196   => array(0x269),
+        0x197   => array(0x268),
+        0x198   => array(0x199),
+        0x19C   => array(0x26F),
+        0x19D   => array(0x272),
+        0x19F   => array(0x275),
+        0x1A0   => array(0x1A1),
+        0x1A2   => array(0x1A3),
+        0x1A4   => array(0x1A5),
+        0x1A6   => array(0x280),
+        0x1A7   => array(0x1A8),
+        0x1A9   => array(0x283),
+        0x1AC   => array(0x1AD),
+        0x1AE   => array(0x288),
+        0x1AF   => array(0x1B0),
+        0x1B1   => array(0x28A),
+        0x1B2   => array(0x28B),
+        0x1B3   => array(0x1B4),
+        0x1B5   => array(0x1B6),
+        0x1B7   => array(0x292),
+        0x1B8   => array(0x1B9),
+        0x1BC   => array(0x1BD),
+        0x1C4   => array(0x1C6),
+        0x1C5   => array(0x1C6),
+        0x1C7   => array(0x1C9),
+        0x1C8   => array(0x1C9),
+        0x1CA   => array(0x1CC),
+        0x1CB   => array(0x1CC),
+        0x1CD   => array(0x1CE),
+        0x1CF   => array(0x1D0),
+        0x1D1   => array(0x1D2),
+        0x1D3   => array(0x1D4),
+        0x1D5   => array(0x1D6),
+        0x1D7   => array(0x1D8),
+        0x1D9   => array(0x1DA),
+        0x1DB   => array(0x1DC),
+        0x1DE   => array(0x1DF),
+        0x1E0   => array(0x1E1),
+        0x1E2   => array(0x1E3),
+        0x1E4   => array(0x1E5),
+        0x1E6   => array(0x1E7),
+        0x1E8   => array(0x1E9),
+        0x1EA   => array(0x1EB),
+        0x1EC   => array(0x1ED),
+        0x1EE   => array(0x1EF),
+        0x1F0   => array(0x6A, 0x30C),
+        0x1F1   => array(0x1F3),
+        0x1F2   => array(0x1F3),
+        0x1F4   => array(0x1F5),
+        0x1F6   => array(0x195),
+        0x1F7   => array(0x1BF),
+        0x1F8   => array(0x1F9),
+        0x1FA   => array(0x1FB),
+        0x1FC   => array(0x1FD),
+        0x1FE   => array(0x1FF),
+        0x200   => array(0x201),
+        0x202   => array(0x203),
+        0x204   => array(0x205),
+        0x206   => array(0x207),
+        0x208   => array(0x209),
+        0x20A   => array(0x20B),
+        0x20C   => array(0x20D),
+        0x20E   => array(0x20F),
+        0x210   => array(0x211),
+        0x212   => array(0x213),
+        0x214   => array(0x215),
+        0x216   => array(0x217),
+        0x218   => array(0x219),
+        0x21A   => array(0x21B),
+        0x21C   => array(0x21D),
+        0x21E   => array(0x21F),
+        0x220   => array(0x19E),
+        0x222   => array(0x223),
+        0x224   => array(0x225),
+        0x226   => array(0x227),
+        0x228   => array(0x229),
+        0x22A   => array(0x22B),
+        0x22C   => array(0x22D),
+        0x22E   => array(0x22F),
+        0x230   => array(0x231),
+        0x232   => array(0x233),
+        0x345   => array(0x3B9),
+        0x37A   => array(0x20, 0x3B9),
+        0x386   => array(0x3AC),
+        0x388   => array(0x3AD),
+        0x389   => array(0x3AE),
+        0x38A   => array(0x3AF),
+        0x38C   => array(0x3CC),
+        0x38E   => array(0x3CD),
+        0x38F   => array(0x3CE),
+        0x390   => array(0x3B9, 0x308, 0x301),
+        0x391   => array(0x3B1),
+        0x392   => array(0x3B2),
+        0x393   => array(0x3B3),
+        0x394   => array(0x3B4),
+        0x395   => array(0x3B5),
+        0x396   => array(0x3B6),
+        0x397   => array(0x3B7),
+        0x398   => array(0x3B8),
+        0x399   => array(0x3B9),
+        0x39A   => array(0x3BA),
+        0x39B   => array(0x3BB),
+        0x39C   => array(0x3BC),
+        0x39D   => array(0x3BD),
+        0x39E   => array(0x3BE),
+        0x39F   => array(0x3BF),
+        0x3A0   => array(0x3C0),
+        0x3A1   => array(0x3C1),
+        0x3A3   => array(0x3C3),
+        0x3A4   => array(0x3C4),
+        0x3A5   => array(0x3C5),
+        0x3A6   => array(0x3C6),
+        0x3A7   => array(0x3C7),
+        0x3A8   => array(0x3C8),
+        0x3A9   => array(0x3C9),
+        0x3AA   => array(0x3CA),
+        0x3AB   => array(0x3CB),
+        0x3B0   => array(0x3C5, 0x308, 0x301),
+        0x3C2   => array(0x3C3),
+        0x3D0   => array(0x3B2),
+        0x3D1   => array(0x3B8),
+        0x3D2   => array(0x3C5),
+        0x3D3   => array(0x3CD),
+        0x3D4   => array(0x3CB),
+        0x3D5   => array(0x3C6),
+        0x3D6   => array(0x3C0),
+        0x3D8   => array(0x3D9),
+        0x3DA   => array(0x3DB),
+        0x3DC   => array(0x3DD),
+        0x3DE   => array(0x3DF),
+        0x3E0   => array(0x3E1),
+        0x3E2   => array(0x3E3),
+        0x3E4   => array(0x3E5),
+        0x3E6   => array(0x3E7),
+        0x3E8   => array(0x3E9),
+        0x3EA   => array(0x3EB),
+        0x3EC   => array(0x3ED),
+        0x3EE   => array(0x3EF),
+        0x3F0   => array(0x3BA),
+        0x3F1   => array(0x3C1),
+        0x3F2   => array(0x3C3),
+        0x3F4   => array(0x3B8),
+        0x3F5   => array(0x3B5),
+        0x400   => array(0x450),
+        0x401   => array(0x451),
+        0x402   => array(0x452),
+        0x403   => array(0x453),
+        0x404   => array(0x454),
+        0x405   => array(0x455),
+        0x406   => array(0x456),
+        0x407   => array(0x457),
+        0x408   => array(0x458),
+        0x409   => array(0x459),
+        0x40A   => array(0x45A),
+        0x40B   => array(0x45B),
+        0x40C   => array(0x45C),
+        0x40D   => array(0x45D),
+        0x40E   => array(0x45E),
+        0x40F   => array(0x45F),
+        0x410   => array(0x430),
+        0x411   => array(0x431),
+        0x412   => array(0x432),
+        0x413   => array(0x433),
+        0x414   => array(0x434),
+        0x415   => array(0x435),
+        0x416   => array(0x436),
+        0x417   => array(0x437),
+        0x418   => array(0x438),
+        0x419   => array(0x439),
+        0x41A   => array(0x43A),
+        0x41B   => array(0x43B),
+        0x41C   => array(0x43C),
+        0x41D   => array(0x43D),
+        0x41E   => array(0x43E),
+        0x41F   => array(0x43F),
+        0x420   => array(0x440),
+        0x421   => array(0x441),
+        0x422   => array(0x442),
+        0x423   => array(0x443),
+        0x424   => array(0x444),
+        0x425   => array(0x445),
+        0x426   => array(0x446),
+        0x427   => array(0x447),
+        0x428   => array(0x448),
+        0x429   => array(0x449),
+        0x42A   => array(0x44A),
+        0x42B   => array(0x44B),
+        0x42C   => array(0x44C),
+        0x42D   => array(0x44D),
+        0x42E   => array(0x44E),
+        0x42F   => array(0x44F),
+        0x460   => array(0x461),
+        0x462   => array(0x463),
+        0x464   => array(0x465),
+        0x466   => array(0x467),
+        0x468   => array(0x469),
+        0x46A   => array(0x46B),
+        0x46C   => array(0x46D),
+        0x46E   => array(0x46F),
+        0x470   => array(0x471),
+        0x472   => array(0x473),
+        0x474   => array(0x475),
+        0x476   => array(0x477),
+        0x478   => array(0x479),
+        0x47A   => array(0x47B),
+        0x47C   => array(0x47D),
+        0x47E   => array(0x47F),
+        0x480   => array(0x481),
+        0x48A   => array(0x48B),
+        0x48C   => array(0x48D),
+        0x48E   => array(0x48F),
+        0x490   => array(0x491),
+        0x492   => array(0x493),
+        0x494   => array(0x495),
+        0x496   => array(0x497),
+        0x498   => array(0x499),
+        0x49A   => array(0x49B),
+        0x49C   => array(0x49D),
+        0x49E   => array(0x49F),
+        0x4A0   => array(0x4A1),
+        0x4A2   => array(0x4A3),
+        0x4A4   => array(0x4A5),
+        0x4A6   => array(0x4A7),
+        0x4A8   => array(0x4A9),
+        0x4AA   => array(0x4AB),
+        0x4AC   => array(0x4AD),
+        0x4AE   => array(0x4AF),
+        0x4B0   => array(0x4B1),
+        0x4B2   => array(0x4B3),
+        0x4B4   => array(0x4B5),
+        0x4B6   => array(0x4B7),
+        0x4B8   => array(0x4B9),
+        0x4BA   => array(0x4BB),
+        0x4BC   => array(0x4BD),
+        0x4BE   => array(0x4BF),
+        0x4C1   => array(0x4C2),
+        0x4C3   => array(0x4C4),
+        0x4C5   => array(0x4C6),
+        0x4C7   => array(0x4C8),
+        0x4C9   => array(0x4CA),
+        0x4CB   => array(0x4CC),
+        0x4CD   => array(0x4CE),
+        0x4D0   => array(0x4D1),
+        0x4D2   => array(0x4D3),
+        0x4D4   => array(0x4D5),
+        0x4D6   => array(0x4D7),
+        0x4D8   => array(0x4D9),
+        0x4DA   => array(0x4DB),
+        0x4DC   => array(0x4DD),
+        0x4DE   => array(0x4DF),
+        0x4E0   => array(0x4E1),
+        0x4E2   => array(0x4E3),
+        0x4E4   => array(0x4E5),
+        0x4E6   => array(0x4E7),
+        0x4E8   => array(0x4E9),
+        0x4EA   => array(0x4EB),
+        0x4EC   => array(0x4ED),
+        0x4EE   => array(0x4EF),
+        0x4F0   => array(0x4F1),
+        0x4F2   => array(0x4F3),
+        0x4F4   => array(0x4F5),
+        0x4F8   => array(0x4F9),
+        0x500   => array(0x501),
+        0x502   => array(0x503),
+        0x504   => array(0x505),
+        0x506   => array(0x507),
+        0x508   => array(0x509),
+        0x50A   => array(0x50B),
+        0x50C   => array(0x50D),
+        0x50E   => array(0x50F),
+        0x531   => array(0x561),
+        0x532   => array(0x562),
+        0x533   => array(0x563),
+        0x534   => array(0x564),
+        0x535   => array(0x565),
+        0x536   => array(0x566),
+        0x537   => array(0x567),
+        0x538   => array(0x568),
+        0x539   => array(0x569),
+        0x53A   => array(0x56A),
+        0x53B   => array(0x56B),
+        0x53C   => array(0x56C),
+        0x53D   => array(0x56D),
+        0x53E   => array(0x56E),
+        0x53F   => array(0x56F),
+        0x540   => array(0x570),
+        0x541   => array(0x571),
+        0x542   => array(0x572),
+        0x543   => array(0x573),
+        0x544   => array(0x574),
+        0x545   => array(0x575),
+        0x546   => array(0x576),
+        0x547   => array(0x577),
+        0x548   => array(0x578),
+        0x549   => array(0x579),
+        0x54A   => array(0x57A),
+        0x54B   => array(0x57B),
+        0x54C   => array(0x57C),
+        0x54D   => array(0x57D),
+        0x54E   => array(0x57E),
+        0x54F   => array(0x57F),
+        0x550   => array(0x580),
+        0x551   => array(0x581),
+        0x552   => array(0x582),
+        0x553   => array(0x583),
+        0x554   => array(0x584),
+        0x555   => array(0x585),
+        0x556   => array(0x586),
+        0x587   => array(0x565, 0x582),
+        0x1E00  => array(0x1E01),
+        0x1E02  => array(0x1E03),
+        0x1E04  => array(0x1E05),
+        0x1E06  => array(0x1E07),
+        0x1E08  => array(0x1E09),
+        0x1E0A  => array(0x1E0B),
+        0x1E0C  => array(0x1E0D),
+        0x1E0E  => array(0x1E0F),
+        0x1E10  => array(0x1E11),
+        0x1E12  => array(0x1E13),
+        0x1E14  => array(0x1E15),
+        0x1E16  => array(0x1E17),
+        0x1E18  => array(0x1E19),
+        0x1E1A  => array(0x1E1B),
+        0x1E1C  => array(0x1E1D),
+        0x1E1E  => array(0x1E1F),
+        0x1E20  => array(0x1E21),
+        0x1E22  => array(0x1E23),
+        0x1E24  => array(0x1E25),
+        0x1E26  => array(0x1E27),
+        0x1E28  => array(0x1E29),
+        0x1E2A  => array(0x1E2B),
+        0x1E2C  => array(0x1E2D),
+        0x1E2E  => array(0x1E2F),
+        0x1E30  => array(0x1E31),
+        0x1E32  => array(0x1E33),
+        0x1E34  => array(0x1E35),
+        0x1E36  => array(0x1E37),
+        0x1E38  => array(0x1E39),
+        0x1E3A  => array(0x1E3B),
+        0x1E3C  => array(0x1E3D),
+        0x1E3E  => array(0x1E3F),
+        0x1E40  => array(0x1E41),
+        0x1E42  => array(0x1E43),
+        0x1E44  => array(0x1E45),
+        0x1E46  => array(0x1E47),
+        0x1E48  => array(0x1E49),
+        0x1E4A  => array(0x1E4B),
+        0x1E4C  => array(0x1E4D),
+        0x1E4E  => array(0x1E4F),
+        0x1E50  => array(0x1E51),
+        0x1E52  => array(0x1E53),
+        0x1E54  => array(0x1E55),
+        0x1E56  => array(0x1E57),
+        0x1E58  => array(0x1E59),
+        0x1E5A  => array(0x1E5B),
+        0x1E5C  => array(0x1E5D),
+        0x1E5E  => array(0x1E5F),
+        0x1E60  => array(0x1E61),
+        0x1E62  => array(0x1E63),
+        0x1E64  => array(0x1E65),
+        0x1E66  => array(0x1E67),
+        0x1E68  => array(0x1E69),
+        0x1E6A  => array(0x1E6B),
+        0x1E6C  => array(0x1E6D),
+        0x1E6E  => array(0x1E6F),
+        0x1E70  => array(0x1E71),
+        0x1E72  => array(0x1E73),
+        0x1E74  => array(0x1E75),
+        0x1E76  => array(0x1E77),
+        0x1E78  => array(0x1E79),
+        0x1E7A  => array(0x1E7B),
+        0x1E7C  => array(0x1E7D),
+        0x1E7E  => array(0x1E7F),
+        0x1E80  => array(0x1E81),
+        0x1E82  => array(0x1E83),
+        0x1E84  => array(0x1E85),
+        0x1E86  => array(0x1E87),
+        0x1E88  => array(0x1E89),
+        0x1E8A  => array(0x1E8B),
+        0x1E8C  => array(0x1E8D),
+        0x1E8E  => array(0x1E8F),
+        0x1E90  => array(0x1E91),
+        0x1E92  => array(0x1E93),
+        0x1E94  => array(0x1E95),
+        0x1E96  => array(0x68, 0x331),
+        0x1E97  => array(0x74, 0x308),
+        0x1E98  => array(0x77, 0x30A),
+        0x1E99  => array(0x79, 0x30A),
+        0x1E9A  => array(0x61, 0x2BE),
+        0x1E9B  => array(0x1E61),
+        0x1EA0  => array(0x1EA1),
+        0x1EA2  => array(0x1EA3),
+        0x1EA4  => array(0x1EA5),
+        0x1EA6  => array(0x1EA7),
+        0x1EA8  => array(0x1EA9),
+        0x1EAA  => array(0x1EAB),
+        0x1EAC  => array(0x1EAD),
+        0x1EAE  => array(0x1EAF),
+        0x1EB0  => array(0x1EB1),
+        0x1EB2  => array(0x1EB3),
+        0x1EB4  => array(0x1EB5),
+        0x1EB6  => array(0x1EB7),
+        0x1EB8  => array(0x1EB9),
+        0x1EBA  => array(0x1EBB),
+        0x1EBC  => array(0x1EBD),
+        0x1EBE  => array(0x1EBF),
+        0x1EC0  => array(0x1EC1),
+        0x1EC2  => array(0x1EC3),
+        0x1EC4  => array(0x1EC5),
+        0x1EC6  => array(0x1EC7),
+        0x1EC8  => array(0x1EC9),
+        0x1ECA  => array(0x1ECB),
+        0x1ECC  => array(0x1ECD),
+        0x1ECE  => array(0x1ECF),
+        0x1ED0  => array(0x1ED1),
+        0x1ED2  => array(0x1ED3),
+        0x1ED4  => array(0x1ED5),
+        0x1ED6  => array(0x1ED7),
+        0x1ED8  => array(0x1ED9),
+        0x1EDA  => array(0x1EDB),
+        0x1EDC  => array(0x1EDD),
+        0x1EDE  => array(0x1EDF),
+        0x1EE0  => array(0x1EE1),
+        0x1EE2  => array(0x1EE3),
+        0x1EE4  => array(0x1EE5),
+        0x1EE6  => array(0x1EE7),
+        0x1EE8  => array(0x1EE9),
+        0x1EEA  => array(0x1EEB),
+        0x1EEC  => array(0x1EED),
+        0x1EEE  => array(0x1EEF),
+        0x1EF0  => array(0x1EF1),
+        0x1EF2  => array(0x1EF3),
+        0x1EF4  => array(0x1EF5),
+        0x1EF6  => array(0x1EF7),
+        0x1EF8  => array(0x1EF9),
+        0x1F08  => array(0x1F00),
+        0x1F09  => array(0x1F01),
+        0x1F0A  => array(0x1F02),
+        0x1F0B  => array(0x1F03),
+        0x1F0C  => array(0x1F04),
+        0x1F0D  => array(0x1F05),
+        0x1F0E  => array(0x1F06),
+        0x1F0F  => array(0x1F07),
+        0x1F18  => array(0x1F10),
+        0x1F19  => array(0x1F11),
+        0x1F1A  => array(0x1F12),
+        0x1F1B  => array(0x1F13),
+        0x1F1C  => array(0x1F14),
+        0x1F1D  => array(0x1F15),
+        0x1F28  => array(0x1F20),
+        0x1F29  => array(0x1F21),
+        0x1F2A  => array(0x1F22),
+        0x1F2B  => array(0x1F23),
+        0x1F2C  => array(0x1F24),
+        0x1F2D  => array(0x1F25),
+        0x1F2E  => array(0x1F26),
+        0x1F2F  => array(0x1F27),
+        0x1F38  => array(0x1F30),
+        0x1F39  => array(0x1F31),
+        0x1F3A  => array(0x1F32),
+        0x1F3B  => array(0x1F33),
+        0x1F3C  => array(0x1F34),
+        0x1F3D  => array(0x1F35),
+        0x1F3E  => array(0x1F36),
+        0x1F3F  => array(0x1F37),
+        0x1F48  => array(0x1F40),
+        0x1F49  => array(0x1F41),
+        0x1F4A  => array(0x1F42),
+        0x1F4B  => array(0x1F43),
+        0x1F4C  => array(0x1F44),
+        0x1F4D  => array(0x1F45),
+        0x1F50  => array(0x3C5, 0x313),
+        0x1F52  => array(0x3C5, 0x313, 0x300),
+        0x1F54  => array(0x3C5, 0x313, 0x301),
+        0x1F56  => array(0x3C5, 0x313, 0x342),
+        0x1F59  => array(0x1F51),
+        0x1F5B  => array(0x1F53),
+        0x1F5D  => array(0x1F55),
+        0x1F5F  => array(0x1F57),
+        0x1F68  => array(0x1F60),
+        0x1F69  => array(0x1F61),
+        0x1F6A  => array(0x1F62),
+        0x1F6B  => array(0x1F63),
+        0x1F6C  => array(0x1F64),
+        0x1F6D  => array(0x1F65),
+        0x1F6E  => array(0x1F66),
+        0x1F6F  => array(0x1F67),
+        0x1F80  => array(0x1F00, 0x3B9),
+        0x1F81  => array(0x1F01, 0x3B9),
+        0x1F82  => array(0x1F02, 0x3B9),
+        0x1F83  => array(0x1F03, 0x3B9),
+        0x1F84  => array(0x1F04, 0x3B9),
+        0x1F85  => array(0x1F05, 0x3B9),
+        0x1F86  => array(0x1F06, 0x3B9),
+        0x1F87  => array(0x1F07, 0x3B9),
+        0x1F88  => array(0x1F00, 0x3B9),
+        0x1F89  => array(0x1F01, 0x3B9),
+        0x1F8A  => array(0x1F02, 0x3B9),
+        0x1F8B  => array(0x1F03, 0x3B9),
+        0x1F8C  => array(0x1F04, 0x3B9),
+        0x1F8D  => array(0x1F05, 0x3B9),
+        0x1F8E  => array(0x1F06, 0x3B9),
+        0x1F8F  => array(0x1F07, 0x3B9),
+        0x1F90  => array(0x1F20, 0x3B9),
+        0x1F91  => array(0x1F21, 0x3B9),
+        0x1F92  => array(0x1F22, 0x3B9),
+        0x1F93  => array(0x1F23, 0x3B9),
+        0x1F94  => array(0x1F24, 0x3B9),
+        0x1F95  => array(0x1F25, 0x3B9),
+        0x1F96  => array(0x1F26, 0x3B9),
+        0x1F97  => array(0x1F27, 0x3B9),
+        0x1F98  => array(0x1F20, 0x3B9),
+        0x1F99  => array(0x1F21, 0x3B9),
+        0x1F9A  => array(0x1F22, 0x3B9),
+        0x1F9B  => array(0x1F23, 0x3B9),
+        0x1F9C  => array(0x1F24, 0x3B9),
+        0x1F9D  => array(0x1F25, 0x3B9),
+        0x1F9E  => array(0x1F26, 0x3B9),
+        0x1F9F  => array(0x1F27, 0x3B9),
+        0x1FA0  => array(0x1F60, 0x3B9),
+        0x1FA1  => array(0x1F61, 0x3B9),
+        0x1FA2  => array(0x1F62, 0x3B9),
+        0x1FA3  => array(0x1F63, 0x3B9),
+        0x1FA4  => array(0x1F64, 0x3B9),
+        0x1FA5  => array(0x1F65, 0x3B9),
+        0x1FA6  => array(0x1F66, 0x3B9),
+        0x1FA7  => array(0x1F67, 0x3B9),
+        0x1FA8  => array(0x1F60, 0x3B9),
+        0x1FA9  => array(0x1F61, 0x3B9),
+        0x1FAA  => array(0x1F62, 0x3B9),
+        0x1FAB  => array(0x1F63, 0x3B9),
+        0x1FAC  => array(0x1F64, 0x3B9),
+        0x1FAD  => array(0x1F65, 0x3B9),
+        0x1FAE  => array(0x1F66, 0x3B9),
+        0x1FAF  => array(0x1F67, 0x3B9),
+        0x1FB2  => array(0x1F70, 0x3B9),
+        0x1FB3  => array(0x3B1, 0x3B9),
+        0x1FB4  => array(0x3AC, 0x3B9),
+        0x1FB6  => array(0x3B1, 0x342),
+        0x1FB7  => array(0x3B1, 0x342, 0x3B9),
+        0x1FB8  => array(0x1FB0),
+        0x1FB9  => array(0x1FB1),
+        0x1FBA  => array(0x1F70),
+        0x1FBB  => array(0x1F71),
+        0x1FBC  => array(0x3B1, 0x3B9),
+        0x1FBE  => array(0x3B9),
+        0x1FC2  => array(0x1F74, 0x3B9),
+        0x1FC3  => array(0x3B7, 0x3B9),
+        0x1FC4  => array(0x3AE, 0x3B9),
+        0x1FC6  => array(0x3B7, 0x342),
+        0x1FC7  => array(0x3B7, 0x342, 0x3B9),
+        0x1FC8  => array(0x1F72),
+        0x1FC9  => array(0x1F73),
+        0x1FCA  => array(0x1F74),
+        0x1FCB  => array(0x1F75),
+        0x1FCC  => array(0x3B7, 0x3B9),
+        0x1FD2  => array(0x3B9, 0x308, 0x300),
+        0x1FD3  => array(0x3B9, 0x308, 0x301),
+        0x1FD6  => array(0x3B9, 0x342),
+        0x1FD7  => array(0x3B9, 0x308, 0x342),
+        0x1FD8  => array(0x1FD0),
+        0x1FD9  => array(0x1FD1),
+        0x1FDA  => array(0x1F76),
+        0x1FDB  => array(0x1F77),
+        0x1FE2  => array(0x3C5, 0x308, 0x300),
+        0x1FE3  => array(0x3C5, 0x308, 0x301),
+        0x1FE4  => array(0x3C1, 0x313),
+        0x1FE6  => array(0x3C5, 0x342),
+        0x1FE7  => array(0x3C5, 0x308, 0x342),
+        0x1FE8  => array(0x1FE0),
+        0x1FE9  => array(0x1FE1),
+        0x1FEA  => array(0x1F7A),
+        0x1FEB  => array(0x1F7B),
+        0x1FEC  => array(0x1FE5),
+        0x1FF2  => array(0x1F7C, 0x3B9),
+        0x1FF3  => array(0x3C9, 0x3B9),
+        0x1FF4  => array(0x3CE, 0x3B9),
+        0x1FF6  => array(0x3C9, 0x342),
+        0x1FF7  => array(0x3C9, 0x342, 0x3B9),
+        0x1FF8  => array(0x1F78),
+        0x1FF9  => array(0x1F79),
+        0x1FFA  => array(0x1F7C),
+        0x1FFB  => array(0x1F7D),
+        0x1FFC  => array(0x3C9, 0x3B9),
+        0x20A8  => array(0x72, 0x73),
+        0x2102  => array(0x63),
+        0x2103  => array(0xB0, 0x63),
+        0x2107  => array(0x25B),
+        0x2109  => array(0xB0, 0x66),
+        0x210B  => array(0x68),
+        0x210C  => array(0x68),
+        0x210D  => array(0x68),
+        0x2110  => array(0x69),
+        0x2111  => array(0x69),
+        0x2112  => array(0x6C),
+        0x2115  => array(0x6E),
+        0x2116  => array(0x6E, 0x6F),
+        0x2119  => array(0x70),
+        0x211A  => array(0x71),
+        0x211B  => array(0x72),
+        0x211C  => array(0x72),
+        0x211D  => array(0x72),
+        0x2120  => array(0x73, 0x6D),
+        0x2121  => array(0x74, 0x65, 0x6C),
+        0x2122  => array(0x74, 0x6D),
+        0x2124  => array(0x7A),
+        0x2126  => array(0x3C9),
+        0x2128  => array(0x7A),
+        0x212A  => array(0x6B),
+        0x212B  => array(0xE5),
+        0x212C  => array(0x62),
+        0x212D  => array(0x63),
+        0x2130  => array(0x65),
+        0x2131  => array(0x66),
+        0x2133  => array(0x6D),
+        0x213E  => array(0x3B3),
+        0x213F  => array(0x3C0),
+        0x2145  => array(0x64),
+        0x2160  => array(0x2170),
+        0x2161  => array(0x2171),
+        0x2162  => array(0x2172),
+        0x2163  => array(0x2173),
+        0x2164  => array(0x2174),
+        0x2165  => array(0x2175),
+        0x2166  => array(0x2176),
+        0x2167  => array(0x2177),
+        0x2168  => array(0x2178),
+        0x2169  => array(0x2179),
+        0x216A  => array(0x217A),
+        0x216B  => array(0x217B),
+        0x216C  => array(0x217C),
+        0x216D  => array(0x217D),
+        0x216E  => array(0x217E),
+        0x216F  => array(0x217F),
+        0x24B6  => array(0x24D0),
+        0x24B7  => array(0x24D1),
+        0x24B8  => array(0x24D2),
+        0x24B9  => array(0x24D3),
+        0x24BA  => array(0x24D4),
+        0x24BB  => array(0x24D5),
+        0x24BC  => array(0x24D6),
+        0x24BD  => array(0x24D7),
+        0x24BE  => array(0x24D8),
+        0x24BF  => array(0x24D9),
+        0x24C0  => array(0x24DA),
+        0x24C1  => array(0x24DB),
+        0x24C2  => array(0x24DC),
+        0x24C3  => array(0x24DD),
+        0x24C4  => array(0x24DE),
+        0x24C5  => array(0x24DF),
+        0x24C6  => array(0x24E0),
+        0x24C7  => array(0x24E1),
+        0x24C8  => array(0x24E2),
+        0x24C9  => array(0x24E3),
+        0x24CA  => array(0x24E4),
+        0x24CB  => array(0x24E5),
+        0x24CC  => array(0x24E6),
+        0x24CD  => array(0x24E7),
+        0x24CE  => array(0x24E8),
+        0x24CF  => array(0x24E9),
+        0x3371  => array(0x68, 0x70, 0x61),
+        0x3373  => array(0x61, 0x75),
+        0x3375  => array(0x6F, 0x76),
+        0x3380  => array(0x70, 0x61),
+        0x3381  => array(0x6E, 0x61),
+        0x3382  => array(0x3BC, 0x61),
+        0x3383  => array(0x6D, 0x61),
+        0x3384  => array(0x6B, 0x61),
+        0x3385  => array(0x6B, 0x62),
+        0x3386  => array(0x6D, 0x62),
+        0x3387  => array(0x67, 0x62),
+        0x338A  => array(0x70, 0x66),
+        0x338B  => array(0x6E, 0x66),
+        0x338C  => array(0x3BC, 0x66),
+        0x3390  => array(0x68, 0x7A),
+        0x3391  => array(0x6B, 0x68, 0x7A),
+        0x3392  => array(0x6D, 0x68, 0x7A),
+        0x3393  => array(0x67, 0x68, 0x7A),
+        0x3394  => array(0x74, 0x68, 0x7A),
+        0x33A9  => array(0x70, 0x61),
+        0x33AA  => array(0x6B, 0x70, 0x61),
+        0x33AB  => array(0x6D, 0x70, 0x61),
+        0x33AC  => array(0x67, 0x70, 0x61),
+        0x33B4  => array(0x70, 0x76),
+        0x33B5  => array(0x6E, 0x76),
+        0x33B6  => array(0x3BC, 0x76),
+        0x33B7  => array(0x6D, 0x76),
+        0x33B8  => array(0x6B, 0x76),
+        0x33B9  => array(0x6D, 0x76),
+        0x33BA  => array(0x70, 0x77),
+        0x33BB  => array(0x6E, 0x77),
+        0x33BC  => array(0x3BC, 0x77),
+        0x33BD  => array(0x6D, 0x77),
+        0x33BE  => array(0x6B, 0x77),
+        0x33BF  => array(0x6D, 0x77),
+        0x33C0  => array(0x6B, 0x3C9),
+        0x33C1  => array(0x6D, 0x3C9),
         /* 0x33C2  => array(0x61, 0x2E, 0x6D, 0x2E), */
-        0x33C3 => array(0x62, 0x71),
-        0x33C6 => array(0x63, 0x2215, 0x6B, 0x67),
-        0x33C7 => array(0x63, 0x6F, 0x2E),
-        0x33C8 => array(0x64, 0x62),
-        0x33C9 => array(0x67, 0x79),
-        0x33CB => array(0x68, 0x70),
-        0x33CD => array(0x6B, 0x6B),
-        0x33CE => array(0x6B, 0x6D),
-        0x33D7 => array(0x70, 0x68),
-        0x33D9 => array(0x70, 0x70, 0x6D),
-        0x33DA => array(0x70, 0x72),
-        0x33DC => array(0x73, 0x76),
-        0x33DD => array(0x77, 0x62),
-        0xFB00 => array(0x66, 0x66),
-        0xFB01 => array(0x66, 0x69),
-        0xFB02 => array(0x66, 0x6C),
-        0xFB03 => array(0x66, 0x66, 0x69),
-        0xFB04 => array(0x66, 0x66, 0x6C),
-        0xFB05 => array(0x73, 0x74),
-        0xFB06 => array(0x73, 0x74),
-        0xFB13 => array(0x574, 0x576),
-        0xFB14 => array(0x574, 0x565),
-        0xFB15 => array(0x574, 0x56B),
-        0xFB16 => array(0x57E, 0x576),
-        0xFB17 => array(0x574, 0x56D),
-        0xFF21 => array(0xFF41),
-        0xFF22 => array(0xFF42),
-        0xFF23 => array(0xFF43),
-        0xFF24 => array(0xFF44),
-        0xFF25 => array(0xFF45),
-        0xFF26 => array(0xFF46),
-        0xFF27 => array(0xFF47),
-        0xFF28 => array(0xFF48),
-        0xFF29 => array(0xFF49),
-        0xFF2A => array(0xFF4A),
-        0xFF2B => array(0xFF4B),
-        0xFF2C => array(0xFF4C),
-        0xFF2D => array(0xFF4D),
-        0xFF2E => array(0xFF4E),
-        0xFF2F => array(0xFF4F),
-        0xFF30 => array(0xFF50),
-        0xFF31 => array(0xFF51),
-        0xFF32 => array(0xFF52),
-        0xFF33 => array(0xFF53),
-        0xFF34 => array(0xFF54),
-        0xFF35 => array(0xFF55),
-        0xFF36 => array(0xFF56),
-        0xFF37 => array(0xFF57),
-        0xFF38 => array(0xFF58),
-        0xFF39 => array(0xFF59),
-        0xFF3A => array(0xFF5A),
+        0x33C3  => array(0x62, 0x71),
+        0x33C6  => array(0x63, 0x2215, 0x6B, 0x67),
+        0x33C7  => array(0x63, 0x6F, 0x2E),
+        0x33C8  => array(0x64, 0x62),
+        0x33C9  => array(0x67, 0x79),
+        0x33CB  => array(0x68, 0x70),
+        0x33CD  => array(0x6B, 0x6B),
+        0x33CE  => array(0x6B, 0x6D),
+        0x33D7  => array(0x70, 0x68),
+        0x33D9  => array(0x70, 0x70, 0x6D),
+        0x33DA  => array(0x70, 0x72),
+        0x33DC  => array(0x73, 0x76),
+        0x33DD  => array(0x77, 0x62),
+        0xFB00  => array(0x66, 0x66),
+        0xFB01  => array(0x66, 0x69),
+        0xFB02  => array(0x66, 0x6C),
+        0xFB03  => array(0x66, 0x66, 0x69),
+        0xFB04  => array(0x66, 0x66, 0x6C),
+        0xFB05  => array(0x73, 0x74),
+        0xFB06  => array(0x73, 0x74),
+        0xFB13  => array(0x574, 0x576),
+        0xFB14  => array(0x574, 0x565),
+        0xFB15  => array(0x574, 0x56B),
+        0xFB16  => array(0x57E, 0x576),
+        0xFB17  => array(0x574, 0x56D),
+        0xFF21  => array(0xFF41),
+        0xFF22  => array(0xFF42),
+        0xFF23  => array(0xFF43),
+        0xFF24  => array(0xFF44),
+        0xFF25  => array(0xFF45),
+        0xFF26  => array(0xFF46),
+        0xFF27  => array(0xFF47),
+        0xFF28  => array(0xFF48),
+        0xFF29  => array(0xFF49),
+        0xFF2A  => array(0xFF4A),
+        0xFF2B  => array(0xFF4B),
+        0xFF2C  => array(0xFF4C),
+        0xFF2D  => array(0xFF4D),
+        0xFF2E  => array(0xFF4E),
+        0xFF2F  => array(0xFF4F),
+        0xFF30  => array(0xFF50),
+        0xFF31  => array(0xFF51),
+        0xFF32  => array(0xFF52),
+        0xFF33  => array(0xFF53),
+        0xFF34  => array(0xFF54),
+        0xFF35  => array(0xFF55),
+        0xFF36  => array(0xFF56),
+        0xFF37  => array(0xFF57),
+        0xFF38  => array(0xFF58),
+        0xFF39  => array(0xFF59),
+        0xFF3A  => array(0xFF5A),
         0x10400 => array(0x10428),
         0x10401 => array(0x10429),
         0x10402 => array(0x1042A),
@@ -1662,36 +1663,36 @@ class Net_IDNA2 {
         0x1D7A7 => array(0x3C8),
         0x1D7A8 => array(0x3C9),
         0x1D7BB => array(0x3C3),
-        0x3F9 => array(0x3C3),
-        0x1D2C => array(0x61),
-        0x1D2D => array(0xE6),
-        0x1D2E => array(0x62),
-        0x1D30 => array(0x64),
-        0x1D31 => array(0x65),
-        0x1D32 => array(0x1DD),
-        0x1D33 => array(0x67),
-        0x1D34 => array(0x68),
-        0x1D35 => array(0x69),
-        0x1D36 => array(0x6A),
-        0x1D37 => array(0x6B),
-        0x1D38 => array(0x6C),
-        0x1D39 => array(0x6D),
-        0x1D3A => array(0x6E),
-        0x1D3C => array(0x6F),
-        0x1D3D => array(0x223),
-        0x1D3E => array(0x70),
-        0x1D3F => array(0x72),
-        0x1D40 => array(0x74),
-        0x1D41 => array(0x75),
-        0x1D42 => array(0x77),
-        0x213B => array(0x66, 0x61, 0x78),
-        0x3250 => array(0x70, 0x74, 0x65),
-        0x32CC => array(0x68, 0x67),
-        0x32CE => array(0x65, 0x76),
-        0x32CF => array(0x6C, 0x74, 0x64),
-        0x337A => array(0x69, 0x75),
-        0x33DE => array(0x76, 0x2215, 0x6D),
-        0x33DF => array(0x61, 0x2215, 0x6D)
+        0x3F9   => array(0x3C3),
+        0x1D2C  => array(0x61),
+        0x1D2D  => array(0xE6),
+        0x1D2E  => array(0x62),
+        0x1D30  => array(0x64),
+        0x1D31  => array(0x65),
+        0x1D32  => array(0x1DD),
+        0x1D33  => array(0x67),
+        0x1D34  => array(0x68),
+        0x1D35  => array(0x69),
+        0x1D36  => array(0x6A),
+        0x1D37  => array(0x6B),
+        0x1D38  => array(0x6C),
+        0x1D39  => array(0x6D),
+        0x1D3A  => array(0x6E),
+        0x1D3C  => array(0x6F),
+        0x1D3D  => array(0x223),
+        0x1D3E  => array(0x70),
+        0x1D3F  => array(0x72),
+        0x1D40  => array(0x74),
+        0x1D41  => array(0x75),
+        0x1D42  => array(0x77),
+        0x213B  => array(0x66, 0x61, 0x78),
+        0x3250  => array(0x70, 0x74, 0x65),
+        0x32CC  => array(0x68, 0x67),
+        0x32CE  => array(0x65, 0x76),
+        0x32CF  => array(0x6C, 0x74, 0x64),
+        0x337A  => array(0x69, 0x75),
+        0x33DE  => array(0x76, 0x2215, 0x6D),
+        0x33DF  => array(0x61, 0x2215, 0x6D)
     );
 
     /**
@@ -1703,91 +1704,91 @@ class Net_IDNA2 {
      * @access private
      */
     private static $_np_norm_combcls = array(
-        0x334 => 1,
-        0x335 => 1,
-        0x336 => 1,
-        0x337 => 1,
-        0x338 => 1,
-        0x93C => 7,
-        0x9BC => 7,
-        0xA3C => 7,
-        0xABC => 7,
-        0xB3C => 7,
-        0xCBC => 7,
-        0x1037 => 7,
-        0x3099 => 8,
-        0x309A => 8,
-        0x94D => 9,
-        0x9CD => 9,
-        0xA4D => 9,
-        0xACD => 9,
-        0xB4D => 9,
-        0xBCD => 9,
-        0xC4D => 9,
-        0xCCD => 9,
-        0xD4D => 9,
-        0xDCA => 9,
-        0xE3A => 9,
-        0xF84 => 9,
-        0x1039 => 9,
-        0x1714 => 9,
-        0x1734 => 9,
-        0x17D2 => 9,
-        0x5B0 => 10,
-        0x5B1 => 11,
-        0x5B2 => 12,
-        0x5B3 => 13,
-        0x5B4 => 14,
-        0x5B5 => 15,
-        0x5B6 => 16,
-        0x5B7 => 17,
-        0x5B8 => 18,
-        0x5B9 => 19,
-        0x5BB => 20,
-        0x5Bc => 21,
-        0x5BD => 22,
-        0x5BF => 23,
-        0x5C1 => 24,
-        0x5C2 => 25,
-        0xFB1E => 26,
-        0x64B => 27,
-        0x64C => 28,
-        0x64D => 29,
-        0x64E => 30,
-        0x64F => 31,
-        0x650 => 32,
-        0x651 => 33,
-        0x652 => 34,
-        0x670 => 35,
-        0x711 => 36,
-        0xC55 => 84,
-        0xC56 => 91,
-        0xE38 => 103,
-        0xE39 => 103,
-        0xE48 => 107,
-        0xE49 => 107,
-        0xE4A => 107,
-        0xE4B => 107,
-        0xEB8 => 118,
-        0xEB9 => 118,
-        0xEC8 => 122,
-        0xEC9 => 122,
-        0xECA => 122,
-        0xECB => 122,
-        0xF71 => 129,
-        0xF72 => 130,
-        0xF7A => 130,
-        0xF7B => 130,
-        0xF7C => 130,
-        0xF7D => 130,
-        0xF80 => 130,
-        0xF74 => 132,
-        0x321 => 202,
-        0x322 => 202,
-        0x327 => 202,
-        0x328 => 202,
-        0x31B => 216,
-        0xF39 => 216,
+        0x334   => 1,
+        0x335   => 1,
+        0x336   => 1,
+        0x337   => 1,
+        0x338   => 1,
+        0x93C   => 7,
+        0x9BC   => 7,
+        0xA3C   => 7,
+        0xABC   => 7,
+        0xB3C   => 7,
+        0xCBC   => 7,
+        0x1037  => 7,
+        0x3099  => 8,
+        0x309A  => 8,
+        0x94D   => 9,
+        0x9CD   => 9,
+        0xA4D   => 9,
+        0xACD   => 9,
+        0xB4D   => 9,
+        0xBCD   => 9,
+        0xC4D   => 9,
+        0xCCD   => 9,
+        0xD4D   => 9,
+        0xDCA   => 9,
+        0xE3A   => 9,
+        0xF84   => 9,
+        0x1039  => 9,
+        0x1714  => 9,
+        0x1734  => 9,
+        0x17D2  => 9,
+        0x5B0   => 10,
+        0x5B1   => 11,
+        0x5B2   => 12,
+        0x5B3   => 13,
+        0x5B4   => 14,
+        0x5B5   => 15,
+        0x5B6   => 16,
+        0x5B7   => 17,
+        0x5B8   => 18,
+        0x5B9   => 19,
+        0x5BB   => 20,
+        0x5Bc   => 21,
+        0x5BD   => 22,
+        0x5BF   => 23,
+        0x5C1   => 24,
+        0x5C2   => 25,
+        0xFB1E  => 26,
+        0x64B   => 27,
+        0x64C   => 28,
+        0x64D   => 29,
+        0x64E   => 30,
+        0x64F   => 31,
+        0x650   => 32,
+        0x651   => 33,
+        0x652   => 34,
+        0x670   => 35,
+        0x711   => 36,
+        0xC55   => 84,
+        0xC56   => 91,
+        0xE38   => 103,
+        0xE39   => 103,
+        0xE48   => 107,
+        0xE49   => 107,
+        0xE4A   => 107,
+        0xE4B   => 107,
+        0xEB8   => 118,
+        0xEB9   => 118,
+        0xEC8   => 122,
+        0xEC9   => 122,
+        0xECA   => 122,
+        0xECB   => 122,
+        0xF71   => 129,
+        0xF72   => 130,
+        0xF7A   => 130,
+        0xF7B   => 130,
+        0xF7C   => 130,
+        0xF7D   => 130,
+        0xF80   => 130,
+        0xF74   => 132,
+        0x321   => 202,
+        0x322   => 202,
+        0x327   => 202,
+        0x328   => 202,
+        0x31B   => 216,
+        0xF39   => 216,
         0x1D165 => 216,
         0x1D166 => 216,
         0x1D16E => 216,
@@ -1795,78 +1796,78 @@ class Net_IDNA2 {
         0x1D170 => 216,
         0x1D171 => 216,
         0x1D172 => 216,
-        0x302A => 218,
-        0x316 => 220,
-        0x317 => 220,
-        0x318 => 220,
-        0x319 => 220,
-        0x31C => 220,
-        0x31D => 220,
-        0x31E => 220,
-        0x31F => 220,
-        0x320 => 220,
-        0x323 => 220,
-        0x324 => 220,
-        0x325 => 220,
-        0x326 => 220,
-        0x329 => 220,
-        0x32A => 220,
-        0x32B => 220,
-        0x32C => 220,
-        0x32D => 220,
-        0x32E => 220,
-        0x32F => 220,
-        0x330 => 220,
-        0x331 => 220,
-        0x332 => 220,
-        0x333 => 220,
-        0x339 => 220,
-        0x33A => 220,
-        0x33B => 220,
-        0x33C => 220,
-        0x347 => 220,
-        0x348 => 220,
-        0x349 => 220,
-        0x34D => 220,
-        0x34E => 220,
-        0x353 => 220,
-        0x354 => 220,
-        0x355 => 220,
-        0x356 => 220,
-        0x591 => 220,
-        0x596 => 220,
-        0x59B => 220,
-        0x5A3 => 220,
-        0x5A4 => 220,
-        0x5A5 => 220,
-        0x5A6 => 220,
-        0x5A7 => 220,
-        0x5AA => 220,
-        0x655 => 220,
-        0x656 => 220,
-        0x6E3 => 220,
-        0x6EA => 220,
-        0x6ED => 220,
-        0x731 => 220,
-        0x734 => 220,
-        0x737 => 220,
-        0x738 => 220,
-        0x739 => 220,
-        0x73B => 220,
-        0x73C => 220,
-        0x73E => 220,
-        0x742 => 220,
-        0x744 => 220,
-        0x746 => 220,
-        0x748 => 220,
-        0x952 => 220,
-        0xF18 => 220,
-        0xF19 => 220,
-        0xF35 => 220,
-        0xF37 => 220,
-        0xFC6 => 220,
-        0x193B => 220,
-        0x20E8 => 220,
+        0x302A  => 218,
+        0x316   => 220,
+        0x317   => 220,
+        0x318   => 220,
+        0x319   => 220,
+        0x31C   => 220,
+        0x31D   => 220,
+        0x31E   => 220,
+        0x31F   => 220,
+        0x320   => 220,
+        0x323   => 220,
+        0x324   => 220,
+        0x325   => 220,
+        0x326   => 220,
+        0x329   => 220,
+        0x32A   => 220,
+        0x32B   => 220,
+        0x32C   => 220,
+        0x32D   => 220,
+        0x32E   => 220,
+        0x32F   => 220,
+        0x330   => 220,
+        0x331   => 220,
+        0x332   => 220,
+        0x333   => 220,
+        0x339   => 220,
+        0x33A   => 220,
+        0x33B   => 220,
+        0x33C   => 220,
+        0x347   => 220,
+        0x348   => 220,
+        0x349   => 220,
+        0x34D   => 220,
+        0x34E   => 220,
+        0x353   => 220,
+        0x354   => 220,
+        0x355   => 220,
+        0x356   => 220,
+        0x591   => 220,
+        0x596   => 220,
+        0x59B   => 220,
+        0x5A3   => 220,
+        0x5A4   => 220,
+        0x5A5   => 220,
+        0x5A6   => 220,
+        0x5A7   => 220,
+        0x5AA   => 220,
+        0x655   => 220,
+        0x656   => 220,
+        0x6E3   => 220,
+        0x6EA   => 220,
+        0x6ED   => 220,
+        0x731   => 220,
+        0x734   => 220,
+        0x737   => 220,
+        0x738   => 220,
+        0x739   => 220,
+        0x73B   => 220,
+        0x73C   => 220,
+        0x73E   => 220,
+        0x742   => 220,
+        0x744   => 220,
+        0x746   => 220,
+        0x748   => 220,
+        0x952   => 220,
+        0xF18   => 220,
+        0xF19   => 220,
+        0xF35   => 220,
+        0xF37   => 220,
+        0xFC6   => 220,
+        0x193B  => 220,
+        0x20E8  => 220,
         0x1D17B => 220,
         0x1D17C => 220,
         0x1D17D => 220,
@@ -1877,154 +1878,154 @@ class Net_IDNA2 {
         0x1D182 => 220,
         0x1D18A => 220,
         0x1D18B => 220,
-        0x59A => 222,
-        0x5AD => 222,
-        0x1929 => 222,
-        0x302D => 222,
-        0x302E => 224,
-        0x302F => 224,
+        0x59A   => 222,
+        0x5AD   => 222,
+        0x1929  => 222,
+        0x302D  => 222,
+        0x302E  => 224,
+        0x302F  => 224,
         0x1D16D => 226,
-        0x5AE => 228,
-        0x18A9 => 228,
-        0x302B => 228,
-        0x300 => 230,
-        0x301 => 230,
-        0x302 => 230,
-        0x303 => 230,
-        0x304 => 230,
-        0x305 => 230,
-        0x306 => 230,
-        0x307 => 230,
-        0x308 => 230,
-        0x309 => 230,
-        0x30A => 230,
-        0x30B => 230,
-        0x30C => 230,
-        0x30D => 230,
-        0x30E => 230,
-        0x30F => 230,
-        0x310 => 230,
-        0x311 => 230,
-        0x312 => 230,
-        0x313 => 230,
-        0x314 => 230,
-        0x33D => 230,
-        0x33E => 230,
-        0x33F => 230,
-        0x340 => 230,
-        0x341 => 230,
-        0x342 => 230,
-        0x343 => 230,
-        0x344 => 230,
-        0x346 => 230,
-        0x34A => 230,
-        0x34B => 230,
-        0x34C => 230,
-        0x350 => 230,
-        0x351 => 230,
-        0x352 => 230,
-        0x357 => 230,
-        0x363 => 230,
-        0x364 => 230,
-        0x365 => 230,
-        0x366 => 230,
-        0x367 => 230,
-        0x368 => 230,
-        0x369 => 230,
-        0x36A => 230,
-        0x36B => 230,
-        0x36C => 230,
-        0x36D => 230,
-        0x36E => 230,
-        0x36F => 230,
-        0x483 => 230,
-        0x484 => 230,
-        0x485 => 230,
-        0x486 => 230,
-        0x592 => 230,
-        0x593 => 230,
-        0x594 => 230,
-        0x595 => 230,
-        0x597 => 230,
-        0x598 => 230,
-        0x599 => 230,
-        0x59C => 230,
-        0x59D => 230,
-        0x59E => 230,
-        0x59F => 230,
-        0x5A0 => 230,
-        0x5A1 => 230,
-        0x5A8 => 230,
-        0x5A9 => 230,
-        0x5AB => 230,
-        0x5AC => 230,
-        0x5AF => 230,
-        0x5C4 => 230,
-        0x610 => 230,
-        0x611 => 230,
-        0x612 => 230,
-        0x613 => 230,
-        0x614 => 230,
-        0x615 => 230,
-        0x653 => 230,
-        0x654 => 230,
-        0x657 => 230,
-        0x658 => 230,
-        0x6D6 => 230,
-        0x6D7 => 230,
-        0x6D8 => 230,
-        0x6D9 => 230,
-        0x6DA => 230,
-        0x6DB => 230,
-        0x6DC => 230,
-        0x6DF => 230,
-        0x6E0 => 230,
-        0x6E1 => 230,
-        0x6E2 => 230,
-        0x6E4 => 230,
-        0x6E7 => 230,
-        0x6E8 => 230,
-        0x6EB => 230,
-        0x6EC => 230,
-        0x730 => 230,
-        0x732 => 230,
-        0x733 => 230,
-        0x735 => 230,
-        0x736 => 230,
-        0x73A => 230,
-        0x73D => 230,
-        0x73F => 230,
-        0x740 => 230,
-        0x741 => 230,
-        0x743 => 230,
-        0x745 => 230,
-        0x747 => 230,
-        0x749 => 230,
-        0x74A => 230,
-        0x951 => 230,
-        0x953 => 230,
-        0x954 => 230,
-        0xF82 => 230,
-        0xF83 => 230,
-        0xF86 => 230,
-        0xF87 => 230,
-        0x170D => 230,
-        0x193A => 230,
-        0x20D0 => 230,
-        0x20D1 => 230,
-        0x20D4 => 230,
-        0x20D5 => 230,
-        0x20D6 => 230,
-        0x20D7 => 230,
-        0x20DB => 230,
-        0x20DC => 230,
-        0x20E1 => 230,
-        0x20E7 => 230,
-        0x20E9 => 230,
-        0xFE20 => 230,
-        0xFE21 => 230,
-        0xFE22 => 230,
-        0xFE23 => 230,
+        0x5AE   => 228,
+        0x18A9  => 228,
+        0x302B  => 228,
+        0x300   => 230,
+        0x301   => 230,
+        0x302   => 230,
+        0x303   => 230,
+        0x304   => 230,
+        0x305   => 230,
+        0x306   => 230,
+        0x307   => 230,
+        0x308   => 230,
+        0x309   => 230,
+        0x30A   => 230,
+        0x30B   => 230,
+        0x30C   => 230,
+        0x30D   => 230,
+        0x30E   => 230,
+        0x30F   => 230,
+        0x310   => 230,
+        0x311   => 230,
+        0x312   => 230,
+        0x313   => 230,
+        0x314   => 230,
+        0x33D   => 230,
+        0x33E   => 230,
+        0x33F   => 230,
+        0x340   => 230,
+        0x341   => 230,
+        0x342   => 230,
+        0x343   => 230,
+        0x344   => 230,
+        0x346   => 230,
+        0x34A   => 230,
+        0x34B   => 230,
+        0x34C   => 230,
+        0x350   => 230,
+        0x351   => 230,
+        0x352   => 230,
+        0x357   => 230,
+        0x363   => 230,
+        0x364   => 230,
+        0x365   => 230,
+        0x366   => 230,
+        0x367   => 230,
+        0x368   => 230,
+        0x369   => 230,
+        0x36A   => 230,
+        0x36B   => 230,
+        0x36C   => 230,
+        0x36D   => 230,
+        0x36E   => 230,
+        0x36F   => 230,
+        0x483   => 230,
+        0x484   => 230,
+        0x485   => 230,
+        0x486   => 230,
+        0x592   => 230,
+        0x593   => 230,
+        0x594   => 230,
+        0x595   => 230,
+        0x597   => 230,
+        0x598   => 230,
+        0x599   => 230,
+        0x59C   => 230,
+        0x59D   => 230,
+        0x59E   => 230,
+        0x59F   => 230,
+        0x5A0   => 230,
+        0x5A1   => 230,
+        0x5A8   => 230,
+        0x5A9   => 230,
+        0x5AB   => 230,
+        0x5AC   => 230,
+        0x5AF   => 230,
+        0x5C4   => 230,
+        0x610   => 230,
+        0x611   => 230,
+        0x612   => 230,
+        0x613   => 230,
+        0x614   => 230,
+        0x615   => 230,
+        0x653   => 230,
+        0x654   => 230,
+        0x657   => 230,
+        0x658   => 230,
+        0x6D6   => 230,
+        0x6D7   => 230,
+        0x6D8   => 230,
+        0x6D9   => 230,
+        0x6DA   => 230,
+        0x6DB   => 230,
+        0x6DC   => 230,
+        0x6DF   => 230,
+        0x6E0   => 230,
+        0x6E1   => 230,
+        0x6E2   => 230,
+        0x6E4   => 230,
+        0x6E7   => 230,
+        0x6E8   => 230,
+        0x6EB   => 230,
+        0x6EC   => 230,
+        0x730   => 230,
+        0x732   => 230,
+        0x733   => 230,
+        0x735   => 230,
+        0x736   => 230,
+        0x73A   => 230,
+        0x73D   => 230,
+        0x73F   => 230,
+        0x740   => 230,
+        0x741   => 230,
+        0x743   => 230,
+        0x745   => 230,
+        0x747   => 230,
+        0x749   => 230,
+        0x74A   => 230,
+        0x951   => 230,
+        0x953   => 230,
+        0x954   => 230,
+        0xF82   => 230,
+        0xF83   => 230,
+        0xF86   => 230,
+        0xF87   => 230,
+        0x170D  => 230,
+        0x193A  => 230,
+        0x20D0  => 230,
+        0x20D1  => 230,
+        0x20D4  => 230,
+        0x20D5  => 230,
+        0x20D6  => 230,
+        0x20D7  => 230,
+        0x20DB  => 230,
+        0x20DC  => 230,
+        0x20E1  => 230,
+        0x20E7  => 230,
+        0x20E9  => 230,
+        0xFE20  => 230,
+        0xFE21  => 230,
+        0xFE22  => 230,
+        0xFE23  => 230,
         0x1D185 => 230,
         0x1D186 => 230,
         0x1D187 => 230,
@@ -2034,18 +2035,19 @@ class Net_IDNA2 {
         0x1D1AB => 230,
         0x1D1AC => 230,
         0x1D1AD => 230,
-        0x315 => 232,
-        0x31A => 232,
-        0x302C => 232,
-        0x35F => 233,
-        0x362 => 233,
-        0x35D => 234,
-        0x35E => 234,
-        0x360 => 234,
-        0x361 => 234,
-        0x345 => 240
+        0x315   => 232,
+        0x31A   => 232,
+        0x302C  => 232,
+        0x35F   => 233,
+        0x362   => 233,
+        0x35D   => 234,
+        0x35E   => 234,
+        0x360   => 234,
+        0x361   => 234,
+        0x345   => 240
     );
     // }}}
+
     // {{{ properties
     /**
      * @var string
@@ -2215,8 +2217,9 @@ class Net_IDNA2 {
      * @see Net_IDNA2::_byteLength()
      */
     private static $_mb_string_overload = null;
-
     // }}}
+
+
     // {{{ constructor
     /**
      * Constructor
@@ -2226,7 +2229,8 @@ class Net_IDNA2 {
      * @access public
      * @see    setParams()
      */
-    public function __construct($options = null) {
+    public function __construct($options = null)
+    {
         $this->_slast = $this->_sbase + $this->_lcount * $this->_vcount * $this->_tcount;
 
         if (is_array($options)) {
@@ -2236,11 +2240,11 @@ class Net_IDNA2 {
         // populate mbstring overloading cache if not set
         if (self::$_mb_string_overload === null) {
             self::$_mb_string_overload = (extension_loaded('mbstring')
-                    && (ini_get('mbstring.func_overload') & 0x02) === 0x02);
+                && (ini_get('mbstring.func_overload') & 0x02) === 0x02);
         }
     }
-
     // }}}
+
 
     /**
      * Sets a new option value. Available options and values:
@@ -2260,45 +2264,46 @@ class Net_IDNA2 {
      * @return boolean       true on success, false otherwise
      * @access public
      */
-    public function setParams($option, $value = false) {
+    public function setParams($option, $value = false)
+    {
         if (!is_array($option)) {
             $option = array($option => $value);
         }
 
         foreach ($option as $k => $v) {
             switch ($k) {
-                case 'encoding':
-                    switch ($v) {
-                        case 'utf8':
-                        case 'ucs4_string':
-                        case 'ucs4_array':
-                            $this->_api_encoding = $v;
-                            break;
-
-                        default:
-                            throw new InvalidArgumentException('Set Parameter: Unknown parameter ' . $v . ' for option ' . $k);
-                    }
-
-                    break;
-
-                case 'overlong':
-                    $this->_allow_overlong = ($v) ? true : false;
-                    break;
-
-                case 'strict':
-                    $this->_strict_mode = ($v) ? true : false;
-                    break;
-
-                case 'version':
-                    if (in_array($v, array('2003', '2008'))) {
-                        $this->_version = $v;
-                    } else {
-                        throw new InvalidArgumentException('Set Parameter: Invalid parameter ' . $v . ' for option ' . $k);
-                    }
+            case 'encoding':
+                switch ($v) {
+                case 'utf8':
+                case 'ucs4_string':
+                case 'ucs4_array':
+                    $this->_api_encoding = $v;
                     break;
 
                 default:
-                    return false;
+                    throw new InvalidArgumentException('Set Parameter: Unknown parameter '.$v.' for option '.$k);
+                }
+
+                break;
+
+            case 'overlong':
+                $this->_allow_overlong = ($v) ? true : false;
+                break;
+
+            case 'strict':
+                $this->_strict_mode = ($v) ? true : false;
+                break;
+
+            case 'version':
+                if (in_array($v, array('2003', '2008'))) {
+                    $this->_version = $v;
+                } else {
+                    throw new InvalidArgumentException('Set Parameter: Invalid parameter '.$v.' for option '.$k);
+                }
+                break;
+
+            default:
+                return false;
             }
         }
 
@@ -2317,24 +2322,24 @@ class Net_IDNA2 {
      * @throws Exception
      * @access public
      */
-    public function encode($decoded, $one_time_encoding = false) {
+    public function encode($decoded, $one_time_encoding = false)
+    {
         // Forcing conversion of input to UCS4 array
         // If one time encoding is given, use this, else the objects property
         switch (($one_time_encoding) ? $one_time_encoding : $this->_api_encoding) {
-            case 'utf8':
-                $decoded = $this->_utf8_to_ucs4($decoded);
-                break;
-            case 'ucs4_string':
-                $decoded = $this->_ucs4_string_to_ucs4($decoded);
-            case 'ucs4_array': // No break; before this line. Catch case, but do nothing
-                break;
-            default:
-                throw new InvalidArgumentException('Unsupported input format');
+        case 'utf8':
+            $decoded = $this->_utf8_to_ucs4($decoded);
+            break;
+        case 'ucs4_string':
+            $decoded = $this->_ucs4_string_to_ucs4($decoded);
+        case 'ucs4_array': // No break; before this line. Catch case, but do nothing
+            break;
+        default:
+            throw new InvalidArgumentException('Unsupported input format');
         }
 
         // No input, no output, what else did you expect?
-        if (empty($decoded))
-            return '';
+        if (empty($decoded)) return '';
 
         // Anchors for iteration
         $last_begin = 0;
@@ -2343,46 +2348,47 @@ class Net_IDNA2 {
 
         foreach ($decoded as $k => $v) {
             // Make sure to use just the plain dot
-            switch ($v) {
-                case 0x3002:
-                case 0xFF0E:
-                case 0xFF61:
-                    $decoded[$k] = 0x2E;
+            switch($v) {
+            case 0x3002:
+            case 0xFF0E:
+            case 0xFF61:
+                $decoded[$k] = 0x2E;
                 // It's right, no break here
                 // The codepoints above have to be converted to dots anyway
-                // Stumbling across an anchoring character
-                case 0x2E:
-                case 0x2F:
-                case 0x3A:
-                case 0x3F:
-                case 0x40:
-                    // Neither email addresses nor URLs allowed in strict mode
-                    if ($this->_strict_mode) {
-                        throw new InvalidArgumentException('Neither email addresses nor URLs are allowed in strict mode.');
+
+            // Stumbling across an anchoring character
+            case 0x2E:
+            case 0x2F:
+            case 0x3A:
+            case 0x3F:
+            case 0x40:
+                // Neither email addresses nor URLs allowed in strict mode
+                if ($this->_strict_mode) {
+                    throw new InvalidArgumentException('Neither email addresses nor URLs are allowed in strict mode.');
+                }
+                // Skip first char
+                if ($k) {
+                    $encoded = '';
+                    $encoded = $this->_encode(array_slice($decoded, $last_begin, (($k)-$last_begin)));
+                    if ($encoded) {
+                        $output .= $encoded;
+                    } else {
+                        $output .= $this->_ucs4_to_utf8(array_slice($decoded, $last_begin, (($k)-$last_begin)));
                     }
-                    // Skip first char
-                    if ($k) {
-                        $encoded = '';
-                        $encoded = $this->_encode(array_slice($decoded, $last_begin, (($k) - $last_begin)));
-                        if ($encoded) {
-                            $output .= $encoded;
-                        } else {
-                            $output .= $this->_ucs4_to_utf8(array_slice($decoded, $last_begin, (($k) - $last_begin)));
-                        }
-                        $output .= chr($decoded[$k]);
-                    }
-                    $last_begin = $k + 1;
+                    $output .= chr($decoded[$k]);
+                }
+                $last_begin = $k + 1;
             }
         }
         // Catch the rest of the string
         if ($last_begin) {
             $inp_len = sizeof($decoded);
             $encoded = '';
-            $encoded = $this->_encode(array_slice($decoded, $last_begin, (($inp_len) - $last_begin)));
+            $encoded = $this->_encode(array_slice($decoded, $last_begin, (($inp_len)-$last_begin)));
             if ($encoded) {
                 $output .= $encoded;
             } else {
-                $output .= $this->_ucs4_to_utf8(array_slice($decoded, $last_begin, (($inp_len) - $last_begin)));
+                $output .= $this->_ucs4_to_utf8(array_slice($decoded, $last_begin, (($inp_len)-$last_begin)));
             }
             return $output;
         }
@@ -2404,16 +2410,17 @@ class Net_IDNA2 {
      * @throws Exception
      * @access public
      */
-    public function decode($input, $one_time_encoding = false) {
+    public function decode($input, $one_time_encoding = false)
+    {
         // Optionally set
         if ($one_time_encoding) {
             switch ($one_time_encoding) {
-                case 'utf8':
-                case 'ucs4_string':
-                case 'ucs4_array':
-                    break;
-                default:
-                    throw new InvalidArgumentException('Unknown encoding ' . $one_time_encoding);
+            case 'utf8':
+            case 'ucs4_string':
+            case 'ucs4_array':
+                break;
+            default:
+                throw new InvalidArgumentException('Unknown encoding '.$one_time_encoding);
             }
         }
         // Make sure to drop any newline characters around
@@ -2430,8 +2437,7 @@ class Net_IDNA2 {
             $arr = explode('.', $input);
             foreach ($arr as $k => $v) {
                 $conv = $this->_decode($v);
-                if ($conv)
-                    $arr[$k] = $conv;
+                if ($conv) $arr[$k] = $conv;
             }
             $return = $email_pref . '@' . join('.', $arr);
         } elseif (preg_match('![:\./]!', $input)) { // Or a complete domain name (with or without paths / parameters)
@@ -2445,8 +2451,7 @@ class Net_IDNA2 {
                 $arr = explode('.', $parsed['host']);
                 foreach ($arr as $k => $v) {
                     $conv = $this->_decode($v);
-                    if ($conv)
-                        $arr[$k] = $conv;
+                    if ($conv) $arr[$k] = $conv;
                 }
                 $parsed['host'] = join('.', $arr);
                 if (isset($parsed['scheme'])) {
@@ -2457,8 +2462,7 @@ class Net_IDNA2 {
                 $arr = explode('.', $input);
                 foreach ($arr as $k => $v) {
                     $conv = $this->_decode($v);
-                    if ($conv)
-                        $arr[$k] = $conv;
+                    if ($conv) $arr[$k] = $conv;
                 }
                 $return = join('.', $arr);
             }
@@ -2468,19 +2472,20 @@ class Net_IDNA2 {
         // The output is UTF-8 by default, other output formats need conversion here
         // If one time encoding is given, use this, else the objects property
         switch (($one_time_encoding) ? $one_time_encoding : $this->_api_encoding) {
-            case 'utf8':
-                return $return;
-                break;
-            case 'ucs4_string':
-                return $this->_ucs4_to_ucs4_string($this->_utf8_to_ucs4($return));
-                break;
-            case 'ucs4_array':
-                return $this->_utf8_to_ucs4($return);
-                break;
-            default:
-                throw new InvalidArgumentException('Unsupported output format');
+        case 'utf8':
+            return $return;
+            break;
+        case 'ucs4_string':
+            return $this->_ucs4_to_ucs4_string($this->_utf8_to_ucs4($return));
+            break;
+        case 'ucs4_array':
+            return $this->_utf8_to_ucs4($return);
+            break;
+        default:
+            throw new InvalidArgumentException('Unsupported output format');
         }
     }
+
 
     // {{{ private
     /**
@@ -2493,7 +2498,8 @@ class Net_IDNA2 {
      * @return string
      * @access private
      */
-    private function _unparse_url($parts_arr) {
+    private function _unparse_url($parts_arr)
+    {
         if (!empty($parts_arr['scheme'])) {
             $ret_url = $parts_arr['scheme'];
         }
@@ -2527,7 +2533,8 @@ class Net_IDNA2 {
      * @throws Exception
      * @access private
      */
-    private function _encode($decoded) {
+    private function _encode($decoded)
+    {
         // We cannot encode a domain name containing the Punycode prefix
         $extract = self::_byteLength($this->_punycode_prefix);
         $check_pref = $this->_utf8_to_ucs4($this->_punycode_prefix);
@@ -2575,9 +2582,9 @@ class Net_IDNA2 {
             $test = $decoded[$i];
             // Will match [0-9a-zA-Z-]
             if ((0x2F < $test && $test < 0x40)
-                    || (0x40 < $test && $test < 0x5B)
-                    || (0x60 < $test && $test <= 0x7B)
-                    || (0x2D == $test)
+                || (0x40 < $test && $test < 0x5B)
+                || (0x60 < $test && $test <= 0x7B)
+                || (0x2D == $test)
             ) {
                 $encoded .= chr($decoded[$i]);
                 $codecount++;
@@ -2598,10 +2605,10 @@ class Net_IDNA2 {
         }
 
         // Now find and encode all non-basic code points
-        $is_first = true;
-        $cur_code = $this->_initial_n;
-        $bias = $this->_initial_bias;
-        $delta = 0;
+        $is_first  = true;
+        $cur_code  = $this->_initial_n;
+        $bias      = $this->_initial_bias;
+        $delta     = 0;
 
         while ($codecount < $deco_len) {
             // Find the smallest code point >= the current code point and
@@ -2621,9 +2628,9 @@ class Net_IDNA2 {
                     $delta++;
                 } else if ($decoded[$i] == $cur_code) {
                     for ($q = $delta, $k = $this->_base; 1; $k += $this->_base) {
-                        $t = ($k <= $bias) ?
-                                $this->_tmin :
-                                (($k >= $bias + $this->_tmax) ? $this->_tmax : $k - $bias);
+                        $t = ($k <= $bias)?
+                            $this->_tmin :
+                            (($k >= $bias + $this->_tmax)? $this->_tmax : $k - $bias);
 
                         if ($q < $t) {
                             break;
@@ -2657,7 +2664,8 @@ class Net_IDNA2 {
      * @throws Exception
      * @access private
      */
-    private function _decode($encoded) {
+    private function _decode($encoded)
+    {
         // We do need to find the Punycode prefix
         if (!preg_match('!^' . preg_quote($this->_punycode_prefix, '!') . '!', $encoded)) {
             return false;
@@ -2686,30 +2694,30 @@ class Net_IDNA2 {
 
         // Wandering through the strings; init
         $is_first = true;
-        $bias = $this->_initial_bias;
-        $idx = 0;
-        $char = $this->_initial_n;
+        $bias     = $this->_initial_bias;
+        $idx      = 0;
+        $char     = $this->_initial_n;
 
-        for ($enco_idx = ($delim_pos) ? ($delim_pos + 1) : 0; $enco_idx < $enco_len; ++$deco_len) {
-            for ($old_idx = $idx, $w = 1, $k = $this->_base; 1; $k += $this->_base) {
+        for ($enco_idx = ($delim_pos)? ($delim_pos + 1) : 0; $enco_idx < $enco_len; ++$deco_len) {
+            for ($old_idx = $idx, $w = 1, $k = $this->_base; 1 ; $k += $this->_base) {
                 $digit = $this->_decodeDigit($encoded{$enco_idx++});
                 $idx += $digit * $w;
 
                 $t = ($k <= $bias) ?
-                        $this->_tmin :
-                        (($k >= $bias + $this->_tmax) ? $this->_tmax : ($k - $bias));
+                    $this->_tmin :
+                    (($k >= $bias + $this->_tmax)? $this->_tmax : ($k - $bias));
 
                 if ($digit < $t) {
                     break;
                 }
 
-                $w = (int) ($w * ($this->_base - $t));
+                $w = (int)($w * ($this->_base - $t));
             }
 
-            $bias = $this->_adapt($idx - $old_idx, $deco_len + 1, $is_first);
-            $is_first = false;
-            $char += (int) ($idx / ($deco_len + 1));
-            $idx %= ($deco_len + 1);
+            $bias      = $this->_adapt($idx - $old_idx, $deco_len + 1, $is_first);
+            $is_first  = false;
+            $char     += (int) ($idx / ($deco_len + 1));
+            $idx      %= ($deco_len + 1);
 
             if ($deco_len > 0) {
                 // Make room for the decoded char
@@ -2734,7 +2742,8 @@ class Net_IDNA2 {
      * @return int
      * @access private
      */
-    private function _adapt($delta, $npoints, $is_first) {
+    private function _adapt($delta, $npoints, $is_first)
+    {
         $delta = (int) ($is_first ? ($delta / $this->_damp) : ($delta / 2));
         $delta += (int) ($delta / $npoints);
 
@@ -2753,7 +2762,8 @@ class Net_IDNA2 {
      * @return char  Encoded digit
      * @access private
      */
-    private function _encodeDigit($d) {
+    private function _encodeDigit($d)
+    {
         return chr($d + 22 + 75 * ($d < 26));
     }
 
@@ -2765,9 +2775,10 @@ class Net_IDNA2 {
      * @return int     Decoded digit
      * @access private
      */
-    private function _decodeDigit($cp) {
+    private function _decodeDigit($cp)
+    {
         $cp = ord($cp);
-        return ($cp - 48 < 10) ? $cp - 22 : (($cp - 65 < 26) ? $cp - 65 : (($cp - 97 < 26) ? $cp - 97 : $this->_base));
+        return ($cp - 48 < 10)? $cp - 22 : (($cp - 65 < 26)? $cp - 65 : (($cp - 97 < 26)? $cp - 97 : $this->_base));
     }
 
     /**
@@ -2779,7 +2790,8 @@ class Net_IDNA2 {
      * @throws Exception
      * @access private
      */
-    private function _nameprep($input) {
+    private function _nameprep($input)
+    {
         $output = array();
 
         // Walking through the input array, performing the required steps on each of
@@ -2821,9 +2833,9 @@ class Net_IDNA2 {
 
         // Combine code points
 
-        $last_class = 0;
+        $last_class   = 0;
         $last_starter = 0;
-        $out_len = count($output);
+        $out_len      = count($output);
 
         for ($i = 0; $i < $out_len; ++$i) {
             $class = $this->_getCombiningClass($output[$i]);
@@ -2849,7 +2861,7 @@ class Net_IDNA2 {
                     // Rewind the for loop by one, since there can be more possible compositions
                     $i--;
                     $out_len--;
-                    $last_class = ($i == $last_starter) ? 0 : $this->_getCombiningClass($output[$i - 1]);
+                    $last_class = ($i == $last_starter)? 0 : $this->_getCombiningClass($output[$i - 1]);
 
                     continue;
                 }
@@ -2876,17 +2888,18 @@ class Net_IDNA2 {
      *                      value as one value array
      * @access private
      */
-    private function _hangulDecompose($char) {
+    private function _hangulDecompose($char)
+    {
         $sindex = $char - $this->_sbase;
 
         if ($sindex < 0 || $sindex >= $this->_scount) {
             return array($char);
         }
 
-        $result = array();
-        $T = $this->_tbase + $sindex % $this->_tcount;
-        $result[] = (int) ($this->_lbase + $sindex / $this->_ncount);
-        $result[] = (int) ($this->_vbase + ($sindex % $this->_ncount) / $this->_tcount);
+        $result   = array();
+        $T        = $this->_tbase + $sindex % $this->_tcount;
+        $result[] = (int)($this->_lbase +  $sindex / $this->_ncount);
+        $result[] = (int)($this->_vbase + ($sindex % $this->_ncount) / $this->_tcount);
 
         if ($T != $this->_tbase) {
             $result[] = $T;
@@ -2904,15 +2917,16 @@ class Net_IDNA2 {
      * @return array       UCS4 sequence with syllables composed
      * @access private
      */
-    private function _hangulCompose($input) {
+    private function _hangulCompose($input)
+    {
         $inp_len = count($input);
 
         if (!$inp_len) {
             return array();
         }
 
-        $result = array();
-        $last = $input[0];
+        $result   = array();
+        $last     = $input[0];
         $result[] = $last; // copy first char from input to output
 
         for ($i = 1; $i < $inp_len; ++$i) {
@@ -2926,9 +2940,10 @@ class Net_IDNA2 {
 
                 if (0 <= $vindex && $vindex < $this->_vcount) {
                     // create syllable of form LV
-                    $last = ($this->_sbase + ($lindex * $this->_vcount + $vindex) * $this->_tcount);
+                    $last    = ($this->_sbase + ($lindex * $this->_vcount + $vindex) * $this->_tcount);
                     $out_off = count($result) - 1;
                     $result[$out_off] = $last; // reset last
+
                     // discard char
                     continue;
                 }
@@ -2945,6 +2960,7 @@ class Net_IDNA2 {
                     $last += $tindex;
                     $out_off = count($result) - 1;
                     $result[$out_off] = $last; // reset last
+
                     // discard char
                     continue;
                 }
@@ -2966,8 +2982,9 @@ class Net_IDNA2 {
      * @return integer      Combining class if found, else 0
      * @access private
      */
-    private function _getCombiningClass($char) {
-        return isset(self::$_np_norm_combcls[$char]) ? self::$_np_norm_combcls[$char] : 0;
+    private function _getCombiningClass($char)
+    {
+        return isset(self::$_np_norm_combcls[$char])? self::$_np_norm_combcls[$char] : 0;
     }
 
     /**
@@ -2978,7 +2995,8 @@ class Net_IDNA2 {
      * @return array       Ordered USC4 sequence
      * @access private
      */
-    private function _applyCannonicalOrdering($input) {
+    private function _applyCannonicalOrdering($input)
+    {
         $swap = true;
         $size = count($input);
 
@@ -3021,7 +3039,8 @@ class Net_IDNA2 {
      * @return array       Ordered USC4 sequence
      * @access private
      */
-    private function _combine($input) {
+    private function _combine($input)
+    {
         $inp_len = count($input);
 
         // Is it a Hangul syllable?
@@ -3085,7 +3104,8 @@ class Net_IDNA2 {
      * @throws Exception
      * @access private
      */
-    private function _utf8_to_ucs4($input) {
+    private function _utf8_to_ucs4($input)
+    {
         $output = array();
         $out_len = 0;
         $inp_len = self::_byteLength($input, '8bit');
@@ -3098,7 +3118,7 @@ class Net_IDNA2 {
                 $output[$out_len] = $v;
                 ++$out_len;
                 if ('add' == $mode) {
-                    throw new UnexpectedValueException('Conversion from UTF-8 to UCS-4 failed: malformed input at byte ' . $k);
+                    throw new UnexpectedValueException('Conversion from UTF-8 to UCS-4 failed: malformed input at byte '.$k);
                 }
                 continue;
             }
@@ -3122,7 +3142,7 @@ class Net_IDNA2 {
                     $next_byte = 4;
                     $v = ($v - 252) << 30;
                 } else {
-                    throw new UnexpectedValueException('This might be UTF-8, but I don\'t understand it at byte ' . $k);
+                    throw new UnexpectedValueException('This might be UTF-8, but I don\'t understand it at byte '.$k);
                 }
                 if ('add' == $mode) {
                     $output[$out_len] = (int) $v;
@@ -3134,7 +3154,7 @@ class Net_IDNA2 {
                 if (!$this->_allow_overlong && $test == 'range') {
                     $test = 'none';
                     if (($v < 0xA0 && $start_byte == 0xE0) || ($v < 0x90 && $start_byte == 0xF0) || ($v > 0x8F && $start_byte == 0xF4)) {
-                        throw new OutOfRangeException('Bogus UTF-8 character detected (out of legal range) at byte ' . $k);
+                        throw new OutOfRangeException('Bogus UTF-8 character detected (out of legal range) at byte '.$k);
                     }
                 }
                 if ($v >> 6 == 2) { // Bit mask must be 10xxxxxx
@@ -3142,7 +3162,7 @@ class Net_IDNA2 {
                     $output[($out_len - 1)] += $v;
                     --$next_byte;
                 } else {
-                    throw new UnexpectedValueException('Conversion from UTF-8 to UCS-4 failed: malformed input at byte ' . $k);
+                    throw new UnexpectedValueException('Conversion from UTF-8 to UCS-4 failed: malformed input at byte '.$k);
                 }
                 if ($next_byte < 0) {
                     $mode = 'next';
@@ -3161,7 +3181,8 @@ class Net_IDNA2 {
      * @throws Exception
      * @access private
      */
-    private function _ucs4_to_utf8($input) {
+    private function _ucs4_to_utf8($input)
+    {
         $output = '';
 
         foreach ($input as $v) {
@@ -3173,33 +3194,33 @@ class Net_IDNA2 {
             } else if ($v < 1 << 11) {
                 // 2 bytes
                 $output .= chr(192 + ($v >> 6))
-                        . chr(128 + ($v & 63));
+                    . chr(128 + ($v & 63));
             } else if ($v < 1 << 16) {
                 // 3 bytes
                 $output .= chr(224 + ($v >> 12))
-                        . chr(128 + (($v >> 6) & 63))
-                        . chr(128 + ($v & 63));
+                    . chr(128 + (($v >> 6) & 63))
+                    . chr(128 + ($v & 63));
             } else if ($v < 1 << 21) {
                 // 4 bytes
                 $output .= chr(240 + ($v >> 18))
-                        . chr(128 + (($v >> 12) & 63))
-                        . chr(128 + (($v >> 6) & 63))
-                        . chr(128 + ($v & 63));
+                    . chr(128 + (($v >> 12) & 63))
+                    . chr(128 + (($v >>  6) & 63))
+                    . chr(128 + ($v & 63));
             } else if ($v < 1 << 26) {
                 // 5 bytes
                 $output .= chr(248 + ($v >> 24))
-                        . chr(128 + (($v >> 18) & 63))
-                        . chr(128 + (($v >> 12) & 63))
-                        . chr(128 + (($v >> 6) & 63))
-                        . chr(128 + ($v & 63));
+                    . chr(128 + (($v >> 18) & 63))
+                    . chr(128 + (($v >> 12) & 63))
+                    . chr(128 + (($v >>  6) & 63))
+                    . chr(128 + ($v & 63));
             } else if ($v < 1 << 31) {
                 // 6 bytes
                 $output .= chr(252 + ($v >> 30))
-                        . chr(128 + (($v >> 24) & 63))
-                        . chr(128 + (($v >> 18) & 63))
-                        . chr(128 + (($v >> 12) & 63))
-                        . chr(128 + (($v >> 6) & 63))
-                        . chr(128 + ($v & 63));
+                    . chr(128 + (($v >> 24) & 63))
+                    . chr(128 + (($v >> 18) & 63))
+                    . chr(128 + (($v >> 12) & 63))
+                    . chr(128 + (($v >>  6) & 63))
+                    . chr(128 + ($v & 63));
             } else {
                 throw new UnexpectedValueException('Conversion from UCS-4 to UTF-8 failed: malformed input');
             }
@@ -3217,7 +3238,8 @@ class Net_IDNA2 {
      * @throws Exception
      * @access private
      */
-    private function _ucs4_to_ucs4_string($input) {
+    private function _ucs4_to_ucs4_string($input)
+    {
         $output = '';
         // Take array values and split output to 4 bytes per value
         // The bit mask is 255, which reads &11111111
@@ -3236,7 +3258,8 @@ class Net_IDNA2 {
      * @throws InvalidArgumentException
      * @access private
      */
-    private function _ucs4_string_to_ucs4($input) {
+    private function _ucs4_string_to_ucs4($input)
+    {
         $output = array();
 
         $inp_len = self::_byteLength($input);
@@ -3271,7 +3294,8 @@ class Net_IDNA2 {
      * @static
      * @access private
      */
-    private static function _showHex($input, $include_bit = false) {
+    private static function _showHex($input, $include_bit = false)
+    {
         foreach ($input as $k => $v) {
             echo '[', $k, '] => ', sprintf('%X', $v);
 
@@ -3293,7 +3317,8 @@ class Net_IDNA2 {
      * @static
      * @access private
      */
-    private static function _showBitmask($octet) {
+    private static function _showBitmask($octet)
+    {
         if ($octet >= (1 << 16)) {
             $w = 31;
         } else if ($octet >= (1 << 8)) {
@@ -3305,7 +3330,7 @@ class Net_IDNA2 {
         $return = '';
 
         for ($i = $w; $i > -1; $i--) {
-            $return .= ($octet & (1 << $i)) ? '1' : '0';
+            $return .= ($octet & (1 << $i))? '1' : '0';
         }
 
         return $return;
@@ -3321,14 +3346,16 @@ class Net_IDNA2 {
      *
      * @see Net_IDNA2::$_mb_string_overload
      */
-    private static function _byteLength($string) {
+    private static function _byteLength($string)
+    {
         if (self::$_mb_string_overload) {
             return mb_strlen($string, '8bit');
         }
-        return strlen((binary) $string);
+        return strlen((binary)$string);
     }
 
     // }}}}
+
     // {{{ factory
     /**
      * Attempts to return a concrete IDNA instance for either php4 or php5.
@@ -3338,11 +3365,12 @@ class Net_IDNA2 {
      * @return Net_IDNA2
      * @access public
      */
-    function getInstance($params = array()) {
+    function getInstance($params = array())
+    {
         return new Net_IDNA2($params);
     }
-
     // }}}
+
     // {{{ singleton
     /**
      * Attempts to return a concrete IDNA instance for either php4 or php5,
@@ -3354,7 +3382,8 @@ class Net_IDNA2 {
      * @return object Net_IDNA2
      * @access public
      */
-    function singleton($params = array()) {
+    function singleton($params = array())
+    {
         static $instances;
         if (!isset($instances)) {
             $instances = array();
@@ -3367,7 +3396,6 @@ class Net_IDNA2 {
 
         return $instances[$signature];
     }
-
     // }}}
 }
 

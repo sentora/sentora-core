@@ -1,27 +1,28 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/cy_GB/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Dafydd Tomos <l10n@da.fydd.org>                               |
-  +-----------------------------------------------------------------------+
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/cy_GB/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Dafydd Tomos                                                  |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Fe gafwyd gwall!';
 $messages['loginfailed'] = 'Methwyd a\'ch mewngofnodi';
 $messages['cookiesdisabled'] = 'Nid yw eich porwr yn derbyn cwcis';
 $messages['sessionerror'] = 'Mae\'r sesiwn yn anghywir neu wedi dod i ben';
-$messages['imaperror'] = 'Methwyd cysylltu a\'r gweinydd IMAP';
+$messages['storageerror'] = 'Methwyd cysylltu a\'r gweinydd IMAP';
 $messages['servererror'] = 'Gwall Gweinydd!';
 $messages['servererrormsg'] = 'Gwall Gweinydd: $msg';
 $messages['dberror'] = 'Gwall Cronfa Ddata!';
+$messages['requesttimedout'] = 'Cais wedi dod i derfyn amser';
 $messages['errorreadonly'] = 'Methwyd gweithredu. Mae\'r ffolder yn darllen-yn-unig';
 $messages['errornoperm'] = 'Methwyd gweithredu. Gwrthodwyd caniatad';
 $messages['invalidrequest'] = 'Cais annilys! Ni chadwyd unrhyw wybodaeth.';
@@ -71,7 +72,7 @@ $messages['nonamewarning'] = 'Rhowch enw';
 $messages['nopagesizewarning'] = 'Rhowch maint tudalen';
 $messages['nosenderwarning'] = 'Rhowch gyfeiriad e-bost y danfonwr';
 $messages['norecipientwarning'] = 'Rhowch o leiaf un derbynnydd';
-$messages['nosubjectwarning'] = 'Mae\'r pennawd \"Pwnc\" yn wag. Hoffech chi roi un fewn nawr?';
+$messages['nosubjectwarning'] = 'Mae\'r pennawd "Pwnc" yn wag. Hoffech chi roi un fewn nawr?';
 $messages['nobodywarning'] = 'Danfon y neges hwn heb destun?';
 $messages['notsentwarning'] = 'Ni ddanfonwyd y neges. Hoffech chi gael gwared a\'r neges?';
 $messages['noldapserver'] = 'Dewiswch weinydd ldap i chwilio';
@@ -106,10 +107,11 @@ $messages['addingmember'] = 'Yn ychwanegu cyswllt/cysylltiadau i\'r grŵp...';
 $messages['removingmember'] = 'Yn dileu cyswllt/cysylltiadau o\'r grŵp...';
 $messages['receiptsent'] = 'Danfonwyd cadarnhad derbyn yn llwyddiannus';
 $messages['errorsendingreceipt'] = 'Methwyd danfon cadarnhad derbyn';
+$messages['deleteidentityconfirm'] = 'Ydych chi wir am ddileu\'r personoliaeth hwn?';
 $messages['nodeletelastidentity'] = 'Allwch chi ddim dileu\'r personoliaeth yma, hwn yw\'r un olaf.';
 $messages['forbiddencharacter'] = 'Mae enw\'r ffolder yn cynnwys llythyren annerbynniol';
 $messages['selectimportfile'] = 'Dewiswch ffeil i\'w lwytho fyny';
-$messages['addresswriterror'] = 'Nid yw\'n bosib ysgrifennu i\'r llyfr cyfeiriadau ';
+$messages['addresswriterror'] = 'Nid yw\'n bosib ysgrifennu i\'r llyfr cyfeiriadau';
 $messages['contactaddedtogroup'] = 'Ychwanegwyd y cysylltiadau i\'r grŵp yma yn llwyddiannus';
 $messages['contactremovedfromgroup'] = 'Dilëwyd y cysylltiadau o\'r grŵp yma yn llwyddiannus';
 $messages['importwait'] = 'Yn mewnforio, arhoswch os gwelwch yn dda...';
@@ -155,4 +157,4 @@ $messages['invalidimageformat'] = 'Ddim yn fformat llun dilys.';
 $messages['mispellingsfound'] = 'Gwelwyd camsillafu yn y neges.';
 $messages['parentnotwritable'] = 'Methwyd creu/symud ffolder i\'r ffolder rhiant ddewiswyd. Dim hawl mynediad.';
 $messages['messagetoobig'] = 'Mae darn y neges yn rhy fawr i\'w brosesu.';
-?>
+

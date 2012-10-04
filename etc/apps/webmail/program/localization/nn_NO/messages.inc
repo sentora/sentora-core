@@ -1,28 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/nn_NO/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Per-Stian Vatne <psv@orsta.org>                               |
-  | Update: Odin Omdal Hørthe <odin.omdal@gmail.com>                      |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/nn_NO/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Feil ved innlogging';
 $messages['cookiesdisabled'] = 'Nettlesaren din tillet ikkje informasjonskapslar (cookies)';
 $messages['sessionerror'] = 'Sesjonen din er ulovleg eller har gått ut på tid';
-$messages['imaperror'] = 'Feil ved tilkopling til IMAP-tenar';
+$messages['storageerror'] = 'Feil ved tilkopling til IMAP-tenar';
 $messages['servererror'] = 'Tenarfeil!';
 $messages['invalidrequest'] = 'Eg forstår ingen ting! Ingen data lagra.';
 $messages['nomessagesfound'] = 'Ingen meldingar i denne postkassa';
@@ -67,7 +63,6 @@ $messages['nosubjectwarning'] = 'Emnefeltet er tomt. Vil du skriva inn eitt emne
 $messages['nobodywarning'] = 'Senda melding utan tekst?';
 $messages['notsentwarning'] = 'Meldinga er ikkje sendt. Vil du kasta ho?';
 $messages['noldapserver'] = 'Vel LDAP-tenar å søkja i';
-$messages['nocontactsreturned'] = 'Fann ingen kontaktar';
 $messages['nosearchname'] = 'Skriv inn kontaktnamn eller epostadressa';
 $messages['notuploadedwarning'] = 'Ikkje alle vedlegga er lasta opp. Vent eller avslutt opplastinga.';
 $messages['searchsuccessful'] = 'Fann $nr meldingar';
@@ -111,4 +106,4 @@ $messages['smtperror'] = 'SMTP-feil: $msg';
 $messages['emailformaterror'] = 'Ukorrekt e-postadresse: $email';
 $messages['toomanyrecipients'] = 'For mange mottakarar. Senk talet til maksimalt $max.';
 $messages['maxgroupmembersreached'] = 'Du kan berre ha $max grupper, du er over grensa søta.';
-?>
+

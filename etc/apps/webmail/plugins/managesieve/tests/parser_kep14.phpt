@@ -12,6 +12,7 @@ $txt = '
 
 $s = new rcube_sieve_script($txt, array('body'));
 echo $s->as_text();
+
 ?>
 --EXPECT--
 # EDITOR Roundcube

@@ -1,27 +1,29 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/de_CH/messages.inc                                       |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id: messages.inc 5741 2012-01-08 16:20:12Z thomasb $
- */
+ +-----------------------------------------------------------------------+
+ | localization/de_CH/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Fehlermeldung';
 $messages['loginfailed'] = 'Login fehlgeschlagen';
 $messages['cookiesdisabled'] = 'Ihr Browser akzeptiert keine Cookies';
 $messages['sessionerror'] = 'Ihre Session ist ungültig oder abgelaufen';
-$messages['imaperror'] = 'Keine Verbindung zum IMAP Server';
+$messages['storageerror'] = 'Keine Verbindung zum IMAP Server';
 $messages['servererror'] = 'Serverfehler!';
 $messages['servererrormsg'] = 'Serverfehler: $msg';
 $messages['dberror'] = 'Datenbankfehler!';
+$messages['requesttimedout'] = 'Zeitlimit überschritten';
 $messages['errorreadonly'] = 'Die Aktion kann nicht ausgeführt werden. Der Ordner ist schreibgeschützt.';
 $messages['errornoperm'] = 'Die Aktion kann nicht ausgeführt werden. Zugriff verweigert.';
 $messages['invalidrequest'] = 'Ungültige Anfrage! Es wurden keine Daten gespeichert.';
@@ -76,6 +78,7 @@ $messages['nobodywarning'] = 'Wollen Sie diese Nachricht ohne Inhalt senden?';
 $messages['notsentwarning'] = 'Ihre Nachricht wurde nicht gesendet. Wollen Sie die Nachricht verwerfen?';
 $messages['noldapserver'] = 'Bitte wählen Sie einen LDAP-Server aus';
 $messages['nosearchname'] = 'Bitte geben Sie einen Namen oder eine E-Mail-Adresse ein.';
+$messages['notuploadedwarning'] = 'Es wurden noch nicht alle Dateien hochgeladen. Bitte warten oder Upload abbrechen.';
 $messages['searchsuccessful'] = '$nr Nachrichten gefunden.';
 $messages['contactsearchsuccessful'] = '$nr Kontakte gefunden.';
 $messages['searchnomatch'] = 'Die Suche lieferte keine Treffer.';
@@ -112,6 +115,7 @@ $messages['selectimportfile'] = 'Bitte wählen Sie eine Datei zum Importieren au
 $messages['addresswriterror'] = 'Das gewählte Adressbuch kann nicht verändert werden.';
 $messages['contactaddedtogroup'] = 'Kontakte wurden dieser Gruppe hinzugefügt.';
 $messages['contactremovedfromgroup'] = 'Kontakte wurden aus dieser Gruppe entfernt.';
+$messages['nogroupassignmentschanged'] = 'Es wurde keine Gruppenzuweisung verändert.';
 $messages['importwait'] = 'Daten werden importiert, bitte warten...';
 $messages['importerror'] = 'Import fehlgeschlagen! Die hochgeladene Datei ist nicht im vCard-Format.';
 $messages['importconfirm'] = '<b>Es wurden $inserted Adressen erfolgreich importiert</b>';
@@ -135,8 +139,8 @@ $messages['contactdeleted'] = 'Kontakt(e) erfolgreich gelöscht.';
 $messages['contactrestoreerror'] = 'Die gelöschten Kontakte konnten nicht wiederhergestellt werden.';
 $messages['contactrestored'] = 'Kontakte erfolgreich wiederhergestellt.';
 $messages['groupdeleted'] = 'Gruppe erfolgreich gelöscht.';
-$messages['grouprenamed'] = 'Gruppe erlogreich umbenannt.';
-$messages['groupcreated'] = 'Gruppe erlogreich erstellt.';
+$messages['grouprenamed'] = 'Gruppe erfolgreich umbenannt.';
+$messages['groupcreated'] = 'Gruppe erfolgreich erstellt.';
 $messages['savedsearchdeleted'] = 'Suche erfolgreich gelöscht.';
 $messages['savedsearchdeleteerror'] = 'Suche konnte nicht gelöscht werden.';
 $messages['savedsearchcreated'] = 'Suche erfolgreich gespeichert.';

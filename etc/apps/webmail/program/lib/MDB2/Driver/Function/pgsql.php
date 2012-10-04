@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -54,7 +53,8 @@ require_once 'MDB2/Driver/Function/Common.php';
  * @category Database
  * @author Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Function_pgsql extends MDB2_Driver_Function_Common {
+class MDB2_Driver_Function_pgsql extends MDB2_Driver_Function_Common
+{
     // {{{ executeStoredProc()
 
     /**
@@ -69,17 +69,17 @@ class MDB2_Driver_Function_pgsql extends MDB2_Driver_Function_Common {
      * @return mixed a result handle or MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false) {
+    function executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $query = 'SELECT * FROM ' . $name;
-        $query .= $params ? '(' . implode(', ', $params) . ')' : '()';
+        $query = 'SELECT * FROM '.$name;
+        $query .= $params ? '('.implode(', ', $params).')' : '()';
         return $db->query($query, $types, $result_class, $result_wrap_class);
     }
-
     // }}}
     // {{{ unixtimestamp()
 
@@ -91,7 +91,8 @@ class MDB2_Driver_Function_pgsql extends MDB2_Driver_Function_Common {
      * @return string to call a variable with the timestamp
      * @access public
      */
-    function unixtimestamp($expression) {
+    function unixtimestamp($expression)
+    {
         return 'EXTRACT(EPOCH FROM DATE_TRUNC(\'seconds\', CAST ((' . $expression . ') AS TIMESTAMP)))';
     }
 
@@ -104,11 +105,11 @@ class MDB2_Driver_Function_pgsql extends MDB2_Driver_Function_Common {
      * @return return string to generate float between 0 and 1
      * @access public
      */
-    function random() {
+    function random()
+    {
         return 'RANDOM()';
     }
 
     // }}}
 }
-
 ?>

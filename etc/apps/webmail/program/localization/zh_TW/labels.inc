@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/zh_TW/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Nansen <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id: labels.inc 5741 2012-01-08 16:20:12Z thomasb $
- */
+ +-----------------------------------------------------------------------+
+ | localization/zh_TW/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Nansen <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = '歡迎使用 $product';
@@ -22,7 +22,7 @@ $labels['server'] = '伺服器';
 $labels['login'] = '登入';
 $labels['logout'] = '登出';
 $labels['mail'] = '電子郵件';
-$labels['settings'] = '個人設定';
+$labels['settings'] = '設定';
 $labels['addressbook'] = '通訊錄';
 $labels['inbox'] = '收件匣';
 $labels['drafts'] = '草稿匣';
@@ -41,11 +41,13 @@ $labels['size'] = '大小';
 $labels['priority'] = '優先順序';
 $labels['organization'] = '組織';
 $labels['readstatus'] = '讀信狀態';
+$labels['listoptions'] = '列表選項...';
 $labels['mailboxlist'] = '資料夾';
 $labels['folders'] = '資料夾';
 $labels['messagesfromto'] = '郵件 $from 至 $to，共有 $count 封郵件';
 $labels['threadsfromto'] = '郵件串 $from 至 $to，共有 $count 個';
 $labels['messagenrof'] = '第 $nr 封郵件，共有 $count 封';
+$labels['fromtoshort'] = '自 $from – $to 統計 $count';
 $labels['copy'] = '複製';
 $labels['move'] = '移動';
 $labels['moveto'] = '移至...';
@@ -120,7 +122,7 @@ $labels['markread'] = '標示為已讀取';
 $labels['markunread'] = '標示為未讀取';
 $labels['markflagged'] = '標上旗標';
 $labels['markunflagged'] = '移除旗標';
-$labels['moreactions'] = '資料夾動做...';
+$labels['moreactions'] = '資料夾動作...';
 $labels['more'] = '更多';
 $labels['back'] = '上一頁';
 $labels['options'] = '選項';
@@ -167,7 +169,7 @@ $labels['searchmod'] = '修改搜尋';
 $labels['msgtext'] = '整封郵件';
 $labels['openinextwin'] = '在新視窗開啟';
 $labels['emlsave'] = '下載（.eml）';
-$labels['editasnew'] = '已新郵件編輯';
+$labels['editasnew'] = '以新郵件編輯';
 $labels['savemessage'] = '儲存成草稿';
 $labels['sendmessage'] = '立即寄出';
 $labels['addattachment'] = '增加附件檔案';
@@ -175,15 +177,17 @@ $labels['charset'] = '郵件編碼';
 $labels['editortype'] = '編輯器類型';
 $labels['returnreceipt'] = '要求讀取回條';
 $labels['dsn'] = '傳送狀態通知';
-$labels['mailreplyintro'] = '$sender 於 $data 寫到:';
+$labels['mailreplyintro'] = '$sender 於 $date 寫到:';
 $labels['originalmessage'] = '郵件顯示設定';
 $labels['editidents'] = '編輯身份資訊';
+$labels['spellcheck'] = '拼字';
 $labels['checkspelling'] = '拼字檢查';
 $labels['resumeediting'] = '繼續編輯';
 $labels['revertto'] = '恢復至';
 $labels['attach'] = '附件';
 $labels['attachments'] = '附加檔案';
 $labels['upload'] = '上傳';
+$labels['uploadprogress'] = '$percent ($current / $total)';
 $labels['close'] = '關閉';
 $labels['messageoptions'] = '郵件選項...';
 $labels['low'] = '低';
@@ -269,6 +273,7 @@ $labels['delete'] = '刪除';
 $labels['rename'] = '重新命名';
 $labels['addphoto'] = '新增';
 $labels['replacephoto'] = '取代';
+$labels['uploadphoto'] = '上傳相片';
 $labels['newcontact'] = '建立新聯絡人資料';
 $labels['deletecontact'] = '刪除所選擇的聯絡人';
 $labels['composeto'] = '寄信至所選擇的聯絡人';
@@ -279,13 +284,14 @@ $labels['exportvcards'] = '匯出通訊錄為 vCard 格式';
 $labels['newcontactgroup'] = '新增聯絡人群組';
 $labels['grouprename'] = '重新命名群組';
 $labels['groupdelete'] = '刪除群組';
+$labels['groupremoveselected'] = '從群組中刪除選擇的聯絡人';
 $labels['previouspage'] = '顯示上一頁';
 $labels['firstpage'] = '顯示第一頁';
 $labels['nextpage'] = '顯示下一頁';
 $labels['lastpage'] = '顯示最後一頁';
 $labels['group'] = '群組';
 $labels['groups'] = '群組';
-$labels['personaladrbook'] = '個人住址';
+$labels['personaladrbook'] = '個人通訊錄';
 $labels['searchsave'] = '儲存搜尋結果';
 $labels['searchdelete'] = '刪除搜尋結果';
 $labels['import'] = '匯入通訊錄';
@@ -338,6 +344,7 @@ $labels['readwhendeleted'] = '將刪除的郵件標示為已讀取';
 $labels['flagfordeletion'] = '刪除郵件時將原始郵件標示為已刪除';
 $labels['skipdeleted'] = '不要顯示已刪除的郵件';
 $labels['deletealways'] = '如果移到垃圾桶失敗，就直接刪除';
+$labels['deletejunk'] = '直接從垃圾郵件刪除';
 $labels['showremoteimages'] = '顯示遠端郵件內文中的圖片';
 $labels['fromknownsenders'] = '從已知的寄件者';
 $labels['always'] = '總是接受';
@@ -353,13 +360,14 @@ $labels['mimeparamfolding'] = '附加檔案名稱的編碼方式';
 $labels['2231folding'] = '完全 RFC 2231 模式（Thunderbird）';
 $labels['miscfolding'] = 'RFC 2047/2231 混合模式（MS Outlook）';
 $labels['2047folding'] = '完全 RFC 2047 模式（其他）';
-$labels['force7bit'] = '使用MIME編碼對於8位元字元';
+$labels['force7bit'] = '使用 MIME 編碼對於 8 位元字元';
 $labels['advancedoptions'] = '顯示進階設定選項';
 $labels['focusonnewmessage'] = '收到新郵件時使瀏覽器獲得焦點';
 $labels['checkallfolders'] = '檢查所有資料夾中的新郵件';
 $labels['displaynext'] = '郵件刪除／移動時顯示下一個郵件';
 $labels['defaultfont'] = 'HTML格式預設字型';
 $labels['mainoptions'] = '主要選項';
+$labels['browseroptions'] = '瀏覽選項';
 $labels['section'] = '分類';
 $labels['maintenance'] = '管理';
 $labels['newmessage'] = '新郵件';
@@ -381,12 +389,15 @@ $labels['reqmdn'] = '永遠索取讀取回條';
 $labels['reqdsn'] = '總是要求傳送狀態通知';
 $labels['replysamefolder'] = '將回覆與回覆信件放置於相同資料夾';
 $labels['defaultaddressbook'] = '新增連絡人至指定通訊錄';
+$labels['autocompletesingle'] = '在自動完成中略過另一個email';
+$labels['listnamedisplay'] = '標記聯絡人為';
 $labels['spellcheckbeforesend'] = '寄送前執行拼字檢查';
 $labels['spellcheckoptions'] = '拼字檢查選項';
 $labels['spellcheckignoresyms'] = '忽略符號';
 $labels['spellcheckignorenums'] = '忽略數字';
 $labels['spellcheckignorecaps'] = '忽略大寫字母';
 $labels['addtodict'] = '加入詞典';
+$labels['mailtoprotohandler'] = '註冊mailto:協定處理程式';
 $labels['folder'] = '資料夾';
 $labels['foldername'] = '資料夾名稱';
 $labels['subscribed'] = '顯示';

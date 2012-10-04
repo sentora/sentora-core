@@ -1,24 +1,24 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/hi_IN/messages.inc                                       |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id: messages.inc 5741 2012-01-08 16:20:12Z thomasb $
- */
+ +-----------------------------------------------------------------------+
+ | localization/hi_IN/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'लॉगिन नहीं हो पाया';
 $messages['cookiesdisabled'] = 'आपका ब्राऊसर कुकी स्वीकार नहीं कर रहा है';
 $messages['sessionerror'] = 'सत्र समाप्त या अवैद्य';
-$messages['imaperror'] = 'आईमैप (IMAP) सर्वर से सम्पर्क नहीं हो पाया';
+$messages['storageerror'] = 'आईमैप (IMAP) सर्वर से सम्पर्क नहीं हो पाया';
 $messages['nomessagesfound'] = 'इस मेलबॉक्स में कोई मेल नहीं है';
 $messages['loggedout'] = 'सत्र समाप्त. टा टा!';
 $messages['mailboxempty'] = 'मेलबॉक्स खाली है';

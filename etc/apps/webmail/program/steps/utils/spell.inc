@@ -1,23 +1,26 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | program/steps/utils/spell.inc                                         |
-  |                                                                       |
-  | This file is part of the Roundcube Webmail client                     |
-  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  | PURPOSE:                                                              |
-  |   Invoke the configured or default spell checking engine.             |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Kris Steinhoff <steinhof@umich.edu>                           |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | program/steps/utils/spell.inc                                         |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ | PURPOSE:                                                              |
+ |   Invoke the configured or default spell checking engine.             |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Kris Steinhoff <steinhof@umich.edu>                           |
+ +-----------------------------------------------------------------------+
 
-  $Id: spell.inc 5181 2011-09-06 13:39:45Z alec $
+ $Id$
 
- */
+*/
 
 // read input
 $lang = get_input_value('lang', RCUBE_INPUT_GET);
@@ -28,15 +31,16 @@ $learn_word = strpos($data, '<learnword>');
 // Get data string
 $left = strpos($data, '<text>');
 $right = strrpos($data, '</text>');
-$data = substr($data, $left + 6, $right - ($left + 6));
+$data = substr($data, $left+6, $right-($left+6));
 $data = html_entity_decode($data, ENT_QUOTES, RCMAIL_CHARSET);
 
 $spellchecker = new rcube_spellchecker($lang);
 
 if ($learn_word) {
     $spellchecker->add_word($data);
-    $result = '<?xml version="1.0" encoding="' . RCMAIL_CHARSET . '"?><learnwordresult></learnwordresult>';
-} else {
+    $result = '<?xml version="1.0" encoding="'.RCMAIL_CHARSET.'"?><learnwordresult></learnwordresult>';
+}
+else {
     $spellchecker->check($data);
     $result = $spellchecker->get_xml();
 }

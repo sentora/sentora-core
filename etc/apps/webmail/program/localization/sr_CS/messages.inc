@@ -1,30 +1,27 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/sr_cyrillic/messages.inc                                     |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Branko Kokanovic <branko.kokanovic@gmail.com>                 |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4627 2011-03-31 13:47:22Z yllar $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/sr_CS/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Неуспешно пријављивање';
 $messages['cookiesdisabled'] = 'Ваш интернет прегледач не подржава колачиће';
 $messages['sessionerror'] = 'Сесија није валидна или је истекла';
-$messages['imaperror'] = 'Неуспешна конекција на IMAP сервер';
+$messages['storageerror'] = 'Неуспешна конекција на IMAP сервер';
 $messages['servererror'] = 'Грешка на серверу!';
 $messages['servererrormsg'] = 'Грешка на серверу: $msg';
-$messages['errorreadonly'] = 'Операција неуспела. Фасицкло је ';
+$messages['errorreadonly'] = 'Операција неуспела. Фасицкло је';
 $messages['errornoperm'] = 'Извршење операције није могуће. Одбијен захтев за дозволу..';
 $messages['invalidrequest'] = 'Погрешан захтев! Подаци нису сачувани.';
 $messages['nomessagesfound'] = 'Немате порука у сандучету';
@@ -71,7 +68,6 @@ $messages['nosubjectwarning'] = 'Поље \'Наслов\' је празно. Ж
 $messages['nobodywarning'] = 'Да ли желите да пошаљете поруку без текста?';
 $messages['notsentwarning'] = 'Порука није послата. Да ли желите да одбаците ову поруку?';
 $messages['noldapserver'] = 'Унесите LDAP сервер за претрагу';
-$messages['nocontactsreturned'] = 'Није пронађен ниједан контакт';
 $messages['nosearchname'] = 'Унесите име или е-мејл адресу';
 $messages['notuploadedwarning'] = 'Нису сви прилози отпремљени. Молимо сачекајте или откажите отпремање.';
 $messages['searchsuccessful'] = 'Број пронађених порука: $nr';
@@ -102,7 +98,7 @@ $messages['errorsendingreceipt'] = 'Неуспело слање обавеште
 $messages['nodeletelastidentity'] = 'Не можете обрисати овај идентитет, он Вам је последњи.';
 $messages['forbiddencharacter'] = 'Име фасцикле садржи недозвољено слово';
 $messages['selectimportfile'] = 'Молимо Вас да изаберете датотеку за отпремање';
-$messages['addresswriterror'] = 'У изабраном адресару нису дозвољене промене ';
+$messages['addresswriterror'] = 'У изабраном адресару нису дозвољене промене';
 $messages['contactaddedtogroup'] = 'Контакти успешно додати групи';
 $messages['contactremovedfromgroup'] = 'Контакти успешно одстрањени из групе';
 $messages['importwait'] = 'Увоз података, молимо сачекајте...';
@@ -118,7 +114,6 @@ $messages['smtpautherror'] = 'SMTP Error ($code): Аутентификација
 $messages['smtpfromerror'] = 'SMTP Error ($code): Неуспешно додавање пошиљаоца "$from" ($msg)';
 $messages['smtptoerror'] = 'SMTP Error ($code): Неуспешно додавање примаоца "$to" ($msg)';
 $messages['smtprecipientserror'] = 'SMTP Error ($code): Није могуће расчланити листу прималаца';
-$messages['smtpdsnerror'] = 'SMTP Error ($code): Нема подршке за обавештења о статусу испоруке';
 $messages['smtperror'] = 'SMTP Error ($code): $msg';
 $messages['emailformaterror'] = 'Имејл адреса није валидна: $email';
 $messages['toomanyrecipients'] = 'Превише прималаца. Смањите број прималаца на $max.';
@@ -139,4 +134,4 @@ $messages['nametoolong'] = 'Предугачко име';
 $messages['folderupdated'] = 'фасцикла успешно ажурирана';
 $messages['foldercreated'] = 'Фасцикла успешно креирана';
 $messages['invalidimageformat'] = 'Формат слике није валидан';
-?>
+

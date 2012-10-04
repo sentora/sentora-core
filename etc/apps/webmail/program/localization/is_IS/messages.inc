@@ -1,27 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/en_GB/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Weiran Zhang (weiran@weiran.co.uk)                            |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/is_IS/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Innskráning mistókst';
 $messages['cookiesdisabled'] = 'Vafrinn þinn vill ekki taka við kökum (cookies)';
 $messages['sessionerror'] = 'Innskráningin þín ógild eða útrunnin';
-$messages['imaperror'] = 'Tengin við IMAP-miðlara mistókst';
+$messages['storageerror'] = 'Tengin við IMAP-miðlara mistókst';
 $messages['nomessagesfound'] = 'Engin skeyti eru í þessu pósthólfi';
 $messages['loggedout'] = 'Þú hefur útskráðst. Bless!';
 $messages['mailboxempty'] = 'Pósthólfið er tómt';
@@ -52,7 +49,6 @@ $messages['nosubjectwarning'] = 'Efnislínan er tóm. Viltu slá eitthvað inn �
 $messages['nobodywarning'] = 'Viltu senda tómt skeyti?';
 $messages['notsentwarning'] = 'Skeytið hefur ekki verið send. Viltu henda skeytinu?';
 $messages['noldapserver'] = 'Please select an ldap server to search';
-$messages['nocontactsreturned'] = 'Engin netföng fundust';
 $messages['nosearchname'] = 'Sláðu inn nafn eða netfang';
 $messages['searchsuccessful'] = '$nr skeyti fundust';
 $messages['searchnomatch'] = 'Leit skilaði engu';
@@ -60,4 +56,4 @@ $messages['searching'] = 'Leita...';
 $messages['checking'] = 'Gái...';
 $messages['nospellerrors'] = 'Engar innsláttarvillur fundust';
 $messages['folderdeleted'] = 'Möppu var eytt';
-?>
+

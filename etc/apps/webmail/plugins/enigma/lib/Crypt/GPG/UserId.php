@@ -31,6 +31,7 @@
  * @version   CVS: $Id: UserId.php 295621 2010-03-01 04:18:54Z gauthierm $
  * @link      http://pear.php.net/package/Crypt_GPG
  */
+
 // {{{ class Crypt_GPG_UserId
 
 /**
@@ -48,7 +49,8 @@
  * @see       Crypt_GPG::getKeys()
  * @see       Crypt_GPG_Key::getUserIds()
  */
-class Crypt_GPG_UserId {
+class Crypt_GPG_UserId
+{
     // {{{ class properties
 
     /**
@@ -105,7 +107,8 @@ class Crypt_GPG_UserId {
      *        existing user id object, which is copied; a user id string, which
      *        is parsed; or an array of initial values.
      */
-    public function __construct($userId = null) {
+    public function __construct($userId = null)
+    {
         // parse from string
         if (is_string($userId)) {
             $userId = self::parse($userId);
@@ -113,11 +116,11 @@ class Crypt_GPG_UserId {
 
         // copy from object
         if ($userId instanceof Crypt_GPG_UserId) {
-            $this->_name = $userId->_name;
-            $this->_comment = $userId->_comment;
-            $this->_email = $userId->_email;
+            $this->_name      = $userId->_name;
+            $this->_comment   = $userId->_comment;
+            $this->_email     = $userId->_email;
             $this->_isRevoked = $userId->_isRevoked;
-            $this->_isValid = $userId->_isValid;
+            $this->_isValid   = $userId->_isValid;
         }
 
         // initialize from array
@@ -152,7 +155,8 @@ class Crypt_GPG_UserId {
      *
      * @return string the name field of this user id.
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->_name;
     }
 
@@ -164,7 +168,8 @@ class Crypt_GPG_UserId {
      *
      * @return string the comments field of this user id.
      */
-    public function getComment() {
+    public function getComment()
+    {
         return $this->_comment;
     }
 
@@ -176,7 +181,8 @@ class Crypt_GPG_UserId {
      *
      * @return string the email field of this user id.
      */
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->_email;
     }
 
@@ -188,7 +194,8 @@ class Crypt_GPG_UserId {
      *
      * @return boolean true if this user id is revoked and false if it is not.
      */
-    public function isRevoked() {
+    public function isRevoked()
+    {
         return $this->_isRevoked;
     }
 
@@ -200,7 +207,8 @@ class Crypt_GPG_UserId {
      *
      * @return boolean true if this user id is valid and false if it is not.
      */
-    public function isValid() {
+    public function isValid()
+    {
         return $this->_isValid;
     }
 
@@ -215,7 +223,8 @@ class Crypt_GPG_UserId {
      *
      * @return string a string representation of this user id.
      */
-    public function __toString() {
+    public function __toString()
+    {
         $components = array();
 
         if (strlen($this->_name) > 0) {
@@ -227,7 +236,7 @@ class Crypt_GPG_UserId {
         }
 
         if (strlen($this->_email) > 0) {
-            $components[] = '<' . $this->_email . '>';
+            $components[] = '<' . $this->_email. '>';
         }
 
         return implode(' ', $components);
@@ -243,7 +252,8 @@ class Crypt_GPG_UserId {
      *
      * @return Crypt_GPG_UserId the current object, for fluent interface.
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->_name = strval($name);
         return $this;
     }
@@ -258,7 +268,8 @@ class Crypt_GPG_UserId {
      *
      * @return Crypt_GPG_UserId the current object, for fluent interface.
      */
-    public function setComment($comment) {
+    public function setComment($comment)
+    {
         $this->_comment = strval($comment);
         return $this;
     }
@@ -273,7 +284,8 @@ class Crypt_GPG_UserId {
      *
      * @return Crypt_GPG_UserId the current object, for fluent interface.
      */
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->_email = strval($email);
         return $this;
     }
@@ -288,7 +300,8 @@ class Crypt_GPG_UserId {
      *
      * @return Crypt_GPG_UserId the current object, for fluent interface.
      */
-    public function setRevoked($isRevoked) {
+    public function setRevoked($isRevoked)
+    {
         $this->_isRevoked = ($isRevoked) ? true : false;
         return $this;
     }
@@ -303,7 +316,8 @@ class Crypt_GPG_UserId {
      *
      * @return Crypt_GPG_UserId the current object, for fluent interface.
      */
-    public function setValid($isValid) {
+    public function setValid($isValid)
+    {
         $this->_isValid = ($isValid) ? true : false;
         return $this;
     }
@@ -322,22 +336,23 @@ class Crypt_GPG_UserId {
      *
      * @return Crypt_GPG_UserId the user id object parsed from the string.
      */
-    public static function parse($string) {
-        $userId = new Crypt_GPG_UserId();
-        $email = '';
+    public static function parse($string)
+    {
+        $userId  = new Crypt_GPG_UserId();
+        $email   = '';
         $comment = '';
 
         // get email address from end of string if it exists
         $matches = array();
         if (preg_match('/^(.+?) <([^>]+)>$/', $string, $matches) === 1) {
             $string = $matches[1];
-            $email = $matches[2];
+            $email  = $matches[2];
         }
 
         // get comment from end of string if it exists
         $matches = array();
         if (preg_match('/^(.+?) \(([^\)]+)\)$/', $string, $matches) === 1) {
-            $string = $matches[1];
+            $string  = $matches[1];
             $comment = $matches[2];
         }
 
@@ -354,4 +369,5 @@ class Crypt_GPG_UserId {
 }
 
 // }}}
+
 ?>

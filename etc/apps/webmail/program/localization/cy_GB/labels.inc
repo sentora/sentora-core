@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/cy_GB/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2008-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Dafydd Tomos <l10n@da.fydd.org>                               |
-  +-----------------------------------------------------------------------+
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/cy_GB/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Dafydd Tomos <Unknown>                                        |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = 'Croeso i $product';
@@ -41,10 +41,13 @@ $labels['size'] = 'Maint';
 $labels['priority'] = 'Blaenoriaeth';
 $labels['organization'] = 'Enw\'r Sefydliad';
 $labels['readstatus'] = 'Statws darllen';
+$labels['listoptions'] = 'Dewisiadau rhestr...';
 $labels['mailboxlist'] = 'Ffolderi';
+$labels['folders'] = 'Ffolderi';
 $labels['messagesfromto'] = 'Negeseuon $from i $to o $count';
 $labels['threadsfromto'] = 'Edefau $from i $to o $count';
 $labels['messagenrof'] = 'Neges $nr o $count';
+$labels['fromtoshort'] = '$from - $to o $count';
 $labels['copy'] = 'Copio';
 $labels['move'] = 'Symud';
 $labels['moveto'] = 'Symud i...';
@@ -71,6 +74,7 @@ $labels['feb'] = 'Chwe';
 $labels['mar'] = 'Maw';
 $labels['apr'] = 'Ebr';
 $labels['may'] = 'Mai';
+$labels['longmay'] = 'Mai';
 $labels['jun'] = 'Meh';
 $labels['jul'] = 'Gor';
 $labels['aug'] = 'Aws';
@@ -82,7 +86,6 @@ $labels['longjan'] = 'Ionawr';
 $labels['longfeb'] = 'Chwefror';
 $labels['longmar'] = 'Mawrth';
 $labels['longapr'] = 'Ebrill';
-$labels['longmay'] = 'Mai';
 $labels['longjun'] = 'Mehefin';
 $labels['longjul'] = 'Gorffennaf';
 $labels['longaug'] = 'Awst';
@@ -91,12 +94,16 @@ $labels['longoct'] = 'Hydref';
 $labels['longnov'] = 'Tachwedd';
 $labels['longdec'] = 'Rhagfyr';
 $labels['today'] = 'Heddiw';
+$labels['refresh'] = 'Adnewyddu';
 $labels['checkmail'] = 'Edrych am negeseuon newydd';
+$labels['compose'] = 'Ysgrifennu neges';
 $labels['writenewmessage'] = 'Creu neges newydd';
+$labels['reply'] = 'Ymateb';
 $labels['replytomessage'] = 'Ymateb i\'r anfonwr';
 $labels['replytoallmessage'] = 'Ymateb i\'r anfonwr a phob derbyniwr';
 $labels['replyall'] = 'Ymateb i bawb';
 $labels['replylist'] = 'Ymateb i\'r rhestr';
+$labels['forward'] = 'Anfon ymlaen';
 $labels['forwardinline'] = 'Anfon ymlaen o fewn y neges';
 $labels['forwardattachment'] = 'Anfon ymlaen fel atodiad';
 $labels['forwardmessage'] = 'Danfon y neges ymlaen';
@@ -109,15 +116,20 @@ $labels['nextmessage'] = 'Dangos y neges nesaf';
 $labels['lastmessage'] = 'Dangos y neges olaf';
 $labels['backtolist'] = 'Nôl i\'r rhestr o negeseuon';
 $labels['viewsource'] = 'Edrych ar y ffynhonnell';
+$labels['mark'] = 'Nodi';
 $labels['markmessages'] = 'Nodi\'r negeseuon';
 $labels['markread'] = 'Wedi eu darllen';
 $labels['markunread'] = 'Heb eu darllen';
 $labels['markflagged'] = 'Wedi eu fflagio';
 $labels['markunflagged'] = 'Heb eu fflagio';
 $labels['moreactions'] = 'Mwy o weithredoedd...';
+$labels['more'] = 'Mwy';
+$labels['back'] = 'Yn ôl';
+$labels['options'] = 'Dewisiadau';
 $labels['select'] = 'Dewis';
 $labels['all'] = 'Popeth';
-$labels['none'] = 'Dim byd';
+$labels['none'] = 'Dim';
+$labels['nonesort'] = 'Dim';
 $labels['currpage'] = 'Tudalen gyfredol';
 $labels['unread'] = 'Heb eu darllen';
 $labels['flagged'] = 'Nodwyd';
@@ -137,7 +149,6 @@ $labels['expand_only_unread'] = 'dim ond gyda negeseuon heb eu darllen';
 $labels['fromto'] = 'Danfonwr/Derbynnydd';
 $labels['flag'] = 'Fflag';
 $labels['attachment'] = 'Atodiad';
-$labels['nonesort'] = 'Dim';
 $labels['sentdate'] = 'Dyddiad danfon';
 $labels['arrival'] = 'Dyddiad derbyn';
 $labels['asc'] = 'esgynnol';
@@ -149,7 +160,7 @@ $labels['listmode'] = 'Golwg rhestr';
 $labels['folderactions'] = 'Gweithredoedd ffolder...';
 $labels['compact'] = 'Crynhoi';
 $labels['empty'] = 'Gwagio';
-$labels['quota'] = 'Defnydd ';
+$labels['quota'] = 'Defnydd';
 $labels['unknown'] = 'anhysbys';
 $labels['unlimited'] = 'diderfyn';
 $labels['quicksearch'] = 'Chwiliad cyflym';
@@ -158,7 +169,6 @@ $labels['searchmod'] = 'Addasyddion chwilio';
 $labels['msgtext'] = 'Y neges yn llawn';
 $labels['openinextwin'] = 'Agor mewn ffenest newydd';
 $labels['emlsave'] = 'Llwytho lawr (.eml)';
-$labels['compose'] = 'Ysgrifennu neges';
 $labels['editasnew'] = 'Golygu fel neges newydd';
 $labels['savemessage'] = 'Cadw\'r drafft hwn';
 $labels['sendmessage'] = 'Danfon nawr';
@@ -170,9 +180,11 @@ $labels['dsn'] = 'Hysbysiad statws danfon';
 $labels['mailreplyintro'] = 'Ar $date, ysgrifennodd $sender:';
 $labels['originalmessage'] = 'Neges Wreiddiol';
 $labels['editidents'] = 'Golygu personoliaethau';
+$labels['spellcheck'] = 'Sillafu';
 $labels['checkspelling'] = 'Gwirio sillafu';
 $labels['resumeediting'] = 'Ail-ddechrau golygu';
 $labels['revertto'] = 'Dychwelyd i';
+$labels['attach'] = 'Atodi';
 $labels['attachments'] = 'Atodiadau';
 $labels['upload'] = 'Llwytho fyny';
 $labels['uploadprogress'] = '$percent ($current o $total)';
@@ -228,14 +240,16 @@ $labels['male'] = 'gwryw';
 $labels['female'] = 'benyw';
 $labels['manager'] = 'Rheolwr';
 $labels['assistant'] = 'Cynorthwyydd';
+$labels['typeassistant'] = 'Cynorthwyydd';
 $labels['spouse'] = 'Cymar';
 $labels['allfields'] = 'Pob maes';
 $labels['search'] = 'Chwilio';
 $labels['advsearch'] = 'Chwilio Uwch';
+$labels['advanced'] = 'Uwch';
 $labels['other'] = 'Arall';
+$labels['typeother'] = 'Arall';
 $labels['typehome'] = 'Cartref';
 $labels['typework'] = 'Gwaith';
-$labels['typeother'] = 'Arall';
 $labels['typemobile'] = 'Symudol';
 $labels['typemain'] = 'Prif';
 $labels['typehomefax'] = 'Ffacs Adref';
@@ -243,7 +257,6 @@ $labels['typeworkfax'] = 'Ffacs Gwaith';
 $labels['typecar'] = 'Car';
 $labels['typepager'] = 'Peiriant Galw';
 $labels['typevideo'] = 'Fideo';
-$labels['typeassistant'] = 'Cynorthwyydd';
 $labels['typehomepage'] = 'Gwefan';
 $labels['typeblog'] = 'Blog';
 $labels['typeprofile'] = 'Proffil';
@@ -260,6 +273,7 @@ $labels['delete'] = 'Dileu';
 $labels['rename'] = 'Ail-enwi';
 $labels['addphoto'] = 'Ychwanegu';
 $labels['replacephoto'] = 'Amnewid';
+$labels['uploadphoto'] = 'Llwytho fyny llun';
 $labels['newcontact'] = 'Creu cerdyn cyswllt newydd';
 $labels['deletecontact'] = 'Dileu y cysylltiadau a ddewiswyd';
 $labels['composeto'] = 'Ysgrifennu neges at';
@@ -270,6 +284,7 @@ $labels['exportvcards'] = 'Allforio cysylltiadau mewn fformat vCard';
 $labels['newcontactgroup'] = 'Creu grŵp cysylltiadau newydd';
 $labels['grouprename'] = 'Ail-enwi grŵp';
 $labels['groupdelete'] = 'Dileu grŵp';
+$labels['groupremoveselected'] = 'Dileu y cysylltiadau dewiswyd o\'r grŵp';
 $labels['previouspage'] = 'Dangos y set flaenorol';
 $labels['firstpage'] = 'Dangos y set gyntaf';
 $labels['nextpage'] = 'Dangos y set nesaf';
@@ -329,6 +344,7 @@ $labels['readwhendeleted'] = 'Nodi\'r neges fel darllenwyd wrth ddileu';
 $labels['flagfordeletion'] = 'Fflagio\'r neges i\'w ddileu yn hytrach na dileu yn syth';
 $labels['skipdeleted'] = 'Peidio dangos negesuon wedi ei dileu';
 $labels['deletealways'] = 'Pan fod symud negeseuon i\'r Sbwriel yn methu, dileu nhw';
+$labels['deletejunk'] = 'Dileu negeseuon yn uniongyrchol yn Sbwriel';
 $labels['showremoteimages'] = 'Dangos lluniau o wefannau allanol';
 $labels['fromknownsenders'] = 'o ddanfonwyr hysbys';
 $labels['always'] = 'bob amser';
@@ -349,11 +365,12 @@ $labels['advancedoptions'] = 'Dewisiadau uwch';
 $labels['focusonnewmessage'] = 'Ffocysu\'r porwr ar y neges newydd';
 $labels['checkallfolders'] = 'Chwilio pob ffolder am negeseuon newydd';
 $labels['displaynext'] = 'Ar ôl dileu/symud neges dangos y neges nesaf';
+$labels['defaultfont'] = 'Ffont arferol ar gyfer negeseuon HTML';
 $labels['mainoptions'] = 'Prif Ddewisiadau';
+$labels['browseroptions'] = 'Dewisiadau Porwr';
 $labels['section'] = 'Adran';
 $labels['maintenance'] = 'Gwaith cynnal a chadw';
 $labels['newmessage'] = 'Neges Newydd';
-$labels['listoptions'] = 'Rhestru Dewisiadau';
 $labels['signatureoptions'] = 'Dewisiadau Llofnod';
 $labels['whenreplying'] = 'Wrth ateb';
 $labels['replytopposting'] = 'dechrau\'r neges newydd uwchben y neges wreiddiol';
@@ -373,14 +390,15 @@ $labels['reqdsn'] = 'Gofyn am hysbysiad statws danfon bob amser';
 $labels['replysamefolder'] = 'Rhoi atebion yn yr un ffolder i\'r neges sy\'n cael ei ateb';
 $labels['defaultaddressbook'] = 'Ychwanegu cysylltiadau newydd i\'r llyfr cyfeiriad dewiswyd';
 $labels['autocompletesingle'] = 'Hepgor cyfeiriadau ebost amgen wrth awto-gwblhau';
+$labels['listnamedisplay'] = 'Rhestrwch cysylltiadau fel';
 $labels['spellcheckbeforesend'] = 'Gwirio sillafu cyn danfon neges';
 $labels['spellcheckoptions'] = 'Dewisiadau gwirio sillafu';
 $labels['spellcheckignoresyms'] = 'Anwybyddu geiriau gyda symbolau';
 $labels['spellcheckignorenums'] = 'Anwybyddu geiriau gyda rhifau';
 $labels['spellcheckignorecaps'] = 'Anwybyddu geiriau sy\'n briflythrennau yn gyfangwbl';
 $labels['addtodict'] = 'Ychwanegu i\'r geiriadur';
+$labels['mailtoprotohandler'] = 'Cofrestru trafodwr protocol ar gyfer dolenni mailto:';
 $labels['folder'] = 'Ffolder';
-$labels['folders'] = 'Ffolderi';
 $labels['foldername'] = 'Enw ffolder';
 $labels['subscribed'] = 'Tanysgrifwyd';
 $labels['messagecount'] = 'Negeseuon';
@@ -430,4 +448,4 @@ $labels['vietnamese'] = 'Fietnamaidd';
 $labels['japanese'] = 'Japaneaidd';
 $labels['korean'] = 'Corëeg';
 $labels['chinese'] = 'Tsieineaidd';
-?>
+

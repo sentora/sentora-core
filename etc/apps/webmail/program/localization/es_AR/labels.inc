@@ -1,26 +1,18 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/es_AR/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Javier Smaldone <javier@smaldone.com.ar>                      |
-  |         http://www.smaldone.com.ar                                    |
-  |         David Grajal Blanco <dgrabla@gmail.com>                       |
-  |         http://david.grajal.net                                       |
-  |         Pablo Rosciani <pablo@netsud.com>                             |
-  |         http://www.netsud.com                                         |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/es_AR/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = 'Bienvenido a $product';
@@ -47,8 +39,8 @@ $labels['date'] = 'Fecha';
 $labels['size'] = 'Tamaño';
 $labels['priority'] = 'Prioridad';
 $labels['organization'] = 'Organización';
-$labels['reply-to'] = 'Responder a';
 $labels['mailboxlist'] = 'Carpetas';
+$labels['folders'] = 'Carpetas';
 $labels['messagesfromto'] = 'Mensajes $from a $to de $count';
 $labels['messagenrof'] = 'Mensaje $nr de $count';
 $labels['copy'] = 'Copiar';
@@ -76,7 +68,8 @@ $labels['jan'] = 'Ene';
 $labels['feb'] = 'Feb';
 $labels['mar'] = 'Mar';
 $labels['apr'] = 'Abr';
-$labels['may'] = 'May';
+$labels['may'] = 'Mayo';
+$labels['longmay'] = 'Mayo';
 $labels['jun'] = 'Jun';
 $labels['jul'] = 'Jul';
 $labels['aug'] = 'Ago';
@@ -88,7 +81,6 @@ $labels['longjan'] = 'Enero';
 $labels['longfeb'] = 'Febrero';
 $labels['longmar'] = 'Marzo';
 $labels['longapr'] = 'Abril';
-$labels['longmay'] = 'Mayo';
 $labels['longjun'] = 'Junio';
 $labels['longjul'] = 'Julio';
 $labels['longaug'] = 'Agosto';
@@ -98,6 +90,7 @@ $labels['longnov'] = 'Noviembre';
 $labels['longdec'] = 'Diciembre';
 $labels['today'] = 'Hoy';
 $labels['checkmail'] = 'Revisar si hay nuevos mensajes';
+$labels['compose'] = 'Escribir un mensaje';
 $labels['writenewmessage'] = 'Crear nuevo mensaje';
 $labels['replytomessage'] = 'Responder mensaje';
 $labels['replytoallmessage'] = 'Responder al emisor y a todos los destinatarios';
@@ -106,13 +99,9 @@ $labels['deletemessage'] = 'Eliminar mensaje';
 $labels['movemessagetotrash'] = 'Mover mensaje a la papelera';
 $labels['printmessage'] = 'Imprimir este mensaje';
 $labels['previousmessage'] = 'Mostrar mensaje anterior';
-$labels['previousmessages'] = 'Mostrar grupo anterior de mensajes';
 $labels['firstmessage'] = 'Mostrar primer mensaje';
-$labels['firstmessages'] = 'Mostrar primer grupo de mensajes';
 $labels['nextmessage'] = 'Mostrar siguente mensaje';
-$labels['nextmessages'] = 'Mostrar siguente grupo de mensajes';
 $labels['lastmessage'] = 'Mostrar último mensaje';
-$labels['lastmessages'] = 'Mostrar último grupo de mensajes';
 $labels['backtolist'] = 'Volver a la lista de mensajes';
 $labels['viewsource'] = 'Mostrar código';
 $labels['markmessages'] = 'Marcar mensajes';
@@ -120,10 +109,10 @@ $labels['markread'] = 'Como leído';
 $labels['markunread'] = 'Como no leído';
 $labels['markflagged'] = 'Como marcado';
 $labels['markunflagged'] = 'Como no marcado';
-$labels['messageactions'] = 'Más acciones...';
 $labels['select'] = 'Elija';
 $labels['all'] = 'Todos';
 $labels['none'] = 'Ninguno';
+$labels['nonesort'] = 'Ninguno';
 $labels['currpage'] = 'Página actual';
 $labels['unread'] = 'Sin leer';
 $labels['flagged'] = 'Marcado';
@@ -136,14 +125,12 @@ $labels['expand-unread'] = 'Expandir No Leidos';
 $labels['collapse-all'] = 'Colapsar Todos';
 $labels['expand_only_unread'] = 'solo con mensajes no leídos';
 $labels['attachment'] = 'Adjunto';
-$labels['nonesort'] = 'Ninguno';
 $labels['sentdate'] = 'Fecha de Enviado';
 $labels['arrival'] = 'Fecha de Recepción';
 $labels['asc'] = 'Ascendente';
 $labels['desc'] = 'Descendente';
 $labels['compact'] = 'Compactar';
 $labels['empty'] = 'Vaciar';
-$labels['purge'] = 'Eliminar';
 $labels['quota'] = 'Uso de disco';
 $labels['unknown'] = 'desconocido';
 $labels['unlimited'] = 'sin límite';
@@ -153,7 +140,6 @@ $labels['searchmod'] = 'Opciones de búsqueda';
 $labels['msgtext'] = 'Mensaje completo';
 $labels['openinextwin'] = 'Abrir en ventana nueva';
 $labels['emlsave'] = 'Guardar (.eml)';
-$labels['compose'] = 'Escribir un mensaje';
 $labels['editasnew'] = 'Editar como nuevo';
 $labels['savemessage'] = 'Guardar como borrador';
 $labels['sendmessage'] = 'Enviar ahora el mensaje';
@@ -205,7 +191,6 @@ $labels['print'] = 'Imprimir';
 $labels['export'] = 'Exportar';
 $labels['exportvcards'] = 'Exportar contactos en format vCard';
 $labels['newcontactgroup'] = 'Crear Nuevo Grupo de Contacto';
-$labels['groupactions'] = 'Acción para Grupos de Contacto';
 $labels['previouspage'] = 'Mostrar grupo anterior';
 $labels['firstpage'] = 'Mostrar primer grupo';
 $labels['nextpage'] = 'Mostrar siguiente grupo';
@@ -280,7 +265,6 @@ $labels['mainoptions'] = 'Opciones Principales';
 $labels['section'] = 'Selección';
 $labels['maintenance'] = 'Mantenimiento';
 $labels['newmessage'] = 'Nuevo Mensaje';
-$labels['listoptions'] = 'Opciones de Listado';
 $labels['signatureoptions'] = 'Opciones de Firma';
 $labels['whenreplying'] = 'Al Responder';
 $labels['replytopposting'] = 'iniciar el nuevo mensaje sobre el original';
@@ -296,7 +280,6 @@ $labels['insertsignature'] = 'Insertar firma';
 $labels['previewpanemarkread'] = 'Marcar mensajes previsualizados como leidos';
 $labels['afternseconds'] = 'despues de $n segundos';
 $labels['folder'] = 'Carpeta';
-$labels['folders'] = 'Carpetas';
 $labels['foldername'] = 'Nombre de carpeta';
 $labels['subscribed'] = 'Suscripta';
 $labels['messagecount'] = 'Mensajes';
@@ -329,4 +312,4 @@ $labels['vietnamese'] = 'Vietnamita';
 $labels['japanese'] = 'Japonés';
 $labels['korean'] = 'Coreano';
 $labels['chinese'] = 'Chino';
-?>
+

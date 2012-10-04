@@ -2,65 +2,70 @@
 
 /*
 
-  +-----------------------------------------------------------------------+
-  | language/en_US/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | language/en_US/labels.inc                                             |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+ +-----------------------------------------------------------------------+
 
-  @version $Id: labels.inc 5873 2012-02-11 13:50:04Z thomasb $
+ @version $Id$
 
- */
+*/
 
 $labels = array();
 
 // login page
-$labels['welcome'] = 'Welcome to $product';
-$labels['username'] = 'Username';
-$labels['password'] = 'Password';
-$labels['server'] = 'Server';
-$labels['login'] = 'Login';
+$labels['welcome']   = 'Welcome to $product';
+$labels['username']  = 'Username';
+$labels['password']  = 'Password';
+$labels['server']    = 'Server';
+$labels['login']     = 'Login';
 
 // taskbar
-$labels['logout'] = 'Logout';
-$labels['mail'] = 'Mail';
+$labels['logout']   = 'Logout';
+$labels['mail']     = 'Mail';
 $labels['settings'] = 'Settings';
 $labels['addressbook'] = 'Address Book';
 
 // mailbox names
-$labels['inbox'] = 'Inbox';
+$labels['inbox']  = 'Inbox';
 $labels['drafts'] = 'Drafts';
-$labels['sent'] = 'Sent';
-$labels['trash'] = 'Trash';
-$labels['junk'] = 'Junk';
+$labels['sent']   = 'Sent';
+$labels['trash']  = 'Trash';
+$labels['junk']   = 'Junk';
 
 // message listing
 $labels['subject'] = 'Subject';
-$labels['from'] = 'From';
-$labels['to'] = 'To';
-$labels['cc'] = 'Cc';
-$labels['bcc'] = 'Bcc';
+$labels['from']    = 'From';
+$labels['to']      = 'To';
+$labels['cc']      = 'Cc';
+$labels['bcc']     = 'Bcc';
 $labels['replyto'] = 'Reply-To';
 $labels['followupto'] = 'Followup-To';
-$labels['date'] = 'Date';
-$labels['size'] = 'Size';
+$labels['date']    = 'Date';
+$labels['size']    = 'Size';
 $labels['priority'] = 'Priority';
 $labels['organization'] = 'Organization';
 $labels['readstatus'] = 'Read status';
+$labels['listoptions'] = 'List options...';
 
 $labels['mailboxlist'] = 'Folders';
 $labels['messagesfromto'] = 'Messages $from to $to of $count';
 $labels['threadsfromto'] = 'Threads $from to $to of $count';
 $labels['messagenrof'] = 'Message $nr of $count';
+$labels['fromtoshort'] = '$from – $to of $count';
 
-$labels['copy'] = 'Copy';
-$labels['move'] = 'Move';
-$labels['moveto'] = 'Move to...';
+$labels['copy']     = 'Copy';
+$labels['move']     = 'Move';
+$labels['moveto']   = 'Move to...';
 $labels['download'] = 'Download';
 
 $labels['filename'] = 'File name';
@@ -78,69 +83,77 @@ $labels['fri'] = 'Fri';
 $labels['sat'] = 'Sat';
 
 // weekdays long
-$labels['sunday'] = 'Sunday';
-$labels['monday'] = 'Monday';
-$labels['tuesday'] = 'Tuesday';
+$labels['sunday']    = 'Sunday';
+$labels['monday']    = 'Monday';
+$labels['tuesday']   = 'Tuesday';
 $labels['wednesday'] = 'Wednesday';
-$labels['thursday'] = 'Thursday';
-$labels['friday'] = 'Friday';
-$labels['saturday'] = 'Saturday';
+$labels['thursday']  = 'Thursday';
+$labels['friday']    = 'Friday';
+$labels['saturday']  = 'Saturday';
 
 // months short
-$labels['jan'] = 'Jan';
-$labels['feb'] = 'Feb';
-$labels['mar'] = 'Mar';
-$labels['apr'] = 'Apr';
-$labels['may'] = 'May';
-$labels['jun'] = 'Jun';
-$labels['jul'] = 'Jul';
-$labels['aug'] = 'Aug';
-$labels['sep'] = 'Sep';
-$labels['oct'] = 'Oct';
-$labels['nov'] = 'Nov';
-$labels['dec'] = 'Dec';
+$labels['jan']	= 'Jan';
+$labels['feb']	= 'Feb';
+$labels['mar']	= 'Mar';
+$labels['apr']	= 'Apr';
+$labels['may']	= 'May';
+$labels['jun']	= 'Jun';
+$labels['jul'] 	= 'Jul';
+$labels['aug']	= 'Aug';
+$labels['sep']	= 'Sep';
+$labels['oct']	= 'Oct';
+$labels['nov']	= 'Nov';
+$labels['dec']	= 'Dec';
 
 // months long
-$labels['longjan'] = 'January';
-$labels['longfeb'] = 'February';
-$labels['longmar'] = 'March';
-$labels['longapr'] = 'April';
-$labels['longmay'] = 'May';
-$labels['longjun'] = 'June';
-$labels['longjul'] = 'July';
-$labels['longaug'] = 'August';
-$labels['longsep'] = 'September';
-$labels['longoct'] = 'October';
-$labels['longnov'] = 'November';
-$labels['longdec'] = 'December';
+$labels['longjan']	= 'January';
+$labels['longfeb']	= 'February';
+$labels['longmar']	= 'March';
+$labels['longapr']	= 'April';
+$labels['longmay']	= 'May';
+$labels['longjun']	= 'June';
+$labels['longjul']	= 'July';
+$labels['longaug']	= 'August';
+$labels['longsep']	= 'September';
+$labels['longoct']	= 'October';
+$labels['longnov']	= 'November';
+$labels['longdec']	= 'December';
 
 $labels['today'] = 'Today';
 
 // toolbar buttons
-$labels['checkmail'] = 'Check for new messages';
-$labels['writenewmessage'] = 'Create a new message';
-$labels['replytomessage'] = 'Reply to sender';
+$labels['refresh']          = 'Refresh';
+$labels['checkmail']        = 'Check for new messages';
+$labels['compose']          = 'Compose';
+$labels['writenewmessage']  = 'Create a new message';
+$labels['reply']            = 'Reply';
+$labels['replytomessage']   = 'Reply to sender';
 $labels['replytoallmessage'] = 'Reply to list or to sender and all recipients';
-$labels['replyall'] = 'Reply all';
-$labels['replylist'] = 'Reply list';
-$labels['forwardinline'] = 'Forward inline';
+$labels['replyall']         = 'Reply all';
+$labels['replylist']        = 'Reply list';
+$labels['forward']          = 'Forward';
+$labels['forwardinline']    = 'Forward inline';
 $labels['forwardattachment'] = 'Forward as attachment';
-$labels['forwardmessage'] = 'Forward the message';
-$labels['deletemessage'] = 'Delete message';
+$labels['forwardmessage']   = 'Forward the message';
+$labels['deletemessage']    = 'Delete message';
 $labels['movemessagetotrash'] = 'Move message to trash';
-$labels['printmessage'] = 'Print this message';
-$labels['previousmessage'] = 'Show previous message';
-$labels['firstmessage'] = 'Show first message';
-$labels['nextmessage'] = 'Show next message';
-$labels['lastmessage'] = 'Show last message';
-$labels['backtolist'] = 'Back to message list';
-$labels['viewsource'] = 'Show source';
-$labels['markmessages'] = 'Mark messages';
-$labels['markread'] = 'As read';
-$labels['markunread'] = 'As unread';
-$labels['markflagged'] = 'As flagged';
-$labels['markunflagged'] = 'As unflagged';
-$labels['moreactions'] = 'More actions...';
+$labels['printmessage']     = 'Print this message';
+$labels['previousmessage']  = 'Show previous message';
+$labels['firstmessage']     = 'Show first message';
+$labels['nextmessage']      = 'Show next message';
+$labels['lastmessage']      = 'Show last message';
+$labels['backtolist']       = 'Back to message list';
+$labels['viewsource']       = 'Show source';
+$labels['mark']             = 'Mark';
+$labels['markmessages']     = 'Mark messages';
+$labels['markread']         = 'As read';
+$labels['markunread']       = 'As unread';
+$labels['markflagged']      = 'As flagged';
+$labels['markunflagged']    = 'As unflagged';
+$labels['moreactions']      = 'More actions...';
+$labels['more']             = 'More';
+$labels['back']             = 'Back';
+$labels['options']          = 'Options';
 
 $labels['select'] = 'Select';
 $labels['all'] = 'All';
@@ -180,51 +193,52 @@ $labels['compact'] = 'Compact';
 $labels['empty'] = 'Empty';
 
 $labels['quota'] = 'Disk usage';
-$labels['unknown'] = 'unknown';
-$labels['unlimited'] = 'unlimited';
+$labels['unknown']  = 'unknown';
+$labels['unlimited']  = 'unlimited';
 
-$labels['quicksearch'] = 'Quick search';
-$labels['resetsearch'] = 'Reset search';
-$labels['searchmod'] = 'Search modifiers';
-$labels['msgtext'] = 'Entire message';
+$labels['quicksearch']  = 'Quick search';
+$labels['resetsearch']  = 'Reset search';
+$labels['searchmod']  = 'Search modifiers';
+$labels['msgtext']  = 'Entire message';
 
 $labels['openinextwin'] = 'Open in new window';
 $labels['emlsave'] = 'Download (.eml)';
 
 // message compose
-$labels['compose'] = 'Compose a message';
-$labels['editasnew'] = 'Edit as new';
-$labels['savemessage'] = 'Save this draft';
-$labels['sendmessage'] = 'Send now';
-$labels['addattachment'] = 'Attach a file';
-$labels['charset'] = 'Charset';
-$labels['editortype'] = 'Editor type';
-$labels['returnreceipt'] = 'Return receipt';
-$labels['dsn'] = 'Delivery status notification';
+$labels['editasnew']      = 'Edit as new';
+$labels['savemessage']    = 'Save as draft';
+$labels['sendmessage']    = 'Send message';
+$labels['addattachment']  = 'Attach a file';
+$labels['charset']        = 'Charset';
+$labels['editortype']     = 'Editor type';
+$labels['returnreceipt']  = 'Return receipt';
+$labels['dsn']            = 'Delivery status notification';
 $labels['mailreplyintro'] = 'On $date, $sender wrote:';
 $labels['originalmessage'] = 'Original Message';
 
-$labels['editidents'] = 'Edit identities';
+$labels['editidents']    = 'Edit identities';
+$labels['spellcheck']    = 'Spell';
 $labels['checkspelling'] = 'Check spelling';
 $labels['resumeediting'] = 'Resume editing';
-$labels['revertto'] = 'Revert to';
+$labels['revertto']      = 'Revert to';
 
+$labels['attach'] = 'Attach';
 $labels['attachments'] = 'Attachments';
 $labels['upload'] = 'Upload';
 $labels['uploadprogress'] = '$percent ($current from $total)';
-$labels['close'] = 'Close';
-$labels['messageoptions'] = 'Message options...';
+$labels['close']  = 'Close';
+$labels['messageoptions']  = 'Message options...';
 
-$labels['low'] = 'Low';
-$labels['lowest'] = 'Lowest';
-$labels['normal'] = 'Normal';
-$labels['high'] = 'High';
+$labels['low']     = 'Low';
+$labels['lowest']  = 'Lowest';
+$labels['normal']  = 'Normal';
+$labels['high']    = 'High';
 $labels['highest'] = 'Highest';
 
-$labels['nosubject'] = '(no subject)';
+$labels['nosubject']  = '(no subject)';
 $labels['showimages'] = 'Display images';
 $labels['alwaysshow'] = 'Always show images from $sender';
-$labels['isdraft'] = 'This is a draft message.';
+$labels['isdraft']    = 'This is a draft message.';
 
 $labels['htmltoggle'] = 'HTML';
 $labels['plaintoggle'] = 'Plain text';
@@ -244,31 +258,31 @@ $labels['yourmessage'] = 'This is a Return Receipt for your message';
 $labels['receiptnote'] = 'Note: This receipt only acknowledges that the message was displayed on the recipient\'s computer. There is no guarantee that the recipient has read or understood the message contents.';
 
 // address boook
-$labels['name'] = 'Display Name';
-$labels['firstname'] = 'First Name';
-$labels['surname'] = 'Last Name';
-$labels['middlename'] = 'Middle Name';
-$labels['nameprefix'] = 'Prefix';
-$labels['namesuffix'] = 'Suffix';
-$labels['nickname'] = 'Nickname';
-$labels['jobtitle'] = 'Job Title';
-$labels['department'] = 'Department';
-$labels['gender'] = 'Gender';
-$labels['maidenname'] = 'Maiden Name';
-$labels['email'] = 'Email';
-$labels['phone'] = 'Phone';
-$labels['address'] = 'Address';
-$labels['street'] = 'Street';
-$labels['locality'] = 'City';
-$labels['zipcode'] = 'ZIP Code';
-$labels['region'] = 'State/Province';
-$labels['country'] = 'Country';
-$labels['birthday'] = 'Birthday';
-$labels['anniversary'] = 'Anniversary';
-$labels['website'] = 'Website';
+$labels['name']         = 'Display Name';
+$labels['firstname']    = 'First Name';
+$labels['surname']      = 'Last Name';
+$labels['middlename']   = 'Middle Name';
+$labels['nameprefix']   = 'Prefix';
+$labels['namesuffix']   = 'Suffix';
+$labels['nickname']     = 'Nickname';
+$labels['jobtitle']     = 'Job Title';
+$labels['department']   = 'Department';
+$labels['gender']       = 'Gender';
+$labels['maidenname']   = 'Maiden Name';
+$labels['email']        = 'Email';
+$labels['phone']        = 'Phone';
+$labels['address']      = 'Address';
+$labels['street']       = 'Street';
+$labels['locality']     = 'City';
+$labels['zipcode']      = 'ZIP Code';
+$labels['region']       = 'State/Province';
+$labels['country']      = 'Country';
+$labels['birthday']     = 'Birthday';
+$labels['anniversary']  = 'Anniversary';
+$labels['website']      = 'Website';
 $labels['instantmessenger'] = 'IM';
 $labels['notes'] = 'Notes';
-$labels['male'] = 'male';
+$labels['male']   = 'male';
 $labels['female'] = 'female';
 $labels['manager'] = 'Manager';
 $labels['assistant'] = 'Assistant';
@@ -276,20 +290,21 @@ $labels['spouse'] = 'Spouse';
 $labels['allfields'] = 'All fields';
 $labels['search'] = 'Search';
 $labels['advsearch'] = 'Advanced Search';
+$labels['advanced'] = 'Advanced';
 $labels['other'] = 'Other';
 
-$labels['typehome'] = 'Home';
-$labels['typework'] = 'Work';
-$labels['typeother'] = 'Other';
-$labels['typemobile'] = 'Mobile';
-$labels['typemain'] = 'Main';
-$labels['typehomefax'] = 'Home Fax';
-$labels['typeworkfax'] = 'Work Fax';
-$labels['typecar'] = 'Car';
-$labels['typepager'] = 'Pager';
-$labels['typevideo'] = 'Video';
-$labels['typeassistant'] = 'Assistant';
-$labels['typehomepage'] = 'Home Page';
+$labels['typehome']   = 'Home';
+$labels['typework']   = 'Work';
+$labels['typeother']  = 'Other';
+$labels['typemobile']  = 'Mobile';
+$labels['typemain']  = 'Main';
+$labels['typehomefax']  = 'Home Fax';
+$labels['typeworkfax']  = 'Work Fax';
+$labels['typecar']  = 'Car';
+$labels['typepager']  = 'Pager';
+$labels['typevideo']  = 'Video';
+$labels['typeassistant']  = 'Assistant';
+$labels['typehomepage']  = 'Home Page';
 $labels['typeblog'] = 'Blog';
 $labels['typeprofile'] = 'Profile';
 
@@ -300,29 +315,31 @@ $labels['contacts'] = 'Contacts';
 $labels['contactproperties'] = 'Contact properties';
 $labels['personalinfo'] = 'Personal information';
 
-$labels['edit'] = 'Edit';
+$labels['edit']   = 'Edit';
 $labels['cancel'] = 'Cancel';
-$labels['save'] = 'Save';
+$labels['save']   = 'Save';
 $labels['delete'] = 'Delete';
 $labels['rename'] = 'Rename';
 $labels['addphoto'] = 'Add';
 $labels['replacephoto'] = 'Replace';
+$labels['uploadphoto'] = 'Upload photo';
 
-$labels['newcontact'] = 'Create new contact card';
-$labels['deletecontact'] = 'Delete selected contacts';
-$labels['composeto'] = 'Compose mail to';
+$labels['newcontact']     = 'Create new contact card';
+$labels['deletecontact']  = 'Delete selected contacts';
+$labels['composeto']      = 'Compose mail to';
 $labels['contactsfromto'] = 'Contacts $from to $to of $count';
-$labels['print'] = 'Print';
-$labels['export'] = 'Export';
-$labels['exportvcards'] = 'Export contacts in vCard format';
+$labels['print']          = 'Print';
+$labels['export']         = 'Export';
+$labels['exportvcards']   = 'Export contacts in vCard format';
 $labels['newcontactgroup'] = 'Create new contact group';
-$labels['grouprename'] = 'Rename group';
-$labels['groupdelete'] = 'Delete group';
+$labels['grouprename']    = 'Rename group';
+$labels['groupdelete']    = 'Delete group';
+$labels['groupremoveselected'] = 'Remove selected contacts from group';
 
-$labels['previouspage'] = 'Show previous page';
-$labels['firstpage'] = 'Show first page';
-$labels['nextpage'] = 'Show next page';
-$labels['lastpage'] = 'Show last page';
+$labels['previouspage']   = 'Show previous page';
+$labels['firstpage']      = 'Show first page';
+$labels['nextpage']       = 'Show next page';
+$labels['lastpage']       = 'Show last page';
 
 $labels['group'] = 'Group';
 $labels['groups'] = 'Groups';
@@ -359,13 +376,13 @@ $labels['htmlmessage'] = 'HTML Message';
 $labels['dateformat'] = 'Date format';
 $labels['timeformat'] = 'Time format';
 $labels['prettydate'] = 'Pretty dates';
-$labels['setdefault'] = 'Set default';
-$labels['autodetect'] = 'Auto';
-$labels['language'] = 'Language';
-$labels['timezone'] = 'Time zone';
-$labels['pagesize'] = 'Rows per page';
+$labels['setdefault']  = 'Set default';
+$labels['autodetect']  = 'Auto';
+$labels['language']  = 'Language';
+$labels['timezone']  = 'Time zone';
+$labels['pagesize']  = 'Rows per page';
 $labels['signature'] = 'Signature';
-$labels['dstactive'] = 'Daylight saving time';
+$labels['dstactive']  = 'Daylight saving time';
 $labels['htmleditor'] = 'Compose HTML messages';
 $labels['htmlonreply'] = 'on reply to HTML message only';
 $labels['htmlsignature'] = 'HTML signature';
@@ -386,15 +403,16 @@ $labels['readwhendeleted'] = 'Mark the message as read on delete';
 $labels['flagfordeletion'] = 'Flag the message for deletion instead of delete';
 $labels['skipdeleted'] = 'Do not show deleted messages';
 $labels['deletealways'] = 'If moving messages to Trash fails, delete them';
+$labels['deletejunk'] = 'Directly delete messages in Junk';
 $labels['showremoteimages'] = 'Display remote inline images';
 $labels['fromknownsenders'] = 'from known senders';
 $labels['always'] = 'always';
 $labels['showinlineimages'] = 'Display attached images below the message';
-$labels['autosavedraft'] = 'Automatically save draft';
-$labels['everynminutes'] = 'every $n minute(s)';
-$labels['keepalive'] = 'Check for new messages on';
-$labels['never'] = 'never';
-$labels['immediately'] = 'immediately';
+$labels['autosavedraft']  = 'Automatically save draft';
+$labels['everynminutes']  = 'every $n minute(s)';
+$labels['keepalive']  = 'Check for new messages on';
+$labels['never']  = 'never';
+$labels['immediately']  = 'immediately';
 $labels['messagesdisplaying'] = 'Displaying Messages';
 $labels['messagescomposition'] = 'Composing Messages';
 $labels['mimeparamfolding'] = 'Attachment names';
@@ -408,10 +426,10 @@ $labels['checkallfolders'] = 'Check all folders for new messages';
 $labels['displaynext'] = 'After message delete/move display the next message';
 $labels['defaultfont'] = 'Default font of HTML message';
 $labels['mainoptions'] = 'Main Options';
+$labels['browseroptions'] = 'Browser Options';
 $labels['section'] = 'Section';
 $labels['maintenance'] = 'Maintenance';
 $labels['newmessage'] = 'New Message';
-$labels['listoptions'] = 'List Options';
 $labels['signatureoptions'] = 'Signature Options';
 $labels['whenreplying'] = 'When replying';
 $labels['replytopposting'] = 'start new message above original';
@@ -424,8 +442,8 @@ $labels['replysignaturepos'] = 'When replying or forwarding place signature';
 $labels['belowquote'] = 'below the quote';
 $labels['abovequote'] = 'above the quote';
 $labels['insertsignature'] = 'Insert signature';
-$labels['previewpanemarkread'] = 'Mark previewed messages as read';
-$labels['afternseconds'] = 'after $n seconds';
+$labels['previewpanemarkread']  = 'Mark previewed messages as read';
+$labels['afternseconds']  = 'after $n seconds';
 $labels['reqmdn'] = 'Always request a return receipt';
 $labels['reqdsn'] = 'Always request a delivery status notification';
 $labels['replysamefolder'] = 'Place replies in the folder of the message being replied to';
@@ -438,15 +456,19 @@ $labels['spellcheckignoresyms'] = 'Ignore words with symbols';
 $labels['spellcheckignorenums'] = 'Ignore words with numbers';
 $labels['spellcheckignorecaps'] = 'Ignore words with all letters capitalized';
 $labels['addtodict'] = 'Add to dictionary';
+$labels['mailtoprotohandler'] = 'Register protocol handler for mailto: links';
+$labels['forwardmode'] = 'Messages forwarding';
+$labels['inline'] = 'inline';
+$labels['asattachment'] = 'as attachment';
 
-$labels['folder'] = 'Folder';
-$labels['folders'] = 'Folders';
-$labels['foldername'] = 'Folder name';
-$labels['subscribed'] = 'Subscribed';
+$labels['folder']  = 'Folder';
+$labels['folders']  = 'Folders';
+$labels['foldername']  = 'Folder name';
+$labels['subscribed']  = 'Subscribed';
 $labels['messagecount'] = 'Messages';
-$labels['create'] = 'Create';
-$labels['createfolder'] = 'Create new folder';
-$labels['managefolders'] = 'Manage folders';
+$labels['create']  = 'Create';
+$labels['createfolder']  = 'Create new folder';
+$labels['managefolders']  = 'Manage folders';
 $labels['specialfolders'] = 'Special Folders';
 $labels['properties'] = 'Properties';
 $labels['folderproperties'] = 'Folder properties';
@@ -456,12 +478,12 @@ $labels['info'] = 'Information';
 $labels['getfoldersize'] = 'Click to get folder size';
 $labels['changesubscription'] = 'Click to change subscription';
 $labels['foldertype'] = 'Folder Type';
-$labels['personalfolder'] = 'Private Folder';
-$labels['otherfolder'] = 'Other User\'s Folder';
-$labels['sharedfolder'] = 'Public Folder';
+$labels['personalfolder']  = 'Private Folder';
+$labels['otherfolder']  = 'Other User\'s Folder';
+$labels['sharedfolder']  = 'Public Folder';
 
 $labels['sortby'] = 'Sort by';
-$labels['sortasc'] = 'Sort ascending';
+$labels['sortasc']  = 'Sort ascending';
 $labels['sortdesc'] = 'Sort descending';
 $labels['undo'] = 'Undo';
 
@@ -496,4 +518,5 @@ $labels['vietnamese'] = 'Vietnamese';
 $labels['japanese'] = 'Japanese';
 $labels['korean'] = 'Korean';
 $labels['chinese'] = 'Chinese';
+
 ?>

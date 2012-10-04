@@ -1,28 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/it_IT/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Andrej Mocilnik <amocilnik@dotcom.ts.it>                      |
-  |         Yusef Maali <contact@yusefmaali.net>                          |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/it_IT/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas                                                        |
+ +-----------------------------------------------------------------------+
+*/
 
 $messages = array();
+$messages['errortitle'] = 'C\'è stato qualche errore';
 $messages['loginfailed'] = 'Impossibile accedere. Utente o password non corretti';
 $messages['cookiesdisabled'] = 'Il tuo browser non accetta i cookies';
 $messages['sessionerror'] = 'Sessione non valida o scaduta';
-$messages['imaperror'] = 'Impossibile connettersi al server IMAP';
+$messages['storageerror'] = 'Impossibile connettersi al server IMAP';
 $messages['servererror'] = 'Errore del server!';
 $messages['servererrormsg'] = 'Errore del server: $msg';
 $messages['dberror'] = 'Errore del database!';
@@ -110,6 +106,7 @@ $messages['addingmember'] = 'Aggiunta contatto al gruppo...';
 $messages['removingmember'] = 'Rimozione contatto dal gruppo...';
 $messages['receiptsent'] = 'Ricevuta di ritorno inviata con successo';
 $messages['errorsendingreceipt'] = 'Impossibile spedire la ricevuta di ritorno';
+$messages['deleteidentityconfirm'] = 'sei sicuro di voler cancellare questo profilo?';
 $messages['nodeletelastidentity'] = 'Impossibile eliminare l\'unica identità disponibile';
 $messages['forbiddencharacter'] = 'Il nome della cartella contiene un carattere vietato';
 $messages['selectimportfile'] = 'Per favore, seleziona il file da caricare';
@@ -159,4 +156,4 @@ $messages['invalidimageformat'] = 'Formato immagine non valido';
 $messages['mispellingsfound'] = 'Sono stati riscontrati errori ortografici nel messaggio';
 $messages['parentnotwritable'] = 'Impossibile creare o muovere la cartella: accesso negato';
 $messages['messagetoobig'] = 'La parte del messaggio è troppo grande per essere processata.';
-?>
+

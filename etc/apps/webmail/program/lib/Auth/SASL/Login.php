@@ -1,5 +1,4 @@
 <?php
-
 // +-----------------------------------------------------------------------+ 
 // | Copyright (c) 2002-2003 Richard Heyes                                 | 
 // | All rights reserved.                                                  | 
@@ -33,34 +32,34 @@
 // | Author: Richard Heyes <richard@php.net>                               | 
 // +-----------------------------------------------------------------------+ 
 // 
-// $Id: Login.php 584 2007-05-24 03:49:19Z estadtherr $
+// $Id$
 
 /**
- * This is technically not a SASL mechanism, however
- * it's used by Net_Sieve, Net_Cyrus and potentially
- * other protocols , so here is a good place to abstract
- * it.
- *
- * @author  Richard Heyes <richard@php.net>
- * @access  public
- * @version 1.0
- * @package Auth_SASL
- */
+* This is technically not a SASL mechanism, however
+* it's used by Net_Sieve, Net_Cyrus and potentially
+* other protocols , so here is a good place to abstract
+* it.
+*
+* @author  Richard Heyes <richard@php.net>
+* @access  public
+* @version 1.0
+* @package Auth_SASL
+*/
+
 require_once('Auth/SASL/Common.php');
 
-class Auth_SASL_Login extends Auth_SASL_Common {
-
+class Auth_SASL_Login extends Auth_SASL_Common
+{
     /**
-     * Pseudo SASL LOGIN mechanism
-     *
-     * @param  string $user Username
-     * @param  string $pass Password
-     * @return string       LOGIN string
-     */
-    function getResponse($user, $pass) {
+    * Pseudo SASL LOGIN mechanism
+    *
+    * @param  string $user Username
+    * @param  string $pass Password
+    * @return string       LOGIN string
+    */
+    function getResponse($user, $pass)
+    {
         return sprintf('LOGIN %s %s', $user, $pass);
     }
-
 }
-
 ?>

@@ -1,10 +1,10 @@
 <?php
 
 $labels = array();
-$labels['changepasswd'] = 'Cambia la Password';
-$labels['curpasswd'] = 'Password corrente:';
-$labels['newpasswd'] = 'Nuova Password:';
-$labels['confpasswd'] = 'Conferma la Nuova Password:';
+$labels['changepasswd']  = 'Cambia la Password';
+$labels['curpasswd']  = 'Password corrente:';
+$labels['newpasswd']  = 'Nuova Password:';
+$labels['confpasswd']  = 'Conferma la Nuova Password:';
 
 $messages = array();
 $messages['nopassword'] = 'Per favore inserisci la nuova password.';
@@ -17,4 +17,5 @@ $messages['internalerror'] = 'Non posso salvare la password.';
 $messages['passwordshort'] = 'La nuova password deve essere lunga almeno $length caratteri.';
 $messages['passwordweak'] = 'La nuova password deve contenere almeno una cifra e un segno di punteggiatura.';
 $messages['passwordforbidden'] = 'La password scelta contiene dei caratteri non consentiti.';
+
 ?>

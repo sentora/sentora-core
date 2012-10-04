@@ -1,24 +1,24 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/ku/messages.inc                                              |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2006, The Roundcube Dev Team                            |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Amed çeko Jiyan <amedcj@kurdistan.name>                       |
-  +-----------------------------------------------------------------------+
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/ku/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Têketin têk çû';
 $messages['cookiesdisabled'] = 'Geroka te destûrê nade çerezan';
 $messages['sessionerror'] = 'Danişîna te çewt e an jî bi dawî bûye';
-$messages['imaperror'] = 'Girêdana pêşkêşkara IMAP têk çû';
+$messages['storageerror'] = 'Girêdana pêşkêşkara IMAP têk çû';
 $messages['nomessagesfound'] = 'Di vê peyamdankê de tu peyam nehat dîtin';
 $messages['loggedout'] = 'Te danişînî bi dawî anî. Oxir be!';
 $messages['mailboxempty'] = 'Peyamdank vala ye';
@@ -53,7 +53,6 @@ $messages['nosubjectwarning'] = 'Qada "Mijar"ê vala ye. Dixwazî niha tiştekî
 $messages['nobodywarning'] = 'Peyamê bê nivîs bişeyînî?';
 $messages['notsentwarning'] = 'Peyam nehat şandin. Dixwazî peyamê pişTgo bikî?';
 $messages['noldapserver'] = 'Tika ye, ji bo lêgerînê pêşkêşkareke Idap têkevê';
-$messages['nocontactsreturned'] = 'Tu têkilî nehat dîtin';
 $messages['nosearchname'] = 'Tika ye, nav an jî navnîşaneke têkiliyê têkevê';
 $messages['searchsuccessful'] = '$nr peyam hat(in) dîtin';
 $messages['searchnomatch'] = 'Di lêgerînê de tu tişt nehat dîtin';
@@ -74,4 +73,4 @@ $messages['movingmessage'] = 'Ciyê peyamê tê guhertin...';
 $messages['receiptsent'] = 'Rapora şandina serkeftî';
 $messages['errorsendingreceipt'] = 'Rapor nehat şandin';
 $messages['nodeletelastidentity'] = 'Nikarî vê nasnameyê jê bibî. Ew ya dawî ye.';
-?>
+

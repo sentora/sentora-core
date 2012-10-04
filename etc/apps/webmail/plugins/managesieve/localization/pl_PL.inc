@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/pl_PL/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/pl_PL/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Aleksander Machniak <alec@alec.pl>                            |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['filters'] = 'Filtry';
@@ -93,7 +93,17 @@ $labels['flagdeleted'] = 'Usunięta';
 $labels['flaganswered'] = 'Z odpowiedzią';
 $labels['flagflagged'] = 'Oflagowana';
 $labels['flagdraft'] = 'Szkic';
-$labels['filtercreate'] = 'Utwóż filtr';
+$labels['setvariable'] = 'Ustaw zmienną';
+$labels['setvarname'] = 'Nazwa zmiennej:';
+$labels['setvarvalue'] = 'Wartość zmiennej:';
+$labels['setvarmodifiers'] = 'Modyfikatory:';
+$labels['varlower'] = 'małe litery (:lower)';
+$labels['varupper'] = 'duże litery (:upper)';
+$labels['varlowerfirst'] = 'pierwsza litera mała (:lowerfirst)';
+$labels['varupperfirst'] = 'pierwsza litera duża (:upperfirst)';
+$labels['varquotewildcard'] = 'anulowane znaki specjalne (:quotewildcard)';
+$labels['varlength'] = 'długość (:length)';
+$labels['filtercreate'] = 'Utwórz filtr';
 $labels['usedata'] = 'Użyj następujących danych do utworzenia filtra:';
 $labels['nextstep'] = 'Następny krok';
 $labels['...'] = '...';

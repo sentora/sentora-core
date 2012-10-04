@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -55,7 +54,9 @@ require_once 'MDB2/Driver/Manager/Common.php';
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
+class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common
+{
+
     // }}}
     // {{{ createDatabase()
 
@@ -68,13 +69,14 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createDatabase($name, $options = array()) {
+    function createDatabase($name, $options = array())
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $name = $db->quoteIdentifier($name, true);
+        $name  = $db->quoteIdentifier($name, true);
         $query = 'CREATE DATABASE ' . $name;
         if (!empty($options['charset'])) {
             $query .= ' DEFAULT CHARACTER SET ' . $db->quote($options['charset'], 'text');
@@ -97,13 +99,14 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function alterDatabase($name, $options = array()) {
+    function alterDatabase($name, $options = array())
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $query = 'ALTER DATABASE ' . $db->quoteIdentifier($name, true);
+        $query = 'ALTER DATABASE '. $db->quoteIdentifier($name, true);
         if (!empty($options['charset'])) {
             $query .= ' DEFAULT CHARACTER SET ' . $db->quote($options['charset'], 'text');
         }
@@ -123,7 +126,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropDatabase($name) {
+    function dropDatabase($name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -145,16 +149,17 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return string
      * @access protected
      */
-    function _getAdvancedFKOptions($definition) {
+    function _getAdvancedFKOptions($definition)
+    {
         $query = '';
         if (!empty($definition['match'])) {
-            $query .= ' MATCH ' . $definition['match'];
+            $query .= ' MATCH '.$definition['match'];
         }
         if (!empty($definition['onupdate'])) {
-            $query .= ' ON UPDATE ' . $definition['onupdate'];
+            $query .= ' ON UPDATE '.$definition['onupdate'];
         }
         if (!empty($definition['ondelete'])) {
-            $query .= ' ON DELETE ' . $definition['ondelete'];
+            $query .= ' ON DELETE '.$definition['ondelete'];
         }
         return $query;
     }
@@ -197,7 +202,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createTable($name, $fields, $options = array()) {
+    function createTable($name, $fields, $options = array())
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -237,13 +243,13 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
         $options_strings = array();
 
         if (!empty($options['comment'])) {
-            $options_strings['comment'] = 'COMMENT = ' . $db->quote($options['comment'], 'text');
+            $options_strings['comment'] = 'COMMENT = '.$db->quote($options['comment'], 'text');
         }
 
         if (!empty($options['charset'])) {
-            $options_strings['charset'] = 'DEFAULT CHARACTER SET ' . $options['charset'];
+            $options_strings['charset'] = 'DEFAULT CHARACTER SET '.$options['charset'];
             if (!empty($options['collate'])) {
-                $options_strings['charset'].= ' COLLATE ' . $options['collate'];
+                $options_strings['charset'].= ' COLLATE '.$options['collate'];
             }
         }
 
@@ -258,7 +264,7 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
         }
 
         if (!empty($options_strings)) {
-            $query .= ' ' . implode(' ', $options_strings);
+            $query .= ' '.implode(' ', $options_strings);
         }
         $result = $db->exec($query);
         if (PEAR::isError($result)) {
@@ -277,7 +283,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropTable($name) {
+    function dropTable($name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -312,7 +319,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function truncateTable($name) {
+    function truncateTable($name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -339,7 +347,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK success, a MDB2 error on failure
      * @access public
      */
-    function vacuum($table = null, $options = array()) {
+    function vacuum($table = null, $options = array())
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -353,19 +362,19 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
         }
         if (is_array($table)) {
             foreach (array_keys($table) as $k) {
-                $table[$k] = $db->quoteIdentifier($table[$k], true);
+            	$table[$k] = $db->quoteIdentifier($table[$k], true);
             }
             $table = implode(', ', $table);
         } else {
             $table = $db->quoteIdentifier($table, true);
         }
-
-        $result = $db->exec('OPTIMIZE TABLE ' . $table);
+        
+        $result = $db->exec('OPTIMIZE TABLE '.$table);
         if (PEAR::isError($result)) {
             return $result;
         }
         if (!empty($options['analyze'])) {
-            return $db->exec('ANALYZE TABLE ' . $table);
+            return $db->exec('ANALYZE TABLE '.$table);
         }
         return MDB2_OK;
     }
@@ -461,9 +470,10 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      *                             actually perform them otherwise.
      * @access public
      *
-     * @return mixed MDB2_OK on success, a MDB2 error on failure
+      * @return mixed MDB2_OK on success, a MDB2 error on failure
      */
-    function alterTable($name, $changes, $check) {
+    function alterTable($name, $changes, $check)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -471,14 +481,15 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
 
         foreach ($changes as $change_name => $change) {
             switch ($change_name) {
-                case 'add':
-                case 'remove':
-                case 'change':
-                case 'rename':
-                case 'name':
-                    break;
-                default:
-                    return $db->raiseError(MDB2_ERROR_CANNOT_ALTER, null, null, 'change type "' . $change_name . '" not yet supported', __FUNCTION__);
+            case 'add':
+            case 'remove':
+            case 'change':
+            case 'rename':
+            case 'name':
+                break;
+            default:
+                return $db->raiseError(MDB2_ERROR_CANNOT_ALTER, null, null,
+                    'change type "'.$change_name.'" not yet supported', __FUNCTION__);
             }
         }
 
@@ -562,7 +573,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of database names on success, a MDB2 error on failure
      * @access public
      */
-    function listDatabases() {
+    function listDatabases()
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -587,7 +599,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of user names on success, a MDB2 error on failure
      * @access public
      */
-    function listUsers() {
+    function listUsers()
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -605,7 +618,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of function names on success, a MDB2 error on failure
      * @access public
      */
-    function listFunctions() {
+    function listFunctions()
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -613,10 +627,10 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
 
         $query = "SELECT name FROM mysql.proc";
         /*
-          SELECT ROUTINE_NAME
+        SELECT ROUTINE_NAME
           FROM INFORMATION_SCHEMA.ROUTINES
-          WHERE ROUTINE_TYPE = 'FUNCTION'
-         */
+         WHERE ROUTINE_TYPE = 'FUNCTION'
+        */
         $result = $db->queryCol($query);
         if (PEAR::isError($result)) {
             return $result;
@@ -637,7 +651,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of trigger names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableTriggers($table = null) {
+    function listTableTriggers($table = null)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -668,7 +683,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of table names on success, a MDB2 error on failure
      * @access public
      */
-    function listTables($database = null) {
+    function listTables($database = null)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -707,7 +723,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of view names on success, a MDB2 error on failure
      * @access public
      */
-    function listViews($database = null) {
+    function listViews($database = null)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -740,7 +757,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of field names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableFields($table) {
+    function listTableFields($table)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -795,7 +813,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createIndex($table, $name, $definition) {
+    function createIndex($table, $name, $definition)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -812,7 +831,7 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
                 $fields[] = $db->quoteIdentifier($field, true);
             }
         }
-        $query .= ' (' . implode(', ', $fields) . ')';
+        $query .= ' ('. implode(', ', $fields) . ')';
         return $db->exec($query);
     }
 
@@ -827,7 +846,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropIndex($table, $name) {
+    function dropIndex($table, $name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -848,7 +868,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of index names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableIndexes($table) {
+    function listTableIndexes($table)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -911,7 +932,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createConstraint($table, $name, $definition) {
+    function createConstraint($table, $name, $definition)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -928,7 +950,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
             $type = 'CONSTRAINT';
         }
         if (empty($type)) {
-            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null, 'invalid definition, could not create constraint', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
+                'invalid definition, could not create constraint', __FUNCTION__);
         }
 
         $table_quoted = $db->quoteIdentifier($table, true);
@@ -944,19 +967,19 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
             }
             $fields[] = $quoted;
         }
-        $query .= ' (' . implode(', ', $fields) . ')';
+        $query .= ' ('. implode(', ', $fields) . ')';
         if (!empty($definition['foreign'])) {
             $query.= ' REFERENCES ' . $db->quoteIdentifier($definition['references']['table'], true);
             $referenced_fields = array();
             foreach (array_keys($definition['references']['fields']) as $field) {
                 $referenced_fields[] = $db->quoteIdentifier($field, true);
             }
-            $query .= ' (' . implode(', ', $referenced_fields) . ')';
+            $query .= ' ('. implode(', ', $referenced_fields) . ')';
             $query .= $this->_getAdvancedFKOptions($definition);
 
             // add index on FK column(s) or we can't add a FK constraint
             // @see http://forums.mysql.com/read.php?22,19755,226009
-            $result = $this->createIndex($table, $name . '_fkidx', $definition);
+            $result = $this->createIndex($table, $name.'_fkidx', $definition);
             if (PEAR::isError($result)) {
                 return $result;
             }
@@ -983,14 +1006,15 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropConstraint($table, $name, $primary = false) {
+    function dropConstraint($table, $name, $primary = false)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         if ($primary || strtolower($name) == 'primary') {
-            $query = 'ALTER TABLE ' . $db->quoteIdentifier($table, true) . ' DROP PRIMARY KEY';
+            $query = 'ALTER TABLE '. $db->quoteIdentifier($table, true) .' DROP PRIMARY KEY';
             return $db->exec($query);
         }
 
@@ -1032,7 +1056,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access private
      */
-    function _createFKTriggers($table, $foreign_keys) {
+    function _createFKTriggers($table, $foreign_keys)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -1049,10 +1074,10 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
                 $fkdef['ondelete'] = empty($fkdef['ondelete']) ? $db->options['default_fk_action_ondelete'] : strtoupper($fkdef['ondelete']);
 
                 $trigger_names = array(
-                    'insert' => $fkname . '_insert_trg',
-                    'update' => $fkname . '_update_trg',
-                    'pk_update' => $fkname . '_pk_update_trg',
-                    'pk_delete' => $fkname . '_pk_delete_trg',
+                    'insert'    => $fkname.'_insert_trg',
+                    'update'    => $fkname.'_update_trg',
+                    'pk_update' => $fkname.'_pk_update_trg',
+                    'pk_delete' => $fkname.'_pk_delete_trg',
                 );
                 $table_fields = array_keys($fkdef['fields']);
                 $referenced_fields = array_keys($fkdef['references']['fields']);
@@ -1061,37 +1086,37 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
                 $restrict_action = ' IF (SELECT ';
                 $aliased_fields = array();
                 foreach ($table_fields as $field) {
-                    $aliased_fields[] = $table_quoted . '.' . $field . ' AS ' . $field;
+                    $aliased_fields[] = $table_quoted .'.'.$field .' AS '.$field;
                 }
                 $restrict_action .= implode(',', $aliased_fields)
-                        . ' FROM ' . $table_quoted
-                        . ' WHERE ';
-                $conditions = array();
-                $new_values = array();
+                       .' FROM '.$table_quoted
+                       .' WHERE ';
+                $conditions  = array();
+                $new_values  = array();
                 $null_values = array();
-                for ($i = 0; $i < count($table_fields); $i++) {
-                    $conditions[] = $table_fields[$i] . ' = OLD.' . $referenced_fields[$i];
-                    $new_values[] = $table_fields[$i] . ' = NEW.' . $referenced_fields[$i];
-                    $null_values[] = $table_fields[$i] . ' = NULL';
+                for ($i=0; $i<count($table_fields); $i++) {
+                    $conditions[]  = $table_fields[$i] .' = OLD.'.$referenced_fields[$i];
+                    $new_values[]  = $table_fields[$i] .' = NEW.'.$referenced_fields[$i];
+                    $null_values[] = $table_fields[$i] .' = NULL';
                 }
                 $conditions2 = array();
                 if ('NO ACTION' != $fkdef['ondelete']) {
                     // There is no NEW row in on DELETE trigger
-                    for ($i = 0; $i < count($referenced_fields); $i++) {
-                        $conditions2[] = 'NEW.' . $referenced_fields[$i] . ' <> OLD.' . $referenced_fields[$i];
+                    for ($i=0; $i<count($referenced_fields); $i++) {
+                        $conditions2[]  = 'NEW.'.$referenced_fields[$i] .' <> OLD.'.$referenced_fields[$i];
                     }
                 }
 
-                $restrict_action .= implode(' AND ', $conditions) . ') IS NOT NULL';
+                $restrict_action .= implode(' AND ', $conditions).') IS NOT NULL';
                 if (!empty($conditions2)) {
-                    $restrict_action .= ' AND (' . implode(' OR ', $conditions2) . ')';
+                    $restrict_action .= ' AND (' .implode(' OR ', $conditions2) .')';
                 }
-                $restrict_action .= ' THEN CALL %s_ON_TABLE_' . $table . '_VIOLATES_FOREIGN_KEY_CONSTRAINT();'
-                        . ' END IF;';
+                $restrict_action .= ' THEN CALL %s_ON_TABLE_'.$table.'_VIOLATES_FOREIGN_KEY_CONSTRAINT();'
+                                   .' END IF;';
 
-                $cascade_action_update = 'UPDATE ' . $table_quoted . ' SET ' . implode(', ', $new_values) . ' WHERE ' . implode(' AND ', $conditions) . ';';
-                $cascade_action_delete = 'DELETE FROM ' . $table_quoted . ' WHERE ' . implode(' AND ', $conditions) . ';';
-                $setnull_action = 'UPDATE ' . $table_quoted . ' SET ' . implode(', ', $null_values) . ' WHERE ' . implode(' AND ', $conditions) . ';';
+                $cascade_action_update = 'UPDATE '.$table_quoted.' SET '.implode(', ', $new_values) .' WHERE '.implode(' AND ', $conditions). ';';
+                $cascade_action_delete = 'DELETE FROM '.$table_quoted.' WHERE '.implode(' AND ', $conditions). ';';
+                $setnull_action        = 'UPDATE '.$table_quoted.' SET '.implode(', ', $null_values).' WHERE '.implode(' AND ', $conditions). ';';
 
                 if ('SET DEFAULT' == $fkdef['onupdate'] || 'SET DEFAULT' == $fkdef['ondelete']) {
                     $db->loadModule('Reverse', null, true);
@@ -1101,37 +1126,37 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
                         if (PEAR::isError($field_definition)) {
                             return $field_definition;
                         }
-                        $default_values[] = $table_field . ' = ' . $field_definition[0]['default'];
+                        $default_values[] = $table_field .' = '. $field_definition[0]['default'];
                     }
-                    $setdefault_action = 'UPDATE ' . $table_quoted . ' SET ' . implode(', ', $default_values) . ' WHERE ' . implode(' AND ', $conditions) . ';';
+                    $setdefault_action = 'UPDATE '.$table_quoted.' SET '.implode(', ', $default_values).' WHERE '.implode(' AND ', $conditions). ';';
                 }
 
                 $query = 'CREATE TRIGGER %s'
-                        . ' %s ON ' . $fkdef['references']['table']
-                        . ' FOR EACH ROW BEGIN '
-                        . ' SET FOREIGN_KEY_CHECKS = 0; ';  //only really needed for ON UPDATE CASCADE
+                        .' %s ON '.$fkdef['references']['table']
+                        .' FOR EACH ROW BEGIN '
+                        .' SET FOREIGN_KEY_CHECKS = 0; ';  //only really needed for ON UPDATE CASCADE
 
                 if ('CASCADE' == $fkdef['onupdate']) {
-                    $sql_update = sprintf($query, $trigger_names['pk_update'], 'BEFORE UPDATE', 'update') . $cascade_action_update;
+                    $sql_update = sprintf($query, $trigger_names['pk_update'], 'BEFORE UPDATE',  'update') . $cascade_action_update;
                 } elseif ('SET NULL' == $fkdef['onupdate']) {
                     $sql_update = sprintf($query, $trigger_names['pk_update'], 'BEFORE UPDATE', 'update') . $setnull_action;
                 } elseif ('SET DEFAULT' == $fkdef['onupdate']) {
                     $sql_update = sprintf($query, $trigger_names['pk_update'], 'BEFORE UPDATE', 'update') . $setdefault_action;
                 } elseif ('NO ACTION' == $fkdef['onupdate']) {
-                    $sql_update = sprintf($query . $restrict_action, $trigger_names['pk_update'], 'AFTER UPDATE', 'update');
+                    $sql_update = sprintf($query.$restrict_action, $trigger_names['pk_update'], 'AFTER UPDATE', 'update');
                 } elseif ('RESTRICT' == $fkdef['onupdate']) {
-                    $sql_update = sprintf($query . $restrict_action, $trigger_names['pk_update'], 'BEFORE UPDATE', 'update');
+                    $sql_update = sprintf($query.$restrict_action, $trigger_names['pk_update'], 'BEFORE UPDATE', 'update');
                 }
                 if ('CASCADE' == $fkdef['ondelete']) {
-                    $sql_delete = sprintf($query, $trigger_names['pk_delete'], 'BEFORE DELETE', 'delete') . $cascade_action_delete;
+                    $sql_delete = sprintf($query, $trigger_names['pk_delete'], 'BEFORE DELETE',  'delete') . $cascade_action_delete;
                 } elseif ('SET NULL' == $fkdef['ondelete']) {
                     $sql_delete = sprintf($query, $trigger_names['pk_delete'], 'BEFORE DELETE', 'delete') . $setnull_action;
                 } elseif ('SET DEFAULT' == $fkdef['ondelete']) {
                     $sql_delete = sprintf($query, $trigger_names['pk_delete'], 'BEFORE DELETE', 'delete') . $setdefault_action;
                 } elseif ('NO ACTION' == $fkdef['ondelete']) {
-                    $sql_delete = sprintf($query . $restrict_action, $trigger_names['pk_delete'], 'AFTER DELETE', 'delete');
+                    $sql_delete = sprintf($query.$restrict_action, $trigger_names['pk_delete'], 'AFTER DELETE', 'delete');
                 } elseif ('RESTRICT' == $fkdef['ondelete']) {
-                    $sql_delete = sprintf($query . $restrict_action, $trigger_names['pk_delete'], 'BEFORE DELETE', 'delete');
+                    $sql_delete = sprintf($query.$restrict_action, $trigger_names['pk_delete'], 'BEFORE DELETE', 'delete');
                 }
                 $sql_update .= ' SET FOREIGN_KEY_CHECKS = 1; END;';
                 $sql_delete .= ' SET FOREIGN_KEY_CHECKS = 1; END;';
@@ -1177,20 +1202,21 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access private
      */
-    function _dropFKTriggers($table, $fkname, $referenced_table) {
+    function _dropFKTriggers($table, $fkname, $referenced_table)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $triggers = $this->listTableTriggers($table);
+        $triggers  = $this->listTableTriggers($table);
         $triggers2 = $this->listTableTriggers($referenced_table);
         if (!PEAR::isError($triggers2) && !PEAR::isError($triggers)) {
             $triggers = array_merge($triggers, $triggers2);
-            $pattern = '/^' . $fkname . '(_pk)?_(insert|update|delete)_trg$/i';
+            $pattern = '/^'.$fkname.'(_pk)?_(insert|update|delete)_trg$/i';
             foreach ($triggers as $trigger) {
                 if (preg_match($pattern, $trigger)) {
-                    $result = $db->exec('DROP TRIGGER ' . $trigger);
+                    $result = $db->exec('DROP TRIGGER '.$trigger);
                     if (PEAR::isError($result)) {
                         return $result;
                     }
@@ -1210,7 +1236,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of constraint names on success, a MDB2 error on failure
      * @access public
      */
-    function listTableConstraints($table) {
+    function listTableConstraints($table)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -1247,9 +1274,9 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
                 }
             }
         }
-
+        
         //list FOREIGN KEY constraints...
-        $query = 'SHOW CREATE TABLE ' . $db->escape($table);
+        $query = 'SHOW CREATE TABLE '. $db->escape($table);
         $definition = $db->queryOne($query, 'text', 1);
         if (!PEAR::isError($definition) && !empty($definition)) {
             $pattern = '/\bCONSTRAINT\b\s+([^\s]+)\s+\bFOREIGN KEY\b/Uims';
@@ -1284,7 +1311,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function createSequence($seq_name, $start = 1, $options = array()) {
+    function createSequence($seq_name, $start = 1, $options = array())
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -1292,17 +1320,17 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
 
         $sequence_name = $db->quoteIdentifier($db->getSequenceName($seq_name), true);
         $seqcol_name = $db->quoteIdentifier($db->options['seqcol_name'], true);
-
+        
         $options_strings = array();
 
         if (!empty($options['comment'])) {
-            $options_strings['comment'] = 'COMMENT = ' . $db->quote($options['comment'], 'text');
+            $options_strings['comment'] = 'COMMENT = '.$db->quote($options['comment'], 'text');
         }
 
         if (!empty($options['charset'])) {
-            $options_strings['charset'] = 'DEFAULT CHARACTER SET ' . $options['charset'];
+            $options_strings['charset'] = 'DEFAULT CHARACTER SET '.$options['charset'];
             if (!empty($options['collate'])) {
-                $options_strings['charset'].= ' COLLATE ' . $options['collate'];
+                $options_strings['charset'].= ' COLLATE '.$options['collate'];
             }
         }
 
@@ -1318,7 +1346,7 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
 
         $query = "CREATE TABLE $sequence_name ($seqcol_name INT NOT NULL AUTO_INCREMENT, PRIMARY KEY ($seqcol_name))";
         if (!empty($options_strings)) {
-            $query .= ' ' . implode(' ', $options_strings);
+            $query .= ' '.implode(' ', $options_strings);
         }
         $res = $db->exec($query);
         if (PEAR::isError($res)) {
@@ -1329,7 +1357,7 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
             return MDB2_OK;
         }
 
-        $query = "INSERT INTO $sequence_name ($seqcol_name) VALUES (" . ($start - 1) . ')';
+        $query = "INSERT INTO $sequence_name ($seqcol_name) VALUES (".($start-1).')';
         $res = $db->exec($query);
         if (!PEAR::isError($res)) {
             return MDB2_OK;
@@ -1338,10 +1366,12 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
         // Handle error
         $result = $db->exec("DROP TABLE $sequence_name");
         if (PEAR::isError($result)) {
-            return $db->raiseError($result, null, null, 'could not drop inconsistent sequence table', __FUNCTION__);
+            return $db->raiseError($result, null, null,
+                'could not drop inconsistent sequence table', __FUNCTION__);
         }
 
-        return $db->raiseError($res, null, null, 'could not create sequence table', __FUNCTION__);
+        return $db->raiseError($res, null, null,
+            'could not create sequence table', __FUNCTION__);
     }
 
     // }}}
@@ -1354,7 +1384,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function dropSequence($seq_name) {
+    function dropSequence($seq_name)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -1374,7 +1405,8 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
      * @return mixed array of sequence names on success, a MDB2 error on failure
      * @access public
      */
-    function listSequences($database = null) {
+    function listSequences($database = null)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
@@ -1403,5 +1435,4 @@ class MDB2_Driver_Manager_mysql extends MDB2_Driver_Manager_Common {
 
     // }}}
 }
-
 ?>

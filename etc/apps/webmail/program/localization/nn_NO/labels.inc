@@ -1,22 +1,18 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/nn_NO/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Per-Stian Vatne <psv@orsta.org>                               |
-  | Update: Odin Omdal Hørthe <odin.omdal@gmail.com>                      |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 5290 2011-09-28 17:09:50Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/nn_NO/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = 'Velkomen til $product';
@@ -44,7 +40,8 @@ $labels['date'] = 'Dato';
 $labels['size'] = 'Storleik';
 $labels['priority'] = 'Prioritet';
 $labels['organization'] = 'Organisasjon';
-$labels['mailboxlist'] = 'Katalogar';
+$labels['mailboxlist'] = 'Mapper';
+$labels['folders'] = 'Mapper';
 $labels['messagesfromto'] = 'Meldingar $from til $to av $count';
 $labels['threadsfromto'] = 'Trådar $from til $to ($count stk)';
 $labels['messagenrof'] = 'Melding $nr av $count';
@@ -74,6 +71,7 @@ $labels['feb'] = 'Feb';
 $labels['mar'] = 'Mar';
 $labels['apr'] = 'Apr';
 $labels['may'] = 'Mai';
+$labels['longmay'] = 'Mai';
 $labels['jun'] = 'Jun';
 $labels['jul'] = 'Jul';
 $labels['aug'] = 'Aug';
@@ -85,7 +83,6 @@ $labels['longjan'] = 'Januar';
 $labels['longfeb'] = 'Februar';
 $labels['longmar'] = 'Mars';
 $labels['longapr'] = 'April';
-$labels['longmay'] = 'Mai';
 $labels['longjun'] = 'Juni';
 $labels['longjul'] = 'Juli';
 $labels['longaug'] = 'August';
@@ -95,6 +92,7 @@ $labels['longnov'] = 'November';
 $labels['longdec'] = 'Desember';
 $labels['today'] = 'I dag';
 $labels['checkmail'] = 'Sjå etter nye meldingar';
+$labels['compose'] = 'Skriv ei melding';
 $labels['writenewmessage'] = 'Skriv ei ny melding';
 $labels['replytomessage'] = 'Svar på meldinga';
 $labels['replytoallmessage'] = 'Svar til sendar og alle mottakarar';
@@ -121,6 +119,7 @@ $labels['moreactions'] = 'Fleire handlingar';
 $labels['select'] = 'Vel';
 $labels['all'] = 'Alle';
 $labels['none'] = 'Ingen';
+$labels['nonesort'] = 'Ingen';
 $labels['currpage'] = 'Gjeldande side';
 $labels['unread'] = 'Uleste';
 $labels['flagged'] = 'Flagga';
@@ -140,7 +139,6 @@ $labels['expand_only_unread'] = 'berre med ulesne epostar';
 $labels['fromto'] = 'Sendar/Mottakar';
 $labels['flag'] = 'Flagg';
 $labels['attachment'] = 'Vedlegg';
-$labels['nonesort'] = 'Ingen';
 $labels['sentdate'] = 'Sendtdato';
 $labels['arrival'] = 'Mottaksdato';
 $labels['asc'] = 'Alfabetisk';
@@ -161,7 +159,6 @@ $labels['searchmod'] = 'Søkeutsagn';
 $labels['msgtext'] = 'Heile eposten';
 $labels['openinextwin'] = 'Opna i nytt vindauga';
 $labels['emlsave'] = 'Last ned (.eml)';
-$labels['compose'] = 'Skriv ei melding';
 $labels['editasnew'] = 'Rediger som ny';
 $labels['savemessage'] = 'Lagra kladd';
 $labels['sendmessage'] = 'Send meldinga no';
@@ -224,13 +221,14 @@ $labels['notes'] = 'Notatar';
 $labels['male'] = 'Mann';
 $labels['female'] = 'Kvinne';
 $labels['assistant'] = 'Assistent';
+$labels['typeassistant'] = 'Assistent';
 $labels['allfields'] = 'Alle felt';
 $labels['search'] = 'Søk';
 $labels['advsearch'] = 'Avansert søk';
 $labels['other'] = 'Andre';
+$labels['typeother'] = 'Andre';
 $labels['typehome'] = 'Heim';
 $labels['typework'] = 'Jobb';
-$labels['typeother'] = 'Andre';
 $labels['typemobile'] = 'Mobil';
 $labels['typemain'] = 'Hovud';
 $labels['typehomefax'] = 'Heimefax';
@@ -238,7 +236,6 @@ $labels['typeworkfax'] = 'Jobbfax';
 $labels['typecar'] = 'Bil';
 $labels['typepager'] = 'Personsøkjar';
 $labels['typevideo'] = 'VIdeo';
-$labels['typeassistant'] = 'Assistent';
 $labels['typehomepage'] = 'Heimeside';
 $labels['typeblog'] = 'Blogg';
 $labels['typeprofile'] = 'Profil';
@@ -343,7 +340,6 @@ $labels['mainoptions'] = 'Hovudinnstillingar';
 $labels['section'] = 'Seksjon';
 $labels['maintenance'] = 'Vedlikehald';
 $labels['newmessage'] = 'Ny epost';
-$labels['listoptions'] = 'Liste-innstillingar';
 $labels['signatureoptions'] = 'Signatur-innstillingar';
 $labels['whenreplying'] = 'Når du svarar';
 $labels['replytopposting'] = 'start ny epost oppante originalen';
@@ -359,7 +355,6 @@ $labels['insertsignature'] = 'Sett inn signatur';
 $labels['previewpanemarkread'] = 'Merk forehandsviste epostar som leste';
 $labels['afternseconds'] = 'etter $n sekund';
 $labels['folder'] = 'Mappe';
-$labels['folders'] = 'Mapper';
 $labels['foldername'] = 'Mappenamn';
 $labels['subscribed'] = 'Abonnert';
 $labels['messagecount'] = 'Meldingar';
@@ -399,4 +394,4 @@ $labels['vietnamese'] = 'Vietnamesisk';
 $labels['japanese'] = 'Japansk';
 $labels['korean'] = 'Koreansk';
 $labels['chinese'] = 'Kinesisk';
-?>
+

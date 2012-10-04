@@ -63,4 +63,5 @@ $rcmail_config['managesieve_filename_extension'] = '.sieve';
 // List of reserved script names (without extension).
 // Scripts listed here will be not presented to the user.
 $rcmail_config['managesieve_filename_exceptions'] = array();
+
 ?>

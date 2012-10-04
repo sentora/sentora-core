@@ -16,12 +16,13 @@ if header :matches "Subject" "^Test$" {
 
 $s = new rcube_sieve_script($txt, array('imapflags'));
 echo $s->as_text();
+
 ?>
 --EXPECT--
 require ["imapflags"];
 # rule:[imapflags]
 if header :matches "Subject" "^Test$"
 {
-setflag "\\Seen";
-addflag ["\\Answered","\\Deleted"];
+	setflag "\\Seen";
+	addflag ["\\Answered","\\Deleted"];
 }

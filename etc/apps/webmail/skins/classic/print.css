@@ -1,0 +1,137 @@
+/***** Roundcube|Mail message print styles *****/
+
+body
+{
+  font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+  background-color: #ffffff;
+  color: #000000;
+  margin: 2mm;
+}
+
+body, td, th, span, div, p
+{
+  font-size: 9pt;
+  color: #000000;
+}
+
+h3
+{
+  font-size: 18px;
+  color: #000000;
+}
+
+a, a:active, a:visited
+{
+  color: #000000;
+}
+
+body > #logo
+{
+  float: right;
+  margin: 0 5mm 3mm 5mm;
+}
+
+table.headers-table
+{
+  table-layout: fixed;
+  margin-top: 14px;
+}
+
+table.headers-table tr td
+{
+  font-size: 9pt;
+}
+
+table.headers-table td.header-title
+{
+  color: #666666;
+  font-weight: bold;
+  text-align: right;
+  vertical-align: top;
+  padding-right: 4mm;
+  white-space: nowrap;
+}
+
+table.headers-table tr td.subject
+{
+  width: 90%;
+  font-weight: bold;
+}
+
+#attachment-list
+{
+  margin-top: 3mm;
+  padding-top: 3mm;
+  border-top: 1pt solid #cccccc;
+}
+
+#attachment-list li
+{
+  font-size: 9pt;
+}
+
+#attachment-list li a
+{
+  text-decoration: none;
+}
+
+#attachment-list li a:hover
+{
+  text-decoration: underline;
+}
+
+#messagebody
+{
+  margin-top: 5mm;
+  border-top: none;
+}
+
+div.message-part
+{
+  padding: 2mm;
+  margin-top: 5mm;
+  margin-bottom: 5mm;
+  border-top: 1pt solid #cccccc;
+}
+
+div.message-part a
+{
+  color: #0000CC;
+}
+
+div.message-part pre,
+div.message-htmlpart pre,
+div.message-part div.pre
+{
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+  white-space: -moz-pre-wrap !important;
+  white-space: pre-wrap !important;
+  white-space: pre;
+  word-wrap: break-word; /* IE (and Safari) */
+}
+
+div.message-part blockquote
+{
+  color: blue;
+  border-left: 2px solid blue;
+  border-right: 2px solid blue;
+  background-color: #F6F6F6;
+  margin: 2px 0px;
+  padding: 1px 8px 1px 10px;
+}
+
+div.message-part blockquote blockquote
+{
+  color: green;
+  border-left: 2px solid green;
+  border-right: 2px solid green;
+}
+
+div.message-part blockquote blockquote blockquote
+{
+  color: #990000;
+  border-left: 2px solid #bb0000;
+  border-right: 2px solid #bb0000;
+}

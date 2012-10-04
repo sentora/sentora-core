@@ -1,20 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/mk_MK/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author:  Ivan Mishev - mishevivan@gmail.com                           |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/mk_MK/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['welcome'] = 'Добредојдовте во $product';
@@ -41,17 +39,15 @@ $labels['date'] = 'Датум';
 $labels['size'] = 'Големина';
 $labels['priority'] = 'Приоритет';
 $labels['organization'] = 'Организација';
-$labels['reply-to'] = 'Препрати на';
 $labels['mailboxlist'] = 'Папки';
+$labels['folders'] = 'Папки';
 $labels['messagesfromto'] = 'Писма од $from до $to од $count';
 $labels['messagenrof'] = 'Писмо $nr од $count';
+$labels['copy'] = 'Копирај';
 $labels['moveto'] = 'Премести во...';
 $labels['download'] = 'Преземи';
 $labels['filename'] = 'Име на податотеката';
 $labels['filesize'] = 'Големина на податотеката';
-$labels['preferhtml'] = 'Прикажи во HTML';
-$labels['htmlmessage'] = 'HTML писмо';
-$labels['prettydate'] = 'Убави датуми';
 $labels['addtoaddressbook'] = 'Додај во именик';
 $labels['sun'] = 'Нед';
 $labels['mon'] = 'Пон';
@@ -72,6 +68,7 @@ $labels['feb'] = 'Фев';
 $labels['mar'] = 'Мар';
 $labels['apr'] = 'Апр';
 $labels['may'] = 'Мај';
+$labels['longmay'] = 'Мај';
 $labels['jun'] = 'Јун';
 $labels['jul'] = 'Јул';
 $labels['aug'] = 'Авг';
@@ -83,7 +80,6 @@ $labels['longjan'] = 'Јануари';
 $labels['longfeb'] = 'Февруари';
 $labels['longmar'] = 'Март';
 $labels['longapr'] = 'Април';
-$labels['longmay'] = 'Мај';
 $labels['longjun'] = 'Јуни';
 $labels['longjul'] = 'Јули';
 $labels['longaug'] = 'Август';
@@ -93,6 +89,7 @@ $labels['longnov'] = 'Ноември';
 $labels['longdec'] = 'Декември';
 $labels['today'] = 'Денес';
 $labels['checkmail'] = 'Провери пошта';
+$labels['compose'] = 'Пиши ново писмо';
 $labels['writenewmessage'] = 'Ново писмо';
 $labels['replytomessage'] = 'Одговори на испраќачот';
 $labels['replytoallmessage'] = 'Одговори на испраќачот и сите примачи';
@@ -101,13 +98,9 @@ $labels['deletemessage'] = 'Избриши писмо';
 $labels['movemessagetotrash'] = 'Премести ги писмата во Корпа';
 $labels['printmessage'] = 'Испечати писмо';
 $labels['previousmessage'] = 'Прикажи го претходното писмо';
-$labels['previousmessages'] = 'Прикажи ги претходните писма';
 $labels['firstmessage'] = 'Прикажи го првото писмо';
-$labels['firstmessages'] = 'Прикажи ги првите писма';
 $labels['nextmessage'] = 'Прикажи го следното писмо';
-$labels['nextmessages'] = 'Прикажи ги следните писма';
 $labels['lastmessage'] = 'Прикажи го последното писмо';
-$labels['lastmessages'] = 'Прикажи ги последните писма';
 $labels['backtolist'] = 'Назад кон листа на писма';
 $labels['viewsource'] = 'Покажи го изворот на писмото';
 $labels['markmessages'] = 'Обележи ги писмата';
@@ -115,10 +108,10 @@ $labels['markread'] = 'Како прочитани';
 $labels['markunread'] = 'Како непрочитани';
 $labels['markflagged'] = 'Како обележано';
 $labels['markunflagged'] = 'Како необележано';
-$labels['messageactions'] = 'Повеќе дејства...';
 $labels['select'] = 'Одбери';
 $labels['all'] = 'Сите';
 $labels['none'] = 'Ниедно';
+$labels['nonesort'] = 'Ниедно';
 $labels['unread'] = 'Непрочитани';
 $labels['flagged'] = 'Обележано';
 $labels['unanswered'] = 'Неодговорено';
@@ -127,7 +120,6 @@ $labels['invert'] = 'Обратно';
 $labels['filter'] = 'Филтер';
 $labels['compact'] = 'Компактно';
 $labels['empty'] = 'Испразни';
-$labels['purge'] = 'Исчисти';
 $labels['quota'] = 'Искористен простор';
 $labels['unknown'] = 'непознато';
 $labels['unlimited'] = 'неограничено';
@@ -137,14 +129,13 @@ $labels['searchmod'] = 'Модификатори на пребарувањето
 $labels['msgtext'] = 'Цело писмо';
 $labels['openinextwin'] = 'Отвори во нов прозорец';
 $labels['emlsave'] = 'Преземи (.eml)';
-$labels['compose'] = 'Пиши ново писмо';
 $labels['editasnew'] = 'Уреди како ново';
 $labels['savemessage'] = 'Зачувај го писмото во Непратени';
 $labels['sendmessage'] = 'Испрати сега';
 $labels['addattachment'] = 'Приложи податотека';
 $labels['charset'] = 'Збир од знаци';
 $labels['editortype'] = 'Тип на уредник';
-$labels['returnreceipt'] = 'Врати ';
+$labels['returnreceipt'] = 'Врати';
 $labels['checkspelling'] = 'Провери правопис';
 $labels['resumeediting'] = 'Продолжи со уредување';
 $labels['revertto'] = 'Врати на';
@@ -201,14 +192,17 @@ $labels['importreplace'] = 'Замени го целиот именик';
 $labels['importtext'] = 'Можете да приложите контакти од веќе постоечки именик.<br/>Во моментот поддржуваме увоз на адреси од <a href="http://mk.wikipedia.org/wiki/VCard">vCard</a> форматот.';
 $labels['done'] = 'Завршено';
 $labels['settingsfor'] = 'Нагодувања за';
-$labels['preferences'] = 'Нагодувања ';
-$labels['userpreferences'] = 'Кориснички нагодувања ';
-$labels['editpreferences'] = 'Промени кориснички нагодувања ';
+$labels['preferences'] = 'Нагодувања';
+$labels['userpreferences'] = 'Кориснички нагодувања';
+$labels['editpreferences'] = 'Промени кориснички нагодувања';
 $labels['identities'] = 'Идентитети';
 $labels['manageidentities'] = 'Организирај ги идентитетите за овој корисник';
 $labels['newidentity'] = 'Нов идентитет';
 $labels['newitem'] = 'Нов објект';
 $labels['edititem'] = 'Промени објект';
+$labels['preferhtml'] = 'Прикажи во HTML';
+$labels['htmlmessage'] = 'HTML писмо';
+$labels['prettydate'] = 'Убави датуми';
 $labels['setdefault'] = 'Постави за основно';
 $labels['autodetect'] = 'Автоматски';
 $labels['language'] = 'Јазик';
@@ -254,7 +248,6 @@ $labels['mainoptions'] = 'Главни можности';
 $labels['section'] = 'Заглавие';
 $labels['maintenance'] = 'Одржување';
 $labels['newmessage'] = 'Ново писмо';
-$labels['listoptions'] = 'Можности за листата';
 $labels['signatureoptions'] = 'Можности за потписот';
 $labels['whenreplying'] = 'При одговарање';
 $labels['replytopposting'] = 'новото писмо започни го над оригиналот';
@@ -268,7 +261,6 @@ $labels['belowquote'] = 'под цитираното';
 $labels['abovequote'] = 'над цитираното';
 $labels['insertsignature'] = 'Вметни потпис';
 $labels['folder'] = 'Папка';
-$labels['folders'] = 'Папки';
 $labels['foldername'] = 'Име на папката';
 $labels['subscribed'] = 'Претплатен';
 $labels['messagecount'] = 'Пораки';
@@ -283,4 +275,4 @@ $labels['B'] = 'Б';
 $labels['KB'] = 'КБ';
 $labels['MB'] = 'МБ';
 $labels['GB'] = 'ГБ';
-?>
+

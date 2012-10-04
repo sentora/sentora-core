@@ -1,28 +1,31 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | program/steps/addressbook/search.inc                                  |
-  |                                                                       |
-  | This file is part of the Roundcube Webmail client                     |
-  | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
-  | Copyright (C) 2011, Kolab Systems AG                                  |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  | PURPOSE:                                                              |
-  |   Search action (and form) for address book contacts                  |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-  | Author: Aleksander Machniak <machniak@kolabsys.com>                   |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | program/steps/addressbook/search.inc                                  |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+ | Copyright (C) 2011, Kolab Systems AG                                  |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ | PURPOSE:                                                              |
+ |   Search action (and form) for address book contacts                  |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+ | Author: Aleksander Machniak <machniak@kolabsys.com>                   |
+ +-----------------------------------------------------------------------+
 
-  $Id: search.inc 456 2007-01-10 12:34:33Z thomasb $
+ $Id: search.inc 456 2007-01-10 12:34:33Z thomasb $
 
- */
+*/
 
 if ($RCMAIL->action == 'search-create') {
-    $id = get_input_value('_search', RCUBE_INPUT_POST);
+    $id   = get_input_value('_search', RCUBE_INPUT_POST);
     $name = get_input_value('_name', RCUBE_INPUT_POST, true);
 
     if (($params = $_SESSION['search_params']) && $params['id'] == $id) {
@@ -85,8 +88,10 @@ if (!isset($_GET['_form'])) {
 $OUTPUT->add_handler('searchform', 'rcmail_contact_search_form');
 $OUTPUT->send('contactsearch');
 
-function rcmail_contact_search() {
-    global $RCMAIL, $OUTPUT, $CONFIG, $SEARCH_MODS_DEFAULT;
+
+function rcmail_contact_search()
+{
+    global $RCMAIL, $OUTPUT, $SEARCH_MODS_DEFAULT, $PAGE_SIZE;
 
     $adv = isset($_POST['_adv']);
     $sid = get_input_value('_sid', RCUBE_INPUT_GET);
@@ -118,7 +123,8 @@ function rcmail_contact_search() {
 
         if (empty($fields)) {
             $fields = array_keys($SEARCH_MODS_DEFAULT);
-        } else {
+        }
+        else {
             $fields = array_filter($fields);
         }
 
@@ -138,10 +144,10 @@ function rcmail_contact_search() {
     $mode = (int) $RCMAIL->config->get('addressbook_search_mode');
 
     // get sources list
-    $sources = $RCMAIL->get_address_sources();
+    $sources    = $RCMAIL->get_address_sources();
     $search_set = array();
-    $records = array();
-    $sort_col = $RCMAIL->config->get('addressbook_sort_col', 'name');
+    $records    = array();
+    $sort_col   = $RCMAIL->config->get('addressbook_sort_col', 'name');
 
     foreach ($sources as $s) {
         $source = $RCMAIL->get_address_book($s['id']);
@@ -153,7 +159,7 @@ function rcmail_contact_search() {
 
             foreach ($fields as $f) {
                 if (array_key_exists($f, $cols)) {
-                    $supported++;
+                    $supported ++;
                 }
             }
 
@@ -176,7 +182,7 @@ function rcmail_contact_search() {
         }
 
         // get records
-        $result = $source->list_records(array('name', 'email'));
+        $result = $source->list_records(array('name', 'firstname', 'surname', 'email'));
 
         while ($row = $result->next()) {
             $row['sourceid'] = $s['id'];
@@ -192,20 +198,20 @@ function rcmail_contact_search() {
     ksort($records, SORT_LOCALE_STRING);
 
     // create resultset object
-    $count = count($records);
+    $count  = count($records);
     $result = new rcube_result_set($count);
 
     // cut first-page records
-    if ($CONFIG['pagesize'] < $count) {
-        $records = array_slice($records, 0, $CONFIG['pagesize']);
+    if ($PAGE_SIZE < $count) {
+        $records = array_slice($records, 0, $PAGE_SIZE);
     }
 
     $result->records = array_values($records);
 
     // search request ID
     $search_request = md5('addr'
-            . (is_array($fields) ? implode($fields, ',') : $fields)
-            . (is_array($search) ? implode($search, ',') : $search));
+        .(is_array($fields) ? implode($fields, ',') : $fields)
+        .(is_array($search) ? implode($search, ',') : $search));
 
     // save search settings in session
     $_SESSION['search'][$search_request] = $search_set;
@@ -219,53 +225,58 @@ function rcmail_contact_search() {
         // create javascript list
         rcmail_js_contacts_list($result);
         $OUTPUT->show_message('contactsearchsuccessful', 'confirmation', array('nr' => $result->count));
-    } else {
+    }
+    else {
         $OUTPUT->show_message('nocontactsfound', 'notice');
     }
 
     // update message count display
     $OUTPUT->command('set_env', 'search_request', $search_request);
-    $OUTPUT->command('set_env', 'pagecount', ceil($result->count / $CONFIG['pagesize']));
+    $OUTPUT->command('set_env', 'pagecount', ceil($result->count / $PAGE_SIZE));
     $OUTPUT->command('set_rowcount', rcmail_get_rowcount_text($result));
     // Re-set current source
     $OUTPUT->command('set_env', 'search_id', $sid);
     $OUTPUT->command('set_env', 'source', '');
     $OUTPUT->command('set_env', 'group', '');
 
-    // unselect currently selected directory/group
-    if (!$sid)
+    if (!$sid) {
+        // unselect currently selected directory/group
         $OUTPUT->command('unselect_directory');
+        // enable "Save search" command
+        $OUTPUT->command('enable_command', 'search-create', true);
+    }
     $OUTPUT->command('update_group_commands');
 
     // send response
     $OUTPUT->send($adv ? 'iframe' : null);
 }
 
-function rcmail_contact_search_form($attrib) {
+function rcmail_contact_search_form($attrib)
+{
     global $RCMAIL, $CONTACT_COLTYPES;
 
     $i_size = !empty($attrib['size']) ? $attrib['size'] : 30;
 
     $form = array(
         'main' => array(
-            'name' => rcube_label('properties'),
+            'name'    => rcube_label('properties'),
             'content' => array(
             ),
         ),
         'personal' => array(
-            'name' => rcube_label('personalinfo'),
+            'name'    => rcube_label('personalinfo'),
             'content' => array(
             ),
         ),
         'other' => array(
-            'name' => rcube_label('other'),
+            'name'    => rcube_label('other'),
             'content' => array(
             ),
         ),
     );
 
     // get supported coltypes from all address sources
-    $sources = $RCMAIL->get_address_sources();
+    $sources  = $RCMAIL->get_address_sources();
     $coltypes = array();
 
     foreach ($sources as $s) {
@@ -279,21 +290,23 @@ function rcmail_contact_search_form($attrib) {
 
     // merge supported coltypes with $CONTACT_COLTYPES
     foreach ($coltypes as $col => $colprop) {
-        $coltypes[$col] = $CONTACT_COLTYPES[$col] ? array_merge($CONTACT_COLTYPES[$col], (array) $colprop) : (array) $colprop;
+        $coltypes[$col] = $CONTACT_COLTYPES[$col] ? array_merge($CONTACT_COLTYPES[$col], (array)$colprop) : (array)$colprop;
     }
 
     // build form fields list
-    foreach ($coltypes as $col => $colprop) {
-        if ($colprop['type'] != 'image' && !$colprop['nosearch']) {
-            $ftype = $colprop['type'] == 'select' ? 'select' : 'text';
-            $label = isset($colprop['label']) ? $colprop['label'] : rcube_label($col);
+    foreach ($coltypes as $col => $colprop)
+    {
+        if ($colprop['type'] != 'image' && !$colprop['nosearch'])
+        {
+            $ftype    = $colprop['type'] == 'select' ? 'select' : 'text';
+            $label    = isset($colprop['label']) ? $colprop['label'] : rcube_label($col);
             $category = $colprop['category'] ? $colprop['category'] : 'other';
 
             if ($ftype == 'text')
                 $colprop['size'] = $i_size;
 
-            $content = html::div('row', html::div('contactfieldlabel label', Q($label))
-                            . html::div('contactfieldcontent', rcmail_get_edit_field('search_' . $col, '', $colprop, $ftype)));
+            $content  = html::div('row', html::div('contactfieldlabel label', Q($label))
+                . html::div('contactfieldcontent', rcmail_get_edit_field('search_'.$col, '', $colprop, $ftype)));
 
             $form[$category]['content'][] = $content;
         }
@@ -316,8 +329,9 @@ function rcmail_contact_search_form($attrib) {
         if (!empty($f['content'])) {
             $content = html::div('contactfieldgroup', join("\n", $f['content']));
 
-            $out .= html::tag('fieldset', $attrib, html::tag('legend', null, Q($f['name']))
-                            . $content) . "\n";
+            $out .= html::tag('fieldset', $attrib,
+                html::tag('legend', null, Q($f['name']))
+                . $content) . "\n";
         }
     }
 

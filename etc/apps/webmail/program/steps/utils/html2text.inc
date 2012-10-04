@@ -1,24 +1,26 @@
 <?php
-
 /*
 
-  +-----------------------------------------------------------------------+
-  | program/steps/utils/html2text.inc                                     |
-  |                                                                       |
-  | This file is part of the Roundcube Webmail client                     |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  | PURPOSE:                                                              |
-  |   Convert HTML message to plain text                                  |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | program/steps/utils/html2text.inc                                     |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ | PURPOSE:                                                              |
+ |   Convert HTML message to plain text                                  |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+ +-----------------------------------------------------------------------+
 
-  $Id: html2text.inc 4410 2011-01-12 18:25:02Z thomasb $
+ $Id$
 
- */
+*/
 
 $html = $HTTP_RAW_POST_DATA;
 

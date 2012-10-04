@@ -37,6 +37,7 @@
  * @version   CVS: $Id: Exceptions.php 273745 2009-01-18 05:24:25Z gauthierm $
  * @link      http://pear.php.net/package/Crypt_GPG
  */
+
 /**
  * PEAR Exception handler and base class
  */
@@ -54,8 +55,8 @@ require_once 'PEAR/Exception.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_Exception extends PEAR_Exception {
-    
+class Crypt_GPG_Exception extends PEAR_Exception
+{
 }
 
 // }}}
@@ -75,7 +76,8 @@ class Crypt_GPG_Exception extends PEAR_Exception {
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_FileException extends Crypt_GPG_Exception {
+class Crypt_GPG_FileException extends Crypt_GPG_Exception
+{
     // {{{ private class properties
 
     /**
@@ -95,7 +97,8 @@ class Crypt_GPG_FileException extends Crypt_GPG_Exception {
      * @param integer $code     a user defined error code.
      * @param string  $filename the name of the file that caused this exception.
      */
-    public function __construct($message, $code = 0, $filename = '') {
+    public function __construct($message, $code = 0, $filename = '')
+    {
         $this->_filename = $filename;
         parent::__construct($message, $code);
     }
@@ -110,7 +113,8 @@ class Crypt_GPG_FileException extends Crypt_GPG_Exception {
      *
      * @see Crypt_GPG_FileException::$_filename
      */
-    public function getFilename() {
+    public function getFilename()
+    {
         return $this->_filename;
     }
 
@@ -133,7 +137,8 @@ class Crypt_GPG_FileException extends Crypt_GPG_Exception {
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_OpenSubprocessException extends Crypt_GPG_Exception {
+class Crypt_GPG_OpenSubprocessException extends Crypt_GPG_Exception
+{
     // {{{ private class properties
 
     /**
@@ -156,7 +161,8 @@ class Crypt_GPG_OpenSubprocessException extends Crypt_GPG_Exception {
      *
      * @see Crypt_GPG::_openSubprocess()
      */
-    public function __construct($message, $code = 0, $command = '') {
+    public function __construct($message, $code = 0, $command = '')
+    {
         $this->_command = $command;
         parent::__construct($message, $code);
     }
@@ -171,7 +177,8 @@ class Crypt_GPG_OpenSubprocessException extends Crypt_GPG_Exception {
      *
      * @see Crypt_GPG_OpenSubprocessException::$_command
      */
-    public function getCommand() {
+    public function getCommand()
+    {
         return $this->_command;
     }
 
@@ -191,7 +198,8 @@ class Crypt_GPG_OpenSubprocessException extends Crypt_GPG_Exception {
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_InvalidOperationException extends Crypt_GPG_Exception {
+class Crypt_GPG_InvalidOperationException extends Crypt_GPG_Exception
+{
     // {{{ private class properties
 
     /**
@@ -211,7 +219,8 @@ class Crypt_GPG_InvalidOperationException extends Crypt_GPG_Exception {
      * @param integer $code      a user defined error code.
      * @param string  $operation the operation.
      */
-    public function __construct($message, $code = 0, $operation = '') {
+    public function __construct($message, $code = 0, $operation = '')
+    {
         $this->_operation = $operation;
         parent::__construct($message, $code);
     }
@@ -226,7 +235,8 @@ class Crypt_GPG_InvalidOperationException extends Crypt_GPG_Exception {
      *
      * @see Crypt_GPG_InvalidOperationException::$_operation
      */
-    public function getOperation() {
+    public function getOperation()
+    {
         return $this->_operation;
     }
 
@@ -247,7 +257,8 @@ class Crypt_GPG_InvalidOperationException extends Crypt_GPG_Exception {
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_KeyNotFoundException extends Crypt_GPG_Exception {
+class Crypt_GPG_KeyNotFoundException extends Crypt_GPG_Exception
+{
     // {{{ private class properties
 
     /**
@@ -267,7 +278,8 @@ class Crypt_GPG_KeyNotFoundException extends Crypt_GPG_Exception {
      * @param integer $code    a user defined error code.
      * @param string  $keyId   the key identifier of the key.
      */
-    public function __construct($message, $code = 0, $keyId = '') {
+    public function __construct($message, $code = 0, $keyId= '')
+    {
         $this->_keyId = $keyId;
         parent::__construct($message, $code);
     }
@@ -280,7 +292,8 @@ class Crypt_GPG_KeyNotFoundException extends Crypt_GPG_Exception {
      *
      * @return string the key identifier of the key that was not found.
      */
-    public function getKeyId() {
+    public function getKeyId()
+    {
         return $this->_keyId;
     }
 
@@ -301,8 +314,8 @@ class Crypt_GPG_KeyNotFoundException extends Crypt_GPG_Exception {
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_NoDataException extends Crypt_GPG_Exception {
-    
+class Crypt_GPG_NoDataException extends Crypt_GPG_Exception
+{
 }
 
 // }}}
@@ -318,7 +331,8 @@ class Crypt_GPG_NoDataException extends Crypt_GPG_Exception {
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_BadPassphraseException extends Crypt_GPG_Exception {
+class Crypt_GPG_BadPassphraseException extends Crypt_GPG_Exception
+{
     // {{{ private class properties
 
     /**
@@ -352,9 +366,10 @@ class Crypt_GPG_BadPassphraseException extends Crypt_GPG_Exception {
      * @param string  $missingPassphrases an array containing user ids of keys
      *                                    for which the passphrase is missing.
      */
-    public function __construct($message, $code = 0, array $badPassphrases = array(), array $missingPassphrases = array()
+    public function __construct($message, $code = 0,
+        array $badPassphrases = array(), array $missingPassphrases = array()
     ) {
-        $this->_badPassphrases = $badPassphrases;
+        $this->_badPassphrases     = $badPassphrases;
         $this->_missingPassphrases = $missingPassphrases;
 
         parent::__construct($message, $code);
@@ -370,7 +385,8 @@ class Crypt_GPG_BadPassphraseException extends Crypt_GPG_Exception {
      *               The array contains primary user ids indexed by the sub-key
      *               id.
      */
-    public function getBadPassphrases() {
+    public function getBadPassphrases()
+    {
         return $this->_badPassphrases;
     }
 
@@ -384,7 +400,8 @@ class Crypt_GPG_BadPassphraseException extends Crypt_GPG_Exception {
      *               The array contains primary user ids indexed by the sub-key
      *               id.
      */
-    public function getMissingPassphrases() {
+    public function getMissingPassphrases()
+    {
         return $this->_missingPassphrases;
     }
 
@@ -405,7 +422,8 @@ class Crypt_GPG_BadPassphraseException extends Crypt_GPG_Exception {
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @link      http://pear.php.net/package/Crypt_GPG
  */
-class Crypt_GPG_DeletePrivateKeyException extends Crypt_GPG_Exception {
+class Crypt_GPG_DeletePrivateKeyException extends Crypt_GPG_Exception
+{
     // {{{ private class properties
 
     /**
@@ -428,7 +446,8 @@ class Crypt_GPG_DeletePrivateKeyException extends Crypt_GPG_Exception {
      *
      * @see Crypt_GPG::deletePublicKey()
      */
-    public function __construct($message, $code = 0, $keyId = '') {
+    public function __construct($message, $code = 0, $keyId = '')
+    {
         $this->_keyId = $keyId;
         parent::__construct($message, $code);
     }
@@ -441,7 +460,8 @@ class Crypt_GPG_DeletePrivateKeyException extends Crypt_GPG_Exception {
      *
      * @return string the key identifier of the key that was not found.
      */
-    public function getKeyId() {
+    public function getKeyId()
+    {
         return $this->_keyId;
     }
 
@@ -449,4 +469,5 @@ class Crypt_GPG_DeletePrivateKeyException extends Crypt_GPG_Exception {
 }
 
 // }}}
+
 ?>

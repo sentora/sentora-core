@@ -13,20 +13,22 @@
  * @author Ziba Scott
  * @website http://roundcube.net
  */
-class additional_message_headers extends rcube_plugin {
-
+class additional_message_headers extends rcube_plugin
+{
     public $task = 'mail';
 
-    function init() {
+    function init()
+    {
         $this->add_hook('message_outgoing_headers', array($this, 'message_headers'));
     }
 
-    function message_headers($args) {
-        $this->load_config();
+    function message_headers($args)
+    {
+	$this->load_config();
 
         // additional email headers
-        $additional_headers = rcmail::get_instance()->config->get('additional_message_headers', array());
-        foreach ($additional_headers as $header => $value) {
+        $additional_headers = rcmail::get_instance()->config->get('additional_message_headers',array());
+        foreach($additional_headers as $header=>$value){
             if (null === $value) {
                 unset($args['headers'][$header]);
             } else {
@@ -36,7 +38,6 @@ class additional_message_headers extends rcube_plugin {
 
         return $args;
     }
-
 }
 
 ?>

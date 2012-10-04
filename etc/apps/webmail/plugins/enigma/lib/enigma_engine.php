@@ -1,57 +1,60 @@
 <?php
+/*
+ +-------------------------------------------------------------------------+
+ | Engine of the Enigma Plugin                                             |
+ |                                                                         |
+ | This program is free software; you can redistribute it and/or modify    |
+ | it under the terms of the GNU General Public License version 2          |
+ | as published by the Free Software Foundation.                           |
+ |                                                                         |
+ | This program is distributed in the hope that it will be useful,         |
+ | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
+ | GNU General Public License for more details.                            |
+ |                                                                         |
+ | You should have received a copy of the GNU General Public License along |
+ | with this program; if not, write to the Free Software Foundation, Inc., |
+ | 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.             |
+ |                                                                         |
+ +-------------------------------------------------------------------------+
+ | Author: Aleksander Machniak <alec@alec.pl>                              |
+ +-------------------------------------------------------------------------+
+
+*/
 
 /*
-  +-------------------------------------------------------------------------+
-  | Engine of the Enigma Plugin                                             |
-  |                                                                         |
-  | This program is free software; you can redistribute it and/or modify    |
-  | it under the terms of the GNU General Public License version 2          |
-  | as published by the Free Software Foundation.                           |
-  |                                                                         |
-  | This program is distributed in the hope that it will be useful,         |
-  | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
-  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
-  | GNU General Public License for more details.                            |
-  |                                                                         |
-  | You should have received a copy of the GNU General Public License along |
-  | with this program; if not, write to the Free Software Foundation, Inc., |
-  | 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.             |
-  |                                                                         |
-  +-------------------------------------------------------------------------+
-  | Author: Aleksander Machniak <alec@alec.pl>                              |
-  +-------------------------------------------------------------------------+
+    RFC2440: OpenPGP Message Format
+    RFC3156: MIME Security with OpenPGP
+    RFC3851: S/MIME
+*/
 
- */
-
-/*
-  RFC2440: OpenPGP Message Format
-  RFC3156: MIME Security with OpenPGP
-  RFC3851: S/MIME
- */
-
-class enigma_engine {
-
+class enigma_engine
+{
     private $rc;
     private $enigma;
     private $pgp_driver;
     private $smime_driver;
+
     public $decryptions = array();
     public $signatures = array();
     public $signed_parts = array();
 
+
     /**
      * Plugin initialization.
      */
-    function __construct($enigma) {
+    function __construct($enigma)
+    {
         $rcmail = rcmail::get_instance();
-        $this->rc = $rcmail;
+        $this->rc = $rcmail;    
         $this->enigma = $enigma;
     }
 
     /**
      * PGP driver initialization.
      */
-    function load_pgp_driver() {
+    function load_pgp_driver()
+    {
         if ($this->pgp_driver)
             return;
 
@@ -66,7 +69,7 @@ class enigma_engine {
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Enigma plugin: Unable to load PGP driver: $driver"
-                    ), true, true);
+            ), true, true);
         }
 
         // Initialise driver
@@ -76,15 +79,16 @@ class enigma_engine {
             raise_error(array(
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
-                'message' => "Enigma plugin: " . $result->getMessage()
-                    ), true, true);
+                'message' => "Enigma plugin: ".$result->getMessage()
+            ), true, true);
         }
     }
 
     /**
      * S/MIME driver initialization.
      */
-    function load_smime_driver() {
+    function load_smime_driver()
+    {
         if ($this->smime_driver)
             return;
 
@@ -102,7 +106,7 @@ class enigma_engine {
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Enigma plugin: Unable to load S/MIME driver: $driver"
-                    ), true, true);
+            ), true, true);
         }
 
         // Initialise driver
@@ -112,8 +116,8 @@ class enigma_engine {
             raise_error(array(
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
-                'message' => "Enigma plugin: " . $result->getMessage()
-                    ), true, true);
+                'message' => "Enigma plugin: ".$result->getMessage()
+            ), true, true);
         }
     }
 
@@ -122,7 +126,8 @@ class enigma_engine {
      *
      * @param array Reference to hook's parameters
      */
-    function parse_plain(&$p) {
+    function parse_plain(&$p)
+    {
         $part = $p['structure'];
 
         // Get message body from IMAP server
@@ -144,7 +149,8 @@ class enigma_engine {
      *
      * @param array Reference to hook's parameters
      */
-    function parse_signed(&$p) {
+    function parse_signed(&$p)
+    {
         $struct = $p['structure'];
 
         // S/MIME
@@ -167,7 +173,8 @@ class enigma_engine {
      *
      * @param array Reference to hook's parameters
      */
-    function parse_encrypted(&$p) {
+    function parse_encrypted(&$p)
+    {
         $struct = $p['structure'];
 
         // S/MIME
@@ -181,7 +188,7 @@ class enigma_engine {
         // The second MIME body part MUST contain the actual encrypted data.  It
         // must be labeled with a content type of "application/octet-stream".
         else if ($struct->parts[0] && $struct->parts[0]->mimetype == 'application/pgp-encrypted' &&
-                $struct->parts[1] && $struct->parts[1]->mimetype == 'application/octet-stream'
+            $struct->parts[1] && $struct->parts[1]->mimetype == 'application/octet-stream'
         ) {
             $this->parse_pgp_encrypted($p);
         }
@@ -193,7 +200,8 @@ class enigma_engine {
      *
      * @param array Reference to hook's parameters
      */
-    private function parse_plain_signed(&$p) {
+    private function parse_plain_signed(&$p)
+    {
         $this->load_pgp_driver();
         $part = $p['structure'];
 
@@ -203,6 +211,7 @@ class enigma_engine {
         }
 
         // @TODO: Handle big bodies using (temp) files
+
         // In this way we can use fgets on string as on file handle
         $fh = fopen('php://memory', 'br+');
         // @TODO: fopen/fwrite errors handling
@@ -237,22 +246,23 @@ class enigma_engine {
 
         fclose($fh);
     }
-
+    
     /**
      * Handler for PGP/MIME signed message.
      * Verifies signature.
      *
      * @param array Reference to hook's parameters
      */
-    private function parse_pgp_signed(&$p) {
+    private function parse_pgp_signed(&$p)
+    {
         $this->load_pgp_driver();
         $struct = $p['structure'];
-
+        
         // Verify signature
         if ($this->rc->action == 'show' || $this->rc->action == 'preview') {
             $msg_part = $struct->parts[0];
             $sig_part = $struct->parts[1];
-
+        
             // Get bodies
             $this->set_part_body($msg_part, $p['object']->uid);
             $this->set_part_body($sig_part, $p['object']->uid);
@@ -282,7 +292,8 @@ class enigma_engine {
      *
      * @param array Reference to hook's parameters
      */
-    private function parse_smime_signed(&$p) {
+    private function parse_smime_signed(&$p)
+    {
         $this->load_smime_driver();
     }
 
@@ -291,35 +302,37 @@ class enigma_engine {
      *
      * @param array Reference to hook's parameters
      */
-    private function parse_plain_encrypted(&$p) {
+    private function parse_plain_encrypted(&$p)
+    {
         $this->load_pgp_driver();
         $part = $p['structure'];
-
+        
         // Get body
         $this->set_part_body($part, $p['object']->uid);
 
         // Decrypt 
         $result = $this->pgp_decrypt($part->body);
-
+        
         // Store decryption status
         $this->decryptions[$part->mime_id] = $result;
-
+        
         // Parse decrypted message
         if ($result === true) {
             // @TODO
         }
     }
-
+    
     /**
      * Handler for PGP/MIME encrypted message.
      *
      * @param array Reference to hook's parameters
      */
-    private function parse_pgp_encrypted(&$p) {
+    private function parse_pgp_encrypted(&$p)
+    {
         $this->load_pgp_driver();
         $struct = $p['structure'];
         $part = $struct->parts[1];
-
+        
         // Get body
         $this->set_part_body($part, $p['object']->uid);
 
@@ -331,7 +344,8 @@ class enigma_engine {
         // Parse decrypted message
         if ($result === true) {
             // @TODO
-        } else {
+        }
+        else {
             // Make sure decryption status message will be displayed
             $part->type = 'content';
             $p['object']->parts[] = $part;
@@ -343,7 +357,8 @@ class enigma_engine {
      *
      * @param array Reference to hook's parameters
      */
-    private function parse_smime_encrypted(&$p) {
+    private function parse_smime_encrypted(&$p)
+    {
         $this->load_smime_driver();
     }
 
@@ -355,18 +370,19 @@ class enigma_engine {
      *
      * @return mixed enigma_signature or enigma_error
      */
-    private function pgp_verify(&$msg_body, $sig_body = null) {
+    private function pgp_verify(&$msg_body, $sig_body=null)
+    {
         // @TODO: Handle big bodies using (temp) files
         // @TODO: caching of verification result
+        
+         $sig = $this->pgp_driver->verify($msg_body, $sig_body);
 
-        $sig = $this->pgp_driver->verify($msg_body, $sig_body);
-
-        if (($sig instanceof enigma_error) && $sig->getCode() != enigma_error::E_KEYNOTFOUND)
-            raise_error(array(
+         if (($sig instanceof enigma_error) && $sig->getCode() != enigma_error::E_KEYNOTFOUND)
+             raise_error(array(
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Enigma plugin: " . $error->getMessage()
-                    ), true, false);
+                ), true, false);
 
 //print_r($sig);
         return $sig;
@@ -379,10 +395,11 @@ class enigma_engine {
      *
      * @return mixed True or enigma_error
      */
-    private function pgp_decrypt(&$msg_body) {
+    private function pgp_decrypt(&$msg_body)
+    {
         // @TODO: Handle big bodies using (temp) files
         // @TODO: caching of verification result
-
+        
         $result = $this->pgp_driver->decrypt($msg_body, $key, $pass);
 
 //print_r($result);
@@ -394,7 +411,7 @@ class enigma_engine {
                     'code' => 600, 'type' => 'php',
                     'file' => __FILE__, 'line' => __LINE__,
                     'message' => "Enigma plugin: " . $result->getMessage()
-                        ), true, false);
+                    ), true, false);
             return $result;
         }
 
@@ -409,18 +426,19 @@ class enigma_engine {
      *
      * @return mixed Array of keys or enigma_error
      */
-    function list_keys($pattern = '') {
+    function list_keys($pattern='')
+    {
         $this->load_pgp_driver();
         $result = $this->pgp_driver->list_keys($pattern);
-
+    
         if ($result instanceof enigma_error) {
             raise_error(array(
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Enigma plugin: " . $result->getMessage()
-                    ), true, false);
+                ), true, false);
         }
-
+        
         return $result;
     }
 
@@ -431,18 +449,19 @@ class enigma_engine {
      *
      * @return mixed enigma_key or enigma_error
      */
-    function get_key($keyid) {
+    function get_key($keyid)
+    {
         $this->load_pgp_driver();
         $result = $this->pgp_driver->get_key($keyid);
-
+    
         if ($result instanceof enigma_error) {
             raise_error(array(
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Enigma plugin: " . $result->getMessage()
-                    ), true, false);
+                ), true, false);
         }
-
+        
         return $result;
     }
 
@@ -454,7 +473,8 @@ class enigma_engine {
      *
      * @return mixed Import status data array or enigma_error
      */
-    function import_key($content, $isfile = false) {
+    function import_key($content, $isfile=false)
+    {
         $this->load_pgp_driver();
         $result = $this->pgp_driver->import($content, $isfile);
 
@@ -463,8 +483,9 @@ class enigma_engine {
                 'code' => 600, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
                 'message' => "Enigma plugin: " . $result->getMessage()
-                    ), true, false);
-        } else {
+                ), true, false);
+        }
+        else {
             $result['imported'] = $result['public_imported'] + $result['private_imported'];
             $result['unchanged'] = $result['public_unchanged'] + $result['private_unchanged'];
         }
@@ -475,17 +496,19 @@ class enigma_engine {
     /**
      * Handler for keys/certs import request action
      */
-    function import_file() {
+    function import_file()
+    {
         $uid = get_input_value('_uid', RCUBE_INPUT_POST);
         $mbox = get_input_value('_mbox', RCUBE_INPUT_POST);
         $mime_id = get_input_value('_part', RCUBE_INPUT_POST);
 
         if ($uid && $mime_id) {
-            $part = $this->rc->imap->get_message_part($uid, $mime_id);
+            $part = $this->rc->storage->get_message_part($uid, $mime_id);
         }
 
         if ($part && is_array($result = $this->import_key($part))) {
-            $this->rc->output->show_message('enigma.keysimportsuccess', 'confirmation', array('new' => $result['imported'], 'old' => $result['unchanged']));
+            $this->rc->output->show_message('enigma.keysimportsuccess', 'confirmation',
+                array('new' => $result['imported'], 'old' => $result['unchanged']));
         }
         else
             $this->rc->output->show_message('enigma.keysimportfailed', 'error');
@@ -500,24 +523,25 @@ class enigma_engine {
      * @param rcube_message_part Message part object
      * @param integer            Message UID
      */
-    private function set_part_body($part, $uid) {
+    private function set_part_body($part, $uid)
+    {
         // @TODO: Create such function in core
         // @TODO: Handle big bodies using file handles
         if (!isset($part->body)) {
-            $part->body = $this->rc->imap->get_message_part(
-                    $uid, $part->mime_id, $part);
+            $part->body = $this->rc->storage->get_message_part(
+                $uid, $part->mime_id, $part);
         }
     }
 
     /**
      * Adds CSS style file to the page header.
      */
-    private function add_css() {
+    private function add_css()
+    {
         $skin = $this->rc->config->get('skin');
         if (!file_exists($this->home . "/skins/$skin/enigma.css"))
             $skin = 'default';
 
-        $this->include_stylesheet("skins/$skin/enigma.css");
+        $this->include_stylesheet("skins/$skin/enigma.css");                                                
     }
-
 }

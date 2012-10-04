@@ -19,25 +19,27 @@
  * 'dont_override' list and the global option has changed, don't expect
  * to see the change until the folder list cache is refreshed.
  *
- * @version 1.1
+ * @version @package_version@
  * @author Ziba Scott
  */
-class subscriptions_option extends rcube_plugin {
-
+class subscriptions_option extends rcube_plugin
+{
     public $task = 'mail|settings';
 
-    function init() {
+    function init()
+    {
         $this->add_texts('localization/', false);
         $dont_override = rcmail::get_instance()->config->get('dont_override', array());
         if (!in_array('use_subscriptions', $dont_override)) {
             $this->add_hook('preferences_list', array($this, 'settings_blocks'));
             $this->add_hook('preferences_save', array($this, 'save_prefs'));
         }
-        $this->add_hook('mailboxes_list', array($this, 'mailboxes_list'));
+        $this->add_hook('storage_folders', array($this, 'mailboxes_list'));
         $this->add_hook('folders_list', array($this, 'folders_list'));
     }
 
-    function settings_blocks($args) {
+    function settings_blocks($args)
+    {
         if ($args['section'] == 'server') {
             $use_subscriptions = rcmail::get_instance()->config->get('use_subscriptions');
             $field_id = 'rcmfd_use_subscriptions';
@@ -45,14 +47,15 @@ class subscriptions_option extends rcube_plugin {
 
             $args['blocks']['main']['options']['use_subscriptions'] = array(
                 'title' => html::label($field_id, Q($this->gettext('useimapsubscriptions'))),
-                'content' => $checkbox->show($use_subscriptions ? 1 : 0),
+                'content' => $checkbox->show($use_subscriptions?1:0),
             );
         }
 
         return $args;
     }
 
-    function save_prefs($args) {
+    function save_prefs($args)
+    {
         if ($args['section'] == 'server') {
             $rcmail = rcmail::get_instance();
             $use_subscriptions = $rcmail->config->get('use_subscriptions');
@@ -61,28 +64,29 @@ class subscriptions_option extends rcube_plugin {
 
             // if the use_subscriptions preference changes, flush the folder cache
             if (($use_subscriptions && !isset($_POST['_use_subscriptions'])) ||
-                    (!$use_subscriptions && isset($_POST['_use_subscriptions']))) {
-                $rcmail->imap_connect();
-                $rcmail->imap->clear_cache('mailboxes');
+                (!$use_subscriptions && isset($_POST['_use_subscriptions']))) {
+                    $storage = $rcmail->get_storage();
+                    $storage->clear_cache('mailboxes');
             }
         }
         return $args;
     }
 
-    function mailboxes_list($args) {
+    function mailboxes_list($args)
+    {
         $rcmail = rcmail::get_instance();
         if (!$rcmail->config->get('use_subscriptions', true)) {
-            $args['folders'] = $rcmail->imap->conn->listMailboxes($args['root'], $args['name']);
+            $args['folders'] = $rcmail->get_storage()->list_folders_direct();
         }
         return $args;
     }
 
-    function folders_list($args) {
+    function folders_list($args)
+    {
         $rcmail = rcmail::get_instance();
         if (!$rcmail->config->get('use_subscriptions', true)) {
             $args['table']->remove_column('subscribed');
         }
         return $args;
     }
-
 }

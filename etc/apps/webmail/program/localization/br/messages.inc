@@ -1,29 +1,24 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/bzg/messages.inc                                              |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: aldweb <info@aldweb.com>                                      |
-  |         Pierre HAEGELI <pierre@haegeli.net>                           |
-  |         Mickaël Wolff <rcw@lupusmic.org>                              |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 4410 2011-01-12 18:25:02Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/br/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas <Unknown>                                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
 $messages['loginfailed'] = 'Fazi dilesadur';
 $messages['cookiesdisabled'] = 'N\'eus ket c\'hoant toupinoù Hor merder';
 $messages['sessionerror'] = 'Direizh eo hoc\'h dalc\'h pe echu eo';
-$messages['imaperror'] = 'Fazi kevreadur ouzh ar servijer IMAP';
+$messages['storageerror'] = 'Fazi kevreadur ouzh ar servijer IMAP';
 $messages['nomessagesfound'] = 'Kemennadoù ebet er voest lizhiri';
 $messages['loggedout'] = 'Digevreet hoc\'h eus mat. Kenavo !';
 $messages['mailboxempty'] = 'Boest lizhiri dileun';
@@ -58,7 +53,6 @@ $messages['nosubjectwarning'] = 'Dileun eo ar maezienn « Sujed » . C\'hoant ho
 $messages['nobodywarning'] = 'Kas ar c\'hemennad hep testenn ?';
 $messages['notsentwarning'] = 'N\'eo ket bet kaset ar c\'hemennad. C\'hoant hoc\'h eus dilezel ar c\'hemennad-se ?';
 $messages['noldapserver'] = 'Dizuit ur servijer LDAP evit ar glask';
-$messages['nocontactsreturned'] = 'Darempred ebet kavet';
 $messages['nosearchname'] = 'Skrivit un anv darempred pe ur postel elektronek';
 $messages['searchsuccessful'] = '$nr kemennad kavet';
 $messages['searchnomatch'] = 'Disoc\'h ebet gant ar glask';
@@ -75,4 +69,4 @@ $messages['copysuccess'] = 'Kopiañ mat $nr chomlec\'h';
 $messages['copyerror'] = 'Ne c\'hall ket kopiañ chomlec\'hioù';
 $messages['sourceisreadonly'] = 'Lenn hepken eo an tarzh chomlec\'h se';
 $messages['errorsavingcontact'] = 'Ne c\'haller ket gwarediñ chomlec\'h darempred';
-?>
+

@@ -1,36 +1,40 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | program/steps/addressbook/delete.inc                                  |
-  |                                                                       |
-  | This file is part of the Roundcube Webmail client                     |
-  | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  | PURPOSE:                                                              |
-  |   Delete the submitted contacts (CIDs) from the users address book    |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-  +-----------------------------------------------------------------------+
+ +-----------------------------------------------------------------------+
+ | program/steps/addressbook/delete.inc                                  |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ |                                                                       |
+ | PURPOSE:                                                              |
+ |   Delete the submitted contacts (CIDs) from the users address book    |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
+ +-----------------------------------------------------------------------+
 
-  $Id: delete.inc 5967 2012-03-05 19:59:07Z alec $
+ $Id$
 
- */
+*/
 
 // process ajax requests only
 if (!$OUTPUT->ajax_call)
     return;
 
-$cids = rcmail_get_cids();
+$cids   = rcmail_get_cids();
 $delcnt = 0;
 
 // remove previous deletes
 $undo_time = $RCMAIL->config->get('undo_timeout', 0);
 $RCMAIL->session->remove('contact_undo');
 
-foreach ($cids as $source => $cid) {
+foreach ($cids as $source => $cid)
+{
     $CONTACTS = rcmail_contact_source($source);
 
     if ($CONTACTS->readonly) {
@@ -53,7 +57,8 @@ foreach ($cids as $source => $cid) {
         $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'contactdelerror', 'error');
         $OUTPUT->command('list_contacts');
         $OUTPUT->send();
-    } else {
+    }
+    else {
         $delcnt += $deleted;
 
         // store deleted contacts IDs in session for undo action
@@ -68,7 +73,7 @@ $page = isset($_SESSION['page']) ? $_SESSION['page'] : 1;
 // update saved search after data changed
 if (($search_request = $_REQUEST['_search']) && isset($_SESSION['search'][$search_request])) {
     $sort_col = $RCMAIL->config->get('addressbook_sort_col', 'name');
-    $search = (array) $_SESSION['search'][$search_request];
+    $search  = (array)$_SESSION['search'][$search_request];
     $records = array();
 
     // Get records from all sources (refresh search)
@@ -81,7 +86,7 @@ if (($search_request = $_REQUEST['_search']) && isset($_SESSION['search'][$searc
         $source->set_search_set($set);
 
         // get records
-        $result = $source->list_records(array('name', 'email'));
+        $result = $source->list_records(array('name', 'firstname', 'surname', 'email'));
 
         if (!$result->count) {
             unset($search[$s]);
@@ -101,35 +106,37 @@ if (($search_request = $_REQUEST['_search']) && isset($_SESSION['search'][$searc
     $_SESSION['search'][$search_request] = $search;
 
     // create resultset object
-    $count = count($records);
-    $first = ($page - 1) * $CONFIG['pagesize'];
+    $count  = count($records);
+    $first  = ($page-1) * $PAGE_SIZE;
     $result = new rcube_result_set($count, $first);
 
     // get records from the next page to add to the list
-    $pages = ceil((count($records) + $delcnt) / $CONFIG['pagesize']);
+    $pages = ceil((count($records) + $delcnt) / $PAGE_SIZE);
     if ($_GET['_from'] != 'show' && $pages > 1 && $page < $pages) {
         // sort the records
         ksort($records, SORT_LOCALE_STRING);
 
-        $first += $CONFIG['pagesize'];
+        $first += $PAGE_SIZE;
         // create resultset object
         $res = new rcube_result_set($count, $first - $delcnt);
 
-        if ($CONFIG['pagesize'] < $count) {
+        if ($PAGE_SIZE < $count) {
             $records = array_slice($records, $first - $delcnt, $delcnt);
         }
 
         $res->records = array_values($records);
         $records = $res;
-    } else {
+    }
+    else {
         unset($records);
     }
-} else {
+}
+else {
     // count contacts for this user
     $result = $CONTACTS->count();
 
     // get records from the next page to add to the list
-    $pages = ceil(($result->count + $delcnt) / $CONFIG['pagesize']);
+    $pages = ceil(($result->count + $delcnt) / $PAGE_SIZE);
     if ($_GET['_from'] != 'show' && $pages > 1 && $page < $pages) {
         $CONTACTS->set_page($page);
         $records = $CONTACTS->list_records(null, -$delcnt);
@@ -137,16 +144,17 @@ if (($search_request = $_REQUEST['_search']) && isset($_SESSION['search'][$searc
 }
 
 // update message count display
-$OUTPUT->set_env('pagecount', ceil($result->count / $CONFIG['pagesize']));
+$OUTPUT->set_env('pagecount', ceil($result->count / $PAGE_SIZE));
 $OUTPUT->command('set_rowcount', rcmail_get_rowcount_text($result));
 
 if (!empty($_SESSION['contact_undo'])) {
     $_SESSION['contact_undo']['ts'] = time();
     $msg = html::span(null, rcube_label('contactdeleted'))
-            . ' ' . html::a(array('onclick' => JS_OBJECT_NAME . ".command('undo', '', this)"), rcube_label('undo'));
+        . ' ' . html::a(array('onclick' => JS_OBJECT_NAME.".command('undo', '', this)"), rcube_label('undo'));
 
     $OUTPUT->show_message($msg, 'confirmation', null, true, $undo_time);
-} else {
+}
+else {
     $OUTPUT->show_message('contactdeleted', 'confirmation');
 }
 

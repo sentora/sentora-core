@@ -1,27 +1,25 @@
 <?php
 
 /*
-
-  +-----------------------------------------------------------------------+
-  | language/id_ID/messages.inc                                           |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Putu Arya Sabda Wijaya <ptaryasw@isi-dps.ac.id>                    |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: messages.inc 5139 2011-08-28 09:47:15Z alec $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/id_ID/messages.inc                                       |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Putu Arya Sabda Wijaya <Unknown>                              |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $messages = array();
+$messages['errortitle'] = 'Terjadi galat!';
 $messages['loginfailed'] = 'Gagal masuk';
 $messages['cookiesdisabled'] = 'Browser Anda tidak menerima cookies';
 $messages['sessionerror'] = 'Session Anda invalid atau kadaluwarsa';
-$messages['imaperror'] = 'Koneksi ke IMAP server gagal';
+$messages['storageerror'] = 'Koneksi ke IMAP server gagal';
 $messages['servererror'] = 'Server Error!';
 $messages['servererrormsg'] = 'Server Error: $msg';
 $messages['dberror'] = 'Basis data Error!';
@@ -43,10 +41,12 @@ $messages['messagesaved'] = 'Menyimpan pesan ke daftar tunggu';
 $messages['successfullysaved'] = 'Berhasil disimpan';
 $messages['addedsuccessfully'] = 'Kontak berhasil ditambahkan ke buku alamat';
 $messages['contactexists'] = 'Kontak dengan alamat e-mail ini sudah ada';
+$messages['contactnameexists'] = 'Kontak dengan nama yang sama sudah ada';
 $messages['blockedimages'] = 'Untuk melindungi privasi Anda, gambar-gambar diluar server diblok pada pesan ini.';
 $messages['encryptedmessage'] = 'Pesan ini terenkripsi dan tidak bisa ditampilkan. Maaf!';
 $messages['nocontactsfound'] = 'Kontak tidak ditemukan';
 $messages['contactnotfound'] = 'Kontak yang diminta tidak ditemukan';
+$messages['contactsearchonly'] = 'Masukkan jenis pencarian untuk mencari kontak';
 $messages['sendingfailed'] = 'Pengiriman pesan gagal';
 $messages['senttooquickly'] = 'Mohon tunggu $sec detik sebelum mengirim pesan ini';
 $messages['errorsavingsent'] = 'Error ketika menyimpan pesan terkirim';
@@ -56,9 +56,12 @@ $messages['errorcopying'] = 'Pesan tidak dapat disalin';
 $messages['errordeleting'] = 'Pesan tidak bisa dihapus';
 $messages['errormarking'] = 'Tidak dapat menandai pesan';
 $messages['deletecontactconfirm'] = 'Apakah anda yakin untuk menghapus kontak terpilih?';
+$messages['deletegroupconfirm'] = 'Yakinkah Anda ingin menhapus grup terpilih?';
 $messages['deletemessagesconfirm'] = 'Yakin menghapus pesan terpilih?';
 $messages['deletefolderconfirm'] = 'Apakah anda benar-benar ingin menghapus map ini?';
 $messages['purgefolderconfirm'] = 'Yakin menghapus semua pesan pada map ini?';
+$messages['contactdeleting'] = 'Menghapus kontak...';
+$messages['groupdeleting'] = 'Menghapus grup...';
 $messages['folderdeleting'] = 'Menghapus map...';
 $messages['foldermoving'] = 'Memindahkan map...';
 $messages['foldersubscribing'] = 'Melanggankan folder';
@@ -73,10 +76,10 @@ $messages['nosubjectwarning'] = '"Judul" kosong. Isi judul sekarang?';
 $messages['nobodywarning'] = 'Kirim pesan ini tanpa teks?';
 $messages['notsentwarning'] = 'Pesan belum terkirim. Buang pesan Anda?';
 $messages['noldapserver'] = 'Tolong pilih server LDAP untuk pencarian';
-$messages['nocontactsreturned'] = 'Kontak kosong';
 $messages['nosearchname'] = 'Tolong masukkan nama kontak atau alamat email';
 $messages['notuploadedwarning'] = 'Proses upload belum selesai. Silahkan tunggu atau batalkan proses upload';
 $messages['searchsuccessful'] = '$nr pesan ditemukan';
+$messages['contactsearchsuccessful'] = 'Ditemukan $nr  kontak';
 $messages['searchnomatch'] = 'Pencarian hasilnya nihil';
 $messages['searching'] = 'Mencari...';
 $messages['checking'] = 'Memeriksa...';
@@ -97,10 +100,14 @@ $messages['sourceisreadonly'] = 'Sumber dari alamat ini hanya dapat dibaca';
 $messages['errorsavingcontact'] = 'Tidak bisa menyimpan alamat kontak';
 $messages['movingmessage'] = 'Memindahkan pesan...';
 $messages['copyingmessage'] = 'Menyalin pesan...';
+$messages['copyingcontact'] = 'Menyalin kontak...';
 $messages['deletingmessage'] = 'Menghapus pesan...';
 $messages['markingmessage'] = 'Menandai Pesan...';
+$messages['addingmember'] = 'Menambahkan kontak ke grup...';
+$messages['removingmember'] = 'Menyingkirkan kontak dari grup...';
 $messages['receiptsent'] = 'Berhasil mengirim pemberitahuan tanda terima telah terbaca';
 $messages['errorsendingreceipt'] = 'Tidak dapat mengirim tanda terima';
+$messages['deleteidentityconfirm'] = 'Yakin untuk menghapus identitas ini?';
 $messages['nodeletelastidentity'] = 'Anda tidak bida mengapus identitas ini, ini identitas yang terakhir';
 $messages['forbiddencharacter'] = 'Nama folder mengandung karakter terlarang';
 $messages['selectimportfile'] = 'Mohon pilih sebuah berkas untuk diunggah';
@@ -120,7 +127,6 @@ $messages['smtpautherror'] = 'SMTP Error ($code): Otentifikasi gagal';
 $messages['smtpfromerror'] = 'SMTP Error ($code): Gagal mengatur pengirim "$from" ($msg)';
 $messages['smtptoerror'] = 'SMTP Error ($code): Gagal menambah penerima "$to" ($msg)';
 $messages['smtprecipientserror'] = 'SMTP Error ($code): Tidak dapat menguraikan daftar penerima';
-$messages['smtpdsnerror'] = 'SMTP Error: Tidak ada dukungan untuk pemberitahuan status terkirim';
 $messages['smtperror'] = 'SMTP Error : $msg';
 $messages['emailformaterror'] = 'Alamat e-mail salah: $email';
 $messages['toomanyrecipients'] = 'Terlalu banyak penerima. Batas maksimal penerima adalah $max';
@@ -128,17 +134,27 @@ $messages['maxgroupmembersreached'] = 'Jumlah grup melebihi jumlah maksimum $max
 $messages['internalerror'] = 'Terjadi kesalahan internal. Silahkan diulang kembali';
 $messages['contactdelerror'] = 'Kontak tidak bisa dihapus';
 $messages['contactdeleted'] = 'Kontak berhasil dihapus';
+$messages['contactrestoreerror'] = 'Tidak bisa mengembalikan kontak yang terhapus.';
+$messages['contactrestored'] = 'Kontak berhasil dikembalikan.';
 $messages['groupdeleted'] = 'Grup berhasil dihapus';
 $messages['grouprenamed'] = 'Grup berhasil dinamai kembali';
 $messages['groupcreated'] = 'Grub berhasil dibuat';
+$messages['savedsearchdeleted'] = 'Pencarian tersimpan berhasil dihapus.';
+$messages['savedsearchdeleteerror'] = 'Tidak bisa menghapus pencarian tersimpan.';
+$messages['savedsearchcreated'] = 'Pencarian tersimpan berhasil dibuat.';
+$messages['savedsearchcreateerror'] = 'Tidak bisa membuat pencarian tersimpan.';
 $messages['messagedeleted'] = 'Pesan berhasil dihapus';
 $messages['messagemoved'] = 'Pesan berhasil dipindahkan';
 $messages['messagecopied'] = 'Pesan berhasil disalin';
 $messages['messagemarked'] = 'Pesan berhasil ditandai';
 $messages['autocompletechars'] = 'Masukkan setidaknya $min karakter untuk swaparipurna';
+$messages['autocompletemore'] = 'Ada banyak entri yang ditemukan. Tolong ketikkan lebih banyak karakter.';
 $messages['namecannotbeempty'] = 'Nama tidak boleh kosong';
 $messages['nametoolong'] = 'Nama terlalu panjang';
 $messages['folderupdated'] = 'Folder berhasil diperbarui';
 $messages['foldercreated'] = 'Folder berhasil dibuat';
 $messages['invalidimageformat'] = 'Bukan format gambar yang valid';
-?>
+$messages['mispellingsfound'] = 'Terdapat kesalahan ejaan pada pesan.';
+$messages['parentnotwritable'] = 'Tidak bisa membuat/memindahkan map ke map induk. Tidak memiliki hak akses.';
+$messages['messagetoobig'] = 'Pesan terlalu besar untuk diproses.';
+

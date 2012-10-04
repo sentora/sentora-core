@@ -8,4 +8,5 @@ $rcmail_config['newmail_notifier_sound'] = false;
 
 // Enables desktop notification
 $rcmail_config['newmail_notifier_desktop'] = false;
+
 ?>

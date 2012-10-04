@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -50,14 +49,16 @@
  * @package MDB2
  * @category Database
  */
+
 /**
  * These are constants for the tableInfo-function
  * they are bitwised or'ed. so if there are more constants to be defined
  * in the future, adjust MDB2_TABLEINFO_FULL accordingly
  */
-define('MDB2_TABLEINFO_ORDER', 1);
+
+define('MDB2_TABLEINFO_ORDER',      1);
 define('MDB2_TABLEINFO_ORDERTABLE', 2);
-define('MDB2_TABLEINFO_FULL', 3);
+define('MDB2_TABLEINFO_FULL',       3);
 
 /**
  * Base class for the schema reverse engineering module that is extended by each MDB2 driver
@@ -69,7 +70,8 @@ define('MDB2_TABLEINFO_FULL', 3);
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
+class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
+{
     // {{{ splitTableSchema()
 
     /**
@@ -80,7 +82,8 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
      * @return array array(schema, table)
      * @access private
      */
-    function splitTableSchema($table) {
+    function splitTableSchema($table)
+    {
         $ret = array();
         if (strpos($table, '.') !== false) {
             return explode('.', $table);
@@ -102,13 +105,15 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
      *          [notnull] [nativetype] [length] [fixed] [default] [type] [mdb2type]
      * @access public
      */
-    function getTableFieldDefinition($table, $field) {
-        $db = & $this->getDBInstance();
+    function getTableFieldDefinition($table, $field)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -134,13 +139,15 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
      *          </pre>
      * @access public
      */
-    function getTableIndexDefinition($table, $index) {
-        $db = & $this->getDBInstance();
+    function getTableIndexDefinition($table, $index)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -184,13 +191,15 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
      *          </pre>
      * @access public
      */
-    function getTableConstraintDefinition($table, $index) {
-        $db = & $this->getDBInstance();
+    function getTableConstraintDefinition($table, $index)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -209,8 +218,9 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
      *          </pre>
      * @access public
      */
-    function getSequenceDefinition($sequence) {
-        $db = & $this->getDBInstance();
+    function getSequenceDefinition($sequence)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
@@ -261,13 +271,15 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
      *          The oci8 driver also returns a [when_clause] index.
      * @access public
      */
-    function getTriggerDefinition($trigger) {
-        $db = & $this->getDBInstance();
+    function getTriggerDefinition($trigger)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+        return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+            'method not implemented', __FUNCTION__);
     }
 
     // }}}
@@ -393,14 +405,16 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
      *
      * @see MDB2_Driver_Common::setOption()
      */
-    function tableInfo($result, $mode = null) {
-        $db = & $this->getDBInstance();
+    function tableInfo($result, $mode = null)
+    {
+        $db =& $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
         if (!is_string($result)) {
-            return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null, 'method not implemented', __FUNCTION__);
+            return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
+                'method not implemented', __FUNCTION__);
         }
 
         $db->loadModule('Manager', null, true);
@@ -444,7 +458,9 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
                 $db->setOption('idxname_format', $idxname_format);
                 return $definition;
             }
-            $flag = !empty($definition['primary']) ? 'primary_key' : (!empty($definition['unique']) ? 'unique_key' : false);
+            $flag = !empty($definition['primary'])
+                ? 'primary_key' : (!empty($definition['unique'])
+                    ? 'unique_key' : false);
             if ($flag) {
                 foreach ($definition['fields'] as $field => $sort) {
                     if (empty($flags[$field]) || $flags[$field] != 'primary_key') {
@@ -483,7 +499,7 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
                 $res[$i]['flags'].= ' autoincrement';
             }
             if (!empty($res[$i]['default'])) {
-                $res[$i]['flags'].= ' default_' . rawurlencode($res[$i]['default']);
+                $res[$i]['flags'].= ' default_'.rawurlencode($res[$i]['default']);
             }
 
             if ($mode & MDB2_TABLEINFO_ORDER) {
@@ -497,7 +513,5 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common {
         $db->setOption('idxname_format', $idxname_format);
         return $res;
     }
-
 }
-
 ?>

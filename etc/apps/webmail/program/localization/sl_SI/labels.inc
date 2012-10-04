@@ -1,22 +1,17 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | language/sl_SI/labels.inc                                             |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
-  | Licensed under the GNU GPL                                            |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Andrej Sossi <asossi@dotcom.ts.it>                            |
-  |         Andrej Mocilnik <amocilnik@dotcom.ts.it>                      |
-  |         Barbara Krasovec <barbarak@arnes.si>                          |
-  +-----------------------------------------------------------------------+
-
-  @version $Id: labels.inc 5569 2011-12-07 14:47:32Z thomasb $
-
- */
+ +-----------------------------------------------------------------------+
+ | localization/sl_SI/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Teja Cetinski <teja.cetinski@gmail.com>                       |
+ +-----------------------------------------------------------------------+
+*/
 
 $labels = array();
 $labels['welcome'] = 'Dobrodošli v $product';
@@ -45,10 +40,13 @@ $labels['size'] = 'Velikost';
 $labels['priority'] = 'Prioriteta';
 $labels['organization'] = 'Organizacija';
 $labels['readstatus'] = 'Status';
+$labels['listoptions'] = 'Možnosti prikaza...';
 $labels['mailboxlist'] = 'Mape';
+$labels['folders'] = 'Mape';
 $labels['messagesfromto'] = 'Sporočila $from do $to od $count';
 $labels['threadsfromto'] = 'Nit $from do $to od $count';
 $labels['messagenrof'] = 'Sporočilo $nr od $count';
+$labels['fromtoshort'] = '$from – $to od $count';
 $labels['copy'] = 'Kopiraj';
 $labels['move'] = 'Premakni';
 $labels['moveto'] = 'Premakni v...';
@@ -75,6 +73,7 @@ $labels['feb'] = 'Feb';
 $labels['mar'] = 'Mar';
 $labels['apr'] = 'Apr';
 $labels['may'] = 'Maj';
+$labels['longmay'] = 'Maj';
 $labels['jun'] = 'Jun';
 $labels['jul'] = 'Jul';
 $labels['aug'] = 'Avg';
@@ -86,7 +85,6 @@ $labels['longjan'] = 'Januar';
 $labels['longfeb'] = 'Februar';
 $labels['longmar'] = 'Marec';
 $labels['longapr'] = 'April';
-$labels['longmay'] = 'Maj';
 $labels['longjun'] = 'Junij';
 $labels['longjul'] = 'Julij';
 $labels['longaug'] = 'Avgust';
@@ -95,12 +93,16 @@ $labels['longoct'] = 'Oktober';
 $labels['longnov'] = 'November';
 $labels['longdec'] = 'December';
 $labels['today'] = 'Danes';
+$labels['refresh'] = 'Osveži';
 $labels['checkmail'] = 'Preglej nova sporočila';
+$labels['compose'] = 'Sestavi sporočilo';
 $labels['writenewmessage'] = 'Novo sporočilo';
+$labels['reply'] = 'Odgovori';
 $labels['replytomessage'] = 'Odgovori';
 $labels['replytoallmessage'] = 'Odgovori listi ali vsem prejemnikom';
 $labels['replyall'] = 'Odgovori vsem';
 $labels['replylist'] = 'Odgovori listi';
+$labels['forward'] = 'Posreduj';
 $labels['forwardinline'] = 'Posreduj medvrstično';
 $labels['forwardattachment'] = 'Posreduj kot priponko';
 $labels['forwardmessage'] = 'Posreduj';
@@ -113,15 +115,20 @@ $labels['nextmessage'] = 'Prikaži naslednje sporočilo';
 $labels['lastmessage'] = 'Prikaži zadnje sporočilo';
 $labels['backtolist'] = 'Nazaj na seznam sporočil';
 $labels['viewsource'] = 'Prikaži izvirno kodo';
+$labels['mark'] = 'Označi';
 $labels['markmessages'] = 'Označi sporočilo';
 $labels['markread'] = 'Kot prebrano';
 $labels['markunread'] = 'Kot neprebrano';
 $labels['markflagged'] = 'Kot označeno';
 $labels['markunflagged'] = 'Kot neoznačeno';
 $labels['moreactions'] = 'Več možnosti...';
+$labels['more'] = 'Več';
+$labels['back'] = 'Nazaj';
+$labels['options'] = 'Možnosti';
 $labels['select'] = 'Izberi';
 $labels['all'] = 'Vse';
-$labels['none'] = 'Ničesar';
+$labels['none'] = 'Brez';
+$labels['nonesort'] = 'Brez';
 $labels['currpage'] = 'Trenutna stran';
 $labels['unread'] = 'Neprebrano';
 $labels['flagged'] = 'Označeno';
@@ -141,7 +148,6 @@ $labels['expand_only_unread'] = 'samo niti z neprebranimi sporočili';
 $labels['fromto'] = 'Pošiljatelj/Prejemnik';
 $labels['flag'] = 'Oznaka';
 $labels['attachment'] = 'Priponka';
-$labels['nonesort'] = 'Brez';
 $labels['sentdate'] = 'Datum pošiljanja';
 $labels['arrival'] = 'Datum prejema';
 $labels['asc'] = 'naraščajoče';
@@ -162,7 +168,6 @@ $labels['searchmod'] = 'Spremembe iskanja';
 $labels['msgtext'] = 'Celotno sporočilo';
 $labels['openinextwin'] = 'Odpri v novem oknu';
 $labels['emlsave'] = 'Prenos datoteke (.eml)';
-$labels['compose'] = 'Sestavi sporočilo';
 $labels['editasnew'] = 'Uredi kot novo';
 $labels['savemessage'] = 'Shrani kot osnutek';
 $labels['sendmessage'] = 'Pošlji sporočilo';
@@ -174,9 +179,11 @@ $labels['dsn'] = 'Status dostave sporočila';
 $labels['mailreplyintro'] = '$date, je $sender napisal';
 $labels['originalmessage'] = 'Izvorno sporočilo';
 $labels['editidents'] = 'Uredi identitete';
+$labels['spellcheck'] = 'Črkovanje';
 $labels['checkspelling'] = 'Preglej pravopis';
 $labels['resumeediting'] = 'Nadaljuj z urejanjem';
 $labels['revertto'] = 'Razveljavi';
+$labels['attach'] = 'Pripni';
 $labels['attachments'] = 'Priponke';
 $labels['upload'] = 'Naloži';
 $labels['uploadprogress'] = '$percent ($current od $total)';
@@ -231,15 +238,17 @@ $labels['notes'] = 'Opombe';
 $labels['male'] = 'moški';
 $labels['female'] = 'ženska';
 $labels['manager'] = 'Vodja';
-$labels['assistant'] = 'Asistent';
+$labels['assistant'] = 'Pomoč';
+$labels['typeassistant'] = 'Pomoč';
 $labels['spouse'] = 'Zakonec';
 $labels['allfields'] = 'Vsa polja';
 $labels['search'] = 'Iskanje';
 $labels['advsearch'] = 'Napredno iskanje';
+$labels['advanced'] = 'Napredno';
 $labels['other'] = 'Ostalo';
+$labels['typeother'] = 'Ostalo';
 $labels['typehome'] = 'Doma';
 $labels['typework'] = 'Služba';
-$labels['typeother'] = 'Ostalo';
 $labels['typemobile'] = 'Mobilni telefon';
 $labels['typemain'] = 'Osnovno';
 $labels['typehomefax'] = 'Domači fax';
@@ -247,7 +256,6 @@ $labels['typeworkfax'] = 'Službeni fax';
 $labels['typecar'] = 'Avto';
 $labels['typepager'] = 'Pozivnik';
 $labels['typevideo'] = 'Video';
-$labels['typeassistant'] = 'Pomoč';
 $labels['typehomepage'] = 'Domača stran';
 $labels['typeblog'] = 'Blog';
 $labels['typeprofile'] = 'Profil';
@@ -264,6 +272,7 @@ $labels['delete'] = 'Izbriši';
 $labels['rename'] = 'Preimenuj';
 $labels['addphoto'] = 'Dodaj';
 $labels['replacephoto'] = 'Zamenjaj';
+$labels['uploadphoto'] = 'Naloži sliko';
 $labels['newcontact'] = 'Dodaj vizitko';
 $labels['deletecontact'] = 'Izbriši izbrane vizitke';
 $labels['composeto'] = 'Sestavi sporočilo za';
@@ -274,6 +283,7 @@ $labels['exportvcards'] = 'Izvozi stike v formatu vCard';
 $labels['newcontactgroup'] = 'Ustvari novo skupino stikov';
 $labels['grouprename'] = 'Preimenuj skupino';
 $labels['groupdelete'] = 'Izbriši skupino';
+$labels['groupremoveselected'] = 'Odstrani izbrane stike iz skupine';
 $labels['previouspage'] = 'Prejšnja stran';
 $labels['firstpage'] = 'Prva stran';
 $labels['nextpage'] = 'Naslednja stran';
@@ -333,6 +343,7 @@ $labels['readwhendeleted'] = 'Označi izbrisano sporočilo kot prebrano';
 $labels['flagfordeletion'] = 'Ne izbriši sporočila, le označi kot izbrisano';
 $labels['skipdeleted'] = 'Ne prikaži izbrisanih sporočil';
 $labels['deletealways'] = 'Če premikanje sporočil v Smeti spodleti, naj bodo izbrisana.';
+$labels['deletejunk'] = 'Neposredno izbriši sporočila v mapi Nezaželena sporočila';
 $labels['showremoteimages'] = 'Prikaži medvrstične slike';
 $labels['fromknownsenders'] = 'od znanih pošiljateljev';
 $labels['always'] = 'vedno';
@@ -353,11 +364,12 @@ $labels['advancedoptions'] = 'Dodatne možnosti';
 $labels['focusonnewmessage'] = 'Usmeri okno brskalnika na novo sporočilo';
 $labels['checkallfolders'] = 'Preglej nova sporočila za vse mape';
 $labels['displaynext'] = 'Po izbrisu/premikanju sporočila prikaži naslednje sporočilo';
+$labels['defaultfont'] = 'Privzeta pisava HTML sporočil';
 $labels['mainoptions'] = 'Osnovne nastavitve';
+$labels['browseroptions'] = 'Možnosti brskalnika';
 $labels['section'] = 'Nastavitve';
 $labels['maintenance'] = 'Vzdrževanje';
 $labels['newmessage'] = 'Novo sporočilo';
-$labels['listoptions'] = 'Prikaži seznam možnosti';
 $labels['signatureoptions'] = 'Nastavitve podpisa';
 $labels['whenreplying'] = 'Pri odgovoru';
 $labels['replytopposting'] = 'začni z novim sporočilom nad izvornim sporočilom';
@@ -377,14 +389,15 @@ $labels['reqdsn'] = 'Vedno zahtevaj obvestilo o statusu dostave';
 $labels['replysamefolder'] = 'Shrani odgovore na sporočilo v mapo izvornega sporočila';
 $labels['defaultaddressbook'] = 'Dodaj nove stike v izbran imenik';
 $labels['autocompletesingle'] = 'Preskoči nadomestni e-naslov pri samodejnem dokončanju';
+$labels['listnamedisplay'] = 'Prikaži seznam stikov kot';
 $labels['spellcheckbeforesend'] = 'Preveri črkovanje pred pošiljanjem sporočila';
 $labels['spellcheckoptions'] = 'Možnosti črkovanja';
 $labels['spellcheckignoresyms'] = 'Ne upoštevaj besed, ki vsebujejo simbole';
 $labels['spellcheckignorenums'] = 'Ne upoštevaj besed, ki vsebujejo številke';
 $labels['spellcheckignorecaps'] = 'Ne upoštevaj besed, ki vsebujejo samo velike črke';
 $labels['addtodict'] = 'Dodaj v slovar';
+$labels['mailtoprotohandler'] = 'Registriraj upravljavca protokola za e-naslov: povezave';
 $labels['folder'] = 'Mapa';
-$labels['folders'] = 'Mape';
 $labels['foldername'] = 'Ime mape';
 $labels['subscribed'] = 'Vpisan';
 $labels['messagecount'] = 'Sporočila';
@@ -434,4 +447,4 @@ $labels['vietnamese'] = 'Vietnamsko';
 $labels['japanese'] = 'Japonsko';
 $labels['korean'] = 'Korejsko';
 $labels['chinese'] = 'Kitajsko';
-?>
+

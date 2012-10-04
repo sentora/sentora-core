@@ -1,18 +1,18 @@
 <?php
 
 /*
-  +-----------------------------------------------------------------------+
-  | localization/hr_HR/labels.inc                                         |
-  |                                                                       |
-  | Language file of the Roundcube Webmail client                         |
-  | Copyright (C) 2012, The Roundcube Dev Team                            |
-  | Licensed under the GNU General Public License                         |
-  |                                                                       |
-  +-----------------------------------------------------------------------+
-  | Author: Thomas <Unknown>                                              |
-  +-----------------------------------------------------------------------+
-  @version $Id$
- */
+ +-----------------------------------------------------------------------+
+ | localization/hr_HR/labels.inc                                         |
+ |                                                                       |
+ | Language file of the Roundcube Webmail client                         |
+ | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Licensed under the GNU General Public License                         |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+ | Author: Svebor Prstačić <svebor.prstacic@gmail.com>                 |
+ +-----------------------------------------------------------------------+
+ @version $Id$
+*/
 
 $labels = array();
 $labels['filters'] = 'Filteri';
@@ -58,7 +58,9 @@ $labels['vacationdays'] = 'Koliko često slati poruku (u danima):';
 $labels['vacationreason'] = 'Tijelo poruke (razlog odmora):';
 $labels['vacationsubject'] = 'Naslov poruke:';
 $labels['rulestop'] = 'Prekini izvođenje filtera';
+$labels['enable'] = 'Omogući/Onemogući';
 $labels['filterset'] = 'Grupa filtera';
+$labels['filtersets'] = 'Filteri';
 $labels['filtersetadd'] = 'Dodaj grupu filtera';
 $labels['filtersetdel'] = 'Obriši odabranu grupu filtera';
 $labels['filtersetact'] = 'Aktiviraj odabranu grupu filtera';
@@ -91,6 +93,29 @@ $labels['flagdeleted'] = 'Obrisana';
 $labels['flaganswered'] = 'Odgovorena';
 $labels['flagflagged'] = 'Označena';
 $labels['flagdraft'] = 'Predložak';
+$labels['filtercreate'] = 'Stvori filter';
+$labels['usedata'] = 'Koristi podatke za filter:';
+$labels['nextstep'] = 'Idući korak';
+$labels['...'] = '…';
+$labels['advancedopts'] = 'Napredne postavke';
+$labels['body'] = 'Tijelo poruke';
+$labels['address'] = 'adresa';
+$labels['envelope'] = 'omotnica';
+$labels['modifier'] = 'modificirao:';
+$labels['text'] = 'tekst';
+$labels['undecoded'] = 'nedekodirano (raw)';
+$labels['contenttype'] = 'tip sadržaja';
+$labels['modtype'] = 'tip:';
+$labels['allparts'] = 'sve';
+$labels['domain'] = 'domena';
+$labels['localpart'] = 'lokalni dio';
+$labels['user'] = 'korisnik';
+$labels['detail'] = 'detalj';
+$labels['comparator'] = 'usporedio:';
+$labels['default'] = 'preddefinirano';
+$labels['octet'] = 'strogo (oktet)';
+$labels['asciicasemap'] = 'neosjetljivo na veličinu slova (ascii-casemap)';
+$labels['asciinumeric'] = 'numerički (ascii-numeric)';
 $labels['filterunknownerror'] = 'Nepoznata greška na poslužitelju';
 $labels['filterconnerror'] = 'Nemoguće spajanje na poslužitelj (managesieve)';
 $labels['filterdeleteerror'] = 'Nemoguće brisanje filtera. Greška na poslužitelju';
@@ -102,6 +127,7 @@ $labels['ruledeleteconfirm'] = 'Jeste li sigurni da želite obrisati odabrana pr
 $labels['actiondeleteconfirm'] = 'Jeste li sigurni da želite obrisati odabrane akcije?';
 $labels['forbiddenchars'] = 'Nedozvoljeni znakovi u polju';
 $labels['cannotbeempty'] = 'Polje nesmije biti prazno';
+$labels['ruleexist'] = 'Filter sa zadanim imenom već postoji.';
 $labels['setactivateerror'] = 'Nemoguće aktivirati odabranu grupu filtera. Greška na poslužitelju';
 $labels['setdeactivateerror'] = 'Nemoguće deaktivirati odabranu grupu filtera. Greška na poslužitelju';
 $labels['setdeleteerror'] = 'Nemoguće obrisati odabranu grupu filtera. Greška na poslužitelju';
@@ -111,5 +137,14 @@ $labels['setdeleted'] = 'Grupa filtera je uspješno obrisana';
 $labels['setdeleteconfirm'] = 'Jeste li sigurni da želite obrisati odabranu grupu filtera?';
 $labels['setcreateerror'] = 'Nemoguće stvoriti grupu filtera. Greška na poslužitelju';
 $labels['setcreated'] = 'Grupa filtera je uspješno stvorena';
+$labels['activateerror'] = 'Nije moguće omogućiti odabrani filter(e). Greška poslužitelja.';
+$labels['deactivateerror'] = 'Nije moguće onemogučiti odabrane filter(e). Greška poslužitelja.';
+$labels['activated'] = 'Filter(i) onemogućen(i) uspješno.';
+$labels['deactivated'] = 'Filter(i) omogućen(i) uspješno.';
+$labels['moved'] = 'Filter uspješno premješten.';
+$labels['moveerror'] = 'Nije moguće premjestiti odabrani filter. Greška poslužitelja.';
 $labels['nametoolong'] = 'Nemoguće napraviti grupu filtera. Naziv je predugačak';
+$labels['namereserved'] = 'Rezervirano ime.';
+$labels['setexist'] = 'Skup već postoji.';
+$labels['nodata'] = 'Barem jedan pozicija mora biti odabrana!';
 

@@ -33,6 +33,7 @@
  * @version   CVS: $Id: Signature.php 302773 2010-08-25 14:16:28Z gauthierm $
  * @link      http://pear.php.net/package/Crypt_GPG
  */
+
 /**
  * User id class definition
  */
@@ -54,7 +55,8 @@ require_once 'Crypt/GPG/UserId.php';
  * @link      http://pear.php.net/package/Crypt_GPG
  * @see       Crypt_GPG::verify()
  */
-class Crypt_GPG_Signature {
+class Crypt_GPG_Signature
+{
     // {{{ class properties
 
     /**
@@ -144,15 +146,16 @@ class Crypt_GPG_Signature {
      * @param Crypt_GPG_Signature|array $signature optional. Either an existing
      *        signature object, which is copied; or an array of initial values.
      */
-    public function __construct($signature = null) {
+    public function __construct($signature = null)
+    {
         // copy from object
         if ($signature instanceof Crypt_GPG_Signature) {
-            $this->_id = $signature->_id;
+            $this->_id             = $signature->_id;
             $this->_keyFingerprint = $signature->_keyFingerprint;
-            $this->_keyId = $signature->_keyId;
-            $this->_creationDate = $signature->_creationDate;
+            $this->_keyId          = $signature->_keyId;
+            $this->_creationDate   = $signature->_creationDate;
             $this->_expirationDate = $signature->_expirationDate;
-            $this->_isValid = $signature->_isValid;
+            $this->_isValid        = $signature->_isValid;
 
             if ($signature->_userId instanceof Crypt_GPG_UserId) {
                 $this->_userId = clone $signature->_userId;
@@ -204,7 +207,8 @@ class Crypt_GPG_Signature {
      *                signature. This id is used to prevent replay attacks and
      *                is not present for all types of signatures.
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->_id;
     }
 
@@ -216,7 +220,8 @@ class Crypt_GPG_Signature {
      *
      * @return string the fingerprint of the key used to create this signature.
      */
-    public function getKeyFingerprint() {
+    public function getKeyFingerprint()
+    {
         return $this->_keyFingerprint;
     }
 
@@ -232,7 +237,8 @@ class Crypt_GPG_Signature {
      *
      * @return string the id of the key used to create this signature.
      */
-    public function getKeyId() {
+    public function getKeyId()
+    {
         return $this->_keyId;
     }
 
@@ -245,7 +251,8 @@ class Crypt_GPG_Signature {
      * @return integer the creation date of this signature. This is a Unix
      *                 timestamp.
      */
-    public function getCreationDate() {
+    public function getCreationDate()
+    {
         return $this->_creationDate;
     }
 
@@ -259,7 +266,8 @@ class Crypt_GPG_Signature {
      *                 timestamp. If this signature does not expire, this will
      *                 be zero.
      */
-    public function getExpirationDate() {
+    public function getExpirationDate()
+    {
         return $this->_expirationDate;
     }
 
@@ -271,7 +279,8 @@ class Crypt_GPG_Signature {
      *
      * @return Crypt_GPG_UserId the user id associated with this signature.
      */
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->_userId;
     }
 
@@ -283,7 +292,8 @@ class Crypt_GPG_Signature {
      *
      * @return boolean true if this signature is valid and false if it is not.
      */
-    public function isValid() {
+    public function isValid()
+    {
         return $this->_isValid;
     }
 
@@ -300,7 +310,8 @@ class Crypt_GPG_Signature {
      *
      * @see Crypt_GPG_Signature::getId()
      */
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->_id = strval($id);
         return $this;
     }
@@ -317,7 +328,8 @@ class Crypt_GPG_Signature {
      *
      * @return Crypt_GPG_Signature the current object, for fluent interface.
      */
-    public function setKeyFingerprint($fingerprint) {
+    public function setKeyFingerprint($fingerprint)
+    {
         $this->_keyFingerprint = strval($fingerprint);
         return $this;
     }
@@ -333,7 +345,8 @@ class Crypt_GPG_Signature {
      *
      * @return Crypt_GPG_Signature the current object, for fluent interface.
      */
-    public function setKeyId($id) {
+    public function setKeyId($id)
+    {
         $this->_keyId = strval($id);
         return $this;
     }
@@ -349,7 +362,8 @@ class Crypt_GPG_Signature {
      *
      * @return Crypt_GPG_Signature the current object, for fluent interface.
      */
-    public function setCreationDate($creationDate) {
+    public function setCreationDate($creationDate)
+    {
         $this->_creationDate = intval($creationDate);
         return $this;
     }
@@ -366,7 +380,8 @@ class Crypt_GPG_Signature {
      *
      * @return Crypt_GPG_Signature the current object, for fluent interface.
      */
-    public function setExpirationDate($expirationDate) {
+    public function setExpirationDate($expirationDate)
+    {
         $this->_expirationDate = intval($expirationDate);
         return $this;
     }
@@ -382,7 +397,8 @@ class Crypt_GPG_Signature {
      *
      * @return Crypt_GPG_Signature the current object, for fluent interface.
      */
-    public function setUserId(Crypt_GPG_UserId $userId) {
+    public function setUserId(Crypt_GPG_UserId $userId)
+    {
         $this->_userId = $userId;
         return $this;
     }
@@ -398,7 +414,8 @@ class Crypt_GPG_Signature {
      *
      * @return Crypt_GPG_Signature the current object, for fluent interface.
      */
-    public function setValid($isValid) {
+    public function setValid($isValid)
+    {
         $this->_isValid = ($isValid) ? true : false;
         return $this;
     }
@@ -407,4 +424,5 @@ class Crypt_GPG_Signature {
 }
 
 // }}}
+
 ?>

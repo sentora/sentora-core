@@ -1,5 +1,4 @@
 <?php
-
 // +----------------------------------------------------------------------+
 // | PHP versions 4 and 5                                                 |
 // +----------------------------------------------------------------------+
@@ -55,8 +54,9 @@ require_once 'MDB2/Driver/Function/Common.php';
  * @category Database
  * @author  Lukas Smith <smith@pooteeweet.org>
  */
-class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common {
-    // }}}
+class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common
+{
+     // }}}
     // {{{ executeStoredProc()
 
     /**
@@ -71,14 +71,15 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common {
      * @return mixed a result handle or MDB2_OK on success, a MDB2 error on failure
      * @access public
      */
-    function executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false) {
+    function executeStoredProc($name, $params = null, $types = null, $result_class = true, $result_wrap_class = false)
+    {
         $db = $this->getDBInstance();
         if (PEAR::isError($db)) {
             return $db;
         }
 
-        $query = 'CALL ' . $name;
-        $query .= $params ? '(' . implode(', ', $params) . ')' : '()';
+        $query = 'CALL '.$name;
+        $query .= $params ? '('.implode(', ', $params).')' : '()';
         return $db->query($query, $types, $result_class, $result_wrap_class);
     }
 
@@ -93,8 +94,9 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common {
      * @return string to call a variable with the timestamp
      * @access public
      */
-    function unixtimestamp($expression) {
-        return 'UNIX_TIMESTAMP(' . $expression . ')';
+    function unixtimestamp($expression)
+    {
+        return 'UNIX_TIMESTAMP('. $expression.')';
     }
 
     // }}}
@@ -108,10 +110,11 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common {
      * @param string $values...
      * @return string to concatenate two strings
      * @access public
-     * */
-    function concat($value1, $value2) {
+     **/
+    function concat($value1, $value2)
+    {
         $args = func_get_args();
-        return "CONCAT(" . implode(', ', $args) . ")";
+        return "CONCAT(".implode(', ', $args).")";
     }
 
     // }}}
@@ -123,11 +126,11 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common {
      * @return string to get global unique identifier
      * @access public
      */
-    function guid() {
+    function guid()
+    {
         return 'UUID()';
     }
 
     // }}}
 }
-
 ?>
