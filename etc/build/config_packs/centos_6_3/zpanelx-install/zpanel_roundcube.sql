@@ -3,6 +3,9 @@
 
 /*!40014  SET FOREIGN_KEY_CHECKS=0 */;
 
+CREATE SCHEMA IF NOT EXISTS `zpanel_roundcube`;
+USE zpanel_roundcube;
+
 -- Table structure for table `session`
 
 CREATE TABLE `session` (
