@@ -11,7 +11,7 @@ delay_warning_time = 4
 # postfix paths
 html_directory = no
 command_directory = /usr/sbin
-daemon_directory = /usr/libexec/postfix
+daemon_directory = /usr/lib/postfix
 queue_directory = /var/spool/postfix
 sendmail_path = /usr/sbin/sendmail.postfix
 newaliases_path = /usr/bin/newaliases.postfix
@@ -34,7 +34,7 @@ recipient_delimiter = +
 # mappings
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
-transport_maps = hash:/etc/postfix/transport
+#transport_maps = hash:/etc/postfix/transport
 #local_recipient_maps =
 
 # virtual setup
