@@ -1,0 +1,10 @@
+# This specifies the list of subnets that Postfix considers as
+# "trusted" SMTP clients that have more privileges than "strangers".
+#
+# In particular, "trusted" SMTP clients are allowed to relay mail
+# through Postfix.
+#
+# Be sure to add your public ip address block if needed.
+#
+176.31.61.0/28
+127.0.0.0/8
