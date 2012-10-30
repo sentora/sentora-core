@@ -137,8 +137,14 @@ class ui_module {
      */
     static function CheckModuleEnabled($modulename) {
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_name_vc = '" . $modulename . "'")->Fetch();
-        if ($retval['mo_enabled_en'] == "true") {
+        
+		$bindArray = array(
+		    ':module' => $modulename,
+        );
+		$retvalSQL = $zdbh->bindQuery("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+		$retval = $zdbh->returnRow();
+		
+		if ($retval['mo_enabled_en'] == "true") {
             $retval = true;
         } else {
             $retval = false;
