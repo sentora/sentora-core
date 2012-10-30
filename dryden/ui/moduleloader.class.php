@@ -24,17 +24,22 @@ class ui_moduleloader {
         if ($catname == "") {
             $sql = "SELECT * FROM x_modcats";
         } else {
-            $sql = "SELECT * FROM x_modcats WHERE mc_name_vc = '" . $catname . "'";
+            $sql = "SELECT * FROM x_modcats WHERE mc_name_vc = :catname";
         }
-        $numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+		$numrows->bindParam(':catname', $catname);
+		$numrows->execute();
+		
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+			$sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             $has_icons = false;
             while ($row = $sql->fetch()) {
-                $checksql = "SELECT * FROM x_modules WHERE mo_category_fk = '" . $row['mc_id_pk'] . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
+                $checksql = "SELECT * FROM x_modules WHERE mo_category_fk = :cid AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
                 $checksql = $zdbh->prepare($checksql);
+				$checksql->bindParam(':cid', $row['mc_id_pk'] );
                 $checksql->execute();
                 while ($rowcheck = $checksql->fetch()) {
                     if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $rowcheck['mo_id_pk'])) {
@@ -65,11 +70,16 @@ class ui_moduleloader {
         if ($catid == "") {
             $sql = "SELECT * FROM x_modules";
         } else {
-            $sql = "SELECT * FROM x_modules WHERE mo_category_fk = '" . $catid . "' AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc";
+            $sql = "SELECT * FROM x_modules WHERE mo_category_fk = :catid AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc";
         }
-        $numrows = $zdbh->query($sql);
+		
+		$numrows = $zdbh->prepare($sql);
+		$numrows->bindParam(':catid', $catid);
+		$numrows->execute();
+		
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+			$sql->bindParam(':catid', $catid);
             $res = array();
             $sql->execute();
             while ($row = $sql->fetch()) {
