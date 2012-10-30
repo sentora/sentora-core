@@ -80,14 +80,25 @@ class ui_module {
             if ($module_type != ("user" || "system" || "modadmin")) {
                 $module_type = "user";
             }
-            $result = $zdbh->query("SELECT mc_id_pk FROM x_modcats WHERE mc_name_vc = '$module_defaultcat'")->Fetch();
+			$sql = $zdbh->prepare("SELECT mc_id_pk FROM x_modcats WHERE mc_name_vc = :module_defaultcat");
+		    $sql->bindParam(':module_defaultcat', $module_defaultcat);
+		    $status = $sql->execute();
+			$result = $sql->fetch();
+			
             if ($result) {
                 $cat_fk = $result['mc_id_pk'];
             } else {
                 $cat_fk = 2;
             }
-            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_category_fk, mo_version_in, mo_folder_vc, mo_installed_ts, mo_type_en, mo_desc_tx) VALUES ('$module_name', $cat_fk, $module_version, '$module', " . time() . ", '$module_type',  '$module_description')");
-            $sql->execute();
+            $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_category_fk, mo_version_in, mo_folder_vc, mo_installed_ts, mo_type_en, mo_desc_tx) VALUES (:module_name, :cat_fk, :module_version, :module, " . time() . ", :module_type,  :module_description)");
+            $sql->bindParam(':module_name', $module_name);
+			$sql->bindParam(':cat_fk', $cat_fk);
+			$sql->bindParam(':module_version', $module_version);
+			$sql->bindParam(':module', $module);
+			$sql->bindParam(':module_type', $module_type);
+			$sql->bindParam(':module_description', $module_description);
+			
+			$sql->execute();
             return true;
         } catch (Exception $e) {
             return false;
@@ -111,7 +122,12 @@ class ui_module {
             while ($file = readdir($handle)) {
                 if ($file != "." && $file != "..") {
                     if (is_dir($chkdir . $file)) {
-                        $match_module = $zdbh->query("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '$file'")->Fetch();
+
+						$sql = $zdbh->prepare("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = :file");
+		   				$sql->bindParam(':file', $file);
+		    			$status = $sql->execute();
+						$match_module = $sql->fetch();
+						
                         if (!$match_module) {
                             array_push($new_module_list, $file);
                         }
