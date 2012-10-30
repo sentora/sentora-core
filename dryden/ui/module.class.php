@@ -156,9 +156,12 @@ class ui_module {
     static function GetModuleName() {
         global $controller;
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
-        $retval = $retval['mo_name_vc'];
-        return $retval;
+        $bindArray = array(
+		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+        );
+		$retval = $zdbh->bindQuery("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+		$moduleInfo = $zdbh->returnRow();
+        return $moduleInfo['mo_name_vc'];
     }
 
     /**
@@ -171,9 +174,13 @@ class ui_module {
     static function GetModuleID() {
         global $controller;
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
-        $retval = $retval['mo_id_pk'];
-        return $retval;
+        $bindArray = array(
+		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+        );
+		$retval = $zdbh->bindQuery("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+		$moduleInfo = $zdbh->returnRow();
+        return $moduleInfo['mo_id_pk'];
+		
     }
 
     /**
@@ -186,9 +193,12 @@ class ui_module {
     static function GetModuleFolderName() {
         global $controller;
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_folder_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
-        $retval = $retval['mo_folder_vc'];
-        return $retval;
+        $bindArray = array(
+		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+        );
+		$retval = $zdbh->bindQuery("SELECT mo_folder_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+		$moduleInfo = $zdbh->returnRow();
+        return $moduleInfo['mo_folder_vc'];
     }
 
     /**
@@ -201,9 +211,12 @@ class ui_module {
     static function GetModuleDescription() {
         global $controller;
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'module') . "'")->Fetch();
-        $retval = $retval['mo_desc_tx'];
-        return $retval;
+        $bindArray = array(
+		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+        );
+		$retval = $zdbh->bindQuery("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+		$moduleInfo = $zdbh->returnRow();
+        return $moduleInfo['mo_desc_tx'];
     }
 
     /**
@@ -215,8 +228,14 @@ class ui_module {
      */
     static function GetModuleHasUpdates($modulefolder) {
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_updateurl_tx, mo_updatever_vc FROM x_modules WHERE mo_folder_vc = '" . $modulefolder . "'")->Fetch();
-        if ($retval['mo_updatever_vc'] <> "") {
+        
+		$bindArray = array(
+		    ':module' => $modulefolder,
+        );
+		$retvalQuery = $zdbh->bindQuery("SELECT mo_updateurl_tx, mo_updatever_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+		$retval = $zdbh->returnRow();
+		
+		if ($retval['mo_updatever_vc'] <> "") {
             $retval = array($retval['mo_updatever_vc'], $retval['mo_updateurl_tx']);
         } else {
             $retval = false;
