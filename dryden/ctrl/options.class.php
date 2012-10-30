@@ -55,13 +55,21 @@ class ctrl_options {
     static function SetSystemOption($name, $value, $create = false) {
         global $zdbh;
         if ($create == false) {
-            if ($zdbh->exec("UPDATE x_settings SET so_value_tx = '$value' WHERE so_name_vc = '$name'")) {
+			$bindArray = array(
+		    	':name' => $name,
+				':value' => $value
+			);
+            if ($zdbh->bindQuery("UPDATE x_settings SET so_value_tx = :value WHERE so_name_vc = :name", $bindArray)) {
                 return true;
             } else {
                 return false;
             }
         } else {
-            if ($zdbh->exec("INSERT INTO x_settings (so_name_vc, so_value_tx) VALUES ('$name', '$value')")) {
+			$bindArray = array(
+		    	':name' => $name,
+				':value' => $value
+			);
+            if ($zdbh->bindQuery("INSERT INTO x_settings (so_name_vc, so_value_tx) VALUES (:name, :value)", $bindArray)) {
                 return true;
             } else {
                 return false;
@@ -79,7 +87,11 @@ class ctrl_options {
      */
     static function GetUserInfo($id) {
         global $zdbh;
-        $result = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk = '$id'")->Fetch();
+		$bindArray = array(
+		    ':id' => $id,
+        );
+		$sqlStatment = $zdbh->bindQuery("SELECT * FROM x_accounts WHERE ac_id_pk = :id", $bindArray);
+		$results = $zdbh->returnRow();
         if ($result) {
             return $result;
         } else {
@@ -96,7 +108,13 @@ class ctrl_options {
      */
     static function GetPackageInfo($id) {
         global $zdbh;
-        $result = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk = '$id'")->Fetch();
+		
+		$bindArray = array(
+		    ':id' => $id,
+        );
+		$sqlStatment = $zdbh->bindQuery("SELECT * FROM x_accounts WHERE ac_id_pk = :id", $bindArray);
+		$results = $zdbh->returnRow();
+		
         if ($result) {
             $packageid = $result['ac_id_pk'];
             $result = $zdbh->query("SELECT * FROM x_packages WHERE pk_id_pk = '$packageid'")->Fetch();
