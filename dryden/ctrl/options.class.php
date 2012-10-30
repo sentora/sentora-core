@@ -22,7 +22,7 @@ class ctrl_options {
     static function GetSystemOption($name) {
         global $zdbh;
         $sqlString = "SELECT so_value_tx FROM x_settings WHERE so_name_vc = :name";
-        $bindArray = array(':name' => $name,);
+        $bindArray = array(':name' => $name);
         $zdbh->bindQuery($sqlString, $bindArray);
         $result = $zdbh->returnRow();
         if ($result) {

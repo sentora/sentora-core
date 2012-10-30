@@ -31,38 +31,39 @@ class ctrl_users {
             LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk) 
             LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk) 
             LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk) 
-            WHERE x_accounts.ac_id_pk= " . $uid . "
+            WHERE x_accounts.ac_id_pk= :uid
           ");
+		$rows->bindParam(':uid', $uid);
         $rows->execute();
         $dbvals = $rows->fetch();
-        $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
-        $userdetail->addItemValue('userid', $dbvals['ac_id_pk']);
+        $userdetail->addItemValue('username', htmlspecialchars(strip_tags($dbvals['ac_user_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('userid', htmlspecialchars(strip_tags($dbvals['ac_id_pk']), ENT_QUOTES, 'UTF-8'));
         $userdetail->addItemValue('password', $dbvals['ac_pass_vc']);
-        $userdetail->addItemValue('email', $dbvals['ac_email_vc']);
-        $userdetail->addItemValue('resellerid', $dbvals['ac_reseller_fk']);
-        $userdetail->addItemValue('packageid', $dbvals['ac_package_fk']);
-        $userdetail->addItemValue('enabled', $dbvals['ac_enabled_in']);
-        $userdetail->addItemValue('usertheme', $dbvals['ac_usertheme_vc']);
-        $userdetail->addItemValue('usercss', $dbvals['ac_usercss_vc']);
-        $userdetail->addItemValue('lastlogon', $dbvals['ac_lastlogon_ts']);
-        $userdetail->addItemValue('fullname', $dbvals['ud_fullname_vc']);
-        $userdetail->addItemValue('packagename', $dbvals['pk_name_vc']);
-        $userdetail->addItemValue('usergroup', $dbvals['ug_name_vc']);
-        $userdetail->addItemValue('usergroupid', $dbvals['ac_group_fk']);
-        $userdetail->addItemValue('address', $dbvals['ud_address_tx']);
-        $userdetail->addItemValue('postcode', $dbvals['ud_postcode_vc']);
-        $userdetail->addItemValue('phone', $dbvals['ud_phone_vc']);
-        $userdetail->addItemValue('language', $dbvals['ud_language_vc']);
-        $userdetail->addItemValue('diskquota', $dbvals['qt_diskspace_bi']);
-        $userdetail->addItemValue('bandwidthquota', $dbvals['qt_bandwidth_bi']);
-        $userdetail->addItemValue('domainquota', $dbvals['qt_domains_in']);
-        $userdetail->addItemValue('subdomainquota', $dbvals['qt_subdomains_in']);
-        $userdetail->addItemValue('parkeddomainquota', $dbvals['qt_parkeddomains_in']);
-        $userdetail->addItemValue('ftpaccountsquota', $dbvals['qt_ftpaccounts_in']);
-        $userdetail->addItemValue('mysqlquota', $dbvals['qt_mysql_in']);
-        $userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
-        $userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
-        $userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
+        $userdetail->addItemValue('email', htmlspecialchars(strip_tags($dbvals['ac_email_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('resellerid', htmlspecialchars(strip_tags($dbvals['ac_reseller_fk']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('packageid', htmlspecialchars(strip_tags($dbvals['ac_package_fk']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('enabled', htmlspecialchars(strip_tags($dbvals['ac_enabled_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('usertheme', htmlspecialchars(strip_tags($dbvals['ac_usertheme_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('usercss', htmlspecialchars(strip_tags($dbvals['ac_usercss_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('lastlogon', htmlspecialchars(strip_tags($dbvals['ac_lastlogon_ts']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('fullname', htmlspecialchars(strip_tags($dbvals['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('packagename', htmlspecialchars(strip_tags($dbvals['pk_name_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('usergroup', htmlspecialchars(strip_tags($dbvals['ug_name_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('usergroupid', htmlspecialchars(strip_tags($dbvals['ac_group_fk']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('address', htmlspecialchars(strip_tags($dbvals['ud_address_tx']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('postcode', htmlspecialchars(strip_tags($dbvals['ud_postcode_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('phone', htmlspecialchars(strip_tags($dbvals['ud_phone_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('language', htmlspecialchars(strip_tags($dbvals['ud_language_vc']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('diskquota', htmlspecialchars(strip_tags($dbvals['qt_diskspace_bi']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('bandwidthquota', htmlspecialchars(strip_tags($dbvals['qt_bandwidth_bi']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('domainquota', htmlspecialchars(strip_tags($dbvals['qt_domains_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('subdomainquota', htmlspecialchars(strip_tags($dbvals['qt_subdomains_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('parkeddomainquota', htmlspecialchars(strip_tags($dbvals['qt_parkeddomains_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('ftpaccountsquota', htmlspecialchars(strip_tags($dbvals['qt_ftpaccounts_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('mysqlquota', htmlspecialchars(strip_tags($dbvals['qt_mysql_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('mailboxquota', htmlspecialchars(strip_tags($dbvals['qt_mailboxes_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('forwardersquota', htmlspecialchars(strip_tags($dbvals['qt_fowarders_in']), ENT_QUOTES, 'UTF-8'));
+        $userdetail->addItemValue('distrobutionlistsquota', htmlspecialchars(strip_tags($dbvals['qt_distlists_in']), ENT_QUOTES, 'UTF-8'));
         return $userdetail->getDataObject();
     }
 
@@ -76,62 +77,72 @@ class ctrl_users {
     static function GetQuotaUsages($resource, $acc_key = 0) {
         global $zdbh;
         if ($resource == 'domains') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=1 AND vh_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk= :acc_key AND vh_type_in=1 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'subdomains') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=2 AND vh_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk= :acc_key AND vh_type_in=2 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'parkeddomains') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=3 AND vh_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk= :acc_key AND vh_type_in=3 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'mailboxes') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mailboxes WHERE mb_acc_fk=" . $acc_key . " AND mb_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_mailboxes WHERE mb_acc_fk= :acc_key AND mb_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'forwarders') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_forwarders WHERE fw_acc_fk=" . $acc_key . " AND fw_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_forwarders WHERE fw_acc_fk= :acc_key AND fw_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'distlists') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_distlists WHERE dl_acc_fk=" . $acc_key . " AND dl_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_distlists WHERE dl_acc_fk= :acc_key AND dl_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'ftpaccounts') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_ftpaccounts WHERE ft_acc_fk=" . $acc_key . " AND ft_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_ftpaccounts WHERE ft_acc_fk= :acc_key AND ft_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'mysql') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mysql_databases WHERE my_acc_fk=" . $acc_key . " AND my_deleted_ts IS NULL");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_mysql_databases WHERE my_acc_fk= :acc_key AND my_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
+			$sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'diskspace') {
-            $sql = $zdbh->query("SELECT bd_diskamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT bd_diskamount_bi FROM x_bandwidth WHERE bd_acc_fk= :acc_key AND bd_month_in=" . date("Ym", time()) . "");
+            $sql->bindParam(':acc_key', $acc_key);
+		    $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['bd_diskamount_bi'];
         }
         if ($resource == 'bandwidth') {
-            $sql = $zdbh->query("SELECT bd_transamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
-            $sql->execute();
+            $sql = $zdbh->prepare("SELECT bd_transamount_bi FROM x_bandwidth WHERE bd_acc_fk= :acc_key AND bd_month_in=" . date("Ym", time()) . "");
+            $sql->bindParam(':acc_key', $acc_key);
+		    $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['bd_transamount_bi'];
         }
@@ -144,8 +155,11 @@ class ctrl_users {
     static function GetUserDomains($userid, $type = "1") {
         global $zdbh;
         $domains = 0;
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $userid . " AND vh_deleted_ts IS NULL AND vh_type_in=" . $type . "";
-        if ($numrows = $zdbh->query($sql)) {
+        $numrows = $zdbh->prepare("SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk= :userid AND vh_deleted_ts IS NULL AND vh_type_in= :type");
+		$numrows->bindParam(':userid', $userid);
+		$numrows->bindParam(':type', $type);
+		$status = $sql->execute();
+		if ($status) {
             if ($numrows->fetchColumn() <> 0) {
                 $domains = count($numrows->fetchColumn());
                 return $domains;
@@ -164,9 +178,12 @@ class ctrl_users {
     static function CheckUserEnabled($uid) {
         global $zdbh;
         $domains = 0;
-        $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_id_pk=" . $uid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
-            if ($numrows->fetchColumn() <> 0) {
+        $sql = $zdbh->prepare("SELECT COUNT(*) FROM x_accounts WHERE ac_id_pk= :uid AND ac_enabled_in=1 AND ac_deleted_ts IS NULL");
+		$sql->bindParam(':uid', $uid);
+		$status = $sql->execute();
+		
+		if ($status) {
+            if ($sql->fetchColumn() <> 0) {
                 return true;
             }
         }
