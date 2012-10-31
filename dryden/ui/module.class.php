@@ -80,11 +80,11 @@ class ui_module {
             if ($module_type != ("user" || "system" || "modadmin")) {
                 $module_type = "user";
             }
-			$sql = $zdbh->prepare("SELECT mc_id_pk FROM x_modcats WHERE mc_name_vc = :module_defaultcat");
-		    $sql->bindParam(':module_defaultcat', $module_defaultcat);
-		    $status = $sql->execute();
-			$result = $sql->fetch();
-			
+            $sql = $zdbh->prepare("SELECT mc_id_pk FROM x_modcats WHERE mc_name_vc = :module_defaultcat");
+            $sql->bindParam(':module_defaultcat', $module_defaultcat);
+            $status = $sql->execute();
+            $result = $sql->fetch();
+
             if ($result) {
                 $cat_fk = $result['mc_id_pk'];
             } else {
@@ -92,13 +92,13 @@ class ui_module {
             }
             $sql = $zdbh->prepare("INSERT INTO x_modules (mo_name_vc, mo_category_fk, mo_version_in, mo_folder_vc, mo_installed_ts, mo_type_en, mo_desc_tx) VALUES (:module_name, :cat_fk, :module_version, :module, " . time() . ", :module_type,  :module_description)");
             $sql->bindParam(':module_name', $module_name);
-			$sql->bindParam(':cat_fk', $cat_fk);
-			$sql->bindParam(':module_version', $module_version);
-			$sql->bindParam(':module', $module);
-			$sql->bindParam(':module_type', $module_type);
-			$sql->bindParam(':module_description', $module_description);
-			
-			$sql->execute();
+            $sql->bindParam(':cat_fk', $cat_fk);
+            $sql->bindParam(':module_version', $module_version);
+            $sql->bindParam(':module', $module);
+            $sql->bindParam(':module_type', $module_type);
+            $sql->bindParam(':module_description', $module_description);
+
+            $sql->execute();
             return true;
         } catch (Exception $e) {
             return false;
@@ -123,11 +123,11 @@ class ui_module {
                 if ($file != "." && $file != "..") {
                     if (is_dir($chkdir . $file)) {
 
-						$sql = $zdbh->prepare("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = :file");
-		   				$sql->bindParam(':file', $file);
-		    			$status = $sql->execute();
-						$match_module = $sql->fetch();
-						
+                        $sql = $zdbh->prepare("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = :file");
+                        $sql->bindParam(':file', $file);
+                        $status = $sql->execute();
+                        $match_module = $sql->fetch();
+
                         if (!$match_module) {
                             array_push($new_module_list, $file);
                         }
@@ -153,14 +153,14 @@ class ui_module {
      */
     static function CheckModuleEnabled($modulename) {
         global $zdbh;
-        
-		$bindArray = array(
-		    ':module' => $modulename,
+
+        $bindArray = array(
+            ':module' => $modulename,
         );
-		$retvalSQL = $zdbh->bindQuery("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
-		$retval = $zdbh->returnRow();
-		
-		if ($retval['mo_enabled_en'] == "true") {
+        $retvalSQL = $zdbh->bindQuery("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+        $retval = $zdbh->returnRow();
+
+        if ($retval['mo_enabled_en'] == "true") {
             $retval = true;
         } else {
             $retval = false;
@@ -179,10 +179,10 @@ class ui_module {
         global $controller;
         global $zdbh;
         $bindArray = array(
-		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+            ':module' => $controller->GetControllerRequest('URL', 'module'),
         );
-		$retval = $zdbh->bindQuery("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
-		$moduleInfo = $zdbh->returnRow();
+        $retval = $zdbh->bindQuery("SELECT mo_name_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+        $moduleInfo = $zdbh->returnRow();
         return $moduleInfo['mo_name_vc'];
     }
 
@@ -197,12 +197,11 @@ class ui_module {
         global $controller;
         global $zdbh;
         $bindArray = array(
-		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+            ':module' => $controller->GetControllerRequest('URL', 'module'),
         );
-		$retval = $zdbh->bindQuery("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
-		$moduleInfo = $zdbh->returnRow();
+        $retval = $zdbh->bindQuery("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+        $moduleInfo = $zdbh->returnRow();
         return $moduleInfo['mo_id_pk'];
-		
     }
 
     /**
@@ -216,10 +215,10 @@ class ui_module {
         global $controller;
         global $zdbh;
         $bindArray = array(
-		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+            ':module' => $controller->GetControllerRequest('URL', 'module'),
         );
-		$retval = $zdbh->bindQuery("SELECT mo_folder_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
-		$moduleInfo = $zdbh->returnRow();
+        $retval = $zdbh->bindQuery("SELECT mo_folder_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+        $moduleInfo = $zdbh->returnRow();
         return $moduleInfo['mo_folder_vc'];
     }
 
@@ -234,10 +233,10 @@ class ui_module {
         global $controller;
         global $zdbh;
         $bindArray = array(
-		    ':module' => $controller->GetControllerRequest('URL', 'module'),
+            ':module' => $controller->GetControllerRequest('URL', 'module'),
         );
-		$retval = $zdbh->bindQuery("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
-		$moduleInfo = $zdbh->returnRow();
+        $retval = $zdbh->bindQuery("SELECT mo_desc_tx FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+        $moduleInfo = $zdbh->returnRow();
         return $moduleInfo['mo_desc_tx'];
     }
 
@@ -250,14 +249,14 @@ class ui_module {
      */
     static function GetModuleHasUpdates($modulefolder) {
         global $zdbh;
-        
-		$bindArray = array(
-		    ':module' => $modulefolder,
+
+        $bindArray = array(
+            ':module' => $modulefolder,
         );
-		$retvalQuery = $zdbh->bindQuery("SELECT mo_updateurl_tx, mo_updatever_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
-		$retval = $zdbh->returnRow();
-		
-		if ($retval['mo_updatever_vc'] <> "") {
+        $retvalQuery = $zdbh->bindQuery("SELECT mo_updateurl_tx, mo_updatever_vc FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
+        $retval = $zdbh->returnRow();
+
+        if ($retval['mo_updatever_vc'] <> "") {
             $retval = array($retval['mo_updatever_vc'], $retval['mo_updateurl_tx']);
         } else {
             $retval = false;

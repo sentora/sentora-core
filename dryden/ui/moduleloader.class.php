@@ -27,19 +27,19 @@ class ui_moduleloader {
             $sql = "SELECT * FROM x_modcats WHERE mc_name_vc = :catname";
         }
         $numrows = $zdbh->prepare($sql);
-		$numrows->bindParam(':catname', $catname);
-		$numrows->execute();
-		
+        $numrows->bindParam(':catname', $catname);
+        $numrows->execute();
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
-			$sql->bindParam(':uid', $uid);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             $has_icons = false;
             while ($row = $sql->fetch()) {
                 $checksql = "SELECT * FROM x_modules WHERE mo_category_fk = :cid AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
                 $checksql = $zdbh->prepare($checksql);
-				$checksql->bindParam(':cid', $row['mc_id_pk'] );
+                $checksql->bindParam(':cid', $row['mc_id_pk']);
                 $checksql->execute();
                 while ($rowcheck = $checksql->fetch()) {
                     if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], $rowcheck['mo_id_pk'])) {
@@ -72,14 +72,14 @@ class ui_moduleloader {
         } else {
             $sql = "SELECT * FROM x_modules WHERE mo_category_fk = :catid AND mo_type_en = 'user' AND mo_enabled_en = 'true' ORDER BY mo_name_vc";
         }
-		
-		$numrows = $zdbh->prepare($sql);
-		$numrows->bindParam(':catid', $catid);
-		$numrows->execute();
-		
+
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':catid', $catid);
+        $numrows->execute();
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
-			$sql->bindParam(':catid', $catid);
+            $sql->bindParam(':catid', $catid);
             $res = array();
             $sql->execute();
             while ($row = $sql->fetch()) {
