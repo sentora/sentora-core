@@ -18,7 +18,7 @@ class ui_controllerdebug extends runtime_controller {
      * @global obj $controller The controller object.
      * @return string HTML output to display the controller debug infomation in a pretty way
      */
-    function Template() {
+    static function Template() {
         global $controller;
         if ($controller->OutputControllerDebug()) {
             $controllerdebug = $controller->OutputControllerDebug();
