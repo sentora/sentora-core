@@ -12,7 +12,7 @@
  */
 class ui_tpl_notice {
 
-    public function Template() {
+    public static function Template() {
         $user_array = ctrl_users::GetUserDetail();
         global $zdbh;
         $result = $zdbh->query("SELECT ac_notice_tx FROM x_accounts WHERE ac_id_pk = " . $user_array['resellerid'] . "")->Fetch();

@@ -12,7 +12,7 @@
  */
 class ui_tpl_usedparkeddomains {
 
-    public function Template() {
+    public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $parkeddomains = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
         if ($parkeddomains <> 0) {

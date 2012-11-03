@@ -12,7 +12,7 @@
  */
 class ui_tpl_clientdomains {
 
-    public function Template() {
+    public static function Template() {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail();
         $line = "<table  border=\"0\" cellSpacing=\"0\" cellPadding=\"2\" width=\"100%\">";

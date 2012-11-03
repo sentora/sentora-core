@@ -12,7 +12,7 @@
  */
 class ui_tpl_shadowbar {
 
-    public function Template() {
+    public static function Template() {
         if (isset($_SESSION['ruid'])) {
             return "<div class=\"zshadowbar\" id=\"zshadowbar\"><a href=\"./?returnsession=true\" class=\"zshadowbar\" id=\"zshadowbar_a\" border=\"0\"></a><a href=\"./?returnsession=true\">" . ui_language::translate("End shadow session and return to your session.") . "</a></div>";
         } else {

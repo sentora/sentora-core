@@ -12,7 +12,7 @@
  */
 class ui_tpl_quotabandwidth {
 
-    public function Template() {
+    public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $bandwidthquota = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
         return $bandwidthquota;

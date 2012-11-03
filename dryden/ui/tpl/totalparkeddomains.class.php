@@ -12,7 +12,7 @@
  */
 class ui_tpl_totalparkeddomains {
 
-    public function Template() {
+    public static function Template() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $parkeddomainsquota = $currentuser['parkeddomainquota'];

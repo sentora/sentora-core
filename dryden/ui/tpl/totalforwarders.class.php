@@ -12,7 +12,7 @@
  */
 class ui_tpl_totalforwarders {
 
-    public function Template() {
+    public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $forwardersquota = $currentuser['forwardersquota'];
         if ($forwardersquota <> 0) {

@@ -12,7 +12,7 @@
  */
 class ui_tpl_totalftp {
 
-    public function Template() {
+    public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $ftpaccountsquota = $currentuser['ftpaccountsquota'];
         if ($ftpaccountsquota <> 0) {

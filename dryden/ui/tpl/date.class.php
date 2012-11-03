@@ -12,7 +12,7 @@
  */
 class ui_tpl_date {
 
-    public function Template() {
+    public static function Template() {
         return date('l F jS\, Y');
     }
 

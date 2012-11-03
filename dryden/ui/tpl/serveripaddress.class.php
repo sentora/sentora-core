@@ -12,7 +12,7 @@
  */
 class ui_tpl_serveripaddress {
 
-    public function Template() {
+    public static function Template() {
         if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
             return ctrl_options::GetSystemOption('server_ip');
         } else {

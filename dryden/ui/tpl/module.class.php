@@ -12,7 +12,7 @@
  */
 class ui_tpl_module {
 
-    public function Template() {
+    public static function Template() {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'module')) {
             return ui_module::getModule($controller->getCurrentModule());

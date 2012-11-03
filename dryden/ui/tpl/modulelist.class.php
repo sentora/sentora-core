@@ -12,7 +12,7 @@
  */
 class ui_tpl_modulelist {
 
-    function Template() {
+    public static function Template() {
         global $controller;
         if (!$controller->GetControllerRequest('URL', 'module')) {
             $line = "";
