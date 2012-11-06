@@ -133,14 +133,14 @@ class module_controller {
             $sql->execute();
             $currentuser = ctrl_users::GetUserDetail($uid);
             while ($rowclients = $sql->fetch()) {
-                array_push($res, array('fullname' => $rowclients['ud_fullname_vc'],
-                    'username' => $currentuser['username'],
-                    'userid' => $currentuser['userid'],
-                    'fullname' => $rowclients['ud_fullname_vc'],
-                    'postcode' => $rowclients['ud_postcode_vc'],
-                    'address' => $rowclients['ud_address_tx'],
-                    'phone' => $rowclients['ud_phone_vc'],
-                    'email' => $currentuser['email']));
+                array_push($res, array('fullname' => htmlspecialchars(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
+                    'username' => htmlspecialchars(strip_tags($currentuser['username']), ENT_QUOTES, 'UTF-8'),
+                    'userid' => htmlspecialchars(strip_tags($currentuser['userid']), ENT_QUOTES, 'UTF-8'),
+                    'fullname' => htmlspecialchars(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
+                    'postcode' => htmlspecialchars(strip_tags($rowclients['ud_postcode_vc']), ENT_QUOTES, 'UTF-8'),
+                    'address' => htmlspecialchars(strip_tags($rowclients['ud_address_tx']), ENT_QUOTES, 'UTF-8'),
+                    'phone' => htmlspecialchars(strip_tags($rowclients['ud_phone_vc']), ENT_QUOTES, 'UTF-8'),
+                    'email' => htmlspecialchars(strip_tags($currentuser['email']), ENT_QUOTES, 'UTF-8')));
             }
             return $res;
         } else {

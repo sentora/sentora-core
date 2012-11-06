@@ -12,7 +12,7 @@
  */
 class ui_tpl_modulelistul {
 
-    function Template() {
+    public static function Template() {
         $line = "";
         $show = 0;
         $modcats = ui_moduleloader::GetModuleCats();

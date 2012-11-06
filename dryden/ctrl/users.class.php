@@ -31,8 +31,9 @@ class ctrl_users {
             LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk) 
             LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk) 
             LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk) 
-            WHERE x_accounts.ac_id_pk= " . $uid . "
+            WHERE x_accounts.ac_id_pk= :uid
           ");
+        $rows->bindParam(':uid', $uid);
         $rows->execute();
         $dbvals = $rows->fetch();
         $userdetail->addItemValue('username', $dbvals['ac_user_vc']);
@@ -76,61 +77,71 @@ class ctrl_users {
     static function GetQuotaUsages($resource, $acc_key = 0) {
         global $zdbh;
         if ($resource == 'domains') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=1 AND vh_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk= :acc_key AND vh_type_in=1 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'subdomains') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=2 AND vh_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk= :acc_key AND vh_type_in=2 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'parkeddomains') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk=" . $acc_key . " AND vh_type_in=3 AND vh_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_vhosts WHERE vh_acc_fk= :acc_key AND vh_type_in=3 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'mailboxes') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mailboxes WHERE mb_acc_fk=" . $acc_key . " AND mb_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_mailboxes WHERE mb_acc_fk= :acc_key AND mb_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'forwarders') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_forwarders WHERE fw_acc_fk=" . $acc_key . " AND fw_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_forwarders WHERE fw_acc_fk= :acc_key AND fw_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'distlists') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_distlists WHERE dl_acc_fk=" . $acc_key . " AND dl_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_distlists WHERE dl_acc_fk= :acc_key AND dl_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'ftpaccounts') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_ftpaccounts WHERE ft_acc_fk=" . $acc_key . " AND ft_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_ftpaccounts WHERE ft_acc_fk= :acc_key AND ft_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'mysql') {
-            $sql = $zdbh->query("SELECT COUNT(*) AS amount FROM x_mysql_databases WHERE my_acc_fk=" . $acc_key . " AND my_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT COUNT(*) AS amount FROM x_mysql_databases WHERE my_acc_fk= :acc_key AND my_deleted_ts IS NULL");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['amount'];
         }
         if ($resource == 'diskspace') {
-            $sql = $zdbh->query("SELECT bd_diskamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
+            $sql = $zdbh->prepare("SELECT bd_diskamount_bi FROM x_bandwidth WHERE bd_acc_fk= :acc_key AND bd_month_in=" . date("Ym", time()) . "");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['bd_diskamount_bi'];
         }
         if ($resource == 'bandwidth') {
-            $sql = $zdbh->query("SELECT bd_transamount_bi FROM x_bandwidth WHERE bd_acc_fk=" . $acc_key . " AND bd_month_in=" . date("Ym", time()) . "");
+            $sql = $zdbh->prepare("SELECT bd_transamount_bi FROM x_bandwidth WHERE bd_acc_fk= :acc_key AND bd_month_in=" . date("Ym", time()) . "");
+            $sql->bindParam(':acc_key', $acc_key);
             $sql->execute();
             $retval = $sql->fetch();
             $retval = $retval['bd_transamount_bi'];
@@ -144,8 +155,11 @@ class ctrl_users {
     static function GetUserDomains($userid, $type = "1") {
         global $zdbh;
         $domains = 0;
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=" . $userid . " AND vh_deleted_ts IS NULL AND vh_type_in=" . $type . "";
-        if ($numrows = $zdbh->query($sql)) {
+        $numrows = $zdbh->prepare("SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk= :userid AND vh_deleted_ts IS NULL AND vh_type_in= :type");
+        $numrows->bindParam(':userid', $userid);
+        $numrows->bindParam(':type', $type);
+        $status = $sql->execute();
+        if ($status) {
             if ($numrows->fetchColumn() <> 0) {
                 $domains = count($numrows->fetchColumn());
                 return $domains;
@@ -164,9 +178,12 @@ class ctrl_users {
     static function CheckUserEnabled($uid) {
         global $zdbh;
         $domains = 0;
-        $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_id_pk=" . $uid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
-            if ($numrows->fetchColumn() <> 0) {
+        $sql = $zdbh->prepare("SELECT COUNT(*) FROM x_accounts WHERE ac_id_pk= :uid AND ac_enabled_in=1 AND ac_deleted_ts IS NULL");
+        $sql->bindParam(':uid', $uid);
+        $status = $sql->execute();
+
+        if ($status) {
+            if ($sql->fetchColumn() <> 0) {
                 return true;
             }
         }

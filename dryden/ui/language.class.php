@@ -26,7 +26,12 @@ class ui_language {
         $lang = $currentuser['language'];
         $column_names = self::GetColumnNames('x_translations');
         foreach ($column_names as $column_name) {
-            $result = $zdbh->query("SELECT * FROM x_translations WHERE " . $column_name . " LIKE '" . $message . "'")->Fetch();
+            $sql = $zdbh->prepare("SELECT * FROM x_translations WHERE :column_name LIKE :message");
+            $sql->bindParam(':column_name', $column_name);
+            $sql->bindParam(':message', $message);
+            $sql->execute();
+            $result = $sql->fetch();
+
             if ($result) {
                 if (!fs_director::CheckForEmptyValue($result['tr_' . $lang . '_tx'])) {
                     return $result['tr_' . $lang . '_tx'];
@@ -36,7 +41,8 @@ class ui_language {
             }
         }
         if (!fs_director::CheckForEmptyValue($message) && $lang == "en") {
-            $sql = $zdbh->prepare("INSERT INTO x_translations (tr_en_tx) VALUES ('" . $message . "')");
+            $sql = $zdbh->prepare("INSERT INTO x_translations (tr_en_tx) VALUES (:message)");
+            $sql->bindParam(':message', $message);
             $sql->execute();
         }
         return stripslashes($message);
@@ -50,8 +56,9 @@ class ui_language {
      */
     static function GetColumnNames($table) {
         global $zdbh;
-        $sql = "select column_name from information_schema.columns where lower(table_name)=lower('$table')";
+        $sql = "select column_name from information_schema.columns where lower(table_name)=lower(:table)";
         $stmt = $zdbh->prepare($sql);
+        $stmt->bindParam(':table', $table);
         try {
             if ($stmt->execute()) {
                 $raw_column_data = $stmt->fetchAll(PDO::FETCH_ASSOC);

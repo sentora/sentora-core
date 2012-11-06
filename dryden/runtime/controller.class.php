@@ -42,6 +42,9 @@ class runtime_controller {
         $this->vars_session = array($_SESSION);
         $this->vars_cookie = array($_COOKIE);
 
+        //Here we get the users information
+        $user = ctrl_users::GetUserDetail();
+
         if (!isset($this->vars_session[0]['zpuid'])) {
             ui_module::GetLoginTemplate();
         }
@@ -50,10 +53,12 @@ class runtime_controller {
             ui_module::getModule($this->GetCurrentModule());
         }
         if (isset($this->vars_get[0]['action'])) {
-            if ((class_exists('module_controller', FALSE)) && (method_exists('module_controller', 'do' . $this->vars_get[0]['action']))) {
-                call_user_func(array('module_controller', 'do' . $this->vars_get[0]['action']));
-            } else {
-                echo ui_sysmessage::shout("No 'do" . $this->vars_get[0]['action'] . "' class exists - Please create it to enable controller actions and runtime placeholders within your module.");
+            if (ctrl_groups::CheckGroupModulePermissions($user['usergroupid'], ui_module::GetModuleID())) {
+                if ((class_exists('module_controller', FALSE)) && (method_exists('module_controller', 'do' . $this->vars_get[0]['action']))) {
+                    call_user_func(array('module_controller', 'do' . $this->vars_get[0]['action']));
+                } else {
+                    echo ui_sysmessage::shout("No 'do" . $this->vars_get[0]['action'] . "' class exists - Please create it to enable controller actions and runtime placeholders within your module.");
+                }
             }
         }
         return;

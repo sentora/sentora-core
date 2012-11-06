@@ -12,7 +12,7 @@
  */
 class ui_tpl_totaldistlists {
 
-    public function Template() {
+    public static function Template() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $distrobutionlistsquota = $currentuser['distrobutionlistsquota'];

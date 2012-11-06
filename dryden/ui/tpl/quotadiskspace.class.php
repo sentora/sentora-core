@@ -12,7 +12,7 @@
  */
 class ui_tpl_quotadiskspace {
 
-    public function Template() {
+    public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $diskspacequota = fs_director::ShowHumanFileSize($currentuser['diskquota']);
         return $diskspacequota;

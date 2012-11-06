@@ -12,7 +12,7 @@
  */
 class ui_tpl_progbarbandwidth {
 
-    public function Template() {
+    public static function Template() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $bandwidthquota = $currentuser['bandwidthquota'];
