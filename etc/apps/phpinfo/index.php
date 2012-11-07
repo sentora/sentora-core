@@ -24,5 +24,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-echo phpinfo();
+session_start();
+if (isset($_SESSION['zpuid'])) {
+    echo phpinfo();
+} else {
+    echo "<h1>Unathorised request!</h1><p>You must be logged in before you are able to view PHP configuration on this server.</p>";
+}
 ?>
