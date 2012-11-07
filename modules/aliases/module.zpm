@@ -60,9 +60,11 @@
 						<input type="text" name="inAddress" id="inAddress" />
 						<select name="inDomain" id="inDomain">
 						<option value="" selected="selected">-- <: Select a domain :> --</option>
-						<% loop DomainList %>
+						<% if DomainList %>
+                                                <% loop DomainList %>
 						<option value="<& domain &>">@<& domain &></option>
 						<% endloop %>
+                                                <% endif %>
 						</select>
 						</td>
 					</tr>
@@ -71,9 +73,11 @@
 						<td>
 						<select name="inDestination" id="inDestination">
 						<option value="" selected="selected">-- <: Select a mailbox :> --</option>
-						<% loop MailboxList %>
+						<% if isDeleteAlias %>
+                                                <% loop MailboxList %>
 						<option value="<& address &>"><& address &></option>
 						<% endloop %>
+                                                <% endif %>
 						</select>
 						</td>
 					</tr>

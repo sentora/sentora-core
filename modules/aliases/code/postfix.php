@@ -36,17 +36,30 @@ try {
 
 // Deleting Postfix Alias
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
-    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'")->Fetch();
+    //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'")->Fetch();
+    
+    $bindArray = NULL;
+    $bindArray = array(':aliasname' => $rowalias['al_address_vc']);
+    $sqlStatment = $mail_db->bindQuery("SELECT address FROM alias WHERE address=:aliasname", $bindArray);
+    $result = $mail_db->returnRow();
+    
     if ($result) {
-        $sql = "DELETE FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'";
-        $sql = $mail_db->prepare($sql);
+        $sqlStatment = "DELETE FROM alias WHERE address=:address";
+        $sql = $mail_db->prepare($sqlStatment);
+        $sql->bindParam(':address', $rowalias['al_address_vc']);
         $sql->execute();
     }
 }
 
 // Adding Postfix Alias
 if (!fs_director::CheckForEmptyValue(self::$create)) {
-    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
+    //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
+    
+    $bindArray = NULL;
+    $bindArray = array(':address' => $fulladdress);
+    $sqlStatment = $mail_db->bindQuery("SELECT address FROM alias WHERE address=:address", $bindArray);
+    $result = $mail_db->returnRow();
+    
     if (!$result) {
         $sql = "INSERT INTO alias  (address,
 										 	goto,
@@ -54,13 +67,16 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 											created,
 										 	modified,
 										 	active) VALUES (
-										 	'" . $fulladdress . "',
-										 	'" . $destination . "',
-										 	'" . $domain . "',
+										 	:fulladdress,
+										 	:destination,
+										 	:domain,
 										 	NOW(),
 										 	NOW(),
 										 	'1')";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':domain', $domain);
+        $sql->bindParam(':fulladdress', $fulladdress);
+        $sql->bindParam(':destination', $destination);
         $sql->execute();
     }
 }

@@ -18,12 +18,12 @@ class ui_tpl_clientdomains {
         $line = "<table  border=\"0\" cellSpacing=\"0\" cellPadding=\"2\" width=\"100%\">";
 		
 		$numrows = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk= :userid AND vh_type_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_id_pk LIMIT 4");
-        $numrows->bindParam(':userid', $currentuser['userid']);			
+                $numrows->bindParam(':userid', $currentuser['userid']);			
 		$numrows->execute();
 		
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk= :userid AND vh_type_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_id_pk LIMIT 4");
-            $numrows->bindParam(':userid', $currentuser['userid']);	
+            $sql->bindParam(':userid', $currentuser['userid']);	
 			$sql->execute();
             $limit = 0;
             $line .= "<tr><td nowrap=\"nowrap\"><img class=\"raquo\" src=\"<# ui_tpl_assetfolderpath #>/images/blank.png\" border=\"0\"><strong>Domains</strong></td><td></td></tr>";

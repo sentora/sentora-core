@@ -36,27 +36,41 @@ try {
 
 // Deleting hMail Alias
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
-    $result = $mail_db->query("SELECT aliasname FROM hm_aliases WHERE aliasname='" . $rowalias['al_address_vc'] . "'")->Fetch();
+    //$result = $mail_db->query("SELECT aliasname FROM hm_aliases WHERE aliasname='" . $rowalias['al_address_vc'] . "'")->Fetch();
+    $bindArray = NULL;
+    $bindArray = array(':aliasname' => $rowalias['al_address_vc']);
+    $sqlStatment = $mail_db->bindQuery("SELECT aliasname FROM hm_aliases WHERE aliasname=:aliasname", $bindArray);
+    $result = $mail_db->returnRow();
+    
     if ($result) {
-        $sql = "DELETE FROM hm_aliases WHERE aliasname='" . $rowalias['al_address_vc'] . "'";
-        $sql = $mail_db->prepare($sql);
+        $sqlStatment = "DELETE FROM hm_aliases WHERE aliasname=:aliasname";
+        $sql = $mail_db->prepare($sqlStatment);
+        $sql->bindParam(':aliasname', $rowalias['al_address_vc']);
         $sql->execute();
     }
 }
 
 // Adding hMail Alias
 if (!fs_director::CheckForEmptyValue(self::$create)) {
-    $result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
+    //$result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
+    $bindArray = NULL;
+    $bindArray = array(':domain' => $domain);
+    $sqlStatment = $mail_db->bindQuery("SELECT domainid FROM hm_domains WHERE domainname=:domain", $bindArray);
+    $result = $mail_db->returnRow();
+    
     if ($result) {
-        $sql = "INSERT INTO hm_aliases (aliasdomainid,
+        $sqlStatment = "INSERT INTO hm_aliases (aliasdomainid,
 										aliasname,
 										aliasvalue,
 										aliasactive) VALUES (
-									 	'" . $result['domainid'] . "',
-									 	'" . $fulladdress . "',
-									 	'" . $destination . "',
+									 	:domainID,
+									 	:fulladdress,
+									 	:destination,
 									 	'1')";
-        $sql = $mail_db->prepare($sql);
+        $sql = $mail_db->prepare($sqlStatment);
+        $sql->bindParam(':domainID', $result['domainid']);
+        $sql->bindParam(':fulladdress', $fulladdress);
+        $sql->bindParam(':destination', $destination);
         $sql->execute();
     }
 }

@@ -26,7 +26,7 @@
  */
 class module_controller {
 
-    function getZpanelUpdates() {
+    public static function getZpanelUpdates() {
         if (ctrl_options::GetSystemOption('dbversion') < ctrl_options::GetSystemOption('latestzpversion')) {
             $msg = ui_language::translate("There are currently new updates for your ZPanel installation, please download the latest release") . " (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>) from <a hre=\"http://www.zpanelcp.com/\">http://www.zpanelcp.com/</a>.";
         } elseif (ctrl_options::GetSystemOption('dbversion') == ctrl_options::GetSystemOption('latestzpversion')) {
@@ -37,12 +37,12 @@ class module_controller {
         return $msg;
     }
 
-    function getModuleName() {
+    public static function getModuleName() {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    function getModuleIcon() {
+    public static function getModuleIcon() {
         global $controller;
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
