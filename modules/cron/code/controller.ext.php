@@ -62,6 +62,7 @@ class module_controller {
                     $line .= "</tr>";
                 }
                 $line .= "</table>";
+                $line .= runtime_csfr::Token();
                 $line .= "</form>";
             } else {
                 $line .= ui_language::translate("You currently do not have any tasks setup.");
@@ -104,6 +105,7 @@ class module_controller {
         $line .= "<tr>";
         $line .= "<th colspan=\"2\" align=\"right\"><input type=\"hidden\" name=\"inReturn\" value=\"GetFullURL\" />";
         $line .= "<input type=\"hidden\" name=\"inUserID\" value=\"" . $currentuser['userid'] . "\" />";
+        $line .= runtime_csfr::Token();
         $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\">" . ui_language::translate("Create") . "</button></th>";
         $line .= "</tr>";
         $line .= "</table>";
@@ -115,6 +117,7 @@ class module_controller {
     static function doCreateCron() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         if (fs_director::CheckForEmptyValue(self::CheckCronForErrors())) {
 
@@ -138,6 +141,7 @@ class module_controller {
     static function doDeleteCron() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
@@ -335,6 +339,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Cron updated successfully."), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleName() {
