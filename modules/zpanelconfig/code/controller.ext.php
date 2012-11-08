@@ -124,6 +124,7 @@ class module_controller {
     static function doForceDaemon() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inForceFull'])) {
             $sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_lastrun'");

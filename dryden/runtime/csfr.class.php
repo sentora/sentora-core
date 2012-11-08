@@ -18,7 +18,9 @@ class runtime_csfr {
      * @return string The HTML form tag.
      */
     static function Token() {
-        self::Tokeniser();
+        if (!isset($_SESSION['zpcsfr'])) {
+            self::Tokeniser();
+        }
         $token = $_SESSION['zpcsfr'];
         return "<input type=\"hidden\" name=\"csfr_token\" value=\"" . $token . "\">";
     }
@@ -46,7 +48,7 @@ class runtime_csfr {
      * @return bool
      */
     static function Protect() {
-        if ($_POST['csfr_token'] == $_SESSION['zpcsfr']) {
+        if (isset($_POST['csfr_token']) && ($_POST['csfr_token'] == $_SESSION['zpcsfr'])) {
             self::Tokeniser();
             return true;
         }
