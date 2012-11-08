@@ -27,6 +27,7 @@
 		</tr>
 		<% endloop %>
     </table>
+<@ CSFR_Tag @>
 </form>
 <% else %><!-- ELSE ShadowAccounts -->
 <: You have no Clients at this time. :>
