@@ -270,6 +270,7 @@ class module_controller {
      */
     static function doSelectFolder() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inFolder'])) {
@@ -283,6 +284,7 @@ class module_controller {
 
     static function doCreateHTA() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteCreateHTA($currentuser['userid'], $formvars['inAuthName'], $formvars['inHTUsername'], $formvars['inHTPassword'], $formvars['inConfirmHTPassword'], $formvars['inPath']))
@@ -292,6 +294,7 @@ class module_controller {
 
     static function doEditHTA() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListProtectedDirectories($currentuser['userid']) as $row) {
@@ -309,6 +312,7 @@ class module_controller {
 
     static function doConfirmDeleteHTA() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteHTA($formvars['inDelete']))
             return true;
@@ -317,6 +321,7 @@ class module_controller {
 
     static function doRemoveUserHTA() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteRemoveUserHTA($formvars['inID'], $formvars['inRemove']))
             return true;
@@ -325,6 +330,7 @@ class module_controller {
 
     static function doAddUserHTA() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddUserHTA($formvars['inID'], $formvars['inHTUsername'], $formvars['inHTPassword'], $formvars['inConfirmHTPassword']))
             return true;
@@ -432,6 +438,10 @@ class module_controller {
         return;
     }
 
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
+    }
+
     static function getModuleDesc() {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
@@ -448,9 +458,6 @@ class module_controller {
         return $module_icon;
     }
 
-    /**
-     * Webinterface sudo methods.
-     */
 }
 
 ?>
