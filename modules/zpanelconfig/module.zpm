@@ -17,7 +17,7 @@
 			<% endloop %>
 			<tr>
 				<th colspan="3">
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
+				<@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
 				</th>
 			</tr>
 		</table>
