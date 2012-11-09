@@ -49,8 +49,8 @@ foreach ($deletedclients as $deletedclient) {
             $result = $zdbh->returnRow();
             
             if ($result) {
-                $msql = "DELETE FROM hm_aliases WHERE aliasname=:address";
-                $msql = $mail_db->prepare($msql);
+                $msqlSql = "DELETE FROM hm_aliases WHERE aliasname=:address";
+                $msql = $mail_db->prepare($msqlSql);
                 $msql->bindParam(':address', $rowmailbox['al_address_vc']);
                 $msql->execute();
                 
