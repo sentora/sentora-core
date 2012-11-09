@@ -31,11 +31,18 @@ class module_controller {
     static function getConfig() {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc";
-        $numrows = $zdbh->query($sql);
+        $moduleName = ui_module::GetModuleName();
+        
+        $sql = "SELECT * FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':module', $moduleName);
+        $numrows->execute();
+        
+        //$numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
+            $sql->bindParam(':module', $moduleName);
             $sql->execute();
             while ($rowmailsettings = $sql->fetch()) {
                 if (ctrl_options::CheckForPredefinedOptions($rowmailsettings['so_defvalues_tx'])) {
@@ -58,14 +65,23 @@ class module_controller {
     static function doUpdateConfig() {
         global $zdbh;
         global $controller;
-        $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
-        $numrows = $zdbh->query($sql);
+        $moduleName = ui_module::GetModuleName();
+        $sql = "SELECT * FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':module', $moduleName);
+        $numrows->execute();
+        //$numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':module', $moduleName);
             $sql->execute();
             while ($row = $sql->fetch()) {
                 if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
-                    $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
+                    $value = $controller->GetControllerRequest('FORM', $row['so_name_vc']);
+                    $name = $row['so_name_vc'];
+                    $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = :value WHERE so_name_vc = :name");
+                    $updatesql->bindParam(':value', $value);
+                    $updatesql->bindParam(':name', $name);
                     $updatesql->execute();
                 }
             }
