@@ -86,7 +86,7 @@ class module_controller {
 
 
         $line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
-        $line .= "<div class=\"content\"><h2>" . ui_language::translate("Create Deafult DNS Records") . "</h2>";
+        $line .= "<div class=\"content\"><h2>" . ui_language::translate("Create Default DNS Records") . "</h2>";
         $line .= "" . ui_language::translate("No records were found for this domain.  Click the button below to set up your domain records for the first time") . "";
         $line .= "<div>";
         $line .= "<div class=\"actions\"><a class=\"back\" href=\"./?module=" . $controller->GetControllerRequest('URL', 'module') . "\">Domain List</a></div>";
