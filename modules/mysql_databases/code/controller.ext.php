@@ -172,6 +172,7 @@ class module_controller {
      */
     static function doCreateDatabase() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteCreateDatabase($currentuser['userid'], $formvars['inDatabase']))
@@ -181,6 +182,7 @@ class module_controller {
 
     static function doDeleteDatabase() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListDatabases($currentuser['userid']) as $row) {
@@ -194,6 +196,7 @@ class module_controller {
 
     static function doConfirmDeleteDatabase() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteDatabase($formvars['inDelete']))
             return true;
@@ -284,6 +287,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your databases have been saved successfully!"), "zannounceok");
         }
         return;
+    }
+    
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleDesc() {
