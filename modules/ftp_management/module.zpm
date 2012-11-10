@@ -18,6 +18,7 @@
 				</td>
 			</tr>
 		</table>
+                <@ CSFR_Tag @>
 		</form>
 	</div>
 	<% endif %>
@@ -45,6 +46,7 @@
 				<td></td>
         	</tr>
         </table>
+        <@ CSFR_Tag @>
     	</form>
 	</div>
 	<% endif %>
@@ -73,7 +75,8 @@
 					</td>
                 </tr>
 				<% endloop %>	
-       		</table> 
+       		</table>
+                <@ CSFR_Tag @>
     	</form>
 		<% else %>
     	<: You do not have any FTP Accounts setup. Create an FTP account using the form below. :>
@@ -148,6 +151,7 @@
 					        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inSubmit" id="inSubmit" value=""><: Create :></button></th>
 				        </tr>
 			        </table>
+                        <@ CSFR_Tag @>
 		    	</form>
 				<% else %>
 				<: You have reached your FTP account limit! :>

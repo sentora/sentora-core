@@ -237,6 +237,7 @@ class module_controller {
      */
     static function doCreateFTP() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteCreateFTP($currentuser['userid'], $formvars['inFTPUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inAccess'], $formvars['inAutoHome']))
@@ -247,6 +248,7 @@ class module_controller {
 
     static function doDeleteFTP() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteFTP($formvars['inDelete']))
             self::$ok = true;
@@ -256,6 +258,7 @@ class module_controller {
 
     static function doResetPassword() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteResetPassword($formvars['inReset'], $formvars['inPassword']))
             self::$ok = true;
@@ -299,6 +302,7 @@ class module_controller {
 
     static function doEditFTP() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListClients($currentuser['userid']) as $row) {
@@ -401,6 +405,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("FTP accounts updated successfully."), "zannounceok");
         }
         return;
+    }
+    
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleName() {
