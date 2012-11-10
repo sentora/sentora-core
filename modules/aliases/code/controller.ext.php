@@ -223,6 +223,7 @@ class module_controller {
      */
     static function doCreateAlias() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteCreateAlias($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain'], $formvars['inDestination']))
@@ -233,6 +234,7 @@ class module_controller {
 
     static function doDeleteAlias() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListAliases($currentuser['userid']) as $row) {
@@ -250,6 +252,7 @@ class module_controller {
 
     static function doConfirmDeleteAlias() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteAlias($formvars['inDelete']))
             return true;
@@ -370,6 +373,10 @@ class module_controller {
             return NULL;
         }
         return;
+    }
+    
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**
