@@ -74,6 +74,19 @@ class sys_monitoring {
             $hours = fs_director::CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
             $minutes = fs_director::CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
             $retval = $days . ", " . $hours . ", " . $minutes . "";
+        } elseif (sys_versions::ShowOSPlatformVersion() == "MacOSX") {
+            $uptime = explode(" ", exec("sysctl -n kern.boottime"));
+            $uptime = str_replace(",", "", $uptime[3]);
+            $uptime = time() - $uptime;
+            $min = $uptime / 60;
+            $hours = $min / 60;
+            $days = floor($hours / 24);
+            $hours = floor($hours - ($days * 24));
+            $minutes = floor($min - ($days * 60 * 24) - ($hours * 60));
+            $days = fs_director::CheckForNullValue($days != 1, $days . ' days', $days . ' day');
+            $hours = fs_director::CheckForNullValue($hours != 1, $hours . ' hours', $hours . ' hour');
+            $minutes = fs_director::CheckForNullValue($minutes != 1, $minutes . ' minutes', $minutes . ' minute');
+            $retval = $days . ", " . $hours . ", " . $minutes . "";
         } elseif (sys_versions::ShowOSPlatformVersion() == "FreeBSD") {
             $uptime = explode(" ", exec("/sbin/sysctl -n kern.boottime"));
             $uptime = str_replace(",", "", $uptime[3]);
