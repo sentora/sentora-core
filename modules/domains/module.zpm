@@ -18,6 +18,7 @@
 				</td>
 			</tr>
 		</table>
+                <@ CSFR_Tag @>
 		</form>
 	</div>
 	<% endif %>
@@ -43,6 +44,7 @@
             </tr>			
 			<% endloop %>
 	    </table>
+            <@ CSFR_Tag @>
     	</form>
 	<% else %>
 	<: You currently do not have any domains configured. Create a domain using the form below. :>
@@ -85,6 +87,7 @@
 			        <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
 		        </tr>
         </table>
+        <@ CSFR_Tag @>
         </form>
 	<% else %>
 	<: You have reached your domain limit! :>
