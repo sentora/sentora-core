@@ -19,6 +19,7 @@
 				</td>
 			</tr>
 		</table>
+                <@ CSFR_Tag @>
 		</form>
 	</div>
 	<% endif %>
@@ -55,6 +56,7 @@
 				</td>
 			</tr>
 		</table>
+                <@ CSFR_Tag @>
 		</form>
 	</div>
 	<% endif %>
@@ -81,6 +83,7 @@
 			</tr>
 		<% endloop %>
 		</table>
+                <@ CSFR_Tag @>
 		</form>
 		<% else %><!-- ELSE DistList -->
 		<: You currently do not have any distribution lists setup. :>
@@ -113,6 +116,7 @@
 				<td></td>
 			</tr>
 		</table>
+                <@ CSFR_Tag @>
 		</form>	
 	<% else %>
 	<: You have reached your Distribution List quota limit! :>
