@@ -57,8 +57,9 @@ if (isset($_GET['id']) && $_GET['id'] != "") {
 	        LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk) 
 	        LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk) 
 	        LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk) 
-	        WHERE x_accounts.ac_id_pk= " . $userid . "
+	        WHERE x_accounts.ac_id_pk= :userid
 	        ");
+        $rows->bindParam(':userid', $userid);
         $rows->execute();
         $dbvals = $rows->fetch();
 
@@ -101,10 +102,15 @@ function ExecuteBackup($userid, $username, $download = 0) {
         @chmod($temp_dir . $backupname . ".zip", 0777);
     }
     // Now lets backup all MySQL datbases for the user and add them to the archive...
-    $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL";
-    if ($numrows = $zdbh->query($sql)) {
+    $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_acc_fk=:userid AND my_deleted_ts IS NULL";
+    $numrows = $zdbh->prepare($sql);
+    $numrows->bindParam(':userid', $userid);
+    $numrows->execute();
+    
+    if ($numrows) {
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_acc_fk=:userid AND my_deleted_ts IS NULL");
+            $sql->bindParam(':userid', $userid);
             $sql->execute();
             while ($row_mysql = $sql->fetch()) {
                 $bkcommand = ctrl_options::GetSystemOption('mysqldump_exe') . " -h " . $host . " -u " . $user . " -p" . $pass . " --no-create-db " . $row_mysql['my_name_vc'] . " > " . $temp_dir . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql";
