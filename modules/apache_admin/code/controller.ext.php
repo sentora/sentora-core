@@ -84,6 +84,7 @@ class module_controller {
             }
         }
         $line .= "</table>";
+        $line .= runtime_csfr::Token();
         $line .= "</form>";
         return $line;
     }
@@ -113,6 +114,7 @@ class module_controller {
         $line .= "</select>";
         $line .= "</td></tr>";
         $line .= "</table>";
+        $line .= runtime_csfr::Token();
         $line .= "</form>";
         return $line;
     }
@@ -162,6 +164,7 @@ class module_controller {
         $line .= "</select>";
         $line .= "</td></tr>";
         $line .= "</table>";
+        $line .= runtime_csfr::Token();
         $line .= "</form>";
         return $line;
     }
@@ -217,6 +220,7 @@ class module_controller {
         $line .= "</select>";
         $line .= "</td></tr>";
         $line .= "</table>";
+        $line .= runtime_csfr::Token();
         $line .= "</form>";
         return $line;
     }
@@ -258,6 +262,7 @@ class module_controller {
         $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=apache_admin';return false;\"><: Cancel :></button>";
         $line .= "</td></tr>";
         $line .= "</table>";
+        $line .= runtime_csfr::Token();
         $line .= "</form>";
         return $line;
     }
@@ -265,12 +270,14 @@ class module_controller {
     static function doDisplayVhost() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         self::$showvhost = TRUE;
     }
 
     static function doUpdateApacheConfig() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
         
         $moduleName = ui_module::GetModuleName();
@@ -303,7 +310,7 @@ class module_controller {
     static function doSaveVhost() {
         global $zdbh;
         global $controller;
-
+        runtime_csfr::Protect();
         $port = $controller->GetControllerRequest('FORM', 'vh_custom_port_in');
         if (empty($port)) {
             $port = NULL;
@@ -374,6 +381,10 @@ class module_controller {
 								SET so_value_tx='true'
 								WHERE so_name_vc='apache_changed'");
         $sql->execute();
+    }
+    
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
 }

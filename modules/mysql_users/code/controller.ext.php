@@ -385,6 +385,7 @@ class module_controller {
      */
     static function doCreateUser() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if ($formvars['inAccess'] == 1) {
@@ -399,6 +400,7 @@ class module_controller {
 
     static function doEditUser() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListUsers($currentuser['userid']) as $row) {
@@ -416,6 +418,7 @@ class module_controller {
 
     static function doAddDB() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddDB($currentuser['userid'], $formvars['inUser'], $formvars['inDatabase']))
@@ -425,6 +428,7 @@ class module_controller {
 
     static function doRemoveDB() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListUserDatabases($formvars['inUser']) as $row) {
@@ -441,6 +445,7 @@ class module_controller {
 
     static function doConfirmDeleteUser() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteUser($formvars['inDelete']))
             return true;
@@ -449,6 +454,7 @@ class module_controller {
 
     static function doResetPW() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteResetPassword($formvars['inUser'], $formvars['inResetPW']))
             return true;
@@ -562,6 +568,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your MySQL users have been saved successfully!"), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleDesc() {

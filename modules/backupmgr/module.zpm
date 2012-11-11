@@ -51,6 +51,7 @@
         </tr>
 	<% endloop %>
     </table>
+    <@ CSFR_Tag @>
 </form>
 <% else %>
 <% if DiskAllowed %>

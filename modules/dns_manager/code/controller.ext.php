@@ -86,10 +86,10 @@ class module_controller {
 
 
         $line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
-        $line .= "<div class=\"content\"><h2>" . ui_language::translate("Create Deafult DNS Records") . "</h2>";
+        $line .= "<div class=\"content\"><h2>" . ui_language::translate("Create Default DNS Records") . "</h2>";
         $line .= "" . ui_language::translate("No records were found for this domain.  Click the button below to set up your domain records for the first time") . "";
         $line .= "<div>";
-        $line .= "<div class=\"actions\"><a class=\"back\" href=\"/?module=" . $controller->GetControllerRequest('URL', 'module') . "\">Domain List</a></div>";
+        $line .= "<div class=\"actions\"><a class=\"back\" href=\"./?module=" . $controller->GetControllerRequest('URL', 'module') . "\">Domain List</a></div>";
         $line .= "</div><br class=\"clear\">";
         $line .= "</div>";
         $line .= "</div>";
@@ -105,6 +105,7 @@ class module_controller {
         $line .= "</table>";
         $line .= "<input type=\"hidden\" name=\"inDomain\" value =\"" . $controller->GetControllerRequest('FORM', 'inDomain') . "\" />";
         $line .= "<input type=\"hidden\" name=\"inUserID\" value =\"" . $currentuser['userid'] . "\" />";
+        $line .= self::getCSFR_Tag();
         $line .= "</form>";
         $line .= "</div>";
         return $line;
@@ -141,7 +142,7 @@ class module_controller {
         $line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
         $line .= "<div class=\"content\"><h2>" . ui_language::translate("DNS records for") . ":</h2><a href=\"http://" . $domain['vh_name_vc'] . "\" target=\"_blank\">" . $domain['vh_name_vc'] . "</a>";
         $line .= "<div>";
-        $line .= "<div class=\"actions\"><a class=\"undo disabled\">" . ui_language::translate("Undo Changes") . "</a><a class=\"save disabled\">" . ui_language::translate("Save Changes") . "</a><a class=\"back\" href=\"/?module=" . $controller->GetControllerRequest('URL', 'module') . "\">" . ui_language::translate("Domain List") . "</a></div>";
+        $line .= "<div class=\"actions\"><a class=\"undo disabled\">" . ui_language::translate("Undo Changes") . "</a><a class=\"save disabled\">" . ui_language::translate("Save Changes") . "</a><a class=\"back\" href=\"./?module=" . $controller->GetControllerRequest('URL', 'module') . "\">" . ui_language::translate("Domain List") . "</a></div>";
         $line .= "</div><br class=\"clear\">";
         $line .= "</div>";
         $line .= "</div>";
@@ -541,10 +542,11 @@ class module_controller {
         $line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
         $line .= "<div class=\"content\">";
         $line .= "<div>";
-        $line .= "<div class=\"actions\"><a class=\"undo disabled\">" . ui_language::translate("Undo Changes") . "</a><a class=\"save disabled\">" . ui_language::translate("Save Changes") . "</a><a class=\"back\" href=\"/?module=" . $controller->GetControllerRequest('URL', 'module') . "\">" . ui_language::translate("Domain List") . "</a></div>";
+        $line .= "<div class=\"actions\"><a class=\"undo disabled\">" . ui_language::translate("Undo Changes") . "</a><a class=\"save disabled\">" . ui_language::translate("Save Changes") . "</a><a class=\"back\" href=\"./?module=" . $controller->GetControllerRequest('URL', 'module') . "\">" . ui_language::translate("Domain List") . "</a></div>";
         $line .= "</div><br class=\"clear\">";
         $line .= "</div>";
         //$line .= "</div>";
+        $line .= self::getCSFR_Tag();
         $line .= "</form>";
         //$line .= "</div>";
         $line .= "<!-- END DNS FORM -->";
@@ -584,6 +586,7 @@ class module_controller {
         $line .= "</td>";
         $line .= "</tr>";
         $line .= "</table>";
+        $line .= self::getCSFR_Tag();
         $line .= "</form>";
         $line .= "<p>&nbsp;</p>";
         $line .= "</div>";
@@ -593,6 +596,7 @@ class module_controller {
     static function doEditClient() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $sql = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $currentuser['userid'] . " AND ac_deleted_ts IS NULL");
         $sql->execute();
@@ -612,6 +616,7 @@ class module_controller {
     static function doDisplayRecords() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         self::$editdomain = $controller->GetControllerRequest('FORM', 'inDomain');
         return;
     }
@@ -619,6 +624,7 @@ class module_controller {
     static function doSaveDNS() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         if (!fs_director::CheckForEmptyValue(self::CheckForErrors())) {
             self::SaveDNS();
             //self::WriteRecord();
@@ -630,6 +636,7 @@ class module_controller {
     static function doCreateDefaultRecords() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $domainID = $controller->GetControllerRequest('FORM', 'inDomain');
         $domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
         $userID = $controller->GetControllerRequest('FORM', 'inUserID');
@@ -1401,6 +1408,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your DNS have been saved successfully!"), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleName() {

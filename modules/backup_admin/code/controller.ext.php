@@ -65,12 +65,12 @@ class module_controller {
     static function doUpdateConfig() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $moduleName = ui_module::GetModuleName();
         $sql = "SELECT * FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':module', $moduleName);
         $numrows->execute();
-        //$numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $sql->bindParam(':module', $moduleName);
@@ -94,6 +94,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleDesc() {

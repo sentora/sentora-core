@@ -319,6 +319,7 @@ class module_controller {
      */
     static function doEditDistList() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListDist($currentuser['userid']) as $row) {
@@ -336,6 +337,7 @@ class module_controller {
 
     static function doConfirmDeleteDistList() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteDistList($formvars['inDelete']))
             return true;
@@ -344,6 +346,7 @@ class module_controller {
 
     static function doUpdateDistList() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inAdd'])) {
@@ -365,6 +368,7 @@ class module_controller {
 
     static function doAddDistList() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddDistList($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain']))
@@ -492,6 +496,10 @@ class module_controller {
     static function getModuleDesc() {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
+    }
+    
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
 }

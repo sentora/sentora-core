@@ -297,6 +297,7 @@ class module_controller {
      */
     static function doCreatePackage() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inEnablePHP'])) {
@@ -316,6 +317,7 @@ class module_controller {
 
     static function doUpdatePackage() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inEnablePHP'])) {
@@ -335,6 +337,7 @@ class module_controller {
 
     static function doEditPackage() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListPackages($currentuser['userid']) as $row) {
@@ -352,6 +355,7 @@ class module_controller {
 
     static function doDeletePackage() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeletePackage($formvars['inPackageID'], $formvars['inMovePackage']))
             return true;
@@ -573,6 +577,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your packages have been saved successfully!"), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**

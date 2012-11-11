@@ -554,6 +554,7 @@ class module_controller {
      */
     static function doCreateClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inSWE'])) {
@@ -571,6 +572,7 @@ class module_controller {
 
     static function doEditClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListClients($currentuser['userid']) as $row) {
@@ -588,6 +590,7 @@ class module_controller {
 
     static function doEditDisabledClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListDisabledClients($currentuser['userid']) as $row) {
@@ -605,6 +608,7 @@ class module_controller {
 
     static function doDeleteClient() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteClient($formvars['inDelete'], $formvars['inMoveClient']))
             return true;
@@ -613,6 +617,7 @@ class module_controller {
 
     static function doUpdateClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteUpdateClient($formvars['inClientID'], $formvars['inPackage'], $formvars['inEnabled'], $formvars['inGroup'], $formvars['inFullName'], $formvars['inEmailAddress'], $formvars['inAddress'], $formvars['inPostCode'], $formvars['inPhone'], $formvars['inNewPassword']))
@@ -930,6 +935,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your client(s) have been saved successfully!"), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**

@@ -47,7 +47,7 @@
 		</tr>
 		<tr>
 			<th>&nbsp;</th>
-			<td align="right"><button class="fg-button ui-state-default ui-corner-all" id="button" type="submit" ><: Update Account :></button</td>
+			<td align="right"><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" id="button" type="submit" ><: Update Account :></button</td>
 		</tr>	
     </table>
 </form>

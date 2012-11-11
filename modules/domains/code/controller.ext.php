@@ -332,6 +332,7 @@ class module_controller {
 
     static function doCreateDomain() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddDomain($currentuser['userid'], $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])) {
@@ -345,6 +346,7 @@ class module_controller {
 
     static function doDeleteDomain() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inDelete'])) {
@@ -358,6 +360,7 @@ class module_controller {
 
     static function doConfirmDeleteDomain() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListDomains($currentuser['userid']) as $row) {
@@ -393,6 +396,10 @@ class module_controller {
         } else {
             return "";
         }
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleName() {

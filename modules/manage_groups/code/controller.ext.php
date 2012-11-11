@@ -192,6 +192,7 @@ class module_controller {
 
     static function doCreateGroup() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExectuteCreateGroup($formvars['inGroupName'], $formvars['inDesc'], $currentuser['userid'])) {
@@ -204,6 +205,7 @@ class module_controller {
 
     static function doEditGroup() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListGroups($currentuser['userid']) as $row) {
@@ -221,6 +223,7 @@ class module_controller {
 
     static function doDeleteGroup() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inMoveGroup'])) {
             $inMoveGroup = $formvars['inMoveGroup'];
@@ -234,6 +237,7 @@ class module_controller {
 
     static function doUpdateGroup() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExectuteUpdateGroup($formvars['inGroupID'], $formvars['inGroupName'], $formvars['inDesc']))
             return true;
@@ -292,6 +296,10 @@ class module_controller {
         } else {
             return "";
         }
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**

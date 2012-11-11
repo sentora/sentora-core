@@ -258,6 +258,7 @@ class module_controller {
      */
     static function doAddMailbox() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddMailbox($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain'], $formvars['inPassword']))
@@ -268,6 +269,7 @@ class module_controller {
 
     static function doEditMailbox() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListMailboxes($currentuser['userid']) as $row) {
@@ -285,6 +287,7 @@ class module_controller {
 
     static function doUpdateMailbox() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inEnabled'])) {
@@ -300,6 +303,7 @@ class module_controller {
 
     static function doConfirmDeleteMailbox() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteMailbox($formvars['inDelete']))
             return true;
@@ -437,6 +441,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your mailboxes have been saved successfully!"), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**
