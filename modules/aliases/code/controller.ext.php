@@ -72,6 +72,7 @@ class module_controller {
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
+            $sql->bindParam(':aid', $aid);
             $sql->execute();
             while ($rowaliases = $sql->fetch()) {
                 array_push($res, array('address' => $rowaliases['al_address_vc'],
