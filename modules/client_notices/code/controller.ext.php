@@ -45,15 +45,21 @@ class module_controller {
         $sql = $zdbh->prepare("
             UPDATE x_accounts
             SET ac_notice_tx = :notice
-            WHERE ac_id_pk = " . $uid . "");
+            WHERE ac_id_pk = :uid");
         $sql->bindParam(':notice', $notice);
+        $sql->bindParam(':uid', $uid);
         $sql->execute();
         return true;
     }
 
     static function ExecuteShowNotice($rid) {
         global $zdbh;
-        $result = $zdbh->query("SELECT ac_notice_tx FROM x_accounts WHERE ac_id_pk = " . $rid . "")->Fetch();
+        //$result = $zdbh->query("SELECT ac_notice_tx FROM x_accounts WHERE ac_id_pk = :rid")->Fetch();
+        $sql = $zdbh->prepare("SELECT ac_notice_tx FROM x_accounts WHERE ac_id_pk = :rid");
+        $sql->bindParam(':rid', $rid);
+        $sql->execute();
+        $result = $sql->fetch();
+        
         if ($result) {
             return $result['ac_notice_tx'];
         } else {
@@ -83,7 +89,7 @@ class module_controller {
         header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
         exit;
     }
-
+    
     static function getCSFR_Tag() {
         return runtime_csfr::Token();
     }

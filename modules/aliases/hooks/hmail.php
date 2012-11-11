@@ -35,17 +35,25 @@ try {
 }
 
 foreach ($deletedclients as $deletedclient) {
-    $sql = "SELECT * FROM x_aliases WHERE al_acc_fk=" . $deletedclient . " AND al_deleted_ts IS NULL";
-    $numrows = $zdbh->query($sql);
+    $sql = "SELECT * FROM x_aliases WHERE al_acc_fk=:acc AND al_deleted_ts IS NULL";    
+    $numrows = $zdbh->prepare($sql);
+    $numrows->bindParam(':acc', $deletedclient);
+    $numrows->execute();
+    
     if ($numrows->fetchColumn() <> 0) {
         $sql = $zdbh->prepare($sql);
         $sql->execute();
         while ($rowmailbox = $sql->fetch()) {
-            $result = $mail_db->query("SELECT aliasname FROM hm_aliases WHERE aliasname='" . $rowmailbox['al_address_vc'] . "'")->Fetch();
+            $bindArray = array(':aliasname' => $rowmailbox['al_address_vc']);
+            $sqlStatment = $zdbh->bindQuery("SELECT aliasname FROM hm_aliases WHERE aliasname=:aliasname", $bindArray);
+            $result = $zdbh->returnRow();
+            
             if ($result) {
-                $msql = "DELETE FROM hm_aliases WHERE aliasname='" . $rowmailbox['al_address_vc'] . "'";
-                $msql = $mail_db->prepare($msql);
+                $msqlSql = "DELETE FROM hm_aliases WHERE aliasname=:address";
+                $msql = $mail_db->prepare($msqlSql);
+                $msql->bindParam(':address', $rowmailbox['al_address_vc']);
                 $msql->execute();
+                
             }
         }
     }

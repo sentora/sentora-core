@@ -175,7 +175,7 @@ class ui_module {
      * @global db_driver $zdbh The ZPX database handle.
      * @return string The name of the currently loaded (active) module. 
      */
-    static function GetModuleName() {
+    public static function GetModuleName() {
         global $controller;
         global $zdbh;
         $bindArray = array(

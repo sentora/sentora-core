@@ -41,6 +41,7 @@ class ui_templateparser {
                 }
             }
         }
+        $match = null;
         preg_match_all("'<@\s(.*?)\s@>'si", $raw, $match);
         if ($match) {
             foreach ($match[1] as $classes) {
@@ -51,6 +52,7 @@ class ui_templateparser {
                 #}
             }
         }
+        $match = null;
         preg_match_all("'<:\s(.*?)\s:>'si", $raw, $match);
         if ($match) {
             foreach ($match[1] as $string) {

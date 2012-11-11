@@ -59,10 +59,15 @@ class module_controller {
         $line .= "<form action=\"./?module=apache_admin&action=UpdateApacheConfig\" method=\"post\">";
         $line .= "<table class=\"zgrid\">";
         $count = 0;
-        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
+        $moduleName = ui_module::GetModuleName();
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':module', $moduleName);
+        $numrows->execute();
+        if ($numrows) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc");
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc");
+                $sql->bindParam(':module', $moduleName);
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
@@ -228,11 +233,18 @@ class module_controller {
         $line .= "<br><br>";
         $line .= "<form action=\"./?module=apache_admin&action=SaveVhost\" method=\"post\">";
         $line .= "<table class=\"zform\">";
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc='" . $controller->GetControllerRequest('FORM', 'inVhost') . "' AND vh_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
-            if ($numrows->fetchColumn() <> 0) {
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc=:vhost AND vh_deleted_ts IS NULL";
+        
+        $inVhost = $controller->GetControllerRequest('FORM', 'inVhost');
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':vhost', $inVhost);
+        $numrows->execute();
 
-                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_name_vc='" . $controller->GetControllerRequest('FORM', 'inVhost') . "' AND vh_deleted_ts IS NULL");
+        if ($numrows) {
+            if ($numrows->fetchColumn() <> 0) {
+                $inVhost2 = $controller->GetControllerRequest('FORM', 'inVhost');
+                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_name_vc=:vhost AND vh_deleted_ts IS NULL");
+                $sql->bindParam(':vhost', $inVhost2);
                 $sql->execute();
                 $row = $sql->fetch();
 
@@ -266,14 +278,27 @@ class module_controller {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
-        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
+        
+        $moduleName = ui_module::GetModuleName();
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':module', $moduleName);
+        $numrows->execute();
+        
+        if ($numrows) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'");
+                $moduleName2 = ui_module::GetModuleName();
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'");
+                $sql->bindParam(':module', $moduleName2);
                 $sql->execute();
                 while ($row = $sql->fetch()) {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
-                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
+                        $value = $controller->GetControllerRequest('FORM', $row['so_name_vc']);
+                        $name = $row['so_name_vc'];
+                        
+                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = :value WHERE so_name_vc = :name");
+                        $updatesql->bindParam(':value', $value);
+                        $updatesql->bindParam(':name', $name);
                         $updatesql->execute();
                         self::SetWriteApacheConfigTrue();
                     }

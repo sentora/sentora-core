@@ -40,13 +40,17 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_aliases WHERE al_acc_fk=" . $currentuser['userid'] . " AND al_deleted_ts IS NULL ORDER BY al_address_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_aliases WHERE al_acc_fk=:userid AND al_deleted_ts IS NULL ORDER BY al_address_vc ASC";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
+            $sql2 = $zdbh->prepare($sql);
             $res = array();
-            $sql->execute();
-            while ($rowaliases = $sql->fetch()) {
+            $sql2->bindParam(':userid', $currentuser['userid']);
+            $sql2->execute();
+            while ($rowaliases = $sql2->fetch()) {
                 array_push($res, array('address' => $rowaliases['al_address_vc'],
                     'destination' => $rowaliases['al_destination_vc'],
                     'id' => $rowaliases['al_id_pk']));
@@ -60,11 +64,15 @@ class module_controller {
     static function ListCurrentAlias($aid) {
         global $zdbh;
         global $controller;
-        $sql = "SELECT * FROM x_aliases WHERE al_id_pk=" . $aid . " AND al_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_aliases WHERE al_id_pk=:aid AND al_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':aid', $aid);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
+            $sql->bindParam(':aid', $aid);
             $sql->execute();
             while ($rowaliases = $sql->fetch()) {
                 array_push($res, array('address' => $rowaliases['al_address_vc'],
@@ -77,17 +85,24 @@ class module_controller {
         }
     }
 
-    static function getMailboxList($uid) {
+    static function getMailboxList($uid=null) {
         global $zdbh;
         global $controller;
+        if(($uid == '')||(empty($uid))||($uid == null)){
+            $uid = ctrl_auth::CurrentUserID();
+        }
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $currentuser['userid'] . " AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
+            $sqlRun = $zdbh->prepare($sql);
+            $sqlRun->bindParam(':userid', $currentuser['userid']);
             $res = array();
-            $sql->execute();
-            while ($rowmailboxes = $sql->fetch()) {
+            $sqlRun->execute();
+            while ($rowmailboxes = $sqlRun->fetch()) {
                 array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
                     'id' => $rowmailboxes['mb_id_pk']));
             }
@@ -97,17 +112,24 @@ class module_controller {
         }
     }
 
-    static function getDomainList($uid) {
+    static function getDomainList($uid=null){
         global $zdbh;
         global $controller;
+        if(($uid == '')||(empty($uid))||($uid == null)){
+            $uid = ctrl_auth::CurrentUserID();
+        }
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
+            $sqlRun = $zdbh->prepare($sql);
+            $sqlRun->bindParam(':userid', $currentuser['userid']);
             $res = array();
-            $sql->execute();
-            while ($rowdomains = $sql->fetch()) {
+            $sqlRun->execute();
+            while ($rowdomains = $sqlRun->fetch()) {
                 array_push($res, array('domain' => $rowdomains['vh_name_vc']));
             }
             return $res;
@@ -129,19 +151,28 @@ class module_controller {
         self::$create = true;
         // Include mail server specific file here.
         include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        
+        $bindArray = array(
+                ':userid' => $currentuser['userid'],
+                ':fulladdress' => $fulladdress,
+                ':destination' => $destination,
+                ':time' => time()
+            );
         $sql = "INSERT INTO x_aliases (al_acc_fk,
 											  al_address_vc,
 											  al_destination_vc,
 											  al_created_ts) VALUES (
-											  " . $currentuser['userid'] . ",
-											  '" . $fulladdress . "',
-											  '" . $destination . "',
-											  " . time() . ")";
-        $sql = $zdbh->prepare($sql);
-        $sql->execute();
-        runtime_hook::Execute('OnAfterCreateAlias');
-        self::$ok = true;
-        return true;
+											  :userid,
+											  :fulladdress,
+											  :destination,
+											  :time)";
+        if($zdbh->bindQuery($sql, $bindArray)){
+            runtime_hook::Execute('OnAfterCreateAlias');
+            self::$ok = true;
+            return true;
+        }else{
+            return false;
+        }
     }
 
     static function ExecuteDeleteAlias($al_id_pk) {
@@ -149,13 +180,21 @@ class module_controller {
         global $controller;
         self::$delete = true;
         runtime_hook::Execute('OnBeforeDeleteAlias');
-        $rowalias = $zdbh->query("SELECT * FROM x_aliases WHERE al_id_pk=" . $al_id_pk . "")->Fetch();
+        //$rowalias = $zdbh->query("SELECT * FROM x_aliases WHERE al_id_pk=" . $al_id_pk . "")->Fetch();
+        $bindArray = array(
+            ':id' => $al_id_pk,
+        );
+        $sqlStatment = $zdbh->bindQuery("SELECT * FROM x_aliases WHERE al_id_pk=:id", $bindArray);
+        $rowalias = $zdbh->returnRow();
+        
         // Include mail server specific file here.
         if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
             include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
         }
-        $sql = "UPDATE x_aliases SET al_deleted_ts=" . time() . " WHERE al_id_pk=" . $al_id_pk . "";
-        $sql = $zdbh->prepare($sql);
+        $sqlStatmentUpdate = "UPDATE x_aliases SET al_deleted_ts=:time WHERE al_id_pk=:id";
+        $sql = $zdbh->prepare($sqlStatmentUpdate);
+        $sql->bindParam(':id', $al_id_pk);
+        $sql->bindParam(':time', time());
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteAlias');
         self::$ok = true;
@@ -174,32 +213,47 @@ class module_controller {
             self::$validemail = true;
             return false;
         }
-        $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc='" . $fulladdress . "' AND mb_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc=:fulladdress AND mb_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
         }
-        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc=:fulladdress AND fw_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
         }
-        $sql = "SELECT * FROM x_forwarders WHERE fw_destination_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_forwarders WHERE fw_destination_vc=:fulladdress AND fw_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
         }
-        $sql = "SELECT * FROM x_distlists WHERE dl_address_vc='" . $fulladdress . "' AND dl_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_distlists WHERE dl_address_vc=:fulladdress AND dl_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
         }
-        $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $fulladdress . "' AND al_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_aliases WHERE al_address_vc=:fulladdress AND al_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
@@ -309,7 +363,11 @@ class module_controller {
 
     static function GetMailOption($name) {
         global $zdbh;
-        $result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
+        $sql = 'SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = :name';
+        $bindArray = array(':name' => $name);
+        $sqlStatment = $zdbh->bindQuery($sql, $bindArray);
+        $result = $zdbh->returnRow();
+
         if ($result) {
             return $result['mbs_value_tx'];
         } else {
