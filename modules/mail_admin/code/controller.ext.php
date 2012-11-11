@@ -58,6 +58,7 @@ class module_controller {
     static function doUpdateConfig() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $sql = "SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
         $numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
@@ -94,6 +95,10 @@ class module_controller {
         global $controller;
         $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
 }

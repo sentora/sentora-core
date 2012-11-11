@@ -277,6 +277,7 @@ class module_controller {
 
     static function doCreateParkedDomain() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteAddParkedDomain($currentuser['userid'], $formvars['inDomain'])) {
@@ -290,6 +291,7 @@ class module_controller {
 
     static function doDeleteParkedDomain() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inDelete'])) {
@@ -303,6 +305,7 @@ class module_controller {
 
     static function doConfirmDeleteParkedDomain() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListParkedDomains($currentuser['userid']) as $row) {
@@ -396,6 +399,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your domain web hosting has been saved successfully."), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**

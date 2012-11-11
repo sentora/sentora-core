@@ -142,6 +142,7 @@ class module_controller {
     static function doDeleteBackup() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $userid = $currentuser['userid'];
         $username = $currentuser['username'];
@@ -248,6 +249,10 @@ class module_controller {
             return ui_sysmessage::shout("Backup completed successfully!", "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
 }

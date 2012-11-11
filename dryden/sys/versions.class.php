@@ -74,6 +74,8 @@ class sys_versions {
             $retval = "Linux";
         } elseif ($os_abbr == "FRE") {
             $retval = "FreeBSD";
+        } elseif ($os_abbr == "DAR") {
+            $retval = "MacOSX";
         } else {
             $retval = "Other";
         }
@@ -92,10 +94,15 @@ class sys_versions {
                 $retval = "Windows";
             } else {
                 $retval = $osname[0][0];
+                if ($retval == "Unix") {
+                    // Lets just make sure it isn't MacOSX before we give up!
+                    if (sys_versions::ShowOSPlatformVersion() == "MacOSX") {
+                        $retval = "MacOSX";
+                    }
+                }
             }
 
             //My testing shows Linux shows correct OS, WindowsXP=Win32, Windows2007/Server=WINNT -russ
-
             /*
               $uname = strtolower(php_uname());
               $retval = "";

@@ -82,11 +82,16 @@ class module_controller {
 
     static function doUpdateMessage() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         self::ExectuteUpdateNotice($currentuser['userid'], $formvars['inNotice']);
         header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
         exit;
+    }
+    
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**
