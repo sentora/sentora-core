@@ -46,10 +46,11 @@ class module_controller {
         $numrows->execute();
         
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
+            $sql2 = $zdbh->prepare($sql);
             $res = array();
-            $sql->execute();
-            while ($rowaliases = $sql->fetch()) {
+            $sql2->bindParam(':userid', $currentuser['userid']);
+            $sql2->execute();
+            while ($rowaliases = $sql2->fetch()) {
                 array_push($res, array('address' => $rowaliases['al_address_vc'],
                     'destination' => $rowaliases['al_destination_vc'],
                     'id' => $rowaliases['al_id_pk']));
