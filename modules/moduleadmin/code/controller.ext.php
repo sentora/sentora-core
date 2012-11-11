@@ -240,45 +240,69 @@ class module_controller {
 
     static function getIsShowModuleInfo() {
         global $controller;
-        if ($controller->GetControllerRequest('URL', 'showinfo'))
+        if (isset($_GET['showinfo']) && $controller->GetControllerRequest('URL', 'showinfo'))
             return true;
         return false;
     }
 
     static function getModuleInfoName() {
         global $controller;
-        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-        return $info['name'];
+        if (self::getIsShowModuleInfo()) {
+            $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+            return $info['name'];
+        } else {
+            return null;
+        }
     }
 
     static function getModuleDescription() {
         global $controller;
-        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-        return $info['desc'];
+        if (self::getIsShowModuleInfo()) {
+            $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+            return $info['desc'];
+        } else {
+            return null;
+        }
     }
 
     static function getModuleDeveloperName() {
         global $controller;
-        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-        return $info['authorname'];
+        if (self::getIsShowModuleInfo()) {
+            $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+            return $info['authorname'];
+        } else {
+            return null;
+        }
     }
 
     static function getModuleDeveloperEmail() {
         global $controller;
-        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-        return $info['authoremail'];
+        if (self::getIsShowModuleInfo()) {
+            $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+            return $info['authoremail'];
+        } else {
+            return null;
+        }
     }
 
     static function getModuleVersion() {
         global $controller;
-        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-        return $info['version'];
+        if (self::getIsShowModuleInfo()) {
+            $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+            return $info['version'];
+        } else {
+            return null;
+        }
     }
 
     static function getModuleDeveloperURL() {
         global $controller;
-        $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
-        return $info['authorurl'];
+        if (self::getIsShowModuleInfo()) {
+            $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
+            return $info['authorurl'];
+        } else {
+            return null;
+        }
     }
 
     static function getModuleUpdateURL() {
