@@ -61,7 +61,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
     $result = $mail_db->returnRow();
     
     if (!$result) {
-        $sql = "INSERT INTO alias  (address,
+        $sqlStatment2 = "INSERT INTO alias  (address,
 										 	goto,
 										 	domain,
 											created,
@@ -73,7 +73,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 										 	NOW(),
 										 	NOW(),
 										 	'1')";
-        $sql = $mail_db->prepare($sql);
+        $sql = $mail_db->prepare($sqlStatment2);
         $sql->bindParam(':domain', $domain);
         $sql->bindParam(':fulladdress', $fulladdress);
         $sql->bindParam(':destination', $destination);
