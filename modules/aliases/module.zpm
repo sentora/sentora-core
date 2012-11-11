@@ -73,7 +73,7 @@
 						<td>
 						<select name="inDestination" id="inDestination">
 						<option value="" selected="selected">-- <: Select a mailbox :> --</option>
-						<% if isDeleteAlias %>
+						<% if MailboxList %>
                                                 <% loop MailboxList %>
 						<option value="<& address &>"><& address &></option>
 						<% endloop %>
