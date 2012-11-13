@@ -67,9 +67,7 @@ class runtime_csfr {
             }
             </style>
             <div class=\"dbwarning\"><strong>Application Error:</strong> [0204] - The form you attempted to submit had an invalid token!</p></div>";
-
-    die($error_html);
-        die("CSFR Token failure!");
+        die($error_html);
     }
 
 }
