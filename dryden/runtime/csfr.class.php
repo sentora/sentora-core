@@ -52,6 +52,23 @@ class runtime_csfr {
             self::Tokeniser();
             return true;
         }
+        $error_html = "<style type=\"text/css\"><!--
+            .dbwarning {
+                    font-family: Verdana, Geneva, sans-serif;
+                    font-size: 14px;
+                    color: #C00;
+                    background-color: #FCC;
+                    padding: 30px;
+                    border: 1px solid #C00;
+            }
+            p {
+                    font-size: 12px;
+                    color: #666;
+            }
+            </style>
+            <div class=\"dbwarning\"><strong>Application Error:</strong> [0204] - The form you attempted to submit had an invalid token!</p></div>";
+
+    die($error_html);
         die("CSFR Token failure!");
     }
 
