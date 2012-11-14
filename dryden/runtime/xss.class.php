@@ -107,35 +107,28 @@ class runtime_xss {
      */
     function xssClean($data, $settings) {
         if (@$settings[0] || @empty($settings[0])) {
-            // Fix &entity\n;
             $data = $this->fixEntitys($data);
         }
 
         if (@$settings[1] || @empty($settings[1])) {
-            // Remove any attribute starting with "on" or xmlns
             $data = $this->removeAttribute($data);
         }
 
         if (@$settings[2] || @empty($settings[2])) {
-            // Remove javascript: and vbscript: protocols
             $data = $this->removeJavaVB($data);
         }
 
         if (@$settings[3] || @empty($settings[3])) {
-            // Only works in IE: <span style="width: expression(alert('Ping!'));"></span>
             $data = $this->removeCssAttack($data);
         }
 
         if (@$settings[4] || @empty($settings[4])) {
-            // Remove namespaced elements (we do not need them)
             $data = $this->removeNameSpace($data);
         }
         if (@$settings[5] || @empty($settings[5])) {
-            //Remove any un-wanted strings
             $data = $this->removeHarmfullStrings($data);
         }
         if (@$settings[6] || @empty($settings[6])) {
-            //Now we run throught html entities for another check
             $data = $this->htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
         }
         // Xss Clean Data
