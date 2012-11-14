@@ -1,36 +1,143 @@
 <?php
-//not done yet
+
+/**
+ * Cross Side Scripting protection class.
+ * @package zpanelx
+ * @subpackage dryden -> runtime
+ * @version 1.0.0
+ * @author Sam Mottley (smottley@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
+ */
 class runtime_xss {
 
-    function xssClean($data) {
-        // Fix &entity\n;
+    /**
+     * Fix any problems or tampering with entities
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @return string The Clean String.
+     */
+    public function fixEntitys($data) {
         $data = str_replace(array('&amp;', '&lt;', '&gt;'), array('&amp;amp;', '&amp;lt;', '&amp;gt;'), $data);
         $data = preg_replace('/(&#*\w+)[\x00-\x20]+;/u', '$1;', $data);
         $data = preg_replace('/(&#x*[0-9A-F]+);*/iu', '$1;', $data);
         $data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
+        return $data;
+    }
 
-        // Remove any attribute starting with "on" or xmlns
+    /**
+     * Remove on and xmlns attributes
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @return string The Clean String.
+     */
+    public function removeAttribute($data) {
         $data = preg_replace('#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu', '$1>', $data);
+        return $data;
+    }
 
-        // Remove javascript: and vbscript: protocols
+    /**
+     * Remove javascript and VB tags
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @return string The Clean String.
+     */
+    public function removeJavaVB($data) {
         $data = preg_replace('#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2nojavascript...', $data);
         $data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2novbscript...', $data);
         $data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u', '$1=$2nomozbinding...', $data);
+        return $data;
+    }
 
-        // Only works in IE: <span style="width: expression(alert('Ping!'));"></span>
+    /**
+     * Remove a common css attack 
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @return string The Clean String.
+     */
+    public function removeCssAttack($data) {
         $data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
         $data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?behaviour[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
         $data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu', '$1>', $data);
+        return $data;
+    }
 
-        // Remove namespaced elements (we do not need them)
+    /**
+     * Remove namespaces from strong
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @return string The Clean String.
+     */
+    public function removeNameSpace($data) {
         $data = preg_replace('#</*\w+:\w[^>]*+>#i', '', $data);
-        
-        //Remove any un-wanted strings
+        return $data;
+    }
+
+    /**
+     * Remove tags that can cause a security issue
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @return string The Clean String.
+     */
+    public function removeHarmfullStrings($data) {
         $data = preg_replace_all('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $data);
-        
-        //Now we run throught html entities for another check
-        $data = htmlentities($data, ENT_QUOTES, 'UTF-8');
-        
+        return $data;
+    }
+
+    /**
+     * Use htmlentities this will by default protect against 99% of attacks
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @param string $ENT specify how to handle quotes
+     * @param string $type Type of encoding to use
+     * @return string The Clean String.
+     */
+    public function htmlentitiesProtection($data, $ENT = 'ENT_QUOTES', $type = 'UTF-8') {
+        $data = htmlentities($data, $ENT, $type);
+        return $data;
+    }
+
+    /**
+     * Run though selected cleaners
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param Array $settings What cleans you want to run through. True And False. 
+     * @param string $data the data that needs cleaning
+     * @return string The Clean String.
+     */
+    function xssClean($data, $settings) {
+        if (@$settings[0] || @empty($settings[0])) {
+            // Fix &entity\n;
+            $data = $this->fixEntitys($data);
+        }
+
+        if (@$settings[1] || @empty($settings[1])) {
+            // Remove any attribute starting with "on" or xmlns
+            $data = $this->removeAttribute($data);
+        }
+
+        if (@$settings[2] || @empty($settings[2])) {
+            // Remove javascript: and vbscript: protocols
+            $data = $this->removeJavaVB($data);
+        }
+
+        if (@$settings[3] || @empty($settings[3])) {
+            // Only works in IE: <span style="width: expression(alert('Ping!'));"></span>
+            $data = $this->removeCssAttack($data);
+        }
+
+        if (@$settings[4] || @empty($settings[4])) {
+            // Remove namespaced elements (we do not need them)
+            $data = $this->removeNameSpace($data);
+        }
+        if (@$settings[5] || @empty($settings[5])) {
+            //Remove any un-wanted strings
+            $data = $this->removeHarmfullStrings($data);
+        }
+        if (@$settings[6] || @empty($settings[6])) {
+            //Now we run throught html entities for another check
+            $data = $this->htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
+        }
         // Xss Clean Data
         return $data;
     }
