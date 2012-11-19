@@ -31,7 +31,12 @@ function WriteCronFile() {
         $line .= "# INSTEAD! THE ABOVE ENTRIES ARE USED FOR ZPANEL TASKS, DO NOT REMOVE THEM!      " . fs_filehandler::NewLine();
         $line .= "#################################################################################" . fs_filehandler::NewLine();
         while ($rowcron = $sql->fetch()) {
-            $rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . $rowcron['ct_acc_fk'] . " AND ac_deleted_ts IS NULL")->fetch();
+            //$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . $rowcron['ct_acc_fk'] . " AND ac_deleted_ts IS NULL")->fetch();
+            $numrows = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_id_pk=:userid AND ac_deleted_ts IS NULL");
+            $numrows->bindParam(':userid', $rowcron['ct_acc_fk']);
+            $numrows->execute();
+            $rowclient = $numrows->fetch();
+            
             if ($rowclient && $rowclient['ac_enabled_in'] <> 0) {
                 $line .= "# CRON ID: " . $rowcron['ct_id_pk'] . "" . fs_filehandler::NewLine();
                 $line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetSystemOption('php_exer') . " " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
@@ -55,10 +60,17 @@ function DeleteClientCronjobs() {
         $sql = $zdbh->prepare($sql);
         $sql->execute();
         while ($rowclient = $sql->fetch()) {
-            $rowcron = $zdbh->query("SELECT * FROM x_cronjobs WHERE ct_acc_fk=" . $rowclient['ac_id_pk'] . " AND ct_deleted_ts IS NULL")->fetch();
+            //$rowcron = $zdbh->query("SELECT * FROM x_cronjobs WHERE ct_acc_fk=" . $rowclient['ac_id_pk'] . " AND ct_deleted_ts IS NULL")->fetch();
+            $numrows = $zdbh->prepare("SELECT * FROM x_cronjobs WHERE ct_acc_fk=:userid AND ct_deleted_ts IS NULL");
+            $numrows->bindParam(':userid', $rowclient['ac_id_pk']);
+            $numrows->execute();
+            $rowcron = $numrows->fetch();
+            
             if ($rowcron) {
-                $delete = "UPDATE x_cronjobs SET ct_deleted_ts=" . time() . " WHERE ct_acc_fk=" . $rowclient['ac_id_pk'] . "";
+                $delete = "UPDATE x_cronjobs SET ct_deleted_ts=:time WHERE ct_acc_fk=:userid";
                 $delete = $zdbh->prepare($delete);
+                $delete->bindParam(':time', time());
+                $delete->bindParam(':userid', $rowclient['ac_id_pk']);
                 $delete->execute();
             }
         }
