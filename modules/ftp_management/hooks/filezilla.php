@@ -25,9 +25,16 @@
  *
  */
 foreach ($deletedclients as $deletedclient) {
-    $result = $zdbh->query("SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $deletedclient . " AND ft_deleted_ts IS NULL")->Fetch();
+    $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:deleteClient AND ft_deleted_ts IS NULL";
+    $info = $zdbh->prepare($sql);
+    $info->bindParam(':deleteClient', $deletedclient);
+    $info->execute();
+    $result = $info->fetch();
+    
     if ($result) {
-        $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_acc_fk=" . $deletedclient . "");
+        $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=:time WHERE ft_acc_fk=:deleteClient");
+        $sql->bindParam(':time', time());
+        $sql->bindParam(':deleteClient', $deletedclient);
         $sql->execute();
     }
 }
