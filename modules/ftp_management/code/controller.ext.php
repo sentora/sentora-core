@@ -40,11 +40,16 @@ class module_controller {
      */
     static function ListClients($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $uid . " AND ft_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $uid);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
+            $sql->bindParam(':userid', $uid);
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
                 array_push($res, array('id' => $rowclients['ft_id_pk'],
@@ -61,10 +66,15 @@ class module_controller {
 
     static function ListCurrentClient($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . $uid . " AND ft_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:userid AND ft_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $uid);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $uid);
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
@@ -127,11 +137,17 @@ class module_controller {
         global $controller;
         runtime_hook::Execute('OnBeforeResetFTPPassword');
         $retval = FALSE;
-        $rowftp = $zdbh->query("SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . $ft_id_pk . "")->fetch();
+        $rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
+        $rowftpfind = $zdbh->prepare($rowftpsql);
+        $rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
+        $rowftpfind->execute();
+        $rowftp = $rowftpfind->fetch();
+        
         $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc=:password WHERE ft_id_pk=:ftpid");
         $sql->bindParam(':password', $password);
         $sql->bindParam(':ftpid', $ft_id_pk);
         $sql->execute();
+        
         self::$reset = true;
         // Include FTP server specific file here.
         if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")) {
@@ -159,12 +175,13 @@ class module_controller {
             } else {
                 $homedirectoy_to_use = "/" . $destination;
             }
-            $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, " . time() . ")");
+            $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->bindParam(':username', $username);
             $sql->bindParam(':homedir', $homedirectoy_to_use);
             $sql->bindParam(':accesstype', $access_type);
             $sql->bindParam(':password', $password);
+            $sql->bindParam(':time', time());
             $sql->execute();
             self::$create = true;
             // Include FTP server specific file here.
@@ -192,8 +209,11 @@ class module_controller {
             $retval = TRUE;
         }
         // Check to make sure the cron is not a duplicate...
-        $sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc='" . $username . "' AND ft_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc=:userid AND ft_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $username);
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 self::$alreadyexists = TRUE;
                 $retval = TRUE;
@@ -214,9 +234,15 @@ class module_controller {
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteFTPAccount');
         $retval = FALSE;
-        $rowftp = $zdbh->query("SELECT * FROM x_ftpaccounts WHERE ft_id_pk=" . $ft_id_pk . "")->fetch();
-        $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_id_pk=:ftpid");
+        $rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
+        $rowftpfind = $zdbh->prepare($rowftpsql);
+        $rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
+        $rowftpfind->execute();
+        $rowftp = $rowftpfind->fetch();
+        
+        $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=:time WHERE ft_id_pk=:ftpid");
         $sql->bindParam(':ftpid', $ft_id_pk);
+        $sql->bindParam(':time', $ft_id_pk);
         $sql->execute();
         self::$delete = true;
         // Include FTP server specific file here.
