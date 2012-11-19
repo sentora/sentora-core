@@ -24,7 +24,7 @@ function DeleteClientDatabaseUser() {
 
 
                     $delete = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = :mu_name_vc)";
-                    $numrows = $zdbh->prepare($sql);
+                    $numrows = $zdbh->prepare($delete);
                     $numrows->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);
                     
                     if ($numrows->execute()) {
