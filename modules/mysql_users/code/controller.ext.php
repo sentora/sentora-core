@@ -215,10 +215,10 @@ class module_controller {
         $sql->bindParam(':access', $access);
         $sql->execute();
         // Grant privileges for new user to the assigned database...
-        $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON :name.* TO :username@:access");
-        $sql->bindParam(':username', $username);
-        $sql->bindParam(':access', $access);
-        $sql->bindParam(':name', $rowdb['my_name_vc']);
+        $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `:name`.* TO `:username`@`:access`");
+        $sql->bindParam(':username', $username, PDO::PARAM_INT);
+        $sql->bindParam(':access', $access, PDO::PARAM_INT);
+        $sql->bindParam(':name', $rowdb['my_name_vc'], PDO::PARAM_INT);
         $sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
@@ -241,7 +241,8 @@ class module_controller {
         $sql->bindParam(':database', $database);
         $sql->bindParam(':password', $password);
         $sql->bindParam(':access', $access);
-        $sql->bindParam(':time', time());
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         // Get the new users id...
         //$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_name_vc='" . $username . "' AND mu_acc_fk=" . $uid . " AND mu_deleted_ts IS NULL")->fetch();
@@ -354,7 +355,8 @@ class module_controller {
 			UPDATE x_mysql_users
 			SET mu_deleted_ts = :time 
 			WHERE mu_id_pk = :mu_id_pk");
-        $sql->bindParam(':time', time());
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->bindParam(':mu_id_pk', $mu_id_pk);
         $sql->execute();
         $sql = $zdbh->prepare("
@@ -372,6 +374,10 @@ class module_controller {
         if (fs_director::CheckForEmptyValue(self::CheckAddForErrors($myuserid, $dbid))) {
             return false;
         }
+        if(!isset($uid)|| $uid == NULL || $uid == ''){
+            $currentuser = ctrl_users::GetUserDetail();
+            $uid = $currentuser['userid'];
+        }
         runtime_hook::Execute('OnBeforeAddDatabaseAccess');
         //$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $dbid . " AND my_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_id_pk=:dbid AND my_deleted_ts IS NULL");
@@ -385,25 +391,27 @@ class module_controller {
         $numrows->execute();
         $rowuser = $numrows->fetch();
         
-        $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON :my_name_vc.* TO :mu_name_vc@:mu_access_vc");
-        $sql->bindParam(':my_name_vc', $rowdb['my_name_vc']);
-        $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);
-        $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc']);
+        $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `:my_name_vc`.* TO `:mu_name_vc`@`:mu_access_vc`");
+        $sql->bindParam(':my_name_vc', $rowdb['my_name_vc'], PDO::PARAM_BOOL);
+        $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc'], PDO::PARAM_BOOL);
+        $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc'], PDO::PARAM_BOOL);
         $sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
-        $sql = $zdbh->prepare("
+        $sql2 = $zdbh->prepare("
 			INSERT INTO x_mysql_dbmap (
 							mm_acc_fk,
 							mm_user_fk,
 							mm_database_fk) VALUES (
 							:uid,
 							:myuserid,
-							:dbid)");
-        $sql->bindParam(':uid', $uid);
-        $sql->bindParam(':myuserid)', $myuserid);
-        $sql->bindParam(':dbid', $dbid);
-        $sql->execute();
+							:dbid
+                                                        )");
+        $sql2->bindParam(':uid', $uid);
+        $sql2->bindParam(':myuserid', $myuserid);
+        $sql2->bindParam(':dbid', $dbid);
+        $sql2->execute();
+        echo 'start hook here';
         runtime_hook::Execute('OnAfterAddDatabaseAccess');
         self::$ok = true;
         return true;
