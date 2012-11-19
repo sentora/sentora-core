@@ -216,9 +216,9 @@ class module_controller {
         $sql->execute();
         // Grant privileges for new user to the assigned database...
         $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `:name`.* TO `:username`@`:access`");
-        $sql->bindParam(':username', $username, PDO::PARAM_INT);
-        $sql->bindParam(':access', $access, PDO::PARAM_INT);
-        $sql->bindParam(':name', $rowdb['my_name_vc'], PDO::PARAM_INT);
+        $sql->bindParam(':username', $username, PDO::PARAM_STR);
+        $sql->bindParam(':access', $access, PDO::PARAM_STR);
+        $sql->bindParam(':name', $rowdb['my_name_vc'], PDO::PARAM_STR);
         $sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
@@ -392,9 +392,9 @@ class module_controller {
         $rowuser = $numrows->fetch();
         
         $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `:my_name_vc`.* TO `:mu_name_vc`@`:mu_access_vc`");
-        $sql->bindParam(':my_name_vc', $rowdb['my_name_vc'], PDO::PARAM_BOOL);
-        $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc'], PDO::PARAM_BOOL);
-        $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc'], PDO::PARAM_BOOL);
+        $sql->bindParam(':my_name_vc', $rowdb['my_name_vc'], PDO::PARAM_STR);
+        $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc'], PDO::PARAM_STR);
+        $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc'], PDO::PARAM_STR);
         $sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
