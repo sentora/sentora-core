@@ -483,7 +483,7 @@ class module_controller {
                 $sql->execute();
                 $sql = $zdbh->prepare("FLUSH PRIVILEGES");
                 $sql->execute();
-                $sql = $zdbh->prepare("UPDATE x_mysql_users SET mu_pass_vc=password WHERE mu_id_pk=:myuserid");
+                $sql = $zdbh->prepare("UPDATE x_mysql_users SET mu_pass_vc=:password WHERE mu_id_pk=:myuserid");
                 $sql->bindParam(':password', $password); 
                 $sql->bindParam(':myuserid', $myuserid); 
                 $sql->execute();
