@@ -35,20 +35,31 @@ try {
 }
 
 foreach ($deletedclients as $deletedclient) {
-    $sql = "SELECT * FROM x_distlists WHERE dl_acc_fk=" . $deletedclient . " AND dl_deleted_ts IS NULL";
-    $numrows = $zdbh->query($sql);
+    $sql = "SELECT * FROM x_distlists WHERE dl_acc_fk=:deletedclient AND dl_deleted_ts IS NULL";
+    //$numrows = $zdbh->query($sql);
+    $numrows = $zdbh->prepare($sql);
+    $numrows->bindParam(':deletedclient', $deletedclient);
+    $numrows->execute();
+    
     if ($numrows->fetchColumn() <> 0) {
         $sql = $zdbh->prepare($sql);
+        $sql->bindParam(':deletedclient', $deletedclient);
         $sql->execute();
         while ($rowmailbox = $sql->fetch()) {
             //distlist
-            $result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'")->Fetch();
+            //$result = $mail_db->query("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'")->Fetch();
+            $numrows = $mail_db->prepare("SELECT distributionlistid FROM hm_distributionlists WHERE distributionlistaddress=:dl_address_vc");
+            $numrows->bindParam(':dl_address_vc', $rowmailbox['dl_address_vc']);
+            $numrows->execute();
+            $result = $numrows->fetch();
             if ($result) {
-                $msql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid='" . $result['distributionlistid'] . "'";
+                $msql = "DELETE FROM hm_distributionlistsrecipients WHERE distributionlistrecipientlistid=:distributionlistid";
                 $msql = $mail_db->prepare($msql);
+                $msql->bindParam(':distributionlistid', $result['distributionlistid']);
                 $msql->execute();
-                $msql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress='" . $rowmailbox['dl_address_vc'] . "'";
+                $msql = "DELETE FROM hm_distributionlists WHERE distributionlistaddress=:dl_address_vc";
                 $msql = $mail_db->prepare($msql);
+                $msql->bindParam(':dl_address_vc', $rowmailbox['dl_address_vc']);
                 $msql->execute();
             }
         }
