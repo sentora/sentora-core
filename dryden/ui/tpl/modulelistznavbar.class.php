@@ -12,7 +12,7 @@
  */
 class ui_tpl_modulelistznavbar {
 
-    function Template() {
+    public static function Template() {
         $line = "";
         $tabindex = 0;
         $modcats = ui_moduleloader::GetModuleCats();

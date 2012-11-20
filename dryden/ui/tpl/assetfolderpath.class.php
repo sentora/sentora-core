@@ -12,7 +12,7 @@
  */
 class ui_tpl_assetfolderpath {
 
-    public function Template() {
+    public static function Template() {
         return 'etc/styles/' . ui_template::GetUserTemplate() . '/';
     }
 

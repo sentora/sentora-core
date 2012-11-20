@@ -12,7 +12,7 @@
  */
 class ui_tpl_clientipaddress {
 
-    public function Template() {
+    public static function Template() {
         return sys_monitoring::ClientIPAddress();
     }
 

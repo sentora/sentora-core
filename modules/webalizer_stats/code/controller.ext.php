@@ -59,6 +59,7 @@ class module_controller {
 
     static function doShowStats() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inDomain'])) {
             header("location: ./?module=" . $controller->GetCurrentModule() . "&show=true&domain=" . $formvars['inDomain'] . "");
@@ -74,6 +75,10 @@ class module_controller {
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "true"))
             return true;
         return false;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getInit() {

@@ -18,6 +18,7 @@
 				</td>
 			</tr>
 		</table>
+                <@ CSFR_Tag @>
 		</form>
 	</div>
 	<% endif %>
@@ -43,6 +44,7 @@
             </tr>			
 			<% endloop %>
 	    </table>
+        <@ CSFR_Tag @>
     	</form>
 	<% else %>
 	<: You currently do not have any parked domains setup on your account. Create a parked domain using the form below. :>
@@ -64,6 +66,7 @@
 			        <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateParkedDomain" value="1">Create</button></td>
 		        </tr>
         </table>
+        <@ CSFR_Tag @>
         </form>
 	<% else %>
 	<: You have reached your parked domains limit! :>

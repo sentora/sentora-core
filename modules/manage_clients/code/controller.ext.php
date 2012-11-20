@@ -133,14 +133,14 @@ class module_controller {
             $sql->execute();
             $currentuser = ctrl_users::GetUserDetail($uid);
             while ($rowclients = $sql->fetch()) {
-                array_push($res, array('fullname' => $rowclients['ud_fullname_vc'],
-                    'username' => $currentuser['username'],
-                    'userid' => $currentuser['userid'],
-                    'fullname' => $rowclients['ud_fullname_vc'],
-                    'postcode' => $rowclients['ud_postcode_vc'],
-                    'address' => $rowclients['ud_address_tx'],
-                    'phone' => $rowclients['ud_phone_vc'],
-                    'email' => $currentuser['email']));
+                array_push($res, array('fullname' => htmlspecialchars(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
+                    'username' => htmlentities(strip_tags($currentuser['username']), ENT_QUOTES, 'UTF-8'),
+                    'userid' => htmlentities(strip_tags($currentuser['userid']), ENT_QUOTES, 'UTF-8'),
+                    'fullname' => htmlentities(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
+                    'postcode' => htmlentities(strip_tags($rowclients['ud_postcode_vc']), ENT_QUOTES, 'UTF-8'),
+                    'address' => htmlentities(strip_tags($rowclients['ud_address_tx']), ENT_QUOTES, 'UTF-8'),
+                    'phone' => htmlentities(strip_tags($rowclients['ud_phone_vc']), ENT_QUOTES, 'UTF-8'),
+                    'email' => htmlentities(strip_tags($currentuser['email']), ENT_QUOTES, 'UTF-8')));
             }
             return $res;
         } else {
@@ -554,6 +554,7 @@ class module_controller {
      */
     static function doCreateClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inSWE'])) {
@@ -571,6 +572,7 @@ class module_controller {
 
     static function doEditClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListClients($currentuser['userid']) as $row) {
@@ -588,6 +590,7 @@ class module_controller {
 
     static function doEditDisabledClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListDisabledClients($currentuser['userid']) as $row) {
@@ -605,6 +608,7 @@ class module_controller {
 
     static function doDeleteClient() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteClient($formvars['inDelete'], $formvars['inMoveClient']))
             return true;
@@ -613,6 +617,7 @@ class module_controller {
 
     static function doUpdateClient() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteUpdateClient($formvars['inClientID'], $formvars['inPackage'], $formvars['inEnabled'], $formvars['inGroup'], $formvars['inFullName'], $formvars['inEmailAddress'], $formvars['inAddress'], $formvars['inPostCode'], $formvars['inPhone'], $formvars['inNewPassword']))
@@ -930,6 +935,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Changes to your client(s) have been saved successfully!"), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**

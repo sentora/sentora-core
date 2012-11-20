@@ -39,11 +39,15 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $line = "<h2>" . ui_language::translate("Current Cron Tasks") . "</h2>";
-        $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=:userid AND ct_deleted_ts IS NULL";       
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
 
-                $sql = $zdbh->prepare("SELECT * FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_deleted_ts IS NULL");
+                $sql = $zdbh->prepare("SELECT * FROM x_cronjobs WHERE ct_acc_fk=:userid AND ct_deleted_ts IS NULL");
+                $sql->bindParam(':userid', $currentuser['userid']);
                 $sql->execute();
                 $line .= "<form action=\"./?module=cron&action=DeleteCron\" method=\"post\">";
                 $line .= "<table class=\"zgrid\">";
@@ -62,6 +66,7 @@ class module_controller {
                     $line .= "</tr>";
                 }
                 $line .= "</table>";
+                $line .= runtime_csfr::Token();
                 $line .= "</form>";
             } else {
                 $line .= ui_language::translate("You currently do not have any tasks setup.");
@@ -104,6 +109,7 @@ class module_controller {
         $line .= "<tr>";
         $line .= "<th colspan=\"2\" align=\"right\"><input type=\"hidden\" name=\"inReturn\" value=\"GetFullURL\" />";
         $line .= "<input type=\"hidden\" name=\"inUserID\" value=\"" . $currentuser['userid'] . "\" />";
+        $line .= runtime_csfr::Token();
         $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\">" . ui_language::translate("Create") . "</button></th>";
         $line .= "</tr>";
         $line .= "</table>";
@@ -115,6 +121,7 @@ class module_controller {
     static function doCreateCron() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         if (fs_director::CheckForEmptyValue(self::CheckCronForErrors())) {
 
@@ -138,16 +145,22 @@ class module_controller {
     static function doDeleteCron() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=:userid AND ct_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_deleted_ts IS NULL");
+                $sql = $zdbh->prepare("SELECT * FROM x_cronjobs WHERE ct_acc_fk=:userid AND ct_deleted_ts IS NULL");
+                $sql->bindParam(':userid', $currentuser['userid']);
                 $sql->execute();
                 while ($rowcrons = $sql->fetch()) {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $rowcrons['ct_id_pk'] . ''))) {
-                        $sql2 = $zdbh->prepare("UPDATE x_cronjobs SET ct_deleted_ts=" . time() . " WHERE ct_id_pk=:cronid");
+                        $sql2 = $zdbh->prepare("UPDATE x_cronjobs SET ct_deleted_ts=:time WHERE ct_id_pk=:cronid");
                         $sql2->bindParam(':cronid', $rowcrons['ct_id_pk']);
+                        $sql2->bindParam(':time', time());
                         $sql2->execute();
                         self::WriteCronFile();
                         self::$ok = TRUE;
@@ -190,8 +203,12 @@ class module_controller {
             $retval = TRUE;
         }
         // Check to make sure the cron is not a duplicate...
-        $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=" . $currentuser['userid'] . " AND ct_script_vc='" . $controller->GetControllerRequest('FORM', 'inScript') . "' AND ct_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=:userid AND ct_script_vc=:inScript AND ct_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':inScript', $controller->GetControllerRequest('FORM', 'inScript'));
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 self::$alreadyexists = TRUE;
                 $retval = TRUE;
@@ -229,7 +246,12 @@ class module_controller {
             $line .= "# INSTEAD! THE ABOVE ENTRIES ARE USED FOR ZPANEL TASKS, DO NOT REMOVE THEM!      " . fs_filehandler::NewLine();
             $line .= "#################################################################################" . fs_filehandler::NewLine();
             while ($rowcron = $sql->fetch()) {
-                $rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . $rowcron['ct_acc_fk'] . " AND ac_deleted_ts IS NULL")->fetch();
+                //$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=:userid AND ac_deleted_ts IS NULL")->fetch();
+                $fetchRows = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_id_pk=:userid AND ac_deleted_ts IS NULL");
+                $fetchRows->bindParam(':userid', $rowcron['ct_acc_fk']);
+                $fetchRows->execute();
+                $rowclient = $fetchRows->fetch();
+                
                 if ($rowclient && $rowclient['ac_enabled_in'] <> 0) {
                     $line .= "# CRON ID: " . $rowcron['ct_id_pk'] . "" . fs_filehandler::NewLine();
                     $line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetSystemOption('php_exer') . " " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
@@ -335,6 +357,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("Cron updated successfully."), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     static function getModuleName() {

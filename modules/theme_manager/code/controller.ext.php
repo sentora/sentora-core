@@ -138,6 +138,7 @@ class module_controller {
 
     static function doSaveTheme() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         self::ExectuteUpdateTheme($currentuser['userid'], $formvars['inTheme']);
@@ -152,6 +153,7 @@ class module_controller {
 
     static function doSaveCSS() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         self::ExectuteUpdateCSS($currentuser['userid'], $formvars['inCSS']);
@@ -170,6 +172,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("This theme has more than one variation, please choose a variation you'd like to use.."), "zannounceerror");
         }
         return false;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
     /**

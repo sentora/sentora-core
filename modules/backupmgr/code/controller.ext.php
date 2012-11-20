@@ -142,6 +142,7 @@ class module_controller {
     static function doDeleteBackup() {
         global $zdbh;
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $userid = $currentuser['userid'];
         $username = $currentuser['username'];
@@ -203,7 +204,11 @@ class module_controller {
 
     static function GetBUOption($name) {
         global $zdbh;
-        $result = $zdbh->query("SELECT bus_value_tx FROM x_backup_settings WHERE bus_name_vc = '$name'")->Fetch();
+       // $result = $zdbh->query("SELECT bus_value_tx FROM x_backup_settings WHERE bus_name_vc = '$name'")->Fetch();
+        $sql = $zdbh->prepare("SELECT bus_value_tx FROM x_backup_settings WHERE bus_name_vc = :name");
+        $sql->bindParam(':name', $name);
+        $sql->execute();
+        $result = $sql->fetch();
         if ($result) {
             return $result['bus_value_tx'];
         } else {
@@ -244,6 +249,10 @@ class module_controller {
             return ui_sysmessage::shout("Backup completed successfully!", "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
 }

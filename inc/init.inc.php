@@ -35,6 +35,7 @@ if (isset($_GET['returnsession'])) {
 }
 
 if (isset($_POST['inForgotPassword'])) {
+    runtime_csfr::Protect();
     $randomkey = sha1(microtime());
     $forgotPass = $_POST['inForgotPassword'];
     $sth = $zdbh->prepare("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = :forgotPass");
@@ -63,6 +64,7 @@ if (isset($_POST['inForgotPassword'])) {
 }
 
 if (isset($_POST['inConfEmail'])) {
+    runtime_csfr::Protect();
     $sql = $zdbh->prepare("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = :email AND ac_resethash_tx = :resetkey AND ac_resethash_tx IS NOT NULL");
     $sql->bindParam(':email', $_POST['inConfEmail']);
     $sql->bindParam(':resetkey', $_GET['resetkey']);
@@ -82,6 +84,8 @@ if (isset($_POST['inConfEmail'])) {
 }
 
 if (isset($_POST['inUsername'])) {
+    if (ctrl_options::GetSystemOption('login_csfr') == 'false')
+        runtime_csfr::Protect();
     if (!isset($_POST['inRemember'])) {
         $rememberdetails = false;
     } else {

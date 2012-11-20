@@ -44,7 +44,8 @@ if (ui_module::CheckModuleEnabled('Backup Config')) {
                 $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL";
                 if ($numrows = $zdbh->query($sql)) {
                     if ($numrows->fetchColumn() <> 0) {
-                        $sql = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_acc_fk=" . $userid . " AND my_deleted_ts IS NULL");
+                        $sql = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_acc_fk=:userid AND my_deleted_ts IS NULL");
+                        $sql->bindParam(':userid', $userid);
                         $sql->execute();
                         while ($row_mysql = $sql->fetch()) {
                             $bkcommand = ctrl_options::GetSystemOption('mysqldump_exe') . " -h " . $host . " -u " . $user . " -p" . $pass . " --no-create-db " . $row_mysql['my_name_vc'] . " > " . ctrl_options::GetSystemOption('temp_dir') . $row_mysql['my_name_vc'] . "_" . $dbstamp . ".sql";

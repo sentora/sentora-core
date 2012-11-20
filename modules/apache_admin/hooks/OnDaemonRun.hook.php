@@ -133,7 +133,8 @@ function WriteVhostConfigFile() {
         $bandwidth = ctrl_users::GetQuotaUsages('bandwidth', $vhostuser['userid']);
         $diskspace = ctrl_users::GetQuotaUsages('diskspace', $vhostuser['userid']);
         // Set the vhosts to "LIVE"
-        $vsql = $zdbh->prepare("UPDATE x_vhosts SET vh_active_in=1 WHERE vh_id_pk=" . $rowvhost['vh_id_pk'] . "");
+        $vsql = $zdbh->prepare("UPDATE x_vhosts SET vh_active_in=1 WHERE vh_id_pk=:id");
+        $vsql->bindParam(':id', $rowvhost['vh_id_pk']);
         $vsql->execute();
         // Add a default email if no email found for client.
         if (fs_director::CheckForEmptyValue($vhostuser['email'])) {
@@ -416,9 +417,11 @@ function WriteVhostConfigFile() {
     $vhconfigfile = ctrl_options::GetSystemOption('apache_vhost');
     if (fs_filehandler::UpdateFile($vhconfigfile, 0777, $line)) {
         // Reset Apache settings to reflect that config file has been written, until the next change.
+        $time = time();
         $vsql = $zdbh->prepare("UPDATE x_settings
-									SET so_value_tx='" . time() . "'
+									SET so_value_tx=:time
 									WHERE so_name_vc='apache_changed'");
+        $vsql->bindParam(':time', $time);
         $vsql->execute();
         echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
         if (sys_versions::ShowOSPlatformVersion() == "Windows") {
@@ -491,35 +494,58 @@ function TriggerApacheQuotaUsage() {
         if ($rowvhost['vh_enabled_in'] == 1 && ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) ||
                 $rowvhost['vh_enabled_in'] == 1 && ctrl_options::GetSystemOption('apache_allow_disabled') == strtolower("true")) {
 
-            $checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $rowvhost['vh_acc_fk'] . "")->fetch();
+            //$checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $rowvhost['vh_acc_fk'] . "")->fetch();
+ 
+            $date = date("Ym");
+            $findsize = $zdbh->prepare("SELECT * FROM x_bandwidth WHERE bd_month_in = :date AND bd_acc_fk = :acc");
+            $findsize->bindParam(':date', $date);
+            $findsize->bindParam(':acc', $rowvhost['vh_acc_fk']);
+            $findsize->execute();
+            $checksize = $findsize->fetch();
+            
             $currentuser = ctrl_users::GetUserDetail($rowvhost['vh_acc_fk']);
             if ($checksize['bd_diskover_in'] != $checksize['bd_diskcheck_in'] && $checksize['bd_diskover_in'] == 1) {
                 echo "Disk usage over quota, triggering Apache..." . fs_filehandler::NewLine();
                 $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
-                $updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
-                $updateapache->execute();
+                
+                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+                $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_diskcheck_in = 1 WHERE bd_acc_fk = :acc");
+                $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
+                $updateapache2->execute();
             }
             if ($checksize['bd_diskover_in'] != $checksize['bd_diskcheck_in'] && $checksize['bd_diskover_in'] == 0) {
                 echo "Disk usage under quota, triggering Apache..." . fs_filehandler::NewLine();
                 $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
-                $updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
-                $updateapache->execute();
+                
+                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+                $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_diskcheck_in = 0 WHERE bd_acc_fk = :acc");
+                $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
+                $updateapache2->execute();
+                
             }
             if ($checksize['bd_transover_in'] != $checksize['bd_transcheck_in'] && $checksize['bd_transover_in'] == 1) {
                 echo "Bandwidth usage over quota, triggering Apache..." . fs_filehandler::NewLine();
                 $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
-                $updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
-                $updateapache->execute();
+                
+                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+                $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_transcheck_in = 1 WHERE bd_acc_fk = :acc");
+                $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
+                $updateapache2->execute();
+                
             }
             if ($checksize['bd_transover_in'] != $checksize['bd_transcheck_in'] && $checksize['bd_transover_in'] == 0) {
                 echo "Bandwidth usage under quota, triggering Apache..." . fs_filehandler::NewLine();
                 $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
-                $updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
-                $updateapache->execute();
+                
+                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+                $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_transcheck_in = 0 WHERE bd_acc_fk = :acc");
+                $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
+                $updateapache2->execute();
+                
             }
         }
     }

@@ -12,7 +12,7 @@
  */
 class ui_tpl_domainname {
 
-    public function Template() {
+    public static function Template() {
         $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
         return $domain;
     }

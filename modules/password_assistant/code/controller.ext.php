@@ -32,9 +32,8 @@ class module_controller {
     static function doUpdatePassword() {
         global $zdbh;
         global $controller;
-
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
-
         $current_pass = $controller->GetControllerRequest('FORM', 'inCurPass');
         $newpass = $controller->GetControllerRequest('FORM', 'inNewPass');
         $conpass = $controller->GetControllerRequest('FORM', 'inConPass');
@@ -99,6 +98,10 @@ class module_controller {
     static function getModuleDesc() {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
 }

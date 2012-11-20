@@ -12,7 +12,7 @@
  */
 class ui_tpl_fullname {
 
-    public function Template() {
+    public static function Template() {
         $user_array = ctrl_users::GetUserDetail();
         return $user_array['fullname'];
     }

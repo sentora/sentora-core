@@ -12,7 +12,7 @@
  */
 class ui_tpl_usedemail {
 
-    public function Template() {
+    public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $email = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
         if ($email <> 0) {

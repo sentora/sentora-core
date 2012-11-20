@@ -12,7 +12,7 @@
  */
 class ui_tpl_phpversion {
 
-    public function Template() {
+    public static function Template() {
         return sys_versions::ShowPHPVersion();
     }
 

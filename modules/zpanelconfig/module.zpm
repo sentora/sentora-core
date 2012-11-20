@@ -17,7 +17,7 @@
 			<% endloop %>
 			<tr>
 				<th colspan="3">
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
+				<@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
 				</th>
 			</tr>
 		</table>
@@ -44,7 +44,7 @@
 				<th nowrap="nowrap"><: Last Month Daemon Run :>:</th><td><% if LastMonthRunTime %><@ LastMonthRunTime @><% else %><: Never :><% endif %></td>
 			</tr>
 			<tr>
-				<th><: Queue a full daemon run (reset) :>:</th><td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inForceFull"><: Go :></button></td>
+				<th><: Queue a full daemon run (reset) :>:</th><td><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inForceFull"><: Go :></button></td>
 			</tr>
 		</table>
 		</form>
@@ -52,7 +52,7 @@
 		<form name="LaunchBackup" action="modules/zpanelconfig/code/rundaemon.php" target="backup" method="post" onsubmit="var w=window.open('', 'backup', 'scrollbars=yes,menubar=yes,height=600,width=600,resizable=no,toolbar=no,location=no,status=no'); w.focus();">
 		<table class="zgrid">
 			<tr>
-				<th nowrap="nowrap" width="300px"><: Run Daemon Now :>:</th><td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inRunDaemon"><: Go :></button></td>
+				<th nowrap="nowrap" width="300px"><: Run Daemon Now :>:</th><td><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inRunDaemon"><: Go :></button></td>
 			</tr>
 		</table>
 		</form>

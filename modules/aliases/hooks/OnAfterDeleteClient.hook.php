@@ -21,10 +21,15 @@ function DeleteAliasForDeletedClient() {
         include("modules/aliases/hooks/" . ctrl_options::GetSystemOption('mailserver_php') . "");
     }
 
-    foreach ($deletedclients as $deletedclient) {
-        $result = $zdbh->query("SELECT * FROM x_aliases WHERE al_acc_fk=" . $deletedclient . " AND al_deleted_ts IS NULL")->Fetch();
+    foreach ($deletedclients as $deletedclient) {        
+        $bindArray = array(':deletedclient' => $deletedclient);
+        $sqlStatment = $zdbh->bindQuery("SELECT * FROM x_aliases WHERE al_acc_fk=:deletedclient AND al_deleted_ts IS NULL", $bindArray);
+        $result = $zdbh->returnRow();
+        
         if ($result) {
-            $sql = $zdbh->prepare("UPDATE x_aliases SET al_deleted_ts=" . time() . " WHERE al_acc_fk=" . $deletedclient . "");
+            $sql = $zdbh->prepare("UPDATE x_aliases SET al_deleted_ts=:time WHERE al_acc_fk=:deletedclient");
+            $sql->bindParam(':time', time());
+            $sql->bindParam(':deletedclient', $deletedclient);
             $sql->execute();
         }
     }

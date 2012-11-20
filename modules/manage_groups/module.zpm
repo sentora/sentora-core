@@ -33,6 +33,7 @@
 </th>
 </tr>
 </table>
+<@ CSFR_Tag @>
 </form>
 </div>
 <% endif %>
@@ -76,6 +77,7 @@
 </tr>
 <% endloop %>
 </table>
+<@ CSFR_Tag @>
 </form>
 <% else %>
 <p><: There are currently no custom user groups configured! :></p>
@@ -101,6 +103,7 @@
 </th>
 </tr>
 </table>
+<@ CSFR_Tag @>
 </form>
 </div>
 <% endif %>
@@ -125,6 +128,7 @@
 </th>
 </tr>
 </table>
+<@ CSFR_Tag @>
 </form>
 </div>
 <% endif %>

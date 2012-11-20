@@ -12,7 +12,7 @@
  */
 class ui_tpl_apacheversion {
 
-    public function Template() {
+    public static function Template() {
         return sys_versions::ShowApacheVersion();
     }
 

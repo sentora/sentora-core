@@ -36,22 +36,29 @@ try {
 }
 
 foreach ($deletedclients as $deletedclient) {
-    $sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_acc_fk=" . $deletedclient . " AND ft_deleted_ts IS NULL";
-    if ($numrows = $zdbh->query($sql)) {
+    $sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_acc_fk=:deletedclient AND ft_deleted_ts IS NULL";
+    $numrows = $zdbh->prepare($sql);
+    $numrows->bindParam(':deletedclient', $deletedclient);
+    if ($numrows->execute()) {
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare("SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=" . $deletedclient . " AND ft_deleted_ts IS NULL");
+            $sql = $zdbh->prepare("SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:deletedclient AND ft_deleted_ts IS NULL");
+            $sql->bindParam(':deletedclient', $deletedclient);
             $sql->execute();
             while ($rowclient = $sql->fetch()) {
                 $fsql = $ftp_db->prepare("DELETE FROM ftpquotalimits 
 												 WHERE
-												 name='" . $rowclient['ft_user_vc'] . "'");
+												 name=:ft_user_vc");
+                $fsql->bindParam(':ft_user_vc', $rowclient['ft_user_vc']);
                 $fsql->execute();
                 $fsql = $ftp_db->prepare("DELETE FROM ftpuser 
 												 WHERE
-												 userid='" . $rowclient['ft_user_vc'] . "'");
+												 userid=:ft_user_vc");
+                $fsql->bindParam(':ft_user_vc', $rowclient['ft_user_vc']);
                 $fsql->execute();
             }
-            $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=" . time() . " WHERE ft_acc_fk=" . $deletedclient . "");
+            $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=:time WHERE ft_acc_fk=:deletedclient");
+            $sql->bindParam(':deletedclient', $deletedclient);
+            $sql->bindParam(':time', time());
             $sql->execute();
         }
     }

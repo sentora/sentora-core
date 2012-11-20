@@ -12,7 +12,7 @@
  */
 class ui_tpl_csspath {
 
-    public function Template() {
+    public static function Template() {
         $user = ctrl_users::GetUserDetail();
         if (!fs_director::CheckForEmptyValue(fs_director::CheckForEmptyValue($user['usercss']))) {
             $retval = "etc/styles/" . ui_template::GetUserTemplate() . "/css/default.css";

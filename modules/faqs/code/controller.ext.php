@@ -142,6 +142,7 @@ class module_controller {
 
     static function doDeleteFaq() {
         global $controller;
+        runtime_csfr::Protect();
         $faqs = self::getFAQS();
         //print_r($_POST);
         foreach ($faqs as $faq) {
@@ -155,6 +156,7 @@ class module_controller {
 
     static function doConfirmDeleteFAQ() {
         global $controller;
+        runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteDeleteFaq($formvars['inDelete']))
             return true;
@@ -163,6 +165,7 @@ class module_controller {
 
     static function doAddFaq() {
         global $controller;
+        runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inAdd'))) {
             $question = $controller->GetControllerRequest('FORM', 'question');
@@ -232,6 +235,10 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("FAQ item was added successfully!"), "zannounceok");
         }
         return;
+    }
+
+    static function getCSFR_Tag() {
+        return runtime_csfr::Token();
     }
 
 }

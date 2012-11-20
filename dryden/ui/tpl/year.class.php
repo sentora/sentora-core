@@ -12,7 +12,7 @@
  */
 class ui_tpl_year {
 
-    public function Template() {
+    public static function Template() {
         return date('Y');
     }
 
