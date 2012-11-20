@@ -22,9 +22,16 @@ function DeleteDistListForDeletedClient() {
     }
 
     foreach ($deletedclients as $deletedclient) {
-        $result = $zdbh->query("SELECT * FROM x_distlists WHERE dl_acc_fk=" . $deletedclient . " AND dl_deleted_ts IS NULL")->Fetch();
+        //$result = $zdbh->query("SELECT * FROM x_distlists WHERE dl_acc_fk=" . $deletedclient . " AND dl_deleted_ts IS NULL")->Fetch();      
+        $numrows = $zdbh->prepare("SELECT * FROM x_distlists WHERE dl_acc_fk=:deletedclient AND dl_deleted_ts IS NULL");
+        $numrows->bindParam(':deletedclient', $deletedclient);
+        $numrows->execute();
+        $result = $numrows->fetch();
         if ($result) {
-            $sql = $zdbh->prepare("UPDATE x_distlists SET dl_deleted_ts=" . time() . " WHERE dl_acc_fk=" . $deletedclient . "");
+            $sql = $zdbh->prepare("UPDATE x_distlists SET dl_deleted_ts=:time WHERE dl_acc_fk=:deletedclient");
+            $time = time();
+            $sql->bindParam(':time', $time);
+            $sql->bindParam(':deletedclient', $deletedclient);
             $sql->execute();
         }
     }
