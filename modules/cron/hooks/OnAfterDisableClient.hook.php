@@ -30,7 +30,12 @@ function WriteCronFile() {
         $line .= "# INSTEAD! THE ABOVE ENTRIES ARE USED FOR ZPANEL TASKS, DO NOT REMOVE THEM!      " . fs_filehandler::NewLine();
         $line .= "#################################################################################" . fs_filehandler::NewLine();
         while ($rowcron = $sql->fetch()) {
-            $rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . $rowcron['ct_acc_fk'] . " AND ac_deleted_ts IS NULL")->fetch();
+            //$rowclient = $zdbh->query("SELECT * FROM x_accounts WHERE ac_id_pk=" . $rowcron['ct_acc_fk'] . " AND ac_deleted_ts IS NULL")->fetch();
+            $numrows = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_id_pk=:userid AND ac_deleted_ts IS NULL");
+            $numrows->bindParam(':userid', $rowcron['ct_acc_fk']);
+            $numrows->execute();
+            $rowclient = $numrows->fetch();
+            
             if ($rowclient && $rowclient['ac_enabled_in'] <> 0) {
                 $line .= "# CRON ID: " . $rowcron['ct_id_pk'] . "" . fs_filehandler::NewLine();
                 $line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetSystemOption('php_exer') . " " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();

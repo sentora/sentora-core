@@ -57,9 +57,11 @@
 			        <td width="150px">
 						<select name="inDatabase" id="inDatabase">
 						<option value="" selected="selected">-- Select a database --</option>
-						<% loop DatabaseList %>
+						<% if DatabaseList %>
+                                                <% loop DatabaseList %>
 						<option value="<& mysqlid &>"><& mysqlname &></option>
 						<% endloop %>
+                                                <% endif %>
 				        </select>
 					</td>
 					<td>
@@ -148,9 +150,11 @@
 			        <td>
 						<select name="inDatabase" id="inDatabase">
 						<option value="" selected="selected">-- Select a database --</option>
+                                                <% if DatabaseList %>
 						<% loop DatabaseList %>
 						<option value="<& mysqlid &>"><& mysqlname &></option>
 						<% endloop %>
+                                                <% endif %>
 				        </select>
 					</td>
 		        </tr>

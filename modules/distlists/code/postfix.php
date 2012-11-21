@@ -38,17 +38,26 @@ try {
 
 // Deleting Postfix Distubution List
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
-    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT address FROM alias WHERE address=:dl_address_vc");
+    $numrows->bindParam(':dl_address_vc', $rowdl['dl_address_vc']);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
-        $sql = "DELETE FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'";
+        $sql = "DELETE FROM alias WHERE address=:dl_address_vc";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':dl_address_vc', $rowdl['dl_address_vc']);
         $sql->execute();
     }
 }
 
 // Adding Postfix Distubution List
 if (!fs_director::CheckForEmptyValue(self::$create)) {
-    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
+    //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT address FROM alias WHERE address=:fulladdress");
+    $numrows->bindParam(':fulladdress', $fulladdress);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if (!$result) {
         $sql = "INSERT INTO alias  (address,
 								 	goto,
@@ -56,38 +65,52 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 									created,
 								 	modified,
 								 	active) VALUES (
-								 	'" . $fulladdress . "',
+								 	:fulladdress,
 								 	'',
-								 	'" . $inDomain . "',
+								 	:inDomain,
 								 	NOW(),
 								 	NOW(),
 								 	'1')";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':fulladdress', $fulladdress);
+        $sql->bindParam(':inDomain', $inDomain);
         $sql->execute();
     }
 }
 
 // Deleting Postfix Distubution List User
 if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
-    $result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    //$result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT * FROM alias WHERE address=:dl_address_vc");
+    $numrows->bindParam(':dl_address_vc', $rowdl['dl_address_vc']);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
         //echo $rowdlu['du_address_vc'];
         $newlist = str_replace("," . $rowdlu['du_address_vc'], "", $result['goto']);
         $newlist = str_replace(",,", ",", $newlist);
-        $sql = "UPDATE alias SET goto='" . $newlist . "', modified=NOW() WHERE address='" . $rowdl['dl_address_vc'] . "'";
+        $sql = "UPDATE alias SET goto=:newlist, modified=NOW() WHERE address=:dl_address_vc";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':newlist', $newlist);
+        $sql->bindParam(':dl_address_vc', $rowdl['dl_address_vc']);
         $sql->execute();
     }
 }
 
 // Adding Postfix Distubution List User
 if (!fs_director::CheckForEmptyValue(self::$createuser)) {
-    $result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    //$result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT * FROM alias WHERE address=:dl_address_vc");
+    $numrows->bindParam(':dl_address_vc', $rowdl['dl_address_vc']);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
         $newlist = $result['goto'] . "," . $fulladdress;
         $newlist = str_replace(",,", ",", $newlist);
-        $sql = "UPDATE alias SET goto='" . $newlist . "', modified=NOW() WHERE address='" . $rowdl['dl_address_vc'] . "'";
+        $sql = "UPDATE alias SET goto=:newlist, modified=NOW() WHERE address=:dl_address_vc";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':newlist', $newlist);
+        $sql->bindParam(':dl_address_vc', $rowdl['dl_address_vc']);
         $sql->execute();
     }
 }

@@ -103,7 +103,7 @@ class module_controller {
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
 
-                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_enabled_in=1 AND vh_deleted_ts IS NULL");
+                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC");
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
@@ -144,7 +144,7 @@ class module_controller {
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
 
-                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL");
+                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC");
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
@@ -209,7 +209,7 @@ class module_controller {
         if ($numrows = $zdbh->query($sql)) {
             if ($numrows->fetchColumn() <> 0) {
 
-                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_enabled_in=0 AND vh_deleted_ts IS NULL");
+                $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_enabled_in=0 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC");
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
@@ -234,7 +234,7 @@ class module_controller {
         $line .= "<form action=\"./?module=apache_admin&action=SaveVhost\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc=:vhost AND vh_deleted_ts IS NULL";
-        
+
         $inVhost = $controller->GetControllerRequest('FORM', 'inVhost');
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':vhost', $inVhost);
@@ -279,12 +279,12 @@ class module_controller {
         global $controller;
         runtime_csfr::Protect();
         $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
-        
+
         $moduleName = ui_module::GetModuleName();
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':module', $moduleName);
         $numrows->execute();
-        
+
         if ($numrows) {
             if ($numrows->fetchColumn() <> 0) {
                 $moduleName2 = ui_module::GetModuleName();
@@ -295,7 +295,7 @@ class module_controller {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
                         $value = $controller->GetControllerRequest('FORM', $row['so_name_vc']);
                         $name = $row['so_name_vc'];
-                        
+
                         $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = :value WHERE so_name_vc = :name");
                         $updatesql->bindParam(':value', $value);
                         $updatesql->bindParam(':name', $name);
@@ -382,7 +382,7 @@ class module_controller {
 								WHERE so_name_vc='apache_changed'");
         $sql->execute();
     }
-    
+
     static function getCSFR_Tag() {
         return runtime_csfr::Token();
     }
