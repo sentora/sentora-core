@@ -1,168 +1,168 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><a href="<@ ModulePath @>"><img src="<@ ModuleIcon @>" border="0"></a><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
-<@ Result @>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+    <@ Result @>
 
-	<% if isDeleteFTP %>
-	<div class="zform_wrapper">
-		<h2><: Delete FTP account :>: <@ EditCurrentName @> ?</h2>
-		<p><: Please confirm that you want to delete this FTP account. :></p>
-		<form action="./?module=ftp_management&action=DeleteFTP" method="post">
-		<table class="none" cellpadding="0" cellspacing="0">
-			<tr>
-				<td colspan="2" align="right">
-				<input type="hidden" name="inDelete" value="<@ EditCurrentID @>">
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button>
-				</td>
-			</tr>
-		</table>
-                <@ CSFR_Tag @>
-		</form>
-	</div>
-	<% endif %>
+    <% if isDeleteFTP %>
+    <div class="zform_wrapper">
+        <h2><: Delete FTP account :>: <@ EditCurrentName @> ?</h2>
+        <p><: Please confirm that you want to delete this FTP account. :></p>
+        <form action="./?module=ftp_management&action=DeleteFTP" method="post">
+            <table class="none" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="2" align="right">
+                        <input type="hidden" name="inDelete" value="<@ EditCurrentID @>">
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button>
+                    </td>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+    </div>
+    <% endif %>
 
-	<% if isEditFTP %>
-	<div class="zform_wrapper">		
-		<h2><: Reset FTP Password for user :>: <@ EditCurrentName @></h2>
-		<form action="./?module=ftp_management&action=ResetPassword" method="post">
-        <table class="zform">
-        	<tr>
-		        <th><: Username :>:</th>
-		        <td><@ EditCurrentName @></td>
-				<td></td>
-	        </tr>
-	        <tr>
-		        <th><: New password :>:</th>
-		        <td><input name="inPassword" type="text" id="input-password" size="30" /></td>
-				<td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inReset" id="button" value="<@ EditCurrentID @>"><: Reset Password :>
-</button>
-				<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button></td>
-	        </tr>
-	        <tr>
-		        <th></th>
-				<td><a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
-				<td></td>
-        	</tr>
-        </table>
-        <@ CSFR_Tag @>
-    	</form>
-	</div>
-	<% endif %>
-	
-	<div class="zgrid_wrapper">
-		<h2><: Current FTP accounts :></h2> 
-		<% if ClientList %>
-    	<form action="./?module=ftp_management&action=EditFTP" method="post">
-        	<table class="zgrid"> 
-            	<tr> 
-        	        <th><: Account name :></th> 
-            	    <th><: Home directory :></th> 
-                	<th><: Permission :></th>
-					<th><: Password :></th>
-	                <th></th> 
-            	</tr>
-				<% loop ClientList %>
-				<tr>
+    <% if isEditFTP %>
+    <div class="zform_wrapper">		
+        <h2><: Reset FTP Password for user :>: <@ EditCurrentName @></h2>
+        <form action="./?module=ftp_management&action=ResetPassword" method="post">
+            <table class="zform">
+                <tr>
+                    <th><: Username :>:</th>
+                    <td><@ EditCurrentName @></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th><: New password :>:</th>
+                    <td><input name="inPassword" type="text" id="input-password" size="30" /></td>
+                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inReset" id="button" value="<@ EditCurrentID @>"><: Reset Password :>
+                        </button>
+                        <button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td><a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
+                    <td></td>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+    </div>
+    <% endif %>
+
+    <div class="zgrid_wrapper">
+        <h2><: Current FTP accounts :></h2> 
+        <% if ClientList %>
+        <form action="./?module=ftp_management&action=EditFTP" method="post">
+            <table class="zgrid"> 
+                <tr> 
+                    <th><: Account name :></th> 
+                    <th><: Home directory :></th> 
+                    <th><: Permission :></th>
+                    <th><: Password :></th>
+                    <th></th> 
+                </tr>
+                <% loop ClientList %>
+                <tr>
                     <td><& username &></td>
                     <td><& directory &></td>
                     <td><& access &></td>
-					<td><& password &></td>
-					<td>
-					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inReset_<& id &>" id="button" value="inReset_<& id &>"><: Reset Password :></button>
-					<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& id &>" id="button" value="inDelete_<& id &>"><: Delete :></button>
-					</td>
+                    <td><& password &></td>
+                    <td>
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inReset_<& id &>" id="button" value="inReset_<& id &>"><: Reset Password :></button>
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& id &>" id="button" value="inDelete_<& id &>"><: Delete :></button>
+                    </td>
                 </tr>
-				<% endloop %>	
-       		</table>
-                <@ CSFR_Tag @>
-    	</form>
-		<% else %>
-    	<: You do not have any FTP Accounts setup. Create an FTP account using the form below. :>
-		<% endif %>
-	</div>
-	
-	<% if isCreateFTP %>
-	<div class="zform_wrapper">
-		<table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top">
-			<tr valign="top">
-				<td>
-				<h2><: Create a new FTP Account :></h2>
-				<% if QuotaLimit %>
-				<form action="./?module=ftp_management&action=CreateFTP" method="post">
-		       		<table class="zform">
-				        <tr>
-					        <th nowrap="nowrap"><: Username :>:</th>
-					        <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value=""/></td>
-				        </tr>
-				        <tr>
-					        <th><: Password :>:</th>
-					        <td><input name="inPassword" type="password" id="inPassword" size="30" /></td>
-				        </tr>
-				        <tr>
-					        <th nowrap="nowrap"><: Access type :>:</th>
-					        <td><select name="inAccess" size="1">
-					        <option value="RO" selected="selected"><: Read-only :></option>
-					        <option value="WO"><: Write-only :></option>
-					        <option value="RW"><: Full access :></option>
-					        </select></td>
-				        </tr>
-		        <tr>
-			        <th nowrap="nowrap"><: Home directory :>:</th>
-			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showmasterselect')&hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
-		        </tr>
-		        <tr>
-			        <th>&nbsp;</th>
-			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showmasterselect')&hide_div('showdomainselect');" />&nbsp;<: Set Master home directory :></td>
-		        </tr>
-		        <tr>
-			        <th>&nbsp;</th>
-			        <td>
-			        	<div id="showmasterselect" style="display:none;">
-			        		<select name="inDestination" id="inDestination">
-			        		<option value="">/ (root)</option>
-							<% loop MasterDirsList %>
-							<option value="<& domains &>">/<& domains &></option>
-							<% endloop %>
-			        		</select>
-						</div>
-					</td>
-		        </tr>
-		        		        <tr>
-			        <th>&nbsp;</th>
-			        <td><input name="inAutoHome" type="radio" id="inAutoHome" value="3" onclick="show_div('showdomainselect')&hide_div('showmasterselect');" />&nbsp;<: Use Domain directory :></td>
-		        </tr>
-		        <tr>
-			        <th>&nbsp;</th>
-			        <td>
-			        	<div id="showdomainselect" style="display:none;">
-			        		<select name="inDestination" id="inDestination">
-			        		<option value="">/ (root)</option>
-							<% loop DomainDirsList %>
-							<option value="public_html/<& domains &>">/<& domains &></option>
-							<% endloop %>
-			        		</select>
-						</div>
-					</td>
-		        </tr>
-				        <tr>
-					        <th colspan="2" align="right">
-					        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inSubmit" id="inSubmit" value=""><: Create :></button></th>
-				        </tr>
-			        </table>
+                <% endloop %>	
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+        <% else %>
+        <: You do not have any FTP Accounts setup. Create an FTP account using the form below. :>
+        <% endif %>
+    </div>
+
+    <% if isCreateFTP %>
+    <div class="zform_wrapper">
+        <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top">
+            <tr valign="top">
+                <td>
+                    <h2><: Create a new FTP Account :></h2>
+                    <% if QuotaLimit %>
+                    <form action="./?module=ftp_management&action=CreateFTP" method="post">
+                        <table class="zform">
+                            <tr>
+                                <th nowrap="nowrap"><: Username :>:</th>
+                                <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value=""/></td>
+                            </tr>
+                            <tr>
+                                <th><: Password :>:</th>
+                                <td><input name="inPassword" type="password" id="inPassword" size="30" /></td>
+                            </tr>
+                            <tr>
+                                <th nowrap="nowrap"><: Access type :>:</th>
+                                <td><select name="inAccess" size="1">
+                                        <option value="RO" selected="selected"><: Read-only :></option>
+                                        <option value="WO"><: Write-only :></option>
+                                        <option value="RW"><: Full access :></option>
+                                    </select></td>
+                            </tr>
+                            <tr>
+                                <th nowrap="nowrap"><: Home directory :>:</th>
+                                <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showmasterselect')&hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
+                            </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showmasterselect')&hide_div('showdomainselect');" />&nbsp;<: Set Master home directory :></td>
+                            </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td>
+                                    <div id="showmasterselect" style="display:none;">
+                                        <select name="inDestination" id="inDestination">
+                                            <option value="">/ (root)</option>
+                                            <% loop MasterDirsList %>
+                                            <option value="<& domains &>">/<& domains &></option>
+                                            <% endloop %>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td><input name="inAutoHome" type="radio" id="inAutoHome" value="3" onclick="show_div('showdomainselect')&hide_div('showmasterselect');" />&nbsp;<: Use Domain directory :></td>
+                            </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td>
+                                    <div id="showdomainselect" style="display:none;">
+                                        <select name="inDestination" id="inDestination">
+                                            <option value="">/ (root)</option>
+                                            <% loop DomainDirsList %>
+                                            <option value="public_html/<& domains &>">/<& domains &></option>
+                                            <% endloop %>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2" align="right">
+                                    <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inSubmit" id="inSubmit" value=""><: Create :></button></th>
+                            </tr>
+                        </table>
                         <@ CSFR_Tag @>
-		    	</form>
-				<% else %>
-				<: You have reached your FTP account limit! :>
-				<% endif %>	
-				</td>
-				<td align="right"><@ FTPUsagepChart @></td>
-			</tr>
-		</table>
-	</div>
-	<% endif %>
-	
+                    </form>
+                    <% else %>
+                    <: You have reached your FTP account limit! :>
+                    <% endif %>	
+                </td>
+                <td align="right"><@ FTPUsagepChart @></td>
+            </tr>
+        </table>
+    </div>
+    <% endif %>
+
 </div>
 
 <script type="text/javascript">
@@ -184,36 +184,36 @@
     //-->
 </script>
 <script type="text/JavaScript">
-$.extend({
-  password: function (length, special) {
-    var iteration = 0;
-    var password = "";
-    var randomNumber;
-    if(special == undefined){
-        var special = false;
-    }
-    while(iteration < length){
-        randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
-        if(!special){
-            if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
-            if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
-            if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
-            if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+    $.extend({
+        password: function (length, special) {
+            var iteration = 0;
+            var password = "";
+            var randomNumber;
+            if(special == undefined){
+                var special = false;
+            }
+            while(iteration < length){
+                randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
+                if(!special){
+                    if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
+                    if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
+                    if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
+                    if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+                }
+                iteration++;
+                password += String.fromCharCode(randomNumber);
+            }
+            return password;
         }
-        iteration++;
-        password += String.fromCharCode(randomNumber);
-    }
-    return password;
-  }
-});
-$(document).ready(function() {
-	$('.link-password').click(function(e){
-		linkId = $(this).attr('id');
-		if (linkId == 'generate'){
-			password = $.password(9,false);
-			$('#input-password').val(password);
-		}
-		e.preventDefault();
-	});
-});
+    });
+    $(document).ready(function() {
+        $('.link-password').click(function(e){
+            linkId = $(this).attr('id');
+            if (linkId == 'generate'){
+                password = $.password(9,false);
+                $('#input-password').val(password);
+            }
+            e.preventDefault();
+        });
+    });
 </script>

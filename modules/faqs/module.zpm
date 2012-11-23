@@ -1,85 +1,85 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
-<@ Result @>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+    <@ Result @>
 
-	<% if isDeleteFAQ %>
-	<div class="zform_wrapper">
-		<h2><: Delete FAQ Item :> ?</h2>
-		<p><: Please confirm that you want to delete this FAQ item. :></p>
-		<form action="./?module=faqs&action=ConfirmDeleteFAQ" method="post">
-		<table class="none" cellpadding="0" cellspacing="0">
-			<tr>
-				<td colspan="2" align="right">
-				<input type="hidden" name="inDelete" value="<@ EditCurrentFAQID @>">
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=faqs';return false;"><: Cancel :></button>
-				</td>
-			</tr>
-		</table>
-                <@ CSFR_Tag @>
-		</form>
-	</div>
-	<% endif %>
-		
-	<% if UserFAQS %>
-	<div class="zform_wrapper">
-	<h2><: Frequently Asked Questions :></h2>
-	<form action="./?module=faqs&action=DeleteFaq" method="post">
-		<table class="none">
-			<% loop UserFAQS %>
-			<tr valign="top">
-				<td><& allowdelete &></td>
-				<td><img src="<@ ModulePath @>assets/item.png" width="16" height="16"></td>
-				<td><a href="#" id="faq_<& id &>_a" onclick="toggle_visibility('<& id &>')"><strong><& question &></strong></a>
-				<div id="faq_<& id &>" style="display:none;"><& answer &><br><br></div></td>
-			</tr>
-			<script type="text/javascript">
-			$(document).ready(function() { 
-    			$("#faq_<& id &>").hide();
-    			$("#faq_<& id &>_a").click(function(){
-        		if ($("#faq_<& id &>").is(":visible")) {
-					$("#faq_<& id &>").slideUp("fast");
-            		$(this).addClass("active");
-            		return false;
-        		} else {
-            		$("#faq_<& id &>").slideDown("fast");
-            		$(this).removeClass("active");
-            		return false;
-        		}
-    			}); 
-			})
-			</script>
-			<% endloop %>
-		</table>
-                <@ CSFR_Tag @>
-	</form>
-	</div>
-	<% endif %><!-- END UserFAQS -->
-	
-	<% if AddFAQS %>
-	<div class="zform_wrapper">
-	<h2><a href="#" onclick="toggle_visibility('admin_desc')"><img src="<@ ModulePath @>assets/help_small.png" width="16" height="16"></a> <: Add FAQ Item :></h2>
-	<div id="admin_desc" style="display:none;"><: Since you are logged in as an Administrator or a Reseller, you can add and remove FAQ items.  Administrators can see and remove all FAQ items, but Resellers can only remove FAQ items they have created.  Your clients will be able to see any FAQ items you create, plus any FAQ items created by an Administrator. Your clients will not be able to add or remove any FAQ items. :><br><br></div>
-	<form action="./?module=faqs&action=AddFaq" method="post">
-		<table class="none">
- 	 		<tr valign="top">
- 				<th>Question:</th><td><input type="text" name="question" id="question" style="width: 310px;"></td>
-			</tr>
- 	 		<tr valign="top">
- 				<th>&nbsp;</th><td>&nbsp;</td>
-			</tr>
-			<tr valign="top">
-				<th>Answer:</th><td><textarea rows="5" cols="45" name="answer"id="answer"></textarea></td>
-			</tr>
-			<tr valign="top">
-				<th></th><td><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inAdd" value="1"><: Add :></button></td>		
- 			</tr>
-	</table>
-	</form>
-	</div>
-	<% endif %><!-- END AddFAQS -->
+    <% if isDeleteFAQ %>
+    <div class="zform_wrapper">
+        <h2><: Delete FAQ Item :> ?</h2>
+        <p><: Please confirm that you want to delete this FAQ item. :></p>
+        <form action="./?module=faqs&action=ConfirmDeleteFAQ" method="post">
+            <table class="none" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="2" align="right">
+                        <input type="hidden" name="inDelete" value="<@ EditCurrentFAQID @>">
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=faqs';return false;"><: Cancel :></button>
+                    </td>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+    </div>
+    <% endif %>
+
+    <% if UserFAQS %>
+    <div class="zform_wrapper">
+        <h2><: Frequently Asked Questions :></h2>
+        <form action="./?module=faqs&action=DeleteFaq" method="post">
+            <table class="none">
+                <% loop UserFAQS %>
+                <tr valign="top">
+                    <td><& allowdelete &></td>
+                    <td><img src="<@ ModulePath @>assets/item.png" width="16" height="16"></td>
+                    <td><a href="#" id="faq_<& id &>_a" onclick="toggle_visibility('<& id &>')"><strong><& question &></strong></a>
+                        <div id="faq_<& id &>" style="display:none;"><& answer &><br><br></div></td>
+                </tr>
+                <script type="text/javascript">
+                    $(document).ready(function() { 
+                        $("#faq_<& id &>").hide();
+                        $("#faq_<& id &>_a").click(function(){
+                            if ($("#faq_<& id &>").is(":visible")) {
+                                $("#faq_<& id &>").slideUp("fast");
+                                $(this).addClass("active");
+                                return false;
+                            } else {
+                                $("#faq_<& id &>").slideDown("fast");
+                                $(this).removeClass("active");
+                                return false;
+                            }
+                        }); 
+                    })
+                </script>
+                <% endloop %>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+    </div>
+    <% endif %><!-- END UserFAQS -->
+
+    <% if AddFAQS %>
+    <div class="zform_wrapper">
+        <h2><a href="#" onclick="toggle_visibility('admin_desc')"><img src="<@ ModulePath @>assets/help_small.png" width="16" height="16"></a> <: Add FAQ Item :></h2>
+        <div id="admin_desc" style="display:none;"><: Since you are logged in as an Administrator or a Reseller, you can add and remove FAQ items.  Administrators can see and remove all FAQ items, but Resellers can only remove FAQ items they have created.  Your clients will be able to see any FAQ items you create, plus any FAQ items created by an Administrator. Your clients will not be able to add or remove any FAQ items. :><br><br></div>
+        <form action="./?module=faqs&action=AddFaq" method="post">
+            <table class="none">
+                <tr valign="top">
+                    <th>Question:</th><td><input type="text" name="question" id="question" style="width: 310px;"></td>
+                </tr>
+                <tr valign="top">
+                    <th>&nbsp;</th><td>&nbsp;</td>
+                </tr>
+                <tr valign="top">
+                    <th>Answer:</th><td><textarea rows="5" cols="45" name="answer"id="answer"></textarea></td>
+                </tr>
+                <tr valign="top">
+                    <th></th><td><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inAdd" value="1"><: Add :></button></td>		
+                </tr>
+            </table>
+        </form>
+    </div>
+    <% endif %><!-- END AddFAQS -->
 
 </div>
 

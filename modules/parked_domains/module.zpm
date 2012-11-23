@@ -1,81 +1,81 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
-<@ Result @>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+    <@ Result @>
 
-	<% if isDeleteDomain %>
-	<div class="zform_wrapper">
-		<h2><: Delete :>: <@ CurrentDomain @>?</h2>
-		<p><: Please confirm that you want to delete this domain. :></p>
-		<form action="./?module=parked_domains&action=DeleteParkedDomain" method="post">
-		<table class="none" cellpadding="0" cellspacing="0">
-			<tr>
-				<td colspan="2" align="right">
-				<input type="hidden" name="inDelete" value="<@ CurrentID @>">
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=parked_domains';return false;"><: Cancel :></button>
-				</td>
-			</tr>
-		</table>
-                <@ CSFR_Tag @>
-		</form>
-	</div>
-	<% endif %>
-
-	<div class="zgrid_wrapper">
-		<h2><: Current parked domains :></h2>
-		<% if ParkedDomainList %>
-    	<form action="./?module=parked_domains&action=ConfirmDeleteParkedDomain" method="post">
-    	<table class="zgrid">
-		    <tr>
-			    <th><: Domain name :></th>
-			    <th><: Date parked :></th>
-			    <th><: Status :></th>
-			    <th></th>
-			    <th></th>
-		    </tr>
-			<% loop ParkedDomainList %>
-            <tr>
-            	<td><a href="http://<& name &>/" target="_blank"><& name &></a></td>
-                <td><& created &></td>
-                <& status &>
-                <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
-            </tr>			
-			<% endloop %>
-	    </table>
-        <@ CSFR_Tag @>
-    	</form>
-	<% else %>
-	<: You currently do not have any parked domains setup on your account. Create a parked domain using the form below. :>
-	<% endif %>
-	</div>
-
-	<div class="zform_wrapper">
-        <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
-        	<h2>Create a new parked domain</h2>
-			<% if CreateParkedDomain %>
-	        <form action="./?module=parked_domains&action=CreateParkedDomain" method="post" name="CreateDomain">
-	        <table class="zform">
-		        <tr>
-			        <th nowrap="nowrap"><: Domain name :>:</th>
-			        <td><input name="inDomain" type="text" id="inDomain" /></td>
-		        </tr>
-		        <tr>
-			        <th></th>
-			        <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateParkedDomain" value="1">Create</button></td>
-		        </tr>
-        </table>
-        <@ CSFR_Tag @>
+    <% if isDeleteDomain %>
+    <div class="zform_wrapper">
+        <h2><: Delete :>: <@ CurrentDomain @>?</h2>
+        <p><: Please confirm that you want to delete this domain. :></p>
+        <form action="./?module=parked_domains&action=DeleteParkedDomain" method="post">
+            <table class="none" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="2" align="right">
+                        <input type="hidden" name="inDelete" value="<@ CurrentID @>">
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=parked_domains';return false;"><: Cancel :></button>
+                    </td>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
         </form>
-	<% else %>
-	<: You have reached your parked domains limit! :>
-	<% endif %>	
-        </td>
-        <td align="right"><@ ParkedDomainUsagepChart @></td>
-        </tr></table>	
-	</div>
-	
+    </div>
+    <% endif %>
+
+    <div class="zgrid_wrapper">
+        <h2><: Current parked domains :></h2>
+        <% if ParkedDomainList %>
+        <form action="./?module=parked_domains&action=ConfirmDeleteParkedDomain" method="post">
+            <table class="zgrid">
+                <tr>
+                    <th><: Domain name :></th>
+                    <th><: Date parked :></th>
+                    <th><: Status :></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <% loop ParkedDomainList %>
+                <tr>
+                    <td><a href="http://<& name &>/" target="_blank"><& name &></a></td>
+                    <td><& created &></td>
+                    <& status &>
+                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
+                </tr>			
+                <% endloop %>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+        <% else %>
+        <: You currently do not have any parked domains setup on your account. Create a parked domain using the form below. :>
+        <% endif %>
+    </div>
+
+    <div class="zform_wrapper">
+        <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
+                    <h2>Create a new parked domain</h2>
+                    <% if CreateParkedDomain %>
+                    <form action="./?module=parked_domains&action=CreateParkedDomain" method="post" name="CreateDomain">
+                        <table class="zform">
+                            <tr>
+                                <th nowrap="nowrap"><: Domain name :>:</th>
+                                <td><input name="inDomain" type="text" id="inDomain" /></td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateParkedDomain" value="1">Create</button></td>
+                            </tr>
+                        </table>
+                        <@ CSFR_Tag @>
+                    </form>
+                    <% else %>
+                    <: You have reached your parked domains limit! :>
+                    <% endif %>	
+                </td>
+                <td align="right"><@ ParkedDomainUsagepChart @></td>
+            </tr></table>	
+    </div>
+
 </div>
 
 <script type="text/javascript">
