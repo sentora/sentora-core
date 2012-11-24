@@ -65,8 +65,13 @@ class module_controller {
             } else {
                 $domainID = self::$editdomain;
             }
-            $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL";
-            if ($numrows = $zdbh->query($sql)) {
+            
+            $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->bindParam(':userid', $currentuser['userid']);
+            $numrows->bindParam(':domainID', $domainID);
+            
+            if ($numrows->execute()) {
                 if ($numrows->fetchColumn() == 0) {
                     $display = self::DisplayDefaultRecords();
                 } else {
@@ -121,7 +126,12 @@ class module_controller {
         } else {
             $domainID = self::$editdomain;
         }
-        $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
+        //$domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
+        $numrows2 = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+        $numrows2->bindParam(':domainID', $domainID);
+        $numrows2->execute();
+        $domain = $numrows2->fetch();
+        
         $zone_message = self::CheckZoneRecord($domainID);
         $zonecheck_file = ctrl_options::GetSystemOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
         $zone_message = str_replace($zonecheck_file, "", $zone_message);
