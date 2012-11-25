@@ -168,7 +168,7 @@ class ui_module {
             }
             return $retvalEnd;
         */
-        $numrows = $zdbh->prepare("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_folder_vc = :module");
+        $numrows = $zdbh->prepare("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_name_vc = :module");
         $numrows->bindParam(':module', $modulename);
         $numrows->execute();
         $retval = $numrows->fetch();
