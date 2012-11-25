@@ -42,7 +42,7 @@ function WriteDNSZoneRecordsHook() {
     //Now we have all domain ID's, loop through them and find records for each zone file.
     foreach ($dnsrecords as $dnsrecord) {
         //if (in_array($dnsrecord, $RecordsNeedingUpdateArray)){
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:dnsrecord  AND dn_deleted_ts IS NULL";
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:dnsrecord AND dn_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':dnsrecord', $dnsrecord);
        
