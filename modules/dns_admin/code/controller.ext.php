@@ -63,10 +63,15 @@ class module_controller {
         $line .= "<form action=\"./?module=dns_admin&action=UpdateDNSConfig\" method=\"post\">";
         $line .= "<table class=\"zgrid\">";
         $count = 0;
-        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc=:moduleName AND so_usereditable_en = 'true'";
+        $numrows = $zdbh->prepare($sql);
+        $GetModuleName = ui_module::GetModuleName();
+        $numrows->bindParam(':moduleName', $GetModuleName);
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc");
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc=:moduleName AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc");
+                $GetModuleName = ui_module::GetModuleName();
+                $sql->bindParam(':moduleName', $GetModuleName);
                 $sql->execute();
 
                 while ($row = $sql->fetch()) {
@@ -251,14 +256,24 @@ class module_controller {
     static function doUpdateDNSConfig() {
         global $zdbh;
         global $controller;
-        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc=:moduleName AND so_usereditable_en = 'true'";
+        $numrows = $zdbh->prepare($sql);
+        $GetModuleName = ui_module::GetModuleName();
+        $numrows->bindParam(':moduleName', $GetModuleName);
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc='" . ui_module::GetModuleName() . "' AND so_usereditable_en = 'true'");
+                $sql = $zdbh->prepare("SELECT * FROM x_settings WHERE so_module_vc=:moduleName AND so_usereditable_en = 'true'");
+                $GetModuleName = ui_module::GetModuleName();
+                $sql->bindParam(':moduleName', $GetModuleName);
                 $sql->execute();
                 while ($row = $sql->fetch()) {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
-                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = '" . $controller->GetControllerRequest('FORM', $row['so_name_vc']) . "' WHERE so_name_vc = '" . $row['so_name_vc'] . "'");
+                        $name = $controller->GetControllerRequest('FORM', $row['so_name_vc']);
+                        $name2 = $row['so_name_vc'];
+                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = :name WHERE so_name_vc = :name2");
+                        $updatesql->bindParam(':name', $name);
+                        $updatesql->bindParam(':name2', $name2);
                         $updatesql->execute();
                         self::TriggerDNSUpdate("0");
                     }
@@ -413,8 +428,10 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue($vhosts)) {
             foreach ($vhosts as $vhost) {
-                $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk = " . $vhost . " AND dn_deleted_ts IS NULL";
-                if ($numrows = $zdbh->query($sql)) {
+                $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk = :vhost AND dn_deleted_ts IS NULL";
+                $numrows = $zdbh->prepare($sql);
+                $numrows->bindParam(':vhost', $vhost);
+                if ($numrows->execute()) {
                     if ($numrows->fetchColumn() == 0) {
                         self::CreateDefaultRecords($vhost);
                         $numrecords++;
@@ -429,13 +446,25 @@ class module_controller {
         global $zdbh;
         global $controller;
         $numrecords = 0;
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_type_vc = '" . $controller->GetControllerRequest('FORM', 'inType') . "' AND dn_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $type = $controller->GetControllerRequest('FORM', 'inType');
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_type_vc = :type AND dn_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':type', $type);
+        
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_type_vc = '" . $controller->GetControllerRequest('FORM', 'inType') . "' AND dn_deleted_ts IS NULL");
+                $type = $controller->GetControllerRequest('FORM', 'inType');
+                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_type_vc = :type AND dn_deleted_ts IS NULL");
+                $sql->bindParam(':type', $type);
                 $sql->execute();
                 while ($row = $sql->fetch()) {
-                    $delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=" . time() . " WHERE dn_id_pk = " . $row['dn_id_pk'] . " AND dn_type_vc = '" . $controller->GetControllerRequest('FORM', 'inType') . "'");
+                    $time = time();
+                    $type = $controller->GetControllerRequest('FORM', 'inType');
+                    $delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=:time WHERE dn_id_pk = :dn_id_pk AND dn_type_vc = :type");
+                    $delete_record->bindParam(':time', $time);
+                    $delete_record->bindParam(':dn_id_pk', $row['dn_id_pk']);
+                    $delete_record->bindParam(':type', $type);
                     $delete_record->execute();
                     $numrecords++;
                 }
@@ -455,7 +484,8 @@ class module_controller {
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NOT NULL");
                 $sql->execute();
                 while ($row = $sql->fetch()) {
-                    $delete_record = $zdbh->prepare("DELETE FROM x_dns WHERE dn_id_pk = " . $row['dn_id_pk'] . "");
+                    $delete_record = $zdbh->prepare("DELETE FROM x_dns WHERE dn_id_pk = :dn_id_pk");
+                    $delete_record->bindParam(':dn_id_pk', $row['dn_id_pk']);
                     $delete_record->execute();
 
                     $numrecords++;
@@ -475,7 +505,10 @@ class module_controller {
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NULL");
                 $sql->execute();
                 while ($row = $sql->fetch()) {
-                    $delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=" . time() . " WHERE dn_id_pk = " . $row['dn_id_pk'] . "");
+                    $time = time();
+                    $delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=:time WHERE dn_id_pk = :dn_id_pk");
+                    $delete_record->bindParam(':time', $time);
+                    $delete_record->bindParam(':dn_id_pk', $row['dn_id_pk']);
                     $delete_record->execute();
                     $numrecords++;
                 }
@@ -488,15 +521,21 @@ class module_controller {
         global $zdbh;
         global $controller;
         $numrecords = 0;
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=" . $domainid . " AND dn_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:domainid AND dn_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':domainid', $domainid);
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=" . $domainid . " AND dn_deleted_ts IS NULL");
+                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=:domainid AND dn_deleted_ts IS NULL");
+                $sql->bindParam(':domainid', $domainid);
                 $sql->execute();
-                while ($row = $sql->fetch()) {
-                    $delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=" . time() . " WHERE dn_id_pk = " . $row['dn_id_pk'] . "");
+                while ($row = $sql->fetch()){ 
+                    $time = time();
+                    $delete_record = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=:time WHERE dn_id_pk = :dn_id_pk");
+                    $delete_record->bindParam(':time', $time);
+                    $delete_record->bindParam(':dn_id_pk', $row['dn_id_pk']);
                     $delete_record->execute();
-                    $numrecords++;
+                    $numrecords++;                 
                 }
                 self::$deleted = $numrecords;
             }
@@ -709,17 +748,23 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'A',
 															'@',
 															3600,
-															'" . $target . "',
+															:target,
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
+        $sql->bindParam(':domainID', $domainID);
+        $sql->bindParam(':target', $target);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -732,9 +777,9 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'CNAME',
 															'www',
 															3600,
@@ -742,7 +787,12 @@ class module_controller {
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
+        $sql->bindParam(':domainID', $domainID);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -755,9 +805,9 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'CNAME',
 															'ftp',
 															3600,
@@ -765,7 +815,12 @@ class module_controller {
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
+        $sql->bindParam(':domainID', $domainID);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -778,17 +833,23 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															userID,
+															vh_name_vc,
+															:domainID,
 															'A',
 															'mail',
 															86400,
-															'" . $target . "',
+															:target,
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
+        $sql->bindParam(':domainID', $domainID);
+        $sql->bindParam(':target', $target);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -801,17 +862,24 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'MX',
 															'@',
 															86400,
-															'mail." . $domainName['vh_name_vc'] . "',
+															:vh_name_vc,
 															10,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $Domain = 'mail.'.$domainName['vh_name_vc'];
+        $sql->bindParam(':vh_name_vc', $Domain);
+        $sql->bindParam(':domainID', $domainID);
+        $sql->bindParam(':target', $target);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -824,17 +892,23 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'A',
 															'ns1',
 															172800,
-															'" . $target . "',
+															:target,
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
+        $sql->bindParam(':domainID', $domainID);
+        $sql->bindParam(':target', $target);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -847,17 +921,23 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'A',
 															'ns2',
 															172800,
-															'" . $target . "',
+															:target,
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
+        $sql->bindParam(':domainID', $domainID);
+        $sql->bindParam(':target', $target);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -870,17 +950,24 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'NS',
 															'@',
 															172800,
-															'ns1." . $domainName['vh_name_vc'] . "',
+															:vh_name_vc2,
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $Domain = 'ns1.'.$domainName['vh_name_vc'];
+        $sql->bindParam(':vh_name_vc', $Domain);
+        $sql->bindParam(':domainID', $domainID);
+        $time = time();
+        $sql->bindParam(':time', $time);
+        $sql->bindParam(':vh_name_vc2', $domainName['vh_name_vc']);
         $sql->execute();
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
 															dn_name_vc,
@@ -893,17 +980,24 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															" . $userID . ",
-															'" . $domainName['vh_name_vc'] . "',
-															" . $domainID . ",
+															:userID,
+															:vh_name_vc,
+															:domainID,
 															'NS',
 															'@',
 															172800,
-															'ns2." . $domainName['vh_name_vc'] . "',
+															:ns2,
 															NULL,
 															NULL,
 															NULL,
-															" . time() . ")");
+															:time)");
+        $sql->bindParam(':userID', $userID);
+        $Domain = 'ns2.'.$domainName['vh_name_vc'];
+        $sql->bindParam(':ns2', $Domain);
+        $sql->bindParam(':domainID', $domainID);
+        $time = time();
+        $sql->bindParam(':time', $time);
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);        
         $sql->execute();
         return;
     }
@@ -995,8 +1089,9 @@ class module_controller {
         if (!in_array($id, $RecordArray)) {
             $newlist = $GetRecords . "," . $id;
             $newlist = str_replace(",,", ",", $newlist);
-            $sql = "UPDATE x_settings SET so_value_tx='" . $newlist . "' WHERE so_name_vc='dns_hasupdates'";
+            $sql = "UPDATE x_settings SET so_value_tx=:newlist WHERE so_name_vc='dns_hasupdates'";
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':newlist', $newlist);
             $sql->execute();
             return true;
         }

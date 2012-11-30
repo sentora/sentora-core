@@ -324,7 +324,8 @@ function WriteVhostConfigFile() {
                 $line .= "</Directory>" . fs_filehandler::NewLine();
 
                 // Get Package php and cgi enabled options
-                $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_id_pk=" . $vhostuser['packageid'] . " AND pk_deleted_ts IS NULL");
+                $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_id_pk=:packageid AND pk_deleted_ts IS NULL");
+                $rows->bindParam(':packageid', $vhostuser['packageid']);
                 $rows->execute();
                 $packageinfo = $rows->fetch();
                 if ($packageinfo['pk_enablephp_in'] <> 0) {
@@ -506,7 +507,7 @@ function TriggerApacheQuotaUsage() {
             $currentuser = ctrl_users::GetUserDetail($rowvhost['vh_acc_fk']);
             if ($checksize['bd_diskover_in'] != $checksize['bd_diskcheck_in'] && $checksize['bd_diskover_in'] == 1) {
                 echo "Disk usage over quota, triggering Apache..." . fs_filehandler::NewLine();
-                $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+                $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
                 
                 //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
@@ -516,7 +517,7 @@ function TriggerApacheQuotaUsage() {
             }
             if ($checksize['bd_diskover_in'] != $checksize['bd_diskcheck_in'] && $checksize['bd_diskover_in'] == 0) {
                 echo "Disk usage under quota, triggering Apache..." . fs_filehandler::NewLine();
-                $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+                $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
                 
                 //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
@@ -527,7 +528,7 @@ function TriggerApacheQuotaUsage() {
             }
             if ($checksize['bd_transover_in'] != $checksize['bd_transcheck_in'] && $checksize['bd_transover_in'] == 1) {
                 echo "Bandwidth usage over quota, triggering Apache..." . fs_filehandler::NewLine();
-                $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+                $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
                 
                 //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
@@ -538,7 +539,7 @@ function TriggerApacheQuotaUsage() {
             }
             if ($checksize['bd_transover_in'] != $checksize['bd_transcheck_in'] && $checksize['bd_transover_in'] == 0) {
                 echo "Bandwidth usage under quota, triggering Apache..." . fs_filehandler::NewLine();
-                $updateapache = $zdbh->query("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
+                $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
                 
                 //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");

@@ -1,9 +1,9 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p>
-</div>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p>
+    </div>
 
-<button class="fg-button ui-state-default ui-corner-all" type="submit" onclick="window.open('etc/apps/webmail/')"><@ LaunchWebMail @></button>
+    <button class="fg-button ui-state-default ui-corner-all" type="submit" onclick="window.open('etc/apps/webmail/')"><@ LaunchWebMail @></button>
 
 </div>

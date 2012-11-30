@@ -37,7 +37,8 @@ class ui_templateparser {
         if ($match) {
             foreach ($match[1] as $classes) {
                 if (class_exists('' . $classes . '')) {
-                    $raw = str_replace("<# " . $classes . " #>", call_user_func(array($classes, 'Template')), $raw);
+                    $xss_cleaner = new runtime_xss;
+                    $raw = str_replace("<# " . $classes . " #>", $xss_cleaner->xssClean(call_user_func(array($classes, 'Template')), array(false, false, false, false, false, false, false)), $raw);
                 }
             }
         }

@@ -1,31 +1,31 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
-<@ Result @>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+    <@ Result @>
 
-<div class="zform_wrapper">
-<h2><: Enter your current and new password :></h2>
-<form action="./?module=password_assistant&action=UpdatePassword" method="post">
-    <table class="zform">
-		<tr>
-			<th><: Current password :>:</th>
-			<td><input name="inCurPass" type="password" id="inCurPass" /></td>
-		</tr>
-		<tr>
-			<th><: New password :>:</th>
-			<td><input name="inNewPass" type="password" id="inNewPass" /></td>
-		</tr>
-		<tr>
-			<th><: Confirm new password :>:</th>
-			<td><input name="inConPass" type="password" id="inConPass" /></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td align="right"><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button"><: Change :></button></td>
-		</tr>
-    </table>
-</form>
-</div>
+    <div class="zform_wrapper">
+        <h2><: Enter your current and new password :></h2>
+        <form action="./?module=password_assistant&action=UpdatePassword" method="post">
+            <table class="zform">
+                <tr>
+                    <th><: Current password :>:</th>
+                    <td><input name="inCurPass" type="password" id="inCurPass" /></td>
+                </tr>
+                <tr>
+                    <th><: New password :>:</th>
+                    <td><input name="inNewPass" type="password" id="inNewPass" /></td>
+                </tr>
+                <tr>
+                    <th><: Confirm new password :>:</th>
+                    <td><input name="inConPass" type="password" id="inConPass" /></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td align="right"><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button"><: Change :></button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
 
 </div>

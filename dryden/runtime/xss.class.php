@@ -81,7 +81,7 @@ class runtime_xss {
      * @return string The Clean String.
      */
     public function removeHarmfullStrings($data) {
-        $data = preg_replace_all('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $data);
+        $data = preg_replace('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $data, -1);
         return $data;
     }
 
@@ -106,29 +106,29 @@ class runtime_xss {
      * @return string The Clean String.
      */
     function xssClean($data, $settings) {
-        if (@$settings[0] || @empty($settings[0])) {
+        if ($settings[0]) {
             $data = $this->fixEntitys($data);
         }
 
-        if (@$settings[1] || @empty($settings[1])) {
+        if ($settings[1]) {
             $data = $this->removeAttribute($data);
         }
 
-        if (@$settings[2] || @empty($settings[2])) {
+        if ($settings[2]) {
             $data = $this->removeJavaVB($data);
         }
 
-        if (@$settings[3] || @empty($settings[3])) {
+        if ($settings[3]) {
             $data = $this->removeCssAttack($data);
         }
 
-        if (@$settings[4] || @empty($settings[4])) {
+        if ($settings[4]) {
             $data = $this->removeNameSpace($data);
         }
-        if (@$settings[5] || @empty($settings[5])) {
+        if ($settings[5]) {
             $data = $this->removeHarmfullStrings($data);
         }
-        if (@$settings[6] || @empty($settings[6])) {
+        if ($settings[6]) {
             $data = $this->htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
         }
         // Xss Clean Data

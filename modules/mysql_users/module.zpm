@@ -1,191 +1,191 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
-<@ Result @>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+    <@ Result @>
 
-	<% if isDeleteUser %>
-	<div class="zform_wrapper">
-		<h2><: Delete User :>: <@ EditCurrentUserName @> ?</h2>
-		<p><: Please confirm that you want to delete this MySQL user. :></p>
-		<form action="./?module=mysql_users&action=ConfirmDeleteUser" method="post">
-		<table class="none" cellpadding="0" cellspacing="0">
-			<tr>
-				<td colspan="2" align="right">
-				<input type="hidden" name="inDelete" value="<@ EditCurrentUserID @>">
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
-				</td>
-			</tr>
-		</table>
-                <@ CSFR_Tag @>
-		</form>
-	</div>
-	<% endif %>
+    <% if isDeleteUser %>
+    <div class="zform_wrapper">
+        <h2><: Delete User :>: <@ EditCurrentUserName @> ?</h2>
+        <p><: Please confirm that you want to delete this MySQL user. :></p>
+        <form action="./?module=mysql_users&action=ConfirmDeleteUser" method="post">
+            <table class="none" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="2" align="right">
+                        <input type="hidden" name="inDelete" value="<@ EditCurrentUserID @>">
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
+                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
+                    </td>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+    </div>
+    <% endif %>
 
-	<% if isEditUser %>
-	<div class="zgrid_wrapper">
-		<h2><: Databases for user :>: <@ EditCurrentUserName @></h2>
-		<% if UserDatabaseList %>
-	    <form action="./?module=mysql_users&action=RemoveDB" method="post">
-	        <table class="zgrid">
-		        <tr>
-    			    <th><: Database name :></th>
-					<th><: Remove from user :></th>
-		        </tr>
-				<% loop UserDatabaseList %>
-		        <tr>
-					<td><& mmdbname &></td>
-			        <td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inRemove_<& mmid &>" id="inRemove_<& mmid &>" value="<& mmid &>"><: Remove database :></button></td>
-		        </tr>
-				<% endloop %>
-				<input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
-	    	</table>
-                <@ CSFR_Tag @>
-	    </form>
-		<% else %>
-		<: This user currently has no databases. Assign a database using the form below. :>
-		<% endif %>
-		
-		<p>&nbsp;</p>
-		
-		<h2><: Add Database :></h2>
-		<form action="./?module=mysql_users&action=AddDB" method="post">
-	        <table class="zform">
-		        <tr>
-    			    <th nowrap="nowrap"><: Database :>:</th>
-			        <td width="150px">
-						<select name="inDatabase" id="inDatabase">
-						<option value="" selected="selected">-- Select a database --</option>
-						<% if DatabaseList %>
-                                                <% loop DatabaseList %>
-						<option value="<& mysqlid &>"><& mysqlname &></option>
-						<% endloop %>
-                                                <% endif %>
-				        </select>
-					</td>
-					<td>
-					<input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
-					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Add Database :></button>
-					</td>
-		        </tr>
-	    	</table>
-                <@ CSFR_Tag @>
-		</form>
-		
-		<p>&nbsp;</p>
+    <% if isEditUser %>
+    <div class="zgrid_wrapper">
+        <h2><: Databases for user :>: <@ EditCurrentUserName @></h2>
+        <% if UserDatabaseList %>
+        <form action="./?module=mysql_users&action=RemoveDB" method="post">
+            <table class="zgrid">
+                <tr>
+                    <th><: Database name :></th>
+                    <th><: Remove from user :></th>
+                </tr>
+                <% loop UserDatabaseList %>
+                <tr>
+                    <td><& mmdbname &></td>
+                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inRemove_<& mmid &>" id="inRemove_<& mmid &>" value="<& mmid &>"><: Remove database :></button></td>
+                </tr>
+                <% endloop %>
+                <input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+        <% else %>
+        <: This user currently has no databases. Assign a database using the form below. :>
+        <% endif %>
 
-		<h2><: Reset Password :></h2>
-		<form action="./?module=mysql_users&action=ResetPW" method="post">
-	        <table class="zform">
-		        <tr>
-    			    <th nowrap="nowrap"><: Password :>:</th>
-			        <td width="150px">
-					<input type="text" name="inResetPW" id="input-password" value="">
-					</td>
-					<td>
-					<input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
-					<button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save Password :></button>
-					<button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
-					</td>
-		        </tr>
-		        <tr>
-    			    <th></th>
-			        <td><a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
-					<td></td>
-		        </tr>
-	    	</table>
-<@ CSFR_Tag @>
-		</form>
-			
-	</div>
-	<% endif %>
-	
-	<div class="zgrid_wrapper">
-		<h2><: Current MySQL&reg Users :></h2>
-		<% if UserList %>
-		<form action="./?module=mysql_users&action=EditUser" method="post">
-		<table class="zgrid">
-			<tr>
-				<th><: User name :></th>
-				<th><: Access :></th>
-				<th><: Databases :></th>
-				<th><: Password :></th>
-				<th></th>
-			</tr>
-			<% loop UserList %>
-			<tr>
-				<td><& username &></td>
-				<td><& accesshtml &></td>
-				<td><& totaldb &></td>
-				<td><& dbpassword &></td>
-				<td>
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inEdit_<& userid &>" id="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& userid &>" id="inDelete_<& userid &>" value="<& userid &>"><: Delete :></button>
-				</td>
-			</tr>
-			<% endloop %>	
-		</table>
-                <@ CSFR_Tag @>
-		</form>
-		<% else %>
-		<: You have no MySQL&reg users at this time. Create a user using the form below. :>
-		<% endif %>
-	</div>
-	
-	<% if isCreateUser %>
-	<div class="zform_wrapper">
-		<table class="none" width="100%" cellborder="0" cellspacing="0">
-		<tr valign="top">
-		<td>
-			<h2><: Create a new MySQL&reg User :></h2>
-	    	<form action="./?module=mysql_users&action=CreateUser" method="post">
-	        <table class="zform">
-		        <tr>
-    			    <th nowrap="nowrap"><: User name :>:</th>
-			        <td nowrap="nowrap"><input type="text" size="30" name="inUserName" id="inUserName" /></td>
-		        </tr>
-		        <tr>
-    			    <th nowrap="nowrap"><: Map Database :>:</th>
-			        <td>
-						<select name="inDatabase" id="inDatabase">
-						<option value="" selected="selected">-- Select a database --</option>
-                                                <% if DatabaseList %>
-						<% loop DatabaseList %>
-						<option value="<& mysqlid &>"><& mysqlname &></option>
-						<% endloop %>
-                                                <% endif %>
-				        </select>
-					</td>
-		        </tr>
-		        <tr>
-			        <th nowrap="nowrap"><: Remote Access :>:</th>
-			        <td><input name="inAccess" type="radio" id="inAccess" value="1" onclick="hide_div('showaccess');" CHECKED />&nbsp;<: Allow from any IP :></td>
-		        </tr>
-		        <tr>
-			        <th>&nbsp;</th>
-			        <td><input name="inAccess" type="radio" id="inAccess" value="2" onclick="show_div('showaccess');" />&nbsp;<: Only from single IP :></td>
-		        </tr>
-		        <tr>
-			        <th>&nbsp;</th>
-			        <td>
-			        	<div id="showaccess" style="display:none;">
-						<input type="text" size="30" name="inAccessIP" id="inAccessIP" />
-						</div>
-					</td>
-		        </tr>
-		        <tr>
-			        <th colspan="2" align="right">
-			        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Create :></button></th>
-		        </tr>
-	        </table>
-                <@ CSFR_Tag @>
-	    	</form>
-		</td>
-		<td align="right"><@ MysqlUsagepChart @></td>
-		</tr></table>
-	</div>
-	<% endif %>
+        <p>&nbsp;</p>
+
+        <h2><: Add Database :></h2>
+        <form action="./?module=mysql_users&action=AddDB" method="post">
+            <table class="zform">
+                <tr>
+                    <th nowrap="nowrap"><: Database :>:</th>
+                    <td width="150px">
+                        <select name="inDatabase" id="inDatabase">
+                            <option value="" selected="selected">-- Select a database --</option>
+                            <% if DatabaseList %>
+                            <% loop DatabaseList %>
+                            <option value="<& mysqlid &>"><& mysqlname &></option>
+                            <% endloop %>
+                            <% endif %>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Add Database :></button>
+                    </td>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+
+        <p>&nbsp;</p>
+
+        <h2><: Reset Password :></h2>
+        <form action="./?module=mysql_users&action=ResetPW" method="post">
+            <table class="zform">
+                <tr>
+                    <th nowrap="nowrap"><: Password :>:</th>
+                    <td width="150px">
+                        <input type="text" name="inResetPW" id="input-password" value="">
+                    </td>
+                    <td>
+                        <input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save Password :></button>
+                        <button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td><a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
+                    <td></td>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+
+    </div>
+    <% endif %>
+
+    <div class="zgrid_wrapper">
+        <h2><: Current MySQL&reg Users :></h2>
+        <% if UserList %>
+        <form action="./?module=mysql_users&action=EditUser" method="post">
+            <table class="zgrid">
+                <tr>
+                    <th><: User name :></th>
+                    <th><: Access :></th>
+                    <th><: Databases :></th>
+                    <th><: Password :></th>
+                    <th></th>
+                </tr>
+                <% loop UserList %>
+                <tr>
+                    <td><& username &></td>
+                    <td><& accesshtml &></td>
+                    <td><& totaldb &></td>
+                    <td><& dbpassword &></td>
+                    <td>
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inEdit_<& userid &>" id="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& userid &>" id="inDelete_<& userid &>" value="<& userid &>"><: Delete :></button>
+                    </td>
+                </tr>
+                <% endloop %>	
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+        <% else %>
+        <: You have no MySQL&reg users at this time. Create a user using the form below. :>
+        <% endif %>
+    </div>
+
+    <% if isCreateUser %>
+    <div class="zform_wrapper">
+        <table class="none" width="100%" cellborder="0" cellspacing="0">
+            <tr valign="top">
+                <td>
+                    <h2><: Create a new MySQL&reg User :></h2>
+                    <form action="./?module=mysql_users&action=CreateUser" method="post">
+                        <table class="zform">
+                            <tr>
+                                <th nowrap="nowrap"><: User name :>:</th>
+                                <td nowrap="nowrap"><input type="text" size="30" name="inUserName" id="inUserName" /></td>
+                            </tr>
+                            <tr>
+                                <th nowrap="nowrap"><: Map Database :>:</th>
+                                <td>
+                                    <select name="inDatabase" id="inDatabase">
+                                        <option value="" selected="selected">-- Select a database --</option>
+                                        <% if DatabaseList %>
+                                        <% loop DatabaseList %>
+                                        <option value="<& mysqlid &>"><& mysqlname &></option>
+                                        <% endloop %>
+                                        <% endif %>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th nowrap="nowrap"><: Remote Access :>:</th>
+                                <td><input name="inAccess" type="radio" id="inAccess" value="1" onclick="hide_div('showaccess');" CHECKED />&nbsp;<: Allow from any IP :></td>
+                            </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td><input name="inAccess" type="radio" id="inAccess" value="2" onclick="show_div('showaccess');" />&nbsp;<: Only from single IP :></td>
+                            </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td>
+                                    <div id="showaccess" style="display:none;">
+                                        <input type="text" size="30" name="inAccessIP" id="inAccessIP" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2" align="right">
+                                    <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Create :></button></th>
+                            </tr>
+                        </table>
+                        <@ CSFR_Tag @>
+                    </form>
+                </td>
+                <td align="right"><@ MysqlUsagepChart @></td>
+            </tr></table>
+    </div>
+    <% endif %>
 
 </div>
 
@@ -208,36 +208,36 @@
     //-->
 </script>
 <script type="text/JavaScript">
-$.extend({
-  password: function (length, special) {
-    var iteration = 0;
-    var password = "";
-    var randomNumber;
-    if(special == undefined){
-        var special = false;
-    }
-    while(iteration < length){
-        randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
-        if(!special){
-            if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
-            if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
-            if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
-            if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+    $.extend({
+        password: function (length, special) {
+            var iteration = 0;
+            var password = "";
+            var randomNumber;
+            if(special == undefined){
+                var special = false;
+            }
+            while(iteration < length){
+                randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
+                if(!special){
+                    if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
+                    if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
+                    if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
+                    if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+                }
+                iteration++;
+                password += String.fromCharCode(randomNumber);
+            }
+            return password;
         }
-        iteration++;
-        password += String.fromCharCode(randomNumber);
-    }
-    return password;
-  }
-});
-$(document).ready(function() {
-	$('.link-password').click(function(e){
-		linkId = $(this).attr('id');
-		if (linkId == 'generate'){
-			password = $.password(9,false);
-			$('#input-password').val(password);
-		}
-		e.preventDefault();
-	});
-});
+    });
+    $(document).ready(function() {
+        $('.link-password').click(function(e){
+            linkId = $(this).attr('id');
+            if (linkId == 'generate'){
+                password = $.password(9,false);
+                $('#input-password').val(password);
+            }
+            e.preventDefault();
+        });
+    });
 </script>

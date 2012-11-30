@@ -54,10 +54,14 @@ class module_controller {
 
     function ListCurrentFAQ($fid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_faqs WHERE fq_id_pk=" . $fid . " IS NOT NULL AND fq_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_faqs WHERE fq_id_pk=:fid IS NOT NULL AND fq_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fid', $fid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':fid', $fid);
             $res = array();
             $sql->execute();
             while ($rowfaqs = $sql->fetch()) {
@@ -191,8 +195,11 @@ class module_controller {
 
     static function ExecuteDeleteFaq($fq_id_pk) {
         global $zdbh;
-        $sql = "UPDATE x_faqs SET fq_deleted_ts=" . time() . " WHERE fq_id_pk=" . $fq_id_pk . "";
+        $sql = "UPDATE x_faqs SET fq_deleted_ts=:time WHERE fq_id_pk=:fq_id_pk";
         $sql = $zdbh->prepare($sql);
+        $time = time();
+        $sql->bindParam(':time', $time);
+        $sql->bindParam(':fq_id_pk', $fq_id_pk);
         $sql->execute();
         self::$delete = true;
         return true;
@@ -201,12 +208,14 @@ class module_controller {
     static function ExecuteAddFaq($question, $answer, $userid, $global) {
         global $zdbh;
         if ($question != "" && $answer != "") {
-            $sql = "INSERT INTO x_faqs (fq_acc_fk, fq_question_tx, fq_answer_tx, fq_global_in, fq_created_ts) VALUES (:userid, :question, :answer, :global, " . time() . ")";
+            $sql = "INSERT INTO x_faqs (fq_acc_fk, fq_question_tx, fq_answer_tx, fq_global_in, fq_created_ts) VALUES (:userid, :question, :answer, :global, :time)";
             $sql = $zdbh->prepare($sql);
             $sql->bindParam(':userid', $userid);
             $sql->bindParam(':question', $question);
             $sql->bindParam(':answer', $answer);
             $sql->bindParam(':global', $global);
+            $time = time();
+            $sql->bindParam(':time', $time);
             $sql->execute();
             self::$ok = true;
             return true;

@@ -1,29 +1,29 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-	<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
-	<@ Result @>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+    <@ Result @>
 
-	<div class="zgrid_wrapper">
-		<h2><: Configure your Backup Settings :></h2>
-		<form action="./?module=backup_admin&action=UpdateConfig" method="post">
-		<table class="zgrid">
-			<% loop Config %>
-			<tr valign="top">
-				<th nowrap="nowrap"><& cleanname &></th>
-				<td><& fieldhtml &></td>
-				<td><& description &></td>
-			</tr>
-			<% endloop %>
-			<tr>
-				<th colspan="3">
-				<button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
-				<button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=moduleadmin';return false;"><: Cancel :></button>
-				</th>
-			</tr>
-		</table>
-                <@ CSFR_Tag @>
-		</form>
-	</div>
+    <div class="zgrid_wrapper">
+        <h2><: Configure your Backup Settings :></h2>
+        <form action="./?module=backup_admin&action=UpdateConfig" method="post">
+            <table class="zgrid">
+                <% loop Config %>
+                <tr valign="top">
+                    <th nowrap="nowrap"><& cleanname &></th>
+                    <td><& fieldhtml &></td>
+                    <td><& description &></td>
+                </tr>
+                <% endloop %>
+                <tr>
+                    <th colspan="3">
+                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
+                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=moduleadmin';return false;"><: Cancel :></button>
+                    </th>
+                </tr>
+            </table>
+            <@ CSFR_Tag @>
+        </form>
+    </div>
 
 </div>

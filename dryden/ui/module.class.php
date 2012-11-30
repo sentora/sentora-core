@@ -153,19 +153,18 @@ class ui_module {
      */
     static function CheckModuleEnabled($modulename) {
         global $zdbh;
-
-        $bindArray = array(
-            ':module' => $modulename,
-        );
-        $retvalSQL = $zdbh->bindQuery("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_folder_vc = :module", $bindArray);
-        $retval = $zdbh->returnRow();
-
+        
+        $numrows = $zdbh->prepare("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_name_vc = :module");
+        $numrows->bindParam(':module', $modulename);
+        $numrows->execute();
+        $retval = $numrows->fetch();
+        
         if ($retval['mo_enabled_en'] == "true") {
-            $retval = true;
+            $retvalEnd = true;
         } else {
-            $retval = false;
+            $retvalEnd = false;
         }
-        return $retval;
+        return $retvalEnd;
     }
 
     /**

@@ -42,12 +42,21 @@ function WriteDNSZoneRecordsHook() {
     //Now we have all domain ID's, loop through them and find records for each zone file.
     foreach ($dnsrecords as $dnsrecord) {
         //if (in_array($dnsrecord, $RecordsNeedingUpdateArray)){
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=" . $dnsrecord . "  AND dn_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:dnsrecord AND dn_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':dnsrecord', $dnsrecord);
+       
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=" . $dnsrecord . " AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
+                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=:dnsrecord AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
+                $sql->bindParam(':dnsrecord', $dnsrecord);
                 $sql->execute();
-                $domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $dnsrecord . " AND dn_deleted_ts IS NULL")->Fetch();
+//              $domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $dnsrecord . " AND dn_deleted_ts IS NULL")->Fetch();           
+                $numrows = $zdbh->prepare("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=:dnsrecord AND dn_deleted_ts IS NULL");
+                $numrows->bindParam(':dnsrecord', $dnsrecord);
+                $numrows->execute();
+                $domain = $numrows->fetch();
+
                 //Create zone directory if it doesnt exists...
                 if (!is_dir(ctrl_options::GetSystemOption('zone_dir'))) {
                     fs_director::CreateDirectory(ctrl_options::GetSystemOption('zone_dir'));

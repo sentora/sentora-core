@@ -1,27 +1,27 @@
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
 
-<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
+    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ Result @></p></div>
 
-<div class="zgrid_wrapper">
-<@ ApacheConfig @>
-</div>
+    <div class="zgrid_wrapper">
+        <@ ApacheConfig @>
+    </div>
 
-<div class="zform_wrapper">
-<@ VhostConfig @>
-</div>
+    <div class="zform_wrapper">
+        <@ VhostConfig @>
+    </div>
 
-<% if IsDisplayVhostOverrides %>
-<div class="zform_wrapper">
-<@ DisplayVhostOverrides @>
-</div>
-<% endif %>
+    <% if IsDisplayVhostOverrides %>
+    <div class="zform_wrapper">
+        <@ DisplayVhostOverrides @>
+    </div>
+    <% endif %>
 
-<% if IsDisplayDisabledVhostConfig %>
-<div class="zform_wrapper">
-<@ DisabledVhostConfig @>
-</div>
-<% endif %>
+    <% if IsDisplayDisabledVhostConfig %>
+    <div class="zform_wrapper">
+        <@ DisabledVhostConfig @>
+    </div>
+    <% endif %>
 </div>
 
 <script type="text/javascript">
