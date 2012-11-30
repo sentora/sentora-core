@@ -1,14 +1,14 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * XML import plugin for phpMyAdmin
  *
  * @todo    Improve efficiency
- * @version 0.5-beta
- * @package phpMyAdmin-Import
+ * @package PhpMyAdmin-Import
+ * @subpackage XML
  */
-if (!defined('PHPMYADMIN')) {
+
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -22,14 +22,15 @@ if (!function_exists('libxml_disable_entity_loader')) {
 /**
  * The possible scopes for $plugin_param are: 'table', 'database', and 'server'
  */
+
 if (isset($plugin_list)) {
     $plugin_list['xml'] = array(
         'text' => __('XML'),
         'extension' => 'xml',
         'options' => array(
-        ),
+            ),
         'options_text' => __('Options'),
-    );
+        );
     /* We do not define function when plugin is just queried for information above */
     return;
 }
@@ -42,13 +43,13 @@ $buffer = "";
  * Read in the file via PMA_importGetNextChunk so that
  * it can process compressed files
  */
-while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
+while (! ($finished && $i >= $len) && ! $error && ! $timeout_passed) {
     $data = PMA_importGetNextChunk();
-    if ($data === FALSE) {
+    if ($data === false) {
         /* subtract data we didn't handle yet and stop processing */
         $offset -= strlen($buffer);
         break;
-    } elseif ($data === TRUE) {
+    } elseif ($data === true) {
         /* Handle rest of buffer */
     } else {
         /* Append new data to buffer */
@@ -78,7 +79,7 @@ unset($buffer);
 /**
  * The XML was malformed
  */
-if ($xml === FALSE) {
+if ($xml === false) {
     PMA_Message::error(__('The XML file specified was either malformed or incomplete. Please correct the issue and try again.'))->display();
     unset($xml);
     $GLOBALS['finished'] = false;
@@ -117,24 +118,24 @@ $db_attr = $xml->children($namespaces['pma'])->{'structure_schemas'}->{'database
 
 if ($db_attr instanceof SimpleXMLElement) {
     $db_attr = $db_attr->attributes();
-    $db_name = (string) $db_attr['name'];
-    $collation = (string) $db_attr['collation'];
-    $charset = (string) $db_attr['charset'];
+    $db_name = (string)$db_attr['name'];
+    $collation = (string)$db_attr['collation'];
+    $charset = (string)$db_attr['charset'];
 } else {
     /**
      * If the structure section is not present
      * get the database name from the data section
      */
     $db_attr = $xml->children()->attributes();
-    $db_name = (string) $db_attr['name'];
-    $collation = NULL;
-    $charset = NULL;
+    $db_name = (string)$db_attr['name'];
+    $collation = null;
+    $charset = null;
 }
 
 /**
  * The XML was malformed
  */
-if ($db_name === NULL) {
+if ($db_name === null) {
     PMA_Message::error(__('The XML file specified was either malformed or incomplete. Please correct the issue and try again.'))->display();
     unset($xml);
     $GLOBALS['finished'] = false;
@@ -166,7 +167,7 @@ if (isset($namespaces['pma'])) {
                 /**
                  * Remove the extra cosmetic spacing
                  */
-                $val3 = str_replace("                ", "", (string) $val3);
+                $val3 = str_replace("                ", "", (string)$val3);
                 $create[] = $val3;
             }
         }
@@ -185,7 +186,7 @@ $data_present = false;
 /**
  * Only attempt to analyze/collect data if there is data present
  */
-if (@count($xml->children())) {
+if ($xml && @count($xml->children())) {
     $data_present = true;
 
     /**
@@ -196,25 +197,25 @@ if (@count($xml->children())) {
 
         $isInTables = false;
         for ($i = 0; $i < count($tables); ++$i) {
-            if (!strcmp($tables[$i][TBL_NAME], (string) $tbl_attr['name'])) {
+            if (! strcmp($tables[$i][TBL_NAME], (string)$tbl_attr['name'])) {
                 $isInTables = true;
                 break;
             }
         }
 
         if ($isInTables == false) {
-            $tables[] = array((string) $tbl_attr['name']);
+            $tables[] = array((string)$tbl_attr['name']);
         }
 
         foreach ($v1 as $k2 => $v2) {
             $row_attr = $v2->attributes();
-            if (!array_search((string) $row_attr['name'], $tempRow)) {
-                $tempRow[] = (string) $row_attr['name'];
+            if (! array_search((string)$row_attr['name'], $tempRow)) {
+                $tempRow[] = (string)$row_attr['name'];
             }
-            $tempCells[] = (string) $v2;
+            $tempCells[] = (string)$v2;
         }
 
-        $rows[] = array((string) $tbl_attr['name'], $tempRow, $tempCells);
+        $rows[] = array((string)$tbl_attr['name'], $tempRow, $tempCells);
 
         $tempRow = array();
         $tempCells = array();
@@ -230,8 +231,8 @@ if (@count($xml->children())) {
     $num_tbls = count($tables);
     for ($i = 0; $i < $num_tbls; ++$i) {
         for ($j = 0; $j < count($rows); ++$j) {
-            if (!strcmp($tables[$i][TBL_NAME], $rows[$j][TBL_NAME])) {
-                if (!isset($tables[$i][COL_NAMES])) {
+            if (! strcmp($tables[$i][TBL_NAME], $rows[$j][TBL_NAME])) {
+                if (! isset($tables[$i][COL_NAMES])) {
                     $tables[$i][] = $rows[$j][COL_NAMES];
                 }
 
@@ -242,7 +243,7 @@ if (@count($xml->children())) {
 
     unset($rows);
 
-    if (!$struct_present) {
+    if (! $struct_present) {
         $analyses = array();
 
         $len = count($tables);
@@ -265,10 +266,10 @@ if ($data_present) {
      * Set values to NULL if they were not present
      * to maintain PMA_buildSQL() call integrity
      */
-    if (!isset($analyses)) {
-        $analyses = NULL;
-        if (!$struct_present) {
-            $create = NULL;
+    if (! isset($analyses)) {
+        $analyses = null;
+        if (! $struct_present) {
+            $create = null;
         }
     }
 }
@@ -286,20 +287,21 @@ if ($data_present) {
  *
  * array $options = an associative array of options
  */
+
 /* Set database name to the currently selected one, if applicable */
 if (strlen($db)) {
     /* Override the database name in the XML file, if one is selected */
     $db_name = $db;
     $options = array('create_db' => false);
 } else {
-    if ($db_name === NULL) {
+    if ($db_name === null) {
         $db_name = 'XML_DB';
     }
 
     /* Set database collation/charset */
     $options = array(
         'db_collation' => $collation,
-        'db_charset' => $charset,
+        'db_charset'   => $charset,
     );
 }
 

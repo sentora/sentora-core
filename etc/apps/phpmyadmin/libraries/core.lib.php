@@ -1,12 +1,11 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Core functions used all over the scripts.
  * This script is distinct from libraries/common.inc.php because this
  * script is called from /test.
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
 
 /**
@@ -30,15 +29,15 @@
  * echo PMA_ifSetOr($cfg['ForceSSL'], false, 'boolean'); // true
  * </code>
  *
- * @uses    PMA_isValid()
  * @see     PMA_isValid()
- * @param   mixed   $var        param to check
- * @param   mixed   $default    default value
- * @param   mixed   $type       var type or array of values to check against $var
+ * @param mixed   $var        param to check
+ * @param mixed   $default    default value
+ * @param mixed   $type       var type or array of values to check against $var
  * @return  mixed   $var or $default
  */
-function PMA_ifSetOr(&$var, $default = null, $type = 'similar') {
-    if (!PMA_isValid($var, $type, $default)) {
+function PMA_ifSetOr(&$var, $default = null, $type = 'similar')
+{
+    if (! PMA_isValid($var, $type, $default)) {
         return $default;
     }
 
@@ -80,20 +79,15 @@ function PMA_ifSetOr(&$var, $default = null, $type = 'similar') {
  *
  * @todo create some testsuites
  * @todo add some more var types like hex, bin, ...?
- * @uses    is_scalar()
- * @uses    is_numeric()
- * @uses    is_array()
- * @uses    in_array()
- * @uses    gettype()
- * @uses    strtolower()
  * @see     http://php.net/gettype
- * @param   mixed   $var        variable to check
- * @param   mixed   $type       var type or array of valid values to check against $var
- * @param   mixed   $compare    var to compare with $var
+ * @param mixed   $var        variable to check
+ * @param mixed   $type       var type or array of valid values to check against $var
+ * @param mixed   $compare    var to compare with $var
  * @return  boolean whether valid or not
  */
-function PMA_isValid(&$var, $type = 'length', $compare = null) {
-    if (!isset($var)) {
+function PMA_isValid(&$var, $type = 'length', $compare = null)
+{
+    if (! isset($var)) {
         // var is not even set
         return false;
     }
@@ -177,20 +171,19 @@ function PMA_isValid(&$var, $type = 'length', $compare = null) {
  * require() when a part of the path comes from an insecure source
  * like a cookie or form.
  *
- * @param    string  The path to check
+ * @param string  The path to check
  *
  * @return   string  The secured path
  *
  * @access  public
  */
-function PMA_securePath($path) {
+function PMA_securePath($path)
+{
     // change .. to .
     $path = preg_replace('@\.\.*@', '.', $path);
 
     return $path;
-}
-
-// end function
+} // end function
 
 /**
  * displays the given error message on phpMyAdmin error page in foreign language,
@@ -199,26 +192,12 @@ function PMA_securePath($path) {
  * loads language file if not loaded already
  *
  * @todo    use detected argument separator (PMA_Config)
- * @uses    $GLOBALS['session_name']
- * @uses    $GLOBALS['text_dir']
- * @uses    $GLOBALS['available_languages']
- * @uses    $GLOBALS['lang']
- * @uses    $GLOBALS['PMA_Config']->removeCookie()
- * @uses    select_lang.lib.php
- * @uses    $_COOKIE
- * @uses    substr()
- * @uses    header()
- * @uses    http_build_query()
- * @uses    is_string()
- * @uses    sprintf()
- * @uses    vsprintf()
- * @uses    strtr()
- * @uses    defined()
- * @param   string $error_message the error message or named error message
- * @param   string|array $message_args arguments applied to $error_message
+ * @param string $error_message the error message or named error message
+ * @param string|array $message_args arguments applied to $error_message
  * @return  exit
  */
-function PMA_fatalError($error_message, $message_args = null) {
+function PMA_fatalError($error_message, $message_args = null)
+{
     /* Use format string if applicable */
     if (is_string($message_args)) {
         $error_message = sprintf($error_message, $message_args);
@@ -244,9 +223,11 @@ function PMA_fatalError($error_message, $message_args = null) {
         $GLOBALS['PMA_Config']->removeCookie($GLOBALS['session_name']);
     }
 
-    require('./libraries/error.inc.php');
+    include './libraries/error.inc.php';
 
-    exit;
+    if (!defined('TESTSUITE')) {
+        exit;
+    }
 }
 
 /**
@@ -258,13 +239,16 @@ function PMA_fatalError($error_message, $message_args = null) {
  *
  * @access  public
  */
-function PMA_getPHPDocLink($target) {
-    /* Gettext does not have to be loaded yet */
-    if (function_exists('_pgettext')) {
-        /* l10n: Language to use for PHP documentation, please use only languages which do exist in official documentation. */
-        $lang = _pgettext('PHP documentation language', 'en');
-    } else {
-        $lang = 'en';
+function PMA_getPHPDocLink($target)
+{
+    /* List of PHP documentation translations */
+    $php_doc_languages = array(
+        'pt_BR', 'zh', 'fr', 'de', 'it', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr'
+    );
+
+    $lang = 'en';
+    if (in_array($GLOBALS['lang'], $php_doc_languages)) {
+        $lang = $GLOBALS['lang'];
     }
 
     return PMA_linkURL('http://php.net/manual/' . $lang . '/' . $target);
@@ -275,16 +259,18 @@ function PMA_getPHPDocLink($target) {
  *
  * @param string $extension Extension name
  * @param bool $fatal Whether the error is fatal.
-  / @param string $extra Extra string to append to messsage.
+ / @param string $extra Extra string to append to messsage.
  */
-function PMA_warnMissingExtension($extension, $fatal = false, $extra = '') {
+function PMA_warnMissingExtension($extension, $fatal = false, $extra = '')
+{
     /* Gettext does not have to be loaded yet here */
     if (function_exists('__')) {
         $message = __('The %s extension is missing. Please check your PHP configuration.');
     } else {
         $message = 'The %s extension is missing. Please check your PHP configuration.';
     }
-    $message = sprintf($message, '[a@' . PMA_getPHPDocLink('book.' . $extension . '.php') . '@Documentation][em]' . $extension . '[/em][/a]');
+    $message = sprintf($message,
+        '[a@' . PMA_getPHPDocLink('book.' . $extension . '.php') . '@Documentation][em]' . $extension . '[/em][/a]');
     if ($extra != '') {
         $message .= ' ' . $extra;
     }
@@ -298,17 +284,14 @@ function PMA_warnMissingExtension($extension, $fatal = false, $extra = '') {
 /**
  * returns count of tables in given db
  *
- * @uses    PMA_DBI_try_query()
- * @uses    PMA_backquote()
- * @uses    PMA_DBI_QUERY_STORE()
- * @uses    PMA_DBI_num_rows()
- * @uses    PMA_DBI_free_result()
- * @param   string  $db database to count tables for
+ * @param string  $db database to count tables for
  * @return  integer count of tables in $db
  */
-function PMA_getTableCount($db) {
+function PMA_getTableCount($db)
+{
     $tables = PMA_DBI_try_query(
-            'SHOW TABLES FROM ' . PMA_backquote($db) . ';', null, PMA_DBI_QUERY_STORE);
+        'SHOW TABLES FROM ' . PMA_backquote($db) . ';',
+        null, PMA_DBI_QUERY_STORE);
     if ($tables) {
         $num_tables = PMA_DBI_num_rows($tables);
 
@@ -333,36 +316,32 @@ function PMA_getTableCount($db) {
  * (renamed with PMA prefix to avoid double definition when embedded
  * in Moodle)
  *
- * @uses    each()
- * @uses    strlen()
- * @uses    substr()
- * @param   string  $size
+ * @param string  $size
  * @return  integer $size
  */
-function PMA_get_real_size($size = 0) {
-    if (!$size) {
+function PMA_get_real_size($size = 0)
+{
+    if (! $size) {
         return 0;
     }
 
     $scan['gb'] = 1073741824; //1024 * 1024 * 1024;
-    $scan['g'] = 1073741824; //1024 * 1024 * 1024;
+    $scan['g']  = 1073741824; //1024 * 1024 * 1024;
     $scan['mb'] = 1048576;
-    $scan['m'] = 1048576;
-    $scan['kb'] = 1024;
-    $scan['k'] = 1024;
-    $scan['b'] = 1;
+    $scan['m']  = 1048576;
+    $scan['kb'] =    1024;
+    $scan['k']  =    1024;
+    $scan['b']  =       1;
 
     foreach ($scan as $unit => $factor) {
         if (strlen($size) > strlen($unit)
-                && strtolower(substr($size, strlen($size) - strlen($unit))) == $unit) {
+         && strtolower(substr($size, strlen($size) - strlen($unit))) == $unit) {
             return substr($size, 0, strlen($size) - strlen($unit)) * $factor;
         }
     }
 
     return $size;
-}
-
-// end function PMA_get_real_size()
+} // end function PMA_get_real_size()
 
 /**
  * merges array recursive like array_merge_recursive() but keyed-values are
@@ -372,17 +351,14 @@ function PMA_get_real_size($size = 0) {
  *
  * @see     http://php.net/array_merge
  * @see     http://php.net/array_merge_recursive
- * @uses    func_num_args()
- * @uses    func_get_arg()
- * @uses    is_array()
- * @uses    call_user_func_array()
- * @param   array   array to merge
- * @param   array   array to merge
- * @param   array   ...
+ * @param array   array to merge
+ * @param array   array to merge
+ * @param array   ...
  * @return  array   merged array
  */
-function PMA_array_merge_recursive() {
-    switch (func_num_args()) {
+function PMA_array_merge_recursive()
+{
+    switch(func_num_args()) {
         case 0 :
             return false;
             break;
@@ -392,12 +368,13 @@ function PMA_array_merge_recursive() {
             break;
         case 2 :
             $args = func_get_args();
-            if (!is_array($args[0]) || !is_array($args[1])) {
+            if (! is_array($args[0]) || ! is_array($args[1])) {
                 return $args[1];
             }
             foreach ($args[1] as $key2 => $value2) {
                 if (isset($args[0][$key2]) && !is_int($key2)) {
-                    $args[0][$key2] = PMA_array_merge_recursive($args[0][$key2], $value2);
+                    $args[0][$key2] = PMA_array_merge_recursive($args[0][$key2],
+                        $value2);
                 } else {
                     // we erase the parent array, otherwise we cannot override a directive that
                     // contains array elements, like this:
@@ -429,16 +406,14 @@ function PMA_array_merge_recursive() {
  * @see http://www.php-security.org/MOPB/MOPB-02-2007.html
  * @see http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2006-1549
  *
- * @uses    PMA_arrayWalkRecursive()
- * @uses    is_array()
- * @uses    is_string()
- * @param   array   $array      array to walk
- * @param   string  $function   function to call for every array element
+ * @param array   $array      array to walk
+ * @param string  $function   function to call for every array element
  */
-function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false) {
+function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
+{
     static $recursive_counter = 0;
     if (++$recursive_counter > 1000) {
-        die('possible deep recursion attack');
+        die(__('possible deep recursion attack'));
     }
     foreach ($array as $key => $value) {
         if (is_array($value)) {
@@ -464,16 +439,13 @@ function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
  * checks given given $page against given $whitelist and returns true if valid
  * it ignores optionaly query paramters in $page (script.php?ignored)
  *
- * @uses    in_array()
- * @uses    urldecode()
- * @uses    substr()
- * @uses    strpos()
- * @param   string  &$page      page to check
- * @param   array   $whitelist  whitelist to check page against
+ * @param string  &$page      page to check
+ * @param array   $whitelist  whitelist to check page against
  * @return  boolean whether $page is valid or not (in $whitelist or not)
  */
-function PMA_checkPageValidity(&$page, $whitelist) {
-    if (!isset($page) || !is_string($page)) {
+function PMA_checkPageValidity(&$page, $whitelist)
+{
+    if (! isset($page) || !is_string($page)) {
         return false;
     }
 
@@ -496,15 +468,11 @@ function PMA_checkPageValidity(&$page, $whitelist) {
  * searchs in $_SERVER, $_ENV than trys getenv() and apache_getenv()
  * in this order
  *
- * @uses    $_SERVER
- * @uses    $_ENV
- * @uses    getenv()
- * @uses    function_exists()
- * @uses    apache_getenv()
- * @param   string  $var_name   variable name
+ * @param string  $var_name   variable name
  * @return  string  value of $var or empty string
  */
-function PMA_getenv($var_name) {
+function PMA_getenv($var_name)
+{
     if (isset($_SERVER[$var_name])) {
         return $_SERVER[$var_name];
     } elseif (isset($_ENV[$var_name])) {
@@ -512,7 +480,7 @@ function PMA_getenv($var_name) {
     } elseif (getenv($var_name)) {
         return getenv($var_name);
     } elseif (function_exists('apache_getenv')
-            && apache_getenv($var_name, true)) {
+     && apache_getenv($var_name, true)) {
         return apache_getenv($var_name, true);
     }
 
@@ -522,31 +490,19 @@ function PMA_getenv($var_name) {
 /**
  * Send HTTP header, taking IIS limits into account (600 seems ok)
  *
- * @uses    PMA_IS_IIS
- * @uses    PMA_COMING_FROM_COOKIE_LOGIN
- * @uses    PMA_get_arg_separator()
- * @uses    SID
- * @uses    strlen()
- * @uses    strpos()
- * @uses    header()
- * @uses    session_write_close()
- * @uses    headers_sent()
- * @uses    function_exists()
- * @uses    debug_print_backtrace()
- * @uses    trigger_error()
- * @uses    defined()
- * @param   string   $uri the header to send
+ * @param string   $uri the header to send
  * @return  boolean  always true
  */
-function PMA_sendHeaderLocation($uri) {
+function PMA_sendHeaderLocation($uri)
+{
     if (PMA_IS_IIS && strlen($uri) > 600) {
-        require_once './libraries/js_escape.lib.php';
+        include_once './libraries/js_escape.lib.php';
 
         echo '<html><head><title>- - -</title>' . "\n";
         echo '<meta http-equiv="expires" content="0">' . "\n";
         echo '<meta http-equiv="Pragma" content="no-cache">' . "\n";
         echo '<meta http-equiv="Cache-Control" content="no-cache">' . "\n";
-        echo '<meta http-equiv="Refresh" content="0;url=' . htmlspecialchars($uri) . '">' . "\n";
+        echo '<meta http-equiv="Refresh" content="0;url=' .  htmlspecialchars($uri) . '">' . "\n";
         echo '<script type="text/javascript">' . "\n";
         echo '//<![CDATA[' . "\n";
         echo 'setTimeout("window.location = unescape(\'"' . PMA_escapeJsString($uri) . '"\')", 2000);' . "\n";
@@ -559,6 +515,7 @@ function PMA_sendHeaderLocation($uri) {
         echo 'document.write(\'<p><a href="' . htmlspecialchars($uri) . '">' . __('Go') . '</a></p>\');' . "\n";
         echo '//]]>' . "\n";
         echo '</script></body></html>' . "\n";
+
     } else {
         if (SID) {
             if (strpos($uri, '?') === false) {
@@ -590,23 +547,76 @@ function PMA_sendHeaderLocation($uri) {
 }
 
 /**
+ * Outputs headers to prevent caching in browser (and on the way).
+ *
+ * @return nothing
+ */
+function PMA_no_cache_header()
+{
+    header('Expires: ' . date(DATE_RFC1123)); // rfc2616 - Section 14.21
+    header('Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0'); // HTTP/1.1
+    if (PMA_USR_BROWSER_AGENT == 'IE') {
+        /* FIXME: Why is this speecial case for IE needed? */
+        header('Pragma: public');
+    } else {
+        header('Pragma: no-cache'); // HTTP/1.0
+        // test case: exporting a database into a .gz file with Safari
+        // would produce files not having the current time
+        // (added this header for Safari but should not harm other browsers)
+        header('Last-Modified: ' . date(DATE_RFC1123));
+    }
+}
+
+
+/**
+ * Sends header indicating file download.
+ *
+ * @param string $filename Filename to include in headers if empty,
+ *                         none Content-Disposition header will be sent.
+ * @param string $mimetype MIME type to include in headers.
+ * @param int    $length   Length of content (optional)
+ * @param bool   $no_cache Whether to include no-caching headers.
+ *
+ * @return nothing
+ */
+function PMA_download_header($filename, $mimetype, $length = 0, $no_cache = true)
+{
+    if ($no_cache) {
+        PMA_no_cache_header();
+    }
+    /* Replace all possibly dangerous chars in filename */
+    $filename = str_replace(array(';', '"', "\n", "\r"), '-', $filename);
+    if (!empty($filename)) {
+        header('Content-Description: File Transfer');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+    }
+    header('Content-Type: ' . $mimetype);
+    header('Content-Transfer-Encoding: binary');
+    if ($length > 0) {
+        header('Content-Length: ' . $length);
+    }
+}
+
+
+/**
  * Returns value of an element in $array given by $path.
  * $path is a string describing position of an element in an associative array,
  * eg. Servers/1/host refers to $array[Servers][1][host]
  *
- * @param  string   $path
- * @param  array    $array
- * @param  mixed    $default
+ * @param string   $path
+ * @param array    $array
+ * @param mixed    $default
  * @return mixed    array element or $default
  */
-function PMA_array_read($path, $array, $default = null) {
+function PMA_array_read($path, $array, $default = null)
+{
     $keys = explode('/', $path);
-    $value = & $array;
+    $value =& $array;
     foreach ($keys as $key) {
-        if (!isset($value[$key])) {
+        if (! isset($value[$key])) {
             return $default;
         }
-        $value = & $value[$key];
+        $value =& $value[$key];
     }
     return $value;
 }
@@ -614,19 +624,20 @@ function PMA_array_read($path, $array, $default = null) {
 /**
  * Stores value in an array
  *
- * @param  string   $path
- * @param  array    &$array
- * @param  mixed    $value
+ * @param string   $path
+ * @param array    &$array
+ * @param mixed    $value
  */
-function PMA_array_write($path, &$array, $value) {
+function PMA_array_write($path, &$array, $value)
+{
     $keys = explode('/', $path);
     $last_key = array_pop($keys);
-    $a = & $array;
+    $a =& $array;
     foreach ($keys as $key) {
-        if (!isset($a[$key])) {
+        if (! isset($a[$key])) {
             $a[$key] = array();
         }
-        $a = & $a[$key];
+        $a =& $a[$key];
     }
     $a[$last_key] = $value;
 }
@@ -634,26 +645,27 @@ function PMA_array_write($path, &$array, $value) {
 /**
  * Removes value from an array
  *
- * @param  string   $path
- * @param  array    &$array
- * @param  mixed    $value
+ * @param string   $path
+ * @param array    &$array
+ * @param mixed    $value
  */
-function PMA_array_remove($path, &$array) {
+function PMA_array_remove($path, &$array)
+{
     $keys = explode('/', $path);
     $keys_last = array_pop($keys);
     $path = array();
     $depth = 0;
 
-    $path[0] = & $array;
+    $path[0] =& $array;
     $found = true;
     // go as deep as required or possible
     foreach ($keys as $key) {
-        if (!isset($path[$depth][$key])) {
+        if (! isset($path[$depth][$key])) {
             $found = false;
             break;
         }
         $depth++;
-        $path[$depth] = & $path[$depth - 1][$key];
+        $path[$depth] =& $path[$depth-1][$key];
     }
     // if element found, remove it
     if ($found) {
@@ -663,7 +675,7 @@ function PMA_array_remove($path, &$array) {
 
     // remove empty nested arrays
     for (; $depth >= 0; $depth--) {
-        if (!isset($path[$depth + 1]) || count($path[$depth + 1]) == 0) {
+        if (! isset($path[$depth+1]) || count($path[$depth+1]) == 0) {
             unset($path[$depth][$keys[$depth]]);
         } else {
             break;
@@ -678,12 +690,13 @@ function PMA_array_remove($path, &$array) {
  *
  * @return string URL for a link.
  */
-function PMA_linkURL($url) {
+function PMA_linkURL($url)
+{
     if (!preg_match('#^https?://#', $url) || defined('PMA_SETUP')) {
         return $url;
     } else {
         if (!function_exists('PMA_generate_common_url')) {
-            require_once('./libraries/url_generating.lib.php');
+            include_once './libraries/url_generating.lib.php';
         }
         $params = array();
         $params['url'] = $url;
@@ -698,12 +711,38 @@ function PMA_linkURL($url) {
  *
  * @return string HTML code for javascript inclusion.
  */
-function PMA_includeJS($url) {
-    if (strpos($url, '?') === FALSE) {
+function PMA_includeJS($url)
+{
+    if (strpos($url, '?') === false) {
         return '<script src="./js/' . $url . '?ts=' . filemtime('./js/' . $url) . '" type="text/javascript"></script>' . "\n";
     } else {
         return '<script src="./js/' . $url . '" type="text/javascript"></script>' . "\n";
     }
+}
+
+/**
+ * Adds JS code snippets to be displayed by header.inc.php. Adds a
+ * newline to each snippet.
+ *
+ * @param string $str Js code to be added (e.g. "token=1234;")
+ *
+ */
+function PMA_AddJSCode($str)
+{
+    $GLOBALS['js_script'][] = $str;
+}
+
+/**
+ * Adds JS code snippet for variable assignment to be displayed by header.inc.php.
+ *
+ * @param string $key    Name of value to set
+ * @param mixed  $value  Value to set, can be either string or array of strings
+ * @param bool   $escape Whether to escape value or keep it as it is (for inclusion of js code)
+ *
+ */
+function PMA_AddJSVar($key, $value, $escape = true)
+{
+    PMA_AddJsCode(PMA_getJsValue($key, $value, $escape));
 }
 
 ?>

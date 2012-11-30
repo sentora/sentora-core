@@ -1,15 +1,11 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * dumps a database
  *
- * @uses    libraries/db_common.inc.php
- * @uses    libraries/db_info.inc.php
- * @uses    libraries/display_export.lib.php
- * @uses    $tables     from libraries/db_info.inc.php
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
+
 /**
  * Gets some core libraries
  */
@@ -19,7 +15,7 @@ $GLOBALS['js_include'][] = 'export.js';
 
 // $sub_part is also used in db_info.inc.php to see if we are coming from
 // db_export.php, in which case we don't obey $cfg['MaxTableList']
-$sub_part = '_export';
+$sub_part  = '_export';
 require_once './libraries/db_common.inc.php';
 $url_query .= '&amp;goto=db_export.php';
 require_once './libraries/db_info.inc.php';
@@ -32,13 +28,13 @@ $export_page_title = __('View dump (schema) of database');
 // exit if no tables in db found
 if ($num_tables < 1) {
     PMA_Message::error(__('No tables found in database.'))->display();
-    require './libraries/footer.inc.php';
+    include './libraries/footer.inc.php';
     exit;
 } // end if
 
 $checkall_url = 'db_export.php?'
-        . PMA_generate_common_url($db)
-        . '&amp;goto=db_export.php';
+              . PMA_generate_common_url($db)
+              . '&amp;goto=db_export.php';
 
 $multi_values = '<div>';
 $multi_values .= '<a href="' . $checkall_url . '" onclick="setSelectOptions(\'dump\', \'table_select[]\', true); return false;">' . __('Select All') . '</a>
@@ -65,16 +61,16 @@ foreach ($tables as $each_table) {
         } else {
             $is_selected = '';
         }
-    } elseif (!empty($unselectall)
-            || (!empty($table_select) && !in_array($each_table['Name'], $table_select))) {
+    } elseif (! empty($unselectall)
+            || (! empty($table_select) && !in_array($each_table['Name'], $table_select))) {
         $is_selected = '';
     } else {
         $is_selected = ' selected="selected"';
     }
-    $table_html = htmlspecialchars($each_table['Name']);
+    $table_html   = htmlspecialchars($each_table['Name']);
     $multi_values .= '                <option value="' . $table_html . '"'
-            . $is_selected . '>'
-            . str_replace(' ', '&nbsp;', $table_html) . '</option>' . "\n";
+        . $is_selected . '>'
+        . str_replace(' ', '&nbsp;', $table_html) . '</option>' . "\n";
 } // end for
 
 $multi_values .= "\n";

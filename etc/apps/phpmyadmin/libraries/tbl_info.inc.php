@@ -1,5 +1,4 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * extracts table properties from create statement
@@ -7,9 +6,9 @@
  * @todo should be handled by class Table
  * @todo this should be recoded as functions, to avoid messing with global variables
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -26,7 +25,7 @@ PMA_checkParameters(array('db', 'table'));
  * This is necessary because this script can be included by libraries/header.inc.php.
  */
 global $showtable, $tbl_is_view, $tbl_type, $show_comment, $tbl_collation,
- $table_info_num_rows, $auto_increment;
+       $table_info_num_rows, $auto_increment;
 
 /**
  * Gets table informations
@@ -57,30 +56,41 @@ $GLOBALS['showtable'] = PMA_Table::sGetStatusInfo($GLOBALS['db'], $GLOBALS['tabl
 
 if ($showtable) {
     if (PMA_Table::isView($GLOBALS['db'], $GLOBALS['table'])) {
-        $tbl_is_view = true;
-        $tbl_type = __('View');
-        $show_comment = null;
+        $tbl_is_view     = true;
+        $tbl_type        = __('View');
+        $show_comment    = null;
     } else {
-        $tbl_is_view = false;
-        $tbl_type = isset($showtable['Engine']) ? strtoupper($showtable['Engine']) : '';
+        $tbl_is_view     = false;
+        $tbl_type        = isset($showtable['Engine'])
+            ? strtoupper($showtable['Engine'])
+            : '';
         // a new comment could be coming from tbl_operations.php
         // and we want to show it in the header
         if (isset($submitcomment) && isset($comment)) {
             $show_comment = $comment;
         } else {
-            $show_comment = isset($showtable['Comment']) ? $showtable['Comment'] : '';
+            $show_comment    = isset($showtable['Comment'])
+                ? $showtable['Comment']
+                : '';
         }
     }
-    $tbl_collation = empty($showtable['Collation']) ? '' : $showtable['Collation'];
+    $tbl_collation       = empty($showtable['Collation'])
+        ? ''
+        : $showtable['Collation'];
 
     if (null === $showtable['Rows']) {
-        $showtable['Rows'] = PMA_Table::countRecords($GLOBALS['db'], $showtable['Name'], true);
+        $showtable['Rows']   = PMA_Table::countRecords($GLOBALS['db'],
+            $showtable['Name'], true);
     }
     $table_info_num_rows = isset($showtable['Rows']) ? $showtable['Rows'] : 0;
     $row_format = isset($showtable['Row_format']) ? $showtable['Row_format'] : '';
-    $auto_increment = isset($showtable['Auto_increment']) ? $showtable['Auto_increment'] : '';
+    $auto_increment      = isset($showtable['Auto_increment'])
+        ? $showtable['Auto_increment']
+        : '';
 
-    $create_options = isset($showtable['Create_options']) ? explode(' ', $showtable['Create_options']) : array();
+    $create_options      = isset($showtable['Create_options'])
+        ? explode(' ', $showtable['Create_options'])
+        : array();
 
     // export create options by its name as variables into global namespace
     // f.e. pack_keys=1 becomes available as $pack_keys with value of '1'
@@ -88,11 +98,11 @@ if ($showtable) {
     foreach ($create_options as $each_create_option) {
         $each_create_option = explode('=', $each_create_option);
         if (isset($each_create_option[1])) {
-            $$each_create_option[0] = $each_create_option[1];
+            $$each_create_option[0]    = $each_create_option[1];
         }
     }
     // we need explicit DEFAULT value here (different from '0')
-    $pack_keys = (!isset($pack_keys) || strlen($pack_keys) == 0) ? 'DEFAULT' : $pack_keys;
+    $pack_keys = (! isset($pack_keys) || strlen($pack_keys) == 0) ? 'DEFAULT' : $pack_keys;
     unset($create_options, $each_create_option);
 } // end if
 ?>

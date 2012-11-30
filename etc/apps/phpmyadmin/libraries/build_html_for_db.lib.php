@@ -1,11 +1,10 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -14,43 +13,44 @@ if (!defined('PHPMYADMIN')) {
  *
  * @return array
  */
-function PMA_getColumnOrder() {
+function PMA_getColumnOrder()
+{
 
     $column_order['DEFAULT_COLLATION_NAME'] = array(
-        'disp_name' => __('Collation'),
-        'description_function' => 'PMA_getCollationDescr',
-        'format' => 'string',
-        'footer' => PMA_getServerCollation(),
-    );
+            'disp_name' => __('Collation'),
+            'description_function' => 'PMA_getCollationDescr',
+            'format'    => 'string',
+            'footer'    => PMA_getServerCollation(),
+        );
     $column_order['SCHEMA_TABLES'] = array(
         'disp_name' => __('Tables'),
-        'format' => 'number',
-        'footer' => 0,
+        'format'    => 'number',
+        'footer'    => 0,
     );
     $column_order['SCHEMA_TABLE_ROWS'] = array(
         'disp_name' => __('Rows'),
-        'format' => 'number',
-        'footer' => 0,
+        'format'    => 'number',
+        'footer'    => 0,
     );
     $column_order['SCHEMA_DATA_LENGTH'] = array(
         'disp_name' => __('Data'),
-        'format' => 'byte',
-        'footer' => 0,
+        'format'    => 'byte',
+        'footer'    => 0,
     );
     $column_order['SCHEMA_INDEX_LENGTH'] = array(
         'disp_name' => __('Indexes'),
-        'format' => 'byte',
-        'footer' => 0,
+        'format'    => 'byte',
+        'footer'    => 0,
     );
     $column_order['SCHEMA_LENGTH'] = array(
         'disp_name' => __('Total'),
-        'format' => 'byte',
-        'footer' => 0,
+        'format'    => 'byte',
+        'footer'    => 0,
     );
     $column_order['SCHEMA_DATA_FREE'] = array(
         'disp_name' => __('Overhead'),
-        'format' => 'byte',
-        'footer' => 0,
+        'format'    => 'byte',
+        'footer'    => 0,
     );
 
     return $column_order;
@@ -71,16 +71,15 @@ function PMA_getColumnOrder() {
  *
  * @return array $column_order, $out
  */
-
-function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $column_order, $replication_types, $replication_info) {
+function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $column_order, $replication_types, $replication_info)
+{
 
     $out = '';
     if ($is_superuser || $GLOBALS['cfg']['AllowUserDropDatabase']) {
         $out .= '<td class="tool">';
         $out .= '<input type="checkbox" name="selected_dbs[]" title="' . htmlspecialchars($current['SCHEMA_NAME']) . '" value="' . htmlspecialchars($current['SCHEMA_NAME']) . '" ';
 
-        if ($current['SCHEMA_NAME'] != 'mysql'
-                && $current['SCHEMA_NAME'] != 'information_schema') {
+        if (!PMA_is_system_schema($current['SCHEMA_NAME'], true)) {
             $out .= (empty($checkall) ? '' : 'checked="checked" ') . '/>';
         } else {
             $out .= ' disabled="disabled" />';
@@ -88,15 +87,15 @@ function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $col
         $out .= '</td>';
     }
     $out .= '<td class="name">'
-            . '        <a onclick="'
-            . 'if (window.parent.openDb &amp;&amp; window.parent.openDb(\'' . PMA_jsFormat($current['SCHEMA_NAME'], false) . '\')) return false;'
-            . '" href="index.php?' . $url_query . '&amp;db='
-            . urlencode($current['SCHEMA_NAME']) . '" title="'
-            . sprintf(__('Jump to database'), htmlspecialchars($current['SCHEMA_NAME']))
-            . '" target="_parent">'
-            . ' ' . htmlspecialchars($current['SCHEMA_NAME'])
-            . '</a>'
-            . '</td>';
+           . '        <a onclick="'
+           . 'if (window.parent.openDb &amp;&amp; window.parent.openDb(\'' . PMA_jsFormat($current['SCHEMA_NAME'], false) . '\')) return false;'
+           . '" href="index.php?' . $url_query . '&amp;db='
+           . urlencode($current['SCHEMA_NAME']) . '" title="'
+           . sprintf(__('Jump to database'), htmlspecialchars($current['SCHEMA_NAME']))
+           . '" target="_parent">'
+           . ' ' . htmlspecialchars($current['SCHEMA_NAME'])
+           . '</a>'
+           . '</td>';
 
     foreach ($column_order as $stat_name => $stat) {
         if (array_key_exists($stat_name, $current)) {
@@ -129,7 +128,7 @@ function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $col
             $out .= '<td class="tool" style="text-align: center;">';
 
             if (strlen(array_search($current["SCHEMA_NAME"], $replication_info[$type]['Ignore_DB'])) > 0) {
-                $out .= PMA_getIcon('s_cancel.png', __('Not replicated'));
+                $out .= PMA_getIcon('s_cancel.png',  __('Not replicated'));
             } else {
                 $key = array_search($current["SCHEMA_NAME"], $replication_info[$type]['Do_DB']);
 
@@ -143,19 +142,18 @@ function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $col
         }
     }
 
-    if ($is_superuser) {
+    if ($is_superuser && !PMA_DRIZZLE) {
         $out .= '<td class="tool">'
-                . '<a onclick="'
-                . 'if (window.parent.setDb) window.parent.setDb(\'' . PMA_jsFormat($current['SCHEMA_NAME']) . '\');'
-                . '" href="./server_privileges.php?' . $url_query
-                . '&amp;checkprivs=' . urlencode($current['SCHEMA_NAME'])
-                . '" title="' . sprintf(__('Check privileges for database &quot;%s&quot;.'), htmlspecialchars($current['SCHEMA_NAME']))
-                . '">'
-                . ' '
-                . PMA_getIcon('s_rights.png', __('Check Privileges'))
-                . '</a></td>';
+               . '<a onclick="'
+               . 'if (window.parent.setDb) window.parent.setDb(\'' . PMA_jsFormat($current['SCHEMA_NAME']) . '\');'
+               . '" href="./server_privileges.php?' . $url_query
+               . '&amp;checkprivs=' . urlencode($current['SCHEMA_NAME'])
+               . '" title="' . sprintf(__('Check privileges for database &quot;%s&quot;.'), htmlspecialchars($current['SCHEMA_NAME']))
+               . '">'
+               . ' '
+               . PMA_getIcon('s_rights.png', __('Check Privileges'))
+               . '</a></td>';
     }
     return array($column_order, $out);
 }
-
 ?>

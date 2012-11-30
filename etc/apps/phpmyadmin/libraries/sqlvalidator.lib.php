@@ -1,5 +1,4 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * SQL Validator interface for phpMyAdmin
@@ -28,9 +27,9 @@
  *
  * Also set a username and password if you have a private one
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -39,9 +38,10 @@ if (!defined('PHPMYADMIN')) {
  * I'm not sure if PEAR was available before this point
  * For now we actually use a configuration flag
  */
-if ($cfg['SQLValidator']['use'] == TRUE) {
-    require_once './libraries/sqlvalidator.class.php';
-} // if ($cfg['SQLValidator']['use'] == TRUE)
+if ($cfg['SQLValidator']['use'] == true) {
+    include_once './libraries/sqlvalidator.class.php';
+} // if ($cfg['SQLValidator']['use'] == true)
+
 
 /**
  * This function utilizes the Mimer SQL Validator service
@@ -49,20 +49,21 @@ if ($cfg['SQLValidator']['use'] == TRUE) {
  *
  * <http://developer.mimer.com/validator/index.htm>
  *
- * @param   string   SQL query to validate
+ * @param string   SQL query to validate
  *
  * @return  string   Validator result string
  *
  * @global  array    The PMA configuration array
  */
-function PMA_validateSQL($sql) {
+function PMA_validateSQL($sql)
+{
     global $cfg;
 
     $str = '';
 
     if ($cfg['SQLValidator']['use']) {
         if (isset($GLOBALS['sqlvalidator_error'])
-                && $GLOBALS['sqlvalidator_error']) {
+            && $GLOBALS['sqlvalidator_error']) {
             $str = sprintf(__('The SQL validator could not be initialized. Please check if you have installed the necessary PHP extensions as described in the %sdocumentation%s.'), '<a href="./Documentation.html#faqsqlvalidator" target="documentation">', '</a>');
         } else {
             // create new class instance
@@ -87,10 +88,11 @@ function PMA_validateSQL($sql) {
             // Do service validation
             $str = $srv->validationString($sql);
         }
+
     } // end if
+
     // Gives string back to caller
     return $str;
-}
+} // end of the "PMA_validateSQL()" function
 
-// end of the "PMA_validateSQL()" function
 ?>

@@ -1,4 +1,4 @@
-phpMyAdmin 3.4.9 Documentation
+phpMyAdmin 3.5.4 Documentation
 
   * Top
   * Requirements
@@ -16,6 +16,7 @@ phpMyAdmin 3.4.9 Documentation
   * phpMyAdmin homepage
   * SourceForge phpMyAdmin project page
   * Official phpMyAdmin wiki
+  * Git repositories on Github
   * Local documents:
       + Version history: ChangeLog
       + License: LICENSE
@@ -73,6 +74,8 @@ Currently phpMyAdmin can:
   * track changes on databases, tables and views
   * support InnoDB tables and foreign keys (see FAQ 3.6)
   * support mysqli, the improved MySQL extension (see FAQ 1.17)
+  * create, edit, call, export and drop stored procedures and functions
+  * create, edit, export and drop events and triggers
   * communicate in 62 different languages
   * synchronize two databases residing on the same as well as remote servers
     (see FAQ 9.1)
@@ -213,8 +216,7 @@ Quick Install
  8. It is generally good idea to protect public phpMyAdmin installation against
     access by robots as they usually can not do anything good there. You can do
     this using robots.txt file in root of your webserver or limit access by web
-    server configuration. You can find example .htaccess file which can help
-    you achieve this in contrib directory in phpMyAdmin.
+    server configuration, see FAQ 1.42.
 
 phpMyAdmin configuration storage
 
@@ -225,20 +227,20 @@ database, or in a central database for a multi-user installation (this database
 would then be accessed by the controluser, so no other user should have rights
 to it).
 
-Please look at your ./scripts/ directory, where you should find a file called
+Please look at your ./examples/ directory, where you should find a file called
 create_tables.sql. (If you are using a Windows server, pay special attention to
 FAQ 1.23).
 
 If you already had this infrastructure and upgraded to MySQL 4.1.2 or newer,
-please use ./scripts/upgrade_tables_mysql_4_1_2+.sql and then create new tables
-by importing ./scripts/create_tables.sql.
+please use ./examples/upgrade_tables_mysql_4_1_2+.sql and then create new
+tables by importing ./examples/create_tables.sql.
 
 You can use your phpMyAdmin to create the tables for you. Please be aware that
 you may need special (administrator) privileges to create the database and
 tables, and that the script may need some tuning, depending on the database
 name.
 
-After having imported the ./scripts/create_tables.sql file, you should specify
+After having imported the ./examples/create_tables.sql file, you should specify
 the table names in your ./config.inc.php file. The directives used for that can
 be found in the Configuration section. You will also need to have a controluser
 with the proper rights to those tables (see section Using authentication modes
@@ -259,7 +261,7 @@ the default configuration file is version-specific.
 
 If you have upgraded your MySQL server from a version previous to 4.1.2 to
 version 5.x or newer and if you use the phpMyAdmin configuration storage, you
-should run the SQL script found in scripts/upgrade_tables_mysql_4_1_2+.sql.
+should run the SQL script found in examples/upgrade_tables_mysql_4_1_2+.sql.
 
 Using authentication modes
 
@@ -394,7 +396,7 @@ $cfg['Servers'][$i]['auth_swekey_config'] = '/etc/swekey.conf';
 You then have to create the swekey.conf file that will associate each user with
 their Swekey Id. It is important to place this file outside of your web
 server's document root (in the example, it is located in /etc). A self
-documented sample file is provided in the contrib directory. Feel free to use
+documented sample file is provided in the examples directory. Feel free to use
 it with your own users' information.
 
 If you want to purchase a Swekey please visit http://phpmyadmin.net/auth_key
@@ -497,16 +499,16 @@ $cfg['Servers'][$i]['connect_type'] string
 $cfg['Servers'][$i]['extension'] string
     What php MySQL extension to use for the connection. Valid options are:
 
-    mysql : The classic MySQL extension. This is the recommended and default
-    method at this time.
+    mysql : The classic MySQL extension.
 
     mysqli : The improved MySQL extension. This extension became available with
-    php 5.0.0 and is the recommended way to connect to a server running MySQL
+    PHP 5.0.0 and is the recommended way to connect to a server running MySQL
     4.1.x or newer.
 $cfg['Servers'][$i]['compress'] boolean
     Whether to use a compressed protocol for the MySQL server connection or not
     (experimental).
-    This feature requires PHP >= 4.3.0.
+$cfg['Servers'][$i]['controlhost'] string
+    Permits to use an alternate host to hold the configuration storage data.
 $cfg['Servers'][$i]['controluser'] string
     $cfg['Servers'][$i]['controlpass'] string
     This special account is used for 2 distinct purposes: to make possible all
@@ -539,12 +541,13 @@ $cfg['Servers'][$i]['auth_type'] string ['HTTP'|'http'|'cookie'|'config'|
         can be written also as 'http') ($auth_type = 'HTTP') as introduced in
         1.3.0 allows you to log in as any valid MySQL user via HTTP-Auth.
       + 'signon' authentication mode ($auth_type = 'signon') as introduced in
-        2.10.0 allows you to log in from prepared PHP session data. This is
-        useful for implementing single signon from another application. Sample
-        way how to seed session is in signon example: scripts/signon.php. There
-        is also alternative example using OpenID - scripts/openid.php. You need
-        to configure session name and signon URL to use this authentication
-        method.
+        2.10.0 allows you to log in from prepared PHP session data or using
+        supplied PHP script. This is useful for implementing single signon from
+        another application. Sample way how to seed session is in signon
+        example: examples/signon.php. There is also alternative example using
+        OpenID - examples/openid.php and example for scripts based solution -
+        examples/signon-script.php. You need to configure session name or
+        script to be executed and signon URL to use this authentication method.
     Please see the install section on "Using authentication modes" for more
     information.
 $cfg['Servers'][$i]['auth_http_realm'] string
@@ -736,6 +739,31 @@ $cfg['Servers'][$i]['history'] string
       + set up pmadb and the phpMyAdmin configuration storage
       + put the table name in $cfg['Servers'][$i]['history'] (e.g.
         'pma_history')
+$cfg['Servers'][$i]['recent'] string
+    Since release 3.5.0 you can show recently used tables in the left
+    navigation frame. It helps you to jump across table directly, without the
+    need to select the database, and then select the table. Using $cfg
+    ['LeftRecentTable'] you can configure the maximum number of recent tables
+    shown. When you select a table from the list, it will jump to the page
+    specified in $cfg['LeftDefaultTabTable'].
+
+    Without configuring the storage, you can still access the recently used
+    tables, but it will disappear after you logout.
+
+    To allow the usage of this functionality persistently:
+      + set up pmadb and the phpMyAdmin configuration storage
+      + put the table name in $cfg['Servers'][$i]['recent'] (e.g. 'pma_recent')
+$cfg['Servers'][$i]['table_uiprefs'] string
+    Since release 3.5.0 phpMyAdmin can be configured to remember several things
+    (sorted column $cfg['RememberSorting'] , column order, and column
+    visibility from a database table) for browsing tables. Without configuring
+    the storage, these features still can be used, but the values will
+    disappear after you logout.
+
+    To allow the usage of these functionality persistently:
+      + set up pmadb and the phpMyAdmin configuration storage
+      + put the table name in $cfg['Servers'][$i]['table_uiprefs'] (e.g.
+        'pma_table_uiprefs')
 $cfg['Servers'][$i]['tracking'] string
     Since release 3.3.x a tracking mechanism is available. It helps you to
     track every SQL command which is executed by phpMyAdmin. The mechanism
@@ -808,6 +836,13 @@ $cfg['Servers'][$i]['designer_coords'] string
       + set up pmadb and the phpMyAdmin configuration storage
       + put the table name in $cfg['Servers'][$i]['designer_coords'] (e.g.
         'pma_designer_coords')
+$cfg['Servers'][$i]['MaxTableUiprefs'] integer
+    Maximum number of rows saved in $cfg['Servers'][$i]['table_uiprefs'] table.
+
+    When tables are dropped or renamed, table_uiprefs may contain invalid data
+    (referring to tables which no longer exist).
+    We only keep this number of newest rows in table_uiprefs and automatically
+    delete older rows.
 $cfg['Servers'][$i]['verbose_check'] boolean
     Because release 2.5.0 introduced the new MIME-transformation support, the
     column_info table got enhanced with three new columns. If the above
@@ -890,8 +925,17 @@ $cfg['Servers'][$i]['ShowDatabasesCommand'] string
 $cfg['Servers'][$i]['CountTables'] boolean
     Whether to count the number of tables for each database when preparing the
     list of databases for the navigation frame.
+$cfg['Servers'][$i]['SignonScript'] string
+    Name of PHP script to be sourced and executed to obtain login credentials.
+    This is alternative approach to session based single signon. The script
+    needs to provide function get_login_credentials which returns list of
+    username and password, accepting single parameter of existing username (can
+    be empty). See examples/signon-script.php for an example.
 $cfg['Servers'][$i]['SignonSession'] string
-    Name of session which will be used for signon authentication method.
+    Name of session which will be used for signon authentication method. You
+    should use something different than phpMyAdmin, because this is session
+    which phpMyAdmin uses internally. Takes effect only if SignonScript is not
+    configured.
 $cfg['Servers'][$i]['SignonURL'] string
     URL where user will be redirected to log in for signon authentication
     method. Should be absolute including protocol.
@@ -919,6 +963,9 @@ $cfg['MaxTableList'] integer
     The maximum number of table names to be displayed in the main panel's list
     (except on the Export page). This limit is also enforced in the navigation
     panel when in Light mode.
+$cfg['ShowHint'] boolean
+    Whether or not to show hints (for example, hints when hovering over table
+    headers).
 $cfg['MaxCharactersInDisplayedSQL'] integer
     The maximum number of characters when a SQL query is displayed. The default
     limit of 1000 should be correct to avoid the display of tons of hexadecimal
@@ -933,8 +980,10 @@ $cfg['OBGzip'] string/boolean
     it if your browser has some problems with buffering. IE6 with a certain
     patch is known to cause data corruption when having enabled buffering.
 $cfg['PersistentConnections'] boolean
-    Whether persistent connections should be used or not (mysql_connect or
-    mysql_pconnect).
+    Whether persistent connections should be used or not. Works with following
+    extensions:
+      + mysql (mysql_pconnect),
+      + mysqli (requires PHP 5.3.0 or newer, more information).
 $cfg['ForceSSL'] boolean
     Whether to force using https while accessing phpMyAdmin.
 $cfg['ExecTimeLimit'] integer [number of seconds]
@@ -958,6 +1007,9 @@ $cfg['SkipLockedTables'] boolean
 $cfg['ShowSQL'] boolean
     Defines whether SQL queries generated by phpMyAdmin should be displayed or
     not.
+$cfg['RetainQueryBox'] boolean
+    Defines whether the SQL query box should be kept displayed after its
+    submission.
 $cfg['AllowUserDropDatabase'] boolean
     Defines whether normal users (non-administrator) are allowed to delete
     their own database or not. If set as FALSE, the link "Drop Database" will
@@ -1030,11 +1082,14 @@ $cfg['LeftFrameTableSeparator'] string
 $cfg['LeftFrameTableLevel'] string
     Defines how many sublevels should be displayed when splitting up tables by
     the above separator.
+$cfg['LeftRecentTable'] integer
+    The maximum number of recently used tables shown in the left navigation
+    frame. Set this to 0 (zero) to disable the listing of recent tables.
 $cfg['ShowTooltip'] boolean
     Defines whether to display table comment as tool-tip in left frame or not.
 $cfg['ShowTooltipAliasDB'] boolean
     If tool-tips are enabled and a DB comment is set, this will flip the
-    comment and the real name. That means that if you have a table called
+    comment and the real name. That means that if you have a database called
     'user0001' and add the comment 'MyName' on it, you will see the name
     'MyName' used consequently in the left frame and the tool-tip shows the
     real name of the DB.
@@ -1057,7 +1112,7 @@ $cfg['LeftLogoLinkWindow'] string
 $cfg['LeftDisplayTableFilterMinimum'] integer
     Defines the minimum number of tables to display a JavaScript filter box
     above the list of tables in the left frame. Defaults to 30. To disable the
-    filter completely some high number can he used (e.g. 9999)
+    filter completely some high number can be used (e.g. 9999)
 $cfg['LeftDisplayServers'] boolean
     Defines whether or not to display a server choice at the top of the left
     frame. Defaults to FALSE.
@@ -1106,11 +1161,14 @@ $cfg['NavigationBarIconic'] string
     text or symbols only. A value of TRUE displays icons, FALSE displays text
     and 'both' displays both icons and text.
 $cfg['ShowAll'] boolean
-    Defines whether a user should be displayed a "show all (records)" button in
-    browse mode or not.
+    Defines whether a user should be displayed a "Show all" button in browse
+    mode or not in all cases. By default it is shown only on small tables (less
+    than 5 ? $cfg['MaxRows'] rows) to avoid performance issues while getting
+    too many rows.
 $cfg['MaxRows'] integer
-    Number of rows displayed when browsing a result set. If the result set
-    contains more rows, "Previous" and "Next" links will be shown.
+    Number of rows displayed when browsing a result set and no LIMIT clause is
+    used. If the result set contains more rows, "Previous" and "Next" links
+    will be shown.
 $cfg['Order'] string [DESC|ASC|SMART]
     Defines whether columns are displayed in ascending (ASC) order, in
     descending (DESC) order or in a "smart" (SMART) order - I.E. descending
@@ -1140,6 +1198,12 @@ $cfg['CharEditing'] string
       + textarea - no problems with newlines in columns, but also no length
         limitations
     Default is old behavior so input.
+$cfg['MinSizeForInputField'] integer
+    Defines the minimum size for input fields generated for CHAR and VARCHAR
+    columns.
+$cfg['MaxSizeForInputField'] integer
+    Defines the maximum size for input fields generated for CHAR and VARCHAR
+    columns.
 $cfg['InsertRows'] integer
     Defines the maximum number of concurrent entries for the Insert page.
 $cfg['ForeignKeyMaxLimit'] integer
@@ -1204,7 +1268,8 @@ $cfg['DefaultLang'] string
     phpmyadmin.mo.
 $cfg['DefaultConnectionCollation'] string
     Defines the default connection collation to use, if not user-defined.
-    See the MySQL documentation for list of possible values.
+    See the MySQL documentation for list of possible values. This setting is
+    ignored when connected to Drizzle server.
 $cfg['Lang'] string
     Force language to use.
     The corresponding language file needs to be in locale/code/LC_MESSAGES/
@@ -1253,9 +1318,7 @@ $cfg['GD2Available'] string
     Specifies whether GD >= 2 is available. If yes it can be used for MIME
     transformations.
     Possible values are:
-      + auto - automatically detect, this is a bit expensive operation for php
-        < 4.3.0 so it is preferred to change this according to your server real
-        possibilities
+      + auto - automatically detect
       + yes - GD 2 functions can be used
       + no - GD 2 function cannot be used
     Default is auto.
@@ -1267,8 +1330,13 @@ $cfg['CheckConfigurationPermissions'] boolean
     set this parameter to FALSE. Default is TRUE.
 $cfg['LinkLengthLimit'] integer
     Limit for length of URL in links. When length would be above this limit, it
-    is replaced by form with button. This is required as some web servers (IIS)
-    have problems with long URLs. Default is 1000.
+    is replaced by form with button. This is required as some web servers (
+    IIS) have problems with long URLs. Default is 1000.
+$cfg['DisableMultiTableMaintenance'] boolean
+    In the database Structure page, it's possible to mark some tables then
+    choose an operation like optimizing for many tables. This can slow down a
+    server; therefore, setting this to true prevents this kind of multiple
+    maintenance operation. Default is false.
 $cfg['NaviWidth'] integer
     Navi frame width in pixels. See themes/themename/layout.inc.php.
 $cfg['NaviBackground'] string [CSS color for background]
@@ -1327,11 +1395,11 @@ $cfg['TextareaAutoSelect'] boolean
 $cfg['LimitChars'] integer
     Maximum number of characters shown in any non-numeric field on browse view.
     Can be turned off by a toggle button on the browse page.
-$cfg['ModifyDeleteAtLeft'] boolean $cfg['ModifyDeleteAtRight'] boolean
-    Defines the place where table row links (Edit, Inline edit, Copy, Delete)
-    would be put when tables contents are displayed (you may have them
-    displayed both at the left and at the right). "Left" and "right" are parsed
-    as "top" and "bottom" with vertical display mode.
+$cfg['RowActionLinks'] string
+    Defines the place where table row links (Edit, Copy, Delete) would be put
+    when tables contents are displayed (you may have them displayed at the left
+    side, right side, both sides or nowhere). "left" and "right" are parsed as
+    "top" and "bottom" with vertical display mode.
 $cfg['DefaultDisplay'] string
     There are 3 display modes: horizontal, horizontalflipped and vertical.
     Define which one is displayed by default. The first mode displays each row
@@ -1339,6 +1407,8 @@ $cfg['DefaultDisplay'] string
     can use descriptive headers even though columns only contain small values
     and still print them out. The vertical mode sorts each row on a vertical
     lineup.
+$cfg['RememberSorting'] boolean
+    If enabled, remember the sorting of each table when browsing them.
 $cfg['HeaderFlipType'] string
     The HeaderFlipType can be set to 'auto', 'css' or 'fake'. When using 'css'
     the rotation of the header for horizontalflipped is done via CSS. The CSS
@@ -1346,15 +1416,6 @@ $cfg['HeaderFlipType'] string
     PHP does the transformation for you, but of course this does not look as
     good as CSS. The 'auto' option enables CSS transformation when browser
     supports it and use PHP based one otherwise.
-$cfg['DefaultPropDisplay'] string or integer
-    When editing/creating new columns in a table all fields normally get lined
-    up one field a line. (default: 'horizontal'). If you set this to 'vertical'
-    you can have each field lined up vertically beneath each other. You can
-    save up a lot of place on the horizontal direction and no longer have to
-    scroll. If you set this to integer, editing of fewer columns will appear in
-    'vertical' mode, while editing of more columns still in 'horizontal' mode.
-    This way you can still effectively edit large number of columns, while
-    having full view on few of them.
 $cfg['ShowBrowseComments'] boolean
     $cfg['ShowPropertyComments'] boolean
     By setting the corresponding variable to TRUE you can enable the display of
@@ -1406,8 +1467,8 @@ $cfg['SaveDir'] string
 $cfg['TempDir'] string
     The name of the directory where temporary files can be stored.
 
-    This is needed to work around limitations of open_basedir for uploaded
-    files, see FAQ 1.11.
+    This is needed for importing ESRI Shapefiles, see FAQ 6.30 and to work
+    around limitations of open_basedir for uploaded files, see FAQ 1.11.
 
     If the directory where phpMyAdmin is installed is subject to an
     open_basedir restriction, you need to create a temporary directory in some
@@ -1449,6 +1510,11 @@ $cfg['Import'] array
     In this array are defined default parameters for import, names of items are
     similar to texts seen on import page, so you can easily identify what they
     mean.
+$cfg['SaveCellsAtOnce'] boolean
+    Defines whether or not to save all edited cells at once in browse-mode.
+$cfg['ShowDisplayDirection'] boolean
+    Defines whether or not type display direction option is shown when browsing
+    a table.
 $cfg['RepeatCells'] integer
     Repeat the headers every X cells, or 0 to deactivate.
 $cfg['EditInWindow'] boolean
@@ -1512,7 +1578,7 @@ $cfg['MaxExactCount'] integer
 $cfg['MaxExactCountViews'] integer
     For VIEWs, since obtaining the exact count could have an impact on
     performance, this value is the maximum to be displayed, using a SELECT
-    COUNT ... LIMIT. The default value of 0 bypasses any row counting.
+    COUNT ... LIMIT. Setting this to 0 bypasses any row counting.
 $cfg['NaturalOrder'] boolean
     Sorts database and table names according to natural order (for example, t1,
     t2, t10). Currently implemented in the left panel (Light mode) and in
@@ -1636,17 +1702,6 @@ $cfg['DefaultFunctions'] array
     Functions selected by default when inserting/changing row, Functions are
     defined for meta types from $cfg['RestrictColumnTypes'] and for
     first_timestamp, which is used for first timestamp column in table.
-$cfg['NumOperators'] array
-    Operators available for search operations on numeric and date columns.
-$cfg['TextOperators'] array
-    Operators available for search operations on character columns. Note that
-    we put LIKE by default instead of LIKE %...%, to avoid unintended
-    performance problems in case of huge tables.
-$cfg['EnumOperators'] array
-    Operators available for search operations on ENUM columns.
-$cfg['NullOperators'] array
-    Additional operators available for search operations when the column can be
-    null.
 
 Transformations
 
@@ -1882,7 +1937,7 @@ support groups.
 CGI application misbehaved by not returning a complete set of HTTP headers
 ...".
 
-You just forgot to read the install.txt file from the php distribution. Have a
+You just forgot to read the install.txt file from the PHP distribution. Have a
 look at the last message in this bug report from the official PHP bug database.
 
 1.5 Using phpMyAdmin on IIS, I'm facing crashes and/or many error messages with
@@ -1983,7 +2038,7 @@ provider is unwilling to change the settings:
 Since phpMyAdmin 3.0.x, only MySQL 5.0.1 and newer are supported. For older
 MySQL versions, you need to use the latest 2.x branch. phpMyAdmin can connect
 to your MySQL server using PHP's classic MySQL extension as well as the
-improved MySQL extension (MySQLi) that is available in php 5.0. The latter one
+improved MySQL extension (MySQLi) that is available in PHP 5.0. The latter one
 should be used unless you have a good reason not to do so.
 When compiling PHP, we strongly recommend that you manually link the MySQL
 extension of your choice to a MySQL client library of at least the same minor
@@ -1991,6 +2046,8 @@ version since the one that is bundled with some PHP distributions is rather old
 and might cause problems (see FAQ 1.17a).
 
 MariaDB is also supported (versions 5.1 and 5.2 were tested).
+
+Since phpMyAdmin 3.5 Drizzle is supported.
 
 1.17a I cannot connect to the MySQL server. It always returns the error
 message, "Client does not support authentication protocol requested by server;
@@ -2140,11 +2197,7 @@ under IIS 5.1.
  3. In Custom Errors, select the range of 401;1 through 401;5 and click the Set
     to Default button.
 
-1.33 Is there a problem with the mysqli extension when running PHP 5.0.4 on
-64-bit systems?
-
-Yes. This problem affects phpMyAdmin ("Call to undefined function
-pma_reloadnavigation"), so upgrade your PHP to the next version.
+1.33 (withdrawn).
 
 1.34 Can I access directly to database or table pages?
 
@@ -2253,6 +2306,31 @@ an unknown column.
 The MySQL server's privilege tables are not up to date, you need to run the
 mysql_upgrade command on the server.
 
+1.42 How can I prevent robots from accessing phpMyAdmin?
+
+You can add various rules to .htaccess to filter access based on user agent
+field. This is quite easy to circumvent, but could prevent at least some robots
+accessing your installation.
+
+RewriteEngine on
+
+# Allow only GET and POST verbs
+RewriteCond %{REQUEST_METHOD} !^(GET|POST)$ [NC,OR]
+
+# Ban Typical Vulnerability Scanners and others
+# Kick out Script Kiddies
+RewriteCond %{HTTP_USER_AGENT} ^(java|curl|wget).* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*(libwww-perl|curl|wget|python|nikto|wkito|pikto|scan|acunetix).* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*(winhttp|HTTrack|clshttp|archiver|loader|email|harvest|extract|grab|miner).* [NC,OR]
+
+# Ban Search Engines, Crawlers to your administrative panel
+# No reasons to access from bots
+# Ultimately Better than the useless robots.txt
+# Did google respect robots.txt?
+# Try google: intitle:phpMyAdmin intext:"Welcome to phpMyAdmin *.*.*" intext:"Log in" -wiki -forum -forums -questions intext:"Cookies must be enabled"
+RewriteCond %{HTTP_USER_AGENT} ^.*(AdsBot-Google|ia_archiver|Scooter|Ask.Jeeves|Baiduspider|Exabot|FAST.Enterprise.Crawler|FAST-WebCrawler|www\.neomo\.de|Gigabot|Mediapartners-Google|Google.Desktop|Feedfetcher-Google|Googlebot|heise-IT-Markt-Crawler|heritrix|ibm.com\cs/crawler|ICCrawler|ichiro|MJ12bot|MetagerBot|msnbot-NewsBlogs|msnbot|msnbot-media|NG-Search|lucene.apache.org|NutchCVS|OmniExplorer_Bot|online.link.validator|psbot0|Seekbot|Sensis.Web.Crawler|SEO.search.Crawler|Seoma.\[SEO.Crawler\]|SEOsearch|Snappy|www.urltrends.com|www.tkl.iis.u-tokyo.ac.jp/~crawler|SynooBot|crawleradmin.t-info@telekom.de|TurnitinBot|voyager|W3.SiteSearch.Crawler|W3C-checklink|W3C_Validator|www.WISEnutbot.com|yacybot|Yahoo-MMCrawler|Yahoo\!.DE.Slurp|Yahoo\!.Slurp|YahooSeeker).* [NC]
+RewriteRule .* - [F]
+
 Configuration
 
 2.1 The error message "Warning: Cannot add header information - headers already
@@ -2310,12 +2388,12 @@ do?
 
 Try to set the $cfg['OBGZip'] directive to FALSE in the phpMyAdmin
 configuration file. It helps sometime.
-Also have a look at your PHP version number: if it contains "4.0b..." it means
-you're running a beta version of PHP. That's not a so good idea, please upgrade
-to a plain revision.
+Also have a look at your PHP version number: if it contains "b" or "alpha" it
+means you're running a testing version of PHP. That's not a so good idea,
+please upgrade to a plain revision.
 
-2.5 Each time I want to insert or change a record or drop a database or a
-table, an error 404 (page not found) is displayed or, with HTTP or cookie
+2.5 Each time I want to insert or change a row or drop a database or a table,
+an error 404 (page not found) is displayed or, with HTTP or cookie
 authentication, I'm asked to log in again. What's wrong?
 
 Check the value you set for the $cfg['PmaAbsoluteUri'] directive in the
@@ -2495,7 +2573,7 @@ Edit I cannot be sure that I am editing the intended row.
 Please make sure that your table has a primary key, so that phpMyAdmin can use
 it for the Edit and Delete links.
 
-3.11 The number of records for InnoDB tables is not correct.
+3.11 The number of rows for InnoDB tables is not correct.
 
 phpMyAdmin uses a quick method to get the row count, and this method only
 returns an approximate count in the case of InnoDB tables. See $cfg
@@ -2525,7 +2603,7 @@ likely to be solved in the future.
 3.18 When I import a CSV file that contains multiple tables, they are lumped
 together into a single table.
 
-There is no reliable way to differetiate tables in CSV format. For the time
+There is no reliable way to differentiate tables in CSV format. For the time
 being, you will have to break apart CSV files containing multiple tables.
 
 3.19 When I import a file and have phpMyAdmin determine the appropriate data
@@ -2749,6 +2827,12 @@ This happens only when both of these conditions are met: using the http
 authentication mode and register_globals being set to On on the server. It
 seems to be a browser-specific problem; meanwhile use the cookie authentication
 mode.
+
+5.19 I get JavaScript errors in my browser.
+
+Issues have been reported with some combinations of browser extensions. To
+troubleshoot, disable all extensions then clear your browser cache to see if
+the problem goes away.
 
 Using phpMyAdmin
 
@@ -2981,9 +3065,7 @@ is the condition to create an index on a BLOB column.
 6.16 How can I simply move in page with plenty editing fields?
 
 You can use Ctrl+arrows (Option+Arrows in Safari) for moving on most pages with
-many editing fields (table structure changes, row editing, etc.). You can also
-have a look at the directive $cfg['DefaultPropDisplay'] ('vertical') and see if
-this eases up editing for you.
+many editing fields (table structure changes, row editing, etc.).
 
 6.17 Transformations: I can't enter my own mimetype! WTF is this feature then
 useful for?
@@ -3148,8 +3230,8 @@ name), but the following variables can be used:
     Currently opened database
 @TABLE@
     Currently opened table
-@FIELDS@
-    Fields of currently opened table
+@COLUMNS@
+    Columns of the currently opened table
 @PHPMYADMIN@
     phpMyAdmin with version
 
@@ -3181,6 +3263,67 @@ columns can be visualised as a chart. Moreover the table must be in a special
 format for chart script to understand it. Currently supported formats can be
 found in the wiki.
 
+6.30 Import: How can I import ESRI Shapefiles
+
+An ESRI Shapefile is actually a set of several files, where .shp file contains
+geometry data and .dbf file contains data related to those geometry data. To
+read data from .dbf file you need to have PHP compiled with the dBase extension
+(--enable-dbase). Otherwise only geometry data will be imported.
+
+To upload these set of files you can use either of the following methods:
+
+  * Configure upload directory with $cfg['UploadDir'], upload both .shp and
+    .dbf files with the same filename and chose the .shp file from the import
+    page.
+
+  * Create a Zip archive with .shp and .dbf files and import it. For this to
+    work, you need to set $cfg['TempDir'] to a place where the web server user
+    can write (for example './tmp').
+
+    To create the temporary directory on a UNIX-based system, you can do:
+
+    cd phpMyAdmin
+    mkdir tmp
+    chmod o+rwx tmp
+
+6.31 How do I create a relation in designer?
+
+To select relation, click:
+[relation icon]
+The display column is shown in pink. To set/unset a column as the display
+column, click the "Choose column to display" icon, then click on the
+appropriate column name.
+
+6.32 How can I use the zoom search feature?
+
+The Zoom search feature is an alternative to table search feature. It allows
+you to explore a table by representing its data in a scatter plot. You can
+locate this feature by selecting a table and clicking the 'Search' tab. One of
+the sub-tabs in the 'Table Search' page is 'Zoom Search'.
+
+Consider the table REL_persons in FAQ 6.6 for an example. To use zoom search,
+two columns need to be selected, for example, id and town_code. The id values
+will be represented on one axis and town_code values on the other axis. Each
+row will be represented as a point in a scatter plot based on its id and
+town_code. You can include two additional search criteria apart from the two
+fields to display.
+
+You can choose which field should be displayed as label for each point. If a
+display column has been set for the table (see FAQ 6.7), it is taken as the
+label unless you specify otherwise. You can also select the maximum number of
+rows you want to be displayed in the plot by specifing it in the 'Max rows to
+plot' field. Once you have decided over your criteria, click 'Go' to display
+the plot.
+
+After the plot is generated, you can use the mousewheel to zoom in and out of
+the plot. In addition, panning feature is enabled to navigate through the plot.
+You can zoom-in to a certail level of detail and use panning to locate your
+area of interest. Clicking on a point opens a dialogue box, displaying field
+values of the data row represented by the point. You can edit the values if
+required and click on submit to issue an update query. Basic instructions on
+how to use can be viewed by clicking the 'How to use?' link located just above
+the plot.
+
 phpMyAdmin project
 
 7.1 I have found a bug. How do I inform developers?
@@ -3194,49 +3337,16 @@ https://sourceforge.net/projects/phpmyadmin/forums.
 7.2 I want to translate the messages to a new language or upgrade an existing
 language, where do I start?
 
-Always use latest Git version of the po file to translate. You can optionally
-translate online at our translation server where you can also get the latest po
-files and merge them with your translations. For creating a new translation
-simply use po/phpmyadmin.pot and generate po/LANG_CODE.po for your language
-(you can use msginit -i po/phpmyadmin.pot -l LANG_CODE --no-translator -o po/
-LANG_CODE.po to do this) or ask on the mailing list to add the translation to
-the web interface. More details are available on our wiki.
-
-Please note that we try not to use HTML entities like &eacute; in the
-translations, since we define the right character set in the file. With HTML
-entities, the text on JavaScript messages would not display correctly. However
-there are some entities that need to be there: quotes, non-breakable spaces,
-ampersands, less than, greater than.
-
-You can then put your translations, as a zip file to avoid losing special
-characters, on the sourceforge.net translation tracker.
-
-It would be a good idea to subscribe to the phpmyadmin-translators mailing
-list, because this is where we ask for translations of new messages.
-
-Documentation is being translated using po4a and gettext (see documentation for
-existing translations). To start, checkout localized_docs/po from Git, or just
-go to the translation server and translate it online. If your language is
-missing, just contact Michal ?iha?; he will add it. If you prefer to directly
-translate the po files, please put updated ones into our translation tracker.
+Translations are very welcome and all you need to have are the language skills.
+The easiest way is to use our online translation service. You can check out all
+the possibilities to translate in the translate section on our website.
 
 7.3 I would like to help out with the development of phpMyAdmin. How should I
 proceed?
 
-The following method is preferred for new developers:
-
- 1. fetch the current git repository over anonymous git:
-    git clone git://phpmyadmin.git.sourceforge.net/gitroot/phpmyadmin/
-    phpmyadmin
- 2. add your stuff
- 3. generate patch with your changes: git diff > xxx.diff
- 4. submit your patch via the patch tracker of the phpMyAdmin project.
-
-More details on git are available on our wiki.
-
-Write access to the repository is granted only to experienced developers who
-have already contributed something useful to phpMyAdmin.
-Also, have a look at the Developers section.
+We welcome every contribution to the development of phpMyAdmin. You can check
+out all the possibilities to contribute in the contribute section on our
+website.
 
 Security
 
@@ -3310,48 +3420,24 @@ The difference is depicted by the red and green buttons with S and D letters,
 indicating that either Structure or Data are not up to date. By clicking on
 them, they will turn grey, what means that they will be synchronized.
 
+9.2 Are there problems with data synchronizing large tables?
+
+Yes. This aspect of synchronization is currently limited to small tables, and
+they must have a primary key.
+
 Developers Information
 
 phpMyAdmin is Open Source, so you're invited to contribute to it. Many great
 features have been written by other people and you too can help to make
 phpMyAdmin a useful tool.
 
-If you're planning to contribute source, please read the following information:
-
-  * All files include libraries/header.inc.php (layout),. libraries/
-    common.lib.php (common functions) and config.inc.php.
-    Only configuration data should go in config.inc.php. Please keep it free
-    from other code.
-    Commonly used functions should be added to libraries/common.lib.php and
-    more specific ones may be added within a library stored into the libraries
-    sub-directory.
-  * Obviously, you're free to use whatever coding style you want. But please
-    try to keep your code as simple as possible: beginners are using phpMyAdmin
-    as an example application.
-    As far as possible, we want the scripts to be XHTML1.0 and CSS2 compliant
-    on one hand, they fit the PEAR coding standards on the other hand. Please
-    pay attention to this.
-  * Please enable showing PHP errors and warnings by the $cfg['Error_Handler']
-    ['display'] configuration directive.
-  * Please try to keep up the file-naming conventions. Table-related stuff goes
-    to tbl_*.php, db-related code to db_*.php, server-related tools to
-    server_*.php and so on.
-  * Please use gettext wrappers around all messages (__('Some text') or
-    _ngettext() function). To translate them, you need to call scripts/
-    update-po script. To use translated messages, call scripts/generate-mo,
-    which generates binary files read by Gettext.
-  * If you want to be really helpful, write an entry for the ChangeLog.
-  * The DBG extension (PHP Debugger DBG) is now supported by phpMyAdmin for
-    developers to better debug and profile their code.
-    Please see the $cfg['DBG']* configuration options for more information.
-    This is in memoriam of the Space Shuttle Columbia (STS-107) which was lost
-    during its re-entry into Earth's atmosphere and in memory of the brave men
-    and women who gave their lives for the people of Earth.
+You can check out all the possibilities to contribute in the contribute section
+on our website.
 
 Copyright
 
 Copyright (C) 1998-2000 Tobias Ratschiller <tobias_at_ratschiller.com>
-Copyright (C) 2001-2010 Marc Delisle <marc_at_infomarc.info>
+Copyright (C) 2001-2012 Marc Delisle <marc_at_infomarc.info>
                         Olivier M?ller <om_at_omnis.ch>
                         Robin Johnson <robbat2_at_users.sourceforge.net>
                         Alexander M. Turek <me_at_derrabus.de>
@@ -3370,8 +3456,7 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
-St, Fifth Floor, Boston, MA 02110-1301 USA
+this program. If not, see http://www.gnu.org/licenses/.
 
 Credits
 
@@ -3488,9 +3573,10 @@ Credits, in chronological order
       + new relations Designer
   * Raj Kissu Rajandran (Google Summer of Code 2008)
       + BLOBstreaming support
-  * Piotr Przybylski (Google Summer of Code 2008 and 2010)
+  * Piotr Przybylski (Google Summer of Code 2008, 2010 and 2011)
       + improved setup script
       + user preferences
+      + Drizzle support
   * Derek Schaefer (Google Summer of Code 2009)
       + Improved the import system
   * Alexander Rutkowski (Google Summer of Code 2009)
@@ -3513,6 +3599,12 @@ Credits, in chronological order
       + BLOBstreaming support with PBMS PHP extension
   * Ankit Gupta (Google Summer of Code 2010)
       + Visual query builder
+  * Rouslan Placella (Google Summer of Code 2011)
+      + Improved support for Stored Routines, Triggers and Events
+      + Italian translation updates
+  * Dieter Adriaenssens
+      + Various bugfixes
+      + Dutch translation updates
 
 And also to the following people who have contributed minor changes,
 enhancements, bugfixes or support for a new language since version 2.1.0:
@@ -3600,8 +3692,8 @@ From Wikipedia, the free encyclopedia
   * FAQ (Frequently Asked Questions) - a list of commonly asked question and
     there answers.
   * Field - one part of divided data/columns.
-  * foreign key - a field or group of fields in a database record that point to
-    a key field or group of fields forming a key of another database record in
+  * foreign key - a column or group of columns in a database row that point to
+    a key column or group of columns forming a key of another database row in
     some (usually different) table.
   * FPDF (FreePDF) - the free PDF library
   * GD Graphics Library - a library by Thomas Boutell and others for
@@ -3665,7 +3757,7 @@ From Wikipedia, the free encyclopedia
     encompassing new research, innovations, and methodologies applicable to
     Internet technologies.
   * RFC 1952 - GZIP file format specification version 4.3
-  * Row (record, tulpel) - represents a single, implicitly structured data item
+  * Row (record, tuple) - represents a single, implicitly structured data item
     in a table.
   * Server - a computer system that provides services to other computing
     systems over a network.
@@ -3673,6 +3765,8 @@ From Wikipedia, the free encyclopedia
   * socket - a form of inter-process communication.
   * SSL (Secure Sockets Layer) - a cryptographic protocol which provides secure
     communication on the Internet.
+  * Stored procedure - a subroutine available to applications accessing a
+    relational database system
   * SQL - Structured Query Language
   * table - a set of data elements (cells) that is organized, defined and
     stored as horizontal rows and vertical columns where each item can be
@@ -3682,6 +3776,8 @@ From Wikipedia, the free encyclopedia
   * tar - a type of archive file format: the Tape ARchive format.
   * TCP (Transmission Control Protocol) - one of the core protocols of the
     Internet protocol suite.
+  * trigger - a procedural code that is automatically executed in response to
+    certain events on a particular table or view in a database
   * UFPDF - Unicode/UTF-8 extension for FPDF
   * URL (Uniform Resource Locator) - a sequence of characters, conforming to a
     standardized format, that is used for referring to resources, such as

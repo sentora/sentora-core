@@ -1,78 +1,10 @@
 var today=new Date,expires=new Date(today.getTime()+48384E5),pma_navi_width,pma_saveframesize_timeout=null;
-function toggle(a,d){
-    var b=document.getElementById("subel"+a);
-    if(!b)return false;
-    var c=document.getElementById("el"+a+"Img");
-    if(b.style.display=="none"||d){
-        b.style.display="";
-        if(c){
-            c.src=image_minus;
-            c.alt="-"
-            }
-        }else{
-    b.style.display="none";
-    if(c){
-        c.src=image_plus;
-        c.alt="+"
-        }
-    }
-return true
-}
-function PMA_callFunctionDelayed(){
-    if(typeof pma_saveframesize_timeout=="number"){
-        window.clearTimeout(pma_saveframesize_timeout);
-        pma_saveframesize_timeout=null
-        }
-    }
-function PMA_saveFrameSizeReal(){
-    pma_navi_width=parent.text_dir=="ltr"?parseInt(parent.document.getElementById("mainFrameset").cols):parent.document.getElementById("mainFrameset").cols.match(/\d+$/);
-    pma_navi_width>0&&pma_navi_width!=PMA_getCookie("pma_navi_width")&&PMA_setCookie("pma_navi_width",pma_navi_width,expires)
-    }
-function PMA_saveFrameSize(){
-    if(typeof pma_saveframesize_timeout=="number"){
-        window.clearTimeout(pma_saveframesize_timeout);
-        pma_saveframesize_timeout=null
-        }
-        pma_saveframesize_timeout=window.setTimeout(PMA_saveFrameSizeReal,2E3)
-    }
-function PMA_setFrameSize(){
-    pma_navi_width=PMA_getCookie("pma_navi_width");
-    if(pma_navi_width!=null&&parent.document!=document)if(parent.text_dir=="ltr")parent.document.getElementById("mainFrameset").cols=pma_navi_width+",*";else parent.document.getElementById("mainFrameset").cols="*,"+pma_navi_width
-        }
-function PMA_getCookie(a){
-    var d=document.cookie.indexOf(a+"="),b=d+a.length+1;
-    if(!d&&a!=document.cookie.substring(0,a.length))return null;
-    if(d==-1)return null;
-    a=document.cookie.indexOf(";",b);
-    if(a==-1)a=document.cookie.length;
-    return unescape(document.cookie.substring(b,a))
-    }
-    function PMA_setCookie(a,d,b,c,e,f){
-    document.cookie=a+"="+escape(d)+(b?";expires="+b.toGMTString():"")+(c?";path="+c:"")+(e?";domain="+e:"")+(f?";secure":"")
-    }
-function fast_filter(a){
-    lowercase_value=a.toLowerCase();
-    $("#subel0 a[class!='tableicon']").each(function(d,b){
-        $elem=$(b);
-        a&&$elem.html().toLowerCase().indexOf(lowercase_value)==-1?$elem.parent().hide():$elem.parents("li").show()
-        })
-    }
-    function clear_fast_filter(){
-    var a=$("#NavFilter input");
-    a.val("");
-    fast_filter("");
-    a.focus()
-    }
-$(document).ready(function(){
-    $("#NavFilter").css("display","inline");
-    $('input[id="fast_filter"]').focus(function(){
-        $(this).attr("value")==="filter tables by name"&&clear_fast_filter()
-        });
-    $("#clear_fast_filter").click(clear_fast_filter);
-    $("#fast_filter").focus(function(a){
-        a.target.select()
-        });
-    $("#fast_filter").keyup(function(a){
-        fast_filter(a.target.value)
-        })
-    });
+function toggle(b,a){var c=document.getElementById("subel"+b);if(!c)return false;var d=document.getElementById("el"+b+"Img");if(c.style.display=="none"||a){c.style.display="";if(d){c=PMA_getImage("b_minus.png");d.className=c.attr("class");d.src=c.attr("src");d.alt="-"}}else{c.style.display="none";if(d){c=PMA_getImage("b_plus.png");d.className=c.attr("class");d.src=c.attr("src");d.alt="+"}}return true}
+function PMA_callFunctionDelayed(){if(typeof pma_saveframesize_timeout=="number"){window.clearTimeout(pma_saveframesize_timeout);pma_saveframesize_timeout=null}}function PMA_saveFrameSizeReal(){pma_navi_width=parent.text_dir=="ltr"?parseInt(parent.document.getElementById("mainFrameset").cols):parent.document.getElementById("mainFrameset").cols.match(/\d+$/);pma_navi_width>0&&pma_navi_width!=PMA_getCookie("pma_navi_width")&&PMA_setCookie("pma_navi_width",pma_navi_width,expires)}
+function PMA_saveFrameSize(){if(typeof pma_saveframesize_timeout=="number"){window.clearTimeout(pma_saveframesize_timeout);pma_saveframesize_timeout=null}pma_saveframesize_timeout=window.setTimeout(PMA_saveFrameSizeReal,2E3)}
+function PMA_setFrameSize(){pma_navi_width=PMA_getCookie("pma_navi_width");if(pma_navi_width!=null&&parent.document!=document)if(parent.text_dir=="ltr")parent.document.getElementById("mainFrameset").cols=pma_navi_width+",*";else parent.document.getElementById("mainFrameset").cols="*,"+pma_navi_width}
+function PMA_getCookie(b){var a=document.cookie.indexOf(b+"="),c=a+b.length+1;if(!a&&b!=document.cookie.substring(0,b.length))return null;if(a==-1)return null;b=document.cookie.indexOf(";",c);if(b==-1)b=document.cookie.length;return unescape(document.cookie.substring(c,b))}function PMA_setCookie(b,a,c,d,e,f){document.cookie=b+"="+escape(a)+(c?";expires="+c.toGMTString():"")+(d?";path="+d:"")+(e?";domain="+e:"")+(f?";secure":"")}
+function fast_filter(b){lowercase_value=b.toLowerCase();$("#subel0 a[class!='tableicon']").each(function(a,c){$elem=$(c);b&&$elem.html().toLowerCase().indexOf(lowercase_value)==-1?$elem.parent().hide():$elem.parents("li").show()})}function clear_fast_filter(){$("#fast_filter").val("");fast_filter("")}
+function PMA_reloadRecentTable(){$.get("navigation.php",{token:window.parent.token,server:window.parent.server,ajax_request:true,recent_table:true},function(b){b.success==true&&$("#recentTable").html(b.options)})}
+$(document).ready(function(){$("#NavFilter").css("display","inline");var b=$("#fast_filter").val();$("#fast_filter.gray").live("focus",function(){$(this).removeClass("gray");clear_fast_filter()});$("#fast_filter:not(.gray)").live("focusout",function(){var a=$(this);a.val()==""&&a.addClass("gray").val(b)});$("#clear_fast_filter").click(function(){clear_fast_filter();$("#fast_filter").focus()});$("#fast_filter").keyup(function(){fast_filter($(this).val())});$("#recentTable").change(function(){if(this.value!=
+""){var a=jQuery.parseJSON(this.value);window.parent.setDb(a.db);window.parent.setTable(a.table);window.parent.refreshMain($("#LeftDefaultTabTable")[0].value)}});$("#newtable a.ajax").click(function(a){a.preventDefault();a=$("#newtable a").attr("href");if(a.substring(0,15)=="tbl_create.php?")a=a.substring(15);a+="&num_fields=&ajax_request=true";var c=parent.frame_content.$('<div id="create_table_dialog"></div>');parent.frame_content.PMA_createTableDialog(c,a,"tbl_create.php")})});

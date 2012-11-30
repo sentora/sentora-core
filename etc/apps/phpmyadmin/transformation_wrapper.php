@@ -1,10 +1,10 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
+
 /**
  *
  */
@@ -27,13 +27,12 @@ require_once './libraries/db_table_exists.lib.php';
  * Get the list of the fields of the current table
  */
 PMA_DBI_select_db($db);
-$table_def = PMA_DBI_query('SHOW FIELDS FROM ' . PMA_backquote($table), null, PMA_DBI_QUERY_STORE);
 if (isset($where_clause)) {
-    $result = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' WHERE ' . $where_clause . ';', null, PMA_DBI_QUERY_STORE);
-    $row = PMA_DBI_fetch_assoc($result);
+    $result      = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' WHERE ' . $where_clause . ';', null, PMA_DBI_QUERY_STORE);
+    $row         = PMA_DBI_fetch_assoc($result);
 } else {
-    $result = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' LIMIT 1;', null, PMA_DBI_QUERY_STORE);
-    $row = PMA_DBI_fetch_assoc($result);
+    $result      = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' LIMIT 1;', null, PMA_DBI_QUERY_STORE);
+    $row         = PMA_DBI_fetch_assoc($result);
 }
 
 // No row returned
@@ -61,17 +60,14 @@ if ($cfgRelation['commwork'] && $cfgRelation['mimework']) {
 require_once './libraries/header_http.inc.php';
 // [MIME]
 if (isset($ct) && !empty($ct)) {
-    $content_type = 'Content-Type: ' . $ct;
+    $mime_type = $ct;
 } else {
-    $content_type = 'Content-Type: ' . (isset($mime_map[$transform_key]['mimetype']) ? str_replace('_', '/', $mime_map[$transform_key]['mimetype']) : $default_ct) . (isset($mime_options['charset']) ? $mime_options['charset'] : '');
-}
-header($content_type);
-
-if (isset($cn) && !empty($cn)) {
-    header('Content-Disposition: attachment; filename=' . PMA_sanitize_filename($cn));
+    $mime_type = (isset($mime_map[$transform_key]['mimetype']) ? str_replace('_', '/', $mime_map[$transform_key]['mimetype']) : $default_ct) . (isset($mime_options['charset']) ? $mime_options['charset'] : '');
 }
 
-if (!isset($resize)) {
+PMA_download_header($cn, $mime_type);
+
+if (! isset($resize)) {
     echo $row[$transform_key];
 } else {
     // if image_*__inline.inc.php finds that we can resize,
@@ -85,15 +81,15 @@ if (!isset($resize)) {
     // if so adjust accordingly to make sure the image
     // stays smaller then the $newWidth and $newHeight
 
-    $ratioWidth = $srcWidth / $newWidth;
-    $ratioHeight = $srcHeight / $newHeight;
+    $ratioWidth = $srcWidth/$newWidth;
+    $ratioHeight = $srcHeight/$newHeight;
 
     if ($ratioWidth < $ratioHeight) {
-        $destWidth = $srcWidth / $ratioHeight;
+        $destWidth = $srcWidth/$ratioHeight;
         $destHeight = $newHeight;
     } else {
         $destWidth = $newWidth;
-        $destHeight = $srcHeight / $ratioWidth;
+        $destHeight = $srcHeight/$ratioWidth;
     }
 
     if ($resize) {
@@ -105,7 +101,7 @@ if (!isset($resize)) {
     ImageCopyResampled($destImage, $srcImage, 0, 0, 0, 0, $destWidth, $destHeight, $srcWidth, $srcHeight);
 
     if ($resize == 'jpeg') {
-        ImageJPEG($destImage, '', 75);
+        ImageJPEG($destImage, NULL, 75);
     }
     if ($resize == 'png') {
         ImagePNG($destImage);

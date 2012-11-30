@@ -2,8 +2,9 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
+
 /**
  * Don't display the page heading
  * @ignore
@@ -29,6 +30,7 @@ foreach ($types['mimetype'] as $key => $mimetype) {
     } else {
         echo $mimetype . '<br />';
     }
+
 }
 ?>
 <br />
@@ -39,36 +41,27 @@ foreach ($types['mimetype'] as $key => $mimetype) {
 <br />
 <h2><?php echo __('Available transformations'); ?></h2>
 <table border="0" width="90%">
-    <thead>
-        <tr>
-            <th><?php echo __('Browser transformation'); ?></th>
-            <th><?php echo _pgettext('for MIME transformation', 'Description'); ?></th>
-        </tr>
-    </thead>
-    <tbody>
+<thead>
+<tr>
+    <th><?php echo __('Browser transformation'); ?></th>
+    <th><?php echo _pgettext('for MIME transformation', 'Description'); ?></th>
+</tr>
+</thead>
+<tbody>
 <?php
 $odd_row = true;
 foreach ($types['transformation'] as $key => $transform) {
-    $func = strtolower(str_ireplace('.inc.php', '', $types['transformation_file'][$key]));
-    require './libraries/transformations/' . $types['transformation_file'][$key];
-    $funcname = 'PMA_transformation_' . $func . '_info';
-    $desc = '<i>' . sprintf(__('No description is available for this transformation.<br />Please ask the author what %s does.'), 'PMA_transformation_' . $func . '()') . '</i>';
-    if (function_exists($funcname)) {
-        $desc_arr = $funcname();
-        if (isset($desc_arr['info'])) {
-            $desc = $desc_arr['info'];
-        }
-    }
+    $desc = PMA_getTransformationDescription($types['transformation_file'][$key]);
     ?>
-            <tr class="<?php echo $odd_row ? 'odd' : 'even'; ?>">
-                <td><?php echo $transform; ?></td>
-                <td><?php echo $desc; ?></td>
-            </tr>
+    <tr class="<?php echo $odd_row ? 'odd' : 'even'; ?>">
+        <td><?php echo $transform; ?></td>
+        <td><?php echo $desc; ?></td>
+    </tr>
     <?php
     $odd_row = !$odd_row;
 }
 ?>
-    </tbody>
+</tbody>
 </table>
 
 <?php

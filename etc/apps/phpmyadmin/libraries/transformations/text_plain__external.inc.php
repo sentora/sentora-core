@@ -1,20 +1,21 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
-
 /**
- * @package phpMyAdmin-Transformation
+ * @package PhpMyAdmin-Transformation
  */
-function PMA_transformation_text_plain__external_info() {
+
+function PMA_transformation_text_plain__external_info()
+{
     return array(
         'info' => __('LINUX ONLY: Launches an external application and feeds it the column data via standard input. Returns the standard output of the application. The default is Tidy, to pretty-print HTML code. For security reasons, you have to manually edit the file libraries/transformations/text_plain__external.inc.php and list the tools you want to make available. The first option is then the number of the program you want to use and the second option is the parameters for the program. The third option, if set to 1, will convert the output using htmlspecialchars() (Default 1). The fourth option, if set to 1, will prevent wrapping and ensure that the output appears all on one line (Default 1).'),
-    );
+        );
 }
 
 /**
  *
  */
-function PMA_transformation_text_plain__external_nowrap($options = array()) {
+function PMA_transformation_text_plain__external_nowrap($options = array())
+{
     if (!isset($options[3]) || $options[3] == '') {
         $nowrap = true;
     } elseif ($options[3] == '1' || $options[3] == 1) {
@@ -26,9 +27,11 @@ function PMA_transformation_text_plain__external_nowrap($options = array()) {
     return $nowrap;
 }
 
-function PMA_transformation_text_plain__external($buffer, $options = array(), $meta = '') {
+function PMA_transformation_text_plain__external($buffer, $options = array(), $meta = '')
+{
     // possibly use a global transform and feed it with special options:
     // include './libraries/transformations/global.inc.php';
+
     // further operations on $buffer using the $options[] array.
 
     $allowed_programs = array();
@@ -46,12 +49,13 @@ function PMA_transformation_text_plain__external($buffer, $options = array(), $m
     //
     //$allowed_programs[0] = '/usr/local/bin/tidy';
     //$allowed_programs[1] = '/usr/local/bin/validate';
+
     // no-op when no allowed programs
     if (count($allowed_programs) == 0) {
         return $buffer;
     }
 
-    if (!isset($options[0]) || $options[0] == '' || !isset($allowed_programs[$options[0]])) {
+    if (!isset($options[0]) ||  $options[0] == '' || !isset($allowed_programs[$options[0]])) {
         $program = $allowed_programs[0];
     } else {
         $program = $allowed_programs[$options[0]];
@@ -98,5 +102,4 @@ function PMA_transformation_text_plain__external($buffer, $options = array(), $m
 
     return $retstring;
 }
-
 ?>

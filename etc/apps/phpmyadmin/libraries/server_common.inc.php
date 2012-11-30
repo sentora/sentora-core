@@ -1,16 +1,9 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * @uses    PMA_generate_common_url()
- * @uses    PMA_isSuperuser()
- * @uses    PMA_DBI_select_db()
- * @uses    PMA_DBI_fetch_result()
- * @uses    PMA_DBI_QUERY_STORE
- * @uses    $userlink
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -50,12 +43,14 @@ require_once './libraries/header.inc.php';
 $is_superuser = PMA_isSuperuser();
 
 // now, select the mysql db
-if ($is_superuser) {
+if ($is_superuser && !PMA_DRIZZLE) {
     PMA_DBI_select_db('mysql', $userlink);
 }
 
 /**
  * @global array binary log files
  */
-$binary_logs = PMA_DBI_fetch_result('SHOW MASTER LOGS', 'Log_name', null, null, PMA_DBI_QUERY_STORE);
+$binary_logs = PMA_DRIZZLE
+    ? null
+    : PMA_DBI_fetch_result('SHOW MASTER LOGS', 'Log_name', null, null, PMA_DBI_QUERY_STORE);
 ?>

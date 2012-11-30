@@ -1,12 +1,11 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Charset conversion functions.
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -52,29 +51,30 @@ if ($cfg['RecodingEngine'] == 'iconv') {
 
 /* Load AIX iconv wrapper if needed */
 if ($PMA_recoding_engine == PMA_CHARSET_ICONV_AIX) {
-    require_once './libraries/iconv_wrapper.lib.php';
+    include_once './libraries/iconv_wrapper.lib.php';
 }
 
 /**
  * Converts encoding of text according to parameters with detected
  * conversion function.
  *
- * @param   string   source charset
- * @param   string   target charset
- * @param   string   what to convert
+ * @param string   source charset
+ * @param string   target charset
+ * @param string   what to convert
  *
  * @return  string   converted text
  *
  * @access  public
  *
  */
-function PMA_convert_string($src_charset, $dest_charset, $what) {
+function PMA_convert_string($src_charset, $dest_charset, $what)
+{
     if ($src_charset == $dest_charset) {
         return $what;
     }
     switch ($GLOBALS['PMA_recoding_engine']) {
         case PMA_CHARSET_RECODE:
-            return recode_string($src_charset . '..' . $dest_charset, $what);
+            return recode_string($src_charset . '..'  . $dest_charset, $what);
         case PMA_CHARSET_ICONV:
             return iconv($src_charset, $dest_charset . $GLOBALS['cfg']['IconvExtraParams'], $what);
         case PMA_CHARSET_ICONV_AIX:
@@ -82,7 +82,6 @@ function PMA_convert_string($src_charset, $dest_charset, $what) {
         default:
             return $what;
     }
-}
+} //  end of the "PMA_convert_string()" function
 
-//  end of the "PMA_convert_string()" function
 ?>

@@ -1,12 +1,14 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * This library is used with the server IP allow/deny host authentication
  * feature
  *
- * @package phpMyAdmin
+ * @todo Broken for IPv6
+ *
+ * @package PhpMyAdmin
  */
+
 
 /**
  * Gets the "true" IP address of the current user
@@ -15,7 +17,8 @@
  *
  * @access  private
  */
-function PMA_getIp() {
+function PMA_getIp()
+{
     /* Get the address of user */
     if (!empty($_SERVER['REMOTE_ADDR'])) {
         $direct_ip = $_SERVER['REMOTE_ADDR'];
@@ -38,15 +41,14 @@ function PMA_getIp() {
 
     /* Return true IP */
     return $direct_ip;
-}
+} // end of the 'PMA_getIp()' function
 
-// end of the 'PMA_getIp()' function
 
 /**
  * Based on IP Pattern Matcher
  * Originally by J.Adams <jna@retina.net>
  * Found on <http://www.php.net/manual/en/function.ip2long.php>
- * Modified for phpMyAdmin 
+ * Modified for phpMyAdmin
  *
  * Matches:
  * xxx.xxx.xxx.xxx        (exact)
@@ -56,44 +58,45 @@ function PMA_getIp() {
  * Does not match:
  * xxx.xxx.xxx.xx[yyy-zzz]  (range, partial octets not supported)
  *
- * @param   string   string of IP range to match
- * @param   string   string of IP to test against range
+ * @param string   string of IP range to match
+ * @param string   string of IP to test against range
  *
  * @return  boolean    always true
  *
  * @access  public
  */
-function PMA_ipMaskTest($testRange, $ipToTest) {
-    $result = true;
+function PMA_ipMaskTest($testRange, $ipToTest)
+{
+   $result = true;
 
-    if (preg_match('|([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/([0-9]+)|', $testRange, $regs)) {
-        // performs a mask match
-        $ipl = ip2long($ipToTest);
-        $rangel = ip2long($regs[1] . '.' . $regs[2] . '.' . $regs[3] . '.' . $regs[4]);
+   if (preg_match('|([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/([0-9]+)|', $testRange, $regs)) {
+       // performs a mask match
+       $ipl    = ip2long($ipToTest);
+       $rangel = ip2long($regs[1] . '.' . $regs[2] . '.' . $regs[3] . '.' . $regs[4]);
 
-        $maskl = 0;
+       $maskl  = 0;
 
-        for ($i = 0; $i < 31; $i++) {
-            if ($i < $regs[5] - 1) {
-                $maskl = $maskl + PMA_pow(2, (30 - $i));
-            } // end if
-        } // end for
+       for ($i = 0; $i < 31; $i++) {
+           if ($i < $regs[5] - 1) {
+               $maskl = $maskl + PMA_pow(2, (30 - $i));
+           } // end if
+       } // end for
 
-        if (($maskl & $rangel) == ($maskl & $ipl)) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        // range based
-        $maskocts = explode('.', $testRange);
-        $ipocts = explode('.', $ipToTest);
+       if (($maskl & $rangel) == ($maskl & $ipl)) {
+           return true;
+       } else {
+           return false;
+       }
+   } else {
+       // range based
+       $maskocts = explode('.', $testRange);
+       $ipocts   = explode('.', $ipToTest);
 
-        // perform a range match
-        for ($i = 0; $i < 4; $i++) {
+       // perform a range match
+       for ($i = 0; $i < 4; $i++) {
             if (preg_match('|\[([0-9]+)\-([0-9]+)\]|', $maskocts[$i], $regs)) {
                 if (($ipocts[$i] > $regs[2])
-                        || ($ipocts[$i] < $regs[1])) {
+                    || ($ipocts[$i] < $regs[1])) {
                     $result = false;
                 } // end if
             } else {
@@ -101,18 +104,17 @@ function PMA_ipMaskTest($testRange, $ipToTest) {
                     $result = false;
                 } // end if
             } // end if/else
-        } //end for
-    } //end if/else
+       } //end for
+   } //end if/else
 
-    return $result;
-}
+   return $result;
+} // end of the "PMA_IPMaskTest()" function
 
-// end of the "PMA_IPMaskTest()" function
 
 /**
  * Runs through IP Allow/Deny rules the use of it below for more information
  *
- * @param   string 'allow' | 'deny' type of rule to match
+ * @param string 'allow' | 'deny' type of rule to match
  *
  * @return  bool   Matched a rule ?
  *
@@ -120,7 +122,8 @@ function PMA_ipMaskTest($testRange, $ipToTest) {
  *
  * @see     PMA_getIp()
  */
-function PMA_allowDeny($type) {
+function PMA_allowDeny($type)
+{
     global $cfg;
 
     // Grabs true IP of the user and returns if it can't be found
@@ -130,14 +133,14 @@ function PMA_allowDeny($type) {
     }
 
     // copy username
-    $username = $cfg['Server']['user'];
+    $username  = $cfg['Server']['user'];
 
     // copy rule database
-    $rules = $cfg['Server']['AllowDeny']['rules'];
+    $rules     = $cfg['Server']['AllowDeny']['rules'];
 
     // lookup table for some name shortcuts
     $shortcuts = array(
-        'all' => '0.0.0.0/0',
+        'all'       => '0.0.0.0/0',
         'localhost' => '127.0.0.1/8'
     );
 
@@ -159,7 +162,7 @@ function PMA_allowDeny($type) {
 
         // check for username
         if (($rule_data[1] != '%') //wildcarded first
-                && ($rule_data[1] != $username)) {
+            && ($rule_data[1] != $username)) {
             continue;
         }
 
@@ -176,6 +179,7 @@ function PMA_allowDeny($type) {
 
         // Add code for host lookups here
         // Excluded for the moment
+
         // Do the actual matching now
         if (PMA_ipMaskTest($rule_data[2], $remote_ip)) {
             return true;
@@ -183,7 +187,6 @@ function PMA_allowDeny($type) {
     } // end while
 
     return false;
-}
+} // end of the "PMA_AllowDeny()" function
 
-// end of the "PMA_AllowDeny()" function
 ?>

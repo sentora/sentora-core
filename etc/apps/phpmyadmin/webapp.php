@@ -1,11 +1,11 @@
 <?php
-
 /**
  * generate an WebApp file for Prism / WebRunner
  *
  * @see http://wiki.mozilla.org/Prism
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
+
 /**
  * @ignore
  */
@@ -21,17 +21,18 @@ require './libraries/zip.lib.php';
 
 // ini file
 $parameters = array(
-    'id' => 'phpMyAdmin@' . $_SERVER['HTTP_HOST'],
-    'uri' => $GLOBALS['PMA_Config']->get('PmaAbsoluteUri'),
-    'status' => 'yes',
-    'location' => 'no',
-    'sidebar' => 'no',
+    'id'        => 'phpMyAdmin@' . $_SERVER['HTTP_HOST'],
+    'uri'       => $GLOBALS['PMA_Config']->get('PmaAbsoluteUri'),
+    'status'    => 'yes',
+    'location'  => 'no',
+    'sidebar'   => 'no',
     'navigation' => 'no',
-    'icon' => 'phpMyAdmin',
+    'icon'      => 'phpMyAdmin',
 );
 
 // dom sript file
 // none need yet
+
 // icon
 $icon = 'favicon.ico';
 
@@ -43,11 +44,11 @@ foreach ($parameters as $key => $value) {
     $ini_file .= $key . '=' . $value . "\n";
 }
 
+PMA_download_header($name, 'application/webapp', 0, false);
+
 $zip = new zipfile;
+$zip->setDoWrite();
 $zip->addFile($ini_file, 'webapp.ini');
 $zip->addFile(file_get_contents($icon), 'phpMyAdmin.ico');
-
-header('Content-Type: application/webapp');
-header('Content-Disposition: attachment; filename="' . $name . '"');
-echo $zip->file();
+$zip->file();
 ?>

@@ -1,29 +1,29 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Functions for listing directories
  *
  * @todo rename to file_listing.lib.php
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
 
 /**
  * Returns array of filtered file names
  *
- * @param   string  directory to list
- * @param   string  regular expression to match files
- * @returns array   sorted file list on success, FALSE on failure
+ * @param string $dir        directory to list
+ * @param string $expression regular expression to match files
+ * @return array   sorted file list on success, false on failure
  */
-function PMA_getDirContent($dir, $expression = '') {
+function PMA_getDirContent($dir, $expression = '')
+{
     if (file_exists($dir) && $handle = @opendir($dir)) {
         $result = array();
         if (substr($dir, -1) != '/') {
             $dir .= '/';
         }
         while ($file = @readdir($handle)) {
-            // for PHP < 5.2.4, is_file() gives a warning when using open_basedir
-            // and verifying '..' or '.'
+        // for PHP < 5.2.4, is_file() gives a warning when using open_basedir
+        // and verifying '..' or '.'
             if ('.' != $file && '..' != $file && is_file($dir . $file) && ($expression == '' || preg_match($expression, $file))) {
                 $result[] = $file;
             }
@@ -32,26 +32,27 @@ function PMA_getDirContent($dir, $expression = '') {
         asort($result);
         return $result;
     } else {
-        return FALSE;
+        return false;
     }
 }
 
 /**
  * Returns options of filtered file names
  *
- * @param   string  directory to list
- * @param   string  regullar expression to match files
- * @param   string  currently active choice
- * @returns array   sorted file list on success, FALSE on failure
+ * @param string $dir        directory to list
+ * @param string $extensions regullar expression to match files
+ * @param string $active     currently active choice
+ * @return array   sorted file list on success, false on failure
  */
-function PMA_getFileSelectOptions($dir, $extensions = '', $active = '') {
+function PMA_getFileSelectOptions($dir, $extensions = '', $active = '')
+{
     $list = PMA_getDirContent($dir, $extensions);
-    if ($list === FALSE) {
-        return FALSE;
+    if ($list === false) {
+        return false;
     }
     $result = '';
     foreach ($list as $key => $val) {
-        $result .= '<option value="' . htmlspecialchars($val) . '"';
+        $result .= '<option value="'. htmlspecialchars($val) . '"';
         if ($val == $active) {
             $result .= ' selected="selected"';
         }
@@ -63,9 +64,10 @@ function PMA_getFileSelectOptions($dir, $extensions = '', $active = '') {
 /**
  * Get currently supported decompressions.
  *
- * @returns string | separated list of extensions usable in PMA_getDirContent
+ * @return string | separated list of extensions usable in PMA_getDirContent
  */
-function PMA_supportedDecompressions() {
+function PMA_supportedDecompressions()
+{
     global $cfg;
 
     $compressions = '';

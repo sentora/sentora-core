@@ -1,5 +1,4 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Output buffer functions for phpMyAdmin
@@ -10,7 +9,7 @@
  * Check for all the needed functions for output buffering
  * Make some wrappers for the top and bottoms of our files.
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
 
 /**
@@ -18,14 +17,11 @@
  * because both header and footer functions must know what each other is
  * doing.
  *
- * @uses    $cfg['OBGzip']
- * @uses    function_exists()
- * @uses    ini_get()
- * @uses    ob_get_level()
  * @staticvar integer remember last calculated value
  * @return  integer  the output buffer mode
  */
-function PMA_outBufferModeGet() {
+function PMA_outBufferModeGet()
+{
     static $mode = null;
 
     if (null !== $mode) {
@@ -58,22 +54,17 @@ function PMA_outBufferModeGet() {
     // the sum of all modes will be the natural choice.
 
     return $mode;
-}
+} // end of the 'PMA_outBufferModeGet()' function
 
-// end of the 'PMA_outBufferModeGet()' function
 
 /**
  * This function will need to run at the top of all pages if output
  * output buffering is turned on.  It also needs to be passed $mode from
  * the PMA_outBufferModeGet() function or it will be useless.
  *
- * @uses    PMA_outBufferModeGet()
- * @uses    PMA_outBufferPost() to register it as shutdown function
- * @uses    ob_start()
- * @uses    header() to send X-ob_mode:
- * @uses    register_shutdown_function() to register PMA_outBufferPost()
  */
-function PMA_outBufferPre() {
+function PMA_outBufferPre()
+{
     if ($mode = PMA_outBufferModeGet()) {
         ob_start('ob_gzhandler');
     }
@@ -81,20 +72,17 @@ function PMA_outBufferPre() {
     header('X-ob_mode: ' . $mode);
 
     register_shutdown_function('PMA_outBufferPost');
-}
+} // end of the 'PMA_outBufferPre()' function
 
-// end of the 'PMA_outBufferPre()' function
 
 /**
  * This function will need to run at the bottom of all pages if output
  * buffering is turned on.  It also needs to be passed $mode from the
  * PMA_outBufferModeGet() function or it will be useless.
  *
- * @uses    PMA_outBufferModeGet()
- * @uses    ob_flush()
- * @uses    flush()
  */
-function PMA_outBufferPost() {
+function PMA_outBufferPost()
+{
     if (ob_get_status() && PMA_outBufferModeGet()) {
         ob_flush();
     }
@@ -103,7 +91,6 @@ function PMA_outBufferPost() {
      * (at least PHP 5.2.11) have a bug (49816) that produces garbled
      * data
      */
-}
+} // end of the 'PMA_outBufferPost()' function
 
-// end of the 'PMA_outBufferPost()' function
 ?>

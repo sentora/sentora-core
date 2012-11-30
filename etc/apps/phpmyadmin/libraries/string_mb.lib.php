@@ -1,5 +1,4 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Specialized String Functions for phpMyAdmin
@@ -13,59 +12,55 @@
  *
  * The SQL Parser code relies heavily on these functions.
  *
- * @package phpMyAdmin-String-MB
+ * @package PhpMyAdmin-String-MB
  */
 
 /**
  * Returns length of string depending on current charset.
  *
- * @uses    mb_strlen()
- * @param   string   string to count
+ * @param string   string to count
  * @return  int      string length
- * @access  public
- * @todo rename to PM_STR_len()
  */
-function PMA_strlen($string) {
+function PMA_strlen($string)
+{
     return mb_strlen($string);
 }
 
 /**
  * Returns substring from string, works depending on current charset.
  *
- * @uses    mb_substr()
- * @param   string   string to count
- * @param   int      start of substring
- * @param   int      length of substring
- * @return  int      substring
- * @access  public
- * @todo rename to PM_STR_sub()
+ * @param string $string  string to count
+ * @param int    $start   start of substring
+ * @param int    $length  length of substring
+ * @return  string
  */
-function PMA_substr($string, $start, $length = 2147483647) {
+function PMA_substr($string, $start, $length = 2147483647)
+{
     return mb_substr($string, $start, $length);
 }
 
 /**
- * returns postion of $needle in $haystack or false if not found
+ * Returns postion of $needle in $haystack or false if not found
  *
- * @uses    mb_strpos()
- * @param   string  $needle
- * @param   string  $haystack
+ * @param string  $haystack
+ * @param string  $needle
+ * @param int     $offset
  * @return  integer position of $needle in $haystack or false
  */
-function PMA_STR_pos($haystack, $needle, $offset = 0) {
+function PMA_strpos($haystack, $needle, $offset = 0)
+{
     return mb_strpos($haystack, $needle, $offset);
 }
 
 /**
- * returns right most postion of $needle in $haystack or false if not found
+ * Make a string lowercase
  *
- * @uses    mb_strrpos()
- * @param   string  $needle
- * @param   string  $haystack
- * @return  integer position of $needle in $haystack or false
+ * @param string  $string
+ * @return  string
  */
-function PMA_STR_rPos($haystack, $needle, $offset = 0) {
-    return mb_strrpos($haystack, $needle, $offset);
+function PMA_strtolower($string)
+{
+    return mb_strtolower($string);
 }
 
 ?>

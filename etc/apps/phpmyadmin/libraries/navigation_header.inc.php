@@ -3,9 +3,9 @@
 /**
  * displays the pma logo, links and db and server selection in left frame
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -23,10 +23,10 @@ if ($GLOBALS['cfg']['LeftDisplayLogo']) {
     $logo = 'phpMyAdmin';
     if (@file_exists($GLOBALS['pmaThemeImage'] . 'logo_left.png')) {
         $logo = '<img src="' . $GLOBALS['pmaThemeImage'] . 'logo_left.png" '
-                . 'alt="' . $logo . '" id="imgpmalogo" />';
+            .'alt="' . $logo . '" id="imgpmalogo" />';
     } elseif (@file_exists($GLOBALS['pmaThemeImage'] . 'pma_logo2.png')) {
         $logo = '<img src="' . $GLOBALS['pmaThemeImage'] . 'pma_logo2.png" '
-                . 'alt="' . $logo . '" id="imgpmalogo" />';
+            .'alt="' . $logo . '" id="imgpmalogo" />';
     }
 
     echo '<div id="pmalogo">' . "\n";
@@ -52,47 +52,46 @@ if ($GLOBALS['cfg']['LeftDisplayLogo']) {
 } // end of display logo
 ?>
 <div id="leftframelinks">
-    <?php
+<?php
     echo '<a href="main.php?' . $query_url . '"'
-    . ' title="' . __('Home') . '">'
-    . ($GLOBALS['cfg']['MainPageIconic'] ? '<img class="icon" src="' . $pmaThemeImage . 'b_home.png" width="16" '
-            . ' height="16" alt="' . __('Home') . '" />' : __('Home'))
-    . '</a>' . "\n";
+        .' title="' . __('Home') . '">'
+        .($GLOBALS['cfg']['MainPageIconic']
+            ? PMA_getImage('b_home.png', __('Home'))
+            : __('Home'))
+        .'</a>' . "\n";
     // if we have chosen server
     if ($server != 0) {
         // Logout for advanced authentication
         if ($GLOBALS['cfg']['Server']['auth_type'] != 'config') {
             echo ($GLOBALS['cfg']['MainPageIconic'] ? '' : ' - ');
             echo '<a href="index.php?' . $query_url . '&amp;old_usr='
-            . urlencode($PHP_AUTH_USER) . '" target="_parent"'
-            . ' title="' . __('Log out') . '" >'
-            . ($GLOBALS['cfg']['MainPageIconic'] ? '<img class="icon" src="' . $pmaThemeImage . 's_loggoff.png" '
-                    . ' width="16" height="16" alt="' . __('Log out') . '" />' : __('Log out'))
-            . '</a>' . "\n";
+                .urlencode($PHP_AUTH_USER) . '" target="_parent"'
+                .' title="' . __('Log out') . '" >'
+                .($GLOBALS['cfg']['MainPageIconic']
+                    ? PMA_getImage('s_loggoff.png', __('Log out'))
+                    : __('Log out'))
+                .'</a>' . "\n";
         } // end if ($GLOBALS['cfg']['Server']['auth_type'] != 'config'
 
         $anchor = 'querywindow.php?' . PMA_generate_common_url($db, $table);
 
         if ($GLOBALS['cfg']['MainPageIconic']) {
-            $query_frame_link_text =
-                    '<img class="icon" src="' . $pmaThemeImage . 'b_selboard.png"'
-                    . ' width="16" height="16" alt="' . __('Query window') . '" />';
+            $query_frame_link_text = PMA_getImage('b_selboard.png', __('Query window'));
         } else {
             echo '<br />' . "\n";
             $query_frame_link_text = __('Query window');
         }
         echo '<a href="' . $anchor . '&amp;no_js=true"'
-        . ' title="' . __('Query window') . '"';
+            .' title="' . __('Query window') . '"';
         echo ' onclick="if (window.parent.open_querywindow()) return false;"';
         echo '>' . $query_frame_link_text . '</a>' . "\n";
     } // end if ($server != 0)
 
     echo '    <a href="Documentation.html" target="documentation"'
-    . ' title="' . __('phpMyAdmin documentation') . '" >';
+        .' title="' . __('phpMyAdmin documentation') . '" >';
 
     if ($GLOBALS['cfg']['MainPageIconic']) {
-        echo '<img class="icon" src="' . $pmaThemeImage . 'b_docs.png" width="16" height="16"'
-        . ' alt="' . __('phpMyAdmin documentation') . '" />';
+        echo PMA_getImage('b_docs.png', __('phpMyAdmin documentation'));
     } else {
         echo '<br />' . __('phpMyAdmin documentation');
     }
@@ -105,7 +104,7 @@ if ($GLOBALS['cfg']['LeftDisplayLogo']) {
         preg_match('/<a[^>]*>/', $documentation_link, $matches);
         $link = $matches[0];
         echo substr($link, 0, strlen($link) - 1) . ' title="' . __('Documentation') . '" >'
-        . '<br />' . __('Documentation') . '</a>';
+            . '<br />' . __('Documentation') . '</a>';
     }
 
     $params = array('uniqid' => uniqid());
@@ -113,25 +112,23 @@ if ($GLOBALS['cfg']['LeftDisplayLogo']) {
         $params['db'] = $GLOBALS['db'];
     }
     echo '<a href="navigation.php?' . PMA_generate_common_url($params)
-    . '" title="' . __('Reload navigation frame') . '" target="frame_navigation">';
+        . '" title="' . __('Reload navigation frame') . '" target="frame_navigation">';
     if ($GLOBALS['cfg']['MainPageIconic']) {
-        echo '<img class="icon" src="' . $GLOBALS['pmaThemeImage'] . 's_reload.png"'
-        . ' title="' . __('Reload navigation frame') . '"'
-        . ' alt="' . __('Reload navigation frame') . '" />';
+        echo PMA_getImage('s_reload.png', __('Reload navigation frame'));
     } else {
         echo '<br />' . __('Reload navigation frame');
     }
     echo '</a>';
 
-    echo '</div>' . "\n";
+echo '</div>' . "\n";
 
-    /**
-     * Displays the MySQL servers choice form
-     */
-    if ($GLOBALS['cfg']['LeftDisplayServers'] && (count($GLOBALS['cfg']['Servers']) > 1 || $server == 0 && count($GLOBALS['cfg']['Servers']) == 1)) {
-        echo '<div id="serverinfo">';
-        include './libraries/select_server.lib.php';
-        PMA_select_server(true, true);
-        echo '</div><br />';
-    } // end if LeftDisplayServers
-    ?>
+/**
+ * Displays the MySQL servers choice form
+ */
+if ($GLOBALS['cfg']['LeftDisplayServers'] && (count($GLOBALS['cfg']['Servers']) > 1 || $server == 0 && count($GLOBALS['cfg']['Servers']) == 1)) {
+    echo '<div id="serverinfo">';
+    include './libraries/select_server.lib.php';
+    PMA_select_server(true, true);
+    echo '</div><br />';
+} // end if LeftDisplayServers
+?>

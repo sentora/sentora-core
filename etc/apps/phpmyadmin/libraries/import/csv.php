@@ -1,13 +1,13 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * CSV import plugin for phpMyAdmin
  *
  * @todo    add an option for handling NULL values
- * @package phpMyAdmin-Import
+ * @package PhpMyAdmin-Import
+ * @subpackage CSV
  */
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -29,17 +29,17 @@ if (isset($plugin_list)) {
             array('type' => 'text', 'name' => 'enclosed', 'text' => __('Columns enclosed with:'), 'size' => 2, 'len' => 2),
             array('type' => 'text', 'name' => 'escaped', 'text' => __('Columns escaped with:'), 'size' => 2, 'len' => 2),
             array('type' => 'text', 'name' => 'new_line', 'text' => __('Lines terminated with:'), 'size' => 2),
-        ),
+            ),
         'options_text' => __('Options'),
-    );
+        );
 
     if ($plugin_param !== 'table') {
-        $plugin_list['csv']['options'][] =
-                array('type' => 'bool', 'name' => 'col_names', 'text' => __('The first line of the file contains the table column names <i>(if this is unchecked, the first line will become part of the data)</i>'));
+        $plugin_list['csv']['options'][]
+            = array('type' => 'bool', 'name' => 'col_names', 'text' => __('The first line of the file contains the table column names <i>(if this is unchecked, the first line will become part of the data)</i>'));
     } else {
         $hint = new PMA_Message(__('If the data in each row of the file is not in the same order as in the database, list the corresponding column names here. Column names must be separated by commas and not enclosed in quotations.'));
-        $plugin_list['csv']['options'][] =
-                array('type' => 'text', 'name' => 'columns', 'text' => __('Column names: ') . PMA_showHint($hint));
+        $plugin_list['csv']['options'][]
+            = array('type' => 'text', 'name' => 'columns', 'text' => __('Column names: ') . PMA_showHint($hint));
     }
     $plugin_list['csv']['options'][] = array('type' => 'end_group');
 
@@ -48,21 +48,21 @@ if (isset($plugin_list)) {
 }
 
 $replacements = array(
-    '\\n' => "\n",
-    '\\t' => "\t",
-    '\\r' => "\r",
-);
+    '\\n'   => "\n",
+    '\\t'   => "\t",
+    '\\r'   => "\r",
+    );
 $csv_terminated = strtr($csv_terminated, $replacements);
-$csv_enclosed = strtr($csv_enclosed, $replacements);
+$csv_enclosed = strtr($csv_enclosed,  $replacements);
 $csv_escaped = strtr($csv_escaped, $replacements);
 $csv_new_line = strtr($csv_new_line, $replacements);
 
-$param_error = FALSE;
+$param_error = false;
 if (strlen($csv_terminated) != 1) {
     $message = PMA_Message::error(__('Invalid parameter for CSV import: %s'));
     $message->addParam(__('Columns terminated by'), false);
-    $error = TRUE;
-    $param_error = TRUE;
+    $error = true;
+    $param_error = true;
     // The default dialog of MS Excel when generating a CSV produces a
     // semi-colon-separated file with no chance of specifying the
     // enclosing character. Thus, users who want to import this file
@@ -74,18 +74,18 @@ if (strlen($csv_terminated) != 1) {
 } elseif (strlen($csv_enclosed) > 1) {
     $message = PMA_Message::error(__('Invalid parameter for CSV import: %s'));
     $message->addParam(__('Columns enclosed by'), false);
-    $error = TRUE;
-    $param_error = TRUE;
+    $error = true;
+    $param_error = true;
 } elseif (strlen($csv_escaped) != 1) {
     $message = PMA_Message::error(__('Invalid parameter for CSV import: %s'));
     $message->addParam(__('Columns escaped by'), false);
-    $error = TRUE;
-    $param_error = TRUE;
+    $error = true;
+    $param_error = true;
 } elseif (strlen($csv_new_line) != 1 && $csv_new_line != 'auto') {
     $message = PMA_Message::error(__('Invalid parameter for CSV import: %s'));
     $message->addParam(__('Lines terminated by'), false);
-    $error = TRUE;
-    $param_error = TRUE;
+    $error = true;
+    $param_error = true;
 }
 
 // If there is an error in the parameters entered, indicate that immediately.
@@ -107,31 +107,31 @@ if (!$analyze) {
     }
     $sql_template .= ' INTO ' . PMA_backquote($table);
 
-    $tmp_fields = PMA_DBI_get_fields($db, $table);
+    $tmp_fields = PMA_DBI_get_columns($db, $table);
 
     if (empty($csv_columns)) {
         $fields = $tmp_fields;
     } else {
         $sql_template .= ' (';
         $fields = array();
-        $tmp = preg_split('/,( ?)/', $csv_columns);
+        $tmp   = preg_split('/,( ?)/', $csv_columns);
         foreach ($tmp as $key => $val) {
             if (count($fields) > 0) {
                 $sql_template .= ', ';
             }
             /* Trim also `, if user already included backquoted fields */
             $val = trim($val, " \t\r\n\0\x0B`");
-            $found = FALSE;
+            $found = false;
             foreach ($tmp_fields as $id => $field) {
                 if ($field['Field'] == $val) {
-                    $found = TRUE;
+                    $found = true;
                     break;
                 }
             }
             if (!$found) {
                 $message = PMA_Message::error(__('Invalid column (%s) specified! Ensure that columns names are spelled correctly, separated by commas, and not enclosed in quotes.'));
                 $message->addParam($val);
-                $error = TRUE;
+                $error = true;
                 break;
             }
             $fields[] = $field;
@@ -151,7 +151,7 @@ $len = 0;
 $line = 1;
 $lasti = -1;
 $values = array();
-$csv_finish = FALSE;
+$csv_finish = false;
 
 $tempRow = array();
 $rows = array();
@@ -163,19 +163,20 @@ $max_cols = 0;
 
 while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
     $data = PMA_importGetNextChunk();
-    if ($data === FALSE) {
+    if ($data === false) {
         // subtract data we didn't handle yet and stop processing
         $offset -= strlen($buffer);
         break;
-    } elseif ($data === TRUE) {
+    } elseif ($data === true) {
         // Handle rest of buffer
     } else {
         // Append new data to buffer
         $buffer .= $data;
         unset($data);
         // Do not parse string when we're not at the end and don't have new line inside
-        if (($csv_new_line == 'auto' && strpos($buffer, "\r") === FALSE && strpos($buffer, "\n") === FALSE)
-                || ($csv_new_line != 'auto' && strpos($buffer, $csv_new_line) === FALSE)) {
+        if (($csv_new_line == 'auto' && strpos($buffer, "\r") === false && strpos($buffer, "\n") === false)
+            || ($csv_new_line != 'auto' && strpos($buffer, $csv_new_line) === false)
+        ) {
             continue;
         }
     }
@@ -189,7 +190,7 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
         if ($lasti == $i && $lastlen == $len) {
             $message = PMA_Message::error(__('Invalid format of CSV input on line %d.'));
             $message->addParam($line);
-            $error = TRUE;
+            $error = true;
             break;
         }
         $lasti = $i;
@@ -214,30 +215,35 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
                 if ($i == $len - 1) {
                     break;
                 }
-                $need_end = TRUE;
+                $need_end = true;
                 $i++;
                 $ch = $buffer[$i];
             } else {
-                $need_end = FALSE;
+                $need_end = false;
             }
-            $fail = FALSE;
+            $fail = false;
             $value = '';
-            while (($need_end && $ch != $csv_enclosed)
-            || (!$need_end && !($ch == $csv_terminated
-            || $ch == $csv_new_line || ($csv_new_line == 'auto'
-            && ($ch == "\r" || $ch == "\n"))))) {
+            while (($need_end && ($ch != $csv_enclosed || $csv_enclosed == $csv_escaped))
+             || (!$need_end && !($ch == $csv_terminated
+               || $ch == $csv_new_line || ($csv_new_line == 'auto'
+                && ($ch == "\r" || $ch == "\n"))))) {
                 if ($ch == $csv_escaped) {
                     if ($i == $len - 1) {
-                        $fail = TRUE;
+                        $fail = true;
                         break;
                     }
                     $i++;
                     $ch = $buffer[$i];
+                    if ($csv_enclosed == $csv_escaped && ($ch == $csv_terminated
+                     || $ch == $csv_new_line || ($csv_new_line == 'auto'
+                      && ($ch == "\r" || $ch == "\n")))) {
+                        break;
+                    }
                 }
                 $value .= $ch;
                 if ($i == $len - 1) {
                     if (!$finished) {
-                        $fail = TRUE;
+                        $fail = true;
                     }
                     break;
                 }
@@ -258,7 +264,7 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
             // Need to strip trailing enclosing char?
             if ($need_end && $ch == $csv_enclosed) {
                 if ($finished && $i == $len - 1) {
-                    $ch = NULL;
+                    $ch = null;
                 } elseif ($i == $len - 1) {
                     $i = $fallbacki;
                     $ch = $buffer[$i];
@@ -269,8 +275,11 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
                 }
             }
             // Are we at the end?
-            if ($ch == $csv_new_line || ($csv_new_line == 'auto' && ($ch == "\r" || $ch == "\n")) || ($finished && $i == $len - 1)) {
-                $csv_finish = TRUE;
+            if ($ch == $csv_new_line
+                || ($csv_new_line == 'auto' && ($ch == "\r" || $ch == "\n"))
+                || ($finished && $i == $len - 1)
+            ) {
+                $csv_finish = true;
             }
             // Go to next char
             if ($ch == $csv_terminated) {
@@ -287,7 +296,10 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
         }
 
         // End of line
-        if ($csv_finish || $ch == $csv_new_line || ($csv_new_line == 'auto' && ($ch == "\r" || $ch == "\n"))) {
+        if ($csv_finish
+            || $ch == $csv_new_line
+            || ($csv_new_line == 'auto' && ($ch == "\r" || $ch == "\n"))
+        ) {
             if ($csv_new_line == 'auto' && $ch == "\r") { // Handle "\r\n"
                 if ($i >= ($len - 2) && !$finished) {
                     break; // We need more data to decide new line
@@ -324,12 +336,12 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
                     } else {
                         $message = PMA_Message::error(__('Invalid column count in CSV input on line %d.'));
                         $message->addParam($line);
-                        $error = TRUE;
+                        $error = true;
                         break;
                     }
                 }
 
-                $first = TRUE;
+                $first = true;
                 $sql = $sql_template;
                 foreach ($values as $key => $val) {
                     if (!$first) {
@@ -338,10 +350,10 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
                     if ($val === null) {
                         $sql .= 'NULL';
                     } else {
-                        $sql .= '\'' . addslashes($val) . '\'';
+                        $sql .= '\'' . PMA_sqlAddSlashes($val) . '\'';
                     }
 
-                    $first = FALSE;
+                    $first = false;
                 }
                 $sql .= ')';
 
@@ -352,7 +364,7 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
             }
 
             $line++;
-            $csv_finish = FALSE;
+            $csv_finish = false;
             $values = array();
             $buffer = substr($buffer, $i + 1);
             $len = strlen($buffer);
@@ -377,16 +389,18 @@ if ($analyze) {
         $col_names = $col_names[0];
     }
 
-    if ((isset($col_names) && count($col_names) != $max_cols) || !isset($col_names)) {
+    if ((isset($col_names) && count($col_names) != $max_cols)
+        || ! isset($col_names)
+    ) {
         // Fill out column names
         for ($i = 0; $i < $max_cols; ++$i) {
-            $col_names[] = 'COL ' . ($i + 1);
+            $col_names[] = 'COL '.($i+1);
         }
     }
 
     if (strlen($db)) {
         $result = PMA_DBI_fetch_result('SHOW TABLES');
-        $tbl_name = 'TABLE ' . (count($result) + 1);
+        $tbl_name = 'TABLE '.(count($result) + 1);
     } else {
         $tbl_name = 'TBL_NAME';
     }
@@ -410,17 +424,18 @@ if ($analyze) {
      *
      * array $options = an associative array of options
      */
+
     /* Set database name to the currently selected one, if applicable */
     if (strlen($db)) {
         $db_name = $db;
         $options = array('create_db' => false);
     } else {
         $db_name = 'CSV_DB';
-        $options = NULL;
+        $options = null;
     }
 
     /* Non-applicable parameters */
-    $create = NULL;
+    $create = null;
 
     /* Created and execute necessary SQL statements from data */
     PMA_buildSQL($db_name, $tables, $analyses, $create, $options);
@@ -435,6 +450,6 @@ PMA_importRunQuery();
 if (count($values) != 0 && !$error) {
     $message = PMA_Message::error(__('Invalid format of CSV input on line %d.'));
     $message->addParam($line);
-    $error = TRUE;
+    $error = true;
 }
 ?>

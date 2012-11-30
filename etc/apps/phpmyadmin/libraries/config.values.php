@@ -1,12 +1,12 @@
 <?php
-
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Database with allowed values for configuration stored in the $cfg array,
  * used by setup script and user preferences to generate forms.
  *
- * @package phpMyAdmin
+ * @package PhpMyAdmin
  */
+
 if (!defined('PHPMYADMIN')) {
     exit;
 }
@@ -21,13 +21,13 @@ if (!defined('PHPMYADMIN')) {
 $cfg_db = array();
 
 $cfg_db['Servers'] = array(1 => array(
-        'port' => 'integer',
-        'connect_type' => array('tcp', 'socket'),
-        'extension' => array('mysql', 'mysqli'),
-        'auth_type' => array('config', 'http', 'signon', 'cookie'),
-        'AllowDeny' => array(
-            'order' => array('', 'deny,allow', 'allow,deny', 'explicit')),
-        'only_db' => 'array'));
+    'port'         => 'integer',
+    'connect_type' => array('tcp', 'socket'),
+    'extension'    => array('mysql', 'mysqli'),
+    'auth_type'    => array('config', 'http', 'signon', 'cookie'),
+    'AllowDeny'    => array(
+        'order'    => array('', 'deny,allow', 'allow,deny', 'explicit')),
+    'only_db'      => 'array'));
 $cfg_db['RecodingEngine'] = array('auto', 'iconv', 'recode', 'none');
 $cfg_db['OBGzip'] = array('auto', true, false);
 $cfg_db['MemoryLimit'] = 'short_string';
@@ -36,46 +36,50 @@ $cfg_db['DisplayDatabasesList'] = array('auto', true, false);
 $cfg_db['LeftLogoLinkWindow'] = array('main', 'new');
 $cfg_db['LeftDefaultTabTable'] = array(
     'tbl_structure.php', // fields list
-    'tbl_sql.php', // SQL form
-    'tbl_select.php', // search page
-    'tbl_change.php', // insert row page
+    'tbl_sql.php',       // SQL form
+    'tbl_select.php',    // search page
+    'tbl_change.php',    // insert row page
     'sql.php');          // browse page
 $cfg_db['LeftFrameDBSeparator'] = 'short_string';
 $cfg_db['LeftFrameTableSeparator'] = 'short_string';
 $cfg_db['NavigationBarIconic'] = array(true => __('Yes'), false => __('No'), 'both' => __('Both'));
 $cfg_db['Order'] = array('ASC', 'DESC', 'SMART');
+$cfg_db['RowActionLinks'] = array('none' => __('Nowhere'), 'left' => __('Left'), 'right' => __('Right'), 'both' => __('Both'));
 $cfg_db['ProtectBinary'] = array(false, 'blob', 'all');
 $cfg_db['DefaultDisplay'] = array('horizontal', 'vertical', 'horizontalflipped');
 $cfg_db['CharEditing'] = array('input', 'textarea');
 $cfg_db['PropertiesIconic'] = array(true => __('Yes'), false => __('No'), 'both' => __('Both'));
 $cfg_db['DefaultTabServer'] = array(
-    'main.php', // the welcome page (recommended for multiuser setups)
-    'server_databases.php', // list of databases
-    'server_status.php', // runtime information
-    'server_variables.php', // MySQL server variables
-    'server_privileges.php', // user management
+    'main.php',                // the welcome page (recommended for multiuser setups)
+    'server_databases.php',    // list of databases
+    'server_status.php',       // runtime information
+    'server_variables.php',    // MySQL server variables
+    'server_privileges.php',   // user management
     'server_processlist.php'); // process list
 $cfg_db['DefaultTabDatabase'] = array(
-    'db_structure.php', // tables list
-    'db_sql.php', // SQL form
-    'db_search.php', // search query
+    'db_structure.php',   // tables list
+    'db_sql.php',         // SQL form
+    'db_search.php',      // search query
     'db_operations.php'); // operations on database
 $cfg_db['DefaultTabTable'] = array(
     'tbl_structure.php', // fields list
-    'tbl_sql.php', // SQL form
-    'tbl_select.php', // search page
-    'tbl_change.php', // insert row page
+    'tbl_sql.php',       // SQL form
+    'tbl_select.php',    // search page
+    'tbl_change.php',    // insert row page
     'sql.php');          // browse page
 $cfg_db['QueryWindowDefTab'] = array(
-    'sql', // SQL
-    'files', // Import files
+    'sql',     // SQL
+    'files',   // Import files
     'history', // SQL history
     'full');   // All (SQL and SQL history)
-$cfg_db['InitialSlidersState'] = array('open' => __('Open'), 'closed' => __('Closed'));
+$cfg_db['InitialSlidersState'] = array(
+    'open' => __('Open'), 
+    'closed' => __('Closed'),
+    'disabled' => __('Disabled'));
 $cfg_db['Import']['format'] = array(
-    'csv', // CSV
+    'csv',    // CSV
     'docsql', // DocSQL
-    'ldi', // CSV using LOAD DATA
+    'ldi',    // CSV using LOAD DATA
     'sql');   // SQL
 $cfg_db['Import']['charset'] = array_merge(array(''), $GLOBALS['cfg']['AvailableCharsets']);
 $cfg_db['Import']['sql_compatibility'] = $cfg_db['Export']['sql_compatibility'] = array(
@@ -135,7 +139,8 @@ $cfg_db['Export']['texytext_null'] = 'short_string';
  * Use only full paths
  */
 $cfg_db['_overrides'] = array();
-$cfg_db['_overrides']['Servers/1/extension'] = extension_loaded('mysqli') ? 'mysqli' : 'mysql';
+$cfg_db['_overrides']['Servers/1/extension'] = extension_loaded('mysqli')
+    ? 'mysqli' : 'mysql';
 
 /**
  * Basic validator assignments (functions from libraries/config/validate.lib.php and 'validators'
@@ -145,7 +150,6 @@ $cfg_db['_overrides']['Servers/1/extension'] = extension_loaded('mysqli') ? 'mys
 $cfg_db['_validators'] = array(
     'CharTextareaCols' => 'validate_positive_number',
     'CharTextareaRows' => 'validate_positive_number',
-    'DefaultPropDisplay' => array(array('validate_by_regex', '/^(?:horizontal|vertical|\d+)$/')),
     'ExecTimeLimit' => 'validate_non_negative_number',
     'Export/sql_max_query_size' => 'validate_positive_number',
     'ForeignKeyMaxLimit' => 'validate_positive_number',
@@ -158,6 +162,7 @@ $cfg_db['_validators'] = array(
     'Import/skip_queries' => 'validate_non_negative_number',
     'InsertRows' => 'validate_positive_number',
     'LeftFrameTableLevel' => 'validate_positive_number',
+    'LeftRecentTable' => 'validate_non_negative_number',
     'LimitChars' => 'validate_positive_number',
     'LoginCookieValidity' => 'validate_positive_number',
     'LoginCookieStore' => 'validate_non_negative_number',
