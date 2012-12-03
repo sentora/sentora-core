@@ -32,6 +32,7 @@ CREATE TABLE `x_accounts` (
   `ac_lastlogon_ts` int(30) DEFAULT NULL,
   `ac_notice_tx` text,
   `ac_resethash_tx` text,
+  `ac_passsalt_vc` varchar(22) DEFAULT NULL,
   `ac_created_ts` int(30) DEFAULT NULL,
   `ac_deleted_ts` int(30) DEFAULT NULL,
   PRIMARY KEY (`ac_id_pk`)
