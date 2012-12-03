@@ -38,10 +38,16 @@ class module_controller {
         $newpass = $controller->GetControllerRequest('FORM', 'inNewPass');
         $conpass = $controller->GetControllerRequest('FORM', 'inConPass');
 
+        $crypto = new runtime_hash;
+        $crypto->SetPassword($newpass);
+        $randomsalt = $crypto->RandomSalt();
+        $crypto->SetSalt($randomsalt);
+        $secure_password = $crypto->Crypt();
+
         if (fs_director::CheckForEmptyValue($newpass)) {
             // Current password is blank!
             self::$error = "error";
-        } elseif (md5($current_pass) <> $currentuser['password']) {
+        } elseif ($secure_password <> $currentuser['password']) {
             // Current password does not match!
             self::$error = "error";
         } else {
@@ -51,8 +57,8 @@ class module_controller {
                     self::$badpassword = true;
                     return false;
                 }
-                // Check that the new password matches the confirmation box.
-                $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($newpass) . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
+                // Check that the new password matches the confirmation box. - Needs SQLi Protection added here!!!!!!
+                $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . $secure_password . "', ac_passsalt_vc= '" . $randomsalt . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
                 $sql->execute();
                 self::$error = "ok";
             } else {
@@ -90,7 +96,12 @@ class module_controller {
 
     static function UpdatePassword($uid, $password) {
         global $zdbh;
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($password) . "' WHERE ac_id_pk=$uid");
+        $crypto = new runtime_hash;
+        $crypto->SetPassword($newpass);
+        $randomsalt = $crypto->RandomSalt();
+        $crypto->SetSalt($randomsalt);
+        $secure_password = $crypto->Crypt();
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . $secure_password . "', ac_passsalt_vc= '" . $randomsalt . "' WHERE ac_id_pk=" . $uid . "");
         $sql->execute();
         return true;
     }
