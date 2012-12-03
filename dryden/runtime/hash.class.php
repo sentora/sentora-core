@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Provides controller/framework execution debug tools.
+ * Provides bcrypt (Blowfish single-way encryption) functionality for password hashing in ZPanel.
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.2
@@ -12,43 +12,80 @@
  */
 class runtime_hash {
 
-   const DEFAULT_WORK_FACTOR = 8;
+    /**
+     * The password of which you wish to hash.
+     * @var string $password The password string of which to create a hash from. 
+     */
+    var $password = null;
 
-    public static function hash($password, $work_factor = 0) {
-        if (version_compare(PHP_VERSION, '5.3') < 0)
-            throw new Exception('Bcrypt requires PHP 5.3 or above');
+    /**
+     * The 'salt' this should ideally be 22 characters in lengh. Only '.', '/' and aphanumrical values are allowed!
+     * @var string $salt The salt to use for the hash process. (22 characters in lengh)
+     */
+    var $salt = null;
 
-        if (!function_exists('openssl_random_pseudo_bytes')) {
-            throw new Exception('Bcrypt requires openssl PHP extension');
-        }
-
-        if ($work_factor < 4 || $work_factor > 31)
-            $work_factor = self::DEFAULT_WORK_FACTOR;
-        $salt =
-                '$2a$' . str_pad($work_factor, 2, '0', STR_PAD_LEFT) . '$' .
-                substr(
-                        strtr(base64_encode(openssl_random_pseudo_bytes(16)), '+', '.'), 0, 22
-                )
-        ;
-        return crypt($password, $salt);
+    /**
+     * Class constructor, can specify password and salt here or alternatively use the setter methods.
+     * @param string $password The password string of which to create a hash from.
+     * @param string $salt The salt to use for the hash process. (22 characters in lengh)
+     */
+    public function __construct($password = '', $salt = '') {
+        if (!empty($password))
+            $this->password = $password;
+        if (!empty($cost))
+            $this->salt = $salt;
     }
 
-    public static function check($password, $stored_hash, $legacy_handler = NULL) {
-        if (version_compare(PHP_VERSION, '5.3') < 0)
-            throw new Exception('Bcrypt requires PHP 5.3 or above');
-
-        if (self::is_legacy_hash($stored_hash)) {
-            if ($legacy_handler)
-                return call_user_func($legacy_handler, $password, $stored_hash);
-            else
-                throw new Exception('Unsupported hash format');
+    /**
+     * Instead of using the constructor to set the password, you can also use this 'setter' method.
+     * @param string $password The password string of which to create a hash from. 
+     * @return boolean
+     */
+    public function SetPassword($password = '') {
+        if (!empty($password)) {
+            $this->password = $password;
+        } else {
+            return false;
         }
-
-        return crypt($password, $stored_hash) == $stored_hash;
     }
 
-    public static function is_legacy_hash($hash) {
-        return substr($hash, 0, 4) != '$2a$';
+    /**
+     * Instead of using the constructor to set the salt, you can also use this 'setter' method.
+     * @param type $salt The salt to use for the hash process. (22 characters in lengh)
+     * @return boolean
+     */
+    public function SetSalt($salt = '') {
+        if (!empty($salt)) {
+            $this->salt = $salt;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Main method for generating the bcrypt hash.
+     * @return boolean Will return false if fails (the user didn't define a password or the version of PHP does not support Blowfish, PHP 5.3.0+ is required!) or the password hash if successful.
+     */
+    public function Crypt() {
+        if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
+            $salt = '$2a$07$' . $this->salt . '$';
+            return crypt($this->password, $salt);
+        } else {
+            // Returns false if PHP version is not higher than 5.3.0 (which implements the Blowfish encruption mechanism).
+            return false;
+        }
+    }
+
+    /**
+     * Generates a valid 22 character random salt (using the correct valid characters).
+     * @return string A valid random 22 character salt.
+     */
+    public function RandomSalt() {
+        $chars = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $randomsalt = (string) null;
+        for ($i = 0; $i < 22; $i++)
+            $randomsalt.=$chars[rand(0, 63)];
+        return $randomsalt;
     }
 
 }
