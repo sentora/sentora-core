@@ -35,21 +35,34 @@ try {
 }
 
 foreach ($deletedclients as $deletedclient) {
-    $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $deletedclient . " AND mb_deleted_ts IS NULL";
-    $numrows = $zdbh->query($sql);
+    $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:deletedclient AND mb_deleted_ts IS NULL";
+    //$numrows = $zdbh->query($sql);
+    $numrows = $zdbh->prepare($sql);
+    $numrows->bindParam(':deletedclient', $deletedclient);
+    $numrows->execute();
     if ($numrows->fetchColumn() <> 0) {
         $sql = $zdbh->prepare($sql);
+        $sql->bindParam(':deletedclient', $deletedclient);
         $sql->execute();
         while ($rowmailbox = $sql->fetch()) {
             // Deleting PostFix Mailboxes
-            $msql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+            $msql = $mail_db->prepare("DELETE FROM mailbox WHERE username=:mb_address_vc");
+            $msql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
             $msql->execute();
-            $msql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
+            $msql = $mail_db->prepare("DELETE FROM alias WHERE address=:mb_address_vc");
+            $msql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
             $msql->execute();
             $domain = explode("@", $rowmailbox['mb_address_vc']);
-            $result = $mail_db->query("SELECT * FROM domain WHERE domain='" . $domain[1] . "'")->Fetch();
+            
+            //$result = $mail_db->query("SELECT * FROM domain WHERE domain='" . $domain[1] . "'")->Fetch();
+            $numrows = $mail_db->prepare("SELECT * FROM domain WHERE domain=:domain");
+            $numrows->bindParam(':domain', $domain[1]);
+            $numrows->execute();
+            $result = $numrows->fetch();
+            
             if ($result) {
-                $msql = $mail_db->prepare("DELETE FROM domain WHERE domain='" . $domain[1] . "'");
+                $msql = $mail_db->prepare("DELETE FROM domain WHERE domain=:domain");
+                $msql->bindParam(':domain', $domain[1]);
                 $msql->execute();
             }
         }
