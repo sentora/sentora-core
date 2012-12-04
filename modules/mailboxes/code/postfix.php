@@ -36,7 +36,11 @@ try {
 
 // Adding PostFix Mailboxes
 if (!fs_director::CheckForEmptyValue(self::$create)) {
-    $result = $mail_db->query("SELECT domain FROM domain WHERE domain='" . $domain . "'")->Fetch();
+    //$result = $mail_db->query("SELECT domain FROM domain WHERE domain='" . $domain . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT domain FROM domain WHERE domain=:domain");
+    $numrows->bindParam(':domain', $domain);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if (!$result) {
         $sql = $mail_db->prepare("INSERT INTO domain (  domain,
                                                         description,
@@ -49,7 +53,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
                                                         created,
                                                         modified,
                                                         active) VALUES (
-                                                        '" . $domain . "',
+                                                        :domain,
                                                         '',
                                                         0,
                                                         0,
@@ -60,9 +64,14 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
                                                         NOW(),
                                                         NOW(),
                                                         '1')");
+        $sql->bindParam(':domain', $domain);
         $sql->execute();
     }
-    $result = $mail_db->query("SELECT username FROM mailbox WHERE username='" . $fulladdress . "'")->Fetch();
+    //$result = $mail_db->query("SELECT username FROM mailbox WHERE username='" . $fulladdress . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT username FROM mailbox WHERE username=:fulladdress");
+    $numrows->bindParam(':fulladdress', $fulladdress);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if (!$result) {
         $sql = $mail_db->prepare("INSERT INTO mailbox (username,
 								 							password,
@@ -74,16 +83,27 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 														 	created,
 														 	modified,
 														 	active) VALUES (
-														 	'" . $fulladdress . "',
-														 	'{PLAIN-MD5}" . md5($password) . "',
-														 	'" . $address . "',
-														 	'" . $domain . "/" . $address . "/',
-														 	'" . $address . "',
-														 	'" . ctrl_options::GetSystemOption('max_mail_size') . "',
-														 	'" . $domain . "',
+														 	:fulladdress,
+														 	:password,
+														 	:address,
+														 	:location,
+														 	:address2,
+														 	:maxMail,
+														 	:domain,
 														 	NOW(),
 														 	NOW(),
 														 	'1')");
+        $password = '{PLAIN-MD5}' . md5($password);
+        $location = $domain . "/" . $address . "/";
+        $maxMail = ctrl_options::GetSystemOption('max_mail_size');
+        
+        $sql->bindParam(':password', $password);
+        $sql->bindParam(':address', $address);
+        $sql->bindParam(':fulladdress', $fulladdress);
+        $sql->bindParam(':location', $location);
+        $sql->bindParam(':address2', $address);
+        $sql->bindParam(':maxMail', $maxMail);
+        $sql->bindParam(':domain', $domain);
         $sql->execute();
         $sql = $mail_db->prepare("INSERT INTO alias  (address,
 														 	goto,
@@ -91,31 +111,41 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 															created,
 														 	modified,
 														 	active) VALUES (
-														 	'" . $fulladdress . "',
-														 	'" . $fulladdress . "',
-														 	'" . $domain . "',
+														 	:fulladdress,
+														 	:fulladdress2,
+														 	:domain,
 														 	NOW(),
 														 	NOW(),
 														 	'1')");
+        $sql->bindParam(':domain', $domain);
+        $sql->bindParam(':fulladdress', $fulladdress);
+        $sql->bindParam(':fulladdress2', $fulladdress);
         $sql->execute();
     }
 }
 
 // Deleting PostFix Mailboxes
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
-    $sql = $mail_db->prepare("DELETE FROM mailbox WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+    $sql = $mail_db->prepare("DELETE FROM mailbox WHERE username=:mb_address_vc");
+    $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
     $sql->execute();
-    $sql = $mail_db->prepare("DELETE FROM alias WHERE address='" . $rowmailbox['mb_address_vc'] . "'");
+    $sql = $mail_db->prepare("DELETE FROM alias WHERE address=:mb_address_vc");
+    $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
     $sql->execute();
 }
 
 //Saving PostFix Mailboxes
 if (!fs_director::CheckForEmptyValue(self::$update)) {
     if (!fs_director::CheckForEmptyValue($password)) {
-        $sql = $mail_db->prepare("UPDATE mailbox SET password='{PLAIN-MD5}" . md5($password) . "' WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+        $sql = $mail_db->prepare("UPDATE mailbox SET password=:password WHERE username=:mb_address_vc");
+        $password = '{PLAIN-MD5}' . md5($password);
+        $sql->bindParam(':password', $password);
+        $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
         $sql->execute();
     }
-    $sql = $mail_db->prepare("UPDATE mailbox SET active=" . $enabled . " WHERE username='" . $rowmailbox['mb_address_vc'] . "'");
+    $sql = $mail_db->prepare("UPDATE mailbox SET active=:enabled WHERE username=:mb_address_vc");
+    $sql->bindParam(':enabled', $enabled);
+    $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
     $sql->execute();
 }
 ?>
