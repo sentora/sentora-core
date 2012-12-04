@@ -38,10 +38,15 @@ try {
 
 // Deleting hMail Forwarder
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
-    $result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+    //$result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT accountaddress FROM hm_accounts WHERE accountaddress=:fw_address_vc");
+    $numrows->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
+    $numrows->execute(); 
+    $result = $numrows->fetch();
     if ($result) {
-        $sql = "UPDATE hm_accounts SET accountforwardenabled='0', accountforwardaddress='', accountforwardkeeporiginal='0' WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'";
+        $sql = "UPDATE hm_accounts SET accountforwardenabled='0', accountforwardaddress='', accountforwardkeeporiginal='0' WHERE accountaddress=:fw_address_vc";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
         $sql->execute();
     }
 }
@@ -50,10 +55,17 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
 
 // Adding hMail Forwarder
 if (!fs_director::CheckForEmptyValue(self::$create)) {
-    $result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $address . "'")->Fetch();
+    //$result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $address . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT accountaddress FROM hm_accounts WHERE accountaddress=:address");
+    $numrows->bindParam(':address', $address);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
-        $sql = "UPDATE hm_accounts SET accountforwardenabled='1', accountforwardaddress='" . $destination . "', accountforwardkeeporiginal='" . $keepmessage . "' WHERE accountaddress='" . $address . "'";
+        $sql = "UPDATE hm_accounts SET accountforwardenabled='1', accountforwardaddress=:destination, accountforwardkeeporiginal=:keepmessage WHERE accountaddress=:address";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':destination', $destination);
+        $sql->bindParam(':keepmessage', $keepmessage);
+        $sql->bindParam(':address', $address);
         $sql->execute();
     }
 }
