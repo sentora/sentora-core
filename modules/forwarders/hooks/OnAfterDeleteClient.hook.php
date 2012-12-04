@@ -22,9 +22,17 @@ function DeleteForwardersForDeletedClient() {
     }
 
     foreach ($deletedclients as $deletedclient) {
-        $result = $zdbh->query("SELECT * FROM x_forwarders WHERE fw_acc_fk=" . $deletedclient . " AND fw_deleted_ts IS NULL")->Fetch();
+        //$result = $zdbh->query("SELECT * FROM x_forwarders WHERE fw_acc_fk=:deletedclient AND fw_deleted_ts IS NULL")->Fetch();       
+        $numrows = $zdbh->prepare("SELECT * FROM x_forwarders WHERE fw_acc_fk=:deletedclient AND fw_deleted_ts IS NULL");
+        $numrows->bindParam(':deletedclient', $deletedclient);
+        $numrows->execute();
+        $result = $numrows->fetch();
+        
         if ($result) {
-            $sql = $zdbh->prepare("UPDATE x_forwarders SET fw_deleted_ts=" . time() . " WHERE fw_acc_fk=" . $deletedclient . "");
+            $sql = $zdbh->prepare("UPDATE x_forwarders SET fw_deleted_ts=:time WHERE fw_acc_fk=:deletedclient");
+            $time = time();
+            $sql->bindParam(':time', $time);
+            $sql->bindParam(':deletedclient', $deletedclient);
             $sql->execute();
         }
     }
