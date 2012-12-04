@@ -75,7 +75,7 @@ if (isset($_POST['inConfEmail'])) {
     $crypto->SetPassword($_POST['inNewPass']);
     $randomsalt = $crypto->RandomSalt();
     $crypto->SetSalt($randomsalt);
-    $secure_password = $crypto->Crypt();
+    $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
 
     if ($result) {
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= :password, ac_passsalt_vc= :salt WHERE ac_id_pk= :uid");
@@ -100,26 +100,16 @@ if (isset($_POST['inUsername'])) {
         $rememberdetails = true;
     }
 
-    /**
-     * NOT ENABLING THIS YET AS I DON'T WANT TO BREAK DEVELOPMENT ENVIROMENTS BEFORE I'VE HAD A CHANCE TO FULLY
-     * TEST AT HOME ~ ballen (03/12/2012)
-     * WILL ALSO ADD BACKWARDS COMPATIBILITY FOR PASSWORDS HERE TOO - Will check that the string does not contain
-     * $2a$ at the start and if so, will check authetication is successful using the old method and then
-     * rehash using the new method before continuing.
-     * 
-      $sql = $zdbh->prepare("SELECT ac_passsalt_vc FROM x_accounts WHERE ac_user_vc= :username");
-      $sql->bindParam(':username', $_POST['inUsername']);
-      $sql->execute();
-      $result = $sql->returnRow();
+    $sql = $zdbh->prepare("SELECT ac_passsalt_vc FROM x_accounts WHERE ac_user_vc= :username");
+    $sql->bindParam(':username', $_POST['inUsername']);
+    $sql->execute();
+    $result = $sql->fetch();
+    $crypto = new runtime_hash;
+    $crypto->SetPassword($_POST['inPassword']);
+    $crypto->SetSalt($result['ac_passsalt_vc']);
+    $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
 
-      $crypto = new runtime_hash;
-      $crypto->SetPassword($_POST['inPassword']);
-      $crypto->SetSalt($result['ac_passsalt_vc']);
-      $secure_password = $crypto->Crypt();
-
-      if (!ctrl_auth::Authenticate($_POST['inUsername'], $secure_password, $rememberdetails, false)) {
-     * */
-    if (!ctrl_auth::Authenticate($_POST['inUsername'], md5($_POST['inPassword']), $rememberdetails, false)) {
+    if (!ctrl_auth::Authenticate($_POST['inUsername'], $secure_password, $rememberdetails, false)) {
         header("location: ./?invalidlogin");
         exit();
     }
