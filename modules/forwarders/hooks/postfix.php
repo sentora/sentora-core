@@ -35,16 +35,25 @@ try {
 }
 
 foreach ($deletedclients as $deletedclient) {
-    $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=" . $deletedclient . " AND fw_deleted_ts IS NULL";
-    $numrows = $zdbh->query($sql);
+    $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=:deletedclient AND fw_deleted_ts IS NULL";
+//  $numrows = $zdbh->query($sql);
+    $numrows = $zdbh->prepare($sql);
+    $numrows->bindParam(':deletedclient', $deletedclient);
+    $numrows->execute();
     if ($numrows->fetchColumn() <> 0) {
         $sql = $zdbh->prepare($sql);
+        $sql->bindParam(':deletedclient', $deletedclient);
         $sql->execute();
         while ($rowforwarder = $sql->fetch()) {
-            $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+            //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+            $numrows = $zdbh->prepare("SELECT address FROM alias WHERE address=:fw_address_vc");
+            $numrows->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
+            $numrows->execute();
+            $result = $numrows->fetch();
             if ($result) {
-                $sql = "DELETE * FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'";
+                $sql = "DELETE * FROM alias WHERE address=:fw_address_vc";
                 $sql = $mail_db->prepare($sql);
+                $sql->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
                 $sql->execute();
             }
         }
