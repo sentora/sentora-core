@@ -25,6 +25,14 @@ class runtime_hash {
     var $salt = null;
 
     /**
+     * Cost, the strengh (number of rounds).
+     * 10 = 1,024
+     * 11 = 2,048
+     * 12 = 4,086
+     */
+    var $cost = 12;
+
+    /**
      * Class constructor, can specify password and salt here or alternatively use the setter methods.
      * @param string $password The password string of which to create a hash from.
      * @param string $salt The salt to use for the hash process. (22 characters in lengh)
@@ -32,7 +40,7 @@ class runtime_hash {
     public function __construct($password = '', $salt = '') {
         if (!empty($password))
             $this->password = $password;
-        if (!empty($cost))
+        if (!empty($salt))
             $this->salt = $salt;
     }
 
@@ -51,7 +59,7 @@ class runtime_hash {
 
     /**
      * Instead of using the constructor to set the salt, you can also use this 'setter' method.
-     * @param type $salt The salt to use for the hash process. (22 characters in lengh)
+     * @param string $salt The salt to use for the hash process. (22 characters in lengh)
      * @return boolean
      */
     public function SetSalt($salt = '') {
@@ -63,12 +71,24 @@ class runtime_hash {
     }
 
     /**
+     * A 'setter' method to set the cost (strenght) of the encryption.
+     * @param int $cost Numbe of rounds (2 to the power 10) eg. 10 = 1,024, 11 = 2,048, 12 = 4,096 (Default is 12 (4,096))
+     */
+    public function SetCost($cost = 0) {
+        if ($cost > 0) {
+            $this->cost = $cost;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Main method for generating the bcrypt hash.
      * @return boolean Will return false if fails (the user didn't define a password or the version of PHP does not support Blowfish, PHP 5.3.0+ is required!) or the password hash if successful.
      */
     public function Crypt() {
         if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
-            $salt = '$2a$07$' . $this->salt . '$';
+            $salt = '$2a$' . $this::COST . '$' . $this->salt . '$';
             return crypt($this->password, $salt);
         } else {
             // Returns false if PHP version is not higher than 5.3.0 (which implements the Blowfish encruption mechanism).
@@ -86,6 +106,25 @@ class runtime_hash {
         for ($i = 0; $i < 22; $i++)
             $randomsalt.=$chars[rand(0, 63)];
         return $randomsalt;
+    }
+
+    /**
+     * Breaks the generated bcrypt string down to extract the various parts (the salt and the hash from the entire string)
+     * @param  string $crypto A generated Blowfish hash.
+     * @return object Split parts of the cyrpto string.
+     */
+    public function CryptParts($crypto) {
+        $algoritm = substr($crypto, 0, 4);
+        $cost = substr($crypto, 4, 2);
+        $salt = substr($crypto, 7, 22);
+        $hash = substr($crypto, 29);
+        $parts = array(
+            'Algorithm' => $algoritm,
+            'Cost' => $cost,
+            'Salt' => $salt,
+            'Hash' => $hash,
+        );
+        return (object) $parts;
     }
 
 }
