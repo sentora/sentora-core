@@ -36,9 +36,14 @@ try {
 
 // Deleting hMail Mailboxes
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
-    $result = $mail_db->query("SELECT accountid FROM hm_accounts WHERE accountaddress='" . $rowmailbox['mb_address_vc'] . "'")->Fetch();
+//  $result = $mail_db->query("SELECT accountid FROM hm_accounts WHERE accountaddress=:mb_address_vc")->Fetch();
+    $numrows = $mail_db->prepare("SELECT accountid FROM hm_accounts WHERE accountaddress=:mb_address_vc");
+    $numrows->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
-        $sql = $mail_db->prepare("DELETE FROM hm_accounts WHERE accountaddress='" . $rowmailbox['mb_address_vc'] . "'");
+        $sql = $mail_db->prepare("DELETE FROM hm_accounts WHERE accountaddress=:mb_address_vc");
+        $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc'] );
         $sql->execute();
     }
 }
@@ -46,17 +51,26 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
 //Saving hMail Mailboxes
 if (self::$update) {
     if (!fs_director::CheckForEmptyValue($password)) {
-        $sql = $mail_db->prepare("UPDATE hm_accounts SET accountpassword='" . md5($password) . "' WHERE accountaddress='" . $rowmailbox['mb_address_vc'] . "'");
+        $sql = $mail_db->prepare("UPDATE hm_accounts SET accountpassword=:password WHERE accountaddress=:mb_address_vc");
+        $password = md5($password); 
+        $sql->bindParam(':password', $password);
+        $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
         $sql->execute();
     }
-    $sql = $mail_db->prepare("UPDATE hm_accounts SET accountactive=" . $enabled . " WHERE accountaddress='" . $rowmailbox['mb_address_vc'] . "'");
+    $sql = $mail_db->prepare("UPDATE hm_accounts SET accountactive=:enabled WHERE accountaddress=:mb_address_vc");
+    $sql->bindParam(':enabled', $enabled);
+    $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
     $sql->execute();
 }
 
 // Adding hMail Mailboxes
 if (!fs_director::CheckForEmptyValue(self::$create)) {
     // Lets add the domain if it does not exist for that mailbox...
-    $result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
+    //$result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT domainid FROM hm_domains WHERE domainname=:domain");
+    $numrows->bindParam(':domain', $domain);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if (!$result) {
         $sql = "INSERT INTO hm_domains(domainname,
 												domainactive,
@@ -80,7 +94,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 												domainmaxaccountsize,
 												domaindkimselector,
 												domaindkimprivatekeyfile) VALUES (
-												'" . $domain . "',
+												:domain,
 												 1,
 												 '',
 												 0,
@@ -99,14 +113,21 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 												 0,
 												 0,
 												 0,
-												 " . ctrl_options::GetSystemOption('max_mail_size') . ",
+												 :maxMail,
 												 '',
 												 '')";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':domain', $domain);
+        $maxMail = ctrl_options::GetSystemOption('max_mail_size');
+        $sql->bindParam(':maxMail', $maxMail);
         $sql->execute();
     }
     # Now lets get the hMailServer domain ID...
-    $result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
+    //$result = $mail_db->query("SELECT domainid FROM hm_domains WHERE domainname='" . $domain . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT domainid FROM hm_domains WHERE domainname=:domain");
+    $numrows->bindParam(':domain', $domain);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
         $domain_id = $result['domainid'];
         # Now we insert the mailbox data into the hMailServer database...
@@ -134,19 +155,19 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 											 	accountvacationexpiredate,
 											 	accountpersonfirstname,
 											 	accountpersonlastname) VALUES (
-											 	" . $domain_id . ",
+											 	:domain_id,
 											 	0,
-											 	'" . $fulladdress . "',
-											 	'" . md5($password) . "',
+											 	:fulladdress,
+											 	:password,
 											 	1,
 											 	0,
 											 	'',
 											 	'',
-											 	" . ctrl_options::GetSystemOption('max_mail_size') . ",
+											 	:maxMail,
 											 	0,
 											 	'',
 											 	'',
-											 	" . ctrl_options::GetSystemOption('hmailserver_et') . ",
+											 	:hmail,
 											 	0,
 											 	'',
 											 	0,
@@ -159,9 +180,21 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 											 	'',
 											 	'')";
         $sql = $mail_db->prepare($sql);
+        $password = md5($password);
+        $sql->bindParam(':password', $password);
+        $sql->bindParam(':domain_id', $domain_id);
+        $sql->bindParam(':fulladdress', $fulladdress);
+        $maxMail = ctrl_options::GetSystemOption('max_mail_size');
+        $sql->bindParam(':maxMail', $maxMail);
+        $hmail = ctrl_options::GetSystemOption('hmailserver_et'); 
+        $sql->bindParam(':hmail', $hmail);
         $sql->execute();
         # Lets grab the accountid of the mailbox...
-        $result = $mail_db->query("SELECT accountid FROM hm_accounts WHERE accountaddress='" . $fulladdress . "'")->Fetch();
+        //$result = $mail_db->query("SELECT accountid FROM hm_accounts WHERE accountaddress='" . $fulladdress . "'")->Fetch();
+        $numrows = $mail_db->prepare("SELECT accountid FROM hm_accounts WHERE accountaddress=:fulladdress");
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
+        $result = $numrows->fetch();
         if ($result) {
             # Now we create the hm_imapfolders row...
             $sql = "INSERT INTO hm_imapfolders(folderaccountid,
@@ -170,13 +203,14 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
 												   	folderissubscribed,
 												   	foldercreationtime,
 												   	foldercurrentuid) VALUES (
-												   	" . $result['accountid'] . ",
+												   	:accountid,
 												   	-1,
 												   	'INBOX',
 												   	1,
 												   	NOW(),
 												   	1)";
             $sql = $mail_db->prepare($sql);
+            $sql->bindParam(':accountid', $result['accountid']);
             $sql->execute();
         }
     }
