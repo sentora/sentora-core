@@ -37,10 +37,15 @@ class module_controller {
      */
     static function ListProtectedDirectories($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_htaccess WHERE ht_acc_fk=" . $uid . " AND ht_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_htaccess WHERE ht_acc_fk=:uid AND ht_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowhta = $sql->fetch()) {
@@ -74,10 +79,14 @@ class module_controller {
 
     static function ListHTA($id) {
         global $zdbh;
-        $sql = "SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . " AND ht_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_htaccess WHERE ht_id_pk=:id AND ht_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':id', $id);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':id', $id);
             $res = array();
             $sql->execute();
             while ($rowhta = $sql->fetch()) {
@@ -94,7 +103,13 @@ class module_controller {
 
     static function DirectoryIsProtected($uid, $folder) {
         global $zdbh;
-        $rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk=" . $uid . " AND ht_dir_vc='" . $folder . "' AND ht_deleted_ts IS NULL")->fetch();
+        //$rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk=" . $uid . " AND ht_dir_vc='" . $folder . "' AND ht_deleted_ts IS NULL")->fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_htaccess WHERE ht_acc_fk=:uid AND ht_dir_vc=:folder AND ht_deleted_ts IS NULL");
+        $numrows->bindParam(':uid', $uid);
+        $numrows->bindParam(':folder', $folder);
+        $numrows->execute();
+        $rowpath = $numrows->fetch();
+        
         if ($rowpath) {
             if (file_exists(ctrl_options::GetSystemOption('hosted_dir') . $folder . "/.htaccess")) {
                 header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "");
@@ -103,7 +118,10 @@ class module_controller {
                 if (file_exists(ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $rowpath['ht_id_pk'] . ".htpasswd")) {
                     unlink(ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $rowpath['ht_id_pk'] . ".htpasswd");
                 }
-                $sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=" . time() . " WHERE ht_id_pk=" . $rowpath['ht_id_pk'] . "");
+                $sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=:time WHERE ht_id_pk=:ht_id_pk");
+                $sql->bindParam(':ht_id_pk', $rowpath['ht_id_pk']);
+                $time = time();
+                $sql->bindParam(':time', $time);
                 $sql->execute();
                 return false;
             }
@@ -115,8 +133,17 @@ class module_controller {
     static function ExecuteDeleteHTA($id) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteHTAccess');
-        $row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "")->fetch();
-        $sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=" . time() . " WHERE ht_id_pk=" . $id . "");
+        //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "")->fetch();        
+        
+        $numrows = $zdbh->prepare("SELECT * FROM x_htaccess WHERE ht_id_pk=:id");
+        $numrows->bindParam(':id', $id);
+        $numrows->execute();
+        $row = $numrows->fetch();
+        
+        $sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=:time WHERE ht_id_pk=:id");
+        $sql->bindParam(':id', $id);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         $htpassword = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $id . ".htpasswd";
         $htaccess = ctrl_options::GetSystemOption('hosted_dir') . $row['ht_dir_vc'] . "/.htaccess";
@@ -173,12 +200,23 @@ class module_controller {
 								ht_user_vc, 
 								ht_dir_vc,
 								ht_created_ts) VALUES (
-								" . $userid . ", 
-								'" . $inHTUsername . "', 
-								'" . $inPath . "',
-								" . time() . ")");
+								:userid, 
+								:inHTUsername, 
+								:inPath,
+								:time)");
+        $time = time();
+        $sql->bindParam(':userid', $userid);
+        $sql->bindParam(':inHTUsername', $inHTUsername);
+        $sql->bindParam(':inPath', $inPath);
+        $sql->bindParam(':time', $time);
         $sql->execute();
-        $row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk =" . $userid . " AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1")->fetch();
+        
+        //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk =" . $userid . " AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1")->fetch();       
+        $numrows = $zdbh->prepare("SELECT * FROM x_htaccess WHERE ht_acc_fk =:userid AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1");
+        $numrows->bindParam(':userid', $userid);
+        $numrows->execute();
+        $row = $numrows->fetch();
+        
         $htaccesfiledir = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/";
         if (!is_dir($htaccesfiledir)) {
             fs_director::CreateDirectory($htaccesfiledir);
@@ -201,7 +239,8 @@ class module_controller {
 
             system($htpasswd_exe);
         } else {
-            $sql = $zdbh->prepare("DELETE  FROM x_htaccess WHERE ht_id_pk=" . $row['ht_id_pk'] . "");
+            $sql = $zdbh->prepare("DELETE  FROM x_htaccess WHERE ht_id_pk=:ht_id_pk");
+            $sql->bindParam(':ht_id_pk', $row['ht_id_pk']);
             $sql->execute();
             self::$nowrite = true;
         }
