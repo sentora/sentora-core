@@ -22,9 +22,16 @@ function DeleteMailboxesForDeletedClient() {
     }
 
     foreach ($deletedclients as $deletedclient) {
-        $result = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $deletedclient . " AND mb_deleted_ts IS NULL")->Fetch();
+//      $result = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $deletedclient . " AND mb_deleted_ts IS NULL")->Fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_mailboxes WHERE mb_acc_fk=:deletedclient AND mb_deleted_ts IS NULL");
+        $numrows->bindParam(':deletedclient', $deletedclient);
+        $numrows->execute();
+        $result = $numrows->fetch();
         if ($result) {
-            $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_deleted_ts=" . time() . " WHERE mb_acc_fk=" . $deletedclient . "");
+            $time = time();
+            $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_deleted_ts=:time WHERE mb_acc_fk=:deletedclient");
+            $sql->bindParam(':time', $time);
+            $sql->bindParam(':deletedclient', $deletedclient);
             $sql->execute();
         }
     }
