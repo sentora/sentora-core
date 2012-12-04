@@ -43,10 +43,15 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $currentuser['userid'] . " AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
+        //$numrows = $zdbh->query($sql);        
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
+        
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $currentuser['userid']);
             $res = array();
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
@@ -69,10 +74,14 @@ class module_controller {
     static function ListCurrentMailboxes($mid) {
         global $zdbh;
         global $controller;
-        $sql = "SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . " AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mailboxes WHERE mb_id_pk=:mid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':mid', $mid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':mid', $mid);
             $res = array();
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
@@ -96,10 +105,14 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $currentuser['userid']);
             $res = array();
             $sql->execute();
             while ($rowdomains = $sql->fetch()) {
@@ -129,10 +142,14 @@ class module_controller {
         $sql = "INSERT INTO x_mailboxes (mb_acc_fk,
 											 mb_address_vc,
 											 mb_created_ts) VALUES (
-											 " . $currentuser['userid'] . ",
-											 '" . $fulladdress . "',
-											 " . time() . ")";
+											 :userid,
+											 :fulladdress,
+											 :time)";
+        $time = time();
         $sql = $zdbh->prepare($sql);
+        $sql->bindParam(':time', $time);
+        $sql->bindParam(':userid', $currentuser['userid']);
+        $sql->bindParam(':fulladdress', $fulladdress);
         $sql->execute();
         runtime_hook::Execute('OnAfterCreateMailbox');
         self::$ok = true;
@@ -144,13 +161,20 @@ class module_controller {
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteMailbox');
         self::$delete = true;
-        $rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->Fetch();
+        //$rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->Fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_mailboxes WHERE mb_id_pk=:mid");
+        $numrows->bindParam(':mid', $mid);
+        $numrows->execute();
+        $rowmailbox = $numrows->fetch();
         // Include mail server specific file here.
         if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
             include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
         }
-        $sql = "UPDATE x_mailboxes SET mb_deleted_ts=" . time() . " WHERE mb_id_pk=" . $mid . "";
+        $time = time();
+        $sql = "UPDATE x_mailboxes SET mb_deleted_ts=:time WHERE mb_id_pk=:mid";
         $sql = $zdbh->prepare($sql);
+        $sql->bindParam(':time', $time);
+        $sql->bindParam(':mid', $mid);
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteMailbox');
         self::$ok = true;
@@ -160,7 +184,11 @@ class module_controller {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeUpdateMailbox');
-        $rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->fetch();
+        //$rowmailbox = $zdbh->query("SELECT * FROM x_mailboxes WHERE mb_id_pk=" . $mid . "")->fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_mailboxes WHERE mb_id_pk=:mid");
+        $numrows->bindParam(':mid', $mid);
+        $numrows->execute();
+        $rowmailbox = $numrows->fetch();
         if ($enabled <> 0) {
             self::ExecuteEnableMailbox($mid);
         } else {
@@ -180,7 +208,8 @@ class module_controller {
         global $zdbh;
         runtime_hook::Execute('OnBeforeEnableMailbox');
         $retval = false;
-        $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=1 WHERE mb_id_pk='" . $mid . "'");
+        $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=1 WHERE mb_id_pk=:mid");
+        $sql->bindParam(':mid', $mid);
         $sql->execute();
         $retval = true;
         runtime_hook::Execute('OnAfterEnableMailbox');
@@ -191,7 +220,8 @@ class module_controller {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDisableMailbox');
         $retval = false;
-        $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=0 WHERE mb_id_pk='" . $mid . "'");
+        $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=0 WHERE mb_id_pk=:mid");
+        $sql->bindParam(':mid', $mid);
         $sql->execute();
         $retval = true;
         runtime_hook::Execute('OnAfterDisableMailbox');
@@ -215,26 +245,38 @@ class module_controller {
             self::$validemail = true;
             return false;
         }
-        $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc='" . $fulladdress . "' AND mb_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc=:fulladdress AND mb_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
         }
-        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc='" . $fulladdress . "' AND fw_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc=:fulladdress AND fw_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
         }
-        $sql = "SELECT * FROM x_distlists WHERE dl_address_vc='" . $fulladdress . "' AND dl_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_distlists WHERE dl_address_vc=:fulladdress AND dl_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
         }
-        $sql = "SELECT * FROM x_aliases WHERE al_address_vc='" . $fulladdress . "' AND al_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_aliases WHERE al_address_vc=:fulladdress AND al_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fulladdress', $fulladdress);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
@@ -330,7 +372,11 @@ class module_controller {
 
     static function GetMailOption($name) {
         global $zdbh;
-        $result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
+//      $result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
+        $numrows = $zdbh->prepare("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = :name");
+        $numrows->bindParam(':name', $name);
+        $numrows->execute();
+        $result = $numrows->fetch();
         if ($result) {
             return $result['mbs_value_tx'];
         } else {
