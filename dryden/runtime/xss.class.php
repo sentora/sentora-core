@@ -4,7 +4,7 @@
  * Cross Side Scripting protection class.
  * @package zpanelx
  * @subpackage dryden -> runtime
- * @version 1.0.0
+ * @version 1.0.2
  * @author Sam Mottley (smottley@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/

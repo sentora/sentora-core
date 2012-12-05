@@ -38,12 +38,28 @@ class module_controller {
         $newpass = $controller->GetControllerRequest('FORM', 'inNewPass');
         $conpass = $controller->GetControllerRequest('FORM', 'inConPass');
 
+        $crypto = new runtime_hash;
+        $crypto->SetPassword($newpass);
+        $randomsalt = $crypto->RandomSalt();
+        $crypto->SetSalt($randomsalt);
+        $new_secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+
+
+        $sql = $zdbh->prepare("SELECT ac_pass_vc, ac_passsalt_vc FROM x_accounts WHERE ac_id_pk= :uid");
+        $sql->bindParam(':uid', $currentuser['userid']);
+        $sql->execute();
+        $result = $sql->fetch();
+        $userpasshash = new runtime_hash;
+        $userpasshash->SetPassword($current_pass);
+        $userpasshash->SetSalt($result['ac_passsalt_vc']);
+        $current_secure_password = $userpasshash->CryptParts($userpasshash->Crypt())->Hash;
+
         if (fs_director::CheckForEmptyValue($newpass)) {
             // Current password is blank!
             self::$error = "error";
-        } elseif (md5($current_pass) <> $currentuser['password']) {
+        } elseif ($current_secure_password <> $result['ac_pass_vc']) {
             // Current password does not match!
-            self::$error = "error";
+            self::$error = "nomatch";
         } else {
             if ($newpass == $conpass) {
                 // Check for password length...
@@ -51,8 +67,8 @@ class module_controller {
                     self::$badpassword = true;
                     return false;
                 }
-                // Check that the new password matches the confirmation box.
-                $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($newpass) . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
+                // Check that the new password matches the confirmation box. - Needs SQLi Protection added here!!!!!!
+                $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . $new_secure_password . "', ac_passsalt_vc= '" . $randomsalt . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
                 $sql->execute();
                 self::$error = "ok";
             } else {
@@ -65,6 +81,9 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue(self::$error)) {
             if (self::$error == "ok") {
                 return ui_sysmessage::shout(ui_language::translate("Your account password been changed successfully!"), "zannounceok");
+            }
+            if (self::$error == "nomatch") {
+                return ui_sysmessage::shout(ui_language::translate("Sorry, your current password does not match the one on your account!"), "zannounceerror");
             }
             if (self::$error == "error") {
                 return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
@@ -90,7 +109,12 @@ class module_controller {
 
     static function UpdatePassword($uid, $password) {
         global $zdbh;
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . md5($password) . "' WHERE ac_id_pk=$uid");
+        $crypto = new runtime_hash;
+        $crypto->SetPassword($password);
+        $randomsalt = $crypto->RandomSalt();
+        $crypto->SetSalt($randomsalt);
+        $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . $secure_password . "', ac_passsalt_vc= '" . $randomsalt . "' WHERE ac_id_pk=" . $uid . "");
         $sql->execute();
         return true;
     }

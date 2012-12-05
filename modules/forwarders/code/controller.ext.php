@@ -42,10 +42,14 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=" . $currentuser['userid'] . " AND fw_deleted_ts IS NULL ORDER BY fw_address_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=:userid AND fw_deleted_ts IS NULL ORDER BY fw_address_vc ASC";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $currentuser['userid']);
             $res = array();
             $sql->execute();
             while ($rowforwarders = $sql->fetch()) {
@@ -68,10 +72,14 @@ class module_controller {
     static function ListCurrentForwarder($fid) {
         global $zdbh;
         global $controller;
-        $sql = "SELECT * FROM x_forwarders WHERE fw_id_pk=" . $fid . " AND fw_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_forwarders WHERE fw_id_pk=:fid AND fw_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':fid', $fid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':fid', $fid);
             $res = array();
             $sql->execute();
             while ($rowforwarders = $sql->fetch()) {
@@ -89,14 +97,22 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=" . $currentuser['userid'] . " AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $currentuser['userid']);
             $res = array();
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
-                $result = $zdbh->query("SELECT fw_address_vc FROM x_forwarders WHERE fw_address_vc='" . $rowmailboxes['mb_address_vc'] . "' AND fw_deleted_ts IS NULL")->Fetch();
+                //$result = $zdbh->query("SELECT fw_address_vc FROM x_forwarders WHERE fw_address_vc='" . $rowmailboxes['mb_address_vc'] . "' AND fw_deleted_ts IS NULL")->Fetch();
+                $numrows = $zdbh->prepare("SELECT fw_address_vc FROM x_forwarders WHERE fw_address_vc=:mb_address_vc AND fw_deleted_ts IS NULL");
+                $numrows->bindParam(':mb_address_vc', $rowmailboxes['mb_address_vc']);
+                $numrows->execute();
+                $result = $numrows->fetch();
                 if (!$result) {
                     array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
                         'id' => $rowmailboxes['mb_id_pk']));
@@ -127,12 +143,18 @@ class module_controller {
 											  fw_destination_vc,
 											  fw_keepmessage_in,
 											  fw_created_ts) VALUES (
-											  " . $currentuser['userid'] . ",
-											  '" . $address . "',
-											  '" . $destination . "',
-											  '" . $keepmessage . "',
-											  " . time() . ")";
+											  :userid,
+											  :address,
+											  :destination,
+											  :keepmessage,
+											  :time)";
         $sql = $zdbh->prepare($sql);
+        $sql->bindParam(':userid', $currentuser['userid']);
+        $sql->bindParam(':address', $address);
+        $sql->bindParam(':destination', $destination);
+        $sql->bindParam(':keepmessage', $keepmessage);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         runtime_hook::Execute('OnAfterCreateForwarder');
         self::$ok = true;
@@ -143,14 +165,21 @@ class module_controller {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteForwarer');
-        $rowforwarder = $zdbh->query("SELECT * FROM x_forwarders WHERE fw_id_pk=" . $fw_id_pk . "")->fetch();
+        //$rowforwarder = $zdbh->query("SELECT * FROM x_forwarders WHERE fw_id_pk=" . $fw_id_pk . "")->fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_forwarders WHERE fw_id_pk=:fw_id_pk");
+        $numrows->bindParam(':fw_id_pk', $fw_id_pk);
+        $numrows->execute();
+        $rowforwarder = $numrows->fetch();
         self::$delete = true;
         // Include mail server specific file here.
         if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
             include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
         }
-        $sql = "UPDATE x_forwarders SET fw_deleted_ts=" . time() . " WHERE fw_id_pk=" . $fw_id_pk . "";
+        $sql = "UPDATE x_forwarders SET fw_deleted_ts=:time WHERE fw_id_pk=:fw_id_pk";
         $sql = $zdbh->prepare($sql);
+        $sql->bindParam(':fw_id_pk', $fw_id_pk);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteForwarder');
         self::$ok = true;
@@ -273,7 +302,11 @@ class module_controller {
 
     static function GetMailOption($name) {
         global $zdbh;
-        $result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
+        //$result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
+        $numrows = $zdbh->prepare("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = :name");
+        $numrows->bindParam(':name', $name);
+        $numrows->execute();
+        $result = $numrows->fetch();
         if ($result) {
             return $result['mbs_value_tx'];
         } else {
@@ -286,10 +319,14 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $mailboxes = 0;
-        $sql = "SELECT mb_id_pk FROM x_mailboxes WHERE mb_acc_fk=" . $currentuser['userid'] . " AND mb_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT mb_id_pk FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $currentuser['userid']);
             $sql->execute();
             $mailboxes = $sql->rowCount();
         }

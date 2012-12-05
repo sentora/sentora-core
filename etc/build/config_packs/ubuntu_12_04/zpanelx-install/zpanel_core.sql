@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS `x_accounts`;
 CREATE TABLE `x_accounts` (
   `ac_id_pk` int(6) unsigned NOT NULL AUTO_INCREMENT,
   `ac_user_vc` varchar(50) DEFAULT NULL,
-  `ac_pass_vc` varchar(50) DEFAULT NULL,
+  `ac_pass_vc` varchar(200) DEFAULT NULL,
   `ac_email_vc` varchar(250) DEFAULT NULL,
   `ac_reseller_fk` int(6) DEFAULT NULL,
   `ac_package_fk` int(6) DEFAULT NULL,
@@ -32,6 +32,7 @@ CREATE TABLE `x_accounts` (
   `ac_lastlogon_ts` int(30) DEFAULT NULL,
   `ac_notice_tx` text,
   `ac_resethash_tx` text,
+  `ac_passsalt_vc` varchar(22) DEFAULT NULL,
   `ac_created_ts` int(30) DEFAULT NULL,
   `ac_deleted_ts` int(30) DEFAULT NULL,
   PRIMARY KEY (`ac_id_pk`)

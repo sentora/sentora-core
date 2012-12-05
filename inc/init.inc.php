@@ -70,9 +70,17 @@ if (isset($_POST['inConfEmail'])) {
     $sql->bindParam(':resetkey', $_GET['resetkey']);
     $sql->execute();
     $result = $sql->fetch();
+
+    $crypto = new runtime_hash;
+    $crypto->SetPassword($_POST['inNewPass']);
+    $randomsalt = $crypto->RandomSalt();
+    $crypto->SetSalt($randomsalt);
+    $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+
     if ($result) {
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= :password WHERE ac_id_pk= :uid");
-        $sql->bindParam(':password', md5($_POST['inNewPass']));
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc= :password, ac_passsalt_vc= :salt WHERE ac_id_pk= :uid");
+        $sql->bindParam(':password', $secure_password);
+        $sql->bindParam(':salt', $randomsalt);
         $sql->bindParam(':uid', $result['ac_id_pk']);
         $sql->execute();
         runtime_hook::Execute('OnSuccessfulPasswordReset');
@@ -91,7 +99,17 @@ if (isset($_POST['inUsername'])) {
     } else {
         $rememberdetails = true;
     }
-    if (!ctrl_auth::Authenticate($_POST['inUsername'], md5($_POST['inPassword']), $rememberdetails, false)) {
+
+    $sql = $zdbh->prepare("SELECT ac_passsalt_vc FROM x_accounts WHERE ac_user_vc= :username");
+    $sql->bindParam(':username', $_POST['inUsername']);
+    $sql->execute();
+    $result = $sql->fetch();
+    $crypto = new runtime_hash;
+    $crypto->SetPassword($_POST['inPassword']);
+    $crypto->SetSalt($result['ac_passsalt_vc']);
+    $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+
+    if (!ctrl_auth::Authenticate($_POST['inUsername'], $secure_password, $rememberdetails, false)) {
         header("location: ./?invalidlogin");
         exit();
     }

@@ -35,16 +35,27 @@ try {
 }
 
 foreach ($deletedclients as $deletedclient) {
-    $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=" . $deletedclient . " AND fw_deleted_ts IS NULL";
-    $numrows = $zdbh->query($sql);
+    //$sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=" . $deletedclient . " AND fw_deleted_ts IS NULL";
+    //$numrows = $zdbh->query($sql);   
+    $numrows = $zdbh->prepare("SELECT * FROM x_forwarders WHERE fw_acc_fk=:deletedclient AND fw_deleted_ts IS NULL");
+    $numrows->bindParam(':deletedclient', $deletedclient);
+    $numrows->execute();
+        
     if ($numrows->fetchColumn() <> 0) {
-        $sql = $zdbh->prepare($sql);
+        $sql = $zdbh->prepare("SELECT * FROM x_forwarders WHERE fw_acc_fk=:deletedclient AND fw_deleted_ts IS NULL");
+        $sql->bindParam(':deletedclient', $deletedclient);
         $sql->execute();
         while ($rowforwarder = $sql->fetch()) {
-            $result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+            //$result = $mail_db->query("SELECT accountaddress FROM hm_accounts WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();            
+            $numrows = $mail_db->prepare("SELECT accountaddress FROM hm_accounts WHERE accountaddress=:fw_address_vc");
+            $numrows->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
+            $numrows->execute();
+            $result = $numrows->fetch();
+            
             if ($result) {
-                $sql = "DELETE * FROM hm_accounts WHERE accountaddress='" . $rowforwarder['fw_address_vc'] . "'";
+                $sql = "DELETE * FROM hm_accounts WHERE accountaddress=:fw_address_vc";
                 $sql = $mail_db->prepare($sql);
+                $sql->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
                 $sql->execute();
             }
         }

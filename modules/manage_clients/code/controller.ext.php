@@ -316,9 +316,17 @@ class module_controller {
                 self::$badpassword = true;
                 return false;
             }
-            $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc= :newpass WHERE ac_id_pk= :clientid");
+
+            $crypto = new runtime_hash;
+            $crypto->SetPassword($newpass);
+            $randomsalt = $crypto->RandomSalt();
+            $crypto->SetSalt($randomsalt);
+            $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+
+            $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc= :newpass, ac_passsalt_vc= :passsalt WHERE ac_id_pk= :clientid");
             $sql->bindParam(':clientid', $clientid);
-            $sql->bindParam(':newpass', md5($newpass));
+            $sql->bindParam(':newpass', $secure_password);
+            $sql->bindParam(':passsalt', $randomsalt);
             $sql->execute();
         }
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc= :email, ac_package_fk= :package, ac_enabled_in= :isenabled, ac_group_fk= :group WHERE ac_id_pk= " . $clientid . "");
@@ -403,11 +411,19 @@ class module_controller {
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateClient');
+
+        $crypto = new runtime_hash;
+        $crypto->SetPassword($password);
+        $randomsalt = $crypto->RandomSalt();
+        $crypto->SetSalt($randomsalt);
+        $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+
         // No errors found, so we can add the user to the database...
-        $sql = $zdbh->prepare("INSERT INTO x_accounts (ac_user_vc, ac_pass_vc, ac_email_vc, ac_package_fk, ac_group_fk, ac_usertheme_vc, ac_usercss_vc, ac_reseller_fk, ac_created_ts) VALUES (
-            :username, :password, :email, :packageid, :groupid, :resellertheme, :resellercss, " . $uid . ", " . time() . ")");
+        $sql = $zdbh->prepare("INSERT INTO x_accounts (ac_user_vc, ac_pass_vc, ac_email_vc, ac_package_fk, ac_group_fk, ac_usertheme_vc, ac_usercss_vc, ac_reseller_fk, ac_passsalt_vc, ac_created_ts) VALUES (
+            :username, :password, :email, :packageid, :groupid, :resellertheme, :resellercss, " . $uid . ", :passsalt, " . time() . ")");
         $sql->bindParam(':username', $username);
-        $sql->bindParam(':password', md5($password));
+        $sql->bindParam(':password', $secure_password);
+        $sql->bindParam(':passsalt', $randomsalt);
         $sql->bindParam(':email', $email);
         $sql->bindParam(':packageid', $packageid);
         $sql->bindParam(':groupid', $groupid);

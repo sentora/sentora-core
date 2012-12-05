@@ -38,10 +38,16 @@ try {
 
 // Deleting hMail Forwarder
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
-    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();
+    //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowforwarder['fw_address_vc'] . "'")->Fetch();   
+    $numrows = $mail_db->prepare("SELECT address FROM alias WHERE address=:fw_address_vc");
+    $numrows->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
-        $sql = "UPDATE alias SET goto='" . $rowforwarder['fw_address_vc'] . "', modified=NOW() WHERE address = '" . $rowforwarder['fw_address_vc'] . "'";
+        $sql = "UPDATE alias SET goto=:fw_address_vc, modified=NOW() WHERE address = :fw_address_vc2";
         $sql = $mail_db->prepare($sql);
+        $sql->bindParam(':fw_address_vc', $rowforwarder['fw_address_vc']);
+        $sql->bindParam(':fw_address_vc2', $rowforwarder['fw_address_vc']);
         $sql->execute();
     }
 }
@@ -50,15 +56,22 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
 
 // Adding hMail Forwarder
 if (!fs_director::CheckForEmptyValue(self::$create)) {
-    $result = $mail_db->query("SELECT address FROM alias WHERE address='" . $address . "'")->Fetch();
+    //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $address . "'")->Fetch();
+    $numrows = $mail_db->prepare("SELECT address FROM alias WHERE address=:address");
+    $numrows->bindParam(':address', $address);
+    $numrows->execute();
+    $result = $numrows->fetch();
     if ($result) {
         if ($keepmessage == 1) {
             $copy = "," . $address;
         } else {
             $copy = NULL;
         }
-        $sql = "UPDATE alias SET goto='" . $destination . $copy . "', modified=NOW() WHERE address = '" . $address . "'";
+        $sql = "UPDATE alias SET goto=:goTo, modified=NOW() WHERE address = :address";
         $sql = $mail_db->prepare($sql);
+        $goTo = $destination . $copy;
+        $sql->bindParam(':goTo', $goTo);
+        $sql->bindParam(':address', $address);
         $sql->execute();
     }
 }

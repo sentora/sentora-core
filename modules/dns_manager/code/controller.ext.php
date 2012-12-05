@@ -1608,7 +1608,7 @@ class module_controller {
             if ($numrows->fetchColumn() <> 0) {
                 $hasrecords = true;
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
-                $numrows->bindParam(':domainID', $domainID);
+                $sql->bindParam(':domainID', $domainID);
                 $sql->execute();
                 //$domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();               
                 $numrows = $zdbh->prepare("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL");
