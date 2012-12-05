@@ -39,7 +39,7 @@ CREATE TABLE `x_accounts` (
 
 /*Data for the table `x_accounts` */
 
-insert  into `x_accounts`(`ac_id_pk`,`ac_user_vc`,`ac_pass_vc`,`ac_email_vc`,`ac_reseller_fk`,`ac_package_fk`,`ac_group_fk`,`ac_usertheme_vc`,`ac_usercss_vc`,`ac_enabled_in`,`ac_lastlogon_ts`,`ac_notice_tx`,`ac_resethash_tx`,`ac_created_ts`,`ac_deleted_ts`) values (1,'zadmin','5f4dcc3b5aa765d61d8327deb882cf99','zadmin@localhost',1,1,1,'zpanelx','default',1,0,'Welcome to your new ZPanel installation! You can remove this message from the Client Notice Manager module. This module allows you to notify your clients of service outages upgrades and new features etc :-)','',NULL,NULL);
+insert  into `x_accounts`(`ac_id_pk`,`ac_user_vc`,`ac_pass_vc`,`ac_email_vc`,`ac_reseller_fk`,`ac_package_fk`,`ac_group_fk`,`ac_usertheme_vc`,`ac_usercss_vc`,`ac_enabled_in`,`ac_lastlogon_ts`,`ac_notice_tx`,`ac_resethash_tx`,`ac_created_ts`,`ac_deleted_ts`) values (1,'zadmin','vgCCaJqy.SAWvjqWIKmwJP5BJTE2cJW','zadmin@localhost',1,1,1,'zpanelx','default',1,0,'Welcome to your new ZPanel installation! You can remove this message from the Client Notice Manager module. This module allows you to notify your clients of service outages upgrades and new features etc :-)','',NULL,NULL);
 
 /*Table structure for table `x_aliases` */
 
