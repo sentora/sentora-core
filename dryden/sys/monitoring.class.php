@@ -125,6 +125,20 @@ class sys_monitoring {
     }
 
     /**
+     * Checks that an IP address is valid, can be public or private subnet (IPv6 and IPv4).
+     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @param string $ip The IP address of which to check.
+     * @return boolean 
+     */
+    static function IsAnyValidIP($ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Checks that an IP address is valid (IPv6 and IPv4).
      * @author Bobby Allen (ballen@zpanelcp.com) 
      * @param string $ip The IP address of which to check.

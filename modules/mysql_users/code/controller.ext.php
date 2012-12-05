@@ -44,7 +44,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $uid);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $sql->bindParam(':userid', $uid);
@@ -55,7 +55,7 @@ class module_controller {
                 $find->bindParam(':id', $rowmysql['mm_database_fk']);
                 $find->execute();
                 $rowdb = $find->fetch();
-                
+
                 if (!$rowdb) {
                     
                 }
@@ -85,7 +85,7 @@ class module_controller {
                 $numrows->bindParam(':mysql', $rowmysql['mu_id_pk']);
                 $numrows->execute();
                 $numrowdb = $numrows->fetch();
-                
+
                 if ($rowmysql['mu_access_vc'] == "%") {
                     $access = "ANY";
                 } else {
@@ -132,19 +132,17 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $uid);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
             $sql->bindParam(':userid', $uid);
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
-                //$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowmysql['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();
                 $numrows = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_id_pk=:database AND my_deleted_ts IS NULL");
                 $numrows->bindParam(':database', $rowmysql['mm_database_fk']);
                 $numrows->execute();
                 $rowdb = $numrows->fetch();
-                
                 if ($rowdb) {
                     array_push($res, array('mmid' => $rowmysql['mm_id_pk'],
                         'mmaccount' => $rowmysql['mm_acc_fk'],
@@ -164,7 +162,7 @@ class module_controller {
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:mid AND mu_deleted_ts IS NULL");
         $numrows->bindParam(':mid', $mid);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:mid AND mu_deleted_ts IS NULL");
             $res = array();
@@ -204,7 +202,6 @@ class module_controller {
         $sql->bindParam(':password', $password);
         $sql->execute();
         // Get the database name from the ID...
-        //$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $database . " AND my_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_id_pk=:database AND my_deleted_ts IS NULL");
         $numrows->bindParam(':database', $database);
         $numrows->execute();
@@ -302,12 +299,11 @@ class module_controller {
         }
         // Check for invalid IP address
         if ($access != "%" && strtolower($access) != "localhost") {
-            if (!sys_monitoring::IsValidIP($access)) {
+            if (!sys_monitoring::IsAnyValidIP($access)) {
                 self::$badIP = true;
                 return false;
             }
         }
-
         return true;
     }
 
@@ -335,16 +331,16 @@ class module_controller {
         $numrows->bindParam(':mu_id_pk', $mu_id_pk);
         $numrows->execute();
         $rowuser = $numrows->fetch();
-        
+
         $sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = :name)";
         $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':name', $rowuser['mu_name_vc']);       
+        $numrows->bindParam(':name', $rowuser['mu_name_vc']);
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 //drop user
                 $sql = $zdbh->prepare("DROP USER :name@:access;");
-                $sql->bindParam(':name', $rowuser['mu_name_vc']); 
-                $sql->bindParam(':access', $rowuser['mu_access_vc']); 
+                $sql->bindParam(':name', $rowuser['mu_name_vc']);
+                $sql->bindParam(':access', $rowuser['mu_access_vc']);
                 $sql->execute();
                 //flush privileges
                 $sql = $zdbh->prepare("FLUSH PRIVILEGES");
@@ -374,7 +370,7 @@ class module_controller {
         if (fs_director::CheckForEmptyValue(self::CheckAddForErrors($myuserid, $dbid))) {
             return false;
         }
-        if(!isset($uid)|| $uid == NULL || $uid == ''){
+        if (!isset($uid) || $uid == NULL || $uid == '') {
             $currentuser = ctrl_users::GetUserDetail();
             $uid = $currentuser['userid'];
         }
@@ -383,14 +379,14 @@ class module_controller {
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_id_pk=:dbid AND my_deleted_ts IS NULL");
         $numrows->bindParam(':dbid', $dbid);
         $numrows->execute();
-        $rowdb = $numrows->fetch();     
-        
+        $rowdb = $numrows->fetch();
+
         //$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:myuserid AND mu_deleted_ts IS NULL");
         $numrows->bindParam(':myuserid', $myuserid);
         $numrows->execute();
         $rowuser = $numrows->fetch();
-        
+
         $sql = $zdbh->prepare("GRANT ALL PRIVILEGES ON `:my_name_vc`.* TO `:mu_name_vc`@`:mu_access_vc`");
         $sql->bindParam(':my_name_vc', $rowdb['my_name_vc'], PDO::PARAM_STR);
         $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc'], PDO::PARAM_STR);
@@ -425,33 +421,33 @@ class module_controller {
         $numrows->bindParam(':mapid', $mapid);
         $numrows->execute();
         $rowdbmap = $numrows->fetch();
-        
+
         //$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowdbmap['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();        
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_id_pk=:mm_database_fk AND my_deleted_ts IS NULL");
         $numrows->bindParam(':mm_database_fk', $rowdbmap['mm_database_fk']);
         $numrows->execute();
         $rowdb = $numrows->fetch();
-        
+
         //$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();        
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:myuserid AND mu_deleted_ts IS NULL");
         $numrows->bindParam(':myuserid', $myuserid);
         $numrows->execute();
         $rowuser = $numrows->fetch();
-        
+
         $sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON :my_name_vc.* FROM :mu_name_vc@:mu_access_vc");
         $sql->bindParam(':my_name_vc', $rowdb['my_name_vc']);
-        $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc'] );
+        $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);
         $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc']);
         $sql->execute();
-        
+
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
-        
+
         $sql = $zdbh->prepare("DELETE FROM x_mysql_dbmap WHERE mm_id_pk=:mapid AND mm_user_fk=:myuserid");
         $sql->bindParam(':mapid', $mapid);
         $sql->bindParam(':myuserid', $myuserid);
         $sql->execute();
-        
+
         runtime_hook::Execute('OnAfterRemoveDatabaseAccess');
         self::$ok = true;
         return true;
@@ -472,20 +468,20 @@ class module_controller {
         }
         $sql = "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = :mu_name_vc)";
         $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);      
+        $numrows->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 // Set MySQL password for new user...
                 $sql = $zdbh->prepare("SET PASSWORD FOR :mu_name_vc@:mu_access_vc=PASSWORD(:password)");
-                $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc']); 
-                $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc']); 
-                $sql->bindParam(':password', $password); 
+                $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);
+                $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc']);
+                $sql->bindParam(':password', $password);
                 $sql->execute();
                 $sql = $zdbh->prepare("FLUSH PRIVILEGES");
                 $sql->execute();
                 $sql = $zdbh->prepare("UPDATE x_mysql_users SET mu_pass_vc=:password WHERE mu_id_pk=:myuserid");
-                $sql->bindParam(':password', $password); 
-                $sql->bindParam(':myuserid', $myuserid); 
+                $sql->bindParam(':password', $password);
+                $sql->bindParam(':myuserid', $myuserid);
                 $sql->execute();
             }
         }
