@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-# ZPanel Enviroment Configuration Tool for Microsoft Windows based systems.
+# ZPanel Enviroment Configuration Tool for *NIX based systems.
 # Written by Bobby Allen, 19/02/2012
 
 echo "ZPanel Enviroment Configuration Tool"
