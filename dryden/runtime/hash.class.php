@@ -88,7 +88,9 @@ class runtime_hash {
      */
     public function Crypt() {
         if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
-            $salt = '$2a$' . $this->cost . '$' . $this->salt . '$';
+            require_once 'cnf/security.php';
+            $combined_salt = substr(sha1($this->salt . $server_crypto_key), 0, 22);
+            $salt = '$2a$' . $this->cost . '$' . $combined_salt . '$';
             return crypt($this->password, $salt);
         } else {
             // Returns false if PHP version is not higher than 5.3.0 (which implements the Blowfish encruption mechanism).
