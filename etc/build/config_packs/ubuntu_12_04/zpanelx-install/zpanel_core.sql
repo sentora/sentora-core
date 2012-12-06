@@ -62,8 +62,8 @@ VALUES
     (
     1,
     'zadmin',
-    '1EwewEP.yIhL4UyIsafUXJyHEclfpla',
-    'VQlm.qtCk7fMlj96Q8.BoQ',
+    'v.eCCwjd4xAGWagHafqod6SMASr25Na',
+    '/L8ewHozMz0EqAmmILPFN2',
     'zadmin@localhost',
     1,
     1,
