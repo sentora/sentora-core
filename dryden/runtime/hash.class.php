@@ -87,9 +87,10 @@ class runtime_hash {
      * @return boolean Will return false if fails (the user didn't define a password or the version of PHP does not support Blowfish, PHP 5.3.0+ is required!) or the password hash if successful.
      */
     public function Crypt() {
+        require_once ctrl_options::GetSystemOption('zpanel_root') . 'cnf/security.php';
+        global $security;
         if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
-            require_once 'cnf/security.php';
-            $combined_salt = substr(sha1($this->salt . $server_crypto_key), 0, 22);
+            $combined_salt = substr(sha1($this->salt . $security['server_crypto_key']), 0, 22);
             $salt = '$2a$' . $this->cost . '$' . $combined_salt . '$';
             return crypt($this->password, $salt);
         } else {

@@ -9,5 +9,7 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-$server_crypto_key = "GENERATED_SALT_HERE";
+global $security;
+
+$security['server_crypto_key'] = "GENERATED_SALT_HERE";
 ?>
