@@ -419,8 +419,8 @@ class module_controller {
         $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
 
         // No errors found, so we can add the user to the database...
-        $sql = $zdbh->prepare("INSERT INTO x_accounts (ac_user_vc, ac_pass_vc, ac_email_vc, ac_package_fk, ac_group_fk, ac_usertheme_vc, ac_usercss_vc, ac_reseller_fk, ac_passsalt_vc, ac_created_ts) VALUES (
-            :username, :password, :email, :packageid, :groupid, :resellertheme, :resellercss, " . $uid . ", :passsalt, " . time() . ")");
+        $sql = $zdbh->prepare("INSERT INTO x_accounts (ac_user_vc, ac_pass_vc, ac_passsalt_vc, ac_email_vc, ac_package_fk, ac_group_fk, ac_usertheme_vc, ac_usercss_vc, ac_reseller_fk, ac_created_ts) VALUES (
+            :username, :password, :passsalt, :email, :packageid, :groupid, :resellertheme, :resellercss, " . $uid . ", " . time() . ")");
         $sql->bindParam(':username', $username);
         $sql->bindParam(':password', $secure_password);
         $sql->bindParam(':passsalt', $randomsalt);

@@ -1,5 +1,3 @@
-ZPanel README
-
 ZPanel is an open-source web hosting control panel written in PHP and is compatible
 with Microsoft Windows and POSIX (Linux, UNIX, MacOSX and the BSD's).
 
@@ -30,10 +28,11 @@ Windows.
 
 GETTING SUPPORT
 
-We provide excellent support and documentation at our website of which can be 
-viewed here: http://www.zpanelcp.com
+We provide excellent free (and premium) support and documentation at our website of which 
+can be viewed here: http://www.zpanelcp.com
 
 Other support resources include:-
 
 Our official community support forums: http://forums.zpanelcp.com/
+Our official bug tracking system: http://bugs.zpanelcp.com/
 Our documentation site (planet): http://planet.zpanelcp.com/
