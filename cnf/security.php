@@ -12,4 +12,3 @@
 global $security;
 
 $security['server_crypto_key'] = "GENERATED_SALT_HERE";
-?>
