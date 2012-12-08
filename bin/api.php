@@ -9,9 +9,9 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-$raw_path = str_replace("\\", "/", dirname(__FILE__));
-$root_path = str_replace("/bin", "/", $raw_path);
-chdir($root_path);
+$rawPath = str_replace("\\", "/", dirname(__FILE__));
+$rootPath = str_replace("/bin", "/", $rawPath);
+chdir($rootPath);
 
 require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
@@ -51,4 +51,3 @@ if (file_exists('modules/' . $_GET['m'] . '/code/webservice.ext.php')) {
 } else {
     echo "No modular web service found using this request URL (" . $_SERVER['REQUEST_URI'] . ")";
 }
-?>

@@ -9,9 +9,9 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-$raw_path = str_replace("\\", "/", dirname(__FILE__));
-$root_path = str_replace("/bin", "/", $raw_path);
-chdir($root_path);
+$rawPath = str_replace("\\", "/", dirname(__FILE__));
+$rootPath = str_replace("/bin", "/", $rawPath);
+chdir($rootPath);
 
 set_time_limit(0);
 //ini_set('memory_limit', '256M');
@@ -50,7 +50,7 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
             }
             chdir('etc/zppy-cache/package-downloads/');
             exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
-            chdir($root_path);
+            chdir($rootPath);
             if ($isfound) {
                 if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $argv[2])) {
                     if (fs_director::CreateDirectory('modules/' . $argv[2])) {
@@ -108,7 +108,7 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
             }
             chdir('etc/zppy-cache/package-downloads/');
             exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
-            chdir($root_path);
+            chdir($rootPath);
         }
     }
     if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $argv[2])) {

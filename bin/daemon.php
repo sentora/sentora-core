@@ -11,24 +11,24 @@
  */
 set_time_limit(0);
 
-$raw_path = str_replace("\\", "/", dirname(__FILE__));
-$root_path = str_replace("/bin", "/", $raw_path);
-chdir($root_path);
+$rawPath = str_replace("\\", "/", dirname(__FILE__));
+$rootPath = str_replace("/bin", "/", $rawPath);
+chdir($rootPath);
 
 require_once 'dryden/loader.inc.php';
 require_once 'cnf/db.php';
 require_once 'inc/dbc.inc.php';
 
-$daemon_log = new debug_logger();
-$daemon_log->method = "file";
-$daemon_log->logcode = "001";
+$daemonLog = new debug_logger();
+$daemonLog->method = "file";
+$daemonLog->logcode = "001";
 
 if (!runtime_controller::IsCLI())
     echo "<pre>";
 echo "Daemon is now running...";
 
-$daemon_log->detail = "Daemon execution started...";
-$daemon_log->writeLog();
+$daemonLog->detail = "Daemon execution started...";
+$daemonLog->writeLog();
 
 runtime_hook::Execute("OnStartDaemonRun");
 runtime_hook::Execute("OnDaemonRun");
@@ -66,10 +66,9 @@ echo "\nDaemon run complete!\n";
 
 ctrl_options::SetSystemOption('daemon_lastrun', time());
 
-$daemon_log->detail = "Daemon execution completed!";
-$daemon_log->writeLog();
+$daemonLog->detail = "Daemon execution completed!";
+$daemonLog->writeLog();
 
 if (!runtime_controller::IsCLI())
     echo "</pre>";
 exit;
-?>
