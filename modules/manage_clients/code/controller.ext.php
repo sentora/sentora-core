@@ -50,17 +50,33 @@ class module_controller {
         global $zdbh;
         if ($uid == 0) {
             $sql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->execute();
         } else {
-            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->bindParam(':uid', $uid);
+            $numrows->execute();
         }
-        $numrows = $zdbh->query($sql);
+        
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            if ($uid == 0) {
+                //do not bind as there is no need
+            }else{
+                //else we bind the pram to the sql statment
+               $sql->bindParam(':uid', $uid); 
+            }
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
                 if ($rowclients['ac_user_vc'] != "zadmin") {
-                    $numrowclients = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk=" . $rowclients['ac_id_pk'] . " AND ac_deleted_ts IS NULL")->fetch();
+                    //$numrowclients = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk=" . $rowclients['ac_id_pk'] . " AND ac_deleted_ts IS NULL")->fetch();
+                    $numrows = $zdbh->prepare("SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk=:ac_id_pk AND ac_deleted_ts IS NULL");
+                    $numrows->bindParam(':ac_id_pk', $rowclients['ac_id_pk']);
+                    $numrows->execute();
+                    $numrowclients = $numrows->fetch();
+                    
                     $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
                     $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
                     $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
@@ -78,15 +94,22 @@ class module_controller {
 
     static function ListAllClients($moveid, $uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid AND ac_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $skipclients = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
-                $getgroup = $zdbh->query("SELECT * FROM x_groups WHERE ug_id_pk=" . $rowclients['ac_group_fk'] . "")->fetch();
+                //$getgroup = $zdbh->query("SELECT * FROM x_groups WHERE ug_id_pk=" . $rowclients['ac_group_fk'] . "")->fetch();
+                $numrows = $zdbh->prepare("SELECT * FROM x_groups WHERE ug_id_pk=:ac_group_fk");
+                $numrows->bindParam(':ac_group_fk', $rowclients['ac_group_fk']);
+                $numrows->execute();
+                $getgroup = $numrows->fetch();
                 if ($rowclients['ac_id_pk'] != $moveid && $getgroup['ug_name_vc'] == "Administrators" ||
                         $rowclients['ac_id_pk'] != $moveid && $getgroup['ug_name_vc'] == "Resellers") {
                     array_push($res, array('moveclientid' => $rowclients['ac_id_pk'],
@@ -101,10 +124,14 @@ class module_controller {
 
     static function ListDisabledClients($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " AND ac_enabled_in=0 AND ac_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid AND ac_enabled_in=0 AND ac_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
@@ -125,10 +152,14 @@ class module_controller {
 
     static function ListCurrentClient($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_profiles WHERE ud_user_fk=" . $uid . "";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_profiles WHERE ud_user_fk=:uid";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             $currentuser = ctrl_users::GetUserDetail($uid);
@@ -151,10 +182,14 @@ class module_controller {
     static function ListGroups($uid) {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $currentuser['resellerid'] . "";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:resellerid";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':resellerid', $currentuser['resellerid']);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':resellerid', $currentuser['resellerid']);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
@@ -182,12 +217,16 @@ class module_controller {
 
     static function ListCurrentGroups($uid, $rid, $id) {
         global $zdbh;
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $rid . "";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:rid";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':rid', $rid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $currentuser = ctrl_users::GetUserDetail($uid);
             $reseller = ctrl_users::GetUserDetail($id);
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':rid', $rid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
@@ -219,10 +258,14 @@ class module_controller {
 
     static function ListPackages($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:uid AND pk_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
@@ -237,11 +280,15 @@ class module_controller {
 
     static function ListCurrentPackages($uid, $rid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=" . $rid . " AND pk_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:rid AND pk_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':rid', $rid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $currentuser = ctrl_users::GetUserDetail($uid);
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':rid', $rid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
@@ -263,8 +310,11 @@ class module_controller {
         global $zdbh;
         runtime_hook::Execute('OnBeforeSetClientAccount');
         $sql = $zdbh->prepare("UPDATE x_accounts
-								SET " . $column . "=" . $value . " 
-								WHERE ac_id_pk=" . $userid . "");
+								SET :column=:value 
+								WHERE ac_id_pk=:userid");
+        $sql->bindParam(':column', $column);
+        $sql->bindParam(':value', $value);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         runtime_hook::Execute('OnAfterSetClientAccount');
         return true;
@@ -273,7 +323,10 @@ class module_controller {
     static function SetClientProfile($userid, $column, $value) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeSetClientProfile');
-        $sql = $zdbh->prepare("UPDATE x_profiles SET " . $column . "=" . $value . " WHERE ud_user_fk=" . $userid . "");
+        $sql = $zdbh->prepare("UPDATE x_profiles SET :column=:value WHERE ud_user_fk=:userid");
+        $sql->bindParam(':column', $column);
+        $sql->bindParam(':value', $value);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         runtime_hook::Execute('OnAfterSetClientProfile');
         return true;
@@ -284,23 +337,32 @@ class module_controller {
         runtime_hook::Execute('OnBeforeDeleteClient');
         $sql = $zdbh->prepare("
 			UPDATE x_accounts
-			SET ac_deleted_ts=" . time() . " 
-			WHERE ac_id_pk=" . $userid . "");
+			SET ac_deleted_ts=:time 
+			WHERE ac_id_pk=:userid");
+        $time = time();
+        $sql->bindParam(':time', $time);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         $sql = $zdbh->prepare("
 			UPDATE x_accounts 
-			SET ac_reseller_fk = " . $moveid . " 
-			WHERE ac_reseller_fk = " . $userid . "");
+			SET ac_reseller_fk = :moveid
+			WHERE ac_reseller_fk = :userid");
+        $sql->bindParam(':moveid', $moveid);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         $sql = $zdbh->prepare("
 			UPDATE x_packages 
-			SET pk_reseller_fk = " . $moveid . " 
-			WHERE pk_reseller_fk = " . $userid . "");
+			SET pk_reseller_fk = :moveid 
+			WHERE pk_reseller_fk = :userid");
+        $sql->bindParam(':moveid', $moveid);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         $sql = $zdbh->prepare("
 			UPDATE x_groups 
-			SET ug_reseller_fk = " . $moveid . " 
-			WHERE ug_reseller_fk = " . $userid . "");
+			SET ug_reseller_fk = :moveid 
+			WHERE ug_reseller_fk = :userid");
+        $sql->bindParam(':moveid', $moveid);
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteClient');
         self::$ok = true;
@@ -329,11 +391,12 @@ class module_controller {
             $sql->bindParam(':passsalt', $randomsalt);
             $sql->execute();
         }
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc= :email, ac_package_fk= :package, ac_enabled_in= :isenabled, ac_group_fk= :group WHERE ac_id_pk= " . $clientid . "");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_email_vc= :email, ac_package_fk= :package, ac_enabled_in= :isenabled, ac_group_fk= :group WHERE ac_id_pk = :clientid");
         $sql->bindParam(':email', $email);
         $sql->bindParam(':package', $package);
         $sql->bindParam(':isenabled', $enabled);
         $sql->bindParam(':group', $group);
+        $sql->bindParam(':clientid', $clientid);
         //$sql->bindParam(':accountid', $clientid);
         $sql->execute();
 
@@ -360,7 +423,8 @@ class module_controller {
     static function EnableClient($userid) {
         runtime_hook::Execute('OnBeforeEnableClient');
         global $zdbh;
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=1 WHERE ac_id_pk=" . $userid . "");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=1 WHERE ac_id_pk=:userid");
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         runtime_hook::Execute('OnAfterEnableClient');
         return true;
@@ -369,7 +433,8 @@ class module_controller {
     static function DisableClient($userid) {
         runtime_hook::Execute('OnBeforeDisableClient');
         global $zdbh;
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=0 WHERE ac_id_pk=" . $userid . "");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=0 WHERE ac_id_pk=:userid");
+        $sql->bindParam(':userid', $userid);
         $sql->execute();
         runtime_hook::Execute('OnAfterDisableClient');
         return true;
@@ -392,8 +457,11 @@ class module_controller {
 
     static function CheckHasPackage($userid) {
         global $zdbh;
-        $sql = "SELECT COUNT(*) FROM x_packages WHERE pk_reseller_fk='" . $userid . "' AND pk_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_packages WHERE pk_reseller_fk=:userid AND pk_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $userid);
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() == 0) {
                 return false;
             }
@@ -420,7 +488,10 @@ class module_controller {
 
         // No errors found, so we can add the user to the database...
         $sql = $zdbh->prepare("INSERT INTO x_accounts (ac_user_vc, ac_pass_vc, ac_passsalt_vc, ac_email_vc, ac_package_fk, ac_group_fk, ac_usertheme_vc, ac_usercss_vc, ac_reseller_fk, ac_created_ts) VALUES (
-            :username, :password, :passsalt, :email, :packageid, :groupid, :resellertheme, :resellercss, " . $uid . ", " . time() . ")");
+            :username, :password, :passsalt, :email, :packageid, :groupid, :resellertheme, :resellercss, :uid, :time)");
+        $sql->bindParam(':uid', $uid);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->bindParam(':username', $username);
         $sql->bindParam(':password', $secure_password);
         $sql->bindParam(':passsalt', $randomsalt);
@@ -431,8 +502,13 @@ class module_controller {
         $sql->bindParam(':resellercss', $reseller['usercss']);
         $sql->execute();
         // Now lets pull back the client ID so that we can add their personal address details etc...
-        $client = $zdbh->query("SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " ORDER BY ac_id_pk DESC")->Fetch();
-        $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk, ud_fullname_vc, ud_group_fk, ud_package_fk, ud_address_tx, ud_postcode_vc, ud_phone_vc, ud_created_ts) VALUES (:userid, :fullname, :packageid, :groupid, :address, :postcode, :phone, " . time() . ")");
+        //$client = $zdbh->query("SELECT * FROM x_accounts WHERE ac_reseller_fk=" . $uid . " ORDER BY ac_id_pk DESC")->Fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid ORDER BY ac_id_pk DESC");
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
+        $client = $numrows->fetch();
+        
+        $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk, ud_fullname_vc, ud_group_fk, ud_package_fk, ud_address_tx, ud_postcode_vc, ud_phone_vc, ud_created_ts) VALUES (:userid, :fullname, :packageid, :groupid, :address, :postcode, :phone, :time");
         $sql->bindParam(':userid', $client['ac_id_pk']);
         $sql->bindParam(':fullname', $fullname);
         $sql->bindParam(':packageid', $packageid);
@@ -440,9 +516,14 @@ class module_controller {
         $sql->bindParam(':address', $address);
         $sql->bindParam(':postcode', $post);
         $sql->bindParam(':phone', $phone);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         // Now we add an entry into the bandwidth table, for the user for the upcoming month.
-        $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (" . $client['ac_id_pk'] . "," . date("Ym", time()) . ", 0, 0)");
+        $sql = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi) VALUES (:ac_id_pk, :date, 0, 0)");
+        $date = date("Ym", time());
+        $sql->bindParam(':date', $date);
+        $sql->bindParam(':ac_id_pk', $client['ac_id_pk']);
         $sql->execute();
         // Lets create the client diectories
         fs_director::CreateDirectory(ctrl_options::GetSystemOption('hosted_dir') . $username);
@@ -477,8 +558,11 @@ class module_controller {
         $username = strtolower(str_replace(' ', '', $username));
         // Check to make sure the username is not blank or exists before we go any further...
         if (!fs_director::CheckForEmptyValue($username)) {
-            $sql = "SELECT COUNT(*) FROM x_accounts WHERE UPPER(ac_user_vc)='" . strtoupper($username) . "' AND ac_deleted_ts IS NULL";
-            if ($numrows = $zdbh->query($sql)) {
+            $sql = "SELECT COUNT(*) FROM x_accounts WHERE UPPER(ac_user_vc)=:user AND ac_deleted_ts IS NULL";
+            $numrows = $zdbh->prepare($sql);
+            $user = strtoupper($username);
+            $numrows->bindParam(':user', $user);
+            if ($numrows->execute()) {
                 if ($numrows->fetchColumn() <> 0) {
                     self::$alreadyexists = true;
                     return false;
@@ -494,8 +578,10 @@ class module_controller {
         }
         // Check to make sure the packagename is not blank and exists before we go any further...
         if (!fs_director::CheckForEmptyValue($packageid)) {
-            $sql = "SELECT COUNT(*) FROM x_packages WHERE pk_id_pk='" . $packageid . "' AND pk_deleted_ts IS NULL";
-            if ($numrows = $zdbh->query($sql)) {
+            $sql = "SELECT COUNT(*) FROM x_packages WHERE pk_id_pk=:packageid AND pk_deleted_ts IS NULL";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->bindParam(':packageid', $packageid);
+            if ($numrows->execute()) {
                 if ($numrows->fetchColumn() == 0) {
                     self::$packageblank = true;
                     return false;
@@ -507,8 +593,11 @@ class module_controller {
         }
         // Check to make sure the groupname is not blank and exists before we go any further...
         if (!fs_director::CheckForEmptyValue($groupid)) {
-            $sql = "SELECT COUNT(*) FROM x_groups WHERE ug_id_pk='" . $groupid . "'";
-            if ($numrows = $zdbh->query($sql)) {
+            $sql = "SELECT COUNT(*) FROM x_groups WHERE ug_id_pk=:groupid";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->bindParam(':groupid', $groupid);
+            
+            if ($numrows->execute()) {
                 if ($numrows->fetchColumn() == 0) {
                     self::$groupblank = true;
                     return;
