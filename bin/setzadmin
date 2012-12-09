@@ -1,0 +1,100 @@
+#!/usr/bin/php
+<?php
+/**
+ * SETZADMIN - ZPanel tool to set inital zadmin account password, salt and random API key.
+ * @package zpanelx
+ * @subpackage core -> setzadmin
+ * @author Bobby Allen (ballen@zpanelcp.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
+ */
+$rawPath = str_replace("\\", "/", dirname(__FILE__));
+$rootPath = str_replace("/bin", "/", $rawPath);
+chdir($rootPath);
+
+set_time_limit(0);
+//ini_set('memory_limit', '256M');
+ini_set('error_reporting', E_ALL | E_STRICT);
+ini_set('display_errors', 'On');
+ini_set('log_errors', 'Off');
+
+require_once 'dryden/loader.inc.php';
+require_once 'cnf/db.php';
+require_once 'inc/dbc.inc.php';
+
+
+
+if (!runtime_controller::IsCLI())
+    exit(1);
+
+$generate = true;
+
+if ((isset($argv[1])) && ($argv[1] == '--noregen')) {
+    $generate = false;
+}
+
+if ((isset($argv[1])) && ($argv[1] == '--set')) {
+    $password = $argv[2];
+}
+
+if ((isset($argv[2])) && ($argv[2] == '--set')) {
+    $password = $argv[3];
+}
+
+function SetPassword($password, $generate) {
+    global $zdbh;
+    print "\n";
+    if ($generate == true) {
+        $system_hash = new runtime_hash;
+        $new_hash = $system_hash->RandomSalt();
+        $securityfile = "<?php\n" .
+                "/**\n" .
+                "* Security configuration file.\n" .
+                "* @package zpanelx\n" .
+                "* @subpackage core -> config\n" .
+                "* @author Bobby Allen (ballen@zpanelcp.com)\n" .
+                "* @copyright ZPanel Project (http://www.zpanelcp.com/)\n" .
+                "* @link http://www.zpanelcp.com/\n" .
+                "* @license GPL (http://www.gnu.org/licenses/gpl.html)\n" .
+                "*/\n" .
+                "global \$security;\n" .
+                "\n" .
+                "\$security['server_crypto_key'] = \"" . $new_hash . "\";" .
+                "\n";
+        fs_filehandler::UpdateFile('cnf/security.php', 0755, $securityfile);
+        print "> New server crypto key written to cnf/security.php\n";
+    }
+    if ($generate == true) {
+        $chars = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $randomkey = (string) null;
+        for ($i = 0; $i < 32; $i++)
+            $randomkey.=$chars[rand(0, 63)];
+        ctrl_options::SetSystemOption('apikey', md5($randomkey));
+        print "> New API key has been generated!\n";
+    }
+    $crypto = new runtime_hash;
+    $crypto->SetPassword($password);
+    $randomsalt = $crypto->RandomSalt();
+    $crypto->SetSalt($randomsalt);
+    $new_secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+    $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc = '" . $new_secure_password . "', ac_passsalt_vc = '" . $randomsalt . "' WHERE ac_user_vc = 'zadmin'");
+    $sql->execute();
+    print "> Account password for 'zadmin' has been updated!\n";
+    print "\n";
+}
+
+if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {
+    fwrite(STDOUT, "\nZPanel 'zadmin' account tool\n");
+    fwrite(STDOUT, "Copyright (c) 2008 - 2013 ZPanel Project\n");
+    fwrite(STDOUT, "http://www.zpanelcp.com/\n");
+    fwrite(STDOUT, "Usage: setzadmin [options]\n");
+    fwrite(STDOUT, "Options:\n");
+    fwrite(STDOUT, "  --noregen - Supresses generation of a new API key and system hash.\n");
+    fwrite(STDOUT, "  --set [password] - Sets the new password for the 'zadmin' account.\n");
+    fwrite(STDOUT, "  --help - Displays this text.\n\n");
+    exit(0);
+}
+
+SetPassword($password, $generate);
+?>
