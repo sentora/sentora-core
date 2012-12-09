@@ -407,7 +407,6 @@ class module_controller {
         $sql2->bindParam(':myuserid', $myuserid);
         $sql2->bindParam(':dbid', $dbid);
         $sql2->execute();
-        echo 'start hook here';
         runtime_hook::Execute('OnAfterAddDatabaseAccess');
         self::$ok = true;
         return true;
