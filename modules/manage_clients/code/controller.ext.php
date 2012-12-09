@@ -508,7 +508,7 @@ class module_controller {
         $numrows->execute();
         $client = $numrows->fetch();
         
-        $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk, ud_fullname_vc, ud_group_fk, ud_package_fk, ud_address_tx, ud_postcode_vc, ud_phone_vc, ud_created_ts) VALUES (:userid, :fullname, :packageid, :groupid, :address, :postcode, :phone, :time");
+        $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk, ud_fullname_vc, ud_group_fk, ud_package_fk, ud_address_tx, ud_postcode_vc, ud_phone_vc, ud_created_ts) VALUES (:userid, :fullname, :packageid, :groupid, :address, :postcode, :phone, :time)");
         $sql->bindParam(':userid', $client['ac_id_pk']);
         $sql->bindParam(':fullname', $fullname);
         $sql->bindParam(':packageid', $packageid);
