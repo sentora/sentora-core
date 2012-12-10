@@ -27,11 +27,15 @@ if (!runtime_controller::IsCLI())
     exit(1);
 
 if ((isset($argv[1])) && ($argv[1] == '--set')) {
-    ctrl_options::SetSystemOption($argv[2], $argv[3], false);
+    if (isset($argv[2]) && isset($argv[3])) {
+        ctrl_options::SetSystemOption($argv[2], $argv[3], false);
+    }
 }
 
 if ((isset($argv[1])) && ($argv[1] == '--show')) {
-    echo ctrl_options::GetSystemOption($argv[2]);
+    if (isset($argv[2])) {
+        echo ctrl_options::GetSystemOption($argv[2]);
+    }
 }
 
 if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {
