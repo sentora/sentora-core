@@ -36,11 +36,15 @@ if ((isset($argv[1])) && ($argv[1] == '--noregen')) {
 }
 
 if ((isset($argv[1])) && ($argv[1] == '--set')) {
-    $password = $argv[2];
+    if (isset($argv[2])) {
+        $password = $argv[2];
+    }
 }
 
 if ((isset($argv[2])) && ($argv[2] == '--set')) {
-    $password = $argv[3];
+    if (isset($argv[3])) {
+        $password = $argv[3];
+    }
 }
 
 function SetPassword($password, $generate) {
