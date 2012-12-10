@@ -29,6 +29,7 @@ if (!runtime_controller::IsCLI())
     exit(1);
 
 $generate = true;
+$password = null;
 
 if ((isset($argv[1])) && ($argv[1] == '--noregen')) {
     $generate = false;
@@ -45,42 +46,46 @@ if ((isset($argv[2])) && ($argv[2] == '--set')) {
 function SetPassword($password, $generate) {
     global $zdbh;
     print "\n";
-    if ($generate == true) {
-        $system_hash = new runtime_hash;
-        $new_hash = $system_hash->RandomSalt();
-        $securityfile = "<?php\n" .
-                "/**\n" .
-                "* Security configuration file.\n" .
-                "* @package zpanelx\n" .
-                "* @subpackage core -> config\n" .
-                "* @author Bobby Allen (ballen@zpanelcp.com)\n" .
-                "* @copyright ZPanel Project (http://www.zpanelcp.com/)\n" .
-                "* @link http://www.zpanelcp.com/\n" .
-                "* @license GPL (http://www.gnu.org/licenses/gpl.html)\n" .
-                "*/\n" .
-                "global \$security;\n" .
-                "\n" .
-                "\$security['server_crypto_key'] = \"" . $new_hash . "\";" .
-                "\n";
-        fs_filehandler::UpdateFile('cnf/security.php', 0755, $securityfile);
-        print "> New server crypto key written to cnf/security.php\n";
+    if ($password != null) {
+        if ($generate == true) {
+            $system_hash = new runtime_hash;
+            $new_hash = $system_hash->RandomSalt();
+            $securityfile = "<?php\n" .
+                    "/**\n" .
+                    "* Security configuration file.\n" .
+                    "* @package zpanelx\n" .
+                    "* @subpackage core -> config\n" .
+                    "* @author Bobby Allen (ballen@zpanelcp.com)\n" .
+                    "* @copyright ZPanel Project (http://www.zpanelcp.com/)\n" .
+                    "* @link http://www.zpanelcp.com/\n" .
+                    "* @license GPL (http://www.gnu.org/licenses/gpl.html)\n" .
+                    "*/\n" .
+                    "global \$security;\n" .
+                    "\n" .
+                    "\$security['server_crypto_key'] = \"" . $new_hash . "\";" .
+                    "\n";
+            fs_filehandler::UpdateFile('cnf/security.php', 0755, $securityfile);
+            print "> New server crypto key written to cnf/security.php\n";
+        }
+        if ($generate == true) {
+            $chars = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            $randomkey = (string) null;
+            for ($i = 0; $i < 32; $i++)
+                $randomkey.=$chars[rand(0, 63)];
+            ctrl_options::SetSystemOption('apikey', md5($randomkey));
+            print "> New API key has been generated!\n";
+        }
+        $crypto = new runtime_hash;
+        $crypto->SetPassword($password);
+        $randomsalt = $crypto->RandomSalt();
+        $crypto->SetSalt($randomsalt);
+        $new_secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc = '" . $new_secure_password . "', ac_passsalt_vc = '" . $randomsalt . "' WHERE ac_user_vc = 'zadmin'");
+        $sql->execute();
+        print "> Account password for 'zadmin' has been updated!\n";
+    } else {
+        print "Error: No password was specified, no actions have been carried out!\n";
     }
-    if ($generate == true) {
-        $chars = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        $randomkey = (string) null;
-        for ($i = 0; $i < 32; $i++)
-            $randomkey.=$chars[rand(0, 63)];
-        ctrl_options::SetSystemOption('apikey', md5($randomkey));
-        print "> New API key has been generated!\n";
-    }
-    $crypto = new runtime_hash;
-    $crypto->SetPassword($password);
-    $randomsalt = $crypto->RandomSalt();
-    $crypto->SetSalt($randomsalt);
-    $new_secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
-    $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc = '" . $new_secure_password . "', ac_passsalt_vc = '" . $randomsalt . "' WHERE ac_user_vc = 'zadmin'");
-    $sql->execute();
-    print "> Account password for 'zadmin' has been updated!\n";
     print "\n";
 }
 
@@ -90,7 +95,7 @@ if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1
     fwrite(STDOUT, "http://www.zpanelcp.com/\n");
     fwrite(STDOUT, "Usage: setzadmin [options]\n");
     fwrite(STDOUT, "Options:\n");
-    fwrite(STDOUT, "  --noregen - Supresses generation of a new API key and system hash.\n");
+    fwrite(STDOUT, "  --noregen - Suppresses generation of a new API key and system hash.\n");
     fwrite(STDOUT, "  --set [password] - Sets the new password for the 'zadmin' account.\n");
     fwrite(STDOUT, "  --help - Displays this text.\n\n");
     exit(0);
