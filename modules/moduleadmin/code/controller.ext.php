@@ -184,7 +184,8 @@ class module_controller {
     static function ModuleStatusIcon($mo_id_pk) {
         global $zdbh;
         global $controller;
-        $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = '" . $mo_id_pk . "'");
+        $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = :mo_id_pk");
+        $modsql->bindParam(':mo_id_pk', $mo_id_pk);
         $modsql->execute();
         $modulestatus = $modsql->fetch();
         if ($modulestatus['mo_enabled_en'] == 'false') {
@@ -214,8 +215,10 @@ class module_controller {
                         }
                     }
                     $sql2 = $zdbh->prepare("UPDATE x_modules SET mo_enabled_en = :enabled, mo_category_fk = :category WHERE mo_id_pk = :moduleid");
-                    $sql2->bindParam(':enabled', $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . ''));
-                    $sql2->bindParam(':category', $controller->GetControllerRequest('FORM', 'inCategory_' . $rowmodule['mo_id_pk'] . ''));
+                    $disable = $controller->GetControllerRequest('FORM', 'inDisable_' . $rowmodule['mo_id_pk'] . '');
+                    $category = $controller->GetControllerRequest('FORM', 'inCategory_' . $rowmodule['mo_id_pk'] . '');
+                    $sql2->bindParam(':enabled', $disable);
+                    $sql2->bindParam(':category', $category);
                     $sql2->bindParam(':moduleid', $rowmodule['mo_id_pk']);
                     $sql2->execute();
                 }
@@ -308,7 +311,12 @@ class module_controller {
     static function getModuleUpdateURL() {
         global $controller;
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_updateurl_tx FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        //$retval = $zdbh->query("SELECT mo_updateurl_tx FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        $numrows = $zdbh->prepare("SELECT mo_updateurl_tx FROM x_modules WHERE mo_folder_vc = :info");
+        $info = $controller->GetControllerRequest('URL', 'showinfo');
+        $numrows->bindParam(':info', $info);
+        $numrows->execute();
+        $retval = $numrows->fetch();
         $retval = $retval['mo_updateurl_tx'];
         return $retval;
     }
@@ -316,7 +324,12 @@ class module_controller {
     static function getLatestVersion() {
         global $controller;
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_updatever_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        //$retval = $zdbh->query("SELECT mo_updatever_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        $numrows = $zdbh->prepare("SELECT mo_updatever_vc FROM x_modules WHERE mo_folder_vc = :info");
+        $info = $controller->GetControllerRequest('URL', 'showinfo');
+        $numrows->bindParam(':info', $info);
+        $numrows->execute();
+        $retval = $numrows->fetch();
         $retval = $retval['mo_updatever_vc'];
         return $retval;
     }
@@ -324,7 +337,12 @@ class module_controller {
     static function getModuleType() {
         global $controller;
         global $zdbh;
-        $retval = $zdbh->query("SELECT mo_type_en FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        //$retval = $zdbh->query("SELECT mo_type_en FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
+        $numrows = $zdbh->prepare("SELECT mo_type_en FROM x_modules WHERE mo_folder_vc = :info");
+        $info = $controller->GetControllerRequest('URL', 'showinfo');
+        $numrows->bindParam(':info', $info);
+        $numrows->execute();
+        $retval = $numrows->fetch();
         $retval = $retval['mo_type_en'];
         return $retval;
     }
