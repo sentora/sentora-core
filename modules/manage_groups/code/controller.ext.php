@@ -70,7 +70,7 @@ class module_controller {
         $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':gid', $gid);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
