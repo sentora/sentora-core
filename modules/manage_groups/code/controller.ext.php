@@ -90,10 +90,14 @@ class module_controller {
 
     static function ListDefaultGroups($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . "";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:uid";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
+        //$numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
@@ -113,10 +117,16 @@ class module_controller {
 
     static function GroupMoveTo($uid, $gid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . " AND ug_id_pk <> " . $gid . "";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:uid AND ug_id_pk <> :gid";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->bindParam(':gid', $gid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
+            $sql->bindParam(':gid', $gid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
@@ -155,18 +165,22 @@ class module_controller {
         if ($mgid != "") {
             $sql = $zdbh->prepare("
             UPDATE x_accounts
-            SET ac_group_fk = " . $mgid . "
-            WHERE ac_group_fk = " . $gid . "");
+            SET ac_group_fk = :mgid
+            WHERE ac_group_fk = :gid");
+            $sql->bindParam(':mgid', $mgid);
+            $sql->bindParam(':gid', $gid);
             $sql->execute();
             $sql = $zdbh->prepare("
             DELETE FROM x_groups
-            WHERE ug_id_pk = " . $gid . "");
+            WHERE ug_id_pk = :gid");
+            $sql->bindParam(':gid', $gid);
             $sql->execute();
             return true;
         } else {
             $sql = $zdbh->prepare("
             DELETE FROM x_groups
-            WHERE ug_id_pk = " . $gid . "");
+            WHERE ug_id_pk = :gid");
+            $sql->bindParam(':gid', $gid);
             $sql->execute();
             return true;
         }
