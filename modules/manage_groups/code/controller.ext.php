@@ -63,10 +63,10 @@ class module_controller {
 
     static function ListGroups($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:gid";
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:uid";
         //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':gid', $gid);
+        $numrows->bindParam(':uid', $uid);
         $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
