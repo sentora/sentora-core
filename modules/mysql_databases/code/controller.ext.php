@@ -36,10 +36,14 @@ class module_controller {
      */
     static function ListDatabases($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_mysql_databases WHERE my_acc_fk=" . $uid . " AND my_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mysql_databases WHERE my_acc_fk=:uid AND my_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
@@ -58,10 +62,14 @@ class module_controller {
 
     static function ListCurrentDatabases($mysqlid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $mysqlid . " AND my_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_mysql_databases WHERE my_id_pk=:mysqlid AND my_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':mysqlid', $mysqlid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':mysqlid', $mysqlid);
             $res = array();
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
@@ -86,7 +94,9 @@ class module_controller {
         }
         runtime_hook::Execute('OnBeforeCreateDatabase');
         try {
-            $sql = $zdbh->prepare("CREATE DATABASE `" . $currentuser['username'] . "_" . $databasename . "` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
+            $sql = $zdbh->prepare("CREATE DATABASE `:db` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
+            $db = $currentuser['username'] . "_" . $databasename;
+            $sql->bindParam(':db', $db, PDO::PARAM_STR);
             $sql->execute();
             $sql = $zdbh->prepare("FLUSH PRIVILEGES");
             $sql->execute();
@@ -94,9 +104,15 @@ class module_controller {
 									my_acc_fk,
 									my_name_vc,
 									my_created_ts) VALUES (
-									" . $currentuser['userid'] . ",
-									'" . $currentuser['username'] . "_" . $databasename . "',
-									" . time() . ")");
+									:userid,
+									:name,
+									:time)");
+            $time = time();
+            $name = $currentuser['username'] . "_" . $databasename;
+            
+            $sql->bindParam(':userid', $currentuser['userid']);
+            $sql->bindParam(':time', $time);
+            $sql->bindParam(':name', $name);
             $sql->execute();
         } catch (PDOException $e) {
             return false;
@@ -119,8 +135,12 @@ class module_controller {
             return false;
         }
         # Check to make sure the database is not a duplicate...
-        $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_name_vc='" . $username . "_" . $databasename . "' AND my_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_mysql_databases WHERE my_name_vc=:dbName AND my_deleted_ts IS NULL";
+        $dbName = $username . "_" . $databasename;
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':dbName', $dbName);
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 self::$alreadyexists = true;
                 return false;
@@ -133,20 +153,29 @@ class module_controller {
     static function ExecuteDeleteDatabase($my_id_pk) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteDatabase');
-        $rowmysql = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $my_id_pk . "")->fetch();
+        //$rowmysql = $zdbh->query("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=" . $my_id_pk . "")->fetch();
+        $numrows = $zdbh->prepare("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=:my_id_pk");
+        $numrows->bindParam(':my_id_pk', $my_id_pk);
+        $numrows->execute();
+        $rowmysql = $numrows->fetch();
         try {
-            $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `" . $rowmysql['my_name_vc'] . "`;");
+            $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `:my_name_vc`;");
+            $sql->bindParam(':my_name_vc', $rowmysql['my_name_vc'], PDO::PARAM_STR);
             $sql->execute();
             $sql = $zdbh->prepare("FLUSH PRIVILEGES");
             $sql->execute();
             $sql = $zdbh->prepare("
 			UPDATE x_mysql_databases 
-			SET my_deleted_ts = '" . time() . "' 
-			WHERE my_id_pk = '" . $my_id_pk . "'");
+			SET my_deleted_ts = :time 
+			WHERE my_id_pk = :my_id_pk");
+            $time = time();
+            $sql->bindParam(':time', $time);
+            $sql->bindParam(':my_id_pk', $my_id_pk);
             $sql->execute();
             $sql = $zdbh->prepare("
 			DELETE FROM x_mysql_dbmap 
-			WHERE mm_database_fk=" . $my_id_pk . "");
+			WHERE mm_database_fk=:my_id_pk");
+            $sql->bindParam(':my_id_pk', $my_id_pk);
             $sql->execute();
         } catch (PDOException $e) {
             return false;
