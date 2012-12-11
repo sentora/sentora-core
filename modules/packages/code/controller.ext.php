@@ -39,14 +39,22 @@ class module_controller {
      */
     static function ListPackages($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:uid AND pk_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowpackages = $sql->fetch()) {
-                $numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . " AND ac_deleted_ts IS NULL")->fetchColumn();
+                //$numrows = $zdbh->query("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=" . $rowpackages['pk_id_pk'] . " AND ac_deleted_ts IS NULL")->fetchColumn();
+                $numrows = $zdbh->prepare("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=:pk_id_pk AND ac_deleted_ts IS NULL");
+                $numrows->bindParam(':pk_id_pk', $rowpackages['pk_id_pk']);
+                $numrows->execute();
+                $numrows->fetchColumn(); 
                 array_push($res, array('packageid' => $rowpackages['pk_id_pk'],
                     'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowpackages['pk_created_ts']),
                     'clients' => $numrows[0],
@@ -62,10 +70,14 @@ class module_controller {
         global $zdbh;
         $sql = "SELECT * FROM x_packages 
 				LEFT JOIN x_quotas  ON (x_packages.pk_id_pk=x_quotas.qt_package_fk) 
-				WHERE pk_id_pk=" . $id . " AND pk_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+				WHERE pk_id_pk=:id AND pk_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':id', $id);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':id', $id);
             $res = array();
             $sql->execute();
             while ($rowpackages = $sql->fetch()) {
@@ -116,18 +128,25 @@ class module_controller {
         runtime_hook::Execute('OnBeforeDeletePackage');
         $sql = $zdbh->prepare("
             UPDATE x_accounts
-            SET ac_package_fk = " . $mpk_id_pk . "
-            WHERE ac_package_fk = " . $pk_id_pk . "");
+            SET ac_package_fk = :mpk_id_pk
+            WHERE ac_package_fk =:pk_id_pk");
+        $sql->bindParam(':mpk_id_pk', $mpk_id_pk);
+        $sql->bindParam(':pk_id_pk', $pk_id_pk);
         $sql->execute();
         $sql = $zdbh->prepare("
             UPDATE x_profiles
-            SET ud_package_fk = " . $mpk_id_pk . "
-            WHERE ud_package_fk = " . $pk_id_pk . "");
+            SET ud_package_fk = :mpk_id_pk
+            WHERE ud_package_fk = :pk_id_pk");
+        $sql->bindParam(':mpk_id_pk', $mpk_id_pk);
+        $sql->bindParam(':pk_id_pk', $pk_id_pk);
         $sql->execute();
         $sql = $zdbh->prepare("
 			UPDATE x_packages 
-			SET pk_deleted_ts = '" . time() . "' 
-			WHERE pk_id_pk = '" . $pk_id_pk . "'");
+			SET pk_deleted_ts = :time 
+			WHERE pk_id_pk = :pk_id_pk");
+        $time = time();
+        $sql->bindParam(':time', $time);
+        $sql->bindParam(':pk_id_pk', $pk_id_pk);
         $sql->execute();
         runtime_hook::Execute('OnAfterDeletePackage');
         self::$ok = true;
@@ -151,11 +170,20 @@ class module_controller {
 										pk_enablephp_in,
 										pk_enablecgi_in,
 										pk_created_ts) VALUES (
-										" . $uid . ",
-										'" . addslashes($packagename) . "',
-										" . fs_director::GetCheckboxValue($EnablePHP) . ",
-										" . fs_director::GetCheckboxValue($EnableCGI) . ",
-										" . time() . ");");
+										:uid,
+										:packagename,
+										:php,
+										:cgi,
+										:time);");
+        $php = fs_director::GetCheckboxValue($EnablePHP);
+        $cgi = fs_director::GetCheckboxValue($EnableCGI);
+        $sql->bindParam(':php', $php);
+        $sql->bindParam(':cgi', $cgi);
+        $sql->bindParam(':uid', $uid);
+        $time = time();
+        $sql->bindParam(':time', $time);
+        $pack = addslashes($packagename);
+        $sql->bindParam(':packagename', $pack);
         $sql->execute();
         # Now lets pull back the package ID so we can use it in the other tables we are about to manipulate.
         $package = $zdbh->query("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_name_vc='" . $packagename . "' AND pk_deleted_ts IS NULL")->Fetch();
@@ -170,17 +198,30 @@ class module_controller {
 										qt_mysql_in,
 										qt_diskspace_bi,
 										qt_bandwidth_bi) VALUES (
-										" . $package['pk_id_pk'] . ",
-										" . $Domains . ",
-										" . $SubDomains . ",
-										" . $ParkedDomains . ",
-										" . $Mailboxes . ",
-										" . $Fowarders . ",
-										" . $DistLists . ",
-										" . $FTPAccounts . ",
-										" . $MySQL . ",
-										" . ($DiskQuota * 1024000) . ",
-										" . ($BandQuota * 1024000) . ")");
+										:pk_id_pk,
+										:Domains,
+										:SubDomains,
+										:ParkedDomains,
+										:Mailboxes,
+										:Fowarders,
+										:DistLists,
+										:FTPAccounts,
+										:MySQL,
+										:DiskQuotaFinal,
+										:BandQuotaFinal)");
+        $DiskQuotaFinal = $DiskQuota * 1024000;
+        $BandQuotaFinal = $BandQuota * 1024000;
+        $sql->bindParam(':DiskQuotaFinal', $DiskQuotaFinal);
+        $sql->bindParam(':BandQuotaFinal', $BandQuotaFinal);
+        $sql->bindParam(':MySQL', $MySQL);
+        $sql->bindParam(':DistLists', $DistLists);
+        $sql->bindParam(':Fowarders', $Fowarders);
+        $sql->bindParam(':Mailboxes', $Mailboxes);
+        $sql->bindParam(':SubDomains', $SubDomains);
+        $sql->bindParam(':FTPAccounts', $FTPAccounts);
+        $sql->bindParam(':ParkedDomains', $ParkedDomains);
+        $sql->bindParam(':Domains', $Domains);
+        $sql->bindParam(':pk_id_pk', $package['pk_id_pk']);
         $sql->execute();
         runtime_hook::Execute('OnAfterCreatePackage');
         self::$ok = true;
@@ -198,22 +239,41 @@ class module_controller {
             return false;
         }
         runtime_hook::Execute('OnBeforeUpdatePackage');
-        $sql = $zdbh->prepare("UPDATE x_packages SET pk_name_vc='" . $packagename . "',
-								pk_enablephp_in =" . fs_director::GetCheckboxValue($EnablePHP) . ",
-								pk_enablecgi_in =" . fs_director::GetCheckboxValue($EnableCGI) . " 
-								WHERE pk_id_pk  =" . $pid . "");
+        $sql = $zdbh->prepare("UPDATE x_packages SET pk_name_vc=:packagename,
+								pk_enablephp_in = :php,
+								pk_enablecgi_in = :cgi 
+								WHERE pk_id_pk  = :pid");
+        
+        $php = fs_director::GetCheckboxValue($EnablePHP);
+        $cgi = fs_director::GetCheckboxValue($EnableCGI);
+        $sql->bindParam(':php', $php);
+        $sql->bindParam(':cgi', $cgi);
+        $sql->bindParam(':pid', $pid);
+        $sql->bindParam(':packagename', $packagename);
         $sql->execute();
-        $sql = $zdbh->prepare("UPDATE x_quotas SET qt_domains_in = " . $Domains . ", 
-								qt_parkeddomains_in =" . $ParkedDomains . ",
-								qt_ftpaccounts_in   =" . $FTPAccounts . ",
-								qt_subdomains_in    =" . $SubDomains . ",
-								qt_mailboxes_in     =" . $Mailboxes . ",
-								qt_fowarders_in     =" . $Fowarders . ",
-								qt_distlists_in     =" . $DistLists . ",
-								qt_diskspace_bi     =" . ($DiskQuota * 1024000) . ",
-								qt_bandwidth_bi     =" . ($BandQuota * 1024000) . " ,
-								qt_mysql_in         =" . $MySQL . "
-								WHERE qt_package_fk =" . $pid . "");
+        $sql = $zdbh->prepare("UPDATE x_quotas SET qt_domains_in = :Domains, 
+								qt_parkeddomains_in = :ParkedDomains,
+								qt_ftpaccounts_in   = :FTPAccounts,
+								qt_subdomains_in    = :SubDomains,
+								qt_mailboxes_in     = :Mailboxes,
+								qt_fowarders_in     = :Fowarders,
+								qt_distlists_in     = :DistLists,
+								qt_diskspace_bi     = :DiskQuotaFinal,
+								qt_bandwidth_bi     = :BandQuotaFinal,
+								qt_mysql_in         = :pid");
+        $DiskQuotaFinal = $DiskQuota * 1024000;
+        $BandQuotaFinal = $BandQuota * 1024000;
+        $sql->bindParam(':DiskQuotaFinal', $DiskQuotaFinal);
+        $sql->bindParam(':BandQuotaFinal', $BandQuotaFinal);
+        //$sql->bindParam(':MySQL', $MySQL);
+        $sql->bindParam(':DistLists', $DistLists);
+        $sql->bindParam(':Fowarders', $Fowarders);
+        $sql->bindParam(':Mailboxes', $Mailboxes);
+        $sql->bindParam(':SubDomains', $SubDomains);
+        $sql->bindParam(':FTPAccounts', $FTPAccounts);
+        $sql->bindParam(':ParkedDomains', ParkedDomains);
+        $sql->bindParam(':Domains', $Domains);
+        $sql->bindParam(':pid', $pid);
         $sql->execute();
         runtime_hook::Execute('OnAfterUpdatePackage');
         self::$ok = true;
@@ -225,8 +285,15 @@ class module_controller {
         $packagename = str_replace(' ', '', $packagename);
         # Check to make sure the packagename is not blank or exists for reseller before we go any further...
         if (!fs_director::CheckForEmptyValue($packagename)) {
-            $sql = "SELECT COUNT(*) FROM x_packages WHERE UPPER(pk_name_vc)='" . addslashes(strtoupper($packagename)) . "' AND pk_reseller_fk=" . $uid . " AND pk_id_pk !=" . $pid . " AND pk_deleted_ts IS NULL";
-            if ($numrows = $zdbh->query($sql)) {
+            $sql = "SELECT COUNT(*) FROM x_packages WHERE UPPER(pk_name_vc)=:packageNameSlashes AND pk_reseller_fk=:uid AND pk_id_pk !=:pid AND pk_deleted_ts IS NULL";
+            $packageNameSlashes = addslashes(strtoupper($packagename));
+            
+            $numrows = $zdbh->prepare($sql);
+            $numrows->bindParam(':packageNameSlashes', $packageNameSlashes);
+            $numrows->bindParam(':uid', $uid);
+            $numrows->bindParam(':pid', $pid);       
+            
+            if ($numrows->execute()) {
                 if ($numrows->fetchColumn() <> 0) {
                     self::$alreadyexists = true;
                     return false;
@@ -273,15 +340,22 @@ class module_controller {
 
     static function AddDefaultPackageTime($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:uid AND pk_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $sql->execute();
             while ($rowpackages = $sql->fetch()) {
                 if ($rowpackages['pk_created_ts'] == "") {
-                    $add = $zdbh->prepare("UPDATE x_packages SET pk_created_ts=" . time() . "
-									WHERE pk_id_pk  =" . $rowpackages['pk_id_pk'] . "");
+                    $add = $zdbh->prepare("UPDATE x_packages SET pk_created_ts=:time
+									WHERE pk_id_pk  =:pk_id_pk");
+                    $time = time();
+                    $add->bindParam(':time', $time);
+                    $add->bindParam(':pk_id_pk', $rowpackages['pk_id_pk']);
                     $add->execute();
                 }
             }
