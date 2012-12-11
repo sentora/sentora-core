@@ -42,10 +42,14 @@ class module_controller {
      */
     static function GroupInfo($gid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_groups WHERE ug_id_pk=" . $gid . "";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_groups WHERE ug_id_pk=:gid";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':gid', $gid);
+        $numrows->execute();
+        //$numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':gid', $gid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
@@ -59,10 +63,14 @@ class module_controller {
 
     static function ListGroups($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=" . $uid . "";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:gid";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':gid', $gid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':gid', $gid);
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
