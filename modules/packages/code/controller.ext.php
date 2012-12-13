@@ -186,7 +186,14 @@ class module_controller {
         $sql->bindParam(':packagename', $pack);
         $sql->execute();
         # Now lets pull back the package ID so we can use it in the other tables we are about to manipulate.
-        $package = $zdbh->query("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_name_vc='" . $packagename . "' AND pk_deleted_ts IS NULL")->Fetch();
+        //$package = $zdbh->query("SELECT * FROM x_packages WHERE pk_reseller_fk=" . $uid . " AND pk_name_vc='" . $packagename . "' AND pk_deleted_ts IS NULL")->Fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_reseller_fk=:uid AND pk_name_vc=:packagename AND pk_deleted_ts IS NULL");
+        $numrows->bindParam(':uid', $uid);
+        $numrows->bindParam(':packagename', $packagename);
+        $numrows->execute();
+        $package = $numrows->fetch();
+
+        
         $sql = $zdbh->prepare("INSERT INTO x_quotas (qt_package_fk,
 										qt_domains_in,
 										qt_subdomains_in,
@@ -271,7 +278,7 @@ class module_controller {
         $sql->bindParam(':Mailboxes', $Mailboxes);
         $sql->bindParam(':SubDomains', $SubDomains);
         $sql->bindParam(':FTPAccounts', $FTPAccounts);
-        $sql->bindParam(':ParkedDomains', ParkedDomains);
+        $sql->bindParam(':ParkedDomains', $ParkedDomains);
         $sql->bindParam(':Domains', $Domains);
         $sql->bindParam(':pid', $pid);
         $sql->execute();
