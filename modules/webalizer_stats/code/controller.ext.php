@@ -10,10 +10,15 @@ class module_controller {
     static function ListDomains($uid) {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk='" . $currentuser['userid'] . "' AND vh_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->execute();
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':userid', $currentuser['userid']);
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
