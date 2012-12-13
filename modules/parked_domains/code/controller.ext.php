@@ -40,10 +40,14 @@ class module_controller {
      */
     static function ListParkedDomains($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL AND vh_type_in=3 ORDER BY vh_name_vc ASC";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:uid AND vh_deleted_ts IS NULL AND vh_type_in=3 ORDER BY vh_name_vc ASC";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowdomains = $sql->fetch()) {
@@ -61,10 +65,14 @@ class module_controller {
 
     static function ListCurrentDomain($uid) {
         global $zdbh;
-        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $uid . " AND vh_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
+        $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:uid AND vh_deleted_ts IS NULL";
+        //$numrows = $zdbh->query($sql);
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             while ($rowdomains = $sql->fetch()) {
@@ -85,8 +93,11 @@ class module_controller {
         $retval = FALSE;
         runtime_hook::Execute('OnBeforeDeleteParkedDomain');
         $sql = $zdbh->prepare("UPDATE x_vhosts 
-							   SET vh_deleted_ts=" . time() . " 
-							   WHERE vh_id_pk=" . $id . "");
+							   SET vh_deleted_ts=:time 
+							   WHERE vh_id_pk=:id");
+        $sql->bindParam(':id', $id);
+        $time = time();
+        $sql->bindParam(':time', $time);
         $sql->execute();
         self::SetWriteApacheConfigTrue();
         $retval = TRUE;
@@ -108,11 +119,15 @@ class module_controller {
 														 vh_directory_vc,
 														 vh_type_in,
 														 vh_created_ts) VALUES (
-														 " . $currentuser['userid'] . ",
-														 '" . $domain . "',
+														 :userid,
+														 :domain,
 														 '',
 														 3,
-														 " . time() . ")");
+														 :time)");
+            $sql->bindParam(':userid', $currentuser['userid']);
+            $sql->bindParam(':domain', $domain);
+            $time = time();
+            $sql->bindParam(':time', $time);
             $sql->execute();
             # Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
@@ -150,8 +165,11 @@ class module_controller {
             return FALSE;
         }
         // Check to see if the domain already exists in ZPanel somewhere and redirect if it does....
-        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc='" . $domain . "' AND vh_deleted_ts IS NULL";
-        if ($numrows = $zdbh->query($sql)) {
+        $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc=:domain AND vh_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':domain', $domain);
+        
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() > 0) {
                 self::$alreadyexists = TRUE;
                 return FALSE;
@@ -170,7 +188,9 @@ class module_controller {
             foreach ($part as $check) {
                 if (!in_array($check, $SharedDomains)) {
                     if (strlen($check) > 3) {
-                        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_name_vc LIKE '%" . $check . "%' AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+                        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_name_vc LIKE :Checked AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+                        $Checked = '%' . $check . '%';
+                        $sql->bindParam(':Checked', $Checked);
                         $sql->execute();
                         while ($rowcheckdomains = $sql->fetch()) {
                             $subpart = explode('.', $rowcheckdomains['vh_name_vc']);
