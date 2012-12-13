@@ -34,13 +34,24 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['username'] == 'zadmin') {
             $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->execute();        
         } else {
-            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->bindParam(':userid', $currentuser['userid']);
+            $numrows->execute();        
         }
 
-        $numrows = $zdbh->query($sql);
+        //$numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
+            if ($currentuser['username'] == 'zadmin') {
+               //noi bind needed
+            } else {
+                //bind the username
+                $sql->bindParam(':userid', $currentuser['userid']);
+            }
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
@@ -67,12 +78,21 @@ class module_controller {
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['username'] == 'zadmin') {
             $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
+            $numrows = $zdbh->prepare($sql);          
         } else {
-            $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = '" . $currentuser['userid'] . "' AND ac_deleted_ts IS NULL";
+            $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL";
+            $numrows = $zdbh->prepare($sql);
+            $numrows->bindParam(':userid', $currentuser['userid']);            
         }
-        if ($numrows = $zdbh->query($sql)) {
+        if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 $sql = $zdbh->prepare($sql);
+                if ($currentuser['username'] == 'zadmin') {
+                    //no bind needed
+                } else {
+                    //bind the username
+                    $sql->bindParam(':userid', $currentuser['userid']);
+                }
                 $sql->execute();
                 while ($rowclients = $sql->fetch()) {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inShadow_' . $rowclients['ac_id_pk']))) {
