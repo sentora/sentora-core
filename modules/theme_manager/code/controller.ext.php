@@ -44,9 +44,12 @@ class module_controller {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_accounts
-            SET ac_usertheme_vc = '" . $theme . "'
-            WHERE ac_reseller_fk = " . $uid . "
-            OR ac_id_pk = " . $uid . "");
+            SET ac_usertheme_vc = :theme
+            WHERE ac_reseller_fk = :uid
+            OR ac_id_pk = :uid2");
+        $sql->bindParam(':theme', $theme);
+        $sql->bindParam(':uid', $uid);
+        $sql->bindParam(':uid2', $uid);
         $sql->execute();
         return true;
     }
@@ -55,9 +58,12 @@ class module_controller {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_accounts
-            SET ac_usercss_vc = '" . $css . "'
-            WHERE ac_reseller_fk = " . $uid . "
-            OR ac_id_pk = " . $uid . "");
+            SET ac_usercss_vc = :css
+            WHERE ac_reseller_fk = :uid
+            OR ac_id_pk = :uid2");
+        $sql->bindParam(':css', $css);
+        $sql->bindParam(':uid', $uid);
+        $sql->bindParam(':uid2', $uid);
         $sql->execute();
         return true;
     }
@@ -68,7 +74,11 @@ class module_controller {
 
     static function ExecuteShowCurrentCSS($uid) {
         global $zdbh;
-        $result = $zdbh->query("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_pk = " . $uid . "")->Fetch();
+        //$result = $zdbh->query("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_pk = " . $uid . "")->Fetch();
+        $numrows = $zdbh->prepare("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_pk = :uid");
+        $numrows->bindParam(':uid', $uid);
+        $numrows->execute();
+        $result = $numrows->fetch();
         if ($result) {
             return $result['ac_usercss_vc'];
         } else {
