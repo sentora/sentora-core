@@ -17,9 +17,16 @@ function DeleteSubDomainsForDeletedClient() {
     }
     foreach ($deletedclients as $deletedclient) {
         $deletedir = false;
-        $result = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $deletedclient . " AND vh_type_in=2 AND vh_deleted_ts IS NULL")->Fetch();
+        //$result = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_acc_fk=:deletedclient AND vh_type_in=2 AND vh_deleted_ts IS NULL")->Fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=:deletedclient AND vh_type_in=2 AND vh_deleted_ts IS NULL");
+        $numrows->bindParam(':deletedclient', $deletedclient);
+        $numrows->execute();
+        $result = $numrows->fetch();
         if ($result) {
-            $sql = $zdbh->prepare("UPDATE x_vhosts SET vh_deleted_ts=" . time() . " WHERE vh_acc_fk=" . $deletedclient . " AND vh_type_in=2");
+            $sql = $zdbh->prepare("UPDATE x_vhosts SET vh_deleted_ts=:time WHERE vh_acc_fk=:deletedclient AND vh_type_in=2");
+            $sql->bindParam(':deletedclient', $deletedclient);
+            $time = time();
+            $sql->bindParam(':time', $time);
             $sql->execute();
             $deletedir = true;
         }
