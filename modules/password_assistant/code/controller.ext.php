@@ -67,8 +67,11 @@ class module_controller {
                     self::$badpassword = true;
                     return false;
                 }
-                // Check that the new password matches the confirmation box. - Needs SQLi Protection added here!!!!!!
-                $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . $new_secure_password . "', ac_passsalt_vc= '" . $randomsalt . "' WHERE ac_id_pk=" . $currentuser['userid'] . "");
+                // Check that the new password matches the confirmation box.
+                $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc=:new_secure_password, ac_passsalt_vc= :randomsalt WHERE ac_id_pk=:userid");
+                $sql->bindParam(':randomsalt', $randomsalt);
+                $sql->bindParam(':new_secure_password', $new_secure_password);
+                $sql->bindParam(':userid', $currentuser['userid']);
                 $sql->execute();
                 self::$error = "ok";
             } else {
@@ -114,7 +117,10 @@ class module_controller {
         $randomsalt = $crypto->RandomSalt();
         $crypto->SetSalt($randomsalt);
         $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc='" . $secure_password . "', ac_passsalt_vc= '" . $randomsalt . "' WHERE ac_id_pk=" . $uid . "");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_pass_vc=:secure_password, ac_passsalt_vc= :randomsalt WHERE ac_id_pk=:userid");
+        $sql->bindParam(':randomsalt', $randomsalt);
+        $sql->bindParam(':secure_password', $secure_password);
+        $sql->bindParam(':userid', $uid);
         $sql->execute();
         return true;
     }
