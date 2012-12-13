@@ -16,8 +16,10 @@ class runtime_sessionsecurity {
     
     // on login 
         //set 
-            //ip
-            //user agant
+            //ip session
+            //user agent session 
+            //cookie salt
+            //zUser session
    
     /*****The below are generic function used more than once*****/
     public function sessionRegen(){
@@ -41,7 +43,8 @@ class runtime_sessionsecurity {
     public function userSpeficData(){
         $ip = $_SESSION['ip'];
         $username = $_SESSION['zUser'];
-        return $ip.$username;
+        $userSalt = $_COOKIE['zUserSalt'];
+        return $ip.$username.$userSalt;
     }
     
     
@@ -53,7 +56,7 @@ class runtime_sessionsecurity {
      */
     public function setUserAgent(){
         
-        if($_SESSION['HTTP_USER_AGENT'] = sha1($_SERVER['HTTP_USER_AGENT'] . $this->userSpeficData())){
+        if($_SESSION['HTTP_USER_AGENT'] = sha1($_SERVER['HTTP_USER_AGENT'],$this->userSpeficData())){
             return true;
         }else{
             return false;
@@ -67,7 +70,7 @@ class runtime_sessionsecurity {
      */
     public function setUserIP(){
         
-        if($_SESSION['ip'] = sha1($this->findIP() . $this->userSpeficData())){
+        if($_SESSION['ip'] = sha1($this->findIP(), $this->userSpeficData())){
             return true;
         }else{
             return false;
@@ -101,7 +104,7 @@ class runtime_sessionsecurity {
      * @return string The data.
      */
     public function getProviedUserAgent(){
-        return sha1($_SERVER['HTTP_USER_AGENT'] . $this->userSpeficData());
+        return sha1($_SERVER['HTTP_USER_AGENT'], $this->userSpeficData());
     }
     
     /**
@@ -110,7 +113,7 @@ class runtime_sessionsecurity {
      * @return string The data.
      */
     public function getProviedIP(){
-        return sha1($this->findIP() . $this->userSpeficData());
+        return sha1($this->findIP(), $this->userSpeficData());
     }
     
     
@@ -148,6 +151,17 @@ class runtime_sessionsecurity {
         }
     }
     
+    /**
+     * This checks wheather the user is behind a proxy
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return string The data.
+     */
+    public function checkProxy(){
+        if ($_SERVER['HTTP_X_FORWARDED_FOR']|| $_SERVER['HTTP_X_FORWARDED']|| $_SERVER['HTTP_FORWARDED_FOR']|| $_SERVER['HTTP_CLIENT_IP']|| $_SERVER['HTTP_VIA']|| in_array($_SERVER['REMOTE_PORT'], array(8080,80,6588,8000,3128,553,554))|| @fsockopen($_SERVER['REMOTE_ADDR'], 80, $errno, $errstr, 30)){
+              return true;
+        }
+    }
+    
     /*****Below is the heart of the class*****/
     public function antiSessionHijacking(){
         $checkIP = $this->checkIP();
@@ -157,9 +171,15 @@ class runtime_sessionsecurity {
             $this->sessionRegen();
             return true;
         }else{
-            $_SESSION['zpuid'] = null;
-            session_destroy();
-            return false;
+            if(($this->checkProxy() == true) && ($checkUserAgent == false) && (isset($_COOKIE['zUserSalt']))){
+                //proxies can cause fluxuations in the user agent header 
+                return true;
+            }else{
+                $_SESSION['zpuid'] = null;
+                unset($_COOKIE['zUserSalt']);
+                session_destroy();
+                return false;
+            }
         }
     }
 }
