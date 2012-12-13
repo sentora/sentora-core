@@ -19,10 +19,14 @@ while ($modules = $modsql->fetch()) {
                 $latest_version = $updateinfo->document->latestversion[0]->tagData;
                 $downloadurl = $updateinfo->document->downloadurl[0]->tagData;
                 if ($current_version < $latest_version) {
-                    $versionsql = $zdbh->prepare("UPDATE x_modules SET mo_updatever_vc = '$latest_version', mo_updateurl_tx = '$downloadurl' WHERE mo_id_pk = " . $modules['mo_id_pk'] . "");
+                    $versionsql = $zdbh->prepare("UPDATE x_modules SET mo_updatever_vc = :latest_version, mo_updateurl_tx = :downloadurl WHERE mo_id_pk = :mo_id_pk");
+                    $versionsql->bindParam(':mo_id_pk', $modules['mo_id_pk']);
+                    $versionsql->bindParam(':latest_version', $latest_version);
+                    $versionsql->bindParam(':downloadurl', $downloadurl);
                     $versionsql->execute();
                 } else {
-                    $versionsql = $zdbh->prepare("UPDATE x_modules SET mo_updatever_vc = '', mo_updateurl_tx = '' WHERE mo_id_pk = " . $modules['mo_id_pk'] . "");
+                    $versionsql = $zdbh->prepare("UPDATE x_modules SET mo_updatever_vc = '', mo_updateurl_tx = '' WHERE mo_id_pk = :mo_id_pk");
+                    $versionsql->bindParam(':mo_id_pk', $modules['mo_id_pk']);
                     $versionsql->execute();
                 }
             } else {
