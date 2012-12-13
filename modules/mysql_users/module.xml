@@ -3,7 +3,7 @@
     <name>MySQL Users</name>
     <version>100</version>
     <defaultcat>Databases</defaultcat>
-    <desc>MySQL® Users allows you to add users and permissions to your MySQL® databases.</desc>
+    <desc>MySQL Users allows you to add users and permissions to your MySQL databases.</desc>
     <authorname>ZPanel Project</authorname>
     <authoremail>developers@zpanelcp.com</authoremail>
     <authorurl>http://www.zpanelcp.com/</authorurl>

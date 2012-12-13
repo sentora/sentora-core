@@ -3,7 +3,7 @@
     <name>PHP Info</name>
     <version>100</version>
     <defaultcat>Server Admin</defaultcat>
-    <desc>PHPInfo provides you with infomation regarding the version of PHP running on this system as well as installed PHP extentsions and configuration details.
+    <desc>PHPInfo provides you with information regarding the version of PHP running on this system as well as installed PHP extensions and configuration details.
     </desc>
     <authorname>ZPanel Project</authorname>
     <authoremail>developers@zpanelcp.com</authoremail>

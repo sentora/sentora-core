@@ -3,7 +3,7 @@
     <name>Updates</name>
     <version>100</version>
     <defaultcat>Server Admin</defaultcat>
-    <desc>Check to see if there are any avaliable updates to your version of the ZPanel software.</desc>
+    <desc>Check to see if there are any available updates to your version of the ZPanel software.</desc>
     <authorname>ZPanel Project</authorname>
     <authoremail>developers@zpanelcp.com</authoremail>
     <authorurl>http://www.zpanelcp.com/</authorurl>
