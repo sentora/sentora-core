@@ -22,8 +22,17 @@ class runtime_sessionsecurity {
             //zUser session
    
     /*****The below are generic function used more than once*****/
+    /**
+     * Regenerate the PHPSID  
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return boolean.
+     */
     public function sessionRegen(){
-         session_regenerate_id();
+         if(session_regenerate_id()){
+             return true;
+         }else{
+             return false;
+         }
     }
     
     /**
@@ -52,7 +61,7 @@ class runtime_sessionsecurity {
     /**
      * This function will set the users agent in a secure session and hashes
      * @author Sam Mottley (smottley@zpanelcp.com)
-     * @return string The data.
+     * @return boolean.
      */
     public function setUserAgent(){
         
@@ -66,7 +75,7 @@ class runtime_sessionsecurity {
     /**
      * This function will set the users IP in a secure session and hashes
      * @author Sam Mottley (smottley@zpanelcp.com)
-     * @return string The data.
+     * @return boolean.
      */
     public function setUserIP(){
         
@@ -122,7 +131,7 @@ class runtime_sessionsecurity {
     /**
      * This checks wether the set user agent for the session is the same one as what is currently being provied
      * @author Sam Mottley (smottley@zpanelcp.com)
-     * @return string The data.
+     * @return boolean.
      */
     public function checkAgent(){
         $userSetAgent = $this->getSetUserAgent();
@@ -138,7 +147,7 @@ class runtime_sessionsecurity {
     /**
      * This checks wether the set user ip for the session is the same one as what is currently being provied
      * @author Sam Mottley (smottley@zpanelcp.com)
-     * @return string The data.
+     * @return boolean.
      */
     public function checkIP(){
         $userSetIP = $this->getSetIP();
@@ -154,15 +163,22 @@ class runtime_sessionsecurity {
     /**
      * This checks wheather the user is behind a proxy
      * @author Sam Mottley (smottley@zpanelcp.com)
-     * @return string The data.
+     * @return boolean
      */
     public function checkProxy(){
         if ($_SERVER['HTTP_X_FORWARDED_FOR']|| $_SERVER['HTTP_X_FORWARDED']|| $_SERVER['HTTP_FORWARDED_FOR']|| $_SERVER['HTTP_CLIENT_IP']|| $_SERVER['HTTP_VIA']|| in_array($_SERVER['REMOTE_PORT'], array(8080,80,6588,8000,3128,553,554))|| @fsockopen($_SERVER['REMOTE_ADDR'], 80, $errno, $errstr, 30)){
               return true;
+        }else{
+            return false;
         }
     }
     
     /*****Below is the heart of the class*****/
+    /**
+     * This checks wheather the session has been stolen or not
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return boolean
+     */
     public function antiSessionHijacking(){
         $checkIP = $this->checkIP();
         $checkUserAgent = $this->checkAgent();
