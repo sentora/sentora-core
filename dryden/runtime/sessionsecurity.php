@@ -96,7 +96,7 @@ class runtime_sessionsecurity {
     
     /*****The below is retrieveing the current provided information*****/
     /**
-     * This returns the current provied users agent via headers  and hashes
+     * This returns the current provied users agent via headers and THEN hashes
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @return string The data.
      */
@@ -105,7 +105,7 @@ class runtime_sessionsecurity {
     }
     
     /**
-     * This returns the current provied users IP and hashes
+     * This returns the current provied users IP and THEN hashes
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @return string The data.
      */
@@ -153,7 +153,7 @@ class runtime_sessionsecurity {
         $checkIP = $this->checkIP();
         $checkUserAgent = $this->checkAgent();
         if(($checkIP == true) && ($checkUserAgent == true)){
-            //Regenerate session id the more it changes the less likly to get hacked!
+            //Regenerate session id... The more it changes the less likly to get hacked!
             $this->sessionRegen();
             return true;
         }else{
