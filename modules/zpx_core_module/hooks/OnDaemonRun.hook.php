@@ -15,19 +15,43 @@ while ($userdir = $userssql->fetch()) {
         $size = 0;
     }
     $currentuser = ctrl_users::GetUserDetail($userdir['ac_id_pk']);
-    $checksql = $zdbh->query("SELECT COUNT(*) AS total FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $userdir['ac_id_pk'] . "")->fetch();
+    //$checksql = $zdbh->query("SELECT COUNT(*) AS total FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $userdir['ac_id_pk'] . "")->fetch();
+    $numrows = $zdbh->prepare("SELECT COUNT(*) AS total FROM x_bandwidth WHERE bd_month_in = :date AND bd_acc_fk = :ac_id_pk");
+    $date = date("Ym");
+    $numrows->bindParam(':date', $date);
+    $numrows->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
+    $numrows->execute();
+    $checksql = $numrows->fetch();
+    
     if ($checksql['total'] == 0) {
-        $zdbh->query("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transcheck_in ) VALUES (" . $userdir['ac_id_pk'] . "," . date("Ym") . ",0,0,0,0,0,0);");
+//      $zdbh->query("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transcheck_in ) VALUES (" . $userdir['ac_id_pk'] . "," . date("Ym") . ",0,0,0,0,0,0);");
+        $numrows = prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transcheck_in ) VALUES (:ac_id_pk,:date,0,0,0,0,0,0);");
+        $date = date("Ym");
+        $numrows->bindParam(':date', $date);
+        $numrows->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
+        $numrows->execute();
     }
 
-    $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskamount_bi = '" . $size . "' WHERE bd_acc_fk =" . $userdir['ac_id_pk'] . "");
+    $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskamount_bi = :size WHERE bd_acc_fk =:ac_id_pk");
+    $updatesql->bindParam(':size', $size);
+    $updatesql->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
     $updatesql->execute();
-    $checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $userdir['ac_id_pk'] . "")->fetch();
+    
+//  $checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = :date AND bd_acc_fk = " . $userdir['ac_id_pk'] . "")->fetch();
+    $numrows = $zdbh->prepare("SELECT * FROM x_bandwidth WHERE bd_month_in = :date AND bd_acc_fk = :ac_id_pk");
+    $date = date("Ym");
+    $numrows->bindParam(':date', $date);
+    $numrows->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
+    $numrows->execute();
+    $checksize = $numrows->fetch();
+    
     if ($checksize['bd_diskamount_bi'] > $currentuser['diskquota']) {
-        $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskover_in = 1 WHERE bd_acc_fk =" . $userdir['ac_id_pk'] . "");
+        $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskover_in = 1 WHERE bd_acc_fk =:ac_id_pk");
+        $updatesql->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
         $updatesql->execute();
     } else {
-        $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskover_in = 0 WHERE bd_acc_fk =" . $userdir['ac_id_pk'] . "");
+        $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskover_in = 0 WHERE bd_acc_fk =:ac_id_pk");
+        $updatesql->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
         $updatesql->execute();
     }
 
@@ -61,16 +85,31 @@ if ($checksql['total'] > 0) {
             }
         }
         if (!fs_director::CheckForEmptyValue($bandwidth)) {
-            $zdbh->query("UPDATE x_bandwidth SET bd_transamount_bi=(bd_transamount_bi+" . $bandwidth . ") WHERE bd_acc_fk = " . $domain['vh_acc_fk'] . " AND bd_month_in = " . date("Ym") . "");
+            //$zdbh->query("UPDATE x_bandwidth SET bd_transamount_bi=(bd_transamount_bi+" . $bandwidth . ") WHERE bd_acc_fk = " . $domain['vh_acc_fk'] . " AND bd_month_in = " . date("Ym") . "");
+            $numrows = $zdbh->prepare("UPDATE x_bandwidth SET bd_transamount_bi=(bd_transamount_bi+:bandwidth) WHERE bd_acc_fk = :vh_acc_fk AND bd_month_in = :date");
+            $numrows->bindParam(':bandwidth', $bandwidth);
+            $date = date("Ym");
+            $numrows->bindParam(':date', $date);
+            $numrows->bindParam(':vh_acc_fk', $domain['vh_acc_fk']);
+            $numrows->execute();            
         } else {
             echo "No bandwidth used, skipping!" . fs_filehandler::NewLine();
         }
-        $checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $domain['vh_acc_fk'] . "")->fetch();
+        //$checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $domain['vh_acc_fk'] . "")->fetch();
+        $numrows = $zdbh->prepare("SELECT * FROM x_bandwidth WHERE bd_month_in = :date AND bd_acc_fk = :vh_acc_fk");
+        $date = date("Ym");
+        $numrows->bindParam(':date', $date);
+        $numrows->bindParam(':vh_acc_fk', $domain['vh_acc_fk']);
+        $numrows->execute();
+        $checksize = $numrows->fetch();
+        
         if ($checksize['bd_transamount_bi'] > $domainowner['bandwidthquota']) {
-            $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_transover_in = 1 WHERE bd_acc_fk =" . $domain['vh_acc_fk'] . "");
+            $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_transover_in = 1 WHERE bd_acc_fk = :vh_acc_fk");
+            $updatesql->bindParam(':vh_acc_fk', $domain['vh_acc_fk']);
             $updatesql->execute();
         } else {
-            $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_transover_in = 0 WHERE bd_acc_fk =" . $domain['vh_acc_fk'] . "");
+            $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_transover_in = 0 WHERE bd_acc_fk =:vh_acc_fk");
+            $updatesql->bindParam(':vh_acc_fk', $domain['vh_acc_fk']);
             $updatesql->execute();
         }
     }
