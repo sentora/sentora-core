@@ -65,12 +65,12 @@ class module_controller {
             } else {
                 $domainID = self::$editdomain;
             }
-            
+
             $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL";
             $numrows = $zdbh->prepare($sql);
             $numrows->bindParam(':userid', $currentuser['userid']);
             $numrows->bindParam(':domainID', $domainID);
-            
+
             if ($numrows->execute()) {
                 if ($numrows->fetchColumn() == 0) {
                     $display = self::DisplayDefaultRecords();
@@ -131,7 +131,7 @@ class module_controller {
         $numrows2->bindParam(':domainID', $domainID);
         $numrows2->execute();
         $domain = $numrows2->fetch();
-        
+
         $zone_message = self::CheckZoneRecord($domainID);
         $zonecheck_file = ctrl_options::GetSystemOption('temp_dir') . $domain['vh_name_vc'] . ".txt";
         $zone_message = str_replace($zonecheck_file, "", $zone_message);
@@ -678,14 +678,14 @@ class module_controller {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
-        
+
         $domainID = $controller->GetControllerRequest('FORM', 'inDomain');
         //$domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();        
         $numrows = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
         $numrows->bindParam(':domainID', $domainID);
         $numrows->execute();
         $domainName = $numrows->fetch();
-        
+
         $userID = $controller->GetControllerRequest('FORM', 'inUserID');
         if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
             $target = ctrl_options::GetSystemOption('server_ip');
@@ -715,7 +715,7 @@ class module_controller {
 															NULL,
 															:time)");
         $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc'] );
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
         $sql->bindParam(':domainID', $domainID);
         $sql->bindParam(':target', $target);
         $time = time();
@@ -744,7 +744,7 @@ class module_controller {
 															NULL,
 															:time)");
         $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc'] );
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
         $sql->bindParam(':domainID', $domainID);
         $time = time();
         $sql->bindParam(':time', $time);
@@ -772,7 +772,7 @@ class module_controller {
 															NULL,
 															:time)");
         $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc'] );
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
         $sql->bindParam(':domainID', $domainID);
         $time = time();
         $sql->bindParam(':time', $time);
@@ -800,7 +800,7 @@ class module_controller {
 															NULL,
 															:time)");
         $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc'] );
+        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
         $sql->bindParam(':domainID', $domainID);
         $sql->bindParam(':target', $target);
         $time = time();
@@ -829,7 +829,7 @@ class module_controller {
 															NULL,
 															:time)");
         $sql->bindParam(':userID', $userID);
-        $vh_name_vc = 'mail.'.$domainName['vh_name_vc'];
+        $vh_name_vc = 'mail.' . $domainName['vh_name_vc'];
         $sql->bindParam(':vh_name_vc', $vh_name_vc);
         $sql->bindParam(':domainID', $domainID);
         $sql->bindParam(':target', $target);
@@ -919,7 +919,7 @@ class module_controller {
         $sql->bindParam(':userID', $userID);
         $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
         $sql->bindParam(':domainID', $domainID);
-        $target2 = 'ns1.'.$domainName['vh_name_vc'];
+        $target2 = 'ns1.' . $domainName['vh_name_vc'];
         $sql->bindParam(':target2', $target2);
         $time = time();
         $sql->bindParam(':time', $time);
@@ -949,7 +949,7 @@ class module_controller {
         $sql->bindParam(':userID', $userID);
         $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
         $sql->bindParam(':domainID', $domainID);
-        $target2 = 'ns2.'.$domainName['vh_name_vc'];
+        $target2 = 'ns2.' . $domainName['vh_name_vc'];
         $sql->bindParam(':target2', $target2);
         $time = time();
         $sql->bindParam(':time', $time);
@@ -1248,7 +1248,7 @@ class module_controller {
         $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->bindParam(':domainID', $domainID);              
+        $numrows->bindParam(':domainID', $domainID);
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL");
@@ -1362,7 +1362,7 @@ class module_controller {
                             }
 
                             if ($type['new_' . $id] != "SRV") {
-                                if (!self::IsValidDomainName($hostName['new_' . $id])) {
+                                if (!self::IsValidTargetName($hostName['new_' . $id])) {
                                     return FALSE;
                                 }
                             }
@@ -1453,6 +1453,18 @@ class module_controller {
             $part = explode(".", $a);
             foreach ($part as $check) {
                 if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    static function IsValidTargetName($a) {
+        if ($a != "@") {
+            $part = explode(".", $a);
+            foreach ($part as $check) {
+                if (!preg_match('/^[a-z\d_][a-z\d-_]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
                     return false;
                 }
             }
@@ -1603,7 +1615,7 @@ class module_controller {
         $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:domainID  AND dn_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':domainID', $domainID);
-        
+
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 $hasrecords = true;
@@ -1616,7 +1628,7 @@ class module_controller {
                 $numrows->execute();
                 $domain = $numrows->fetch();
 
-                
+
                 $zonecheck_file = (ctrl_options::GetSystemOption('temp_dir')) . $domain['dn_name_vc'] . ".txt";
                 $checkline = "$" . "TTL 10800" . fs_filehandler::NewLine();
                 $checkline .= "@ IN SOA " . $domain['dn_name_vc'] . ".    ";
