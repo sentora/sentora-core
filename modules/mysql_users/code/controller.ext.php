@@ -500,8 +500,13 @@ class module_controller {
     static function IsValidUserName($username) {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
+        } else {
+            if (strlen($username) < 17) {
+                // Enforce the MySQL username limit! (http://dev.mysql.com/doc/refman/4.1/en/user-names.html)
+                return true;
+            }
+            return false;
         }
-        return true;
     }
 
     static function IsValidPassword($password) {
