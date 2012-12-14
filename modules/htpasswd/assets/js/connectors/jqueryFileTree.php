@@ -1,9 +1,13 @@
 <?php
 
+session_start();
+
 include($_SERVER['DOCUMENT_ROOT'] . '/cnf/db.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/dryden/db/driver.class.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/dryden/debug/logger.class.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/inc/dbc.inc.php');
+
+if (isset($_SESSION['zpuid'])) {
 $z_db_user = $user;
 $z_db_pass = $pass;
 try {
@@ -13,7 +17,7 @@ try {
 }
 $rowsettings = $zdbh->query("SELECT * FROM x_settings WHERE so_name_vc='hosted_dir'")->fetch();
 $path = urldecode($_POST['dir']);
-if (file_exists($path)) {
+if (file_exists($path) && strpos($rowsettings['so_value_tx'], $path)) {
 
     $files = scandir($path);
     natcasesort($files);
@@ -48,5 +52,8 @@ if (file_exists($path)) {
     } else {
         echo "<font color=\"red\">No Directories Found!</font>";
     }
+}
+} else {
+    echo "<h1>Unathorised request!</h1><p>You must be logged in before you are able to access this file.</p>";
 }
 ?>
