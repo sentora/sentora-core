@@ -54,10 +54,10 @@ class module_controller {
                 $numrows = $zdbh->prepare("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=:pk_id_pk AND ac_deleted_ts IS NULL");
                 $numrows->bindParam(':pk_id_pk', $rowpackages['pk_id_pk']);
                 $numrows->execute();
-                $numrows->fetchColumn(); 
+                $Column = $numrows->fetchColumn(); 
                 array_push($res, array('packageid' => $rowpackages['pk_id_pk'],
                     'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowpackages['pk_created_ts']),
-                    'clients' => $numrows[0],
+                    'clients' => $Column[0],
                     'packagename' => ui_language::translate($rowpackages['pk_name_vc'])));
             }
             return $res;
