@@ -25,7 +25,7 @@ while ($userdir = $userssql->fetch()) {
     
     if ($checksql['total'] == 0) {
 //      $zdbh->query("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transcheck_in ) VALUES (" . $userdir['ac_id_pk'] . "," . date("Ym") . ",0,0,0,0,0,0);");
-        $numrows3 = prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transcheck_in ) VALUES (:ac_id_pk,:date,0,0,0,0,0,0)");//removed ;from end of statments
+        $numrows3 = $zdbh->prepare("INSERT INTO x_bandwidth (bd_acc_fk, bd_month_in, bd_transamount_bi, bd_diskamount_bi, bd_diskover_in, bd_diskcheck_in, bd_transover_in, bd_transcheck_in ) VALUES (:ac_id_pk,:date,0,0,0,0,0,0)");//removed ;from end of statments
         $date = date("Ym");
         $numrows3->bindParam(':date', $date);
         $numrows3->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
