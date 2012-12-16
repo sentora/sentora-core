@@ -94,9 +94,8 @@ class module_controller {
         }
         runtime_hook::Execute('OnBeforeCreateDatabase');
         try {
-            $sql = $zdbh->prepare("CREATE DATABASE `:db` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
-            $db = $currentuser['username'] . "_" . $databasename;
-            $sql->bindParam(':db', $db, PDO::PARAM_STR);
+            $db = $zdbh->mysqlRealEscapeString($currentuser['username'] . "_" . $databasename);
+            $sql = $zdbh->prepare("CREATE DATABASE `$db` DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';");
             $sql->execute();
             $sql = $zdbh->prepare("FLUSH PRIVILEGES");
             $sql->execute();
@@ -159,8 +158,9 @@ class module_controller {
         $numrows->execute();
         $rowmysql = $numrows->fetch();
         try {
-            $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `:my_name_vc`;");
-            $sql->bindParam(':my_name_vc', $rowmysql['my_name_vc'], PDO::PARAM_STR);
+            $my_name_vc = $zdbh->mysqlRealEscapeString($rowmysql['my_name_vc']);
+            $sql = $zdbh->prepare("DROP DATABASE IF EXISTS `$my_name_vc`;");
+            //$sql->bindParam(':my_name_vc', $rowmysql['my_name_vc'], PDO::PARAM_STR);
             $sql->execute();
             $sql = $zdbh->prepare("FLUSH PRIVILEGES");
             $sql->execute();
