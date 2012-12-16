@@ -32,7 +32,7 @@ while ($userdir = $userssql->fetch()) {
         $numrows3->execute();
     }
 
-    $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskamount_bi = :size WHERE bd_acc_fk =:ac_id_pk");
+    $updatesql = $zdbh->prepare("UPDATE x_bandwidth SET bd_diskamount_bi = :size WHERE bd_acc_fk =:ac_id_pk");
     $updatesql->bindParam(':size', $size);
     $updatesql->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
     $updatesql->execute();
@@ -46,11 +46,11 @@ while ($userdir = $userssql->fetch()) {
     $checksize = $numrows->fetch();
     
     if ($checksize['bd_diskamount_bi'] > $currentuser['diskquota']) {
-        $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskover_in = 1 WHERE bd_acc_fk =:ac_id_pk");
+        $updatesql = $zdbh->prepare("UPDATE x_bandwidth SET bd_diskover_in = 1 WHERE bd_acc_fk =:ac_id_pk");
         $updatesql->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
         $updatesql->execute();
     } else {
-        $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_diskover_in = 0 WHERE bd_acc_fk =:ac_id_pk");
+        $updatesql = $zdbh->prepare("UPDATE x_bandwidth SET bd_diskover_in = 0 WHERE bd_acc_fk =:ac_id_pk");
         $updatesql->bindParam(':ac_id_pk', $userdir['ac_id_pk']);
         $updatesql->execute();
     }
@@ -104,11 +104,11 @@ if ($checksql['total'] > 0) {
         $checksize = $numrows->fetch();
         
         if ($checksize['bd_transamount_bi'] > $domainowner['bandwidthquota']) {
-            $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_transover_in = 1 WHERE bd_acc_fk = :vh_acc_fk");
+            $updatesql = $zdbh->prepare("UPDATE x_bandwidth SET bd_transover_in = 1 WHERE bd_acc_fk = :vh_acc_fk");
             $updatesql->bindParam(':vh_acc_fk', $domain['vh_acc_fk']);
             $updatesql->execute();
         } else {
-            $updatesql = $zdbh->query("UPDATE x_bandwidth SET bd_transover_in = 0 WHERE bd_acc_fk =:vh_acc_fk");
+            $updatesql = $zdbh->prepare("UPDATE x_bandwidth SET bd_transover_in = 0 WHERE bd_acc_fk =:vh_acc_fk");
             $updatesql->bindParam(':vh_acc_fk', $domain['vh_acc_fk']);
             $updatesql->execute();
         }
