@@ -230,6 +230,18 @@ class db_driver extends PDO {
         return $this->getExecuted()->rowCount();
     }
 
+    /**
+     * The function is the equilivent to mysql_real_escape_string needed due to PDO issues with `
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param String $string string to be cleaned
+     * @return String Clean version of the string 
+     */
+    public function mysqlRealEscapeString($string){
+                $search = array("\\","\0","\n","\r","\x1a","'",'"',"`");//`
+                $replace = array("\\\\","\\0","\\n","\\r","\Z","\'",'\"',"");//`
+                $cleanString = str_replace($search,$replace,$string);
+                return $cleanString;
+        }
 }
 
 ?>
