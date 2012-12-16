@@ -19,8 +19,9 @@ function DeleteClientDatabases() {
         
             if ($rowdatabase) {
                 try {
-                    $delete = $zdbh->prepare("DROP DATABASE IF EXISTS `:my_name_vc`;");
-                    $delete->bindParam(':my_name_vc', $rowdatabase['my_name_vc'], PDO::PARAM_STR);
+                    $my_name_vc = $zdbh->mysqlRealEscapeString($rowdatabase['my_name_vc']);
+                    $delete = $zdbh->prepare("DROP DATABASE IF EXISTS `$my_name_vc`;");
+                    //$delete->bindParam(':my_name_vc', $rowdatabase['my_name_vc'], PDO::PARAM_STR);
                     $delete->execute();
                     $delete = $zdbh->prepare("FLUSH PRIVILEGES");
                     $delete->execute();
