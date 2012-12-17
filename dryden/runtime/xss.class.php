@@ -99,7 +99,7 @@ class runtime_xss {
     }
     
     /**
-     * Use htmlentities this will by default protect against 99% of attacks
+     * Use htmlspecialchars this will by default protect against 99% of attacks
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @param string $data the data that needs cleaning
      * @param string $ENT specify how to handle quotes
