@@ -19,7 +19,7 @@ class runtime_xss {
      * @return string The Clean String.
      */
     static public function fixEntitys($data) {
-        $data = str_replace(array('&amp;amp;', '&amp;lt;', '&amp;gt;'), array('&amp;', '&lt;', '&gt;'), $data);
+        $data = str_replace(array('&amp;amp;', '&amp;lt;', '&amp;gt;', '&amp;quot;'), array('&amp;', '&lt;', '&gt;', '&quot;'), $data);
         $data = preg_replace('/(&#*\w+)[\x00-\x20]+;/u', '$1;', $data);
         $data = preg_replace('/(&#x*[0-9A-F]+);*/iu', '$1;', $data);
         return $data;
@@ -138,7 +138,7 @@ class runtime_xss {
             $data = self::removeHarmfullStrings($data);
         }
         if ($settings[6]) {
-            //$data = self::htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
+            $data = self::htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
         }
         
         //Below is enforced protection
