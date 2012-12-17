@@ -18,7 +18,7 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    public function fixEntitys($data) {
+    static public function fixEntitys($data) {
         $data = str_replace(array('&amp;', '&lt;', '&gt;'), array('&amp;amp;', '&amp;lt;', '&amp;gt;'), $data);
         $data = preg_replace('/(&#*\w+)[\x00-\x20]+;/u', '$1;', $data);
         $data = preg_replace('/(&#x*[0-9A-F]+);*/iu', '$1;', $data);
@@ -32,7 +32,7 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    public function removeAttribute($data) {
+    static public function removeAttribute($data) {
         $data = preg_replace('#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu', '$1>', $data);
         return $data;
     }
@@ -43,7 +43,7 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    public function removeJavaVB($data) {
+    static public function removeJavaVB($data) {
         $data = preg_replace('#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2nojavascript...', $data);
         $data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2novbscript...', $data);
         $data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u', '$1=$2nomozbinding...', $data);
@@ -56,7 +56,7 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    public function removeCssAttack($data) {
+    static public function removeCssAttack($data) {
         $data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
         $data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?behaviour[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
         $data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu', '$1>', $data);
@@ -69,7 +69,7 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    public function removeNameSpace($data) {
+    static public function removeNameSpace($data) {
         $data = preg_replace('#</*\w+:\w[^>]*+>#i', '', $data);
         return $data;
     }
@@ -80,7 +80,7 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    public function removeHarmfullStrings($data) {
+    static public function removeHarmfullStrings($data) {
         $data = preg_replace('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $data, -1);
         return $data;
     }
@@ -93,8 +93,21 @@ class runtime_xss {
      * @param string $type Type of encoding to use
      * @return string The Clean String.
      */
-    public function htmlentitiesProtection($data, $ENT = 'ENT_QUOTES', $type = 'UTF-8') {
+    static public function htmlentitiesProtection($data, $ENT = ENT_QUOTES, $type = 'UTF-8') {
         $data = htmlentities($data, $ENT, $type);
+        return $data;
+    }
+    
+    /**
+     * Use htmlentities this will by default protect against 99% of attacks
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @param string $data the data that needs cleaning
+     * @param string $ENT specify how to handle quotes
+     * @param string $type Type of encoding to use
+     * @return string The Clean String.
+     */
+    static public function htmlspecialcharsProtection($data, $ENT = ENT_QUOTES, $type = 'UTF-8') {
+        $data = htmlspecialchars($data, $ENT, $type);
         return $data;
     }
 
@@ -105,32 +118,34 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    function xssClean($data, $settings=array(true, true, true, true, true, true, true)) {
+    static public function xssClean($data, $settings=array(true, true, true, true, true, true, true)) {
         if ($settings[0]) {
-            $data = $this->fixEntitys($data);
+            $data = self::fixEntitys($data);
         }
 
         if ($settings[1]) {
-            $data = $this->removeAttribute($data);
+            $data = self::removeAttribute($data);
         }
 
         if ($settings[2]) {
-            $data = $this->removeJavaVB($data);
+            $data = self::removeJavaVB($data);
         }
 
         if ($settings[3]) {
-            $data = $this->removeCssAttack($data);
+            $data = self::removeCssAttack($data);
         }
 
         if ($settings[4]) {
-            $data = $this->removeNameSpace($data);
+            $data = self::removeNameSpace($data);
         }
         if ($settings[5]) {
-            $data = $this->removeHarmfullStrings($data);
+            $data = self::removeHarmfullStrings($data);
         }
         if ($settings[6]) {
-            $data = $this->htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
+            $data = self::htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
         }
+        //Below is enforced protection
+        $data = self::htmlspecialcharsProtection($data);
         // Xss Clean Data
         return $data;
     }
