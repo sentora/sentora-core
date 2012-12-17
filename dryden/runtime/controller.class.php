@@ -57,7 +57,7 @@ class runtime_controller {
                 if ((class_exists('module_controller', FALSE)) && (method_exists('module_controller', 'do' . $this->vars_get[0]['action']))) {
                     call_user_func(array('module_controller', 'do' . $this->vars_get[0]['action']));
                 } else {
-                    echo ui_sysmessage::shout("No 'do" . $this->vars_get[0]['action'] . "' class exists - Please create it to enable controller actions and runtime placeholders within your module.");
+                    echo ui_sysmessage::shout("No 'do" . runtime_xss::xssClean($this->vars_get[0]['action']) . "' class exists - Please create it to enable controller actions and runtime placeholders within your module.");
                 }
             }
         }
