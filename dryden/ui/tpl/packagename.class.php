@@ -14,7 +14,7 @@ class ui_tpl_packagename {
 
     public static function Template() {
         $user_array = ctrl_users::GetUserDetail();
-        return $user_array['packagename'];
+        return runtime_xss::xssClean($user_array['packagename']);
     }
 
 }
