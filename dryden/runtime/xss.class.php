@@ -19,10 +19,9 @@ class runtime_xss {
      * @return string The Clean String.
      */
     static public function fixEntitys($data) {
-        $data = str_replace(array('&amp;', '&lt;', '&gt;'), array('&amp;amp;', '&amp;lt;', '&amp;gt;'), $data);
+        $data = str_replace(array('&amp;amp;', '&amp;lt;', '&amp;gt;'), array('&amp;', '&lt;', '&gt;'), $data);
         $data = preg_replace('/(&#*\w+)[\x00-\x20]+;/u', '$1;', $data);
         $data = preg_replace('/(&#x*[0-9A-F]+);*/iu', '$1;', $data);
-        $data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
         return $data;
     }
 
@@ -119,9 +118,6 @@ class runtime_xss {
      * @return string The Clean String.
      */
     static public function xssClean($data, $settings=array(true, true, true, true, true, true, true)) {
-        if ($settings[0]) {
-            $data = self::fixEntitys($data);
-        }
 
         if ($settings[1]) {
             $data = self::removeAttribute($data);
@@ -142,10 +138,16 @@ class runtime_xss {
             $data = self::removeHarmfullStrings($data);
         }
         if ($settings[6]) {
-            $data = self::htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
+            //$data = self::htmlentitiesProtection($data, ENT_QUOTES, 'UTF-8');
         }
+        
         //Below is enforced protection
         $data = self::htmlspecialcharsProtection($data);
+        
+        if ($settings[0]) {
+            $data = self::fixEntitys($data);
+        }
+        
         // Xss Clean Data
         return $data;
     }
