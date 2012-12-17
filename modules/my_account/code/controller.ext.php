@@ -33,11 +33,11 @@ class module_controller {
     static function getAccountSettings() {
         $currentuser = ctrl_users::GetUserDetail();
         $res = array();
-        array_push($res, array('fullname' => $currentuser['fullname'],
-            'email' => $currentuser['email'],
-            'phone' => $currentuser['phone'],
-            'address' => $currentuser['address'],
-            'postcode' => $currentuser['postcode']));
+        array_push($res, array('fullname' => runtime_xss::xssClean($currentuser['fullname']),
+            'email' => runtime_xss::xssClean($currentuser['email']),
+            'phone' => runtime_xss::xssClean($currentuser['phone']),
+            'address' => runtime_xss::xssClean($currentuser['address']),
+            'postcode' => runtime_xss::xssClean($currentuser['postcode'])));
         return $res;
     }
 
