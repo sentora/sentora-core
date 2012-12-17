@@ -105,7 +105,7 @@ class runtime_xss {
      * @param string $data the data that needs cleaning
      * @return string The Clean String.
      */
-    function xssClean($data, $settings) {
+    function xssClean($data, $settings=array(true, true, true, true, true, true, true)) {
         if ($settings[0]) {
             $data = $this->fixEntitys($data);
         }
