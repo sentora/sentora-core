@@ -1,5 +1,5 @@
 /* Update SQL for CentOS 6 ZPanel 10.0.0 to 10.0.1 */
-
+USE `zpanel_core`;
 /* Adds the new fields for customising vhost configs */
 ALTER TABLE `zpanel_core`.`x_vhosts` 
 ADD COLUMN `vh_custom_port_in` INT(6) NULL DEFAULT NULL  AFTER `vh_custom_tx` , 
@@ -11,6 +11,7 @@ CREATE USER postfix@localhost IDENTIFIED BY 'postfix';
 GRANT ALL PRIVILEGES ON zpanel_postfix . * TO postfix@localhost;
 FLUSH PRIVILEGES;
 
+USE `zpanel_proftpd`;
 /* Change the Uid and Gid of all FTP users to enable editing of apache owned files */
 ALTER TABLE `zpanel_proftpd`.`ftpuser`
 CHANGE COLUMN `uid` `uid` SMALLINT(6) NOT NULL DEFAULT '48'  ,
