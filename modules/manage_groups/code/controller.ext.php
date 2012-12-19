@@ -53,7 +53,7 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
+                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_name_vc'])), 'groupdesc' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_notes_tx']))));
             }
             return $res;
         } else {
@@ -79,7 +79,7 @@ class module_controller {
                         $rowgroups['ug_name_vc'] != "Users") {
                     $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
                     $totalnoaccs = $zdbh->query($noaccs)->fetch();
-                    array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
+                    array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_name_vc'])), 'groupdesc' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_notes_tx'])), 'usersingroup' => runtime_xss::xssClean($totalnoaccs['total'])));
                 }
             }
             return $res;
@@ -106,7 +106,7 @@ class module_controller {
                         $rowgroups['ug_name_vc'] == "Users") {
                     $noaccs = "SELECT COUNT(*) AS total FROM x_accounts WHERE ac_group_fk=" . $rowgroups['ug_id_pk'] . "";
                     $totalnoaccs = $zdbh->query($noaccs)->fetch();
-                    array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx']), 'usersingroup' => $totalnoaccs['total']));
+                    array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_name_vc'])), 'groupdesc' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_notes_tx'])), 'usersingroup' => runtime_xss::xssClean($totalnoaccs['total'])));
                 }
             }
             return $res;
@@ -130,7 +130,7 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowgroups = $sql->fetch()) {
-                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate($rowgroups['ug_name_vc']), 'groupdesc' => ui_language::translate($rowgroups['ug_notes_tx'])));
+                array_push($res, array('groupid' => $rowgroups['ug_id_pk'], 'groupname' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_name_vc'])), 'groupdesc' => ui_language::translate(runtime_xss::xssClean($rowgroups['ug_notes_tx']))));
             }
             return $res;
         } else {
@@ -232,11 +232,11 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListGroups($currentuser['userid']) as $row) {
             if (isset($formvars['inDelete_' . $row['groupid'] . ''])) {
-                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['groupid'] . "");
+                header("location: ./?module=" . runtime_xss::xssClean($controller->GetCurrentModule()) . "&show=Delete&other=" . runtime_xss::xssClean($row['groupid']) . "");
                 exit;
             }
             if (isset($formvars['inEdit_' . $row['groupid'] . ''])) {
-                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['groupid'] . "");
+                header("location: ./?module=" . runtime_xss::xssClean($controller->GetCurrentModule()) . "&show=Edit&other=" . runtime_xss::xssClean($row['groupid']) . "");
                 exit;
             }
         }
