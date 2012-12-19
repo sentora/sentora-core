@@ -106,7 +106,7 @@ function ExecuteBackup($userid, $username, $download = 0) {
     $numrows = $zdbh->prepare($sql);
     $numrows->bindParam(':userid', $userid);
     $numrows->execute();
-    
+
     if ($numrows) {
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_acc_fk=:userid AND my_deleted_ts IS NULL");
@@ -134,6 +134,7 @@ function ExecuteBackup($userid, $username, $download = 0) {
             $backupdir = $homedir . "/backups/";
             if (!is_dir($backupdir)) {
                 fs_director::CreateDirectory($backupdir);
+                @chmod($backupdir, 0777);
             }
             copy($temp_dir . $backupname . ".zip", $backupdir . $backupname . ".zip");
             fs_director::SetFileSystemPermissions($backupdir . $backupname . ".zip", 0777);
