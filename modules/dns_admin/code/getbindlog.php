@@ -1,8 +1,14 @@
+<?php
+session_start();
+if (!isset($_SESSION['zpuid'])) {
+    die("<h1>Unathorised request!</h1><p>You must be logged in before you are able to view the DNS logs on this server.</p>");
+}
+?>
 <body bgcolor="#000000">
     <font color="#009900">
     <?php
     if (isset($_POST['inBindLog'])) {
-        $bindlog = $_POST['inBindLog'];
+        $bindlog = str_replace('..', '__', $_POST['inBindLog']); // Temporary fix until I can think of a better solution, this will however stop reverse iteration of the filesystem though by causing an error if '..'  eg. '../../' is requested.
         $logerror = array();
         $logwarning = array();
         $getlog = array();
