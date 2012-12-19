@@ -61,7 +61,7 @@ class module_controller {
         $result = $sql->fetch();
         
         if ($result) {
-            return $result['ac_notice_tx'];
+            return runtime_xss::xssClean($result['ac_notice_tx']);
         } else {
             return false;
         }
