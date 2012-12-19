@@ -53,10 +53,10 @@ class module_controller {
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
                 array_push($res, array('id' => $rowclients['ft_id_pk'],
-                    'directory' => $rowclients['ft_directory_vc'],
-                    'access' => $rowclients['ft_access_vc'],
-                    'password' => $rowclients['ft_password_vc'],
-                    'username' => $rowclients['ft_user_vc']));
+                    'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
+                    'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
+                    'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
+                    'username' => runtime_xss::xssClean($rowclients['ft_user_vc'])));
             }
             return $res;
         } else {
@@ -79,10 +79,10 @@ class module_controller {
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
                 array_push($res, array('id' => $rowclients['ft_id_pk'],
-                    'directory' => $rowclients['ft_directory_vc'],
-                    'access' => $rowclients['ft_access_vc'],
-                    'password' => $rowclients['ft_password_vc'],
-                    'username' => $rowclients['ft_user_vc']));
+                    'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
+                    'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
+                    'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
+                    'username' => runtime_xss::xssClean($rowclients['ft_user_vc'])));
             }
             return $res;
         } else {
@@ -102,7 +102,7 @@ class module_controller {
             while ($file = @readdir($handle)) {
                 if ($file != "." && $file != ".." && $file != "_errorpages") {
                     if (is_dir($chkdir . $file)) {
-                        array_push($res, array('domains' => $file));
+                        array_push($res, array('domains' => runtime_xss::xssClean($file)));
                     }
                 }
             }
@@ -123,7 +123,7 @@ class module_controller {
             while ($file = @readdir($handle)) {
                 if ($file != "." && $file != ".." && $file != "_errorpages") {
                     if (is_dir($chkdir . $file)) {
-                        array_push($res, array('domains' => $file));
+                        array_push($res, array('domains' => runtime_xss::xssClean($file)));
                     }
                 }
             }
