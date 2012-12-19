@@ -86,7 +86,7 @@
                 </tr>
                 <tr>
                     <th><: Reset password :>:</th>
-                    <td><input name="inNewPassword" type="password" id="inNewPassword" size="20" maxlength="50" /></td>
+                    <td><input name="inNewPassword" type="password" id="inNewPassword" size="20" /></td>
                 </tr>
                 <td>
                     <% loop CheckEnabledHTML %>

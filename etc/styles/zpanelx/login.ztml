@@ -60,7 +60,7 @@
                                                                 <td id="login"><strong>Your email address:</strong></td>
                                                             </tr>
                                                             <tr>
-                                                                <td><input name="inNewPass" id="inNewPass" type="password" maxlength="20" tabindex="1" /></td>
+                                                                <td><input name="inNewPass" id="inNewPass" type="password" tabindex="1" /></td>
                                                                 <td><input name="inConfEmail" type="text" id="inConfEmail"  tabindex="3" /></td>
                                                             </tr>
                                                             <tr>
@@ -68,7 +68,7 @@
                                                                 <td></td>
                                                             </tr>
                                                             <tr>
-                                                                <td><input name="inNewPass2" id="inNewPass2" type="password" maxlength="20"  tabindex="2" /></td>
+                                                                <td><input name="inNewPass2" id="inNewPass2" type="password" tabindex="2" /></td>
                                                                 <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="Confirm" value="1"  tabindex="4">Submit</button></td>
                                                             </tr>
                                                         </table>
@@ -112,7 +112,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
-                                                                <td><input name="inPassword" type="password" id="inPassword" maxlength="20" /></td>
+                                                                <td><input name="inPassword" type="password" id="inPassword" /></td>
                                                             </tr>
                                                             <tr>
                                                                 <td id="lightblue"></td>
