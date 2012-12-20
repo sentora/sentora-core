@@ -34,9 +34,9 @@ class module_controller {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
-        $current_pass = runtime_xss::xssClean($controller->GetControllerRequest('FORM', 'inCurPass'));
-        $newpass = runtime_xss::xssClean($controller->GetControllerRequest('FORM', 'inNewPass'));
-        $conpass = runtime_xss::xssClean($controller->GetControllerRequest('FORM', 'inConPass'));
+        $current_pass = $controller->GetControllerRequest('FORM', 'inCurPass');
+        $newpass = $controller->GetControllerRequest('FORM', 'inNewPass');
+        $conpass = $controller->GetControllerRequest('FORM', 'inConPass');
 
         $crypto = new runtime_hash;
         $crypto->SetPassword($newpass);
