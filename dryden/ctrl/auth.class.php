@@ -46,6 +46,12 @@ class ctrl_auth {
     static function SetUserSession($zpuid = 0) {
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
+            
+            //Implamentation of session security 
+            runtime_sessionsecurity::setUserIP();
+            runtime_sessionsecurity::setUserAgent();
+            setcookie("zUserSalt", runtime_randomstring::randomHash(30), time() + 60 * 60 * 24 * 30, "/");
+            
             return true;
         } else {
             return false;
@@ -95,6 +101,7 @@ class ctrl_auth {
         $row = $zdbh->returnRow();
 
         if ($row) {
+            runtime_sessionsecurity::sessionRegen();
             ctrl_auth::SetUserSession($row['ac_id_pk']);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $row['ac_id_pk'] . "");
             $log_logon->execute();
@@ -102,6 +109,7 @@ class ctrl_auth {
                 setcookie("zUser", $username, time() + 60 * 60 * 24 * 30, "/");
                 setcookie("zPass", $password, time() + 60 * 60 * 24 * 30, "/");
             }
+            
             runtime_hook::Execute('OnGoodUserLogin');
             return $row['ac_id_pk'];
         } else {

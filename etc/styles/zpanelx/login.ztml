@@ -91,13 +91,16 @@
                                                 <td align="left" colspan="2"><font color="#55a7c8">
                                                         <?php
                                                         if (isset($_GET['invalidlogin'])) {
-                                                        echo "Invalid user account or username/password mismatch, please try again!";
+                                                            echo "Invalid user account or username/password mismatch, please try again!";
                                                         }
                                                         if (isset($_GET['loggedout'])) {
-                                                        echo "You have been logged out successfully!";
+                                                            echo "You have been logged out successfully!";
+                                                        }
+                                                        if(isset($_GET['sessionIssue'])){
+                                                            echo 'ZPanel has detected an issue please login again!';
                                                         }
                                                         if (isset($_GET['passwordreset'])) {
-                                                        echo "If your email address matched the one on your account your password has now been reset!";
+                                                            echo "If your email address matched the one on your account your password has now been reset!";
                                                         }
                                                         ?></font>&nbsp;
                                                 </td>
