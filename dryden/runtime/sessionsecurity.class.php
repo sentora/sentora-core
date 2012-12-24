@@ -41,6 +41,19 @@ class runtime_sessionsecurity {
         }
         return $ip;
     }
+    
+    /**
+     * Distroys the current session
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return string The Clean IP.
+     */
+    static public function destroyCurrentSession(){
+        $_SESSION['zpuid'] = null;
+        unset($_COOKIE['zUserSaltCookie']);
+        session_destroy();
+        return true;
+    }
+    
     /**
      * Get users details that are spefic for the individual user only
      * @author Sam Mottley (smottley@zpanelcp.com)
@@ -49,8 +62,7 @@ class runtime_sessionsecurity {
     static public function userSpeficData(){
         $ip = self::findIP();
         $username = $_SESSION['zpuid'];
-        $userSalt = $_COOKIE['zUserSalt'];
-        return $ip.$username.$userSalt;
+        return $ip.$username;
     }
     
     
@@ -70,12 +82,23 @@ class runtime_sessionsecurity {
     }
     
     /**
+     * This function will set the users cookie login ID in a secure cookie and hashes
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return boolean.
+     */
+    static public function setCookie(){ 
+        $random = runtime_randomstring::randomHash(100);
+        $_SESSION['zUserSalt'] = $random;
+        setcookie("zUserSaltCookie", $random, time() + 60 * 60 * 24 * 30, "/"); 
+        return true;            
+    }
+    
+    /**
      * This function will set the users IP in a secure session and hashes
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @return boolean.
      */
-    static public function setUserIP(){
-        
+    static public function setUserIP(){      
         if($_SESSION['ip'] = sha1(self::findIP(), self::userSpeficData())){
             return true;
         }else{
@@ -102,6 +125,14 @@ class runtime_sessionsecurity {
         return $_SESSION['ip'];
     }
     
+    /**
+     * This will return the secure session set version of the users cookie
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return string The data.
+     */
+    static public function getSetCookie(){
+        return $_SESSION['zUserSalt'];
+    }
     
     /*****The below is retrieveing the current provided information*****/
     /**
@@ -111,6 +142,15 @@ class runtime_sessionsecurity {
      */
     static public function getProviedUserAgent(){
         return sha1($_SERVER['HTTP_USER_AGENT'], self::userSpeficData());
+    }
+    
+    /**
+     * This returns the current provied users agent via headers and THEN hashes
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return string The data.
+     */
+    static public function getProviedCookie(){
+        return $_COOKIE["zUserSaltCookie"];
     }
     
     /**
@@ -158,6 +198,22 @@ class runtime_sessionsecurity {
     }
     
     /**
+     * This checks wether the set user ip for the session is the same one as what is currently being provied
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return boolean.
+     */
+    static public function checkCookie(){
+        $userSetCookie = self::getSetCookie();
+        $currentUserCookie = self::getProviedCookie();
+        
+        if($userSetCookie == $currentUserCookie){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    /**
      * This checks wheather the user is behind a proxy
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @return boolean
@@ -179,16 +235,35 @@ class runtime_sessionsecurity {
     static public function antiSessionHijacking(){
         $checkIP = self::checkIP();
         $checkUserAgent = self::checkAgent();
+        
         if(($checkIP == true) && ($checkUserAgent == true)){
-            return true;
-        }else{
-            if((self::checkProxy() == true) && ($checkUserAgent == false) && (isset($_COOKIE['zUserSalt']))){
-                //proxies can cause fluxuations in the user agent header 
-                return true;
+            if(isset($_GET['module'])){
+                $checkUserCookie = self::checkCookie();
+                if($checkUserCookie == true){
+                    return true;
+                }else{
+                    self::destroyCurrentSession();
+                    return false;
+                }
             }else{
-                $_SESSION['zpuid'] = null;
-                unset($_COOKIE['zUserSalt']);
-                session_destroy();
+                return true;
+            }
+        }else{
+            if((self::checkProxy() == true) && ($checkUserAgent == false) && ($checkIP == false)){
+                //proxies can cause fluxuations in the user agent and IP headers 
+                if(isset($_GET['module'])){
+                    $checkUserCookie = self::checkCookie();
+                    if($checkUserCookie == true){
+                        return true;
+                    }else{
+                        self::destroyCurrentSession();
+                        return false;
+                    }
+                }else{
+                    return true;
+                }
+            }else{
+                self::destroyCurrentSession();
                 return false;
             }
         }

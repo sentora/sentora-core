@@ -48,9 +48,9 @@ class ctrl_auth {
             $_SESSION['zpuid'] = $zpuid;
             
             //Implamentation of session security 
+            runtime_sessionsecurity::setCookie();
             runtime_sessionsecurity::setUserIP();
-            runtime_sessionsecurity::setUserAgent();
-            setcookie("zUserSalt", runtime_randomstring::randomHash(30), time() + 60 * 60 * 24 * 30, "/");
+            runtime_sessionsecurity::setUserAgent();           
             
             return true;
         } else {
@@ -126,6 +126,7 @@ class ctrl_auth {
     static function KillSession() {
         runtime_hook::Execute('OnUserLogout');
         $_SESSION['zpuid'] = null;
+        unset($_COOKIE['zUserSaltCookie']);
         return true;
     }
 
