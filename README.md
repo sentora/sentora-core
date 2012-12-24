@@ -1,6 +1,6 @@
 #ZPanelCP
 
-* Version: 10.0.1
+* Version: 10.0.2
 * [Website](http://www.zpanelcp.com/)
 * [Documentation](http://www.zpanelcp.com/support/documentation/)
 * [Forums](http://forums.zpanelcp.com/) for comments, discussion and community support
