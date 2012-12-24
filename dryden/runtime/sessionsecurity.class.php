@@ -249,7 +249,7 @@ class runtime_sessionsecurity {
                 return true;
             }
         }else{
-            if((self::checkProxy() == true) && ($checkUserAgent == false) && ($checkIP == false)){
+            if(self::checkProxy() == true){
                 //proxies can cause fluxuations in the user agent and IP headers 
                 if(isset($_GET['module'])){
                     $checkUserCookie = self::checkCookie();
