@@ -126,7 +126,8 @@ class ctrl_auth {
     static function KillSession() {
         runtime_hook::Execute('OnUserLogout');
         $_SESSION['zpuid'] = null;
-        unset($_COOKIE['zUserSaltCookie']);
+//removed as cookie if unset on next login in theory so will always fail
+      //  unset($_COOKIE['zUserSaltCookie']); 
         return true;
     }
 
