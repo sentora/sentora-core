@@ -1099,13 +1099,13 @@ class module_controller {
             while ($numnew >= $id) {
                 if (isset($type['new_' . $id]) && !fs_director::CheckForEmptyValue($target['new_' . $id])) {
                     if ($delete['new_' . $id] != "true" && !fs_director::CheckForEmptyValue($type['new_' . $id])) {
-                        if (isset($hostName['new_' . $id]) /* && !fs_director::CheckForEmptyValue($hostName['new_' . $id]) */) {
-                            $hostName_new = "'" . self::CleanRecord($hostName['new_' . $id], $type['new_' . $id]) . "'";
+                        if (isset($hostName['new_' . $id])) {
+                            $hostName_new = self::CleanRecord($hostName['new_' . $id], $type['new_' . $id]);
                         } else {
                             $hostName_new = "NULL";
                         }
                         if (isset($type['new_' . $id]) && !fs_director::CheckForEmptyValue($type['new_' . $id])) {
-                            $type_new = "'" . $type['new_' . $id] . "'";
+                            $type_new = $type['new_' . $id];
                         } else {
                             $type_new = "NULL";
                         }
@@ -1125,7 +1125,7 @@ class module_controller {
                                     }
                                 }
                             }
-                            $target_new = "'" . self::CleanRecord($target['new_' . $id], $type['new_' . $id]) . "'";
+                            $target_new = self::CleanRecord($target['new_' . $id], $type['new_' . $id]);
                         } else {
                             $target_new = "NULL";
                         }
