@@ -25,9 +25,9 @@ class ui_language {
         $currentuser = ctrl_users::GetUserDetail();
         $lang = $currentuser['language'];
         $column_names = self::GetColumnNames('x_translations');
-        foreach ($column_names as $column_name) {
-            $sql = $zdbh->prepare("SELECT * FROM x_translations WHERE :column_name LIKE :message");
-            $sql->bindParam(':column_name', $column_name);
+        foreach ($column_names as $column_name) {            
+            $columnNameClean = $zdbh->mysqlRealEscapeString($column_name);
+            $sql = $zdbh->prepare("SELECT * FROM x_translations WHERE ".$columnNameClean." LIKE :message");
             $sql->bindParam(':message', $message);
             $sql->execute();
             $result = $sql->fetch();
