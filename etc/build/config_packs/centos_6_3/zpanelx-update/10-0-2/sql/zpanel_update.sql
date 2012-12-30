@@ -1,9 +1,6 @@
 /* Update SQL for CentOS 6 ZPanel 10.0.1 to 10.0.2 */
 
-/* Adds the new password related fields */
-ALTER TABLE `zpanel_core`.`x_accounts`
-ADD COLUMN `ac_passsalt_vc` VARCHAR(22) NULL DEFAULT NULL
-AFTER `ac_resethash_tx` ;
+/* Change field length for passwords */
 ALTER TABLE `zpanel_core`.`x_accounts`
 CHANGE COLUMN `ac_pass_vc` `ac_pass_vc` VARCHAR(200) NULL DEFAULT NULL ;
 
