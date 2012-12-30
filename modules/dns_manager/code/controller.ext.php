@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -254,7 +254,7 @@ class module_controller {
             $line .= "<br>";
             $line .= "</div>";
             //AAAA Records
-            //$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='AAAA' AND dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");           
+            //$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=" . $currentuser['userid'] . " AND dn_type_vc='AAAA' AND dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
             $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=:userid AND dn_type_vc='AAAA' AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL ORDER BY dn_host_vc ASC");
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->bindParam(':domainID', $domainID);
@@ -293,7 +293,7 @@ class module_controller {
         if (self::IsTypeAllowed('CNAME')) {
             $line .= "<!-- CNAME RECORDS -->	";
             $line .= "<div class=\"records dnsRecordCNAME ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide\" id=\"typeCNAME\">";
-            $line .= "<div class=\"description\">" . ui_language::translate("The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g. 
+            $line .= "<div class=\"description\">" . ui_language::translate("The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g.
 'webserver-01.example.com'.") . "</div>";
             $line .= "<div class=\"header row\">";
             $line .= "<div class=\"hostName\"><label class=\"enableToolTip\">" . ui_language::translate("Host Name") . "</label></div>";
@@ -680,7 +680,7 @@ class module_controller {
         runtime_csfr::Protect();
 
         $domainID = $controller->GetControllerRequest('FORM', 'inDomain');
-        //$domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();        
+        //$domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
         $numrows->bindParam(':domainID', $domainID);
         $numrows->execute();
@@ -1043,7 +1043,7 @@ class module_controller {
                 //If deleting an A recod, also delete cnames pointing to it.
                 if ($type[$id] == "A") {
                     //$sql = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=" . time() . " WHERE dn_type_vc='CNAME' AND dn_vhost_fk=".$domainID." AND dn_target_vc='".$target[$id]."' AND dn_deleted_ts IS NULL");
-                    //$sql->execute();						
+                    //$sql->execute();
                 }
             } else {
                 //The record needs updating instead.
@@ -1284,9 +1284,9 @@ class module_controller {
                             return FALSE;
                         }
                     } elseif ($type[$id] == "TXT") {
-                        
+
                     } elseif ($type[$id] == "SPF") {
-                        
+
                     } else {
                         if (!self::IsValidIP($target[$id])) {
                             if (!self::IsValidDomainName($target[$id])) {
@@ -1387,11 +1387,11 @@ class module_controller {
                                     return FALSE;
                                 }
                             } elseif ($type['new_' . $id] == "TXT") {
-                                
+
                             } elseif ($type['new_' . $id] == "SPF") {
-                                
+
                             } elseif ($type['new_' . $id] == "NS") {
-                                
+
                             } else {
                                 if (!self::IsValidIP($target['new_' . $id])) {
                                     if (!self::IsValidDomainName($target['new_' . $id])) {
@@ -1407,7 +1407,7 @@ class module_controller {
                                 }
                             }
                         }
-                        //PRIORITY			
+                        //PRIORITY
                         if (isset($priority['new_' . $id]) && !fs_director::CheckForEmptyValue($priority['new_' . $id])) {
                             if (!is_numeric($priority['new_' . $id])) {
                                 self::$priorityNumeric_error = TRUE;
@@ -1622,7 +1622,7 @@ class module_controller {
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
                 $sql->bindParam(':domainID', $domainID);
                 $sql->execute();
-                //$domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();               
+                //$domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();
                 $numrows = $zdbh->prepare("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL");
                 $numrows->bindParam(':domainID', $domainID);
                 $numrows->execute();
@@ -1687,5 +1687,4 @@ class module_controller {
     }
 
 }
-
 ?>

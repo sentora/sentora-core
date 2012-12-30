@@ -49,8 +49,7 @@ class runtime_sessionsecurity {
      */
     static public function destroyCurrentSession(){
         $_SESSION['zpuid'] = null;
-//set over header so could cause issue with next login
-       // unset($_COOKIE['zUserSaltCookie']);
+        unset($_COOKIE['zUserSaltCookie']);
         session_destroy();
         return true;
     }

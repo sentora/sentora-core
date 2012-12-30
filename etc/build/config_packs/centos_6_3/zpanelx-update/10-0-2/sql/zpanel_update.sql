@@ -1,11 +1,9 @@
 /* Update SQL for CentOS 6 ZPanel 10.0.1 to 10.0.2 */
+USE `zpanel_core`;
 
-/* Adds the new password related fields */
-ALTER TABLE `zpanel_core`.`x_accounts`
-ADD COLUMN `ac_passsalt_vc` VARCHAR(22) NULL DEFAULT NULL
-AFTER `ac_resethash_tx` ;
-ALTER TABLE `zpanel_core`.`x_accounts`
-CHANGE COLUMN `ac_pass_vc` `ac_pass_vc` VARCHAR(200) NULL DEFAULT NULL ;
+/* Change field length for passwords */
+    ALTER TABLE `zpanel_core`.`x_accounts`
+    CHANGE COLUMN `ac_pass_vc` `ac_pass_vc` VARCHAR(200) NULL DEFAULT NULL;
 
 /* New setting for turning off CSRF on login form */
 INSERT INTO `x_settings`(`so_id_pk`,`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defVALUES_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) VALUES (117,'login_csfr','Remote Login Forms','false','false|true','Disables CSFR protection on the login form to enable remote login forms.','ZPanel Config','true');

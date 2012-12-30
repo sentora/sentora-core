@@ -47,7 +47,7 @@ class ctrl_auth {
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
             
-            //To be intergrated into ZP10.0.3
+            //Disabled till zpanel 10.0.3
             //Implamentation of session security 
             //runtime_sessionsecurity::setCookie();
             //runtime_sessionsecurity::setUserIP();
@@ -102,8 +102,9 @@ class ctrl_auth {
         $row = $zdbh->returnRow();
 
         if ($row) {
-            //To be intergrated into ZP10.0.3
+            //Disabled till zpanel 10.0.3
             //runtime_sessionsecurity::sessionRegen();
+            
             ctrl_auth::SetUserSession($row['ac_id_pk']);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $row['ac_id_pk'] . "");
             $log_logon->execute();
@@ -128,8 +129,9 @@ class ctrl_auth {
     static function KillSession() {
         runtime_hook::Execute('OnUserLogout');
         $_SESSION['zpuid'] = null;
-//removed as cookie if unset on next login in theory so will always fail
-      //  unset($_COOKIE['zUserSaltCookie']); 
+        //Disabled till zpanel 10.0.3
+        //unset($_COOKIE['zUserSaltCookie']);
+        
         return true;
     }
 
