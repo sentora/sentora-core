@@ -47,10 +47,11 @@ class ctrl_auth {
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
             
+            //To be intergrated into ZP10.0.3
             //Implamentation of session security 
-            runtime_sessionsecurity::setCookie();
-            runtime_sessionsecurity::setUserIP();
-            runtime_sessionsecurity::setUserAgent();           
+            //runtime_sessionsecurity::setCookie();
+            //runtime_sessionsecurity::setUserIP();
+            //runtime_sessionsecurity::setUserAgent();           
             
             return true;
         } else {
@@ -101,7 +102,8 @@ class ctrl_auth {
         $row = $zdbh->returnRow();
 
         if ($row) {
-            runtime_sessionsecurity::sessionRegen();
+            //To be intergrated into ZP10.0.3
+            //runtime_sessionsecurity::sessionRegen();
             ctrl_auth::SetUserSession($row['ac_id_pk']);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $row['ac_id_pk'] . "");
             $log_logon->execute();
