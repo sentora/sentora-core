@@ -267,12 +267,13 @@ class module_controller {
 								qt_distlists_in     = :DistLists,
 								qt_diskspace_bi     = :DiskQuotaFinal,
 								qt_bandwidth_bi     = :BandQuotaFinal,
-								qt_mysql_in         = :pid");
+								qt_mysql_in         = :MySQL
+                                                                WHERE qt_package_fk = :pid");
         $DiskQuotaFinal = $DiskQuota * 1024000;
         $BandQuotaFinal = $BandQuota * 1024000;
         $sql->bindParam(':DiskQuotaFinal', $DiskQuotaFinal);
         $sql->bindParam(':BandQuotaFinal', $BandQuotaFinal);
-        //$sql->bindParam(':MySQL', $MySQL);
+        $sql->bindParam(':MySQL', $MySQL);
         $sql->bindParam(':DistLists', $DistLists);
         $sql->bindParam(':Fowarders', $Fowarders);
         $sql->bindParam(':Mailboxes', $Mailboxes);
