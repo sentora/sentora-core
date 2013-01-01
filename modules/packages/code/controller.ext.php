@@ -669,5 +669,4 @@ class module_controller {
      * Webinterface sudo methods.
      */
 }
-
 ?>
