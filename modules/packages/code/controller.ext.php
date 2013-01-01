@@ -54,7 +54,7 @@ class module_controller {
                 $numrows = $zdbh->prepare("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=:pk_id_pk AND ac_deleted_ts IS NULL");
                 $numrows->bindParam(':pk_id_pk', $rowpackages['pk_id_pk']);
                 $numrows->execute();
-                $Column = $numrows->fetchColumn(); 
+                $Column = $numrows->fetchColumn();
                 array_push($res, array('packageid' => $rowpackages['pk_id_pk'],
                     'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowpackages['pk_created_ts']),
                     'clients' => $Column[0],
@@ -193,7 +193,7 @@ class module_controller {
         $numrows->execute();
         $package = $numrows->fetch();
 
-        
+
         $sql = $zdbh->prepare("INSERT INTO x_quotas (qt_package_fk,
 										qt_domains_in,
 										qt_subdomains_in,
@@ -250,7 +250,7 @@ class module_controller {
 								pk_enablephp_in = :php,
 								pk_enablecgi_in = :cgi 
 								WHERE pk_id_pk  = :pid");
-        
+
         $php = fs_director::GetCheckboxValue($EnablePHP);
         $cgi = fs_director::GetCheckboxValue($EnableCGI);
         $sql->bindParam(':php', $php);
@@ -267,12 +267,13 @@ class module_controller {
 								qt_distlists_in     = :DistLists,
 								qt_diskspace_bi     = :DiskQuotaFinal,
 								qt_bandwidth_bi     = :BandQuotaFinal,
-								qt_mysql_in         = :pid");
+								qt_mysql_in         = :MySQL
+                                                                WHERE qt_package_fk = :pid");
         $DiskQuotaFinal = $DiskQuota * 1024000;
         $BandQuotaFinal = $BandQuota * 1024000;
         $sql->bindParam(':DiskQuotaFinal', $DiskQuotaFinal);
         $sql->bindParam(':BandQuotaFinal', $BandQuotaFinal);
-        //$sql->bindParam(':MySQL', $MySQL);
+        $sql->bindParam(':MySQL', $MySQL);
         $sql->bindParam(':DistLists', $DistLists);
         $sql->bindParam(':Fowarders', $Fowarders);
         $sql->bindParam(':Mailboxes', $Mailboxes);
@@ -294,12 +295,12 @@ class module_controller {
         if (!fs_director::CheckForEmptyValue($packagename)) {
             $sql = "SELECT COUNT(*) FROM x_packages WHERE UPPER(pk_name_vc)=:packageNameSlashes AND pk_reseller_fk=:uid AND pk_id_pk !=:pid AND pk_deleted_ts IS NULL";
             $packageNameSlashes = addslashes(strtoupper($packagename));
-            
+
             $numrows = $zdbh->prepare($sql);
             $numrows->bindParam(':packageNameSlashes', $packageNameSlashes);
             $numrows->bindParam(':uid', $uid);
-            $numrows->bindParam(':pid', $pid);       
-            
+            $numrows->bindParam(':pid', $pid);
+
             if ($numrows->execute()) {
                 if ($numrows->fetchColumn() <> 0) {
                     self::$alreadyexists = true;
