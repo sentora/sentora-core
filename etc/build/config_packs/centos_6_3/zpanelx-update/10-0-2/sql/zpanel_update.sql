@@ -26,5 +26,10 @@ INSERT IGNORE INTO `zpanel_core`.`x_faqs` (`fq_id_pk`,`fq_acc_fk`,`fq_question_t
 INSERT IGNORE INTO `zpanel_core`.`x_faqs` (`fq_id_pk`,`fq_acc_fk`,`fq_question_tx`,`fq_answer_tx`,`fq_global_in`,`fq_created_ts`,`fq_deleted_ts`) VALUES (16,1,'How can I view how much Data I have used?','You can view how much data you have used by accessing the &quot;Usage Viewer&quot; under the Account Information section of ZPanel. It displays account information in different formats. It displays Data Usage, Domain Usage, Bandwidth Usage, MySQL Usage, and much more.',1,NULL,NULL);
 INSERT IGNORE INTO `zpanel_core`.`x_faqs` (`fq_id_pk`,`fq_acc_fk`,`fq_question_tx`,`fq_answer_tx`,`fq_global_in`,`fq_created_ts`,`fq_deleted_ts`) VALUES (17,1,'How can I access Webmail?','Go to the Mail section of ZPanel and select the module called &quot;Webmail&quot;, from here you can login to your E-Mail account and view and create messages. ',1,NULL,NULL);
 
+/* Force DNS and Apache rewrite configs */
+UPDATE `zpanel_core`.`x_settings` SET `so_value_tx`=',0' WHERE `so_name_vc`='dns_hasupdates';
+UPDATE `zpanel_core`.`x_settings` SET `so_value_tx`='true' WHERE `so_name_vc`='apache_changed';
+
+
 /* Update the ZPanel database version number */
 UPDATE  `zpanel_core`.`x_settings` SET  `so_value_tx` =  '10.0.2' WHERE  `so_name_vc` = 'dbversion';

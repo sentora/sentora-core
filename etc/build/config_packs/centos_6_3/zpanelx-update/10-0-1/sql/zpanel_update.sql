@@ -12,5 +12,9 @@ CHANGE COLUMN `uid` `uid` SMALLINT(6) NOT NULL DEFAULT '48',
 CHANGE COLUMN `gid` `gid` SMALLINT(6) NOT NULL DEFAULT '48';
 UPDATE `zpanel_proftpd`.`ftpuser` SET `uid`='48', `gid`='48';
 
+/* Force DNS and Apache rewrite configs */
+UPDATE `zpanel_core`.`x_settings` SET `so_value_tx`=',0' WHERE `so_name_vc`='dns_hasupdates';
+UPDATE `zpanel_core`.`x_settings` SET `so_value_tx`='true' WHERE `so_name_vc`='apache_changed';
+
 /* Update the ZPanel database version number */
 UPDATE  `zpanel_core`.`x_settings` SET  `so_value_tx` =  '10.0.1' WHERE  `so_name_vc` = 'dbversion';
