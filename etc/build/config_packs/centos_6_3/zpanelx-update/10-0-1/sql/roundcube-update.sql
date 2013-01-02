@@ -199,7 +199,7 @@ ALTER TABLE `contacts` DROP INDEX `user_contacts_index`;
 ALTER TABLE `contacts` MODIFY `email` text NOT NULL;
 ALTER TABLE `contacts` ADD INDEX `user_contacts_index` (`user_id`,`del`);
 ALTER TABLE `contacts` ADD CONSTRAINT `user_id_fk_contacts` FOREIGN KEY (`user_id`)
-   REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `cache` ALTER `user_id` DROP DEFAULT;
 ALTER TABLE `cache_index` ALTER `user_id` DROP DEFAULT;

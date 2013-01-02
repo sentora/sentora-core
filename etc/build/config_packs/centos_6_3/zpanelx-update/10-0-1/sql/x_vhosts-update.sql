@@ -2,74 +2,73 @@
 USE `zpanel_core`;
 /* Adds the new fields for customising vhost configs */
 
-delimiter '$$'
-create procedure AddColumnUnlessExists(
-        IN dbName tinytext,
-        IN tableName tinytext,
-        IN fieldName tinytext,
-        IN fieldDef text)
-begin
-        IF NOT EXISTS (
-                SELECT * FROM information_schema.COLUMNS
-                WHERE column_name=vh_custom_port_in
-                and table_name=x_vhosts
-                and table_schema=zpanel_core
-                )
-        THEN
-                ALTER TABLE `zpanel_core`.`x_vhosts`
-                ADD COLUMN `vh_custom_port_in` INT(6) NULL DEFAULT NULL  AFTER `vh_custom_tx`;
-        END IF;
-end;
-$$
+DELIMITER $$
 
-delimiter '$$'
-drop procedure AddColumnUnlessExists;
-$$
+USE `zpanel_core`; $$
 
-delimiter '$$'
-create procedure AddColumnUnlessExists(
-        IN dbName tinytext,
-        IN tableName tinytext,
-        IN fieldName tinytext,
-        IN fieldDef text)
-begin
-        IF NOT EXISTS (
-                SELECT * FROM information_schema.COLUMNS
-                WHERE column_name=vh_portforward_in
-                and table_name=x_vhosts
-                and table_schema=zpanel_core
-                )
-        THEN
-                ALTER TABLE `zpanel_core`.`x_vhosts`
-                ADD COLUMN `vh_portforward_in` INT(1) NULL DEFAULT '1'  AFTER `vh_custom_port_in`;
-        END IF;
-end;
-$$
+DROP PROCEDURE IF EXISTS AddColumnUnlessExists $$
+CREATE PROCEDURE AddColumnUnlessExists()
+BEGIN
 
-delimiter '$$'
-drop procedure AddColumnUnlessExists;
-$$
+-- add a column safely
+IF NOT EXISTS( (SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='zpanel_core'
+        AND COLUMN_NAME='vh_custom_port_in' AND TABLE_NAME='x_vhosts') ) THEN
+    ALTER TABLE `x_vhosts`
+	ADD COLUMN `vh_custom_port_in` INT(6)
+    NULL DEFAULT NULL  AFTER `vh_custom_tx`;
+END IF;
 
-delimiter '$$'
-create procedure AddColumnUnlessExists(
-        IN dbName tinytext,
-        IN tableName tinytext,
-        IN fieldName tinytext,
-        IN fieldDef text)
-begin
-        IF NOT EXISTS (
-                SELECT * FROM information_schema.COLUMNS
-                WHERE column_name=vh_custom_ip_vc
-                and table_name=x_vhosts
-                and table_schema=zpanel_core
-                )
-        THEN
-                ALTER TABLE `zpanel_core`.`x_vhosts`
-                ADD COLUMN `vh_custom_ip_vc` VARCHAR(45) NULL DEFAULT NULL  AFTER `vh_portforward_in`;
-        END IF;
-end;
-$$
+END $$
 
-delimiter '$$'
-drop procedure AddColumnUnlessExists;
-$$
+CALL AddColumnUnlessExists() $$
+DROP PROCEDURE IF EXISTS AddColumnUnlessExists $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+USE `zpanel_core`; $$
+
+DROP PROCEDURE IF EXISTS AddColumnUnlessExists $$
+CREATE PROCEDURE AddColumnUnlessExists()
+BEGIN
+
+-- add a column safely
+IF NOT EXISTS( (SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='zpanel_core'
+        AND COLUMN_NAME='vh_portforward_in' AND TABLE_NAME='x_vhosts') ) THEN
+    ALTER TABLE `x_vhosts`
+	ADD COLUMN `vh_portforward_in` VARCHAR(22)
+	NULL DEFAULT '1'  AFTER `vh_custom_port_in`;
+END IF;
+
+END $$
+
+CALL AddColumnUnlessExists() $$
+DROP PROCEDURE IF EXISTS AddColumnUnlessExists $$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+
+USE `zpanel_core`; $$
+
+DROP PROCEDURE IF EXISTS AddColumnUnlessExists $$
+CREATE PROCEDURE AddColumnUnlessExists()
+BEGIN
+
+-- add a column safely
+IF NOT EXISTS( (SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='zpanel_core'
+        AND COLUMN_NAME='vh_custom_ip_vc' AND TABLE_NAME='x_vhosts') ) THEN
+    ALTER TABLE `x_vhosts`
+	ADD COLUMN `vh_custom_ip_vc` VARCHAR(22)
+	NULL DEFAULT NULL AFTER `vh_portforward_in`;
+END IF;
+
+END $$
+
+CALL AddColumnUnlessExists() $$
+DROP PROCEDURE IF EXISTS AddColumnUnlessExists $$
+DELIMITER ;
