@@ -65,8 +65,8 @@ function WriteDNSZoneRecordsHook() {
                 $zone_file = (ctrl_options::GetSystemOption('zone_dir')) . $domain['dn_name_vc'] . ".txt";
                 $line = "$" . "TTL 10800" . fs_filehandler::NewLine();
                 $line .= "@ IN SOA " . $domain['dn_name_vc'] . ".    ";
-                $line .= "postmaster@" . $domain['dn_name_vc'] . ". (" . fs_filehandler::NewLine();
-                $line .= "                       " . time() . "	;serial" . fs_filehandler::NewLine();
+                $line .= "postmaster." . $domain['dn_name_vc'] . ". (" . fs_filehandler::NewLine();
+                $line .= "                       " . date("Ymdt") . "	;serial" . fs_filehandler::NewLine();
                 $line .= "                       " . ctrl_options::GetSystemOption('refresh_ttl') . "      ;refresh after 6 hours" . fs_filehandler::NewLine();
                 $line .= "                       " . ctrl_options::GetSystemOption('retry_ttl') . "       ;retry after 1 hour" . fs_filehandler::NewLine();
                 $line .= "                       " . ctrl_options::GetSystemOption('expire_ttl') . "     ;expire after 1 week" . fs_filehandler::NewLine();
