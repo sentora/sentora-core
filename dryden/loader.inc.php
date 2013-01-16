@@ -21,12 +21,12 @@ function __autoload($class_name) {
         require_once "dryden/" . $path . ".class.php";
     }
     if (isset($_GET['module'])) {
-        if (file_exists("modules/" . $_GET['module'] . "/code/controller.ext.php")) {
-            require_once "modules/" . $_GET['module'] . "/code/controller.ext.php";
+        if (file_exists("modules/" . fs_protector::ModuleRequest() . "/code/controller.ext.php")) {
+            require_once "modules/" . fs_protector::ModuleRequest() . "/code/controller.ext.php";
         }
         $additional_path = str_replace("_", "/", $class_name);
-        if (file_exists("modules/" . $_GET['module'] . "/code/" . $class_name . ".class.php")) {
-            require_once "modules/" . $_GET['module'] . "/code/" . $class_name . ".class.php";
+        if (file_exists("modules/" . fs_protector::ModuleRequest() . "/code/" . $class_name . ".class.php")) {
+            require_once "modules/" . fs_protector::ModuleRequest() . "/code/" . $class_name . ".class.php";
         }
     }
 }
