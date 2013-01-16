@@ -58,14 +58,14 @@ class module_controller {
             $numrows->bindParam(':uid', $uid);
             $numrows->execute();
         }
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             if ($uid == 0) {
                 //do not bind as there is no need
-            }else{
+            } else {
                 //else we bind the pram to the sql statment
-               $sql->bindParam(':uid', $uid); 
+                $sql->bindParam(':uid', $uid);
             }
             $res = array();
             $sql->execute();
@@ -76,7 +76,7 @@ class module_controller {
                     $numrows->bindParam(':ac_id_pk', $rowclients['ac_id_pk']);
                     $numrows->execute();
                     $numrowclients = $numrows->fetch();
-                    
+
                     $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
                     $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
                     $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
@@ -460,7 +460,7 @@ class module_controller {
         $sql = "SELECT COUNT(*) FROM x_packages WHERE pk_reseller_fk=:userid AND pk_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $userid);
-        
+
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() == 0) {
                 return false;
@@ -507,7 +507,7 @@ class module_controller {
         $numrows->bindParam(':uid', $uid);
         $numrows->execute();
         $client = $numrows->fetch();
-        
+
         $sql = $zdbh->prepare("INSERT INTO x_profiles (ud_user_fk, ud_fullname_vc, ud_group_fk, ud_package_fk, ud_address_tx, ud_postcode_vc, ud_phone_vc, ud_created_ts) VALUES (:userid, :fullname, :packageid, :groupid, :address, :postcode, :phone, :time)");
         $sql->bindParam(':userid', $client['ac_id_pk']);
         $sql->bindParam(':fullname', $fullname);
@@ -534,12 +534,18 @@ class module_controller {
         fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups", 0777);
         // Send the user account details via. email (if requested)... 
         if ($sendemail <> 0) {
+            if (isset($_SERVER['HTTPS'])) {
+                $protocol = 'https://';
+            } else {
+                $protocol = 'http://';
+            }
             $emailsubject = str_replace("{{username}}", $username, $emailsubject);
             $emailsubject = str_replace("{{password}}", $password, $emailsubject);
             $emailsubject = str_replace("{{fullname}}", $fullname, $emailsubject);
             $emailbody = str_replace("{{username}}", $username, $emailbody);
             $emailbody = str_replace("{{password}}", $password, $emailbody);
             $emailbody = str_replace("{{fullname}}", $fullname, $emailbody);
+            $emailbody = str_replace('{{controlpanelurl}}', $protocol . ctrl_options::GetSystemOption('zpanel_domain'), $emailbody);
 
             $phpmailer = new sys_email();
             $phpmailer->Subject = $emailsubject;
@@ -596,7 +602,7 @@ class module_controller {
             $sql = "SELECT COUNT(*) FROM x_groups WHERE ug_id_pk=:groupid";
             $numrows = $zdbh->prepare($sql);
             $numrows->bindParam(':groupid', $groupid);
-            
+
             if ($numrows->execute()) {
                 if ($numrows->fetchColumn() == 0) {
                     self::$groupblank = true;
@@ -646,7 +652,7 @@ class module_controller {
     }
 
     static function DefaultEmailBody() {
-        $line = ui_language::translate("Hi {{fullname}},\r\rWe are pleased to inform you that your new hosting account is now active, you can now login to ZPanel using the following credentials:\r\rUsername: {{username}}\rPassword: {{password}}");
+        $line = ui_language::translate("Hi {{fullname}},\r\rWe are pleased to inform you that your new hosting account is now active!\r\rYou can access your web hosting control panel using this link:\r{{controlpanelurl}}\r\rYour username and password is as follows:\rUsername: {{username}}\rPassword: {{password}}\r\rMany thanks,\rThe management");
         return $line;
     }
 
