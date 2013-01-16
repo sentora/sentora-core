@@ -19,9 +19,9 @@ require_once 'inc/dbc.inc.php';
 
 debug_phperrors::SetMode('dev');
 
-if (file_exists('modules/' . fs_protector::ModuleRequest() . '/code/webservice.ext.php')) {
-    include 'modules/' . fs_protector::ModuleRequest() . '/code/controller.ext.php';
-    include 'modules/' . fs_protector::ModuleRequest() . '/code/webservice.ext.php';
+if (file_exists('modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/code/webservice.ext.php')) {
+    include 'modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/code/controller.ext.php';
+    include 'modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/code/webservice.ext.php';
     $api = new webservice();
 
     if ($api->wsdataarray['request'] == '') {

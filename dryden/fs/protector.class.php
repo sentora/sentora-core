@@ -30,13 +30,13 @@ class fs_protector {
     public static function ModuleRequest() {
         global $zdbh;
         if (isset($_GET['m'])) {
-            $module_folder = self::SanitiseFolderName($_GET['m']);
+            $module_folder = $_GET['m'];
         } elseif (isset($_GET['module'])) {
-            $module_folder = self::SanitiseFolderName($_GET['module']);
+            $module_folder = $_GET['module'];
         } else {
             $module_folder = null;
         }
-        $sqlString = "SELECT mo_folder_vc FROM x_modules WHERE mo_folder_vc = :name";
+        $sqlString = "SELECT mo_folder_vc FROM x_modules WHERE mo_folder_vc = ':name'";
         $bindArray = array(':name' => $module_folder);
         $zdbh->bindQuery($sqlString, $bindArray);
         $result = $zdbh->returnRow();
