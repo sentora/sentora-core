@@ -3,7 +3,7 @@
     <name>My Account</name>
     <version>100</version>
     <defaultcat>Account Information</defaultcat>
-    <desc>Current personal details that you have provided us with, We ask that you keep these upto date in case we require to contact you regarding your hosting package.</desc>
+    <desc>Your current personal account details, we ask that you keep these details up-to-date in case we need to contact you regarding your hosting services.</desc>
     <authorname>ZPanel Project</authorname>
     <authoremail>developers@zpanelcp.com</authoremail>
     <authorurl>http://www.zpanelcp.com/</authorurl>
