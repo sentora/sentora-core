@@ -137,7 +137,7 @@
                                 <th>&nbsp;</th>
                                 <td>
                                     <div id="showdomainselect" style="display:none;">
-                                        <select name="inDestination" id="inDestination">
+                                        <select name="inDomainDestination" id="inDomainDestination">
                                             <option value="">/ (root)</option>
                                             <% loop DomainDirsList %>
                                             <option value="public_html/<& domains &>">/<& domains &></option>

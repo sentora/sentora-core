@@ -158,7 +158,7 @@ class module_controller {
         return $retval;
     }
 
-    static function ExecuteCreateFTP($uid, $username, $password, $destination, $access_type, $home) {
+    static function ExecuteCreateFTP($uid, $username, $password, $destination, $domainDestination, $access_type, $home) {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -266,10 +266,20 @@ class module_controller {
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateFTP($currentuser['userid'], $formvars['inFTPUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inAccess'], $formvars['inAutoHome']))
+        if ( self::ExecuteCreateFTP(
+                $currentuser['userid'],
+                $formvars['inFTPUsername'],
+                $formvars['inPassword'],
+                $formvars['inDestination'],
+                $formvars['inDomainDestination'],
+                $formvars['inAccess'],
+                $formvars['inAutoHome']
+        )) {
             self::$ok = true;
-        return true;
-        return false;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static function doDeleteFTP() {
