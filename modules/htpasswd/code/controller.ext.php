@@ -63,7 +63,8 @@ class module_controller {
     static function ListCurrentHTA($id) {
         global $zdbh;
         $res = array();
-        $htpasswd = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $id . ".htpasswd";
+        //$htpasswd = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/" . $id . ".htpasswd";
+        $htpasswd = "modules/htpasswd/assets/files/" . $id . ".htpasswd";
         if (file_exists($htpasswd)) {
             $lines = file($htpasswd);
             foreach ($lines as $line_num => $line) {
@@ -326,7 +327,7 @@ class module_controller {
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateHTA($currentuser['userid'], $formvars['inAuthName'], $formvars['inHTUsername'], $formvars['inHTPassword'], $formvars['inConfirmHTPassword'], $formvars['inPath']))
+        if (self::ExecuteCreateHTA($currentuser['userid'], $formvars['inAuthName'], $formvars['inHTUsername'], $formvars['inHTPassword'], $formvars['inConfirmHTPassword'], $currentuser['username'].'/public_html/'.$formvars['inPath']))
             return true;
         return false;
     }
@@ -423,7 +424,7 @@ class module_controller {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListHTA($controller->GetControllerRequest('URL', 'other'));
-            return $current[0]['htdir'];
+            return str_replace($current[0]['htuser'].'/public_html/','',$current[0]['htdir']);
         } else {
             return "";
         }
@@ -431,7 +432,7 @@ class module_controller {
 
     static function getRootPath() {
         $currentuser = ctrl_users::GetUserDetail();
-        return ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
+        return "";
     }
 
     static function getCurrentUserName() {
