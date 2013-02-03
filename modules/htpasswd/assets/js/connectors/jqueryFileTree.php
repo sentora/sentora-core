@@ -1,13 +1,14 @@
 <?php
 
 session_start();
-
-include($_SERVER['DOCUMENT_ROOT'] . '/cnf/db.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/db/driver.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/dryden/debug/logger.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . '/inc/dbc.inc.php');
-
 if (isset($_SESSION['zpuid'])) {
+//remember to remove zpanelx from link!
+include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/cnf/db.php');
+include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/dryden/db/driver.class.php');
+include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/dryden/debug/logger.class.php');
+include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/inc/dbc.inc.php');
+
+
 $z_db_user = $user;
 $z_db_pass = $pass;
 try {
@@ -15,18 +16,26 @@ try {
 } catch (PDOException $e) {
     exit();
 }
-$rowsettings = $zdbh->query("SELECT * FROM x_settings WHERE so_name_vc='hosted_dir'")->fetch();
-$path = urldecode($_POST['dir']);
-if (file_exists($path) && strpos($rowsettings['so_value_tx'], $path)) {
 
-    $files = scandir($path);
+//find user name
+$rows = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_id_pk = :uid");
+$rows->bindParam(':uid', $_SESSION['zpuid']);
+$rows->execute();
+$dbvals = $rows->fetch();
+$username = $dbvals['ac_user_vc'].'/public_html/';
+
+$rowsettings = $zdbh->query("SELECT * FROM x_settings WHERE so_name_vc='hosted_dir'")->fetch();
+$path = str_replace('//','/',str_replace('\\','/',str_replace('\\\\','//',str_replace('../','',str_replace('./','',urldecode($_POST['dir'])))))); //this is total untrusted data so lets secure it
+
+if (file_exists($rowsettings['so_value_tx'].$username.$path)) {
+    $files = scandir($rowsettings['so_value_tx'].$username.$path);
     natcasesort($files);
     if (count($files) > 2) { /* The 2 accounts for . and .. */
         echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
         // All dirs
         foreach ($files as $file) {
-            if (file_exists($path . $file) && $file != '.' && $file != '..' && is_dir($path . $file)) {
-                $userreturnpath = trim(substr($path . $file, strlen($rowsettings['so_value_tx']), strlen($path . $file)));
+            if (file_exists($rowsettings['so_value_tx'].$username.$path . $file) && $file != '.' && $file != '..' && is_dir($rowsettings['so_value_tx'].$username.$path . $file)) {
+                $userreturnpath = $path . $file;
                 echo "<li class=\"directory collapsed\"><a href=\"#\" 
 														   name=\"" . htmlentities($userreturnpath) . "\"
 														   id  =\"" . htmlentities($path . $file) . "\"
@@ -37,14 +46,14 @@ if (file_exists($path) && strpos($rowsettings['so_value_tx'], $path)) {
         }
         // All files
         foreach ($files as $file) {
-            if (file_exists($path . $file) && $file != '.' && $file != '..' && !is_dir($path . $file) && strstr($file, '.htaccess')) {
+            if (file_exists($rowsettings['so_value_tx'].$username.$path . $file) && $file != '.' && $file != '..' && !is_dir($rowsettings['so_value_tx'].$username.$path . $file) && strstr($file, '.htaccess')) {
                 $ext = preg_replace('/^.*\./', '', $file);
-                $htaccesspath = trim(substr($path, strlen($rowsettings['so_value_tx']), strlen($path . $file)));
+                $htaccesspath = trim(substr($path, strlen($rowsettings['so_value_tx']), strlen($rowsettings['so_value_tx'].$username.$path . $file)));
                 $rowpath = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_dir_vc='" . substr($htaccesspath, 0, -1) . "' AND ht_deleted_ts IS NULL")->fetch();
                 if ($rowpath) {
                     echo "<li class=\"file ext_$ext\"><a href=\"./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "\" title=\"Edit Users\">" . htmlentities($file) . "</a></li>";
                 } else {
-                    echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($path . $file) . "\" title=\"Not a known Password File\"><font color=\"red\">" . htmlentities($file) . "</font></a></li>";
+                    echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($file) . "\" title=\"Not a known Password File\"><font color=\"red\">" . htmlentities($file) . "</font></a></li>";
                 }
             }
         }
