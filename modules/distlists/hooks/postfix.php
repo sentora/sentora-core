@@ -51,7 +51,7 @@ foreach ($deletedclients as $deletedclient) {
             $numrows->bindParam(':dl_address_vc', $rowmailbox['dl_address_vc']);
             $numrows->execute();
             $result = $numrows->fetch();
-            
+
             if ($result) {
                 $msql = "DELETE FROM alias WHERE address=:dl_address_vc";
                 $msql = $mail_db->prepare($msql);

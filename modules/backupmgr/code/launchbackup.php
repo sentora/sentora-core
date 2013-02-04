@@ -55,7 +55,7 @@ if ($_SESSION['zpuid'] == $userid) {
             </div>
         </body>
     </html>
-    <?php } else {
+<?php } else {
     ?>
     <body style="background: #F3F3F3;">
         <h2>Unauthorized Access!</h2>

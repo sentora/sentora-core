@@ -45,7 +45,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $uid);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
@@ -71,7 +71,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $uid);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $sql->bindParam(':userid', $uid);
@@ -142,12 +142,12 @@ class module_controller {
         $rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
         $rowftpfind->execute();
         $rowftp = $rowftpfind->fetch();
-        
+
         $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc=:password WHERE ft_id_pk=:ftpid");
         $sql->bindParam(':password', $password);
         $sql->bindParam(':ftpid', $ft_id_pk);
         $sql->execute();
-        
+
         self::$reset = true;
         // Include FTP server specific file here.
         if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")) {
@@ -212,7 +212,7 @@ class module_controller {
         $sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc=:userid AND ft_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $username);
-        
+
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 self::$alreadyexists = TRUE;
@@ -239,7 +239,7 @@ class module_controller {
         $rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
         $rowftpfind->execute();
         $rowftp = $rowftpfind->fetch();
-        
+
         $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=:time WHERE ft_id_pk=:ftpid");
         $sql->bindParam(':ftpid', $ft_id_pk);
         $sql->bindParam(':time', $ft_id_pk);
@@ -266,14 +266,8 @@ class module_controller {
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if ( self::ExecuteCreateFTP(
-                $currentuser['userid'],
-                $formvars['inFTPUsername'],
-                $formvars['inPassword'],
-                $formvars['inDestination'],
-                $formvars['inDomainDestination'],
-                $formvars['inAccess'],
-                $formvars['inAutoHome']
+        if (self::ExecuteCreateFTP(
+                        $currentuser['userid'], $formvars['inFTPUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inDomainDestination'], $formvars['inAccess'], $formvars['inAutoHome']
         )) {
             self::$ok = true;
             return true;
@@ -442,7 +436,7 @@ class module_controller {
         }
         return;
     }
-    
+
     static function getCSFR_Tag() {
         return runtime_csfr::Token();
     }

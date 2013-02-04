@@ -96,7 +96,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
         $password = '{PLAIN-MD5}' . md5($password);
         $location = $domain . "/" . $address . "/";
         $maxMail = ctrl_options::GetSystemOption('max_mail_size');
-        
+
         $sql->bindParam(':password', $password);
         $sql->bindParam(':address', $address);
         $sql->bindParam(':fulladdress', $fulladdress);

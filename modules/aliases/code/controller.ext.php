@@ -44,7 +44,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql2 = $zdbh->prepare($sql);
             $res = array();
@@ -68,7 +68,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':aid', $aid);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $res = array();
@@ -85,10 +85,10 @@ class module_controller {
         }
     }
 
-    static function getMailboxList($uid=null) {
+    static function getMailboxList($uid = null) {
         global $zdbh;
         global $controller;
-        if(($uid == '')||(empty($uid))||($uid == null)){
+        if (($uid == '') || (empty($uid)) || ($uid == null)) {
             $uid = ctrl_auth::CurrentUserID();
         }
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -96,7 +96,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sqlRun = $zdbh->prepare($sql);
             $sqlRun->bindParam(':userid', $currentuser['userid']);
@@ -112,10 +112,10 @@ class module_controller {
         }
     }
 
-    static function getDomainList($uid=null){
+    static function getDomainList($uid = null) {
         global $zdbh;
         global $controller;
-        if(($uid == '')||(empty($uid))||($uid == null)){
+        if (($uid == '') || (empty($uid)) || ($uid == null)) {
             $uid = ctrl_auth::CurrentUserID();
         }
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -123,7 +123,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sqlRun = $zdbh->prepare($sql);
             $sqlRun->bindParam(':userid', $currentuser['userid']);
@@ -151,13 +151,13 @@ class module_controller {
         self::$create = true;
         // Include mail server specific file here.
         include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-        
+
         $bindArray = array(
-                ':userid' => $currentuser['userid'],
-                ':fulladdress' => $fulladdress,
-                ':destination' => $destination,
-                ':time' => time()
-            );
+            ':userid' => $currentuser['userid'],
+            ':fulladdress' => $fulladdress,
+            ':destination' => $destination,
+            ':time' => time()
+        );
         $sql = "INSERT INTO x_aliases (al_acc_fk,
 											  al_address_vc,
 											  al_destination_vc,
@@ -166,11 +166,11 @@ class module_controller {
 											  :fulladdress,
 											  :destination,
 											  :time)";
-        if($zdbh->bindQuery($sql, $bindArray)){
+        if ($zdbh->bindQuery($sql, $bindArray)) {
             runtime_hook::Execute('OnAfterCreateAlias');
             self::$ok = true;
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -186,7 +186,7 @@ class module_controller {
         );
         $sqlStatment = $zdbh->bindQuery("SELECT * FROM x_aliases WHERE al_id_pk=:id", $bindArray);
         $rowalias = $zdbh->returnRow();
-        
+
         // Include mail server specific file here.
         if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
             include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
@@ -217,7 +217,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
@@ -226,7 +226,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
@@ -235,7 +235,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
@@ -244,7 +244,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
@@ -253,7 +253,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             self::$alreadyexists = true;
             return false;
@@ -432,7 +432,7 @@ class module_controller {
         }
         return;
     }
-    
+
     static function getCSFR_Tag() {
         return runtime_csfr::Token();
     }

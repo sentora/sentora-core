@@ -40,7 +40,7 @@ foreach ($deletedclients as $deletedclient) {
     $numrows = $zdbh->prepare($sql);
     $numrows->bindParam(':deletedclient', $deletedclient);
     $numrows->execute();
-    
+
     if ($numrows->fetchColumn() <> 0) {
         $sql = $zdbh->prepare($sql);
         $sql->bindParam(':deletedclient', $deletedclient);

@@ -110,7 +110,7 @@ class module_controller {
         $numrows->bindParam(':folder', $folder);
         $numrows->execute();
         $rowpath = $numrows->fetch();
-        
+
         if ($rowpath) {
             if (file_exists(ctrl_options::GetSystemOption('hosted_dir') . $folder . "/.htaccess")) {
                 header("location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $rowpath['ht_id_pk'] . "");
@@ -135,12 +135,12 @@ class module_controller {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteHTAccess');
         //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "")->fetch();        
-        
+
         $numrows = $zdbh->prepare("SELECT * FROM x_htaccess WHERE ht_id_pk=:id");
         $numrows->bindParam(':id', $id);
         $numrows->execute();
         $row = $numrows->fetch();
-        
+
         $sql = $zdbh->prepare("UPDATE x_htaccess SET ht_deleted_ts=:time WHERE ht_id_pk=:id");
         $sql->bindParam(':id', $id);
         $time = time();
@@ -211,13 +211,13 @@ class module_controller {
         $sql->bindParam(':inPath', $inPath);
         $sql->bindParam(':time', $time);
         $sql->execute();
-        
+
         //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk =" . $userid . " AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1")->fetch();       
         $numrows = $zdbh->prepare("SELECT * FROM x_htaccess WHERE ht_acc_fk =:userid AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1");
         $numrows->bindParam(':userid', $userid);
         $numrows->execute();
         $row = $numrows->fetch();
-        
+
         $htaccesfiledir = ctrl_options::GetSystemOption('zpanel_root') . "modules/htpasswd/assets/files/";
         if (!is_dir($htaccesfiledir)) {
             fs_director::CreateDirectory($htaccesfiledir);
@@ -327,7 +327,7 @@ class module_controller {
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateHTA($currentuser['userid'], $formvars['inAuthName'], $formvars['inHTUsername'], $formvars['inHTPassword'], $formvars['inConfirmHTPassword'], $currentuser['username'].'/public_html/'.$formvars['inPath']))
+        if (self::ExecuteCreateHTA($currentuser['userid'], $formvars['inAuthName'], $formvars['inHTUsername'], $formvars['inHTPassword'], $formvars['inConfirmHTPassword'], $currentuser['username'] . '/public_html/' . $formvars['inPath']))
             return true;
         return false;
     }
@@ -424,7 +424,7 @@ class module_controller {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListHTA($controller->GetControllerRequest('URL', 'other'));
-            return str_replace($current[0]['htuser'].'/public_html/','',$current[0]['htdir']);
+            return str_replace($current[0]['htuser'] . '/public_html/', '', $current[0]['htdir']);
         } else {
             return "";
         }

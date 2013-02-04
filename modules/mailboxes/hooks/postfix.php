@@ -53,13 +53,13 @@ foreach ($deletedclients as $deletedclient) {
             $msql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
             $msql->execute();
             $domain = explode("@", $rowmailbox['mb_address_vc']);
-            
+
             //$result = $mail_db->query("SELECT * FROM domain WHERE domain='" . $domain[1] . "'")->Fetch();
             $numrows = $mail_db->prepare("SELECT * FROM domain WHERE domain=:domain");
             $numrows->bindParam(':domain', $domain[1]);
             $numrows->execute();
             $result = $numrows->fetch();
-            
+
             if ($result) {
                 $msql = $mail_db->prepare("DELETE FROM domain WHERE domain=:domain");
                 $msql->bindParam(':domain', $domain[1]);

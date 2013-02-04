@@ -30,7 +30,7 @@ foreach ($deletedclients as $deletedclient) {
     $info->bindParam(':deleteClient', $deletedclient);
     $info->execute();
     $result = $info->fetch();
-    
+
     if ($result) {
         $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_deleted_ts=:time WHERE ft_acc_fk=:deleteClient");
         $sql->bindParam(':time', time());

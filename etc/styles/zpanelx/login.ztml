@@ -42,132 +42,132 @@
                                 <td width="492px">
 
                                     <?php if (isset($_GET['resetkey'])) { ?>
-                                    <!-- BEGIN CONFIRMATION-->
-                                    <div class="confirmation_wrapper" id="confirmation_wrapper" style="display:block;">
-                                        <table border="0" cellpadding="0" cellspacing="0" class="login" height="175px">
-                                            <tr>
-                                                <th>Reset Password</th>
-                                            </tr>
-                                            <tr>
-                                                <td align="left" colspan="2"><font color="#55a7c8">Your nearly there! To reset your account password, please enter your new password and confirm your email address to proceed.</font>&nbsp;</td>
-                                            </tr>
-                                            <tr valign="top">
-                                                <td>
-                                                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm">
-                                                        <table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
-                                                            <tr>
-                                                                <td id="login"><strong>New password:</strong></td>
-                                                                <td id="login"><strong>Your email address:</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><input name="inNewPass" id="inNewPass" type="password" tabindex="1" /></td>
-                                                                <td><input name="inConfEmail" type="text" id="inConfEmail"  tabindex="3" /></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><strong>Re-type new password:</strong></td>
-                                                                <td></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><input name="inNewPass2" id="inNewPass2" type="password" tabindex="2" /></td>
-                                                                <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="Confirm" value="1"  tabindex="4">Submit</button></td>
-                                                            </tr>
-                                                        </table>
-                                                        <?php echo runtime_csfr::Token(); ?>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <!-- END CONFIRMATION- -->
+                                        <!-- BEGIN CONFIRMATION-->
+                                        <div class="confirmation_wrapper" id="confirmation_wrapper" style="display:block;">
+                                            <table border="0" cellpadding="0" cellspacing="0" class="login" height="175px">
+                                                <tr>
+                                                    <th>Reset Password</th>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" colspan="2"><font color="#55a7c8">Your nearly there! To reset your account password, please enter your new password and confirm your email address to proceed.</font>&nbsp;</td>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td>
+                                                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm">
+                                                            <table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
+                                                                <tr>
+                                                                    <td id="login"><strong>New password:</strong></td>
+                                                                    <td id="login"><strong>Your email address:</strong></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><input name="inNewPass" id="inNewPass" type="password" tabindex="1" /></td>
+                                                                    <td><input name="inConfEmail" type="text" id="inConfEmail"  tabindex="3" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><strong>Re-type new password:</strong></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><input name="inNewPass2" id="inNewPass2" type="password" tabindex="2" /></td>
+                                                                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="Confirm" value="1"  tabindex="4">Submit</button></td>
+                                                                </tr>
+                                                            </table>
+                                                            <?php echo runtime_csfr::Token(); ?>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <!-- END CONFIRMATION- -->
                                     <?php } else {
-                                    ?>
-                                    <!-- BEGIN LOGIN -->
-                                    <div class="login_wrapper" id="login_wrapper" style="display:block;">
-                                        <table border="0" cellpadding="0" cellspacing="0" class="login" height="175px">
-                                            <tr>
-                                                <th>Control panel login</th>
-                                            </tr>
-                                            <tr>
-                                                <td align="left" colspan="2"><font color="#55a7c8">
-                                                        <?php
-                                                        if (isset($_GET['invalidlogin'])) {
-                                                            echo "Invalid user account or username/password mismatch, please try again!";
-                                                        }
-                                                        if (isset($_GET['loggedout'])) {
-                                                            echo "You have been logged out successfully!";
-                                                        }
-                                                        if(isset($_GET['sessionIssue'])){
-                                                            echo 'ZPanel has detected an issue please login again!';
-                                                        }
-                                                        if (isset($_GET['passwordreset'])) {
-                                                            echo "If your email address matched the one on your account your password has now been reset!";
-                                                        }
-                                                        ?></font>&nbsp;
-                                                </td>
-                                            </tr>
-                                            <tr valign="top">
-                                                <td align="left">
-                                                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="frmZLogin" id="frmZLogin">
-                                                        <table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
-                                                            <tr>
-                                                                <td id="login" width="20px"><strong>Username:</strong></td>
-                                                                <td id="login"><strong>Password:</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
-                                                                <td><input name="inPassword" type="password" id="inPassword" /></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td id="lightblue"></td>
-                                                                <td id="lightblue"></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
-                                                                <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td colspan="2" id="grey"><a href="javascript:void(0);" id="fp" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');">Forgot Password?</a></td>
-                                                            </tr>
-                                                        </table>
-                                                        <?php echo runtime_csfr::Token(); ?>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <!-- END LOGIN -->
-                                    <!-- BEGIN FORGOT PASSWORD-->
-                                    <div class="forgotpassword_wrapper" id="forgotpassword_wrapper" style="display:none;">
-                                        <table border="0" cellpadding="0" cellspacing="0" class="login" height="175px">
-                                            <tr>
-                                                <th>Forgot your password?</th>
-                                            </tr>
-                                            <tr>
-                                                <td align="left" colspan="2"><font color="#55a7c8">Please enter the email address for your account.</font>&nbsp;</td>
-                                            </tr>
-                                            <tr valign="top">
-                                                <td>
-                                                    <form action="" method="post" name="frmZForgot" id="frmZForgot">
-                                                        <table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
-                                                            <tr>
-                                                                <td id="login"><strong>Email:</strong></td>
-                                                                <td id="login"></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><input name="inForgotPassword" type="text" id="inForgotPassword" /></td>
-                                                                <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Submit</button></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td colspan="2" id="grey"><a href="javascript:void(0);" id="btl" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');" id="grey">Back to Login</a></td>
-                                                            </tr>
-                                                        </table>
-                                                        <?php echo runtime_csfr::Token(); ?>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <!-- END FORGOT PASSWORD- -->
+                                        ?>
+                                        <!-- BEGIN LOGIN -->
+                                        <div class="login_wrapper" id="login_wrapper" style="display:block;">
+                                            <table border="0" cellpadding="0" cellspacing="0" class="login" height="175px">
+                                                <tr>
+                                                    <th>Control panel login</th>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" colspan="2"><font color="#55a7c8">
+                                                            <?php
+                                                            if (isset($_GET['invalidlogin'])) {
+                                                                echo "Invalid user account or username/password mismatch, please try again!";
+                                                            }
+                                                            if (isset($_GET['loggedout'])) {
+                                                                echo "You have been logged out successfully!";
+                                                            }
+                                                            if (isset($_GET['sessionIssue'])) {
+                                                                echo 'ZPanel has detected an issue please login again!';
+                                                            }
+                                                            if (isset($_GET['passwordreset'])) {
+                                                                echo "If your email address matched the one on your account your password has now been reset!";
+                                                            }
+                                                            ?></font>&nbsp;
+                                                    </td>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td align="left">
+                                                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="frmZLogin" id="frmZLogin">
+                                                            <table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
+                                                                <tr>
+                                                                    <td id="login" width="20px"><strong>Username:</strong></td>
+                                                                    <td id="login"><strong>Password:</strong></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
+                                                                    <td><input name="inPassword" type="password" id="inPassword" /></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td id="lightblue"></td>
+                                                                    <td id="lightblue"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
+                                                                    <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" id="fp" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');">Forgot Password?</a></td>
+                                                                </tr>
+                                                            </table>
+                                                            <?php echo runtime_csfr::Token(); ?>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <!-- END LOGIN -->
+                                        <!-- BEGIN FORGOT PASSWORD-->
+                                        <div class="forgotpassword_wrapper" id="forgotpassword_wrapper" style="display:none;">
+                                            <table border="0" cellpadding="0" cellspacing="0" class="login" height="175px">
+                                                <tr>
+                                                    <th>Forgot your password?</th>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" colspan="2"><font color="#55a7c8">Please enter the email address for your account.</font>&nbsp;</td>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td>
+                                                        <form action="" method="post" name="frmZForgot" id="frmZForgot">
+                                                            <table align="left" border="0" width="90%" cellpadding="0" cellspacing="5px" >
+                                                                <tr>
+                                                                    <td id="login"><strong>Email:</strong></td>
+                                                                    <td id="login"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><input name="inForgotPassword" type="text" id="inForgotPassword" /></td>
+                                                                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Submit</button></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2" id="grey"><a href="javascript:void(0);" id="btl" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');" id="grey">Back to Login</a></td>
+                                                                </tr>
+                                                            </table>
+                                                            <?php echo runtime_csfr::Token(); ?>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <!-- END FORGOT PASSWORD- -->
                                     <?php }
                                     ?>
                                 </td>

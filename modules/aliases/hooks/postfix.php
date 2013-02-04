@@ -1,4 +1,4 @@
-  <?php
+<?php
 
 /**
  *
@@ -39,7 +39,7 @@ foreach ($deletedclients as $deletedclient) {
     $numrows = $zdbh->prepare($sql);
     $numrows->bindParam(':acc', $deletedclient);
     $numrows->execute();
-    
+
     if ($numrows->fetchColumn() <> 0) {
         $sql = $zdbh->prepare($sql);
         $sql->execute();
@@ -47,7 +47,7 @@ foreach ($deletedclients as $deletedclient) {
             $bindArray = array(':address' => $rowmailbox['al_address_vc']);
             $sqlStatment = $zdbh->bindQuery("SELECT address FROM alias WHERE address=:address", $bindArray);
             $result = $zdbh->returnRow();
-            
+
             if ($result) {
                 $msql = "DELETE FROM alias WHERE address=:address";
                 $msql = $mail_db->prepare($msql);

@@ -59,7 +59,7 @@ class module_controller {
                 $numrows2->bindParam(':dl_id_pk', $rowdistlist['dl_id_pk']);
                 $numrows2->execute();
                 $numrowmb = $numrows2->fetch();
-                
+
                 array_push($res, array('address' => $rowdistlist['dl_address_vc'],
                     'totalmb' => $numrowmb[0],
                     'id' => $rowdistlist['dl_id_pk']));
@@ -241,7 +241,7 @@ class module_controller {
         $numrows->bindParam(':du_distlist_fk', $du_distlist_fk);
         $numrows->execute();
         $rowdl = $numrows->fetch();
-        
+
         runtime_hook::Execute('OnBeforeAddDistListUser');
         self::$createuser = true;
         // Include mail server specific file here.
@@ -272,13 +272,13 @@ class module_controller {
         $numrows->bindParam(':du_id_pk', $du_id_pk);
         $numrows->execute();
         $rowdlu = $numrows->fetch();
-        
+
         //$rowdl = $zdbh->query("SELECT * FROM x_distlists WHERE dl_id_pk=" . $rowdlu['du_distlist_fk'] . " AND dl_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_distlists WHERE dl_id_pk=:du_distlist_fk AND dl_deleted_ts IS NULL");
         $numrows->bindParam(':du_distlist_fk', $rowdlu['du_distlist_fk']);
         $numrows->execute();
         $rowdl = $numrows->fetch();
-        
+
         $dladdress = $rowdl['dl_address_vc'];
         runtime_hook::Execute('OnBeforeDeleteDistListUser');
         // Include mail server specific file here.
@@ -576,7 +576,7 @@ class module_controller {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
-    
+
     static function getCSFR_Tag() {
         return runtime_csfr::Token();
     }

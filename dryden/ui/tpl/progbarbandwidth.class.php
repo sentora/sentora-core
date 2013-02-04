@@ -19,8 +19,7 @@ class ui_tpl_progbarbandwidth {
         $bandwidth = ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']);
         if ($bandwidthquota == 0) {
             return ''; // no quota, it is desactivated
-        }
-        else {
+        } else {
             if (fs_director::CheckForEmptyValue($bandwidth))
                 $bandwidth = 0;
             $percent = round(($bandwidth / $bandwidthquota) * 100, 0);

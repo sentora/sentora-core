@@ -48,7 +48,7 @@ class module_controller {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
-        
+
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $sql->bindParam(':userid', $currentuser['userid']);

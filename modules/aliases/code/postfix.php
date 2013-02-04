@@ -37,12 +37,12 @@ try {
 // Deleting Postfix Alias
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
     //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowalias['al_address_vc'] . "'")->Fetch();
-    
+
     $bindArray = NULL;
     $bindArray = array(':aliasname' => $rowalias['al_address_vc']);
     $sqlStatment = $mail_db->bindQuery("SELECT address FROM alias WHERE address=:aliasname", $bindArray);
     $result = $mail_db->returnRow();
-    
+
     if ($result) {
         $sqlStatment = "DELETE FROM alias WHERE address=:address";
         $sql = $mail_db->prepare($sqlStatment);
@@ -54,12 +54,12 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
 // Adding Postfix Alias
 if (!fs_director::CheckForEmptyValue(self::$create)) {
     //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
-    
+
     $bindArray = NULL;
     $bindArray = array(':address' => $fulladdress);
     $sqlStatment = $mail_db->bindQuery("SELECT address FROM alias WHERE address=:address", $bindArray);
     $result = $mail_db->returnRow();
-    
+
     if (!$result) {
         $sqlStatment2 = "INSERT INTO alias  (address,
 										 	goto,

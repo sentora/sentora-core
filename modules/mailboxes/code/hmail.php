@@ -43,7 +43,7 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
     $result = $numrows->fetch();
     if ($result) {
         $sql = $mail_db->prepare("DELETE FROM hm_accounts WHERE accountaddress=:mb_address_vc");
-        $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc'] );
+        $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
         $sql->execute();
     }
 }
@@ -52,7 +52,7 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
 if (self::$update) {
     if (!fs_director::CheckForEmptyValue($password)) {
         $sql = $mail_db->prepare("UPDATE hm_accounts SET accountpassword=:password WHERE accountaddress=:mb_address_vc");
-        $password = md5($password); 
+        $password = md5($password);
         $sql->bindParam(':password', $password);
         $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
         $sql->execute();
@@ -186,7 +186,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
         $sql->bindParam(':fulladdress', $fulladdress);
         $maxMail = ctrl_options::GetSystemOption('max_mail_size');
         $sql->bindParam(':maxMail', $maxMail);
-        $hmail = ctrl_options::GetSystemOption('hmailserver_et'); 
+        $hmail = ctrl_options::GetSystemOption('hmailserver_et');
         $sql->bindParam(':hmail', $hmail);
         $sql->execute();
         # Lets grab the accountid of the mailbox...

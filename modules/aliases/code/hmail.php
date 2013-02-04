@@ -41,7 +41,7 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
     $bindArray = array(':aliasname' => $rowalias['al_address_vc']);
     $sqlStatment = $mail_db->bindQuery("SELECT aliasname FROM hm_aliases WHERE aliasname=:aliasname", $bindArray);
     $result = $mail_db->returnRow();
-    
+
     if ($result) {
         $sqlStatment = "DELETE FROM hm_aliases WHERE aliasname=:aliasname";
         $sql = $mail_db->prepare($sqlStatment);
@@ -57,7 +57,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
     $bindArray = array(':domain' => $domain);
     $sqlStatment = $mail_db->bindQuery("SELECT domainid FROM hm_domains WHERE domainname=:domain", $bindArray);
     $result = $mail_db->returnRow();
-    
+
     if ($result) {
         $sqlStatment = "INSERT INTO hm_aliases (aliasdomainid,
 										aliasname,

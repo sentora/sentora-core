@@ -20,11 +20,10 @@ class ui_tpl_progbardisk {
         if ($diskquota == 0) {
             $line = '[Illimited]'; // no quota, it is desactivated, 
             //to do : dislay a same size image for "Illimited" ?
-        }
-        else {
-            if (fs_director::CheckForEmptyValue($diskspace)) 
-			    $diskspace = 0;
-              
+        } else {
+            if (fs_director::CheckForEmptyValue($diskspace))
+                $diskspace = 0;
+
             $percent = round(($diskspace / $diskquota) * 100, 0);
             return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . $percent . '"/>';
         }

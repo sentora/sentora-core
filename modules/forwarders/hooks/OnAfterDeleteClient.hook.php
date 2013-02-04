@@ -27,7 +27,7 @@ function DeleteForwardersForDeletedClient() {
         $numrows->bindParam(':deletedclient', $deletedclient);
         $numrows->execute();
         $result = $numrows->fetch();
-        
+
         if ($result) {
             $sql = $zdbh->prepare("UPDATE x_forwarders SET fw_deleted_ts=:time WHERE fw_acc_fk=:deletedclient");
             $time = time();
