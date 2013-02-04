@@ -17,17 +17,15 @@ class ui_tpl_progbarbandwidth {
         $currentuser = ctrl_users::GetUserDetail();
         $bandwidthquota = $currentuser['bandwidthquota'];
         $bandwidth = ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']);
-        if (!fs_director::CheckForEmptyValue($bandwidth)) {
-            $per = ($bandwidth / $bandwidthquota) * 100;
-            $percent = round($per, 0);
-            $line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=$percent\"/>";
-        } else {
-            $line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=0\"/>";
+        if ($bandwidthquota == 0) {
+            return ''; // no quota, it is desactivated
         }
-        if ($bandwidth == $bandwidthquota) {
-            $line = "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=100\"/>";
+        else {
+            if (fs_director::CheckForEmptyValue($bandwidth))
+                $bandwidth = 0;
+            $percent = round(($bandwidth / $bandwidthquota) * 100, 0);
+            return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=$percent"/>';
         }
-        return $line;
     }
 
 }
