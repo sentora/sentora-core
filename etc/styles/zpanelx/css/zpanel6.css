@@ -566,7 +566,7 @@ span.Side_Info_None{
 .zcatcontent td{
     margin:0px;
     padding:0px;
-    background: url(../) left top repeat-x;
+    background:none;
     border-top:0px;
     border-left:0px;
     border-right:0px;
