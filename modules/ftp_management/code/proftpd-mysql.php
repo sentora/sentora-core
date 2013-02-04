@@ -29,7 +29,7 @@ include('cnf/db.php');
 $z_db_user = $user;
 $z_db_pass = $pass;
 try {
-    $ftp_db = new db_driver("mysql:host=localhost;dbname=$ftp_db", $z_db_user, $z_db_pass);
+    $ftp_db = new db_driver("mysql:host=" . $host . ";dbbname=$ftp_db", $z_db_user, $z_db_pass);
 } catch (PDOException $e) {
     
 }

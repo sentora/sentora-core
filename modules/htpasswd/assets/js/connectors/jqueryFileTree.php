@@ -12,7 +12,7 @@ include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/inc/dbc.inc.php');
 $z_db_user = $user;
 $z_db_pass = $pass;
 try {
-    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $z_db_user, $z_db_pass);
+    $zdbh = new db_driver("mysql:host=" . $host . ";dbbname=" . $dbname . "", $z_db_user, $z_db_pass);
 } catch (PDOException $e) {
     exit();
 }

@@ -38,7 +38,7 @@ include('../../../dryden/fs/director.class.php');
 include('../../../dryden/fs/filehandler.class.php');
 include('../../../inc/dbc.inc.php');
 try {
-    $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $user, $pass);
+    $zdbh = new db_driver("mysql:host=" . $host . ";dbbname=" . $dbname . "", $user, $pass);
 } catch (PDOException $e) {
     exit();
 }
@@ -79,7 +79,7 @@ if (isset($_GET['id']) && $_GET['id'] != "") {
 function ExecuteBackup($userid, $username, $download = 0) {
     include('../../../cnf/db.php');
     try {
-        $zdbh = new db_driver("mysql:host=localhost;dbname=" . $dbname . "", $user, $pass);
+        $zdbh = new db_driver("mysql:host=" . $host . ";dbbname=" . $dbname . "", $user, $pass);
     } catch (PDOException $e) {
         exit();
     }
