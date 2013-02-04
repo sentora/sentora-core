@@ -3,10 +3,10 @@
 session_start();
 if (isset($_SESSION['zpuid'])) {
 //remember to remove zpanelx from link!
-include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/cnf/db.php');
-include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/dryden/db/driver.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/dryden/debug/logger.class.php');
-include($_SERVER['DOCUMENT_ROOT'] . 'zpanelx/inc/dbc.inc.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/zpanelx/cnf/db.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/zpanelx/dryden/db/driver.class.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/zpanelx/dryden/debug/logger.class.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/zpanelx/inc/dbc.inc.php');
 
 
 $z_db_user = $user;
