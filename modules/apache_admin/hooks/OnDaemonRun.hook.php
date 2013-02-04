@@ -179,7 +179,7 @@ function WriteVhostConfigFile() {
              */
 
             //Domain is beyond its diskusage
-            if ($vhostuser['diskquota'] <= $diskspace) {
+            if ($vhostuser['diskquota'] != 0 && $diskspace > $vhostuser['diskquota']) {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR QUOTA OVERAGE" . fs_filehandler::NewLine();
                 $line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
@@ -212,7 +212,7 @@ function WriteVhostConfigFile() {
                  */
 
                 //Domain is beyond its quota
-            } elseif ($vhostuser['bandwidthquota'] <= $bandwidth) {
+            } elseif ($vhostuser['bandwidthquota'] != 0 && $bandwidth > $vhostuser['bandwidthquota']) {
                 $line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR BANDWIDTH OVERAGE" . fs_filehandler::NewLine();
                 $line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();

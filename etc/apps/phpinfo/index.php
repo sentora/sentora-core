@@ -28,6 +28,6 @@ session_start();
 if (isset($_SESSION['zpuid'])) {
     echo phpinfo();
 } else {
-    echo "<h1>Unathorised request!</h1><p>You must be logged in before you are able to view PHP configuration on this server.</p>";
+    echo "<h1>Unauthorised request!</h1><p>You must be logged in before you are able to view PHP configuration on this server.</p>";
 }
 ?>
