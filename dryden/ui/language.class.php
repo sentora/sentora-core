@@ -4,7 +4,7 @@
  * Language translation class.
  * @package zpanelx
  * @subpackage dryden -> ui
- * @version 1.0.0
+ * @version 1.0.1
  * @author Russell Skinner (rskinner@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -12,40 +12,46 @@
  */
 class ui_language {
 
+    static $LangCol;
+
     /**
      * Used to translate a text string into the language preference of the user.
-     * @author Russell Skinner (rskinner@zpanelcp.com)
+     * @author Pascal Peyremorte (p.peyremorte@wanadoo.fr)
      * @global db_driver $zdbh The ZPX database handle.
      * @param $message The string to translate.
      * @return string The transalated string.
      */
     static function translate($message) {
         global $zdbh;
-        $message = addslashes($message);
-        $currentuser = ctrl_users::GetUserDetail();
-        $lang = $currentuser['language'];
-        $column_names = self::GetColumnNames('x_translations');
-        foreach ($column_names as $column_name) {            
-            $columnNameClean = $zdbh->mysqlRealEscapeString($column_name);
-            $sql = $zdbh->prepare("SELECT * FROM x_translations WHERE ".$columnNameClean." LIKE :message");
-            $sql->bindParam(':message', $message);
-            $sql->execute();
-            $result = $sql->fetch();
 
-            if ($result) {
-                if (!fs_director::CheckForEmptyValue($result['tr_' . $lang . '_tx'])) {
-                    return $result['tr_' . $lang . '_tx'];
-                } else {
-                    return stripslashes($message);
-                }
-            }
-        }
-        if (!fs_director::CheckForEmptyValue($message) && $lang == "en") {
-            $sql = $zdbh->prepare("INSERT INTO x_translations (tr_en_tx) VALUES (:message)");
-            $sql->bindParam(':message', $message);
+        if (empty(self::$LangCol)) {
+            $uid = ctrl_auth::CurrentUserID();
+            $sql = $zdbh->prepare('SELECT ud_language_vc FROM x_profiles WHERE ud_user_fk=' . $uid);
             $sql->execute();
+            $lang = $sql->fetch();
+            self::$LangCol = 'tr_' . $lang['ud_language_vc'] . '_tx';
         }
-        return stripslashes($message);
+        if (self::$LangCol == 'tr_en_tx')
+            return $message; //no translation required, english used
+
+        $SlashedMessage = addslashes($message); //protect special chars
+        $sql = $zdbh->prepare('SELECT ' . self::$LangCol . ' FROM x_translations WHERE tr_en_tx =:message');
+        $sql->bindParam(':message', $SlashedMessage);
+        $sql->execute();
+        $result = $sql->fetch();
+
+        if ($result) {
+            if (!fs_director::CheckForEmptyValue($result[self::$LangCol]))
+                return $result[self::$LangCol]; //valid translation present
+            else
+                return $message; //translated message empty
+        } else { //message not found in the table
+            //add unfound message to the table with empties translations
+            $sql = $zdbh->prepare('INSERT INTO x_translations SET tr_en_tx=:message');
+            $sql->bindParam(':message', $SlashedMessage);
+            $sql->execute();
+            return $message;
+        }
     }
 
     /**
