@@ -23,7 +23,7 @@ class ui_tpl_progbardisk {
             if (fs_director::CheckForEmptyValue($diskspace))
                 $diskspace = 0;
             $percent = round(($diskspace / $diskquota) * 100, 0);
-            return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . $percent . '"/>';
+            return "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent = " . $percent . "\"/>";
         }
     }
 
