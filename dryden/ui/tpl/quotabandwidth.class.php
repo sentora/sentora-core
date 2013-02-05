@@ -15,7 +15,7 @@ class ui_tpl_quotabandwidth {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['bandwidthquota'] == 0)
-            $bandwidthquota = ui_language::translate('Illimited');
+            $bandwidthquota = ui_language::translate('Unlimited');
         else
             $bandwidthquota = fs_director::ShowHumanFileSize($currentuser['bandwidthquota']);
         return $bandwidthquota;

@@ -133,7 +133,7 @@ class module_controller {
         $used = self::$diskspace;
         if ($total == 0) {
             $free = 100000000;
-            $freeLabel = ui_language::translate('Illimited');
+            $freeLabel = ui_language::translate('Unlimited');
         } else {
             $free = $total - $used;
             if ($free < 0) {
@@ -145,7 +145,7 @@ class module_controller {
 
         function pbar($used, $quota) {
             if ($quota == 0)
-                return '[' . ui_language::translate('Illimited') . ']'; //Quota are disabled
+                return '[' . ui_language::translate('Unlimited') . ']'; //Quota are disabled
             if ($used == $quota)
                 return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=100"/>';
             return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . round($used / $quota * 100, 0) . '"/>';
@@ -155,7 +155,7 @@ class module_controller {
             return ($quota == 0 ) ? '<tr>' .
                     '<th nowrap="nowrap">' . ui_language::translate($name) . ':</th>' .
                     '<td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used) . '</td>' .
-                    '<td> (' . ui_language::translate('Illimited') . ')</td>' .
+                    '<td> (' . ui_language::translate('Unlimited') . ')</td>' .
                     '</tr>' : '<tr>' .
                     '<th nowrap="nowrap">' . ui_language::translate($name) . ':</th>' .
                     '<td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used) . ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td>' .
