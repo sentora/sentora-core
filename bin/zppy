@@ -57,36 +57,36 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
                         if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
                             fs_director::SetFileSystemPermissions('modules/' . $argv[2] . '', 0777);
                             if (!fs_director::CheckFileExists('modules/' . $argv[2] . '/module.xml')) {
-                                fwrite(STDOUT, "No module.xml file found in the unzipped archive.");
+                                fwrite(STDOUT, "No module.xml file found in the unzipped archive.\n");
                                 exit(1);
                             } else {
                                 ui_module::ModuleInfoToDB($argv[2]);
                                 $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/install.run";
                                 if (fs_director::CheckFileExists($extra_config))
-                                    exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
-                                fwrite(STDOUT, "Module installed successfully!");
+                                    include($extra_config);
+                                fwrite(STDOUT, "Module installed successfully!\n");
                                 exit(0);
                             }
                         } else {
                             fs_director::RemoveDirectory('modules/' . $argv[2]);
-                            fwrite(STDOUT, "An error occured, The package archive could not be extracted!");
+                            fwrite(STDOUT, "An error occured, The package archive could not be extracted!\n");
                             exit(1);
                         }
 
                         exit(1);
                     } else {
-                        fwrite(STDOUT, "Cannot create directory for module!");
+                        fwrite(STDOUT, "Cannot create directory for module!\n");
                         exit(1);
                     }
                 } else {
-                    fwrite(STDOUT, "Module already appears to be installed!");
+                    fwrite(STDOUT, "Module already appears to be installed!\n");
                     exit(1);
                 }
             }
         }
     }
     if (!$isfound) {
-        fwrite(STDOUT, "No package match, check you have added the correct repo!");
+        fwrite(STDOUT, "No package match, check you have added the correct repo!\n");
         exit(1);
     }
 }
@@ -112,7 +112,7 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
         }
     }
     if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $argv[2])) {
-        fwrite(STDOUT, "The module '" . $argv[2] . "' is not installed, install it first before you can upgrade it!");
+        fwrite(STDOUT, "The module '" . $argv[2] . "' is not installed, install it first before you can upgrade it!\n");
         exit(1);
     } else {
         /**
@@ -121,17 +121,17 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
         if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
             fs_director::SetFileSystemPermissions('modules/' . $argv[2] . '', 0777);
             if (!fs_director::CheckFileExists('modules/' . $argv[2] . '/module.xml')) {
-                fwrite(STDOUT, "No module.xml file found in the unzipped archive.");
+                fwrite(STDOUT, "No module.xml file found in the unzipped archive.\n");
                 exit(1);
             } else {
                 $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
                 if (fs_director::CheckFileExists($extra_config))
                     exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
-                fwrite(STDOUT, "Module upgraded successfully!");
+                fwrite(STDOUT, "Module upgraded successfully!\n");
                 exit(0);
             }
         } else {
-            fwrite(STDOUT, "An error occured, The package archive could not be extracted!");
+            fwrite(STDOUT, "An error occured, The package archive could not be extracted!\n");
             exit(1);
         }
     }
@@ -181,13 +181,13 @@ if ((isset($argv[1])) && (($argv[1] == 'version') || ($argv[1] == '-v') || ($arg
 
 if (isset($argv[1]) && ($argv[1] == 'checkperms')) {
     $checks = 0;
-    fwrite(STDOUT, "Checking file permissions: ");
+    fwrite(STDOUT, "Checking file permissions: \n");
     if (!is_writable($repo_file)) {
-        fwrite(STDOUT, "repo.list if not writable!\n");
+        fwrite(STDOUT, "\trepo.list if not writable!\n");
         $checks++;
     }
     if (!is_writable($package_file)) {
-        fwrite(STDOUT, "package.list if not writable!\n");
+        fwrite(STDOUT, "\tpackage.list if not writable!\n");
         $checks++;
     }
     if ($checks == 0) {
@@ -213,10 +213,10 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
             $newrepo = "" . $argv[3] . "\n";
             fwrite($handle, $newrepo);
             fclose($handle);
-            fwrite(STDOUT, "Added '" . $argv[3] . "' to list of repositories!\nRemember to execute 'zppy update' to grab the latest list of packages.");
+            fwrite(STDOUT, "Added '" . $argv[3] . "' to list of repositories!\nRemember to execute 'zppy update' to grab the latest list of packages.\n");
             exit(0);
         } else {
-            fwrite(STDOUT, "The repository '" . $argv[3] . "' already exists or non specified.");
+            fwrite(STDOUT, "The repository '" . $argv[3] . "' already exists or non specified.\n");
             exit(1);
         }
     }
@@ -238,10 +238,10 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
         fwrite($handle, $newconf);
         fclose($handle);
         if ($removed) {
-            fwrite(STDOUT, "Removed '" . $argv[3] . "' from the list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.");
+            fwrite(STDOUT, "Removed '" . $argv[3] . "' from the list of repositories! Remember to execute 'zppy update' to grab the latest list of packages.\n");
             exit(0);
         } else {
-            fwrite(STDOUT, "The repository '" . $argv[3] . "' was not found in your list of repositories!");
+            fwrite(STDOUT, "The repository '" . $argv[3] . "' was not found in your list of repositories!\n");
             exit(1);
         }
     }

@@ -53,6 +53,51 @@ class fs_filehandler {
             fs_director::SetFileSystemPermissions($dest, 0777);
         }
     }
+	
+	/**
+	 * Copies a Directory's contents including all of its subfolders and files
+	 * @author VJ Patel (meetthevj@gmail.com - VJftw @ ZPanel Forums)
+	 * @param string $src The full path to the source directory (the directory who's contents to copy)
+	 * @param string $dest The full path to the destination directory (the directory to put the subfolders and files in)
+	 */
+	 static function CopyDirectoryContents($src, $dest) { 
+		if(is_dir($src)) {
+			$dir_handle=opendir($src);
+			while($file=readdir($dir_handle)){
+				if($file!="." && $file!=".."){
+					if(is_dir(fs_director::ConvertSlashes($src."/".$file))){
+						mkdir(fs_director::ConvertSlashes($dest."/".$file));
+						fs_filehandler::CopyDirectoryContents(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
+					} else {
+						copy(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
+					}
+				}
+			}
+			closedir($dir_handle);
+		} else {
+			copy($src, $dest);
+		}
+	 }
+	 
+	/**
+	 * Removes a Directory's contents (without removing the directory itself)
+	 * @author VJ Patel (meetthevj@gmail.com - VJftw @ZPanel Forums)
+	 * @param string $dir The full path to the directory who's contents to remove
+	*/
+	static function RemoveDirectoryContents($dir) {
+		$dir = fs_director::ConvertSlashes($dir);
+		$files = dir($dir);
+		while ($file = $files->read()) {
+			if ($file != '.' && $file != '..') {			
+				if (is_dir($dir.$file)) {
+					fs_filehandler::RemoveDirectoryContents(fs_director::ConvertSlashes($dir.$file.'/'));
+					rmdir($dir.$file);
+				} else
+				unlink($dir.$file);
+			}
+		}
+		$files->close();
+	}
 
     /**
      * Create blank or populated file with permissions, including the path.
