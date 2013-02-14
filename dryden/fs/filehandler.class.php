@@ -72,8 +72,7 @@ class fs_filehandler {
 						mkdir(fs_director::ConvertSlashes($dest."/".$file));
 						fs_filehandler::CopyDirectoryContents($src."/".$file, $dest."/".$file);
 					} else {
-						copy(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
-						chmod(fs_director::ConvertSlashes($dest."/".$file), 0777);
+						self::CopyFileSafe(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
 					}
 				}
 			}
