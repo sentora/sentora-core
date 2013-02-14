@@ -68,7 +68,7 @@ class fs_filehandler {
 			while($file = readdir($dir_handle)){
 				if($file != "." && $file != ".."){				
 					if(is_dir(fs_director::ConvertSlashes($src."/".$file))){
-						mkdir(fs_director::ConvertSlashes($dest."/".$file));
+						mkdir(fs_director::ConvertSlashes($dest."/".$file), 0777);
 						self::CopyDirectoryContents($src."/".$file, $dest."/".$file);
 					} else {
 						self::CopyFileSafe(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
