@@ -833,8 +833,8 @@ class module_controller {
 															dn_weight_in,
 															dn_port_in,
 															dn_created_ts) VALUES (
-															userID,
-															vh_name_vc,
+															:userID,
+															:vh_name_vc,
 															:domainID,
 															'A',
 															'mail',
