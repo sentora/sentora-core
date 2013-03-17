@@ -42,6 +42,7 @@ class module_controller {
     static $clientid;
     static $clientpkgid;
     static $resetform;
+    static $not_unique_email;
 
     /**
      * The 'worker' methods.
@@ -623,6 +624,21 @@ class module_controller {
             self::$emailblank = true;
             return false;
         }
+
+        // Check that the email address is unique to the user's table
+        if (!fs_director::CheckForEmptyValue($email)) {
+            if (ctrl_users::CheckUserEmailIsUnique($email)) {
+                self::$not_unique_email = false;
+                return true;
+            } else {
+                self::$not_unique_email = true;
+                return false; 
+            }
+        } else {
+            self::$not_unique_email = true;
+            return false;
+        }
+
         // Check for password length...
         if (!fs_director::CheckForEmptyValue($password)) {
             if (strlen($password) < ctrl_options::GetSystemOption('password_minlength')) {
@@ -1044,6 +1060,9 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your client(s) have been saved successfully!"), "zannounceok");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$not_unique_email)) {
+            return ui_sysmessage::shout(ui_language::translate("Another user account is already using this email address."), "zannounceerror");
         }
         return;
     }
