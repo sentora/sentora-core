@@ -34,24 +34,18 @@ class module_controller {
         return ws_generic::JSONToArray($content, true);
     }
 
-    static
-
-    function getModuleName() {
+    static function getModuleName() {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static
-
-    function getModuleIcon() {
+    static function getModuleIcon() {
         global $controller;
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
-    static
-
-    function getModuleDesc() {
+    static function getModuleDesc() {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
