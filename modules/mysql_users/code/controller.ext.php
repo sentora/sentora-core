@@ -421,30 +421,25 @@ class module_controller {
     static function ExecuteRemoveDB($myuserid, $mapid) { // <-- mmid = dbmaps
         global $zdbh;
         runtime_hook::Execute('OnBeforeRemoveDatabaseAccess');
-        //$rowdbmap = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_id_pk=" . $mapid . "")->fetch();        
+     
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_dbmap WHERE mm_id_pk=:mapid");
         $numrows->bindParam(':mapid', $mapid);
         $numrows->execute();
         $rowdbmap = $numrows->fetch();
-
-        //$rowdb = $zdbh->query("SELECT * FROM x_mysql_databases WHERE my_id_pk=" . $rowdbmap['mm_database_fk'] . " AND my_deleted_ts IS NULL")->fetch();        
+     
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_id_pk=:mm_database_fk AND my_deleted_ts IS NULL");
         $numrows->bindParam(':mm_database_fk', $rowdbmap['mm_database_fk']);
         $numrows->execute();
         $rowdb = $numrows->fetch();
-
-        //$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();        
+       
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:myuserid AND mu_deleted_ts IS NULL");
         $numrows->bindParam(':myuserid', $myuserid);
         $numrows->execute();
         $rowuser = $numrows->fetch();
 
-        $sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON :my_name_vc.* FROM :mu_name_vc@:mu_access_vc");
-        $sql->bindParam(':my_name_vc', $rowdb['my_name_vc']);
-        $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);
-        $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc']);
+        $sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* FROM '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
         $sql->execute();
-
+        
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
 
