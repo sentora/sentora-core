@@ -671,6 +671,28 @@ class module_controller {
         $line = ui_language::translate("Hi {{fullname}},\r\rWe are pleased to inform you that your new hosting account is now active!\r\rYou can access your web hosting control panel using this link:\r{{controlpanelurl}}\r\rYour username and password is as follows:\rUsername: {{username}}\rPassword: {{password}}\r\rMany thanks,\rThe management");
         return $line;
     }
+    
+    /**
+     * Checks if the user already exists in the x_accounts table.
+     * @global type $zdbh The ZPanelX database handle.
+     * @param type $username The username to check against.
+     * @return boolean
+     */
+    static function CheckUserExits($username){ 
+        global $zdbh;
+            $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username";
+            $uniqueuser = $zdbh->prepare($sql);
+            $uniqueuser->bindParam(':username', strtolower($username));       
+            if ($uniqueuser->execute()) {
+                if ($uniqueuser->fetchColumn() > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }        
+    }
 
     /**
      * End 'worker' methods.
