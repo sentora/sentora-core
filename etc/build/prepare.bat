@@ -36,6 +36,8 @@ COPY bin\zppy.bat %windir%\zppy.bat /Y
 echo Copying 'setso' client to system root...
 COPY bin\setso.bat %windir%\setso.bat /Y
 echo Complete!
+echo Copying 'setzadmin' client to system root...
+COPY bin\setzadmin.bat %windir%\setzadmin.bat /Y
 echo.
 echo You can access your new ZPanel folder layout here: %zpd%:\zpanel
 echo.
