@@ -29,26 +29,29 @@ class module_controller {
     static function getZpanelNews() {
         $handle = @file_get_contents(ctrl_options::GetSystemOption('news_url'));
         $content = $handle;
-        if ($content == '') {
-            $content = ui_language::translate("Unable to connect to the ZPanel API server at this time.");
-        } else {
-            $content = ws_generic::JSONToArray($content, true);
-        }
-        return $content;
+        if (!$content)
+            return false;
+        return ws_generic::JSONToArray($content, true);
     }
 
-    static function getModuleName() {
+    static
+
+    function getModuleName() {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static
+
+    function getModuleIcon() {
         global $controller;
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
-    static function getModuleDesc() {
+    static
+
+    function getModuleDesc() {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
