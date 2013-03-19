@@ -13,13 +13,8 @@
 class ui_tpl_subdomains {
 
     public static function Template() {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $domain = ctrl_users::GetUserDomains($currentuser['userid'], 2);
-        if ($domain <> 0) {
-            return (string) $domain;
-        }
-        return (string) 0;
+        return ctrl_users::GetUserDomains($currentuser['userid'], 2);
     }
 
 }

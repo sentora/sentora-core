@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -41,7 +41,6 @@ class module_controller {
     static function ListClients($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $uid);
         $numrows->execute();
@@ -52,11 +51,11 @@ class module_controller {
             $sql->bindParam(':userid', $uid);
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
-                array_push($res, array('id' => $rowclients['ft_id_pk'],
-                    'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
-                    'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
-                    'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
-                    'username' => runtime_xss::xssClean($rowclients['ft_user_vc'])));
+                $res[] = array('id' => $rowclients['ft_id_pk'],
+                               'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
+                               'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
+                               'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
+                               'username' => runtime_xss::xssClean($rowclients['ft_user_vc']));
             }
             return $res;
         } else {
@@ -67,7 +66,6 @@ class module_controller {
     static function ListCurrentClient($uid) {
         global $zdbh;
         $sql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:userid AND ft_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $uid);
         $numrows->execute();
@@ -78,11 +76,11 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
-                array_push($res, array('id' => $rowclients['ft_id_pk'],
-                    'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
-                    'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
-                    'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
-                    'username' => runtime_xss::xssClean($rowclients['ft_user_vc'])));
+                $res[] = array('id' => $rowclients['ft_id_pk'],
+                               'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
+                               'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
+                               'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
+                               'username' => runtime_xss::xssClean($rowclients['ft_user_vc']));
             }
             return $res;
         } else {
@@ -91,7 +89,6 @@ class module_controller {
     }
 
     static function ListMasterDirs($uid) {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $res = array();
         $handle = @opendir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "");
@@ -100,9 +97,9 @@ class module_controller {
             // Log an error as the folder cannot be opened...
         } else {
             while ($file = @readdir($handle)) {
-                if ($file != "." && $file != ".." && $file != "_errorpages") {
+                if ($file != '.' && $file != '..' && $file != '_errorpages') {
                     if (is_dir($chkdir . $file)) {
-                        array_push($res, array('domains' => runtime_xss::xssClean($file)));
+                        $res[] = array('domains' => runtime_xss::xssClean($file));
                     }
                 }
             }
@@ -112,18 +109,17 @@ class module_controller {
     }
 
     static function ListDomainDirs($uid) {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $res = array();
         $handle = @opendir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html");
         $chkdir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
         if (!$handle) {
-            # Log an error as the folder cannot be opened...
+        // Log an error as the folder cannot be opened...
         } else {
             while ($file = @readdir($handle)) {
                 if ($file != "." && $file != ".." && $file != "_errorpages") {
                     if (is_dir($chkdir . $file)) {
-                        array_push($res, array('domains' => runtime_xss::xssClean($file)));
+                        $res[] = array('domains' => runtime_xss::xssClean($file));
                     }
                 }
             }
@@ -136,7 +132,6 @@ class module_controller {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeResetFTPPassword');
-        $retval = FALSE;
         $rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
         $rowftpfind = $zdbh->prepare($rowftpsql);
         $rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
@@ -150,8 +145,9 @@ class module_controller {
 
         self::$reset = true;
         // Include FTP server specific file here.
-        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")) {
-            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "");
+        $FtpModuleFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('ftp_php');
+        if (file_exists($FtpModuleFile)) {
+            include($FtpModuleFile);
         }
         $retval = TRUE;
         runtime_hook::Execute('OnAfterResetFTPPassword');
@@ -166,27 +162,29 @@ class module_controller {
         if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))) {
             // Check to see if its a new home directory or use a current one...
             if ($home == 1) {
-                $homedirectoy_to_use = "/" . str_replace(".", "_", $username);
-                // Create the new home directory... (If it doesnt already exist.)		
-                if (!file_exists(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/")) {
-                    @mkdir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 777);
-                    @chmod(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "/", 0777);
+                $homedirectory_to_use = '/' . str_replace('.', '_', $username);
+                $full_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectory_to_use . '/';
+                // Create the new home directory... (If it doesnt already exist.)
+                if (!file_exists($full_path)) {
+                    @mkdir($full_path, 777);
+                    @chmod($full_path, 0777);
                 }
             } else {
-                $homedirectoy_to_use = "/" . $destination;
+                $homedirectory_to_use = '/' . $destination;
             }
             $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->bindParam(':username', $username);
-            $sql->bindParam(':homedir', $homedirectoy_to_use);
+            $sql->bindParam(':homedir', $homedirectory_to_use);
             $sql->bindParam(':accesstype', $access_type);
             $sql->bindParam(':password', $password);
             $sql->bindParam(':time', time());
             $sql->execute();
             self::$create = true;
             // Include FTP server specific file here.
-            if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")) {
-                include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "");
+            $FtpModuleFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('ftp_php');
+            if (file_exists($FtpModuleFile)) {
+                include($FtpModuleFile);
             }
             runtime_hook::Execute('OnAfterCreateFTPAccount');
             return true;
@@ -197,7 +195,6 @@ class module_controller {
     static function CheckForErrors($username, $password) {
         global $zdbh;
         $retval = FALSE;
-        $currentuser = ctrl_users::GetUserDetail();
         // Check to make sure the username and password is not blank before we go any further...
         if ($username == '' || $password == '') {
             self::$blank = TRUE;
@@ -223,17 +220,13 @@ class module_controller {
     }
 
     static function IsValidUserName($username) {
-        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
-            return false;
-        }
-        return true;
+        return preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
     }
 
     static function ExecuteDeleteFTP($ft_id_pk) {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteFTPAccount');
-        $retval = FALSE;
         $rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
         $rowftpfind = $zdbh->prepare($rowftpsql);
         $rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
@@ -246,8 +239,9 @@ class module_controller {
         $sql->execute();
         self::$delete = true;
         // Include FTP server specific file here.
-        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "")) {
-            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('ftp_php') . "");
+        $FtpModuleFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('ftp_php');
+        if (file_exists($FtpModuleFile)) {
+            include($FtpModuleFile);
         }
         $retval = TRUE;
         runtime_hook::Execute('OnAfterDeleteFTPAccount');
@@ -266,9 +260,9 @@ class module_controller {
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteCreateFTP(
-                        $currentuser['userid'], $formvars['inFTPUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inDomainDestination'], $formvars['inAccess'], $formvars['inAutoHome']
-        )) {
+        if (self::ExecuteCreateFTP($currentuser['userid'], $formvars['inFTPUsername'],
+               $formvars['inPassword'], $formvars['inDestination'], $formvars['inDomainDestination'],
+               $formvars['inAccess'], $formvars['inAutoHome'] )) {
             self::$ok = true;
             return true;
         } else {
@@ -283,7 +277,6 @@ class module_controller {
         if (self::ExecuteDeleteFTP($formvars['inDelete']))
             self::$ok = true;
         return true;
-        return false;
     }
 
     static function doResetPassword() {
@@ -293,41 +286,24 @@ class module_controller {
         if (self::ExecuteResetPassword($formvars['inReset'], $formvars['inPassword']))
             self::$ok = true;
         return true;
-        return false;
     }
 
     static function getClientList() {
         $currentuser = ctrl_users::GetUserDetail();
         $clientlist = self::ListClients($currentuser['userid']);
-        if (!fs_director::CheckForEmptyValue($clientlist)) {
-            return $clientlist;
-        } else {
-            return false;
-        }
+        return (!fs_director::CheckForEmptyValue($clientlist)) ? $clientlist : false;
     }
 
     static function getDomainDirsList() {
-        global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $domaindirectories = self::ListDomainDirs($currentuser['userid']);
-        if (!fs_director::CheckForEmptyValue($domaindirectories)) {
-            return $domaindirectories;
-        } else {
-            return false;
-        }
+        return (!fs_director::CheckForEmptyValue($domaindirectories)) ? $domaindirectories : false;
     }
 
     static function getMasterDirsList() {
-        global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $domaindirectories = self::ListMasterDirs($currentuser['userid']);
-        if (!fs_director::CheckForEmptyValue($domaindirectories)) {
-            return $domaindirectories;
-        } else {
-            return false;
-        }
+        return (!fs_director::CheckForEmptyValue($domaindirectories)) ? $domaindirectories : false;
     }
 
     static function doEditFTP() {
@@ -337,11 +313,11 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListClients($currentuser['userid']) as $row) {
             if (isset($formvars['inDelete_' . $row['id'] . ''])) {
-                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id'] . "");
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id']);
                 exit;
             }
             if (isset($formvars['inReset_' . $row['id'] . ''])) {
-                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['id'] . "");
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['id']);
                 exit;
             }
         }
@@ -351,27 +327,19 @@ class module_controller {
     static function getisCreateFTP() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if (!isset($urlvars['show']))
-            return true;
-        return false;
+        return !isset($urlvars['show']);
     }
 
     static function getisDeleteFTP() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
-            return true;
-        return false;
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
     static function getisEditFTP() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")) {
-            return true;
-        } else {
-            return false;
-        }
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Edit");
     }
 
     static function getEditCurrentName() {
@@ -395,27 +363,25 @@ class module_controller {
     }
 
     static function getQuotaLimit() {
-        global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['ftpaccountsquota'] > ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid'])) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($currentuser['ftpaccountsquota'] < 0 ) or //-1 = unlimited
+               ($currentuser['ftpaccountsquota'] > ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']));
     }
 
     static function getFTPUsagepChart() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $ftpquota = $currentuser['ftpaccountsquota'];
-        $ftp = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
-        $total = $ftpquota;
-        $used = $ftp;
-        $free = $total - $used;
-        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
-        return $line;
+        $maximum = $currentuser['ftpaccountsquota'];
+        if ($maximum < 0) { //-1 = unlimited
+            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
+        } else {
+            $used = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
+            $free = max($maximum - $used, 0);
+            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                  . '&labels=Free: ' . $free . '::Used: ' . $used
+                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
+        }
     }
 
     static function getResult() {
@@ -442,25 +408,21 @@ class module_controller {
     }
 
     static function getModuleName() {
-        $module_name = ui_language::translate(ui_module::GetModuleName());
-        return $module_name;
+        return ui_language::translate(ui_module::GetModuleName());
     }
 
     static function getModuleIcon() {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        return 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
     }
 
     static function getModulePath() {
         global $controller;
-        $module_path = "?module=" . $controller->GetControllerRequest('URL', 'module') . "";
-        return $module_path;
+        return '?module=' . $controller->GetControllerRequest('URL', 'module');
     }
 
     static function getModuleDesc() {
-        $message = ui_language::translate(ui_module::GetModuleDescription());
-        return $message;
+        return ui_language::translate(ui_module::GetModuleDescription());
     }
 
     /**

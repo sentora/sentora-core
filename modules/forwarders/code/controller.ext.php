@@ -43,7 +43,6 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_forwarders WHERE fw_acc_fk=:userid AND fw_deleted_ts IS NULL ORDER BY fw_address_vc ASC";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
@@ -54,14 +53,16 @@ class module_controller {
             $sql->execute();
             while ($rowforwarders = $sql->fetch()) {
                 if ($rowforwarders['fw_keepmessage_in'] == 1) {
-                    $status = "<a href=\"#\" title=\"" . ui_language::translate("A copy of the original message will be left in the source mailbox address when it is fowarded to the destination address") . "\"><img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\"></a>";
+                    $status = '<a href="#" title="' . ui_language::translate("A copy of the original message will be left in the source mailbox address when it is fowarded to the destination address") . '">'
+                              . '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.gif"></a>';
                 } else {
-                    $status = "<a href=\"#\" title=\"" . ui_language::translate("The original message will only be available in the destination address") . "\"><img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\"></a>";
+                    $status = '<a href="#" title="' . ui_language::translate("The original message will only be available in the destination address") . '">'
+                              . '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif"></a>';
                 }
-                array_push($res, array('address' => $rowforwarders['fw_address_vc'],
-                    'destination' => $rowforwarders['fw_destination_vc'],
-                    'status' => $status,
-                    'id' => $rowforwarders['fw_id_pk']));
+                $res[] = array('address' => $rowforwarders['fw_address_vc'],
+                               'destination' => $rowforwarders['fw_destination_vc'],
+                               'status' => $status,
+                               'id' => $rowforwarders['fw_id_pk']);
             }
             return $res;
         } else {
@@ -71,9 +72,7 @@ class module_controller {
 
     static function ListCurrentForwarder($fid) {
         global $zdbh;
-        global $controller;
         $sql = "SELECT * FROM x_forwarders WHERE fw_id_pk=:fid AND fw_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fid', $fid);
         $numrows->execute();
@@ -83,9 +82,9 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowforwarders = $sql->fetch()) {
-                array_push($res, array('address' => $rowforwarders['fw_address_vc'],
-                    'destination' => $rowforwarders['fw_destination_vc'],
-                    'id' => $rowforwarders['fw_id_pk']));
+                $res[] = array('address' => $rowforwarders['fw_address_vc'],
+                               'destination' => $rowforwarders['fw_destination_vc'],
+                               'id' => $rowforwarders['fw_id_pk']);
             }
             return $res;
         } else {
@@ -95,10 +94,8 @@ class module_controller {
 
     static function getMailboxList() {
         global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
@@ -114,8 +111,8 @@ class module_controller {
                 $numrows->execute();
                 $result = $numrows->fetch();
                 if (!$result) {
-                    array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
-                        'id' => $rowmailboxes['mb_id_pk']));
+                    $res[] = array('address' => $rowmailboxes['mb_address_vc'],
+                                   'id' => $rowmailboxes['mb_id_pk']);
                 }
             }
             return $res;
@@ -131,13 +128,13 @@ class module_controller {
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($address, $dname, $ddomain, $keepmessage))) {
             return false;
         }
-        $destination = strtolower(str_replace(' ', '', $dname . "@" . $ddomain));
+        $destination = strtolower(str_replace(' ', '', $dname . '@' . $ddomain));
         runtime_hook::Execute('OnBeforeCreateForwarder');
         self::$create = true;
         // Include mail server specific file here.
-        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
-            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-        }
+        $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
+        if (file_exists($MailServerFile))
+            include($MailServerFile);
         $sql = "INSERT INTO x_forwarders (fw_acc_fk,
 											  fw_address_vc,
 											  fw_destination_vc,
@@ -153,8 +150,7 @@ class module_controller {
         $sql->bindParam(':address', $address);
         $sql->bindParam(':destination', $destination);
         $sql->bindParam(':keepmessage', $keepmessage);
-        $time = time();
-        $sql->bindParam(':time', $time);
+        $sql->bindParam(':time', time());
         $sql->execute();
         runtime_hook::Execute('OnAfterCreateForwarder');
         self::$ok = true;
@@ -172,24 +168,22 @@ class module_controller {
         $rowforwarder = $numrows->fetch();
         self::$delete = true;
         // Include mail server specific file here.
-        if (file_exists("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "")) {
-            include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
-        }
+        $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
+        if (file_exists($MailServerFile))
+            include($MailServerFile);
         $sql = "UPDATE x_forwarders SET fw_deleted_ts=:time WHERE fw_id_pk=:fw_id_pk";
         $sql = $zdbh->prepare($sql);
         $sql->bindParam(':fw_id_pk', $fw_id_pk);
-        $time = time();
-        $sql->bindParam(':time', $time);
+        $sql->bindParam(':time', time());
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteForwarder');
         self::$ok = true;
     }
 
     static function CheckCreateForErrors($address, $dname, $ddomain, $keepmessage) {
-        global $zdbh;
         global $controller;
         $address = $controller->GetControllerRequest('FORM', 'inAddress');
-        $destination = strtolower(str_replace(' ', '', $dname . "@" . $ddomain));
+        $destination = strtolower(str_replace(' ', '', $dname . '@' . $ddomain));
         if (fs_director::CheckForEmptyValue($address)) {
             self::$noaddress = true;
             return false;
@@ -206,10 +200,7 @@ class module_controller {
     }
 
     static function IsValidEmail($email) {
-        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
-            return false;
-        }
-        return true;
+        return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
 
     /**
@@ -224,15 +215,12 @@ class module_controller {
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inKeepMessage'])) {
-            $keepmessage = fs_director::GetCheckboxValue($formvars['inKeepMessage']);
-        } else {
-            $keepmessage = 0;
-        }
+        $keepmessage = (isset($formvars['inKeepMessage']))
+                       ? fs_director::GetCheckboxValue($formvars['inKeepMessage'])
+                       : 0;
         if (self::ExecuteCreateForwarder($currentuser['userid'], $formvars['inAddress'], $formvars['inDestinationName'], $formvars['inDestinationDomain'], $keepmessage))
             self::$ok = true;
         return true;
-        return false;
     }
 
     static function doDeleteForwarder() {
@@ -242,20 +230,18 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListForwarders($currentuser['userid']) as $row) {
             if (isset($formvars['inDelete_' . $row['id'] . ''])) {
-                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id'] . "");
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id']);
                 exit;
             }
         }
-        return;
+        return true;
     }
 
     static function doConfirmDeleteForwarder() {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteDeleteForwarder($formvars['inDelete']))
-            return true;
-        return false;
+        return self::ExecuteDeleteForwarder($formvars['inDelete']);
     }
 
     static function getForwarderList() {
@@ -267,17 +253,13 @@ class module_controller {
     static function getisCreateForwarder() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if (!isset($urlvars['show']))
-            return true;
-        return false;
+        return !isset($urlvars['show']);
     }
 
     static function getisDeleteForwarder() {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
-            return true;
-        return false;
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
     static function getEditCurrentForwarderName() {
@@ -286,7 +268,7 @@ class module_controller {
             $current = self::ListCurrentForwarder($controller->GetControllerRequest('URL', 'other'));
             return $current[0]['address'];
         } else {
-            return "";
+            return '';
         }
     }
 
@@ -296,7 +278,7 @@ class module_controller {
             $current = self::ListCurrentForwarder($controller->GetControllerRequest('URL', 'other'));
             return $current[0]['id'];
         } else {
-            return "";
+            return '';
         }
     }
 
@@ -307,64 +289,41 @@ class module_controller {
         $numrows->bindParam(':name', $name);
         $numrows->execute();
         $result = $numrows->fetch();
-        if ($result) {
-            return $result['mbs_value_tx'];
-        } else {
-            return false;
-        }
+        return ($result) ? $result['mbs_value_tx'] : false;
     }
 
     static function getQuotaLimit() {
-        global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $mailboxes = 0;
-        $sql = "SELECT mb_id_pk FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
-        $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->execute();
-        if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':userid', $currentuser['userid']);
-            $sql->execute();
-            $mailboxes = $sql->rowCount();
-        }
-        $quota = $currentuser['mailboxquota'];
-        if ($quota > $mailboxes) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($currentuser['forwardersquota'] < 0) or //-1 = unlimited
+               ($currentuser['forwardersquota'] > ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']));
     }
 
     static function getForwardUsagepChart() {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $forwardersquota = $currentuser['forwardersquota'];
-        $forwarders = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
-        $total = $forwardersquota;
-        $used = $forwarders;
-        $free = $total - $used;
-        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
-        return $line;
+        $maximum = $currentuser['forwardersquota'];
+        if ($maximum < 0) { //-1 = unlimited
+            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
+        } else {
+            $used = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
+            $free = max($maximum - $used, 0);
+            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                  . '&labels=Free: ' . $free . '::Used: ' . $used 
+                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
+        }
     }
 
     static function getModuleName() {
-        $module_name = ui_module::GetModuleName();
-        return $module_name;
+        return ui_module::GetModuleName();
     }
 
     static function getModuleIcon() {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        return "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
     }
 
     static function getModuleDesc() {
-        $message = ui_language::translate(ui_module::GetModuleDescription());
-        return $message;
+        return ui_language::translate(ui_module::GetModuleDescription());
     }
 
     static function getResult() {
@@ -372,7 +331,7 @@ class module_controller {
             return ui_sysmessage::shout(ui_language::translate("You cannot forward a mailbox to itself!"), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout(ui_language::translate("A mailbox, alias, forwarder or distrubution list already exists with that name."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate('A mailbox, alias, forwarder or distribution list already exists with that name.'), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$validemail)) {
             return ui_sysmessage::shout(ui_language::translate("Your email address is not valid."), "zannounceerror");

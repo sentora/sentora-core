@@ -3,91 +3,76 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
-        <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>/inc/favicon.ico">
+        <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>inc/favicon.ico">
         <link href="<# ui_tpl_csspath #>" rel="stylesheet" type="text/css">
-
-
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.min.js"></script>
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery-ui.js"></script>
-        <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.cookie.js"></script>
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script>
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery_jclock-1_2_0_js.txt"></script>
-
+        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>inc/jquery.min.js"></script>
+        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>inc/jquery-ui.js"></script>
+        <script type="text/javascript" language="javascript" src="<# ui_tpl_assetfolderpath #>inc/jquery.cookie.js"></script>
+        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>inc/init.js"></script>
+        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>inc/jquery_jclock-1_2_0_js.txt"></script>
         <!-- TOOL TIPS (Styles title="" in links into nice boxes) -->
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/jquery.qtip.min.js"></script>
+        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>inc/jquery.qtip.min.js"></script>
         <!-- END TOOL TIPS -->
-
         <!-- JQUERY NAVBAR REQUIREMENTS -->
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/init.js"></script>	
-        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/navbar/fg.menu.js"></script>
+        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>inc/navbar/init.js"></script>
+        <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>inc/navbar/fg.menu.js"></script>
         <!-- END JQUERY NAVBAR REQUIREMENTS -->
 
         <!-- ZLOADER ANIMATION FIX FOR IE (I use JQuery to call this in init.js)-->
-        <script languag='javascript'> 
-        function showDiv(){ 
-        //document.getElementById('myHiddeDiv').style.display =""; 
-        document.getElementById('zloader_image').src = "<# ui_tpl_assetfolderpath #>/images/loading.gif";} 
-        </script> 
+        <script languag='javascript'>
+            function showDiv(){
+            //document.getElementById('myHiddeDiv').style.display ="";
+            document.getElementById('zloader_image').src = "<# ui_tpl_assetfolderpath #>images/loading.gif";}
+        </script>
         <!-- END ZLOADER ANIMATION FIX FOR IE -->
 
         <!-- Anti ClickJacking protection! -->
         <style id="antiClickjack">body{display:none !important;}</style>
         <script type="text/javascript">
             if (self === top) {
-                var antiClickjack = document.getElementById("antiClickjack");
-                antiClickjack.parentNode.removeChild(antiClickjack);
+            var antiClickjack = document.getElementById("antiClickjack");
+            antiClickjack.parentNode.removeChild(antiClickjack);
             } else {
-                top.location = self.location;
+            top.location = self.location;
             }
         </script>
         <!-- End of Anti ClickJacking protection! -->
-        
     </head>
     <body>
         <!-- BEGIN ZLOADER PROGRESSBAR DIV -->
         <div class="zloader_overlay" id="zloader_overlay" style="display:none;"></div>
         <div class="zloader" id="zloader" style="display:none;">
             <div class="zloader_content" id="zloader_content">
-                <img src="<# ui_tpl_assetfolderpath #>/images/loading.gif" id="zloader_image" alt="Loading...">
+                <img src="<# ui_tpl_assetfolderpath #>images/loading.gif" id="zloader_image" alt="Loading...">
             </div>
         </div>
         <!-- END ZLOADER PROGRESSBAR DIV -->
         <!-- BEGIN HEADER -->
-
         <div id="header">
             <div id="header_top" style="display:none;">
-                <div class="logo_small" id="logo_small"><a class="logo_small" id="logo_small_a" title="<: Main Page :>" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/zpanel_small.png"/></a></div>			
-
-                <!--
-            <div id="header_links_small">
-    <a title="<: Main Page :>" href="index.php"><img src="<# ui_tpl_assetfolderpath #>/images/home.png"/></a>
-    <a title="<: My Account :>" href="?c=account&p=my_account"><img src="<# ui_tpl_assetfolderpath #>/images/account.png"/></a>
-    <a title="<: Change Password :>" href="?c=account&p=password_assistant"><img src="<# ui_tpl_assetfolderpath #>/images/pass.png"/></a>
-    <a title="<: Log off ZPanel :>" href="login.php?logout"><img src="<# ui_tpl_assetfolderpath #>/images/logout.png"/></a>
-</div>
-                -->
+                <div class="logo_small" id="logo_small"><a class="logo_small" id="logo_small_a" title="<: Main Page :>" href="index.php"><img src="<# ui_tpl_assetfolderpath #>images/zpanel_small.png"/></a></div>
                 <div class="znavbar_small" id="znavbar_small">
-                    <a class="fg-navbutton ui-state-default ui-corner-all" id="header_top_a_small"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_down.png"/></a>
+                    <a class="fg-navbutton ui-state-default ui-corner-all" id="header_top_a_small"><img src="<# ui_tpl_assetfolderpath #>images/arrow_down.png"/></a>
                     <span id="arrow_small_right">
-                        <a class="fg-navbutton ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
+                        <a class="fg-navbutton ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_right"><img src="<# ui_tpl_assetfolderpath #>images/arrow_right.png"/></a>
                     </span>
                     <span id="arrow_small_left">
-                        <a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_left"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_left.png"/></a>
+                        <a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_small_left"><img src="<# ui_tpl_assetfolderpath #>images/arrow_left.png"/></a>
                     </span>
-                </div>	
+                </div>
             </div>
             <div class="header_bottom" id="header_bottom">
                 <div id="header_middle"></div>
                 <div id="header_overlay" class="center">
-                    <a href="index.php"><img src="<# ui_tpl_assetfolderpath #>/inc/zp_logo.png" border="0"></a>
+                    <a href="index.php"><img src="<# ui_tpl_assetfolderpath #>inc/zp_logo.png" border="0"></a>
                     <div id="header_links">
                         <div id="header_arrows">
-                            <a class="fg-navbutton ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_up.png"/></a>
+                            <a class="fg-navbutton ui-state-default ui-corner-all" id="header_top_a"><img src="<# ui_tpl_assetfolderpath #>images/arrow_up.png"/></a>
                             <span id="arrow_right">
-                                <a class="fg-navbutton ui-state-default ui-corner-all" id="statsdata_wrapper_a_right"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_right.png"/></a>
+                                <a class="fg-navbutton ui-state-default ui-corner-all" id="statsdata_wrapper_a_right"><img src="<# ui_tpl_assetfolderpath #>images/arrow_right.png"/></a>
                             </span>
                             <span id="arrow_left">
-                                <a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_left"><img src="<# ui_tpl_assetfolderpath #>/images/arrow_left.png"/></a>
+                                <a class="fg-button ui-state-default ui-corner-all" id="statsdata_wrapper_a_left"><img src="<# ui_tpl_assetfolderpath #>images/arrow_left.png"/></a>
                             </span>
                         </div>
                         <div class="znavbar" id="znavbar"><# ui_tpl_modulelistznavbar #></div>
@@ -103,11 +88,10 @@
         <!-- BEGIN CONTENT WRAPPER -->
         <div id="content" align="center">
             <br>
-
             <!-- BEGIN MAIN LAYOUT -->
             <table align="center" class="mainlayout" width="98%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="15px" align="left"><img class="mainlayout_tleft" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td><td width="100%" class="mainlayout_tcenter"></td><td width="15px"><img class="mainlayout_tright" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td>
+                    <td width="15px" align="left"><img class="mainlayout_tleft" src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"></td><td width="100%" class="mainlayout_tcenter"></td><td width="15px"><img class="mainlayout_tright" src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"></td>
                 </tr>
 
                 <tr>
@@ -115,10 +99,8 @@
                     <td><# ui_tpl_notice #>
                         <!-- BEGIN MAIN LAYOUT CONTENT -->
                         <table class="mainlayout_content" width="100%" border="0" cellpadding="0" cellspacing="0">
-
                             <tr valign="top">
-                                <td class="mainlayout_content" width="100%">								
-
+                                <td class="mainlayout_content" width="100%">
                                     <# ui_tpl_modulelist #><# ui_tpl_module #></td>
                                 <td style="padding-right:0px" width="200px">
                                     <!-- BEGIN STATSDATA -->
@@ -130,34 +112,34 @@
                                             </tr>
                                             <tr valign="top">
                                                 <td>
-                                                    <!-- BEGIN ACCOUNTINFO -->	
+                                                    <!-- BEGIN ACCOUNTINFO -->
                                                     <div class="statsdata_accountinfo" id="statsdata_accountinfo">
                                                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                                             <tr>
-                                                                <td nowrap="nowrap" colspan="2"><a href="./index.php" title="<: Home :>"><img src="<# ui_tpl_assetfolderpath #>/images/home.png" border="0"></a><a href="./?module=my_account" title="<: My Account :>"><img src="<# ui_tpl_assetfolderpath #>/images/account.png" border="0"></a><a href="./?module=password_assistant" title="<: Change Password :>"><img src="<# ui_tpl_assetfolderpath #>/images/pass.png" border="0"></a><a href="./?logout" title="<: Log Out :>"><img src="<# ui_tpl_assetfolderpath #>/images/logout.png" border="0"></a></td>
+                                                                <td nowrap="nowrap" colspan="2"><a href="./index.php" title="<: Home :>"><img src="<# ui_tpl_assetfolderpath #>images/home.png" border="0"></a><a href="./?module=my_account" title="<: My Account :>"><img src="<# ui_tpl_assetfolderpath #>images/account.png" border="0"></a><a href="./?module=password_assistant" title="<: Change Password :>"><img src="<# ui_tpl_assetfolderpath #>images/pass.png" border="0"></a><a href="./?logout" title="<: Log Out :>"><img src="<# ui_tpl_assetfolderpath #>images/logout.png" border="0"></a></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Username :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Username :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_username #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Full name :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Full name :>:</strong></td>
                                                                 <td nowrap="nowrap"><# ui_tpl_fullname #></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Email Address :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Email Address :>:</strong></td>
                                                                 <td nowrap="nowrap"><a href="./?module=my_account" title="<: Update your contact email address :>"><# ui_tpl_email #></a></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Package name :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Package name :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_packagename #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Account type :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Account type :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_usergroup #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Last Logon :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Last Logon :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_lastlogon #></span></td>
                                                             </tr>
                                                             <tr>
@@ -165,20 +147,20 @@
                                                                 <td nowrap="nowrap">&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Disk Quota :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Disk Quota :>:</strong></td>
                                                                 <td nowrap="nowrap"><# ui_tpl_progbardisk #></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
-                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>/inc/drop.gif" width="10" height="8"> <span class="Side_Info"><# ui_tpl_usagediskspace #></span> / <span class="Side_Info"><# ui_tpl_quotadiskspace #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>inc/drop.gif" width="10" height="8"> <span class="Side_Info"><# ui_tpl_usagediskspace #></span> / <span class="Side_Info"><# ui_tpl_quotadiskspace #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Bandwidth Quota :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Bandwidth Quota :>:</strong></td>
                                                                 <td nowrap="nowrap"><# ui_tpl_progbarbandwidth #></td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
-                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>/inc/drop.gif" width="10" height="8"><span class="Side_Info"> <# ui_tpl_usagebandwidth #></span> / <span class="Side_Info"><# ui_tpl_quotabandwidth #></span>&nbsp;</td>
+                                                                <td nowrap="nowrap" valign="top"><img src="<# ui_tpl_assetfolderpath #>inc/drop.gif" width="10" height="8"><span class="Side_Info"> <# ui_tpl_usagebandwidth #></span> / <span class="Side_Info"><# ui_tpl_quotabandwidth #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td nowrap="nowrap">&nbsp;</td>
@@ -189,35 +171,35 @@
                                                                 <td nowrap="nowrap"><span class="Side_Info_used_header"><b><: Used :></b></span>  <span class="Side_Info_max_header"><b><: Max :></b></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Domains :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Domains :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_useddomains #></span>  <span class="Side_Info_max"><# ui_tpl_totaldomains #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Sub-domains :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Sub-domains :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedsubdomains #></span>  <span class="Side_Info_max"><# ui_tpl_totalsubdomains #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Parked domains :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Parked domains :>:</strong></td>
                                                                 <td nowrap="nowrap"> <span class="Side_Info_used"><# ui_tpl_usedparkeddomains #></span>  <span class="Side_Info_max"><# ui_tpl_totalparkeddomains #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: FTP accounts :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: FTP accounts :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedftp #></span>  <span class="Side_Info_max"><# ui_tpl_totalftp #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: MySQL&reg; databases :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: MySQL&reg; databases :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedmysql #></span>  <span class="Side_Info_max"><# ui_tpl_totalmysql #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Email Accounts :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Email Accounts :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedemail #></span>  <span class="Side_Info_max"><# ui_tpl_totalemail #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Email Forwarders :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Email Forwarders :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_usedforwarders #></span>  <span class="Side_Info_max"><# ui_tpl_totalforwarders #></span>&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Distribution lists :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Distribution lists :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info_used"><# ui_tpl_useddistlists #></span>  <span class="Side_Info_max"><# ui_tpl_totaldistlists #></span>&nbsp;</td>
                                                             </tr>
                                                         </table>
@@ -234,50 +216,41 @@
                                                     <div class="statsdata_serverinfo" id="statsdata_serverinfo">
                                                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Your IP :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Your IP :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_clientipaddress #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Server IP :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Server IP :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_serveripaddress #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Server OS :>:</strong></td>
-                                                                <td nowrap="nowrap"><span class="Side_Info"><img src="<# ui_tpl_assetfolderpath #>/images/os_icons/<# ui_tpl_serverosname #>.png" border="0" width="16" height="16" style="float:left;"/>&nbsp;<# ui_tpl_serverosname #></span></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Server OS :>:</strong></td>
+                                                                <td nowrap="nowrap"><span class="Side_Info"><img src="<# ui_tpl_assetfolderpath #>images/os_icons/<# ui_tpl_serverosname #>.png" border="0" width="16" height="16" style="float:left;"/>&nbsp;<# ui_tpl_serverosname #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Apache Version :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Apache Version :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_apacheversion #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: PHP Version :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: PHP Version :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_phpversion #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: MySQL Version :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: MySQL Version :>:</strong></td>
                                                                 <td nowrap="nowrap"><span class="Side_Info"><# ui_tpl_mysqlversion #></span></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: ZPanel Version :>:</strong></td>
+                                                                <td nowrap="nowrap"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: ZPanel Version :>:</strong></td>
                                                                 <td nowrap="nowrap"><# ui_tpl_zpanelversion #></td>
                                                             </tr>
                                                             <tr>
-                                                                <td nowrap="nowrap" colspan="2"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"> <strong><: Server uptime :>:</strong> <# ui_tpl_serveruptime #></td>
+                                                                <td nowrap="nowrap" colspan="2"><img class="raquo"  src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"> <strong><: Server uptime :>:</strong> <# ui_tpl_serveruptime #></td>
                                                             </tr>
                                                         </table>
                                                     </div>
                                                     <!-- END SERVERINFO -->
                                                 </td>
                                             </tr>
-
-
-
-
-
-
-
-
-
                                             </tr>
                                             <tr>
                                                 <th><: Domain Information :> <a class="statsdata_domaininfo" id="statsdata_domaininfo_a"></a></th>
@@ -291,16 +264,6 @@
                                                     <!-- END DOMAININFO -->
                                                 </td>
                                             </tr>
-
-
-
-
-
-
-
-
-
-
                                         </table>
                                     </div>
                                     <!-- END STATSDATA -->
@@ -312,7 +275,7 @@
                     <td class="mainlayout_right"></td>
                 </tr>
                 <tr>
-                    <td width="15px" align="left"><img class="mainlayout_bleft" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td><td width="100%" class="mainlayout_bcenter"></td><td width="15px"><img class="mainlayout_bright" src="<# ui_tpl_assetfolderpath #>/images/blank.png" border="0"></td>
+                    <td width="15px" align="left"><img class="mainlayout_bleft" src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"></td><td width="100%" class="mainlayout_bcenter"></td><td width="15px"><img class="mainlayout_bright" src="<# ui_tpl_assetfolderpath #>images/blank.png" border="0"></td>
                 </tr>
             </table>
             <!-- BEGIN MAIN LAYOUT -->

@@ -14,11 +14,7 @@ class ui_tpl_usedsubdomains {
 
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
-        $subdomains = ctrl_users::GetQuotaUsages('subdomains', $currentuser['userid']);
-        if ($subdomains <> 0) {
-            return (string) $subdomains;
-        }
-        return (string) 0;
+        return ctrl_users::GetQuotaUsages('subdomains', $currentuser['userid']);
     }
 
 }

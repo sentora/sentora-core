@@ -10,24 +10,27 @@
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 global $starttime;
-$mtime = microtime();
-$mtime = explode(" ", $mtime);
+$mtime = explode(' ', microtime());
 $mtime = $mtime[1] + $mtime[0];
 $starttime = $mtime;
 
 function __autoload($class_name) {
-    $path = str_replace("_", "/", $class_name);
-    if (file_exists("dryden/" . $path . ".class.php")) {
-        require_once "dryden/" . $path . ".class.php";
+    $path = 'dryden/' . str_replace('_', '/', $class_name) . '.class.php';
+    if (file_exists($path)) {
+        require_once $path;
     }
 
     if (isset($_GET['module'])) {
-        if (file_exists("modules/" . fs_protector::SanitiseFolderName($_GET['module']) . "/code/controller.ext.php")) {
-            require_once "modules/" . fs_protector::SanitiseFolderName($_GET['module']) . "/code/controller.ext.php";
+        $CleanModuleName = fs_protector::SanitiseFolderName($_GET['module']);
+
+        $ControlerPath = 'modules/' . $CleanModuleName . '/code/controller.ext.php';
+        if (file_exists($ControlerPath)) {
+            require_once $ControlerPath;
         }
-        $additional_path = str_replace("_", "/", $class_name);
-        if (file_exists("modules/" . fs_protector::SanitiseFolderName($_GET['module']) . "/code/" . $class_name . ".class.php")) {
-            require_once "modules/" . fs_protector::SanitiseFolderName($_GET['module']) . "/code/" . $class_name . ".class.php";
+
+        $ModulePath = 'modules/' . $CleanModuleName . '/code/' . $class_name . '.class.php';
+        if (file_exists($ModulePath)) {
+            require_once $ModulePath;
         }
     }
 }

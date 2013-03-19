@@ -14,11 +14,7 @@ class ui_tpl_usedmysql {
 
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
-        $mysql = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
-        if ($mysql <> 0) {
-            return (string) $mysql;
-        }
-        return (string) 0;
+        return ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
     }
 
 }

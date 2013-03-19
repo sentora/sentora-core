@@ -14,8 +14,7 @@ class ui_tpl_usagebandwidth {
 
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
-        $bandwidth = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']));
-        return $bandwidth;
+        return fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']));
     }
 
 }

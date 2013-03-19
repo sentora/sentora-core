@@ -52,7 +52,9 @@
     </div>
 
     <div class="zform_wrapper">
-        <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
+        <table class="none" width="100%" cellborder="0" cellspacing="0">
+            <tr valign="top">
+                <td>
                     <h2>Create a new sub-domain</h2>
                     <% if CreateSubDomain %>
                     <form action="./?module=sub_domains&action=CreateSubDomain" method="post" name="CreateDomain">
@@ -64,7 +66,6 @@
                                         <option value="<& name &>"><& name &></option>
                                         <% endloop %>
                                     </select>
-
                                 </td>
                             </tr>
                             <tr>

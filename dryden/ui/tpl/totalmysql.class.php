@@ -15,10 +15,10 @@ class ui_tpl_totalmysql {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $mysqlquota = $currentuser['mysqlquota'];
-        if ($mysqlquota <> 0) {
-            return (string) $mysqlquota;
-        }
-        return (string) 0;
+        if ($mysqlquota < 0)
+            return '&#8734;';
+        else
+            return $mysqlquota;
     }
 
 }

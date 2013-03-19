@@ -15,10 +15,10 @@ class ui_tpl_totalsubdomains {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $subdomainsquota = $currentuser['subdomainquota'];
-        if ($subdomainsquota <> 0) {
-            return (string) $subdomainsquota;
-        }
-        return (string) 0;
+        if ($subdomainsquota < 0)
+            return '&#8734;';
+        else
+            return $subdomainsquota;
     }
 
 }

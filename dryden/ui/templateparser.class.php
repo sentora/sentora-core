@@ -27,7 +27,7 @@ class ui_templateparser {
     /**
      * Replaces the template place holders with the equivilent dynamic infomation.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @param string $raw The HTML tempalte file (as is in the filesystem, the raw module.zpm file)
+     * @param string $raw The HTML template file (as is in the filesystem, the raw module.zpm file)
      * @return string The generated HTML text.
      */
     static function Process($raw) {

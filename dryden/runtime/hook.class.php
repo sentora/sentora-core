@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Intergration hooks class.
+ * Integration hooks class.
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.0
@@ -24,8 +24,12 @@ class runtime_hook {
         $hook_log->logcode = "861";
         foreach (glob($mod_folder, GLOB_BRACE) as $hook_file) {
             if (file_exists($hook_file)) {
-                $hook_log->detail = "Hook file executed (" . $hook_file . ")";
-                include $hook_file;
+                $hook_log->detail = "Execute hook file (" . $hook_file . ")";
+                try {
+                  include $hook_file;
+                } catch (Exception $e) {
+                  $hook_log->detail .= ' -> Exception(' . $e->getMessage() . ') :(';
+                }
                 $hook_log->writeLog();
             }
         }

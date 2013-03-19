@@ -52,49 +52,51 @@
     </div>
 
     <div class="zform_wrapper">
-        <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
-                    <h2>Create a new domain</h2>
-                    <% if CreateDomain %>
-                    <form action="./?module=domains&action=CreateDomain" method="post" name="CreateDomain">
-                        <table class="zform">
-                            <tr>
-                                <th nowrap="nowrap"><: Domain name :>:</th>
-                                <td><input name="inDomain" type="text" id="inDomain" size="30" /></td>
-                            </tr>
-                            <tr>
-                                <th nowrap="nowrap"><: Home directory :>:</th>
-                                <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
-                            </tr>
-                            <tr>
-                                <th>&nbsp;</th>
-                                <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showdomainselect');" />&nbsp;<: Use existing home directory :></td>
-                            </tr>
-                            <tr>
-                                <th>&nbsp;</th>
-                                <td>
-                                    <div id="showdomainselect" style="display:none;">
-                                        <select name="inDestination" id="inDestination">
-                                            <option value="">/ (root)</option>
-                                            <% loop DomainDirsList %>
-                                            <option value="<& domains &>">/<& domains &></option>
-                                            <% endloop %>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
-                            </tr>
-                        </table>
-                        <@ CSFR_Tag @>
-                    </form>
-                    <% else %>
-                    <: You have reached your domain limit! :>
-                    <% endif %>	
-                </td>
-                <td align="right"><@ DomainUsagepChart @></td>
-            </tr></table>	
+        <table class="none" width="100%" cellborder="0" cellspacing="0">
+        <tr valign="top">
+            <td>
+                <h2>Create a new domain</h2>
+                <% if CreateDomain %>
+                <form action="./?module=domains&action=CreateDomain" method="post" name="CreateDomain">
+                    <table class="zform">
+                        <tr>
+                            <th nowrap="nowrap"><: Domain name :>:</th>
+                            <td><input name="inDomain" type="text" id="inDomain" size="30" /></td>
+                        </tr>
+                        <tr>
+                            <th nowrap="nowrap"><: Home directory :>:</th>
+                            <td><input name="inAutoHome" type="radio" id="inAutoHome" value="1" onclick="hide_div('showdomainselect');" CHECKED />&nbsp;<: Create a new home directory :></td>
+                        </tr>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <td><input name="inAutoHome" type="radio" id="inAutoHome" value="2" onclick="show_div('showdomainselect');" />&nbsp;<: Use existing home directory :></td>
+                        </tr>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <td>
+                                <div id="showdomainselect" style="display:none;">
+                                    <select name="inDestination" id="inDestination">
+                                        <option value="">/ (root)</option>
+                                        <% loop DomainDirsList %>
+                                        <option value="<& domains &>">/<& domains &></option>
+                                        <% endloop %>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
+                        </tr>
+                    </table>
+                    <@ CSFR_Tag @>
+                </form>
+                <% else %>
+                <: You have reached your domain limit! :>
+                <% endif %>	
+            </td>
+            <td align="right"><@ DomainUsagepChart @></td>
+        </tr></table>	
     </div>
 
 </div>

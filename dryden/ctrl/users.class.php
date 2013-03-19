@@ -63,7 +63,7 @@ class ctrl_users {
         $userdetail->addItemValue('mysqlquota', $dbvals['qt_mysql_in']);
         $userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
         $userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
-        $userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
+        $userdetail->addItemValue('distlistsquota', $dbvals['qt_distlists_in']);
         return $userdetail->getDataObject();
     }
 
