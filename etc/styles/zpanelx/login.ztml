@@ -97,10 +97,13 @@
                                                                 echo "You have been logged out successfully!";
                                                             }
                                                             if (isset($_GET['sessionIssue'])) {
-                                                                echo 'ZPanel has detected an issue please login again!';
+                                                                echo 'ZPanel has detected an issue please login again! If the problem perisits disable session secuirty.';
                                                             }
                                                             if (isset($_GET['passwordreset'])) {
                                                                 echo "If your email address matched the one on your account your password has now been reset!";
+                                                            }
+                                                            if(runtime_sessionsecurity::checkProxy()){
+                                                                echo 'It seems you are running behind a proxy or on a webserver, if any problems occure disabling session secuirty';
                                                             }
                                                             ?></font>&nbsp;
                                                     </td>
@@ -123,9 +126,10 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
-                                                                    <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
+                                                                    <td id="lightblue"><input name="inSessionSecuirty" name="inSessionSecuirty" type="checkbox"  checked/> Enable Session Security</td>
                                                                 </tr>
                                                                 <tr>
+                                                                    <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
                                                                     <td colspan="2" id="grey"><a href="javascript:void(0);" id="fp" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');">Forgot Password?</a></td>
                                                                 </tr>
                                                             </table>
