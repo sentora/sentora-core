@@ -125,7 +125,7 @@ class module_controller {
         self::$forwardersquota = empty_as_0($currentuser['forwardersquota']);
         self::$forwarders = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
 
-        self::$distlistsquota = $currentuser['distrobutionlistsquota'];
+        self::$distlistsquota = $currentuser['distlistsquota'];
         self::$distlists = empty_as_0(ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']));
 
         $maximum = self::$diskquota;
@@ -139,13 +139,13 @@ class module_controller {
         }
         $usedLabel = fs_director::ShowHumanFileSize($used);
 
-        
+
         function build_row_usage($name, $used, $quota, $human = false) {
-            $res = '<tr>\n<th nowrap="nowrap">' . ui_language::translate($name) . ':</th>\n<td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used);
+            $res = '<tr><th nowrap="nowrap">' . ui_language::translate($name) . ':</th><td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used);
             if ($quota < 0) {
-                $res .= '</td>\n<td style="text-align:center">&#8734; ' . ui_language::translate('Unlimited') . ' &#8734;</td>\n';
+                $res .= '</td><td style="text-align:center">&#8734; ' . ui_language::translate('Unlimited') . ' &#8734;</td>';
             } else {
-                $res .= ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td>\n<td><img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . (($quota == 0 or $used == $quota) ? 100 : round($used / $quota * 100, 0)) . '"/>';
+                $res .= ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td><td><img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . (($quota == 0 or $used == $quota) ? 100 : round($used / $quota * 100, 0)) . '"/>';
             }
             return $res . '</td></tr>';
         }
@@ -181,8 +181,7 @@ class module_controller {
 
     private function DisplayChart($name, $used, $maximum) {
         if ($maximum < 0) { //-1 = unlimited
-            $res = '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>'
-                    . '<br><span class="zlegend">' . ui_language::translate('Used') . ': ' . $used . '</span>';
+            $res = '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $free = max($maximum - $used, 0);
             $res = '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
