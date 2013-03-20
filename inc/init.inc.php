@@ -36,7 +36,7 @@ if (isset($_GET['returnsession'])) {
 
 if (isset($_POST['inForgotPassword'])) {
     runtime_csfr::Protect();
-    $randomkey = sha1(microtime());
+    $randomkey = runtime_randomstring::randomHash();
     $forgotPass = runtime_xss::xssClean($_POST['inForgotPassword']);
     $sth = $zdbh->prepare("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = :forgotPass");
     $sth->bindParam(':forgotPass', $forgotPass);
