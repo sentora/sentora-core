@@ -126,7 +126,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
-                                                                    <td id="lightblue"><input name="inSessionSecuirty" name="inSessionSecuirty" type="checkbox"  value="1"  checked/> Enable Session Security</td>
+                                                                    <td id="lightblue"><input name="inSessionSecuirty" name="inSessionSecuirty" type="checkbox" checked/> Enable Session Security</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>

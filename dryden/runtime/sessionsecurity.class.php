@@ -280,11 +280,14 @@ class runtime_sessionsecurity {
                 return true;
             }
         }else{
+            echo 222222;
             if(self::checkSessionSecurityEnabled() == false){
                 //proxies can cause fluxuations in the user agent and IP headers so user can disable it on login
                 if(isset($_GET['module'])){
+                    echo 111111111111;
                     $checkUserCookie = self::checkCookie();
                     if($checkUserCookie == true){
+                        echo 3333333;
                         return true;
                     }else{
                         self::destroyCurrentSession();
