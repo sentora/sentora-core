@@ -14,24 +14,29 @@ class db_driver extends PDO {
 
     /**
      *
-     * @var \PDOStatement 
+     * @var \PDOStatement
      */
     private $_prepared = null;
 
     /**
      *
-     * @var \PDOStatement 
+     * @var \PDOStatement
      */
     private $_executed = null;
 
     /**
      *
-     * @var array 
+     * @var array
      */
     private $_result = null;
 
     /**
-     * 
+     *
+     */
+    private $queriesExecuted = array();
+
+    /**
+     *
      * @param type $prepared
      */
     private function setPrepared($prepared) {
@@ -39,7 +44,7 @@ class db_driver extends PDO {
     }
 
     /**
-     * 
+     *
      * @param type $executed
      */
     private function setExecuted($executed) {
@@ -47,7 +52,7 @@ class db_driver extends PDO {
     }
 
     /**
-     * 
+     *
      * @return \PDOStatement
      */
     private function getPrepared() {
@@ -55,7 +60,7 @@ class db_driver extends PDO {
     }
 
     /**
-     * 
+     *
      * @return \PDOStatement
      */
     private function getExecuted() {
@@ -63,7 +68,7 @@ class db_driver extends PDO {
     }
 
     /**
-     * 
+     *
      * @param String $dsn
      * @param String $username
      * @param String $password
@@ -93,7 +98,7 @@ class db_driver extends PDO {
             </style>";
 
     /**
-     * 
+     *
      * @param String $exception
      * @return String
      */
@@ -108,7 +113,7 @@ class db_driver extends PDO {
     }
 
     /**
-     * 
+     *
      * @param String $query
      * @return type
      */
@@ -129,7 +134,7 @@ class db_driver extends PDO {
     }
 
     /**
-     * 
+     *
      * @param String $query
      * @deprecated since version 10.0.1
      * @return type
@@ -172,7 +177,7 @@ class db_driver extends PDO {
     }
 
     /**
-     * 
+     *
      * @param String $query
      * @param Array $driver_options
      * @return type
@@ -180,6 +185,7 @@ class db_driver extends PDO {
     public function prepare($query, $driver_options = array()) {
         try {
             $result = parent::prepare($query, $driver_options);
+            $this->queriesExecuted[] = $query;
             return($result);
         } catch (PDOException $e) {
             $errormessage = $this->errorInfo();
@@ -234,14 +240,24 @@ class db_driver extends PDO {
      * The function is the equilivent to mysql_real_escape_string needed due to PDO issues with `
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @param String $string string to be cleaned
-     * @return String Clean version of the string 
+     * @return String Clean version of the string
      */
-    public function mysqlRealEscapeString($string){
-                $search = array("\\","\0","\n","\r","\x1a","'",'"',"`");//`
-                $replace = array("\\\\","\\0","\\n","\\r","\Z","\'",'\"',"");//`
-                $cleanString = str_replace($search,$replace,$string);
-                return $cleanString;
-        }
+    public function mysqlRealEscapeString($string) {
+        $search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"', "`"); //`
+        $replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"', ""); //`
+        $cleanString = str_replace($search, $replace, $string);
+        return $cleanString;
+    }
+
+    /**
+     * Returns a list of all the current queries executed. (Implemented for the Debug/Execution class!)
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @return array List of executed SQL queries.
+     */
+    public function getExecutedQueries() {
+        return $this->queriesExecuted;
+    }
+
 }
 
 ?>

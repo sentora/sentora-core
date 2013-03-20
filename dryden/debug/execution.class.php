@@ -15,7 +15,7 @@ class debug_execution {
     /**
      * Displays the current script memory usage.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return string Human readable memory usage for of the script. 
+     * @return string Human readable memory usage for of the script.
      */
     static function ScriptMemoryUsage() {
         $mem_usage = memory_get_usage(false);
@@ -32,11 +32,22 @@ class debug_execution {
     /**
      * Gets a list of all the currently loaded classes.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return string Displays preformatted list of the classes that are currently loaded.
+     * @return array List of the classes that are currently loaded.
      */
     static function GetLoadedClasses() {
         $classes_loaded = get_declared_classes();
-        return print_r($classes_loaded);
+        return $classes_loaded;
+    }
+
+    /**
+     * Gets a list of all the SQL queries executed for this request.
+     * @global db_driver $zdbh The ZPX database handle.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @return array List of all executed SQL queries for this request.
+     */
+    static function GetSQLQueriesExecuted() {
+        global $zdbh;
+        return $zdbh->getExecutedQueries();
     }
 
 }

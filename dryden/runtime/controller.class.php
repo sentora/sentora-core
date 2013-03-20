@@ -13,22 +13,22 @@
 class runtime_controller {
 
     /**
-     * @var array All current request 'get' variables. 
+     * @var array All current request 'get' variables.
      */
     private $vars_get;
 
     /**
-     * @var array All current request 'post' variables. 
+     * @var array All current request 'post' variables.
      */
     private $vars_post;
 
     /**
-     * @var array All current request 'session' variables. 
+     * @var array All current request 'session' variables.
      */
     private $vars_session;
 
     /**
-     * @var array All current request 'cookie' variables. 
+     * @var array All current request 'cookie' variables.
      */
     private $vars_cookie;
 
@@ -37,7 +37,7 @@ class runtime_controller {
      * @author Bobby Allen (ballen@zpanelcp.com)
      */
     public function Init() {
-        
+
         //Set class varables
         $this->vars_get = array($_GET);
         $this->vars_post = array($_POST);
@@ -106,7 +106,7 @@ class runtime_controller {
      * Grabs the list of all controller requests for a given type.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $type What type of requests would you like to see? (URL, USER, FORM or COOKIE)
-     * @return array List of all set variables for the requested type. 
+     * @return array List of all set variables for the requested type.
      */
     public function GetAllControllerRequests($type = "URL") {
         if ($type == 'FORM') {
@@ -123,7 +123,7 @@ class runtime_controller {
 
     /**
      * Gets the current framework requested action.
-     * @return boolean 
+     * @return boolean
      */
     public function GetAction() {
         if (isset($this->vars_get[0]['action']))
@@ -133,7 +133,7 @@ class runtime_controller {
 
     /**
      * Gets the current framework requested module 'options'.
-     * @return boolean 
+     * @return boolean
      */
     public function GetOptions() {
         if (isset($this->vars_get[0]['options']))
@@ -143,7 +143,7 @@ class runtime_controller {
 
     /**
      * Gets and returns the name of the current module.
-     * @return boolean 
+     * @return boolean
      */
     public function GetCurrentModule() {
         if (isset($this->vars_get[0]['module']))
@@ -156,7 +156,7 @@ class runtime_controller {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global string $script_memory The current amount of memory that the script it using.
      * @global int $starttime The microtime of when the script started executing.
-     * @return string HTML output of the debug infomation. 
+     * @return string HTML output of the debug infomation.
      */
     public function OutputControllerDebug() {
         global $script_memory;
@@ -178,9 +178,15 @@ class runtime_controller {
             var_dump($this->GetAllControllerRequests('COOKIE'));
             $set_cookies = ob_get_contents();
             ob_end_clean();
+            $classes_loaded = debug_execution::GetLoadedClasses();
             ob_start();
-            debug_execution::GetLoadedClasses();
-            $classes_loaded = ob_get_contents();
+            print_r($classes_loaded);
+            $classes_array = ob_get_contents();
+            ob_end_clean();
+            $sql_queries = debug_execution::GetSQLQueriesExecuted();
+            ob_start();
+            print_r($sql_queries);
+            $sql_array = ob_get_contents();
             ob_end_clean();
             $mtime = microtime();
             $mtime = explode(" ", $mtime);
@@ -188,7 +194,7 @@ class runtime_controller {
             $endtime = $mtime;
             $totaltime = ($endtime - $starttime);
             runtime_hook::Execute('OnDisplayRuntimeDebug');
-            return "<h1>Controller Debug Mode</h1><strong>PHP Script Memory Usage:</strong> " . debug_execution::ScriptMemoryUsage($script_memory) . "<br><strong>Script Execution Time: </strong> " . $totaltime . "<br><br><strong>URL Variables set:</strong><br><pre>" . $set_urls . "</pre><strong>POST Variables set:</strong><br><pre>" . $set_forms . "</pre><strong>SESSION Variables set:</strong><br><pre>" . $set_sessions . "</pre><strong>COOKIE Variables set:</strong><br><pre>" . $set_cookies . "</pre><br><br><strong>Loaded classes:</strong><pre>" . $classes_loaded . "</pre>";
+            return "<h1>Controller Debug Mode</h1><strong>PHP Script Memory Usage:</strong> " . debug_execution::ScriptMemoryUsage($script_memory) . "<br><strong>Script Execution Time: </strong> " . $totaltime . "<br><br><strong>URL Variables set:</strong><br><pre>" . $set_urls . "</pre><strong>POST Variables set:</strong><br><pre>" . $set_forms . "</pre><strong>SESSION Variables set:</strong><br><pre>" . $set_sessions . "</pre><strong>COOKIE Variables set:</strong><br><pre>" . $set_cookies . "</pre><br><br><strong>Loaded classes (Total: " . count($classes_loaded) . "):</strong><pre>" . $classes_array . "</pre><br><br><strong>SQL queries executed (Total: " . count($sql_queries) . "):</strong><pre>" . $sql_array . "</pre>";
         } else {
             return false;
         }
