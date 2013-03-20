@@ -31,14 +31,7 @@ class runtime_csfr {
      * @return bool 
      */
     static function Tokeniser() {
-        $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-        $pass = array();
-        $alphaLength = strlen($alphabet) - 1;
-        for ($i = 0; $i < 14; $i++) {
-            $n = rand(0, $alphaLength);
-            $pass[] = $alphabet[$n];
-        }
-        $_SESSION['zpcsfr'] = implode($pass);
+        $_SESSION['zpcsfr'] = runtime_randomstring::randomHash();
         return true;
     }
 
