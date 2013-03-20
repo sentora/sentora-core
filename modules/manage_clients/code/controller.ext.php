@@ -165,14 +165,14 @@ class module_controller {
             $sql->execute();
             $currentuser = ctrl_users::GetUserDetail($uid);
             while ($rowclients = $sql->fetch()) {
-                array_push($res, array('fullname' => htmlspecialchars(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
-                    'username' => htmlentities(strip_tags($currentuser['username']), ENT_QUOTES, 'UTF-8'),
-                    'userid' => htmlentities(strip_tags($currentuser['userid']), ENT_QUOTES, 'UTF-8'),
-                    'fullname' => htmlentities(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
-                    'postcode' => htmlentities(strip_tags($rowclients['ud_postcode_vc']), ENT_QUOTES, 'UTF-8'),
-                    'address' => htmlentities(strip_tags($rowclients['ud_address_tx']), ENT_QUOTES, 'UTF-8'),
-                    'phone' => htmlentities(strip_tags($rowclients['ud_phone_vc']), ENT_QUOTES, 'UTF-8'),
-                    'email' => htmlentities(strip_tags($currentuser['email']), ENT_QUOTES, 'UTF-8')));
+                array_push($res, array('fullname' => runtime_xss::xssClean(strip_tags($rowclients['ud_fullname_vc'])),
+                    'username' => runtime_xss::xssClean(strip_tags($currentuser['username'])),
+                    'userid' => runtime_xss::xssClean(strip_tags($currentuser['userid'])),
+                    'fullname' => runtime_xss::xssClean(strip_tags($rowclients['ud_fullname_vc'])),
+                    'postcode' => runtime_xss::xssClean(strip_tags($rowclients['ud_postcode_vc'])),
+                    'address' => runtime_xss::xssClean(strip_tags($rowclients['ud_address_tx'])),
+                    'phone' => runtime_xss::xssClean(strip_tags($rowclients['ud_phone_vc'])),
+                    'email' => runtime_xss::xssClean(strip_tags($currentuser['email']))));
             }
             return $res;
         } else {
@@ -200,12 +200,12 @@ class module_controller {
                         $selected = " selected";
                     }
                     array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
-                        'groupname' => ui_language::translate($rowgroups['ug_name_vc']),
+                        'groupname' => runtime_xss::xssClean(ui_language::translate($rowgroups['ug_name_vc'])),
                         'groupselected' => $selected));
                 } else {
                     if (strtoupper($rowgroups['ug_name_vc']) == "USERS") {
                         array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
-                            'groupname' => ui_language::translate($rowgroups['ug_name_vc']),
+                            'groupname' => runtime_xss::xssClean(ui_language::translate($rowgroups['ug_name_vc'])),
                             'groupselected' => $selected));
                     }
                 }
