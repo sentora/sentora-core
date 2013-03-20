@@ -7,8 +7,8 @@
         <script type="text/javascript" src="etc/styles/zpanelx/inc/jquery.min.js"></script>
         <!-- JQUERY NAVBAR REQUIREMENTS -->
         <link href="etc/styles/zpanelx/inc/navbar/fg.menu.css" media="screen" rel="stylesheet" type="text/css"/>
-        <link href="etc/styles/zpanelx/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>	
-        <script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/init.js"></script>	
+        <link href="etc/styles/zpanelx/inc/navbar/theme/start/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/init.js"></script>
         <script type="text/javascript" src="etc/styles/zpanelx/inc/navbar/fg.menu.js"></script>
         <!-- END JQUERY NAVBAR REQUIREMENTS -->
 
@@ -16,10 +16,10 @@
         <style id="antiClickjack">body{display:none !important;}</style>
         <script type="text/javascript">
             if (self === top) {
-                var antiClickjack = document.getElementById("antiClickjack");
-                antiClickjack.parentNode.removeChild(antiClickjack);
+            var antiClickjack = document.getElementById("antiClickjack");
+            antiClickjack.parentNode.removeChild(antiClickjack);
             } else {
-                top.location = self.location;
+            top.location = self.location;
             }
         </script>
         <!-- End of Anti ClickJacking protection! -->
@@ -97,10 +97,13 @@
                                                                 echo "You have been logged out successfully!";
                                                             }
                                                             if (isset($_GET['sessionIssue'])) {
-                                                                echo 'ZPanel has detected an issue please login again!';
+                                                                echo 'ZPanel has detected an issue please login again! If the problem perisits disable session secuirty.';
                                                             }
                                                             if (isset($_GET['passwordreset'])) {
                                                                 echo "If your email address matched the one on your account your password has now been reset!";
+                                                            }
+                                                            if(runtime_sessionsecurity::checkProxy()){
+                                                                echo 'It seems you are running behind a proxy or on a webserver, if any problems occure disabling session secuirty';
                                                             }
                                                             ?></font>&nbsp;
                                                     </td>
@@ -114,8 +117,8 @@
                                                                     <td id="login"><strong>Password:</strong></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><input name="inUsername" type="text" id="inUsername" maxlength="20" /></td>
-                                                                    <td><input name="inPassword" type="password" id="inPassword" /></td>
+                                                                    <td><input name="inUsername" type="text" size="30" id="inUsername" maxlength="30" /></td>
+                                                                    <td><input name="inPassword" type="password" size="30" id="inPassword" /></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td id="lightblue"></td>
@@ -123,9 +126,10 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td id="lightblue"><input name="inRemember" name="inRemember" type="checkbox" value="1"/> Remember Me</td>
-                                                                    <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
+                                                                    <td id="lightblue"><input name="inSessionSecuirty" name="inSessionSecuirty" type="checkbox" checked/> Enable Session Security</td>
                                                                 </tr>
                                                                 <tr>
+                                                                    <td id="lightblue"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="sublogin2" value="LogIn">Login</button></td>
                                                                     <td colspan="2" id="grey"><a href="javascript:void(0);" id="fp" onclick="toggleVisibility('forgotpassword_wrapper', 'login_wrapper');">Forgot Password?</a></td>
                                                                 </tr>
                                                             </table>
@@ -198,20 +202,20 @@
 <script language="JavaScript" type="text/javascript">
     <!--
     function toggleVisibility(sId, lId){
-        var me=document.getElementById(sId);
-        var le=document.getElementById(lId);
-        if (me.style.display=="none"){
-            me.style.display="block";
-        }
-        else {
-            me.style.display="none";
-        }
-        if (le.style.display=="block"){
-            le.style.display="none";
-        }
-        else {
-            le.style.display="block";
-        }
+    var me=document.getElementById(sId);
+    var le=document.getElementById(lId);
+    if (me.style.display=="none"){
+    me.style.display="block";
+    }
+    else {
+    me.style.display="none";
+    }
+    if (le.style.display=="block"){
+    le.style.display="none";
+    }
+    else {
+    le.style.display="block";
+    }
     }
     // -->
 </script>
@@ -231,37 +235,37 @@
 </style>
 <script language="JavaScript" type="text/javascript">
     $(document).ready(function() {
-        $('input[type="text"]').addClass("idleField");
-        $('input[type="text"]').focus(function() {
-            $(this).removeClass("idleField").addClass("focusField");
-    		    
-            if(this.value != this.defaultValue){
-                this.select();
-            }
-        });
-        $('input[type="text"]').blur(function() {
-            $(this).removeClass("focusField").addClass("idleField");
+    $('input[type="text"]').addClass("idleField");
+    $('input[type="text"]').focus(function() {
+    $(this).removeClass("idleField").addClass("focusField");
 
-        });
-    });	
+    if(this.value != this.defaultValue){
+    this.select();
+    }
+    });
+    $('input[type="text"]').blur(function() {
+    $(this).removeClass("focusField").addClass("idleField");
+
+    });
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('input[type="password"]').addClass("idleField");
-        $('input[type="password"]').focus(function() {
-            $(this).removeClass("idleField").addClass("focusField");
-            if (this.value == this.defaultValue){ 
-                this.value = '';
-            }
-            if(this.value != this.defaultValue){
-                this.select();
-            }
-        });
-        $('input[type="password"]').blur(function() {
-            $(this).removeClass("focusField").addClass("idleField");
-            if ($.trim(this.value) == ''){
-                this.value = (this.defaultValue ? this.defaultValue : '');
-            }
-        });
-    });			
+    $('input[type="password"]').addClass("idleField");
+    $('input[type="password"]').focus(function() {
+    $(this).removeClass("idleField").addClass("focusField");
+    if (this.value == this.defaultValue){
+    this.value = '';
+    }
+    if(this.value != this.defaultValue){
+    this.select();
+    }
+    });
+    $('input[type="password"]').blur(function() {
+    $(this).removeClass("focusField").addClass("idleField");
+    if ($.trim(this.value) == ''){
+    this.value = (this.defaultValue ? this.defaultValue : '');
+    }
+    });
+    });
 </script>

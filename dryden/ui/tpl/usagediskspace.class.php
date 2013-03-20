@@ -14,8 +14,7 @@ class ui_tpl_usagediskspace {
 
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
-        $diskspace = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
-        return $diskspace;
+        return fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
     }
 
 }

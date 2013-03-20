@@ -46,7 +46,7 @@ class webservice extends ws_xmws {
         $total_ftpaccounts = $sql['total'];
 
         // Total FTP accounts
-        $sql = $zdbh->query("SELECT COUNT(*) AS total FROM x_mysql WHERE my_deleted_ts IS NULL")->Fetch();
+        $sql = $zdbh->query("SELECT COUNT(*) AS total FROM x_mysql_databases WHERE my_deleted_ts IS NULL")->Fetch();
         $total_mysql = $sql['total'];
 
         // Total hosting packages

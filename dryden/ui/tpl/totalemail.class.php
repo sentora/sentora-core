@@ -15,10 +15,10 @@ class ui_tpl_totalemail {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $mailboxquota = $currentuser['mailboxquota'];
-        if ($mailboxquota <> 0) {
-            return (string) $mailboxquota;
-        }
-        return (string) 0;
+        if ($mailboxquota < 0)
+            return '&#8734;';
+        else
+            return $mailboxquota;
     }
 
 }

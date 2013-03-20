@@ -14,11 +14,7 @@ class ui_tpl_usedftp {
 
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
-        $ftp = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
-        if ($ftp <> 0) {
-            return (string) $ftp;
-        }
-        return (string) 0;
+        return ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
     }
 
 }

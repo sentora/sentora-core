@@ -88,7 +88,7 @@
     <div class="zgrid_wrapper">	
         <table class="none" width="100%" cellborder="0" cellspacing="0">
             <tr valign="top">
-                <td>	
+                <td>
                     <h2><: Create a new mailbox :></h2>
                     <% if QuotaLimit %>
                     <form action="./?module=mailboxes&action=AddMailbox" method="post">

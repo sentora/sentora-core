@@ -15,10 +15,10 @@ class ui_tpl_totaldomains {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         $domainsquota = $currentuser['domainquota'];
-        if ($domainsquota <> 0) {
-            return (string) $domainsquota;
-        }
-        return (string) 0;
+        if ($domainsquota < 0)
+            return '&#8734;';
+        else
+            return $domainsquota;
     }
 
 }

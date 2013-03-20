@@ -15,7 +15,7 @@ class ui_template {
     /**
      * Returns the name (folder name) of the template that should be used for the current user.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return string The tempalte name.
+     * @return string The template name.
      */
     static function GetUserTemplate() {
         $user = ctrl_users::GetUserDetail();

@@ -42,6 +42,7 @@ class module_controller {
     static $clientid;
     static $clientpkgid;
     static $resetform;
+    static $not_unique_email;
 
     /**
      * The 'worker' methods.
@@ -164,14 +165,14 @@ class module_controller {
             $sql->execute();
             $currentuser = ctrl_users::GetUserDetail($uid);
             while ($rowclients = $sql->fetch()) {
-                array_push($res, array('fullname' => htmlspecialchars(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
-                    'username' => htmlentities(strip_tags($currentuser['username']), ENT_QUOTES, 'UTF-8'),
-                    'userid' => htmlentities(strip_tags($currentuser['userid']), ENT_QUOTES, 'UTF-8'),
-                    'fullname' => htmlentities(strip_tags($rowclients['ud_fullname_vc']), ENT_QUOTES, 'UTF-8'),
-                    'postcode' => htmlentities(strip_tags($rowclients['ud_postcode_vc']), ENT_QUOTES, 'UTF-8'),
-                    'address' => htmlentities(strip_tags($rowclients['ud_address_tx']), ENT_QUOTES, 'UTF-8'),
-                    'phone' => htmlentities(strip_tags($rowclients['ud_phone_vc']), ENT_QUOTES, 'UTF-8'),
-                    'email' => htmlentities(strip_tags($currentuser['email']), ENT_QUOTES, 'UTF-8')));
+                array_push($res, array('fullname' => runtime_xss::xssClean(strip_tags($rowclients['ud_fullname_vc'])),
+                    'username' => runtime_xss::xssClean(strip_tags($currentuser['username'])),
+                    'userid' => runtime_xss::xssClean(strip_tags($currentuser['userid'])),
+                    'fullname' => runtime_xss::xssClean(strip_tags($rowclients['ud_fullname_vc'])),
+                    'postcode' => runtime_xss::xssClean(strip_tags($rowclients['ud_postcode_vc'])),
+                    'address' => runtime_xss::xssClean(strip_tags($rowclients['ud_address_tx'])),
+                    'phone' => runtime_xss::xssClean(strip_tags($rowclients['ud_phone_vc'])),
+                    'email' => runtime_xss::xssClean(strip_tags($currentuser['email']))));
             }
             return $res;
         } else {
@@ -199,12 +200,12 @@ class module_controller {
                         $selected = " selected";
                     }
                     array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
-                        'groupname' => ui_language::translate($rowgroups['ug_name_vc']),
+                        'groupname' => runtime_xss::xssClean(ui_language::translate($rowgroups['ug_name_vc'])),
                         'groupselected' => $selected));
                 } else {
                     if (strtoupper($rowgroups['ug_name_vc']) == "USERS") {
                         array_push($res, array('groupid' => $rowgroups['ug_id_pk'],
-                            'groupname' => ui_language::translate($rowgroups['ug_name_vc']),
+                            'groupname' => runtime_xss::xssClean(ui_language::translate($rowgroups['ug_name_vc'])),
                             'groupselected' => $selected));
                     }
                 }
@@ -623,6 +624,21 @@ class module_controller {
             self::$emailblank = true;
             return false;
         }
+
+        // Check that the email address is unique to the user's table
+        if (!fs_director::CheckForEmptyValue($email)) {
+            if (ctrl_users::CheckUserEmailIsUnique($email)) {
+                self::$not_unique_email = false;
+                return true;
+            } else {
+                self::$not_unique_email = true;
+                return false; 
+            }
+        } else {
+            self::$not_unique_email = true;
+            return false;
+        }
+
         // Check for password length...
         if (!fs_director::CheckForEmptyValue($password)) {
             if (strlen($password) < ctrl_options::GetSystemOption('password_minlength')) {
@@ -654,6 +670,28 @@ class module_controller {
     static function DefaultEmailBody() {
         $line = ui_language::translate("Hi {{fullname}},\r\rWe are pleased to inform you that your new hosting account is now active!\r\rYou can access your web hosting control panel using this link:\r{{controlpanelurl}}\r\rYour username and password is as follows:\rUsername: {{username}}\rPassword: {{password}}\r\rMany thanks,\rThe management");
         return $line;
+    }
+    
+    /**
+     * Checks if the user already exists in the x_accounts table.
+     * @global type $zdbh The ZPanelX database handle.
+     * @param type $username The username to check against.
+     * @return boolean
+     */
+    static function CheckUserExits($username){ 
+        global $zdbh;
+            $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username";
+            $uniqueuser = $zdbh->prepare($sql);
+            $uniqueuser->bindParam(':username', strtolower($username));       
+            if ($uniqueuser->execute()) {
+                if ($uniqueuser->fetchColumn() > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }        
     }
 
     /**
@@ -1044,6 +1082,9 @@ class module_controller {
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your client(s) have been saved successfully!"), "zannounceok");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$not_unique_email)) {
+            return ui_sysmessage::shout(ui_language::translate("Another user account is already using this email address."), "zannounceerror");
         }
         return;
     }

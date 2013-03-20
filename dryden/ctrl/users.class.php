@@ -63,7 +63,7 @@ class ctrl_users {
         $userdetail->addItemValue('mysqlquota', $dbvals['qt_mysql_in']);
         $userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
         $userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
-        $userdetail->addItemValue('distrobutionlistsquota', $dbvals['qt_distlists_in']);
+        $userdetail->addItemValue('distlistsquota', $dbvals['qt_distlists_in']);
         return $userdetail->getDataObject();
     }
 
@@ -173,7 +173,7 @@ class ctrl_users {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $uid The ZPanel user account ID.
-     * @return type 
+     * @return boolean
      */
     static function CheckUserEnabled($uid) {
         global $zdbh;
@@ -190,6 +190,28 @@ class ctrl_users {
         return false;
     }
 
-}
+    /**
+     * Checks that a specified email address is unique in the user accounts table.
+     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @global db_driver The ZPX database handle.
+     * @param type $email The email address to check.
+     * @return boolean
+     */
+    static function CheckUserEmailIsUnique($email) {
+        global $zdbh;
+            $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_email_vc)=:email";
+            $uniqueuser = $zdbh->prepare($sql);
+            $uniqueuser->bindParam(':email', $email);       
+            if ($uniqueuser->execute()) {
+                if ($uniqueuser->fetchColumn() > 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
 
+        } 
+    }
 ?>

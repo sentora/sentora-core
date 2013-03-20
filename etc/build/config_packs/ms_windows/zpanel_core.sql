@@ -33,6 +33,7 @@ CREATE TABLE `x_accounts` (
   `ac_notice_tx` text,
   `ac_resethash_tx` text,
   `ac_passsalt_vc` varchar(22) DEFAULT NULL,
+  `ac_catorder_vc` varchar(255) DEFAULT NULL,
   `ac_created_ts` int(30) DEFAULT NULL,
   `ac_deleted_ts` int(30) DEFAULT NULL,
   PRIMARY KEY (`ac_id_pk`)
@@ -399,22 +400,6 @@ insert  into `x_modules`(`mo_id_pk`,`mo_category_fk`,`mo_name_vc`,`mo_version_in
 insert  into `x_modules`(`mo_id_pk`,`mo_category_fk`,`mo_name_vc`,`mo_version_in`,`mo_folder_vc`,`mo_type_en`,`mo_desc_tx`,`mo_installed_ts`,`mo_enabled_en`,`mo_updatever_vc`,`mo_updateurl_tx`) values (43,3,'Protect Directories',100,'htpasswd','user','This module enables you to configure .htaccess files and users to protect your web directories.',0,'true','','');
 insert  into `x_modules`(`mo_id_pk`,`mo_category_fk`,`mo_name_vc`,`mo_version_in`,`mo_folder_vc`,`mo_type_en`,`mo_desc_tx`,`mo_installed_ts`,`mo_enabled_en`,`mo_updatever_vc`,`mo_updateurl_tx`) values (46,7,'Theme Manager',100,'theme_manager','user','Enables the reseller to set themes configurations for their clients.',0,'true','','');
 insert  into `x_modules`(`mo_id_pk`,`mo_category_fk`,`mo_name_vc`,`mo_version_in`,`mo_folder_vc`,`mo_type_en`,`mo_desc_tx`,`mo_installed_ts`,`mo_enabled_en`,`mo_updatever_vc`,`mo_updateurl_tx`) values (47,3,'Webalizer Stats',100,'webalizer_stats','user','You can view many statistics such as visitor infomation, bandwidth used, referal infomation and most viewed pages etc. Web stats are based on Domains and sub-domains so to view web stats for a particular domain or subdomain use the drop-down menu to select the domain or sub-domain you want to view web stats for.',0,'true','',NULL);
-
-/*Table structure for table `x_mysql` */
-
-DROP TABLE IF EXISTS `x_mysql`;
-
-CREATE TABLE `x_mysql` (
-  `my_id_pk` int(6) unsigned NOT NULL AUTO_INCREMENT,
-  `my_acc_fk` int(6) DEFAULT NULL,
-  `my_name_vc` varchar(40) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
-  `my_usedspace_bi` bigint(50) DEFAULT '0',
-  `my_created_ts` int(30) DEFAULT NULL,
-  `my_deleted_ts` int(30) DEFAULT NULL,
-  PRIMARY KEY (`my_id_pk`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-/*Data for the table `x_mysql` */
 
 /*Table structure for table `x_mysql_databases` */
 

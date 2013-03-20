@@ -45,7 +45,7 @@ function WriteDNSZoneRecordsHook() {
         $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:dnsrecord AND dn_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':dnsrecord', $dnsrecord);
-       
+
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=:dnsrecord AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
@@ -79,7 +79,7 @@ function WriteDNSZoneRecordsHook() {
                         $line .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		AAAA		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "CNAME") {
-                        $line .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		CNAME		" . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
+                        $line .= $rowdns['dn_host_vc'] . "              " . $rowdns['dn_ttl_in'] . "            IN              CNAME           " . $rowdns['dn_target_vc'] . ($rowdns['dn_target_vc'] == '@' ? '' : '.') . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "MX") {
                         $line .= $rowdns['dn_host_vc'] . "		" . $rowdns['dn_ttl_in'] . "		IN		MX		" . $rowdns['dn_priority_in'] . "	" . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();

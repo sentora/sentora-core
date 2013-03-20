@@ -29,12 +29,9 @@ class module_controller {
     static function getZpanelNews() {
         $handle = @file_get_contents(ctrl_options::GetSystemOption('news_url'));
         $content = $handle;
-        if ($content == '') {
-            $content = ui_language::translate("Unable to connect to the ZPanel API server at this time.");
-        } else {
-            $content = ws_generic::JSONToArray($content, true);
-        }
-        return $content;
+        if (!$content)
+            return false;
+        return ws_generic::JSONToArray($content, true);
     }
 
     static function getModuleName() {

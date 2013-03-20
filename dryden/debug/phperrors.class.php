@@ -18,14 +18,12 @@ class debug_phperrors {
      * @param str $mode Either 'dev' or 'prod', is left blank 'prod' is used by default.
      */
     static function SetMode($mode = '') {
-        if ($mode == "dev") {
+        if ($mode == 'dev') {
             error_reporting('E_ALL');
             ini_set('error_reporting', E_ALL);
-        } elseif ($mode == "prod") {
+        } else {
             error_reporting('E_NONE');
             ini_set('error_reporting', E_NONE);
-        } else {
-            self::SetMode('prod');
         }
     }
 

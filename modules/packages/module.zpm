@@ -1,6 +1,11 @@
+<script type="text/javascript" language="javascript">
+<!--
+  function isNumberKeyOrNeg(event)
+  { if isNumberKey(event) or ( ((evt.which) ? evt.which : event.keyCode) == 109); }
+-->
+</script>
 <div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
 <div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
-
     <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
     <@ Result @>
 
@@ -57,43 +62,43 @@
                 </tr>
                 <tr>
                     <th><: No. Domains :>:</th>
-                    <td><input name="inNoDomains" type="text" id="inNoDomains" size="5" maxlength="3" value="<@ EditCurrentDomains @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoDomains" type="text" id="inNoDomains" size="5" maxlength="3" value="<@ EditCurrentDomains @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Sub-domains :>:</th>
-                    <td><input name="inNoSubDomains" type="text" id="inNoSubDomains" size="5" maxlength="3" value="<@ EditCurrentSubDomains @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoSubDomains" type="text" id="inNoSubDomains" size="5" maxlength="3" value="<@ EditCurrentSubDomains @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Parked domains :>:</th>
-                    <td><input name="inNoParkedDomains" type="text" id="inNoParkedDomains" size="5" maxlength="3" value="<@ EditCurrentParkedDomains @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoParkedDomains" type="text" id="inNoParkedDomains" size="5" maxlength="3" value="<@ EditCurrentParkedDomains @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Mailboxes :>:</th>
-                    <td><input name="inNoMailboxes" type="text" id="inNoMailboxes" size="5" maxlength="3" value="<@ EditCurrentMailboxes @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoMailboxes" type="text" id="inNoMailboxes" size="5" maxlength="3" value="<@ EditCurrentMailboxes @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Forwarders :>:</th>
-                    <td><input name="inNoFowarders" type="text" id="inNoFowarders" size="5" maxlength="3" value="<@ EditCurrentForwarders @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoFowarders" type="text" id="inNoFowarders" size="5" maxlength="3" value="<@ EditCurrentForwarders @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Dist Lists :>:</th>
-                    <td><input name="inNoDistLists" type="text" id="inNoDistLists" size="5" maxlength="3" value="<@ EditCurrentDistLists @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoDistLists" type="text" id="inNoDistLists" size="5" maxlength="3" value="<@ EditCurrentDistLists @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. FTP accounts :>:</th>
-                    <td><input name="inNoFTPAccounts" type="text" id="inNoFTPAccounts" size="5" maxlength="3" value="<@ EditCurrentFTP @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoFTPAccounts" type="text" id="inNoFTPAccounts" size="5" maxlength="3" value="<@ EditCurrentFTP @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. MySQL databases :>:</th>
-                    <td><input name="inNoMySQL" type="text" id="inNoMySQL" size="5" maxlength="3" value="<@ EditCurrentMySQL @>" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input name="inNoMySQL" type="text" id="inNoMySQL" size="5" maxlength="3" value="<@ EditCurrentMySQL @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: Disk space quota :>:</th>
-                    <td><input name="inDiskQuota" type="text" id="inDiskQuota" size="10" maxlength="10" value="<@ EditCurrentDisk @>" onkeypress="return isNumberKey(event)"/> MB (1000MB = 1GB)</td>
+                    <td><input name="inDiskQuota" type="text" id="inDiskQuota" size="10" maxlength="10" value="<@ EditCurrentDisk @>" onkeypress="return isNumberKey(event)"/> MB (1000MB = 1GB ; 0 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: Monthly bandwidth quota :>:</th>
-                    <td><input name="inBandQuota" type="text" id="inBandQuota" size="10" maxlength="10" value="<@ EditCurrentBandWidth @>" onkeypress="return isNumberKey(event)"/> MB (1000MB = 1GB)</td>
+                    <td><input name="inBandQuota" type="text" id="inBandQuota" size="10" maxlength="10" value="<@ EditCurrentBandWidth @>" onkeypress="return isNumberKey(event)"/> MB (1000MB = 1GB ; 0 = unlimited)</td>
                 </tr>
                 <tr>
                     <th></th>
@@ -120,8 +125,8 @@
                     <th><: Created :></th>
                     <th><: No. of clients :></th>
                     <th>&nbsp;</th>
-                </tr> 
-                <% loop PackageList %> 
+                </tr>
+                <% loop PackageList %>
                 <tr>
                     <td scope="row"><& packagename &></td>
                     <td><& created &></td>
@@ -159,43 +164,43 @@
                 </tr>
                 <tr>
                     <th><: No. Domains :>:</th>
-                    <td><input name="inNoDomains" type="text" id="inNoDomains" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)" /></td>
+                    <td><input name="inNoDomains" type="text" id="inNoDomains" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)" /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Sub-domains :>:</th>
-                    <td><input name="inNoSubDomains" type="text" id="inNoSubDomains" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)"  /></td>
+                    <td><input name="inNoSubDomains" type="text" id="inNoSubDomains" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)"  /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Parked domains :>:</th>
-                    <td><input name="inNoParkedDomains" type="text" id="inNoParkedDomains" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)" /></td>
+                    <td><input name="inNoParkedDomains" type="text" id="inNoParkedDomains" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)" /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Mailboxes :>:</th>
-                    <td><input name="inNoMailboxes" type="text" id="inNoMailboxes" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)" /></td>
+                    <td><input name="inNoMailboxes" type="text" id="inNoMailboxes" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)" /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Forwarders :>:</th>
-                    <td><input name="inNoFowarders" type="text" id="inNoFowarders" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)" /></td>
+                    <td><input name="inNoFowarders" type="text" id="inNoFowarders" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)" /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. Dist Lists :>:</th>
-                    <td><input name="inNoDistLists" type="text" id="inNoDistLists" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)" /></td>
+                    <td><input name="inNoDistLists" type="text" id="inNoDistLists" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)" /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. FTP accounts :>:</th>
-                    <td><input name="inNoFTPAccounts" type="text" id="inNoFTPAccounts" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)" /></td>
+                    <td><input name="inNoFTPAccounts" type="text" id="inNoFTPAccounts" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)" /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: No. MySQL databases :>:</th>
-                    <td><input name="inNoMySQL" type="text" id="inNoMySQL" value="0" size="5" maxlength="3" onkeypress="return isNumberKey(event)" /></td>
+                    <td><input name="inNoMySQL" type="text" id="inNoMySQL" value="0" size="5" maxlength="3" onkeypress="return isNumberKeyOrNeg(event)" /> (-1 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: Disk space quota :>:</th>
-                    <td><input name="inDiskQuota" type="text" id="inDiskQuota" value="0" size="10" maxlength="10" onkeypress="return isNumberKey(event)" /> MB (1000MB = 1GB)</td>
+                    <td><input name="inDiskQuota" type="text" id="inDiskQuota" value="0" size="10" maxlength="10" onkeypress="return isNumberKey(event)" /> MB (1000MB = 1GB ; 0 = unlimited)</td>
                 </tr>
                 <tr>
                     <th><: Monthly bandwidth quota :>:</th>
-                    <td><input name="inBandQuota" type="text" id="inBandQuota" value="0" size="10" maxlength="10" onkeypress="return isNumberKey(event)" /> MB (1000MB = 1GB)</td>
+                    <td><input name="inBandQuota" type="text" id="inBandQuota" value="0" size="10" maxlength="10" onkeypress="return isNumberKey(event)" /> MB (1000MB = 1GB ; 0 = unlimited)</td>
                 </tr>
                 <tr>
                     <th></th>

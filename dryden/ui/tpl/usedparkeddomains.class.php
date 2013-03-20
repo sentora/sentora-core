@@ -14,11 +14,7 @@ class ui_tpl_usedparkeddomains {
 
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
-        $parkeddomains = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
-        if ($parkeddomains <> 0) {
-            return (string) $parkeddomains;
-        }
-        return (string) 0;
+        return ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
     }
 
 }

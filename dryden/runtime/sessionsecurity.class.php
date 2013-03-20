@@ -73,12 +73,7 @@ class runtime_sessionsecurity {
      * @return boolean.
      */
     static public function setUserAgent(){
-        
-        if($_SESSION['HTTP_USER_AGENT'] = sha1($_SERVER['HTTP_USER_AGENT'],self::userSpeficData())){
-            return true;
-        }else{
-            return false;
-        }
+        $_SESSION['HTTP_USER_AGENT'] = sha1($_SERVER['HTTP_USER_AGENT'],self::userSpeficData());
     }
     
     /**
@@ -98,10 +93,21 @@ class runtime_sessionsecurity {
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @return boolean.
      */
-    static public function setUserIP(){      
-        if($_SESSION['ip'] = sha1(self::findIP(), self::userSpeficData())){
+    static public function setUserIP(){
+        $_SESSION['ip'] = sha1(self::findIP(), self::userSpeficData());
+    }
+    
+    /**
+     * This set whether session security is enabled 
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return boolean.
+     */
+    static public function setSessionSecurityEnabled($option){
+        if($option == true){
+            $_SESSION['zSessionSecurityEnabled'] = 1;
             return true;
         }else{
+            $_SESSION['zSessionSecurityEnabled'] = 0;
             return false;
         }
     }
@@ -162,6 +168,18 @@ class runtime_sessionsecurity {
         return sha1(self::findIP(), self::userSpeficData());
     }
     
+    /**
+     * This returns whether the user set the session secuirty option on login
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return boolean.
+     */
+    static public function getSessionSecurityEnabled(){
+        if($_SESSION['zSessionSecurityEnabled'] == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     
     /*****Below are function that check information and try to identy any tampering*****/
@@ -219,8 +237,21 @@ class runtime_sessionsecurity {
      * @return boolean
      */
     static public function checkProxy(){
-        if (@$_SERVER['HTTP_X_FORWARDED_FOR']|| @$_SERVER['HTTP_X_FORWARDED']|| @$_SERVER['HTTP_FORWARDED_FOR']|| @$_SERVER['HTTP_CLIENT_IP']|| @$_SERVER['HTTP_VIA']|| @in_array($_SERVER['REMOTE_PORT'], array(8080,80,6588,8000,3128,553,554))|| @fsockopen($_SERVER['REMOTE_ADDR'], 80, $errno, $errstr, 30)){
+        if (@$_SERVER['HTTP_X_FORWARDED_FOR']|| @$_SERVER['HTTP_X_FORWARDED']|| @$_SERVER['HTTP_FORWARDED_FOR']|| @$_SERVER['HTTP_CLIENT_IP']|| @$_SERVER['HTTP_VIA']|| @in_array($_SERVER['REMOTE_PORT'], array(8080,80,6588,8000,3128,553,554))|| @fsockopen($_SERVER['REMOTE_ADDR'], 80, $errno, $errstr, 1)){
               return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Check if session secuirty enabled
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     * @return boolean
+     */
+    static public function checkSessionSecurityEnabled(){
+        if(self::getSessionSecurityEnabled()){
+            return true;
         }else{
             return false;
         }
@@ -249,8 +280,8 @@ class runtime_sessionsecurity {
                 return true;
             }
         }else{
-            if(self::checkProxy() == true){
-                //proxies can cause fluxuations in the user agent and IP headers 
+            if(self::checkSessionSecurityEnabled() == false){
+                //proxies can cause fluxuations in the user agent and IP headers so user can disable it on login
                 if(isset($_GET['module'])){
                     $checkUserCookie = self::checkCookie();
                     if($checkUserCookie == true){

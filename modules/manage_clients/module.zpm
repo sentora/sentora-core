@@ -16,7 +16,7 @@
                     <th><: Move clients and packages (if any exist) this user has to :>:</th>
                     <td>
                         <select name="inMoveClient" id="inMoveClient">
-                            <% loop AllClientList %>	
+                            <% loop AllClientList %>
                             <option value="<& moveclientid &>"><& moveclientname &></option>
                             <% endloop %>
                         </select>
@@ -43,7 +43,7 @@
             <table class="zform">
                 <tr>
                     <th><: Username :>:</th>
-                    <td><input name="inUserName" type="text" disabled="disabled" maxlength="10" id="inUserName" value="<@ EditCurrentName @>" readonly="readonly" /></td>
+                    <td><input name="inUserName" type="text" disabled="disabled" size="30" maxlength="30" id="inUserName" value="<@ EditCurrentName @>" readonly="readonly" /></td>
                 </tr>
                 <tr>
                     <th><: User group :>:</th>
@@ -90,7 +90,7 @@
                 </tr>
                 <td>
                     <% loop CheckEnabledHTML %>
-                    <input type="radio" name="inEnabled" value="1" <& echecked &>/> Enabled 
+                    <input type="radio" name="inEnabled" value="1" <& echecked &>/> Enabled
                            <input type="radio" name="inEnabled" value="0" <& dchecked &>/> Disabled
                            <% endloop %>
                 </td>
@@ -103,8 +103,8 @@
                     </td>
                 </tr>
             </table>
-            <@ CSFR_Tag @>        
-        </form> 
+            <@ CSFR_Tag @>
+        </form>
     </div>
     <% endif %>
 
@@ -188,11 +188,11 @@
             <table class="zform">
                 <tr>
                     <th><: Username :>:</th>
-                    <td><input type="text" name="inNewUserName" id="inNewUserName" maxlength="10" value="<@ FormName @>" /></td>
+                    <td><input type="text" name="inNewUserName" id="inNewUserName" size="30" maxlength="30" value="<@ FormName @>" /></td>
                 </tr>
                 <tr>
                     <th><: Password :>:</th>
-                    <td><input type="text" name="inNewPassword" id="input-password" value="<@ RandomPassword @>" /> <a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
+                    <td><input type="text" name="inNewPassword" id="input-password" size="30" value="<@ RandomPassword @>" /> <a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
                 </tr>
                 <tr>
                     <th><: Usergroup :>:</th>

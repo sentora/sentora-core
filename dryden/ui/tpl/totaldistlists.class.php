@@ -13,13 +13,12 @@
 class ui_tpl_totaldistlists {
 
     public static function Template() {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $distrobutionlistsquota = $currentuser['distrobutionlistsquota'];
-        if ($distrobutionlistsquota <> 0) {
-            return (string) $distrobutionlistsquota;
-        }
-        return (string) 0;
+        $distlistsquota = $currentuser['distlistsquota'];
+        if ($distlistsquota  < 0)
+            return '&#8734;';
+        else
+            return $distlistsquota;
     }
 
 }

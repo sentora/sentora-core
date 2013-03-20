@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -41,10 +41,8 @@ class module_controller {
      */
     static function ListDist($uid) {
         global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_distlists WHERE dl_acc_fk=:userid AND dl_deleted_ts IS NULL ORDER BY dl_address_vc ASC";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
@@ -54,15 +52,13 @@ class module_controller {
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->execute();
             while ($rowdistlist = $sql->fetch()) {
-                //$numrowmb = $zdbh->query("SELECT COUNT(*) FROM x_distlistusers WHERE du_distlist_fk=" . $rowdistlist['dl_id_pk'] . " AND du_deleted_ts IS NULL")->fetch();
                 $numrows2 = $zdbh->prepare("SELECT COUNT(*) FROM x_distlistusers WHERE du_distlist_fk=:dl_id_pk AND du_deleted_ts IS NULL");
                 $numrows2->bindParam(':dl_id_pk', $rowdistlist['dl_id_pk']);
                 $numrows2->execute();
                 $numrowmb = $numrows2->fetch();
-
-                array_push($res, array('address' => $rowdistlist['dl_address_vc'],
-                    'totalmb' => $numrowmb[0],
-                    'id' => $rowdistlist['dl_id_pk']));
+                $res[] = array('address' => $rowdistlist['dl_address_vc'],
+                               'totalmb' => $numrowmb[0],
+                               'id' => $rowdistlist['dl_id_pk']);
             }
             return $res;
         } else {
@@ -73,7 +69,6 @@ class module_controller {
     static function ListCurrentDist($id) {
         global $zdbh;
         $sql = "SELECT * FROM x_distlists WHERE dl_id_pk=:id AND dl_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':id', $id);
         $numrows->execute();
@@ -83,8 +78,8 @@ class module_controller {
             $sql->bindParam(':id', $id);
             $sql->execute();
             while ($rowdistlist = $sql->fetch()) {
-                array_push($res, array('address' => $rowdistlist['dl_address_vc'],
-                    'id' => $rowdistlist['dl_id_pk']));
+                $res[] = array('address' => $rowdistlist['dl_address_vc'],
+                               'id' => $rowdistlist['dl_id_pk']);
             }
             return $res;
         } else {
@@ -94,15 +89,11 @@ class module_controller {
 
     static function ListDistUsers($id) {
         global $zdbh;
-        global $controller;
-        //$result = $zdbh->query("SELECT * FROM x_distlists WHERE dl_id_pk=" . $id . " AND dl_deleted_ts IS NULL")->Fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_distlists WHERE dl_id_pk=:id AND dl_deleted_ts IS NULL");
         $numrows->bindParam(':id', $id);
         $numrows->execute();
         $result = $numrows->fetch();
         if ($result) {
-            //$sql = "SELECT * FROM x_distlistusers WHERE du_distlist_fk=" . $result['dl_id_pk'] . " AND du_deleted_ts IS NULL";
-            //$numrows = $zdbh->query($sql);
             $numrows = $zdbh->prepare("SELECT * FROM x_distlistusers WHERE du_distlist_fk=:dl_id_pk AND du_deleted_ts IS NULL");
             $numrows->bindParam(':dl_id_pk', $result['dl_id_pk']);
             $numrows->execute();
@@ -112,9 +103,9 @@ class module_controller {
                 $sql->bindParam(':dl_id_pk', $result['dl_id_pk']);
                 $sql->execute();
                 while ($rowdistlist = $sql->fetch()) {
-                    array_push($res, array('address' => $rowdistlist['du_address_vc'],
-                        'distlist' => $result['dl_address_vc'],
-                        'id' => $rowdistlist['du_id_pk']));
+                    $res[] = array('address' => $rowdistlist['du_address_vc'],
+                                   'distlist' => $result['dl_address_vc'],
+                                   'id' => $rowdistlist['du_id_pk']);
                 }
                 return $res;
             } else {
@@ -126,10 +117,8 @@ class module_controller {
 
     static function ListMailbox($uid) {
         global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
@@ -139,8 +128,8 @@ class module_controller {
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
-                array_push($res, array('address' => $rowmailboxes['mb_address_vc'],
-                    'id' => $rowmailboxes['mb_id_pk']));
+                $res[] = array('address' => $rowmailboxes['mb_address_vc'],
+                               'id' => $rowmailboxes['mb_id_pk']);
             }
             return $res;
         } else {
@@ -150,7 +139,6 @@ class module_controller {
 
     static function getDomainList() {
         global $zdbh;
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
         $numrows = $zdbh->query($sql);
@@ -159,7 +147,7 @@ class module_controller {
             $res = array();
             $sql->execute();
             while ($rowdomains = $sql->fetch()) {
-                array_push($res, array('domain' => $rowdomains['vh_name_vc']));
+                $res[] = array('domain' => $rowdomains['vh_name_vc']);
             }
             return $res;
         } else {
@@ -171,16 +159,17 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $fulladdress = $inAddress . "@" . $inDomain;
-        $fulladdress = str_replace(' ', '', $fulladdress);
-        $fulladdress = strtolower($fulladdress);
+        $fulladdress = strtolower(str_replace(' ', '', $inAddress . '@' . $inDomain));
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($inAddress, $inDomain))) {
             return false;
         }
         runtime_hook::Execute('OnBeforeAddDistList');
         self::$create = true;
         // Include mail server specific file here.
-        include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
+        if (file_exists($MailServerFile))
+            include($MailServerFile);
+
         $sqlStatment = "INSERT INTO x_distlists (dl_acc_fk,
 										  dl_address_vc,
 										  dl_created_ts) VALUES (
@@ -190,8 +179,7 @@ class module_controller {
         $sql = $zdbh->prepare($sqlStatment);
         $sql->bindParam(':userid', $currentuser['userid']);
         $sql->bindParam(':fulladdress', $fulladdress);
-        $time = time();
-        $sql->bindParam(':time', $time);
+        $sql->bindParam(':time', time());
         $sql->execute();
         runtime_hook::Execute('OnAfterAddDistList');
         self::$ok = true;
@@ -203,25 +191,25 @@ class module_controller {
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteDistList');
         self::$delete = true;
-        //$rowdl = $zdbh->query("SELECT * FROM x_distlists WHERE dl_id_pk=" . $dl_id_pk . " AND dl_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_distlists WHERE dl_id_pk=:dl_id_pk AND dl_deleted_ts IS NULL");
         $numrows->bindParam(':dl_id_pk', $dl_id_pk);
         $numrows->execute();
         $rowdl = $numrows->fetch();
 
         // Include mail server specific file here.
-        include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
+        if (file_exists($MailServerFile))
+            include($MailServerFile);
+
         $sql = "UPDATE x_distlistusers SET du_deleted_ts=:time WHERE du_distlist_fk=:dl_id_pk";
         $sql = $zdbh->prepare($sql);
         $sql->bindParam(':dl_id_pk', $dl_id_pk);
-        $time = time();
-        $sql->bindParam(':time', $time);
+        $sql->bindParam(':time', time());
         $sql->execute();
         $sql = "UPDATE x_distlists SET dl_deleted_ts=:time WHERE dl_id_pk=:dl_id_pk";
         $sql = $zdbh->prepare($sql);
         $sql->bindParam(':dl_id_pk', $dl_id_pk);
-        $time = time();
-        $sql->bindParam(':time', $time);
+        $sql->bindParam(':time', time());
         $sql->execute();
         runtime_hook::Execute('OnAfterDeleteDistList');
         self::$ok = true;
@@ -230,22 +218,23 @@ class module_controller {
     static function ExecuteAddDistListUser($du_distlist_fk, $address, $domain, $dladdress) {
         global $zdbh;
         global $controller;
-        $fulladdress = $address . "@" . $domain;
-        $fulladdress = str_replace(' ', '', $fulladdress);
-        $fulladdress = strtolower($fulladdress);
+        $fulladdress = strtolower(str_replace(' ', '', $address . '@' . $domain));
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrorsDistListUser())) {
             return false;
         }
-        //$rowdl = $zdbh->query("SELECT * FROM x_distlists WHERE dl_id_pk=" . $du_distlist_fk . " AND dl_deleted_ts IS NULL")->fetch();
+
         $numrows = $zdbh->prepare("SELECT * FROM x_distlists WHERE dl_id_pk=:du_distlist_fk AND dl_deleted_ts IS NULL");
         $numrows->bindParam(':du_distlist_fk', $du_distlist_fk);
         $numrows->execute();
-        $rowdl = $numrows->fetch();
+        $rowdl = $numrows->fetch(); //WARNING : $rowdl is used in mail server specific file
 
         runtime_hook::Execute('OnBeforeAddDistListUser');
         self::$createuser = true;
         // Include mail server specific file here.
-        include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+        $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
+        if (file_exists($MailServerFile))
+            include($MailServerFile);
+
         $sql = "INSERT INTO x_distlistusers (
 										du_distlist_fk,
 										du_address_vc,
@@ -256,8 +245,7 @@ class module_controller {
         $sql = $zdbh->prepare($sql);
         $sql->bindParam(':du_distlist_fk', $du_distlist_fk);
         $sql->bindParam(':fulladdress', $fulladdress);
-        $time = time();
-        $sql->bindParam(':time', $time);
+        $sql->bindParam(':time', time());
         $sql->execute();
         runtime_hook::Execute('OnAfterAddDistListUser');
         self::$ok = true;
@@ -267,23 +255,24 @@ class module_controller {
     static function ExecuteDeleteDistListUser($du_id_pk) {
         global $zdbh;
         global $controller;
-        //$rowdlu = $zdbh->query("SELECT * FROM x_distlistusers WHERE du_id_pk=" . $du_id_pk . " AND du_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_distlistusers WHERE du_id_pk=:du_id_pk AND du_deleted_ts IS NULL");
         $numrows->bindParam(':du_id_pk', $du_id_pk);
         $numrows->execute();
-        $rowdlu = $numrows->fetch();
+        $rowdlu = $numrows->fetch(); //WARNING : $rowdlu is used in mail server specific file
 
-        //$rowdl = $zdbh->query("SELECT * FROM x_distlists WHERE dl_id_pk=" . $rowdlu['du_distlist_fk'] . " AND dl_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_distlists WHERE dl_id_pk=:du_distlist_fk AND dl_deleted_ts IS NULL");
         $numrows->bindParam(':du_distlist_fk', $rowdlu['du_distlist_fk']);
         $numrows->execute();
         $rowdl = $numrows->fetch();
+        $dladdress = $rowdl['dl_address_vc']; //WARNING : $dladdress is used in mail server specific file
 
-        $dladdress = $rowdl['dl_address_vc'];
         runtime_hook::Execute('OnBeforeDeleteDistListUser');
-        // Include mail server specific file here.
         self::$deleteuser = true;
-        include("modules/" . $controller->GetControllerRequest('URL', 'module') . "/code/" . ctrl_options::GetSystemOption('mailserver_php') . "");
+         // Include mail server specific file here.
+        $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
+        if (file_exists($MailServerFile))
+            include($MailServerFile);
+
         $sql = "UPDATE x_distlistusers SET du_deleted_ts=:time WHERE du_id_pk=:du_id_pk";
         $sql = $zdbh->prepare($sql);
         $time = time();
@@ -297,10 +286,7 @@ class module_controller {
 
     static function CheckCreateForErrors($inAddress, $inDomain) {
         global $zdbh;
-        global $controller;
-        $fulladdress = $inAddress . "@" . $inDomain;
-        $fulladdress = str_replace(' ', '', $fulladdress);
-        $fulladdress = strtolower($fulladdress);
+        $fulladdress = strtolower(str_replace(' ', '', $inAddress . '@' . $inDomain));
         if (fs_director::CheckForEmptyValue($inAddress)) {
             self::$noaddress = true;
             return false;
@@ -310,7 +296,6 @@ class module_controller {
             return false;
         }
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc=:fulladdress AND mb_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
@@ -319,8 +304,8 @@ class module_controller {
             self::$alreadyexists = true;
             return false;
         }
+
         $sql = "SELECT * FROM x_forwarders WHERE fw_address_vc=:fulladdress AND fw_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
@@ -328,8 +313,8 @@ class module_controller {
             self::$alreadyexists = true;
             return false;
         }
+
         $sql = "SELECT * FROM x_distlists WHERE dl_address_vc=:fulladdress AND dl_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
@@ -337,8 +322,8 @@ class module_controller {
             self::$alreadyexists = true;
             return false;
         }
+
         $sql = "SELECT * FROM x_aliases WHERE al_address_vc=:fulladdress AND al_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
         $numrows->execute();
@@ -355,9 +340,7 @@ class module_controller {
         $address = $controller->GetControllerRequest('FORM', 'inAddAddress');
         $domain = $controller->GetControllerRequest('FORM', 'inAddDomain');
         $dlid = $controller->GetControllerRequest('FORM', 'inDLID');
-        $fulladdress = $address . "@" . $domain;
-        $fulladdress = str_replace(' ', '', $fulladdress);
-        $fulladdress = strtolower($fulladdress);
+        $fulladdress = strtolower(str_replace(' ', '', $address . '@' . $domain));
         if (fs_director::CheckForEmptyValue($address)) {
             self::$noaddress = true;
             return false;
@@ -366,8 +349,8 @@ class module_controller {
             self::$validemail = true;
             return false;
         }
+
         $sql = "SELECT * FROM x_distlistusers WHERE du_distlist_fk=:dlid  AND du_address_vc=:fulladdress AND du_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':dlid', $dlid);
         $numrows->bindParam(':fulladdress', $fulladdress);
@@ -380,10 +363,7 @@ class module_controller {
     }
 
     static function IsValidEmail($email) {
-        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
-            return false;
-        }
-        return true;
+        return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
 
     /**
@@ -403,11 +383,11 @@ class module_controller {
         $formvars = $controller->GetAllControllerRequests('FORM');
         foreach (self::ListDist($currentuser['userid']) as $row) {
             if (isset($formvars['inDelete_' . $row['id'] . ''])) {
-                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id'] . "");
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Delete&other=" . $row['id']);
                 exit;
             }
             if (isset($formvars['inEdit_' . $row['id'] . ''])) {
-                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['id'] . "");
+                header("location: ./?module=" . $controller->GetCurrentModule() . "&show=Edit&other=" . $row['id']);
                 exit;
             }
         }
@@ -418,15 +398,12 @@ class module_controller {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteDeleteDistList($formvars['inDelete']))
-            return true;
-        return false;
+        return self::ExecuteDeleteDistList($formvars['inDelete']);
     }
 
     static function doUpdateDistList() {
         global $controller;
         runtime_csfr::Protect();
-        $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inAdd'])) {
             if (self::ExecuteAddDistListUser($formvars['inDLID'], $formvars['inAddAddress'], $formvars['inAddDomain'], $formvars['inDLAD'])) {
@@ -450,20 +427,16 @@ class module_controller {
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteAddDistList($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain']))
-            return true;
-        return false;
+        return self::ExecuteAddDistList($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain']);
     }
 
     static function getDistList() {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDist($currentuser['userid']);
     }
 
     static function getDistListUsers() {
         global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
         return self::ListDistUsers($controller->GetControllerRequest('URL', 'other'));
     }
 
@@ -473,7 +446,7 @@ class module_controller {
             $current = self::ListCurrentDist($controller->GetControllerRequest('URL', 'other'));
             return $current[0]['id'];
         } else {
-            return "";
+            return '';
         }
     }
 
@@ -483,7 +456,7 @@ class module_controller {
             $current = self::ListCurrentDist($controller->GetControllerRequest('URL', 'other'));
             return $current[0]['address'];
         } else {
-            return "";
+            return '';
         }
     }
 
@@ -511,27 +484,24 @@ class module_controller {
         return false;
     }
 
-    static function getDistListUsagepChart() {
-        global $controller;
+    static function getQuotaLimit() {
         $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $distlistquota = $currentuser['distrobutionlistsquota'];
-        $distlist = ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']);
-        $total = $distlistquota;
-        $used = $distlist;
-        $free = $total - $used;
-        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
-        return $line;
+        return ($currentuser['distlistsquota'] < 0) or //-1 = unlimited
+               ($currentuser['distlistsquota'] > ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']));
     }
 
-    static function getQuotaLimit() {
-        global $zdbh;
-        global $controller;
+    static function getDistListUsagepChart() {
         $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['distrobutionlistsquota'] > ctrl_users::GetQuotaUsages('distlists', $currentuser['userid'])) {
-            return true;
+        $maximum = $currentuser['distlistsquota'];
+        if ($maximum < 0) { //-1 = unlimited
+            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
         } else {
-            return false;
+            $used = ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']);
+            $free = max($maximum - $used, 0);
+            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                  . '&labels=Free: ' . $free . '::Used: ' . $used
+                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
         }
     }
 
@@ -539,13 +509,13 @@ class module_controller {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (isset($urlvars['status']) && $urlvars['status'] == 'ok') {
-            return ui_sysmessage::shout(ui_language::translate("Changes to your distrubution lists have been saved successfully!"), "zannounceok");
+            return ui_sysmessage::shout(ui_language::translate("Changes to your distribution lists have been saved successfully!"), "zannounceok");
         }
     }
 
     static function getResult() {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout(ui_language::translate("A mailbox, alias, forwarder or distrubution list already exists with that name."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("A mailbox, alias, forwarder or distribution list already exists with that name."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$validemail)) {
             return ui_sysmessage::shout(ui_language::translate("Your email address is not valid."), "zannounceerror");
@@ -562,19 +532,16 @@ class module_controller {
     }
 
     static function getModuleName() {
-        $module_name = ui_module::GetModuleName();
-        return $module_name;
+        return ui_module::GetModuleName();
     }
 
     static function getModuleIcon() {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        return 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
     }
 
     static function getModuleDesc() {
-        $message = ui_language::translate(ui_module::GetModuleDescription());
-        return $message;
+        return ui_language::translate(ui_module::GetModuleDescription());
     }
 
     static function getCSFR_Tag() {
