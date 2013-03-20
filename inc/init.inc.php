@@ -101,6 +101,7 @@ if (isset($_POST['inUsername'])) {
         runtime_csfr::Protect();
     
     $rememberdetails = isset($_POST['inRemember']);
+    $inSessionSecuirty = isset($_POST['inSessionSecuirty']);
 
     $sql = $zdbh->prepare("SELECT ac_passsalt_vc FROM x_accounts WHERE ac_user_vc = :username");
     $sql->bindParam(':username',  $_POST['inUsername']);
@@ -111,7 +112,7 @@ if (isset($_POST['inUsername'])) {
     $crypto->SetSalt($result['ac_passsalt_vc']);
     $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
 
-    if (!ctrl_auth::Authenticate($_POST['inUsername'], $secure_password , $rememberdetails , false, @$_POST['inSessionSecuirty'])) {
+    if (!ctrl_auth::Authenticate($_POST['inUsername'], $secure_password , $rememberdetails , false, $inSessionSecuirty)) {
         header("location: ./?invalidlogin");
         exit();
     }

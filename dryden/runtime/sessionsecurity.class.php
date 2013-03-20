@@ -102,12 +102,12 @@ class runtime_sessionsecurity {
      * @author Sam Mottley (smottley@zpanelcp.com)
      * @return boolean.
      */
-    static public function setSessionSecurityEnabled($option = true){
+    static public function setSessionSecurityEnabled($option){
         if($option == true){
-            $_SESSION['zSessionSecurityEnabled'] = true;
+            $_SESSION['zSessionSecurityEnabled'] = 1;
             return true;
         }else{
-            $_SESSION['zSessionSecurityEnabled'] = false;
+            $_SESSION['zSessionSecurityEnabled'] = 0;
             return false;
         }
     }
@@ -174,7 +174,7 @@ class runtime_sessionsecurity {
      * @return boolean.
      */
     static public function getSessionSecurityEnabled(){
-        if($_SESSION['zSessionSecurityEnabled']){
+        if($_SESSION['zSessionSecurityEnabled'] == 1){
             return true;
         }else{
             return false;
@@ -280,7 +280,7 @@ class runtime_sessionsecurity {
                 return true;
             }
         }else{
-            if(self::checkSessionSecurityEnabled() == true){
+            if(self::checkSessionSecurityEnabled() == false){
                 //proxies can cause fluxuations in the user agent and IP headers so user can disable it on login
                 if(isset($_GET['module'])){
                     $checkUserCookie = self::checkCookie();

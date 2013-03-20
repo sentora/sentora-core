@@ -43,7 +43,7 @@ class ctrl_auth {
      * @param int $zpuid The ZPanel user account ID to set the session as.
      * @return bool 
      */
-    static function SetUserSession($zpuid = 0, $sessionSecuirty = true) {
+    static function SetUserSession($zpuid = 0, $sessionSecuirty) {
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
             if(isset($sessionSecuirty)){
@@ -51,7 +51,7 @@ class ctrl_auth {
                 runtime_sessionsecurity::setCookie();
                 runtime_sessionsecurity::setUserIP();
                 runtime_sessionsecurity::setUserAgent();
-                runtime_sessionsecurity::setSessionSecurityEnabled();
+                runtime_sessionsecurity::setSessionSecurityEnabled(true);
             }else{
                 //Implamentation of session security but set it as off 
                 runtime_sessionsecurity::setCookie();

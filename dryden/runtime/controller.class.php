@@ -37,11 +37,6 @@ class runtime_controller {
      * @author Bobby Allen (ballen@zpanelcp.com)
      */
     public function Init() {
-        //This is where we check the session for hi-jacking
-        if(!runtime_sessionsecurity::antiSessionHijacking()){
-            exit(header("location: ./?sessionIssue"));
-        }
-        
         
         //Set class varables
         $this->vars_get = array($_GET);
