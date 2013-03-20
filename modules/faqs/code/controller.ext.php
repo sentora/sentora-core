@@ -30,7 +30,7 @@ class module_controller {
     static $delete;
     static $ok;
 
-    function getFAQS() {
+    public static function getFAQS() {
         global $zdbh;
         $sql = "SELECT * FROM x_faqs WHERE fq_question_tx IS NOT NULL AND fq_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
@@ -52,7 +52,7 @@ class module_controller {
         }
     }
 
-    function ListCurrentFAQ($fid) {
+    public function ListCurrentFAQ($fid) {
         global $zdbh;
         $sql = "SELECT * FROM x_faqs WHERE fq_id_pk=:fid IS NOT NULL AND fq_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -78,7 +78,7 @@ class module_controller {
         }
     }
 
-    function getUserFAQS() {
+    public static function getUserFAQS() {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -112,7 +112,7 @@ class module_controller {
         }
     }
 
-    function getAddFAQS() {
+    public static function getAddFAQS() {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['usergroup'] == "Administrators" || $currentuser['usergroup'] == "Resellers") {
