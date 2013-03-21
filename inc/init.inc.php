@@ -58,7 +58,7 @@ You, or somebody pretending to be you, has requested a password reset link to be
         
 If you wish to proceed with the password reset on your account, please use the link below to be taken to the password reset page.
             
-" .$protocol .ctrl_options::GetSystemOption('zpanel_domain') . "/?resetkey=" . $randomkey . "
+" . $protocol . ctrl_options::GetSystemOption('zpanel_domain') . "/?resetkey=" . $randomkey . "
 
 
                 ";
@@ -71,8 +71,8 @@ If you wish to proceed with the password reset on your account, please use the l
 if (isset($_POST['inConfEmail'])) {
     runtime_csfr::Protect();
     $sql = $zdbh->prepare("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = :email AND ac_resethash_tx = :resetkey AND ac_resethash_tx IS NOT NULL");
-    $sql->bindParam(':email',  $_POST['inConfEmail']);
-    $sql->bindParam(':resetkey',  $_GET['resetkey']);
+    $sql->bindParam(':email', $_POST['inConfEmail']);
+    $sql->bindParam(':resetkey', $_GET['resetkey']);
     $sql->execute();
     $result = $sql->fetch();
 
@@ -84,9 +84,9 @@ if (isset($_POST['inConfEmail'])) {
 
     if ($result) {
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc = :password, ac_passsalt_vc = :salt WHERE ac_id_pk = :uid");
-        $sql->bindParam(':password',  $secure_password);
-        $sql->bindParam(':salt',  $randomsalt);
-        $sql->bindParam(':uid',  $result['ac_id_pk']);
+        $sql->bindParam(':password', $secure_password);
+        $sql->bindParam(':salt', $randomsalt);
+        $sql->bindParam(':uid', $result['ac_id_pk']);
         $sql->execute();
         runtime_hook::Execute('OnSuccessfulPasswordReset');
     } else {
@@ -99,12 +99,12 @@ if (isset($_POST['inConfEmail'])) {
 if (isset($_POST['inUsername'])) {
     if (ctrl_options::GetSystemOption('login_csfr') == 'false')
         runtime_csfr::Protect();
-    
+
     $rememberdetails = isset($_POST['inRemember']);
     $inSessionSecuirty = isset($_POST['inSessionSecuirty']);
 
     $sql = $zdbh->prepare("SELECT ac_passsalt_vc FROM x_accounts WHERE ac_user_vc = :username");
-    $sql->bindParam(':username',  $_POST['inUsername']);
+    $sql->bindParam(':username', $_POST['inUsername']);
     $sql->execute();
     $result = $sql->fetch();
     $crypto = new runtime_hash;
@@ -112,14 +112,25 @@ if (isset($_POST['inUsername'])) {
     $crypto->SetSalt($result['ac_passsalt_vc']);
     $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
 
-    if (!ctrl_auth::Authenticate($_POST['inUsername'], $secure_password , $rememberdetails , false, $inSessionSecuirty)) {
+    if (!ctrl_auth::Authenticate($_POST['inUsername'], $secure_password, $rememberdetails, false, $inSessionSecuirty)) {
         header("location: ./?invalidlogin");
         exit();
     }
 }
 
 if (isset($_COOKIE['zUser'])) {
-    ctrl_auth::Authenticate($_COOKIE[ 'zUser'], $_COOKIE[  'zPass'], false, true);
+    
+    if (isset($_COOKIE['zSec'])) {
+        if($_COOKIE['zSec'] == false) {
+            $secure = false;
+        } else {
+            $secure = true;
+        }
+    }else{
+        $secure = true;
+    }
+    
+    ctrl_auth::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true, $secure);
 }
 
 if (!isset($_SESSION['zpuid'])) {

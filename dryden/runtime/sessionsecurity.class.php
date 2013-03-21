@@ -83,8 +83,12 @@ class runtime_sessionsecurity {
      */
     static public function setCookie(){ 
         $random = runtime_randomstring::randomHash(100);
-        $_SESSION['zUserSalt'] = $random;
-        setcookie("zUserSaltCookie", $random, time() + 60 * 60 * 24 * 30, "/"); 
+        if(isset($_SESSION['zUserSalt']) && isset($_COOKIE['zUserSaltCookie']) && ($_COOKIE['zUserSaltCookie'] == $_SESSION['zUserSalt'])){
+            //already set
+        }else{
+            $_SESSION['zUserSalt'] = $random;
+            setcookie("zUserSaltCookie", $random, time() + 60 * 60 * 24 * 30, "/"); 
+        }
         return true;            
     }
     

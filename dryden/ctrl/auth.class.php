@@ -22,7 +22,16 @@ class ctrl_auth {
         global $zdbh;
         if (!isset($_SESSION['zpuid'])) {
             if (isset($_COOKIE['zUser'])) {
-                self::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true);
+                if(isset($_COOKIE['zSec'])){
+                    if($_COOKIE['zSec'] == false){
+                        $secure = false;
+                    }else{
+                        $secure = true;
+                    }   
+                }else{
+                    $secure = true;
+                }
+                self::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true, $secure);
             }
             runtime_hook::Execute('OnRequireUserLogin');
             $sqlQuery = "SELECT ac_usertheme_vc, ac_usercss_vc FROM 
@@ -118,6 +127,7 @@ class ctrl_auth {
             if ($rememberme) {
                 setcookie("zUser", $username, time() + 60 * 60 * 24 * 30, "/");
                 setcookie("zPass", $password, time() + 60 * 60 * 24 * 30, "/");
+                //setcookie("zSec", $sessionSecuirty, time() + 60 * 60 * 24 * 30, "/");
             }
             
             runtime_hook::Execute('OnGoodUserLogin');
@@ -152,6 +162,7 @@ class ctrl_auth {
         setcookie("zPass", '', time() - 3600, "/");
         unset($_COOKIE['zUser']);
         unset($_COOKIE['zPass']);
+        unset($_COOKIE['zSec']);
         return true;
     }
 
