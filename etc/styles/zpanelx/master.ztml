@@ -19,7 +19,7 @@
         <!-- END JQUERY NAVBAR REQUIREMENTS -->
 
         <!-- ZLOADER ANIMATION FIX FOR IE (I use JQuery to call this in init.js)-->
-        <script languag='javascript'>
+        <script type="text/javascript" language="javascript">
             function showDiv(){
             //document.getElementById('myHiddeDiv').style.display ="";
             document.getElementById('zloader_image').src = "<# ui_tpl_assetfolderpath #>images/loading.gif";}
