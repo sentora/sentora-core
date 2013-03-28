@@ -24,8 +24,17 @@ class ui_tpl_progbardisk {
                 $diskspace = 0;
             }
             $percent = round(($diskspace / $diskquota) * 100, 0);
-            return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: ' . $percent . '%"></div></div>';
-
+            if($percent >= 75){
+                $bar = 'danger';
+            }else{
+                $bar = 'success';
+            }
+            if($percent >= 10){
+                $showpercent = $percent.'%';
+            }else{
+                $showpercent = '';
+            }
+            return '<div class="progress progress-striped"><div class="progress-bar progress-bar-'.$bar.'" style="width: ' . $percent . '%">' . $showpercent . '</div></div>';
         }
     }
 
