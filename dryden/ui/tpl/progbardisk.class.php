@@ -16,15 +16,16 @@ class ui_tpl_progbardisk {
         $currentuser = ctrl_users::GetUserDetail();
         $diskquota = $currentuser['diskquota'];
         $diskspace = ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']);
+
         if ($diskquota == 0) {
             return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: 0%"></div></div>';
-
         } else {
             if (fs_director::CheckForEmptyValue($diskspace)){
                 $diskspace = 0;
-                $percent = round(($diskspace / $diskquota) * 100, 0);
-                return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: ' . $percent . '%"></div></div>';
             }
+            $percent = round(($diskspace / $diskquota) * 100, 0);
+            return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: ' . $percent . '%"></div></div>';
+
         }
     }
 

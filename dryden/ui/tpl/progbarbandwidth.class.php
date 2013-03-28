@@ -16,14 +16,15 @@ class ui_tpl_progbarbandwidth {
         $currentuser = ctrl_users::GetUserDetail();
         $bandwidthquota = $currentuser['bandwidthquota'];
         $bandwidth = ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']);
+
         if ($bandwidthquota == 0) {
             return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: 0%"></div></div>';
         } else {
             if (fs_director::CheckForEmptyValue($bandwidth)){
                 $bandwidth = 0;
-                $percent = round(($bandwidth / $bandwidthquota) * 100, 0);
-                return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: ' . $percent . '%"></div></div>';
             }
+            $percent = round(($bandwidth / $bandwidthquota) * 100, 0);
+            return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: ' . $percent . '%"></div></div>';
         }
     }
 
