@@ -74,6 +74,15 @@ class ui_tpl_clientdomains {
             $sql->execute();
             $limit = 0;
 
+            if($domain_type == 1){
+                $line .= '<div class="stats-row s-top">';
+            }else{
+                $line .= '<div class="stats-row">';
+            }
+            $line .= '    <div class="stats-column"><strong>'.$name.'s</strong></div>';
+            $line .= '    <div class="stats-column"><strong>Status</strong></div>';
+            $line .= '    <div class="stats-column"><a href="?module='.$domain_url.'">(Add New '.$name.')</a></div>';
+            $line .= '</div><!--end stats-row-->';
             while ($rowdomains = $sql->fetch()) {
                 if ($rowdomains['vh_type_in'] == $domain_type) {
 
@@ -82,17 +91,16 @@ class ui_tpl_clientdomains {
 
 
                     if ($rowdomains['vh_active_in'] == 1 && $rowdomains['vh_enabled_in'] == 1) {
-                        $line .= '<div class="stats-column"><a href="#" title="Live"><img src="{<# ui_tpl_assetfolderpath #>}/images/live.png"></a></div>';
+                        $line .= '<div class="stats-column"><span class="active">Active</span></div>';
                     } elseif ($rowdomains['vh_active_in'] == 0 && $rowdomains['vh_enabled_in'] == 1) {
-                        $line .= '<div class="stats-column"><a href="#" title="Pending"><img src="{<# ui_tpl_assetfolderpath #>}/images/pending.png"></a></div>';
+                        $line .= '<div class="stats-column"><span class="pending">Pending</span></div>';
                     } else {
                         $line .= '';
                     }
                     if ($rowdomains['vh_enabled_in'] == 0) {
-                        $line .= '<div class="stats-column"><a href="#" title="Disabled"><img src="{<# ui_tpl_assetfolderpath #>}/images/disabled.png"></a></div>';
+                        $line .= '<div class="stats-column"><span class="disabled">Disabled</span></div>';
                     }
 
-                    //$line .= '<div class="stats-column"></div>';
                     $line .= '</div><!--end stats-row-->';
                 }
                 $limit++;
@@ -100,7 +108,7 @@ class ui_tpl_clientdomains {
             if ($limit >= $domain_limit) {
 
                 $line .= '<div class="stats-row">';
-                $line .= '    <div class="stats-column"><a href="?module='.$domain_url.'">(Show All)</a></div>';
+                $line .= '    <div class="stats-column"><a href="?module='.$domain_url.'">(View all '.$name.'s)</a></div>';
                 $line .= '</div><!--end stats-row-->';
 
             }
@@ -111,11 +119,11 @@ class ui_tpl_clientdomains {
             }else{
                 $line .= '<div class="stats-row">';
             }
-            $line .= '    <div class="stats-column"><strong>'.$name.'</strong></div>';
+            $line .= '    <div class="stats-column"><strong>'.$name.'s</strong></div>';
             $line .= '</div><!--end stats-row-->';
             $line .= '<div class="stats-row">';
-            $line .= '    <div class="stats-column"><span class="Side_Info_None">No '.$name.' Found</span></div>';
-            $line .= '    <div class="stats-column"><a href="?module='.$domain_url.'">CREATE</a></div>';
+            $line .= '    <div class="stats-column"><span class="Side_Info_None">No '.$name.'s Found</span></div>';
+            $line .= '    <div class="stats-column"><a href="?module='.$domain_url.'">Add New '.$name.'</a></div>';
             $line .= '</div><!--end stats-row-->';
         }
 
