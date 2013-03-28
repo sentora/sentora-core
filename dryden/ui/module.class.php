@@ -13,14 +13,14 @@
 class ui_module {
 
     function __construct() {
-        
+
     }
 
     /**
      * Checks that the module exists.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $name Name of the module to check that exists.
-     * @return boolean 
+     * @return boolean
      */
     static function CheckModuleExists($name) {
         $user = ctrl_users::GetUserDetail();
@@ -34,7 +34,7 @@ class ui_module {
      * Returns the module template code.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $name Name of the module.
-     * @return string 
+     * @return string
      */
     static function GetModuleContent($name) {
         if (self::CheckModuleExists($name)) {
@@ -46,7 +46,7 @@ class ui_module {
      * Handles the GetModule control, if unable to load the module will handle the error too!
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $module The name of the module to load.
-     * @return string 
+     * @return string
      */
     static function GetModule($module) {
         if (self::CheckModuleExists($module)) {
@@ -149,16 +149,16 @@ class ui_module {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $modulename The name of the module of which to check.
-     * @return boolean 
+     * @return boolean
      */
     static function CheckModuleEnabled($modulename) {
         global $zdbh;
-        
+
         $numrows = $zdbh->prepare("SELECT mo_name_vc, mo_enabled_en FROM x_modules WHERE mo_name_vc = :module");
         $numrows->bindParam(':module', $modulename);
         $numrows->execute();
         $retval = $numrows->fetch();
-        
+
         if ($retval['mo_enabled_en'] == "true") {
             $retvalEnd = true;
         } else {
@@ -172,7 +172,7 @@ class ui_module {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $controller The controller object.
      * @global db_driver $zdbh The ZPX database handle.
-     * @return string The name of the currently loaded (active) module. 
+     * @return string The name of the currently loaded (active) module.
      */
     public static function GetModuleName() {
         global $controller;
@@ -226,7 +226,7 @@ class ui_module {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $controller The controller object.
      * @global db_driver $zdbh The ZPX database handle.
-     * @return string The module description from the database (originally improted from the module.xml file). 
+     * @return string The module description from the database (originally improted from the module.xml file).
      */
     static function GetModuleDescription() {
         global $controller;
@@ -238,6 +238,33 @@ class ui_module {
         $moduleInfo = $zdbh->returnRow();
         return $moduleInfo['mo_desc_tx'];
     }
+
+    /**
+     * Returns the current module's Name and Category Name.
+     * @since 10.1.0
+     * @author Jason Davis (jason.davis.fl@gmail.com)
+     * @global obj $controller The controller object.
+     * @global db_driver $zdbh The ZPX database handle.
+     * @return array Module name and category name.
+     */
+    public static function GetModuleCategoryName() {
+        global $controller;
+        global $zdbh;
+        $bindArray = array(
+            ':module' => $controller->GetControllerRequest('URL', 'module'),
+        );
+        $sql = 'SELECT  x_modules.mo_category_fk ,  x_modules.mo_name_vc ,  x_modcats.mc_name_vc
+                    FROM  x_modcats
+                    LEFT JOIN  x_modules
+                    ON ( x_modcats.mc_id_pk = x_modules.mo_category_fk )
+                    WHERE x_modules.mo_folder_vc = :module';
+
+        $retval = $zdbh->bindQuery($sql , $bindArray);
+        $moduleRow = $zdbh->returnRow();
+
+        return $moduleRow;
+    }
+
 
     /**
      * Checks to see if the specified module has updates.
@@ -268,7 +295,7 @@ class ui_module {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $zlo The Generic ZPX logging object.
      * @param string $modulefolder The module folder name of which to import the XML data from.
-     * @return mixed Will an array of the module XML data if the parsing of the document is successful otherwise will return 'false'. 
+     * @return mixed Will an array of the module XML data if the parsing of the document is successful otherwise will return 'false'.
      */
     static function GetModuleXMLTags($modulefolder) {
         global $zlo;

@@ -4,7 +4,7 @@
  * Main module loader class.
  * @package zpanelx
  * @subpackage dryden -> ui
- * @version 1.0.0
+ * @version 1.1.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -21,11 +21,16 @@ class ui_moduleloader {
     static function GetModuleCats($catname = "") {
         global $zdbh;
         $user = ctrl_users::GetUserDetail();
-        if ($catname == "") {
-            $sql = "SELECT * FROM x_modcats";
-        } else {
-            $sql = "SELECT * FROM x_modcats WHERE mc_name_vc = :catname";
+
+        if (isset($user['catorder']) && $user['catorder'] != '') {
+            $order = trim($user['catorder'], '[]');
+            $sql = 'SELECT * FROM `x_modcats`ORDER BY FIELD(`mc_id_pk`, '.$order.')';
+        } else if($catname != ''){
+            $sql = 'SELECT * FROM x_modcats WHERE mc_name_vc = :catname';
+        }else{
+            $sql = 'SELECT * FROM x_modcats';
         }
+
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':catname', $catname);
         $numrows->execute();

@@ -26,11 +26,11 @@ class ctrl_users {
             $uid = ctrl_auth::CurrentUserID();
         }
         $rows = $zdbh->prepare("
-            SELECT * FROM x_accounts 
-            LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk) 
-            LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk) 
-            LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk) 
-            LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk) 
+            SELECT * FROM x_accounts
+            LEFT JOIN x_profiles ON (x_accounts.ac_id_pk=x_profiles.ud_user_fk)
+            LEFT JOIN x_groups   ON (x_accounts.ac_group_fk=x_groups.ug_id_pk)
+            LEFT JOIN x_packages ON (x_accounts.ac_package_fk=x_packages.pk_id_pk)
+            LEFT JOIN x_quotas   ON (x_accounts.ac_package_fk=x_quotas.qt_package_fk)
             WHERE x_accounts.ac_id_pk= :uid
           ");
         $rows->bindParam(':uid', $uid);
@@ -64,15 +64,16 @@ class ctrl_users {
         $userdetail->addItemValue('mailboxquota', $dbvals['qt_mailboxes_in']);
         $userdetail->addItemValue('forwardersquota', $dbvals['qt_fowarders_in']);
         $userdetail->addItemValue('distlistsquota', $dbvals['qt_distlists_in']);
+        $userdetail->addItemValue('catorder', $dbvals['ac_catorder_vc']);
         return $userdetail->getDataObject();
     }
 
     /**
      * Returns the current usage of a particular resource.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $resource What time of quota should we be checking? (domains, subdomains, parkeddomains, mailboxes, distlists etc.)
      * @param int $acc_key The user ID of which to check the quota status for.
-     * @return array Database table array of the quota infomation. 
+     * @return array Database table array of the quota infomation.
      */
     static function GetQuotaUsages($resource, $acc_key = 0) {
         global $zdbh;
@@ -201,7 +202,7 @@ class ctrl_users {
         global $zdbh;
             $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_email_vc)=:email";
             $uniqueuser = $zdbh->prepare($sql);
-            $uniqueuser->bindParam(':email', $email);       
+            $uniqueuser->bindParam(':email', $email);
             if ($uniqueuser->execute()) {
                 if ($uniqueuser->fetchColumn() > 0) {
                     return false;
@@ -212,6 +213,6 @@ class ctrl_users {
                 return false;
             }
 
-        } 
+        }
     }
 ?>

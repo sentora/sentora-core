@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * Generic template place holder class.
+ * @package zpanelx
+ * @subpackage dryden -> ui -> tpl
+ * @version 1.1.0
+ * @author Jason Davis (jason.davis.fl@gmail.com)
+ * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @link http://www.zpanelcp.com/
+ * @license GPL (http://www.gnu.org/licenses/gpl.html)
+ */
+class ui_tpl_breadcrumbs {
+
+    public static function Template() {
+        global $zdbh, $controller;
+        $line = '';
+
+        if($controller->GetControllerRequest('URL', 'module')){
+
+            $module = $controller->GetControllerRequest('URL', 'module');
+            $moduleRow = ui_module::GetModuleCategoryName();
+
+            if($moduleRow){
+                $line .= '<ul class="breadcrumb">';
+                $line .= '  <li><a href=".">Home</a></li>';
+                $line .= '  <li><a href="./#' .$moduleRow['mc_name_vc']. '">' .$moduleRow['mc_name_vc']. '</a></li>';
+                $line .= '  <li class="active">' .$moduleRow['mo_name_vc']. '</li>';
+                $line .= '</ul>';
+            }
+        }
+
+        return $line;
+    }
+}
+?>
