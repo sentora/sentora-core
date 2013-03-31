@@ -217,7 +217,7 @@ class db_driver extends PDO {
      * @return array
      */
     public function returnRow() {
-        return $this->getExecuted()->fetch();
+        return $this->getExecuted()->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
