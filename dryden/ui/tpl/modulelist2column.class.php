@@ -30,7 +30,7 @@ class ui_tpl_modulelist2column {
                     $line .= '    <a name="'.$modcat['mc_name_vc'].'"></a><div class="module-box-title">';
                     $line .= '        <h4>' .ui_language::translate($modcat['mc_name_vc']). '</h4>';
                     $line .= '        <div class="tools">';
-                    $line .= '            <span class="handle">::</span> <a href="#" class="collapse">-</a>';
+                    $line .= '            <span class="handle"></span> <a href="#" class="collapse">-</a>';
                     $line .= '        </div>';
                     $line .= '    </div>';
                     $line .= '    <div class="module-box-body" style="display: block;">';
