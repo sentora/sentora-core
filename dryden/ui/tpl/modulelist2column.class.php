@@ -24,13 +24,13 @@ class ui_tpl_modulelist2column {
                 $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk'], "modadmin");
                 if ($mods) {
 
+                    $catUrl = strtolower(str_replace(' ', '-', $modcat['mc_name_vc']));
 
-                    //$line .= '<ul class="connected grid no2">';
-                    $line .= '<li id="'.$modcat['mc_id_pk'].'" class="col-span-6 module-box">';
-                    $line .= '    <a name="'.$modcat['mc_name_vc'].'"></a><div class="module-box-title">';
+                    $line .= '<li data-catid="'.$modcat['mc_id_pk'].'" id="'.$catUrl.'" class="col-span-6 module-box">';
+                    $line .= '    <div class="module-box-title">';
                     $line .= '        <h4>' .ui_language::translate($modcat['mc_name_vc']). '</h4>';
                     $line .= '        <div class="tools">';
-                    $line .= '            <span class="handle"></span> <a href="#" class="collapse">-</a>';
+                    $line .= '            <span class="collapse"><i class="icon-up-open"></i></span> <span class="handle"></span>';
                     $line .= '        </div>';
                     $line .= '    </div>';
                     $line .= '    <div class="module-box-body" style="display: block;">';
@@ -59,12 +59,10 @@ class ui_tpl_modulelist2column {
                     $line .= '        </ul>';
                     $line .= '    </div><!-- end module-box-body-->';
                     $line .= '</li><!-- end module-box-->';
-                    //$line .= '</ul><!-- end connected-->';
 
-                    // Clear our Floated Divs ever 2 boxes
+                    // Clear our Floated Divs every 2 boxes
                     $mod_box_count++;
                     if($mod_box_count % 2 == 0){
-                     // $line .= '</div><!-- end row-fluid--><div class="row-fluid">';
                       $css_class = '';
                     }else{
                         $css_class = 'last';

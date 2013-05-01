@@ -20,11 +20,12 @@ class ui_tpl_breadcrumbs {
 
             $module = $controller->GetControllerRequest('URL', 'module');
             $moduleRow = ui_module::GetModuleCategoryName();
+            $catUrl = strtolower(str_replace(' ', '-', $moduleRow['mc_name_vc']));
 
             if($moduleRow){
                 $line .= '<ul class="breadcrumb">';
                 $line .= '  <li><a href=".">Home</a></li>';
-                $line .= '  <li><a href="./#' .$moduleRow['mc_name_vc']. '">' .$moduleRow['mc_name_vc']. '</a></li>';
+                $line .= '  <li><a href="./#' .$catUrl. '">' .$moduleRow['mc_name_vc']. '</a></li>';
                 $line .= '  <li class="active">' .$moduleRow['mo_name_vc']. '</li>';
                 $line .= '</ul>';
             }
