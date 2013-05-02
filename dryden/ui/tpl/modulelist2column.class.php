@@ -1,10 +1,11 @@
 <?php
 /**
- * Generic template place holder class.
+ * Home Dashboard with draggable & collapsible category sections.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
  * @version 1.1.0
  * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Jason Davis (jason.davis.fl@gmail.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -79,32 +80,4 @@ class ui_tpl_modulelist2column {
 
 }
 
-
-
-
-
-
-/*
-
-$line .= '<div class="module-box">';
-
-$line .= '    <div class="module-box-title">';
-$line .= '        <h4><i class="icon-cogs"></i>Admin Settings</h4>';
-$line .= '        <div class="tools">';
-$line .= '            <a href="#" class="collapse">-</a>';
-$line .= '        </div>';
-$line .= '    </div>';
-
-$line .= '    <div class="module-box-body" style="display: block;">';
-$line .= '        <ul>';
-$line .= '              <li>Module link and Icon</li>';
-$line .= '              <li>Module link and Icon</li>';
-$line .= '              <li>Module link and Icon</li>';
-$line .= '        </ul>';
-$line .= '    </div>';
-
-$line .= '</div>';
-
-
-*/
 ?>
