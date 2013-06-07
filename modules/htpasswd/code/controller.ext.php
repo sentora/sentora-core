@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -134,7 +134,7 @@ class module_controller {
     static function ExecuteDeleteHTA($id) {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteHTAccess');
-        //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "")->fetch();        
+        //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_id_pk=" . $id . "")->fetch();
 
         $numrows = $zdbh->prepare("SELECT * FROM x_htaccess WHERE ht_id_pk=:id");
         $numrows->bindParam(':id', $id);
@@ -197,12 +197,12 @@ class module_controller {
         }
         runtime_hook::Execute('OnBeforeCreateHTAccess');
         $sql = $zdbh->prepare("INSERT INTO x_htaccess (
-								ht_acc_fk, 
-								ht_user_vc, 
+								ht_acc_fk,
+								ht_user_vc,
 								ht_dir_vc,
 								ht_created_ts) VALUES (
-								:userid, 
-								:inHTUsername, 
+								:userid,
+								:inHTUsername,
 								:inPath,
 								:time)");
         $time = time();
@@ -212,7 +212,7 @@ class module_controller {
         $sql->bindParam(':time', $time);
         $sql->execute();
 
-        //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk =" . $userid . " AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1")->fetch();       
+        //$row = $zdbh->query("SELECT * FROM x_htaccess WHERE ht_acc_fk =" . $userid . " AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_htaccess WHERE ht_acc_fk =:userid AND ht_deleted_ts IS NULL ORDER BY ht_id_pk DESC LIMIT 1");
         $numrows->bindParam(':userid', $userid);
         $numrows->execute();
@@ -236,9 +236,9 @@ class module_controller {
             $htpasswd_exe = ctrl_options::GetSystemOption('htpasswd_exe') . " -b -m -c " .
                     $htaccesfiledir .
                     $row['ht_id_pk'] . ".htpasswd " .
-                    $inHTUsername . " " . $inHTPassword . "";
+                    escapeshellarg($inHTUsername) . " " . escapeshellarg($inHTPassword) . "";
 
-            system($htpasswd_exe);
+            system($htpasswd_exe); 
         } else {
             $sql = $zdbh->prepare("DELETE  FROM x_htaccess WHERE ht_id_pk=:ht_id_pk");
             $sql->bindParam(':ht_id_pk', $row['ht_id_pk']);
