@@ -33,7 +33,7 @@ class ui_template {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @return array 
      */
-    static function ListAvaliableTemeplates() {
+    static function ListAvaliableTemplates() {
         $allstyles = array();
         $handle = @opendir(ctrl_options::GetSystemOption('zpanel_root') . "etc/styles");
         $chkdir = ctrl_options::GetSystemOption('zpanel_root') . "etc/styles/";
