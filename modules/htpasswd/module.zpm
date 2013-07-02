@@ -7,7 +7,7 @@
     <form name="getpath" id="getpath" action="./?module=htpasswd&action=SelectFolder" method="post">
         <table class="none" cellspacing="0" cellpadding="0">
             <tr>
-                <td> 
+                <td>
                     <@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inFolder" id="inFolder" value="" ><: Select Folder :></button>
                 </td>
                 <td>
@@ -25,7 +25,7 @@
                     <table class="none" width="100%" cellspacing="0" cellpadding="0">
                         <tr>
                             <td><br><b><@ CurrentUserName @> <: root :>:</b><br>
-                                <div id="htfileTree" class="fileTree"></div>		
+                                <div id="htfileTree" class="fileTree"></div>
                             </td>
                         </tr>
                     </table>
@@ -38,13 +38,13 @@
 
                 <% if CurrentSelectedFolder %>
                 <div class="zform_wrapper" style="min-height:30px;"><br>
-                    <font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ CurrentSelectedFolder @></font></font>			
+                    <font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ CurrentSelectedFolder @></font></font>
                 </div>
                 <% endif %>
 
                 <% if SelectedFolder %>
                 <div class="zform_wrapper" style="min-height:30px;"><br>
-                    <font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ SelectedFolder @></font></font>		
+                    <font size="-2"><b><: Selected folder :>:</b> <font color="red"><@ SelectedFolder @></font></font>
                 </div>
                 <% endif %>
 
@@ -104,7 +104,7 @@
                                         <tr>
                                             <th><: Password :>:</th><td><input type="password" name="inHTPassword"></td>
                                         </tr>
-                                        <tr>	
+                                        <tr>
                                             <th><: Confirm PW :>:</th><td><input type="password" name="inConfirmHTPassword"></td>
                                         </tr>
                                         <th><input type="hidden" name="inID" id="inID" value="<@ CurrentHTID @>"></th>
@@ -127,7 +127,7 @@
                     <% endif %>
 
                     <% if SelectedFolder %>
-                    <h2>Create .htaccess</h2>	
+                    <h2>Create .htaccess</h2>
                     <table class="none" width="100%" cellspacing="0" cellpadding="0">
                         <tr>
                             <td>
@@ -142,7 +142,7 @@
                                         <tr>
                                             <th><: Password :>:</th><td><input type="password" name="inHTPassword"></td>
                                         </tr>
-                                        <tr>	
+                                        <tr>
                                             <th><: Confirm PW :>:</th><td><input type="password" name="inConfirmHTPassword"></td>
                                         </tr>
                                         <th></th>
@@ -170,7 +170,7 @@
                                 <p><b>1.</b> <: Click the folder Links to expand the directory tree. :></p>
                                 <p><b>2.</b> <: Click on the Select Folder button to select the directory for protection. :></p>
                             </td>
-                        </tr>	
+                        </tr>
                     </table>
                     <% endif %>
                     <% endif %>
@@ -186,7 +186,7 @@
                                 <p><b>1.</b> <: Click the folder Links to expand the directory tree. :></p>
                                 <p><b>2.</b> <: Click on the Select Folder button to select the directory for protection. :></p>
                             </td>
-                        </tr>	
+                        </tr>
                     </table>
                 </div>
                 <% endif %>
@@ -218,15 +218,14 @@
 
             </td>
         </tr>
-    </table>	
+    </table>
 
 </div>
 
 <link rel="stylesheet" type="text/css" href="modules/htpasswd/assets/js/jqueryFileTree.css" media="screen">
-<link rel="stylesheet" href="modules/htpasswd/assets/css/scrollbars.css" type="text/css" media="screen"/>
 <!--This function SHOULD check if jquery is loaded, and if not then load as needed-->
 <script type="text/javascript">
-    if (typeof jQuery == 'undefined') { 
+    if (typeof jQuery == 'undefined') {
         var head = document.getElementsByTagName("head")[0];
         script = document.createElement('script');
         script.id = 'jQuery';
@@ -235,11 +234,10 @@
         head.appendChild(script);
     }
 </script>
-<script type="text/javascript" src="modules/htpasswd/assets/js/jquery.easing.js"></SCRIPT>
 <script type="text/javascript" src="modules/htpasswd/assets/js/jqueryFileTree.js"></SCRIPT>
 <script type="text/javascript">
-    $(document).ready( function() {	
-        $('#htfileTree').fileTree({ root: '<@ RootPath @>', script: 'modules/htpasswd/assets/js/connectors/jqueryFileTree.php' });				
+    $(document).ready( function() {
+        $('#htfileTree').fileTree({ root: '<@ RootPath @>', script: 'modules/htpasswd/assets/js/connectors/jqueryFileTree.php' });
     });
 </script>
 <script type="text/javascript" language="javascript">

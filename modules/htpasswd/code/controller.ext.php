@@ -172,9 +172,9 @@ class module_controller
     {
         runtime_hook::Execute( 'OnBeforeRemoveUserHTAccess' );
         $htpasswd_exe = ctrl_options::GetSystemOption( 'htpasswd_exe' ) . " -D " .
-            escapeshellarg( ctrl_options::GetSystemOption( 'zpanel_root' ) ) .
+            ctrl_options::GetSystemOption( 'zpanel_root' ) .
             "/modules/htpasswd/assets/files/" .
-            escapeshellarg( $id ) . ".htpasswd " . escapeshellarg( $username ) . "";
+            $id . ".htpasswd " . $username . "";
         system( $htpasswd_exe );
         runtime_hook::Execute( 'OnAfterRemoveUserHTAccess' );
         header( "location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "" );
@@ -188,13 +188,9 @@ class module_controller
         }
         runtime_hook::Execute( 'OnBeforeAdUserHTAccess' );
         $htpasswd_exe = ctrl_options::GetSystemOption( 'htpasswd_exe' ) . " -b -m " .
-            escapeshellarg( ctrl_options::GetSystemOption( 'zpanel_root' ) ) .
+            ctrl_options::GetSystemOption( 'zpanel_root' ) .
             "/modules/htpasswd/assets/files/" .
-            escapeshellarg( $id ) .
-            ".htpasswd " .
-            escapeshellarg( strtolower( str_replace( ' ', '', $inHTUsername ) ) ) .
-            " " .
-            escapeshellarg( $inHTPassword ) . "";
+            $id . ".htpasswd " . strtolower( str_replace( ' ', '', $inHTUsername ) ) . " " . $inHTPassword . "";
         system( $htpasswd_exe );
         runtime_hook::Execute( 'OnAfterAddUserHTAccess' );
         header( "location: ./?module=htpasswd&selected=Selected&show=Edit&other=" . $id . "" );
@@ -251,9 +247,9 @@ class module_controller
         if ( file_exists( $htaccessfile ) ) {
             fs_director::SetFileSystemPermissions( $htaccesfiledir, 0777 );
             $htpasswd_exe = ctrl_options::GetSystemOption( 'htpasswd_exe' ) . " -b -m -c " .
-                escapeshellarg( $htaccesfiledir ) .
-                escapeshellarg( $row[ 'ht_id_pk' ] ) . ".htpasswd " .
-                escapeshellarg( $inHTUsername ) . " " . escapeshellarg( $inHTPassword ) . "";
+                $htaccesfiledir .
+                $row[ 'ht_id_pk' ] . ".htpasswd " .
+                $inHTUsername . " " . $inHTPassword . "";
 
             system( $htpasswd_exe );
         }
