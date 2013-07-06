@@ -4,18 +4,27 @@
   { if isNumberKey(event) or ( ((evt.which) ? evt.which : event.keyCode) == 109); }
 -->
 </script>
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
+
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <% if isDeletePackage %>
-    <div class="zform_wrapper">
+    <div class="zform_wrapper alert alert-danger">
         <h2><: Delete package :>: <@ EditCurrentPackageName @> ?</h2>
         <: Please confirm and choose a package to move any existing clients to before the selected package is deleted. :>
         <p>&nbsp;</p>
         <form action="./?module=packages&action=DeletePackage" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Package to delete :>:</th>
                     <td><@ EditCurrentPackageName @></td>
@@ -33,8 +42,8 @@
                 <tr>
                     <th colspan="2" align="right">
                         <input type="hidden" name="inPackageID" value="<@ EditCurrentPackageID @>"/>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" ><: Delete :></button>
+                        <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
                     </th>
                 </tr>
             </table>
@@ -47,7 +56,7 @@
     <div class="zgrid_wrapper">
         <h2><: Edit package :>: <@ EditCurrentPackageName @></h2>
         <form action="./?module=packages&action=UpdatePackage" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Package name :>:</th>
                     <td><input type="text" name="inPackageName" id="inPackageName" value="<@ EditCurrentPackageName @>" /></td>
@@ -104,8 +113,8 @@
                     <th></th>
                     <td>
                         <input type="hidden" name="inPackageID" value="<@ EditCurrentPackageID @>"/>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="inSave"><: Save :></button>
-                        <button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
+                        <button class="button-loader btn btn-primary" type="submit" id="button" name="inSubmit" value="inSave"><: Save :></button>
+                        <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=packages';return false;"><: Cancel :></button>
                     </td>
                 </tr>
             </table>
@@ -119,7 +128,7 @@
         <% if PackageList %>
         <@ AddDefaultPackageTime @>
         <form action="./?module=packages&action=EditPackage" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th scope="row"><: Package name :></th>
                     <th><: Created :></th>
@@ -132,8 +141,8 @@
                     <td><& created &></td>
                     <td><& clients &></td>
                     <td>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& packageid &>" value="<& packageid &>"><: Edit :></button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& packageid &>" value="<& packageid &>"><: Delete :></button>
+                        <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& packageid &>" value="<& packageid &>"><: Edit :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& packageid &>" value="<& packageid &>"><: Delete :></button>
                     </td>
                 </tr>
                 <% endloop %>
@@ -149,7 +158,7 @@
     <div class="zform_wrapper">
         <h2><: Create a new package :></h2>
         <form action="./?module=packages&action=CreatePackage" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Package name :>:</th>
                     <td><input type="text" name="inPackageName" id="inPackageName" /></td>
@@ -204,7 +213,7 @@
                 </tr>
                 <tr>
                     <th></th>
-                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="inSave"><: Save :></button></td>
+                    <td><button class="button-loader btn btn-primary" type="submit" id="button" name="inSubmit" value="inSave"><: Save :></button></td>
                 </tr>
             </table>
             <@ CSFR_Tag @>

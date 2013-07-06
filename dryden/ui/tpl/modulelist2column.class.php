@@ -42,7 +42,7 @@ class ui_tpl_modulelist2column {
                         $cleanname = str_replace(" ", "<br />", $translatename);
 
                         // Check is User Style Module Icon Exist
-                        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/'.$mod['mo_folder_vc'].'/assets/icon.png')) {
+                 if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/'.$mod['mo_folder_vc'].'/assets/icon.png')) {
                             $icon = 'etc/styles/' . ui_template::GetUserTemplate() . '/images/'.$mod['mo_folder_vc'].'/assets/icon.png';
                         } else {
                             $icon = 'modules/' . $mod['mo_folder_vc'] . '/assets/icon.png';

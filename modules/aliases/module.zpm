@@ -1,7 +1,15 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <% if isDeleteAlias %>
@@ -13,8 +21,8 @@
                 <tr>
                     <td colspan="2" align="right">
                         <input type="hidden" name="inDelete" value="<@ EditCurrentAliasID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=aliases';return false;"><: Cancel :></button>
+                        <button class="delete btn btn-danger" type="submit" ><: Delete :></button>
+                        <button class="btn btn-default" type="button" onclick="window.location.href='./?module=aliases';return false;"><: Cancel :></button>
                     </td>
                 </tr>
             </table>
@@ -27,7 +35,7 @@
         <h2><: Current Aliases :></h2>
         <% if AliasList %>
         <form action="./?module=aliases&action=DeleteAlias" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: Address :></th>
                     <th><: Destination :></th>
@@ -37,7 +45,7 @@
                 <tr>
                     <td><& address &></td>
                     <td><& destination &></td>
-                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
+                    <td><button class="delete btn btn-danger" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
                 </tr>
                 <% endloop %>
             </table>
@@ -55,11 +63,13 @@
                     <h2><: Create a new Alias :></h2>
                     <% if QuotaLimit %>
                     <form action="./?module=aliases&action=CreateAlias" method="post">
-                        <table class="zform">
+                        <table class="table table-striped">
                             <tr>
                                 <th nowrap="nowrap"><: Alias Address :>:</th>
                                 <td nowrap="nowrap">
                                     <input type="text" name="inAddress" id="inAddress" />
+                                </td>
+                                <td nowrap="nowrap">
                                     <select name="inDomain" id="inDomain">
                                         <option value="" selected="selected">-- <: Select a domain :> --</option>
                                         <% if DomainList %>
@@ -84,7 +94,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inCreate" id="inCreate" value="inCreate"><: Create :></button></th>
+                                <th><button class="btn btn-primary" type="submit" id="button" name="inCreate" id="inCreate" value="inCreate"><: Create :></button></th>
                                 <td></td>
                             </tr>
                         </table>
@@ -94,9 +104,8 @@
                     <: Sorry, you have reached your mailbox forward quota limit! :>
                     <% endif %><!-- END QuotaLimit -->
                 </td>
-                <td align="right"><@ ForwardUsagepChart @></td>
             </tr>
-        </table>
+        </table><hr><@ ForwardUsagepChart @>
     </div>
 
 </div>

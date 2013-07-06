@@ -1,11 +1,19 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <% if isDeleteDomain %>
-    <div class="zform_wrapper">
+    <div class="zform_wrapper alert alert-danger">
         <h2><: Delete :>: <@ CurrentDomain @>?</h2>
         <p><: Please confirm that you want to delete this domain. :></p>
         <form action="./?module=domains&action=DeleteDomain" method="post">
@@ -13,8 +21,8 @@
                 <tr>
                     <td colspan="2" align="right">
                         <input type="hidden" name="inDelete" value="<@ CurrentID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=domains';return false;"><: Cancel :></button>
+                        <button class="delete btn btn-danger" type="submit" ><: Delete :></button>
+                        <button class="btn btn-default" type="button" onclick="window.location.href='./?module=domains';return false;"><: Cancel :></button>
                     </td>
                 </tr>
             </table>
@@ -27,7 +35,7 @@
         <h2><: Current domains :></h2>
         <% if DomainList %>
         <form action="./?module=domains&action=ConfirmDeleteDomain" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: Domain name :></th>
                     <th><: Home directory :></th>
@@ -40,8 +48,8 @@
                     <td><a href="http://<& name &>/" target="_blank"><& name &></a></td>
                     <td><& directory &></td>
                     <& status &>
-                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
-                </tr>			
+                    <td><button class="delete btn btn-danger" type="submit" id="button" name="inDelete_<& id &>" id="inDelete_<& id &>" value="inDelete_<& id &>"><: Delete :></button></td>
+                </tr>
                 <% endloop %>
             </table>
             <@ CSFR_Tag @>
@@ -58,7 +66,7 @@
                 <h2>Create a new domain</h2>
                 <% if CreateDomain %>
                 <form action="./?module=domains&action=CreateDomain" method="post" name="CreateDomain">
-                    <table class="zform">
+                    <table class="table table-striped">
                         <tr>
                             <th nowrap="nowrap"><: Domain name :>:</th>
                             <td><input name="inDomain" type="text" id="inDomain" size="30" /></td>
@@ -86,17 +94,17 @@
                         </tr>
                         <tr>
                             <th></th>
-                            <td align="right"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
+                            <td align="right"><button class=button-loader btn btn-primary" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
                         </tr>
                     </table>
                     <@ CSFR_Tag @>
                 </form>
                 <% else %>
                 <: You have reached your domain limit! :>
-                <% endif %>	
+                <% endif %>
             </td>
             <td align="right"><@ DomainUsagepChart @></td>
-        </tr></table>	
+        </tr></table>
     </div>
 
 </div>

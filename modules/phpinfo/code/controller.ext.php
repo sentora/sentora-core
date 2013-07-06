@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -33,6 +33,11 @@ class module_controller {
         ob_end_clean();
         $info = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $info);
         $info = str_replace('<img border="0"', '<img style="display: none;"', $info);
+        $info = str_replace(
+            '<table border="0" cellpadding="3" width="600">',
+            '<table class="table table-striped" border="0" cellpadding="3" width="100%" class="table table-striped">',
+            $info
+        );
         return $info;
     }
 

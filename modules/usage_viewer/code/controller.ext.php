@@ -161,7 +161,7 @@ class module_controller {
                 '</td>' .
                 '<td align="left" valign="top">' .
                 '<h2>' . ui_language::translate('Package Usage Total') . '</h2>' .
-                '<table class="zgrid" border="0" cellspacing="0" cellpadding="0">' .
+                '<table class="table table-striped" border="0" cellspacing="0" cellpadding="0">' .
                 build_row_usage('Disk space', self::$diskspace, (self::$diskquota == 0) ? -1 : self::$diskquota, true) .
                 build_row_usage('Bandwidth', self::$bandwidth, (self::$bandwidthquota == 0) ? -1 : self::$bandwidthquota, true) .
                 build_row_usage('Domains', self::$domains, self::$domainsquota) .
