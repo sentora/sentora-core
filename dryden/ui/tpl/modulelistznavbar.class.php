@@ -52,7 +52,7 @@ class ui_tpl_modulelistznavbar {
             // IF Account, show Gravatar Image
             if($shortName == 'Account'){
                 $currentuser = ctrl_users::GetUserDetail();
-                $image = self::get_gravatar($currentuser['fullname'], 22, 'mm', 'g', true);
+                $image = self::get_gravatar($currentuser['email'], 22, 'mm', 'g', true);
                 $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$image.' '.$shortName.' <b class="caret"></b></a>';
             }else{
                 $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$shortName.' <b class="caret"></b></a>';
