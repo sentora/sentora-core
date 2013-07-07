@@ -13,7 +13,7 @@
     <@ Result @>
 
     <% if isDeleteAlias %>
-    <div class="zform_wrapper">
+    <div class="zform_wrapper alert alert-danger">
         <h2><: Delete Alias :>: <@ EditCurrentAliasName @> ?</h2>
         <p><: Please confirm that you want to delete this Alias. :></p>
         <form action="./?module=aliases&action=ConfirmDeleteAlias" method="post">

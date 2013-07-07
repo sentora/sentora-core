@@ -19,8 +19,7 @@
                 <% loop Config %>
                 <tr valign="top">
                     <th nowrap="nowrap"><& cleanname &></th>
-                    <td><& fieldhtml &></td>
-                    <td><& description &></td>
+                    <td><& fieldhtml &><br><& description &><br><br></td>
                 </tr>
                 <% endloop %>
                 <tr>

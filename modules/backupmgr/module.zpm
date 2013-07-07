@@ -20,7 +20,7 @@
         <form name="LaunchBackup" action="modules/backupmgr/code/launchbackup.php?id=<@ UserID @>" target="backup" method="post" onsubmit="var w=window.open('', 'backup', 'scrollbars=no,menubar=no,height=300,width=600,resizable=no,toolbar=no,location=no,status=no'); w.focus();">
             <table class="table table-striped">
                 <tr>
-                    <th nowrap="nowrap"><button class="button-loader btn btn-primary" type="submit" name="inBackUp" value="<@ UserID @>"><: Launch :></button></th>
+                    <th nowrap="nowrap"><button class="btn btn-primary" type="submit" name="inBackUp" value="<@ UserID @>"><: Launch :></button></th>
                     <td><: Backups your data whilst you wait and then prompt's you to download the backup archive. :></td>
                 </tr>
             </table>

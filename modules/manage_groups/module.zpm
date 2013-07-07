@@ -71,7 +71,7 @@
         <h2><: Current user groups :></h2>
         <% if GroupList %>
         <form action="./?module=manage_groups&action=EditGroup" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: Group :></th>
                     <th nowrap="nowrap"><: Users :></th>
@@ -83,7 +83,7 @@
                     <td><& groupname &></td>
                     <td><& usersingroup &></td>
                     <td><& groupdesc &></td>
-                    <td nowrap="nowrap"><button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& groupid &>" id="inEdit_<& groupid &>" value="inEdit_<& groupid &>">Edit</button><button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& groupid &>" id="inDelete_<& groupid &>" value="inDelete_<& groupid &>">Delete</button></td>
+                    <td nowrap="nowrap"><button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& groupid &>" id="inEdit_<& groupid &>" value="inEdit_<& groupid &>">Edit</button>  <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& groupid &>" id="inDelete_<& groupid &>" value="inDelete_<& groupid &>">Delete</button></td>
                 </tr>
                 <% endloop %>
             </table>
@@ -98,7 +98,7 @@
     <div class="zform_wrapper">
         <h2><: Create new user group :></h2>
         <form action="./?module=manage_groups&action=CreateGroup" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Group name :>:</th>
                     <td><input name="inGroupName" type="text" id="inGroupName" size="30" /></td>
@@ -122,7 +122,7 @@
     <div class="zform_wrapper">
         <h2><: Edit user group :></h2>
         <form action="./?module=manage_groups&action=UpdateGroup" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Group name :>:</th>
                     <td><input name="inGroupName" type="text" id="inGroupName" size="30" value="<@ EditCurrentName @>" /></td>

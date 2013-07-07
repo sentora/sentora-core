@@ -206,7 +206,7 @@
                     <h2><: All Protected Directories :></h2>
                     <p><: Edit allowed users, or remove protection from passworded directories. :></p>
                     <form action="./?module=htpasswd&action=EditHTA" method="post">
-                        <table class="zgrid" style="width:100%">
+                        <table class="table table-striped" style="width:100%">
                             <tr>
                                 <th colspan="3"><: Directory :></th>
                             </tr>
@@ -357,7 +357,7 @@
                     <% if CurrentHTA %>
                     <p><: From here you can add or remove users that are allowed to access this directory :></p>
                     <form action="./?module=htpasswd&action=RemoveUserHTA" method="post">
-                        <table class="zgrid">
+                        <table class="table table-striped">
                             <tr>
                                 <th><: User :></th><th><: Encrypted Password :></th><th>&nbsp;<input type="hidden" name="inID" id="inID" value="<@ CurrentHTID @>"></th>
                             </tr>

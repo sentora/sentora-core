@@ -33,7 +33,7 @@ class ui_sysmessage {
                 break;
             case 'zannounceerror':
             case 'alert-error':
-                $class = 'alert-error';
+                $class = 'alert-danger';
                 break;
             case 'zannouncesuccess':
             case 'alert-success':
