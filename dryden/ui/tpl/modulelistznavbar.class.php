@@ -18,6 +18,8 @@ class ui_tpl_modulelistznavbar {
         $line = '<li '.$active.'><a href=".">'.ui_language::translate('Home').'</a></li>';
 
         $modcats = ui_moduleloader::GetModuleCats();
+        rsort($modcats);
+
         foreach ($modcats as $modcat) {
             $shortName = $modcat['mc_name_vc'];
 
@@ -46,7 +48,16 @@ class ui_tpl_modulelistznavbar {
             $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk']);
 
             $line .= '<li class="dropdown">';
-            $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$shortName.' <b class="caret"></b></a>';
+
+            // IF Account, show Gravatar Image
+            if($shortName == 'Account'){
+                $currentuser = ctrl_users::GetUserDetail();
+                $image = self::get_gravatar($currentuser['fullname'], 22, 'mm', 'g', true);
+                $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$image.' '.$shortName.' <b class="caret"></b></a>';
+            }else{
+                $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$shortName.' <b class="caret"></b></a>';
+            }
+
             $line .= '<ul class="dropdown-menu">';
             foreach ($mods as $mod) {
 
@@ -59,11 +70,44 @@ class ui_tpl_modulelistznavbar {
                 }
                 $line .= '<a href="?module=' . $mod['mo_folder_vc'] . '"><i class="icon-'.$class_name.'"></i> ' . ui_language::translate($mod['mo_name_vc']) . '</a></li>';
             }
-            $line .= "</ul></li>";
+
+            // If Account tab, show Logout Menu Item
+            if($shortName == 'Account'){
+                $line .= '<li><a href="?logout"><i class="icon-phpinfo"></i> Logout</a></li>';
+            }
+
+            $line .= '</ul></li>';
         }
 
         return $line;
     }
+
+
+    /**
+     * Get either a Gravatar URL or complete image tag for a specified email address.
+     *
+     * @param string $email The email address
+     * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
+     * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
+     * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
+     * @param boole $img True to return a complete IMG tag False for just the URL
+     * @param array $atts Optional, additional key/value attributes to include in the IMG tag
+     * @return String containing either just a URL or a complete image tag
+     * @source http://gravatar.com/site/implement/images/php/
+     */
+    public static function get_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {
+        $url = 'http://www.gravatar.com/avatar/';
+        $url .= md5( strtolower( trim( $email ) ) );
+        $url .= "?s=$s&d=$d&r=$r";
+        if ( $img ) {
+            $url = '<img src="' . $url . '"';
+            foreach ( $atts as $key => $val )
+                $url .= ' ' . $key . '="' . $val . '"';
+            $url .= ' />';
+        }
+        return $url;
+    }
+
 }
 
 ?>

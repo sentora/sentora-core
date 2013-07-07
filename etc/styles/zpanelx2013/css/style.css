@@ -764,5 +764,13 @@ li.highlight {
 }
 /*End sidebar nav*/
 
+#footer{
+  margin: 0 auto;
+  text-align: right;
+  padding-right: 43px;
+  font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+  font-size: 8pt;
+  color: #333;
+  }
 
 

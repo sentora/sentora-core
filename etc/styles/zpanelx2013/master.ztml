@@ -257,7 +257,7 @@
 
       </div><!--/page-content-->
     </div>
-
+    <div id="footer" >Copyright © 2004-2013 <a href="http://www.zpanelcp.com/" target="_blank">ZPanel Project&lt;/a&gt;.</div>
     </div><!-- END CONTAINER -->
 
     <!-- javascript
@@ -282,5 +282,6 @@
     </script>
 
     <# ui_controllerdebug #>
+
   </body>
 </html>
