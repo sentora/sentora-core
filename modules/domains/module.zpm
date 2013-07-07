@@ -94,7 +94,7 @@
                         </tr>
                         <tr>
                             <th></th>
-                            <td align="right"><button class=button-loader btn btn-primary" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
+                            <td align="right"><button class="button-loader btn btn-primary" type="submit" id="button" name="CreateDomain" value="1">Create</button></td>
                         </tr>
                     </table>
                     <@ CSFR_Tag @>
