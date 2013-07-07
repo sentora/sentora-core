@@ -4,8 +4,8 @@
  * Generic template place holder class.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
- * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @version 1.1.0
+ * @author Jason Davis (jason.davis.fl@gmail.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -13,61 +13,99 @@
 class ui_tpl_modulelistznavbar {
 
     public static function Template() {
-        $line = "";
-        $tabindex = 0;
-        $modcats = ui_moduleloader::GetModuleCats();
-        foreach ($modcats as $modcat) {
-            $cleanname = $modcat['mc_name_vc'];
-            if ($cleanname == "Account Information") {
-                $cleanname = "Account";
-            }
-            if ($cleanname == "Server Admin") {
-                $cleanname = "Admin";
-            }
-            if ($cleanname == "Database Management") {
-                $cleanname = "Database";
-            }
-            if ($cleanname == "Domain Management") {
-                $cleanname = "Domain";
-            }
-            if ($cleanname == "File Management") {
-                $cleanname = "File";
-            }
-            if ($cleanname == "Server Admin") {
-                $cleanname = "Server";
-            }
-            if ($cleanname == "Server Admin") {
-                $cleanname = "Server";
-            }
-            if ($cleanname == "Server Admin") {
-                $cleanname = "Server";
-            }
-            $cleanname = ui_language::translate($cleanname);
-            $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk'], "modadmin");
-            $line .= "<script type=\"text/javascript\">";
-            $line .= "$(function(){";
-            $line .= "$('#" . str_replace(" ", "_", strtolower($modcat['mc_name_vc'])) . "').menu({";
-            $line .= "content: $('#" . str_replace(" ", "_", strtolower($modcat['mc_name_vc'])) . "').next().html(),";
-            $line .= "showSpeed: 400";
-            $line .= "});";
-            $line .= "});";
-            $line .= "</script>";
 
-            $line .= "<a tabindex=\"" . $tabindex . "\" href=\"" . str_replace(" ", "_", strtolower($modcat['mc_name_vc'])) . "\" class=\"fg-navbutton fg-button-icon-right ui-widget ui-state-default ui-corner-all\" id=\"" . str_replace(" ", "_", strtolower($modcat['mc_name_vc'])) . "\"><span class=\"ui-icon ui-icon-triangle-1-s\"></span>" . $cleanname . "</a>";
-            $line .= "<div id=\"" . str_replace(" ", "_", strtolower($modcat['mc_name_vc'])) . "\" class=\"hidden\">";
-            $line .= "<ul>";
-            foreach ($mods as $mod) {
-                $line .= "<li>";
-                $line .= "<a href=\"?module=" . $mod['mo_folder_vc'] . "\">";
-                $line .= "<img src=\"modules/" . $mod['mo_folder_vc'] . "/assets/icon.png\" width=\"20\" height=\"20\" border=\"0\" /> ";
-                $line .= "" . ui_language::translate($mod['mo_name_vc']) . "";
-                $line .= "</a>";
-                $line .= "</li>";
+        $active = isset($_REQUEST['module']) ? '' : 'class="active"';
+        $line = '<li '.$active.'><a href=".">'.ui_language::translate('Home').'</a></li>';
+
+        $modcats = ui_moduleloader::GetModuleCats();
+        rsort($modcats);
+
+        foreach ($modcats as $modcat) {
+            $shortName = $modcat['mc_name_vc'];
+
+            switch ($shortName) {
+                case 'Account Information':
+                    $shortName = 'Account';
+                    break;
+                case 'Server Admin':
+                    $shortName = 'Admin';
+                    break;
+                case 'Database Management':
+                    $shortName = 'Database';
+                    break;
+                case 'Domain Management':
+                    $shortName = 'Domain';
+                    break;
+                case 'File Management':
+                    $shortName = 'File';
+                    break;
+                case 'Server Admin':
+                    $shortName = 'Server';
+                    break;
             }
-            $line .= "</ul></div>";
-            $tabindex++;
+
+            $shortName = ui_language::translate($shortName);
+            $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk']);
+
+            $line .= '<li class="dropdown">';
+
+            // IF Account, show Gravatar Image
+            if($shortName == 'Account'){
+                $currentuser = ctrl_users::GetUserDetail();
+                $image = self::get_gravatar($currentuser['email'], 22, 'mm', 'g', true);
+                $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$image.' '.$shortName.' <b class="caret"></b></a>';
+            }else{
+                $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$shortName.' <b class="caret"></b></a>';
+            }
+
+            $line .= '<ul class="dropdown-menu">';
+            foreach ($mods as $mod) {
+
+                $class_name = str_replace(array(' ', '_'), '-', strtolower($mod['mo_folder_vc']));
+
+                if(isset($_GET['module']) && $_GET['module'] == $mod['mo_folder_vc']){
+                    $line .= '<li class="active">';
+                }else{
+                    $line .= '<li>';
+                }
+                $line .= '<a href="?module=' . $mod['mo_folder_vc'] . '"><i class="icon-'.$class_name.'"></i> ' . ui_language::translate($mod['mo_name_vc']) . '</a></li>';
+            }
+
+            // If Account tab, show Logout Menu Item
+            if($shortName == 'Account'){
+                $line .= '<li><a href="?logout"><i class="icon-phpinfo"></i> Logout</a></li>';
+            }
+
+            $line .= '</ul></li>';
         }
+
         return $line;
+    }
+
+
+    /**
+     * Get either a Gravatar URL or complete image tag for a specified email address.
+     *
+     * @param string $email The email address
+     * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
+     * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
+     * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
+     * @param boole $img True to return a complete IMG tag False for just the URL
+     * @param array $atts Optional, additional key/value attributes to include in the IMG tag
+     * @return String containing either just a URL or a complete image tag
+     * @source http://gravatar.com/site/implement/images/php/
+     */
+    public static function get_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {
+        $url = 'http://www.gravatar.com/avatar/';
+        $url .= md5( strtolower( trim( $email ) ) );
+        $url .= "?s=$s&d=$d&r=$r";
+        if ( $img ) {
+            $url = '<img src="' . $url . '"';
+            foreach ( $atts as $key => $val )
+                $url .= ' ' . $key . '="' . $val . '"';
+            $url .= ' />';
+        }
+        return $url;
     }
 
 }

@@ -28,7 +28,7 @@ class runtime_csfr {
     /**
      * Generates a new CSFR token.
      * @author Bobby Allen (ballen@zpanelcp.com)
-     * @return bool 
+     * @return bool
      */
     static function Tokeniser() {
         $_SESSION['zpcsfr'] = runtime_randomstring::randomHash();

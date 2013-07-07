@@ -4,7 +4,7 @@
  * Generic template place holder class.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
- * @version 1.0.0
+ * @version 1.1.0
  * @author Bobby Allen (ballen@zpanelcp.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
@@ -13,17 +13,28 @@
 class ui_tpl_progbardisk {
 
     public static function Template() {
-        global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $diskquota = $currentuser['diskquota'];
         $diskspace = ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']);
+
         if ($diskquota == 0) {
-            return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=0"/>';
+            return '<div class="progress progress-striped"><div class="progress-bar progress-bar-success" style="width: 0%"></div></div>';
         } else {
-            if (fs_director::CheckForEmptyValue($diskspace))
+            if (fs_director::CheckForEmptyValue($diskspace)){
                 $diskspace = 0;
+            }
             $percent = round(($diskspace / $diskquota) * 100, 0);
-            return "<img src=\"etc/lib/pChart2/zpanel/zProgress.php?percent=" . $percent . "\"/>";
+            if($percent >= 75){
+                $bar = 'danger';
+            }else{
+                $bar = 'success';
+            }
+            if($percent >= 10){
+                $showpercent = $percent.'%';
+            }else{
+                $showpercent = '';
+            }
+            return '<div class="progress progress-striped"><div class="progress-bar progress-bar-'.$bar.'" style="width: ' . $percent . '%">' . $showpercent . '</div></div>';
         }
     }
 

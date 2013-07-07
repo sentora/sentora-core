@@ -1,7 +1,15 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><a href="#" title="Reload Module"><img src="<@ ModuleIcon @>" border="0"></a><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <@ CreateBackupDirectory @>
@@ -10,9 +18,9 @@
         <h2><: Backup your hosting account files :></h2>
         <% if HasData %>
         <form name="LaunchBackup" action="modules/backupmgr/code/launchbackup.php?id=<@ UserID @>" target="backup" method="post" onsubmit="var w=window.open('', 'backup', 'scrollbars=no,menubar=no,height=300,width=600,resizable=no,toolbar=no,location=no,status=no'); w.focus();">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
-                    <th nowrap="nowrap"><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inBackUp" value="<@ UserID @>"><: Launch :></button></th>
+                    <th nowrap="nowrap"><button class="btn btn-primary" type="submit" name="inBackUp" value="<@ UserID @>"><: Launch :></button></th>
                     <td><: Backups your data whilst you wait and then prompt's you to download the backup archive. :></td>
                 </tr>
             </table>
@@ -30,7 +38,7 @@
         <% endif %>
         <a href="./?module=backupmgr" title="<: Refresh archive list :>"><: Refresh archive list :></a><br><br>
         <form action="./?module=backupmgr&action=DeleteBackup" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th></th>
                     <th><: Location :></th>
@@ -46,8 +54,8 @@
                     -->
                     <td width="50px"><@ FileLocation @></td>
                     <td><& backupfile &>.zip</td>
-                    <td><b><& filesize &></b></td>	
-                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& backupfile &>" id="inDelete_<& backupfile &>" value="<& backupfile &>"><: Delete Backup :></button></td>		
+                    <td><b><& filesize &></b></td>
+                    <td><button class="button-loader delete btn btn-danger" type="submit" name="inDelete_<& backupfile &>" id="inDelete_<& backupfile &>" value="<& backupfile &>"><: Delete Backup :></button></td>
                 </tr>
                 <% endloop %>
             </table>

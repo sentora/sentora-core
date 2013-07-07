@@ -1,10 +1,20 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: This module enables you to manage user groups for your client, User groups enable you to control what modules your users can see and access.  :></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><: This module enables you to manage user groups for your client, User groups enable you to control what modules your users can see and access.  :></p></div>
+
+    </div>
+
+
+
 
     <% if isDeleteGroup %>
-    <div class="zform_wrapper">
+    <div class="zform_wrapper alert alert-danger">
         <h2><: Delete user group :>: <@ EditCurrentName @> ?</h2>
         <% if GroupMoveToList %>
         <: Please confirm and choose a group to move any existing clients to before the selected group is deleted. :>
@@ -28,8 +38,8 @@
                 <tr>
                     <th colspan="2" align="right">
                         <input type="hidden" name="inGroupID" value="<@ CurrentID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-                        <button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=manage_groups';return false;"><: Cancel :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" ><: Delete :></button>
+                        <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=manage_groups';return false;"><: Cancel :></button>
                     </th>
                 </tr>
             </table>
@@ -41,7 +51,7 @@
     <div class="zgrid_wrapper">
         <% if DefaultGroupList %>
         <h2><: Default user groups :></h2>
-        <table class="zgrid">
+        <table class="table table-striped">
             <tr>
                 <th><: Group :></th>
                 <th nowrap="nowrap"><: Users :></th>
@@ -61,7 +71,7 @@
         <h2><: Current user groups :></h2>
         <% if GroupList %>
         <form action="./?module=manage_groups&action=EditGroup" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: Group :></th>
                     <th nowrap="nowrap"><: Users :></th>
@@ -73,7 +83,7 @@
                     <td><& groupname &></td>
                     <td><& usersingroup &></td>
                     <td><& groupdesc &></td>
-                    <td nowrap="nowrap"><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& groupid &>" id="inEdit_<& groupid &>" value="inEdit_<& groupid &>">Edit</button><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& groupid &>" id="inDelete_<& groupid &>" value="inDelete_<& groupid &>">Delete</button></td>
+                    <td nowrap="nowrap"><button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& groupid &>" id="inEdit_<& groupid &>" value="inEdit_<& groupid &>">Edit</button>  <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& groupid &>" id="inDelete_<& groupid &>" value="inDelete_<& groupid &>">Delete</button></td>
                 </tr>
                 <% endloop %>
             </table>
@@ -88,7 +98,7 @@
     <div class="zform_wrapper">
         <h2><: Create new user group :></h2>
         <form action="./?module=manage_groups&action=CreateGroup" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Group name :>:</th>
                     <td><input name="inGroupName" type="text" id="inGroupName" size="30" /></td>
@@ -99,7 +109,7 @@
                 </tr>
                 <tr>
                     <th colspan="2" align="right">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Create :></button>
+                        <button class="button-loader btn btn-primary" type="submit" ><: Create :></button>
                     </th>
                 </tr>
             </table>
@@ -112,7 +122,7 @@
     <div class="zform_wrapper">
         <h2><: Edit user group :></h2>
         <form action="./?module=manage_groups&action=UpdateGroup" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Group name :>:</th>
                     <td><input name="inGroupName" type="text" id="inGroupName" size="30" value="<@ EditCurrentName @>" /></td>
@@ -124,7 +134,7 @@
                 <tr>
                     <th colspan="2" align="right">
                         <input type="hidden" name="inGroupID" value="<@ CurrentID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save :></button>
+                        <button class="button-loader btn btn-primary" type="submit" ><: Save :></button>
                     </th>
                 </tr>
             </table>

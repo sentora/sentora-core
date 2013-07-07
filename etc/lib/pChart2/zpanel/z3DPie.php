@@ -66,6 +66,45 @@ if (isset($_GET['radius'])) {
     $Radius = 100;
 }
 
+/* Set palette color */
+if (isset($_GET['palette'])) {
+    switch ($_GET['palette']) {
+        case 'autumn':
+            $palette = 'autumn.color';
+            break;
+        case 'blind':
+            $palette = 'blind.color';
+            break;
+        case 'evening':
+            $palette = 'evening.color';
+            break;
+        case 'kitchen':
+            $palette = 'kitchen.color';
+            break;
+        case 'light':
+            $palette = 'light.color';
+            break;
+        case 'navy':
+            $palette = 'navy.color';
+            break;
+        case 'shade':
+            $palette = 'shade.color';
+            break;
+        case 'spring':
+            $palette = 'spring.color';
+            break;
+        case 'summer':
+            $palette = 'summer.color';
+            break;
+        default:
+            $palette = 'navy.color';
+            break;
+    }
+} else {
+    $palette = 'navy.color';
+}
+
+
 if (isset($_GET['dataangle'])) {
     $DataGapAngle = $_GET['datagapangle'];
 } else {
@@ -168,6 +207,7 @@ $MyData->setSerieDescription("ScoreA", "Application A");
 /* Define the absissa serie */
 $MyData->addPoints($Labels, "Labels");
 $MyData->setAbscissa("Labels");
+$MyData->loadPalette('../palettes/'.$palette, TRUE);
 
 /* Create the pChart object */
 $myPicture = new pImage($ImageSize[0], $ImageSize[1], $MyData, TRUE);

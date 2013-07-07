@@ -1,16 +1,24 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <% if isDeleteClient %>
-    <div class="zform_wrapper">
+    <div class="zform_wrapper alert alert-danger">
         <h2><: Delete :>: <@ EditCurrentName @> ?</h2>
         <p><: Please confirm that you want to delete this client. :></p>
         <p><b><: WARNING! This will remove all files and services belonging to this client! :></b></p>
         <form action="./?module=manage_clients&action=DeleteClient" method="post">
-            <table class="zform" cellpadding="0" cellspacing="0">
+            <table class="table table-striped" cellpadding="0" cellspacing="0">
                 <% if AllClientList %>
                 <tr>
                     <th><: Move clients and packages (if any exist) this user has to :>:</th>
@@ -26,8 +34,8 @@
                 <tr>
                     <th colspan="2" align="right">
                         <input type="hidden" name="inDelete" value="<@ EditCurrentID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=manage_clients';return false;"><: Cancel :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" ><: Delete :></button>
+                        <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=manage_clients';return false;"><: Cancel :></button>
                     </th>
                 </tr>
             </table>
@@ -40,7 +48,7 @@
     <div class="zgrid_wrapper">
         <h2><: Edit existing client :>: <@ EditCurrentName @></h2>
         <form action="./?module=manage_clients&action=UpdateClient" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Username :>:</th>
                     <td><input name="inUserName" type="text" disabled="disabled" size="30" maxlength="30" id="inUserName" value="<@ EditCurrentName @>" readonly="readonly" /></td>
@@ -98,8 +106,8 @@
                 <tr>
                     <th><input type="hidden" name="inClientID" value="<@ EditCurrentID @>" /></th>
                     <td>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="Save"><: Save :></button>
-                        <button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=manage_clients';return false;"><: Cancel :></button>
+                        <button class="button-loader btn btn-primary" type="submit" id="button" name="inSubmit" value="Save"><: Save :></button>
+                        <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=manage_clients';return false;"><: Cancel :></button>
                     </td>
                 </tr>
             </table>
@@ -112,7 +120,7 @@
         <h2><: Current Clients :></h2>
         <% if ClientList %>
         <form action="./?module=manage_clients&action=EditClient" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: Username :></th>
                     <th><: Package :></th>
@@ -131,8 +139,8 @@
                     <td><& diskspacereadable &> / <& diskspacequotareadable &></td>
                     <td><& bandwidthreadable &> / <& bandwidthquotareadable &></td>
                     <td>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>">Edit</button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>">Delete</button>
+                        <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>">Edit</button>
+                        <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>">Delete</button>
                     </td>
                 </tr>
                 <% endloop %>
@@ -152,7 +160,7 @@
     <div class="zgrid_wrapper">
         <h2><: Disabled Clients :></h2>
         <form action="./?module=manage_clients&action=EditDisabledClient" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: Username :></th>
                     <th><: Package :></th>
@@ -169,8 +177,8 @@
                     <td><& diskspacereadable &> / <& diskspacequotareadable &></td>
                     <td><& bandwidthreadable &> / <& bandwidthquotareadable &></td>
                     <td>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>">Edit</button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>">Delete</button>
+                        <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>">Edit</button>
+                        <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>">Delete</button>
                     </td>
                 </tr>
                 <% endloop %>
@@ -185,7 +193,7 @@
     <div class="zform_wrapper">
         <h2><: Create new client account :></h2>
         <form action="./?module=manage_clients&action=CreateClient" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Username :>:</th>
                     <td><input type="text" name="inNewUserName" id="inNewUserName" size="30" maxlength="30" value="<@ FormName @>" /></td>
@@ -250,7 +258,7 @@
                 </tr>
                 <tr>
                     <th></th>
-                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSubmit" value="Save"><: Save :></button></td>
+                    <td><button class="button-loader btn btn-primary" type="submit" id="button" name="inSubmit" value="Save"><: Save :></button></td>
                 </tr>
             </table>
             <@ CSFR_Tag @>

@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -57,7 +57,7 @@ class module_controller {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Configure your Apache Settings") . "</h2>";
         $line .= "<form action=\"./?module=apache_admin&action=UpdateApacheConfig\" method=\"post\">";
-        $line .= "<table class=\"zgrid\">";
+        $line .= "<table class=\"table table-striped\">";
         $count = 0;
         $sql = "SELECT COUNT(*) FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
         $moduleName = ui_module::GetModuleName();
@@ -80,7 +80,7 @@ class module_controller {
                     $line .= "<tr valign=\"top\"><th nowrap=\"nowrap\">" . ui_language::translate($row['so_cleanname_vc']) . "</th><td>" . $fieldhtml . "</td><td>" . ui_language::translate($row['so_desc_tx']) . "</td></tr>";
                 }
                 $line .= "<tr><th>" . ui_language::translate("Force Update") . "</th><td><input type=\"checkbox\"></td><td>" . ui_language::translate("Force vhost.conf to be updated on next daemon run. Any change in settings also triggers vhost.conf to be updated.") . "</td></tr>";
-                $line .= "<tr><th colspan=\"3\"><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">" . ui_language::translate("Save Changes") . "</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\">" . ui_language::translate("Cancel") . "</button></th></tr>";
+                $line .= "<tr><th colspan=\"3\"><button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"inSaveSystem\">" . ui_language::translate("Save Changes") . "</button><button class=\"button-loader btn btn-default\" type=\"button\" onclick=\"window.location.href='./?module=moduleadmin';return false;\">" . ui_language::translate("Cancel") . "</button></th></tr>";
             }
         }
         $line .= "</table>";
@@ -95,7 +95,7 @@ class module_controller {
         $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr><td>";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
+        $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
         $line .= "</td><td>";
         $line .= "<select name=\"inVhost\" id=\"inVhost\">";
         $line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
@@ -136,7 +136,7 @@ class module_controller {
         $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr><td>";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
+        $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
         $line .= "</td><td>";
         $line .= "<select name=\"inVhost\" id=\"inVhost\">";
         $line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
@@ -201,7 +201,7 @@ class module_controller {
         $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
         $line .= "<table class=\"zform\">";
         $line .= "<tr><td>";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
+        $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"inSelectVhost\">" . ui_language::translate("Select Vhost") . "</button>";
         $line .= "</td><td>";
         $line .= "<select name=\"inVhost\" id=\"inVhost\">";
         $line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
@@ -259,7 +259,7 @@ class module_controller {
         }
 
         $line .= "<tr><td colspan=\"2\">";
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=apache_admin';return false;\"><: Cancel :></button>";
+        $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=apache_admin';return false;\"><: Cancel :></button>";
         $line .= "</td></tr>";
         $line .= "</table>";
         $line .= runtime_csfr::Token();
@@ -327,7 +327,7 @@ class module_controller {
 
 
 
-        $sql = $zdbh->prepare("UPDATE x_vhosts SET 
+        $sql = $zdbh->prepare("UPDATE x_vhosts SET
 			vh_enabled_in  = ?,
 			vh_suhosin_in  = ?,
 			vh_obasedir_in = ?,

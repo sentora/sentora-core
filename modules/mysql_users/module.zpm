@@ -1,11 +1,19 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <% if isDeleteUser %>
-    <div class="zform_wrapper">
+    <div class="zform_wrapper alert alert-danger">
         <h2><: Delete User :>: <@ EditCurrentUserName @> ?</h2>
         <p><: Please confirm that you want to delete this MySQL user. :></p>
         <form action="./?module=mysql_users&action=ConfirmDeleteUser" method="post">
@@ -13,8 +21,8 @@
                 <tr>
                     <td colspan="2" align="right">
                         <input type="hidden" name="inDelete" value="<@ EditCurrentUserID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Delete :></button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" ><: Delete :></button>
+                        <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
                     </td>
                 </tr>
             </table>
@@ -28,7 +36,7 @@
         <h2><: Databases for user :>: <@ EditCurrentUserName @></h2>
         <% if UserDatabaseList %>
         <form action="./?module=mysql_users&action=RemoveDB" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: Database name :></th>
                     <th><: Remove from user :></th>
@@ -36,7 +44,7 @@
                 <% loop UserDatabaseList %>
                 <tr>
                     <td><& mmdbname &></td>
-                    <td><button class="fg-button ui-state-default ui-corner-all" type="submit" name="inRemove_<& mmid &>" id="inRemove_<& mmid &>" value="<& mmid &>"><: Remove database :></button></td>
+                    <td><button class="button-loader delete btn btn-danger" type="submit" name="inRemove_<& mmid &>" id="inRemove_<& mmid &>" value="<& mmid &>"><: Remove database :></button></td>
                 </tr>
                 <% endloop %>
                 <input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
@@ -51,7 +59,7 @@
 
         <h2><: Add Database :></h2>
         <form action="./?module=mysql_users&action=AddDB" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th nowrap="nowrap"><: Database :>:</th>
                     <td width="150px">
@@ -66,7 +74,7 @@
                     </td>
                     <td>
                         <input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Add Database :></button>
+                        <button class="button-loader btn btn-primary" type="submit" ><: Add Database :></button>
                     </td>
                 </tr>
             </table>
@@ -85,8 +93,8 @@
                     </td>
                     <td>
                         <input type="hidden" name="inUser" value="<@ EditCurrentUserID @>">
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Save Password :></button>
-                        <button class="fg-button ui-state-default ui-corner-all type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
+                        <button class="button-loader btn btn-primary" type="submit" ><: Save Password :></button>
+                        <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=mysql_users';return false;"><: Cancel :></button>
                     </td>
                 </tr>
                 <tr>
@@ -105,7 +113,7 @@
         <h2><: Current MySQL&reg Users :></h2>
         <% if UserList %>
         <form action="./?module=mysql_users&action=EditUser" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
                     <th><: User name :></th>
                     <th><: Access :></th>
@@ -120,11 +128,11 @@
                     <td><& totaldb &></td>
                     <td><& dbpassword &></td>
                     <td>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inEdit_<& userid &>" id="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
-                        <button class="fg-button ui-state-default ui-corner-all" type="submit" name="inDelete_<& userid &>" id="inDelete_<& userid &>" value="<& userid &>"><: Delete :></button>
+                        <button class="button-loader btn btn-default" type="submit" name="inEdit_<& userid &>" id="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" name="inDelete_<& userid &>" id="inDelete_<& userid &>" value="<& userid &>"><: Delete :></button>
                     </td>
                 </tr>
-                <% endloop %>	
+                <% endloop %>
             </table>
             <@ CSFR_Tag @>
         </form>
@@ -140,7 +148,7 @@
                 <td>
                     <h2><: Create a new MySQL&reg User :></h2>
                     <form action="./?module=mysql_users&action=CreateUser" method="post">
-                        <table class="zform">
+                        <table class="table table-striped">
                             <tr>
                                 <th nowrap="nowrap"><: User name :>:</th>
                                 <td nowrap="nowrap"><input type="text" size="30" name="inUserName" id="inUserName" /></td>
@@ -176,7 +184,7 @@
                             </tr>
                             <tr>
                                 <th colspan="2" align="right">
-                                    <button class="fg-button ui-state-default ui-corner-all" type="submit" ><: Create :></button></th>
+                                    <button class="button-loader btn btn-primary" type="submit" ><: Create :></button></th>
                             </tr>
                         </table>
                         <@ CSFR_Tag @>

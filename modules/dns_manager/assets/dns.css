@@ -47,7 +47,6 @@ div.account > div.content > div > div.actions > a.save {
 /* @accountTitle */
 div.accountTitle > div.content {
     position: relative;
-    min-height: 60px;
 }
 div.accountTitle > div.content > div > strong,
 div.accountTitle > div.content > div > a {
@@ -112,23 +111,20 @@ div.accountTitle > div.content > div > a:hover {
 }
 
 #dnsRecords div.header {
+    padding: 5px 10px 5px 0px;
 }
 
-#dnsRecords div.row {
-    border-bottom: 1px solid silver;
-    position: relative;
+#dnsRecords div.dnsRecord,
+#dnsRecords div.add {
+    padding: 10px 0 10px 0;
+    color: #333;
+    font-size: 12px;
 }
 
-#dnsRecords div.dnsRecord, #dnsRecords div.add {
-    height: 26px;
-    padding-top: 6px;
-    /* color: black; */
-}
-
-#dnsRecords div.dnsRecord:hover, #dnsRecords div.add:hover {
+/*#dnsRecords div.dnsRecord:hover, #dnsRecords div.add:hover {
     background-color: #e8e3e3;
     color: inherit;
-}
+}*/
 
 #dnsRecords div.dnsRecordError {
     background-color: #bf7979;
@@ -142,7 +138,7 @@ div.accountTitle > div.content > div > a:hover {
     margin-bottom: 12px;
     padding-left: 32px;
     padding-top: 1px;
-    background: url(./information_big.png) no-repeat 0 0;
+    /*background: url(./information_big.png) no-repeat 0 0;*/
     /* color: #949494; */
     min-height: 28px;
 }
@@ -150,8 +146,7 @@ div.accountTitle > div.content > div > a:hover {
 #dnsRecords div.row > div {
     display: inline-block;
     margin-right: 8px;
-    vertical-align: middle;
-    height: 26px;
+    /*vertical-align: middle;*/
 }
 #dnsRecords div.header > div {
     height: 100%;
@@ -184,22 +179,18 @@ div.accountTitle > div.content > div > a:hover {
 #dnsRecords div.row > div > input {
     border: 1px solid silver;
     width: 100%;
+    min-height: 10px;
 }
 
-#dnsRecords div.row > div.actions > label {
-    width: 50px;
-    position: absolute;
-    right: 0;
-    top: 1px;
-}
+
 
 #dnsRecords div.row > div.hostName {
     width: 140px;
 }
 
-#dnsRecords div.dnsRecord > div.hostName {
+/*#dnsRecords div.dnsRecord > div.hostName {
     text-align: right;
-}
+}*/
 #dnsRecords div.dnsRecord > div.hostName > span {
     display: inline-block;
     padding-top: 4px;
@@ -220,7 +211,7 @@ div.accountTitle > div.content > div > a:hover {
 }
 #dnsRecords div.row > div.type,
 #dnsRecords div.dnsRecordA > div.row > div.type {
-    width: 12px;
+    width: 50px;
     text-align: center;
 }
 
@@ -342,7 +333,7 @@ div.accountTitle > div.content > div > a:hover {
     vertical-align: middle;
 }
 
-#dnsRecords div.dnsRecord > span.delete {
+/*#dnsRecords div.dnsRecord > span.delete {
     padding: 0;
     margin-left: 4px;
     width: 16px;
@@ -351,12 +342,10 @@ div.accountTitle > div.content > div > a:hover {
     position: absolute;
     right: 0;
     top: 8px;
-}
-#dnsRecords div.dnsRecord > span.delete:hover {
-    cursor: pointer;
-}
+}*/
 
-#dnsRecords div.dnsRecord > span.undo {
+
+/*#dnsRecords div.dnsRecord > span.undo {
     padding: 0;
     margin-left: 4px;
     width: 16px;
@@ -366,10 +355,8 @@ div.accountTitle > div.content > div > a:hover {
     position: absolute;
     right: 22px;
     top: 8px;
-}
-#dnsRecords div.dnsRecord > span.undo:hover {
-    cursor: pointer;
-}
+}*/
+
 
 #dnsRecords div.row > div.errorMessage {
     background: url(/icons/16x16/plain/error.png) no-repeat 10px 1px;
@@ -441,10 +428,6 @@ div.accountTitle > div.content > div > a:hover {
 }
 
 
-
-
-
-
 .inlineBlock {
     display: inline-block;
 }
@@ -456,3 +439,104 @@ div.accountTitle > div.content > div > a:hover {
 .ui-tabs .ui-tabs-panel {
     padding: 0.6em 0.5em;
 }
+
+
+
+
+
+
+
+
+#inDomain {
+    height: 44px;
+    line-height: 48px;
+    width: 230px;
+    margin-right: 5px;
+}
+
+
+.dnsRecord:nth-child(even) {
+    background-color: #F9F9F9;
+}
+
+#dnsRecords .tab-content > .tab-pane{
+     color: #333;
+}
+
+.row.new:nth-child(even) {
+    background-color: #DFF0D8;
+}
+
+#dnsRecords .row.dnsRecord.new {
+    background-color: #DFF0D8;
+    border-color: #D6E9C6;
+}
+#dnsRecords .row.dnsRecord.deleted {
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+}
+
+#dnsRecords div.dnsRecord > .delete {
+    float: right;
+    letter-spacing: 1pt;
+    padding: 2px 6px 2px 6px;
+    margin: 0 10px 0 0;
+}
+#dnsRecords div.dnsRecord > .delete:hover {
+    cursor: pointer;
+}
+#dnsRecords div.dnsRecord > .undo {
+    display: none;
+    float: right;
+    letter-spacing: 1pt;
+    padding: 2px 6px 2px 6px;
+    margin: 3px 10px 0 0;
+}
+
+#dnsRecords div.dnsRecord > .undo:hover {
+    cursor: pointer;
+}
+
+#dnsRecords .description {
+    padding: 20px 0 20px 0;
+    color: #777;
+}
+
+
+#dnsRecords div.row {
+    border-top: 1px solid #EEE;
+    position: relative;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 5px;
+}
+
+/* Add Strike through to Deleted DNS Rows */
+#dnsRecords .row.dnsRecord.deleted span,
+#dnsRecords .row.dnsRecord.deleted .input-small,
+#dnsRecords .row.dnsRecord.deleted div {
+        text-decoration: line-through;
+}
+#dnsRecords .row.dnsRecord.deleted .input-small{
+    filter: alpha(opacity=40);
+    opacity: 0.40;
+}
+
+.actions label {
+    margin-right: 10px;
+}
+#dnsRecords .row > .actions {
+    float: right;
+    margin-right: -3px;
+}
+
+
+
+
+
+
+
+
+
+
+

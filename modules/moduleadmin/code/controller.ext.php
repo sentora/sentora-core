@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -63,7 +63,7 @@ class module_controller {
                 $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_folder_vc <> 'zpx_core_module' ORDER BY mo_name_vc ASC");
                 $modsql->execute();
                 $line .= "<form action=\"./?module=moduleadmin&action=EditModule\" method=\"post\">";
-                $line .= "<table class=\"zgrid\">";
+                $line .= "<table class=\"table table-striped\">";
                 $line .= "<tr>";
                 $line .= "<th></th>";
                 $line .= "<th>" . ui_language::translate("Module") . "</th>";
@@ -173,7 +173,7 @@ class module_controller {
                     }
                 }
                 $line .= "</table><br>";
-                $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSave\" value=\"inSave\">" . ui_language::translate("Save changes") . "</button></form>";
+                $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"inSave\" value=\"inSave\">" . ui_language::translate("Save changes") . "</button></form>";
             } else {
                 $line .= ui_language::translate("You have no administration modules at this time.");
             }

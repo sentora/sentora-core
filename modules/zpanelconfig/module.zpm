@@ -1,23 +1,30 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <div class="zgrid_wrapper">
         <h2><: Configure your ZPanel Settings :></h2>
         <form action="./?module=zpanelconfig&action=UpdateConfig" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <% loop Config %>
                 <tr valign="top">
                     <th nowrap="nowrap"><& cleanname &></th>
-                    <td><& fieldhtml &></td>
-                    <td><& description &></td>
+                    <td><& fieldhtml &><br><& description &><br><br></td>
                 </tr>
                 <% endloop %>
                 <tr>
                     <th colspan="3">
-                        <@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
+                        <@ CSFR_Tag @><button class="button-loader btn btn-primary" type="submit" id="button" name="inSaveSystem"><: Save Changes :></button>
                     </th>
                 </tr>
             </table>
@@ -27,7 +34,7 @@
     <div class="zgrid_wrapper">
         <h2><: ZPanel Daemon :></h2>
         <form action="./?module=zpanelconfig&action=ForceDaemon" method="post">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr valign="top">
                     <th nowrap="nowrap" width="300px"><: Next Daemon Run :>:</th><td><% if LastRunTime %><@ NextRunTime @><% else %><: Never :><% endif %></td>
                 </tr>
@@ -44,15 +51,15 @@
                     <th nowrap="nowrap"><: Last Month Daemon Run :>:</th><td><% if LastMonthRunTime %><@ LastMonthRunTime @><% else %><: Never :><% endif %></td>
                 </tr>
                 <tr>
-                    <th><: Queue a full daemon run (reset) :>:</th><td><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inForceFull"><: Go :></button></td>
+                    <th><: Queue a full daemon run (reset) :>:</th><td><@ CSFR_Tag @><button class="btn btn-primary" type="submit" id="button" name="inForceFull"><: Go :></button></td>
                 </tr>
             </table>
         </form>
         <br><br>
         <form name="LaunchBackup" action="modules/zpanelconfig/code/rundaemon.php" target="backup" method="post" onsubmit="var w=window.open('', 'backup', 'scrollbars=yes,menubar=yes,height=600,width=600,resizable=no,toolbar=no,location=no,status=no'); w.focus();">
-            <table class="zgrid">
+            <table class="table table-striped">
                 <tr>
-                    <th nowrap="nowrap" width="300px"><: Run Daemon Now :>:</th><td><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" type="submit" id="button" name="inRunDaemon"><: Go :></button></td>
+                    <th nowrap="nowrap" width="300px"><: Run Daemon Now :>:</th><td><@ CSFR_Tag @><button class="btn btn-primary" type="submit" id="button" name="inRunDaemon"><: Go :></button></td>
                 </tr>
             </table>
         </form>

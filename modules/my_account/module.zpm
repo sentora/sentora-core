@@ -1,7 +1,15 @@
-<div class="zmodule_header" id="zmodule_header_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
+
     <@ Result @>
 
     <% loop AccountSettings %>
@@ -10,7 +18,7 @@
     <div class="zform_wrapper">
         <h2><: Enter your account details :></h2>
         <form action="./?module=my_account&action=UpdateAccountSettings" method="post">
-            <table class="zform">
+            <table class="table table-striped">
                 <tr>
                     <th><: Full name :>:</th>
                     <td><input name="inFullname" type="text" id="inFullname" size="40" value="<& fullname &>" /></td>
@@ -47,8 +55,8 @@
                 </tr>
                 <tr>
                     <th>&nbsp;</th>
-                    <td align="right"><@ CSFR_Tag @><button class="fg-button ui-state-default ui-corner-all" id="button" type="submit" ><: Update Account :></button</td>
-                </tr>	
+                    <td align="right"><@ CSFR_Tag @><button class="button-loader btn btn-primary" id="button" type="submit" ><: Update Account :></button</td>
+                </tr>
             </table>
         </form>
     </div>
