@@ -4,6 +4,7 @@
 
 Directory structure:
 --------------------
+* ``ajax``         - AJAX related classes *Added in v10.0.3*
 * ``ctrl``         - Controller related classes
 * ``db``           - Database drivers
 * ``debug``        - Debugging and error logging classes
