@@ -263,7 +263,7 @@ static function DnsRecordField($type, $tts, $description, $userID, $domainID){
             } else {
                 $zone_error_message = '<font color="green">' . ui_language::translate('Your DNS zone has been loaded without errors.') . '</font>';
             }
-            $zone_status = '<img src="modules' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.png">';
+            $zone_status = '<img src="modules/' . $controller->GetControllerRequest( 'URL', 'module' ) . '/assets/up.png">';
         } else {
             $zone_error_message = '<font color="red">' . ui_language::translate('Errors detected have prevented your DNS zone from being loaded. Please correct the error(s) listed below. Until these errors are fixed, your DNS will not work.') . '</font>';
             $zone_status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.png">';
@@ -1435,7 +1435,6 @@ $line .='
 
     static function getModuleIcon() {
         global $controller;
-        //$module_icon = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
         $mod_folder = $controller->GetControllerRequest('URL', 'module');
         // Check is Userland Theme has a Module Icon Override
         if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/'.$mod_folder.'/assets/icon.png')) {
@@ -1532,9 +1531,18 @@ $line .='
             //Check the temp zone record for errors
             if (file_exists($zonecheck_file)) {
                 ob_start();
-                system(ctrl_options::GetSystemOption('named_checkzone') . " " . $domain['dn_name_vc'] . " " . $zonecheck_file, $retval);
+                
+                
+                $command = ctrl_options::GetSystemOption( 'named_checkzone' );
+                $args = array(
+                    $domain[ 'dn_name_vc' ],
+                    $zonecheck_file
+                );
+                $retval = ctrl_system::systemCommand( $command, $args );
+                
+
                 $content_grabbed = ob_get_contents();
-                ob_end_clean();
+                ob_end_clean();var_dump($retval);
                 unlink($zonecheck_file);
                 if ($retval == 0) {
                     //Syntax check passed.
