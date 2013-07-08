@@ -30,7 +30,7 @@ class ui_templateparser {
     );
 
     /**
-     * Location of the cached files
+     * Location of the cached files relative to root
      * @author Sam Mottley (smottley@zpanelcp.com)
      */
     static public $storageLocation = 'etc/tmp/storage/';
@@ -323,11 +323,11 @@ class ui_templateparser {
     }
 
     /**
-     * Set the temp path location
+     * Set the root of the temp path location
      * @author Sam Mottley (smottley@zpanelcp.com)
      */
     static public function setLocation(){
-        self::$storageLocation =  ctrl_options::GetSystemOption('zpanel_root').'etc/tmp/storage/';
+        self::$storageLocation =  ctrl_options::GetSystemOption('zpanel_root').self::$storageLocation;
     }
 
 
