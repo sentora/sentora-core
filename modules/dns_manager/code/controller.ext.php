@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
