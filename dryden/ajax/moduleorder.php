@@ -37,7 +37,7 @@ if (isset($_SESSION['zpuid'])) {
             $order = json_encode($_POST['moduleorder']);
 
             // Store in DB a JSON string like this [1","2","3","4","5","6","7","8"]
-            if(UpdateModuleOder($_SESSION['zpuid'], $order)){
+            if(UpdateModuleOrder($_SESSION['zpuid'], $order)){
                 $return = array('sucess' => true, 'status' => 'Module Order Saved to Database');
             }
 
@@ -63,17 +63,28 @@ function isAjax() {
     return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 }
 
-/* Update Module Boxes Order in database */
-function UpdateModuleOder($uid, $order) {
+/**
+ * 
+ * @global db_driver $zdbh
+ * @param type $uid
+ * @param type $order
+ * @return boolean
+ */
+function UpdateModuleOrder($uid, $order) {
     global $zdbh;
-    $sql = $zdbh->prepare("
+    $sqlString = "
         UPDATE x_accounts
         SET ac_catorder_vc = :order
-        WHERE ac_id_pk = :uid");
-    $sql->bindParam(':order', $order);
-    $sql->bindParam(':uid', $uid);
-    $sql->execute();
-    return true;
+        WHERE ac_id_pk = :uid
+        ";
+    $bindArray = array(
+        ':order' => $order,
+        ':uid'   => $uid,
+    );
+    $zdbh->bindQuery( $sqlString, $bindArray );
+
+    return $zdbh->returnResult();
 }
 
+/** @todo need to check session against database plus beforehand check request is from localhost */
 ?>
