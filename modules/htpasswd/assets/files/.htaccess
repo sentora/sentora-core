@@ -1,5 +1,0 @@
-<LIMIT GET POST>
-order deny,allow
-deny from all
-allow from none
-</LIMIT>
