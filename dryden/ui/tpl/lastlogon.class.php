@@ -17,7 +17,7 @@ class ui_tpl_lastlogon {
         if ($currentuser['lastlogon']) {
             return date(ctrl_options::GetSystemOption('zpanel_df'), $currentuser['lastlogon']);
         } else {
-            return ui_language::translate("Never");
+            return "<: Never :>";
         }
     }
 

@@ -39,14 +39,14 @@ class ui_tpl_modulelist {
                     $icons_per_row = ctrl_options::GetSystemOption('module_icons_pr');
                     $num_icons = 0;
                     foreach ($mods as $mod) {
-                        $translatename = ui_language::translate($mod['mo_name_vc']);
-                        $cleanname = str_replace(" ", "<br />", $translatename);
+                        $translatename = '<: '.$mod['mo_name_vc'].' :>';
+                        $cleanname = str_replace(" ", "ZP(br)", $translatename);
                         if ($num_icons == $icons_per_row) {
                             $line .= "</tr><tr>";
                             $num_icons = 0;
                         }
                         $line .= "<td style=\"text-align:center;\" align=\"left\">";
-                        $line .= "<a href=\"?module=" . $mod['mo_folder_vc'] . "\" title=\"" . ui_language::translate($mod['mo_desc_tx']) . "\">";
+                        $line .= "<a href=\"?module=" . $mod['mo_folder_vc'] . "\" title=\"<: " . $mod['mo_desc_tx'] . " :>\">";
                         $line .= "<img src=\"modules/" . $mod['mo_folder_vc'] . "/assets/icon.png\" border=\"0\" />";
                         $line .= "</a>";
                         $line .= "<br />";

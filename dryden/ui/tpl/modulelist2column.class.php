@@ -29,7 +29,7 @@ class ui_tpl_modulelist2column {
 
                     $line .= '<li data-catid="'.$modcat['mc_id_pk'].'" id="'.$catUrl.'" class="col-span-6 module-box">';
                     $line .= '    <div class="module-box-title">';
-                    $line .= '        <h4>' .ui_language::translate($modcat['mc_name_vc']). '</h4>';
+                    $line .= '        <h4><: ' .$modcat['mc_name_vc']. ' :></h4>';
                     $line .= '        <div class="tools">';
                     $line .= '            <span class="collapse"><i class="icon-up-open"></i></span> <span class="handle"></span>';
                     $line .= '        </div>';
@@ -38,8 +38,8 @@ class ui_tpl_modulelist2column {
                     $line .= '        <ul>';
 
                     foreach ($mods as $mod) {
-                        $translatename = ui_language::translate($mod['mo_name_vc']);
-                        $cleanname = str_replace(" ", "<br />", $translatename);
+                        $translatename = $mod['mo_name_vc'];
+                        $cleanname = str_replace(" ", "ZP(br)", $translatename);
 
                         // Check is User Style Module Icon Exist
                  if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/'.$mod['mo_folder_vc'].'/assets/icon.png')) {
@@ -49,11 +49,11 @@ class ui_tpl_modulelist2column {
                         }
 
                         $line .= '              <li>';
-                        $line .= '                      <a href="?module=' . $mod['mo_folder_vc'] . '" title="' . ui_language::translate($mod['mo_desc_tx']) . '">';
+                        $line .= '                      <a href="?module=' . $mod['mo_folder_vc'] . '" title="<: ' . $mod['mo_desc_tx'] . ' :>">';
                         $line .= '<img src="' .$icon. '" border="0">';
                         $line .= '                      </a>';
                         $line .= '                      <br />';
-                        $line .= '                      <a href="?module=' . $mod['mo_folder_vc'] . '">' . $cleanname . '</a>';
+                        $line .= '                      <a href="?module=' . $mod['mo_folder_vc'] . '"><: ' . $cleanname . ' :></a>';
                         $line .= '              </li>';
                     }
 

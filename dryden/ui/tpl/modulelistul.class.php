@@ -27,7 +27,7 @@ class ui_tpl_modulelistul {
             $line .= "<ul>";
             $line .= "<lh>" . $modcat['mc_name_vc'] . "</lh>";
             foreach ($mods as $mod) {
-                $line .= "<li><a href=\"?module=" . $mod['mo_folder_vc'] . "\">" . ui_language::translate($mod['mo_name_vc']) . "</a></li>";
+                $line .= "<li><a href=\"?module=" . $mod['mo_folder_vc'] . "\"><: " . $mod['mo_name_vc'] . " :></a></li>";
             }
             $line .= "</ul></div>";
             $show++;

@@ -15,7 +15,7 @@ class ui_tpl_modulelistznavbar {
     public static function Template() {
 
         $active = isset($_REQUEST['module']) ? '' : 'class="active"';
-        $line = '<li '.$active.'><a href=".">'.ui_language::translate('Home').'</a></li>';
+        $line = '<li '.$active.'><a href="."><: Home :></a></li>';
 
         $modcats = ui_moduleloader::GetModuleCats();
         rsort($modcats);
@@ -44,7 +44,7 @@ class ui_tpl_modulelistznavbar {
                     break;
             }
 
-            $shortName = ui_language::translate($shortName);
+            $shortName = '<: '.$shortName.' :>';
             $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk']);
 
             $line .= '<li class="dropdown">';
@@ -68,7 +68,7 @@ class ui_tpl_modulelistznavbar {
                 }else{
                     $line .= '<li>';
                 }
-                $line .= '<a href="?module=' . $mod['mo_folder_vc'] . '"><i class="icon-'.$class_name.'"></i> ' . ui_language::translate($mod['mo_name_vc']) . '</a></li>';
+                $line .= '<a href="?module=' . $mod['mo_folder_vc'] . '"><i class="icon-'.$class_name.'"></i> <: ' . $mod['mo_name_vc'] . ' :></a></li>';
             }
 
             // If Account tab, show Logout Menu Item

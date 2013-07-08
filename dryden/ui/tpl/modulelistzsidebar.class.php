@@ -28,7 +28,7 @@ class ui_tpl_modulelistzsidebar {
 
                 $line .= '<li>';
 	    $line .= '<a href="?module=' . $mod['mo_folder_vc']. '"><i class="icon-'.$class_name.'"></i> ';
-                $line .= ui_language::translate($mod['mo_name_vc']);
+                $line .= '<: '.$mod['mo_name_vc'].' :>';
                 $line .= '</a>';
                 $line .= '</li>';
             }

@@ -15,7 +15,7 @@ class ui_tpl_quotadiskspace {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['diskquota'] == 0)
-            $diskspacequota = ui_language::translate('Unlimited');
+            $diskspacequota = '<: Unlimited :>';
         else
             $diskspacequota = fs_director::ShowHumanFileSize($currentuser['diskquota']);
         return $diskspacequota;
