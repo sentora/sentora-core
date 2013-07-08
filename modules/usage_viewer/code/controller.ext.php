@@ -47,7 +47,7 @@ class module_controller {
     static $distlists;
     static $distlistsquota;
 
-    private function check_pChart($display) {
+    static private function check_pChart($display) {
         return (file_exists('etc/lib/pChart2/class/pData.class.php')) ? $display : 'pChart Library Not Found.';
     }
 
@@ -179,7 +179,7 @@ class module_controller {
         return $line;
     }
 
-    private function DisplayChart($name, $used, $maximum) {
+    static private function DisplayChart($name, $used, $maximum) {
         if ($maximum < 0) { //-1 = unlimited
             $res = '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
