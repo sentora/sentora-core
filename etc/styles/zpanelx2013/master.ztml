@@ -7,29 +7,29 @@
     <meta name="description" content="Web Hosting Control Panel">
 
     <!-- styles -->
-    <link href="etc/styles/zpanelx-2013/css/bootstrap.css" rel="stylesheet">
-    <link href="etc/styles/zpanelx-2013/css/style.css" rel="stylesheet">
+    <link href="etc/styles/zpanelx2013/css/bootstrap.css" rel="stylesheet">
+    <link href="etc/styles/zpanelx2013/css/style.css" rel="stylesheet">
 
-    <script src="etc/styles/zpanelx-2013/js/jquery.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/jquery.cookie.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/jquery.sortable-custom.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/spin.min.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/zpanel.js"></script>
+    <script src="etc/styles/zpanelx2013/js/jquery.js"></script>
+    <script src="etc/styles/zpanelx2013/js/jquery.cookie.js"></script>
+    <script src="etc/styles/zpanelx2013/js/jquery.sortable-custom.js"></script>
+    <script src="etc/styles/zpanelx2013/js/spin.min.js"></script>
+    <script src="etc/styles/zpanelx2013/js/zpanel.js"></script>
 
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="etc/styles/zpanelx-2013/js/html5shiv.js"></script>
+      <script src="etc/styles/zpanelx2013/js/html5shiv.js"></script>
     <![endif]-->
 
 
 
     <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="etc/styles/zpanelx-2013/img/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="etc/styles/zpanelx-2013/img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="etc/styles/zpanelx-2013/img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="etc/styles/zpanelx-2013/img/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="etc/styles/zpanelx-2013/img/ico/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="etc/styles/zpanelx2013/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="etc/styles/zpanelx2013/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="etc/styles/zpanelx2013/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="etc/styles/zpanelx2013/img/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="etc/styles/zpanelx2013/img/ico/favicon.png">
   </head>
 
   <body>
@@ -51,7 +51,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </a>
-            <a class="navbar-brand" href="."><img src="etc/styles/zpanelx-2013/img/zplogoheader160x28.png" width="160" height="28" alt="Home"></a>
+            <a class="navbar-brand" href="."><img src="etc/styles/zpanelx2013/img/zplogoheader160x28.png" width="160" height="28" alt="Home"></a>
             <div class="nav-collapse collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#" class="nav-stat-button" title="View Account Info" data-toggle="collapse" data-target="#stats-data"><i class="icon-chart-bar-2"></i></a></li>
@@ -262,18 +262,18 @@
 
     <!-- javascript
     ================================================== -->
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-transition.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-alert.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-modal.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-dropdown.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-scrollspy.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-tab.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-tooltip.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-popover.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-button.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-collapse.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-carousel.js"></script>
-    <script src="etc/styles/zpanelx-2013/js/bootstrap-typeahead.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-transition.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-alert.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-modal.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-dropdown.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-scrollspy.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-tab.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-tooltip.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-popover.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-button.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-collapse.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-carousel.js"></script>
+    <script src="etc/styles/zpanelx2013/js/bootstrap-typeahead.js"></script>
     <!-- <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script> -->
      <!-- Modulelist for Typeahead -->
     <script>
