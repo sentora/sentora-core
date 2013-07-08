@@ -87,7 +87,7 @@ class module_controller {
     }
 
     static function ExecuteStylesList() {
-        return ui_template::ListAvaliableTemeplates();
+        return ui_template::ListAvaliableTemplates();
     }
 
     static function ExecuteCSSList() {
