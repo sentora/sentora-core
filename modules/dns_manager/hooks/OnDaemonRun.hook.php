@@ -134,17 +134,15 @@ function WriteDNSNamedHook()
     $line       = "";
     foreach ( $domains as $domain ) {
         echo "CHECKING ZONE FILE: " . ctrl_options::GetSystemOption( 'zone_dir' ) . $domain . ".txt..." . fs_filehandler::NewLine();
-        system(
-            ctrl_options::GetSystemOption( 'named_checkzone' ) .
-            " " .
-            escapeshellarg( $domain ) .
-            " " .
-            escapeshellarg( ctrl_options::GetSystemOption( 'zone_dir' ) ) .
-            escapeshellarg( $domain ) .
-            ".txt"
-            , $retval
+        
+        
+        $command = ctrl_options::GetSystemOption( 'named_checkzone' );
+        $args = array(
+            $domain,
+            ctrl_options::GetSystemOption( 'zone_dir' ) . $domain . ".txt",
         );
-        echo $retval . fs_filehandler::NewLine();
+        $retval  = ctrl_system::systemCommand( $command, $args );
+
         if ( $retval == 0 ) {
             echo "Syntax check passed. Adding zone to " . ctrl_options::GetSystemOption( 'named_conf' ) . fs_filehandler::NewLine();
             $line .= "zone \"" . $domain . "\" IN {" . fs_filehandler::NewLine();
