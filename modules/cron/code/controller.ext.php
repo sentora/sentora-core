@@ -200,6 +200,9 @@ class module_controller
         // Check to see if creating system cron file was successful...
         if (!is_file(ctrl_options::GetSystemOption('cron_file'))) {
             self::$cronnoexists = TRUE;
+            var_dump( 'here boss' );
+            var_dump( ctrl_options::GetSystemOption( 'cron_file' ) );
+            var_dump( is_file( ctrl_options::GetSystemOption( 'cron_file' ) ) );
             $retval = TRUE;
         }
         // Check to makesystem cron file is writable...
@@ -262,11 +265,15 @@ class module_controller
 
             if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, $line)) {
                 if (sys_versions::ShowOSPlatformVersion() != "Windows") {
-                    system(
-                            ctrl_options::GetSystemOption('zsudo') .
-                            " " .
-                            escapeshellarg(ctrl_options::GetSystemOption('cron_reload'))
-                    );
+                    $returnValue = ctrl_system::systemCommand(
+                            ctrl_options::GetSystemOption( 'zsudo' ), array(
+                        ctrl_options::GetSystemOption( 'cron_reload_command' ),
+                        ctrl_options::GetSystemOption( 'cron_reload_flag' ),
+                        ctrl_options::GetSystemOption( 'cron_reload_user' ),
+                        ctrl_options::GetSystemOption( 'cron_reload_path' ),
+                    ) );
+
+                    var_dump( $returnValue );
                 }
                 return true;
             } else {
@@ -292,11 +299,14 @@ class module_controller
             $line .= "#################################################################################" . fs_filehandler::NewLine();
             if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, $line)) {
                 if (sys_versions::ShowOSPlatformVersion() != "Windows") {
-                    system(
-                            ctrl_options::GetSystemOption('zsudo') .
-                            " " .
-                            escapeshellarg(ctrl_options::GetSystemOption('cron_reload'))
-                    );
+                    $returnValue = ctrl_system::systemCommand(
+                            ctrl_options::GetSystemOption( 'zsudo' ), array(
+                        ctrl_options::GetSystemOption( 'cron_reload_command' ),
+                        ctrl_options::GetSystemOption( 'cron_reload_flag' ),
+                        ctrl_options::GetSystemOption( 'cron_reload_user' ),
+                        ctrl_options::GetSystemOption( 'cron_reload_path' ),
+                    ) );
+                    var_dump( $returnValue );
                 }
                 return true;
             } else {
