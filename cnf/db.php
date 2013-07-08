@@ -12,4 +12,4 @@
 $host = "localhost";
 $dbname = "zpanel_core";
 $user = "root";
-$pass = "YOUR_ROOT_MYSQL_PASSWORD";
+$pass = "";

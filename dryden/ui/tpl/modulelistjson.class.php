@@ -19,6 +19,7 @@ class ui_tpl_modulelistjson {
         $sql = 'SELECT mo_name_vc, mo_folder_vc FROM `x_modules` WHERE `mo_enabled_en` = "true" AND `mo_type_en` = "user"';
         $dbh = $zdbh->prepare($sql);
         $dbh->execute();
+        $line = '';
 
         // Build Module list Array
         if ($dbh->fetch() !== 0) {

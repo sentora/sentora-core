@@ -67,7 +67,8 @@ class ui_tpl_clientdomains {
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $user['userid']);
         $numrows->execute();
-
+        $line = '';
+        
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $sql->bindParam(':userid', $user['userid']);
