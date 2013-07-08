@@ -323,6 +323,15 @@ class ui_templateparser {
     }
 
     /**
+     * Set the temp path location
+     * @author Sam Mottley (smottley@zpanelcp.com)
+     */
+    static public function setLocation(){
+        self::$storageLocation =  ctrl_options::GetSystemOption('zpanel_root').'etc/tmp/storage/';
+    }
+
+
+    /**
      * Run the php code and return it
      * @var code the php code
      * @author Sam Mottley (smottley@zpanelcp.com)
@@ -355,6 +364,7 @@ class ui_templateparser {
      * @return sting The processed template HTML.
      */
     static function Generate($template_path) {
+        self::setLocation();
         $template_raw = file_get_contents($template_path . "/master.ztml");
         $template_code = ui_templateparser::allowBr(ui_templateparser::CompileFunctions($template_raw));
         ui_templateparser::clearOldCache();
