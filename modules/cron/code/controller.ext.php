@@ -284,7 +284,7 @@ class module_controller
                 $line .= "# Cron Debug infomation can be found in this file here:-                        " . fs_filehandler::NewLine();
                 $line .= "# C:\WINDOWS\System32\crontab.txt                                                " . fs_filehandler::NewLine();
                 $line .= "#################################################################################" . fs_filehandler::NewLine();
-                $line .= "" . ctrl_options::GetSystemOption('daemon_timing') . " " . ctrl_options::GetSystemOption('php_exer') . " " .ctrl_options::GetSystemOption('daemon_exer') . "" . fs_filehandler::NewLine();
+                $line .= "" . ctrl_options::GetSystemOption('daemon_timing') . " " . ctrl_options::GetSystemOption('php_exer') . " " . ctrl_options::GetSystemOption('daemon_exer') . "" . fs_filehandler::NewLine();
                 $line .= "#################################################################################" . fs_filehandler::NewLine();
             }
             $line .= "# DO NOT MANUALLY REMOVE ANY OF THE CRON ENTRIES FROM THIS FILE, USE ZPANEL      " . fs_filehandler::NewLine();
