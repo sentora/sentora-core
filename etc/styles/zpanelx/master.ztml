@@ -100,7 +100,7 @@
               <!-- BEGIN ACCOUNTINFO -->
               <div class="tab-pane active" id="account">
                 <div class="stats-row s-top">
-                  <div class="stats-column"><strong><: Username :>:</strong></strong></div>
+                  <div class="stats-column"><strong><: Username :>:</strong></div>
                   <div class="stats-column"><# ui_tpl_username #></div>
                 </div>
 
