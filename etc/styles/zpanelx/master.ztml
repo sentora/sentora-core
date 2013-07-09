@@ -65,7 +65,7 @@
     <!-- BEGIN CONTAINER -->
     <div class="wrap container">
         <form>
-          <input type="text" id="module-search" data-provide="typeahead" placeholder="Search" autocomplete="off"></form>
+          <input type="text" id="module-search" data-provide="typeahead" placeholder="Search" autocomplete="off">
         </form>
        <div class="inner-wrap">
         <!-- BEGIN LEFT SIDEBAR -->
