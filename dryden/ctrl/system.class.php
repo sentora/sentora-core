@@ -42,7 +42,7 @@ class ctrl_system
     }
 
     /**
-     * Escape's a string to be used as a shell argument.
+     * Escapes a string to be used as a shell argument.
      * @param array $args Array of arguments of which to be escaped.
      * @return array
      */
