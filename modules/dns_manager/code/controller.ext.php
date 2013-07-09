@@ -126,7 +126,7 @@ class module_controller {
 
 
 
-static function DnsRecordField($type, $tts, $description, $userID, $domainID){
+static function DnsRecordField($type, $ttl, $description, $userID, $domainID){
         global $zdbh;
         global $controller;
         /* Begin DNS records */
@@ -143,7 +143,7 @@ static function DnsRecordField($type, $tts, $description, $userID, $domainID){
                 $custom_ip = NULL;
             }
 
-            $line .= '<!-- '.$type.' RECORDS -->';
+            $line = '<!-- '.$type.' RECORDS -->';
             $line .= '<div class="tab-pane '.$activeCss.'" id="type'.$type.'">';
             $line .= '<div class="description">' . $description . '</div>';
             $line .= '<div class="header row">';
@@ -1531,15 +1531,15 @@ $line .='
             //Check the temp zone record for errors
             if (file_exists($zonecheck_file)) {
                 ob_start();
-                
-                
+
+
                 $command = ctrl_options::GetSystemOption( 'named_checkzone' );
                 $args = array(
                     $domain[ 'dn_name_vc' ],
                     $zonecheck_file
                 );
                 $retval = ctrl_system::systemCommand( $command, $args );
-                
+
 
                 $content_grabbed = ob_get_contents();
                 ob_end_clean();var_dump($retval);
