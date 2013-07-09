@@ -11,8 +11,11 @@ INSERT INTO `x_settings`(`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defval
 INSERT INTO `x_settings`(`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values ('cron_reload_flag','Cron Reload Flags','-u',NULL,'Cron reload command flags in Linux Only','Cron Config','true');
 INSERT INTO `x_settings`(`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values ('cron_reload_user','Cron Reload User','apache',NULL,'Cron reload apache user in Linux','Cron Config','true');
 
-/* Update the ZPanel database version number */
-UPDATE  `zpanel_core`.`x_settings` SET  `so_value_tx` =  '10.0.3' WHERE  `so_name_vc` = 'dbversion';
+/* Reset theme for all users due to new theme which breaks older themes. */
+UPDATE `x_accounts` SET `ac_usertheme_vc` = 'zpanelx';
 
 /* Drop the redunent x_mysql table */
 DROP TABLE IF EXISTS `zpanel_core`.`x_mysql`;
+
+/* Update the ZPanel database version number */
+UPDATE  `zpanel_core`.`x_settings` SET  `so_value_tx` =  '10.0.3' WHERE  `so_name_vc` = 'dbversion';
