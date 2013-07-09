@@ -106,10 +106,6 @@ class module_controller {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
 
-        //function empty_as_0($value) {
-        //    return (empty($value)) ? 0 : $value;
-        //}
-
         self::$diskquota = $currentuser['diskquota'];
         self::$diskspace = ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']);
 
@@ -152,15 +148,6 @@ class module_controller {
         $usedLabel = fs_director::ShowHumanFileSize($used);
 
 
-        /*function build_row_usage($name, $used, $quota, $human = false) {
-            $res = '<tr><th nowrap="nowrap">' . ui_language::translate($name) . ':</th><td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used);
-            if ($quota < 0) {
-                $res .= '</td><td style="text-align:center">&#8734; ' . ui_language::translate('Unlimited') . ' &#8734;</td>';
-            } else {
-                $res .= ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td><td><img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . (($quota == 0 or $used == $quota) ? 100 : round($used / $quota * 100, 0)) . '"/>';
-            }
-            return $res . '</td></tr>';
-        }*/
         $line =
                 '<table class="none" cellpadding="0" cellspacing="0">' .
                 '<tr>' .
