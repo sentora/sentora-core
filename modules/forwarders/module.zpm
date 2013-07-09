@@ -72,9 +72,11 @@
                                 <td>
                                     <select name="inAddress" id="inAddress">
                                         <option value="" selected="selected">-- <: Select a mailbox :> --</option>
-                                        <% loop MailboxList %>
-                                        <option value="<& address &>"><& address &></option>
-                                        <% endloop %>
+                                        <% if MailboxList %>
+                                            <% loop MailboxList %>
+                                            <option value="<& address &>"><& address &></option>
+                                            <% endloop %>
+                                        <% endif %>
                                     </select>
                                 </td>
                             </tr>
