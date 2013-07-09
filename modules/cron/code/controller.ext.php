@@ -255,7 +255,7 @@ class module_controller
                 $rowclient = $fetchRows->fetch();
                 if ($rowclient && $rowclient['ac_enabled_in'] <> 0) {
                     $line .= "# CRON ID: " . $rowcron['ct_id_pk'] . "" . fs_filehandler::NewLine();
-                    $line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetSystemOption('php_exer') . " -d open_basedir=\"" . ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/" . ctrl_options::GetSystemOption('openbase_seperator') . ctrl_options::GetSystemOption('openbase_temp') . "\" " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
+                    $line .= "" . $rowcron['ct_timing_vc'] . " " . ctrl_options::GetSystemOption('php_exer') . " -d suhosin.executor.funclacklist=\"passthru, show_source, shell_exec, system, pcntl_exec, popen, pclose, proc_open, proc_nice, proc_terminate, proc_get_status, proc_close, leak, apache_child_terminate, posix_kill, posix_mkfifo, posix_setpgid, posix_setsid, posix_setuid, escapeshellcmd, escapeshellarg, exec\" -d open_basedir=\"" . ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/" . ctrl_options::GetSystemOption('openbase_seperator') . ctrl_options::GetSystemOption('openbase_temp') . "\" " . $rowcron['ct_fullpath_vc'] . "" . fs_filehandler::NewLine();
                     $line .= "# END CRON ID: " . $rowcron['ct_id_pk'] . "" . fs_filehandler::NewLine();
                 }
             }
