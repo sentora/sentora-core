@@ -58,8 +58,8 @@ INSERT  INTO `x_accounts` (
     `ac_resethash_tx`,
     `ac_created_ts`,
     `ac_deleted_ts`
-    ) 
-VALUES 
+    )
+VALUES
     (
     1,
     'zadmin',
@@ -73,7 +73,7 @@ VALUES
     'default',
     1,
     0,
-    'Welcome to your new ZPanel installation! You can remove this message from the Client Notice Manager module. This module allows you to notify your clients of service outages upgrades and new features etc :-)',
+    'Welcome to your new ZPanel installation! You can remove this message from the Client Notice Manager module. This module allows you to notify your clients of service outages, upgrades and new features etc :-)',
     NULL,
     0,
     NULL
