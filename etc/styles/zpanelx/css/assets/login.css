@@ -1,0 +1,140 @@
+/* Login Page Stylesheet */
+
+html, body {
+  background-color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+}
+a:link, a:visited {
+  color:#5fbf5e;
+  text-decoration:none;
+}
+a:hover, a:active {
+  color:#5fbf5e;
+  text-decoration:underline;
+}
+#clean-loader {
+   position: fixed;
+   left: 0px; 
+   right: 0px; 
+   top: 0px; 
+   bottom: 0px; 
+   height:100%;
+   width:100%;
+   background-color: white;
+   z-index: 1000;
+}
+.loginwrapper {
+  background-color: #fff;
+  height: 370px;
+  width: 400px;
+  padding:5px;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.logincontainer {
+  text-align:center;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  -webkit-box-shadow: 0px 0px 5px 2px rgba(239, 239, 239, .75);
+  -moz-box-shadow: 0px 0px 5px 2px rgba(239, 239, 239, .75);
+  box-shadow: 0px 0px 5px 2px rgba(239, 239, 239, .75);
+  border:1px solid #ccc;
+}
+.loginform {
+  margin:0;
+}
+.logalert {
+  position:relative;
+  bottom:497px;
+  margin:0 5px;
+}
+.logintop {
+  background: rgb(239,239,239); /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(239,239,239,1) 0%, rgba(239,239,239,1) 35%, rgba(247,247,247,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(239,239,239,1)), color-stop(35%,rgba(239,239,239,1)), color-stop(100%,rgba(247,247,247,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
+  padding:20px 0;
+  text-align:center;
+  -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  border-bottom:1px solid #ccc;
+}
+.loginmid {
+  background-color:#fefefe;
+  padding:20px 0 0 0;
+}
+.loginwrapper .form-horizontal .control-label{
+  float: left;
+  width: 140px;
+  padding: 5px 5px 0 0;
+  text-align:right;
+}
+.loginwrapper .form-horizontal .controls {
+  *display: inline-block;
+  *padding-left: 20px;
+  margin-left: 130px;
+  *margin-left: 0;
+}
+.loginwrapper .form-horizontal .controls {
+  text-align:left;
+}
+.logcheckbox {
+  position:relative;
+  bottom:10px;
+  right:10px;
+}
+.loginbtm {
+  background: rgb(239,239,239); /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(239,239,239,1) 0%, rgba(239,239,239,1) 35%, rgba(247,247,247,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(239,239,239,1)), color-stop(35%,rgba(239,239,239,1)), color-stop(100%,rgba(247,247,247,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 35%,rgba(247,247,247,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
+  padding:20px 0;
+  -webkit-border-radius: 0px 0px 5px 5px;
+  border-radius: 0px 0px 5px 5px;
+  border-top:1px solid #ccc;
+}
+.loginbtm > div {
+  display:inline-block;
+  width:49%;
+}
+.vbox {
+  text-align:center;
+  padding-top:10px;
+}
+@media (max-width: 767px) {
+  .loginwrapper {
+    width:100%;
+    height:100%;
+  }
+  .logalert {
+    width:auto;
+  }
+  .loginmid {
+    width:360px;
+    margin:auto;
+  }
+.loginwrapper {
+  background-color: #fff;
+  height: auto;
+  width: auto;
+  padding:0;
+  position: absolute;
+  top:53px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+}
