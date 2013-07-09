@@ -126,7 +126,7 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
             } else {
                 $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
                 if (fs_director::CheckFileExists($extra_config))
-                    exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
+					include($extra_config);
                 fwrite(STDOUT, "Module upgraded successfully!\n");
                 exit(0);
             }
@@ -153,7 +153,7 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
             fwrite(STDOUT, "Removing " . $argv[2] . " module..\n");
             $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/remove.run";
             if (fs_director::CheckFileExists($extra_config))
-                exec(ctrl_options::GetSystemOption('php_exer') . " " . $extra_config . "");
+                include($extra_config);
             ctrl_groups::DeleteGroupModulePermissions(0, $moduleid['mo_id_pk']);
             $sql = $zdbh->prepare("DELETE FROM x_modules WHERE mo_folder_vc = '$argv[2]'");
             $sql->execute();
