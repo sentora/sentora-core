@@ -12,20 +12,21 @@
  */
 class ctrl_system
 {
+
     /**
      * Safely run an escaped system() command.
      * @param string $command The command of which to be executed.
      * @param array $args Any arguments seperated by a space should be in a seperate array value.
      * @return string
      */
-    static function systemCommand( $command, array $args )
+    static function systemCommand($command, array $args)
     {
 
-        $escapedCommand = self::escapeCommand( $command );
-        $escapedArgs    = self::escapeArgs( $args );
-        $builtEscapedCommand = self::buildescapedCommand( $escapedCommand, $escapedArgs );
+        $escapedCommand = self::escapeCommand($command);
+        $escapedArgs = self::escapeArgs($args);
+        $builtEscapedCommand = self::buildescapedCommand($escapedCommand, $escapedArgs);
 
-        system( $builtEscapedCommand, $systemReturnValue );
+        system($builtEscapedCommand, $systemReturnValue);
 
         return $systemReturnValue;
     }
@@ -35,9 +36,9 @@ class ctrl_system
      * @param string $command The command to be escaped.
      * @return string
      */
-    static private function escapeCommand( $command )
+    static private function escapeCommand($command)
     {
-        return escapeshellcmd( $command );
+        return escapeshellcmd($command);
     }
 
     /**
@@ -45,12 +46,12 @@ class ctrl_system
      * @param array $args Array of arguments of which to be escaped.
      * @return array
      */
-    static private function escapeArgs( array $args )
+    static private function escapeArgs(array $args)
     {
-        $escapedArgs = array( );
+        $escapedArgs = array();
 
-        foreach ( $args as $arg ) {
-            $escapedArgs[ ] = escapeshellarg( $arg );
+        foreach ($args as $arg) {
+            $escapedArgs[] = escapeshellarg($arg);
         }
 
         return $escapedArgs;
@@ -62,11 +63,11 @@ class ctrl_system
      * @param array $escapedArgs
      * @return string
      */
-    static private function buildescapedCommand( $escapedCommand, array $escapedArgs )
+    static private function buildescapedCommand($escapedCommand, array $escapedArgs)
     {
         $escapedArgString = null;
 
-        foreach ( $escapedArgs as $escapedArg ) {
+        foreach ($escapedArgs as $escapedArg) {
             $escapedArgString .= " " . $escapedArg;
         }
 
