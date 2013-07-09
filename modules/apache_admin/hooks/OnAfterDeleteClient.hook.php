@@ -20,8 +20,17 @@ function DeleteApacheClientFiles() {
         $res = array();
         $sql->execute();
         while ($rowdeletedaccounts = $sql->fetch()) {
-            if (file_exists(ctrl_options::GetSystemOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc'])) {
-                fs_director::RemoveDirectory(ctrl_options::GetSystemOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc']);
+            // Check for an active user with same username
+            $sql2 = "SELECT COUNT(*) FROM x_accounts WHERE ac_user_vc=:user AND ac_deleted_ts IS NULL";
+            $numrows2 = $zdbh->prepare($sql2);
+            $user = $rowdeletedaccounts['ac_user_vc'];
+            $numrows2->bindParam(':user', $user);
+            if ($numrows2->execute()) {
+                if ($numrows2->fetchColumn() == 0) {
+                    if (file_exists(ctrl_options::GetSystemOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc'])) {
+                        fs_director::RemoveDirectory(ctrl_options::GetSystemOption('hosted_dir') . $rowdeletedaccounts['ac_user_vc']);
+                    }
+                }
             }
         }
     }
