@@ -11,7 +11,6 @@
     </div>
 
     <div class="zform_wrapper">
-        <h2><: Checking if your version of ZPanel is up to date... :></h2>
         <@ ZpanelUpdates @>
     </div>
 
