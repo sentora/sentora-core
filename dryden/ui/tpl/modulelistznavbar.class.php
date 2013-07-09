@@ -48,9 +48,9 @@ class ui_tpl_modulelistznavbar {
             $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk']);
 
             $line .= '<li class="dropdown">';
-
             // IF Account, show Gravatar Image
-            if($shortName == 'Account'){
+            if($shortName == '<: Account :>'){
+                
                 $currentuser = ctrl_users::GetUserDetail();
                 $image = self::get_gravatar($currentuser['email'], 22, 'mm', 'g', true);
                 $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$image.' '.$shortName.' <b class="caret"></b></a>';
@@ -72,7 +72,7 @@ class ui_tpl_modulelistznavbar {
             }
 
             // If Account tab, show Logout Menu Item
-            if($shortName == 'Account'){
+            if($shortName == '<: Account :>'){
                 $line .= '<li><a href="?logout"><i class="icon-phpinfo"></i> Logout</a></li>';
             }
 
