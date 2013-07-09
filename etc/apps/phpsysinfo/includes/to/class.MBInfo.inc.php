@@ -1,5 +1,4 @@
 <?php
-
 /**
  * MBInfo TO class
  *
@@ -13,8 +12,7 @@
  * @version   SVN: $Id: class.MBInfo.inc.php 253 2009-06-17 13:07:50Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * MBInfo TO class
  *
  * @category  PHP
@@ -25,8 +23,8 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class MBInfo {
-
+class MBInfo
+{
     /**
      * array with SensorDevices for temperatures
      *
@@ -61,7 +59,8 @@ class MBInfo {
      *
      * @return Array
      */
-    public function getMbFan() {
+    public function getMbFan()
+    {
         return $this->_mbFan;
     }
 
@@ -74,7 +73,8 @@ class MBInfo {
      *
      * @return Void
      */
-    public function setMbFan($mbFan) {
+    public function setMbFan($mbFan)
+    {
         array_push($this->_mbFan, $mbFan);
     }
 
@@ -85,7 +85,8 @@ class MBInfo {
      *
      * @return Array
      */
-    public function getMbTemp() {
+    public function getMbTemp()
+    {
         return $this->_mbTemp;
     }
 
@@ -98,7 +99,8 @@ class MBInfo {
      *
      * @return Void
      */
-    public function setMbTemp($mbTemp) {
+    public function setMbTemp($mbTemp)
+    {
         array_push($this->_mbTemp, $mbTemp);
     }
 
@@ -109,7 +111,8 @@ class MBInfo {
      *
      * @return Array
      */
-    public function getMbVolt() {
+    public function getMbVolt()
+    {
         return $this->_mbVolt;
     }
 
@@ -122,10 +125,8 @@ class MBInfo {
      *
      * @return Void
      */
-    public function setMbVolt($mbVolt) {
+    public function setMbVolt($mbVolt)
+    {
         array_push($this->_mbVolt, $mbVolt);
     }
-
 }
-
-?>

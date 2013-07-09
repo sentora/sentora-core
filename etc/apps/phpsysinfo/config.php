@@ -1,269 +1,203 @@
 <?php
+if (!defined('PSI_CONFIG_FILE')) {
+    /**
+     * phpSysInfo version
+     */
+    define('PSI_VERSION','3.1.5');
+    /**
+     * phpSysInfo configuration
+     */
+    define('PSI_CONFIG_FILE', APP_ROOT.'/phpsysinfo.ini');
 
-/**
- * PSI Config File
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PSI
- * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
- * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: config.php.new 521 2011-11-06 17:29:25Z namiltd $
- * @link      http://phpsysinfo.sourceforge.net
- */
-// ********************************
-//        MAIN PARAMETERS
-// ********************************
+    define('ARRAY_EXP', '/^return array \([^;]*\);$/'); //array expression search
 
-/**
- * Turn on debugging of some functions and include errors and warnings in xml and provide a popup for displaying errors
- * - false : no debug information are stored in xml or displayed
- * - true : debug information stored in xml and displayed *be careful if set this to true, may include sensitive information from your pc*
- */
-define('PSI_DEBUG', false);
+    if (!is_readable(PSI_CONFIG_FILE) || !($config = @parse_ini_file(PSI_CONFIG_FILE, true))) {
+        $tpl = new Template("/templates/html/error_config.html");
+        echo $tpl->fetch();
+        die();
+    } else {
+        foreach ($config as $name=>$group) {
+            if (strtoupper($name)=="MAIN") {
+                $name_prefix='PSI_';
+            } else {
+                $name_prefix='PSI_PLUGIN_'.strtoupper($name).'_';
+            }
+            foreach ($group as $param=>$value) {
+                if (($value==="") || ($value==="0")) {
+                    define($name_prefix.strtoupper($param), false);
+                } elseif ($value==1) {
+                    define($name_prefix.strtoupper($param), true);
+                } else {
+                    if (strstr($value, ',')) {
+                        define($name_prefix.strtoupper($param), 'return '.var_export(preg_split('/\s*,\s*/', $value, -1, PREG_SPLIT_NO_EMPTY),1).';');
+                    } else {
+                        define($name_prefix.strtoupper($param), $value);
+                    }
+                }
+            }
+        }
+    }
 
-/**
- * Turn on/off compression for JavaScript file
- * - define('PSI_JS_COMPRESSION', false); //no compression (recommended with slow processor)
- * - define('PSI_JS_COMPRESSION', 'None'); //code minimizing
- * - define('PSI_JS_COMPRESSION', 'Normal'); //code packing
- */
-define('PSI_JS_COMPRESSION', 'Normal');
+    /* default error handler */
+    if (function_exists('errorHandlerPsi')) {
+        restore_error_handler();
+    }
 
-/**
- * Additional paths where to look for installed programs
- * Example : define('PSI_ADD_PATHS', '/opt/bin,/opt/sbin');
- */
-define('PSI_ADD_PATHS', false);
+    /* fatal errors only */
+    $old_err_rep = error_reporting();
+    error_reporting(E_ERROR);
 
-/**
- * Plugins that should be included in xml and output (!!!plugin names are case-sensitive!!!)
- * List of plugins should look like "plugin,plugin,plugin". See /plugins directory
- * - define('PSI_PLUGINS', 'MDStatus,PS'); // list of plugins
- * - define('PSI_PLUGINS', false); //no plugins
- * included plugins:
- * - MDStatus       - show the raid status and whats currently going on
- * - PS             - show a process tree of all running processes
- * - PSStatus       - show a graphical representation if a process is running or not
- * - Quotas         - show a table with all quotas that are active and there current state
- * - SMART          - show S.M.A.R.T. information from drives that support it
- * - BAT            - show battery state on a laptop
- * - ipmi           - show IPMI status
- * - UpdateNotifier - show update notifications (only for Ubuntu server)
- * - SNMPPInfo      - show printers info via SNMP
- */
-define('PSI_PLUGINS', false);
+    /* get git revision */
+    if (file_exists(APP_ROOT.'/.git/HEAD')) {
+        $contents = @file_get_contents(APP_ROOT.'/.git/HEAD');
+        if ($contents && preg_match("/^ref:\s+(.*)\/([^\/\s]*)/m", $contents, $matches)) {
+            $contents = @file_get_contents(APP_ROOT.'/.git/'.$matches[1]."/".$matches[2]);
+            if ($contents && preg_match("/^([^\s]*)/m", $contents, $revision)) {
+                define('PSI_VERSION_STRING', PSI_VERSION ."-".$matches[2]."-".substr($revision[1],0,7));
+            } else {
+                define('PSI_VERSION_STRING', PSI_VERSION ."-".$matches[2]);
+            }
+        }
+    }
+    /* get svn revision */
+    if (!defined('PSI_VERSION_STRING') && file_exists(APP_ROOT.'/.svn/entries')) {
+        $contents = @file_get_contents(APP_ROOT.'/.svn/entries');
+        if ($contents && preg_match("/dir\n(.+)/", $contents, $matches)) {
+            define('PSI_VERSION_STRING', PSI_VERSION."-r".$matches[1]);
+        } else {
+            define('PSI_VERSION_STRING', PSI_VERSION);
+        }
+    }
+    if (!defined('PSI_VERSION_STRING')) {
+        define('PSI_VERSION_STRING', PSI_VERSION);
+    }
 
+    if (!defined('PSI_OS')) { //if not overloaded in phpsysinfo.ini
+        /* get Linux code page */
+        if (PHP_OS == 'Linux') {
+            if (file_exists('/etc/sysconfig/i18n')) {
+                $contents = @file_get_contents('/etc/sysconfig/i18n');
+            } elseif (file_exists('/etc/default/locale')) {
+                $contents = @file_get_contents('/etc/default/locale');
+            } elseif (file_exists('/etc/locale.conf')) {
+                $contents = @file_get_contents('/etc/locale.conf');
+            } elseif (file_exists('/etc/sysconfig/language')) {
+                $contents = @file_get_contents('/etc/sysconfig/language');
+            } else {
+                $contents = false;
+                if (file_exists('/system/build.prop')) { //Android
+                    define('PSI_OS', 'Android');
+                    if (!defined('PSI_MODE_POPEN')) { //if not overloaded in phpsysinfo.ini
+                        if (!function_exists("proc_open")) { //proc_open function test by executing 'pwd' command
+                            define('PSI_MODE_POPEN', true); //use popen() function - no stderr error handling
+                        } else {
+                            $out = '';
+                            $err = '';
+                            $pipes = array();
+                            $descriptorspec = array(0=>array("pipe", "r"), 1=>array("pipe", "w"), 2=>array("pipe", "w"));
+                            $process = proc_open("pwd 2>/dev/null ", $descriptorspec, $pipes);
+                            if (!is_resource($process)) {
+                                define('PSI_MODE_POPEN', true);
+                            } else {
+                                $w = null;
+                                $e = null;
+                                $read = array($pipes[1],$pipes[2]);
+                                while (!(feof($pipes[1]) && feof($pipes[2])) && ($n = stream_select($read, $w, $e, 5)) !== false && $n > 0) {
+                                    $out .= fread($pipes[1], 4096);
+                                    $err .= fread($pipes[2], 4096);
+                                }
+                                if (is_null($out) || (trim($out) == "") || (substr(trim($out),0 ,1) != "/")) {
+                                    define('PSI_MODE_POPEN', true);
+                                }
+                                fclose($pipes[0]);
+                                fclose($pipes[1]);
+                                fclose($pipes[2]);
+                                // It is important that you close any pipes before calling
+                                // proc_close in order to avoid a deadlock
+                                proc_close($process);
+                            }
+                        }
+                    }
+                }
+            }
+            if (!(defined('PSI_SYSTEM_CODEPAGE') && defined('PSI_SYSTEM_LANG')) //also if both not overloaded in phpsysinfo.ini
+               && $contents && ( preg_match('/^(LANG="?[^"\n]*"?)/m', $contents, $matches)
+               || preg_match('/^RC_(LANG="?[^"\n]*"?)/m', $contents, $matches))) {
+                if (!defined('PSI_SYSTEM_CODEPAGE') && @exec($matches[1].' locale -k LC_CTYPE 2>/dev/null', $lines)) { //if not overloaded in phpsysinfo.ini
+                    foreach ($lines as $line) {
+                        if (preg_match('/^charmap="?([^"]*)/', $line, $matches2)) {
+                            define('PSI_SYSTEM_CODEPAGE', $matches2[1]);
+                            break;
+                        }
+                    }
+                }
+                if (!defined('PSI_SYSTEM_LANG') && @exec($matches[1].' locale 2>/dev/null', $lines)) { //also if not overloaded in phpsysinfo.ini
+                    foreach ($lines as $line) {
+                        if (preg_match('/^LC_MESSAGES="?([^\."@]*)/', $line, $matches2)) {
+                            $lang = "";
+                            if (is_readable(APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(APP_ROOT.'/data/languages.ini', true))) {
+                                if (isset($langdata['Linux']['_'.$matches2[1]])) {
+                                    $lang = $langdata['Linux']['_'.$matches2[1]];
+                                }
+                            }
+                            if ($lang == "") {
+                                $lang = 'Unknown';
+                            }
+                            define('PSI_SYSTEM_LANG', $lang.' ('.$matches2[1].')');
+                            break;
+                        }
+                    }
+                }
+            }
+        } elseif (PHP_OS == 'Haiku') {
+            if (!(defined('PSI_SYSTEM_CODEPAGE') && defined('PSI_SYSTEM_LANG')) //also if both not overloaded in phpsysinfo.ini
+                && @exec('locale -m 2>/dev/null', $lines)) {
+                foreach ($lines as $line) {
+                    if (preg_match('/^"?([^\."]*)\.?([^"]*)/', $line, $matches2)) {
 
-// ********************************
-//       DISPLAY PARAMETERS
-// ********************************
+                        if (!defined('PSI_SYSTEM_CODEPAGE') && isset($matches2[2]) && !is_null($matches2[2]) && (trim($matches2[2]) != "") ) { //also if not overloaded in phpsysinfo.ini
+                            define('PSI_SYSTEM_CODEPAGE', $matches2[2]);
+                        }
 
-/**
- * Define the default display mode
- * auto: let user browser choose the mode
- * dynamic: use javascript to refresh data
- * static: static page (use metatag to reload page)
- */
-define('PSI_DEFAULT_DISPLAY_MODE', 'auto');
+                        if (!defined('PSI_SYSTEM_LANG')) { //if not overloaded in phpsysinfo.ini
+                            $lang = "";
+                            if (is_readable(APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(APP_ROOT.'/data/languages.ini', true))) {
+                                if (isset($langdata['Linux']['_'.$matches2[1]])) {
+                                    $lang = $langdata['Linux']['_'.$matches2[1]];
+                                }
+                            }
+                            if ($lang == "") {
+                                $lang = 'Unknown';
+                            }
+                            define('PSI_SYSTEM_LANG', $lang.' ('.$matches2[1].')');
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-/**
- * Define the default language
- */
-define('PSI_DEFAULT_LANG', 'en');
+    if (!defined('PSI_OS')) {
+        define('PSI_OS', PHP_OS);
+    }
 
-/**
- * Define the default template
- */
-define('PSI_DEFAULT_TEMPLATE', 'clean');
+    if ((PSI_OS=='Android') && !defined('PSI_SYSTEM_CODEPAGE')) { //also if not overloaded in phpsysinfo.ini
+        define('PSI_SYSTEM_CODEPAGE', 'UTF-8');
+    }
 
-/**
- * Show or hide language picklist
- */
-define('PSI_SHOW_PICKLIST_LANG', true);
+    if (!defined('PSI_SYSTEM_LANG')) {
+        define('PSI_SYSTEM_LANG', null);
+    }
+    if (!defined('PSI_SYSTEM_CODEPAGE')) {
+        define('PSI_SYSTEM_CODEPAGE', null);
+    }
 
-/**
- * Show or hide template picklist
- */
-define('PSI_SHOW_PICKLIST_TEMPLATE', true);
+    /* restore error level */
+    error_reporting($old_err_rep);
 
-/**
- * Define the interval for refreshing data in ms
- * - 0 = disabled
- * - 1000 = 1 second
- * - Default is 60 seconds
- */
-define('PSI_REFRESH', 60000);
-
-/**
- * Show a graph for current cpuload
- * - true = displayed, but it's a performance hit (because we have to wait to get a value, 1 second)
- * - false = will not be displayed
- */
-define('PSI_LOAD_BAR', false);
-
-/**
- * Display the virtual host name and address
- * - Default is canonical host name and address
- * - Use define('PSI_USE_VHOST', true); to display virtual host name.
- */
-define('PSI_USE_VHOST', false);
-
-/**
- * Controls the units & format for network, memory and filesystem
- * - 1 KiB = 2^10 bytes = 1,024 bytes
- * - 1 KB = 10^3 bytes = 1,000 bytes
- * - 'PiB'    everything is in PeBiByte
- * - 'TiB'    everything is in TeBiByte
- * - 'GiB'    everything is in GiBiByte
- * - 'MiB'    everything is in MeBiByte
- * - 'KiB'    everything is in KiBiByte
- * - 'auto_binary' everything is automatic done if value is to big for, e.g MiB then it will be in GiB
- * - 'PB'    everything is in PetaByte
- * - 'TB'    everything is in TeraByte
- * - 'GB'    everything is in GigaByte
- * - 'MB'    everything is in MegaByte
- * - 'KB'    everything is in KiloByte
- * - 'auto_decimal' everything is automatic done if value is to big for, e.g MB then it will be in GB
- */
-define('PSI_BYTE_FORMAT', 'auto_binary');
-
-/**
- * Format in which temperature is displayed
- * - 'c'    shown in celsius
- * - 'f'    shown in fahrenheit
- * - 'c-f'  both shown first celsius and fahrenheit in braces
- * - 'f-c'  both shown first fahrenheit and celsius in braces
- */
-define('PSI_TEMP_FORMAT', 'c');
-
-
-// ********************************
-//       SENSORS PARAMETERS
-// ********************************
-
-/**
- * Define the motherboard monitoring program (!!!names are case-sensitive!!!)
- * We support the following programs so far
- * - LMSensors  http://www.lm-sensors.org/
- * - Healthd    http://healthd.thehousleys.net/
- * - HWSensors  http://www.openbsd.org/
- * - MBMon      http://www.nt.phys.kyushu-u.ac.jp/shimizu/download/download.html
- * - MBM5       http://mbm.livewiredev.com/
- * - Coretemp
- * - IPMI       http://openipmi.sourceforge.net/
- * - K8Temp     http://hur.st/k8temp/
- * Example: If you want to use lmsensors : define('PSI_SENSOR_PROGRAM', 'LMSensors');
- */
-define('PSI_SENSOR_PROGRAM', false);
-
-/**
- * Define how to access the monitor program
- * Available methods for the above list are in the following list
- * default method 'command' should be fine for everybody
- * !!! tcp connections are only made local and on the default port !!!
- * - LMSensors  command, file
- * - Healthd    command
- * - HWSensors  command
- * - MBMon      command, tcp
- * - MBM5       file
- * - Coretemp   command
- * - IPMI       command
- * - K8Temp     command
- */
-define('PSI_SENSOR_ACCESS', 'command');
-
-/**
- * Hddtemp program
- * If the hddtemp program is available we can read the temperature, if hdd is smart capable
- * !!ATTENTION!! hddtemp might be a security issue
- * - define('PSI_HDD_TEMP', 'tcp');	     // read data from hddtemp deamon (localhost:7634)
- * - define('PSI_HDD_TEMP', 'command');  // read data from hddtemp programm (must be set suid)
- */
-define('PSI_HDD_TEMP', false);
-
-
-// ********************************
-//      FILESYSTEM PARAMETERS
-// ********************************
-
-/**
- * Show mount point
- * - true = show mount point
- * - false = do not show mount point
- */
-define('PSI_SHOW_MOUNT_POINT', true);
-
-/**
- * Show mount option
- * - true = show mount option
- * - false = do not show mount option
- */
-define('PSI_SHOW_MOUNT_OPTION', true);
-
-/**
- * Show mount credentials
- * - true = show mount credentials
- * - false = do not show mount credentials
- */
-define('PSI_SHOW_MOUNT_CREDENTIALS', false);
-
-/**
- * Show inode usage
- * - true = display used inodes in percent
- * - false = hide them
- */
-define('PSI_SHOW_INODES', true);
-
-/**
- * Hide mounts
- * Example : define('PSI_HIDE_MOUNTS', '/home,/usr');
- */
-define('PSI_HIDE_MOUNTS', '');
-
-/**
- * Hide filesystem types
- * Example : define('PSI_HIDE_FS_TYPES', 'tmpfs,usbfs');
- */
-define('PSI_HIDE_FS_TYPES', '');
-
-/**
- * Hide partitions
- * Example : define('PSI_HIDE_DISKS', 'rootfs');
- */
-define('PSI_HIDE_DISKS', '');
-
-
-// ********************************
-//      NETWORK PARAMETERS
-// ********************************
-
-/**
- * Hide network interfaces
- * Example : define('PSI_HIDE_NETWORK_INTERFACE', 'eth0,sit0');
- */
-define('PSI_HIDE_NETWORK_INTERFACE', '');
-
-
-// ********************************
-//        UPS PARAMETERS
-// ********************************
-
-/**
- * Define the ups monitoring program (!!!names are case-sensitive!!!)
- * We support the following programs so far
- * - 1. Apcupsd  http://www.apcupsd.com/
- * - 2. Nut      http://www.networkupstools.org/
- * Example: If you want to use Apcupsd : define('PSI_UPS_PROGRAM', 'Apcupsd');
- */
-define('PSI_UPS_PROGRAM', false);
-
-/**
- * Apcupsd supports multiple UPSes
- * You can specify comma delimited list in the form <hostname>:<port> or <ip>:<port>. The defaults are: 127.0.0.1:3551
- * See the following parameters in apcupsd.conf: NETSERVER, NISIP, NISPORT
- */
-define('PSI_UPS_APCUPSD_LIST', '127.0.0.1:3551');
-?>
+    /* restore error handler */
+    if (function_exists('errorHandlerPsi')) {
+        set_error_handler('errorHandlerPsi');
+    }
+}

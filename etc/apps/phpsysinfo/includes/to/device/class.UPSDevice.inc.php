@@ -1,5 +1,4 @@
 <?php
-
 /**
  * UPSDevice TO class
  *
@@ -13,8 +12,7 @@
  * @version   SVN: $Id: class.UPSDevice.inc.php 262 2009-06-22 10:48:33Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * UPSDevice TO class
  *
  * @category  PHP
@@ -25,8 +23,8 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class UPSDevice {
-
+class UPSDevice
+{
     /**
      * name of the ups
      *
@@ -132,7 +130,8 @@ class UPSDevice {
      *
      * @return integer
      */
-    public function getBatterCharge() {
+    public function getBatterCharge()
+    {
         return $this->_batterCharge;
     }
 
@@ -145,7 +144,8 @@ class UPSDevice {
      *
      * @return void
      */
-    public function setBatterCharge($batterCharge) {
+    public function setBatterCharge($batterCharge)
+    {
         $this->_batterCharge = $batterCharge;
     }
 
@@ -156,7 +156,8 @@ class UPSDevice {
      *
      * @return Integer
      */
-    public function getBatteryVoltage() {
+    public function getBatteryVoltage()
+    {
         return $this->_batteryVoltage;
     }
 
@@ -169,7 +170,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setBatteryVoltage($batteryVoltage) {
+    public function setBatteryVoltage($batteryVoltage)
+    {
         $this->_batteryVoltage = $batteryVoltage;
     }
 
@@ -180,7 +182,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getLastOutage() {
+    public function getLastOutage()
+    {
         return $this->_lastOutage;
     }
 
@@ -193,7 +196,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setLastOutage($lastOutage) {
+    public function setLastOutage($lastOutage)
+    {
         $this->_lastOutage = $lastOutage;
     }
 
@@ -204,7 +208,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getLastOutageFinish() {
+    public function getLastOutageFinish()
+    {
         return $this->_lastOutageFinish;
     }
 
@@ -217,7 +222,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setLastOutageFinish($lastOutageFinish) {
+    public function setLastOutageFinish($lastOutageFinish)
+    {
         $this->_lastOutageFinish = $lastOutageFinish;
     }
 
@@ -228,7 +234,8 @@ class UPSDevice {
      *
      * @return Integer
      */
-    public function getLineVoltage() {
+    public function getLineVoltage()
+    {
         return $this->_lineVoltage;
     }
 
@@ -241,7 +248,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setLineVoltage($lineVoltage) {
+    public function setLineVoltage($lineVoltage)
+    {
         $this->_lineVoltage = $lineVoltage;
     }
 
@@ -252,7 +260,8 @@ class UPSDevice {
      *
      * @return Integer
      */
-    public function getLoad() {
+    public function getLoad()
+    {
         return $this->_load;
     }
 
@@ -265,7 +274,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setLoad($load) {
+    public function setLoad($load)
+    {
         $this->_load = $load;
     }
 
@@ -276,7 +286,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getMode() {
+    public function getMode()
+    {
         return $this->_mode;
     }
 
@@ -289,7 +300,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setMode($mode) {
+    public function setMode($mode)
+    {
         $this->_mode = $mode;
     }
 
@@ -300,7 +312,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getModel() {
+    public function getModel()
+    {
         return $this->_model;
     }
 
@@ -313,7 +326,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setModel($model) {
+    public function setModel($model)
+    {
         $this->_model = $model;
     }
 
@@ -324,7 +338,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->_name;
     }
 
@@ -337,7 +352,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->_name = $name;
     }
 
@@ -348,7 +364,8 @@ class UPSDevice {
      *
      * @return Integer
      */
-    public function getOutages() {
+    public function getOutages()
+    {
         return $this->_outages;
     }
 
@@ -361,7 +378,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setOutages($outages) {
+    public function setOutages($outages)
+    {
         $this->_outages = $outages;
     }
 
@@ -372,7 +390,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getStartTime() {
+    public function getStartTime()
+    {
         return $this->_startTime;
     }
 
@@ -385,7 +404,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setStartTime($startTime) {
+    public function setStartTime($startTime)
+    {
         $this->_startTime = $startTime;
     }
 
@@ -396,7 +416,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->_status;
     }
 
@@ -409,7 +430,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->_status = $status;
     }
 
@@ -420,7 +442,8 @@ class UPSDevice {
      *
      * @return Integer
      */
-    public function getTemperatur() {
+    public function getTemperatur()
+    {
         return $this->_temperatur;
     }
 
@@ -433,7 +456,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setTemperatur($temperatur) {
+    public function setTemperatur($temperatur)
+    {
         $this->_temperatur = $temperatur;
     }
 
@@ -444,7 +468,8 @@ class UPSDevice {
      *
      * @return String
      */
-    public function getTimeLeft() {
+    public function getTimeLeft()
+    {
         return $this->_timeLeft;
     }
 
@@ -457,10 +482,8 @@ class UPSDevice {
      *
      * @return Void
      */
-    public function setTimeLeft($timeLeft) {
+    public function setTimeLeft($timeLeft)
+    {
         $this->_timeLeft = $timeLeft;
     }
-
 }
-
-?>

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * start page for webaccess
  *
@@ -10,11 +9,10 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.WebpageXSLT.inc.php 222 2009-05-25 09:12:08Z bigmichi1 $
+ * @version   SVN: $Id: class.WebpageXSLT.inc.php 569 2012-04-16 06:08:18Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * generate a static webpage with xslt trasformation of the xml
  *
  * @category  PHP
@@ -25,12 +23,13 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class WebpageXSLT extends WebpageXML implements PSI_Interface_Output {
-
+class WebpageXSLT extends WebpageXML implements PSI_Interface_Output
+{
     /**
      * call the parent constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(false, null);
     }
 
@@ -39,7 +38,8 @@ class WebpageXSLT extends WebpageXML implements PSI_Interface_Output {
      *
      * @return void
      */
-    public function run() {
+    public function run()
+    {
         CommonFunctions::checkForExtensions(array('xsl'));
         $xmlfile = $this->getXMLString();
         $xslfile = "phpsysinfo.xslt";
@@ -51,7 +51,4 @@ class WebpageXSLT extends WebpageXML implements PSI_Interface_Output {
         $xsltproc->importStyleSheet($domxsl);
         echo $xsltproc->transformToXML($domxml);
     }
-
 }
-
-?>

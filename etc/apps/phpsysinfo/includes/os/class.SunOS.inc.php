@@ -1,38 +1,36 @@
 <?php
-
 /**
  * SunOS System Class
  *
  * PHP version 5
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI SunOS OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.SunOS.inc.php 287 2009-06-26 12:11:59Z bigmichi1 $
+ * @version   SVN: $Id: class.SunOS.inc.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * SunOS sysinfo class
  * get all the required information from SunOS systems
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI SunOS OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class SunOS extends OS {
-
+class SunOS extends OS
+{
     /**
      * add warning to errors
      */
-    public function __construct() {
-        $this->error->addError("WARN", "The SunOS version of phpSysInfo is work in progress, some things currently don't work");
+    public function __construct()
+    {
     }
 
     /**
@@ -42,9 +40,11 @@ class SunOS extends OS {
      *
      * @return string
      */
-    private function _kstat($key) {
-        if (CommonFunctions::executeProgram('kstat', '-p d ' . $key, $m, PSI_DEBUG)) {
+    private function _kstat($key)
+    {
+        if (CommonFunctions::executeProgram('kstat', '-p d '.$key, $m, PSI_DEBUG)) {
             list($key, $value) = preg_split("/\t/", trim($m), 2);
+
             return $value;
         } else {
             return '';
@@ -56,7 +56,8 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _hostname() {
+    private function _hostname()
+    {
         if (PSI_USE_VHOST === true) {
             $this->sys->setHostname(getenv('SERVER_NAME'));
         } else {
@@ -74,12 +75,13 @@ class SunOS extends OS {
      *
      *  @return void
      */
-    private function _ip() {
+    private function _ip()
+    {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setIp(gethostbyname($this->_hostname()));
+            $this->sys->setIp(gethostbyname($this->sys->getHostname()));
         } else {
             if (!($result = getenv('SERVER_ADDR'))) {
-                $this->sys->setIp(gethostbyname($this->_hostname()));
+                $this->sys->setIp(gethostbyname($this->sys->getHostname()));
             } else {
                 $this->sys->setIp($result);
             }
@@ -91,10 +93,11 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _kernel() {
+    private function _kernel()
+    {
         if (CommonFunctions::executeProgram('uname', '-s', $os, PSI_DEBUG)) {
             if (CommonFunctions::executeProgram('uname', '-r', $version, PSI_DEBUG)) {
-                $this->sys->setKernel($os . ' ' . $version);
+                $this->sys->setKernel($os.' '.$version);
             } else {
                 $this->sys->setKernel($os);
             }
@@ -107,7 +110,8 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _uptime() {
+    private function _uptime()
+    {
         $this->sys->setUptime(time() - $this->_kstat('unix:0:system_misc:boot_time'));
     }
 
@@ -116,7 +120,8 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _users() {
+    private function _users()
+    {
         if (CommonFunctions::executeProgram('who', '-q', $buf, PSI_DEBUG)) {
             $who = preg_split('/=/', $buf);
             $this->sys->setUsers($who[1]);
@@ -129,11 +134,12 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _loadavg() {
+    private function _loadavg()
+    {
         $load1 = $this->_kstat('unix:0:system_misc:avenrun_1min');
         $load5 = $this->_kstat('unix:0:system_misc:avenrun_5min');
         $load15 = $this->_kstat('unix:0:system_misc:avenrun_15min');
-        $this->sys->setLoad(round($load1 / 256, 2) . ' ' . round($load5 / 256, 2) . ' ' . round($load15 / 256, 2));
+        $this->sys->setLoad(round($load1 / 256, 2).' '.round($load5 / 256, 2).' '.round($load15 / 256, 2));
     }
 
     /**
@@ -141,7 +147,8 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _cpuinfo() {
+    private function _cpuinfo()
+    {
         $dev = new CpuDevice();
         if (CommonFunctions::executeProgram('uname', '-i', $buf, PSI_DEBUG)) {
             $dev->setModel(trim($buf));
@@ -156,26 +163,27 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _network() {
+    private function _network()
+    {
         if (CommonFunctions::executeProgram('netstat', '-ni | awk \'(NF ==10){print;}\'', $netstat, PSI_DEBUG)) {
             $lines = preg_split("/\n/", $netstat, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($lines as $line) {
                 $ar_buf = preg_split("/\s+/", $line);
-                if (!empty($ar_buf[0]) && $ar_buf[0] !== 'Name') {
+                if (! empty($ar_buf[0]) && $ar_buf[0] !== 'Name') {
                     $dev = new NetDevice();
                     $dev->setName($ar_buf[0]);
                     $results[$ar_buf[0]]['errs'] = $ar_buf[5] + $ar_buf[7];
                     preg_match('/^(\D+)(\d+)$/', $ar_buf[0], $intf);
-                    $prefix = $intf[1] . ':' . $intf[2] . ':' . $intf[1] . $intf[2] . ':';
-                    $cnt = $this->_kstat($prefix . 'drop');
+                    $prefix = $intf[1].':'.$intf[2].':'.$intf[1].$intf[2].':';
+                    $cnt = $this->_kstat($prefix.'drop');
                     if ($cnt > 0) {
                         $dev->setDrops($cnt);
                     }
-                    $cnt = $this->_kstat($prefix . 'obytes64');
+                    $cnt = $this->_kstat($prefix.'obytes64');
                     if ($cnt > 0) {
                         $dev->setTxBytes($cnt);
                     }
-                    $cnt = $this->_kstat($prefix . 'rbytes64');
+                    $cnt = $this->_kstat($prefix.'rbytes64');
                     if ($cnt > 0) {
                         $dev->setRxBytes($cnt);
                     }
@@ -190,7 +198,8 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _memory() {
+    private function _memory()
+    {
         $pagesize = $this->_kstat('unix:0:seg_cache:slab_size');
         $this->sys->setMemTotal($this->_kstat('unix:0:system_pages:pagestotal') * $pagesize);
         $this->sys->setMemUsed($this->_kstat('unix:0:system_pages:pageslocked') * $pagesize);
@@ -209,7 +218,8 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _filesystems() {
+    private function _filesystems()
+    {
         if (CommonFunctions::executeProgram('df', '-k', $df, PSI_DEBUG)) {
             $mounts = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($mounts as $mount) {
@@ -240,7 +250,8 @@ class SunOS extends OS {
      *
      * @return void
      */
-    private function _distro() {
+    private function _distro()
+    {
         $this->sys->setDistribution('SunOS');
         $this->sys->setDistributionIcon('SunOS.png');
     }
@@ -252,9 +263,11 @@ class SunOS extends OS {
      *
      * @return Void
      */
-    function build() {
-        $this->_ip();
+    public function build()
+    {
+        $this->error->addError("WARN", "The SunOS version of phpSysInfo is a work in progress, some things currently don't work");
         $this->_hostname();
+        $this->_ip();
         $this->_distro();
         $this->_kernel();
         $this->_uptime();
@@ -265,7 +278,4 @@ class SunOS extends OS {
         $this->_memory();
         $this->_filesystems();
     }
-
 }
-
-?>

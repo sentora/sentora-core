@@ -1,6 +1,6 @@
 /*
  $Id*
-*/
+ */
 a {
     text-decoration: none;
     color: #c03000;
@@ -133,6 +133,10 @@ h2 {
 
 .bar {
     background: #2971a7;
+}
+
+.barwarn {
+    background: #a72971;
 }
 
 p {

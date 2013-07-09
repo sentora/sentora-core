@@ -1,6 +1,6 @@
 /*
  $Id
-*/ * {
+ */ * {
     margin: 0;
     padding: 0;
 }
@@ -142,6 +142,10 @@ a:hover {
 
 .bar {
     background-color: #58626D;
+}
+
+.barwarn {
+    background-color: #9B2F65;
 }
 
 .right {

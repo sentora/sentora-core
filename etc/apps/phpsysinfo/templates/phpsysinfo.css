@@ -1,6 +1,6 @@
 /*
- $Id: phpsysinfo.css 518 2011-10-28 08:09:07Z namiltd $
-*/
+ $Id: phpsysinfo.css 589 2012-07-01 09:58:44Z namiltd $
+ */
 a {
     text-decoration: none;
     color: #c03000;
@@ -28,8 +28,8 @@ body {
     padding: 20px 20px 0 20px;
     font: 0.75em arial, tahoma, helvetica, sans-serif;
     color: #000;
-    background: #fff url("../gfx/body.gif") repeat-y; 
-    _background: #fff; /* ie6 */
+    background: #fff url("../gfx/body.gif") repeat-y;
+    _bac\kground: #fff; /* ie6 only */
 }
 
 h1 {
@@ -122,6 +122,10 @@ h3 {
 
 .bar {
     background: #C1DC70 url("../gfx/html.gif");
+}
+
+.barwarn {
+    background: #DC8B70 url("../gfx/htmlwarn.gif");
 }
 
 p {

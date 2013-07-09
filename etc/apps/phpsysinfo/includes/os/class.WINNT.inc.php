@@ -1,40 +1,38 @@
 <?php
-
 /**
  * WINNT System Class
  *
  * PHP version 5
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI WINNT OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.WINNT.inc.php 329 2009-09-07 11:21:44Z bigmichi1 $
+ * @version   SVN: $Id: class.WINNT.inc.php 699 2012-09-15 11:57:13Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * WINNT sysinfo class
  * get all the required information from WINNT systems
  * information are retrieved through the WMI interface
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI WINNT OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class WINNT extends OS {
-
+class WINNT extends OS
+{
     /**
      * holds the COM object that we pull all the WMI data from
      *
      * @var Object
      */
-    private $_wmi;
+    private $_wmi = null;
 
     /**
      * holds all devices, which are in the system
@@ -48,24 +46,36 @@ class WINNT extends OS {
      *
      * @var string
      */
-    private $_charset = "";
+    private $_codepage = null;
+
+    /**
+     * store language of the system
+     *
+     * @var string
+     */
+    private $_syslang = null;
 
     /**
      * build the global Error object and create the WMI connection
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         // don't set this params for local connection, it will not work
         $strHostname = '';
         $strUser = '';
         $strPassword = '';
+        try {
+            // initialize the wmi object
+            $objLocator = new COM('WbemScripting.SWbemLocator');
+            if ($strHostname == "") {
+                $this->_wmi = $objLocator->ConnectServer();
 
-        // initialize the wmi object
-        $objLocator = new COM('WbemScripting.SWbemLocator');
-        if ($strHostname == "") {
-            $this->_wmi = $objLocator->ConnectServer();
-        } else {
-            $this->_wmi = $objLocator->ConnectServer($strHostname, 'rootcimv2', $strHostname . '\\' . $strUser, $strPassword);
+            } else {
+                $this->_wmi = $objLocator->ConnectServer($strHostname, 'rootcimv2', $strHostname.'\\'.$strUser, $strPassword);
+            }
+        } catch (Exception $e) {
+            $this->error->addError("WMI connect error", "PhpSysInfo can not connect to the WMI interface for security reasons.\nCheck an authentication mechanism for the directory where phpSysInfo is installed.");
         }
         $this->_getCodeSet();
     }
@@ -75,9 +85,22 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _getCodeSet() {
-        $buffer = $this->_getWMI('Win32_OperatingSystem', array('CodeSet'));
-        $this->_charset = 'windows-' . $buffer[0]['CodeSet'];
+    private function _getCodeSet()
+    {
+        $buffer = $this->_getWMI('Win32_OperatingSystem', array('CodeSet','OSLanguage'));
+        if ($buffer) {
+            $this->_codepage = 'windows-'.$buffer[0]['CodeSet'];
+            $lang = "";
+            if (is_readable(APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(APP_ROOT.'/data/languages.ini', true))) {
+                if (isset($langdata['WINNT'][$buffer[0]['OSLanguage']])) {
+                    $lang = $langdata['WINNT'][$buffer[0]['OSLanguage']];
+                }
+            }
+            if ($lang == "") {
+                $lang = 'Unknown';
+            }
+            $this->_syslang = $lang.' ('.$buffer[0]['OSLanguage'].')';
+        }
     }
 
     /**
@@ -89,35 +112,41 @@ class WINNT extends OS {
      *
      * @return array content of the class stored in an array
      */
-    private function _getWMI($strClass, $strValue = array()) {
+    private function _getWMI($strClass, $strValue = array())
+    {
         $arrData = array();
-        $value = "";
-        try {
-            $objWEBM = $this->_wmi->Get($strClass);
-            $arrProp = $objWEBM->Properties_;
-            $arrWEBMCol = $objWEBM->Instances_();
-            foreach ($arrWEBMCol as $objItem) {
-                if (is_array($arrProp)) {
-                    reset($arrProp);
-                }
-                $arrInstance = array();
-                foreach ($arrProp as $propItem) {
-                    eval("\$value = \$objItem->" . $propItem->Name . ";");
-                    if (empty($strValue)) {
-                        $arrInstance[$propItem->Name] = trim($value);
-                    } else {
-                        if (in_array($propItem->Name, $strValue)) {
-                            $arrInstance[$propItem->Name] = trim($value);
+        if ($this->_wmi) {
+            $value = "";
+            try {
+                $objWEBM = $this->_wmi->Get($strClass);
+                $arrProp = $objWEBM->Properties_;
+                $arrWEBMCol = $objWEBM->Instances_();
+                foreach ($arrWEBMCol as $objItem) {
+                    if (is_array($arrProp)) {
+                        reset($arrProp);
+                    }
+                    $arrInstance = array();
+                    foreach ($arrProp as $propItem) {
+                        eval("\$value = \$objItem->".$propItem->Name.";");
+                        if ( empty($strValue)) {
+                            if (is_string($value)) $arrInstance[$propItem->Name] = trim($value);
+                            else $arrInstance[$propItem->Name] = $value;
+                        } else {
+                            if (in_array($propItem->Name, $strValue)) {
+                                if (is_string($value)) $arrInstance[$propItem->Name] = trim($value);
+                                else $arrInstance[$propItem->Name] = $value;
+                            }
                         }
                     }
+                    $arrData[] = $arrInstance;
                 }
-                $arrData[] = $arrInstance;
-            }
-        } catch (Exception $e) {
-            if (PSI_DEBUG) {
-                $this->error->addError($e->getCode(), $e->getMessage());
+            } catch (Exception $e) {
+                if (PSI_DEBUG) {
+                    $this->error->addError($e->getCode(), $e->getMessage());
+                }
             }
         }
+
         return $arrData;
     }
 
@@ -128,16 +157,18 @@ class WINNT extends OS {
      *
      * @return array list of devices of the specified type
      */
-    private function _devicelist($strType) {
-        if (empty($this->_wmidevices)) {
+    private function _devicelist($strType)
+    {
+        if ( empty($this->_wmidevices)) {
             $this->_wmidevices = $this->_getWMI('Win32_PnPEntity', array('Name', 'PNPDeviceID'));
         }
         $list = array();
         foreach ($this->_wmidevices as $device) {
-            if (substr($device['PNPDeviceID'], 0, strpos($device['PNPDeviceID'], "\\") + 1) == ($strType . "\\")) {
+            if (substr($device['PNPDeviceID'], 0, strpos($device['PNPDeviceID'], "\\") + 1) == ($strType."\\")) {
                 $list[] = $device['Name'];
             }
         }
+
         return $list;
     }
 
@@ -146,15 +177,20 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _hostname() {
+    private function _hostname()
+    {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setHostname(getenv('SERVER_NAME'));
+            if ($hnm = getenv('SERVER_NAME')) $this->sys->setHostname($hnm);
         } else {
             $buffer = $this->_getWMI('Win32_ComputerSystem', array('Name'));
-            $result = $buffer[0]['Name'];
-            $ip = gethostbyname($result);
-            if ($ip != $result) {
-                $this->sys->setHostname(gethostbyaddr($ip));
+            if ($buffer) {
+                $result = $buffer[0]['Name'];
+                $ip = gethostbyname($result);
+                if ($ip != $result) {
+                    $this->sys->setHostname(gethostbyaddr($ip));
+                }
+            } else {
+                if ($hnm = getenv('COMPUTERNAME')) $this->sys->setHostname($hnm);
             }
         }
     }
@@ -164,13 +200,20 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _ip() {
+    private function _ip()
+    {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setIp(gethostbyname($this->_hostname()));
+            if ( (($hnm=$this->sys->getHostname()) != 'localhost') &&
+                 (($hip=gethostbyname($hnm)) != $hnm) ) $this->sys->setIp($hip);
         } else {
             $buffer = $this->_getWMI('Win32_ComputerSystem', array('Name'));
-            $result = $buffer[0]['Name'];
-            $this->sys->setIp(gethostbyname($result));
+            if ($buffer) {
+                $result = $buffer[0]['Name'];
+                $this->sys->setIp(gethostbyname($result));
+            } else {
+            if ( (($hnm=$this->sys->getHostname()) != 'localhost') &&
+                 (($hip=gethostbyname($hnm)) != $hnm) ) $this->sys->setIp($hip);
+            }
         }
     }
 
@@ -180,26 +223,29 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _uptime() {
+    private function _uptime()
+    {
         $result = 0;
         date_default_timezone_set('UTC');
         $buffer = $this->_getWMI('Win32_OperatingSystem', array('LastBootUpTime', 'LocalDateTime'));
-        $byear = intval(substr($buffer[0]['LastBootUpTime'], 0, 4));
-        $bmonth = intval(substr($buffer[0]['LastBootUpTime'], 4, 2));
-        $bday = intval(substr($buffer[0]['LastBootUpTime'], 6, 2));
-        $bhour = intval(substr($buffer[0]['LastBootUpTime'], 8, 2));
-        $bminute = intval(substr($buffer[0]['LastBootUpTime'], 10, 2));
-        $bseconds = intval(substr($buffer[0]['LastBootUpTime'], 12, 2));
-        $lyear = intval(substr($buffer[0]['LocalDateTime'], 0, 4));
-        $lmonth = intval(substr($buffer[0]['LocalDateTime'], 4, 2));
-        $lday = intval(substr($buffer[0]['LocalDateTime'], 6, 2));
-        $lhour = intval(substr($buffer[0]['LocalDateTime'], 8, 2));
-        $lminute = intval(substr($buffer[0]['LocalDateTime'], 10, 2));
-        $lseconds = intval(substr($buffer[0]['LocalDateTime'], 12, 2));
-        $boottime = mktime($bhour, $bminute, $bseconds, $bmonth, $bday, $byear);
-        $localtime = mktime($lhour, $lminute, $lseconds, $lmonth, $lday, $lyear);
-        $result = $localtime - $boottime;
-        $this->sys->setUptime($result);
+        if ($buffer) {
+            $byear = intval(substr($buffer[0]['LastBootUpTime'], 0, 4));
+            $bmonth = intval(substr($buffer[0]['LastBootUpTime'], 4, 2));
+            $bday = intval(substr($buffer[0]['LastBootUpTime'], 6, 2));
+            $bhour = intval(substr($buffer[0]['LastBootUpTime'], 8, 2));
+            $bminute = intval(substr($buffer[0]['LastBootUpTime'], 10, 2));
+            $bseconds = intval(substr($buffer[0]['LastBootUpTime'], 12, 2));
+            $lyear = intval(substr($buffer[0]['LocalDateTime'], 0, 4));
+            $lmonth = intval(substr($buffer[0]['LocalDateTime'], 4, 2));
+            $lday = intval(substr($buffer[0]['LocalDateTime'], 6, 2));
+            $lhour = intval(substr($buffer[0]['LocalDateTime'], 8, 2));
+            $lminute = intval(substr($buffer[0]['LocalDateTime'], 10, 2));
+            $lseconds = intval(substr($buffer[0]['LocalDateTime'], 12, 2));
+            $boottime = mktime($bhour, $bminute, $bseconds, $bmonth, $bday, $byear);
+            $localtime = mktime($lhour, $lminute, $lseconds, $lmonth, $lday, $lyear);
+            $result = $localtime - $boottime;
+            $this->sys->setUptime($result);
+        }
     }
 
     /**
@@ -207,7 +253,8 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _users() {
+    private function _users()
+    {
         $users = 0;
         $buffer = $this->_getWMI('Win32_Process', array('Caption'));
         foreach ($buffer as $process) {
@@ -223,23 +270,43 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _distro() {
-        $buffer = $this->_getWMI('Win32_OperatingSystem', array('Version', 'ServicePackMajorVersion'));
-        $kernel = $buffer[0]['Version'];
-        if ($buffer[0]['ServicePackMajorVersion'] > 0) {
-            $kernel .= ' SP' . $buffer[0]['ServicePackMajorVersion'];
-        }
-        $this->sys->setKernel($kernel);
+    private function _distro()
+    {
+        $buffer = $this->_getWMI('Win32_OperatingSystem', array('Version', 'ServicePackMajorVersion', 'Caption'));
+        if ($buffer) {
+            $kernel = $buffer[0]['Version'];
+            if ($buffer[0]['ServicePackMajorVersion'] > 0) {
+                $kernel .= ' SP'.$buffer[0]['ServicePackMajorVersion'];
+            }
+            $this->sys->setKernel($kernel);
+            $this->sys->setDistribution($buffer[0]['Caption']);
 
-        $buffer = $this->_getWMI('Win32_OperatingSystem', array('Caption'));
-        $this->sys->setDistribution($buffer[0]['Caption']);
-
-        if ($kernel[0] == 6) {
-            $icon = 'vista.png';
+            if ((($kernel[1] == ".") && ($kernel[0] <5)) || (substr($kernel,0,4) == "5.0."))
+                $icon = 'Win2000.png';
+            elseif ((substr($kernel,0,4) == "6.0.") || (substr($kernel,0,4) == "6.1."))
+                $icon = 'WinVista.png';
+            elseif (substr($kernel,0,4) == "6.2.")
+                $icon = 'Win8.png';
+            else
+                $icon = 'WinXP.png';
+            $this->sys->setDistributionIcon($icon);
+        } elseif (CommonFunctions::executeProgram("cmd", "/c ver 2>nul", $ver_value, false)) {
+                if (preg_match("/ReactOS\nVersion\s+(.+)/", $ver_value, $ar_temp)) {
+                    $this->sys->setDistribution("ReactOS");
+                    $this->sys->setKernel($ar_temp[1]);
+                    $this->sys->setDistributionIcon('ReactOS.png');
+                } elseif (preg_match("/^(Microsoft [^\[]*)\s*\[\D*\s*(.+)\]/", $ver_value, $ar_temp)) {
+                    $this->sys->setDistribution($ar_temp[1]);
+                    $this->sys->setKernel($ar_temp[2]);
+                    $this->sys->setDistributionIcon('Win2000.png');
+                } else {
+                    $this->sys->setDistribution("WinNT");
+                    $this->sys->setDistributionIcon('Win2000.png');
+                }
         } else {
-            $icon = 'xp.png';
-        }
-        $this->sys->setDistributionIcon($icon);
+            $this->sys->setDistribution("WinNT");
+            $this->sys->setDistributionIcon('Win2000.png');
+       }
     }
 
     /**
@@ -248,13 +315,14 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _loadavg() {
+    private function _loadavg()
+    {
         $loadavg = "";
         $sum = 0;
         $buffer = $this->_getWMI('Win32_Processor', array('LoadPercentage'));
         foreach ($buffer as $load) {
             $value = $load['LoadPercentage'];
-            $loadavg .= $value . ' ';
+            $loadavg .= $value.' ';
             $sum += $value;
         }
         $this->sys->setLoad(trim($loadavg));
@@ -268,7 +336,8 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _cpuinfo() {
+    private function _cpuinfo()
+    {
         $allCpus = $this->_getWMI('Win32_Processor', array('Name', 'L2CacheSize', 'CurrentClockSpeed', 'ExtClock', 'NumberOfCores'));
         foreach ($allCpus as $oneCpu) {
             $coreCount = 1;
@@ -291,7 +360,8 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _hardware() {
+    private function _hardware()
+    {
         foreach ($this->_devicelist('PCI') as $pciDev) {
             $dev = new HWDevice();
             $dev->setName($pciDev);
@@ -322,25 +392,56 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _network() {
-        foreach ($this->_getWMI('Win32_PerfRawData_Tcpip_NetworkInterface') as $device) {
-            $dev = new NetDevice();
-            $dev->setName($device['Name']);
+    private function _network()
+    {
+        $allDevices = $this->_getWMI('Win32_PerfRawData_Tcpip_NetworkInterface', array('Name', 'BytesSentPersec', 'BytesTotalPersec', 'BytesReceivedPersec', 'PacketsReceivedErrors', 'PacketsReceivedDiscarded'));
+        if (defined('PSI_SHOW_NETWORK_INFOS') && PSI_SHOW_NETWORK_INFOS)
+           $allNetworkAdapterConfigurations = $this->_getWMI('Win32_NetworkAdapterConfiguration', array('Description', 'MACAddress', 'IPAddress'));
+
+        foreach ($allDevices as $device) {
+           $dev = new NetDevice();
+           $name=$device['Name'];
+
+           $cname=preg_replace('/[^A-Za-z0-9]/', '_', $name); //convert to canonical
+           if (preg_match('/\s-\s([^-]*)$/', $name, $ar_name))
+                $name=substr($name,0,strlen($name)-strlen($ar_name[0]));
+           $dev->setName($name);
+
+           if (defined('PSI_SHOW_NETWORK_INFOS') && PSI_SHOW_NETWORK_INFOS) foreach ($allNetworkAdapterConfigurations as $NetworkAdapterConfiguration) {
+                   if ( preg_replace('/[^A-Za-z0-9]/', '_', $NetworkAdapterConfiguration['Description']) == $cname ) {
+                       $dev->setInfo(preg_replace('/:/', '-', $NetworkAdapterConfiguration['MACAddress']));
+                       foreach( $NetworkAdapterConfiguration['IPAddress'] as $ipaddres)
+                           if (($ipaddres!="0.0.0.0") && !preg_match('/^fe80::/i',$ipaddres))
+                                 $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ipaddres);
+
+                       break;
+                   }
+            }
+
             // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmisdk/wmi/win32_perfrawdata_tcpip_networkinterface.asp
             // there is a possible bug in the wmi interfaceabout uint32 and uint64: http://www.ureader.com/message/1244948.aspx, so that
             // magative numbers would occour, try to calculate the nagative value from total - positive number
             $txbytes = $device['BytesSentPersec'];
-            if ($txbytes < 0) {
-                $txbytes = $device['BytesTotalPersec'] - $device['BytesReceivedPersec'];
+            $rxbytes = $device['BytesReceivedPersec'];
+            if (($txbytes < 0) && ($rxbytes < 0)) {
+                $txbytes += 4294967296;
+                $rxbytes += 4294967296;
+            } elseif ($txbytes < 0) {
+                if ($device['BytesTotalPersec'] > $rxbytes)
+                   $txbytes = $device['BytesTotalPersec'] - $rxbytes;
+                else
+                   $txbytes += 4294967296;
+            } elseif ($rxbytes < 0) {
+                if ($device['BytesTotalPersec'] > $txbytes)
+                   $rxbytes = $device['BytesTotalPersec'] - $txbytes;
+                else
+                   $rxbytes += 4294967296;
             }
             $dev->setTxBytes($txbytes);
-            $rxbytes = $device['BytesReceivedPersec'];
-            if ($rxbytes < 0) {
-                $rxbytes = $device['BytesTotalPersec'] - $device['BytesSentPersec'];
-            }
             $dev->setRxBytes($rxbytes);
             $dev->setErrors($device['PacketsReceivedErrors']);
             $dev->setDrops($device['PacketsReceivedDiscarded']);
+
             $this->sys->setNetDevices($dev);
         }
     }
@@ -352,12 +453,14 @@ class WINNT extends OS {
      * @link http://msdn2.microsoft.com/en-us/library/aa394246.aspx
      * @return void
      */
-    private function _memory() {
+    private function _memory()
+    {
         $buffer = $this->_getWMI("Win32_OperatingSystem", array('TotalVisibleMemorySize', 'FreePhysicalMemory'));
-        $this->sys->setMemTotal($buffer[0]['TotalVisibleMemorySize'] * 1024);
-        $this->sys->setMemFree($buffer[0]['FreePhysicalMemory'] * 1024);
-        $this->sys->setMemUsed($this->sys->getMemTotal() - $this->sys->getMemFree());
-
+        if ($buffer) {
+            $this->sys->setMemTotal($buffer[0]['TotalVisibleMemorySize'] * 1024);
+            $this->sys->setMemFree($buffer[0]['FreePhysicalMemory'] * 1024);
+            $this->sys->setMemUsed($this->sys->getMemTotal() - $this->sys->getMemFree());
+        }
         $buffer = $this->_getWMI('Win32_PageFileUsage');
         foreach ($buffer as $swapdevice) {
             $dev = new DiskDevice();
@@ -376,7 +479,8 @@ class WINNT extends OS {
      *
      * @return void
      */
-    private function _filesystems() {
+    private function _filesystems()
+    {
         $typearray = array('Unknown', 'No Root Directory', 'Removable Disk', 'Local Disk', 'Network Drive', 'Compact Disc', 'RAM Disk');
         $floppyarray = array('Unknown', '5 1/4 in.', '3 1/2 in.', '3 1/2 in.', '3 1/2 in.', '3 1/2 in.', '5 1/4 in.', '5 1/4 in.', '5 1/4 in.', '5 1/4 in.', '5 1/4 in.', 'Other', 'HD', '3 1/2 in.', '3 1/2 in.', '5 1/4 in.', '5 1/4 in.', '3 1/2 in.', '3 1/2 in.', '5 1/4 in.', '3 1/2 in.', '3 1/2 in.', '8 in.');
         $buffer = $this->_getWMI('Win32_LogicalDisk', array('Name', 'Size', 'FreeSpace', 'FileSystem', 'DriveType', 'MediaType'));
@@ -390,11 +494,32 @@ class WINNT extends OS {
                 $dev->setUsed($filesystem['Size'] - $filesystem['FreeSpace']);
             }
             if ($filesystem['MediaType'] != "" && $filesystem['DriveType'] == 2) {
-                $dev->setName($typearray[$filesystem['DriveType']] . " (" . $floppyarray[$filesystem['MediaType']] . ")");
+                $dev->setName($typearray[$filesystem['DriveType']]." (".$floppyarray[$filesystem['MediaType']].")");
             } else {
                 $dev->setName($typearray[$filesystem['DriveType']]);
             }
             $this->sys->setDiskDevices($dev);
+        }
+        if (!$buffer && ($this->sys->getDistribution()=="ReactOS")) {
+            // test for command 'free' on current disk
+            if (CommonFunctions::executeProgram("cmd", "/c free 2>nul", $out_value, true)) {
+                for ($letter='A'; $letter!='AA'; $letter++) if (CommonFunctions::executeProgram("cmd", "/c free ".$letter.": 2>nul", $out_value, false)) {
+                   if (preg_match('/\n\s*([\d\.\,]+).*\n\s*([\d\.\,]+).*\n\s*([\d\.\,]+).*$/',$out_value, $out_dig )) {
+                       $size = preg_replace('/(\.)|(\,)/', '', $out_dig[1]);
+                       $used = preg_replace('/(\.)|(\,)/', '', $out_dig[2]);
+                       $free = preg_replace('/(\.)|(\,)/', '', $out_dig[3]);
+                       if ($used + $free == $size) {
+                           $dev = new DiskDevice();
+                           $dev->setMountPoint($letter.":");
+                           $dev->setFsType('Unknown');
+                           $dev->setTotal($size);
+                           $dev->setFree($free);
+                           $dev->setUsed($used);
+                           $this->sys->setDiskDevices($dev);
+                       }
+                   }
+                }
+            }
         }
     }
 
@@ -405,8 +530,21 @@ class WINNT extends OS {
      *
      * @return string
      */
-    function getEncoding() {
-        return $this->_charset;
+    public function getEncoding()
+    {
+        return $this->_codepage;
+    }
+
+    /**
+     * get os specific language
+     *
+     * @see OS::getLanguage()
+     *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->_syslang;
     }
 
     /**
@@ -416,10 +554,14 @@ class WINNT extends OS {
      *
      * @return Void
      */
-    function build() {
-        $this->_ip();
+    public function build()
+    {
         $this->_hostname();
+        $this->_ip();
         $this->_distro();
+        if ($this->sys->getDistribution()=="ReactOS") {
+            $this->error->addError("WARN", "The ReactOS version of phpSysInfo is a work in progress, some things currently don't work");
+        }
         $this->_users();
         $this->_uptime();
         $this->_cpuinfo();
@@ -429,7 +571,4 @@ class WINNT extends OS {
         $this->_memory();
         $this->_loadavg();
     }
-
 }
-
-?>

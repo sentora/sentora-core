@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //
-// $Id: phpsysinfo.js 518 2011-10-28 08:09:07Z namiltd $
+// $Id: phpsysinfo.js 699 2012-09-15 11:57:13Z namiltd $
 //
 
 /*global $, jQuery */
@@ -76,16 +76,20 @@ function readCookie(name) {
  */
 function round(x, n) {
     var e = 0, k = "";
-    if (n < 1 || n > 14) {
+    if (n < 0 || n > 14) {
         return 0;
     }
-    e = Math.pow(10, n);
-    k = (Math.round(x * e) / e).toString();
-    if (k.indexOf('.') === -1) {
-        k += '.';
+    if (n === 0) {
+        return Math.round(x);
+    } else {
+        e = Math.pow(10, n);
+        k = (Math.round(x * e) / e).toString();
+        if (k.indexOf('.') === -1) {
+            k += '.';
+        }
+        k += e.toString().substring(1);
+        return k.substring(0, k.indexOf('.') + n + 1);
     }
-    k += e.toString().substring(1);
-    return k.substring(0, k.indexOf('.') + n + 1);
 }
 
 /**
@@ -264,9 +268,9 @@ function filesystemtable() {
     html += "          <tbody>\n";
     html += "          </tbody>\n";
     html += "        </table>\n";
-    
+
     $("#filesystem").append(html);
-    
+
     filesystemTable = $("#filesystemTable").dataTable({
         "bPaginate": false,
         "bLengthChange": false,
@@ -334,7 +338,7 @@ function displayPage(xml) {
     $("#container").fadeIn("slow");
     versioni = $("Generation", xml).attr("version").toString();
     $("#version").html(versioni);
-    
+
     $("Options", xml).each(function getOptions(id) {
         var showPickListLang = "", showPickListTemplate = "";
         showPickListLang = $(this).attr("showPickListLang");
@@ -400,107 +404,123 @@ function formatHertz(mhertz) {
  */
 function formatBytes(bytes, xml) {
     var byteFormat = "", show = "";
-    
+
     $("Options", xml).each(function getByteFormat(id) {
         byteFormat = $(this).attr("byteFormat");
     });
-    
-    switch (byteFormat) {
-        case "PiB":
-            show += round(bytes / Math.pow(1024, 5), 2);
-            show += "&nbsp;" + genlang(90, true);
-            break;
-        case "TiB":
-            show += round(bytes / Math.pow(1024, 4), 2);
-            show += "&nbsp;" + genlang(86, true);
-            break;
-        case "GiB":
-            show += round(bytes / Math.pow(1024, 3), 2);
-            show += "&nbsp;" + genlang(87, true);
-            break;
-        case "MiB":
-            show += round(bytes / Math.pow(1024, 2), 2);
-            show += "&nbsp;" + genlang(88, true);
-            break;
-        case "KiB":
-            show += round(bytes / Math.pow(1024, 1), 2);
-            show += "&nbsp;" + genlang(89, true);
-            break;
-        case "PB":
+
+    switch (byteFormat.toLowerCase()) {
+    case "pib":
+        show += round(bytes / Math.pow(1024, 5), 2);
+        show += "&nbsp;" + genlang(90, true);
+        break;
+    case "tib":
+        show += round(bytes / Math.pow(1024, 4), 2);
+        show += "&nbsp;" + genlang(86, true);
+        break;
+    case "gib":
+        show += round(bytes / Math.pow(1024, 3), 2);
+        show += "&nbsp;" + genlang(87, true);
+        break;
+    case "mib":
+        show += round(bytes / Math.pow(1024, 2), 2);
+        show += "&nbsp;" + genlang(88, true);
+        break;
+    case "kib":
+        show += round(bytes / Math.pow(1024, 1), 2);
+        show += "&nbsp;" + genlang(89, true);
+        break;
+    case "pb":
+        show += round(bytes / Math.pow(1000, 5), 2);
+        show += "&nbsp;" + genlang(91, true);
+        break;
+    case "tb":
+        show += round(bytes / Math.pow(1000, 4), 2);
+        show += "&nbsp;" + genlang(85, true);
+        break;
+    case "gb":
+        show += round(bytes / Math.pow(1000, 3), 2);
+        show += "&nbsp;" + genlang(41, true);
+        break;
+    case "mb":
+        show += round(bytes / Math.pow(1000, 2), 2);
+        show += "&nbsp;" + genlang(40, true);
+        break;
+    case "kb":
+        show += round(bytes / Math.pow(1000, 1), 2);
+        show += "&nbsp;" + genlang(39, true);
+        break;
+    case "b":
+        show += bytes;
+        show += "&nbsp;" + genlang(96, true);
+        break;
+    case "auto_decimal":
+        if (bytes > Math.pow(1000, 5)) {
             show += round(bytes / Math.pow(1000, 5), 2);
             show += "&nbsp;" + genlang(91, true);
-            break;
-        case "TB":
-            show += round(bytes / Math.pow(1000, 4), 2);
-            show += "&nbsp;" + genlang(85, true);
-            break;
-        case "GB":
-            show += round(bytes / Math.pow(1000, 3), 2);
-            show += "&nbsp;" + genlang(41, true);
-            break;
-        case "MB":
-            show += round(bytes / Math.pow(1000, 2), 2);
-            show += "&nbsp;" + genlang(40, true);
-            break;
-        case "KB":
-            show += round(bytes / Math.pow(1000, 1), 2);
-            show += "&nbsp;" + genlang(39, true);
-            break;
-        case "auto_decimal":
-            if (bytes > Math.pow(1000, 5)) {
-                show += round(bytes / Math.pow(1000, 5), 2);
-                show += "&nbsp;" + genlang(91, true);
+        }
+        else {
+            if (bytes > Math.pow(1000, 4)) {
+                show += round(bytes / Math.pow(1000, 4), 2);
+                show += "&nbsp;" + genlang(85, true);
             }
             else {
-                if (bytes > Math.pow(1000, 4)) {
-                    show += round(bytes / Math.pow(1000, 4), 2);
-                    show += "&nbsp;" + genlang(85, true);
+                if (bytes > Math.pow(1000, 3)) {
+                    show += round(bytes / Math.pow(1000, 3), 2);
+                    show += "&nbsp;" + genlang(41, true);
                 }
                 else {
-                    if (bytes > Math.pow(1000, 3)) {
-                        show += round(bytes / Math.pow(1000, 3), 2);
-                        show += "&nbsp;" + genlang(41, true);
+                    if (bytes > Math.pow(1000, 2)) {
+                        show += round(bytes / Math.pow(1000, 2), 2);
+                        show += "&nbsp;" + genlang(40, true);
                     }
                     else {
-                        if (bytes > Math.pow(1000, 2)) {
-                            show += round(bytes / Math.pow(1000, 2), 2);
-                            show += "&nbsp;" + genlang(40, true);
-                        }
-                        else {
+                        if (bytes > Math.pow(1000, 1)) {
                             show += round(bytes / Math.pow(1000, 1), 2);
                             show += "&nbsp;" + genlang(39, true);
                         }
+                        else {
+                                show += bytes;
+                                show += "&nbsp;" + genlang(96, true);
+                        }
                     }
                 }
             }
-            break;
-        default:
-            if (bytes > Math.pow(1024, 5)) {
-                show += round(bytes / Math.pow(1024, 5), 2);
-                show += "&nbsp;" + genlang(90, true);
+        }
+        break;
+    default:
+        if (bytes > Math.pow(1024, 5)) {
+            show += round(bytes / Math.pow(1024, 5), 2);
+            show += "&nbsp;" + genlang(90, true);
+        }
+        else {
+            if (bytes > Math.pow(1024, 4)) {
+                show += round(bytes / Math.pow(1024, 4), 2);
+                show += "&nbsp;" + genlang(86, true);
             }
             else {
-                if (bytes > Math.pow(1024, 4)) {
-                    show += round(bytes / Math.pow(1024, 4), 2);
-                    show += "&nbsp;" + genlang(86, true);
+                if (bytes > Math.pow(1024, 3)) {
+                    show += round(bytes / Math.pow(1024, 3), 2);
+                    show += "&nbsp;" + genlang(87, true);
                 }
                 else {
-                    if (bytes > Math.pow(1024, 3)) {
-                        show += round(bytes / Math.pow(1024, 3), 2);
-                        show += "&nbsp;" + genlang(87, true);
+                    if (bytes > Math.pow(1024, 2)) {
+                        show += round(bytes / Math.pow(1024, 2), 2);
+                        show += "&nbsp;" + genlang(88, true);
                     }
                     else {
-                        if (bytes > Math.pow(1024, 2)) {
-                            show += round(bytes / Math.pow(1024, 2), 2);
-                            show += "&nbsp;" + genlang(88, true);
-                        }
-                        else {
+                        if (bytes > Math.pow(1024, 1)) {
                             show += round(bytes / Math.pow(1024, 1), 2);
                             show += "&nbsp;" + genlang(89, true);
                         }
+                        else {
+                            show += bytes;
+                            show += "&nbsp;" + genlang(96, true);
+                        }
                     }
                 }
             }
+        }
     }
     return show;
 }
@@ -513,36 +533,39 @@ function formatBytes(bytes, xml) {
  */
 function formatTemp(degreeC, xml) {
     var tempFormat = "", degree = 0;
-    
+
     $("Options", xml).each(function getOptions(id) {
         tempFormat = $(this).attr("tempFormat").toString().toLowerCase();
     });
-    
+
     degree = parseFloat(degreeC);
     if (isNaN(degreeC)) {
         return "---";
     }
     else {
         switch (tempFormat) {
-            case "f":
-                return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true);
-            case "c":
-                return round(degree, 1) + "&nbsp;" + genlang(60, true);
-            case "c-f":
-                return round(degree, 1) + "&nbsp;" + genlang(60, true) + "<br><i>(" + round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + ")</i>";
-            case "f-c":
-                return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + "<br><i>(" + round(degree, 1) + "&nbsp;" + genlang(60, true) + ")</i>";
+        case "f":
+            return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true);
+        case "c":
+            return round(degree, 1) + "&nbsp;" + genlang(60, true);
+        case "c-f":
+            return round(degree, 1) + "&nbsp;" + genlang(60, true) + "<br><i>(" + round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + ")</i>";
+        case "f-c":
+            return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true) + "<br><i>(" + round(degree, 1) + "&nbsp;" + genlang(60, true) + ")</i>";
         }
     }
 }
 
 /**
  * create a visual HTML bar from a given size, the layout of that bar can be costumized through the bar css-class
- * @param {Number} size
+ * @param {Number} size barclass
  * @return {String} HTML string which contains the full layout of the bar
  */
-function createBar(size) {
-    return "<div class=\"bar\" style=\"float:left; width: " + size + "px;\">&nbsp;</div>&nbsp;" + size + "%";
+function createBar(size, barclass) {
+    if (barclass === undefined) {
+        barclass = "bar";
+    }
+    return "<div class=\"" + barclass + "\" style=\"float:left; width: " + size + "px;\">&nbsp;</div>&nbsp;" + size + "%";
 }
 
 /**
@@ -551,8 +574,9 @@ function createBar(size) {
  */
 function refreshVitals(xml) {
     var hostname = "", ip = "", kernel = "", distro = "", icon = "", uptime = "", users = 0, loadavg = "";
+    var syslang = "", codepage = "";
     var lastboot = 0, timestamp = Number(new Date());
-    
+
     $("Vitals", xml).each(function getVitals(id) {
         hostname = $(this).attr("Hostname");
         ip = $(this).attr("IPAddr");
@@ -566,6 +590,18 @@ function refreshVitals(xml) {
         if ($(this).attr("CPULoad") !== undefined) {
             loadavg = loadavg + "<br/>" + createBar(parseInt($(this).attr("CPULoad"), 10));
         }
+        if ($(this).attr("SysLang") !== undefined) {
+            syslang = $(this).attr("SysLang");
+            document.getElementById("s_syslang_tr").style.display='';
+        }
+        if ($(this).attr("CodePage") !== undefined) {
+            codepage = $(this).attr("CodePage");
+            if ($(this).attr("SysLang") !== undefined) {
+                document.getElementById("s_codepage_tr1").style.display='';
+            } else {
+                document.getElementById("s_codepage_tr2").style.display='';
+            }
+        }
         document.title = "System information: " + hostname + " (" + ip + ")";
         $("#s_hostname_title").html(hostname);
         $("#s_ip_title").html(ip);
@@ -577,6 +613,9 @@ function refreshVitals(xml) {
         $("#s_lastboot").html(lastboot.toGMTString()); //toGMTString() or toLocaleString()
         $("#s_users").html(users);
         $("#s_loadavg").html(loadavg);
+        $("#s_syslang").html(syslang);
+        $("#s_codepage_1").html(codepage);
+        $("#s_codepage_2").html(codepage);
     });
 }
 
@@ -590,10 +629,12 @@ function refreshVitals(xml) {
 function fillCpu(xml, tree, rootposition, collapsed) {
     var cpucount = 0, html = "";
     $("Hardware CPU CpuCore", xml).each(function getCpuCore(cpuCoreId) {
-        var model = "", speed = 0, bus = 0, cache = 0, bogo = 0, temp = 0, load = 0, cpucoreposition = 0, virt = "";
+        var model = "", speed = 0, bus = 0, cache = 0, bogo = 0, temp = 0, load = 0, speedmax = 0, speedmin = 0, cpucoreposition = 0, virt = "";
         cpucount += 1;
         model = $(this).attr("Model");
         speed = parseInt($(this).attr("CpuSpeed"), 10);
+        speedmax = parseInt($(this).attr("CpuSpeedMax"), 10);
+        speedmin = parseInt($(this).attr("CpuSpeedMin"), 10);
         cache = parseInt($(this).attr("Cache"), 10);
         virt = $(this).attr("Virt");
         bus = parseInt($(this).attr("BusSpeed"), 10);
@@ -603,11 +644,20 @@ function fillCpu(xml, tree, rootposition, collapsed) {
 
         html += "<tr><td colspan=\"2\">" + model + "</td></tr>\n";
         cpucoreposition = tree.push(rootposition);
+        collapsed.push(cpucoreposition);
         if (!isNaN(speed)) {
             html += "<tr><td style=\"width:50%\">" + genlang(13, true) + ":</td><td>" + formatHertz(speed) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
-        collapsed.push(cpucoreposition);
+        if (!isNaN(speedmax)) {
+            html += "<tr><td style=\"width:50%\">" + genlang(100, true) + ":</td><td>" + formatHertz(speedmax) + "</td></tr>\n";
+            tree.push(cpucoreposition);
+        }
+        if (!isNaN(speedmin)) {
+            html += "<tr><td style=\"width:50%\">" + genlang(101, true) + ":</td><td>" + formatHertz(speedmin) + "</td></tr>\n";
+            tree.push(cpucoreposition);
+        }
+//        collapsed.push(cpucoreposition);
         if (!isNaN(cache)) {
             html += "<tr><td style=\"width:50%\">" + genlang(15, true) + ":</td><td>" + formatBytes(cache) + "</td></tr>\n";
             tree.push(cpucoreposition);
@@ -677,34 +727,34 @@ function refreshHardware(xml) {
     html += "<h2>" + genlang(10, false) + "</h2>\n";
     html += "  <table id=\"HardwareTree\" class=\"tablemain\" style=\"width:100%;\">\n";
     html += "   <tbody class=\"tree\">\n";
-    
+
     html += "    <tr><td colspan=\"2\"><b>" + genlang(11, false) + "</b></td></tr>\n";
     html += fillCpu(xml, tree, tree.push(0), closed);
-    
+
     html += "    <tr><td colspan=\"2\"><b>" + genlang(17, false) + "</b></td></tr>\n";
     index = tree.push(0);
     closed.push(index);
     html += fillHWDevice(xml, 'PCI', tree, index);
-    
+
     html += "    <tr><td colspan=\"2\"><b>" + genlang(18, false) + "</b></td></tr>\n";
     index = tree.push(0);
     closed.push(index);
     html += fillHWDevice(xml, 'IDE', tree, index);
-    
+
     html += "    <tr><td colspan=\"2\"><b>" + genlang(19, false) + "</b></td></tr>\n";
     index = tree.push(0);
     closed.push(index);
     html += fillHWDevice(xml, 'SCSI', tree, index);
-    
+
     html += "    <tr><td colspan=\"2\"><b>" + genlang(20, false) + "</b></td></tr>\n";
     index = tree.push(0);
     closed.push(index);
     html += fillHWDevice(xml, 'USB', tree, index);
-    
+
     html += "   </tbody>\n";
     html += "  </table>\n";
     $("#hardware").append(html);
-    
+
     $("#HardwareTree").jqTreeTable(tree, {
         openImg: "./gfx/treeTable/tv-collapsable.gif",
         shutImg: "./gfx/treeTable/tv-expandable.gif",
@@ -727,16 +777,68 @@ function refreshHardware(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshNetwork(xml) {
-    var name = "", rx = 0, tx = 0, er = 0, dr = 0;
-    $("#tbody_network").empty();
+    var tree = [], closed = [], html0= "", html1= "" ,html = "", isinfo = false;
+    $("#network").empty();
+
+    html0 += "<h2>" + genlang(21, false) + "</h2>\n";
+
+    html1 += "   <thead>\n";
+    html1 += "    <tr>\n";
+    html1 += "     <th>" + genlang(22, true) + "</th>\n";
+    html1 += "     <th class=\"right\" style=\"width:50px;\">" + genlang(23, true) + "</th>\n";
+    html1 += "     <th class=\"right\" style=\"width:50px;\">" + genlang(24, true) + "</th>\n";
+    html1 += "     <th class=\"right\" style=\"width:50px;\">" + genlang(25, true) + "</th>\n";
+    html1 += "    </tr>\n";
+    html1 += "   </thead>\n";
+
     $("Network NetDevice", xml).each(function getDevice(id) {
+        var name = "", rx = 0, tx = 0, er = 0, dr = 0, info = "", networkindex = 0;
         name = $(this).attr("Name");
         rx = parseInt($(this).attr("RxBytes"), 10);
         tx = parseInt($(this).attr("TxBytes"), 10);
         er = parseInt($(this).attr("Err"), 10);
         dr = parseInt($(this).attr("Drops"), 10);
-        $("#tbody_network").append("<tr><td>" + name + "</td><td class=\"right\">" + formatBytes(rx, xml) + "</td><td class=\"right\">" + formatBytes(tx, xml) + "</td><td class=\"right\">" + er.toString() + "/" + dr.toString() + "</td></tr>");
+        html +="<tr><td>" + name + "</td><td class=\"right\">" + formatBytes(rx, xml) + "</td><td class=\"right\">" + formatBytes(tx, xml) + "</td><td class=\"right\">" + er.toString() + "/" + dr.toString() + "</td></tr>";
+
+        networkindex = tree.push(0);
+
+        info = $(this).attr("Info");
+        if ( (info !== undefined) && (info != "") ) {
+           var i =0, infos = info.split(";");
+           isinfo = true;
+           for(i = 0; i < infos.length; i++){
+              html +="<tr><td>" + infos[i] + "</td><td></td><td></td><td></td></tr>";
+              tree.push(networkindex);
+              closed.push(networkindex);
+            }
+        }
     });
+    html += "</tbody>\n";
+    html += "</table>\n";
+    if (isinfo) {
+       html0 += "<table id=\"NetworkTree\" class=\"tablemain\" style=\"border-spacing:0;\">\n";
+       html1 += "   <tbody class=\"tree\">\n";
+    } else {
+       html0 += "<table id=\"NetworkTree\" class=\"stripeMe\" style=\"border-spacing:0;\">\n";
+       html1 += "   <tbody class=\"tbody_network\">\n";
+    }
+    $("#network").append(html0+html1+html);
+
+    if (isinfo) $("#NetworkTree").jqTreeTable(tree, {
+        openImg: "./gfx/treeTable/tv-collapsable.gif",
+        shutImg: "./gfx/treeTable/tv-expandable.gif",
+        leafImg: "./gfx/treeTable/tv-item.gif",
+        lastOpenImg: "./gfx/treeTable/tv-collapsable-last.gif",
+        lastShutImg: "./gfx/treeTable/tv-expandable-last.gif",
+        lastLeafImg: "./gfx/treeTable/tv-item-last.gif",
+        vertLineImg: "./gfx/treeTable/vertline.gif",
+        blankImg: "./gfx/treeTable/blank.gif",
+        collapse: closed,
+        column: 0,
+        striped: true,
+        highlight: false,
+        state: false
+      });
 }
 
 /**
@@ -745,7 +847,7 @@ function refreshNetwork(xml) {
  */
 function refreshMemory(xml) {
     var html = "", tree = [], closed = [];
-    
+
     $("#memory").empty();
     html += "<h2>" + genlang(27, false) + "</h2>\n";
     html += "  <table id=\"MemoryTree\" class=\"tablemain\" style=\"width:100%;\">\n";
@@ -759,7 +861,7 @@ function refreshMemory(xml) {
     html += "    </tr>\n";
     html += "   </thead>\n";
     html += "   <tbody class=\"tree\">\n";
-    
+
     $("Memory", xml).each(function getMemory(id) {
         var free = 0, total = 0, used = 0, percent = 0, memoryindex = 0;
         free = parseInt($(this).attr("Free"), 10);
@@ -768,7 +870,7 @@ function refreshMemory(xml) {
         percent = parseInt($(this).attr("Percent"), 10);
         html += "<tr><td style=\"width:200px;\">" + genlang(28, false) + "</td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
         memoryindex = tree.push(0);
-        
+
         $("Memory Details", xml).each(function getMemorydetails(id) {
             var app = 0, appp = 0, buff = 0, buffp = 0, cached = 0, cachedp = 0;
             app = parseInt($(this).attr("App"), 10);
@@ -802,7 +904,7 @@ function refreshMemory(xml) {
         percent = parseInt($(this).attr("Percent"), 10);
         html += "<tr><td style=\"width:200px;\">" + genlang(29, false) + "</td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
         swapindex = tree.push(0);
-        
+
         $("Memory Swap Mount", xml).each(function getDevices(id) {
             var free = 0, total = 0, used = 0, percent = 0, mpoint = "", mpid = 0;
             closed.push(swapindex);
@@ -812,20 +914,20 @@ function refreshMemory(xml) {
             percent = parseInt($(this).attr("Percent"), 10);
             mpid = parseInt($(this).attr("MountPointID"), 10);
             mpoint = $(this).attr("MountPoint");
-            
+
             if (mpoint === undefined) {
                 mpoint = mpid;
             }
-            
+
             html += "<tr><td style=\"width:184px;\">" + mpoint + "</td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
             tree.push(swapindex);
         });
     });
-    
+
     html += "   </tbody>\n";
     html += "  </table>\n";
     $("#memory").append(html);
-    
+
     $("#MemoryTree").jqTreeTable(tree, {
         openImg: "./gfx/treeTable/tv-collapsable.gif",
         shutImg: "./gfx/treeTable/tv-expandable.gif",
@@ -841,7 +943,7 @@ function refreshMemory(xml) {
         highlight: false,
         state: false
     });
-    
+
 }
 
 /**
@@ -851,10 +953,14 @@ function refreshMemory(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshFilesystems(xml) {
-    var total_usage = 0, total_used = 0, total_free = 0, total_size = 0;
-    
+    var total_usage = 0, total_used = 0, total_free = 0, total_size = 0, threshold = 0;
+
     filesystemTable.fnClearTable();
-    
+
+    $("Options", xml).each(function getThreshold(id) {
+        threshold = parseInt($(this).attr("threshold"), 10);
+    });
+
     $("FileSystem Mount", xml).each(function getMount(mid) {
         var mpoint = "", mpid = 0, type = "", name = "", free = 0, used = 0, size = 0, percent = 0, options = "", inodes = 0, inodes_text = "", options_text = "";
         mpid = parseInt($(this).attr("MountPointID"), 10);
@@ -867,7 +973,7 @@ function refreshFilesystems(xml) {
         options = $(this).attr("MountOptions");
         inodes = parseInt($(this).attr("Inodes"), 10);
         mpoint = $(this).attr("MountPoint");
-        
+
         if (mpoint === undefined) {
             mpoint = mpid;
         }
@@ -877,15 +983,18 @@ function refreshFilesystems(xml) {
         if (!isNaN(inodes)) {
             inodes_text = "<span style=\"font-style:italic\">&nbsp;(" + inodes.toString() + "%)</span>";
         }
-        
-        filesystemTable.fnAddData(["<span style=\"display:none;\">" + mpoint + "</span>" + mpoint, "<span style=\"display:none;\">" + type + "</span>" + type, "<span style=\"display:none;\">" + name + "</span>" + name + options_text, "<span style=\"display:none;\">" + percent.toString() + "</span>" + createBar(percent) + inodes_text, "<span style=\"display:none;\">" + free.toString() + "</span>" + formatBytes(free, xml), "<span style=\"display:none;\">" + used.toString() + "</span>" + formatBytes(used, xml), "<span style=\"display:none;\">" + size.toString() + "</span>" + formatBytes(size, xml)]);
-        
+
+        if (!isNaN(threshold) && (percent >= threshold)) {
+            filesystemTable.fnAddData(["<span style=\"display:none;\">" + mpoint + "</span>" + mpoint, "<span style=\"display:none;\">" + type + "</span>" + type, "<span style=\"display:none;\">" + name + "</span>" + name + options_text, "<span style=\"display:none;\">" + percent.toString() + "</span>" + createBar(percent, "barwarn") + inodes_text, "<span style=\"display:none;\">" + free.toString() + "</span>" + formatBytes(free, xml), "<span style=\"display:none;\">" + used.toString() + "</span>" + formatBytes(used, xml), "<span style=\"display:none;\">" + size.toString() + "</span>" + formatBytes(size, xml)]);
+        } else {
+            filesystemTable.fnAddData(["<span style=\"display:none;\">" + mpoint + "</span>" + mpoint, "<span style=\"display:none;\">" + type + "</span>" + type, "<span style=\"display:none;\">" + name + "</span>" + name + options_text, "<span style=\"display:none;\">" + percent.toString() + "</span>" + createBar(percent) + inodes_text, "<span style=\"display:none;\">" + free.toString() + "</span>" + formatBytes(free, xml), "<span style=\"display:none;\">" + used.toString() + "</span>" + formatBytes(used, xml), "<span style=\"display:none;\">" + size.toString() + "</span>" + formatBytes(size, xml)]);
+        }
         total_used += used;
         total_free += free;
         total_size += size;
         total_usage = round((total_used / total_size) * 100, 2);
     });
-    
+
     $("#s_fs_total").html(createBar(total_usage));
     $("#s_fs_tfree").html(formatBytes(total_free, xml));
     $("#s_fs_tused").html(formatBytes(total_used, xml));
@@ -903,11 +1012,13 @@ function refreshTemp(xml) {
     var values = false;
     $("#tempTable tbody").empty();
     $("MBInfo Temperature Item", xml).each(function getTemperatures(id) {
-        var label = "", value = "", limit = "";
+        var label = "", value = "", limit = 0, _limit = "";
         label = $(this).attr("Label");
         value = $(this).attr("Value").replace(/\+/g, "");
-        limit = $(this).attr("Max").replace(/\+/g, "");
-        $("#tempTable").append("<tr><td>" + label + "</td><td class=\"right\">" + formatTemp(value, xml) + "</td><td class=\"right\">" + formatTemp(limit, xml) + "</td></tr>");
+        limit = parseFloat($(this).attr("Max").replace(/\+/g, ""));
+        if (isFinite(limit))
+            _limit = formatTemp(limit, xml);
+        $("#tempTable").append("<tr><td>" + label + "</td><td class=\"right\">" + formatTemp(value, xml) + "</td><td class=\"right\">" + _limit + "</td></tr>");
         values = true;
     });
     if (values) {
@@ -928,12 +1039,16 @@ function refreshVoltage(xml) {
     var values = false;
     $("#voltageTable tbody").empty();
     $("MBInfo Voltage Item", xml).each(function getVoltages(id) {
-        var label = "", value = 0, max = 0, min = 0;
+        var label = "", value = 0, max = 0, min = 0, _min = "", _max = "";
         label = $(this).attr("Label");
-        value = parseFloat($(this).attr("Value"), 10);
-        max = parseFloat($(this).attr("Max"), 10);
-        min = parseFloat($(this).attr("Min"), 10);
-        $("#voltageTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + round(min, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + round(max, 2) + "&nbsp;" + genlang(62, true) + "</td></tr>");
+        value = parseFloat($(this).attr("Value"));
+        max = parseFloat($(this).attr("Max"));
+        if (isFinite(max))
+            _max = round(max, 2) + "&nbsp;" + genlang(62, true);
+        min = parseFloat($(this).attr("Min"));
+        if (isFinite(min))
+            _min = round(min, 2) + "&nbsp;" + genlang(62, true);
+        $("#voltageTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + _min + "</td><td class=\"right\">" + _max + "</td></tr>");
         values = true;
     });
     if (values) {
@@ -954,11 +1069,13 @@ function refreshFan(xml) {
     var values = false;
     $("#fanTable tbody").empty();
     $("MBInfo Fans Item", xml).each(function getFans(id) {
-        var label = "", value = "", min = "";
+        var label = "", value = 0, min = 0, _min = "";
         label = $(this).attr("Label");
-        value = $(this).attr("Value");
-        min = $(this).attr("Min");
-        $("#fanTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + value + "&nbsp;" + genlang(63, true) + "</td><td class=\"right\">" + min + "&nbsp;" + genlang(63, true) + "</td></tr>");
+        value = parseFloat($(this).attr("Value"));
+        min = parseFloat($(this).attr("Min"));
+        if (isFinite(min))
+            _min = round(min,0) + "&nbsp;" + genlang(63, true);
+        $("#fanTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value,0) + "&nbsp;" + genlang(63, true) + "</td><td class=\"right\">" + _min + "</td></tr>");
         values = true;
     });
     if (values) {
@@ -976,11 +1093,12 @@ function refreshFan(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshUps(xml) {
+    var add_apcupsd_cgi_links = ($("[ApcupsdCgiLinks='1']", xml).length > 0);
     var html = "", tree = [], closed = [], index = 0, values = false;
-    html += "<h2><span id=\"lang_068\">UPS information</span></h2>\n";
+    html += "<h2>" + genlang(68, false) + "</h2>\n";
     html += "        <table class=\"tablemain\" id=\"UPSTree\">\n";
     html += "          <tbody class=\"tree\">\n";
-    
+
     $("#ups").empty();
     $("UPSInfo UPS", xml).each(function getUps(id) {
         var name = "", model = "", mode = "", start_time = "", upsstatus = "", temperature = "", outages_count = "", last_outage = "", last_outage_finish = "", line_voltage = "", load_percent = "", battery_voltage = "", battery_charge_percent = "", time_left_minutes = "";
@@ -989,7 +1107,7 @@ function refreshUps(xml) {
         mode = $(this).attr("Mode");
         start_time = $(this).attr("StartTime");
         upsstatus = $(this).attr("Status");
-        
+
         temperature = $(this).attr("Temperature");
         outages_count = $(this).attr("OutagesCount");
         last_outage = $(this).attr("LastOutage");
@@ -999,7 +1117,7 @@ function refreshUps(xml) {
         battery_voltage = $(this).attr("BatteryVoltage");
         battery_charge_percent = parseInt($(this).attr("BatteryChargePercent"), 10);
         time_left_minutes = $(this).attr("TimeLeftMinutes");
-        
+
         html += "<tr><td colspan=\"2\"><strong>" + name + " (" + mode + ")</strong></td></tr>\n";
         index = tree.push(0);
         html += "<tr><td style=\"width:160px\">" + genlang(70, false) + "</td><td>" + model + "</td></tr>\n";
@@ -1048,9 +1166,12 @@ function refreshUps(xml) {
     });
     html += "          </tbody>\n";
     html += "        </table>\n";
-    
+    if (add_apcupsd_cgi_links){
+        html += " (<a href='/cgi-bin/apcupsd/multimon.cgi' target='apcupsdcgi'>" + genlang(99, false) + "</a>)\n";
+    }
+
     $("#ups").append(html);
-    
+
     if (values) {
         $("#UPSTree").jqTreeTable(tree, {
             openImg: "./gfx/treeTable/tv-collapsable.gif",
@@ -1094,7 +1215,7 @@ function reload() {
             refreshFan(xml);
             refreshTemp(xml);
             refreshUps(xml);
-            
+
             $('.stripeMe tr:nth-child(even)').addClass('even');
             langcounter = 1;
         }
@@ -1125,7 +1246,7 @@ if (cookie_template) {
 
 $(document).ready(function buildpage() {
     filesystemtable();
-    
+
     $.ajax({
         url: 'xml.php',
         dataType: 'xml',
@@ -1136,7 +1257,7 @@ $(document).ready(function buildpage() {
         },
         success: function buildblocks(xml) {
             populateErrors(xml);
-            
+
             refreshVitals(xml);
             refreshHardware(xml);
             refreshNetwork(xml);
@@ -1146,18 +1267,18 @@ $(document).ready(function buildpage() {
             refreshVoltage(xml);
             refreshFan(xml);
             refreshUps(xml);
-            
+
             changeLanguage();
             displayPage(xml);
             settimer(xml);
-            
+
             $('.stripeMe tr:nth-child(even)').addClass('even');
             langcounter = 1;
         }
     });
-    
+
     $("#errors").nyroModal();
-    
+
     $("#lang").change(function changeLang() {
         var language = "", i = 0;
         language = $("#lang").val().toString();
@@ -1169,7 +1290,7 @@ $(document).ready(function buildpage() {
         }
         return false;
     });
-    
+
     $("#template").change(function changeTemplate() {
         switchStyle($("#template").val().toString());
         return false;
@@ -1243,14 +1364,14 @@ function datetime() {
     year = date.getFullYear();
     hour = date.getHours();
     minute = date.getMinutes();
-    
+
     // format values smaller that 10 with a leading 0
     days = (day < 10) ? "0" + day.toString() : day.toString();
     months = (month < 10) ? "0" + month.toString() : month.toString();
     years = (year < 1000) ? year.toString() : year.toString();
     minutes = (minute < 10) ? "0" + minute.toString() : minute.toString();
     hours = (hour < 10) ? "0" + hour.toString() : hour.toString();
-    
+
     return days + "." + months + "." + years + " - " + hours + ":" + minutes;
 }
 

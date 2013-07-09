@@ -1,37 +1,36 @@
 <?php
-
 /**
  * OpenBSD System Class
  *
  * PHP version 5
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI OpenBSD OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.OpenBSD.inc.php 371 2010-05-16 08:35:28Z jacky672 $
+ * @version   SVN: $Id: class.OpenBSD.inc.php 621 2012-07-29 18:49:04Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * OpenBSD sysinfo class
  * get all the required information from OpenBSD systems
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI OpenBSD OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class OpenBSD extends BSDCommon {
-
+class OpenBSD extends BSDCommon
+{
     /**
      * define the regexp for log parser
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->setCPURegExp1("^cpu(.*) (.*) MHz");
         $this->setCPURegExp2("/(.*),(.*),(.*),(.*),(.*)/");
@@ -47,7 +46,8 @@ class OpenBSD extends BSDCommon {
      *
      * @return void
      */
-    private function _uptime() {
+    private function _uptime()
+    {
         $a = $this->grabkey('kern.boottime');
         $this->sys->setUptime(time() - $a);
     }
@@ -57,7 +57,8 @@ class OpenBSD extends BSDCommon {
      *
      * @return void
      */
-    private function _network() {
+    private function _network()
+    {
         CommonFunctions::executeProgram('netstat', '-nbdi | cut -c1-25,44- | grep Link | grep -v \'* \'', $netstat_b, PSI_DEBUG);
         CommonFunctions::executeProgram('netstat', '-ndi | cut -c1-25,44- | grep Link | grep -v \'* \'', $netstat_n, PSI_DEBUG);
         $lines_b = preg_split("/\n/", $netstat_b, -1, PREG_SPLIT_NO_EMPTY);
@@ -65,7 +66,7 @@ class OpenBSD extends BSDCommon {
         for ($i = 0, $max = sizeof($lines_b); $i < $max; $i++) {
             $ar_buf_b = preg_split("/\s+/", $lines_b[$i]);
             $ar_buf_n = preg_split("/\s+/", $lines_n[$i]);
-            if (!empty($ar_buf_b[0]) && !empty($ar_buf_n[3])) {
+            if (! empty($ar_buf_b[0]) && ! empty($ar_buf_n[3])) {
                 $dev = new NetDevice();
                 $dev->setName($ar_buf_b[0]);
                 $dev->setTxBytes($ar_buf_b[4]);
@@ -82,14 +83,15 @@ class OpenBSD extends BSDCommon {
      *
      * @return void
      */
-    protected function ide() {
+    protected function ide()
+    {
         foreach ($this->readdmesg() as $line) {
             if (preg_match('/^(.*) at pciide[0-9] (.*): <(.*)>/', $line, $ar_buf)) {
                 $dev = new HWDevice();
                 $dev->setName($ar_buf[0]);
                 // now loop again and find the capacity
                 foreach ($this->readdmesg() as $line2) {
-                    if (preg_match("/^(" . $ar_buf[0] . "): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
+                    if (preg_match("/^(".$ar_buf[0]."): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
                         $dev->setCapacity($ar_buf_n[4] * 2048 * 1.049);
                     }
                 }
@@ -103,11 +105,17 @@ class OpenBSD extends BSDCommon {
      *
      * @return void
      */
-    protected function cpuinfo() {
+    protected function cpuinfo()
+    {
         $dev = new CpuDevice();
         $dev->setModel($this->grabkey('hw.model'));
         $dev->setCpuSpeed($this->grabkey('hw.cpuspeed'));
-        $this->sys->setCpus($dev);
+        $ncpu = $this->grabkey('hw.ncpu');
+        if ( is_null($ncpu) || (trim($ncpu) == "") || (!($ncpu >= 1)) )
+            $ncpu = 1;
+        for ($ncpu ; $ncpu > 0 ; $ncpu--) {
+            $this->sys->setCpus($dev);
+        }
     }
 
     /**
@@ -115,7 +123,8 @@ class OpenBSD extends BSDCommon {
      *
      * @return void
      */
-    private function _distroicon() {
+    private function _distroicon()
+    {
         $this->sys->setDistributionIcon('OpenBSD.png');
     }
 
@@ -126,13 +135,11 @@ class OpenBSD extends BSDCommon {
      *
      * @return Void
      */
-    function build() {
+    public function build()
+    {
         parent::build();
         $this->_distroicon();
         $this->_network();
         $this->_uptime();
     }
-
 }
-
-?>

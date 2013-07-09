@@ -1,5 +1,4 @@
 <?php
-
 /**
  * HWDevice TO class
  *
@@ -13,8 +12,7 @@
  * @version   SVN: $Id: class.HWDevice.inc.php 255 2009-06-17 13:39:41Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * HWDevice TO class
  *
  * @category  PHP
@@ -25,8 +23,8 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class HWDevice {
-
+class HWDevice
+{
     /**
      * name of the device
      *
@@ -55,7 +53,8 @@ class HWDevice {
      *
      * @return boolean
      */
-    public function equals($dev) {
+    public function equals($dev)
+    {
         if ($dev->getName() === $this->_name && $dev->getCapacity() === $this->_capacity) {
             return true;
         } else {
@@ -70,7 +69,8 @@ class HWDevice {
      *
      * @return Integer
      */
-    public function getCapacity() {
+    public function getCapacity()
+    {
         return $this->_capacity;
     }
 
@@ -83,7 +83,8 @@ class HWDevice {
      *
      * @return Void
      */
-    public function setCapacity($capacity) {
+    public function setCapacity($capacity)
+    {
         $this->_capacity = $capacity;
     }
 
@@ -94,7 +95,8 @@ class HWDevice {
      *
      * @return String
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->_name;
     }
 
@@ -107,7 +109,8 @@ class HWDevice {
      *
      * @return Void
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->_name = $name;
     }
 
@@ -118,7 +121,8 @@ class HWDevice {
      *
      * @return Integer
      */
-    public function getCount() {
+    public function getCount()
+    {
         return $this->_count;
     }
 
@@ -131,10 +135,8 @@ class HWDevice {
      *
      * @return Void
      */
-    public function setCount($count) {
+    public function setCount($count)
+    {
         $this->_count = $count;
     }
-
 }
-
-?>

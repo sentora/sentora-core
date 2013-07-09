@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Basic Plugin Functions
  *
@@ -10,11 +9,10 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.PSI_Plugin.inc.php 304 2009-07-18 12:15:12Z BigMichi1 $
+ * @version   SVN: $Id: class.PSI_Plugin.inc.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * basic functions to get a plugin working in phpSysinfo
  * every plugin must implement this abstract class to be a valid plugin, main tasks
  * of this class are reading the configuration file and check for the required files
@@ -29,8 +27,8 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-abstract class PSI_Plugin implements PSI_Interface_Plugin {
-
+abstract class PSI_Plugin implements PSI_Interface_Plugin
+{
     /**
      * name of the plugin (classname)
      *
@@ -68,11 +66,12 @@ abstract class PSI_Plugin implements PSI_Interface_Plugin {
      *
      * @return void
      */
-    public function __construct($plugin_name, $enc) {
+    public function __construct($plugin_name, $enc)
+    {
         $this->global_error = Error::Singleton();
         if (trim($plugin_name) != "") {
             $this->_plugin_name = $plugin_name;
-            $this->_plugin_base = APP_ROOT . "/plugins/" . $this->_plugin_name . "/";
+            $this->_plugin_base = APP_ROOT."/plugins/".strtolower($this->_plugin_name)."/";
             $this->_checkfiles();
             $this->_getconfig();
         } else {
@@ -86,14 +85,11 @@ abstract class PSI_Plugin implements PSI_Interface_Plugin {
      *
      * @return void
      */
-    private function _getconfig() {
-        $filename = $this->_plugin_base . $this->_plugin_name . ".config.php";
-        if (file_exists($filename)) {
-            if (is_readable($filename)) {
-                include_once $filename;
-            } else {
-                $this->global_error->addError("getconfig()", "Config-File for plugin " . $this->_plugin_name . " exist but can't be read!");
-            }
+    private function _getconfig()
+    {
+        if ( (!defined('PSI_PLUGIN_'.strtoupper($this->_plugin_name).'_ACCESS')) &&
+             (!defined('PSI_PLUGIN_'.strtoupper($this->_plugin_name).'_FILE')) ) {
+                $this->global_error->addError("config.ini", "Config for plugin ".$this->_plugin_name." not exist!");
         }
     }
 
@@ -103,19 +99,20 @@ abstract class PSI_Plugin implements PSI_Interface_Plugin {
      *
      * @return void
      */
-    private function _checkfiles() {
-        if (!file_exists($this->_plugin_base . "js/" . $this->_plugin_name . ".js")) {
-            $this->global_error->addError("file_exists(" . $this->_plugin_base . "js/" . $this->_plugin_name . ".js)", "JS-File for Plugin '" . $this->_plugin_name . "' is missing!");
+    private function _checkfiles()
+    {
+        if (!file_exists($this->_plugin_base."js/".strtolower($this->_plugin_name).".js")) {
+            $this->global_error->addError("file_exists(".$this->_plugin_base."js/".strtolower($this->_plugin_name).".js)", "JS-File for Plugin '".$this->_plugin_name."' is missing!");
         } else {
-            if (!is_readable($this->_plugin_base . "js/" . $this->_plugin_name . ".js")) {
-                $this->global_error->addError("is_readable(" . $this->_plugin_base . "js/" . $this->_plugin_name . ".js)", "JS-File for Plugin '" . $this->_plugin_name . "' is not readable but present!");
+            if (!is_readable($this->_plugin_base."js/".strtolower($this->_plugin_name).".js")) {
+                $this->global_error->addError("is_readable(".$this->_plugin_base."js/".strtolower($this->_plugin_name).".js)", "JS-File for Plugin '".$this->_plugin_name."' is not readable but present!");
             }
         }
-        if (!file_exists($this->_plugin_base . "lang/en.xml")) {
-            $this->global_error->addError("file_exists(" . $this->_plugin_base . "lang/en.xml)", "At least an english translation must exist for the plugin!");
+        if (!file_exists($this->_plugin_base."lang/en.xml")) {
+            $this->global_error->addError("file_exists(".$this->_plugin_base."lang/en.xml)", "At least an english translation must exist for the plugin!");
         } else {
-            if (!is_readable($this->_plugin_base . "lang/en.xml")) {
-                $this->global_error->addError("is_readable(" . $this->_plugin_base . "js/" . $this->_plugin_name . ".js)", "The english translation can't be read but is present!");
+            if (!is_readable($this->_plugin_base."lang/en.xml")) {
+                $this->global_error->addError("is_readable(".$this->_plugin_base."js/".$this->_plugin_name.".js)", "The english translation can't be read but is present!");
             }
         }
     }
@@ -127,13 +124,11 @@ abstract class PSI_Plugin implements PSI_Interface_Plugin {
      *
      * @return Void
      */
-    private function _createXml($enc) {
+    private function _createXml($enc)
+    {
         $dom = new DOMDocument('1.0', 'UTF-8');
-        $root = $dom->createElement("Plugin_" . $this->_plugin_name);
+        $root = $dom->createElement("Plugin_".$this->_plugin_name);
         $dom->appendChild($root);
         $this->xml = new SimpleXMLExtended(simplexml_import_dom($dom), $enc);
     }
-
 }
-
-?>

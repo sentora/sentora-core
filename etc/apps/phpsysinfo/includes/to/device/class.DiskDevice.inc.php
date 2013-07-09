@@ -1,5 +1,4 @@
 <?php
-
 /**
  * DiskDevice TO class
  *
@@ -13,8 +12,7 @@
  * @version   SVN: $Id: class.DiskDevice.inc.php 252 2009-06-17 13:06:44Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
+ /**
  * DiskDevice TO class
  *
  * @category  PHP
@@ -25,8 +23,8 @@
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
-class DiskDevice {
-
+class DiskDevice
+{
     /**
      * name of the disk device
      *
@@ -91,7 +89,8 @@ class DiskDevice {
      *
      * @return Integer
      */
-    public function getPercentUsed() {
+    public function getPercentUsed()
+    {
         if ($this->_total > 0) {
             return ceil($this->_used / $this->_total * 100);
         } else {
@@ -106,7 +105,8 @@ class DiskDevice {
      *
      * @return Integer
      */
-    public function getPercentInodesUsed() {
+    public function getPercentInodesUsed()
+    {
         return $this->_percentInodesUsed;
     }
 
@@ -119,7 +119,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setPercentInodesUsed($percentInodesUsed) {
+    public function setPercentInodesUsed($percentInodesUsed)
+    {
         $this->_percentInodesUsed = $percentInodesUsed;
     }
 
@@ -130,7 +131,8 @@ class DiskDevice {
      *
      * @return Integer
      */
-    public function getFree() {
+    public function getFree()
+    {
         return $this->_free;
     }
 
@@ -143,7 +145,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setFree($free) {
+    public function setFree($free)
+    {
         $this->_free = $free;
     }
 
@@ -154,7 +157,8 @@ class DiskDevice {
      *
      * @return String
      */
-    public function getFsType() {
+    public function getFsType()
+    {
         return $this->_fsType;
     }
 
@@ -167,7 +171,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setFsType($fsType) {
+    public function setFsType($fsType)
+    {
         $this->_fsType = $fsType;
     }
 
@@ -178,7 +183,8 @@ class DiskDevice {
      *
      * @return String
      */
-    public function getMountPoint() {
+    public function getMountPoint()
+    {
         return $this->_mountPoint;
     }
 
@@ -191,7 +197,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setMountPoint($mountPoint) {
+    public function setMountPoint($mountPoint)
+    {
         $this->_mountPoint = $mountPoint;
     }
 
@@ -202,7 +209,8 @@ class DiskDevice {
      *
      * @return String
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->_name;
     }
 
@@ -215,7 +223,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->_name = $name;
     }
 
@@ -226,7 +235,8 @@ class DiskDevice {
      *
      * @return String
      */
-    public function getOptions() {
+    public function getOptions()
+    {
         return $this->_options;
     }
 
@@ -239,7 +249,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setOptions($options) {
+    public function setOptions($options)
+    {
         $this->_options = $options;
     }
 
@@ -250,7 +261,8 @@ class DiskDevice {
      *
      * @return Integer
      */
-    public function getTotal() {
+    public function getTotal()
+    {
         return $this->_total;
     }
 
@@ -263,7 +275,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setTotal($total) {
+    public function setTotal($total)
+    {
         $this->_total = $total;
     }
 
@@ -274,7 +287,8 @@ class DiskDevice {
      *
      * @return Integer
      */
-    public function getUsed() {
+    public function getUsed()
+    {
         return $this->_used;
     }
 
@@ -287,10 +301,8 @@ class DiskDevice {
      *
      * @return Void
      */
-    public function setUsed($used) {
+    public function setUsed($used)
+    {
         $this->_used = $used;
     }
-
 }
-
-?>
