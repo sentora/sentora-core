@@ -116,7 +116,7 @@ class module_controller {
 
     static function getSelectThemeMenu() {
         $html = "";
-        foreach (self::ExectuteStylesList() as $theme) {
+        foreach (self::ExecuteStylesList() as $theme) {
             if ($theme['name'] != self::getCurrentTheme()) {
                 $html .="<option value = \"" . $theme['name'] . "\">" . $theme['name'] . "</option>\n";
             } else {

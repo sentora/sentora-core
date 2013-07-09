@@ -88,45 +88,57 @@ class module_controller {
     }
 
     #Begin Display Methods
+    static function empty_as_0($value) {
+        return (empty($value)) ? 0 : $value;
+    }
 
+    static function build_row_usage($name, $used, $quota, $human = false) {
+        $res = '<tr><th nowrap="nowrap">' . ui_language::translate($name) . ':</th><td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used);
+        if ($quota < 0) {
+            $res .= '</td><td style="text-align:center">&#8734; ' . ui_language::translate('Unlimited') . ' &#8734;</td>';
+        } else {
+            $res .= ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td><td><img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . (($quota == 0 or $used == $quota) ? 100 : round($used / $quota * 100, 0)) . '"/>';
+        }
+        return $res . '</td></tr>';
+    }
     static function DisplayUsagepChart() {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
 
-        function empty_as_0($value) {
-            return (empty($value)) ? 0 : $value;
-        }
+        //function empty_as_0($value) {
+        //    return (empty($value)) ? 0 : $value;
+        //}
 
         self::$diskquota = $currentuser['diskquota'];
         self::$diskspace = ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']);
 
-        self::$bandwidthquota = empty_as_0($currentuser['bandwidthquota']);
+        self::$bandwidthquota = module_controller::empty_as_0($currentuser['bandwidthquota']);
         self::$bandwidth = ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']);
 
-        self::$domainsquota = empty_as_0($currentuser['domainquota']);
+        self::$domainsquota = module_controller::empty_as_0($currentuser['domainquota']);
         self::$domains = ctrl_users::GetQuotaUsages('domains', $currentuser['userid']);
 
-        self::$subdomainsquota = empty_as_0($currentuser['subdomainquota']);
+        self::$subdomainsquota = module_controller::empty_as_0($currentuser['subdomainquota']);
         self::$subdomains = ctrl_users::GetQuotaUsages('subdomains', $currentuser['userid']);
 
-        self::$parkeddomainsquota = empty_as_0($currentuser['parkeddomainquota']);
+        self::$parkeddomainsquota = module_controller::empty_as_0($currentuser['parkeddomainquota']);
         self::$parkeddomains = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
 
-        self::$mysqlquota = empty_as_0($currentuser['mysqlquota']);
+        self::$mysqlquota = module_controller::empty_as_0($currentuser['mysqlquota']);
         self::$mysql = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
 
-        self::$ftpaccountsquota = empty_as_0($currentuser['ftpaccountsquota']);
+        self::$ftpaccountsquota = module_controller::empty_as_0($currentuser['ftpaccountsquota']);
         self::$ftpaccounts = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
 
-        self::$mailboxquota = empty_as_0($currentuser['mailboxquota']);
+        self::$mailboxquota = module_controller::empty_as_0($currentuser['mailboxquota']);
         self::$mailboxes = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
 
-        self::$forwardersquota = empty_as_0($currentuser['forwardersquota']);
+        self::$forwardersquota = module_controller::empty_as_0($currentuser['forwardersquota']);
         self::$forwarders = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
 
         self::$distlistsquota = $currentuser['distlistsquota'];
-        self::$distlists = empty_as_0(ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']));
+        self::$distlists = module_controller::empty_as_0(ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']));
 
         $maximum = self::$diskquota;
         $used = self::$diskspace;
@@ -140,7 +152,7 @@ class module_controller {
         $usedLabel = fs_director::ShowHumanFileSize($used);
 
 
-        function build_row_usage($name, $used, $quota, $human = false) {
+        /*function build_row_usage($name, $used, $quota, $human = false) {
             $res = '<tr><th nowrap="nowrap">' . ui_language::translate($name) . ':</th><td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used);
             if ($quota < 0) {
                 $res .= '</td><td style="text-align:center">&#8734; ' . ui_language::translate('Unlimited') . ' &#8734;</td>';
@@ -148,7 +160,7 @@ class module_controller {
                 $res .= ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td><td><img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . (($quota == 0 or $used == $quota) ? 100 : round($used / $quota * 100, 0)) . '"/>';
             }
             return $res . '</td></tr>';
-        }
+        }*/
         $line =
                 '<table class="none" cellpadding="0" cellspacing="0">' .
                 '<tr>' .
@@ -162,16 +174,16 @@ class module_controller {
                 '<td align="left" valign="top">' .
                 '<h2>' . ui_language::translate('Package Usage Total') . '</h2>' .
                 '<table class="table table-striped" border="0" cellspacing="0" cellpadding="0">' .
-                build_row_usage('Disk space', self::$diskspace, (self::$diskquota == 0) ? -1 : self::$diskquota, true) .
-                build_row_usage('Bandwidth', self::$bandwidth, (self::$bandwidthquota == 0) ? -1 : self::$bandwidthquota, true) .
-                build_row_usage('Domains', self::$domains, self::$domainsquota) .
-                build_row_usage('Sub-domains', self::$subdomains, self::$subdomainsquota) .
-                build_row_usage('Parked domains', self::$parkeddomains, self::$parkeddomainsquota) .
-                build_row_usage('FTP accounts', self::$ftpaccounts, self::$ftpaccountsquota) .
-                build_row_usage('MySQL&reg databases', self::$mysql, self::$mysqlquota) .
-                build_row_usage('Mailboxes', self::$mailboxes, self::$mailboxquota) .
-                build_row_usage('Mail forwarders', self::$forwarders, self::$forwardersquota) .
-                build_row_usage('Distribution lists', self::$distlists, self::$distlistsquota) .
+                module_controller::build_row_usage('Disk space', self::$diskspace, (self::$diskquota == 0) ? -1 : self::$diskquota, true) .
+                module_controller::build_row_usage('Bandwidth', self::$bandwidth, (self::$bandwidthquota == 0) ? -1 : self::$bandwidthquota, true) .
+                module_controller::build_row_usage('Domains', self::$domains, self::$domainsquota) .
+                module_controller::build_row_usage('Sub-domains', self::$subdomains, self::$subdomainsquota) .
+                module_controller::build_row_usage('Parked domains', self::$parkeddomains, self::$parkeddomainsquota) .
+                module_controller::build_row_usage('FTP accounts', self::$ftpaccounts, self::$ftpaccountsquota) .
+                module_controller::build_row_usage('MySQL&reg databases', self::$mysql, self::$mysqlquota) .
+                module_controller::build_row_usage('Mailboxes', self::$mailboxes, self::$mailboxquota) .
+                module_controller::build_row_usage('Mail forwarders', self::$forwarders, self::$forwardersquota) .
+                module_controller::build_row_usage('Distribution lists', self::$distlists, self::$distlistsquota) .
                 '</table>' .
                 '</td>' .
                 '</tr>' .
