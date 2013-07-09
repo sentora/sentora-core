@@ -1,7 +1,7 @@
 <?php
 
 echo fs_filehandler::NewLine() . "START DNS Manager Hook" . fs_filehandler::NewLine();
-if ( ui_module::CheckModuleEnabled( 'Backup Config' ) ) {
+if ( ui_module::CheckModuleEnabled( 'DNS Config' ) ) {
     echo "DNS Manager module ENABLED..." . fs_filehandler::NewLine();
     if ( !fs_director::CheckForEmptyValue( ctrl_options::GetSystemOption( 'dns_hasupdates' ) ) ) {
         echo "DNS Records have changed... Writing new/updated records..." . fs_filehandler::NewLine();
