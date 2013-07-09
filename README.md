@@ -25,9 +25,3 @@ ZPanel is licensed under the GNU GENERAL PUBLIC LICENSE (GPL v3) you can view a 
 ##Getting support
 
 We provide excellent free (and premium) [support](http://www.zpanelcp.com/support/) and [documentation](http://www.zpanelcp.com/support/documentation/) at our website.
-
-##Other support resources
-
-* [Our official community support forums](http://forums.zpanelcp.com/)
-* [Our official bug tracking system](http://bugs.zpanelcp.com/)
-* [Our official documentation](http://www.zpanelcp.com/support/documentation/)
