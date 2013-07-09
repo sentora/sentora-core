@@ -6,19 +6,19 @@
   <title>Control Panel - Login</title>
   <meta name="viewport" content="width=device-width">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="shortcut icon" type="image/x-icon" href="<# ui_tpl_assetfolderpath #>images/favicon.ico" />
+  <link rel="shortcut icon" type="image/x-icon" href="/etc/styles/zpanelx/images/favicon.ico" />
 
   <!-- Ze Stylesheets --> 
-  <link rel="stylesheet" href="<# ui_tpl_assetfolderpath #>css/assets/bootstrap.min.css">
-  <link rel="stylesheet" href="<# ui_tpl_assetfolderpath #>css/assets/prettyCheckable.css">
-  <link rel="stylesheet" href="<# ui_tpl_assetfolderpath #>css/assets/login.css">
+  <link rel="stylesheet" href="/etc/styles/zpanelx/css/assets/bootstrap.min.css">
+  <link rel="stylesheet" href="/etc/styles/zpanelx/css/assets/prettyCheckable.css">
+  <link rel="stylesheet" href="/etc/styles/zpanelx/css/assets/login.css">
 
   <!-- Ze Font -->
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700">
 
   <!-- HTML5 shim for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
-    <script src="<# ui_tpl_assetfolderpath #>js/html5shiv.js"></script>
+    <script src="/etc/styles/zpanelx/js/html5shiv.js"></script>
   <![endif]-->
 
   <script>
@@ -33,7 +33,7 @@
     <div class="logincontainer">
 
       <div class="logintop">
-        <img src="<# ui_tpl_assetfolderpath #>img/zplogo.png">
+        <img src="/etc/styles/zpanelx/img/zplogo.png">
       </div>
 
       <!-- Reset Password Form -->
@@ -212,12 +212,12 @@
 
 <!-- Javascript -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="<# ui_tpl_assetfolderpath #>js/jquery-1.9.1.min.js">\x3C<\/script>')</script>
+<script>window.jQuery || document.write('<script src="/etc/styles/zpanelx/js/jquery-1.9.1.min.js">\x3C<\/script>')</script>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
-<script>window.jQuery || document.write('<script src="<# ui_tpl_assetfolderpath #>css/assets/bootstrap.min.js">\x3C<\/script>')</script>
-<script src="<# ui_tpl_assetfolderpath #>js/respond.min.js"></script>
-<script src="<# ui_tpl_assetfolderpath #>js/prettyCheckable.js"></script>
-<script src="<# ui_tpl_assetfolderpath #>js/jquery.h5validate.js"></script>
+<script>window.jQuery || document.write('<script src="/etc/styles/zpanelx/css/assets/bootstrap.min.js">\x3C<\/script>')</script>
+<script src="/etc/styles/zpanelx/js/respond.min.js"></script>
+<script src="/etc/styles/zpanelx/js/prettyCheckable.js"></script>
+<script src="/etc/styles/zpanelx/js/jquery.h5validate.js"></script>
 
 <!-- Pretty Checkable @ https://github.com/arthurgouveia/prettyCheckable -->
 <script>
