@@ -61,21 +61,23 @@ class fs_filehandler {
 	 * @param string $dest The full path to the destination directory (the directory to put the subfolders and files in)
 	 */
 	 static function CopyDirectoryContents($src, $dest) { 
+		$src = fs_director::ConvertSlashes($src);
+		$dest = fs_director::ConvertSlashes($dest);
 		if(is_dir($src)) {
-			$dir_handle=opendir($src);
-			while($file=readdir($dir_handle)){
-				if($file!="." && $file!=".."){
+			$dir_handle = opendir($src);
+			while($file = readdir($dir_handle)){
+				if($file != "." && $file != ".."){				
 					if(is_dir(fs_director::ConvertSlashes($src."/".$file))){
-						mkdir(fs_director::ConvertSlashes($dest."/".$file));
-						fs_filehandler::CopyDirectoryContents(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
+						mkdir(fs_director::ConvertSlashes($dest."/".$file), 0777);
+						self::CopyDirectoryContents($src."/".$file, $dest."/".$file);
 					} else {
-						copy(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
+						self::CopyFileSafe(fs_director::ConvertSlashes($src."/".$file), fs_director::ConvertSlashes($dest."/".$file));
 					}
 				}
 			}
 			closedir($dir_handle);
 		} else {
-			copy($src, $dest);
+			self::CopyFileSafe($src, $dest);
 		}
 	 }
 	 
@@ -86,19 +88,36 @@ class fs_filehandler {
 	*/
 	static function RemoveDirectoryContents($dir) {
 		$dir = fs_director::ConvertSlashes($dir);
-		$files = dir($dir);
-		while ($file = $files->read()) {
-			if ($file != '.' && $file != '..') {			
-				if (is_dir($dir.$file)) {
-					fs_filehandler::RemoveDirectoryContents(fs_director::ConvertSlashes($dir.$file.'/'));
-					rmdir($dir.$file);
-				} else
-				unlink($dir.$file);
+		if (is_dir($dir)) {
+			$files = dir($dir);
+			if($files) {
+				while ($file = $files->read()) {
+					if ($file != '.' && $file != '..') {			
+						if (is_dir($dir.$file)) {
+							fs_filehandler::RemoveDirectoryContents(fs_director::ConvertSlashes($dir.$file.'/'));
+							rmdir($dir.$file);
+						} else
+						unlink($dir.$file);
+					}
+				}
 			}
+			$files->close();
 		}
-		$files->close();
 	}
-
+	
+	/**
+	 * Removes a Directory and its contents
+	 * @author VJ Patel (meetthevj@gmail.com - VJftw @ZPanel Forums)
+	 * @param string $dir The full path to the directory to remove
+	*/
+	static function RemoveDirectory($dir) {
+		$dir = fs_director::ConvertSlashes($dir);
+		if (is_dir($dir)) {
+			self::RemoveDirectoryContents($dir);
+			rmdir($dir);
+		}
+	}
+	
     /**
      * Create blank or populated file with permissions, including the path.
      * @author Russell Skinner (rskinner@zpanelcp.com)
