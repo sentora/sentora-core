@@ -370,16 +370,11 @@ class module_controller
     static function StartBind()
     {
         if ( sys_versions::ShowOSPlatformVersion() == "Windows" ) {
+            /** @todo this needs changing to use the system command */
             exec( 'net start ' . ctrl_options::GetSystemOption( 'bind_service' ) . '', $out );
         }
         else {
-            system(
-                ctrl_options::GetSystemOption( 'zsudo' ) .
-                ' service ' .
-                escapeshellarg( ctrl_options::GetSystemOption( 'bind_service' ) ) .
-                ' start'
-                , $out
-            );
+            $out = ctrl_system::systemCommand( ctrl_options::GetSystemOption( 'zsudo' ), array( 'service', ctrl_options::GetSystemOption( 'bind_service' ), 'start' ) );
             sleep( 2 );
         }
     }
@@ -387,16 +382,11 @@ class module_controller
     static function StopBind()
     {
         if ( sys_versions::ShowOSPlatformVersion() == "Windows" ) {
+            /** @todo this needs changing to use the system command */
             exec( 'net stop ' . ctrl_options::GetSystemOption( 'bind_service' ) . '', $out );
         }
         else {
-            system(
-                ctrl_options::GetSystemOption( 'zsudo' ) .
-                ' service ' .
-                escapeshellarg( ctrl_options::GetSystemOption( 'bind_service' ) ) .
-                ' stop'
-                , $out
-            );
+            $out = ctrl_system::systemCommand( ctrl_options::GetSystemOption( 'zsudo' ), array( 'service', ctrl_options::GetSystemOption( 'bind_service' ), 'stop' ) );
             sleep( 2 );
         }
     }
@@ -404,12 +394,14 @@ class module_controller
     static function ReloadBind()
     {
         if ( sys_versions::ShowOSPlatformVersion() == "Windows" ) {
+            /** @todo this needs changing to use the system command */
             $reload_bind = ctrl_options::GetSystemOption( 'bind_dir' ) . 'rndc.exe reload';
+            pclose( popen( $reload_bind, 'r' ) );
         }
         else {
-            $reload_bind = ctrl_options::GetSystemOption( 'zsudo' ) . " service " . ctrl_options::GetSystemOption( 'bind_service' ) . " reload";
+            $out = ctrl_system::systemCommand( ctrl_options::GetSystemOption( 'zsudo' ), array( 'service', ctrl_options::GetSystemOption( 'bind_service' ), 'reload' ) );
         }
-        pclose( popen( $reload_bind, 'r' ) );
+        
     }
 
     static function ResetAll()
