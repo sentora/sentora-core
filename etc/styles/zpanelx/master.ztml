@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
+    <title><# ui_tpl_username #> - <# ui_tpl_domainname #></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Web Hosting Control Panel">
 
