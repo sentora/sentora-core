@@ -26,7 +26,7 @@
  */
 class module_controller {
 
-    function getServices() {
+    static public function getServices() {
         global $controller;
         $line = "<h2>" . ui_language::translate("Checking status of services...") . "</h2>";
         $line .= "<table>";
