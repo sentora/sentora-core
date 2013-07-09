@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Secure system command execution class.
+ * System command execution class.
  * @package zpanelx
  * @subpackage dryden -> ctrl
  * @version 1.1.0
