@@ -1542,7 +1542,8 @@ $line .='
 
 
                 $content_grabbed = ob_get_contents();
-                ob_end_clean();var_dump($retval);
+                ob_end_clean();
+                //var_dump($retval);
                 unlink($zonecheck_file);
                 if ($retval == 0) {
                     //Syntax check passed.
