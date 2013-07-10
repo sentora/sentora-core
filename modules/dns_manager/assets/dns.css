@@ -148,10 +148,6 @@ div.accountTitle > div.content > div > a:hover {
     margin-right: 8px;
     /*vertical-align: middle;*/
 }
-#dnsRecords div.header > div {
-    height: 100%;
-}
-
 #dnsRecords div.row > br {
     clear: both;
 }
