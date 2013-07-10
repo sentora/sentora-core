@@ -45,8 +45,8 @@ class module_controller {
     /* Load DNS CSS and JS files */
     static function getInit() {
         global $controller;
-        $line = '<link rel="stylesheet" type="text/css" href="modules' . $controller->GetControllerRequest('URL', 'module') . '/assets/dns.css">';
-        $line .= '<script type="text/javascript" src="modules' . $controller->GetControllerRequest('URL', 'module') . '/assets/dns.js"></script>';
+        $line = '<link rel="stylesheet" type="text/css" href="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/dns.css">';
+        $line .= '<script type="text/javascript" src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/dns.js"></script>';
         return $line;
     }
 
