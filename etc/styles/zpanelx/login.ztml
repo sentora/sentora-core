@@ -6,10 +6,15 @@
     <meta name="viewport" content="width=device-width">
     <meta name="robots" content="noindex, nofollow">
     <link rel="shortcut icon" type="image/x-icon" href="/etc/styles/zpanelx/images/favicon.ico" />
-    <link rel="stylesheet" href="/etc/styles/zpanelx/css/assets/bootstrap.min.css">
-    <link rel="stylesheet" href="/etc/styles/zpanelx/css/assets/prettyCheckable.css">
-    <link rel="stylesheet" href="/etc/styles/zpanelx/css/assets/login.css">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700">
+
+
+
+    <!-- styles -->
+    <link href="/etc/styles/zpanelx/css/bootstrap.css" rel="stylesheet">
+    <link href="/etc/styles/zpanelx/css/style.css" rel="stylesheet">
+    <link href="/etc/styles/zpanelx/css/login.css" rel="stylesheet">
+
+
     <!-- HTML5 shim for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="/etc/styles/zpanelx/js/html5shiv.js"></script>
@@ -27,13 +32,64 @@
             top.location = self.location;
         }
     </script>
+
+<style type="text/css">
+
+</style>
+
+
 </head>
 <body>
     <div class="loginwrapper">
-        <div class="logincontainer">
-            <div class="logintop">
-                <img src="/etc/styles/zpanelx/img/zplogoheader.png">
-            </div>
+
+
+
+
+<div class="panel login-panel">
+    <div class="panel-heading login-head">
+        <img src="/etc/styles/zpanelx/images/zplogo_v9.png">
+    </div>
+    <div class="panel-content form-horizontaL">
+
+
+        <?php
+        if (isset($_GET['invalidlogin'])) {
+        echo '
+        <div class="alert alert-danger fade in">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        Invalid Username or Password!
+        </div>';
+        }
+        if (isset($_GET['loggedout'])) {
+        echo '
+        <div class="alert alert-success fade in">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        Logout Successful!
+        </div>';
+        }
+        if(isset($_GET['sessionIssue'])){
+        echo '
+        <div class="alert alert-danger fade in">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        You have been logged out, please login again.
+        </div>';
+        }
+        if (isset($_GET['passwordreset'])) {
+        echo '
+        <div class="alert alert-success fade in">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        Your password has been reset!
+        </div>';
+        }
+        //if (runtime_sessionsecurity::checkProxy()) {
+        //  echo '
+        //  <div class="alert alert-info fade in logalert">
+        //    <button type="button" class="close" data-dismiss="alert">&times;</button>
+        //    It seems you are behind a proxy or on a webserver. Try disabling Session Security and logging in again.
+        //  </div>';
+        //}
+        ?>
+
             <!-- Reset Password Form -->
             <?php if (isset($_GET['resetkey'])) { ?>
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm" class="form-horizontal loginform">
@@ -59,16 +115,45 @@
                 </div>
                 <div class="loginbtm">
                     <div>
-                        <a href="javascript:void(0);" id="backtologin2">Back To Login</a>
+                        <!-- <a href="javascript:void(0);" id="backtologin2">Back To Login</a> -->
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-success" name="sublogin2" value="LogIn">Submit</button>
+                        <button type="submit" class="btn btn-primary" name="sublogin2" value="LogIn">Submit</button>
                     </div>
                 </div>
                 <?php echo runtime_csfr::Token(); ?>
             </form>
             <!-- End Reset Password Form -->
+
+
             <?php } else {?>
+
+            <!-- Forgot Password Form -->
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="frmZForgot" id="frmZForgot" class="form-horizontal loginform" style="display: none;">
+                <div class="loginmid">
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">
+                            Email:
+                        </label>
+                        <div class="controls">
+                            <input type="text" class="input-medium" id="inputEmail" name="inForgotPassword" placeholder="Email" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="loginbtm">
+                    <div>
+                        <a href="javascript:void(0);" id="backtologin">Back To Login</a>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary" name="sublogin2" value="LogIn">Submit</button>
+                    </div>
+                </div>
+                <?php echo runtime_csfr::Token(); ?>
+            </form>
+            <!-- End Forgot Password Form -->
+
+
+
             <!-- Login Form -->
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="frmZLogin" id="frmZLogin" class="form-horizontal loginform">
                 <div class="loginmid">
@@ -98,85 +183,32 @@
                         <a href="javascript:void(0);" id="forgotpw">Forgot Password?</a>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-success" name="sublogin2" value="LogIn">Login</button>
+                        <button type="submit" class="btn btn-primary" name="sublogin2" value="LogIn">Login</button>
                     </div>
                 </div>
                 <?php echo runtime_csfr::Token(); ?>
             </form>
             <!-- End Login Form -->
-            <!-- Forgot Password Form -->
-            <form action="" method="post" name="frmZForgot" id="frmZForgot" class="form-horizontal loginform hide">
-                <div class="loginmid">
-                    <div class="control-group">
-                        <label class="control-label" for="inputEmail">
-                            Email:
-                        </label>
-                        <div class="controls">
-                            <input type="text" class="input-medium" id="inputEmail" name="inForgotPassword" placeholder="Email" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="loginbtm">
-                    <div>
-                        <a href="javascript:void(0);" id="backtologin">Back To Login</a>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-success" name="sublogin2" value="LogIn">Submit</button>
-                    </div>
-                </div>
-                <?php echo runtime_csfr::Token(); ?>
-            </form>
-            <!-- End Forgot Password Form -->
+
+
+
             <?php }?>
-        </div>
+
+
+
+    </div><!--/panel content-->
+</div>
+
+
         <p class="vbox">Powered By: <a href="http://www.zpanelcp.com/" target="_new">ZPanel <?php echo sys_versions::ShowZpanelVersion(); ?></a></p>
-        <?php
-        if (isset($_GET['invalidlogin'])) {
-        echo '
-        <div class="alert alert-error fade in logalert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Invalid Username or Password!
-        </div>';
-        }
-        if (isset($_GET['loggedout'])) {
-        echo '
-        <div class="alert alert-success fade in logalert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Logout Successful!
-        </div>';
-        }
-        if(isset($_GET['sessionIssue'])){
-        echo '
-        <div class="alert alert-error fade in logalert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        You have been logged out, please login again.
-        </div>';
-        }
-        if (isset($_GET['passwordreset'])) {
-        echo '
-        <div class="alert alert-info fade in logalert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Your password has been reset!
-        </div>';
-        }
-        //if (runtime_sessionsecurity::checkProxy()) {
-        //  echo '
-        //  <div class="alert alert-info fade in logalert">
-        //    <button type="button" class="close" data-dismiss="alert">&times;</button>
-        //    It seems you are behind a proxy or on a webserver. Try disabling Session Security and logging in again.
-        //  </div>';
-        //}
-        ?>
+
     </div>
 
-    <!-- Javascript -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="/etc/styles/zpanelx/js/jquery-1.9.1.min.js">\x3C<\/script>')</script>
-    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
-    <script>window.jQuery || document.write('<script src="/etc/styles/zpanelx/css/assets/bootstrap.min.js">\x3C<\/script>')</script>
-    <script src="/etc/styles/zpanelx/js/respond.min.js"></script>
+
+    <!-- javascript
+    ================================================== -->
+    <script src="/etc/styles/zpanelx/js/jquery.js"></script>
     <script src="/etc/styles/zpanelx/js/prettyCheckable.js"></script>
-    <script src="/etc/styles/zpanelx/js/jquery.h5validate.js"></script>
     <!-- Pretty Checkable @ https://github.com/arthurgouveia/prettyCheckable -->
     <script>
         $().ready(function() {
@@ -203,17 +235,12 @@
                 $('#frmZLogin').slideDown("slow");
             });
         });
+
     </script>
     <!-- Page Fade In After Load -->
     <script>
         $(window).load(function() {
             $("body").fadeIn();
-        });
-    </script>
-    <!-- HTML5 Form Validation in IE -->
-    <script>
-        $(document).ready(function() {
-            $('form').h5Validate();
         });
     </script>
 </body>

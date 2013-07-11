@@ -1,0 +1,151 @@
+/* Login Page Stylesheet */
+
+html, body {
+  background-color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+}
+a:link, a:visited {
+  color:#5fbf5e;
+  text-decoration:none;
+}
+a:hover, a:active {
+  color:#5fbf5e;
+  text-decoration:underline;
+}
+
+.loginwrapper {
+  background-color: #fff;
+  height: 370px;
+  width: 400px;
+  padding:5px;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.loginform {
+  margin: 29px 0 0 0;
+}
+
+.loginwrapper .form-horizontal .control-label{
+  float: left;
+  width: 140px;
+  padding: 5px 5px 0 0;
+  text-align:right;
+}
+.loginwrapper .form-horizontal .controls {
+  display: inline-block;
+  padding-left: 20px;
+  margin-left: 130px;
+  margin-left: 0;
+  text-align:left;
+}
+
+.logcheckbox {
+  position:relative;
+  bottom:10px;
+  right:10px;
+}
+
+.vbox {
+  text-align:center;
+  padding-top:10px;
+}
+
+.loginbtm {
+  background: rgb(239,239,239); /* Old browsers */
+  padding:20px 0;
+  -webkit-border-radius: 0px 0px 5px 5px;
+  border-radius: 0px 0px 5px 5px;
+  border-top:1px solid #ccc;
+}
+.loginbtm > div {
+  display: inline-block;
+  width: 44%;
+  text-align: right;
+}
+.login-head img{
+    width: 226px;
+    float: none;
+}
+.login-head {
+    margin: 0;
+}
+.login-panel {
+    padding: 0;
+}
+.alert {
+  width: 90%;
+  margin: 20px;
+}
+
+/* PrettyCheckable Stylesheet */
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {clear: both;}
+
+.clearfix {*zoom: 1;}
+
+.prettycheckbox,
+.prettyradio {
+    display: inline-block;
+    padding:0;
+    margin:0;
+}
+
+.prettycheckbox a,
+.prettyradio a{
+    width: 30px;
+    height: 30px;
+    background: url(prettyCheckable-blue.png) top left no-repeat;
+    display: block;
+    float: left;
+    cursor: pointer;
+    margin:0;
+}
+
+.prettycheckbox.green a,
+.prettyradio.green a{ background-image: url(prettyCheckable-green.png);}
+
+.prettyradio a {background-position: 0 -120px;}
+
+.prettycheckbox a:focus,
+.prettyradio a:focus {outline: 0 none;}
+
+.prettycheckbox a:focus{background-position: 0 -30px;}
+.prettyradio a:focus{background-position: 0 -150px;}
+
+.prettycheckbox a.checked{ background-position: 0 -60px; }
+.prettyradio a.checked { background-position: 0 -180px; }
+
+.prettycheckbox a.checked:focus{ background-position: 0 -90px; }
+.prettyradio a.checked:focus { background-position: 0 -210px; }
+
+.prettycheckbox label,
+.prettyradio label {
+  display: block;
+  float: left;
+  margin: 6px 5px;
+  cursor: pointer;
+}
+
+.prettycheckbox.disabled a,
+.prettyradio.disabled a,
+.prettycheckbox.disabled label,
+.prettyradio.disabled label{
+  cursor:not-allowed;
+}
+
+.prettycheckbox.disabled a {
+  background-position: 0 -240px;
+}
+
+.prettyradio.disabled a {
+  background-position: 0 -270px;
+}
