@@ -126,7 +126,7 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
             } else {
                 $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
                 if (fs_director::CheckFileExists($extra_config))
-					include($extra_config);
+                    include($extra_config);
                 fwrite(STDOUT, "Module upgraded successfully!\n");
                 exit(0);
             }
@@ -146,9 +146,13 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
         $sql = $zdbh->prepare("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '" . $argv[2] . "'");
         $sql->execute();
         $moduleid = $sql->fetch();
-        fwrite(STDOUT, "Removing \"" . $argv[2] . "\" will delete the module folder and drop any tables used by the module!\n");
-        fwrite(STDOUT, "Please confirm you want to remove this module? [y/N]");
-        $confirm = fgets(STDIN, 2);
+        if(!isset($argv[3]) &&  $argv[3] != '-y') {
+            fwrite(STDOUT, "Removing \"" . $argv[2] . "\" will delete the module folder and drop any tables used by the module!\n");
+            fwrite(STDOUT, "Please confirm you want to remove this module? [y/N]");
+            $confirm = fgets(STDIN, 2);
+        } else {
+            $confirm = 'y';
+        }
         if ($confirm == 'y') {
             fwrite(STDOUT, "Removing " . $argv[2] . " module..\n");
             $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/remove.run";
@@ -310,7 +314,7 @@ if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1
     fwrite(STDOUT, "  install [modulename]- Install a named module.\n");
     fwrite(STDOUT, "  upgrade [modulename]- Updates a named module.\n");
     fwrite(STDOUT, "  update - Updates local avaliable package list.\n");
-    fwrite(STDOUT, "  remove [modulename]- Remove a named module.\n");
+    fwrite(STDOUT, "  remove [modulename] (-y) - Remove a named module. (Optional supress confirm)\n");
     fwrite(STDOUT, "  repo add [fqdn]- Adds a package repository.\n");
     fwrite(STDOUT, "  repo remove [fqdn]- Removes a package repository.\n");
     fwrite(STDOUT, "  repo list - Displays all your current avaliable package repositories.\n");
