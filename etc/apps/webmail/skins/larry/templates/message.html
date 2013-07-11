@@ -1,0 +1,81 @@
+<roundcube:object name="doctype" value="html5" />
+<html>
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+</head>
+<roundcube:if condition="env:extwin" /><body class="noscroll extwin"><roundcube:else /><body class="noscroll"><roundcube:endif />
+
+<roundcube:include file="/includes/header.html" />
+
+<div id="mainscreen">
+
+<!-- toolbar -->
+<div id="messagetoolbar" class="toolbar fullwidth">
+<roundcube:if condition="!env:extwin" />
+	<roundcube:button command="list" type="link" class="button back disabled" classAct="button back" classSel="button back pressed" label="back" />
+<roundcube:endif />
+	<roundcube:include file="/includes/mailtoolbar.html" />
+	<div class="toolbarselect">
+		<roundcube:object name="mailboxlist" type="select" noSelection="moveto" maxlength="25" onchange="rcmail.command('moveto', this.options[this.selectedIndex].value)" class="mailboxlist decorated" folder_filter="mail" />
+	</div>
+</div>
+
+<roundcube:if condition="!env:extwin" />
+
+<div id="mailview-left">
+
+<!-- folders list -->
+<div id="mailboxcontainer" class="uibox listbox">
+<div class="scroller">
+<roundcube:object name="mailboxlist" id="mailboxlist" class="listing" folder_filter="mail" unreadwrap="%s" />
+</div>
+</div>
+
+</div>
+
+<div id="mailview-right" class="offset uibox">
+<roundcube:else />
+
+<div id="mailview-right" class="offset fullwidth uibox">
+<roundcube:endif />
+
+<div id="messageheader">
+<span class="moreheaderstoggle"></span>
+
+<h2 class="subject"><roundcube:object name="messageHeaders" valueOf="subject" /></h2>
+<div class="message-headers">
+<roundcube:object name="messageHeaders" class="headers-table" addicon="/images/addcontact.png" exclude="subject" max="20" />
+</div>
+<roundcube:object name="messageFullHeaders" id="full-headers" />
+
+<!-- record navigation -->
+<div id="countcontrols" class="pagenav">
+	<roundcube:object name="messageCountDisplay" class="countdisplay" />
+	<roundcube:button command="previousmessage" type="link" class="button prevpage disabled" classAct="button prevpage" classSel="button prevpage pressed" innerClass="inner" title="previousmessage" content="&amp;lt;" />
+	<roundcube:button command="nextmessage" type="link" class="button nextpage disabled" classAct="button nextpage" classSel="button nextpage pressed" innerClass="inner" title="nextmessage" content="&amp;gt;" />
+</div>
+
+<div id="contactphoto"><roundcube:object name="contactphoto" /></div>
+</div>
+
+<div id="messagecontent">
+<div class="rightcol">
+<roundcube:object name="messageAttachments" id="attachment-list" class="attachmentslist" />
+</div>
+<div class="leftcol">
+<roundcube:object name="messageObjects" id="message-objects" />
+<roundcube:object name="messageBody" id="messagebody" headertableclass="message-partheaders headers-table" />
+</div>
+</div>
+
+<roundcube:object name="message" id="message" class="statusbar" />
+
+</div><!-- end mailview-right -->
+
+</div><!-- end mainscreen -->
+
+<roundcube:include file="/includes/footer.html" />
+
+</body>
+</html>

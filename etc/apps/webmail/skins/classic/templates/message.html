@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+<script type="text/javascript" src="/splitter.js"></script>
+<script type="text/javascript" src="/functions.js"></script>
+<style type="text/css">
+#mailboxlist-container { width: <roundcube:exp expression="!empty(cookie:mailviewsplitterv) ? cookie:mailviewsplitterv-5 : 170" />px; }
+#messageframe { left: <roundcube:exp expression="!empty(cookie:mailviewsplitterv) ? cookie:mailviewsplitterv+5 : 180" />px;
+<roundcube:exp expression="browser:ie ? ('width: expression((parseInt(this.parentNode.offsetWidth)-'.(!empty(cookie:mailviewsplitterv) ? cookie:mailviewsplitterv+5 : 180).')+\\'px\\');') : ''" />
+}
+</style>
+</head>
+<roundcube:if condition="env:extwin" />
+<body class="extwin" onload="rcube_init_mail_ui()">
+<roundcube:object name="message" id="message" />
+<roundcube:else />
+<body onload="rcube_init_mail_ui()">
+
+<roundcube:include file="/includes/taskbar.html" />
+<roundcube:include file="/includes/header.html" />
+<roundcube:endif />
+
+<roundcube:include file="/includes/messagetoolbar.html" />
+
+<div id="mainscreen">
+<roundcube:if condition="!env:extwin" />
+<div id="mailleftcontainer">
+<div id="mailboxlist-container">
+<div id="mailboxlist-title" class="boxtitle"><roundcube:label name="mailboxlist" /></div>
+<div class="boxlistcontent">
+    <roundcube:object name="mailboxlist" id="mailboxlist" maxlength="25" />
+</div>
+<div class="boxfooter"></div>
+</div>
+</div>
+<roundcube:endif />
+
+<div id="messageframe">
+<div class="boxlistcontent" style="top:0; overflow-x:auto">
+<roundcube:object name="messageHeaders" class="headers-table" cellspacing="0" cellpadding="2" addicon="/images/icons/silhouette.png" summary="Message headers" />
+<roundcube:object name="messageFullHeaders" id="full-headers" />
+<roundcube:object name="messageAttachments" id="attachment-list" />
+<roundcube:object name="messageObjects" id="message-objects" />
+<roundcube:object name="messageBody" id="messagebody" />
+</div>
+<div class="boxfooter">
+<div id="countcontrols" class="pagenav">
+  <roundcube:button command="lastmessage" type="link" class="buttonPas lastpage" classAct="button lastpage" classSel="button lastpageSel" title="lastmessage" content=" " />
+  <roundcube:button command="nextmessage" type="link" class="buttonPas nextpage" classAct="button nextpage" classSel="button nextpageSel" title="nextmessage" content=" " />
+  <roundcube:object name="messageCountDisplay" style="padding:0 .5em; float:right" />
+  <roundcube:button command="previousmessage" type="link" class="buttonPas prevpage" classAct="button prevpage" classSel="button prevpageSel" title="previousmessage" content=" " />
+  <roundcube:button command="firstmessage" type="link" class="buttonPas firstpage" classAct="button firstpage" classSel="button firstpageSel" title="firstmessage" content=" " />
+</div>
+</div>
+</div>
+
+</div>
+
+<roundcube:if condition="!env:extwin" />
+<script type="text/javascript">
+    var mailviewsplitv = new rcube_splitter({id:'mailviewsplitterv', p1: 'mailboxlist-container', p2: 'messageframe', orientation: 'v', relative: true, start: 165});
+    rcmail.add_onload('mailviewsplitv.init()');
+</script>
+<roundcube:endif />
+
+</body>
+</html>
