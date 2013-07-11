@@ -1,4 +1,5 @@
 <?php
+
 /**
  * start page for webaccess
  * redirect the user to the supported page type by the users webbrowser (js available or not)
@@ -13,7 +14,7 @@
  * @version   SVN: $Id: index.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+/**
  * define the application root path on the webserver
  * @var string
  */
@@ -27,14 +28,19 @@ define('APP_ROOT', dirname(__FILE__));
  */
 define('PSI_INTERNAL_XML', false);
 
+session_start();
+if (!isset($_SESSION['zpuid'])) {
+    die("<h1>Unathorised request!</h1><p>You must be logged in before you are able to view the server resource information.</p>");
+}
+
 if (version_compare("5.2", PHP_VERSION, ">")) {
     die("PHP 5.2 or greater is required!!!");
 }
 
-require_once APP_ROOT.'/includes/autoloader.inc.php';
+require_once APP_ROOT . '/includes/autoloader.inc.php';
 
 // Load configuration
-require_once APP_ROOT.'/config.php';
+require_once APP_ROOT . '/config.php';
 
 if (!defined('PSI_CONFIG_FILE') || !defined('PSI_DEBUG')) {
     $tpl = new Template("/templates/html/error_config.html");
@@ -45,20 +51,20 @@ if (!defined('PSI_CONFIG_FILE') || !defined('PSI_DEBUG')) {
 // redirect to page with and without javascript
 $display = isset($_GET['disp']) ? $_GET['disp'] : strtolower(PSI_DEFAULT_DISPLAY_MODE);
 switch ($display) {
-case "static":
-    $webpage = new WebpageXSLT();
-    $webpage->run();
-    break;
-case "dynamic":
-    $webpage = new Webpage();
-    $webpage->run();
-    break;
-case "xml":
-    $webpage = new WebpageXML(true, null);
-    $webpage->run();
-    break;
-default:
-    $tpl = new Template("/templates/html/index_all.html");
-    echo $tpl->fetch();
-    break;
+    case "static":
+        $webpage = new WebpageXSLT();
+        $webpage->run();
+        break;
+    case "dynamic":
+        $webpage = new Webpage();
+        $webpage->run();
+        break;
+    case "xml":
+        $webpage = new WebpageXML(true, null);
+        $webpage->run();
+        break;
+    default:
+        $tpl = new Template("/templates/html/index_all.html");
+        echo $tpl->fetch();
+        break;
 }
