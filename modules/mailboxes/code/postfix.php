@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -137,13 +137,13 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
 //Saving PostFix Mailboxes
 if (!fs_director::CheckForEmptyValue(self::$update)) {
     if (!fs_director::CheckForEmptyValue($password)) {
-        $sql = $mail_db->prepare("UPDATE mailbox SET password=:password WHERE username=:mb_address_vc");
+        $sql = $mail_db->prepare("UPDATE mailbox SET password=:password, modified=NOW() WHERE username=:mb_address_vc");
         $password = '{PLAIN-MD5}' . md5($password);
         $sql->bindParam(':password', $password);
         $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
         $sql->execute();
     }
-    $sql = $mail_db->prepare("UPDATE mailbox SET active=:enabled WHERE username=:mb_address_vc");
+    $sql = $mail_db->prepare("UPDATE mailbox SET active=:enabled, modified=NOW() WHERE username=:mb_address_vc");
     $sql->bindParam(':enabled', $enabled);
     $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
     $sql->execute();
