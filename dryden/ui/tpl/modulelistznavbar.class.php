@@ -10,12 +10,14 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class ui_tpl_modulelistznavbar {
+class ui_tpl_modulelistznavbar
+{
 
-    public static function Template() {
+    public static function Template()
+    {
 
         $active = isset($_REQUEST['module']) ? '' : 'class="active"';
-        $line = '<li '.$active.'><a href="."><: Home :></a></li>';
+        $line = '<li ' . $active . '><a href="."><: Home :></a></li>';
 
         $modcats = ui_moduleloader::GetModuleCats();
         rsort($modcats);
@@ -44,44 +46,44 @@ class ui_tpl_modulelistznavbar {
                     break;
             }
 
-            $shortName = '<: '.$shortName.' :>';
+            $shortName = '<: ' . $shortName . ' :>';
             $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk']);
 
-            $line .= '<li class="dropdown">';
-            // IF Account, show Gravatar Image
-            if($shortName == '<: Account :>'){
-                
-                $currentuser = ctrl_users::GetUserDetail();
-                $image = self::get_gravatar($currentuser['email'], 22, 'mm', 'g', true);
-                $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$image.' '.$shortName.' <b class="caret"></b></a>';
-            }else{
-                $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$shortName.' <b class="caret"></b></a>';
-            }
+            if (count($mods) > 0) {
+                $line .= '<li class="dropdown">';
+                // IF Account, show Gravatar Image
+                if ($shortName == '<: Account :>') {
 
-            $line .= '<ul class="dropdown-menu">';
-            foreach ($mods as $mod) {
-
-                $class_name = str_replace(array(' ', '_'), '-', strtolower($mod['mo_folder_vc']));
-
-                if(isset($_GET['module']) && $_GET['module'] == $mod['mo_folder_vc']){
-                    $line .= '<li class="active">';
-                }else{
-                    $line .= '<li>';
+                    $currentuser = ctrl_users::GetUserDetail();
+                    $image = self::get_gravatar($currentuser['email'], 22, 'mm', 'g', true);
+                    $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' . $image . ' ' . $shortName . ' <b class="caret"></b></a>';
+                } else {
+                    $line .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' . $shortName . ' <b class="caret"></b></a>';
                 }
-                $line .= '<a href="?module=' . $mod['mo_folder_vc'] . '"><i class="icon-'.$class_name.'"></i> <: ' . $mod['mo_name_vc'] . ' :></a></li>';
-            }
 
-            // If Account tab, show Logout Menu Item
-            if($shortName == '<: Account :>'){
-                $line .= '<li><a href="?logout"><i class="icon-phpinfo"></i> Logout</a></li>';
-            }
+                $line .= '<ul class="dropdown-menu">';
+                foreach ($mods as $mod) {
 
-            $line .= '</ul></li>';
+                    $class_name = str_replace(array(' ', '_'), '-', strtolower($mod['mo_folder_vc']));
+
+                    if (isset($_GET['module']) && $_GET['module'] == $mod['mo_folder_vc']) {
+                        $line .= '<li class="active">';
+                    } else {
+                        $line .= '<li>';
+                    }
+                    $line .= '<a href="?module=' . $mod['mo_folder_vc'] . '"><i class="icon-' . $class_name . '"></i> <: ' . $mod['mo_name_vc'] . ' :></a></li>';
+                }
+                // If Account tab, show Logout Menu Item
+                if ($shortName == '<: Account :>') {
+                    $line .= '<li><a href="?logout"><i class="icon-phpinfo"></i> Logout</a></li>';
+                }
+
+                $line .= '</ul></li>';
+            }
         }
 
         return $line;
     }
-
 
     /**
      * Get either a Gravatar URL or complete image tag for a specified email address.
@@ -95,13 +97,14 @@ class ui_tpl_modulelistznavbar {
      * @return String containing either just a URL or a complete image tag
      * @source http://gravatar.com/site/implement/images/php/
      */
-    public static function get_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {
+    public static function get_gravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array())
+    {
         $url = 'http://www.gravatar.com/avatar/';
-        $url .= md5( strtolower( trim( $email ) ) );
+        $url .= md5(strtolower(trim($email)));
         $url .= "?s=$s&d=$d&r=$r";
-        if ( $img ) {
+        if ($img) {
             $url = '<img src="' . $url . '"';
-            foreach ( $atts as $key => $val )
+            foreach ($atts as $key => $val)
                 $url .= ' ' . $key . '="' . $val . '"';
             $url .= ' />';
         }
