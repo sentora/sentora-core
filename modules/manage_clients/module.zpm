@@ -54,7 +54,7 @@
                     <td><input name="inUserName" type="text" disabled="disabled" size="30" maxlength="30" id="inUserName" value="<@ EditCurrentName @>" readonly="readonly" /></td>
                 </tr>
                 <tr>
-                    <th><: User group :>:</th>
+                    <th><: Group :>:</th>
                     <td>
                         <select name="inGroup" id="inGroup">
                             <% loop CurrentGroupList %>
@@ -77,19 +77,19 @@
                     <td><input type="text" name="inFullName" id="inFullName" value="<@ EditCurrentFullName @>" /></td>
                 </tr>
                 <tr>
-                    <th><: Email Address :>:</th>
+                    <th><: Email address :>:</th>
                     <td><input type="text" name="inEmailAddress" id="inEmailAddress" value="<@ EditCurrentEmail @>" /></td>
                 </tr>
                 <tr>
-                    <th><: Postal Address :>:</th>
+                    <th><: Postal address :>:</th>
                     <td><textarea name="inAddress" id="inAddress" cols="45" rows="5"><@ EditCurrentAddress @></textarea></td>
                 </tr>
                 <tr>
-                    <th><: Postal Code :>:</th>
+                    <th><: Postal code :>:</th>
                     <td><input name="inPostCode" type="text" id="inPostCode" size="20" maxlength="10" value="<@ EditCurrentPost @>" /></td>
                 </tr>
                 <tr>
-                    <th><: Phone Number :>:</th>
+                    <th><: Phone number :>:</th>
                     <td><input name="inPhone" type="text" id="inPhone" size="20" maxlength="50" value="<@ EditCurrentPhone @>" /></td>
                 </tr>
                 <tr>
@@ -126,8 +126,8 @@
                     <th><: Package :></th>
                     <th><: Group :></th>
                     <th><: Clients :></th>
-                    <th><: Current Disk :></th>
-                    <th><: Current Bandwidth :></th>
+                    <th><: Current disk :></th>
+                    <th><: Current bandwidth :></th>
                     <th></th>
                 </tr>
                 <% loop ClientList %>
@@ -165,8 +165,8 @@
                     <th><: Username :></th>
                     <th><: Package :></th>
                     <th><: Group :></th>
-                    <th><: Current Disk :></th>
-                    <th><: Current Bandwidth :></th>
+                    <th><: Current disk :></th>
+                    <th><: Current bandwidth :></th>
                     <th></th>
                 </tr>
                 <% loop DisabledClientList %>
@@ -203,10 +203,10 @@
                     <td><input type="text" name="inNewPassword" id="input-password" size="30" value="<@ RandomPassword @>" /> <a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
                 </tr>
                 <tr>
-                    <th><: Usergroup :>:</th>
+                    <th><: Group :>:</th>
                     <td>
                         <select name="inNewGroup" id="inNewGroup">
-                            <option value="" selected="selected">-- Select a usergroup --</option>
+                            <option value="" selected="selected">-- Select a user group --</option>
                             <% loop GroupList %>
                             <option value="<& groupid &>"><& groupname &></option>
                             <% endloop %>
@@ -229,31 +229,31 @@
                     <td><input type="text" name="inNewFullName" id="inNewFullName" value="<@ FormFullName @>" /></td>
                 </tr>
                 <tr>
-                    <th><: Email Address :>:</th>
+                    <th><: Email address :>:</th>
                     <td><input type="text" name="inNewEmailAddress" id="inNewEmailAddress" value="<@ FormEmail @>" /></td>
                 </tr>
                 <tr>
-                    <th><: Postal Address :>:</th>
+                    <th><: Postal address :>:</th>
                     <td><textarea name="inNewAddress" id="inNewAddress" cols="45" rows="5"><@ FormAddress @></textarea></td>
                 </tr>
                 <tr>
-                    <th><: Postal Code :>:</th>
+                    <th><: Postal code :>:</th>
                     <td><input name="inNewPostCode" type="text" id="inNewPostCode" size="20" maxlength="10" value="<@ FormPost @>" /></td>
                 </tr>
                 <tr>
-                    <th><: Phone Number :>:</th>
+                    <th><: Phone number :>:</th>
                     <td><input name="inNewPhone" type="text" id="inNewPhone" size="20" maxlength="50" value="<@ FormPhone @>" /></td>
                 </tr>
                 <tr>
-                    <th><: Send welcome email? :></th>
+                    <th><: Send welcome email :></th>
                     <td><input name="inSWE" type="checkbox" id="inSWE" value="1" checked="checked" /></td>
                 </tr>
                 <tr>
-                    <th><: Email Subject :>:</th>
+                    <th><: Email subject :>:</th>
                     <td><input name="inEmailSubject" type="text" id="inEmailSubject" value="<: Your ZPanel Account details :>" style="width:380px;" /></td>
                 </tr>
                 <tr>
-                    <th><: Email Body :>:</th>
+                    <th><: Email body :>:</th>
                     <td><textarea name="inEmailBody" id="inEmailBody" cols="45" rows="5"><@ DefaultEmailBody @></textarea></td>
                 </tr>
                 <tr>
