@@ -146,12 +146,12 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
         $sql = $zdbh->prepare("SELECT mo_id_pk FROM x_modules WHERE mo_folder_vc = '" . $argv[2] . "'");
         $sql->execute();
         $moduleid = $sql->fetch();
-        if(!isset($argv[3]) &&  $argv[3] != '-y') {
+        if (isset($argv[3]) && $argv[3] == '-y') {
+            $confirm = 'y';
+        } else {
             fwrite(STDOUT, "Removing \"" . $argv[2] . "\" will delete the module folder and drop any tables used by the module!\n");
             fwrite(STDOUT, "Please confirm you want to remove this module? [y/N]");
             $confirm = fgets(STDIN, 2);
-        } else {
-            $confirm = 'y';
         }
         if ($confirm == 'y') {
             fwrite(STDOUT, "Removing " . $argv[2] . " module..\n");
@@ -257,7 +257,7 @@ if ((isset($argv[1])) && ($argv[1] == 'repo')) {
         fwrite(STDOUT, "\nCurrently configured repositories:\n\n");
         foreach ($lines as $line) {
             if (isset($line[0]) && ($line[0] == "#")) {
-                # Its a comment - lets ignore it.
+# Its a comment - lets ignore it.
             } else {
                 if ($line != "") {
                     fwrite(STDOUT, " > " . $line . "\n");
@@ -277,7 +277,7 @@ if ((isset($argv[1])) && ($argv[1] == 'update')) {
     fwrite(STDOUT, "Updating package list..\n");
     foreach ($lines as $line) {
         if (isset($line[0]) && ($line[0] == "#")) {
-            # Its a comment or empty line - lets ignore it.
+# Its a comment or empty line - lets ignore it.
         } else {
             if ($line != "") {
                 fwrite(STDOUT, "  Connecting to " . $line . "\n");
