@@ -23,8 +23,8 @@ if [ "$result" == "zpanel_postfix" ]; then
 	sed -i "s|password \= postfix|password \= $password|" /etc/zpanel/configs/postfix/mysql-virtual_mailbox_limit_maps.cf
 	sed -i "s|password \= postfix|password \= $password|" /etc/zpanel/configs/postfix/mysql-virtual_mailbox_maps.cf
 	sed -i "s|\$db_password \= 'postfix';|\$db_password \= '$password';|" /etc/zpanel/configs/postfix/vacation.conf
-	sed -i "s|password=postfix|password=8G3wQ4A4D23aequN|" /etc/zpanel/configs/dovecot2/dovecot-dict-quota.conf
-	sed -i "s|password=postfix|password=8G3wQ4A4D23aequN|" /etc/zpanel/configs/dovecot2/dovecot-mysql.conf
+	sed -i "s|password=postfix|password=$password|" /etc/zpanel/configs/dovecot2/dovecot-dict-quota.conf
+	sed -i "s|password=postfix|password=$password|" /etc/zpanel/configs/dovecot2/dovecot-mysql.conf
 	echo -e "Your new MySQL 'postfix' is : $password";
 	echo -e "MySQL Postfix Password : $password" >> /root/passwords.txt
 fi
