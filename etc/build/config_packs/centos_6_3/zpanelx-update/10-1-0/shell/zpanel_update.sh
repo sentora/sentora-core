@@ -26,4 +26,5 @@ if [ "$result" == "zpanel_postfix" ]; then
 	sed -i "s|password=postfix|password=8G3wQ4A4D23aequN|" /etc/zpanel/configs/dovecot2/dovecot-dict-quota.conf
 	sed -i "s|password=postfix|password=8G3wQ4A4D23aequN|" /etc/zpanel/configs/dovecot2/dovecot-mysql.conf
 	echo -e "Your new MySQL 'postfix' is : $password";
+	echo -e "MySQL Postfix Password : $password" >> /root/passwords.txt
 fi
