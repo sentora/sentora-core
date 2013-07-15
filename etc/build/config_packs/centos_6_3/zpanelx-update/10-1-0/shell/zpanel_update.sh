@@ -12,7 +12,8 @@ result=`mysql -u postfix -ppostfx --skip-column-names -e "SHOW DATABASES LIKE 'z
 
 if [ "$result" == "zpanel_postfix" ]; then
 	password=`genpasswd`;
-	mysqladmin -u postfix password "$password"
+	mysqlrootpass=`cat /root/mysqlrootpass`
+	echo "UPDATE mysql.user SET Password=PASSWORD('$password') WHERE User='postfix' AND Host='localhost';" | mysql -u root -p$mysqlrootpass
 	sed -i "s|password = postfix|myhostname = $password|" /etc/zpanel/configs/postfix/mysql-relay_domains_maps.cf
 	sed -i "s|password = postfix|myhostname = $password|" /etc/zpanel/configs/postfix/mysql-virtual_alias_maps.cf
 	sed -i "s|password = postfix|myhostname = $password|" /etc/zpanel/configs/postfix/mysql-virtual_domains_maps.cf
