@@ -51,7 +51,7 @@ class ui_tpl_modulelistznavbar
 
             if (count($mods) > 0) {
                 $line .= '<li class="dropdown">';
-                // IF Account, show Gravatar Image
+// IF Account, show Gravatar Image
                 if ($shortName == '<: Account :>') {
 
                     $currentuser = ctrl_users::GetUserDetail();
@@ -73,7 +73,7 @@ class ui_tpl_modulelistznavbar
                     }
                     $line .= '<a href="?module=' . $mod['mo_folder_vc'] . '"><i class="icon-' . $class_name . '"></i> <: ' . $mod['mo_name_vc'] . ' :></a></li>';
                 }
-                // If Account tab, show Logout Menu Item
+// If Account tab, show Logout Menu Item
                 if ($shortName == '<: Account :>') {
                     $line .= '<li><a href="?logout"><i class="icon-phpinfo"></i> Logout</a></li>';
                 }
@@ -99,7 +99,7 @@ class ui_tpl_modulelistznavbar
      */
     public static function get_gravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array())
     {
-        $url = 'http://www.gravatar.com/avatar/';
+        $url = self::getCurrentProtocol() . 'www.gravatar.com/avatar/';
         $url .= md5(strtolower(trim($email)));
         $url .= "?s=$s&d=$d&r=$r";
         if ($img) {
@@ -109,6 +109,19 @@ class ui_tpl_modulelistznavbar
             $url .= ' />';
         }
         return $url;
+    }
+
+    /**
+     * Detects the correct protocol to use when building the Gravatar image URL, this prevents SSL errors if the panel is being hosted over SSL.
+     * @return string The protocol prefix.
+     */
+    private static function getCurrentProtocol()
+    {
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) {
+            return 'https://';
+        } else {
+            return 'http://';
+        }
     }
 
 }

@@ -22,22 +22,22 @@
     <![endif]-->
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-144-precomposed.png">
 
-    <link rel="icon" href="# ui_tpl_assetfolderpath #>img/ico/fav16.png"  sizes="16x16"   type="image/png">
-    <link rel="icon" href="# ui_tpl_assetfolderpath #>img/ico/fav32.png"  sizes="32x32"   type="image/png">
-    <link rel="icon" href="# ui_tpl_assetfolderpath #>img/ico/fav48.png"  sizes="48x48"   type="image/png">
-    <link rel="icon" href="# ui_tpl_assetfolderpath #>img/ico/fav64.png"  sizes="64x64"   type="image/png">
-    <link rel="icon" href="# ui_tpl_assetfolderpath #>img/ico/fav128.png" sizes="128x128" type="image/png">
+    <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav16.png"  sizes="16x16"   type="image/png">
+    <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav32.png"  sizes="32x32"   type="image/png">
+    <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav48.png"  sizes="48x48"   type="image/png">
+    <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav64.png"  sizes="64x64"   type="image/png">
+    <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav128.png" sizes="128x128" type="image/png">
 
-    <link rel="icon" href="# ui_tpl_assetfolderpath #>img/ico/fav32.png">
-    <!--[if IE]><link rel="shortcut icon" href="# ui_tpl_assetfolderpath #>img/ico/favicon.ico"><![endif]-->
+    <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav32.png">
+    <!--[if IE]><link rel="shortcut icon" href="<# ui_tpl_assetfolderpath #>img/ico/favicon.ico"><![endif]-->
 
     <meta name="msapplication-TileColor" content="#222222">
-    <meta name="msapplication-TileImage" content="# ui_tpl_assetfolderpath #>img/ico/fav144.png">
+    <meta name="msapplication-TileImage" content="<# ui_tpl_assetfolderpath #>img/ico/fav144.png">
 
   </head>
 
