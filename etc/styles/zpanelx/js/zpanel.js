@@ -19,7 +19,7 @@
 // /js/bootstrap-tab.js
 // /js/bootstrap-tooltip.js
 // /js/bootstrap-popover.js
-// /js/bootstrap-typeahead.js
+// /js/typeahead.js
 
 var zPanel = {
 
@@ -472,7 +472,7 @@ var zPanel = {
 
         // Show Bootstrap typeAhead with Redirect.
         // Pass in JSON object with Names and URLs
-        typeAhead: function(moduleNames) {
+        typeAheadOLD: function(moduleNames) {
             var moduleNames = new Array();
             var moduleUrls = new Object();
             // Build Arrays
@@ -492,7 +492,35 @@ var zPanel = {
 
                 }
             });
+        },
+
+        // Show Bootstrap typeAhead with Redirect.
+        // Pass in JSON object with Names and URLs
+        typeAhead: function(moduleNames) {
+            var moduleNames = new Array();
+            var moduleUrls = new Object();
+
+            // Build Arrays
+            $.each(moduleJsonData, function(index, module) {
+                moduleNames.push(module.name);
+                moduleUrls[module.name] = module.url;
+            });
+
+            // Attach Twitter TypeAhead
+            $('#module-search').typeahead({
+                name: 'modules',
+                local: moduleNames,
+                header: '<h3 class="module-search">Modules</h3>'
+            }).on('typeahead:selected typeahead:autocompleted', function($e,datum) {
+                var $typeahead = $(this);
+                console.log(moduleUrls[datum.value]);
+                //setTimeout(function() {
+                    window.location.href = '/?module=' + moduleUrls[datum.value];
+                    //return true;
+                //}, 1000);
+            });
         }
+
 
     }
 
