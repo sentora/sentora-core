@@ -486,14 +486,14 @@ li.highlight {
     /*border-bottom: 1px solid #d3d3d1;*/
 
     list-style-type: none;
-    background: #1c1c1c;
+    background: inherit;
 }
 #menu-sidebar ul li{
     /*border-top: 1px solid #fefefe;*/
     /*border-bottom: 1px solid #d3d3d1;*/
 
     list-style-type: none;
-    background: #1c1c1c;
+    background: inherit;
 }
 
 
