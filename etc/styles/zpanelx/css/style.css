@@ -276,6 +276,7 @@ li.highlight {
   padding: 3px 0 3px 17px;
   font-size: 19px;
   line-height: 25px;
+  border-bottom: 1px solid #CCC;
 }
 
 /* Stats Button */

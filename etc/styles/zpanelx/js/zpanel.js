@@ -436,7 +436,7 @@ var zPanel = {
 
             // Module-box Expand/Collapse click event
             $('.module-box-title .tools .expand, .module-box-title .tools .collapse').click(function(e) {
-                console.log('modulebox clicked');
+                zPanel.utils.log('modulebox clicked');
                 var el = $(this).parents(".module-box").children(".module-box-body");
                 var cookieName = $(this).parents(".module-box-title").children("h4").text() + 'Module';
 
@@ -472,29 +472,29 @@ var zPanel = {
 
         // Show Bootstrap typeAhead with Redirect.
         // Pass in JSON object with Names and URLs
-        typeAheadOLD: function(moduleNames) {
-            var moduleNames = new Array();
-            var moduleUrls = new Object();
-            // Build Arrays
-            $.each(moduleJsonData, function(index, module) {
-                moduleNames.push(module.name);
-                moduleUrls[module.name] = module.url;
-            });
-            // Attach Bootstrap TypeAhead
-            $('#module-search').typeahead({
-                source: moduleNames,
-                updater: function(item) {
-                    zPanel.loader.showLoader();
-                    setTimeout(function() {
-                        window.location.href = '/?module=' + moduleUrls[item];
-                        return item;
-                    }, 1000);
+        // typeAheadOLD: function(moduleNames) {
+        //     var moduleNames = new Array();
+        //     var moduleUrls = new Object();
+        //     // Build Arrays
+        //     $.each(moduleJsonData, function(index, module) {
+        //         moduleNames.push(module.name);
+        //         moduleUrls[module.name] = module.url;
+        //     });
+        //     // Attach Bootstrap TypeAhead
+        //     $('#module-search').typeahead({
+        //         source: moduleNames,
+        //         updater: function(item) {
+        //             zPanel.loader.showLoader();
+        //             setTimeout(function() {
+        //                 window.location.href = '/?module=' + moduleUrls[item];
+        //                 return item;
+        //             }, 1000);
 
-                }
-            });
-        },
+        //         }
+        //     });
+        // },
 
-        // Show Bootstrap typeAhead with Redirect.
+        // Show Twitter typeAhead with Redirect.
         // Pass in JSON object with Names and URLs
         typeAhead: function(moduleNames) {
             var moduleNames = new Array();
@@ -507,17 +507,18 @@ var zPanel = {
             });
 
             // Attach Twitter TypeAhead
-            $('#module-search').typeahead({
+            $('#module-search').typeahead([{
                 name: 'modules',
                 local: moduleNames,
                 header: '<h3 class="module-search">Modules</h3>'
-            }).on('typeahead:selected typeahead:autocompleted', function($e,datum) {
+            },{
+                name: 'modules',
+                local: moduleNames,
+                header: '<h3 class="module-search">Modules</h3>'
+            }]).on('typeahead:selected typeahead:autocompleted', function($e,datum) {
                 var $typeahead = $(this);
-                console.log(moduleUrls[datum.value]);
-                //setTimeout(function() {
+                zPanel.utils.log(moduleUrls[datum.value]);
                     window.location.href = '/?module=' + moduleUrls[datum.value];
-                    //return true;
-                //}, 1000);
             });
         }
 
@@ -526,7 +527,7 @@ var zPanel = {
 
 };
 
-
 $(function() {
+    zPanel.utils.settings.debug = false;
     zPanel.init();
 });
