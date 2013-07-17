@@ -507,15 +507,11 @@ var zPanel = {
             });
 
             // Attach Twitter TypeAhead
-            $('#module-search').typeahead([{
+            $('#module-search').typeahead({
                 name: 'modules',
                 local: moduleNames,
                 header: '<h3 class="module-search">Modules</h3>'
-            },{
-                name: 'modules',
-                local: moduleNames,
-                header: '<h3 class="module-search">Modules</h3>'
-            }]).on('typeahead:selected typeahead:autocompleted', function($e,datum) {
+            }).on('typeahead:selected typeahead:autocompleted', function($e,datum) {
                 var $typeahead = $(this);
                 zPanel.utils.log(moduleUrls[datum.value]);
                     window.location.href = '/?module=' + moduleUrls[datum.value];
