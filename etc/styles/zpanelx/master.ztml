@@ -73,9 +73,9 @@
 
     <!-- BEGIN CONTAINER -->
     <div class="wrap container">
-        <form>
+        <div id="module-search-wrap">
           <input type="text" id="module-search" data-provide="typeahead" placeholder="Search" autocomplete="off">
-        </form>
+        </div>
        <div class="inner-wrap">
         <!-- BEGIN LEFT SIDEBAR -->
         <div id="page-sidebar" class="col-lg-3 visible-desktop">
@@ -281,9 +281,10 @@
     <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-button.js"></script>
     <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-collapse.js"></script>
     <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-carousel.js"></script>
-    <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-typeahead.js"></script>
+    <script src="<# ui_tpl_assetfolderpath #>js/typeahead.min.js"></script>
     <!-- <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script> -->
-     <!-- Modulelist for Typeahead -->
+
+    <!-- Modulelist for Typeahead -->
     <script>
       var moduleJsonData = <# ui_tpl_modulelistjson #>;
       zPanel.modules.typeAhead(moduleJsonData);

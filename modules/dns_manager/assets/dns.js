@@ -54,7 +54,7 @@ var zPanelDNS = {
 
             //$("#typeMX div.hostName input").on('keypress',function() {
             $(document).on('keypress', '#typeMX div.hostName > input', function() {
-                console.log('MX hostname change');
+                zPanel.utils.log('MX hostname change');
                 var hostnameSelector = $(this);
                 mXWarning = 'The host name portion of an MX record is typically left blank.<BR/>' +
                     'Only enter host name if you want the email address to be similar to <strong>username@hostname.example.com</strong>, ' +
@@ -89,7 +89,7 @@ var zPanelDNS = {
 
             // Show Dialog if Hostname Matches the Domain Name
             $(document).on('change','div.hostName > input',function() {
-                console.log('hostname change fired');
+                zPanel.utils.log('hostname change fired');
                 var hostnameSelector = $(this);
                 var hostName = $(this).val();
                 var domainName = $("#domainName").val();
@@ -116,8 +116,8 @@ var zPanelDNS = {
             // Activate SAVE and UNDO Buttons when Record Row EDITED
             $(document).on("keydown", "#dnsRecords input", function() {
                 //$("#dnsTitle").find(".save, .undo").removeClass("disabled");
-                console.log(zPanelDNS.cache.dnsTitleId);
-                console.log($("#dnsTitle"));
+                zPanel.utils.log(zPanelDNS.cache.dnsTitleId);
+                zPanel.utils.log($("#dnsTitle"));
                 //$("#dnsTitle").find(".save, .undo").removeClass("disabled");
                 zPanelDNS.cache.dnsTitleId.find(".save, .undo").removeClass("disabled");
                 $(".tab-pane > .add").find(".save").removeClass("disabled");
@@ -130,7 +130,7 @@ var zPanelDNS = {
 
             // Add new Record Row
             $("#dnsRecords div.add > .btn").click(function(e) {
-                console.log('add record button clicked');
+                zPanel.utils.log('add record button clicked');
                 zPanelDNS.records.addRow($(this));
                 e.preventDefault();
             });
@@ -215,8 +215,8 @@ var zPanelDNS = {
 
             // Remove Labels from New records
             if (record.parents("div.add").siblings().length > 2) {
-                console.log('div .add sibblings...');
-                console.log(record.parents("div.add").siblings());
+                zPanel.utils.log('div .add sibblings...');
+                zPanel.utils.log(record.parents("div.add").siblings());
                 //newRecord.find("label").remove();
             }
 
