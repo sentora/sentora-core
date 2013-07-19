@@ -835,4 +835,6 @@ li.highlight {
   color: #333;
   }
 
-
+#inDatabase {
+  width: 85%;
+}
