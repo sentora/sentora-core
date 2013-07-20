@@ -4,6 +4,20 @@ Below I will try to outline some of the JavaScript and CSS functionality that I 
 
 If you have any questions about this theme, you can ask on the forums [zPanel Forums](http://forums.zpanelcp.com/forum.php) or contact me (Jason Davis [http://www.codedevelopr.com](http://www.codedevelopr.com))
 
+## Over-ride Module Icons ##
+You can replace the module icons that come with a Module on the zPanel dashboard screen with your own icons.
+
+To over-ride a Modules icon, simply create a folder and image file in this location...
+
+    /etc/styles/zpanelx/images/MODULE-NAME/assets/icon.png
+
+Replacing **MODULE-NAME** with the name of the module you are replacing.  The Module name has to be the exact same name that the module uses in the modules folder for this over-ride to work!
+
+An example to over-ride the MySQL Database module's icon...
+
+    /etc/styles/zpanelx/images/mysql_databases/assets/icon.png
+
+
 ## Console Logging ##
 You can log to the Browsers JavaScript Console for debugging using this function below.
 
