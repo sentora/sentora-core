@@ -459,7 +459,7 @@ li.highlight {
 }
 
 /* Mobile Only View */
-@media screen and (max-width: 767px){
+@media screen and (max-width: 890px){
   .sortable.grid li {
     width: 100%;
   }
@@ -470,14 +470,25 @@ li.highlight {
     margin-left: 0px;
   }
   #page-content {
-    padding-top: 71px;
+    padding-top: 4px;
     margin-left: 11px;
     width: 96%;
+  }
+
+  .navbar-fixed-top{
+    position: relative;
+  }
+ .collapse {
+    overflow: hidden;
+  }
+  .collapse.in {
+    overflow: visible;
+    z-index: 4000;
   }
 }
 
 /* Tablet Only View */
-@media (max-width: 979px) and (min-width: 768px){
+@media (max-width: 979px) and (min-width: 890px){
   .col-lg-12 {
     width: 724px;
   }
