@@ -92,6 +92,7 @@
         <!-- BEGIN PAGE-CONTENT -->
         <div id="page-content" class="col-lg-9">
 
+        <# ui_tpl_shadowbar #>
 
         <!-- BEGIN STATSDATA -->
         <div id="stats-data" class="collapse">
