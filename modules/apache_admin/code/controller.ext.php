@@ -24,12 +24,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
     static $showvhost;
 
-    static function getApacheConfig() {
+    static function getApacheConfig()
+    {
         if (!fs_director::CheckForEmptyValue(self::$showvhost)) {
             $display = self::DisplayApacheVhost();
         } else {
@@ -38,22 +40,26 @@ class module_controller {
         return $display;
     }
 
-    static function getVhostConfig() {
+    static function getVhostConfig()
+    {
         $display = self::DisplayVhostConfig();
         return $display;
     }
 
-    static function getDisabledVhostConfig() {
+    static function getDisabledVhostConfig()
+    {
         $display = self::DisplayDisabledVhostConfig();
         return $display;
     }
 
-    static function getDisplayVhostOverrides() {
+    static function getDisplayVhostOverrides()
+    {
         $display = self::DisplayVhostOverrides();
         return $display;
     }
 
-    static function DisplayApacheConfig() {
+    static function DisplayApacheConfig()
+    {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Configure your Apache Settings") . "</h2>";
         $line .= "<form action=\"./?module=apache_admin&action=UpdateApacheConfig\" method=\"post\">";
@@ -89,7 +95,8 @@ class module_controller {
         return $line;
     }
 
-    static function DisplayVhostConfig() {
+    static function DisplayVhostConfig()
+    {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Override a Virtual Host Setting") . "</h2>";
         $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
@@ -119,7 +126,8 @@ class module_controller {
         return $line;
     }
 
-    static function getIsDisplayDisabledVhostConfig() {
+    static function getIsDisplayDisabledVhostConfig()
+    {
         global $zdbh;
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_enabled_in=0 AND vh_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
@@ -130,7 +138,8 @@ class module_controller {
         return false;
     }
 
-    static function DisplayVhostOverrides() {
+    static function DisplayVhostOverrides()
+    {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("All Virtual Hosts with Overrides") . "</h2>";
         $line .= "<form action=\"./?module=apache_admin&action=DisplayVhost\" method=\"post\">";
@@ -169,7 +178,8 @@ class module_controller {
         return $line;
     }
 
-    static function getIsDisplayVhostOverrides() {
+    static function getIsDisplayVhostOverrides()
+    {
         global $zdbh;
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_deleted_ts IS NULL";
         if ($numrows = $zdbh->query($sql)) {
@@ -194,7 +204,8 @@ class module_controller {
         return false;
     }
 
-    static function DisplayDisabledVhostConfig() {
+    static function DisplayDisabledVhostConfig()
+    {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Disabled Virtual Hosts") . "</h2>";
         //$line .= ui_language::translate("Select a Virtual Host below.");
@@ -225,7 +236,8 @@ class module_controller {
         return $line;
     }
 
-    static function DisplayApacheVhost() {
+    static function DisplayApacheVhost()
+    {
         global $zdbh;
         global $controller;
         $line = "<h2>" . ui_language::translate("Virtual Host Override") . "</h2>";
@@ -267,14 +279,16 @@ class module_controller {
         return $line;
     }
 
-    static function doDisplayVhost() {
+    static function doDisplayVhost()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
         self::$showvhost = TRUE;
     }
 
-    static function doUpdateApacheConfig() {
+    static function doUpdateApacheConfig()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -292,22 +306,22 @@ class module_controller {
                 $sql->bindParam(':module', $moduleName2);
                 $sql->execute();
                 while ($row = $sql->fetch()) {
-                    if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
-                        $value = $controller->GetControllerRequest('FORM', $row['so_name_vc']);
-                        $name = $row['so_name_vc'];
-
-                        $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = :value WHERE so_name_vc = :name");
-                        $updatesql->bindParam(':value', $value);
-                        $updatesql->bindParam(':name', $name);
-                        $updatesql->execute();
-                        self::SetWriteApacheConfigTrue();
-                    }
+                    //if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', $row['so_name_vc']))) {
+                    $value = $controller->GetControllerRequest('FORM', $row['so_name_vc']);
+                    $name = $row['so_name_vc'];
+                    $updatesql = $zdbh->prepare("UPDATE x_settings SET so_value_tx = :value WHERE so_name_vc = :name");
+                    $updatesql->bindParam(':value', $value);
+                    $updatesql->bindParam(':name', $name);
+                    $updatesql->execute();
+                    self::SetWriteApacheConfigTrue();
+                    //}
                 }
             }
         }
     }
 
-    static function doSaveVhost() {
+    static function doSaveVhost()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -355,7 +369,8 @@ class module_controller {
         return true;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
         } else {
@@ -364,18 +379,21 @@ class module_controller {
         return;
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
         $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
-    static function SetWriteApacheConfigTrue() {
+    static function SetWriteApacheConfigTrue()
+    {
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_settings
 								SET so_value_tx='true'
@@ -383,7 +401,8 @@ class module_controller {
         $sql->execute();
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
