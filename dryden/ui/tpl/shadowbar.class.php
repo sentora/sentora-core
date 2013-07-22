@@ -14,7 +14,7 @@ class ui_tpl_shadowbar {
 
     public static function Template() {
         if (isset($_SESSION['ruid'])) {
-            return "<div class=\"zshadowbar\" id=\"zshadowbar\"><a href=\"./?returnsession=true\" class=\"zshadowbar\" id=\"zshadowbar_a\" border=\"0\"></a><a href=\"./?returnsession=true\">" . "<: End shadow session and return to your session. :>" . "</a></div>";
+            return '<div class="zshadowbar" id="zshadowbar"><a href="./?returnsession=true"><button type="button" class="shadow-btn btn btn-danger"><: End shadow session and return to your session. :></button></a></div>';
         } else {
             return false;
         }

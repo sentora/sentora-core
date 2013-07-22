@@ -73,7 +73,7 @@
 
     <!-- BEGIN CONTAINER -->
     <div class="wrap container">
-        <div id="module-search-wrap">
+        <div id="module-search-wrap" class="visible-lg visible-desktop">
           <input type="text" id="module-search" data-provide="typeahead" placeholder="Search" autocomplete="off">
         </div>
        <div class="inner-wrap">
@@ -92,6 +92,7 @@
         <!-- BEGIN PAGE-CONTENT -->
         <div id="page-content" class="col-lg-9">
 
+        <# ui_tpl_shadowbar #>
 
         <!-- BEGIN STATSDATA -->
         <div id="stats-data" class="collapse">
