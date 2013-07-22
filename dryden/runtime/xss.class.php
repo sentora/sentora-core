@@ -105,8 +105,8 @@ class runtime_xss {
      * @param string $type Type of encoding to use
      * @return string The Clean String.
      */
-    static public function htmlspecialcharsProtection($data='', $ENT = ENT_QUOTES, $type = 'UTF-8') {
-        $data = htmlspecialchars($data, $ENT, $type);
+    static public function htmlspecialcharsProtection($data='', $ENT = ENT_QUOTES, $type = 'UTF-8', $doubleEncoding = false) {
+        $data = htmlspecialchars($data, $ENT, $type, $doubleEncoding);
         return $data;
     }
 
