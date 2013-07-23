@@ -8,10 +8,7 @@
 
     <!-- styles -->
     <link href="<# ui_tpl_assetfolderpath #>global-css/bootstrap.css" rel="stylesheet">
-
     <link href="<# ui_tpl_csspath #>" rel="stylesheet" type="text/css">
-
-    <!-- <link href="<# ui_tpl_assetfolderpath #>css/style.css" rel="stylesheet"> -->
 
     <script src="<# ui_tpl_assetfolderpath #>js/jquery.js"></script>
     <script src="<# ui_tpl_assetfolderpath #>js/jquery.cookie.js"></script>
