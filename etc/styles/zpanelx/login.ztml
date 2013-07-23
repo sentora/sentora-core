@@ -25,9 +25,9 @@
     <meta name="msapplication-TileImage" content="/etc/styles/zpanelx/img/ico/fav144.png">
 
     <!-- styles -->
-    <link href="/etc/styles/zpanelx/css/bootstrap.css" rel="stylesheet">
+    <link href="/etc/styles/zpanelx/global-css/bootstrap.css" rel="stylesheet">
     <link href="/etc/styles/zpanelx/css/style.css" rel="stylesheet">
-    <link href="/etc/styles/zpanelx/css/login.css" rel="stylesheet">
+    <link href="/etc/styles/zpanelx/global-css/login.css" rel="stylesheet">
 
 
     <!-- HTML5 shim for IE6-8 support of HTML5 elements -->
