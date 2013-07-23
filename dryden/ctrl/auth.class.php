@@ -10,7 +10,8 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class ctrl_auth {
+class ctrl_auth
+{
 
     /**
      * Checks that the server has a valid session for the user if not it will redirect to the login screen.
@@ -18,24 +19,25 @@ class ctrl_auth {
      * @global db_driver $zdbh The ZPX database handle.
      * return bool
      */
-    static function RequireUser() {
+    static function RequireUser()
+    {
         global $zdbh;
         if (!isset($_SESSION['zpuid'])) {
             if (isset($_COOKIE['zUser'])) {
-                if(isset($_COOKIE['zSec'])){
-                    if($_COOKIE['zSec'] == false){
+                if (isset($_COOKIE['zSec'])) {
+                    if ($_COOKIE['zSec'] == false) {
                         $secure = false;
-                    }else{
+                    } else {
                         $secure = true;
-                    }   
-                }else{
+                    }
+                } else {
                     $secure = true;
                 }
                 self::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true, $secure);
             }
             runtime_hook::Execute('OnRequireUserLogin');
-            $sqlQuery = "SELECT ac_usertheme_vc, ac_usercss_vc FROM 
-                         x_accounts WHERE 
+            $sqlQuery = "SELECT ac_usertheme_vc, ac_usercss_vc FROM
+                         x_accounts WHERE
                          ac_user_vc = :zadmin";
             $bindArray = array(':zadmin' => 'zadmin');
             $zdbh->bindQuery($sqlQuery, $bindArray);
@@ -50,25 +52,26 @@ class ctrl_auth {
      * Sets a user session ID.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param int $zpuid The ZPanel user account ID to set the session as.
-     * @return bool 
+     * @return bool
      */
-    static function SetUserSession($zpuid = 0, $sessionSecuirty) {
+    static function SetUserSession($zpuid = 0, $sessionSecuirty)
+    {
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
-            if($sessionSecuirty){
-                //Implamentation of session security 
+            if ($sessionSecuirty) {
+                //Implamentation of session security
                 runtime_sessionsecurity::setCookie();
                 runtime_sessionsecurity::setUserIP();
                 runtime_sessionsecurity::setUserAgent();
                 runtime_sessionsecurity::setSessionSecurityEnabled(true);
-            }else{
-                //Implamentation of session security but set it as off 
+            } else {
+                //Implamentation of session security but set it as off
                 runtime_sessionsecurity::setCookie();
                 runtime_sessionsecurity::setUserIP();
                 runtime_sessionsecurity::setUserAgent();
                 runtime_sessionsecurity::setSessionSecurityEnabled(false);
             }
-            
+
             return true;
         } else {
             return false;
@@ -80,9 +83,10 @@ class ctrl_auth {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $name The name of the session variable to set.
      * @param string $value The value of the session variable to set.
-     * @return boolean 
+     * @return boolean
      */
-    static function SetSession($name, $value = "") {
+    static function SetSession($name, $value = "")
+    {
         if (isset($name)) {
             $_SESSION['' . $name . ''] = $value;
             return true;
@@ -99,15 +103,16 @@ class ctrl_auth {
      * @param string $password The password to use to authenticate with.
      * @param bool $rememberme Remember the password for 30 days? (true/false)
      * @param bool $checkingcookie The authentication request has come from a set cookie.
-     * @return mixed Returns 'false' if the authentication fails otherwise will return the user ID. 
+     * @return mixed Returns 'false' if the authentication fails otherwise will return the user ID.
      */
-    static function Authenticate($username, $password, $rememberme = false, $iscookie = false, $sessionSecuirty) {
+    static function Authenticate($username, $password, $rememberme = false, $iscookie = false, $sessionSecuirty)
+    {
         global $zdbh;
-        $sqlString = "SELECT * FROM 
-                      x_accounts WHERE 
-                      ac_user_vc = :username AND 
-                      ac_pass_vc = :password AND 
-                      ac_enabled_in = 1 AND 
+        $sqlString = "SELECT * FROM
+                      x_accounts WHERE
+                      ac_user_vc = :username AND
+                      ac_pass_vc = :password AND
+                      ac_enabled_in = 1 AND
                       ac_deleted_ts IS NULL";
 
         $bindArray = array(':username' => $username,
@@ -120,7 +125,7 @@ class ctrl_auth {
         if ($row) {
             //Disabled till zpanel 10.0.3
             //runtime_sessionsecurity::sessionRegen();
-            
+
             ctrl_auth::SetUserSession($row['ac_id_pk'], $sessionSecuirty);
             $log_logon = $zdbh->prepare("UPDATE x_accounts SET ac_lastlogon_ts=" . time() . " WHERE ac_id_pk=" . $row['ac_id_pk'] . "");
             $log_logon->execute();
@@ -129,7 +134,7 @@ class ctrl_auth {
                 setcookie("zPass", $password, time() + 60 * 60 * 24 * 30, "/");
                 //setcookie("zSec", $sessionSecuirty, time() + 60 * 60 * 24 * 30, "/");
             }
-            
+
             runtime_hook::Execute('OnGoodUserLogin');
             return $row['ac_id_pk'];
         } else {
@@ -143,12 +148,14 @@ class ctrl_auth {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @return bool
      */
-    static function KillSession() {
+    static function KillSession()
+    {
         runtime_hook::Execute('OnUserLogout');
         $_SESSION['zpuid'] = null;
-        
+        if (isset($_SESSION['ruid'])) {
+            unset($_SESSION['ruid']);
+        }
         unset($_COOKIE['zUserSaltCookie']);
-        
         return true;
     }
 
@@ -157,7 +164,8 @@ class ctrl_auth {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @return bool
      */
-    static function KillCookies() {
+    static function KillCookies()
+    {
         setcookie("zUser", '', time() - 3600, "/");
         setcookie("zPass", '', time() - 3600, "/");
         unset($_COOKIE['zUser']);
@@ -170,9 +178,10 @@ class ctrl_auth {
      * Returns the UID (User ID) of the current logged in user.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @global obj $controller The Zpanel controller object.
-     * @return int The current user's session ID. 
+     * @return int The current user's session ID.
      */
-    static function CurrentUserID() {
+    static function CurrentUserID()
+    {
         global $controller;
         return $controller->GetControllerRequest('USER', 'zpuid');
     }
