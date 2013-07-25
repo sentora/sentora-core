@@ -52,7 +52,7 @@ class module_controller
                 $sql->bindParam(':userid', $currentuser['userid']);
                 $sql->execute();
                 $line .= "<form action=\"./?module=cron&action=DeleteCron\" method=\"post\">";
-                $line .= "<table class=\"zgrid\">";
+                $line .= "<table class=\"table table-striped\">";
                 $line .= "<tr>";
                 $line .= "<th>" . ui_language::translate("Script") . "</th>";
                 $line .= "<th>" . ui_language::translate("Timing") . "</th>";
@@ -64,7 +64,7 @@ class module_controller
                     $line .= "<td>" . $rowcrons['ct_script_vc'] . "</td>";
                     $line .= "<td>" . ui_language::translate(self::TranslateTiming($rowcrons['ct_timing_vc'])) . "</td>";
                     $line .= "<td>" . $rowcrons['ct_description_tx'] . "</td>";
-                    $line .= "<td><button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" name=\"inDelete_" . $rowcrons['ct_id_pk'] . "\" id=\"button\" value=\"inDelete_" . $rowcrons['ct_id_pk'] . "\">" . ui_language::translate("Delete") . "</button></td>";
+                    $line .= "<td><button class=\"button-loader delete btn btn-danger\" type=\"submit\" name=\"inDelete_" . $rowcrons['ct_id_pk'] . "\" id=\"button\" value=\"inDelete_" . $rowcrons['ct_id_pk'] . "\">" . ui_language::translate("Delete") . "</button></td>";
                     $line .= "</tr>";
                 }
                 $line .= "</table>";
@@ -85,7 +85,7 @@ class module_controller
 
         $line = "<h2>Create a new task</h2>";
         $line .= "<form action=\"./?module=cron&action=CreateCron\" method=\"post\">";
-        $line .= "<table class=\"zform\">";
+        $line .= "<table class=\"table table-striped\">";
         $line .= "<tr valign=\"top\">";
         $line .= "<th>" . ui_language::translate("Script") . ":</th>";
         $line .= "<td><input name=\"inScript\" type=\"text\" id=\"inScript\" size=\"50\" /><br />" . ui_language::translate("example") . ": /folder/task.php</td>";
@@ -114,7 +114,7 @@ class module_controller
         $line .= "<th colspan=\"2\" align=\"right\"><input type=\"hidden\" name=\"inReturn\" value=\"GetFullURL\" />";
         $line .= "<input type=\"hidden\" name=\"inUserID\" value=\"" . $currentuser['userid'] . "\" />";
         $line .= runtime_csfr::Token();
-        $line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\">" . ui_language::translate("Create") . "</button></th>";
+        $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\">" . ui_language::translate("Create") . "</button></th>";
         $line .= "</tr>";
         $line .= "</table>";
         $line .= "</form>";
@@ -358,25 +358,25 @@ class module_controller
     static function getResult()
     {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
-            return ui_sysmessage::shout(ui_language::translate("You need to specify a valid location for your script."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("<strong>Error:</strong> You need to specify a valid location for your script."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$noexists)) {
-            return ui_sysmessage::shout(ui_language::translate("Your script does not appear to exist at that location."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("<strong>Error:</strong> Your script does not appear to exist at that location."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$cronnoexists)) {
-            return ui_sysmessage::shout(ui_language::translate("System Cron file could not be created."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("<strong>Error:</strong> System Cron file could not be created."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$cronnowrite)) {
-            return ui_sysmessage::shout(ui_language::translate("Could not write to the System Cron file."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("<strong>Error:</strong> Could not write to the System Cron file."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout(ui_language::translate("You can not add the same cron task more than once."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("<strong>Error:</strong> You can not add the same cron task more than once."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$error)) {
-            return ui_sysmessage::shout(ui_language::translate("There was an error updating the cron job."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("<strong>Error:</strong> There was an error updating the cron job."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(ui_language::translate("Cron updated successfully."), "zannounceok");
+            return ui_sysmessage::shout(ui_language::translate("<strong>Success:</strong> Cron updated successfully."), "zannounceok");
         }
         return;
     }
