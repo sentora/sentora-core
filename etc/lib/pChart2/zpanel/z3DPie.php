@@ -1,7 +1,7 @@
 <?php
 
 /* CAT:Pie charts */
-
+error_reporting('E_ALL');
 /* pChart library inclusions */
 include("../class/pData.class.php");
 include("../class/pDraw.class.php");
@@ -101,7 +101,7 @@ if (isset($_GET['palette'])) {
             break;
     }
 } else {
-    $palette = 'navy.color';
+    $palette = 'zpanel.color';
 }
 
 
@@ -207,7 +207,7 @@ $MyData->setSerieDescription("ScoreA", "Application A");
 /* Define the absissa serie */
 $MyData->addPoints($Labels, "Labels");
 $MyData->setAbscissa("Labels");
-$MyData->loadPalette('../palettes/'.$palette, TRUE);
+$MyData->loadPalette('../palettes/zpanel.color', TRUE);
 
 /* Create the pChart object */
 $myPicture = new pImage($ImageSize[0], $ImageSize[1], $MyData, TRUE);
