@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $diskquota;
     static $diskspace;
@@ -47,52 +48,65 @@ class module_controller {
     static $distlists;
     static $distlistsquota;
 
-    static private function check_pChart($display) {
+    static private function check_pChart($display)
+    {
         return (file_exists('etc/lib/pChart2/class/pData.class.php')) ? $display : 'pChart Library Not Found.';
     }
 
-    static function getUsage() {
+    static function getUsage()
+    {
         return self::check_pChart(self::DisplayUsagepChart());
     }
 
-    static function getDomainsUsage() {
+    static function getDomainsUsage()
+    {
         return self::check_pChart(self::DisplayDomainsUsagepChart());
     }
 
-    static function getSubDomainsUsage() {
+    static function getSubDomainsUsage()
+    {
         return self::check_pChart(self::DisplaySubDomainsUsagepChart());
     }
 
-    static function getParkedDomainsUsage() {
+    static function getParkedDomainsUsage()
+    {
         return self::check_pChart(self::DisplayParkedDomainsUsagepChart());
     }
 
-    static function getMysqlUsage() {
+    static function getMysqlUsage()
+    {
         return self::check_pChart(self::DisplayMysqlUsagepChart());
     }
 
-    static function getFTPUsage() {
+    static function getFTPUsage()
+    {
         return self::check_pChart(self::DisplayFTPUsagepChart());
     }
 
-    static function getMailboxUsage() {
+    static function getMailboxUsage()
+    {
         return self::check_pChart(self::DisplayMailboxUsagepChart());
     }
 
-    static function getForwardersUsage() {
+    static function getForwardersUsage()
+    {
         return self::check_pChart(self::DisplayForwardersUsagepChart());
     }
 
-    static function getDistListUsage() {
+    static function getDistListUsage()
+    {
         return self::check_pChart(self::DisplayDistListUsagepChart());
     }
 
     #Begin Display Methods
-    static function empty_as_0($value) {
+
+    static function empty_as_0($value)
+    {
         return (empty($value)) ? 0 : $value;
     }
 
-    static function build_row_usage($name, $used, $quota, $human = false) {
+    static function build_row_usage($name, $used, $quota, $human = false)
+    {
         $res = '<tr><th nowrap="nowrap">' . ui_language::translate($name) . ':</th><td nowrap="nowrap">' . (($human) ? fs_director::ShowHumanFileSize($used) : $used);
         if ($quota < 0) {
             $res .= '</td><td style="text-align:center">&#8734; ' . ui_language::translate('Unlimited') . ' &#8734;</td>';
@@ -101,7 +115,9 @@ class module_controller {
         }
         return $res . '</td></tr>';
     }
-    static function DisplayUsagepChart() {
+
+    static function DisplayUsagepChart()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -178,7 +194,8 @@ class module_controller {
         return $line;
     }
 
-    static private function DisplayChart($name, $used, $maximum) {
+    static private function DisplayChart($name, $used, $maximum)
+    {
         if ($maximum < 0) { //-1 = unlimited
             $res = '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
@@ -192,39 +209,48 @@ class module_controller {
         return '<h2>' . ui_language::translate($name) . '</h2>' . $res;
     }
 
-    static function DisplayDomainsUsagepChart() {
+    static function DisplayDomainsUsagepChart()
+    {
         return self::DisplayChart('Domain Usage', self::$domains, self::$domainsquota);
     }
 
-    static function DisplaySubDomainsUsagepChart() {
+    static function DisplaySubDomainsUsagepChart()
+    {
         return self::DisplayChart('Sub-Domain Usage', self::$subdomains, self::$subdomainsquota);
     }
 
-    static function DisplayParkedDomainsUsagepChart() {
+    static function DisplayParkedDomainsUsagepChart()
+    {
         return self::DisplayChart('Parked-Domain Usage', self::$parkeddomains, self::$parkeddomainsquota);
     }
 
-    static function DisplayMysqlUsagepChart() {
+    static function DisplayMysqlUsagepChart()
+    {
         return self::DisplayChart('MySQL&reg Database Usage', self::$mysql, self::$mysqlquota);
     }
 
-    static function DisplayMailboxUsagepChart() {
+    static function DisplayMailboxUsagepChart()
+    {
         return self::DisplayChart('Mailbox Usage', self::$mailboxes, self::$mailboxquota);
     }
 
-    static function DisplayFTPUsagepChart() {
+    static function DisplayFTPUsagepChart()
+    {
         return self::DisplayChart('FTP Usage', self::$ftpaccounts, self::$ftpaccountsquota);
     }
 
-    static function DisplayForwardersUsagepChart() {
+    static function DisplayForwardersUsagepChart()
+    {
         return self::DisplayChart('Forwarders Usage', self::$forwarders, self::$forwardersquota);
     }
 
-    static function DisplayDistListUsagepChart() {
+    static function DisplayDistListUsagepChart()
+    {
         return self::DisplayChart('Distribution List Usage', self::$distlists, self::$distlistsquota);
     }
 
-    static function DisplaypBar($total, $quota) {
+    static function DisplaypBar($total, $quota)
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $typequota = $currentuser[$quota];
         $type = ctrl_users::GetQuotaUsages($total, $currentuser['userid']);
@@ -237,15 +263,18 @@ class module_controller {
         return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . round($type / $typequota * 100, 0) . '"/>';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         return ui_language::translate(ui_module::GetModuleDescription());
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         return ui_language::translate(ui_module::GetModuleName());
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
         return 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
     }
