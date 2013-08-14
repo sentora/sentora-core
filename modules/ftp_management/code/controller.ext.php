@@ -158,6 +158,7 @@ class module_controller {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
+
         runtime_hook::Execute('OnBeforeCreateFTPAccount');
         if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))) {
             // Check to see if its a new home directory or use a current one...
@@ -172,6 +173,13 @@ class module_controller {
             } else {
                 $homedirectory_to_use = '/' . $destination;
             }
+
+	// andboson: fix for exists domain
+	if ( $domainDestination ){
+		$homedirectory_to_use = ctrl_options::GetSystemOption('hosted_dir') . '/zadmin/'.$domainDestination;
+	    }
+
+
             $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->bindParam(':username', $username);
