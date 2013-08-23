@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -31,15 +31,14 @@ $z_db_pass = $pass;
 try {
     $ftp_db = new db_driver("mysql:host=" . $host . ";dbname=$ftp_db", $z_db_user, $z_db_pass);
 } catch (PDOException $e) {
-    
+
 }
 
 
 // Included after acount has been created
 if (!fs_director::CheckForEmptyValue(self::$create)) {
-    $homedir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectoy_to_use . "";
+    $homedir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectory_to_use . "";
 
-    // andboson: fix for exists domain
     if( $domainDestination){
 	$homedir = $homedirectory_to_use;
     }
