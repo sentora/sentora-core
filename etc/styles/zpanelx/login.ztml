@@ -215,7 +215,7 @@
 </div>
 
 
-        <p class="vbox">Powered By: <a href="http://www.zpanelcp.com/" target="_new">ZPanel <?php echo sys_versions::ShowZpanelVersion(); ?></a></p>
+        <p class="vbox">Powered By: <a href="http://www.zpanelcp.com/" target="_new">ZPanel</a></p>
 
     </div>
 
