@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- *
+ * 
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@zpanelcp.com
@@ -31,18 +31,12 @@ $z_db_pass = $pass;
 try {
     $ftp_db = new db_driver("mysql:host=" . $host . ";dbname=$ftp_db", $z_db_user, $z_db_pass);
 } catch (PDOException $e) {
-
+    
 }
-
 
 // Included after acount has been created
 if (!fs_director::CheckForEmptyValue(self::$create)) {
     $homedir = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectory_to_use . "";
-
-    if( $domainDestination){
-	$homedir = $homedirectory_to_use;
-    }
-
     $sql = $ftp_db->prepare("INSERT INTO ftpquotalimits (name, quota_type, per_session, limit_type, bytes_in_avail, bytes_out_avail, bytes_xfer_avail, files_in_avail, files_out_avail, files_xfer_avail) VALUES (:username, 'user', 'true', 'hard', 0, 0, 0, 0, 0, 0);");
     $sql->bindParam(':username', $username);
     $sql->execute();
