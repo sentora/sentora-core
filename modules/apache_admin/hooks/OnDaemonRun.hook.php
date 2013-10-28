@@ -70,8 +70,9 @@ function WriteVhostConfigFile()
     $portQuery  = $zdbh->prepare( "SELECT vh_custom_port_in, vh_deleted_ts FROM zpanel_core.x_vhosts WHERE vh_custom_port_in IS NOT NULL AND vh_deleted_ts IS NULL" );
     $portQuery->execute();
     while ( $rowport    = $portQuery->fetch() ) {
-        $customPort[ ] = $rowport[ 'vh_custom_port_in' ];
+        $customPorts[ ] = $rowport[ 'vh_custom_port_in' ];
     }
+    $customPortList = array_unique($customPorts);
 
     /*
      * ##############################################################################################################
@@ -90,7 +91,7 @@ function WriteVhostConfigFile()
 
     // ZPanel default virtual host container
     $line .= "NameVirtualHost *:" . ctrl_options::GetSystemOption( 'apache_port' ) . "" . fs_filehandler::NewLine();
-    foreach ( $customPort as $port ) {
+    foreach ( $customPortList as $port ) {
         $line .= "NameVirtualHost *:" . $port . "" . fs_filehandler::NewLine();
     }
     $line .= "" . fs_filehandler::NewLine();
