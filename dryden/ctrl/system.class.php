@@ -16,23 +16,26 @@ class ctrl_system
     /**
      * Safely run an escaped system() command.
      * @param string $command The command of which to be executed.
-     * @param array $args Any arguments seperated by a space should be in a seperate array value.
+     * @param array or string $args Any arguments seperated by a space should be in a seperate array value.
      * @return string
      */
-    static function systemCommand($command, array $args)
+    static function systemCommand($command, $args)
     {
-
-        $escapedCommand = self::escapeCommand($command);
-        $escapedArgs = self::escapeArgs($args);
-        $builtEscapedCommand = self::buildescapedCommand($escapedCommand, $escapedArgs);
-
-        system($builtEscapedCommand, $systemReturnValue);
-
+        $escapedCommand = escapeshellcmd($command);
+        if (is_array($args)) {
+            foreach ($args as $arg) {
+                $escapedCommand .= ' ' . escapeshellarg($arg);
+            }
+        } else {
+            $escapedCommand .= ' ' . escapeshellarg($args);
+        }
+        system($escapedCommand, $systemReturnValue);
         return $systemReturnValue;
     }
 
     /**
      * Escapes shell metacharacters from the command.
+     * @deprecated since version 10.1.1
      * @param string $command The command to be escaped.
      * @return string
      */
@@ -43,6 +46,7 @@ class ctrl_system
 
     /**
      * Escapes a string to be used as a shell argument.
+     * @deprecated since version 10.1.1
      * @param array $args Array of arguments of which to be escaped.
      * @return array
      */
@@ -59,6 +63,7 @@ class ctrl_system
 
     /**
      * Builds the escaped command complete with the specified arguments.
+     * @deprecated since version 10.1.1
      * @param string $escapedCommand
      * @param array $escapedArgs
      * @return string
@@ -76,7 +81,7 @@ class ctrl_system
 
     static private function commandBlackList()
     {
-
+        
     }
 
 }
