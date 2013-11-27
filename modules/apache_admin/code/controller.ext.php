@@ -271,7 +271,7 @@ class module_controller
         }
 
         $line .= "<tr><td colspan=\"2\">";
-        $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button><button class=\"fg-button ui-state-default ui-corner-all type=\"button\" onclick=\"window.location.href='./?module=apache_admin';return false;\"><: Cancel :></button>";
+        $line .= "<button class=\"button-loader btn btn-primary\" type=\"submit\" id=\"button\" name=\"vh_id_pk\" value=\"" . $row['vh_id_pk'] . "\">" . ui_language::translate("Save Vhost") . "</button><button class=\"button-loader btn btn-default\" type=\"button\" onclick=\"window.location.href='./?module=apache_admin';return false;\">" . ui_language::translate("Cancel") . "</button>";
         $line .= "</td></tr>";
         $line .= "</table>";
         $line .= runtime_csfr::Token();
