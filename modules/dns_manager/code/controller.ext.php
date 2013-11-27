@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -23,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
     static $editdomain;
@@ -41,9 +43,10 @@ class module_controller {
     static $portRange_error;
     static $hostname_error;
 
-
     /* Load DNS CSS and JS files */
-    static function getInit() {
+
+    static function getInit()
+    {
         global $controller;
         $line = '<link rel="stylesheet" type="text/css" href="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/dns.css">';
         $line .= '<script type="text/javascript" src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/dns.js"></script>';
@@ -54,7 +57,9 @@ class module_controller {
      * Determine which DNS page to show
      * Domain List or DNS Records
      */
-    static function getRecordAction() {
+
+    static function getRecordAction()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -89,7 +94,9 @@ class module_controller {
     /*
      * Allow user to Create Initial Domain DNS records for the First time
      */
-    static function DisplayDefaultRecords() {
+
+    static function DisplayDefaultRecords()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -124,36 +131,35 @@ class module_controller {
         return $line;
     }
 
-
-
-static function DnsRecordField($type, $ttl, $description, $userID, $domainID){
+    static function DnsRecordField($type, $ttl, $description, $userID, $domainID)
+    {
         global $zdbh;
         global $controller;
         /* Begin DNS records */
         if (self::IsTypeAllowed($type)) {
-            if ($type === 'A'){
+            if ($type === 'A') {
                 $activeCss = 'active';
                 if (ctrl_options::GetSystemOption('custom_ip') == strtolower("false")) {
                     $custom_ip = "READONLY";
                 } else {
                     $custom_ip = NULL;
                 }
-            }else{
+            } else {
                 $activeCss = '';
                 $custom_ip = NULL;
             }
 
-            $line = '<!-- '.$type.' RECORDS -->';
-            $line .= '<div class="tab-pane '.$activeCss.'" id="type'.$type.'">';
+            $line = '<!-- ' . $type . ' RECORDS -->';
+            $line .= '<div class="tab-pane ' . $activeCss . '" id="type' . $type . '">';
             $line .= '<div class="description">' . $description . '</div>';
             $line .= '<div class="header row">';
             $line .= '<div class="hostName"><label class="enableToolTip">' . ui_language::translate('Host Name') . '</label></div>';
             $line .= '<div class="TTL"><label class="enableToolTip">TTL</label></div>';
             $line .= '<div class="in">&nbsp;</div>';
             $line .= '<div class="type">&nbsp;</div>';
-            if ($type === 'MX'){
-                 $line .= '<div class="priority"><label class="enableToolTip">' . ui_language::translate('Priority') . '</label></div>';
-            }elseif ($type === 'SRV') {
+            if ($type === 'MX') {
+                $line .= '<div class="priority"><label class="enableToolTip">' . ui_language::translate('Priority') . '</label></div>';
+            } elseif ($type === 'SRV') {
                 $line .= '<div class="priority"><label class="enableToolTip">' . ui_language::translate('Priority') . '</label></div>';
                 $line .= '<div class="weight"><label class="enableToolTip">' . ui_language::translate('Weight') . '</label></div>';
                 $line .= '<div class="port"><label class="enableToolTip">' . ui_language::translate('Port') . '</label></div>';
@@ -176,11 +182,11 @@ static function DnsRecordField($type, $ttl, $description, $userID, $domainID){
                 $line .= '<input name="ttl[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_ttl_in'] . '" class="input-small" type="text">';
                 $line .= '<input name="original_ttl[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_ttl_in'] . '" type="hidden"></div>';
                 $line .= '<div class="in">IN</div>';
-                $line .= '<div class="type">'.$type.'</div>';
+                $line .= '<div class="type">' . $type . '</div>';
 
-                if($type === 'MX'){
+                if ($type === 'MX') {
                     $line .= '<div class="priority"><input name="priority[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_priority_in'] . '" type="text" class="input-small"><input name="original_priority[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_priority_in'] . '" type="hidden"></div>';
-                }elseif ($type === 'SRV') {
+                } elseif ($type === 'SRV') {
                     $line .= '<div class="priority"><input name="priority[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_priority_in'] . '" class="input-small" type="text"><input name="original_priority[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_priority_in'] . '" type="hidden"></div>';
                     $line .= '<div class="weight"><input name="weight[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_weight_in'] . '" class="input-small" type="text"><input name="original_weight[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_weight_in'] . '" type="hidden"></div>';
                     $line .= '<div class="port"><input name="port[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_port_in'] . '" type="text" class="input-small"><input name="original_port[' . $rowdns['dn_id_pk'] . ']" value="' . $rowdns['dn_port_in'] . '" type="hidden"></div>';
@@ -191,7 +197,7 @@ static function DnsRecordField($type, $ttl, $description, $userID, $domainID){
                 $line .= '</div>';
                 $line .= '<button type="button" class="delete btn btn-danger btn-mini">Delete</button>';
                 $line .= '<button type="button" class="undo btn btn-success btn-mini">Undo</button>';
-                $line .= '<input name="type[' . $rowdns['dn_id_pk'] . ']" value="'.$type.'" type="hidden">';
+                $line .= '<input name="type[' . $rowdns['dn_id_pk'] . ']" value="' . $type . '" type="hidden">';
                 $line .= '<input class="delete" name="delete[' . $rowdns['dn_id_pk'] . ']" value="false" type="hidden">';
                 $line .= '<br>';
                 $line .= '</div>';
@@ -211,34 +217,32 @@ static function DnsRecordField($type, $ttl, $description, $userID, $domainID){
             $line .= '<div class="newRecord row" style="display: none">';
             $line .= '<div class="hostName"><input name="proto_hostName" class="input-small" type="text" placeholder="' . ui_language::translate('Host Name') . '"></div>';
 
-            $line .= '<div class="TTL"><input name="proto_ttl" value="'.$ttl.'" class="input-small" type="text" placeholder="' . ui_language::translate('TTL') . '"></div>';
+            $line .= '<div class="TTL"><input name="proto_ttl" value="' . $ttl . '" class="input-small" type="text" placeholder="' . ui_language::translate('TTL') . '"></div>';
             $line .= '<div class="in">IN</div>';
-            $line .= '<div class="type">'.$type.'</div>';
-            if($type === 'MX'){
+            $line .= '<div class="type">' . $type . '</div>';
+            if ($type === 'MX') {
                 $line .= '<div class="priority"><input name="proto_priority" class="input-small" type="text" placeholder="' . ui_language::translate('Priority') . '"></div>';
-            }elseif ($type === 'SRV') {
+            } elseif ($type === 'SRV') {
                 $line .= '<div class="priority"><input name="proto_priority" class="input-small" type="text" placeholder="' . ui_language::translate('Priority') . '"></div>';
                 $line .= '<div class="weight"><input name="proto_weight" class="input-small" type="text" placeholder="' . ui_language::translate('Weight') . '"></div>';
                 $line .= '<div class="port"><input name="proto_port" class="input-small" type="text" placeholder="' . ui_language::translate('Port') . '"></div>';
             }
 
             $line .= '<div class="target"><input name="proto_target" class="input-small" type="text" placeholder="' . ui_language::translate('Target') . '"></div>';
-            $line .= '<input class="delete" name="proto_delete" value="false" type="hidden"><button type="button" class="delete btn btn-danger btn-mini">Delete</button><input name="proto_type" value="'.$type.'" type="hidden">';
+            $line .= '<input class="delete" name="proto_delete" value="false" type="hidden"><button type="button" class="delete btn btn-danger btn-mini">Delete</button><input name="proto_type" value="' . $type . '" type="hidden">';
             $line .= '</div>';
-            $line .= '</div> <!-- END '.$type.' RECORDS -->';
+            $line .= '</div> <!-- END ' . $type . ' RECORDS -->';
             return $line;
         }
-}
-
-
-
-
+    }
 
     /*
      * Build and show DNS Record HTML output
      * TODO: Break into smaller Functions
      */
-    static function DisplayRecords() {
+
+    static function DisplayRecords()
+    {
         //print_r($_POST); //Post Debug
         global $zdbh;
         global $controller;
@@ -263,20 +267,20 @@ static function DnsRecordField($type, $ttl, $description, $userID, $domainID){
             } else {
                 $zone_error_message = '<font color="green">' . ui_language::translate('Your DNS zone has been loaded without errors.') . '</font>';
             }
-            $zone_status = '<img src="modules/' . $controller->GetControllerRequest( 'URL', 'module' ) . '/assets/up.png">';
+            $zone_status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.png">';
         } else {
             $zone_error_message = '<font color="red">' . ui_language::translate('Errors detected have prevented your DNS zone from being loaded. Please correct the error(s) listed below. Until these errors are fixed, your DNS will not work.') . '</font>';
             $zone_status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.png">';
         }
 
         // Top Edit buttons
-        $line  = '<!-- DNS FORM -->';
+        $line = '<!-- DNS FORM -->';
         $line .= '<div id="dnsTitle" class="account accountTitle">';
-            $line .= '<div class="content"><h4>' . ui_language::translate('DNS records for') . ':  <a href="http://' . $domain['vh_name_vc'] . '" target="_blank">' . $domain['vh_name_vc'] . '</a></h4>';
-                $line .= '<div>';
-                    $line .= '<div class="actions"><a class="undo disabled" rel="popover" data-title="Undo" data-content="Undo all un-saved changes." data-placement="top">' . ui_language::translate('Undo Changes') . '</a><a class="save disabled">' . ui_language::translate('Save Changes') . '</a><a class="back" href="./?module=' . $controller->GetControllerRequest('URL', 'module') . '">' . ui_language::translate('Domain List') . '</a></div>';
-                $line .= '</div><br class="clear">';
-            $line .= '</div>';
+        $line .= '<div class="content"><h4>' . ui_language::translate('DNS records for') . ':  <a href="http://' . $domain['vh_name_vc'] . '" target="_blank">' . $domain['vh_name_vc'] . '</a></h4>';
+        $line .= '<div>';
+        $line .= '<div class="actions"><a class="undo disabled" rel="popover" data-title="Undo" data-content="Undo all un-saved changes." data-placement="top">' . ui_language::translate('Undo Changes') . '</a><a class="save disabled">' . ui_language::translate('Save Changes') . '</a><a class="back" href="./?module=' . $controller->GetControllerRequest('URL', 'module') . '">' . ui_language::translate('Domain List') . '</a></div>';
+        $line .= '</div><br class="clear">';
+        $line .= '</div>';
         $line .= '</div>';
 
         $line .= '<form action="./?module=dns_manager&action=SaveDNS" method="post">';
@@ -367,7 +371,7 @@ static function DnsRecordField($type, $ttl, $description, $userID, $domainID){
         $line .= '</div>';
 
 
-$line .='
+        $line .='
 <div id="dns-modal" class="modal fade in" tabindex="-1" role="dialog" style="display: none;">
     <div class="modal-dialog">
         <div class="alert alert-block alert-error fade in">
@@ -383,17 +387,18 @@ $line .='
         return $line;
     }
 
-
     /*
      * Show Domain Dropdown list/entrance page
      * If no domains exist it shows an Empty list
      * TODO: Tell them to add a domain if no domains exist
      */
-    static function DisplayDomains() {
+
+    static function DisplayDomains()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $line  = "<div class=\"zgrid_wrapper\">";
+        $line = "<div class=\"zgrid_wrapper\">";
         $line .= "<h2>" . ui_language::translate("Manage Domains") . "</h2>";
         $line .= "" . ui_language::translate("Choose fom the list of domains below") . "";
         $line .= "<form name=DisplayDNS action=\"./?module=dns_manager&action=DisplayRecords\" method=\"post\">";
@@ -425,7 +430,8 @@ $line .='
         return $line;
     }
 
-    static function doEditClient() {
+    static function doEditClient()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -446,7 +452,8 @@ $line .='
         }
     }
 
-    static function doDisplayRecords() {
+    static function doDisplayRecords()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -454,7 +461,8 @@ $line .='
         return;
     }
 
-    static function doSaveDNS() {
+    static function doSaveDNS()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -466,7 +474,8 @@ $line .='
         }
     }
 
-    static function doCreateDefaultRecords() {
+    static function doCreateDefaultRecords()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -760,7 +769,8 @@ $line .='
         return;
     }
 
-    static function SaveDNS() {
+    static function SaveDNS()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -992,7 +1002,8 @@ $line .='
     }
 
     //Use the same method as above and check for input errors doSaveDNS() uses before continuing.
-    static function CheckForErrors() {
+    static function CheckForErrors()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -1250,7 +1261,8 @@ $line .='
         return true;
     }
 
-    static function IsValidDomainName($a) {
+    static function IsValidDomainName($a)
+    {
         if ($a != "@") {
             $part = explode(".", $a);
             foreach ($part as $check) {
@@ -1262,7 +1274,8 @@ $line .='
         return true;
     }
 
-    static function IsValidTargetName($a) {
+    static function IsValidTargetName($a)
+    {
         if ($a != "@") {
             $part = explode(".", $a);
             foreach ($part as $check) {
@@ -1274,7 +1287,8 @@ $line .='
         return true;
     }
 
-    static function CleanRecord($data, $type) {
+    static function CleanRecord($data, $type)
+    {
         $data = trim($data);
         if ($type == 'SPF' || $type == 'TXT') {
             $data = str_replace('', '', $data);
@@ -1294,7 +1308,8 @@ $line .='
         return $data;
     }
 
-    static function IsTypeAllowed($type) {
+    static function IsTypeAllowed($type)
+    {
         global $zdbh;
         $record_types = ctrl_options::GetSystemOption('allowed_types');
         $record_types = explode(' ', $record_types);
@@ -1305,7 +1320,8 @@ $line .='
         }
     }
 
-    static function IsValidIP($ip) {
+    static function IsValidIP($ip)
+    {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
             return TRUE;
         } else {
@@ -1313,7 +1329,8 @@ $line .='
         }
     }
 
-    static function IsValidIPv4($ip) {
+    static function IsValidIPv4($ip)
+    {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
             return TRUE;
         } else {
@@ -1321,7 +1338,8 @@ $line .='
         }
     }
 
-    static function IsValidIPv6($ip) {
+    static function IsValidIPv6($ip)
+    {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
             return TRUE;
         } else {
@@ -1329,147 +1347,128 @@ $line .='
         }
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$ttl_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('TTL must be a numeric value.'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('TTL must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$hostname_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('Hostnames must be unique.'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('Hostnames must be unique.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$invalidIPv4_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('IP Address is not a valid IPV4 address.'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('IP Address is not a valid IPV4 address.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$invalidIPv6_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('IP Address is not a valid IPV6 address'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('IP Address is not a valid IPV6 address'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$invalidDomainName_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('An invalid domain name character was entered. Domain names are limited to alphanumeric characters and hyphens.'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('An invalid domain name character was entered. Domain names are limited to alphanumeric characters and hyphens.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$invalidIP_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('Target is not a valid IP address'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('Target is not a valid IP address'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$priorityNumeric_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('Priority must be a numeric value.'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('Priority must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$priorityRange_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('The priority of a dns record must be a numeric value between 0 and 65535'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('The priority of a dns record must be a numeric value between 0 and 65535'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$weightNumeric_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('Weight must be a numeric value.'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('Weight must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$weightRange_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('The weight of a dns record must be a numeric value between 0 and 65535'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('The weight of a dns record must be a numeric value between 0 and 65535'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$portNumeric_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('PORT must be a numeric value.'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('PORT must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$portRange_error)) {
             return ui_sysmessage::shout(
-                ui_language::translate('The port of a dns record must be a numeric value between 0 and 65535'),
-                'zannounceerror',
-                'ERROR DNS NOT SAVED'
+                            ui_language::translate('The port of a dns record must be a numeric value between 0 and 65535'), 'zannounceerror', 'ERROR DNS NOT SAVED'
             );
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(
-                ui_language::translate('Changes to your DNS have been saved successfully!'),
-                'zannouncesuccess',
-                'SUCCESS DNS SAVED'
+                            ui_language::translate('Changes to your DNS have been saved successfully!'), 'zannouncesuccess', 'SUCCESS DNS SAVED'
             );
         }
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
         $mod_folder = $controller->GetControllerRequest('URL', 'module');
         // Check is Userland Theme has a Module Icon Override
-        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/'.$mod_folder.'/assets/icon.png')) {
-            $module_icon = 'etc/styles/' . ui_template::GetUserTemplate() . '/images/'.$mod_folder.'/assets/icon.png';
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_folder . '/assets/icon.png')) {
+            $module_icon = 'etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_folder . '/assets/icon.png';
         } else {
             $module_icon = 'modules/' . $mod_folder . '/assets/icon.png';
         }
         return $module_icon;
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function TriggerDNSUpdate($id) {
+    static function TriggerDNSUpdate($id)
+    {
         global $zdbh;
         global $controller;
-        $GetRecords = ctrl_options::GetSystemOption('dns_hasupdates');
-        $records = explode(",", $GetRecords);
-        foreach ($records as $record) {
-            $RecordArray[] = $record;
-        }
-        if (!in_array($id, $RecordArray)) {
-            $newlist = $GetRecords . ',' . $id;
-            $newlist = str_replace(',,', ',', $newlist);
+        $records_list = ctrl_options::GetSystemOption('dns_hasupdates');
+        $record_array = explode(',', $records_list);
+        if (!in_array($id, $record_array)) {
+            if (empty($records_list)) {
+                $records_list .= $id;
+            } else {
+                $records_list .= ',' . $id;
+            }
             $sql = "UPDATE x_settings SET so_value_tx=:newlist WHERE so_name_vc='dns_hasupdates'";
             $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':newlist', $newlist);
+            $sql->bindParam(':newlist', $records_list);
             $sql->execute();
             return true;
         }
     }
 
-    static function CheckZoneRecord($domainID) {
+    static function CheckZoneRecord($domainID)
+    {
         global $zdbh;
         $hasrecords = false;
         $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:domainID  AND dn_deleted_ts IS NULL";
@@ -1533,12 +1532,12 @@ $line .='
                 ob_start();
 
 
-                $command = ctrl_options::GetSystemOption( 'named_checkzone' );
+                $command = ctrl_options::GetSystemOption('named_checkzone');
                 $args = array(
-                    $domain[ 'dn_name_vc' ],
+                    $domain['dn_name_vc'],
                     $zonecheck_file
                 );
-                $retval = ctrl_system::systemCommand( $command, $args );
+                $retval = ctrl_system::systemCommand($command, $args);
 
 
                 $content_grabbed = ob_get_contents();
@@ -1557,4 +1556,5 @@ $line .='
     }
 
 }
+
 ?>
