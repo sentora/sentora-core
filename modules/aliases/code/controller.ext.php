@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
     static $alreadyexists;
@@ -36,7 +37,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListAliases($uid) {
+    static function ListAliases($uid)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -61,7 +63,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentAlias($aid) {
+    static function ListCurrentAlias($aid)
+    {
         global $zdbh;
         global $controller;
         $sql = "SELECT * FROM x_aliases WHERE al_id_pk=:aid AND al_deleted_ts IS NULL";
@@ -85,7 +88,8 @@ class module_controller {
         }
     }
 
-    static function getMailboxList($uid = null) {
+    static function getMailboxList($uid = null)
+    {
         global $zdbh;
         global $controller;
         if (($uid == '') || (empty($uid)) || ($uid == null)) {
@@ -112,7 +116,8 @@ class module_controller {
         }
     }
 
-    static function getDomainList($uid = null) {
+    static function getDomainList($uid = null)
+    {
         global $zdbh;
         global $controller;
         if (($uid == '') || (empty($uid)) || ($uid == null)) {
@@ -138,7 +143,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteCreateAlias($uid, $address, $domain, $destination) {
+    static function ExecuteCreateAlias($uid, $address, $domain, $destination)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -175,7 +181,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteDeleteAlias($al_id_pk) {
+    static function ExecuteDeleteAlias($al_id_pk)
+    {
         global $zdbh;
         global $controller;
         self::$delete = true;
@@ -200,7 +207,8 @@ class module_controller {
         self::$ok = true;
     }
 
-    static function CheckCreateForErrors($address, $domain, $destination) {
+    static function CheckCreateForErrors($address, $domain, $destination)
+    {
         global $zdbh;
         global $controller;
         $fulladdress = $address . "@" . $domain;
@@ -261,7 +269,8 @@ class module_controller {
         return true;
     }
 
-    static function IsValidEmail($email) {
+    static function IsValidEmail($email)
+    {
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
             return false;
         }
@@ -275,7 +284,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doCreateAlias() {
+    static function doCreateAlias()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -286,7 +296,8 @@ class module_controller {
         return false;
     }
 
-    static function doDeleteAlias() {
+    static function doDeleteAlias()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -304,7 +315,8 @@ class module_controller {
         return;
     }
 
-    static function doConfirmDeleteAlias() {
+    static function doConfirmDeleteAlias()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -313,7 +325,8 @@ class module_controller {
         return false;
     }
 
-    static function getEditCurrentAliasName() {
+    static function getEditCurrentAliasName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentAlias($controller->GetControllerRequest('URL', 'other'));
@@ -323,19 +336,22 @@ class module_controller {
         }
     }
 
-    static function getAliasList() {
+    static function getAliasList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListAliases($currentuser['userid']);
     }
 
-    static function getCurrentAliasList() {
+    static function getCurrentAliasList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListCurrentMailboxes($controller->GetControllerRequest('URL', 'other'));
     }
 
-    static function getisCreateAlias() {
+    static function getisCreateAlias()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (!isset($urlvars['show']))
@@ -343,7 +359,8 @@ class module_controller {
         return false;
     }
 
-    static function getisDeleteAlias() {
+    static function getisDeleteAlias()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
@@ -351,7 +368,8 @@ class module_controller {
         return false;
     }
 
-    static function getEditCurrentAliasID() {
+    static function getEditCurrentAliasID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentAlias($controller->GetControllerRequest('URL', 'other'));
@@ -361,7 +379,8 @@ class module_controller {
         }
     }
 
-    static function GetMailOption($name) {
+    static function GetMailOption($name)
+    {
         global $zdbh;
         $sql = 'SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = :name';
         $bindArray = array(':name' => $name);
@@ -375,47 +394,51 @@ class module_controller {
         }
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
         $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
         return $module_icon;
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function getForwardUsagepChart() {
+    static function getForwardUsagepChart()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $forwardersquota = $currentuser['forwardersquota'];
-        $forwarders = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
-        $total = $forwardersquota;
-        $used = $forwarders;
-        $free = $total - $used;
-        $line .= "<img src=\"etc/lib/pChart2/zpanel/z3DPie.php?score=" . $free . "::" . $used . "&labels=Free: " . $free . "::Used: " . $used . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160\"/>";
-        return $line;
-    }
-
-    static function getQuotaLimit() {
-        global $zdbh;
-        global $controller;
-        $currentuser = ctrl_users::GetUserDetail();
-        if ($currentuser['forwardersquota'] > ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid'])) {
-            return true;
+        $maximum = $currentuser['forwardersquota'];
+        if ($maximum < 0) { //-1 = unlimited
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
-            return false;
+            $used = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
+            $free = max($maximum - $used, 0);
+            return '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                    . '&labels=Free: ' . $free . '::Used: ' . $used
+                    . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                    . ' alt="' . ui_language::translate('Pie chart') . '"/>';
         }
     }
 
-    static function getResult() {
+    static function getQuotaLimit()
+    {
+        $currentuser = ctrl_users::GetUserDetail();
+        return ($currentuser['forwardersquota'] < 0 ) or //-1 = unlimited
+                ($currentuser['forwardersquota'] > ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']));
+    }
+
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate("A mailbox, alias, forwarder or distrubution list already exists with that name."), "zannounceerror");
         }
@@ -433,7 +456,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
