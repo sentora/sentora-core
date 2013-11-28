@@ -26,7 +26,6 @@
 
     <!-- styles -->
     <link href="/etc/styles/zpanelx/global-css/bootstrap.css" rel="stylesheet">
-    <link href="/etc/styles/zpanelx/css/style.css" rel="stylesheet">
     <link href="/etc/styles/zpanelx/global-css/login.css" rel="stylesheet">
 
 
