@@ -95,7 +95,7 @@ function WriteDNSZoneRecordsHook()
                     $line .= $rowdns['dn_host_vc'] . "    " . $rowdns['dn_ttl_in'] . "    IN    SRV    " . $rowdns['dn_priority_in'] . "  " . $rowdns['dn_weight_in'] . "  " . $rowdns['dn_port_in'] . "  " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
                     break;
                 case "SPF" :
-                    $line .= $rowdns['dn_host_vc'] . "    " . $rowdns['dn_ttl_in'] . "    IN    SPF    \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
+                    $line .= $rowdns['dn_host_vc'] . "    " . $rowdns['dn_ttl_in'] . "    IN    TXT    \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
                     break;
                 case "NS" :
                     $line .= $rowdns['dn_host_vc'] . "    " . $rowdns['dn_ttl_in'] . "    IN    NS    " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
