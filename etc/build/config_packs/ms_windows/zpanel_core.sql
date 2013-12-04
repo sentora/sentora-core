@@ -647,7 +647,7 @@ CREATE TABLE `x_settings` (
 
 /*Data for the table `x_settings` */
 
-insert  into `x_settings`(`so_id_pk`,`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values (6,'dbversion','ZPanel version','10.1.0',NULL,'Database Version','ZPanel Config','false');
+insert  into `x_settings`(`so_id_pk`,`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values (6,'dbversion','ZPanel version','10.1.1',NULL,'Database Version','ZPanel Config','false');
 insert  into `x_settings`(`so_id_pk`,`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values (7,'zpanel_root','ZPanel root path','C:/zpanel/panel/',NULL,'Zpanel Web Root','ZPanel Config','true');
 insert  into `x_settings`(`so_id_pk`,`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values (8,'module_icons_pr','Icons per Row','10',NULL,'Set the number of icons to display before beginning a new line.','ZPanel Config','true');
 insert  into `x_settings`(`so_id_pk`,`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values (10,'zpanel_df','Date Format','H:i jS M Y T',NULL,'Set the date format used by modules.','ZPanel Config','true');
@@ -843,6 +843,7 @@ CREATE TABLE `x_vhosts` (
   `vh_custom_port_in` int(6) DEFAULT NULL,
   `vh_custom_ip_vc` varchar(45) DEFAULT NULL,
   `vh_portforward_in` int(1) DEFAULT NULL,
+  `vh_soaserial_vc` CHAR(10) DEFAULT 'AAAAMMDDSS',
   `vh_enabled_in` int(1) DEFAULT '1',
   `vh_created_ts` int(30) DEFAULT NULL,
   `vh_deleted_ts` int(30) DEFAULT NULL,
