@@ -3,5 +3,3 @@
 /log.txt
 /cnf/db.php
 /.vagrant
-/Vagrantfile
-/vagrant_provision.sh
