@@ -19,20 +19,20 @@ function __autoload($class_name) {
     if (file_exists($path)) {
         require_once $path;
     }
+}
 
-    if (isset($_GET['module'])) {
-        $CleanModuleName = fs_protector::SanitiseFolderName($_GET['module']);
+if (isset($_GET['module'])) {
+	$CleanModuleName = fs_protector::SanitiseFolderName($_GET['module']);
 
-        $ControlerPath = 'modules/' . $CleanModuleName . '/code/controller.ext.php';
-        if (file_exists($ControlerPath)) {
-            require_once $ControlerPath;
-        }
+	$ControlerPath = 'modules/' . $CleanModuleName . '/code/controller.ext.php';
+	if (file_exists($ControlerPath)) {
+		require_once $ControlerPath;
+	}
 
-        $ModulePath = 'modules/' . $CleanModuleName . '/code/' . $class_name . '.class.php';
-        if (file_exists($ModulePath)) {
-            require_once $ModulePath;
-        }
-    }
+	$ModulePath = 'modules/' . $CleanModuleName . '/code/' . $class_name . '.class.php';
+	if (file_exists($ModulePath)) {
+		require_once $ModulePath;
+	}
 }
 
 ?>
