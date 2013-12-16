@@ -682,7 +682,7 @@ li.highlight {
 #menu-sidebar .heading:hover{
     /*background: #669933;*/
     /*background: #3e3e3e;*/
-    cursor: s-resize;
+    cursor: pointer;
 }
 
 #menu-sidebar ul li a{
