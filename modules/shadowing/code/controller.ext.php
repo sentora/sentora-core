@@ -80,7 +80,7 @@ class module_controller {
             $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
             $numrows = $zdbh->prepare($sql);          
         } else {
-            $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL";
+            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL";
             $numrows = $zdbh->prepare($sql);
             $numrows->bindParam(':userid', $currentuser['userid']);            
         }
