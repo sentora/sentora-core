@@ -27,7 +27,7 @@ if (isset($_GET['logout'])) {
 
 if (isset($_GET['returnsession'])) {
     if (isset($_SESSION['ruid'])) {
-        ctrl_auth::SetUserSession($_SESSION['ruid']);
+        ctrl_auth::SetUserSession($_SESSION['ruid'], runtime_sessionsecurity::getSessionSecurityEnabled());
         $_SESSION['ruid'] = null;
     }
     header("location: ./");
