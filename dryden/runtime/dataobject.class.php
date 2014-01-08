@@ -13,9 +13,10 @@
 class runtime_dataobject {
 
     /**
-     * @var array The associated array of which to store all dataobject entites in. 
+     * The associated array of which to store all dataobject entites in.
+     * @var array
      */
-    var $object;
+    protected $object;
 
     function __construct() {
         $this->object = array();
@@ -25,7 +26,7 @@ class runtime_dataobject {
      * Used to 'push' an associated array on to the object's $object array.
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param array $arr The associative array data to add to the object.
-     * @return obj 
+     * @return obj
      */
     private function array_push_associative(&$arr) {
         $args = func_get_args();
