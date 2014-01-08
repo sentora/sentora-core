@@ -80,7 +80,7 @@
         <!-- BEGIN LEFT SIDEBAR -->
         <div id="page-sidebar" class="col-lg-3 visible-desktop">
             <ul id="menu-sidebar">
-                <li id="acc-stats"><a class="stats-but" href="#"  data-toggle="collapse" data-target="#stats-data">Account Info</a>
+                <li id="acc-stats"><a class="stats-but" href="#"  data-toggle="collapse" data-target="#stats-data"><: Account Info :></a>
                 </li>
                 <# ui_tpl_modulelistzsidebar #>
             </ul>
@@ -100,10 +100,10 @@
 
             <!-- BEGIN STATS -->
             <ul class="nav nav-tabs" id="stats-tab">
-              <li class="active"><a href="#account">Account Information</a></li>
-              <li><a href="#usage">Account Usage</a></li>
-              <li><a href="#server">Server Information</a></li>
-              <li><a href="#domain">Domain Information</a></li>
+              <li class="active"><a href="#account"><: Account Information :></a></li>
+              <li><a href="#usage"><: Account Usage :></a></li>
+              <li><a href="#server"><: Server Information :></a></li>
+              <li><a href="#domain"><: Domain Information :></a></li>
             </ul>
 
             <div class="tab-content">
