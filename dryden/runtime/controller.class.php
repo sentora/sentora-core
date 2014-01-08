@@ -10,7 +10,8 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class runtime_controller {
+class runtime_controller
+{
 
     /**
      * @var array All current request 'get' variables.
@@ -36,7 +37,8 @@ class runtime_controller {
      * Get the latest requests and updates the values avaliable to the model/view.
      * @author Bobby Allen (ballen@zpanelcp.com)
      */
-    public function Init() {
+    public function Init()
+    {
 
         //Set class varables
         $this->vars_get = array($_GET);
@@ -73,7 +75,8 @@ class runtime_controller {
      * @param string $name The named key of the array.
      * @retrun mixed Returns that array data if avaliable (is set) otherwise will return 'false'.
      */
-    public function GetControllerRequest($type = "URL", $name) {
+    public function GetControllerRequest($type = "URL", $name)
+    {
         if ($type == 'FORM') {
             if (isset($this->vars_post[0][$name])) {
                 return $this->vars_post[0][$name];
@@ -108,7 +111,8 @@ class runtime_controller {
      * @param string $type What type of requests would you like to see? (URL, USER, FORM or COOKIE)
      * @return array List of all set variables for the requested type.
      */
-    public function GetAllControllerRequests($type = "URL") {
+    public function GetAllControllerRequests($type = "URL")
+    {
         if ($type == 'FORM') {
             return $this->vars_post[0];
         } elseif ($type == 'URL') {
@@ -125,7 +129,8 @@ class runtime_controller {
      * Gets the current framework requested action.
      * @return boolean
      */
-    public function GetAction() {
+    public function GetAction()
+    {
         if (isset($this->vars_get[0]['action']))
             return $this->vars_get[0]['action'];
         return false;
@@ -135,7 +140,8 @@ class runtime_controller {
      * Gets the current framework requested module 'options'.
      * @return boolean
      */
-    public function GetOptions() {
+    public function GetOptions()
+    {
         if (isset($this->vars_get[0]['options']))
             return $this->vars_get[0]['options'];
         return false;
@@ -145,7 +151,8 @@ class runtime_controller {
      * Gets and returns the name of the current module.
      * @return boolean
      */
-    public function GetCurrentModule() {
+    public function GetCurrentModule()
+    {
         if (isset($this->vars_get[0]['module']))
             return $this->vars_get[0]['module'];
         return false;
@@ -158,7 +165,8 @@ class runtime_controller {
      * @global int $starttime The microtime of when the script started executing.
      * @return string HTML output of the debug infomation.
      */
-    public function OutputControllerDebug() {
+    public function OutputControllerDebug()
+    {
         global $script_memory;
         global $starttime;
         if (isset($this->vars_get[0]['debug'])) {
@@ -205,10 +213,11 @@ class runtime_controller {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @return boolean
      */
-    static function IsCLI() {
-        if (!@$_SERVER['HTTP_USER_AGENT'])
-            return true;
-        return false;
+    static function IsCLI()
+    {
+        if (isset($_SERVER['HTTP_USER_AGENT']))
+            return false;
+        return true;
     }
 
     /**
@@ -216,7 +225,8 @@ class runtime_controller {
      * @author Bobby Allen (ballen@zpanelcp.com)
      * @param string $module_path The full path to the module.
      */
-    static function ModuleControllerCode($module_path) {
+    static function ModuleControllerCode($module_path)
+    {
         $raw_path = str_replace("\\", "/", $module_path);
         $module_path = str_replace("/hooks", "/code/", $raw_path);
         $rawroot_path = str_replace("\\", "/", dirname(__FILE__));
