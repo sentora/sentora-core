@@ -80,7 +80,7 @@ class module_controller {
             $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
             $numrows = $zdbh->prepare($sql);          
         } else {
-            $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL";
+            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL";
             $numrows = $zdbh->prepare($sql);
             $numrows->bindParam(':userid', $currentuser['userid']);            
         }
@@ -98,7 +98,7 @@ class module_controller {
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inShadow_' . $rowclients['ac_id_pk']))) {
                         ctrl_auth::KillCookies();
                         ctrl_auth::SetSession('ruid', $currentuser['userid']);
-                        ctrl_auth::SetUserSession($rowclients['ac_id_pk']);
+                        ctrl_auth::SetUserSession($rowclients['ac_id_pk'], runtime_sessionsecurity::getSessionSecurityEnabled());
                         header("location: /");
                         exit;
                     }
