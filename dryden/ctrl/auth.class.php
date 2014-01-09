@@ -54,8 +54,9 @@ class ctrl_auth
      * @param int $zpuid The ZPanel user account ID to set the session as.
      * @return bool
      */
-    static function SetUserSession($zpuid = 0, $sessionSecuirty)
+    static function SetUserSession($zpuid = 0, $sessionSecuirty = true)
     {
+        $sessionSecuirty = runtime_sessionsecurity::getSessionSecurityEnabled();
         if (isset($zpuid)) {
             $_SESSION['zpuid'] = $zpuid;
             if ($sessionSecuirty) {
