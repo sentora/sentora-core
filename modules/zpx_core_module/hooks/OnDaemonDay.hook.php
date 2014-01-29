@@ -46,8 +46,14 @@ echo "END getting module version update information!" . fs_filehandler::NewLine(
  * Please DO NOT remove the below code, this helps us at the ZPanel project
  * find out non-personal infomation about how people are running ZPanel. The only infomation
  * that we are passing back here is just your ZPanel version and what OS you are running it on.
+ *
+ * We also collec the email address of the default 'zadmin' account to enable automatic email
+ * notficiations of new releases.
  */
-ws_generic::DoPostRequest('http://api.zpanelcp.com/hello.json', "version=" . sys_versions::ShowZpanelVersion() . "&platform=" . sys_versions::ShowOSPlatformVersion() . "&url=" . ctrl_options::GetSystemOption('zpanel_domain') . "");
+$notify_releases = $zdbh->prepare("SELECT ac_email_vc AS email FROM x_accounts WHERE ac_user_vc = 'zadmin'");
+$zadmin = $notify_releases->returnRow();
+
+ws_generic::DoPostRequest('http://api.zpanelcp.com/hello.json', "version=" . sys_versions::ShowZpanelVersion() . "&platform=" . sys_versions::ShowOSPlatformVersion() . "&url=" . ctrl_options::GetSystemOption('zpanel_domain') . "&zemail=" . $zadmin['email']);
 
 return true;
 ?>
