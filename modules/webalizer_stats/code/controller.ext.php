@@ -5,7 +5,7 @@
  * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
  *
  */
-class module_controller
+class module_controller extends ctrl_module
 {
 
     static function ListDomains($uid)
@@ -13,7 +13,6 @@ class module_controller
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_deleted_ts IS NULL";
-        //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
@@ -89,37 +88,9 @@ class module_controller
         return false;
     }
 
-    static function getCSFR_Tag()
-    {
-        return runtime_csfr::Token();
-    }
-
     static function getInit()
     {
-
-    }
-
-    static function getDescription()
-    {
-        return ui_module::GetModuleDescription();
-    }
-
-    static function getModuleName()
-    {
-        $module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-    static function getModuleIcon()
-    {
-        global $controller;
-        $mod_dir = $controller->GetControllerRequest('URL', 'module');
-        // Check if the current userland theme has a module icon override
-        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
-            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
-        return './modules/' . $mod_dir . '/assets/icon.png';
+        
     }
 
 }
-
-?>

@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller
+class module_controller extends ctrl_module
 {
 
     static $ok;
@@ -1097,9 +1097,9 @@ class module_controller
                             return FALSE;
                         }
                     } elseif ($type[$id] == "TXT") {
-
+                        
                     } elseif ($type[$id] == "SPF") {
-
+                        
                     } else {
                         if (!self::IsValidIP($target[$id])) {
                             if (!self::IsValidDomainName($target[$id])) {
@@ -1200,11 +1200,11 @@ class module_controller
                                     return FALSE;
                                 }
                             } elseif ($type['new_' . $id] == "TXT") {
-
+                                
                             } elseif ($type['new_' . $id] == "SPF") {
-
+                                
                             } elseif ($type['new_' . $id] == "NS") {
-
+                                
                             } else {
                                 if (!self::IsValidIP($target['new_' . $id])) {
                                     if (!self::IsValidDomainName($target['new_' . $id])) {
@@ -1417,33 +1417,6 @@ class module_controller
         return;
     }
 
-    static function getCSFR_Tag()
-    {
-        return runtime_csfr::Token();
-    }
-
-    static function getModuleName()
-    {
-        $module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-    static function getModuleIcon()
-    {
-        global $controller;
-        $mod_dir = $controller->GetControllerRequest('URL', 'module');
-        // Check if the current userland theme has a module icon override
-        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
-            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
-        return './modules/' . $mod_dir . '/assets/icon.png';
-    }
-
-    static function getModuleDesc()
-    {
-        $message = ui_language::translate(ui_module::GetModuleDescription());
-        return $message;
-    }
-
     static function TriggerDNSUpdate($id)
     {
         global $zdbh;
@@ -1553,5 +1526,3 @@ class module_controller
     }
 
 }
-
-?>

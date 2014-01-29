@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller
+class module_controller extends ctrl_module
 {
 
     static $ok;
@@ -34,7 +34,6 @@ class module_controller
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc";
-        //$numrows = $zdbh->query($sql);
         $module = ui_module::GetModuleName();
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':module', $module);
@@ -75,7 +74,7 @@ class module_controller
     static function getNextRunTime()
     {
         if (ctrl_options::GetSystemOption('daemon_lastrun') > 0) {
-            $new_time = $time + ctrl_options::GetSystemOption('daemon_run_interval');
+            $new_time = ctrl_options::GetSystemOption('daemon_lastrun') + ctrl_options::GetSystemOption('daemon_run_interval');
             return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
         } else {
             // The default cron is set to run every 5 minutes on the 5 minute mark!
@@ -119,12 +118,10 @@ class module_controller
         global $controller;
         runtime_csfr::Protect();
         $sql = "SELECT * FROM x_settings WHERE so_module_vc=:module AND so_usereditable_en = 'true'";
-        //$numrows = $zdbh->query($sql);
         $module = ui_module::GetModuleName();
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':module', $module);
         $numrows->execute();
-
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $sql->bindParam(':module', $module);
@@ -169,33 +166,4 @@ class module_controller
         return;
     }
 
-    static function getCSFR_Tag()
-    {
-        return runtime_csfr::Token();
-    }
-
-    static function getModuleDesc()
-    {
-        $module_desc = ui_language::translate(ui_module::GetModuleDescription());
-        return $module_desc;
-    }
-
-    static function getModuleName()
-    {
-        $module_name = ui_module::GetModuleName();
-        return $module_name;
-    }
-
-    static function getModuleIcon()
-    {
-        global $controller;
-        $mod_dir = $controller->GetControllerRequest('URL', 'module');
-        // Check if the current userland theme has a module icon override
-        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
-            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
-        return './modules/' . $mod_dir . '/assets/icon.png';
-    }
-
 }
-
-?>

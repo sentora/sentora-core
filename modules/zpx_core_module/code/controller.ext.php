@@ -8,8 +8,7 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class module_controller {
+class module_controller extends ctrl_module
+{
     
 }
-
-?>

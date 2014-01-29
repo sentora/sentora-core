@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller
+class module_controller extends ctrl_module
 {
 
     static $alreadyexists;
@@ -321,34 +321,7 @@ class module_controller
         return;
     }
 
-    static function getCSFR_Tag()
-    {
-        return runtime_csfr::Token();
-    }
-
-    static function getModuleDesc()
-    {
-        return ui_language::translate(ui_module::GetModuleDescription());
-    }
-
-    static function getModuleName()
-    {
-        return ui_language::translate(ui_module::GetModuleName());
-    }
-
-    static function getModuleIcon()
-    {
-        global $controller;
-        $mod_dir = $controller->GetControllerRequest('URL', 'module');
-        // Check if the current userland theme has a module icon override
-        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
-            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
-        return './modules/' . $mod_dir . '/assets/icon.png';
-    }
-
     /**
      * Webinterface sudo methods.
      */
 }
-
-?>

@@ -24,13 +24,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller extends ctrl_module
+{
 
     static $error;
     static $ok;
     static $error_message;
 
-    static function getAdminModules() {
+    static function getAdminModules()
+    {
         global $zdbh;
         $line = "<h2>" . ui_language::translate("Administration Modules") . "</h2>";
         $modsql = "SELECT COUNT(*) FROM x_modules WHERE mo_type_en = 'modadmin' AND mo_enabled_en = 'true' ORDER BY mo_name_vc ASC";
@@ -53,7 +55,8 @@ class module_controller {
         return $line;
     }
 
-    static function getConfigModules() {
+    static function getConfigModules()
+    {
         global $zdbh;
         global $controller;
         $line = "<h2>" . ui_language::translate("Configure Modules") . "</h2>";
@@ -181,7 +184,8 @@ class module_controller {
         return $line;
     }
 
-    static function ModuleStatusIcon($mo_id_pk) {
+    static function ModuleStatusIcon($mo_id_pk)
+    {
         global $zdbh;
         global $controller;
         $modsql = $zdbh->prepare("SELECT * FROM x_modules WHERE mo_id_pk = :mo_id_pk");
@@ -196,7 +200,8 @@ class module_controller {
         return $retval;
     }
 
-    static function doEditModule() {
+    static function doEditModule()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -230,7 +235,8 @@ class module_controller {
         return;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$error_message))
             return ui_sysmessage::shout(ui_language::translate(self::$error_message), 'zannounceerror', 'zannounce');
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
@@ -241,14 +247,16 @@ class module_controller {
         return;
     }
 
-    static function getIsShowModuleInfo() {
+    static function getIsShowModuleInfo()
+    {
         global $controller;
         if (isset($_GET['showinfo']) && $controller->GetControllerRequest('URL', 'showinfo'))
             return true;
         return false;
     }
 
-    static function getModuleInfoName() {
+    static function getModuleInfoName()
+    {
         global $controller;
         if (self::getIsShowModuleInfo()) {
             $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
@@ -258,7 +266,8 @@ class module_controller {
         }
     }
 
-    static function getModuleDescription() {
+    static function getModuleDescription()
+    {
         global $controller;
         if (self::getIsShowModuleInfo()) {
             $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
@@ -268,7 +277,8 @@ class module_controller {
         }
     }
 
-    static function getModuleDeveloperName() {
+    static function getModuleDeveloperName()
+    {
         global $controller;
         if (self::getIsShowModuleInfo()) {
             $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
@@ -278,7 +288,8 @@ class module_controller {
         }
     }
 
-    static function getModuleDeveloperEmail() {
+    static function getModuleDeveloperEmail()
+    {
         global $controller;
         if (self::getIsShowModuleInfo()) {
             $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
@@ -288,7 +299,8 @@ class module_controller {
         }
     }
 
-    static function getModuleVersion() {
+    static function getModuleVersion()
+    {
         global $controller;
         if (self::getIsShowModuleInfo()) {
             $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
@@ -298,7 +310,8 @@ class module_controller {
         }
     }
 
-    static function getModuleDeveloperURL() {
+    static function getModuleDeveloperURL()
+    {
         global $controller;
         if (self::getIsShowModuleInfo()) {
             $info = ui_module::GetModuleXMLTags($controller->GetControllerRequest('URL', 'showinfo'));
@@ -308,7 +321,8 @@ class module_controller {
         }
     }
 
-    static function getModuleUpdateURL() {
+    static function getModuleUpdateURL()
+    {
         global $controller;
         global $zdbh;
         //$retval = $zdbh->query("SELECT mo_updateurl_tx FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
@@ -321,7 +335,8 @@ class module_controller {
         return $retval;
     }
 
-    static function getLatestVersion() {
+    static function getLatestVersion()
+    {
         global $controller;
         global $zdbh;
         //$retval = $zdbh->query("SELECT mo_updatever_vc FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
@@ -334,7 +349,8 @@ class module_controller {
         return $retval;
     }
 
-    static function getModuleType() {
+    static function getModuleType()
+    {
         global $controller;
         global $zdbh;
         //$retval = $zdbh->query("SELECT mo_type_en FROM x_modules WHERE mo_folder_vc = '" . $controller->GetControllerRequest('URL', 'showinfo') . "'")->Fetch();
@@ -347,7 +363,8 @@ class module_controller {
         return $retval;
     }
 
-    static function doInstallModule() {
+    static function doInstallModule()
+    {
         self::$error_message = "";
         self::$error = false;
         if ($_FILES['modulefile']['error'] > 0) {
@@ -384,17 +401,4 @@ class module_controller {
         return;
     }
 
-    static function getModuleName() {
-        $module_name = ui_language::translate(ui_module::GetModuleName());
-        return $module_name;
-    }
-
-    static function getModuleIcon() {
-        global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
-    }
-
 }
-
-?>

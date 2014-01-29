@@ -24,7 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller
+class module_controller extends ctrl_module
 {
 
     static public function getServices()
@@ -118,28 +118,6 @@ class module_controller
         return $line;
     }
 
-    static function getModuleName()
-    {
-        $module_name = ui_language::translate(ui_module::GetModuleName());
-        return $module_name;
-    }
-
-    static function getModuleDesc()
-    {
-        $message = ui_language::translate("Here you can check the current status of our services and see what services are up and running and which are down and not.");
-        return $message;
-    }
-
-    static function getModuleIcon()
-    {
-        global $controller;
-        $mod_dir = $controller->GetControllerRequest('URL', 'module');
-        // Check if the current userland theme has a module icon override
-        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
-            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
-        return './modules/' . $mod_dir . '/assets/icon.png';
-    }
-
     static function getIsWebServerUp()
     {
         return sys_monitoring::PortStatus(80);
@@ -187,5 +165,3 @@ class module_controller
     }
 
 }
-
-?>
