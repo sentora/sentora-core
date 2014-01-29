@@ -7,4 +7,5 @@ if ! grep -q "apache ALL=NOPASSWD: /etc/zpanel/panel/bin/zsudo" /etc/sudoers; th
 chmod -R 644 /var/spool/cron/
 chmod -R 644 /etc/cron.d/
 
-
+# Removal of Password Directories module
+rm -Rf /etc/zpanel/panel/modules/htpasswd
