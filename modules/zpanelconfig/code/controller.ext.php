@@ -74,12 +74,12 @@ class module_controller
 
     static function getNextRunTime()
     {
-        $time = ctrl_options::GetSystemOption('daemon_lastrun');
-        if ($time != '0') {
+        if (ctrl_options::GetSystemOption('daemon_lastrun') > 0) {
             $new_time = $time + ctrl_options::GetSystemOption('daemon_run_interval');
             return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
         } else {
-            return false;
+            // The default cron is set to run every 5 minutes on the 5 minute mark!
+            return date(ctrl_options::GetSystemOption('zpanel_df'), ceil(time() / 300) * 300);
         }
     }
 
@@ -157,9 +157,6 @@ class module_controller
             $sql->execute();
             $sql = $zdbh->prepare("UPDATE x_settings set so_value_tx = '0' WHERE so_name_vc = 'daemon_monthrun'");
             $sql->execute();
-        }
-        if (isset($formvars['inRunDaemon'])) {
-
         }
         self::$ok = true;
     }

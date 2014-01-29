@@ -36,7 +36,7 @@
         <form action="./?module=zpanelconfig&action=ForceDaemon" method="post">
             <table class="table table-striped">
                 <tr valign="top">
-                    <th nowrap="nowrap" width="300px"><: Next Daemon Run :>:</th><td><% if LastRunTime %><@ NextRunTime @><% else %><: Never :><% endif %></td>
+                    <th nowrap="nowrap" width="300px"><: Next Daemon Run :>:</th><td><@ NextRunTime @></td>
                 </tr>
                 <tr valign="top">
                     <th nowrap="nowrap"><: Last Daemon Run :>:</th><td><% if LastRunTime %><@ LastRunTime @><% else %><: Never :><% endif %></td>
@@ -52,14 +52,6 @@
                 </tr>
                 <tr>
                     <th><: Queue a full daemon run (reset) :>:</th><td><@ CSFR_Tag @><button class="btn btn-primary" type="submit" id="button" name="inForceFull"><: Go :></button></td>
-                </tr>
-            </table>
-        </form>
-        <br><br>
-        <form name="LaunchBackup" action="modules/zpanelconfig/code/rundaemon.php" target="backup" method="post" onsubmit="var w=window.open('', 'backup', 'scrollbars=yes,menubar=yes,height=600,width=600,resizable=no,toolbar=no,location=no,status=no'); w.focus();">
-            <table class="table table-striped">
-                <tr>
-                    <th nowrap="nowrap" width="300px"><: Run Daemon Now :>:</th><td><@ CSFR_Tag @><button class="btn btn-primary" type="submit" id="button" name="inRunDaemon"><: Go :></button></td>
                 </tr>
             </table>
         </form>
