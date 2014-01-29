@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class runtime_hook {
 
     /**
      * Executes a hook file at the called position.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name The name of the hook of which to execute.
      */
     static function Execute($name) {

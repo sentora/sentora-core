@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -35,7 +35,7 @@ class runtime_controller
 
     /**
      * Get the latest requests and updates the values avaliable to the model/view.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      */
     public function Init()
     {
@@ -70,7 +70,7 @@ class runtime_controller
 
     /**
      * Returns a vlaue from one of the requested type.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $type The type of request data to return.
      * @param string $name The named key of the array.
      * @retrun mixed Returns that array data if avaliable (is set) otherwise will return 'false'.
@@ -107,7 +107,7 @@ class runtime_controller
 
     /**
      * Grabs the list of all controller requests for a given type.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $type What type of requests would you like to see? (URL, USER, FORM or COOKIE)
      * @return array List of all set variables for the requested type.
      */
@@ -160,7 +160,7 @@ class runtime_controller
 
     /**
      * Displays Controller debug infomation (mainly for module development and debugging)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global string $script_memory The current amount of memory that the script it using.
      * @global int $starttime The microtime of when the script started executing.
      * @return string HTML output of the debug infomation.
@@ -210,7 +210,7 @@ class runtime_controller
 
     /**
      * Checks if the current script is running in CLI mode (eg. as a cron job)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return boolean
      */
     static function IsCLI()
@@ -222,7 +222,7 @@ class runtime_controller
 
     /**
      * Used in hooks to communicate with the modules controller.ext.php
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $module_path The full path to the module.
      */
     static function ModuleControllerCode($module_path)

@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -15,7 +15,7 @@ class sys_bandwidth
 
     /**
      * Generate the toal amount of bandwidth based on an Apache Access Log (common format).
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $logfile The path to the log file of which to parse.
      * @return int Total amount of bandwidth used (bytes)
      */

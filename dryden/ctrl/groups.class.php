@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class ctrl_groups {
 
     /**
      * Checks permissions to a module for a given user group.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $groupid The usergroup ID.
      * @param int $moduleid The module ID.
@@ -40,7 +40,7 @@ class ctrl_groups {
 
     /**
      * Adds permission to enable a module for a given user group.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $groupid The usergroup ID.
      * @param int $moduleid The module ID.
@@ -83,7 +83,7 @@ class ctrl_groups {
 
     /**
      * Deletes permission to disable a module for a given user group.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $groupid The usergroup ID. (If '0' will delete the permissions for ALL groups)
      * @param int $moduleid The module ID.

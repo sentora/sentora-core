@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> debug
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -41,7 +41,7 @@ class debug_logger {
 
     /**
      * Writes the log infomation out to a predefined logging medium (from $this->method)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @return boolean 
      */
@@ -88,7 +88,7 @@ class debug_logger {
 
     /**
      * Resets debug infomation - be careful to not use before writeLog() as it will clear the log!
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return bool 
      */
     function reset() {
@@ -100,7 +100,7 @@ class debug_logger {
 
     /**
      * Checks if there is infomation in the object to be reported on (If some debug/error message is pending).
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return boolean 
      */
     function hasInfo() {

@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> ui
  * @version 1.1.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class ui_moduleloader {
 
     /**
      * Gets all categories, or if parameter given can select a single category.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $catname The name of the module category to get the list of modules from.
      */
@@ -64,7 +64,7 @@ class ui_moduleloader {
 
     /**
      * Gets the module list as an array from a given category ID.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $catid The name of the module category to get the list of modules from.
      * @return array Array containing the list of modules for the category ID supplied.

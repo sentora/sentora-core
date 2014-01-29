@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class sys_monitoring {
 
     /**
      * Reports on whether a TCP or UDP port is listening for connections.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param int $port The port number of which to check (eg. 25 for SMTP).
      * @param boolean $udp Port is a UDP port as opposed to a TCP port.
      * @return boolean 
@@ -39,7 +39,7 @@ class sys_monitoring {
 
     /**
      * Returns a nice human readable copy of the server uptime.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Human readable server uptime.
      */
     static function ServerUptime() {
@@ -108,7 +108,7 @@ class sys_monitoring {
 
     /**
      * Returns the client's IP address.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string The IP address of the current client connection. 
      */
     static function ClientIPAddress() {
@@ -117,7 +117,7 @@ class sys_monitoring {
 
     /**
      * Returns the server's IP address.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Returns the IP address of the server. 
      */
     static function ServerIPAddress() {
@@ -126,7 +126,7 @@ class sys_monitoring {
 
     /**
      * Checks that an IP address is valid, can be public or private subnet (IPv6 and IPv4).
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $ip The IP address of which to check.
      * @return boolean 
      */
@@ -140,7 +140,7 @@ class sys_monitoring {
 
     /**
      * Checks that an IP address is valid (IPv6 and IPv4).
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $ip The IP address of which to check.
      * @return boolean 
      */
@@ -154,7 +154,7 @@ class sys_monitoring {
 
     /**
      * Checks that an IPv4 address is valid.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $ip The IP address of which to check.
      * @return boolean 
      */
@@ -168,7 +168,7 @@ class sys_monitoring {
 
     /**
      * Checks that an IPv6 address is valid.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $ip The IP address of which to check.
      * @return boolean 
      */

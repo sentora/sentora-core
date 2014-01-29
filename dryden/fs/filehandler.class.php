@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> filesystem
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -158,7 +158,7 @@ class fs_filehandler {
 
     /**
      * Returns the contents of a file in a string.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $file The path and file name to the file.
      * @return string The contents of the file. 
      */
@@ -173,7 +173,7 @@ class fs_filehandler {
 
     /**
      * Updates an existing file and will chmod it too if required.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $path The path and file name to the file to update.
      * @param string $chmod Permissions mode to use for the new file. (eg. 0777)
      * @param string $sting The content to update the file with.
@@ -191,7 +191,7 @@ class fs_filehandler {
 
     /**
      * This adds text data into a specified file. This can be before the start or at the end of the file.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $file The system path to the file.
      * @param string $content The content to add to the file.
      * @param int $pos Where to add the text. (0 = At the start, 1 = At the end of the file)

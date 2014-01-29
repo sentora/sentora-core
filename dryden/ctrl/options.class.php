@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class ctrl_options {
 
     /**
      * The main 'getter' class used to retrieve the value from the system options table.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $name The name of the system option (eg. zpanel_root)
      * @return string The system option value.
@@ -34,7 +34,7 @@ class ctrl_options {
 
     /**
      * An alias of 'GetSystemOption' to 'fix' the recent refactor of the ZPanel Code, this was affecting third-party modules which relied on this old function name.
-     * @author Bobby Allen <ballen@zpanelcp.com>
+     * @author Bobby Allen <ballen@bobbyallen.me>
      * @param string $name The name of the system option.
      * @return string The system option value.
      * @deprecated since version 10.0.1
@@ -45,7 +45,7 @@ class ctrl_options {
 
     /**
      * The main 'setter' class used to write/update system options.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $name The name of the system option (eg. zpanel_root)
      * @param string $value The value to set.
@@ -80,7 +80,7 @@ class ctrl_options {
 
     /**
      * Gets user account information.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $id The user account ID. 
      * @return mixed If the user exists it will return an array containing the account details for the user otherwise if the user doesn't exist will return 'false'.
@@ -101,7 +101,7 @@ class ctrl_options {
 
     /**
      * Gets user package information.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $id The user account ID.
      * @return mixed If the user and package details exist it will return an array containing the user's package details otherwise will return 'false'. 
@@ -130,7 +130,7 @@ class ctrl_options {
 
     /**
      * Checks for predefined avaliable options to choose from.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $dval The list of predefined values (seperated with a '|' pipe charater!)
      * @return boolean 
      */
@@ -142,7 +142,7 @@ class ctrl_options {
 
     /**
      * Dynamically builds a standard text field and will populate with a value if one is set.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name The name to use for the <input> tag.
      * @param string $cval Current value of the field.
      * @return string The HTML code for the generated text field.
@@ -155,7 +155,7 @@ class ctrl_options {
 
     /**
      * Dynamicaly builds a single line text area and will populate with a value if one is set.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name The name to use for the <textarea> tag.
      * @param string $cval Current value of the field.
      * @return string The HTML code for the generated textarea field.
@@ -166,7 +166,7 @@ class ctrl_options {
 
     /**
      * Dynamically builds a drop-down menu of avaliable options based on predfined list of values (seperated with a '|' pipe character!)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name The name to use for the <select> tag.
      * @param string $dval The list of predefined values (seperated with a '|' pipe charater!) 
      * @param string $cval Current value of the field.

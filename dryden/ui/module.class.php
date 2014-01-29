@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> ui
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -18,7 +18,7 @@ class ui_module {
 
     /**
      * Checks that the module exists.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name Name of the module to check that exists.
      * @return boolean
      */
@@ -32,7 +32,7 @@ class ui_module {
 
     /**
      * Returns the module template code.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name Name of the module.
      * @return string
      */
@@ -44,7 +44,7 @@ class ui_module {
 
     /**
      * Handles the GetModule control, if unable to load the module will handle the error too!
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $module The name of the module to load.
      * @return string
      */
@@ -60,7 +60,7 @@ class ui_module {
 
     /**
      * Gathers module infomation from the modules XML file and adds the details to the DB.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $module The name of the module (folder) of which to import the module infomation in for.
      * @return boolean
      */
@@ -108,7 +108,7 @@ class ui_module {
 
     /**
      * This class scans the module directory and will return an array of new modules that are not yet in the database.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param boolean $init Upon finding modules that don't exist in the database, add them!
      * @return array List of all new modules.
@@ -146,7 +146,7 @@ class ui_module {
 
     /**
      * Checks to see if the specified module is enabled.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $modulename The name of the module of which to check.
      * @return boolean
@@ -169,7 +169,7 @@ class ui_module {
 
     /**
      * Returns the name of the current module.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global obj $controller The controller object.
      * @global db_driver $zdbh The ZPX database handle.
      * @return string The name of the currently loaded (active) module.
@@ -187,7 +187,7 @@ class ui_module {
 
     /**
      * This class returns the database ID of the currently loaded (active) module.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global obj $controller The controller object.
      * @global db_driver $zdbh The ZPX database handle.
      * @return int The module ID of the currently loaded (active) module.
@@ -205,7 +205,7 @@ class ui_module {
 
     /**
      * This class returns the folder name of the current module.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global obj $controller The controller object.
      * @global db_driver $zdbh The ZPX database handle.
      * @return string The modules folder name as it appears in panel/modules/.
@@ -223,7 +223,7 @@ class ui_module {
 
     /**
      * This class returns the description of the current module.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global obj $controller The controller object.
      * @global db_driver $zdbh The ZPX database handle.
      * @return string The module description from the database (originally improted from the module.xml file).
@@ -268,7 +268,7 @@ class ui_module {
 
     /**
      * Checks to see if the specified module has updates.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $modulefolder The module folder of which to check updates for.
      * @return mixed If updates are avaliable will return an array with the new version and download URL otherwise will return 'false'.
@@ -292,7 +292,7 @@ class ui_module {
 
     /**
      * Returns an array of the XML tags from the module.xml file.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global obj $zlo The Generic ZPX logging object.
      * @param string $modulefolder The module folder name of which to import the XML data from.
      * @return mixed Will an array of the module XML data if the parsing of the document is successful otherwise will return 'false'.

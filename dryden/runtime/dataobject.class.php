@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -24,7 +24,7 @@ class runtime_dataobject {
 
     /**
      * Used to 'push' an associated array on to the object's $object array.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param array $arr The associative array data to add to the object.
      * @return obj
      */
@@ -45,7 +45,7 @@ class runtime_dataobject {
 
     /**
      * Enables an easy to use key/value pushing to the data object.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name The name of the key.
      * @param string $value The value of the key.
      */
@@ -55,7 +55,7 @@ class runtime_dataobject {
 
     /**
      * Returns an associated array (data object)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return array The dataobject contents.
      */
     public function getDataObject() {
@@ -64,7 +64,7 @@ class runtime_dataobject {
 
     /**
      * Returns a named data object record value.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name The name of the data record (key) to return from the current object.
      * @return string The value.
      */

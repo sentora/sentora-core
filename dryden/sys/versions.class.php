@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class sys_versions {
 
     /**
      * Returns the Apache HTTPd Server Version Number
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Apache Server version number.
      */
     static function ShowApacheVersion() {
@@ -28,7 +28,7 @@ class sys_versions {
 
     /**
      * Returns the PHP version number.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string PHP version number
      */
     static function ShowPHPVersion() {
@@ -37,7 +37,7 @@ class sys_versions {
 
     /**
      * Returns the MySQL server version number.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string MySQL version number 
      */
     static function ShowMySQLVersion() {
@@ -48,7 +48,7 @@ class sys_versions {
 
     /**
      * Returns a human readable copy of the Kernal version number running on the server.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $platform The OS Platform (eg. Linux or Windows)
      * @return string *NIX kernal version. - Will return 'N/A' for Microsoft Windows.
      */
@@ -63,7 +63,7 @@ class sys_versions {
 
     /**
      * Returns in human readable form the operating system platform (eg. Windows, Linux, FreeBSD, Other)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Human readable OS Platform name.
      */
     static function ShowOSPlatformVersion() {
@@ -84,7 +84,7 @@ class sys_versions {
 
     /**
      * Returns in human readable form the operating system name (eg. Windows, Ubuntu, CentOS, MacOSX, FreeBSD, Other)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Human readable OS name.
      */
     static function ShowOSName() {
@@ -150,7 +150,7 @@ class sys_versions {
 
     /**
      * Returns in human readable form the version of perl installed.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Human readable Perl version number.
      */
     static function ShowPerlVersion() {
@@ -173,7 +173,7 @@ class sys_versions {
 
     /**
      * Returns the ZPanel version (based on the DB version number.)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string ZPanel DB Version
      */
     static function ShowZpanelVersion() {

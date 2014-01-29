@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> debug
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class debug_phperrors {
 
     /**
      * Sets PHP error reporting to ON and displays ALL errors if set to 'dev' otherwise will disable all errors.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param str $mode Either 'dev' or 'prod', is left blank 'prod' is used by default.
      */
     static function SetMode($mode = '') {

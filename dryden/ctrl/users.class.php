@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class ctrl_users {
 
     /**
      * Returns an array of infomation for the account details, package, groups and quota limits for a given UID.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $uid The ZPanel user account ID.
      * @return array
@@ -70,7 +70,7 @@ class ctrl_users {
 
     /**
      * Returns the current usage of a particular resource.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $resource What time of quota should we be checking? (domains, subdomains, parkeddomains, mailboxes, distlists etc.)
      * @param int $acc_key The user ID of which to check the quota status for.
      * @return array Database table array of the quota infomation.
@@ -171,7 +171,7 @@ class ctrl_users {
 
     /**
      * Checks that the specified user is active and therefore allowed to login to the panel.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param int $uid The ZPanel user account ID.
      * @return boolean
@@ -193,7 +193,7 @@ class ctrl_users {
 
     /**
      * Checks that a specified email address is unique in the user accounts table.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver The ZPX database handle.
      * @param type $email The email address to check.
      * @return boolean

@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -16,7 +16,7 @@ class sys_email extends PHPMailer {
 
     /**
      * Sends the email with the contents of the object (Body etc. set using the parant calls in phpMailer!)
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return boolean 
      */
     public function SendEmail() {

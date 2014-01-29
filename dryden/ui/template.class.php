@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> ui
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class ui_template {
 
     /**
      * Returns the name (folder name) of the template that should be used for the current user.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string The template name.
      */
     static function GetUserTemplate() {
@@ -30,7 +30,7 @@ class ui_template {
 
     /**
      * Lists all avaliable templates in the 'etc/styles/' folder.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return array 
      */
     static function ListAvaliableTemplates() {
@@ -52,7 +52,7 @@ class ui_template {
 
     /**
      * Returns a list of all avaliable CSS styles for a given theme. If only a single CSS style then it will return false.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $template The template name (folder name) of which to check for extra CSS stlyes.
      * @return array List of avaliable CSS styles for this theme.
      */

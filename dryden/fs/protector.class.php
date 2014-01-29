@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> filesystem
  * @version 1.0.3
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class fs_protector {
 
     /**
      * Returns a safe file system string (to stop reverse iteration of the file system by removing full-stops and slashes (file system seperators etc. in theory, jailing them.)
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param $foldername The single name of the folder.
      * @return string The sanitised module folder name. 
      */
@@ -24,7 +24,7 @@ class fs_protector {
 
     /**
      * Checks module folder name from URL, checks with the database that a module is installed and therefore legit.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @return string The sanitised module folder name. 
      */
     public static function ModuleRequest() {

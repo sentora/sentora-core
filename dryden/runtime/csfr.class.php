@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.2
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class runtime_csfr {
 
     /**
      * Builds a 'hidden' form type which is populated with the generated token.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string The HTML form tag.
      */
     static function Token() {
@@ -27,7 +27,7 @@ class runtime_csfr {
 
     /**
      * Generates a new CSFR token.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return bool
      */
     static function Tokeniser() {
@@ -37,7 +37,7 @@ class runtime_csfr {
 
     /**
      * Verfies that the submitted form has a valid CSFR token.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return bool
      */
     static function Protect() {

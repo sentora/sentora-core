@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -15,7 +15,7 @@ class ctrl_auth
 
     /**
      * Checks that the server has a valid session for the user if not it will redirect to the login screen.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * return bool
      */
@@ -50,7 +50,7 @@ class ctrl_auth
 
     /**
      * Sets a user session ID.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param int $zpuid The ZPanel user account ID to set the session as.
      * @return bool
      */
@@ -81,7 +81,7 @@ class ctrl_auth
 
     /**
      * Sets the value of a given named session variable, if does not exist will create the session variable too.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $name The name of the session variable to set.
      * @param string $value The value of the session variable to set.
      * @return boolean
@@ -98,7 +98,7 @@ class ctrl_auth
 
     /**
      * The main authentication mechanism, checks username and password against the database and logs the user in on a successful authenitcation request.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $username The username to use to authenticate with.
      * @param string $password The password to use to authenticate with.
@@ -146,7 +146,7 @@ class ctrl_auth
 
     /**
      * Destroys a session and ends a user's Zpanel session.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return bool
      */
     static function KillSession()
@@ -162,7 +162,7 @@ class ctrl_auth
 
     /**
      * Deletes the authentication 'rememberme' cookies.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @return bool
      */
     static function KillCookies()
@@ -177,7 +177,7 @@ class ctrl_auth
 
     /**
      * Returns the UID (User ID) of the current logged in user.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @global obj $controller The Zpanel controller object.
      * @return int The current user's session ID.
      */

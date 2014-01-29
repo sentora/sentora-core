@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class runtime_haystack {
 
     /**
      * Get a value between two given strings.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $string The complete string on which to compute.
      * @param string $start The starting character or seqence of characters.
      * @param string $end The ending character or seqence of characters.

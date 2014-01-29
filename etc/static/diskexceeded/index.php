@@ -5,7 +5,7 @@
  * 
  * @package ZPanel
  * @version $Id$
- * @author Bobby Allen - ballen@zpanelcp.com
+ * @author Bobby Allen - ballen@bobbyallen.me
  * @copyright (c) 2008-2011 ZPanel Group - http://www.zpanelcp.com/
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  *

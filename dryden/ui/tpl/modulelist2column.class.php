@@ -4,7 +4,7 @@
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
  * @version 1.1.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @author Jason Davis (jason.davis.fl@gmail.com)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/

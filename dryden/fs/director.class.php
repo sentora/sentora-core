@@ -5,7 +5,7 @@
  * @package zpanelx
  * @subpackage dryden -> filesystem
  * @version 1.0.0
- * @author Bobby Allen (ballen@zpanelcp.com)
+ * @author Bobby Allen (ballen@bobbyallen.me)
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
@@ -14,7 +14,7 @@ class fs_director {
 
     /**
      * Corrects standard UNIX/PHP file slashes '/' to Windows slashes '\'.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $string The string to that of which to convert the slashes in.
      * @return string 
      */
@@ -24,7 +24,7 @@ class fs_director {
 
     /**
      * Converts Windows slashes '\' to UNIX/PHP path slashes '/'.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $string The string to that of which to convert the slashes in.
      * @return string
      */
@@ -34,7 +34,7 @@ class fs_director {
 
     /**
      * Converts to proper slashes based on OS platform.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $string The string to that of which to convert the slashes in.
      * @return string
      */
@@ -49,7 +49,7 @@ class fs_director {
 
     /**
      * Remove double slashes.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $string The string to that of which to convert the slashes in.
      * @return string
      */
@@ -60,7 +60,7 @@ class fs_director {
 
     /**
      * Takes a raw file size value (bytes) and converts it to human readable size with the correct abbreavation.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param int $size Number of bytes to convert to human readable format.
      * @return string Human readable version eg. 250 MB
      */
@@ -79,7 +79,7 @@ class fs_director {
 
     /**
      * Creates a directory if it doesn't already exist!
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $path The full path of the folder to create.
      * @return boolean
      */
@@ -98,7 +98,7 @@ class fs_director {
 
     /**
      * Removes (Deletes) a directory and all folders/file within it.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $path The full path of the folder to delete.
      * @return boolean
      */
@@ -120,7 +120,7 @@ class fs_director {
 
     /**
      * Sets file/directory permissions on a given path.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $path The full path of the file or folder on which to set the permissions on.
      * @param int $mode The UNIX permissions octal (eg. 0777 or 777)
      * @return boolean 
@@ -139,7 +139,7 @@ class fs_director {
 
     /**
      * Checks and converts a given value if the value is of a certain state. (designed to be used with HTML checkboxes).
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $value The value to check on which is null.
      * @param string $true If the result is 'true' return this.
      * @param string $false If the result is 'false' return this.
@@ -155,7 +155,7 @@ class fs_director {
 
     /**
      * Check for an empty value.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $value The value of which to check if its empty.
      * @return boolean 
      */
@@ -169,7 +169,7 @@ class fs_director {
 
     /**
      * Checks the value of a checkbox and returns if 0 if not ticked or 1 if it is ticked.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $value The value of which to check.
      * @return int Returns 1 if the checkbox is ticked and 0 if the text box is unticked.
      */
@@ -185,7 +185,7 @@ class fs_director {
 
     /**
      * Checks the value of a checkbox and returns string "CHECKED" if ticked and NULL if not ticked.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $value The value of which to check.
      * @return string  Returns 'CHECKED' if the checkbox is ticked and 'NULL' if the text box is unticked.
      */
@@ -200,7 +200,7 @@ class fs_director {
 
     /**
      * Returns a random password.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param int $length The total number of characters the password should be.
      * @param int $strength The strengh of the password generated. 
      * @return string The newly generated password. 
@@ -236,7 +236,7 @@ class fs_director {
 
     /**
      * Checks that an email address is of a valid format.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $email The email address of which to check.
      * @return boolean 
      */
@@ -248,7 +248,7 @@ class fs_director {
 
     /**
      * Checks that a domain name is of a valid format.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $domainname The domain name of which to check.
      * @return boolean 
      */
@@ -268,7 +268,7 @@ class fs_director {
 
     /**
      * Checks that a user name is of a valid format.
-     * @author Bobby Allen (ballen@zpanelcp.com) 
+     * @author Bobby Allen (ballen@bobbyallen.me) 
      * @param string $username The user name of which to check.
      * @return boolean 
      */
@@ -280,7 +280,7 @@ class fs_director {
 
     /**
      * Checks if a file exists or not.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $path The path to the file of which to check.
      * @return boolean 
      */
@@ -295,7 +295,7 @@ class fs_director {
 
     /**
      * Checks that a folder exists or not.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $path The path to the folder of which to check.
      * @return boolean 
      */
@@ -309,7 +309,7 @@ class fs_director {
 
     /**
      * Returns the file extentsion of a file.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $filename The full path to the file.
      * @return string The file extentsion (eg. .jpg) 
      */
@@ -319,7 +319,7 @@ class fs_director {
 
     /**
      * Returns the file name of a file minus the file extention.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $filename The full path to the file.
      * @return string The file name.
      */
@@ -329,7 +329,7 @@ class fs_director {
 
     /**
      * Returns the full size of a directory and all child objects.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $directory The filesystem path to the directory
      * @return int The directory size in bytes.
      */
@@ -367,7 +367,7 @@ class fs_director {
 
     /**
      * Renames a file or a folder.
-     * @author Bobby Allen (ballen@zpanelcp.com)
+     * @author Bobby Allen (ballen@bobbyallen.me)
      * @param string $source The full filesystem path of the file to rename.
      * @param string $target The full filesystem path of the new file (name).
      * @return boolean If the rename was successful or not. 
