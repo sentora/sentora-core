@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,23 +24,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
     /**
      * The 'worker' methods.
      */
-    static function ExectuteUpdateNotice($uid, $notice) {
+    static function ExectuteUpdateNotice($uid, $notice)
+    {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_accounts
@@ -52,14 +59,15 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteShowNotice($rid) {
+    static function ExecuteShowNotice($rid)
+    {
         global $zdbh;
         //$result = $zdbh->query("SELECT ac_notice_tx FROM x_accounts WHERE ac_id_pk = :rid")->Fetch();
         $sql = $zdbh->prepare("SELECT ac_notice_tx FROM x_accounts WHERE ac_id_pk = :rid");
         $sql->bindParam(':rid', $rid);
         $sql->execute();
         $result = $sql->fetch();
-        
+
         if ($result) {
             return runtime_xss::xssClean($result['ac_notice_tx']);
         } else {
@@ -74,13 +82,15 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function getCurrentNoticeText() {
+    static function getCurrentNoticeText()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ExecuteShowNotice($currentuser['resellerid']);
     }
 
-    static function doUpdateMessage() {
+    static function doUpdateMessage()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -89,8 +99,9 @@ class module_controller {
         header("location: ./?module=" . $controller->GetCurrentModule() . "&saved=true");
         exit;
     }
-    
-    static function getCSFR_Tag() {
+
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

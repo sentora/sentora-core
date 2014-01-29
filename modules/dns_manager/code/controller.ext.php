@@ -1431,14 +1431,11 @@ class module_controller
     static function getModuleIcon()
     {
         global $controller;
-        $mod_folder = $controller->GetControllerRequest('URL', 'module');
-        // Check is Userland Theme has a Module Icon Override
-        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_folder . '/assets/icon.png')) {
-            $module_icon = 'etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_folder . '/assets/icon.png';
-        } else {
-            $module_icon = 'modules/' . $mod_folder . '/assets/icon.png';
-        }
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
     static function getModuleDesc()

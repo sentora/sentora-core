@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $alreadyexists;
     static $dbalreadyadded;
@@ -38,7 +39,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function CleanOrphanDatabases($uid) {
+    static function CleanOrphanDatabases($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_mysql_dbmap WHERE mm_user_fk=:userid";
         $numrows = $zdbh->prepare($sql);
@@ -57,7 +59,7 @@ class module_controller {
                 $rowdb = $find->fetch();
 
                 if (!$rowdb) {
-                    
+
                 }
             }
             return true;
@@ -66,7 +68,8 @@ class module_controller {
         }
     }
 
-    static function ListUsers($uid) {
+    static function ListUsers($uid)
+    {
         global $zdbh;
         // Remove deleted databases from MySQL userlist...
         self::CleanOrphanDatabases($uid);
@@ -104,7 +107,8 @@ class module_controller {
         }
     }
 
-    static function ListDatabases($uid) {
+    static function ListDatabases($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_mysql_databases WHERE my_acc_fk=:userid AND my_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -126,7 +130,8 @@ class module_controller {
         }
     }
 
-    static function ListUserDatabases($uid) {
+    static function ListUserDatabases($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_mysql_dbmap WHERE mm_user_fk=:userid";
         $numrows = $zdbh->prepare($sql);
@@ -157,7 +162,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentUser($mid) {
+    static function ListCurrentUser($mid)
+    {
         global $zdbh;
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:mid AND mu_deleted_ts IS NULL");
         $numrows->bindParam(':mid', $mid);
@@ -178,7 +184,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteCreateUser($uid, $username, $database, $access) {
+    static function ExecuteCreateUser($uid, $username, $database, $access)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -258,7 +265,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckCreateForErrors($username, $database, $access) {
+    static function CheckCreateForErrors($username, $database, $access)
+    {
         global $zdbh;
         // Check to make sure the user name is not blank before we go any further...
         if ($username == '') {
@@ -310,7 +318,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckAddForErrors($userid, $database) {
+    static function CheckAddForErrors($userid, $database)
+    {
         global $zdbh;
         // Check to make sure the database isnt already added...
         //$result = $zdbh->query("SELECT * FROM x_mysql_dbmap WHERE mm_database_fk=" . $database . " AND mm_user_fk=" . $userid . "")->fetch();
@@ -326,7 +335,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteUser($mu_id_pk) {
+    static function ExecuteDeleteUser($mu_id_pk)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteDatabaseUser');
         //$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $mu_id_pk . " AND mu_deleted_ts IS NULL")->fetch();
@@ -352,7 +362,7 @@ class module_controller {
         }
         $sql = $zdbh->prepare("
 			UPDATE x_mysql_users
-			SET mu_deleted_ts = :time 
+			SET mu_deleted_ts = :time
 			WHERE mu_id_pk = :mu_id_pk");
         $time = time();
         $sql->bindParam(':time', $time);
@@ -368,7 +378,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteAddDB($uid, $myuserid, $dbid) {
+    static function ExecuteAddDB($uid, $myuserid, $dbid)
+    {
         global $zdbh;
         if (fs_director::CheckForEmptyValue(self::CheckAddForErrors($myuserid, $dbid))) {
             return false;
@@ -389,7 +400,7 @@ class module_controller {
         $numrows->bindParam(':myuserid', $myuserid);
         $numrows->execute();
         $rowuser = $numrows->fetch();
-        
+
         $my_name_vc = $zdbh->mysqlRealEscapeString($rowdb['my_name_vc']);
         $mu_name_vc = $zdbh->mysqlRealEscapeString($rowuser['mu_name_vc']);
         $mu_access_vc = $zdbh->mysqlRealEscapeString($rowuser['mu_access_vc']);
@@ -418,20 +429,21 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteRemoveDB($myuserid, $mapid) { // <-- mmid = dbmaps
+    static function ExecuteRemoveDB($myuserid, $mapid)
+    { // <-- mmid = dbmaps
         global $zdbh;
         runtime_hook::Execute('OnBeforeRemoveDatabaseAccess');
-     
+
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_dbmap WHERE mm_id_pk=:mapid");
         $numrows->bindParam(':mapid', $mapid);
         $numrows->execute();
         $rowdbmap = $numrows->fetch();
-     
+
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_databases WHERE my_id_pk=:mm_database_fk AND my_deleted_ts IS NULL");
         $numrows->bindParam(':mm_database_fk', $rowdbmap['mm_database_fk']);
         $numrows->execute();
         $rowdb = $numrows->fetch();
-       
+
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:myuserid AND mu_deleted_ts IS NULL");
         $numrows->bindParam(':myuserid', $myuserid);
         $numrows->execute();
@@ -439,7 +451,7 @@ class module_controller {
 
         $sql = $zdbh->prepare("REVOKE ALL PRIVILEGES ON `" . $rowdb['my_name_vc'] . "`.* FROM '" . $rowuser['mu_name_vc'] . "'@'" . $rowuser['mu_access_vc'] . "'");
         $sql->execute();
-        
+
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
 
@@ -453,10 +465,11 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteResetPassword($myuserid, $password) {
+    static function ExecuteResetPassword($myuserid, $password)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeResetDatabasePassword');
-        //$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();        
+        //$rowuser = $zdbh->query("SELECT * FROM x_mysql_users WHERE mu_id_pk=" . $myuserid . " AND mu_deleted_ts IS NULL")->fetch();
         $numrows = $zdbh->prepare("SELECT * FROM x_mysql_users WHERE mu_id_pk=:myuserid AND mu_deleted_ts IS NULL");
         $numrows->bindParam(':myuserid', $myuserid);
         $numrows->execute();
@@ -490,7 +503,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckPasswordForErrors($password) {
+    static function CheckPasswordForErrors($password)
+    {
         if (!self::IsValidPassword($password)) {
             self::$badpass = true;
             return false;
@@ -498,7 +512,8 @@ class module_controller {
         return true;
     }
 
-    static function IsValidUserName($username) {
+    static function IsValidUserName($username)
+    {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
         } else {
@@ -510,7 +525,8 @@ class module_controller {
         }
     }
 
-    static function IsValidPassword($password) {
+    static function IsValidPassword($password)
+    {
         if (!ctype_alnum($password)) {
             return false;
         }
@@ -524,7 +540,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doCreateUser() {
+    static function doCreateUser()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -539,7 +556,8 @@ class module_controller {
         return false;
     }
 
-    static function doEditUser() {
+    static function doEditUser()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -557,7 +575,8 @@ class module_controller {
         return;
     }
 
-    static function doAddDB() {
+    static function doAddDB()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -567,7 +586,8 @@ class module_controller {
         return false;
     }
 
-    static function doRemoveDB() {
+    static function doRemoveDB()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -584,7 +604,8 @@ class module_controller {
         return false;
     }
 
-    static function doConfirmDeleteUser() {
+    static function doConfirmDeleteUser()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -593,7 +614,8 @@ class module_controller {
         return false;
     }
 
-    static function doResetPW() {
+    static function doResetPW()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -602,25 +624,29 @@ class module_controller {
         return false;
     }
 
-    static function getUserList() {
+    static function getUserList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListUsers($currentuser['userid']);
     }
 
-    static function getDatabaseList() {
+    static function getDatabaseList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDatabases($currentuser['userid']);
     }
 
-    static function getUserDatabaseList() {
+    static function getUserDatabaseList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListUserDatabases($controller->GetControllerRequest('URL', 'other'));
     }
 
-    static function getisDeleteUser() {
+    static function getisDeleteUser()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
@@ -628,7 +654,8 @@ class module_controller {
         return false;
     }
 
-    static function getisEditUser() {
+    static function getisEditUser()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit"))
@@ -636,7 +663,8 @@ class module_controller {
         return false;
     }
 
-    static function getisCreateUser() {
+    static function getisCreateUser()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (!isset($urlvars['show']))
@@ -644,13 +672,15 @@ class module_controller {
         return false;
     }
 
-    static function getCurrentUserName() {
+    static function getCurrentUserName()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return $currentuser['username'];
     }
 
-    static function getEditCurrentUserName() {
+    static function getEditCurrentUserName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentUser($controller->GetControllerRequest('URL', 'other'));
@@ -660,7 +690,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentUserID() {
+    static function getEditCurrentUserID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentUser($controller->GetControllerRequest('URL', 'other'));
@@ -670,7 +701,8 @@ class module_controller {
         }
     }
 
-    static function getMysqlUsagepChart() {
+    static function getMysqlUsagepChart()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $line = "";
@@ -683,7 +715,8 @@ class module_controller {
         return $line;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
             return ui_sysmessage::shout(ui_language::translate("You need to specify a user name and select a database to create your MySQL user."), "zannounceerror");
         }
@@ -711,24 +744,31 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
     /**

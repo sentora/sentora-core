@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,23 +24,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
     /**
      * The 'worker' methods.
      */
-    static function GroupInfo($gid) {
+    static function GroupInfo($gid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_id_pk=:gid";
         $numrows = $zdbh->prepare($sql);
@@ -61,7 +68,8 @@ class module_controller {
         }
     }
 
-    static function ListGroups($uid) {
+    static function ListGroups($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:uid";
         //$numrows = $zdbh->query($sql);
@@ -88,7 +96,8 @@ class module_controller {
         }
     }
 
-    static function ListDefaultGroups($uid) {
+    static function ListDefaultGroups($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:uid";
         $numrows = $zdbh->prepare($sql);
@@ -115,7 +124,8 @@ class module_controller {
         }
     }
 
-    static function GroupMoveTo($uid, $gid) {
+    static function GroupMoveTo($uid, $gid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:uid AND ug_id_pk <> :gid";
         //$numrows = $zdbh->query($sql);
@@ -138,7 +148,8 @@ class module_controller {
         }
     }
 
-    static function ExectuteCreateGroup($name, $desc, $uid) {
+    static function ExectuteCreateGroup($name, $desc, $uid)
+    {
         global $zdbh;
         if (!fs_director::CheckForEmptyValue($name)) {
             $sql = $zdbh->prepare("INSERT INTO x_groups (ug_name_vc, ug_notes_tx, ug_reseller_fk) VALUES (:name, :desc, :uid)");
@@ -150,7 +161,8 @@ class module_controller {
         return true;
     }
 
-    static function ExectuteUpdateGroup($gid, $name, $desc) {
+    static function ExectuteUpdateGroup($gid, $name, $desc)
+    {
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_groups SET ug_name_vc = :name, ug_notes_tx = :desc WHERE ug_id_pk = :groupid");
         $sql->bindParam(':name', $name);
@@ -160,7 +172,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteGroup($gid, $mgid = "") {
+    static function ExecuteDeleteGroup($gid, $mgid = "")
+    {
         global $zdbh;
         if ($mgid != "") {
             $sql = $zdbh->prepare("
@@ -193,26 +206,30 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function getGroupList() {
+    static function getGroupList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListGroups($currentuser['userid']);
     }
 
-    static function getDefaultGroupList() {
+    static function getDefaultGroupList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDefaultGroups($currentuser['userid']);
     }
 
-    static function getGroupMoveToList() {
+    static function getGroupMoveToList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $urlvars = $controller->GetAllControllerRequests('URL');
         return self::GroupMoveTo($currentuser['userid'], $urlvars['other']);
     }
 
-    static function doCreateGroup() {
+    static function doCreateGroup()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -225,7 +242,8 @@ class module_controller {
         return;
     }
 
-    static function doEditGroup() {
+    static function doEditGroup()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -243,7 +261,8 @@ class module_controller {
         return;
     }
 
-    static function doDeleteGroup() {
+    static function doDeleteGroup()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -257,7 +276,8 @@ class module_controller {
         return false;
     }
 
-    static function doUpdateGroup() {
+    static function doUpdateGroup()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -266,7 +286,8 @@ class module_controller {
         return false;
     }
 
-    static function getisCreateGroup() {
+    static function getisCreateGroup()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (!isset($urlvars['show']))
@@ -274,7 +295,8 @@ class module_controller {
         return false;
     }
 
-    static function getisDeleteGroup() {
+    static function getisDeleteGroup()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
@@ -282,7 +304,8 @@ class module_controller {
         return false;
     }
 
-    static function getisEditGroup() {
+    static function getisEditGroup()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit"))
@@ -290,7 +313,8 @@ class module_controller {
         return false;
     }
 
-    static function getCurrentID() {
+    static function getCurrentID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
@@ -300,7 +324,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentName() {
+    static function getEditCurrentName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
@@ -310,7 +335,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentDesc() {
+    static function getEditCurrentDesc()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::GroupInfo($controller->GetControllerRequest('URL', 'other'));
@@ -320,7 +346,8 @@ class module_controller {
         }
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

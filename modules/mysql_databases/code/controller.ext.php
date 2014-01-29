@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $alreadyexists;
     static $blank;
@@ -34,7 +35,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListDatabases($uid) {
+    static function ListDatabases($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_mysql_databases WHERE my_acc_fk=:uid AND my_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -48,10 +50,10 @@ class module_controller {
             while ($rowmysql = $sql->fetch()) {
                 $numrowdb = $zdbh->query("SELECT COUNT(*) FROM x_mysql_dbmap WHERE mm_acc_fk=" . $rowmysql['my_acc_fk'] . " AND mm_database_fk=" . $rowmysql['my_id_pk'] . "")->fetch();
                 $res[] = array('mysqlid' => $rowmysql['my_id_pk'],
-                               'totaldb' => $numrowdb[0],
-                               'mysqlname' => $rowmysql['my_name_vc'],
-                               'mysqlsize' => $rowmysql['my_usedspace_bi'],
-                               'mysqlfriendlysize' => fs_director::ShowHumanFileSize($rowmysql['my_usedspace_bi']));
+                    'totaldb' => $numrowdb[0],
+                    'mysqlname' => $rowmysql['my_name_vc'],
+                    'mysqlsize' => $rowmysql['my_usedspace_bi'],
+                    'mysqlfriendlysize' => fs_director::ShowHumanFileSize($rowmysql['my_usedspace_bi']));
             }
             return $res;
         } else {
@@ -59,7 +61,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentDatabases($mysqlid) {
+    static function ListCurrentDatabases($mysqlid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_mysql_databases WHERE my_id_pk=:mysqlid AND my_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -72,9 +75,9 @@ class module_controller {
             $sql->execute();
             while ($rowmysql = $sql->fetch()) {
                 $res[] = array('mysqlid' => $rowmysql['my_id_pk'],
-                               'mysqlname' => $rowmysql['my_name_vc'],
-                               'mysqlsize' => $rowmysql['my_usedspace_bi'],
-                               'mysqlfriendlysize' => fs_director::ShowHumanFileSize($rowmysql['my_usedspace_bi']));
+                    'mysqlname' => $rowmysql['my_name_vc'],
+                    'mysqlsize' => $rowmysql['my_usedspace_bi'],
+                    'mysqlfriendlysize' => fs_director::ShowHumanFileSize($rowmysql['my_usedspace_bi']));
             }
             return $res;
         } else {
@@ -82,7 +85,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteCreateDatabase($uid, $databasename) {
+    static function ExecuteCreateDatabase($uid, $databasename)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -119,7 +123,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckCreateForErrors($username, $databasename) {
+    static function CheckCreateForErrors($username, $databasename)
+    {
         global $zdbh;
         # Check to make sure the database name is not blank before we go any further...
         if ($databasename == '') {
@@ -147,7 +152,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteDatabase($my_id_pk) {
+    static function ExecuteDeleteDatabase($my_id_pk)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteDatabase');
         $numrows = $zdbh->prepare("SELECT my_name_vc FROM x_mysql_databases WHERE my_id_pk=:my_id_pk");
@@ -179,7 +185,8 @@ class module_controller {
         return true;
     }
 
-    static function IsValidUserName($username) {
+    static function IsValidUserName($username)
+    {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
         }
@@ -193,7 +200,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doCreateDatabase() {
+    static function doCreateDatabase()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -201,7 +209,8 @@ class module_controller {
         return self::ExecuteCreateDatabase($currentuser['userid'], $formvars['inDatabase']);
     }
 
-    static function doDeleteDatabase() {
+    static function doDeleteDatabase()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -215,36 +224,42 @@ class module_controller {
         return true;
     }
 
-    static function doConfirmDeleteDatabase() {
+    static function doConfirmDeleteDatabase()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         return self::ExecuteDeleteDatabase($formvars['inDelete']);
     }
 
-    static function getDatabaseList() {
+    static function getDatabaseList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDatabases($currentuser['userid']);
     }
 
-    static function getisDeleteDatabase() {
+    static function getisDeleteDatabase()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
-    static function getisCreateDatabase() {
+    static function getisCreateDatabase()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return !isset($urlvars['show']);
     }
 
-    static function getCurrentUserName() {
+    static function getCurrentUserName()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return $currentuser['username'];
     }
 
-    static function getEditCurrentDatabaseName() {
+    static function getEditCurrentDatabaseName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentDatabases($controller->GetControllerRequest('URL', 'other'));
@@ -254,7 +269,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentDatabaseID() {
+    static function getEditCurrentDatabaseID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentDatabases($controller->GetControllerRequest('URL', 'other'));
@@ -264,29 +280,32 @@ class module_controller {
         }
     }
 
-    static function getQuotaLimit() {
+    static function getQuotaLimit()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return ($currentuser['mysqlquota'] < 0 ) or //-1 = unlimited
-               ($currentuser['mysqlquota'] > ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']));
+                ($currentuser['mysqlquota'] > ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']));
     }
 
-    static function getMysqlUsagepChart() {
+    static function getMysqlUsagepChart()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $maximum = $currentuser['mysqlquota'];
         if ($maximum < 0) { //-1 = unlimited
-            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
             $free = max($maximum - $used, 0);
-            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
-                  . '&labels=Free: ' . $free . '::Used: ' . $used
-                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
-                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
+            return '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                    . '&labels=Free: ' . $free . '::Used: ' . $used
+                    . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                    . ' alt="' . ui_language::translate('Pie chart') . '"/>';
         }
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
             return ui_sysmessage::shout(ui_language::translate("You need to specify a database name to create your database."), "zannounceerror");
         }
@@ -302,21 +321,29 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         return ui_language::translate(ui_module::GetModuleDescription());
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         return ui_language::translate(ui_module::GetModuleName());
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        return "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
     /**

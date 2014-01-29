@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $error;
     static $alreadyexists;
@@ -37,7 +38,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListPackages($uid) {
+    static function ListPackages($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:uid AND pk_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -66,10 +68,11 @@ class module_controller {
         }
     }
 
-    static function ListCurrentPackage($id) {
+    static function ListCurrentPackage($id)
+    {
         global $zdbh;
-        $sql = "SELECT * FROM x_packages 
-				LEFT JOIN x_quotas  ON (x_packages.pk_id_pk=x_quotas.qt_package_fk) 
+        $sql = "SELECT * FROM x_packages
+				LEFT JOIN x_quotas  ON (x_packages.pk_id_pk=x_quotas.qt_package_fk)
 				WHERE pk_id_pk=:id AND pk_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
         $numrows = $zdbh->prepare($sql);
@@ -112,7 +115,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteDeletePackage($pk_id_pk, $mpk_id_pk) {
+    static function ExecuteDeletePackage($pk_id_pk, $mpk_id_pk)
+    {
         global $zdbh;
 
         $sql = $zdbh->prepare("SELECT COUNT(*) FROM x_accounts WHERE ac_package_fk=:packageid AND ac_deleted_ts IS NULL");
@@ -141,8 +145,8 @@ class module_controller {
         $sql->bindParam(':pk_id_pk', $pk_id_pk);
         $sql->execute();
         $sql = $zdbh->prepare("
-			UPDATE x_packages 
-			SET pk_deleted_ts = :time 
+			UPDATE x_packages
+			SET pk_deleted_ts = :time
 			WHERE pk_id_pk = :pk_id_pk");
         $time = time();
         $sql->bindParam(':time', $time);
@@ -153,7 +157,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteCreatePackage($uid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota) {
+    static function ExecuteCreatePackage($uid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
+    {
         global $zdbh;
         if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
             return false;
@@ -235,7 +240,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteUpdatePackage($uid, $pid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota) {
+    static function ExecuteUpdatePackage($uid, $pid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
+    {
         global $zdbh;
         if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
             return false;
@@ -248,7 +254,7 @@ class module_controller {
         runtime_hook::Execute('OnBeforeUpdatePackage');
         $sql = $zdbh->prepare("UPDATE x_packages SET pk_name_vc=:packagename,
 								pk_enablephp_in = :php,
-								pk_enablecgi_in = :cgi 
+								pk_enablecgi_in = :cgi
 								WHERE pk_id_pk  = :pid");
 
         $php = fs_director::GetCheckboxValue($EnablePHP);
@@ -258,7 +264,7 @@ class module_controller {
         $sql->bindParam(':pid', $pid);
         $sql->bindParam(':packagename', $packagename);
         $sql->execute();
-        $sql = $zdbh->prepare("UPDATE x_quotas SET qt_domains_in = :Domains, 
+        $sql = $zdbh->prepare("UPDATE x_quotas SET qt_domains_in = :Domains,
 								qt_parkeddomains_in = :ParkedDomains,
 								qt_ftpaccounts_in   = :FTPAccounts,
 								qt_subdomains_in    = :SubDomains,
@@ -288,7 +294,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckCreateForErrors($packagename, $uid, $pid = 0) {
+    static function CheckCreateForErrors($packagename, $uid, $pid = 0)
+    {
         global $zdbh;
         $packagename = str_replace(' ', '', $packagename);
         # Check to make sure the packagename is not blank or exists for reseller before we go any further...
@@ -319,14 +326,16 @@ class module_controller {
         return true;
     }
 
-    static function IsValidPackageName($packagename) {
+    static function IsValidPackageName($packagename)
+    {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $packagename) || preg_match('/-$/', $packagename)) {
             return false;
         }
         return true;
     }
 
-    static function CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota) {
+    static function CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
+    {
         if (!is_numeric($EnablePHP) ||
                 !is_numeric($EnableCGI) ||
                 !is_numeric($Domains) ||
@@ -346,7 +355,8 @@ class module_controller {
         }
     }
 
-    static function AddDefaultPackageTime($uid) {
+    static function AddDefaultPackageTime($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:uid AND pk_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -377,7 +387,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doCreatePackage() {
+    static function doCreatePackage()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -397,7 +408,8 @@ class module_controller {
         return false;
     }
 
-    static function doUpdatePackage() {
+    static function doUpdatePackage()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -417,7 +429,8 @@ class module_controller {
         return false;
     }
 
-    static function doEditPackage() {
+    static function doEditPackage()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -435,7 +448,8 @@ class module_controller {
         return;
     }
 
-    static function doDeletePackage() {
+    static function doDeletePackage()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -444,7 +458,8 @@ class module_controller {
         return false;
     }
 
-    static function getPackageList() {
+    static function getPackageList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $packages = self::ListPackages($currentuser['userid']);
         if ($packages)
@@ -452,7 +467,8 @@ class module_controller {
         return false;
     }
 
-    static function getisCreatePackage() {
+    static function getisCreatePackage()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (!isset($urlvars['show']))
@@ -460,7 +476,8 @@ class module_controller {
         return false;
     }
 
-    static function getisDeletePackage() {
+    static function getisDeletePackage()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
@@ -468,7 +485,8 @@ class module_controller {
         return false;
     }
 
-    static function getisEditPackage() {
+    static function getisEditPackage()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")) {
@@ -478,7 +496,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentPackageName() {
+    static function getEditCurrentPackageName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -488,7 +507,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentPackageID() {
+    static function getEditCurrentPackageID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -498,7 +518,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentDomains() {
+    static function getEditCurrentDomains()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -508,7 +529,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentSubDomains() {
+    static function getEditCurrentSubDomains()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -518,7 +540,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentParkedDomains() {
+    static function getEditCurrentParkedDomains()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -528,7 +551,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentMailboxes() {
+    static function getEditCurrentMailboxes()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -538,7 +562,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentForwarders() {
+    static function getEditCurrentForwarders()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -548,7 +573,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentDistLists() {
+    static function getEditCurrentDistLists()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -558,7 +584,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentFTP() {
+    static function getEditCurrentFTP()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -568,7 +595,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentMySQL() {
+    static function getEditCurrentMySQL()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -578,7 +606,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentDisk() {
+    static function getEditCurrentDisk()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -588,7 +617,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentBandWidth() {
+    static function getEditCurrentBandWidth()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -598,12 +628,14 @@ class module_controller {
         }
     }
 
-    static function getAddDefaultPackageTime() {
+    static function getAddDefaultPackageTime()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         self::AddDefaultPackageTime($currentuser['userid']);
     }
 
-    static function getPHPChecked() {
+    static function getPHPChecked()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -613,7 +645,8 @@ class module_controller {
         }
     }
 
-    static function getCGIChecked() {
+    static function getCGIChecked()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
@@ -623,23 +656,30 @@ class module_controller {
         }
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
             return ui_sysmessage::shout(ui_language::translate("You need to specify a package name to create your package."), "zannounceerror");
         }
@@ -661,7 +701,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
@@ -669,4 +710,5 @@ class module_controller {
      * Webinterface sudo methods.
      */
 }
+
 ?>

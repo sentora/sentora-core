@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,11 +24,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
 
-    static function getConfig() {
+    static function getConfig()
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_settings WHERE so_module_vc=:so_module_vc AND so_usereditable_en = 'true' ORDER BY so_cleanname_vc";
@@ -60,7 +62,8 @@ class module_controller {
         }
     }
 
-    static function doUpdateConfig() {
+    static function doUpdateConfig()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -87,30 +90,38 @@ class module_controller {
         self::$ok = true;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your settings have been saved successfully!"));
         }
         return;
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $module_desc = ui_language::translate(ui_module::GetModuleDescription());
         return $module_desc;
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "./modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
-    
-    static function getCSFR_Tag() {
+
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

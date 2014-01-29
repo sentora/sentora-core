@@ -24,9 +24,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
-    static function getPHPInfo() {
+    static function getPHPInfo()
+    {
         ob_start();
         phpinfo(INFO_GENERAL);
         $info = ob_get_contents();
@@ -34,25 +36,29 @@ class module_controller {
         $info = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $info);
         $info = str_replace('<img border="0"', '<img style="display: none;"', $info);
         $info = str_replace(
-            '<table border="0" cellpadding="3" width="600">',
-            '<table class="table table-striped" border="0" cellpadding="3" width="100%" class="table table-striped">',
-            $info
+                '<table border="0" cellpadding="3" width="600">', '<table class="table table-striped" border="0" cellpadding="3" width="100%" class="table table-striped">', $info
         );
         return $info;
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }

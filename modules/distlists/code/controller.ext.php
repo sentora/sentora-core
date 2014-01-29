@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
     static $edit;
@@ -39,7 +40,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListDist($uid) {
+    static function ListDist($uid)
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_distlists WHERE dl_acc_fk=:userid AND dl_deleted_ts IS NULL ORDER BY dl_address_vc ASC";
@@ -57,8 +59,8 @@ class module_controller {
                 $numrows2->execute();
                 $numrowmb = $numrows2->fetch();
                 $res[] = array('address' => $rowdistlist['dl_address_vc'],
-                               'totalmb' => $numrowmb[0],
-                               'id' => $rowdistlist['dl_id_pk']);
+                    'totalmb' => $numrowmb[0],
+                    'id' => $rowdistlist['dl_id_pk']);
             }
             return $res;
         } else {
@@ -66,7 +68,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentDist($id) {
+    static function ListCurrentDist($id)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_distlists WHERE dl_id_pk=:id AND dl_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -79,7 +82,7 @@ class module_controller {
             $sql->execute();
             while ($rowdistlist = $sql->fetch()) {
                 $res[] = array('address' => $rowdistlist['dl_address_vc'],
-                               'id' => $rowdistlist['dl_id_pk']);
+                    'id' => $rowdistlist['dl_id_pk']);
             }
             return $res;
         } else {
@@ -87,7 +90,8 @@ class module_controller {
         }
     }
 
-    static function ListDistUsers($id) {
+    static function ListDistUsers($id)
+    {
         global $zdbh;
         $numrows = $zdbh->prepare("SELECT * FROM x_distlists WHERE dl_id_pk=:id AND dl_deleted_ts IS NULL");
         $numrows->bindParam(':id', $id);
@@ -104,8 +108,8 @@ class module_controller {
                 $sql->execute();
                 while ($rowdistlist = $sql->fetch()) {
                     $res[] = array('address' => $rowdistlist['du_address_vc'],
-                                   'distlist' => $result['dl_address_vc'],
-                                   'id' => $rowdistlist['du_id_pk']);
+                        'distlist' => $result['dl_address_vc'],
+                        'id' => $rowdistlist['du_id_pk']);
                 }
                 return $res;
             } else {
@@ -115,7 +119,8 @@ class module_controller {
         return false;
     }
 
-    static function ListMailbox($uid) {
+    static function ListMailbox($uid)
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
@@ -129,7 +134,7 @@ class module_controller {
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
                 $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                               'id' => $rowmailboxes['mb_id_pk']);
+                    'id' => $rowmailboxes['mb_id_pk']);
             }
             return $res;
         } else {
@@ -137,7 +142,8 @@ class module_controller {
         }
     }
 
-    static function getDomainList() {
+    static function getDomainList()
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
@@ -155,7 +161,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteAddDistList($uid, $inAddress, $inDomain) {
+    static function ExecuteAddDistList($uid, $inAddress, $inDomain)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -186,7 +193,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteDistList($dl_id_pk) {
+    static function ExecuteDeleteDistList($dl_id_pk)
+    {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteDistList');
@@ -215,7 +223,8 @@ class module_controller {
         self::$ok = true;
     }
 
-    static function ExecuteAddDistListUser($du_distlist_fk, $address, $domain, $dladdress) {
+    static function ExecuteAddDistListUser($du_distlist_fk, $address, $domain, $dladdress)
+    {
         global $zdbh;
         global $controller;
         $fulladdress = strtolower(str_replace(' ', '', $address . '@' . $domain));
@@ -252,7 +261,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteDistListUser($du_id_pk) {
+    static function ExecuteDeleteDistListUser($du_id_pk)
+    {
         global $zdbh;
         global $controller;
         $numrows = $zdbh->prepare("SELECT * FROM x_distlistusers WHERE du_id_pk=:du_id_pk AND du_deleted_ts IS NULL");
@@ -268,7 +278,7 @@ class module_controller {
 
         runtime_hook::Execute('OnBeforeDeleteDistListUser');
         self::$deleteuser = true;
-         // Include mail server specific file here.
+        // Include mail server specific file here.
         $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
         if (file_exists($MailServerFile))
             include($MailServerFile);
@@ -284,7 +294,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckCreateForErrors($inAddress, $inDomain) {
+    static function CheckCreateForErrors($inAddress, $inDomain)
+    {
         global $zdbh;
         $fulladdress = strtolower(str_replace(' ', '', $inAddress . '@' . $inDomain));
         if (fs_director::CheckForEmptyValue($inAddress)) {
@@ -334,7 +345,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckCreateForErrorsDistListUser() {
+    static function CheckCreateForErrorsDistListUser()
+    {
         global $zdbh;
         global $controller;
         $address = $controller->GetControllerRequest('FORM', 'inAddAddress');
@@ -362,7 +374,8 @@ class module_controller {
         return true;
     }
 
-    static function IsValidEmail($email) {
+    static function IsValidEmail($email)
+    {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
 
@@ -376,7 +389,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doEditDistList() {
+    static function doEditDistList()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -394,14 +408,16 @@ class module_controller {
         return;
     }
 
-    static function doConfirmDeleteDistList() {
+    static function doConfirmDeleteDistList()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         return self::ExecuteDeleteDistList($formvars['inDelete']);
     }
 
-    static function doUpdateDistList() {
+    static function doUpdateDistList()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -422,7 +438,8 @@ class module_controller {
         return;
     }
 
-    static function doAddDistList() {
+    static function doAddDistList()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -430,17 +447,20 @@ class module_controller {
         return self::ExecuteAddDistList($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain']);
     }
 
-    static function getDistList() {
+    static function getDistList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDist($currentuser['userid']);
     }
 
-    static function getDistListUsers() {
+    static function getDistListUsers()
+    {
         global $controller;
         return self::ListDistUsers($controller->GetControllerRequest('URL', 'other'));
     }
 
-    static function getCurrentDistListID() {
+    static function getCurrentDistListID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentDist($controller->GetControllerRequest('URL', 'other'));
@@ -450,7 +470,8 @@ class module_controller {
         }
     }
 
-    static function getCurrentDistList() {
+    static function getCurrentDistList()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentDist($controller->GetControllerRequest('URL', 'other'));
@@ -460,7 +481,8 @@ class module_controller {
         }
     }
 
-    static function getisEditDistList() {
+    static function getisEditDistList()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit"))
@@ -468,7 +490,8 @@ class module_controller {
         return false;
     }
 
-    static function getisDeleteDistList() {
+    static function getisDeleteDistList()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
@@ -476,7 +499,8 @@ class module_controller {
         return false;
     }
 
-    static function getisCreateDistList() {
+    static function getisCreateDistList()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (!isset($urlvars['show']))
@@ -484,28 +508,31 @@ class module_controller {
         return false;
     }
 
-    static function getQuotaLimit() {
+    static function getQuotaLimit()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return ($currentuser['distlistsquota'] < 0) or //-1 = unlimited
-               ($currentuser['distlistsquota'] > ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']));
+                ($currentuser['distlistsquota'] > ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']));
     }
 
-    static function getDistListUsagepChart() {
+    static function getDistListUsagepChart()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $maximum = $currentuser['distlistsquota'];
         if ($maximum < 0) { //-1 = unlimited
-            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('distlists', $currentuser['userid']);
             $free = max($maximum - $used, 0);
-            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
-                  . '&labels=Free: ' . $free . '::Used: ' . $used
-                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
-                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
+            return '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                    . '&labels=Free: ' . $free . '::Used: ' . $used
+                    . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                    . ' alt="' . ui_language::translate('Pie chart') . '"/>';
         }
     }
 
-    static function getResultURL() {
+    static function getResultURL()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (isset($urlvars['status']) && $urlvars['status'] == 'ok') {
@@ -513,7 +540,8 @@ class module_controller {
         }
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate("A mailbox, alias, forwarder or distribution list already exists with that name."), "zannounceerror");
         }
@@ -531,20 +559,28 @@ class module_controller {
         return;
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         return ui_module::GetModuleName();
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        return 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         return ui_language::translate(ui_module::GetModuleDescription());
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

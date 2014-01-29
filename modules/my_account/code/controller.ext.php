@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,13 +24,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
     static $blank;
     static $emailerror;
 
-    static function getAccountSettings() {
+    static function getAccountSettings()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $res = array();
         array_push($res, array('fullname' => runtime_xss::xssClean($currentuser['fullname']),
@@ -41,7 +43,8 @@ class module_controller {
         return $res;
     }
 
-    static function getLangList() {
+    static function getLangList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $res = array();
         $column_names = ui_language::GetColumnNames('x_translations');
@@ -60,7 +63,8 @@ class module_controller {
         return $res;
     }
 
-    static function doUpdateAccountSettings() {
+    static function doUpdateAccountSettings()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -79,7 +83,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode) {
+    static function ExecuteUpdateAccountSettings($userid, $email, $fullname, $language, $phone, $address, $postalCode)
+    {
         global $zdbh;
         $email = strtolower(str_replace(' ', '', $email));
         $fullname = ucwords($fullname);
@@ -102,7 +107,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckUpdateForErrors($email, $fullname, $language, $phone, $address, $postalCode) {
+    static function CheckUpdateForErrors($email, $fullname, $language, $phone, $address, $postalCode)
+    {
         global $zdbh;
         if (fs_director::CheckForEmptyValue($email) ||
                 fs_director::CheckForEmptyValue($fullname) ||
@@ -120,14 +126,16 @@ class module_controller {
         return true;
     }
 
-    static function IsValidEmail($email) {
+    static function IsValidEmail($email)
+    {
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
             return false;
         }
         return true;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
             return ui_sysmessage::shout(ui_language::translate("You must fill out all fields!"), "zannounceerror");
         }
@@ -140,23 +148,30 @@ class module_controller {
         return;
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

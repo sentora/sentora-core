@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,9 +24,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
-    public static function getZpanelUpdates() {
+    public static function getZpanelUpdates()
+    {
         if (ctrl_options::GetSystemOption('dbversion') < ctrl_options::GetSystemOption('latestzpversion')) {
             $msg = ui_language::translate("There are currently new updates for your ZPanel installation, please download the latest release") . " (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>) from <a hre=\"http://www.zpanelcp.com/\">http://www.zpanelcp.com/</a>.";
         } elseif (ctrl_options::GetSystemOption('dbversion') == ctrl_options::GetSystemOption('latestzpversion')) {
@@ -37,18 +39,24 @@ class module_controller {
         return $msg;
     }
 
-    public static function getModuleName() {
+    public static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    public static function getModuleIcon() {
+    public static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }

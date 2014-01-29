@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,13 +24,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $deleteok;
     static $backupok;
     static $filenotexist;
 
-    static function ListBackUps($userid) {
+    static function ListBackUps($userid)
+    {
         $currentuser = ctrl_users::GetUserDetail($userid);
         $userid = $currentuser['userid'];
         $username = $currentuser['username'];
@@ -59,7 +61,8 @@ class module_controller {
         return $res;
     }
 
-    static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+    static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC)
+    {
         $sort_col = array();
         foreach ($arr as $key => $row) {
             $sort_col[$key] = $row[$col];
@@ -67,7 +70,8 @@ class module_controller {
         array_multisort($sort_col, $dir, $arr);
     }
 
-    static function CheckHasData($userid) {
+    static function CheckHasData($userid)
+    {
         $currentuser = ctrl_users::GetUserDetail($userid);
         $datafolder = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/";
         $dirFiles = array();
@@ -85,7 +89,8 @@ class module_controller {
         return false;
     }
 
-    static function ExecuteBackup($userid, $download = 0) {
+    static function ExecuteBackup($userid, $download = 0)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($userid);
@@ -94,7 +99,8 @@ class module_controller {
         runtime_hook::Execute('OnAfterCreateBackup');
     }
 
-    static function readfile_chunked($filename) {
+    static function readfile_chunked($filename)
+    {
         $chunksize = 1 * (1024 * 1024);
         $buffer = '';
         $handle = fopen($filename, 'rb');
@@ -108,21 +114,24 @@ class module_controller {
         return fclose($handle);
     }
 
-    static function ExecuteDeleteBackup($username, $file) {
+    static function ExecuteDeleteBackup($username, $file)
+    {
         runtime_hook::Execute('OnBeforeDeleteBackup');
         $backup_file_to_delete = ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups/" . $file . ".zip";
         unlink($backup_file_to_delete);
         runtime_hook::Execute('OnAfterDeleteBackup');
     }
 
-    static function ExecuteCreateBackupDirectory($username) {
+    static function ExecuteCreateBackupDirectory($username)
+    {
         $backupdir = ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups/";
         if (!is_dir($backupdir)) {
             fs_director::CreateDirectory($backupdir);
         }
     }
 
-    static function CheckPurgeDate() {
+    static function CheckPurgeDate()
+    {
         if (strtolower(ctrl_options::GetSystemOption('purge_bu')) == "true") {
             return ctrl_options::GetSystemOption('purge_date');
         } else {
@@ -130,7 +139,8 @@ class module_controller {
         }
     }
 
-    static function doBackup() {
+    static function doBackup()
+    {
         global $zdbh;
         global $controller;
         $userid = $controller->GetControllerRequest('FORM', 'inBackUp');
@@ -139,7 +149,8 @@ class module_controller {
         self::$backupok = true;
     }
 
-    static function doDeleteBackup() {
+    static function doDeleteBackup()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
@@ -158,51 +169,59 @@ class module_controller {
         }
     }
 
-    static function GetHasData() {
+    static function GetHasData()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::CheckHasData($currentuser['userid']);
     }
 
-    static function GetBackUpList() {
+    static function GetBackUpList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListBackUps($currentuser['userid']);
     }
 
-    static function GetFileLocation() {
+    static function GetFileLocation()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $filelocation = $currentuser['username'] . "/backups/";
         return $filelocation;
     }
 
-    static function getUserID() {
+    static function getUserID()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $userid = $currentuser['userid'];
         return $userid;
     }
 
-    static function GetDiskAllowed() {
+    static function GetDiskAllowed()
+    {
         global $controller;
         if (strtolower(ctrl_options::GetSystemOption('disk_bu')) == "true")
             return true;
         return false;
     }
 
-    static function GetPurgeDate() {
+    static function GetPurgeDate()
+    {
         return self::CheckPurgeDate();
     }
 
-    static function getCreateBackupDirectory() {
+    static function getCreateBackupDirectory()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         if (self::ExecuteCreateBackupDirectory($currentuser['username']))
             return true;
         return false;
     }
 
-    static function GetBUOption($name) {
+    static function GetBUOption($name)
+    {
         global $zdbh;
         // $result = $zdbh->query("SELECT bus_value_tx FROM x_backup_settings WHERE bus_name_vc = '$name'")->Fetch();
         $sql = $zdbh->prepare("SELECT bus_value_tx FROM x_backup_settings WHERE bus_name_vc = :name");
@@ -216,29 +235,37 @@ class module_controller {
         }
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function getModulePath() {
+    static function getModulePath()
+    {
         global $controller;
         $module_path = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/";
         return $module_path;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$filenotexist)) {
             return ui_sysmessage::shout("There was an error saving your backup!", "zannounceerror");
         }
@@ -251,7 +278,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

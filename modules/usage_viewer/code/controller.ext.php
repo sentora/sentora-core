@@ -164,8 +164,7 @@ class module_controller
         $usedLabel = fs_director::ShowHumanFileSize($used);
 
 
-        $line =
-                '<table class="none" cellpadding="0" cellspacing="0">' .
+        $line = '<table class="none" cellpadding="0" cellspacing="0">' .
                 '<tr>' .
                 '<td align="left" valign="top" width="350px">' .
                 '<h2>' . ui_language::translate('Disk Usage Total') . '</h2>' .
@@ -276,7 +275,11 @@ class module_controller
     static function getModuleIcon()
     {
         global $controller;
-        return 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
 }

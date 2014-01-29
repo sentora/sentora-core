@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,13 +24,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $error;
     static $delete;
     static $ok;
 
-    public static function getFAQS() {
+    public static function getFAQS()
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_faqs WHERE fq_question_tx IS NOT NULL AND fq_deleted_ts IS NULL";
         $numrows = $zdbh->query($sql);
@@ -52,7 +54,8 @@ class module_controller {
         }
     }
 
-    public function ListCurrentFAQ($fid) {
+    public function ListCurrentFAQ($fid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_faqs WHERE fq_id_pk=:fid IS NOT NULL AND fq_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -78,7 +81,8 @@ class module_controller {
         }
     }
 
-    public static function getUserFAQS() {
+    public static function getUserFAQS()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -112,7 +116,8 @@ class module_controller {
         }
     }
 
-    public static function getAddFAQS() {
+    public static function getAddFAQS()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['usergroup'] == "Administrators" || $currentuser['usergroup'] == "Resellers") {
@@ -122,29 +127,37 @@ class module_controller {
         }
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModulePath() {
+    static function getModulePath()
+    {
         global $controller;
         $module_path = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/";
         return $module_path;
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function doDeleteFaq() {
+    static function doDeleteFaq()
+    {
         global $controller;
         runtime_csfr::Protect();
         $faqs = self::getFAQS();
@@ -158,7 +171,8 @@ class module_controller {
         }
     }
 
-    static function doConfirmDeleteFAQ() {
+    static function doConfirmDeleteFAQ()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -167,7 +181,8 @@ class module_controller {
         return false;
     }
 
-    static function doAddFaq() {
+    static function doAddFaq()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -184,7 +199,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentFAQID() {
+    static function getEditCurrentFAQID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             return $controller->GetControllerRequest('URL', 'other');
@@ -193,7 +209,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteDeleteFaq($fq_id_pk) {
+    static function ExecuteDeleteFaq($fq_id_pk)
+    {
         global $zdbh;
         $sql = "UPDATE x_faqs SET fq_deleted_ts=:time WHERE fq_id_pk=:fq_id_pk";
         $sql = $zdbh->prepare($sql);
@@ -205,7 +222,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteAddFaq($question, $answer, $userid, $global) {
+    static function ExecuteAddFaq($question, $answer, $userid, $global)
+    {
         global $zdbh;
         if ($question != "" && $answer != "") {
             $sql = "INSERT INTO x_faqs (fq_acc_fk, fq_question_tx, fq_answer_tx, fq_global_in, fq_created_ts) VALUES (:userid, :question, :answer, :global, :time)";
@@ -225,7 +243,8 @@ class module_controller {
         }
     }
 
-    static function getisDeleteFAQ() {
+    static function getisDeleteFAQ()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
@@ -233,7 +252,8 @@ class module_controller {
         return false;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$error)) {
             return ui_sysmessage::shout(ui_language::translate("You need to enter a question and an answer to add a FAQ item!"), "zannounceerror");
         }
@@ -246,7 +266,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

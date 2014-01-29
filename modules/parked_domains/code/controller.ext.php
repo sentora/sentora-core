@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $complete;
     static $error;
@@ -38,7 +39,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListParkedDomains($uid) {
+    static function ListParkedDomains($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:uid AND vh_deleted_ts IS NULL AND vh_type_in=3 ORDER BY vh_name_vc ASC";
         //$numrows = $zdbh->query($sql);
@@ -63,7 +65,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentDomain($uid) {
+    static function ListCurrentDomain($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:uid AND vh_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -88,7 +91,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteDeleteParkedDomain($id) {
+    static function ExecuteDeleteParkedDomain($id)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteParkedDomain');
         $sql = $zdbh->prepare("UPDATE x_vhosts
@@ -104,7 +108,8 @@ class module_controller {
         return $retval;
     }
 
-    public function ExecuteAddParkedDomain($uid, $domain) {
+    public function ExecuteAddParkedDomain($uid, $domain)
+    {
         global $zdbh;
         $retval = FALSE;
         runtime_hook::Execute('OnBeforeAddParkedDomain');
@@ -142,7 +147,8 @@ class module_controller {
         }
     }
 
-    static function CheckCreateForErrors($domain) {
+    static function CheckCreateForErrors($domain)
+    {
         global $zdbh;
         // Check for spaces and remove if found...
         $domain = strtolower(str_replace(' ', '', $domain));
@@ -210,7 +216,8 @@ class module_controller {
         return TRUE;
     }
 
-    static function CheckErrorDocument($error) {
+    static function CheckErrorDocument($error)
+    {
         $errordocs = array(100, 101, 102, 200, 201, 202, 203, 204, 205, 206, 207,
             300, 301, 302, 303, 304, 305, 306, 307, 400, 401, 402,
             403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
@@ -220,7 +227,8 @@ class module_controller {
         return in_array($error, $errordocs);
     }
 
-    static function IsValidDomainName($a) {
+    static function IsValidDomainName($a)
+    {
         if (stristr($a, '.')) {
             $part = explode(".", $a);
             foreach ($part as $check) {
@@ -234,11 +242,13 @@ class module_controller {
         return true;
     }
 
-    static function IsValidEmail($email) {
+    static function IsValidEmail($email)
+    {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
 
-    static function SetWriteApacheConfigTrue() {
+    static function SetWriteApacheConfigTrue()
+    {
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_settings
 								SET so_value_tx='true'
@@ -253,7 +263,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function getParkedDomainList() {
+    static function getParkedDomainList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $res = array();
         $parkeddomains = self::ListParkedDomains($currentuser['userid']);
@@ -262,11 +273,11 @@ class module_controller {
                 $status = self::getParkedDomainStatusHTML($row['active'], $row['id']);
                 $created = date(ctrl_Options::GetSystemOption('zpanel_df'), $row['created']);
                 $res[] = array('name' => $row['name'],
-                               'directory' => $row['directory'],
-                               'active' => $row['active'],
-                               'status' => $status,
-                               'created' => $created,
-                               'id' => $row['id']);
+                    'directory' => $row['directory'],
+                    'active' => $row['active'],
+                    'status' => $status,
+                    'created' => $created,
+                    'id' => $row['id']);
             }
             return $res;
         } else {
@@ -274,13 +285,15 @@ class module_controller {
         }
     }
 
-    static function getCreateParkedDomain() {
+    static function getCreateParkedDomain()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return ($currentuser['parkeddomainquota'] < 0) or //-1 = unlimited
-               ($currentuser['parkeddomainquota'] > ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']));
+                ($currentuser['parkeddomainquota'] > ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']));
     }
 
-    static function doCreateParkedDomain() {
+    static function doCreateParkedDomain()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -294,7 +307,8 @@ class module_controller {
         return;
     }
 
-    static function doDeleteParkedDomain() {
+    static function doDeleteParkedDomain()
+    {
         global $controller;
         runtime_csfr::Protect();
 //        $currentuser = ctrl_users::GetUserDetail();
@@ -308,7 +322,8 @@ class module_controller {
         return false;
     }
 
-    static function doConfirmDeleteParkedDomain() {
+    static function doConfirmDeleteParkedDomain()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -322,66 +337,79 @@ class module_controller {
         return false;
     }
 
-    static function getisDeleteDomain() {
+    static function getisDeleteDomain()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return (isset($urlvars['show'])) && ($urlvars['show'] == 'Delete');
     }
 
-    static function getCurrentID() {
+    static function getCurrentID()
+    {
         global $controller;
         $id = $controller->GetControllerRequest('URL', 'id');
         return ($id) ? $id : '';
     }
 
-    static function getCurrentDomain() {
+    static function getCurrentDomain()
+    {
         global $controller;
         $domain = $controller->GetControllerRequest('URL', 'domain');
         return ($domain) ? $domain : '';
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         return ui_module::GetModuleName();
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        return '/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         return ui_language::translate(ui_module::GetModuleDescription());
     }
 
-    static function getParkedDomainUsagepChart() {
+    static function getParkedDomainUsagepChart()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $maximum = $currentuser['parkeddomainquota'];
         if ($maximum < 0) { //-1 = unlimited
-            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
             $free = max($maximum - $used, 0);
-            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
-                  . '&labels=Free: ' . $free . '::Used: ' . $used
-                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
-                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
+            return '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                    . '&labels=Free: ' . $free . '::Used: ' . $used
+                    . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                    . ' alt="' . ui_language::translate('Pie chart') . '"/>';
         }
     }
 
-    static function getParkedDomainStatusHTML($int, $id) {
+    static function getParkedDomainStatusHTML($int, $id)
+    {
         global $controller;
         if ($int == 1) {
             return '<td><font color="green">' . ui_language::translate('Live') . '</font></td>'
-                 . '<td></td>';
+                    . '<td></td>';
         } else {
             return '<td><font color="orange">' . ui_language::translate("Pending") . '</font></td>'
-                 . '<td><a href="#" class="help_small" id="help_small_' . $id . '_a"'
-                 . 'title="' . ui_language::translate('Your domain will become active at the next scheduled update.  This can take up to one hour.') . '">'
-                 . '<img src="/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/help_small.png" border="0" /></a></td>';
+                    . '<td><a href="#" class="help_small" id="help_small_' . $id . '_a"'
+                    . 'title="' . ui_language::translate('Your domain will become active at the next scheduled update.  This can take up to one hour.') . '">'
+                    . '<img src="/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/help_small.png" border="0" /></a></td>';
         }
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
             return ui_sysmessage::shout(ui_language::translate("Your Domain can not be empty. Please enter a valid Domain Name and try again."), "zannounceerror");
         }
@@ -403,7 +431,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

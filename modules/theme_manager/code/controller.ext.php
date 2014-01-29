@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,23 +24,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_language::translate(ui_module::GetModuleName());
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
     /**
      * The 'worker' methods.
      */
-    static function ExecuteUpdateTheme($uid, $theme) {
+    static function ExecuteUpdateTheme($uid, $theme)
+    {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_accounts
@@ -54,7 +61,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteUpdateCSS($uid, $css) {
+    static function ExecuteUpdateCSS($uid, $css)
+    {
         global $zdbh;
         $sql = $zdbh->prepare("
             UPDATE x_accounts
@@ -68,11 +76,13 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteShowCurrentTheme($uid) {
+    static function ExecuteShowCurrentTheme($uid)
+    {
         return ui_template::GetUserTemplate();
     }
 
-    static function ExecuteShowCurrentCSS($uid) {
+    static function ExecuteShowCurrentCSS($uid)
+    {
         global $zdbh;
         //$result = $zdbh->query("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_pk = " . $uid . "")->Fetch();
         $numrows = $zdbh->prepare("SELECT ac_usercss_vc FROM x_accounts WHERE ac_id_pk = :uid");
@@ -86,11 +96,13 @@ class module_controller {
         }
     }
 
-    static function ExecuteStylesList() {
+    static function ExecuteStylesList()
+    {
         return ui_template::ListAvaliableTemplates();
     }
 
-    static function ExecuteCSSList() {
+    static function ExecuteCSSList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return ui_template::ListAvaliableCSS(self::ExecuteShowCurrentTheme($currentuser['userid']));
     }
@@ -102,19 +114,22 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function getCurrentTheme() {
+    static function getCurrentTheme()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ExecuteShowCurrentTheme($currentuser['userid']);
     }
 
-    static function getCurrentCSS() {
+    static function getCurrentCSS()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ExecuteShowCurrentCSS($currentuser['userid']);
     }
 
-    static function getSelectThemeMenu() {
+    static function getSelectThemeMenu()
+    {
         $html = "";
         foreach (self::ExecuteStylesList() as $theme) {
             if ($theme['name'] != self::getCurrentTheme()) {
@@ -126,7 +141,8 @@ class module_controller {
         return $html;
     }
 
-    static function getSelectCSSMenu() {
+    static function getSelectCSSMenu()
+    {
         $html = "";
         foreach (self::ExecuteCSSList() as $css) {
             if ($css['name'] != self::getCurrentCSS()) {
@@ -138,7 +154,8 @@ class module_controller {
         return $html;
     }
 
-    static function getIsSelectCSS() {
+    static function getIsSelectCSS()
+    {
         global $controller;
         $getvars = $controller->GetAllControllerRequests('URL');
         if (isset($getvars['selectcss']))
@@ -146,7 +163,8 @@ class module_controller {
         return false;
     }
 
-    static function doSaveTheme() {
+    static function doSaveTheme()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -161,7 +179,8 @@ class module_controller {
         exit;
     }
 
-    static function doSaveCSS() {
+    static function doSaveCSS()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -171,7 +190,8 @@ class module_controller {
         exit;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -184,7 +204,8 @@ class module_controller {
         return false;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

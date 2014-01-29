@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,30 +24,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $shout;
 
-    static function getShadowAccounts() {
+    static function getShadowAccounts()
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['username'] == 'zadmin') {
             $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
             $numrows = $zdbh->prepare($sql);
-            $numrows->execute();        
+            $numrows->execute();
         } else {
             $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
             $numrows = $zdbh->prepare($sql);
             $numrows->bindParam(':userid', $currentuser['userid']);
-            $numrows->execute();        
+            $numrows->execute();
         }
 
         //$numrows = $zdbh->query($sql);
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             if ($currentuser['username'] == 'zadmin') {
-               //noi bind needed
+                //noi bind needed
             } else {
                 //bind the username
                 $sql->bindParam(':userid', $currentuser['userid']);
@@ -71,18 +73,19 @@ class module_controller {
         }
     }
 
-    static function doShadowUser() {
+    static function doShadowUser()
+    {
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         if ($currentuser['username'] == 'zadmin') {
             $sql = "SELECT * FROM x_accounts WHERE ac_deleted_ts IS NULL ORDER BY ac_user_vc";
-            $numrows = $zdbh->prepare($sql);          
+            $numrows = $zdbh->prepare($sql);
         } else {
             $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk = :userid AND ac_deleted_ts IS NULL";
             $numrows = $zdbh->prepare($sql);
-            $numrows->bindParam(':userid', $currentuser['userid']);            
+            $numrows->bindParam(':userid', $currentuser['userid']);
         }
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
@@ -107,23 +110,30 @@ class module_controller {
         }
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

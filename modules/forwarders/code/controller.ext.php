@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
     static $password;
@@ -38,7 +39,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListForwarders($uid) {
+    static function ListForwarders($uid)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -54,15 +56,15 @@ class module_controller {
             while ($rowforwarders = $sql->fetch()) {
                 if ($rowforwarders['fw_keepmessage_in'] == 1) {
                     $status = '<a href="#" title="' . ui_language::translate("A copy of the original message will be left in the source mailbox address when it is fowarded to the destination address") . '">'
-                              . '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.gif"></a>';
+                            . '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.gif"></a>';
                 } else {
                     $status = '<a href="#" title="' . ui_language::translate("The original message will only be available in the destination address") . '">'
-                              . '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif"></a>';
+                            . '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif"></a>';
                 }
                 $res[] = array('address' => $rowforwarders['fw_address_vc'],
-                               'destination' => $rowforwarders['fw_destination_vc'],
-                               'status' => $status,
-                               'id' => $rowforwarders['fw_id_pk']);
+                    'destination' => $rowforwarders['fw_destination_vc'],
+                    'status' => $status,
+                    'id' => $rowforwarders['fw_id_pk']);
             }
             return $res;
         } else {
@@ -70,7 +72,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentForwarder($fid) {
+    static function ListCurrentForwarder($fid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_forwarders WHERE fw_id_pk=:fid AND fw_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -83,8 +86,8 @@ class module_controller {
             $sql->execute();
             while ($rowforwarders = $sql->fetch()) {
                 $res[] = array('address' => $rowforwarders['fw_address_vc'],
-                               'destination' => $rowforwarders['fw_destination_vc'],
-                               'id' => $rowforwarders['fw_id_pk']);
+                    'destination' => $rowforwarders['fw_destination_vc'],
+                    'id' => $rowforwarders['fw_id_pk']);
             }
             return $res;
         } else {
@@ -92,7 +95,8 @@ class module_controller {
         }
     }
 
-    static function getMailboxList() {
+    static function getMailboxList()
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail();
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
@@ -112,7 +116,7 @@ class module_controller {
                 $result = $numrows->fetch();
                 if (!$result) {
                     $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                                   'id' => $rowmailboxes['mb_id_pk']);
+                        'id' => $rowmailboxes['mb_id_pk']);
                 }
             }
             return $res;
@@ -121,7 +125,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteCreateForwarder($uid, $address, $dname, $ddomain, $keepmessage) {
+    static function ExecuteCreateForwarder($uid, $address, $dname, $ddomain, $keepmessage)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -157,7 +162,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteForwarder($fw_id_pk) {
+    static function ExecuteDeleteForwarder($fw_id_pk)
+    {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteForwarer');
@@ -180,7 +186,8 @@ class module_controller {
         self::$ok = true;
     }
 
-    static function CheckCreateForErrors($address, $dname, $ddomain, $keepmessage) {
+    static function CheckCreateForErrors($address, $dname, $ddomain, $keepmessage)
+    {
         global $controller;
         $address = $controller->GetControllerRequest('FORM', 'inAddress');
         $destination = strtolower(str_replace(' ', '', $dname . '@' . $ddomain));
@@ -199,7 +206,8 @@ class module_controller {
         return true;
     }
 
-    static function IsValidEmail($email) {
+    static function IsValidEmail($email)
+    {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
 
@@ -210,20 +218,20 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doCreateForwarder() {
+    static function doCreateForwarder()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        $keepmessage = (isset($formvars['inKeepMessage']))
-                       ? fs_director::GetCheckboxValue($formvars['inKeepMessage'])
-                       : 0;
+        $keepmessage = (isset($formvars['inKeepMessage'])) ? fs_director::GetCheckboxValue($formvars['inKeepMessage']) : 0;
         if (self::ExecuteCreateForwarder($currentuser['userid'], $formvars['inAddress'], $formvars['inDestinationName'], $formvars['inDestinationDomain'], $keepmessage))
             self::$ok = true;
         return true;
     }
 
-    static function doDeleteForwarder() {
+    static function doDeleteForwarder()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -237,32 +245,37 @@ class module_controller {
         return true;
     }
 
-    static function doConfirmDeleteForwarder() {
+    static function doConfirmDeleteForwarder()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         return self::ExecuteDeleteForwarder($formvars['inDelete']);
     }
 
-    static function getForwarderList() {
+    static function getForwarderList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListForwarders($currentuser['userid']);
     }
 
-    static function getisCreateForwarder() {
+    static function getisCreateForwarder()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return !isset($urlvars['show']);
     }
 
-    static function getisDeleteForwarder() {
+    static function getisDeleteForwarder()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
-    static function getEditCurrentForwarderName() {
+    static function getEditCurrentForwarderName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentForwarder($controller->GetControllerRequest('URL', 'other'));
@@ -272,7 +285,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentForwarderID() {
+    static function getEditCurrentForwarderID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentForwarder($controller->GetControllerRequest('URL', 'other'));
@@ -282,7 +296,8 @@ class module_controller {
         }
     }
 
-    static function GetMailOption($name) {
+    static function GetMailOption($name)
+    {
         global $zdbh;
         //$result = $zdbh->query("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = '$name'")->Fetch();
         $numrows = $zdbh->prepare("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = :name");
@@ -292,41 +307,51 @@ class module_controller {
         return ($result) ? $result['mbs_value_tx'] : false;
     }
 
-    static function getQuotaLimit() {
+    static function getQuotaLimit()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return ($currentuser['forwardersquota'] < 0) or //-1 = unlimited
-               ($currentuser['forwardersquota'] > ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']));
+                ($currentuser['forwardersquota'] > ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']));
     }
 
-    static function getForwardUsagepChart() {
+    static function getForwardUsagepChart()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $maximum = $currentuser['forwardersquota'];
         if ($maximum < 0) { //-1 = unlimited
-            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
             $free = max($maximum - $used, 0);
-            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
-                  . '&labels=Free: ' . $free . '::Used: ' . $used 
-                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
-                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
+            return '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                    . '&labels=Free: ' . $free . '::Used: ' . $used
+                    . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                    . ' alt="' . ui_language::translate('Pie chart') . '"/>';
         }
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         return ui_module::GetModuleName();
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        return "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         return ui_language::translate(ui_module::GetModuleDescription());
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexistssame)) {
             return ui_sysmessage::shout(ui_language::translate("You cannot forward a mailbox to itself!"), "zannounceerror");
         }
@@ -350,7 +375,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

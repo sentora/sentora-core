@@ -266,12 +266,12 @@ class module_controller
             if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, $line)) {
                 if (sys_versions::ShowOSPlatformVersion() != "Windows") {
                     $returnValue = ctrl_system::systemCommand(
-                            ctrl_options::GetSystemOption( 'zsudo' ), array(
-                        ctrl_options::GetSystemOption( 'cron_reload_command' ),
-                        ctrl_options::GetSystemOption( 'cron_reload_flag' ),
-                        ctrl_options::GetSystemOption( 'cron_reload_user' ),
-                        ctrl_options::GetSystemOption( 'cron_reload_path' ),
-                    ) );
+                                    ctrl_options::GetSystemOption('zsudo'), array(
+                                ctrl_options::GetSystemOption('cron_reload_command'),
+                                ctrl_options::GetSystemOption('cron_reload_flag'),
+                                ctrl_options::GetSystemOption('cron_reload_user'),
+                                ctrl_options::GetSystemOption('cron_reload_path'),
+                            ));
 
                     //var_dump( $returnValue );
                 }
@@ -300,12 +300,12 @@ class module_controller
             if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, $line)) {
                 if (sys_versions::ShowOSPlatformVersion() != "Windows") {
                     $returnValue = ctrl_system::systemCommand(
-                            ctrl_options::GetSystemOption( 'zsudo' ), array(
-                        ctrl_options::GetSystemOption( 'cron_reload_command' ),
-                        ctrl_options::GetSystemOption( 'cron_reload_flag' ),
-                        ctrl_options::GetSystemOption( 'cron_reload_user' ),
-                        ctrl_options::GetSystemOption( 'cron_reload_path' ),
-                    ) );
+                                    ctrl_options::GetSystemOption('zsudo'), array(
+                                ctrl_options::GetSystemOption('cron_reload_command'),
+                                ctrl_options::GetSystemOption('cron_reload_flag'),
+                                ctrl_options::GetSystemOption('cron_reload_user'),
+                                ctrl_options::GetSystemOption('cron_reload_path'),
+                            ));
                     //var_dump( $returnValue );
                 }
                 return true;
@@ -395,8 +395,11 @@ class module_controller
     static function getModuleIcon()
     {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
     static function getModuleDesc()

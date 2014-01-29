@@ -5,9 +5,11 @@
  * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
  *
  */
-class module_controller {
+class module_controller
+{
 
-    static function ListDomains($uid) {
+    static function ListDomains($uid)
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_deleted_ts IS NULL";
@@ -31,7 +33,8 @@ class module_controller {
         }
     }
 
-    static function getDomains() {
+    static function getDomains()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $clientlist = self::ListDomains($currentuser['userid']);
         if (!fs_director::CheckForEmptyValue($clientlist)) {
@@ -41,7 +44,8 @@ class module_controller {
         }
     }
 
-    static function getCurrentDomain() {
+    static function getCurrentDomain()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['domain'])) && ($urlvars['domain'] != ""))
@@ -49,7 +53,8 @@ class module_controller {
         return false;
     }
 
-    static function getReportToShow() {
+    static function getReportToShow()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (isset($urlvars['domain']) && $urlvars['domain'] != "") {
@@ -62,7 +67,8 @@ class module_controller {
         }
     }
 
-    static function doShowStats() {
+    static function doShowStats()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -74,7 +80,8 @@ class module_controller {
         }
     }
 
-    static function getIsShowStats() {
+    static function getIsShowStats()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "true"))
@@ -82,27 +89,35 @@ class module_controller {
         return false;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
-    static function getInit() {
-        
+    static function getInit()
+    {
+
     }
 
-    static function getDescription() {
+    static function getDescription()
+    {
         return ui_module::GetModuleDescription();
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "/modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
 }

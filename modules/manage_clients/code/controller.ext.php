@@ -3,7 +3,7 @@
 /**
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
- * 
+ *
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $complete;
     static $error;
@@ -47,7 +48,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListClients($uid = 0) {
+    static function ListClients($uid = 0)
+    {
         global $zdbh;
         if ($uid == 0) {
             $sql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
@@ -93,7 +95,8 @@ class module_controller {
         }
     }
 
-    static function ListAllClients($moveid, $uid) {
+    static function ListAllClients($moveid, $uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid AND ac_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -123,7 +126,8 @@ class module_controller {
         }
     }
 
-    static function ListDisabledClients($uid) {
+    static function ListDisabledClients($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid AND ac_enabled_in=0 AND ac_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -151,7 +155,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentClient($uid) {
+    static function ListCurrentClient($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_profiles WHERE ud_user_fk=:uid";
         //$numrows = $zdbh->query($sql);
@@ -180,7 +185,8 @@ class module_controller {
         }
     }
 
-    static function ListGroups($uid) {
+    static function ListGroups($uid)
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:resellerid";
@@ -216,7 +222,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentGroups($uid, $rid, $id) {
+    static function ListCurrentGroups($uid, $rid, $id)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_groups WHERE ug_reseller_fk=:rid";
         //$numrows = $zdbh->query($sql);
@@ -257,7 +264,8 @@ class module_controller {
         }
     }
 
-    static function ListPackages($uid) {
+    static function ListPackages($uid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:uid AND pk_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -279,7 +287,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentPackages($uid, $rid) {
+    static function ListCurrentPackages($uid, $rid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_packages WHERE pk_reseller_fk=:rid AND pk_deleted_ts IS NULL";
         //$numrows = $zdbh->query($sql);
@@ -307,11 +316,12 @@ class module_controller {
         }
     }
 
-    static function SetClientAccount($userid, $column, $value) {
+    static function SetClientAccount($userid, $column, $value)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeSetClientAccount');
         $sql = $zdbh->prepare("UPDATE x_accounts
-								SET :column=:value 
+								SET :column=:value
 								WHERE ac_id_pk=:userid");
         $sql->bindParam(':column', $column);
         $sql->bindParam(':value', $value);
@@ -321,7 +331,8 @@ class module_controller {
         return true;
     }
 
-    static function SetClientProfile($userid, $column, $value) {
+    static function SetClientProfile($userid, $column, $value)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeSetClientProfile');
         $sql = $zdbh->prepare("UPDATE x_profiles SET :column=:value WHERE ud_user_fk=:userid");
@@ -333,34 +344,35 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteClient($userid, $moveid) {
+    static function ExecuteDeleteClient($userid, $moveid)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDeleteClient');
         $sql = $zdbh->prepare("
 			UPDATE x_accounts
-			SET ac_deleted_ts=:time 
+			SET ac_deleted_ts=:time
 			WHERE ac_id_pk=:userid");
         $time = time();
         $sql->bindParam(':time', $time);
         $sql->bindParam(':userid', $userid);
         $sql->execute();
         $sql = $zdbh->prepare("
-			UPDATE x_accounts 
+			UPDATE x_accounts
 			SET ac_reseller_fk = :moveid
 			WHERE ac_reseller_fk = :userid");
         $sql->bindParam(':moveid', $moveid);
         $sql->bindParam(':userid', $userid);
         $sql->execute();
         $sql = $zdbh->prepare("
-			UPDATE x_packages 
-			SET pk_reseller_fk = :moveid 
+			UPDATE x_packages
+			SET pk_reseller_fk = :moveid
 			WHERE pk_reseller_fk = :userid");
         $sql->bindParam(':moveid', $moveid);
         $sql->bindParam(':userid', $userid);
         $sql->execute();
         $sql = $zdbh->prepare("
-			UPDATE x_groups 
-			SET ug_reseller_fk = :moveid 
+			UPDATE x_groups
+			SET ug_reseller_fk = :moveid
 			WHERE ug_reseller_fk = :userid");
         $sql->bindParam(':moveid', $moveid);
         $sql->bindParam(':userid', $userid);
@@ -370,7 +382,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteUpdateClient($clientid, $package, $enabled, $group, $fullname, $email, $address, $post, $phone, $newpass) {
+    static function ExecuteUpdateClient($clientid, $package, $enabled, $group, $fullname, $email, $address, $post, $phone, $newpass)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeUpdateClient');
         if ($newpass != "") {
@@ -421,7 +434,8 @@ class module_controller {
         return true;
     }
 
-    static function EnableClient($userid) {
+    static function EnableClient($userid)
+    {
         runtime_hook::Execute('OnBeforeEnableClient');
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=1 WHERE ac_id_pk=:userid");
@@ -431,7 +445,8 @@ class module_controller {
         return true;
     }
 
-    static function DisableClient($userid) {
+    static function DisableClient($userid)
+    {
         runtime_hook::Execute('OnBeforeDisableClient');
         global $zdbh;
         $sql = $zdbh->prepare("UPDATE x_accounts SET ac_enabled_in=0 WHERE ac_id_pk=:userid");
@@ -441,7 +456,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckEnabledHTML($userid) {
+    static function CheckEnabledHTML($userid)
+    {
         $currentuser = ctrl_users::GetUserDetail($userid);
         $res = array();
         if ($currentuser['enabled'] == 1) {
@@ -456,7 +472,8 @@ class module_controller {
         return $res;
     }
 
-    static function CheckHasPackage($userid) {
+    static function CheckHasPackage($userid)
+    {
         global $zdbh;
         $sql = "SELECT COUNT(*) FROM x_packages WHERE pk_reseller_fk=:userid AND pk_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -470,7 +487,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password, $sendemail, $emailsubject, $emailbody) {
+    static function ExecuteCreateClient($uid, $username, $packageid, $groupid, $fullname, $email, $address, $post, $phone, $password, $sendemail, $emailsubject, $emailbody)
+    {
         global $zdbh;
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
@@ -533,7 +551,7 @@ class module_controller {
         fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('hosted_dir') . $username . "/public_html", 0777);
         fs_director::CreateDirectory(ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups");
         fs_director::SetFileSystemPermissions(ctrl_options::GetSystemOption('hosted_dir') . $username . "/backups", 0777);
-        // Send the user account details via. email (if requested)... 
+        // Send the user account details via. email (if requested)...
         if ($sendemail <> 0) {
             if (isset($_SERVER['HTTPS'])) {
                 $protocol = 'https://';
@@ -560,7 +578,8 @@ class module_controller {
         return true;
     }
 
-    static function CheckCreateForErrors($username, $packageid, $groupid, $email, $password = "") {
+    static function CheckCreateForErrors($username, $packageid, $groupid, $email, $password = "")
+    {
         global $zdbh;
         $username = strtolower(str_replace(' ', '', $username));
         // Check to make sure the username is not blank or exists before we go any further...
@@ -632,7 +651,7 @@ class module_controller {
                 return true;
             } else {
                 self::$not_unique_email = true;
-                return false; 
+                return false;
             }
         } else {
             self::$not_unique_email = true;
@@ -653,45 +672,49 @@ class module_controller {
         return true;
     }
 
-    static function IsValidEmail($email) {
+    static function IsValidEmail($email)
+    {
         if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
             return false;
         }
         return true;
     }
 
-    static function IsValidUserName($username) {
+    static function IsValidUserName($username)
+    {
         if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
         }
         return true;
     }
 
-    static function DefaultEmailBody() {
+    static function DefaultEmailBody()
+    {
         $line = ui_language::translate("Hi {{fullname}},\r\rWe are pleased to inform you that your new hosting account is now active!\r\rYou can access your web hosting control panel using this link:\r{{controlpanelurl}}\r\rYour username and password is as follows:\rUsername: {{username}}\rPassword: {{password}}\r\rMany thanks,\rThe management");
         return $line;
     }
-    
+
     /**
      * Checks if the user already exists in the x_accounts table.
      * @global type $zdbh The ZPanelX database handle.
      * @param type $username The username to check against.
      * @return boolean
      */
-    static function CheckUserExits($username){ 
+    static function CheckUserExits($username)
+    {
         global $zdbh;
-            $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username";
-            $uniqueuser = $zdbh->prepare($sql);
-            $uniqueuser->bindParam(':username', strtolower($username));       
-            if ($uniqueuser->execute()) {
-                if ($uniqueuser->fetchColumn() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
+        $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username";
+        $uniqueuser = $zdbh->prepare($sql);
+        $uniqueuser->bindParam(':username', strtolower($username));
+        if ($uniqueuser->execute()) {
+            if ($uniqueuser->fetchColumn() > 0) {
                 return true;
-            }        
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -701,7 +724,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doCreateClient() {
+    static function doCreateClient()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -719,7 +743,8 @@ class module_controller {
         }
     }
 
-    static function doEditClient() {
+    static function doEditClient()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -737,7 +762,8 @@ class module_controller {
         return;
     }
 
-    static function doEditDisabledClient() {
+    static function doEditDisabledClient()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -755,7 +781,8 @@ class module_controller {
         return;
     }
 
-    static function doDeleteClient() {
+    static function doDeleteClient()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
@@ -764,7 +791,8 @@ class module_controller {
         return false;
     }
 
-    static function doUpdateClient() {
+    static function doUpdateClient()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -774,7 +802,8 @@ class module_controller {
         return false;
     }
 
-    static function getClientList() {
+    static function getClientList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $clientlist = self::ListClients($currentuser['userid']);
         if (!fs_director::CheckForEmptyValue($clientlist)) {
@@ -784,7 +813,8 @@ class module_controller {
         }
     }
 
-    static function getAllClientList() {
+    static function getAllClientList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $urlvars = $controller->GetAllControllerRequests('URL');
@@ -796,7 +826,8 @@ class module_controller {
         }
     }
 
-    static function getDisabledClientList() {
+    static function getDisabledClientList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $disabledclientlist = self::ListDisabledClients($currentuser['userid']);
         if (!fs_director::CheckForEmptyValue($disabledclientlist)) {
@@ -806,7 +837,8 @@ class module_controller {
         }
     }
 
-    static function getCurrentClient() {
+    static function getCurrentClient()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         $client = self::ListCurrentClient($urlvars['other']);
@@ -817,48 +849,56 @@ class module_controller {
         }
     }
 
-    static function getGroupList() {
+    static function getGroupList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListGroups($currentuser['userid']);
     }
 
-    static function getCurrentGroupList() {
+    static function getCurrentGroupList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListCurrentGroups($controller->GetControllerRequest('URL', 'other'), $currentuser['resellerid'], $currentuser['userid']);
     }
 
-    static function getPackageList() {
+    static function getPackageList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListPackages($currentuser['userid']);
     }
 
-    static function getCurrentPackageList() {
+    static function getCurrentPackageList()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListCurrentPackages($controller->GetControllerRequest('URL', 'other'), $currentuser['userid']);
     }
 
-    static function getCheckEnabledHTML() {
+    static function getCheckEnabledHTML()
+    {
         global $controller;
         return self::CheckEnabledHTML($controller->GetControllerRequest('URL', 'other'));
     }
 
-    static function getHasPackage() {
+    static function getHasPackage()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::CheckHasPackage($currentuser['userid']);
     }
 
-    static function getIsReseller() {
+    static function getIsReseller()
+    {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         return self::CheckHasPackage($currentuser['userid']);
     }
 
-    static function getisCreateClient() {
+    static function getisCreateClient()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (!isset($urlvars['show']))
@@ -866,7 +906,8 @@ class module_controller {
         return false;
     }
 
-    static function getisDeleteClient() {
+    static function getisDeleteClient()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
@@ -874,7 +915,8 @@ class module_controller {
         return false;
     }
 
-    static function getisEditClient() {
+    static function getisEditClient()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")) {
@@ -884,7 +926,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentName() {
+    static function getEditCurrentName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
@@ -894,7 +937,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentEmail() {
+    static function getEditCurrentEmail()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
@@ -904,7 +948,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentFullName() {
+    static function getEditCurrentFullName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
@@ -914,7 +959,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentPost() {
+    static function getEditCurrentPost()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
@@ -924,7 +970,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentID() {
+    static function getEditCurrentID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
@@ -934,7 +981,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentAddress() {
+    static function getEditCurrentAddress()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
@@ -944,7 +992,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentPhone() {
+    static function getEditCurrentPhone()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentClient($controller->GetControllerRequest('URL', 'other'));
@@ -954,12 +1003,14 @@ class module_controller {
         }
     }
 
-    static function getDefaultEmailBody() {
+    static function getDefaultEmailBody()
+    {
         global $controller;
         return self::DefaultEmailBody();
     }
 
-    static function getFormName() {
+    static function getFormName()
+    {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inNewUserName']) && fs_director::CheckForEmptyValue(self::$resetform)) {
@@ -968,7 +1019,8 @@ class module_controller {
         return;
     }
 
-    static function getFormFullName() {
+    static function getFormFullName()
+    {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inNewFullName']) && fs_director::CheckForEmptyValue(self::$resetform)) {
@@ -977,7 +1029,8 @@ class module_controller {
         return;
     }
 
-    static function getFormEmail() {
+    static function getFormEmail()
+    {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inNewEmailAddress']) && fs_director::CheckForEmptyValue(self::$resetform)) {
@@ -986,7 +1039,8 @@ class module_controller {
         return;
     }
 
-    static function getFormAddress() {
+    static function getFormAddress()
+    {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inNewAddress']) && fs_director::CheckForEmptyValue(self::$resetform)) {
@@ -995,7 +1049,8 @@ class module_controller {
         return;
     }
 
-    static function getFormPost() {
+    static function getFormPost()
+    {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inNewPostCode']) && fs_director::CheckForEmptyValue(self::$resetform)) {
@@ -1004,7 +1059,8 @@ class module_controller {
         return;
     }
 
-    static function getFormPhone() {
+    static function getFormPhone()
+    {
         global $controller;
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (isset($formvars['inNewPhone']) && fs_director::CheckForEmptyValue(self::$resetform)) {
@@ -1013,23 +1069,30 @@ class module_controller {
         return;
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         $module_name = ui_module::GetModuleName();
         return $module_name;
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/icon.png";
-        return $module_icon;
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         $message = ui_language::translate(ui_module::GetModuleDescription());
         return $message;
     }
 
-    static function getRandomPassword() {
+    static function getRandomPassword()
+    {
         $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
         $trylength = 9;
         if ($trylength < $minpasswordlength) {
@@ -1041,7 +1104,8 @@ class module_controller {
         return $password;
     }
 
-    static function getMinPassLength() {
+    static function getMinPassLength()
+    {
         $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
         $trylength = 9;
         if ($trylength < $minpasswordlength) {
@@ -1052,7 +1116,8 @@ class module_controller {
         return $uselength;
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$userblank)) {
             return ui_sysmessage::shout(ui_language::translate("You need to specify a username to create a new client."), "zannounceerror");
         }
@@ -1089,7 +1154,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 

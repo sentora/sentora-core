@@ -24,7 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class module_controller {
+class module_controller
+{
 
     static $ok;
     static $password;
@@ -39,7 +40,8 @@ class module_controller {
     /**
      * The 'worker' methods.
      */
-    static function ListMailboxes($uid) {
+    static function ListMailboxes($uid)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -61,9 +63,9 @@ class module_controller {
                     $status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif" alt="Down"/>';
                 }
                 $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                               'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
-                               'status' => $status,
-                               'id' => $rowmailboxes['mb_id_pk']);
+                    'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+                    'status' => $status,
+                    'id' => $rowmailboxes['mb_id_pk']);
             }
             return $res;
         } else {
@@ -71,7 +73,8 @@ class module_controller {
         }
     }
 
-    static function ListCurrentMailboxes($mid) {
+    static function ListCurrentMailboxes($mid)
+    {
         global $zdbh;
         $sql = "SELECT * FROM x_mailboxes WHERE mb_id_pk=:mid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
         //$numrows = $zdbh->query($sql);
@@ -90,9 +93,9 @@ class module_controller {
                     $ischeck = NULL;
                 }
                 $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                               'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
-                               'ischeck' => $ischeck,
-                               'id' => $rowmailboxes['mb_id_pk']);
+                    'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+                    'ischeck' => $ischeck,
+                    'id' => $rowmailboxes['mb_id_pk']);
             }
             return $res;
         } else {
@@ -100,7 +103,8 @@ class module_controller {
         }
     }
 
-    static function ListDomains($uid) {
+    static function ListDomains($uid)
+    {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
@@ -122,7 +126,8 @@ class module_controller {
         }
     }
 
-    static function ExecuteAddMailbox($uid, $address, $domain, $password) {
+    static function ExecuteAddMailbox($uid, $address, $domain, $password)
+    {
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
@@ -155,7 +160,8 @@ class module_controller {
         return true;
     }
 
-    static function ExecuteDeleteMailbox($mid) {
+    static function ExecuteDeleteMailbox($mid)
+    {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeDeleteMailbox');
@@ -180,7 +186,8 @@ class module_controller {
         self::$ok = true;
     }
 
-    static function ExecuteUpdateMailbox($mid, $password, $enabled) {
+    static function ExecuteUpdateMailbox($mid, $password, $enabled)
+    {
         global $zdbh;
         global $controller;
         runtime_hook::Execute('OnBeforeUpdateMailbox');
@@ -204,7 +211,8 @@ class module_controller {
         return;
     }
 
-    static function ExecuteEnableMailbox($mid) {
+    static function ExecuteEnableMailbox($mid)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeEnableMailbox');
         $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=1 WHERE mb_id_pk=:mid");
@@ -215,7 +223,8 @@ class module_controller {
         return $retval;
     }
 
-    static function ExecuteDisableMailbox($mid) {
+    static function ExecuteDisableMailbox($mid)
+    {
         global $zdbh;
         runtime_hook::Execute('OnBeforeDisableMailbox');
         $sql = $zdbh->prepare("UPDATE x_mailboxes SET mb_enabled_in=0 WHERE mb_id_pk=:mid");
@@ -226,7 +235,8 @@ class module_controller {
         return $retval;
     }
 
-    static function CheckCreateForErrors($address, $domain, $password) {
+    static function CheckCreateForErrors($address, $domain, $password)
+    {
         global $zdbh;
         $fulladdress = strtolower(str_replace(' ', '', $address . '@' . $domain));
         if (fs_director::CheckForEmptyValue($address)) {
@@ -276,7 +286,8 @@ class module_controller {
         return true;
     }
 
-    static function IsValidEmail($email) {
+    static function IsValidEmail($email)
+    {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
 
@@ -287,7 +298,8 @@ class module_controller {
     /**
      * Webinterface sudo methods.
      */
-    static function doAddMailbox() {
+    static function doAddMailbox()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -297,7 +309,8 @@ class module_controller {
         return true;
     }
 
-    static function doEditMailbox() {
+    static function doEditMailbox()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
@@ -315,42 +328,46 @@ class module_controller {
         return true;
     }
 
-    static function doUpdateMailbox() {
+    static function doUpdateMailbox()
+    {
         global $controller;
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        $enabled = (isset($formvars['inEnabled']))
-                   ? fs_director::GetCheckboxValue($formvars['inEnabled'])
-                   : 0;
+        $enabled = (isset($formvars['inEnabled'])) ? fs_director::GetCheckboxValue($formvars['inEnabled']) : 0;
         if (self::ExecuteUpdateMailbox($formvars['inSave'], $formvars['inPassword'], $enabled))
             self::$ok = true;
         return true;
     }
 
-    static function doConfirmDeleteMailbox() {
+    static function doConfirmDeleteMailbox()
+    {
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
         return self::ExecuteDeleteMailbox($formvars['inDelete']);
     }
 
-    static function getMailboxList() {
+    static function getMailboxList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListMailboxes($currentuser['userid']);
     }
 
-    static function getDomainList() {
+    static function getDomainList()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return self::ListDomains($currentuser['userid']);
     }
 
-    static function getCurrentMailboxList() {
+    static function getCurrentMailboxList()
+    {
         global $controller;
         return self::ListCurrentMailboxes($controller->GetControllerRequest('URL', 'other'));
     }
 
-    static function GetMailOption($name) {
+    static function GetMailOption($name)
+    {
         global $zdbh;
         $numrows = $zdbh->prepare("SELECT mbs_value_tx FROM x_mail_settings WHERE mbs_name_vc = :name");
         $numrows->bindParam(':name', $name);
@@ -359,25 +376,29 @@ class module_controller {
         return ($result) ? $result['mbs_value_tx'] : false;
     }
 
-    static function getisCreateMailbox() {
+    static function getisCreateMailbox()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return !isset($urlvars['show']);
     }
 
-    static function getisDeleteMailbox() {
+    static function getisDeleteMailbox()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
-    static function getisEditMailbox() {
+    static function getisEditMailbox()
+    {
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Edit");
     }
 
-    static function getEditCurrentMailboxName() {
+    static function getEditCurrentMailboxName()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentMailboxes($controller->GetControllerRequest('URL', 'other'));
@@ -387,7 +408,8 @@ class module_controller {
         }
     }
 
-    static function getEditCurrentMailboxID() {
+    static function getEditCurrentMailboxID()
+    {
         global $controller;
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentMailboxes($controller->GetControllerRequest('URL', 'other'));
@@ -397,41 +419,51 @@ class module_controller {
         }
     }
 
-    static function getModuleName() {
+    static function getModuleName()
+    {
         return ui_module::GetModuleName();
     }
 
-    static function getModuleIcon() {
+    static function getModuleIcon()
+    {
         global $controller;
-        return 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/icon.png';
+        $mod_dir = $controller->GetControllerRequest('URL', 'module');
+        // Check if the current userland theme has a module icon override
+        if (file_exists('etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png'))
+            return './etc/styles/' . ui_template::GetUserTemplate() . '/images/' . $mod_dir . '/assets/icon.png';
+        return './modules/' . $mod_dir . '/assets/icon.png';
     }
 
-    static function getModuleDesc() {
+    static function getModuleDesc()
+    {
         return ui_language::translate(ui_module::GetModuleDescription());
     }
 
-    static function getQuotaLimit() {
+    static function getQuotaLimit()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         return ($currentuser['mailboxquota'] < 0) or //-1 = unlimited
-               ($currentuser['mailboxquota'] > ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']));
+                ($currentuser['mailboxquota'] > ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']));
     }
 
-    static function getEmailUsagepChart() {
+    static function getEmailUsagepChart()
+    {
         $currentuser = ctrl_users::GetUserDetail();
         $maximum = $currentuser['mailboxquota'];
         if ($maximum < 0) { //-1 = unlimited
-            return '<img src="'. ui_tpl_assetfolderpath::Template().'images/unlimited.png" alt="'.ui_language::translate('Unlimited').'"/>';
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
             $free = max($maximum - $used, 0);
-            return  '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
-                  . '&labels=Free: ' . $free . '::Used: ' . $used
-                  . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
-                  . ' alt="'.ui_language::translate('Pie chart').'"/>';
+            return '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+                    . '&labels=Free: ' . $free . '::Used: ' . $used
+                    . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
+                    . ' alt="' . ui_language::translate('Pie chart') . '"/>';
         }
     }
 
-    static function getResult() {
+    static function getResult()
+    {
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate('A mailbox, alias, forwarder or distribution list already exists with that name.'), "zannounceerror");
         }
@@ -450,7 +482,8 @@ class module_controller {
         return;
     }
 
-    static function getCSFR_Tag() {
+    static function getCSFR_Tag()
+    {
         return runtime_csfr::Token();
     }
 
