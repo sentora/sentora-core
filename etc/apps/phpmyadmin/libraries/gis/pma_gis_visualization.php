@@ -1,6 +1,17 @@
 <?php
+/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Generates the JavaScripts needed to visualize GIS data.
+ * Handles visualization of GIS data
+ *
+ * @package PhpMyAdmin-GIS
+ */
+
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
+/**
+ * Handles visualization of GIS data
  *
  * @package PhpMyAdmin-GIS
  */
@@ -52,7 +63,8 @@ class PMA_GIS_Visualization
     /**
      * Returns the settings array
      *
-     * @return the settings array.
+     * @return array the settings array
+     * @access public
      */
     public function getSettings()
     {
@@ -64,6 +76,8 @@ class PMA_GIS_Visualization
      *
      * @param array $data    Data for the visualization
      * @param array $options Users specified options
+     *
+     * @access public
      */
     public function __construct($data, $options)
     {
@@ -74,7 +88,8 @@ class PMA_GIS_Visualization
     /**
      * All the variable initialization, options handling has to be done here.
      *
-     * @return nothing
+     * @return void
+     * @access protected
      */
     protected function init()
     {
@@ -85,12 +100,16 @@ class PMA_GIS_Visualization
      * A function which handles passed parameters. Useful if desired
      * chart needs to be a little bit different from the default one.
      *
-     * @return nothing
+     * @return void
+     * @access private
      */
     private function _handleOptions()
     {
         if (! is_null($this->_userSpecifiedSettings)) {
-            $this->_settings = array_merge($this->_settings, $this->_userSpecifiedSettings);
+            $this->_settings = array_merge(
+                $this->_settings,
+                $this->_userSpecifiedSettings
+            );
         }
     }
 
@@ -100,16 +119,19 @@ class PMA_GIS_Visualization
      * @param string $file_name file name
      * @param string $ext       extension of the file
      *
-     * @return the sanitized file name
+     * @return string the sanitized file name
+     * @access private
      */
     private function _sanitizeName($file_name, $ext)
     {
-        $file_name = PMA_sanitize_filename($file_name);
+        $file_name = PMA_sanitizeFilename($file_name);
 
         // Check if the user already added extension;
         // get the substring where the extension would be if it was included
         $extension_start_pos = strlen($file_name) - strlen($ext) - 1;
-        $user_extension = substr($file_name, $extension_start_pos, strlen($file_name));
+        $user_extension = substr(
+            $file_name, $extension_start_pos, strlen($file_name)
+        );
         $required_extension = "." . $ext;
         if (strtolower($user_extension) != $required_extension) {
             $file_name  .= $required_extension;
@@ -124,21 +146,20 @@ class PMA_GIS_Visualization
      * @param string $type      mime type
      * @param string $ext       extension of the file
      *
-     * @return nothing
+     * @return void
+     * @access private
      */
     private function _toFile($file_name, $type, $ext)
     {
         $file_name = $this->_sanitizeName($file_name, $ext);
-
-        ob_clean();
-
-        PMA_download_header($file_name, $type);
+        PMA_downloadHeader($file_name, $type);
     }
 
     /**
      * Generate the visualization in SVG format.
      *
-     * @return the generated image resource
+     * @return string the generated image resource
+     * @access private
      */
     private function _svg()
     {
@@ -146,7 +167,8 @@ class PMA_GIS_Visualization
 
         $output   = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' . "\n";
         $output  .= '<svg version="1.1" xmlns:svg="http://www.w3.org/2000/svg"'
-            . ' xmlns="http://www.w3.org/2000/svg" width="' . $this->_settings['width'] . '"'
+            . ' xmlns="http://www.w3.org/2000/svg"'
+            . ' width="' . $this->_settings['width'] . '"'
             . ' height="' . $this->_settings['height'] . '">';
         $output .= '<g id="groupPanel">';
 
@@ -162,7 +184,8 @@ class PMA_GIS_Visualization
     /**
      * Get the visualization as a SVG.
      *
-     * @return the visualization as a SVG
+     * @return string the visualization as a SVG
+     * @access public
      */
     public function asSVG()
     {
@@ -175,7 +198,8 @@ class PMA_GIS_Visualization
      *
      * @param string $file_name File name
      *
-     * @return nothing
+     * @return void
+     * @access public
      */
     public function toFileAsSvg($file_name)
     {
@@ -187,14 +211,18 @@ class PMA_GIS_Visualization
     /**
      * Generate the visualization in PNG format.
      *
-     * @return the generated image resource
+     * @return resource the generated image resource
+     * @access private
      */
     private function _png()
     {
         $this->init();
 
         // create image
-        $image = imagecreatetruecolor($this->_settings['width'], $this->_settings['height']);
+        $image = imagecreatetruecolor(
+            $this->_settings['width'],
+            $this->_settings['height']
+        );
 
         // fill the background
         $bg = imagecolorallocate($image, 229, 229, 229);
@@ -212,7 +240,8 @@ class PMA_GIS_Visualization
     /**
      * Get the visualization as a PNG.
      *
-     * @return the visualization as a PNG
+     * @return string the visualization as a PNG
+     * @access public
      */
     public function asPng()
     {
@@ -235,7 +264,8 @@ class PMA_GIS_Visualization
      *
      * @param string $file_name File name
      *
-     * @return nothing
+     * @return void
+     * @access public
      */
     public function toFileAsPng($file_name)
     {
@@ -248,7 +278,8 @@ class PMA_GIS_Visualization
     /**
      * Get the code for visualization with OpenLayers.
      *
-     * @return the code for visualization with OpenLayers
+     * @return string the code for visualization with OpenLayers
+     * @access public
      */
     public function asOl()
     {
@@ -261,15 +292,17 @@ class PMA_GIS_Visualization
                 . 'units: "m",'
                 . 'numZoomLevels: 18,'
                 . 'maxResolution: 156543.0339,'
-                . 'maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),'
-                . 'restrictedExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508)'
+                . 'maxExtent: new OpenLayers.Bounds('
+                . '-20037508, -20037508, 20037508, 20037508),'
+                . 'restrictedExtent: new OpenLayers.Bounds('
+                . '-20037508, -20037508, 20037508, 20037508)'
             . '};'
             . 'var map = new OpenLayers.Map("openlayersmap", options);'
-            . 'var layerNone = new OpenLayers.Layer.Boxes("None", {isBaseLayer: true});'
+            . 'var layerNone = new OpenLayers.Layer.Boxes('
+            . '"None", {isBaseLayer: true});'
             . 'var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");'
-            . 'var layerOsmarender = new OpenLayers.Layer.OSM.Osmarender("Osmarender");'
             . 'var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");'
-            . 'map.addLayers([layerMapnik, layerOsmarender, layerCycleMap, layerNone]);'
+            . 'map.addLayers([layerMapnik,layerCycleMap,layerNone]);'
             . 'var vectorLayer = new OpenLayers.Layer.Vector("Data");'
             . 'var bound;';
         $output .= $this->_prepareDataSet($this->_data, $scale_data, 'ol', '');
@@ -289,7 +322,8 @@ class PMA_GIS_Visualization
      *
      * @param string $file_name File name
      *
-     * @return nothing
+     * @return void
+     * @access public
      */
     public function toFileAsPdf($file_name)
     {
@@ -298,7 +332,9 @@ class PMA_GIS_Visualization
         include_once './libraries/tcpdf/tcpdf.php';
 
         // create pdf
-        $pdf = new TCPDF('', 'pt', $GLOBALS['cfg']['PDFDefaultPageSize'], true, 'UTF-8', false);
+        $pdf = new TCPDF(
+            '', 'pt', $GLOBALS['cfg']['PDFDefaultPageSize'], true, 'UTF-8', false
+        );
 
         // disable header and footer
         $pdf->setPrintHeader(false);
@@ -315,8 +351,6 @@ class PMA_GIS_Visualization
 
         // sanitize file name
         $file_name = $this->_sanitizeName($file_name, 'pdf');
-
-        ob_clean();
         $pdf->Output($file_name, 'D');
     }
 
@@ -325,7 +359,8 @@ class PMA_GIS_Visualization
      *
      * @param array $data Row data
      *
-     * @return an array containing the scale, x and y offsets
+     * @return array an array containing the scale, x and y offsets
+     * @access private
      */
     private function _scaleDataSet($data)
     {
@@ -346,7 +381,9 @@ class PMA_GIS_Visualization
             if (! $gis_obj) {
                 continue;
             }
-            $scale_data = $gis_obj->scaleRow($row[$this->_settings['spatialColumn']]);
+            $scale_data = $gis_obj->scaleRow(
+                $row[$this->_settings['spatialColumn']]
+            );
 
             // Upadate minimum/maximum values for x and y cordinates.
             $c_maxX = (float) $scale_data['maxX'];
@@ -407,9 +444,11 @@ class PMA_GIS_Visualization
      * @param array  $data       Raw data
      * @param array  $scale_data Data related to scaling
      * @param string $format     Format of the visulaization
-     * @param image  $results    Image object in the case of png
+     * @param object $results    Image object in the case of png
+     *                           TCPDF object in the case of pdf
      *
-     * @return the formatted array of data.
+     * @return mixed the formatted array of data
+     * @access private
      */
     private function _prepareDataSet($data, $scale_data, $format, $results)
     {

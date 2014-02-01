@@ -1,10 +1,12 @@
 <?php
-
 /**
  * This example configuration shows how to configure phpMyAdmin for
  * many hosts that all have identical configuration otherwise. To add
  * a new host, just drop it into $hosts below. Contributed by
  * Matthew Hawkins.
+ *
+ * @package    PhpMyAdmin
+ * @subpackage Example
  */
 
 $i=0;
@@ -22,7 +24,7 @@ foreach ($hosts as $host) {
     $cfg['Servers'][$i]['socket']   = '';
     $cfg['Servers'][$i]['connect_type']     = 'tcp';
     $cfg['Servers'][$i]['extension']        = 'mysql';
-    $cfg['Servers'][$i]['compress'] = FALSE;
+    $cfg['Servers'][$i]['compress'] = false;
     $cfg['Servers'][$i]['controluser']      = 'pma';
     $cfg['Servers'][$i]['controlpass']      = 'pmapass';
     $cfg['Servers'][$i]['auth_type']        = 'cookie';
@@ -31,13 +33,19 @@ foreach ($hosts as $host) {
     $cfg['Servers'][$i]['only_db']  = '';
     $cfg['Servers'][$i]['verbose']  = '';
     $cfg['Servers'][$i]['pmadb']    = 'phpmyadmin';
-    $cfg['Servers'][$i]['bookmarktable']    = 'pma_bookmark';
-    $cfg['Servers'][$i]['relation'] = 'pma_relation';
-    $cfg['Servers'][$i]['table_info']       = 'pma_table_info';
-    $cfg['Servers'][$i]['table_coords']     = 'pma_table_coords';
-    $cfg['Servers'][$i]['pdf_pages']        = 'pma_pdf_pages';
-    $cfg['Servers'][$i]['column_info']      = 'pma_column_info';
-    $cfg['Servers'][$i]['history']  = 'pma_history';
-    $cfg['Servers'][$i]['designer_coords'] = 'pma_designer_coords';
+    $cfg['Servers'][$i]['bookmarktable'] = 'pma__bookmark';
+    $cfg['Servers'][$i]['relation'] = 'pma__relation';
+    $cfg['Servers'][$i]['table_info'] = 'pma__table_info';
+    $cfg['Servers'][$i]['table_coords'] = 'pma__table_coords';
+    $cfg['Servers'][$i]['pdf_pages'] = 'pma__pdf_pages';
+    $cfg['Servers'][$i]['column_info'] = 'pma__column_info';
+    $cfg['Servers'][$i]['history'] = 'pma__history';
+    $cfg['Servers'][$i]['table_uiprefs'] = 'pma__table_uiprefs';
+    $cfg['Servers'][$i]['tracking'] = 'pma__tracking';
+    $cfg['Servers'][$i]['designer_coords'] = 'pma__designer_coords';
+    $cfg['Servers'][$i]['userconfig'] = 'pma__userconfig';
+    $cfg['Servers'][$i]['recent'] = 'pma__recent';
+    $cfg['Servers'][$i]['users'] = 'pma__users';
+    $cfg['Servers'][$i]['usergroups'] = 'pma__usergroups';
+    $cfg['Servers'][$i]['navigationhiding'] = 'pma__navigationhiding';
 }
-

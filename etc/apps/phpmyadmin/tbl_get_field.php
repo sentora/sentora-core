@@ -2,45 +2,54 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Provides download to a given field defined in parameters.
+ *
  * @package PhpMyAdmin
  */
 
 /**
  * Common functions.
  */
-require_once './libraries/common.inc.php';
-require_once './libraries/mime.lib.php';
+// we don't want the usual PMA_Response-generated HTML above the column's data
+define('PMA_BYPASS_GET_INSTANCE', 1);
+require_once 'libraries/common.inc.php';
+require_once 'libraries/mime.lib.php';
 
 /* Check parameters */
-PMA_checkParameters(array('db', 'table', 'where_clause', 'transform_key'));
+PMA_Util::checkParameters(
+    array('db', 'table')
+);
 
 /* Select database */
-if (!PMA_DBI_select_db($db)) {
-    PMA_mysqlDie(sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)),
-        '', '');
+if (!$GLOBALS['dbi']->selectDb($db)) {
+    PMA_Util::mysqlDie(
+        sprintf(__('\'%s\' database does not exist.'), htmlspecialchars($db)),
+        '', ''
+    );
 }
 
 /* Check if table exists */
-if (!PMA_DBI_get_columns($db, $table)) {
-    PMA_mysqlDie(__('Invalid table name'));
+if (!$GLOBALS['dbi']->getColumns($db, $table)) {
+    PMA_Util::mysqlDie(__('Invalid table name'));
 }
 
 /* Grab data */
-$sql = 'SELECT ' . PMA_backquote($transform_key) . ' FROM ' . PMA_backquote($table) . ' WHERE ' . $where_clause . ';';
-$result = PMA_DBI_fetch_value($sql);
+$sql = 'SELECT ' . PMA_Util::backquote($_GET['transform_key'])
+    . ' FROM ' . PMA_Util::backquote($table)
+    . ' WHERE ' . $_GET['where_clause'] . ';';
+$result = $GLOBALS['dbi']->fetchValue($sql);
 
 /* Check return code */
 if ($result === false) {
-    PMA_mysqlDie(__('MySQL returned an empty result set (i.e. zero rows).'), $sql);
+    PMA_Util::mysqlDie(__('MySQL returned an empty result set (i.e. zero rows).'), $sql);
 }
 
 /* Avoid corrupting data */
 @ini_set('url_rewriter.tags', '');
 
-PMA_download_header(
-    $table . '-' .  $transform_key . '.bin',
+PMA_downloadHeader(
+    $table . '-' .  $_GET['transform_key'] . '.bin',
     PMA_detectMIME($result),
     strlen($result)
-    );
+);
 echo $result;
 ?>

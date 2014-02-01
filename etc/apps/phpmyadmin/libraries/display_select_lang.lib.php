@@ -10,94 +10,89 @@ if (! defined('PHPMYADMIN')) {
 }
 
 /**
- * Sorts available languages by their true english names
+ * Compares the names of two languages.
+ * Used by uasort in PMA_getLanguageSelectorHtml()
  *
- * @param array   the array to be sorted
- * @param mixed   a required parameter
- * @return  the sorted array
- * @access  private
+ * @param array $a The first language being compared
+ * @param array $b The second language being compared
+ *
+ * @return int the sorted array
  */
-function PMA_language_cmp(&$a, &$b)
+function PMA_languageCmp($a, $b)
 {
-    return (strcmp($a[1], $b[1]));
-} // end of the 'PMA_language_cmp()' function
+    return strcmp($a[1], $b[1]);
+}
 
 /**
- * Displays for for language selection
+ * Returns HTML code for the language selector
+ *
+ * @param boolean $use_fieldset whether to use fieldset for selection
+ * @param boolean $show_doc     whether to show documentation links
+ *
+ * @return string
  *
  * @access  public
  */
-function PMA_select_language($use_fieldset = false, $show_doc = true)
+function PMA_getLanguageSelectorHtml($use_fieldset = false, $show_doc = true)
 {
-    global $cfg, $lang;
-    ?>
+    global $lang;
 
-<form method="post" action="index.php" target="_parent">
-    <?php
-    $_form_params = array(
-        'db' => $GLOBALS['db'],
-        'table' => $GLOBALS['table'],
-    );
-    echo PMA_generate_common_hidden_inputs($_form_params);
+    $retval = '';
 
-    // For non-English, display "Language" with emphasis because it's
-    // not a proper word in the current language; we show it to help
-    // people recognize the dialog
-    $language_title = __('Language')
-        . (__('Language') != 'Language' ? ' - <em>Language</em>' : '');
-    if ($show_doc) {
-        $language_title .= PMA_showDocu('faq7_2');
-    }
-    if ($use_fieldset) {
-        echo '<fieldset><legend xml:lang="en" dir="ltr">' . $language_title . '</legend>';
-    } else {
-        echo '<bdo xml:lang="en" dir="ltr">' . $language_title . ':</bdo>';
-    }
-    ?>
+    // Display language selection only if there
+    // is more than one language to choose from
+    if (count($GLOBALS['available_languages']) > 1) {
+        $retval .= '<form method="get" action="index.php" class="disableAjax">';
 
-    <select name="lang" class="autosubmit" xml:lang="en" dir="ltr">
-    <?php
+        $_form_params = array(
+            'db' => $GLOBALS['db'],
+            'table' => $GLOBALS['table'],
+        );
+        $retval .= PMA_URL_getHiddenInputs($_form_params);
 
-    uasort($GLOBALS['available_languages'], 'PMA_language_cmp');
-    foreach ($GLOBALS['available_languages'] as $id => $tmplang) {
-        $lang_name = PMA_langName($tmplang);
-
-        //Is current one active?
-        if ($lang == $id) {
-            $selected = ' selected="selected"';
+        // For non-English, display "Language" with emphasis because it's
+        // not a proper word in the current language; we show it to help
+        // people recognize the dialog
+        $language_title = __('Language')
+            . (__('Language') != 'Language' ? ' - <em>Language</em>' : '');
+        if ($show_doc) {
+            $language_title .= PMA_Util::showDocu('faq', 'faq7-2');
+        }
+        if ($use_fieldset) {
+            $retval .= '<fieldset><legend lang="en" dir="ltr">'
+                . $language_title . '</legend>';
         } else {
-            $selected = '';
+            $retval .= '<bdo lang="en" dir="ltr"><label for="sel-lang">'
+                . $language_title . ': </label></bdo>';
         }
 
-        echo '        ';
-        echo '<option value="' . $id . '"' . $selected . '>' . $lang_name
-            . '</option>' . "\n";
-    }
-    ?>
+        $retval .= '<select name="lang" class="autosubmit" lang="en"'
+            . ' dir="ltr" id="sel-lang">';
 
-    </select>
-    <?php
-    if ($use_fieldset) {
-        echo '</fieldset>';
-    }
-    ?>
+        uasort($GLOBALS['available_languages'], 'PMA_languageCmp');
+        foreach ($GLOBALS['available_languages'] as $id => $tmplang) {
+            $lang_name = PMA_languageName($tmplang);
 
-    <noscript>
-    <?php
-    if ($use_fieldset) {
-        echo '<fieldset class="tblFooters">';
-    }
-    ?>
+            //Is current one active?
+            if ($lang == $id) {
+                $selected = ' selected="selected"';
+            } else {
+                $selected = '';
+            }
+            $retval .= '<option value="' . $id . '"' . $selected . '>';
+            $retval .= $lang_name;
+            $retval .= '</option>';
+        }
 
-        <input type="submit" value="Go" />
-    <?php
-    if ($use_fieldset) {
-        echo '</fieldset>';
-    }
-    ?>
+        $retval .= '</select>';
 
-    </noscript>
-</form>
-    <?php
-} // End of function PMA_select_language
+        if ($use_fieldset) {
+            $retval .= '</fieldset>';
+        }
+
+        $retval .= '</form>';
+    }
+    return $retval;
+}
+
 ?>

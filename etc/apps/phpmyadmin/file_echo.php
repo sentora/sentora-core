@@ -7,7 +7,8 @@
  * @package PhpMyAdmin
  */
 
-require_once './libraries/common.inc.php';
+define('PMA_MINIMUM_COMMON', true);
+require_once 'libraries/common.inc.php';
 
 /* For chart exporting */
 if (isset($_REQUEST['filename']) && isset($_REQUEST['image'])) {
@@ -18,7 +19,7 @@ if (isset($_REQUEST['filename']) && isset($_REQUEST['image'])) {
 
     /* Check whether MIME type is allowed */
     if (! isset($allowed[$_REQUEST['type']])) {
-        die(__('Invalid export type'));
+        PMA_fatalError(__('Invalid export type'));
     }
 
     /*
@@ -49,20 +50,22 @@ if (isset($_REQUEST['filename']) && isset($_REQUEST['image'])) {
     }
 
     /* Send download header */
-    PMA_download_header($filename, $_REQUEST['type'], strlen($data));
+    PMA_downloadHeader($filename, $_REQUEST['type'], strlen($data));
 
     /* Send data */
     echo $data;
 
-/* For monitor chart config export */
 } else if (isset($_REQUEST['monitorconfig'])) {
-    PMA_download_header('monitor.cfg', 'application/force-download');
+    /* For monitor chart config export */
+    PMA_downloadHeader('monitor.cfg', 'application/force-download');
     echo urldecode($_REQUEST['monitorconfig']);
 
-/* For monitor chart config import */
 } else if (isset($_REQUEST['import'])) {
+    /* For monitor chart config import */
     header('Content-type: text/plain');
-    if(!file_exists($_FILES['file']['tmp_name'])) exit();
+    if (!file_exists($_FILES['file']['tmp_name'])) {
+        exit();
+    }
     echo file_get_contents($_FILES['file']['tmp_name']);
 }
 ?>

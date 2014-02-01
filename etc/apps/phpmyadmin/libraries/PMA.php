@@ -1,9 +1,15 @@
 <?php
+/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Enter description here...
+ * phpMyAdmin main Controller
+ *
  * @package PhpMyAdmin
  *
  */
+
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
 
 /**
  * Database listing.
@@ -12,8 +18,6 @@ require_once './libraries/List_Database.class.php';
 
 /**
  * phpMyAdmin main Controller
- *
- *
  *
  * @package PhpMyAdmin
  */
@@ -43,23 +47,23 @@ class PMA
     /**
      * magic access to protected/inaccessible members/properties
      *
-     * @see http://php.net/language.oop5.overloading
+     * @param string $param parameter name
      *
-     * @param string $param
      * @return mixed
+     * @see http://php.net/language.oop5.overloading
      */
     public function __get($param)
     {
         switch ($param) {
-            case 'databases' :
-                return $this->getDatabaseList();
-                break;
-            case 'userlink' :
-                return $this->userlink;
-                break;
-            case 'controllink' :
-                return $this->controllink;
-                break;
+        case 'databases' :
+            return $this->getDatabaseList();
+            break;
+        case 'userlink' :
+            return $this->userlink;
+            break;
+        case 'controllink' :
+            return $this->controllink;
+            break;
         }
 
         return null;
@@ -68,20 +72,21 @@ class PMA
     /**
      * magic access to protected/inaccessible members/properties
      *
-     * @see http://php.net/language.oop5.overloading
+     * @param string $param parameter name
+     * @param mixed  $value value to set
      *
-     * @param string $param
-     * @param mixed  $value
+     * @return void
+     * @see http://php.net/language.oop5.overloading
      */
     public function __set($param, $value)
     {
         switch ($param) {
-            case 'userlink' :
-                $this->userlink = $value;
-                break;
-            case 'controllink' :
-                $this->controllink = $value;
-                break;
+        case 'userlink' :
+            $this->userlink = $value;
+            break;
+        case 'controllink' :
+            $this->controllink = $value;
+            break;
         }
     }
 
@@ -93,7 +98,10 @@ class PMA
     public function getDatabaseList()
     {
         if (null === $this->databases) {
-            $this->databases = new PMA_List_Database($this->userlink, $this->controllink);
+            $this->databases = new PMA_List_Database(
+                $this->userlink,
+                $this->controllink
+            );
         }
 
         return $this->databases;

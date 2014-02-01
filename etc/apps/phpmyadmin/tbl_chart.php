@@ -6,44 +6,40 @@
  * @package PhpMyAdmin
  */
 
-/**
- * do not import request variable into global scope
- * @ignore
- */
-if (! defined('PMA_NO_VARIABLES_IMPORT')) {
-    define('PMA_NO_VARIABLES_IMPORT', true);
-}
-
-/**
- *
- */
-require_once './libraries/common.inc.php';
-require_once './libraries/common.lib.php';
-
+require_once 'libraries/common.inc.php';
+require_once 'libraries/tbl_chart.lib.php';
 /*
  * Execute the query and return the result
  */
-if(isset($_REQUEST['ajax_request']) && isset($_REQUEST['pos']) && isset($_REQUEST['session_max_rows'])) {
+if (isset($_REQUEST['ajax_request'])
+    && isset($_REQUEST['pos'])
+    && isset($_REQUEST['session_max_rows'])
+) {
+    $response = PMA_Response::getInstance();
 
     if (strlen($GLOBALS['table']) && strlen($GLOBALS['db'])) {
-        include './libraries/tbl_common.php';
-    }
-    else {
-        PMA_ajaxResponse(__('Error'), false);
+        include './libraries/tbl_common.inc.php';
+    } else {
+        $response->isSuccess(false);
+        $response->addJSON('message', __('Error'));
+        exit;
     }
 
-    $sql_limit_to_append = ' LIMIT ' . $_REQUEST['pos'] . ', ' . $_REQUEST['session_max_rows'] . " ";
-    $sql_query .= $sql_limit_to_append;
-
+    $sql_with_limit = 'SELECT * FROM( ' . $sql_query . ' ) AS `temp_res` LIMIT '
+        . $_REQUEST['pos'] . ', ' . $_REQUEST['session_max_rows'];
     $data = array();
-    $result = PMA_DBI_try_query($sql_query);
-    while ($row = PMA_DBI_fetch_assoc($result)) {
+    $result = $GLOBALS['dbi']->tryQuery($sql_with_limit);
+    while ($row = $GLOBALS['dbi']->fetchAssoc($result)) {
         $data[] = $row;
     }
-    if(empty($data))
-        PMA_ajaxResponse(__('Error'), false);
 
+    if (empty($data)) {
+        $response->isSuccess(false);
+        $response->addJSON('message', __('No data to display'));
+        exit;
+    }
     $sanitized_data = array();
+
     foreach ($data as $data_row_number => $data_row) {
         $tmp_row = array();
         foreach ($data_row as $data_column => $data_value) {
@@ -51,26 +47,39 @@ if(isset($_REQUEST['ajax_request']) && isset($_REQUEST['pos']) && isset($_REQUES
         }
         $sanitized_data[] = $tmp_row;
     }
-    $extra_data['chartData'] = json_encode($sanitized_data);
+    $response->isSuccess(true);
+    $response->addJSON('message', null);
+    $response->addJSON('chartData', json_encode($sanitized_data));
     unset($sanitized_data);
-    PMA_ajaxResponse(null, true, $extra_data);
+    exit;
 }
 
-$GLOBALS['js_include'][] = 'tbl_chart.js';
-$GLOBALS['js_include'][] = 'jqplot/jquery.jqplot.js';
-$GLOBALS['js_include'][] = 'jquery/jquery-ui-1.8.16.custom.js';
-$GLOBALS['js_include'][] = 'jqplot/plugins/jqplot.barRenderer.js';
-$GLOBALS['js_include'][] = 'jqplot/plugins/jqplot.canvasAxisLabelRenderer.js';
-$GLOBALS['js_include'][] = 'jqplot/plugins/jqplot.canvasTextRenderer.js';
-$GLOBALS['js_include'][] = 'jqplot/plugins/jqplot.categoryAxisRenderer.js';
-$GLOBALS['js_include'][] = 'jqplot/plugins/jqplot.pointLabels.js';
-$GLOBALS['js_include'][] = 'jqplot/plugins/jqplot.pieRenderer.js';
-
+$response = PMA_Response::getInstance();
+// Throw error if no sql query is set
+if (! isset($sql_query) || $sql_query == '') {
+    $response->isSuccess(false);
+    $response->addHTML(
+        PMA_Message::error(__('No SQL query was set to fetch data.'))
+    );
+    exit;
+}
+$header   = $response->getHeader();
+$scripts  = $header->getScripts();
+$scripts->addFile('chart.js');
+$scripts->addFile('tbl_chart.js');
+$scripts->addFile('jqplot/jquery.jqplot.js');
+$scripts->addFile('jqplot/plugins/jqplot.barRenderer.js');
+$scripts->addFile('jqplot/plugins/jqplot.canvasAxisLabelRenderer.js');
+$scripts->addFile('jqplot/plugins/jqplot.canvasTextRenderer.js');
+$scripts->addFile('jqplot/plugins/jqplot.categoryAxisRenderer.js');
+$scripts->addFile('jqplot/plugins/jqplot.dateAxisRenderer.js');
+$scripts->addFile('jqplot/plugins/jqplot.pointLabels.js');
+$scripts->addFile('jqplot/plugins/jqplot.pieRenderer.js');
+$scripts->addFile('jqplot/plugins/jqplot.highlighter.js');
 /* < IE 9 doesn't support canvas natively */
 if (PMA_USR_BROWSER_AGENT == 'IE' && PMA_USR_BROWSER_VER < 9) {
-    $GLOBALS['js_include'][] = 'canvg/flashcanvas.js';
+    $scripts->addFile('canvg/flashcanvas.js');
 }
-//$GLOBALS['js_include'][] = 'canvg/canvg.js';
 
 /**
  * Runs common work
@@ -78,25 +87,43 @@ if (PMA_USR_BROWSER_AGENT == 'IE' && PMA_USR_BROWSER_VER < 9) {
 if (strlen($GLOBALS['table'])) {
     $url_params['goto'] = $cfg['DefaultTabTable'];
     $url_params['back'] = 'tbl_sql.php';
-    include './libraries/tbl_common.php';
-    include './libraries/tbl_info.inc.php';
-    include './libraries/tbl_links.inc.php';
+    include 'libraries/tbl_common.inc.php';
+    include 'libraries/tbl_info.inc.php';
 } elseif (strlen($GLOBALS['db'])) {
     $url_params['goto'] = $cfg['DefaultTabDatabase'];
     $url_params['back'] = 'sql.php';
-    include './libraries/db_common.inc.php';
-    include './libraries/db_info.inc.php';
+    include 'libraries/db_common.inc.php';
+    include 'libraries/db_info.inc.php';
 } else {
     $url_params['goto'] = $cfg['DefaultTabServer'];
     $url_params['back'] = 'sql.php';
-    include './libraries/server_common.inc.php';
-    include './libraries/server_links.inc.php';
+    include 'libraries/server_common.inc.php';
 }
 
 $data = array();
-$result = PMA_DBI_try_query($sql_query);
-while ($row = PMA_DBI_fetch_assoc($result)) {
+
+$result = $GLOBALS['dbi']->tryQuery($sql_query);
+$fields_meta = $GLOBALS['dbi']->getFieldsMeta($result);
+while ($row = $GLOBALS['dbi']->fetchAssoc($result)) {
     $data[] = $row;
+}
+
+$keys = array_keys($data[0]);
+
+$numeric_types = array('int', 'real');
+$numeric_column_count = 0;
+foreach ($keys as $idx => $key) {
+    if (in_array($fields_meta[$idx]->type, $numeric_types)) {
+        $numeric_column_count++;
+    }
+}
+if ($numeric_column_count == 0) {
+    $response->isSuccess(false);
+    $response->addJSON(
+        'message',
+        __('No numeric columns present in the table to plot.')
+    );
+    exit;
 }
 
 // get settings if any posted
@@ -111,94 +138,10 @@ $url_params['reload'] = 1;
 /**
  * Displays the page
  */
-// pma_token/url_query needed for chart export
-?>
-<script type="text/javascript">
-pma_token = '<?php echo $_SESSION[' PMA_token ']; ?>';
-url_query = '<?php echo $url_query;?>';
-</script>
-<!-- Display Chart options -->
-<div id="div_view_options">
-<form method="post" id="tblchartform" action="tbl_chart.php">
-<?php echo PMA_generate_common_hidden_inputs($url_params); ?>
-<fieldset>
-    <legend><?php echo __('Display chart'); ?></legend>
-    <div style="float:left;">
-        <input type="radio" name="chartType" value="bar" id="radio_bar" />
-        <label for ="radio_bar"><?php echo _pgettext('Chart type', 'Bar'); ?></label>
-        <input type="radio" name="chartType" value="column" id="radio_column" />
-        <label for ="radio_column"><?php echo _pgettext('Chart type', 'Column'); ?></label>
-        <input type="radio" name="chartType" value="line" id="radio_line" checked="checked" />
-        <label for ="radio_line"><?php echo _pgettext('Chart type', 'Line'); ?></label>
-        <input type="radio" name="chartType" value="spline" id="radio_spline" />
-        <label for ="radio_spline"><?php echo _pgettext('Chart type', 'Spline'); ?></label>
-        <input type="radio" name="chartType" value="pie" id="radio_pie" />
-        <label for ="radio_pie"><?php echo _pgettext('Chart type', 'Pie'); ?></label>
-        <span class="barStacked" style="display:none;">
-        <input type="checkbox" name="barStacked" value="1" id="checkbox_barStacked" />
-        <label for ="checkbox_barStacked"><?php echo __('Stacked'); ?></label>
-        </span>
-        <br>
-        <input type="text" name="chartTitle" value="<?php echo __('Chart title'); ?>">
-        <?php
-        $keys = array_keys($data[0]);
-        $yaxis = -1;
-        if (count($keys) > 1) { ?>
-            <br />
-            <label for="select_chartXAxis"><?php echo __('X-Axis:'); ?></label>
-            <select name="chartXAxis" id="select_chartXAxis">
-            <?php
-            
-            foreach ($keys as $idx => $key) {
-                if ($yaxis == -1 && (($idx == count($data[0]) - 1) || preg_match("/(date|time)/i", $key))) {
-                    echo '<option value="' . htmlspecialchars($idx) . '" selected>' . htmlspecialchars($key) . '</option>';
-                    $yaxis=$idx;
-                } else {
-                    echo '<option value="' . htmlspecialchars($idx) . '">' . htmlspecialchars($key) . '</option>';
-                }
-            }
-            
-            ?>
-        </select><br />
-        <label for="select_chartSeries"><?php echo __('Series:'); ?></label>
-        <select name="chartSeries" id="select_chartSeries">
-            <option value="columns"><?php echo __('The remaining columns'); ?></option>
-            <?php
-            foreach ($keys as $idx => $key) {
-                echo '<option>' . htmlspecialchars($key) . '</option>';
-            }
-        ?>
-        </select>
-        <?php
-        }
-        ?>
-        
-    </div>
-    <div style="float:left; padding-left:40px;">
-        <label for="xaxis_label"><?php echo __('X-Axis label:'); ?></label>
-        <input style="margin-top:0;" type="text" name="xaxis_label" id="xaxis_label"
-            value="<?php echo ($yaxis == -1) ? __('X Values') : htmlspecialchars($keys[$yaxis]); ?>" /><br />
-        <label for="yaxis_label"><?php echo __('Y-Axis label:'); ?></label>
-        <input type="text" name="yaxis_label" id="yaxis_label" value="<?php echo __('Y Values'); ?>" /><br />
-        <label for="pos"><?php echo __('Start row') . ': ' . "\n"; ?></label>
-        <input type="text" name="pos" size="3" value="<?php echo $_SESSION['tmp_user_values']['pos']; ?>" /><br />
-        <label for="session_max_rows"><?php echo __('Number of rows') . ': ' . "\n"; ?></label>
-        <input type="text" name="session_max_rows" size="3" value="<?php echo (($_SESSION['tmp_user_values']['max_rows'] != 'all') ? $_SESSION['tmp_user_values']['max_rows'] : $GLOBALS['cfg']['MaxRows']); ?>" /><br />
-        <input type="submit" name="submit" class="Go" value="<?php echo __('Go'); ?>" />
-        <input type="hidden" name="sql_query" value="<?php echo htmlspecialchars($sql_query); ?>" />
-    </div>
-    <p style="clear:both;">&nbsp;</p>
-    <div id="resizer" style="width:600px; height:400px;">
-        <div id="querychart">
-        </div>
-    </div>
-</fieldset>
-</form>
-</div>
-<?php
-/**
- * Displays the footer
- */
-require_once './libraries/footer.inc.php';
+$htmlString = PMA_getHtmlForTableChartDisplay(
+    $url_query, $url_params, $keys, $fields_meta, $numeric_types,
+    $numeric_column_count, $sql_query
+);
 
+$response->addHTML($htmlString);
 ?>

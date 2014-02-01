@@ -1,25 +1,1093 @@
-window.ActiveXObject&&!window.CanvasRenderingContext2D&&function(h,j,D){function A(){if(j.readyState==="complete"){j.detachEvent(E,A);for(var a=j.getElementsByTagName(r),b=0,c=a.length;b<c;++b)B.initElement(a[b])}}function F(){var a=event.srcElement,b=a.parentNode;a.blur();b.focus()}function G(){var a=event.propertyName;if(a==="width"||a==="height"){var b=event.srcElement,c=b[a],d=parseInt(c,10);if(isNaN(d)||d<0)d=a==="width"?300:150;if(c===d){b.style[a]=d+"px";b.getContext("2d")._resize(b.width,
-b.height)}else b[a]=d}}function H(){h.detachEvent(I,H);for(var a in s){var b=s[a],c=b.firstChild,d;for(d in c)if(typeof c[d]==="function")c[d]=k;for(d in b)if(typeof b[d]==="function")b[d]=k;c.detachEvent(J,F);b.detachEvent(K,G)}h[L]=k;h[M]=k;h[N]=k;h[C]=k;h[O]=k}function U(){var a=j.getElementsByTagName("script");a=a[a.length-1];return j.documentMode>=8?a.src:a.getAttribute("src",4)}function t(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;")}function V(a){return a.toLowerCase()}function i(a){throw new P(a);
-}function Q(a){var b=parseInt(a.width,10),c=parseInt(a.height,10);if(isNaN(b)||b<0)b=300;if(isNaN(c)||c<0)c=150;a.width=b;a.height=c}var k=null,r="canvas",L="CanvasRenderingContext2D",M="CanvasGradient",N="CanvasPattern",C="FlashCanvas",O="G_vmlCanvasManager",J="onfocus",K="onpropertychange",E="onreadystatechange",I="onunload",u=((h[C+"Options"]||{}).swfPath||U().replace(/[^\/]+$/,""))+"flashcanvas.swf",e=new function(a){for(var b=0,c=a.length;b<c;b++)this[a[b]]=b}(["toDataURL","save","restore","scale",
-"rotate","translate","transform","setTransform","globalAlpha","globalCompositeOperation","strokeStyle","fillStyle","createLinearGradient","createRadialGradient","createPattern","lineWidth","lineCap","lineJoin","miterLimit","shadowOffsetX","shadowOffsetY","shadowBlur","shadowColor","clearRect","fillRect","strokeRect","beginPath","closePath","moveTo","lineTo","quadraticCurveTo","bezierCurveTo","arcTo","rect","arc","fill","stroke","clip","isPointInPath","font","textAlign","textBaseline","fillText","strokeText",
-"measureText","drawImage","createImageData","getImageData","putImageData","addColorStop","direction","resize"]),v={},n={},s={},w={},x=function(a,b){this.canvas=a;this._swf=b;this._canvasId=b.id.slice(8);this._initialize();this._gradientPatternId=0;this._direction="";var c=this;setInterval(function(){n[c._canvasId]===0&&c._executeCommand()},30)};x.prototype={save:function(){this._setCompositing();this._setShadows();this._setStrokeStyle();this._setFillStyle();this._setLineStyles();this._setFontStyles();
-this._stateStack.push([this._globalAlpha,this._globalCompositeOperation,this._strokeStyle,this._fillStyle,this._lineWidth,this._lineCap,this._lineJoin,this._miterLimit,this._shadowOffsetX,this._shadowOffsetY,this._shadowBlur,this._shadowColor,this._font,this._textAlign,this._textBaseline]);this._queue.push(e.save)},restore:function(){var a=this._stateStack;if(a.length){a=a.pop();this.globalAlpha=a[0];this.globalCompositeOperation=a[1];this.strokeStyle=a[2];this.fillStyle=a[3];this.lineWidth=a[4];
-this.lineCap=a[5];this.lineJoin=a[6];this.miterLimit=a[7];this.shadowOffsetX=a[8];this.shadowOffsetY=a[9];this.shadowBlur=a[10];this.shadowColor=a[11];this.font=a[12];this.textAlign=a[13];this.textBaseline=a[14]}this._queue.push(e.restore)},scale:function(a,b){this._queue.push(e.scale,a,b)},rotate:function(a){this._queue.push(e.rotate,a)},translate:function(a,b){this._queue.push(e.translate,a,b)},transform:function(a,b,c,d,f,g){this._queue.push(e.transform,a,b,c,d,f,g)},setTransform:function(a,b,
-c,d,f,g){this._queue.push(e.setTransform,a,b,c,d,f,g)},_setCompositing:function(){var a=this._queue;if(this._globalAlpha!==this.globalAlpha){this._globalAlpha=this.globalAlpha;a.push(e.globalAlpha,this._globalAlpha)}if(this._globalCompositeOperation!==this.globalCompositeOperation){this._globalCompositeOperation=this.globalCompositeOperation;a.push(e.globalCompositeOperation,this._globalCompositeOperation)}},_setStrokeStyle:function(){if(this._strokeStyle!==this.strokeStyle){var a=this._strokeStyle=
-this.strokeStyle;this._queue.push(e.strokeStyle,typeof a==="object"?a.id:a)}},_setFillStyle:function(){if(this._fillStyle!==this.fillStyle){var a=this._fillStyle=this.fillStyle;this._queue.push(e.fillStyle,typeof a==="object"?a.id:a)}},createLinearGradient:function(a,b,c,d){isFinite(a)&&isFinite(b)&&isFinite(c)&&isFinite(d)||i(9);this._queue.push(e.createLinearGradient,a,b,c,d);return new y(this)},createRadialGradient:function(a,b,c,d,f,g){isFinite(a)&&isFinite(b)&&isFinite(c)&&isFinite(d)&&isFinite(f)&&
-isFinite(g)||i(9);if(c<0||g<0)i(1);this._queue.push(e.createRadialGradient,a,b,c,d,f,g);return new y(this)},createPattern:function(a,b){a||i(17);var c=a.tagName,d,f=this._canvasId;if(c){c=c.toLowerCase();if(c==="img")d=a.getAttribute("src",2);else if(c===r||c==="video")return;else i(17)}else if(a.src)d=a.src;else i(17);b==="repeat"||b==="no-repeat"||b==="repeat-x"||b==="repeat-y"||b===""||b===k||i(12);this._queue.push(e.createPattern,t(d),b);if(v[f]){this._executeCommand();++n[f]}return new R(this)},
-_setLineStyles:function(){var a=this._queue;if(this._lineWidth!==this.lineWidth){this._lineWidth=this.lineWidth;a.push(e.lineWidth,this._lineWidth)}if(this._lineCap!==this.lineCap){this._lineCap=this.lineCap;a.push(e.lineCap,this._lineCap)}if(this._lineJoin!==this.lineJoin){this._lineJoin=this.lineJoin;a.push(e.lineJoin,this._lineJoin)}if(this._miterLimit!==this.miterLimit){this._miterLimit=this.miterLimit;a.push(e.miterLimit,this._miterLimit)}},_setShadows:function(){var a=this._queue;if(this._shadowOffsetX!==
-this.shadowOffsetX){this._shadowOffsetX=this.shadowOffsetX;a.push(e.shadowOffsetX,this._shadowOffsetX)}if(this._shadowOffsetY!==this.shadowOffsetY){this._shadowOffsetY=this.shadowOffsetY;a.push(e.shadowOffsetY,this._shadowOffsetY)}if(this._shadowBlur!==this.shadowBlur){this._shadowBlur=this.shadowBlur;a.push(e.shadowBlur,this._shadowBlur)}if(this._shadowColor!==this.shadowColor){this._shadowColor=this.shadowColor;a.push(e.shadowColor,this._shadowColor)}},clearRect:function(a,b,c,d){this._queue.push(e.clearRect,
-a,b,c,d)},fillRect:function(a,b,c,d){this._setCompositing();this._setShadows();this._setFillStyle();this._queue.push(e.fillRect,a,b,c,d)},strokeRect:function(a,b,c,d){this._setCompositing();this._setShadows();this._setStrokeStyle();this._setLineStyles();this._queue.push(e.strokeRect,a,b,c,d)},beginPath:function(){this._queue.push(e.beginPath)},closePath:function(){this._queue.push(e.closePath)},moveTo:function(a,b){this._queue.push(e.moveTo,a,b)},lineTo:function(a,b){this._queue.push(e.lineTo,a,b)},
-quadraticCurveTo:function(a,b,c,d){this._queue.push(e.quadraticCurveTo,a,b,c,d)},bezierCurveTo:function(a,b,c,d,f,g){this._queue.push(e.bezierCurveTo,a,b,c,d,f,g)},arcTo:function(a,b,c,d,f){f<0&&isFinite(f)&&i(1);this._queue.push(e.arcTo,a,b,c,d,f)},rect:function(a,b,c,d){this._queue.push(e.rect,a,b,c,d)},arc:function(a,b,c,d,f,g){c<0&&isFinite(c)&&i(1);this._queue.push(e.arc,a,b,c,d,f,g?1:0)},fill:function(){this._setCompositing();this._setShadows();this._setFillStyle();this._queue.push(e.fill)},
-stroke:function(){this._setCompositing();this._setShadows();this._setStrokeStyle();this._setLineStyles();this._queue.push(e.stroke)},clip:function(){this._queue.push(e.clip)},isPointInPath:function(){},_setFontStyles:function(){var a=this._queue;if(this._font!==this.font)try{var b=w[this._canvasId];b.style.font=this._font=this.font;var c=b.currentStyle,d=[c.fontStyle,c.fontWeight,b.offsetHeight,c.fontFamily].join(" ");a.push(e.font,d)}catch(f){}if(this._textAlign!==this.textAlign){this._textAlign=
-this.textAlign;a.push(e.textAlign,this._textAlign)}if(this._textBaseline!==this.textBaseline){this._textBaseline=this.textBaseline;a.push(e.textBaseline,this._textBaseline)}if(this._direction!==this.canvas.currentStyle.direction){this._direction=this.canvas.currentStyle.direction;a.push(e.direction,this._direction)}},fillText:function(a,b,c,d){this._setCompositing();this._setFillStyle();this._setShadows();this._setFontStyles();this._queue.push(e.fillText,t(a),b,c,d===D?Infinity:d)},strokeText:function(a,
-b,c,d){this._setCompositing();this._setStrokeStyle();this._setShadows();this._setFontStyles();this._queue.push(e.strokeText,t(a),b,c,d===D?Infinity:d)},measureText:function(a){var b=w[this._canvasId];try{b.style.font=this.font}catch(c){}b.innerText=a.replace(/[ \n\f\r]/g,"\t");return new W(b.offsetWidth)},drawImage:function(a,b,c,d,f,g,o,l,z){a||i(17);var p=a.tagName,m,q=arguments.length,S=this._canvasId;if(p){p=p.toLowerCase();if(p==="img")m=a.getAttribute("src",2);else if(p===r||p==="video")return;
-else i(17)}else if(a.src)m=a.src;else i(17);this._setCompositing();this._setShadows();m=t(m);if(q===3)this._queue.push(e.drawImage,q,m,b,c);else if(q===5)this._queue.push(e.drawImage,q,m,b,c,d,f);else if(q===9){if(d===0||f===0)i(1);this._queue.push(e.drawImage,q,m,b,c,d,f,g,o,l,z)}else return;if(v[S]){this._executeCommand();++n[S]}},createImageData:function(){},getImageData:function(){},putImageData:function(){},_initialize:function(){this.globalAlpha=this._globalAlpha=1;this.globalCompositeOperation=
-this._globalCompositeOperation="source-over";this.fillStyle=this._fillStyle=this.strokeStyle=this._strokeStyle="#000000";this.lineWidth=this._lineWidth=1;this.lineCap=this._lineCap="butt";this.lineJoin=this._lineJoin="miter";this.miterLimit=this._miterLimit=10;this.shadowBlur=this._shadowBlur=this.shadowOffsetY=this._shadowOffsetY=this.shadowOffsetX=this._shadowOffsetX=0;this.shadowColor=this._shadowColor="rgba(0, 0, 0, 0.0)";this.font=this._font="10px sans-serif";this.textAlign=this._textAlign="start";
-this.textBaseline=this._textBaseline="alphabetic";this._queue=[];this._stateStack=[]},_flush:function(){var a=this._queue;this._queue=[];return a},_executeCommand:function(){var a=this._flush();if(a.length>0)return eval(this._swf.CallFunction('<invoke name="executeCommand" returntype="javascript"><arguments><string>'+a.join("&#0;")+"</string></arguments></invoke>"))},_resize:function(a,b){this._executeCommand();this._initialize();if(a>0)this._swf.width=a;if(b>0)this._swf.height=b;this._queue.push(e.resize,
-a,b)}};var y=function(a){this._ctx=a;this.id=a._gradientPatternId++};y.prototype={addColorStop:function(a,b){if(isNaN(a)||a<0||a>1)i(1);this._ctx._queue.push(e.addColorStop,this.id,a,b)}};var R=function(a){this.id=a._gradientPatternId++},W=function(a){this.width=a},P=function(a){this.code=a;this.message=X[a]};P.prototype=Error();var X={1:"INDEX_SIZE_ERR",9:"NOT_SUPPORTED_ERR",11:"INVALID_STATE_ERR",12:"SYNTAX_ERR",17:"TYPE_MISMATCH_ERR",18:"SECURITY_ERR"},B={initElement:function(a){if(a.getContext)return a;
-var b=Math.random().toString(36).slice(2)||"0",c="external"+b;v[b]=false;n[b]=1;Q(a);a.innerHTML='<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="'+location.protocol+'//fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="100%" height="100%" id="'+c+'"><param name="allowScriptAccess" value="always"><param name="flashvars" value="id='+c+'"><param name="wmode" value="transparent"></object><span style="margin:0;padding:0;border:0;display:inline-block;position:static;height:1em;overflow:visible;white-space:nowrap"></span>';
-s[b]=a;var d=a.firstChild;w[b]=a.lastChild;var f=j.body.contains;if(f(a))d.movie=u;else var g=setInterval(function(){if(f(a)){clearInterval(g);d.movie=u}},0);if(j.compatMode==="BackCompat"||!h.XMLHttpRequest)w[b].style.overflow="hidden";var o=new x(a,d);a.getContext=function(l){return l==="2d"?o:k};a.toDataURL=function(l,z){(""+l).replace(/[A-Z]+/g,V)==="image/jpeg"?o._queue.push(e.toDataURL,l,typeof z==="number"?z:""):o._queue.push(e.toDataURL,l);return o._executeCommand()};d.attachEvent(J,F);return a},
-saveImage:function(a){a.firstChild.saveImage()},setOptions:function(){},trigger:function(a,b){s[a].fireEvent("on"+b)},unlock:function(a,b){n[a]&&--n[a];if(b){var c=s[a],d=c.firstChild,f,g;Q(c);f=c.width;g=c.height;c.style.width=f+"px";c.style.height=g+"px";if(f>0)d.width=f;if(g>0)d.height=g;d.resize(f,g);c.attachEvent(K,G);v[a]=true}}};j.createElement(r);j.createStyleSheet().cssText=r+"{display:inline-block;overflow:hidden;width:300px;height:150px}";j.readyState==="complete"?A():j.attachEvent(E,A);
-h.attachEvent(I,H);if(u.indexOf(location.protocol+"//"+location.host+"/")===0){var T=new ActiveXObject("Microsoft.XMLHTTP");T.open("GET",u,false);T.send(k)}h[L]=x;h[M]=y;h[N]=R;h[C]=B;h[O]={init:function(){},init_:function(){},initElement:B.initElement};keep=x.measureText}(window,document);
+/*
+ * FlashCanvas
+ *
+ * Copyright (c) 2009      Tim Cameron Ryan
+ * Copyright (c) 2009-2011 FlashCanvas Project
+ * Released under the MIT/X License
+ */
+
+// Reference:
+//   http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html
+//   http://dev.w3.org/html5/spec/the-canvas-element.html
+
+// If the browser is IE and does not support HTML5 Canvas
+if (window["ActiveXObject"] && !window["CanvasRenderingContext2D"]) {
+
+(function(window, document, undefined) {
+
+/*
+ * Constant
+ */
+
+var NULL                        = null;
+var CANVAS                      = "canvas";
+var CANVAS_RENDERING_CONTEXT_2D = "CanvasRenderingContext2D";
+var CANVAS_GRADIENT             = "CanvasGradient";
+var CANVAS_PATTERN              = "CanvasPattern";
+var FLASH_CANVAS                = "FlashCanvas";
+var G_VML_CANVAS_MANAGER        = "G_vmlCanvasManager";
+var OBJECT_ID_PREFIX            = "external";
+var ON_FOCUS                    = "onfocus";
+var ON_PROPERTY_CHANGE          = "onpropertychange";
+var ON_READY_STATE_CHANGE       = "onreadystatechange";
+var ON_UNLOAD                   = "onunload";
+
+var config   = window[FLASH_CANVAS + "Options"] || {};
+var BASE_URL = config["swfPath"] || getScriptUrl().replace(/[^\/]+$/, "");
+var SWF_URL  = BASE_URL + "flashcanvas.swf";
+
+// DOMException code
+var INDEX_SIZE_ERR              =  1;
+var NOT_SUPPORTED_ERR           =  9;
+var INVALID_STATE_ERR           = 11;
+var SYNTAX_ERR                  = 12;
+var TYPE_MISMATCH_ERR           = 17;
+var SECURITY_ERR                = 18;
+
+/**
+ * @constructor
+ */
+function Lookup(array) {
+    for (var i = 0, n = array.length; i < n; i++)
+        this[array[i]] = i;
+}
+
+var properties = new Lookup([
+    // Canvas element
+    "toDataURL",
+
+    // CanvasRenderingContext2D
+    "save",
+    "restore",
+    "scale",
+    "rotate",
+    "translate",
+    "transform",
+    "setTransform",
+    "globalAlpha",
+    "globalCompositeOperation",
+    "strokeStyle",
+    "fillStyle",
+    "createLinearGradient",
+    "createRadialGradient",
+    "createPattern",
+    "lineWidth",
+    "lineCap",
+    "lineJoin",
+    "miterLimit",
+    "shadowOffsetX",
+    "shadowOffsetY",
+    "shadowBlur",
+    "shadowColor",
+    "clearRect",
+    "fillRect",
+    "strokeRect",
+    "beginPath",
+    "closePath",
+    "moveTo",
+    "lineTo",
+    "quadraticCurveTo",
+    "bezierCurveTo",
+    "arcTo",
+    "rect",
+    "arc",
+    "fill",
+    "stroke",
+    "clip",
+    "isPointInPath",
+//  "drawFocusRing",
+    "font",
+    "textAlign",
+    "textBaseline",
+    "fillText",
+    "strokeText",
+    "measureText",
+    "drawImage",
+    "createImageData",
+    "getImageData",
+    "putImageData",
+
+    // CanvasGradient
+    "addColorStop",
+
+    // Internal use
+    "direction",
+    "resize"
+]);
+
+// Whether swf is ready for use
+var isReady = {};
+
+// Monitor the number of loading files
+var lock = {};
+
+// Canvas elements
+var canvases = {};
+
+// SPAN element embedded in the canvas
+var spans = {};
+
+/**
+ * 2D context
+ * @constructor
+ */
+var CanvasRenderingContext2D = function(canvas, swf) {
+    // back-reference to the canvas
+    this.canvas = canvas;
+
+    // back-reference to the swf
+    this._swf = swf;
+
+    // unique ID of canvas
+    this._canvasId = swf.id.slice(8);
+
+    // initialize drawing states
+    this._initialize();
+
+    // Count CanvasGradient and CanvasPattern objects
+    this._gradientPatternId = 0;
+
+    // Directionality of the canvas element
+    this._direction = "";
+
+    // frame update interval
+    var self = this;
+    setInterval(function() {
+        if (lock[self._canvasId] === 0) {
+            self._executeCommand();
+        }
+    }, 30);
+};
+
+CanvasRenderingContext2D.prototype = {
+    /*
+     * state
+     */
+
+    save: function() {
+        // write all properties
+        this._setCompositing();
+        this._setShadows();
+        this._setStrokeStyle();
+        this._setFillStyle();
+        this._setLineStyles();
+        this._setFontStyles();
+
+        // push state
+        this._stateStack.push([
+            this._globalAlpha,
+            this._globalCompositeOperation,
+            this._strokeStyle,
+            this._fillStyle,
+            this._lineWidth,
+            this._lineCap,
+            this._lineJoin,
+            this._miterLimit,
+            this._shadowOffsetX,
+            this._shadowOffsetY,
+            this._shadowBlur,
+            this._shadowColor,
+            this._font,
+            this._textAlign,
+            this._textBaseline
+        ]);
+
+        this._queue.push(properties.save);
+    },
+
+    restore: function() {
+        // pop state
+        var stateStack = this._stateStack;
+        if (stateStack.length) {
+            var state = stateStack.pop();
+            this.globalAlpha              = state[0];
+            this.globalCompositeOperation = state[1];
+            this.strokeStyle              = state[2];
+            this.fillStyle                = state[3];
+            this.lineWidth                = state[4];
+            this.lineCap                  = state[5];
+            this.lineJoin                 = state[6];
+            this.miterLimit               = state[7];
+            this.shadowOffsetX            = state[8];
+            this.shadowOffsetY            = state[9];
+            this.shadowBlur               = state[10];
+            this.shadowColor              = state[11];
+            this.font                     = state[12];
+            this.textAlign                = state[13];
+            this.textBaseline             = state[14];
+        }
+
+        this._queue.push(properties.restore);
+    },
+
+    /*
+     * transformations
+     */
+
+    scale: function(x, y) {
+        this._queue.push(properties.scale, x, y);
+    },
+
+    rotate: function(angle) {
+        this._queue.push(properties.rotate, angle);
+    },
+
+    translate: function(x, y) {
+        this._queue.push(properties.translate, x, y);
+    },
+
+    transform: function(m11, m12, m21, m22, dx, dy) {
+        this._queue.push(properties.transform, m11, m12, m21, m22, dx, dy);
+    },
+
+    setTransform: function(m11, m12, m21, m22, dx, dy) {
+        this._queue.push(properties.setTransform, m11, m12, m21, m22, dx, dy);
+    },
+
+    /*
+     * compositing
+     */
+
+    _setCompositing: function() {
+        var queue = this._queue;
+        if (this._globalAlpha !== this.globalAlpha) {
+            this._globalAlpha = this.globalAlpha;
+            queue.push(properties.globalAlpha, this._globalAlpha);
+        }
+        if (this._globalCompositeOperation !== this.globalCompositeOperation) {
+            this._globalCompositeOperation = this.globalCompositeOperation;
+            queue.push(properties.globalCompositeOperation, this._globalCompositeOperation);
+        }
+    },
+
+    /*
+     * colors and styles
+     */
+
+    _setStrokeStyle: function() {
+        if (this._strokeStyle !== this.strokeStyle) {
+            var style = this._strokeStyle = this.strokeStyle;
+            this._queue.push(properties.strokeStyle, (typeof style === "object") ? style.id : style);
+        }
+    },
+
+    _setFillStyle: function() {
+        if (this._fillStyle !== this.fillStyle) {
+            var style = this._fillStyle = this.fillStyle;
+            this._queue.push(properties.fillStyle, (typeof style === "object") ? style.id : style);
+        }
+    },
+
+    createLinearGradient: function(x0, y0, x1, y1) {
+        // If any of the arguments are not finite numbers, throws a
+        // NOT_SUPPORTED_ERR exception.
+        if (!(isFinite(x0) && isFinite(y0) && isFinite(x1) && isFinite(y1))) {
+            throwException(NOT_SUPPORTED_ERR);
+        }
+
+        this._queue.push(properties.createLinearGradient, x0, y0, x1, y1);
+        return new CanvasGradient(this);
+    },
+
+    createRadialGradient: function(x0, y0, r0, x1, y1, r1) {
+        // If any of the arguments are not finite numbers, throws a
+        // NOT_SUPPORTED_ERR exception.
+        if (!(isFinite(x0) && isFinite(y0) && isFinite(r0) &&
+              isFinite(x1) && isFinite(y1) && isFinite(r1))) {
+            throwException(NOT_SUPPORTED_ERR);
+        }
+
+        // If either of the radii are negative, throws an INDEX_SIZE_ERR
+        // exception.
+        if (r0 < 0 || r1 < 0) {
+            throwException(INDEX_SIZE_ERR);
+        }
+
+        this._queue.push(properties.createRadialGradient, x0, y0, r0, x1, y1, r1);
+        return new CanvasGradient(this);
+    },
+
+    createPattern: function(image, repetition) {
+        // If the image is null, the implementation must raise a
+        // TYPE_MISMATCH_ERR exception.
+        if (!image) {
+            throwException(TYPE_MISMATCH_ERR);
+        }
+
+        var tagName = image.tagName, src;
+        var canvasId = this._canvasId;
+
+        // If the first argument isn't an img, canvas, or video element,
+        // throws a TYPE_MISMATCH_ERR exception.
+        if (tagName) {
+            tagName = tagName.toLowerCase();
+            if (tagName === "img") {
+                src = image.getAttribute("src", 2);
+            } else if (tagName === CANVAS || tagName === "video") {
+                // For now, only HTMLImageElement is supported.
+                return;
+            } else {
+                throwException(TYPE_MISMATCH_ERR);
+            }
+        }
+
+        // Additionally, we accept any object that has a src property.
+        // This is useful when you'd like to specify a long data URI.
+        else if (image.src) {
+            src = image.src;
+        } else {
+            throwException(TYPE_MISMATCH_ERR);
+        }
+
+        // If the second argument isn't one of the allowed values, throws a
+        // SYNTAX_ERR exception.
+        if (!(repetition === "repeat"   || repetition === "no-repeat" ||
+              repetition === "repeat-x" || repetition === "repeat-y"  ||
+              repetition === ""         || repetition === NULL)) {
+            throwException(SYNTAX_ERR);
+        }
+
+        // Special characters in the filename need escaping.
+        this._queue.push(properties.createPattern, encodeXML(src), repetition);
+
+        if (isReady[canvasId]) {
+            this._executeCommand();
+            ++lock[canvasId];
+        }
+
+        return new CanvasPattern(this);
+    },
+
+    /*
+     * line caps/joins
+     */
+
+    _setLineStyles: function() {
+        var queue = this._queue;
+        if (this._lineWidth !== this.lineWidth) {
+            this._lineWidth = this.lineWidth;
+            queue.push(properties.lineWidth, this._lineWidth);
+        }
+        if (this._lineCap !== this.lineCap) {
+            this._lineCap = this.lineCap;
+            queue.push(properties.lineCap, this._lineCap);
+        }
+        if (this._lineJoin !== this.lineJoin) {
+            this._lineJoin = this.lineJoin;
+            queue.push(properties.lineJoin, this._lineJoin);
+        }
+        if (this._miterLimit !== this.miterLimit) {
+            this._miterLimit = this.miterLimit;
+            queue.push(properties.miterLimit, this._miterLimit);
+        }
+    },
+
+    /*
+     * shadows
+     */
+
+    _setShadows: function() {
+        var queue = this._queue;
+        if (this._shadowOffsetX !== this.shadowOffsetX) {
+            this._shadowOffsetX = this.shadowOffsetX;
+            queue.push(properties.shadowOffsetX, this._shadowOffsetX);
+        }
+        if (this._shadowOffsetY !== this.shadowOffsetY) {
+            this._shadowOffsetY = this.shadowOffsetY;
+            queue.push(properties.shadowOffsetY, this._shadowOffsetY);
+        }
+        if (this._shadowBlur !== this.shadowBlur) {
+            this._shadowBlur = this.shadowBlur;
+            queue.push(properties.shadowBlur, this._shadowBlur);
+        }
+        if (this._shadowColor !== this.shadowColor) {
+            this._shadowColor = this.shadowColor;
+            queue.push(properties.shadowColor, this._shadowColor);
+        }
+    },
+
+    /*
+     * rects
+     */
+
+    clearRect: function(x, y, w, h) {
+        this._queue.push(properties.clearRect, x, y, w, h);
+    },
+
+    fillRect: function(x, y, w, h) {
+        this._setCompositing();
+        this._setShadows();
+        this._setFillStyle();
+        this._queue.push(properties.fillRect, x, y, w, h);
+    },
+
+    strokeRect: function(x, y, w, h) {
+        this._setCompositing();
+        this._setShadows();
+        this._setStrokeStyle();
+        this._setLineStyles();
+        this._queue.push(properties.strokeRect, x, y, w, h);
+    },
+
+    /*
+     * path API
+     */
+
+    beginPath: function() {
+        this._queue.push(properties.beginPath);
+    },
+
+    closePath: function() {
+        this._queue.push(properties.closePath);
+    },
+
+    moveTo: function(x, y) {
+        this._queue.push(properties.moveTo, x, y);
+    },
+
+    lineTo: function(x, y) {
+        this._queue.push(properties.lineTo, x, y);
+    },
+
+    quadraticCurveTo: function(cpx, cpy, x, y) {
+        this._queue.push(properties.quadraticCurveTo, cpx, cpy, x, y);
+    },
+
+    bezierCurveTo: function(cp1x, cp1y, cp2x, cp2y, x, y) {
+        this._queue.push(properties.bezierCurveTo, cp1x, cp1y, cp2x, cp2y, x, y);
+    },
+
+    arcTo: function(x1, y1, x2, y2, radius) {
+        // Throws an INDEX_SIZE_ERR exception if the given radius is negative.
+        if (radius < 0 && isFinite(radius)) {
+            throwException(INDEX_SIZE_ERR);
+        }
+
+        this._queue.push(properties.arcTo, x1, y1, x2, y2, radius);
+    },
+
+    rect: function(x, y, w, h) {
+        this._queue.push(properties.rect, x, y, w, h);
+    },
+
+    arc: function(x, y, radius, startAngle, endAngle, anticlockwise) {
+        // Throws an INDEX_SIZE_ERR exception if the given radius is negative.
+        if (radius < 0 && isFinite(radius)) {
+            throwException(INDEX_SIZE_ERR);
+        }
+
+        this._queue.push(properties.arc, x, y, radius, startAngle, endAngle, anticlockwise ? 1 : 0);
+    },
+
+    fill: function() {
+        this._setCompositing();
+        this._setShadows();
+        this._setFillStyle();
+        this._queue.push(properties.fill);
+    },
+
+    stroke: function() {
+        this._setCompositing();
+        this._setShadows();
+        this._setStrokeStyle();
+        this._setLineStyles();
+        this._queue.push(properties.stroke);
+    },
+
+    clip: function() {
+        this._queue.push(properties.clip);
+    },
+
+    isPointInPath: function(x, y) {
+        // TODO: Implement
+    },
+
+    /*
+     * text
+     */
+
+    _setFontStyles: function() {
+        var queue = this._queue;
+        if (this._font !== this.font) {
+            try {
+                var span = spans[this._canvasId];
+                span.style.font = this._font = this.font;
+
+                var style = span.currentStyle;
+                var fontSize = span.offsetHeight;
+                var font = [style.fontStyle, style.fontWeight, fontSize, style.fontFamily].join(" ");
+                queue.push(properties.font, font);
+            } catch(e) {
+                // If this.font cannot be parsed as a CSS font value, then it
+                // must be ignored.
+            }
+        }
+        if (this._textAlign !== this.textAlign) {
+            this._textAlign = this.textAlign;
+            queue.push(properties.textAlign, this._textAlign);
+        }
+        if (this._textBaseline !== this.textBaseline) {
+            this._textBaseline = this.textBaseline;
+            queue.push(properties.textBaseline, this._textBaseline);
+        }
+        if (this._direction !== this.canvas.currentStyle.direction) {
+            this._direction = this.canvas.currentStyle.direction;
+            queue.push(properties.direction, this._direction);
+        }
+    },
+
+    fillText: function(text, x, y, maxWidth) {
+        this._setCompositing();
+        this._setFillStyle();
+        this._setShadows();
+        this._setFontStyles();
+        this._queue.push(properties.fillText, encodeXML(text), x, y,
+                         maxWidth === undefined ? Infinity : maxWidth);
+    },
+
+    strokeText: function(text, x, y, maxWidth) {
+        this._setCompositing();
+        this._setStrokeStyle();
+        this._setShadows();
+        this._setFontStyles();
+        this._queue.push(properties.strokeText, encodeXML(text), x, y,
+                         maxWidth === undefined ? Infinity : maxWidth);
+    },
+
+    measureText: function(text) {
+        var span = spans[this._canvasId];
+        try {
+            span.style.font = this.font;
+        } catch(e) {
+            // If this.font cannot be parsed as a CSS font value, then it must
+            // be ignored.
+        }
+
+        // Replace space characters with tab characters because innerText
+        // removes trailing white spaces.
+        span.innerText = text.replace(/[ \n\f\r]/g, "\t");
+
+        return new TextMetrics(span.offsetWidth);
+    },
+
+    /*
+     * drawing images
+     */
+
+    drawImage: function(image, x1, y1, w1, h1, x2, y2, w2, h2) {
+        // If the image is null, the implementation must raise a
+        // TYPE_MISMATCH_ERR exception.
+        if (!image) {
+            throwException(TYPE_MISMATCH_ERR);
+        }
+
+        var tagName = image.tagName, src, argc = arguments.length;
+        var canvasId = this._canvasId;
+
+        // If the first argument isn't an img, canvas, or video element,
+        // throws a TYPE_MISMATCH_ERR exception.
+        if (tagName) {
+            tagName = tagName.toLowerCase();
+            if (tagName === "img") {
+                src = image.getAttribute("src", 2);
+            } else if (tagName === CANVAS || tagName === "video") {
+                // For now, only HTMLImageElement is supported.
+                return;
+            } else {
+                throwException(TYPE_MISMATCH_ERR);
+            }
+        }
+
+        // Additionally, we accept any object that has a src property.
+        // This is useful when you'd like to specify a long data URI.
+        else if (image.src) {
+            src = image.src;
+        } else {
+            throwException(TYPE_MISMATCH_ERR);
+        }
+
+        this._setCompositing();
+        this._setShadows();
+
+        // Special characters in the filename need escaping.
+        src = encodeXML(src);
+
+        if (argc === 3) {
+            this._queue.push(properties.drawImage, argc, src, x1, y1);
+        } else if (argc === 5) {
+            this._queue.push(properties.drawImage, argc, src, x1, y1, w1, h1);
+        } else if (argc === 9) {
+            // If one of the sw or sh arguments is zero, the implementation
+            // must raise an INDEX_SIZE_ERR exception.
+            if (w1 === 0 || h1 === 0) {
+                throwException(INDEX_SIZE_ERR);
+            }
+
+            this._queue.push(properties.drawImage, argc, src, x1, y1, w1, h1, x2, y2, w2, h2);
+        } else {
+            return;
+        }
+
+        if (isReady[canvasId]) {
+            this._executeCommand();
+            ++lock[canvasId];
+        }
+    },
+
+    /*
+     * pixel manipulation
+     */
+
+    // ImageData createImageData(in float sw, in float sh);
+    // ImageData createImageData(in ImageData imagedata);
+    createImageData: function() {
+        // TODO: Implement
+    },
+
+    // ImageData getImageData(in float sx, in float sy, in float sw, in float sh);
+    getImageData: function(sx, sy, sw, sh) {
+        // TODO: Implement
+    },
+
+    // void putImageData(in ImageData imagedata, in float dx, in float dy, [Optional] in float dirtyX, in float dirtyY, in float dirtyWidth, in float dirtyHeight);
+    putImageData: function(imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight) {
+        // TODO: Implement
+    },
+
+    /*
+     * private methods
+     */
+
+    _initialize: function() {
+        // compositing
+        this.globalAlpha = this._globalAlpha = 1.0;
+        this.globalCompositeOperation = this._globalCompositeOperation = "source-over";
+
+        // colors and styles
+        this.strokeStyle = this._strokeStyle = "#000000";
+        this.fillStyle   = this._fillStyle   = "#000000";
+
+        // line caps/joins
+        this.lineWidth  = this._lineWidth  = 1.0;
+        this.lineCap    = this._lineCap    = "butt";
+        this.lineJoin   = this._lineJoin   = "miter";
+        this.miterLimit = this._miterLimit = 10.0;
+
+        // shadows
+        this.shadowOffsetX = this._shadowOffsetX = 0;
+        this.shadowOffsetY = this._shadowOffsetY = 0;
+        this.shadowBlur    = this._shadowBlur    = 0;
+        this.shadowColor   = this._shadowColor   = "rgba(0, 0, 0, 0.0)";
+
+        // text
+        this.font         = this._font         = "10px sans-serif";
+        this.textAlign    = this._textAlign    = "start";
+        this.textBaseline = this._textBaseline = "alphabetic";
+
+        // command queue
+        this._queue = [];
+
+        // stack of drawing states
+        this._stateStack = [];
+    },
+
+    _flush: function() {
+        var queue = this._queue;
+        this._queue = [];
+        return queue;
+    },
+
+    _executeCommand: function() {
+        // execute commands
+        var commands = this._flush();
+        if (commands.length > 0) {
+            return eval(this._swf.CallFunction(
+                '<invoke name="executeCommand" returntype="javascript"><arguments><string>'
+                + commands.join("&#0;") + "</string></arguments></invoke>"
+            ));
+        }
+    },
+
+    _resize: function(width, height) {
+        // Flush commands in the queue
+        this._executeCommand();
+
+        // Clear back to the initial state
+        this._initialize();
+
+        // Adjust the size of Flash to that of the canvas
+        if (width > 0) {
+            this._swf.width = width;
+        }
+        if (height > 0) {
+            this._swf.height = height;
+        }
+
+        // Execute a resize command at the start of the next frame
+        this._queue.push(properties.resize, width, height);
+    }
+};
+
+/**
+ * CanvasGradient stub
+ * @constructor
+ */
+var CanvasGradient = function(ctx) {
+    this._ctx = ctx;
+    this.id   = ctx._gradientPatternId++;
+};
+
+CanvasGradient.prototype = {
+    addColorStop: function(offset, color) {
+        // Throws an INDEX_SIZE_ERR exception if the offset is out of range.
+        if (isNaN(offset) || offset < 0 || offset > 1) {
+            throwException(INDEX_SIZE_ERR);
+        }
+
+        this._ctx._queue.push(properties.addColorStop, this.id, offset, color);
+    }
+};
+
+/**
+ * CanvasPattern stub
+ * @constructor
+ */
+var CanvasPattern = function(ctx) {
+    this.id = ctx._gradientPatternId++;
+};
+
+/**
+ * TextMetrics stub
+ * @constructor
+ */
+var TextMetrics = function(width) {
+    this.width = width;
+};
+
+/**
+ * DOMException
+ * @constructor
+ */
+var DOMException = function(code) {
+    this.code    = code;
+    this.message = DOMExceptionNames[code];
+};
+
+DOMException.prototype = new Error;
+
+var DOMExceptionNames = {
+    1:  "INDEX_SIZE_ERR",
+    9:  "NOT_SUPPORTED_ERR",
+    11: "INVALID_STATE_ERR",
+    12: "SYNTAX_ERR",
+    17: "TYPE_MISMATCH_ERR",
+    18: "SECURITY_ERR"
+};
+
+/*
+ * Event handlers
+ */
+
+function onReadyStateChange() {
+    if (document.readyState === "complete") {
+        document.detachEvent(ON_READY_STATE_CHANGE, onReadyStateChange);
+
+        var canvases = document.getElementsByTagName(CANVAS);
+        for (var i = 0, n = canvases.length; i < n; ++i) {
+            FlashCanvas.initElement(canvases[i]);
+        }
+    }
+}
+
+function onFocus() {
+    // forward the event to the parent
+    var swf = event.srcElement, canvas = swf.parentNode;
+    swf.blur();
+    canvas.focus();
+}
+
+function onPropertyChange() {
+    var prop = event.propertyName;
+    if (prop === "width" || prop === "height") {
+        var canvas = event.srcElement;
+        var value  = canvas[prop];
+        var number = parseInt(value, 10);
+
+        if (isNaN(number) || number < 0) {
+            number = (prop === "width") ? 300 : 150;
+        }
+
+        if (value === number) {
+            canvas.style[prop] = number + "px";
+            canvas.getContext("2d")._resize(canvas.width, canvas.height);
+        } else {
+            canvas[prop] = number;
+        }
+    }
+}
+
+function onUnload() {
+    window.detachEvent(ON_UNLOAD, onUnload);
+
+    for (var canvasId in canvases) {
+        var canvas = canvases[canvasId], swf = canvas.firstChild, prop;
+
+        // clean up the references of swf.executeCommand and swf.resize
+        for (prop in swf) {
+            if (typeof swf[prop] === "function") {
+                swf[prop] = NULL;
+            }
+        }
+
+        // clean up the references of canvas.getContext and canvas.toDataURL
+        for (prop in canvas) {
+            if (typeof canvas[prop] === "function") {
+                canvas[prop] = NULL;
+            }
+        }
+
+        // remove event listeners
+        swf.detachEvent(ON_FOCUS, onFocus);
+        canvas.detachEvent(ON_PROPERTY_CHANGE, onPropertyChange);
+    }
+
+    // delete exported symbols
+    window[CANVAS_RENDERING_CONTEXT_2D] = NULL;
+    window[CANVAS_GRADIENT]             = NULL;
+    window[CANVAS_PATTERN]              = NULL;
+    window[FLASH_CANVAS]                = NULL;
+    window[G_VML_CANVAS_MANAGER]        = NULL;
+}
+
+/*
+ * FlashCanvas API
+ */
+
+var FlashCanvas = {
+    initElement: function(canvas) {
+        // Check whether the initialization is required or not.
+        if (canvas.getContext) {
+            return canvas;
+        }
+
+        // initialize lock
+        var canvasId      = getUniqueId();
+        var objectId      = OBJECT_ID_PREFIX + canvasId;
+        isReady[canvasId] = false;
+        lock[canvasId]    = 1;
+
+        // Set the width and height attributes.
+        setCanvasSize(canvas);
+
+        // embed swf and SPAN element
+        canvas.innerHTML =
+            '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"' +
+            ' codebase="' + location.protocol + '//fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0"' +
+            ' width="100%" height="100%" id="' + objectId + '">' +
+            '<param name="allowScriptAccess" value="always">' +
+            '<param name="flashvars" value="id=' + objectId + '">' +
+            '<param name="wmode" value="transparent">' +
+            '</object>' +
+            '<span style="margin:0;padding:0;border:0;display:inline-block;position:static;height:1em;overflow:visible;white-space:nowrap">' +
+            '</span>';
+
+        canvases[canvasId] = canvas;
+        var swf            = canvas.firstChild;
+        spans[canvasId]    = canvas.lastChild;
+
+        // Check whether the canvas element is in the DOM tree
+        var documentContains = document.body.contains;
+        if (documentContains(canvas)) {
+            // Load swf file immediately
+            swf["movie"] = SWF_URL;
+        } else {
+            // Wait until the element is added to the DOM tree
+            var intervalId = setInterval(function() {
+                if (documentContains(canvas)) {
+                    clearInterval(intervalId);
+                    swf["movie"] = SWF_URL;
+                }
+            }, 0);
+        }
+
+        // If the browser is IE6 or in quirks mode
+        if (document.compatMode === "BackCompat" || !window.XMLHttpRequest) {
+            spans[canvasId].style.overflow = "hidden";
+        }
+
+        // initialize context
+        var ctx = new CanvasRenderingContext2D(canvas, swf);
+
+        // canvas API
+        canvas.getContext = function(contextId) {
+            return contextId === "2d" ? ctx : NULL;
+        };
+
+        canvas.toDataURL = function(type, quality) {
+            if (("" + type).replace(/[A-Z]+/g, toLowerCase) === "image/jpeg") {
+                ctx._queue.push(properties.toDataURL, type,
+                                typeof quality === "number" ? quality : "");
+            } else {
+                ctx._queue.push(properties.toDataURL, type);
+            }
+            return ctx._executeCommand();
+        };
+
+        // add event listener
+        swf.attachEvent(ON_FOCUS, onFocus);
+
+        return canvas;
+    },
+
+    saveImage: function(canvas) {
+        var swf = canvas.firstChild;
+        swf.saveImage();
+    },
+
+    setOptions: function(options) {
+        // TODO: Implement
+    },
+
+    trigger: function(canvasId, type) {
+        var canvas = canvases[canvasId];
+        canvas.fireEvent("on" + type);
+    },
+
+    unlock: function(canvasId, ready) {
+        if (lock[canvasId]) {
+            --lock[canvasId];
+        }
+        if (ready) {
+            var canvas = canvases[canvasId];
+            var swf    = canvas.firstChild;
+            var width;
+            var height;
+
+            // Set the width and height attributes of the canvas element.
+            setCanvasSize(canvas);
+            width  = canvas.width;
+            height = canvas.height;
+
+            canvas.style.width  = width  + "px";
+            canvas.style.height = height + "px";
+
+            // Adjust the size of Flash to that of the canvas
+            if (width > 0) {
+                swf.width = width;
+            }
+            if (height > 0) {
+                swf.height = height;
+            }
+            swf.resize(width, height);
+
+            // Add event listener
+            canvas.attachEvent(ON_PROPERTY_CHANGE, onPropertyChange);
+
+            // ExternalInterface is now ready for use
+            isReady[canvasId] = true;
+        }
+    }
+};
+
+/*
+ * Utility methods
+ */
+
+// Get the absolute URL of flashcanvas.js
+function getScriptUrl() {
+    var scripts = document.getElementsByTagName("script");
+    var script  = scripts[scripts.length - 1];
+
+    // @see http://msdn.microsoft.com/en-us/library/ms536429(VS.85).aspx
+    if (document.documentMode >= 8) {
+        return script.src;
+    } else {
+        return script.getAttribute("src", 4);
+    }
+}
+
+// Get a unique ID composed of alphanumeric characters.
+function getUniqueId() {
+    return Math.random().toString(36).slice(2) || "0";
+}
+
+// Escape characters not permitted in XML.
+function encodeXML(str) {
+    return ("" + str).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+}
+
+function toLowerCase(str) {
+    return str.toLowerCase();
+}
+
+function throwException(code) {
+    throw new DOMException(code);
+}
+
+// The width and height attributes of a canvas element must have values that
+// are valid non-negative integers.
+function setCanvasSize(canvas) {
+    var width  = parseInt(canvas.width, 10);
+    var height = parseInt(canvas.height, 10);
+
+    if (isNaN(width) || width < 0) {
+        width = 300;
+    }
+    if (isNaN(height) || height < 0) {
+        height = 150;
+    }
+
+    canvas.width  = width;
+    canvas.height = height;
+}
+
+/*
+ * initialization
+ */
+
+// IE HTML5 shiv
+document.createElement(CANVAS);
+
+// setup default CSS
+document.createStyleSheet().cssText =
+    CANVAS + "{display:inline-block;overflow:hidden;width:300px;height:150px}";
+
+// initialize canvas elements
+if (document.readyState === "complete") {
+    onReadyStateChange();
+} else {
+    document.attachEvent(ON_READY_STATE_CHANGE, onReadyStateChange);
+}
+
+// prevent IE6 memory leaks
+window.attachEvent(ON_UNLOAD, onUnload);
+
+// preload SWF file if it's in the same domain
+if (SWF_URL.indexOf(location.protocol + "//" + location.host + "/") === 0) {
+    var req = new ActiveXObject("Microsoft.XMLHTTP");
+    req.open("GET", SWF_URL, false);
+    req.send(NULL);
+}
+
+/*
+ * public API
+ */
+
+window[CANVAS_RENDERING_CONTEXT_2D] = CanvasRenderingContext2D;
+window[CANVAS_GRADIENT]             = CanvasGradient;
+window[CANVAS_PATTERN]              = CanvasPattern;
+window[FLASH_CANVAS]                = FlashCanvas;
+
+// ExplorerCanvas-compatible APIs for convenience
+window[G_VML_CANVAS_MANAGER] = {
+    init:  function(){},
+    init_: function(){},
+    initElement: FlashCanvas.initElement
+};
+
+// Prevent Closure Compiler from removing the function.
+keep = CanvasRenderingContext2D.measureText;
+
+})(window, document);
+
+}

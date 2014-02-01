@@ -1,23 +1,1033 @@
-(function(i){i.extend({tablesorter:new function(){function c(a,b){n(a+","+((new Date).getTime()-b.getTime())+"ms")}function n(a){typeof console!="undefined"&&typeof console.debug!="undefined"?console.log(a):alert(a)}function o(a,b){if(a.config.debug)var d="";if(a.tBodies.length!=0){var e=a.tBodies[0].rows;if(e[0])for(var f=[],l=e[0].cells.length,g=0;g<l;g++){var h=false;if(i.metadata&&i(b[g]).metadata()&&i(b[g]).metadata().sorter)h=u(i(b[g]).metadata().sorter);else if(a.config.headers[g]&&a.config.headers[g].sorter)h=
-u(a.config.headers[g].sorter);if(!h)a:{h=a;for(var j=e,k=-1,q=g,m=s.length,p=false,v=false,B=true;v==""&&B;){k++;if(j[k]){p=j[k].cells[q];v=i.trim(y(h.config,p));h.config.debug&&n("Checking if value was empty on row:"+k)}else B=false}for(j=1;j<m;j++)if(s[j].is(v,h,p)){h=s[j];break a}h=s[0]}if(a.config.debug)d+="column:"+g+" parser:"+h.id+"\n";f.push(h)}a.config.debug&&n(d);return f}}function u(a){for(var b=s.length,d=0;d<b;d++)if(s[d].id.toLowerCase()==a.toLowerCase())return s[d];return false}function t(a){if(a.config.debug)var b=
-new Date;for(var d=a.tBodies[0]&&a.tBodies[0].rows.length||0,e=a.tBodies[0].rows[0]&&a.tBodies[0].rows[0].cells.length||0,f=a.config.parsers,l={row:[],normalized:[]},g=0;g<d;++g){var h=i(a.tBodies[0].rows[g]),j=[];if(h.hasClass(a.config.cssChildRow))l.row[l.row.length-1]=l.row[l.row.length-1].add(h);else{l.row.push(h);for(var k=0;k<e;++k)j.push(f[k].format(y(a.config,h[0].cells[k]),a,h[0].cells[k]));j.push(l.normalized.length);l.normalized.push(j)}}a.config.debug&&c("Building cache for "+d+" rows:",
-b);return l}function y(a,b){var d="";if(!b)return"";if(!a.supportsTextContent)a.supportsTextContent=b.textContent||false;return d=a.textExtraction=="simple"?a.supportsTextContent?b.textContent:b.childNodes[0]&&b.childNodes[0].hasChildNodes()?b.childNodes[0].innerHTML:b.innerHTML:typeof a.textExtraction=="function"?a.textExtraction(b):i(b).text()}function z(a,b){if(a.config.debug)var d=new Date;for(var e=b.row,f=b.normalized,l=f.length,g=f[0].length-1,h=i(a.tBodies[0]),j=[],k=0;k<l;k++){var q=f[k][g];
-j.push(e[q]);if(!a.config.appender)for(var m=e[q].length,p=0;p<m;p++)h[0].appendChild(e[q][p])}a.config.appender&&a.config.appender(a,j);j=null;a.config.debug&&c("Rebuilt table:",d);A(a);setTimeout(function(){i(a).trigger("sortEnd")},0)}function G(a){if(a.config.debug)var b=new Date;var d=H(a);$tableHeaders=i(a.config.selectorHeaders,a).each(function(e){this.column=d[this.parentNode.rowIndex+"-"+this.cellIndex];this.count=this.order=typeof a.config.sortInitialOrder!="Number"?a.config.sortInitialOrder.toLowerCase()==
-"desc"?1:0:a.config.sortInitialOrder==1?1:0;var f;f=i.metadata&&i(this).metadata().sorter===false?true:false;if(!(f=f))f=a.config.headers[e]&&a.config.headers[e].sorter===false?true:false;if(f)this.sortDisabled=true;if(C(a,e))this.order=this.lockedOrder=C(a,e);if(!this.sortDisabled){f=i(this).addClass(a.config.cssHeader);a.config.onRenderHeader&&a.config.onRenderHeader.apply(f)}a.config.headerList[e]=this});if(a.config.debug){c("Built headers:",b);n($tableHeaders)}return $tableHeaders}function H(a){var b=
-[],d={};a=a.getElementsByTagName("THEAD")[0].getElementsByTagName("TR");for(var e=0;e<a.length;e++)for(var f=a[e].cells,l=0;l<f.length;l++){var g=f[l],h=g.parentNode.rowIndex,j=h+"-"+g.cellIndex,k=g.rowSpan||1;g=g.colSpan||1;var q;if(typeof b[h]=="undefined")b[h]=[];for(var m=0;m<b[h].length+1;m++)if(typeof b[h][m]=="undefined"){q=m;break}d[j]=q;for(m=h;m<h+k;m++){if(typeof b[m]=="undefined")b[m]=[];j=b[m];for(var p=q;p<q+g;p++)j[p]="x"}}return d}function C(a,b){if(a.config.headers[b]&&a.config.headers[b].lockedOrder)return a.config.headers[b].lockedOrder;
-return false}function A(a){for(var b=a.config.widgets,d=b.length,e=0;e<d;e++)D(b[e]).format(a)}function D(a){for(var b=w.length,d=0;d<b;d++)if(w[d].id.toLowerCase()==a.toLowerCase())return w[d]}function I(a,b){for(var d=b.length,e=0;e<d;e++)if(b[e][0]==a)return true;return false}function E(a,b,d,e){b.removeClass(e[0]).removeClass(e[1]);var f=[];b.each(function(){this.sortDisabled||(f[this.column]=i(this))});a=d.length;for(b=0;b<a;b++)f[d[b][0]].addClass(e[d[b][1]])}function J(a){if(a.config.widthFixed){var b=
-i("<colgroup>");i("tr:first td",a.tBodies[0]).each(function(){b.append(i("<col>").css("width",i(this).width()))});i(a).prepend(b)}}function F(a,b,d){if(a.config.debug)var e=new Date;for(var f="var sortWrapper = function(a,b) {",l=b.length,g=0;g<l;g++){var h=b[g][0],j=b[g][1];h=a.config.parsers[h].type=="text"?j==0?x("text","asc",h):x("text","desc",h):j==0?x("numeric","asc",h):x("numeric","desc",h);var k="e"+g;f+="var "+k+" = "+h;f+="if("+k+") { return "+k+"; } ";f+="else { "}g=d.normalized[0].length-
-1;f+="return a["+g+"]-b["+g+"];";for(g=0;g<l;g++)f+="}; ";f+="return 0; ";f+="}; ";a.config.debug&&c("Evaling expression:"+f,new Date);eval(f);d.normalized.sort(sortWrapper);a.config.debug&&c("Sorting on "+b.toString()+" and dir "+j+" time:",e);return d}function x(a,b,d){var e="a["+d+"]";d="b["+d+"]";if(a=="text"&&b=="asc")return"("+e+" == "+d+" ? 0 : ("+e+" === null ? Number.POSITIVE_INFINITY : ("+d+" === null ? Number.NEGATIVE_INFINITY : ("+e+" < "+d+") ? -1 : 1 )));";else if(a=="text"&&b=="desc")return"("+
-e+" == "+d+" ? 0 : ("+e+" === null ? Number.POSITIVE_INFINITY : ("+d+" === null ? Number.NEGATIVE_INFINITY : ("+d+" < "+e+") ? -1 : 1 )));";else if(a=="numeric"&&b=="asc")return"("+e+" === null && "+d+" === null) ? 0 :("+e+" === null ? Number.POSITIVE_INFINITY : ("+d+" === null ? Number.NEGATIVE_INFINITY : "+e+" - "+d+"));";else if(a=="numeric"&&b=="desc")return"("+e+" === null && "+d+" === null) ? 0 :("+e+" === null ? Number.POSITIVE_INFINITY : ("+d+" === null ? Number.NEGATIVE_INFINITY : "+d+" - "+
-e+"));"}var s=[],w=[];this.defaults={cssHeader:"header",cssAsc:"headerSortUp",cssDesc:"headerSortDown",cssChildRow:"expand-child",sortInitialOrder:"asc",sortMultiSortKey:"shiftKey",sortForce:null,sortAppend:null,sortLocaleCompare:true,textExtraction:"simple",parsers:{},widgets:[],widgetZebra:{css:["even","odd"]},headers:{},widthFixed:false,cancelSelection:true,sortList:[],headerList:[],dateFormat:"us",decimal:"/.|,/g",onRenderHeader:null,selectorHeaders:"thead th",debug:false};this.benchmark=c;this.construct=
-function(a){return this.each(function(){if(this.tHead&&this.tBodies){var b,d,e,f;this.config={};f=i.extend(this.config,i.tablesorter.defaults,a);b=i(this);i.data(this,"tablesorter",f);d=G(this);this.config.parsers=o(this,d);e=t(this);var l=[f.cssDesc,f.cssAsc];J(this);d.click(function(g){var h=b[0].tBodies[0]&&b[0].tBodies[0].rows.length||0;if(!this.sortDisabled&&h>0){b.trigger("sortStart");i(this);h=this.column;this.order=this.count++%2;if(this.lockedOrder)this.order=this.lockedOrder;if(g[f.sortMultiSortKey])if(I(h,
-f.sortList))for(g=0;g<f.sortList.length;g++){var j=f.sortList[g],k=f.headerList[j[0]];if(j[0]==h){k.count=j[1];k.count++;j[1]=k.count%2}}else f.sortList.push([h,this.order]);else{f.sortList=[];if(f.sortForce!=null){j=f.sortForce;for(g=0;g<j.length;g++)j[g][0]!=h&&f.sortList.push(j[g])}f.sortList.push([h,this.order])}setTimeout(function(){E(b[0],d,f.sortList,l);z(b[0],F(b[0],f.sortList,e))},1);return false}}).mousedown(function(){if(f.cancelSelection){this.onselectstart=function(){return false};return false}});
-b.bind("update",function(){var g=this;setTimeout(function(){g.config.parsers=o(g,d);e=t(g)},1)}).bind("updateCell",function(g,h){var j=this.config,k=[h.parentNode.rowIndex-1,h.cellIndex];e.normalized[k[0]][k[1]]=j.parsers[k[1]].format(y(j,h),h)}).bind("sorton",function(g,h){i(this).trigger("sortStart");f.sortList=h;for(var j=f.sortList,k=this.config,q=j.length,m=0;m<q;m++){var p=j[m],v=k.headerList[p[0]];v.count=p[1];v.count++}E(this,d,j,l);z(this,F(this,j,e))}).bind("appendCache",function(){z(this,
-e)}).bind("applyWidgetId",function(g,h){D(h).format(this)}).bind("applyWidgets",function(){A(this)});if(i.metadata&&i(this).metadata()&&i(this).metadata().sortlist)f.sortList=i(this).metadata().sortlist;f.sortList.length>0?b.trigger("sorton",[f.sortList]):A(this)}})};this.addParser=function(a){for(var b=s.length,d=true,e=0;e<b;e++)if(s[e].id.toLowerCase()==a.id.toLowerCase())d=false;d&&s.push(a)};this.addWidget=function(a){w.push(a)};this.formatFloat=function(a){a=parseFloat(a);return isNaN(a)?0:
-a};this.formatInt=function(a){a=parseInt(a);return isNaN(a)?0:a};this.isDigit=function(a){return/^[-+]?\d*$/.test(i.trim(a.replace(/[,.']/g,"")))};this.clearTableBody=function(a){if(i.browser.msie)(function(){for(;this.firstChild;)this.removeChild(this.firstChild)}).apply(a.tBodies[0]);else a.tBodies[0].innerHTML=""}}});i.fn.extend({tablesorter:i.tablesorter.construct});var r=i.tablesorter;r.addParser({id:"text",is:function(){return true},format:function(c){return i.trim(c.toLocaleLowerCase())},type:"text"});
-r.addParser({id:"digit",is:function(c,n){return i.tablesorter.isDigit(c,n.config)},format:function(c){return i.tablesorter.formatFloat(c)},type:"numeric"});r.addParser({id:"currency",is:function(c){return/^[\u00a3$\u20ac?.]/.test(c)},format:function(c){return i.tablesorter.formatFloat(c.replace(RegExp(/[\u00a3$\u20ac]/g),""))},type:"numeric"});r.addParser({id:"ipAddress",is:function(c){return/^\d{2,3}[\.]\d{2,3}[\.]\d{2,3}[\.]\d{2,3}$/.test(c)},format:function(c){c=c.split(".");for(var n="",o=c.length,
-u=0;u<o;u++){var t=c[u];n+=t.length==2?"0"+t:t}return i.tablesorter.formatFloat(n)},type:"numeric"});r.addParser({id:"url",is:function(c){return/^(https?|ftp|file):\/\/$/.test(c)},format:function(c){return jQuery.trim(c.replace(RegExp(/(https?|ftp|file):\/\//),""))},type:"text"});r.addParser({id:"isoDate",is:function(c){return/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(c)},format:function(c){return i.tablesorter.formatFloat(c!=""?(new Date(c.replace(RegExp(/-/g),"/"))).getTime():"0")},type:"numeric"});
-r.addParser({id:"percent",is:function(c){return/\%$/.test(i.trim(c))},format:function(c){return i.tablesorter.formatFloat(c.replace(RegExp(/%/g),""))},type:"numeric"});r.addParser({id:"usLongDate",is:function(c){return c.match(RegExp(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/))},format:function(c){return i.tablesorter.formatFloat((new Date(c)).getTime())},type:"numeric"});r.addParser({id:"shortDate",is:function(c){return/\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/.test(c)},
-format:function(c,n){var o=n.config;c=c.replace(/\-/g,"/");if(o.dateFormat=="us")c=c.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/,"$3/$1/$2");else if(o.dateFormat=="uk")c=c.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/,"$3/$2/$1");else if(o.dateFormat=="dd/mm/yy"||o.dateFormat=="dd-mm-yy")c=c.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})/,"$1/$2/$3");return i.tablesorter.formatFloat((new Date(c)).getTime())},type:"numeric"});r.addParser({id:"time",is:function(c){return/^(([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(am|pm)))$/.test(c)},
-format:function(c){return i.tablesorter.formatFloat((new Date("2000/01/01 "+c)).getTime())},type:"numeric"});r.addParser({id:"metadata",is:function(){return false},format:function(c,n,o){c=n.config;c=!c.parserMetadataName?"sortValue":c.parserMetadataName;return i(o).metadata()[c]},type:"numeric"});r.addWidget({id:"zebra",format:function(c){if(c.config.debug)var n=new Date;var o,u=-1,t;i("tr:visible",c.tBodies[0]).each(function(){o=i(this);o.hasClass(c.config.cssChildRow)||u++;t=u%2==0;o.removeClass(c.config.widgetZebra.css[t?
-0:1]).addClass(c.config.widgetZebra.css[t?1:0])});c.config.debug&&i.tablesorter.benchmark("Applying Zebra widget",n)}})})(jQuery);
+/*
+ * 
+ * TableSorter 2.0 - Client-side table sorting with ease!
+ * Version 2.0.5b
+ * @requires jQuery v1.2.3
+ * 
+ * Copyright (c) 2007 Christian Bach
+ * Examples and docs at: http://tablesorter.com
+ * Dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ */
+/**
+ * 
+ * @description Create a sortable table with multi-column sorting capabilitys
+ * 
+ * @example $('table').tablesorter();
+ * @desc Create a simple tablesorter interface.
+ * 
+ * @example $('table').tablesorter({ sortList:[[0,0],[1,0]] });
+ * @desc Create a tablesorter interface and sort on the first and secound column column headers.
+ * 
+ * @example $('table').tablesorter({ headers: { 0: { sorter: false}, 1: {sorter: false} } });
+ *          
+ * @desc Create a tablesorter interface and disableing the first and second  column headers.
+ *      
+ * 
+ * @example $('table').tablesorter({ headers: { 0: {sorter:"integer"}, 1: {sorter:"currency"} } });
+ * 
+ * @desc Create a tablesorter interface and set a column parser for the first
+ *       and second column.
+ * 
+ * 
+ * @param Object
+ *            settings An object literal containing key/value pairs to provide
+ *            optional settings.
+ * 
+ * 
+ * @option String cssHeader (optional) A string of the class name to be appended
+ *         to sortable tr elements in the thead of the table. Default value:
+ *         "header"
+ * 
+ * @option String cssAsc (optional) A string of the class name to be appended to
+ *         sortable tr elements in the thead on a ascending sort. Default value:
+ *         "headerSortUp"
+ * 
+ * @option String cssDesc (optional) A string of the class name to be appended
+ *         to sortable tr elements in the thead on a descending sort. Default
+ *         value: "headerSortDown"
+ * 
+ * @option String sortInitialOrder (optional) A string of the inital sorting
+ *         order can be asc or desc. Default value: "asc"
+ * 
+ * @option String sortMultisortKey (optional) A string of the multi-column sort
+ *         key. Default value: "shiftKey"
+ * 
+ * @option String textExtraction (optional) A string of the text-extraction
+ *         method to use. For complex html structures inside td cell set this
+ *         option to "complex", on large tables the complex option can be slow.
+ *         Default value: "simple"
+ * 
+ * @option Object headers (optional) An array containing the forces sorting
+ *         rules. This option let's you specify a default sorting rule. Default
+ *         value: null
+ * 
+ * @option Array sortList (optional) An array containing the forces sorting
+ *         rules. This option let's you specify a default sorting rule. Default
+ *         value: null
+ * 
+ * @option Array sortForce (optional) An array containing forced sorting rules.
+ *         This option let's you specify a default sorting rule, which is
+ *         prepended to user-selected rules. Default value: null
+ * 
+ * @option Boolean sortLocaleCompare (optional) Boolean flag indicating whatever
+ *         to use String.localeCampare method or not. Default set to true.
+ * 
+ * 
+ * @option Array sortAppend (optional) An array containing forced sorting rules.
+ *         This option let's you specify a default sorting rule, which is
+ *         appended to user-selected rules. Default value: null
+ * 
+ * @option Boolean widthFixed (optional) Boolean flag indicating if tablesorter
+ *         should apply fixed widths to the table columns. This is usefull when
+ *         using the pager companion plugin. This options requires the dimension
+ *         jquery plugin. Default value: false
+ * 
+ * @option Boolean cancelSelection (optional) Boolean flag indicating if
+ *         tablesorter should cancel selection of the table headers text.
+ *         Default value: true
+ * 
+ * @option Boolean debug (optional) Boolean flag indicating if tablesorter
+ *         should display debuging information usefull for development.
+ * 
+ * @type jQuery
+ * 
+ * @name tablesorter
+ * 
+ * @cat Plugins/Tablesorter
+ * 
+ * @author Christian Bach/christian.bach@polyester.se
+ */
+
+(function ($) {
+    $.extend({
+        tablesorter: new
+        function () {
+
+            var parsers = [],
+                widgets = [];
+
+            this.defaults = {
+                cssHeader: "header",
+                cssAsc: "headerSortUp",
+                cssDesc: "headerSortDown",
+                cssChildRow: "expand-child",
+                sortInitialOrder: "asc",
+                sortMultiSortKey: "shiftKey",
+                sortForce: null,
+                sortAppend: null,
+                sortLocaleCompare: true,
+                textExtraction: "simple",
+                parsers: {}, widgets: [],
+                widgetZebra: {
+                    css: ["even", "odd"]
+                }, headers: {}, widthFixed: false,
+                cancelSelection: true,
+                sortList: [],
+                headerList: [],
+                dateFormat: "us",
+                decimal: '/\.|\,/g',
+                onRenderHeader: null,
+                selectorHeaders: 'thead th',
+                debug: false
+            };
+
+            /* debuging utils */
+
+            function benchmark(s, d) {
+                log(s + "," + (new Date().getTime() - d.getTime()) + "ms");
+            }
+
+            this.benchmark = benchmark;
+
+            function log(s) {
+                if (typeof console != "undefined" && typeof console.debug != "undefined") {
+                    console.log(s);
+                } else {
+                    alert(s);
+                }
+            }
+
+            /* parsers utils */
+
+            function buildParserCache(table, $headers) {
+
+                if (table.config.debug) {
+                    var parsersDebug = "";
+                }
+
+                if (table.tBodies.length == 0) return; // In the case of empty tables
+                var rows = table.tBodies[0].rows;
+
+                if (rows[0]) {
+
+                    var list = [],
+                        cells = rows[0].cells,
+                        l = cells.length;
+
+                    for (var i = 0; i < l; i++) {
+
+                        var p = false;
+
+                        if ($.metadata && ($($headers[i]).metadata() && $($headers[i]).metadata().sorter)) {
+
+                            p = getParserById($($headers[i]).metadata().sorter);
+
+                        } else if ((table.config.headers[i] && table.config.headers[i].sorter)) {
+
+                            p = getParserById(table.config.headers[i].sorter);
+                        }
+                        if (!p) {
+
+                            p = detectParserForColumn(table, rows, -1, i);
+                        }
+
+                        if (table.config.debug) {
+                            parsersDebug += "column:" + i + " parser:" + p.id + "\n";
+                        }
+
+                        list.push(p);
+                    }
+                }
+
+                if (table.config.debug) {
+                    log(parsersDebug);
+                }
+
+                return list;
+            };
+
+            function detectParserForColumn(table, rows, rowIndex, cellIndex) {
+                var l = parsers.length,
+                    node = false,
+                    nodeValue = false,
+                    keepLooking = true;
+                while (nodeValue == '' && keepLooking) {
+                    rowIndex++;
+                    if (rows[rowIndex]) {
+                        node = getNodeFromRowAndCellIndex(rows, rowIndex, cellIndex);
+                        nodeValue = trimAndGetNodeText(table.config, node);
+                        if (table.config.debug) {
+                            log('Checking if value was empty on row:' + rowIndex);
+                        }
+                    } else {
+                        keepLooking = false;
+                    }
+                }
+                for (var i = 1; i < l; i++) {
+                    if (parsers[i].is(nodeValue, table, node)) {
+                        return parsers[i];
+                    }
+                }
+                // 0 is always the generic parser (text)
+                return parsers[0];
+            }
+
+            function getNodeFromRowAndCellIndex(rows, rowIndex, cellIndex) {
+                return rows[rowIndex].cells[cellIndex];
+            }
+
+            function trimAndGetNodeText(config, node) {
+                return $.trim(getElementText(config, node));
+            }
+
+            function getParserById(name) {
+                var l = parsers.length;
+                for (var i = 0; i < l; i++) {
+                    if (parsers[i].id.toLowerCase() == name.toLowerCase()) {
+                        return parsers[i];
+                    }
+                }
+                return false;
+            }
+
+            /* utils */
+
+            function buildCache(table) {
+
+                if (table.config.debug) {
+                    var cacheTime = new Date();
+                }
+
+                var totalRows = (table.tBodies[0] && table.tBodies[0].rows.length) || 0,
+                    totalCells = (table.tBodies[0].rows[0] && table.tBodies[0].rows[0].cells.length) || 0,
+                    parsers = table.config.parsers,
+                    cache = {
+                        row: [],
+                        normalized: []
+                    };
+
+                for (var i = 0; i < totalRows; ++i) {
+
+                    /** Add the table data to main data array */
+                    var c = $(table.tBodies[0].rows[i]),
+                        cols = [];
+
+                    // if this is a child row, add it to the last row's children and
+                    // continue to the next row
+                    if (c.hasClass(table.config.cssChildRow)) {
+                        cache.row[cache.row.length - 1] = cache.row[cache.row.length - 1].add(c);
+                        // go to the next for loop
+                        continue;
+                    }
+
+                    cache.row.push(c);
+
+                    for (var j = 0; j < totalCells; ++j) {
+                        cols.push(parsers[j].format(getElementText(table.config, c[0].cells[j]), table, c[0].cells[j]));
+                    }
+
+                    cols.push(cache.normalized.length); // add position for rowCache
+                    cache.normalized.push(cols);
+                    cols = null;
+                };
+
+                if (table.config.debug) {
+                    benchmark("Building cache for " + totalRows + " rows:", cacheTime);
+                }
+
+                return cache;
+            };
+
+            function getElementText(config, node) {
+
+                var text = "";
+
+                if (!node) return "";
+
+                if (!config.supportsTextContent) config.supportsTextContent = node.textContent || false;
+
+                if (config.textExtraction == "simple") {
+                    if (config.supportsTextContent) {
+                        text = node.textContent;
+                    } else {
+                        if (node.childNodes[0] && node.childNodes[0].hasChildNodes()) {
+                            text = node.childNodes[0].innerHTML;
+                        } else {
+                            text = node.innerHTML;
+                        }
+                    }
+                } else {
+                    if (typeof(config.textExtraction) == "function") {
+                        text = config.textExtraction(node);
+                    } else {
+                        text = $(node).text();
+                    }
+                }
+                return text;
+            }
+
+            function appendToTable(table, cache) {
+
+                if (table.config.debug) {
+                    var appendTime = new Date()
+                }
+
+                var c = cache,
+                    r = c.row,
+                    n = c.normalized,
+                    totalRows = n.length,
+                    checkCell = (n[0].length - 1),
+                    tableBody = $(table.tBodies[0]),
+                    rows = [];
+
+
+                for (var i = 0; i < totalRows; i++) {
+                    var pos = n[i][checkCell];
+
+                    rows.push(r[pos]);
+
+                    if (!table.config.appender) {
+
+                        //var o = ;
+                        var l = r[pos].length;
+                        for (var j = 0; j < l; j++) {
+                            tableBody[0].appendChild(r[pos][j]);
+                        }
+
+                        // 
+                    }
+                }
+
+
+
+                if (table.config.appender) {
+
+                    table.config.appender(table, rows);
+                }
+
+                rows = null;
+
+                if (table.config.debug) {
+                    benchmark("Rebuilt table:", appendTime);
+                }
+
+                // apply table widgets
+                applyWidget(table);
+
+                // trigger sortend
+                setTimeout(function () {
+                    $(table).trigger("sortEnd");
+                }, 0);
+
+            };
+
+            function buildHeaders(table) {
+
+                if (table.config.debug) {
+                    var time = new Date();
+                }
+
+                var meta = ($.metadata) ? true : false;
+                
+                var header_index = computeTableHeaderCellIndexes(table);
+
+                $tableHeaders = $(table.config.selectorHeaders, table).each(function (index) {
+
+                    this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
+                    // this.column = index;
+                    this.order = formatSortingOrder(table.config.sortInitialOrder);
+                    
+					
+					this.count = this.order;
+
+                    if (checkHeaderMetadata(this) || checkHeaderOptions(table, index)) this.sortDisabled = true;
+					if (checkHeaderOptionsSortingLocked(table, index)) this.order = this.lockedOrder = checkHeaderOptionsSortingLocked(table, index);
+
+                    if (!this.sortDisabled) {
+                        var $th = $(this).addClass(table.config.cssHeader);
+                        if (table.config.onRenderHeader) table.config.onRenderHeader.apply($th);
+                    }
+
+                    // add cell to headerList
+                    table.config.headerList[index] = this;
+                });
+
+                if (table.config.debug) {
+                    benchmark("Built headers:", time);
+                    log($tableHeaders);
+                }
+
+                return $tableHeaders;
+
+            };
+
+            // from:
+            // http://www.javascripttoolbox.com/lib/table/examples.php
+            // http://www.javascripttoolbox.com/temp/table_cellindex.html
+
+
+            function computeTableHeaderCellIndexes(t) {
+                var matrix = [];
+                var lookup = {};
+                var thead = t.getElementsByTagName('THEAD')[0];
+                var trs = thead.getElementsByTagName('TR');
+
+                for (var i = 0; i < trs.length; i++) {
+                    var cells = trs[i].cells;
+                    for (var j = 0; j < cells.length; j++) {
+                        var c = cells[j];
+
+                        var rowIndex = c.parentNode.rowIndex;
+                        var cellId = rowIndex + "-" + c.cellIndex;
+                        var rowSpan = c.rowSpan || 1;
+                        var colSpan = c.colSpan || 1
+                        var firstAvailCol;
+                        if (typeof(matrix[rowIndex]) == "undefined") {
+                            matrix[rowIndex] = [];
+                        }
+                        // Find first available column in the first row
+                        for (var k = 0; k < matrix[rowIndex].length + 1; k++) {
+                            if (typeof(matrix[rowIndex][k]) == "undefined") {
+                                firstAvailCol = k;
+                                break;
+                            }
+                        }
+                        lookup[cellId] = firstAvailCol;
+                        for (var k = rowIndex; k < rowIndex + rowSpan; k++) {
+                            if (typeof(matrix[k]) == "undefined") {
+                                matrix[k] = [];
+                            }
+                            var matrixrow = matrix[k];
+                            for (var l = firstAvailCol; l < firstAvailCol + colSpan; l++) {
+                                matrixrow[l] = "x";
+                            }
+                        }
+                    }
+                }
+                return lookup;
+            }
+
+            function checkCellColSpan(table, rows, row) {
+                var arr = [],
+                    r = table.tHead.rows,
+                    c = r[row].cells;
+
+                for (var i = 0; i < c.length; i++) {
+                    var cell = c[i];
+
+                    if (cell.colSpan > 1) {
+                        arr = arr.concat(checkCellColSpan(table, headerArr, row++));
+                    } else {
+                        if (table.tHead.length == 1 || (cell.rowSpan > 1 || !r[row + 1])) {
+                            arr.push(cell);
+                        }
+                        // headerArr[row] = (i+row);
+                    }
+                }
+                return arr;
+            };
+
+            function checkHeaderMetadata(cell) {
+                if (($.metadata) && ($(cell).metadata().sorter === false)) {
+                    return true;
+                };
+                return false;
+            }
+
+            function checkHeaderOptions(table, i) {
+                if ((table.config.headers[i]) && (table.config.headers[i].sorter === false)) {
+                    return true;
+                };
+                return false;
+            }
+			
+			 function checkHeaderOptionsSortingLocked(table, i) {
+                if ((table.config.headers[i]) && (table.config.headers[i].lockedOrder)) return table.config.headers[i].lockedOrder;
+                return false;
+            }
+			
+            function applyWidget(table) {
+                var c = table.config.widgets;
+                var l = c.length;
+                for (var i = 0; i < l; i++) {
+
+                    getWidgetById(c[i]).format(table);
+                }
+
+            }
+
+            function getWidgetById(name) {
+                var l = widgets.length;
+                for (var i = 0; i < l; i++) {
+                    if (widgets[i].id.toLowerCase() == name.toLowerCase()) {
+                        return widgets[i];
+                    }
+                }
+            };
+
+            function formatSortingOrder(v) {
+                if (typeof(v) != "Number") {
+                    return (v.toLowerCase() == "desc") ? 1 : 0;
+                } else {
+                    return (v == 1) ? 1 : 0;
+                }
+            }
+
+            function isValueInArray(v, a) {
+                var l = a.length;
+                for (var i = 0; i < l; i++) {
+                    if (a[i][0] == v) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function setHeadersCss(table, $headers, list, css) {
+                // remove all header information
+                $headers.removeClass(css[0]).removeClass(css[1]);
+
+                var h = [];
+                $headers.each(function (offset) {
+                    if (!this.sortDisabled) {
+                        h[this.column] = $(this);
+                    }
+                });
+
+                var l = list.length;
+                for (var i = 0; i < l; i++) {
+                    h[list[i][0]].addClass(css[list[i][1]]);
+                }
+            }
+
+            function fixColumnWidth(table, $headers) {
+                var c = table.config;
+                if (c.widthFixed) {
+                    var colgroup = $('<colgroup>');
+                    $("tr:first td", table.tBodies[0]).each(function () {
+                        colgroup.append($('<col>').css('width', $(this).width()));
+                    });
+                    $(table).prepend(colgroup);
+                };
+            }
+
+            function updateHeaderSortCount(table, sortList) {
+                var c = table.config,
+                    l = sortList.length;
+                for (var i = 0; i < l; i++) {
+                    var s = sortList[i],
+                        o = c.headerList[s[0]];
+                    o.count = s[1];
+                    o.count++;
+                }
+            }
+
+            /* sorting methods */
+
+            function multisort(table, sortList, cache) {
+
+                if (table.config.debug) {
+                    var sortTime = new Date();
+                }
+
+                var dynamicExp = "var sortWrapper = function(a,b) {",
+                    l = sortList.length;
+
+                // TODO: inline functions.
+                for (var i = 0; i < l; i++) {
+
+                    var c = sortList[i][0];
+                    var order = sortList[i][1];
+                    // var s = (getCachedSortType(table.config.parsers,c) == "text") ?
+                    // ((order == 0) ? "sortText" : "sortTextDesc") : ((order == 0) ?
+                    // "sortNumeric" : "sortNumericDesc");
+                    // var s = (table.config.parsers[c].type == "text") ? ((order == 0)
+                    // ? makeSortText(c) : makeSortTextDesc(c)) : ((order == 0) ?
+                    // makeSortNumeric(c) : makeSortNumericDesc(c));
+                    var s = (table.config.parsers[c].type == "text") ? ((order == 0) ? makeSortFunction("text", "asc", c) : makeSortFunction("text", "desc", c)) : ((order == 0) ? makeSortFunction("numeric", "asc", c) : makeSortFunction("numeric", "desc", c));
+                    var e = "e" + i;
+
+                    dynamicExp += "var " + e + " = " + s; // + "(a[" + c + "],b[" + c
+                    // + "]); ";
+                    dynamicExp += "if(" + e + ") { return " + e + "; } ";
+                    dynamicExp += "else { ";
+
+                }
+
+                // if value is the same keep orignal order
+                var orgOrderCol = cache.normalized[0].length - 1;
+                dynamicExp += "return a[" + orgOrderCol + "]-b[" + orgOrderCol + "];";
+
+                for (var i = 0; i < l; i++) {
+                    dynamicExp += "}; ";
+                }
+
+                dynamicExp += "return 0; ";
+                dynamicExp += "}; ";
+
+                if (table.config.debug) {
+                    benchmark("Evaling expression:" + dynamicExp, new Date());
+                }
+
+                eval(dynamicExp);
+
+                cache.normalized.sort(sortWrapper);
+
+                if (table.config.debug) {
+                    benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time:", sortTime);
+                }
+
+                return cache;
+            };
+
+            function makeSortFunction(type, direction, index) {
+                var a = "a[" + index + "]",
+                    b = "b[" + index + "]";
+                if (type == 'text' && direction == 'asc') {
+                    return "(" + a + " == " + b + " ? 0 : (" + a + " === null ? Number.POSITIVE_INFINITY : (" + b + " === null ? Number.NEGATIVE_INFINITY : (" + a + " < " + b + ") ? -1 : 1 )));";
+                } else if (type == 'text' && direction == 'desc') {
+                    return "(" + a + " == " + b + " ? 0 : (" + a + " === null ? Number.POSITIVE_INFINITY : (" + b + " === null ? Number.NEGATIVE_INFINITY : (" + b + " < " + a + ") ? -1 : 1 )));";
+                } else if (type == 'numeric' && direction == 'asc') {
+                    return "(" + a + " === null && " + b + " === null) ? 0 :(" + a + " === null ? Number.POSITIVE_INFINITY : (" + b + " === null ? Number.NEGATIVE_INFINITY : " + a + " - " + b + "));";
+                } else if (type == 'numeric' && direction == 'desc') {
+                    return "(" + a + " === null && " + b + " === null) ? 0 :(" + a + " === null ? Number.POSITIVE_INFINITY : (" + b + " === null ? Number.NEGATIVE_INFINITY : " + b + " - " + a + "));";
+                }
+            };
+
+            function makeSortText(i) {
+                return "((a[" + i + "] < b[" + i + "]) ? -1 : ((a[" + i + "] > b[" + i + "]) ? 1 : 0));";
+            };
+
+            function makeSortTextDesc(i) {
+                return "((b[" + i + "] < a[" + i + "]) ? -1 : ((b[" + i + "] > a[" + i + "]) ? 1 : 0));";
+            };
+
+            function makeSortNumeric(i) {
+                return "a[" + i + "]-b[" + i + "];";
+            };
+
+            function makeSortNumericDesc(i) {
+                return "b[" + i + "]-a[" + i + "];";
+            };
+
+            function sortText(a, b) {
+                if (table.config.sortLocaleCompare) return a.localeCompare(b);
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            };
+
+            function sortTextDesc(a, b) {
+                if (table.config.sortLocaleCompare) return b.localeCompare(a);
+                return ((b < a) ? -1 : ((b > a) ? 1 : 0));
+            };
+
+            function sortNumeric(a, b) {
+                return a - b;
+            };
+
+            function sortNumericDesc(a, b) {
+                return b - a;
+            };
+
+            function getCachedSortType(parsers, i) {
+                return parsers[i].type;
+            }; /* public methods */
+            this.construct = function (settings) {
+                return this.each(function () {
+                    // if no thead or tbody quit.
+                    if (!this.tHead || !this.tBodies) return;
+                    // declare
+                    var $this, $document, $headers, cache, config, shiftDown = 0,
+                        sortOrder;
+                    // new blank config object
+                    this.config = {};
+                    // merge and extend.
+                    config = $.extend(this.config, $.tablesorter.defaults, settings);
+                    // store common expression for speed
+                    $this = $(this);
+                    // save the settings where they read
+                    $.data(this, "tablesorter", config);
+                    // build headers
+                    $headers = buildHeaders(this);
+                    // try to auto detect column type, and store in tables config
+                    this.config.parsers = buildParserCache(this, $headers);
+                    // build the cache for the tbody cells
+                    cache = buildCache(this);
+                    // get the css class names, could be done else where.
+                    var sortCSS = [config.cssDesc, config.cssAsc];
+                    // fixate columns if the users supplies the fixedWidth option
+                    fixColumnWidth(this);
+                    // apply event handling to headers
+                    // this is to big, perhaps break it out?
+                    $headers.click(
+
+                    function (e) {
+                        var totalRows = ($this[0].tBodies[0] && $this[0].tBodies[0].rows.length) || 0;
+                        if (!this.sortDisabled && totalRows > 0) {
+                            // Only call sortStart if sorting is
+                            // enabled.
+                            $this.trigger("sortStart");
+                            // store exp, for speed
+                            var $cell = $(this);
+                            // get current column index
+                            var i = this.column;
+                            // get current column sort order
+                            this.order = this.count++ % 2;
+							// always sort on the locked order.
+							if(this.lockedOrder) this.order = this.lockedOrder;
+							
+							// user only whants to sort on one
+                            // column
+                            if (!e[config.sortMultiSortKey]) {
+                                // flush the sort list
+                                config.sortList = [];
+                                if (config.sortForce != null) {
+                                    var a = config.sortForce;
+                                    for (var j = 0; j < a.length; j++) {
+                                        if (a[j][0] != i) {
+                                            config.sortList.push(a[j]);
+                                        }
+                                    }
+                                }
+                                // add column to sort list
+                                config.sortList.push([i, this.order]);
+                                // multi column sorting
+                            } else {
+                                // the user has clicked on an all
+                                // ready sortet column.
+                                if (isValueInArray(i, config.sortList)) {
+                                    // revers the sorting direction
+                                    // for all tables.
+                                    for (var j = 0; j < config.sortList.length; j++) {
+                                        var s = config.sortList[j],
+                                            o = config.headerList[s[0]];
+                                        if (s[0] == i) {
+                                            o.count = s[1];
+                                            o.count++;
+                                            s[1] = o.count % 2;
+                                        }
+                                    }
+                                } else {
+                                    // add column to sort list array
+                                    config.sortList.push([i, this.order]);
+                                }
+                            };
+                            setTimeout(function () {
+                                // set css for headers
+                                setHeadersCss($this[0], $headers, config.sortList, sortCSS);
+                                appendToTable(
+	                                $this[0], multisort(
+	                                $this[0], config.sortList, cache)
+								);
+                            }, 1);
+                            // stop normal event by returning false
+                            return false;
+                        }
+                        // cancel selection
+                    }).mousedown(function () {
+                        if (config.cancelSelection) {
+                            this.onselectstart = function () {
+                                return false
+                            };
+                            return false;
+                        }
+                    });
+                    // apply easy methods that trigger binded events
+                    $this.bind("update", function () {
+                        var me = this;
+                        setTimeout(function () {
+                            // rebuild parsers.
+                            me.config.parsers = buildParserCache(
+                            me, $headers);
+                            // rebuild the cache map
+                            cache = buildCache(me);
+                        }, 1);
+                    }).bind("updateCell", function (e, cell) {
+                        var config = this.config;
+                        // get position from the dom.
+                        var pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
+                        // update cache
+                        cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(
+                        getElementText(config, cell), cell);
+                    }).bind("sorton", function (e, list) {
+                        $(this).trigger("sortStart");
+                        config.sortList = list;
+                        // update and store the sortlist
+                        var sortList = config.sortList;
+                        // update header count index
+                        updateHeaderSortCount(this, sortList);
+                        // set css for headers
+                        setHeadersCss(this, $headers, sortList, sortCSS);
+                        // sort the table and append it to the dom
+                        appendToTable(this, multisort(this, sortList, cache));
+                    }).bind("appendCache", function () {
+                        appendToTable(this, cache);
+                    }).bind("applyWidgetId", function (e, id) {
+                        getWidgetById(id).format(this);
+                    }).bind("applyWidgets", function () {
+                        // apply widgets
+                        applyWidget(this);
+                    });
+                    if ($.metadata && ($(this).metadata() && $(this).metadata().sortlist)) {
+                        config.sortList = $(this).metadata().sortlist;
+                    }
+                    // if user has supplied a sort list to constructor.
+                    if (config.sortList.length > 0) {
+                        $this.trigger("sorton", [config.sortList]);
+                    } else {
+                        // appendToTable used in sorton event already calls applyWidget
+                        // apply widgets
+                        applyWidget(this);
+                    }
+                });
+            };
+            this.addParser = function (parser) {
+                var l = parsers.length,
+                    a = true;
+                for (var i = 0; i < l; i++) {
+                    if (parsers[i].id.toLowerCase() == parser.id.toLowerCase()) {
+                        a = false;
+                    }
+                }
+                if (a) {
+                    parsers.push(parser);
+                };
+            };
+            this.addWidget = function (widget) {
+                widgets.push(widget);
+            };
+            this.formatFloat = function (s) {
+                var i = parseFloat(s);
+                return (isNaN(i)) ? 0 : i;
+            };
+            this.formatInt = function (s) {
+                var i = parseInt(s);
+                return (isNaN(i)) ? 0 : i;
+            };
+            this.isDigit = function (s, config) {
+                // replace all an wanted chars and match.
+                return /^[-+]?\d*$/.test($.trim(s.replace(/[,.']/g, '')));
+            };
+            this.clearTableBody = function (table) {
+                if ($.browser.msie) {
+                    function empty() {
+                        while (this.firstChild)
+                        this.removeChild(this.firstChild);
+                    }
+                    empty.apply(table.tBodies[0]);
+                } else {
+                    table.tBodies[0].innerHTML = "";
+                }
+            };
+        }
+    });
+
+    // extend plugin scope
+    $.fn.extend({
+        tablesorter: $.tablesorter.construct
+    });
+
+    // make shortcut
+    var ts = $.tablesorter;
+
+    // add default parsers
+    ts.addParser({
+        id: "text",
+        is: function (s) {
+            return true;
+        }, format: function (s) {
+            return $.trim(s.toLocaleLowerCase());
+        }, type: "text"
+    });
+
+    ts.addParser({
+        id: "digit",
+        is: function (s, table) {
+            var c = table.config;
+            return $.tablesorter.isDigit(s, c);
+        }, format: function (s) {
+            return $.tablesorter.formatFloat(s);
+        }, type: "numeric"
+    });
+
+    ts.addParser({
+        id: "currency",
+        is: function (s) {
+            return /^[£$€?.]/.test(s);
+        }, format: function (s) {
+            return $.tablesorter.formatFloat(s.replace(new RegExp(/[£$€]/g), ""));
+        }, type: "numeric"
+    });
+
+    ts.addParser({
+        id: "ipAddress",
+        is: function (s) {
+            return /^\d{2,3}[\.]\d{2,3}[\.]\d{2,3}[\.]\d{2,3}$/.test(s);
+        }, format: function (s) {
+            var a = s.split("."),
+                r = "",
+                l = a.length;
+            for (var i = 0; i < l; i++) {
+                var item = a[i];
+                if (item.length == 2) {
+                    r += "0" + item;
+                } else {
+                    r += item;
+                }
+            }
+            return $.tablesorter.formatFloat(r);
+        }, type: "numeric"
+    });
+
+    ts.addParser({
+        id: "url",
+        is: function (s) {
+            return /^(https?|ftp|file):\/\/$/.test(s);
+        }, format: function (s) {
+            return jQuery.trim(s.replace(new RegExp(/(https?|ftp|file):\/\//), ''));
+        }, type: "text"
+    });
+
+    ts.addParser({
+        id: "isoDate",
+        is: function (s) {
+            return /^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(s);
+        }, format: function (s) {
+            return $.tablesorter.formatFloat((s != "") ? new Date(s.replace(
+            new RegExp(/-/g), "/")).getTime() : "0");
+        }, type: "numeric"
+    });
+
+    ts.addParser({
+        id: "percent",
+        is: function (s) {
+            return /\%$/.test($.trim(s));
+        }, format: function (s) {
+            return $.tablesorter.formatFloat(s.replace(new RegExp(/%/g), ""));
+        }, type: "numeric"
+    });
+
+    ts.addParser({
+        id: "usLongDate",
+        is: function (s) {
+            return s.match(new RegExp(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/));
+        }, format: function (s) {
+            return $.tablesorter.formatFloat(new Date(s).getTime());
+        }, type: "numeric"
+    });
+
+    ts.addParser({
+        id: "shortDate",
+        is: function (s) {
+            return /\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/.test(s);
+        }, format: function (s, table) {
+            var c = table.config;
+            s = s.replace(/\-/g, "/");
+            if (c.dateFormat == "us") {
+                // reformat the string in ISO format
+                s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2");
+            } else if (c.dateFormat == "uk") {
+                // reformat the string in ISO format
+                s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
+            } else if (c.dateFormat == "dd/mm/yy" || c.dateFormat == "dd-mm-yy") {
+                s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})/, "$1/$2/$3");
+            }
+            return $.tablesorter.formatFloat(new Date(s).getTime());
+        }, type: "numeric"
+    });
+    ts.addParser({
+        id: "time",
+        is: function (s) {
+            return /^(([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(am|pm)))$/.test(s);
+        }, format: function (s) {
+            return $.tablesorter.formatFloat(new Date("2000/01/01 " + s).getTime());
+        }, type: "numeric"
+    });
+    ts.addParser({
+        id: "metadata",
+        is: function (s) {
+            return false;
+        }, format: function (s, table, cell) {
+            var c = table.config,
+                p = (!c.parserMetadataName) ? 'sortValue' : c.parserMetadataName;
+            return $(cell).metadata()[p];
+        }, type: "numeric"
+    });
+    // add default widgets
+    ts.addWidget({
+        id: "zebra",
+        format: function (table) {
+            if (table.config.debug) {
+                var time = new Date();
+            }
+            var $tr, row = -1,
+                odd;
+            // loop through the visible rows
+            $("tr:visible", table.tBodies[0]).each(function (i) {
+                $tr = $(this);
+                // style children rows the same way the parent
+                // row was styled
+                if (!$tr.hasClass(table.config.cssChildRow)) row++;
+                odd = (row % 2 == 0);
+                $tr.removeClass(
+                table.config.widgetZebra.css[odd ? 0 : 1]).addClass(
+                table.config.widgetZebra.css[odd ? 1 : 0])
+            });
+            if (table.config.debug) {
+                $.tablesorter.benchmark("Applying Zebra widget", time);
+            }
+        }
+    });
+})(jQuery);

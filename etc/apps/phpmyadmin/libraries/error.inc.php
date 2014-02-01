@@ -10,17 +10,17 @@ if (! defined('PHPMYADMIN')) {
     exit;
 }
 
-if (!defined('TESTSUITE')) {
+if (! defined('TESTSUITE')) {
     header('Content-Type: text/html; charset=utf-8');
 }
 ?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $lang; ?>" dir="<?php echo $dir; ?>">
+<!DOCTYPE HTML>
+<html lang="<?php echo $lang; ?>" dir="<?php echo $dir; ?>">
 <head>
-    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <title>phpMyAdmin</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <style type="text/css">
     <!--
     html {

@@ -3,13 +3,19 @@
 /**
  * Theme information
  *
- * @package PhpMyAdmin-theme
- * @subpackage pmahomme
+ * @package    PhpMyAdmin-theme
+ * @subpackage PMAHomme
  */
 
 /**
- * If you have problems or questions about this theme email mikehomme@users.sourceforge.net
+ * If you have problems or questions about this theme email
+ * mikehomme@users.sourceforge.net
  */
+
+/**
+ * Icon set used by this theme: http://famfamfam.com/lab/icons/silk/
+ */
+
 $theme_name = 'pmahomme';
 $theme_full_version = '1.1';
 ?>

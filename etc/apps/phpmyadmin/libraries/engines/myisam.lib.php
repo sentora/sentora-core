@@ -1,19 +1,25 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
+ * The MyISAM storage engine
+ *
  * @package PhpMyAdmin-Engines
  */
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
 
 /**
- * the MyISAM storage engine
+ * The MyISAM storage engine
+ *
  * @package PhpMyAdmin-Engines
  */
 class PMA_StorageEngine_myisam extends PMA_StorageEngine
 {
     /**
-     * returns array with variable names dedicated to MyISAM storage engine
+     * Returns array with variable names dedicated to MyISAM storage engine
      *
-     * @return  array   variable names
+     * @return array   variable names
      */
     function getVariables()
     {

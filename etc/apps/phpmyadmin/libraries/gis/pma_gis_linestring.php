@@ -1,6 +1,17 @@
 <?php
+/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Handles the visualization of GIS LINESTRING objects.
+ * Handles actions related to GIS LINESTRING objects
+ *
+ * @package PhpMyAdmin-GIS
+ */
+
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
+/**
+ * Handles actions related to GIS LINESTRING objects
  *
  * @package PhpMyAdmin-GIS
  */
@@ -11,6 +22,8 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
 
     /**
      * A private constructor; prevents direct creation of object.
+     *
+     * @access private
      */
     private function __construct()
     {
@@ -19,7 +32,8 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
     /**
      * Returns the singleton.
      *
-     * @return the singleton
+     * @return PMA_GIS_Linestring the singleton
+     * @access public
      */
     public static function singleton()
     {
@@ -36,7 +50,8 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
      *
      * @param string $spatial spatial data of a row
      *
-     * @return array containing the min, max values for x and y cordinates
+     * @return array an array containing the min, max values for x and y cordinates
+     * @access public
      */
     public function scaleRow($spatial)
     {
@@ -52,12 +67,14 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
      * @param string $label      Label for the GIS LINESTRING object
      * @param string $line_color Color for the GIS LINESTRING object
      * @param array  $scale_data Array containing data related to scaling
-     * @param image  $image      Image object
+     * @param object $image      Image object
      *
-     * @return the modified image object
+     * @return resource the modified image object
+     * @access public
      */
-    public function prepareRowAsPng($spatial, $label, $line_color, $scale_data, $image)
-    {
+    public function prepareRowAsPng($spatial, $label, $line_color,
+        $scale_data, $image
+    ) {
         // allocate colors
         $black = imagecolorallocate($image, 0, 0, 0);
         $red   = hexdec(substr($line_color, 1, 2));
@@ -74,13 +91,19 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
                 $temp_point = $point;
             } else {
                 // draw line section
-                imageline($image, $temp_point[0], $temp_point[1], $point[0], $point[1], $color);
+                imageline(
+                    $image, $temp_point[0], $temp_point[1],
+                    $point[0], $point[1], $color
+                );
                 $temp_point = $point;
             }
         }
         // print label if applicable
         if (isset($label) && trim($label) != '') {
-            imagestring($image, 1, $points_arr[1][0], $points_arr[1][1], trim($label), $black);
+            imagestring(
+                $image, 1, $points_arr[1][0],
+                $points_arr[1][1], trim($label), $black
+            );
         }
         return $image;
     }
@@ -92,9 +115,10 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
      * @param string $label      Label for the GIS LINESTRING object
      * @param string $line_color Color for the GIS LINESTRING object
      * @param array  $scale_data Array containing data related to scaling
-     * @param image  $pdf        TCPDF instance
+     * @param TCPDF  $pdf        TCPDF instance
      *
-     * @return the modified TCPDF instance
+     * @return TCPDF the modified TCPDF instance
+     * @access public
      */
     public function prepareRowAsPdf($spatial, $label, $line_color, $scale_data, $pdf)
     {
@@ -113,7 +137,10 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
                 $temp_point = $point;
             } else {
                 // draw line section
-                $pdf->Line($temp_point[0], $temp_point[1], $point[0], $point[1], $line);
+                $pdf->Line(
+                    $temp_point[0], $temp_point[1],
+                    $point[0], $point[1], $line
+                );
                 $temp_point = $point;
             }
         }
@@ -134,7 +161,8 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
      * @param string $line_color Color for the GIS LINESTRING object
      * @param array  $scale_data Array containing data related to scaling
      *
-     * @return the code related to a row in the GIS dataset
+     * @return string the code related to a row in the GIS dataset
+     * @access public
      */
     public function prepareRowAsSvg($spatial, $label, $line_color, $scale_data)
     {
@@ -174,7 +202,8 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
      * @param string $line_color Color for the GIS LINESTRING object
      * @param array  $scale_data Array containing data related to scaling
      *
-     * @return JavaScript related to a row in the GIS dataset
+     * @return string JavaScript related to a row in the GIS dataset
+     * @access public
      */
     public function prepareRowAsOl($spatial, $srid, $label, $line_color, $scale_data)
     {
@@ -193,18 +222,9 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
         $linesrting = substr($spatial, 11, (strlen($spatial) - 12));
         $points_arr = $this->extractPoints($linesrting, null);
 
-        $row = 'new Array(';
-        foreach ($points_arr as $point) {
-            $row .= '(new OpenLayers.Geometry.Point(' . $point[0] . ', '
-                . $point[1] . ')).transform(new OpenLayers.Projection("EPSG:'
-                . $srid . '"), map.getProjectionObject()), ';
-        }
-        $row = substr($row, 0, strlen($row) - 2);
-        $row .= ')';
-
         $result .= 'vectorLayer.addFeatures(new OpenLayers.Feature.Vector('
-            . 'new OpenLayers.Geometry.LineString(' . $row . '), null, '
-            . json_encode($style_options) . '));';
+            . $this->getLineForOpenLayers($points_arr, $srid)
+            . ', null, ' . json_encode($style_options) . '));';
         return $result;
     }
 
@@ -215,7 +235,8 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
      * @param int    $index    Index into the parameter object
      * @param string $empty    Value for empty points
      *
-     * @return WKT with the set of parameters passed by the GIS editor
+     * @return string WKT with the set of parameters passed by the GIS editor
+     * @access public
      */
     public function generateWkt($gis_data, $index, $empty = '')
     {
@@ -242,9 +263,10 @@ class PMA_GIS_Linestring extends PMA_GIS_Geometry
      * Generate parameters for the GIS data editor from the value of the GIS column.
      *
      * @param string $value of the GIS column
-     * @param index  $index of the geometry
+     * @param int    $index of the geometry
      *
-     * @return  parameters for the GIS data editor from the value of the GIS column
+     * @return array params for the GIS data editor from the value of the GIS column
+     * @access public
      */
     public function generateParams($value, $index = -1)
     {
