@@ -1,4 +1,53 @@
+Changelog of phpSysInfo
+=======================
+
+http://phpsysinfo.sourceforge.net/
+
+phpSysInfo 3.1.8
+----------------
+
+ - [ADD] Add printers messages in the XML output
+ - [ADD] PSStatus plugin - added optional regular expression search in the process name
+ - [ADD] RedHatEnterpriseClient distro icon #40
+ - [ADD] Hebrew Translation he.xml
+
+ - [FIX] BAT plugin - fix for old and new kernel /proc/acpi and /sys/class/power_supply
+
+ - [UPD] LMSensors name for Mac hardware sensors
+
+phpSysInfo 3.1.7
+----------------
+
+ - [ADD] Ksplice support for Linux
+ - [ADD] Show CPU frequency max and min for Darwin (Mac OS X)
+ - [ADD] Show System Language and Code Page on Darwin (Mac OS X)
+ - [ADD] Show network interfaces infos for Minix and SunOS
+ - [ADD] SMS, gNewSense and Vector to detected distros
+ - [ADD] LMSensors power information
+ - [ADD] Battery installation date for the UPS info
+
+ - [UPD] Network interfaces infos and filesystems infos for FreeBSD
+ - [UPD] Updated support of SunOS
+ - [UPD] Memory informations on Darwin systems
+ - [UPD] BAT plugin - updated Linux support
+ - [UPD] Updated HWSensors - OpenBSD sensor program
+
+phpSysInfo 3.1.6
+----------------
+
+ - [ADD] Porteus, Peppermint, Manjaro, Netrunner and Salix to detected distros
+ - [ADD] Show CPU frequency max for WINNT
+ - [ADD] Show network interfaces infos for Darwin (Mac OS X)
+
+ - [UPD] SNMPPInfo plugin, ink level for some of the data
+ - [UPD] jQuery 2.0.3 and jQuery 1.10.2
+ - [UPD] Russian Translation ru.xml
+ - [UPD] BAT plugin - WINNT support
+
+ - [SEC] Fix JSONP
+
 phpSysInfo 3.1.5
+----------------
 
  - [ADD] Possibility to define multiple SENSOR_PROGRAM
  - [ADD] Added display of temperature and fan speed for IPMI sensor program
@@ -9,6 +58,7 @@ phpSysInfo 3.1.5
  - [FIX] Fix recovery detection of RAID arrays on debian systems #18
 
 phpSysInfo 3.1.4
+----------------
 
  - [ADD] Option for reading the results of functions executeProgram() and rfts() from log
  - [ADD] Show CPU frequency max and min for variable speed processors for Linux and Android
@@ -18,6 +68,7 @@ phpSysInfo 3.1.4
  - [UPD] jQuery 2.0.2 and jQuery 1.10.1
 
 phpSysInfo 3.1.3
+----------------
 
  - [ADD] IPFire, Sabayon, PearOS, ClearOS, Frugalware, Fuduntu, Foresight, Tinycore, ALT Linux, ROSA and RedHatEnterpriseServer to detected distros
 
@@ -28,6 +79,7 @@ phpSysInfo 3.1.3
  - [FIX] Run php-cs-fixer on php files (PSR-2 fixer)
 
 phpSysInfo 3.1.2
+----------------
 
  - [ADD] Tempsensor and CPU frequency for Raspberry Pi (thanks to hawkeyexp)
  - [ADD] Linaro to detected distros
@@ -37,6 +89,7 @@ phpSysInfo 3.1.2
  - [FIX] Incorrect display of chunk size for the plugin mdstatus for some results
 
 phpSysInfo 3.1.1
+----------------
 
  - [ADD] SolusOS, Deepin and antiX to detected distros
  - [ADD] Simplified Chinese translation
@@ -44,6 +97,7 @@ phpSysInfo 3.1.1
  - [UPD] jQuery 1.9.1
 
 phpSysInfo 3.1.0
+----------------
 
  - [NEW] Configuration moved from config.php and subdirs of "plugins" to one file phpsysinfo.ini
 

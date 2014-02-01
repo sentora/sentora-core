@@ -3,7 +3,7 @@ if (!defined('PSI_CONFIG_FILE')) {
     /**
      * phpSysInfo version
      */
-    define('PSI_VERSION','3.1.5');
+    define('PSI_VERSION','3.1.8');
     /**
      * phpSysInfo configuration
      */
@@ -25,7 +25,7 @@ if (!defined('PSI_CONFIG_FILE')) {
             foreach ($group as $param=>$value) {
                 if (($value==="") || ($value==="0")) {
                     define($name_prefix.strtoupper($param), false);
-                } elseif ($value==1) {
+                } elseif ($value==="1") {
                     define($name_prefix.strtoupper($param), true);
                 } else {
                     if (strstr($value, ',')) {
@@ -83,6 +83,8 @@ if (!defined('PSI_CONFIG_FILE')) {
                 $contents = @file_get_contents('/etc/locale.conf');
             } elseif (file_exists('/etc/sysconfig/language')) {
                 $contents = @file_get_contents('/etc/sysconfig/language');
+            } elseif (file_exists('/etc/profile.d/lang.sh')) {
+                $contents = @file_get_contents('/etc/profile.d/lang.sh');
             } else {
                 $contents = false;
                 if (file_exists('/system/build.prop')) { //Android
@@ -101,11 +103,26 @@ if (!defined('PSI_CONFIG_FILE')) {
                             } else {
                                 $w = null;
                                 $e = null;
-                                $read = array($pipes[1],$pipes[2]);
-                                while (!(feof($pipes[1]) && feof($pipes[2])) && ($n = stream_select($read, $w, $e, 5)) !== false && $n > 0) {
-                                    $out .= fread($pipes[1], 4096);
-                                    $err .= fread($pipes[2], 4096);
+
+                                while (!(feof($pipes[1]) || feof($pipes[2]))) {
+                                    $read = array($pipes[1], $pipes[2]);
+
+                                    $n = stream_select($read, $w, $e, 5);
+
+                                    if (($n === FALSE) || ($n === 0)) {
+                                        break;
+                                    }
+
+                                    foreach ($read as $r) {
+                                        if ($r == $pipes[1]) {
+                                            $out .= fread($r, 4096);
+                                        }
+                                        if ($r == $pipes[2]) {
+                                            $err .= fread($r, 4096);
+                                        }
+                                    }
                                 }
+ 
                                 if (is_null($out) || (trim($out) == "") || (substr(trim($out),0 ,1) != "/")) {
                                     define('PSI_MODE_POPEN', true);
                                 }
@@ -122,7 +139,8 @@ if (!defined('PSI_CONFIG_FILE')) {
             }
             if (!(defined('PSI_SYSTEM_CODEPAGE') && defined('PSI_SYSTEM_LANG')) //also if both not overloaded in phpsysinfo.ini
                && $contents && ( preg_match('/^(LANG="?[^"\n]*"?)/m', $contents, $matches)
-               || preg_match('/^RC_(LANG="?[^"\n]*"?)/m', $contents, $matches))) {
+               || preg_match('/^RC_(LANG="?[^"\n]*"?)/m', $contents, $matches)
+               || preg_match('/^export (LANG="?[^"\n]*"?)/m', $contents, $matches))) {
                 if (!defined('PSI_SYSTEM_CODEPAGE') && @exec($matches[1].' locale -k LC_CTYPE 2>/dev/null', $lines)) { //if not overloaded in phpsysinfo.ini
                     foreach ($lines as $line) {
                         if (preg_match('/^charmap="?([^"]*)/', $line, $matches2)) {
@@ -175,6 +193,20 @@ if (!defined('PSI_CONFIG_FILE')) {
                     }
                 }
             }
+        } elseif (PHP_OS == 'Darwin') {
+            if (!defined('PSI_SYSTEM_LANG') //if not overloaded in phpsysinfo.ini
+                && @exec('defaults read /Library/Preferences/.GlobalPreferences AppleLocale 2>/dev/null', $lines)) {
+                $lang = "";
+                if (is_readable(APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(APP_ROOT.'/data/languages.ini', true))) {
+                    if (isset($langdata['Linux']['_'.$lines[0]])) {
+                        $lang = $langdata['Linux']['_'.$lines[0]];
+                    }
+                }
+                if ($lang == "") {
+                    $lang = 'Unknown';
+                }
+                define('PSI_SYSTEM_LANG', $lang.' ('.$lines[0].')');
+            }
         }
     }
 
@@ -182,15 +214,17 @@ if (!defined('PSI_CONFIG_FILE')) {
         define('PSI_OS', PHP_OS);
     }
 
-    if ((PSI_OS=='Android') && !defined('PSI_SYSTEM_CODEPAGE')) { //also if not overloaded in phpsysinfo.ini
-        define('PSI_SYSTEM_CODEPAGE', 'UTF-8');
-    }
-
     if (!defined('PSI_SYSTEM_LANG')) {
         define('PSI_SYSTEM_LANG', null);
     }
-    if (!defined('PSI_SYSTEM_CODEPAGE')) {
-        define('PSI_SYSTEM_CODEPAGE', null);
+    if (!defined('PSI_SYSTEM_CODEPAGE')) { //if not overloaded in phpsysinfo.ini
+        if ((PSI_OS=='Android') || (PSI_OS=='Darwin')) {
+            define('PSI_SYSTEM_CODEPAGE', 'UTF-8');
+        } elseif (PSI_OS=='Minix') {
+            define('PSI_SYSTEM_CODEPAGE', 'CP437');
+        } else {
+            define('PSI_SYSTEM_CODEPAGE', null);
+        }
     }
 
     /* restore error level */
