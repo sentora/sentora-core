@@ -4,15 +4,19 @@
  *
  * @package PhpMyAdmin
  */
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
 
-require_once "Export_Relation_Schema.class.php";
+require_once 'Export_Relation_Schema.class.php';
 
 /**
  * This Class is EPS Library and
  * helps in developing structure of EPS Schema Export
  *
- * @access public
- * @see http://php.net/manual/en/book.xmlwriter.php
+ * @package PhpMyAdmin
+ * @access  public
+ * @see     http://php.net/manual/en/book.xmlwriter.php
  */
 
 class PMA_EPS
@@ -30,7 +34,6 @@ class PMA_EPS
      * Document Structuring Convention [DSC] and is Compliant
      * Encapsulated Post Script Document
      *
-     * @return void
      * @access public
      */
     function __construct()
@@ -301,7 +304,7 @@ class PMA_EPS
 
         $modifier = 1;
         $font = strtolower($font);
-        switch($font){
+        switch ($font) {
         /*
          * no modifier for arial and sans-serif
          */
@@ -354,7 +357,8 @@ class PMA_EPS
             //ob_end_clean();
         //}
         $output = $this->stringCommands;
-        PMA_download_header($fileName . '.eps', 'image/x-eps', strlen($output));
+        PMA_Response::getInstance()->disable();
+        PMA_downloadHeader($fileName . '.eps', 'image/x-eps', strlen($output));
         print $output;
     }
 }
@@ -365,10 +369,11 @@ class PMA_EPS
  * This class preserves the table co-ordinates,fields
  * and helps in drawing/generating the Tables in EPS.
  *
- * @name Table_Stats
- * @see PMA_EPS
+ * @package PhpMyAdmin
+ * @name    Table_Stats_Eps
+ * @see     PMA_EPS
  */
-class Table_Stats
+class Table_Stats_Eps
 {
     /**
      * Defines properties
@@ -386,7 +391,7 @@ class Table_Stats
     public $primary = array();
 
     /**
-     * The "Table_Stats" constructor
+     * The "Table_Stats_Eps" constructor
      *
      * @param string  $tableName        The table name
      * @param string  $font             The font  name
@@ -396,25 +401,28 @@ class Table_Stats
      * @param boolean $showKeys         Whether to display keys or not
      * @param boolean $showInfo         Whether to display table position or not
      *
-     * @global object    The current eps document
-     * @global integer   The current page number (from the
-     *                     $cfg['Servers'][$i]['table_coords'] table)
-     * @global array     The relations settings
-     * @global string    The current db name
+     * @global object  $eps         The current eps document
+     * @global integer              The current page number (from the
+     *                              $cfg['Servers'][$i]['table_coords'] table)
+     * @global array   $cfgRelation The relations settings
+     * @global string  $db          The current db name
      *
      * @access private
-     * @see PMA_EPS, Table_Stats::Table_Stats_setWidth,
-     *      Table_Stats::Table_Stats_setHeight
+     * @see PMA_EPS, Table_Stats_Eps::Table_Stats_setWidth,
+     *      Table_Stats_Eps::Table_Stats_setHeight
      */
-    function __construct($tableName, $font, $fontSize, $pageNumber, &$same_wide_width,
-    $showKeys = false, $showInfo = false)
-    {
+    function __construct(
+        $tableName, $font, $fontSize, $pageNumber, &$same_wide_width,
+        $showKeys = false, $showInfo = false
+    ) {
         global $eps, $cfgRelation, $db;
 
         $this->_tableName = $tableName;
-        $sql = 'DESCRIBE ' . PMA_backquote($tableName);
-        $result = PMA_DBI_try_query($sql, null, PMA_DBI_QUERY_STORE);
-        if (! $result || ! PMA_DBI_num_rows($result)) {
+        $sql = 'DESCRIBE ' . PMA_Util::backquote($tableName);
+        $result = $GLOBALS['dbi']->tryQuery(
+            $sql, null, PMA_DatabaseInterface::QUERY_STORE
+        );
+        if (! $result || ! $GLOBALS['dbi']->numRows($result)) {
             $eps->dieSchema(
                 $pageNumber, "EPS",
                 sprintf(__('The %s table doesn\'t exist!'), $tableName)
@@ -436,7 +444,7 @@ class Table_Stats
             }
             $this->fields = array_keys($all_columns);
         } else {
-            while ($row = PMA_DBI_fetch_row($result)) {
+            while ($row = $GLOBALS['dbi']->fetchRow($result)) {
                 $this->fields[] = $row[0];
             }
         }
@@ -455,14 +463,16 @@ class Table_Stats
 
         // x and y
         $sql = 'SELECT x, y FROM '
-            . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.'
-            . PMA_backquote($cfgRelation['table_coords'])
-            . ' WHERE db_name = \'' . PMA_sqlAddSlashes($db) . '\''
-            . ' AND   table_name = \'' . PMA_sqlAddSlashes($tableName) . '\''
+            . PMA_Util::backquote($GLOBALS['cfgRelation']['db']) . '.'
+            . PMA_Util::backquote($cfgRelation['table_coords'])
+            . ' WHERE db_name = \'' . PMA_Util::sqlAddSlashes($db) . '\''
+            . ' AND   table_name = \'' . PMA_Util::sqlAddSlashes($tableName) . '\''
             . ' AND   pdf_page_number = ' . $pageNumber;
-        $result = PMA_query_as_controluser($sql, false, PMA_DBI_QUERY_STORE);
+        $result = PMA_queryAsControlUser(
+            $sql, false, PMA_DatabaseInterface::QUERY_STORE
+        );
 
-        if (! $result || ! PMA_DBI_num_rows($result)) {
+        if (! $result || ! $GLOBALS['dbi']->numRows($result)) {
             $eps->dieSchema(
                 $pageNumber, "EPS",
                 sprintf(
@@ -471,18 +481,18 @@ class Table_Stats
                 )
             );
         }
-        list($this->x, $this->y) = PMA_DBI_fetch_row($result);
+        list($this->x, $this->y) = $GLOBALS['dbi']->fetchRow($result);
         $this->x = (double) $this->x;
         $this->y = (double) $this->y;
         // displayfield
         $this->displayfield = PMA_getDisplayField($db, $tableName);
         // index
-        $result = PMA_DBI_query(
-            'SHOW INDEX FROM ' . PMA_backquote($tableName) . ';',
-            null, PMA_DBI_QUERY_STORE
+        $result = $GLOBALS['dbi']->query(
+            'SHOW INDEX FROM ' . PMA_Util::backquote($tableName) . ';',
+            null, PMA_DatabaseInterface::QUERY_STORE
         );
-        if (PMA_DBI_num_rows($result) > 0) {
-            while ($row = PMA_DBI_fetch_assoc($result)) {
+        if ($GLOBALS['dbi']->numRows($result) > 0) {
+            while ($row = $GLOBALS['dbi']->fetchAssoc($result)) {
                 if ($row['Key_name'] == 'PRIMARY') {
                     $this->primary[] = $row['Column_name'];
                 }
@@ -510,7 +520,7 @@ class Table_Stats
      * @param string  $font     The font name
      * @param integer $fontSize The font size
      *
-     * @global object    The current eps document
+     * @global object $eps The current eps document
      *
      * @return void
      *
@@ -556,7 +566,7 @@ class Table_Stats
      *
      * @param boolean $showColor Whether to display color
      *
-     * @global object The current eps document
+     * @global object $eps The current eps document
      *
      * @return void
      *
@@ -597,10 +607,11 @@ class Table_Stats
  * master table's master field to foreign table's foreign key
  * in EPS document.
  *
- * @name Relation_Stats
- * @see PMA_EPS
+ * @package PhpMyAdmin
+ * @name    Relation_Stats_Eps
+ * @see     PMA_EPS
  */
-class Relation_Stats
+class Relation_Stats_Eps
 {
     /**
      * Defines properties
@@ -612,14 +623,14 @@ class Relation_Stats
     public $wTick = 10;
 
     /**
-     * The "Relation_Stats" constructor
+     * The "Relation_Stats_Eps" constructor
      *
      * @param string $master_table  The master table name
      * @param string $master_field  The relation field in the master table
      * @param string $foreign_table The foreign table name
      * @param string $foreign_field The relation field in the foreign table
      *
-     * @see Relation_Stats::_getXy
+     * @see Relation_Stats_Eps::_getXy
      */
     function __construct($master_table, $master_field, $foreign_table, $foreign_field)
     {
@@ -693,7 +704,7 @@ class Relation_Stats
      *
      * @param boolean $changeColor Whether to use one color per relation or not
      *
-     * @global object The current EPS document
+     * @global object $eps The current EPS document
      *
      * @access public
      * @see PMA_EPS
@@ -775,7 +786,7 @@ class Relation_Stats
     }
 }
 /*
-* end of the "Relation_Stats" class
+* end of the "Relation_Stats_Eps" class
 */
 
 /**
@@ -789,11 +800,12 @@ class Relation_Stats
  * This class inherits Export_Relation_Schema class has common functionality added
  * to this class
  *
- * @name Eps_Relation_Schema
+ * @package PhpMyAdmin
+ * @name    Eps_Relation_Schema
  */
 class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
 {
-    private $tables = array();
+    private $_tables = array();
     private $_relations = array();
 
     /**
@@ -802,7 +814,6 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * Upon instantiation This starts writing the EPS document
      * user will be prompted for download as .eps extension
      *
-     * @return void
      * @see PMA_EPS
      */
     function __construct()
@@ -813,7 +824,7 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
         $this->setShowColor(isset($_POST['show_color']));
         $this->setShowKeys(isset($_POST['show_keys']));
         $this->setTableDimension(isset($_POST['show_table_dimension']));
-        $this->setAllTableSameWidth(isset($_POST['all_table_same_wide']));
+        $this->setAllTablesSameWidth(isset($_POST['all_tables_same_width']));
         $this->setOrientation($_POST['orientation']);
         $this->setExportType($_POST['export_type']);
 
@@ -832,16 +843,16 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
 
         $alltables = $this->getAllTables($db, $this->pageNumber);
 
-        foreach ($alltables AS $table) {
-            if (! isset($this->tables[$table])) {
-                $this->tables[$table] = new Table_Stats(
+        foreach ($alltables as $table) {
+            if (! isset($this->_tables[$table])) {
+                $this->_tables[$table] = new Table_Stats_Eps(
                     $table, $eps->getFont(), $eps->getFontSize(), $this->pageNumber,
                     $this->_tablewidth, $this->showKeys, $this->tableDimension
                 );
             }
 
             if ($this->sameWide) {
-                $this->tables[$table]->width = $this->_tablewidth;
+                $this->_tables[$table]->width = $this->_tablewidth;
             }
         }
 
@@ -872,8 +883,18 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
 
         $this->_drawTables($this->showColor);
         $eps->endEpsDoc();
-        $eps->showOutput($db.'-'.$this->pageNumber);
-        exit();
+    }
+
+    /**
+     * Output Eps Document for download
+     *
+     * @return void
+     * @access public
+     */
+    function showOutput()
+    {
+        global $eps,$db;
+        $eps->showOutput($db . '-' . $this->pageNumber);
     }
 
     /**
@@ -890,26 +911,27 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * @return void
      *
      * @access private
-     * @see _setMinMax,Table_Stats::__construct(),Relation_Stats::__construct()
+     * @see _setMinMax,Table_Stats_Eps::__construct(),Relation_Stats_Eps::__construct()
      */
-    private function _addRelation($masterTable, $font, $fontSize, $masterField,
-    $foreignTable, $foreignField, $showInfo)
-    {
-        if (! isset($this->tables[$masterTable])) {
-            $this->tables[$masterTable] = new Table_Stats(
+    private function _addRelation(
+        $masterTable, $font, $fontSize, $masterField,
+        $foreignTable, $foreignField, $showInfo
+    ) {
+        if (! isset($this->_tables[$masterTable])) {
+            $this->_tables[$masterTable] = new Table_Stats_Eps(
                 $masterTable, $font, $fontSize, $this->pageNumber,
                 $this->_tablewidth, false, $showInfo
             );
         }
-        if (! isset($this->tables[$foreignTable])) {
-            $this->tables[$foreignTable] = new Table_Stats(
+        if (! isset($this->_tables[$foreignTable])) {
+            $this->_tables[$foreignTable] = new Table_Stats_Eps(
                 $foreignTable, $font, $fontSize, $this->pageNumber,
                 $this->_tablewidth, false, $showInfo
             );
         }
-        $this->_relations[] = new Relation_Stats(
-            $this->tables[$masterTable], $masterField,
-            $this->tables[$foreignTable], $foreignField
+        $this->_relations[] = new Relation_Stats_Eps(
+            $this->_tables[$masterTable], $masterField,
+            $this->_tables[$foreignTable], $foreignField
         );
     }
 
@@ -922,7 +944,7 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * @return void
      *
      * @access private
-     * @see Relation_Stats::relationDraw()
+     * @see Relation_Stats_Eps::relationDraw()
      */
     private function _drawRelations($changeColor)
     {
@@ -939,11 +961,11 @@ class PMA_Eps_Relation_Schema extends PMA_Export_Relation_Schema
      * @return void
      *
      * @access private
-     * @see Table_Stats::Table_Stats_tableDraw()
+     * @see Table_Stats_Eps::Table_Stats_tableDraw()
      */
     private function _drawTables($changeColor)
     {
-        foreach ($this->tables as $table) {
+        foreach ($this->_tables as $table) {
             $table->tableDraw($changeColor);
         }
     }

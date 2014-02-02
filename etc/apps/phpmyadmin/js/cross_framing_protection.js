@@ -1,1 +1,9 @@
-try{var topdomain=top.document.domain;if(topdomain!=self.document.domain){alert("Redirecting...");top.location.replace(self.document.URL.substring(0,self.document.URL.lastIndexOf("/")+1))}}catch(e$$5){alert("Redirecting... (error: "+e$$5);top.location.replace(self.document.URL.substring(0,self.document.URL.lastIndexOf("/")+1))};
+/* vim: set expandtab sw=4 ts=4 sts=4: */
+/**
+ * Conditionally included if framing is not allowed
+ */
+if (self == top) {
+    document.documentElement.style.display = 'block';
+} else {
+    top.location = self.location;
+}

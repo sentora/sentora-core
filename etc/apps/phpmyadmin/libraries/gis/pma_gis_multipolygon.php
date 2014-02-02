@@ -1,6 +1,17 @@
 <?php
+/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Handles the visualization of GIS MULTIPOLYGON objects.
+ * Handles actions related to GIS MULTIPOLYGON objects
+ *
+ * @package PhpMyAdmin-GIS
+ */
+
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
+/**
+ * Handles actions related to GIS MULTIPOLYGON objects
  *
  * @package PhpMyAdmin-GIS
  */
@@ -11,6 +22,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
 
     /**
      * A private constructor; prevents direct creation of object.
+     *
+     * @access private
      */
     private function __construct()
     {
@@ -19,7 +32,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
     /**
      * Returns the singleton.
      *
-     * @return the singleton
+     * @return PMA_GIS_Multipolygon the singleton
+     * @access public
      */
     public static function singleton()
     {
@@ -36,7 +50,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      *
      * @param string $spatial spatial data of a row
      *
-     * @return array containing the min, max values for x and y cordinates
+     * @return array an array containing the min, max values for x and y cordinates
+     * @access public
      */
     public function scaleRow($spatial)
     {
@@ -69,12 +84,14 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      * @param string $label      Label for the GIS MULTIPOLYGON object
      * @param string $fill_color Color for the GIS MULTIPOLYGON object
      * @param array  $scale_data Array containing data related to scaling
-     * @param image  $image      Image object
+     * @param object $image      Image object
      *
-     * @return the modified image object
+     * @return object the modified image object
+     * @access public
      */
-    public function prepareRowAsPng($spatial, $label, $fill_color, $scale_data, $image)
-    {
+    public function prepareRowAsPng($spatial, $label, $fill_color,
+        $scale_data, $image
+    ) {
         // allocate colors
         $black = imagecolorallocate($image, 0, 0, 0);
         $red   = hexdec(substr($fill_color, 1, 2));
@@ -102,7 +119,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
 
                 foreach ($inner as $inner_poly) {
                     $points_arr = array_merge(
-                        $points_arr, $this->extractPoints($inner_poly, $scale_data, true)
+                        $points_arr,
+                        $this->extractPoints($inner_poly, $scale_data, true)
                     );
                 }
             }
@@ -116,7 +134,9 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
         }
         // print label if applicable
         if (isset($label_point)) {
-            imagestring($image, 1, $points_arr[2], $points_arr[3], trim($label), $black);
+            imagestring(
+                $image, 1, $points_arr[2], $points_arr[3], trim($label), $black
+            );
         }
         return $image;
     }
@@ -128,9 +148,10 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      * @param string $label      Label for the GIS MULTIPOLYGON object
      * @param string $fill_color Color for the GIS MULTIPOLYGON object
      * @param array  $scale_data Array containing data related to scaling
-     * @param image  $pdf        TCPDF instance
+     * @param TCPDF  $pdf        TCPDF instance
      *
-     * @return the modified TCPDF instance
+     * @return TCPDF the modified TCPDF instance
+     * @access public
      */
     public function prepareRowAsPdf($spatial, $label, $fill_color, $scale_data, $pdf)
     {
@@ -191,7 +212,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      * @param string $fill_color Color for the GIS MULTIPOLYGON object
      * @param array  $scale_data Array containing data related to scaling
      *
-     * @return the code related to a row in the GIS dataset
+     * @return string the code related to a row in the GIS dataset
+     * @access public
      */
     public function prepareRowAsSvg($spatial, $label, $fill_color, $scale_data)
     {
@@ -251,7 +273,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      * @param string $fill_color Color for the GIS MULTIPOLYGON object
      * @param array  $scale_data Array containing data related to scaling
      *
-     * @return JavaScript related to a row in the GIS dataset
+     * @return string JavaScript related to a row in the GIS dataset
+     * @access public
      */
     public function prepareRowAsOl($spatial, $srid, $label, $fill_color, $scale_data)
     {
@@ -274,13 +297,9 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
         $polygons = explode(")),((", $multipolygon);
 
         $row .= 'vectorLayer.addFeatures(new OpenLayers.Feature.Vector('
-            . 'new OpenLayers.Geometry.MultiPolygon(new Array(';
-
-        foreach ($polygons as $polygon) {
-            $row .= $this->addPointsForOpenLayersPolygon($polygon, $srid);
-        }
-        $row = substr($row, 0, strlen($row) - 2);
-        $row .= ')), null, ' . json_encode($style_options) . '));';
+            . 'new OpenLayers.Geometry.MultiPolygon('
+            . $this->getPolygonArrayForOpenLayers($polygons, $srid)
+            . '), null, ' . json_encode($style_options) . '));';
         return $row;
     }
 
@@ -290,7 +309,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      * @param string $polygon    The ring
      * @param array  $scale_data Array containing data related to scaling
      *
-     * @return the code to draw the ring
+     * @return string the code to draw the ring
+     * @access private
      */
     private function _drawPath($polygon, $scale_data)
     {
@@ -313,37 +333,41 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      * @param int    $index    Index into the parameter object
      * @param string $empty    Value for empty points
      *
-     * @return WKT with the set of parameters passed by the GIS editor
+     * @return string WKT with the set of parameters passed by the GIS editor
+     * @access public
      */
     public function generateWkt($gis_data, $index, $empty = '')
     {
-        $no_of_polygons = isset($gis_data[$index]['MULTIPOLYGON']['no_of_polygons'])
-            ? $gis_data[$index]['MULTIPOLYGON']['no_of_polygons'] : 1;
+        $data_row = $gis_data[$index]['MULTIPOLYGON'];
+
+        $no_of_polygons = isset($data_row['no_of_polygons'])
+            ? $data_row['no_of_polygons'] : 1;
         if ($no_of_polygons < 1) {
             $no_of_polygons = 1;
         }
+
         $wkt = 'MULTIPOLYGON(';
         for ($k = 0; $k < $no_of_polygons; $k++) {
-            $no_of_lines = isset($gis_data[$index]['MULTIPOLYGON'][$k]['no_of_lines'])
-                ? $gis_data[$index]['MULTIPOLYGON'][$k]['no_of_lines'] : 1;
+            $no_of_lines = isset($data_row[$k]['no_of_lines'])
+                ? $data_row[$k]['no_of_lines'] : 1;
             if ($no_of_lines < 1) {
                 $no_of_lines = 1;
             }
             $wkt .= '(';
             for ($i = 0; $i < $no_of_lines; $i++) {
-                $no_of_points = isset($gis_data[$index]['MULTIPOLYGON'][$k][$i]['no_of_points'])
-                    ? $gis_data[$index]['MULTIPOLYGON'][$k][$i]['no_of_points'] : 4;
+                $no_of_points = isset($data_row[$k][$i]['no_of_points'])
+                    ? $data_row[$k][$i]['no_of_points'] : 4;
                 if ($no_of_points < 4) {
                     $no_of_points = 4;
                 }
                 $wkt .= '(';
                 for ($j = 0; $j < $no_of_points; $j++) {
-                    $wkt .= ((isset($gis_data[$index]['MULTIPOLYGON'][$k][$i][$j]['x'])
-                        && trim($gis_data[$index]['MULTIPOLYGON'][$k][$i][$j]['x']) != '')
-                        ? $gis_data[$index]['MULTIPOLYGON'][$k][$i][$j]['x'] : $empty)
-                        . ' ' . ((isset($gis_data[$index]['MULTIPOLYGON'][$k][$i][$j]['y'])
-                        && trim($gis_data[$index]['MULTIPOLYGON'][$k][$i][$j]['y']) != '')
-                        ? $gis_data[$index]['MULTIPOLYGON'][$k][$i][$j]['y'] : $empty) .',';
+                    $wkt .= ((isset($data_row[$k][$i][$j]['x'])
+                        && trim($data_row[$k][$i][$j]['x']) != '')
+                        ? $data_row[$k][$i][$j]['x'] : $empty)
+                        . ' ' . ((isset($data_row[$k][$i][$j]['y'])
+                        && trim($data_row[$k][$i][$j]['y']) != '')
+                        ? $data_row[$k][$i][$j]['y'] : $empty) .',';
                 }
                 $wkt = substr($wkt, 0, strlen($wkt) - 1);
                 $wkt .= '),';
@@ -361,7 +385,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
      *
      * @param array $row_data GIS data
      *
-     * @return the WKT for the data from ESRI shape files
+     * @return string the WKT for the data from ESRI shape files
+     * @access public
      */
     public function getShape($row_data)
     {
@@ -370,7 +395,8 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
         // correctly classify inner rings to their respective outer rings.
         include_once './libraries/gis/pma_gis_polygon.php';
         foreach ($row_data['parts'] as $i => $ring) {
-            $row_data['parts'][$i]['isOuter'] = PMA_GIS_Polygon::isOuterRing($ring['points']);
+            $row_data['parts'][$i]['isOuter']
+                = PMA_GIS_Polygon::isOuterRing($ring['points']);
         }
 
         // Find points on surface for inner rings
@@ -438,10 +464,11 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
     /**
      * Generate parameters for the GIS data editor from the value of the GIS column.
      *
-     * @param string $value of the GIS column
-     * @param index  $index of the geometry
+     * @param string $value Value of the GIS column
+     * @param int    $index Index of the geometry
      *
-     * @return  parameters for the GIS data editor from the value of the GIS column
+     * @return array params for the GIS data editor from the value of the GIS column
+     * @access public
      */
     public function generateParams($value, $index = -1)
     {
@@ -460,32 +487,34 @@ class PMA_GIS_Multipolygon extends PMA_GIS_Geometry
         $multipolygon = substr($wkt, 15, (strlen($wkt) - 18));
         // Seperate each polygon
         $polygons = explode(")),((", $multipolygon);
-        $params[$index]['MULTIPOLYGON']['no_of_polygons'] = count($polygons);
+
+        $param_row =& $params[$index]['MULTIPOLYGON'];
+        $param_row['no_of_polygons'] = count($polygons);
 
         $k = 0;
         foreach ($polygons as $polygon) {
             // If the polygon doesnt have an inner polygon
             if (strpos($polygon, "),(") === false) {
-                $params[$index]['MULTIPOLYGON'][$k]['no_of_lines'] = 1;
+                $param_row[$k]['no_of_lines'] = 1;
                 $points_arr = $this->extractPoints($polygon, null);
                 $no_of_points = count($points_arr);
-                $params[$index]['MULTIPOLYGON'][$k][0]['no_of_points'] = $no_of_points;
+                $param_row[$k][0]['no_of_points'] = $no_of_points;
                 for ($i = 0; $i < $no_of_points; $i++) {
-                    $params[$index]['MULTIPOLYGON'][$k][0][$i]['x'] = $points_arr[$i][0];
-                    $params[$index]['MULTIPOLYGON'][$k][0][$i]['y'] = $points_arr[$i][1];
+                    $param_row[$k][0][$i]['x'] = $points_arr[$i][0];
+                    $param_row[$k][0][$i]['y'] = $points_arr[$i][1];
                 }
             } else {
                 // Seperate outer and inner polygons
                 $parts = explode("),(", $polygon);
-                $params[$index]['MULTIPOLYGON'][$k]['no_of_lines'] = count($parts);
+                $param_row[$k]['no_of_lines'] = count($parts);
                 $j = 0;
                 foreach ($parts as $ring) {
                     $points_arr = $this->extractPoints($ring, null);
                     $no_of_points = count($points_arr);
-                    $params[$index]['MULTIPOLYGON'][$k][$j]['no_of_points'] = $no_of_points;
+                    $param_row[$k][$j]['no_of_points'] = $no_of_points;
                     for ($i = 0; $i < $no_of_points; $i++) {
-                        $params[$index]['MULTIPOLYGON'][$k][$j][$i]['x'] = $points_arr[$i][0];
-                        $params[$index]['MULTIPOLYGON'][$k][$j][$i]['y'] = $points_arr[$i][1];
+                        $param_row[$k][$j][$i]['x'] = $points_arr[$i][0];
+                        $param_row[$k][$j][$i]['y'] = $points_arr[$i][1];
                     }
                     $j++;
                 }

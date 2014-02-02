@@ -22,9 +22,8 @@ if ($GLOBALS['is_ajax_request'] != true) {
     /**
      * Displays the header and tabs
      */
-    if (! empty($table) && in_array($table, PMA_DBI_get_tables($db))) {
-        include_once './libraries/tbl_common.php';
-        include_once './libraries/tbl_links.inc.php';
+    if (! empty($table) && in_array($table, $GLOBALS['dbi']->getTables($db))) {
+        include_once './libraries/tbl_common.inc.php';
     } else {
         $table = '';
         include_once './libraries/db_common.inc.php';
@@ -37,9 +36,9 @@ if ($GLOBALS['is_ajax_request'] != true) {
      * create the missing $url_query variable
      */
     if (strlen($db)) {
-        PMA_DBI_select_db($db);
+        $GLOBALS['dbi']->selectDb($db);
         if (! isset($url_query)) {
-            $url_query = PMA_generate_common_url($db, $table);
+            $url_query = PMA_URL_getCommon($db, $table);
         }
     }
 }
@@ -48,26 +47,28 @@ if ($GLOBALS['is_ajax_request'] != true) {
  * Generate the conditional classes that will
  * be used to attach jQuery events to links
  */
-$ajax_class = array('add'    => '',
-                    'edit'   => '',
-                    'exec'   => '',
-                    'drop'   => '',
-                    'export' => '');
-if ($GLOBALS['cfg']['AjaxEnable']) {
-    $ajax_class = array('add'    => 'class="ajax_add_anchor"',
-                        'edit'   => 'class="ajax_edit_anchor"',
-                        'exec'   => 'class="ajax_exec_anchor"',
-                        'drop'   => 'class="ajax_drop_anchor"',
-                        'export' => 'class="ajax_export_anchor"');
-}
+$ajax_class = array(
+    'add'    => '',
+    'edit'   => '',
+    'exec'   => '',
+    'drop'   => '',
+    'export' => ''
+);
+$ajax_class = array(
+    'add'    => 'class="ajax add_anchor"',
+    'edit'   => 'class="ajax edit_anchor"',
+    'exec'   => 'class="ajax exec_anchor"',
+    'drop'   => 'class="ajax drop_anchor"',
+    'export' => 'class="ajax export_anchor"'
+);
 
 /**
  * Create labels for the list
  */
-$titles = PMA_buildActionTitles();
+$titles = PMA_Util::buildActionTitles();
 
 /**
- * Keep a list of errors that occured while
+ * Keep a list of errors that occurred while
  * processing an 'Add' or 'Edit' operation.
  */
 $errors = array();
@@ -78,7 +79,11 @@ $errors = array();
  */
 switch ($_PMA_RTE) {
 case 'RTN':
-    PMA_RTN_main();
+    $type = null;
+    if (isset($_REQUEST['type'])) {
+        $type = $_REQUEST['type'];
+    }
+    PMA_RTN_main($type);
     break;
 case 'TRI':
     PMA_TRI_main();
@@ -86,13 +91,6 @@ case 'TRI':
 case 'EVN':
     PMA_EVN_main();
     break;
-}
-
-/**
- * Display the footer, if necessary
- */
-if ($GLOBALS['is_ajax_request'] != true) {
-    include './libraries/footer.inc.php';
 }
 
 ?>

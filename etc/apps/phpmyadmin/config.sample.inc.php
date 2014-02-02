@@ -4,8 +4,8 @@
  * phpMyAdmin sample configuration, you can use it as base for
  * manual configuration. For easier setup you can use setup/
  *
- * All directives are explained in Documentation.html and on phpMyAdmin
- * wiki <http://wiki.phpmyadmin.net>.
+ * All directives are explained in documentation in the doc/ folder
+ * or at <http://docs.phpmyadmin.net/>.
  *
  * @package PhpMyAdmin
  */
@@ -41,23 +41,27 @@ $cfg['Servers'][$i]['AllowNoPassword'] = false;
 
 /* User used to manipulate with storage */
 // $cfg['Servers'][$i]['controlhost'] = '';
+// $cfg['Servers'][$i]['controlport'] = '';
 // $cfg['Servers'][$i]['controluser'] = 'pma';
 // $cfg['Servers'][$i]['controlpass'] = 'pmapass';
 
 /* Storage database and tables */
 // $cfg['Servers'][$i]['pmadb'] = 'phpmyadmin';
-// $cfg['Servers'][$i]['bookmarktable'] = 'pma_bookmark';
-// $cfg['Servers'][$i]['relation'] = 'pma_relation';
-// $cfg['Servers'][$i]['table_info'] = 'pma_table_info';
-// $cfg['Servers'][$i]['table_coords'] = 'pma_table_coords';
-// $cfg['Servers'][$i]['pdf_pages'] = 'pma_pdf_pages';
-// $cfg['Servers'][$i]['column_info'] = 'pma_column_info';
-// $cfg['Servers'][$i]['history'] = 'pma_history';
-// $cfg['Servers'][$i]['table_uiprefs'] = 'pma_table_uiprefs';
-// $cfg['Servers'][$i]['tracking'] = 'pma_tracking';
-// $cfg['Servers'][$i]['designer_coords'] = 'pma_designer_coords';
-// $cfg['Servers'][$i]['userconfig'] = 'pma_userconfig';
-// $cfg['Servers'][$i]['recent'] = 'pma_recent';
+// $cfg['Servers'][$i]['bookmarktable'] = 'pma__bookmark';
+// $cfg['Servers'][$i]['relation'] = 'pma__relation';
+// $cfg['Servers'][$i]['table_info'] = 'pma__table_info';
+// $cfg['Servers'][$i]['table_coords'] = 'pma__table_coords';
+// $cfg['Servers'][$i]['pdf_pages'] = 'pma__pdf_pages';
+// $cfg['Servers'][$i]['column_info'] = 'pma__column_info';
+// $cfg['Servers'][$i]['history'] = 'pma__history';
+// $cfg['Servers'][$i]['table_uiprefs'] = 'pma__table_uiprefs';
+// $cfg['Servers'][$i]['tracking'] = 'pma__tracking';
+// $cfg['Servers'][$i]['designer_coords'] = 'pma__designer_coords';
+// $cfg['Servers'][$i]['userconfig'] = 'pma__userconfig';
+// $cfg['Servers'][$i]['recent'] = 'pma__recent';
+// $cfg['Servers'][$i]['users'] = 'pma__users';
+// $cfg['Servers'][$i]['usergroups'] = 'pma__usergroups';
+// $cfg['Servers'][$i]['navigationhiding'] = 'pma__navigationhiding';
 /* Contrib / Swekey authentication */
 // $cfg['Servers'][$i]['auth_swekey_config'] = '/etc/swekey-pma.conf';
 
@@ -86,17 +90,12 @@ $cfg['SaveDir'] = '';
 //$cfg['MaxRows'] = 50;
 
 /**
- * Use graphically less intense menu tabs
- * default = false
- */
-//$cfg['LightTabs'] = true;
-
-/**
  * disallow editing of binary fields
  * valid values are:
- *   false  allow editing
- *   'blob' allow editing except for BLOB fields
- *   'all'  disallow editing
+ *   false    allow editing
+ *   'blob'   allow editing except for BLOB fields
+ *   'noblob' disallow editing except for BLOB fields
+ *   'all'    disallow editing
  * default = blob
  */
 //$cfg['ProtectBinary'] = 'false';
@@ -139,8 +138,15 @@ $cfg['SaveDir'] = '';
  */
 //$cfg['QueryHistoryMax'] = 100;
 
+/**
+ * Should error reporting be enabled for JavaScript errors
+ *
+ * default = 'ask' 
+ */
+//$cfg['SendErrorReports'] = 'ask';
+
 /*
- * You can find more configuration options in Documentation.html
- * or here: http://wiki.phpmyadmin.net/pma/Config
+ * You can find more configuration options in the documentation
+ * in the doc/ folder or at <http://docs.phpmyadmin.net/>.
  */
 ?>

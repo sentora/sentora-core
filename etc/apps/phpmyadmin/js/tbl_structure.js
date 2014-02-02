@@ -1,24 +1,504 @@
-$(document).ready(function(){$(".drop_column_anchor").live("click",function(a){a.preventDefault();a=window.parent.table;var c=$(this).parents("tr"),d=c.children("th").children("label").text(),f=$("select[name='after_field'] option[value='"+d+"']");a=PMA_messages.strDoYouReally+" :\n ALTER TABLE `"+escapeHtml(a)+"` DROP `"+escapeHtml(d)+"`";$(this).PMA_confirm(a,$(this).attr("href"),function(g){PMA_ajaxShowMessage(PMA_messages.strDroppingColumn,false);$.get(g,{is_js_confirmed:1,ajax_request:true},
-function(e){if(e.success==true){PMA_ajaxShowMessage(e.message);toggleRowColors(c.next());for(var b=c.next();b.length>0;b=b.next()){var h=parseInt(b.find("td:nth-child(2)").text())-1;b.find("td:nth-child(2)").text(h)}f.remove();c.hide("medium").remove();$("#indexes").html(e.indexes_list)}else PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest+" : "+e.error,false)})})});$(".action_primary a").live("click",function(a){a.preventDefault();a=window.parent.table;var c=$(this).parents("tr").children("th").children("label").text();
-a=PMA_messages.strDoYouReally+" :\n ALTER TABLE `"+escapeHtml(a)+"` ADD PRIMARY KEY(`"+escapeHtml(c)+"`)";$(this).PMA_confirm(a,$(this).attr("href"),function(d){PMA_ajaxShowMessage(PMA_messages.strAddingPrimaryKey,false);$.get(d,{is_js_confirmed:1,ajax_request:true},function(f){if(f.success==true){PMA_ajaxShowMessage(f.message);$(this).remove();typeof f.reload!="undefined"&&window.parent.frame_content.location.reload()}else PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest+" : "+f.error,
-false)})})});$(".drop_primary_key_index_anchor").live("click",function(a){a.preventDefault();$anchor=$(this);a=$anchor.parents("tr");for(var c=$anchor.parents("td").attr("rowspan")||1,d=a,f=1,g=a.next();f<c;f++,g=g.next())d=d.add(g);a=escapeHtml(a.children("td").children(".drop_primary_key_index_msg").val());$anchor.PMA_confirm(a,$anchor.attr("href"),function(e){PMA_ajaxShowMessage(PMA_messages.strDroppingPrimaryKeyIndex,false);$.get(e,{is_js_confirmed:1,ajax_request:true},function(b){if(b.success==
-true){PMA_ajaxShowMessage(b.message);b=d.closest("table");if(d.length==b.find("tbody > tr").length){b.hide("medium",function(){$(".no_indexes_defined").show("medium");d.remove()});b.siblings("div.notice").hide("medium")}else{toggleRowColors(d.last().next());d.hide("medium",function(){$(this).remove()})}}else PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest+" : "+b.error,false)})})});$("#fieldsForm.ajax .mult_submit[value=change]").live("click",function(a){a.preventDefault();if($("#tablestructure tbody tr").hasClass("marked")){var c=
-$("#fieldsForm");a=c.attr("action");c=c.serialize()+"&ajax_request=true&submit_mult=change";changeColumns(a,c)}else PMA_ajaxShowMessage(PMA_messages.strNoRowSelected)});$("#fieldsForm.ajax #tablestructure tbody tr td.edit a").live("click",function(a){a.preventDefault();a=$(this).attr("href");if(a.substring(0,13)=="tbl_alter.php")a=a.substring(14,a.length);a+="&ajax_request=true";changeColumns("tbl_alter.php",a)});$("#table_index tbody tr td.edit_index.ajax, #indexes .add_index.ajax").live("click",
-function(a){a.preventDefault();if($(this).find("a").length==0){if(!checkFormElementInRange($(this).closest("form")[0],"added_fields","Column count has to be larger than zero."))return;a=$(this).closest("form").serialize();var c=PMA_messages.strAddIndex}else{a=$(this).find("a").attr("href");if(a.substring(0,16)=="tbl_indexes.php?")a=a.substring(16,a.length);c=PMA_messages.strEditIndex}a+="&ajax_request=true";$("#edit_index_dialog").length!=0&&$("#edit_index_dialog").remove();var d=$('<div id="edit_index_dialog"></div>'),
-f={};f[PMA_messages.strGo]=function(){var e=$("#index_frm");PMA_prepareForAjaxRequest(e);$.post(e.attr("action"),e.serialize()+"&do_save_data=1",function(b){$("#sqlqueryresults").length!=0&&$("#sqlqueryresults").remove();if(b.success==true){PMA_ajaxShowMessage(b.message);$("<div id='sqlqueryresults'></div>").insertAfter("#floating_menubar");$("#sqlqueryresults").html(b.sql_query);$("#result_query .notice").remove();$("#result_query").prepend(b.message);$("#table_index").remove();b=$("<div id='temp_div'><div>").append(b.index_table);
-b.find("#table_index").insertAfter("#index_header");$("#edit_index_dialog").length>0&&$("#edit_index_dialog").dialog("close");$(".no_indexes_defined").hide()}else if(b.error!=undefined){b=$("<div id='temp_div'><div>").append(b.error);b=b.find(".error code").length!=0?b.find(".error code").addClass("error"):b;PMA_ajaxShowMessage(b,false)}})};f[PMA_messages.strCancel]=function(){$(this).dialog("close")};var g=PMA_ajaxShowMessage();$.get("tbl_indexes.php",a,function(e){if(e.error)PMA_ajaxShowMessage(e.error,
-false);else{PMA_ajaxRemoveMessage(g);d.append(e).dialog({title:c,width:450,open:PMA_verifyColumnsProperties,modal:true,buttons:f,close:function(){$(this).remove()}});checkIndexType();checkIndexName("index_frm");PMA_convertFootnotesToTooltips(d);d.find(".slider").slider({animate:true,value:1,min:1,max:16,slide:function(b,h){$(this).closest("fieldset").find("input[type=submit]").val(PMA_messages.strAddToIndex.replace(/%d/,h.value))}});$(".ui-slider-handle").addClass("ui-state-focus")}})});$("#index_frm input[type=submit]").live("click",
-function(a){a.preventDefault();for(a=$(this).closest("fieldset").find(".slider").slider("value");a--;)$("#index_columns").find("tbody > tr:first").clone().appendTo($("#index_columns").find("tbody")).find(":input").each(function(){$(this).val("")})});$("#addColumns.ajax input[type=submit]").live("click",function(a){a.preventDefault();$("#add_columns").length!=0&&$("#add_columns").remove();var c=$('<div id="add_columns"></div>');a=$("#addColumns");var d={};d[PMA_messages.strCancel]=function(){$(this).dialog("close").remove()};
-var f={};f[PMA_messages.strOK]=function(){$(this).dialog("close").remove()};var g=PMA_ajaxShowMessage();$.get(a.attr("action"),a.serialize()+"&ajax_request=true",function(e){if(e.success!=undefined&&e.success==false)c.append(e.error).dialog({title:PMA_messages.strAddColumns,height:230,width:900,open:PMA_verifyColumnsProperties,modal:true,buttons:f});else{c.append(e).dialog({title:PMA_messages.strAddColumns,height:600,width:900,open:PMA_verifyColumnsProperties,modal:true,buttons:d});c=$("#add_columns");
-$("#enum_editor").css("z-index","1100");PMA_convertFootnotesToTooltips(c)}PMA_ajaxRemoveMessage(g)})})});
-function changeColumns(a,c){$("#change_column_dialog").length!=0&&$("#change_column_dialog").remove();var d=$('<div id="change_column_dialog"></div>'),f={};f[PMA_messages.strCancel]=function(){$(this).dialog("close").remove()};var g={};g[PMA_messages.strOK]=function(){$(this).dialog("close").remove()};var e=PMA_ajaxShowMessage();$.get(a,c,function(b){if(b.success!=undefined&&b.success==false)d.append(b.error).dialog({title:PMA_messages.strChangeTbl,height:230,width:900,modal:true,open:PMA_verifyColumnsProperties,
-buttons:g});else{d.append(b).dialog({title:PMA_messages.strChangeTbl,height:600,width:900,modal:true,open:PMA_verifyColumnsProperties,buttons:f});$("#append_fields_form input[name=do_save_data]").addClass("ajax");$("#enum_editor").css("z-index","1100");d=$("#change_column_dialog");PMA_convertFootnotesToTooltips(d)}PMA_ajaxRemoveMessage(e)})}
-$(document).ready(function(){$("#append_fields_form input[name=do_save_data]").live("click",function(a){a.preventDefault();a=$("#append_fields_form");if(checkTableEditForm(a[0],a.find("input[name=orig_num_fields]").val()))if(a.hasClass("ajax")){PMA_prepareForAjaxRequest(a);$.post(a.attr("action"),a.serialize()+"&do_save_data=Save",function(c){if($("#sqlqueryresults").length!=0)$("#sqlqueryresults").remove();else $(".error").length!=0&&$(".error").remove();if(c.success==true){PMA_ajaxShowMessage(c.message);
-$("<div id='sqlqueryresults'></div>").insertAfter("#floating_menubar");$("#sqlqueryresults").html(c.sql_query);$("#result_query .notice").remove();$("#result_query").prepend(c.message);if($("#change_column_dialog").length>0)$("#change_column_dialog").dialog("close").remove();else $("#add_columns").length>0&&$("#add_columns").dialog("close").remove();$.post($("#fieldsForm").attr("action"),$("#fieldsForm").serialize()+"&ajax_request=true",function(d){$("#fieldsForm").remove();$("#addColumns").remove();
-d=$("<div id='temp_div'><div>").append(d);$("#sqlqueryresults").length!=0?d.find("#fieldsForm").insertAfter("#sqlqueryresults"):d.find("#fieldsForm").insertAfter(".error");d.find("#addColumns").insertBefore("iframe.IE_hack");$table_clone=false;moreOptsMenuResize()})}else{c=$("<div id='temp_div'><div>").append(c).find(".error code").addClass("error");PMA_ajaxShowMessage(c,false)}})}else{a.append('<input type="hidden" name="do_save_data" value="Save" />');a.submit()}})},"top.frame_content");
-var $table_clone=false;
-function moreOptsMenuResize(){var a=$("table#tablestructure");if(!(a.length==0||a.hasClass("PropertiesIconic"))){if($table_clone!==false){a.replaceWith($table_clone);a=$table_clone}$table_clone=a.clone();a.find("td.more_opts").hide();var c=function(){var e=0;a.find("tr").eq(1).find("td.edit, td.drop, .replaced_by_more:visible, .more_opts:visible").each(function(){e+=$(this).outerWidth()});return e},d=$(window).width();a.find("tr").eq(0).children().each(function(){if($(this).index()<9)d-=$(this).outerWidth()+
-1});var f=c();if(f>d)for(;f>d&&$(".replaced_by_more:visible").length>0;){f=a.find("tr").eq(1).find(".replaced_by_more:visible").last().prop("className").split(" ");a.find("."+f.join(".")).hide();a.find(".replace_in_more.action_"+f[0]).show();a.find("td.more_opts").show();f=c()}$(".replaced_by_more:hidden").length==0&&a.find("td.more_opts").hide();setTimeout(function(){$(".structure_actions_dropdown").each(function(){var e=$(this),b=e.parent().position().left+e.parent().innerWidth()-e.innerWidth(),
-h=e.parent().position().top+e.parent().innerHeight();e.css({top:h,left:b})})},100);var g=$("select[name='after_field']");$("iframe[class='IE_hack']").width(g.width()).height(g.height()).offset({top:g.offset().top,left:g.offset().left});a.find("td.more_opts").unbind("mouseenter").bind("mouseenter",function(){$.browser.msie&&$.browser.version=="6.0"&&$("iframe[class='IE_hack']").show().width(g.width()+4).height(g.height()+4).offset({top:g.offset().top,left:g.offset().left});$(".structure_actions_dropdown").hide();
-$(this).children(".structure_actions_dropdown").show();if($.browser.msie){var e=$(this).offset().left+$(this).innerWidth()-$(this).children(".structure_actions_dropdown").innerWidth(),b=$(this).offset().top+$(this).innerHeight();$(this).children(".structure_actions_dropdown").offset({top:b,left:e})}}).unbind("mouseleave").bind("mouseleave",function(){$(this).children(".structure_actions_dropdown").hide();$.browser.msie&&$.browser.version=="6.0"&&$("iframe[class='IE_hack']").hide()})}}$(window).resize(moreOptsMenuResize);
-$(function(){$(".replace_in_more").hide();moreOptsMenuResize()});
+/* vim: set expandtab sw=4 ts=4 sts=4: */
+/**
+ * @fileoverview    functions used on the table structure page
+ * @name            Table Structure
+ *
+ * @requires    jQuery
+ * @requires    jQueryUI
+ * @required    js/functions.js
+ */
+
+/**
+ * AJAX scripts for tbl_structure.php
+ *
+ * Actions ajaxified here:
+ * Drop Column
+ * Add Primary Key
+ * Drop Primary Key/Index
+ *
+ */
+
+/**
+ * This function returns the horizontal space available for the menu in pixels.
+ * To calculate this value we start we the width of the main panel, then we
+ * substract the margin of the page content, then we substract any cellspacing
+ * that the table may have (original theme only) and finally we substract the
+ * width of all columns of the table except for the last one (which is where
+ * the menu will go). What we should end up with is the distance between the
+ * start of the last column on the table and the edge of the page, again this
+ * is the space available for the menu.
+ *
+ * In the case where the table cell where the menu will be displayed is already
+ * off-screen (the table is wider than the page), a negative value will be returned,
+ * but this will be treated as a zero by the menuResizer plugin.
+ *
+ * @return int
+ */
+function PMA_tbl_structure_menu_resizer_callback() {
+    var pagewidth = $('body').width();
+    var $page = $('#page_content');
+    pagewidth -= $page.outerWidth(true) - $page.outerWidth();
+    var columnsWidth = 0;
+    var $columns = $('#tablestructure').find('tr:eq(1)').find('td,th');
+    $columns.not(':last').each(function () {
+        columnsWidth += $(this).outerWidth(true);
+    });
+    var totalCellSpacing = $('#tablestructure').width();
+    $columns.each(function () {
+        totalCellSpacing -= $(this).outerWidth(true);
+    });
+    return pagewidth - columnsWidth - totalCellSpacing - 15; // 15px extra margin
+}
+
+/**
+ * Reload fields table
+ */
+function reloadFieldForm() {
+    $.post($("#fieldsForm").attr('action'), $("#fieldsForm").serialize() + "&ajax_request=true", function (form_data) {
+        var $temp_div = $("<div id='temp_div'><div>").append(form_data.message);
+        $("#fieldsForm").replaceWith($temp_div.find("#fieldsForm"));
+        $("#addColumns").replaceWith($temp_div.find("#addColumns"));
+        $('#move_columns_dialog ul').replaceWith($temp_div.find("#move_columns_dialog ul"));
+        $("#moveColumns").removeClass("move-active");
+        /* reinitialise the more options in table */
+        $('#fieldsForm ul.table-structure-actions').menuResizer(PMA_tbl_structure_menu_resizer_callback);
+    });
+    $('#page_content').show();
+}
+
+/**
+ * Unbind all event handlers before tearing down a page
+ */
+AJAX.registerTeardown('tbl_structure.js', function () {
+    $("a.change_column_anchor.ajax").die('click');
+    $("button.change_columns_anchor.ajax, input.change_columns_anchor.ajax").die('click');
+    $("a.drop_column_anchor.ajax").die('click');
+    $("a.add_primary_key_anchor.ajax").die('click');
+    $("a.add_index_anchor.ajax").die('click');
+    $("a.add_unique_anchor.ajax").die('click');
+    $("#move_columns_anchor").die('click');
+    $(".append_fields_form.ajax").unbind('submit');
+});
+
+AJAX.registerOnload('tbl_structure.js', function () {
+
+    /**
+     *Ajax action for submitting the "Column Change" and "Add Column" form
+     */
+    $(".append_fields_form.ajax").die().live('submit', function (event) {
+        event.preventDefault();
+        /**
+         * @var    the_form    object referring to the export form
+         */
+        var $form = $(this);
+
+        /*
+         * First validate the form; if there is a problem, avoid submitting it
+         *
+         * checkTableEditForm() needs a pure element and not a jQuery object,
+         * this is why we pass $form[0] as a parameter (the jQuery object
+         * is actually an array of DOM elements)
+         */
+        if (checkTableEditForm($form[0], $form.find('input[name=orig_num_fields]').val())) {
+            // OK, form passed validation step
+            PMA_prepareForAjaxRequest($form);
+            //User wants to submit the form
+            $msg = PMA_ajaxShowMessage();
+            $.post($form.attr('action'), $form.serialize() + '&do_save_data=1', function (data) {
+                if ($("#sqlqueryresults").length !== 0) {
+                    $("#sqlqueryresults").remove();
+                } else if ($(".error:not(.tab)").length !== 0) {
+                    $(".error:not(.tab)").remove();
+                }
+                if (data.success === true) {
+                    $("#page_content")
+                        .empty()
+                        .append(data.message)
+                        .append(data.sql_query)
+                        .show();
+                    PMA_highlightSQL($('#page_content'));
+                    $("#result_query .notice").remove();
+                    reloadFieldForm();
+                    $form.remove();
+                    PMA_ajaxRemoveMessage($msg);
+                    PMA_reloadNavigation();
+                } else {
+                    PMA_ajaxShowMessage(data.error, false);
+                }
+            }); // end $.post()
+        }
+    }); // end change table button "do_save_data"
+
+    /**
+     * Attach Event Handler for 'Change Column'
+     */
+    $("a.change_column_anchor.ajax").live('click', function (event) {
+        event.preventDefault();
+        var $msg = PMA_ajaxShowMessage();
+        $('#page_content').hide();
+        $.get($(this).attr('href'), {'ajax_request': true}, function (data) {
+            PMA_ajaxRemoveMessage($msg);
+            if (data.success) {
+                $('<div id="change_column_dialog" class="margin"></div>')
+                    .html(data.message)
+                    .insertBefore('#page_content');
+                PMA_highlightSQL($('#page_content'));
+                PMA_showHints();
+                PMA_verifyColumnsProperties();
+            } else {
+                PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+            }
+        });
+    });
+
+    /**
+     * Attach Event Handler for 'Change multiple columns'
+     */
+    $("button.change_columns_anchor.ajax, input.change_columns_anchor.ajax").live('click', function (event) {
+        event.preventDefault();
+        var $msg = PMA_ajaxShowMessage();
+        $('#page_content').hide();
+        var $form = $(this).closest('form');
+        var params = $form.serialize() + "&ajax_request=true&submit_mult=change";
+        $.post($form.prop("action"), params, function (data) {
+            PMA_ajaxRemoveMessage($msg);
+            if (data.success) {
+                $('#page_content')
+                    .empty()
+                    .append(
+                        $('<div id="change_column_dialog"></div>')
+                            .html(data.message)
+                    )
+                    .show();
+                PMA_highlightSQL($('#page_content'));
+                PMA_showHints();
+                PMA_verifyColumnsProperties();
+            } else {
+                $('#page_content').show();
+                PMA_ajaxShowMessage(data.error);
+            }
+        });
+    });
+
+    /**
+     * Attach Event Handler for 'Drop Column'
+     */
+    $("a.drop_column_anchor.ajax").live('click', function (event) {
+        event.preventDefault();
+        /**
+         * @var curr_table_name String containing the name of the current table
+         */
+        var curr_table_name = $(this).closest('form').find('input[name=table]').val();
+        /**
+         * @var curr_row    Object reference to the currently selected row (i.e. field in the table)
+         */
+        var $curr_row = $(this).parents('tr');
+        /**
+         * @var curr_column_name    String containing name of the field referred to by {@link curr_row}
+         */
+        var curr_column_name = $curr_row.children('th').children('label').text();
+        /**
+         * @var $after_field_item    Corresponding entry in the 'After' field.
+         */
+        var $after_field_item = $("select[name='after_field'] option[value='" + curr_column_name + "']");
+        /**
+         * @var question    String containing the question to be asked for confirmation
+         */
+        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` DROP `' + escapeHtml(curr_column_name) + '`;');
+        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
+            var $msg = PMA_ajaxShowMessage(PMA_messages.strDroppingColumn, false);
+            $.get(url, {'is_js_confirmed' : 1, 'ajax_request' : true, 'ajax_page_request' : true}, function (data) {
+                if (data.success === true) {
+                    PMA_ajaxRemoveMessage($msg);
+                    if ($('#result_query').length) {
+                        $('#result_query').remove();
+                    }
+                    if (data.sql_query) {
+                        $('<div id="result_query"></div>')
+                            .html(data.sql_query)
+                            .prependTo('#page_content');
+                        PMA_highlightSQL($('#page_content'));
+                    }
+                    toggleRowColors($curr_row.next());
+                    // Adjust the row numbers
+                    for (var $row = $curr_row.next(); $row.length > 0; $row = $row.next()) {
+                        var new_val = parseInt($row.find('td:nth-child(2)').text(), 10) - 1;
+                        $row.find('td:nth-child(2)').text(new_val);
+                    }
+                    $after_field_item.remove();
+                    $curr_row.hide("medium").remove();
+                    //refresh table stats
+                    if (data.tableStat) {
+                        $('#tablestatistics').html(data.tableStat);
+                    }
+                    // refresh the list of indexes (comes from sql.php)
+                    $('.index_info').replaceWith(data.indexes_list);
+                    PMA_reloadNavigation();
+                } else {
+                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+                }
+            }); // end $.get()
+        }); // end $.PMA_confirm()
+    }); //end of Drop Column Anchor action
+
+    /**
+     * Ajax Event handler for 'Add Primary Key'
+     */
+    $("a.add_primary_key_anchor.ajax").live('click', function (event) {
+        event.preventDefault();
+        /**
+         * @var curr_table_name String containing the name of the current table
+         */
+        var curr_table_name = $(this).closest('form').find('input[name=table]').val();
+        /**
+         * @var curr_column_name    String containing name of the field referred to by {@link curr_row}
+         */
+        var curr_column_name = $(this).parents('tr').children('th').children('label').text();
+        /**
+         * @var question    String containing the question to be asked for confirmation
+         */
+        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` ADD PRIMARY KEY(`' + escapeHtml(curr_column_name) + '`);');
+        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
+            var $msg = PMA_ajaxShowMessage(PMA_messages.strAddingPrimaryKey, false);
+            $.get(url, {'is_js_confirmed' : 1, 'ajax_request' : true}, function (data) {
+                if (data.success === true) {
+                    PMA_ajaxRemoveMessage($msg);
+                    $(this).remove();
+                    if (typeof data.reload != 'undefined') {
+                        PMA_commonActions.refreshMain(false, function () {
+                            if ($('#result_query').length) {
+                                $('#result_query').remove();
+                            }
+                            if (data.sql_query) {
+                                $('<div id="result_query"></div>')
+                                    .html(data.sql_query)
+                                    .prependTo('#page_content');
+                                PMA_highlightSQL($('#page_content'));
+                            }
+                        });
+                        PMA_reloadNavigation();
+                    }
+                } else {
+                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+                }
+            }); // end $.get()
+        }); // end $.PMA_confirm()
+    }); //end Add Primary Key
+
+    /**
+     * Ajax Event handler for 'Add Index'
+     */
+    $("a.add_index_anchor.ajax").live('click', function (event) {
+        event.preventDefault();
+        /**
+         * @var curr_table_name String containing the name of the current table
+         */
+        var curr_table_name = $(this).closest('form').find('input[name=table]').val();
+        /**
+         * @var curr_column_name    String containing name of the field referred to by {@link curr_row}
+         */
+        var curr_column_name = $(this).parents('tr').children('th').children('label').text();
+        /**
+         * @var question    String containing the question to be asked for confirmation
+         */
+        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` ADD INDEX(`' + escapeHtml(curr_column_name) + '`);');
+        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
+            var $msg = PMA_ajaxShowMessage(PMA_messages.strAddingIndex, false);
+            $.get(url, {'is_js_confirmed' : 1, 'ajax_request' : true}, function (data) {
+                if (data.success === true) {
+                    PMA_ajaxRemoveMessage($msg);
+                    if ($('#result_query').length) {
+                        $('#result_query').remove();
+                    }
+                    if (data.sql_query) {
+                        $('<div id="result_query"></div>')
+                            .html(data.sql_query)
+                            .prependTo('#page_content');
+                        PMA_highlightSQL($('#page_content'));
+                    }
+                    PMA_reloadNavigation();
+                } else {
+                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+                }
+            }); // end $.get()
+        }); // end $.PMA_confirm()
+    }); //end Add Index
+
+    /**
+     * Ajax Event handler for 'Add Unique'
+     */
+    $("a.add_unique_anchor.ajax").live('click', function (event) {
+        event.preventDefault();
+        /**
+         * @var curr_table_name String containing the name of the current table
+         */
+        var curr_table_name = $(this).closest('form').find('input[name=table]').val();
+        /**
+         * @var curr_column_name    String containing name of the field referred to by {@link curr_row}
+         */
+        var curr_column_name = $(this).parents('tr').children('th').children('label').text();
+        /**
+         * @var question    String containing the question to be asked for confirmation
+         */
+        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` ADD UNIQUE(`' + escapeHtml(curr_column_name) + '`);');
+        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
+            var $msg = PMA_ajaxShowMessage(PMA_messages.strAddingUnique, false);
+            $.get(url, {'is_js_confirmed' : 1, 'ajax_request' : true}, function (data) {
+                if (data.success === true) {
+                    PMA_ajaxRemoveMessage($msg);
+                    if ($('#result_query').length) {
+                        $('#result_query').remove();
+                    }
+                    if (data.sql_query) {
+                        $('<div id="result_query"></div>')
+                            .html(data.sql_query)
+                            .prependTo('#page_content');
+                        PMA_highlightSQL($('#page_content'));
+                    }
+                    PMA_reloadNavigation();
+                } else {
+                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+                }
+            }); // end $.get()
+        }); // end $.PMA_confirm()
+    }); //end Add Unique
+
+    /**
+     * Inline move columns
+    **/
+    $("#move_columns_anchor").live('click', function (e) {
+        e.preventDefault();
+
+        if ($(this).hasClass("move-active")) {
+            return;
+        }
+
+        /**
+         * @var    button_options  Object that stores the options passed to jQueryUI
+         *                          dialog
+         */
+        var button_options = {};
+
+        button_options[PMA_messages.strGo] = function (event) {
+            event.preventDefault();
+            var $msgbox = PMA_ajaxShowMessage();
+            var $this = $(this);
+            var $form = $this.find("form");
+            var serialized = $form.serialize();
+
+            // check if any columns were moved at all
+            if (serialized == $form.data("serialized-unmoved")) {
+                PMA_ajaxRemoveMessage($msgbox);
+                $this.dialog('close');
+                return;
+            }
+
+            $.post($form.prop("action"), serialized + "&ajax_request=true", function (data) {
+                if (data.success === false) {
+                    PMA_ajaxRemoveMessage($msgbox);
+                    $this
+                    .clone()
+                    .html(data.error)
+                    .dialog({
+                        title: $(this).prop("title"),
+                        height: 230,
+                        width: 900,
+                        modal: true,
+                        buttons: button_options_error
+                    }); // end dialog options
+                } else {
+                    $('#fieldsForm ul.table-structure-actions').menuResizer('destroy');
+                    // sort the fields table
+                    var $fields_table = $("table#tablestructure tbody");
+                    // remove all existing rows and remember them
+                    var $rows = $fields_table.find("tr").remove();
+                    // loop through the correct order
+                    for (var i in data.columns) {
+                        var the_column = data.columns[i];
+                        var $the_row = $rows
+                            .find("input:checkbox[value=" + the_column + "]")
+                            .closest("tr");
+                        // append the row for this column to the table
+                        $fields_table.append($the_row);
+                    }
+                    var $firstrow = $fields_table.find("tr").eq(0);
+                    // Adjust the row numbers and colors
+                    for (var $row = $firstrow; $row.length > 0; $row = $row.next()) {
+                        $row
+                        .find('td:nth-child(2)')
+                        .text($row.index() + 1)
+                        .end()
+                        .removeClass("odd even")
+                        .addClass($row.index() % 2 === 0 ? "odd" : "even");
+                    }
+                    PMA_ajaxShowMessage(data.message);
+                    $this.dialog('close');
+                    $('#fieldsForm ul.table-structure-actions').menuResizer(PMA_tbl_structure_menu_resizer_callback);
+                }
+            });
+        };
+        button_options[PMA_messages.strCancel] = function () {
+            $(this).dialog('close');
+        };
+
+        var button_options_error = {};
+        button_options_error[PMA_messages.strOK] = function () {
+            $(this).dialog('close').remove();
+        };
+
+        var columns = [];
+
+        $("#tablestructure tbody tr").each(function () {
+            var col_name = $(this).find("input:checkbox").eq(0).val();
+            var hidden_input = $("<input/>")
+                .prop({
+                    name: "move_columns[]",
+                    type: "hidden"
+                })
+                .val(col_name);
+            columns[columns.length] = $("<li/>")
+                .addClass("placeholderDrag")
+                .text(col_name)
+                .append(hidden_input);
+        });
+
+        var col_list = $("#move_columns_dialog ul")
+            .find("li").remove().end();
+        for (var i in columns) {
+            col_list.append(columns[i]);
+        }
+        col_list.sortable({
+            axis: 'y',
+            containment: $("#move_columns_dialog div"),
+            tolerance: 'pointer'
+        }).disableSelection();
+        var $form = $("#move_columns_dialog form");
+        $form.data("serialized-unmoved", $form.serialize());
+
+        $("#move_columns_dialog").dialog({
+            modal: true,
+            buttons: button_options,
+            beforeClose: function () {
+                $("#move_columns_anchor").removeClass("move-active");
+            }
+        });
+    });
+});
+
+/** Handler for "More" dropdown in structure table rows */
+AJAX.registerOnload('tbl_structure.js', function () {
+    if ($('#fieldsForm').hasClass('HideStructureActions')) {
+        $('#fieldsForm ul.table-structure-actions').menuResizer(PMA_tbl_structure_menu_resizer_callback);
+    }
+});
+AJAX.registerTeardown('tbl_structure.js', function () {
+    $('#fieldsForm ul.table-structure-actions').menuResizer('destroy');
+});
+$(function () {
+    $(window).resize($.throttle(function () {
+        var $list = $('#fieldsForm ul.table-structure-actions');
+        if ($list.length) {
+            $list.menuResizer('resize');
+        }
+    }));
+});

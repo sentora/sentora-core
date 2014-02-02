@@ -1,8 +1,157 @@
-$(function(){function h(){var c,d,k,l;$("table.data").after(l=$('<table id="testTable" style="width:100%;"><tr><td>'+a+"</td></tr></table>"));k=$("#testTable").width();l.remove();d=($("table.data").width()-k)/i;if($("body").innerWidth()<$("table.data").width()+10||$("body").innerWidth()>$("table.data").width()+20){var g=0;$("table.data tbody tr td:nth-child(2)").each(function(){g=Math.max($(this).text().length,g)});d>0&&g<50||$("table.data tbody tr td:nth-child(2)").each(function(){if(d>0&&$(this).text().length>
-g-d||d<0&&$(this).find("abbr.cutoff").length>0){if($(this).find("abbr.cutoff").length>0)c=$(this).find("abbr.cutoff").attr("title");else{c=$(this).text();if(c.length!=$(this).html().length)return 0}c.length<g-d?$(this).html(c):$(this).html('<abbr class="cutoff" title="'+c+'">'+c.substr(0,g-d-3)+"...</abbr>")}})}}function j(){var c=false,d;e=false;$("table.filteredData tbody tr").each(function(){d=$(this).children(":first");if(c||f==null||f.exec(d.text())){c=$(this).hasClass("diffSession")&&!c;e=!e;
-$(this).css("display","");if(e){$(this).addClass("odd");$(this).removeClass("even")}else{$(this).addClass("even");$(this).removeClass("odd")}}else $(this).css("display","none")})}var f=null,e=false,a="abcdefghijklmnopqrstuvwxyz0123456789,ABCEFGHIJKLMOPQRSTUVWXYZ",b,i;editLink='<a href="#" class="editLink" onclick="return editVariable(this);">'+PMA_getImage("b_edit.png")+" "+PMA_messages.strEdit+"</a>";saveLink='<a href="#" class="saveLink">'+PMA_getImage("b_save.png")+" "+PMA_messages.strSave+"</a> ";
-cancelLink='<a href="#" class="cancelLink">'+PMA_getImage("b_close.png")+" "+PMA_messages.strCancel+"</a> ";is_superuser&&$("table.data tbody tr td:nth-child(2)").hover(function(){$(this).parent().children("th").length>0&&!$(this).hasClass("edit")&&$(this).prepend(editLink)},function(){$(this).find("a.editLink").remove()});$("fieldset#tableFilter").css("display","");$("#filterText").keyup(function(){f=$(this).val().length==0?null:RegExp("(^| )"+$(this).val().replace(/_/g," "),"i");j()});if(location.hash.substr(1).split("=")[0]==
-"filter"){b=location.hash.substr(1).split("=")[1];b.match(/[^0-9a-zA-Z_]+/)||$("#filterText").attr("value",b).trigger("keyup")}$("table.data").after(b=$("<span>"+a+"</span>"));i=b.width()/a.length;b.remove();$(window).resize(h);h()});
-function editVariable(h){var j=$(h).parent().parent().find("th:first").first().text().replace(/ /g,"_"),f=$(saveLink),e=$(cancelLink),a=$(h).parent();a.addClass("edit");a.find("a.editLink").remove();f.click(function(){$.get("server_variables.php?"+url_query,{ajax_request:true,type:"setval",varName:j,varValue:a.find("input").attr("value")},function(b){if(b.success)a.html(b.variable);else{PMA_ajaxShowMessage(b.error,false);a.html(a.find("span.oldContent").html())}a.removeClass("edit")},"json");return false});
-e.click(function(){a.html(a.find("span.oldContent").html());a.removeClass("edit");return false});$.get("server_variables.php?"+url_query,{ajax_request:true,type:"getval",varName:j},function(b){a.html('<span class="oldContent" style="display:none;">'+a.html()+"</span>");a.prepend('<table class="serverVariableEditTable" border="0"><tr><td></td><td style="width:100%;"><input type="text" id="variableEditArea" value="'+b+'" /></td></tr></table>');a.find("table td:first").append(f);a.find("table td:first").append(" ");
-a.find("table td:first").append(e);$("input#variableEditArea").focus();$("input#variableEditArea").keydown(function(i){i.keyCode==13&&f.trigger("click");i.keyCode==27&&e.trigger("click")})});return false};
+/* vim: set expandtab sw=4 ts=4 sts=4: */
+
+/**
+ * Unbind all event handlers before tearing down a page
+ */
+AJAX.registerTeardown('server_variables.js', function () {
+    $('#serverVariables .var-row').unbind('hover');
+    $('#filterText').unbind('keyup');
+    $('a.editLink').die('click');
+    $('#serverVariables').find('.var-name').find('a img').remove();
+});
+
+AJAX.registerOnload('server_variables.js', function () {
+    var $editLink = $('a.editLink');
+    var $saveLink = $('a.saveLink');
+    var $cancelLink = $('a.cancelLink');
+    var $filterField = $('#filterText');
+
+    /* Show edit link on hover */
+    $('#serverVariables').delegate('.var-row', 'hover', function (event) {
+        if (event.type === 'mouseenter') {
+            var $elm = $(this).find('.var-value');
+            // Only add edit element if the element is not being edited
+            if ($elm.hasClass('editable') && ! $elm.hasClass('edit')) {
+                $elm.prepend($editLink.clone().show());
+            }
+        } else {
+            $(this).find('a.editLink').remove();
+        }
+    }).find('.var-name').find('a').append(
+        $('#docImage').clone().show()
+    );
+
+    /* Launches the variable editor */
+    $editLink.live('click', function (event) {
+        event.preventDefault();
+        editVariable(this);
+    });
+
+    /* Event handler for variables filter */
+    $filterField.keyup(function () {
+        var textFilter = null, val = $(this).val();
+        if (val.length !== 0) {
+            textFilter = new RegExp("(^| )" + val.replace(/_/g, ' '), 'i');
+        }
+        filterVariables(textFilter);
+    });
+
+    /* Trigger filtering of the list based on incoming variable name */
+    if ($filterField.val()) {
+        $filterField.trigger('keyup').select();
+    }
+
+    /* Filters the rows by the user given regexp */
+    function filterVariables(textFilter) {
+        var mark_next = false, $row, odd_row = false;
+        $('#serverVariables .var-row').not('.var-header').each(function () {
+            $row = $(this);
+            if (mark_next || textFilter === null ||
+                textFilter.exec($row.find('.var-name').text())
+            ) {
+                // If current global value is different from session value
+                // (has class diffSession), then display that one too
+                mark_next = $row.hasClass('diffSession') && ! mark_next;
+
+                odd_row = ! odd_row;
+                $row.css('display', '');
+                if (odd_row) {
+                    $row.addClass('odd').removeClass('even');
+                } else {
+                    $row.addClass('even').removeClass('odd');
+                }
+            } else {
+                $row.css('display', 'none');
+            }
+        });
+    }
+
+    /* Allows the user to edit a server variable */
+    function editVariable(link) {
+        var $cell = $(link).parent();
+        var varName = $cell.parent().find('.var-name').text().replace(/ /g, '_');
+        var $mySaveLink = $saveLink.clone().show();
+        var $myCancelLink = $cancelLink.clone().show();
+        var $msgbox = PMA_ajaxShowMessage();
+
+        $cell
+            .addClass('edit') // variable is being edited
+            .find('a.editLink')
+            .remove(); // remove edit link
+
+        $mySaveLink.click(function () {
+            var $msgbox = PMA_ajaxShowMessage(PMA_messages.strProcessingRequest);
+            $.get($(this).attr('href'), {
+                    ajax_request: true,
+                    type: 'setval',
+                    varName: varName,
+                    varValue: $cell.find('input').val()
+                }, function (data) {
+                    if (data.success) {
+                        $cell
+                            .html(data.variable)
+                            .data('content', data.variable);
+                        PMA_ajaxRemoveMessage($msgbox);
+                    } else {
+                        PMA_ajaxShowMessage(data.error, false);
+                        $cell.html($cell.data('content'));
+                    }
+                    $cell.removeClass('edit');
+                });
+            return false;
+        });
+
+        $myCancelLink.click(function () {
+            $cell
+                .html($cell.data('content'))
+                .removeClass('edit');
+            return false;
+        });
+
+        $.get($mySaveLink.attr('href'), {
+                ajax_request: true,
+                type: 'getval',
+                varName: varName
+            }, function (data) {
+                if (data.success === true) {
+                    var $editor = $('<div />', {'class': 'serverVariableEditor'})
+                        .append($myCancelLink)
+                        .append(' ')
+                        .append($mySaveLink)
+                        .append(' ')
+                        .append(
+                            $('<div/>').append(
+                                $('<input />', {type: 'text'}).val(data.message)
+                            )
+                        );
+                    // Save and replace content
+                    $cell
+                    .data('content', $cell.html())
+                    .html($editor)
+                    .find('input')
+                    .focus()
+                    .keydown(function (event) { // Keyboard shortcuts
+                        if (event.keyCode === 13) { // Enter key
+                            $mySaveLink.trigger('click');
+                        } else if (event.keyCode === 27) { // Escape key
+                            $myCancelLink.trigger('click');
+                        }
+                    });
+                    PMA_ajaxRemoveMessage($msgbox);
+                } else {
+                    $cell.removeClass('edit');
+                    PMA_ajaxShowMessage(data.error);
+                }
+            });
+    }
+});

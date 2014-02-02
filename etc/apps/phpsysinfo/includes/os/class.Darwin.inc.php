@@ -143,7 +143,16 @@ class Darwin extends BSDCommon
         }
         $dev->setCpuSpeed(round($this->grabkey('hw.cpufrequency') / 1000000));
         $dev->setBusSpeed(round($this->grabkey('hw.busfrequency') / 1000000));
-        $dev->setCache(round($this->grabkey('hw.l2cachesize')));
+        $bufn=$this->grabkey('hw.cpufrequency_min');
+        $bufx=$this->grabkey('hw.cpufrequency_max');
+        if ( !is_null($bufn) && (trim($bufn) != "") && !is_null($bufx) && (trim($bufx) != "") && ($bufn != $bufx)) {
+            $dev->setCpuSpeedMin(round($bufn / 1000000));
+            $dev->setCpuSpeedMax(round($bufx / 1000000));
+        }
+        $buf=$this->grabkey('hw.l2cachesize');
+        if ( !is_null($buf) && (trim($buf) != "") ) {
+            $dev->setCache(round($buf));
+        }
         $ncpu = $this->grabkey('hw.ncpu');
         if ( is_null($ncpu) || (trim($ncpu) == "") || (!($ncpu >= 1)) )
             $ncpu = 1;
@@ -246,12 +255,29 @@ class Darwin extends BSDCommon
             // calculate free memory from page sizes (each page = 4MB)
             if ( (preg_match('/^Pages free:\s+(\S+)/m', $pstat, $free_buf ))
               && (preg_match('/^Pages speculative:\s+(\S+)/m', $pstat, $spec_buf )) ) {
+                
                 $this->sys->setMemFree(($free_buf[1]+$spec_buf[1]) * 4 * 1024);
+
+                $appMemory = 0;
+                if (preg_match('/^Pages wired down:\s+(\S+)/m', $pstat, $wire_buf)) {
+                    $appMemory += $wire_buf[1] * 4 * 1024;
+                }
+                if (preg_match('/^Pages active:\s+(\S+)/m', $pstat, $active_buf)) {
+                    $appMemory += $active_buf[1] * 4 * 1024;
+                }
+                $this->sys->setMemApplication($appMemory);
+
+                if (preg_match('/^Pages inactive:\s+(\S+)/m', $pstat, $inactive_buf)) {
+                    $this->sys->setMemCache($inactive_buf[1] * 4 * 1024);
+                }
+
+                $this->sys->setMemBuffer(0);
             } else {
                 $lines = preg_split("/\n/", $pstat, -1, PREG_SPLIT_NO_EMPTY);
                 $ar_buf = preg_split("/\s+/", $lines[1], 19);
                 $this->sys->setMemFree($ar_buf[2] * 4 * 1024);
             }
+
             $this->sys->setMemTotal($s);
             $this->sys->setMemUsed($this->sys->getMemTotal() - $this->sys->getMemFree());
 
@@ -290,6 +316,19 @@ class Darwin extends BSDCommon
                     $dev->setErrors($ar_buf[4] + $ar_buf[7]);
                     if (isset($ar_buf[10])) {
                         $dev->setDrops($ar_buf[10]);
+                    }
+                    if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS) && (CommonFunctions::executeProgram('ifconfig', $ar_buf[0].' 2>/dev/null', $bufr2, PSI_DEBUG))) {
+                        $bufe2 = preg_split("/\n/", $bufr2, -1, PREG_SPLIT_NO_EMPTY);
+                        foreach ($bufe2 as $buf2) {
+                            if (preg_match('/^\s+ether\s+(\S+)/i', $buf2, $ar_buf2))
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').preg_replace('/:/', '-', $ar_buf2[1]));
+                            elseif (preg_match('/^\s+inet\s+(\S+)\s+netmask/i', $buf2, $ar_buf2))
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                            elseif ((preg_match('/^\s+inet6\s+([^\s%]+)\s+prefixlen/i', $buf2, $ar_buf2) 
+                                  || preg_match('/^\s+inet6\s+([^\s%]+)%\S+\s+prefixlen/i', $buf2, $ar_buf2))
+                                  && !preg_match('/^fe80::/i',$ar_buf2[1]))
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                        }
                     }
                     $this->sys->setNetDevices($dev);
                 }

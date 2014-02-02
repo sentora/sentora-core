@@ -1,6 +1,8 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
+
 /**
+ * HTML geneartor for database listing
  *
  * @package PhpMyAdmin
  */
@@ -15,13 +17,12 @@ if (! defined('PHPMYADMIN')) {
  */
 function PMA_getColumnOrder()
 {
-
     $column_order['DEFAULT_COLLATION_NAME'] = array(
-            'disp_name' => __('Collation'),
-            'description_function' => 'PMA_getCollationDescr',
-            'format'    => 'string',
-            'footer'    => PMA_getServerCollation(),
-        );
+        'disp_name' => __('Collation'),
+        'description_function' => 'PMA_getCollationDescr',
+        'format'    => 'string',
+        'footer'    => PMA_getServerCollation(),
+    );
     $column_order['SCHEMA_TABLES'] = array(
         'disp_name' => __('Tables'),
         'format'    => 'number',
@@ -56,43 +57,45 @@ function PMA_getColumnOrder()
     return $column_order;
 }
 
-/*
+/**
  * Builds the HTML td elements for one database to display in the list
  * of databases from server_databases.php (which can be modified by
  * db_create.php)
  *
- * @param array $current
- * @param boolean $is_superuser
- * @param string $checkall
- * @param string $url_query
- * @param array $column_order
- * @param array $replication_types
- * @param array $replication_info
+ * @param array   $current           current database
+ * @param boolean $is_superuser      user status
+ * @param string  $url_query         url query
+ * @param array   $column_order      column order
+ * @param array   $replication_types replication types
+ * @param array   $replication_info  replication info
  *
  * @return array $column_order, $out
  */
-function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $column_order, $replication_types, $replication_info)
-{
-
+function PMA_buildHtmlForDb(
+    $current, $is_superuser, $url_query,
+    $column_order, $replication_types, $replication_info
+) {
     $out = '';
     if ($is_superuser || $GLOBALS['cfg']['AllowUserDropDatabase']) {
         $out .= '<td class="tool">';
-        $out .= '<input type="checkbox" name="selected_dbs[]" title="' . htmlspecialchars($current['SCHEMA_NAME']) . '" value="' . htmlspecialchars($current['SCHEMA_NAME']) . '" ';
+        $out .= '<input type="checkbox" name="selected_dbs[]" class="checkall" '
+            . 'title="' . htmlspecialchars($current['SCHEMA_NAME']) . '" '
+            . 'value="' . htmlspecialchars($current['SCHEMA_NAME']) . '"';
 
-        if (!PMA_is_system_schema($current['SCHEMA_NAME'], true)) {
-            $out .= (empty($checkall) ? '' : 'checked="checked" ') . '/>';
-        } else {
-            $out .= ' disabled="disabled" />';
+        if ($GLOBALS['dbi']->isSystemSchema($current['SCHEMA_NAME'], true)) {
+            $out .= ' disabled="disabled"';
         }
-        $out .= '</td>';
+        $out .= ' /></td>';
     }
     $out .= '<td class="name">'
-           . '        <a onclick="'
-           . 'if (window.parent.openDb &amp;&amp; window.parent.openDb(\'' . PMA_jsFormat($current['SCHEMA_NAME'], false) . '\')) return false;'
-           . '" href="index.php?' . $url_query . '&amp;db='
+           . '<a href="' . $GLOBALS['cfg']['DefaultTabDatabase']
+           . '?' . $url_query . '&amp;db='
            . urlencode($current['SCHEMA_NAME']) . '" title="'
-           . sprintf(__('Jump to database'), htmlspecialchars($current['SCHEMA_NAME']))
-           . '" target="_parent">'
+           . sprintf(
+               __('Jump to database'),
+               htmlspecialchars($current['SCHEMA_NAME'])
+           )
+           . '">'
            . ' ' . htmlspecialchars($current['SCHEMA_NAME'])
            . '</a>'
            . '</td>';
@@ -103,15 +106,20 @@ function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $col
                 $column_order[$stat_name]['footer'] += $current[$stat_name];
             }
             if ($stat['format'] === 'byte') {
-                list($value, $unit) = PMA_formatByteDown($current[$stat_name], 3, 1);
+                list($value, $unit) = PMA_Util::formatByteDown(
+                    $current[$stat_name], 3, 1
+                );
             } elseif ($stat['format'] === 'number') {
-                $value = PMA_formatNumber($current[$stat_name], 0);
+                $value = PMA_Util::formatNumber(
+                    $current[$stat_name], 0
+                );
             } else {
                 $value = htmlentities($current[$stat_name], 0);
             }
             $out .= '<td class="value">';
             if (isset($stat['description_function'])) {
-                $out .= '<dfn title="' . $stat['description_function']($current[$stat_name]) . '">';
+                $out .= '<dfn title="'
+                    . $stat['description_function']($current[$stat_name]) . '">';
             }
             $out .= $value;
             if (isset($stat['description_function'])) {
@@ -127,14 +135,23 @@ function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $col
         if ($replication_info[$type]['status']) {
             $out .= '<td class="tool" style="text-align: center;">';
 
-            if (strlen(array_search($current["SCHEMA_NAME"], $replication_info[$type]['Ignore_DB'])) > 0) {
-                $out .= PMA_getIcon('s_cancel.png',  __('Not replicated'));
+            $key = array_search(
+                $current["SCHEMA_NAME"],
+                $replication_info[$type]['Ignore_DB']
+            );
+            if (strlen($key) > 0) {
+                $out .= PMA_Util::getIcon('s_cancel.png',  __('Not replicated'));
             } else {
-                $key = array_search($current["SCHEMA_NAME"], $replication_info[$type]['Do_DB']);
+                $key = array_search(
+                    $current["SCHEMA_NAME"], $replication_info[$type]['Do_DB']
+                );
 
-                if (strlen($key) > 0 || ($replication_info[$type]['Do_DB'][0] == "" && count($replication_info[$type]['Do_DB']) == 1)) {
+                if (strlen($key) > 0
+                    || ($replication_info[$type]['Do_DB'][0] == ""
+                    && count($replication_info[$type]['Do_DB']) == 1)
+                ) {
                     // if ($key != null) did not work for index "0"
-                    $out .= PMA_getIcon('s_success.png', __('Replicated'));
+                    $out .= PMA_Util::getIcon('s_success.png', __('Replicated'));
                 }
             }
 
@@ -145,13 +162,19 @@ function PMA_buildHtmlForDb($current, $is_superuser, $checkall, $url_query, $col
     if ($is_superuser && !PMA_DRIZZLE) {
         $out .= '<td class="tool">'
                . '<a onclick="'
-               . 'if (window.parent.setDb) window.parent.setDb(\'' . PMA_jsFormat($current['SCHEMA_NAME']) . '\');'
-               . '" href="./server_privileges.php?' . $url_query
-               . '&amp;checkprivs=' . urlencode($current['SCHEMA_NAME'])
-               . '" title="' . sprintf(__('Check privileges for database &quot;%s&quot;.'), htmlspecialchars($current['SCHEMA_NAME']))
+               . 'PMA_commonActions.setDb(\''
+               . PMA_jsFormat($current['SCHEMA_NAME']) . '\');'
+               . '" href="server_privileges.php?' . $url_query
+               . '&amp;db=' . urlencode($current['SCHEMA_NAME'])
+               . '&amp;checkprivsdb=' . urlencode($current['SCHEMA_NAME'])
+               . '" title="'
+               . sprintf(
+                   __('Check privileges for database &quot;%s&quot;.'),
+                   htmlspecialchars($current['SCHEMA_NAME'])
+               )
                . '">'
                . ' '
-               . PMA_getIcon('s_rights.png', __('Check Privileges'))
+               . PMA_Util::getIcon('s_rights.png', __('Check Privileges'))
                . '</a></td>';
     }
     return array($column_order, $out);

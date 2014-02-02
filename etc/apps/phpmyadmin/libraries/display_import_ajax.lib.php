@@ -1,13 +1,14 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
+* Handles plugins that show the upload progress
 *
 * @package PhpMyAdmin
 */
-
-if (!defined('PHPMYADMIN')) {
+if (! defined('PHPMYADMIN')) {
     exit;
 }
+
 /**
   * constant for differenciating array in $_SESSION variable
   */
@@ -25,20 +26,26 @@ $upload_id = uniqid("");
 
 /**
   * list of available plugins
+  *
+  * Each plugin has own checkfunction in display_import_ajax.lib.php
+  * and own file with functions in upload_#KEY#.php
   */
 $plugins = array(
-       "uploadprogress",
-       "apc",
-       "noplugin"
-       ); // available plugins. Each plugin has own checkfunction in display_import_ajax.lib.php and own file with functions in upload_#KEY#.php
+   // PHP 5.4 session-based upload progress is problematic, see bug 3964
+   //"session",
+   "progress",
+   "apc",
+   "noplugin"
+);
 
 // select available plugin
 foreach ($plugins as $plugin) {
-    $check = "PMA_import_" . $plugin . "Check";
+    $check = "PMA_Import_" . $plugin . "Check";
 
     if ($check()) {
-        $_SESSION[$SESSION_KEY]["handler"] = $plugin;
-        include_once "import/upload/" . $plugin . ".php";
+        $upload_class = "Upload" . ucwords($plugin);
+        $_SESSION[$SESSION_KEY]["handler"] = $upload_class;
+        include_once "plugins/import/upload/" . $upload_class . ".class.php";
         break;
     }
 }
@@ -46,11 +53,15 @@ foreach ($plugins as $plugin) {
 /**
   * Checks if APC bar extension is available and configured correctly.
   *
-  * @return true if APC extension is available and if rfc1867 is enabled, false if it is not
+  * @return boolean true if APC extension is available and if rfc1867 is enabled,
+  *                      false if it is not
   */
-function PMA_import_apcCheck()
+function PMA_Import_apcCheck()
 {
-    if (! extension_loaded('apc') || ! function_exists('apc_fetch') || ! function_exists('getallheaders')) {
+    if (! extension_loaded('apc')
+        || ! function_exists('apc_fetch')
+        || ! function_exists('getallheaders')
+    ) {
         return false;
     }
     return (ini_get('apc.enabled') && ini_get('apc.rfc1867'));
@@ -59,33 +70,60 @@ function PMA_import_apcCheck()
 /**
   * Checks if UploadProgress bar extension is available.
   *
-  * @return true if UploadProgress extension is available, false if it is not
+  * @return boolean true if UploadProgress extension is available,
+  *                 false if it is not
   */
-function PMA_import_uploadprogressCheck()
+function PMA_Import_progressCheck()
 {
-    if (! function_exists("uploadprogress_get_info") || ! function_exists('getallheaders')) {
+    if (! function_exists("uploadprogress_get_info")
+        || ! function_exists('getallheaders')
+    ) {
         return false;
     }
     return true;
 }
+
 /**
-  * Default plugin for handling import. If no other plugin is available, noplugin is used.
+  * Checks if PHP 5.4 session upload-progress feature is available.
   *
-  * @return true
+  * @return boolean true if PHP 5.4 session upload-progress is available,
+  *                 false if it is not
   */
-function PMA_import_nopluginCheck()
+function PMA_Import_sessionCheck()
+{
+    if (PMA_PHP_INT_VERSION < 50400
+        || ! ini_get('session.upload_progress.enabled')
+    ) {
+        return false;
+    }
+    return true;
+}
+
+/**
+  * Default plugin for handling import.
+  * If no other plugin is available, noplugin is used.
+  *
+  * @return boolean true
+  */
+function PMA_Import_nopluginCheck()
 {
     return true;
 }
 
 /**
-  * The function outputs json encoded status of uploaded. It uses PMA_getUploadStatus, which is defined in plugin's file.
+  * The function outputs json encoded status of uploaded.
+  * It uses PMA_getUploadStatus, which is defined in plugin's file.
   *
-  * @param $id - ID of transfer, usually $upload_id from display_import_ajax.lib.php
+  * @param string $id ID of transfer, usually $upload_id
+  *                   from display_import_ajax.lib.php
+  *
+  * @return void
   */
 function PMA_importAjaxStatus($id)
 {
     header('Content-type: application/json');
-    echo json_encode(PMA_getUploadStatus($id));
+    echo json_encode(
+        $_SESSION[$GLOBALS['SESSION_KEY']]['handler']::getUploadStatus($id)
+    );
 }
 ?>

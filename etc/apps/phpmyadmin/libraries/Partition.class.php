@@ -5,10 +5,13 @@
  *
  * @package PhpMyAdmin
  */
-
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
 
 /**
  * base Partition Class
+ *
  * @package PhpMyAdmin
  */
 class PMA_Partition
@@ -16,13 +19,20 @@ class PMA_Partition
     /**
      * returns array of partition names for a specific db/table
      *
+     * @param string $db    database name
+     * @param string $table table name
+     *
      * @access  public
-     * @return  array   of partition names
+     * @return array   of partition names
      */
     static public function getPartitionNames($db, $table)
     {
         if (PMA_Partition::havePartitioning()) {
-            return PMA_DBI_fetch_result("select `PARTITION_NAME` from `information_schema`.`PARTITIONS` where `TABLE_SCHEMA` = '" . $db . "' and `TABLE_NAME` = '" . $table . "'");
+            return $GLOBALS['dbi']->fetchResult(
+                "SELECT `PARTITION_NAME` FROM `information_schema`.`PARTITIONS`"
+                . " WHERE `TABLE_SCHEMA` = '" . $db
+                . "' AND `TABLE_NAME` = '" . $table . "'"
+            );
         } else {
             return array();
         }
@@ -35,7 +45,7 @@ class PMA_Partition
      * @staticvar boolean $have_partitioning
      * @staticvar boolean $already_checked
      * @access  public
-     * @return  boolean
+     * @return boolean
      */
     static public function havePartitioning()
     {
@@ -43,12 +53,27 @@ class PMA_Partition
         static $already_checked = false;
 
         if (! $already_checked) {
-            $have_partitioning = PMA_MYSQL_INT_VERSION >= 50100 && PMA_DBI_fetch_value("SHOW VARIABLES LIKE 'have_partitioning';");
-            $already_checked = true;
+            if (PMA_MYSQL_INT_VERSION >= 50100) {
+                if (PMA_MYSQL_INT_VERSION < 50600) {
+                    if ($GLOBALS['dbi']->fetchValue(
+                        "SHOW VARIABLES LIKE 'have_partitioning';"
+                    )) {
+                        $have_partitioning = true;
+                    }
+                } else {
+                    // see http://dev.mysql.com/doc/refman/5.6/en/partitioning.html
+                    $plugins = $GLOBALS['dbi']->fetchResult("SHOW PLUGINS");
+                    foreach ($plugins as $value) {
+                        if ($value['Name'] == 'partition') {
+                            $have_partitioning = true;
+                            break;
+                        }
+                    }
+                }
+                $already_checked = true;
+            }
         }
         return $have_partitioning;
     }
-
 }
-
 ?>

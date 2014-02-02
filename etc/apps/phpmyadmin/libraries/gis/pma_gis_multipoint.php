@@ -1,6 +1,17 @@
 <?php
+/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Handles the visualization of GIS MULTIPOINT objects.
+ * Handles actions related to GIS MULTIPOINT objects
+ *
+ * @package PhpMyAdmin-GIS
+ */
+
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
+/**
+ * Handles actions related to GIS MULTIPOINT objects
  *
  * @package PhpMyAdmin-GIS
  */
@@ -11,6 +22,8 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
 
     /**
      * A private constructor; prevents direct creation of object.
+     *
+     * @access private
      */
     private function __construct()
     {
@@ -19,7 +32,8 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
     /**
      * Returns the singleton.
      *
-     * @return the singleton
+     * @return PMA_GIS_Multipoint the singleton
+     * @access public
      */
     public static function singleton()
     {
@@ -36,7 +50,8 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
      *
      * @param string $spatial spatial data of a row
      *
-     * @return array containing the min, max values for x and y cordinates
+     * @return array an array containing the min, max values for x and y cordinates
+     * @access public
      */
     public function scaleRow($spatial)
     {
@@ -52,12 +67,14 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
      * @param string $label       Label for the GIS MULTIPOINT object
      * @param string $point_color Color for the GIS MULTIPOINT object
      * @param array  $scale_data  Array containing data related to scaling
-     * @param image  $image       Image object
+     * @param object $image       Image object
      *
-     * @return the modified image object
+     * @return object the modified image object
+     * @access public
      */
-    public function prepareRowAsPng($spatial, $label, $point_color, $scale_data, $image)
-    {
+    public function prepareRowAsPng($spatial, $label, $point_color,
+        $scale_data, $image
+    ) {
         // allocate colors
         $black = imagecolorallocate($image, 0, 0, 0);
         $red   = hexdec(substr($point_color, 1, 2));
@@ -79,7 +96,9 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
         if ((isset($label) && trim($label) != '')
             && ($points_arr[0][0] != '' && $points_arr[0][1] != '')
         ) {
-            imagestring($image, 1, $points_arr[0][0], $points_arr[0][1], trim($label), $black);
+            imagestring(
+                $image, 1, $points_arr[0][0], $points_arr[0][1], trim($label), $black
+            );
         }
         return $image;
     }
@@ -91,12 +110,14 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
      * @param string $label       Label for the GIS MULTIPOINT object
      * @param string $point_color Color for the GIS MULTIPOINT object
      * @param array  $scale_data  Array containing data related to scaling
-     * @param image  $pdf         TCPDF instance
+     * @param TCPDF  $pdf         TCPDF instance
      *
-     * @return the modified TCPDF instance
+     * @return TCPDF the modified TCPDF instance
+     * @access public
      */
-    public function prepareRowAsPdf($spatial, $label, $point_color, $scale_data, $pdf)
-    {
+    public function prepareRowAsPdf($spatial, $label, $point_color,
+        $scale_data, $pdf
+    ) {
         // allocate colors
         $red   = hexdec(substr($point_color, 1, 2));
         $green = hexdec(substr($point_color, 3, 2));
@@ -132,7 +153,8 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
      * @param string $point_color Color for the GIS MULTIPOINT object
      * @param array  $scale_data  Array containing data related to scaling
      *
-     * @return the code related to a row in the GIS dataset
+     * @return string the code related to a row in the GIS dataset
+     * @access public
      */
     public function prepareRowAsSvg($spatial, $label, $point_color, $scale_data)
     {
@@ -151,7 +173,8 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
         $row = '';
         foreach ($points_arr as $point) {
             if ($point[0] != '' && $point[1] != '') {
-                $row .= '<circle cx="' . $point[0] . '" cy="' . $point[1] . '" r="3"';
+                $row .= '<circle cx="' . $point[0] . '" cy="'
+                    . $point[1] . '" r="3"';
                 $point_options['id'] = $label . rand();
                 foreach ($point_options as $option => $val) {
                     $row .= ' ' . $option . '="' . trim($val) . '"';
@@ -173,10 +196,12 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
      * @param string $point_color Color for the GIS MULTIPOINT object
      * @param array  $scale_data  Array containing data related to scaling
      *
-     * @return JavaScript related to a row in the GIS dataset
+     * @return string JavaScript related to a row in the GIS dataset
+     * @access public
      */
-    public function prepareRowAsOl($spatial, $srid, $label, $point_color, $scale_data)
-    {
+    public function prepareRowAsOl($spatial, $srid, $label,
+        $point_color, $scale_data
+    ) {
         $style_options = array(
             'pointRadius'  => 3,
             'fillColor'    => '#ffffff',
@@ -195,22 +220,10 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
         $multipoint = substr($spatial, 11, (strlen($spatial) - 12));
         $points_arr = $this->extractPoints($multipoint, null);
 
-        $row = 'new Array(';
-        foreach ($points_arr as $point) {
-            if ($point[0] != '' && $point[1] != '') {
-                $row .= '(new OpenLayers.Geometry.Point(' . $point[0] . ', ' . $point[1]
-                    . ')).transform(new OpenLayers.Projection("EPSG:' . $srid
-                    . '"), map.getProjectionObject()), ';
-            }
-        }
-        if (substr($row, strlen($row) - 2) == ', ') {
-            $row = substr($row, 0, strlen($row) - 2);
-        }
-        $row .= ')';
-
         $result .= 'vectorLayer.addFeatures(new OpenLayers.Feature.Vector('
-            . 'new OpenLayers.Geometry.MultiPoint(' . $row . '), null, '
-            . json_encode($style_options) . '));';
+            . 'new OpenLayers.Geometry.MultiPoint('
+            . $this->getPointsArrayForOpenLayers($points_arr, $srid)
+            . '), null, ' . json_encode($style_options) . '));';
         return $result;
     }
 
@@ -221,7 +234,8 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
      * @param int    $index    Index into the parameter object
      * @param string $empty    Multipoint does not adhere to this
      *
-     * @return WKT with the set of parameters passed by the GIS editor
+     * @return string WKT with the set of parameters passed by the GIS editor
+     * @access public
      */
     public function generateWkt($gis_data, $index, $empty = '')
     {
@@ -249,13 +263,15 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
      *
      * @param array $row_data GIS data
      *
-     * @return the WKT for the data from ESRI shape files
+     * @return string the WKT for the data from ESRI shape files
+     * @access public
      */
     public function getShape($row_data)
     {
         $wkt = 'MULTIPOINT(';
         for ($i = 0; $i < $row_data['numpoints']; $i++) {
-            $wkt .= $row_data['points'][$i]['x'] . ' ' . $row_data['points'][$i]['y'] . ',';
+            $wkt .= $row_data['points'][$i]['x'] . ' '
+                . $row_data['points'][$i]['y'] . ',';
         }
         $wkt = substr($wkt, 0, strlen($wkt) - 1);
         $wkt .= ')';
@@ -265,10 +281,11 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
     /**
      * Generate parameters for the GIS data editor from the value of the GIS column.
      *
-     * @param string $value of the GIS column
-     * @param index  $index of the geometry
+     * @param string  $value Value of the GIS column
+     * @param integer $index Index of the geometry
      *
-     * @return  parameters for the GIS data editor from the value of the GIS column
+     * @return array params for the GIS data editor from the value of the GIS column
+     * @access public
      */
     public function generateParams($value, $index = -1)
     {
@@ -295,6 +312,32 @@ class PMA_GIS_Multipoint extends PMA_GIS_Geometry
         }
 
         return $params;
+    }
+
+    /**
+     * Overidden to make sure that only the points having valid values
+     * for x and y coordinates are added.
+     *
+     * @param array  $points_arr x and y coordinates for each point
+     * @param string $srid       spatial reference id
+     *
+     * @return string JavaScript for adding an array of points to OpenLayers
+     * @access protected
+     */
+    protected function getPointsArrayForOpenLayers($points_arr, $srid)
+    {
+        $ol_array = 'new Array(';
+        foreach ($points_arr as $point) {
+            if ($point[0] != '' && $point[1] != '') {
+                $ol_array .= $this->getPointForOpenLayers($point, $srid) . ', ';
+            }
+        }
+        if (substr($ol_array, strlen($ol_array) - 2) == ', ') {
+            $ol_array = substr($ol_array, 0, strlen($ol_array) - 2);
+        }
+        $ol_array .= ')';
+
+        return $ol_array;
     }
 }
 ?>

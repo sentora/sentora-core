@@ -12,10 +12,11 @@ if (! defined('PHPMYADMIN')) {
 /**
  * Returns language name
  *
- * @param string $tmplang
+ * @param string $tmplang Language code
+ *
  * @return string
  */
-function PMA_langName($tmplang)
+function PMA_languageName($tmplang)
 {
     $lang_name = ucfirst(substr(strrchr($tmplang[0], '|'), 1));
 
@@ -28,9 +29,9 @@ function PMA_langName($tmplang)
 }
 
 /**
- * tries to find the language to use
+ * Tries to find the language to use
  *
- * @return  bool    success if valid lang is found, otherwise false
+ * @return bool  success if valid lang is found, otherwise false
  */
 function PMA_langCheck()
 {
@@ -43,8 +44,8 @@ function PMA_langCheck()
         }
     }
 
-    // Don't use REQUEST in following code as it might be confused by cookies with same name
-    // check user requested language (POST)
+    // Don't use REQUEST in following code as it might be confused by cookies
+    // with same name. Check user requested language (POST)
     if (! empty($_POST['lang'])) {
         if (PMA_langSet($_POST['lang'])) {
             return true;
@@ -80,16 +81,19 @@ function PMA_langCheck()
         }
     }
 
-    // try to findout user's language by checking its HTTP_ACCEPT_LANGUAGE variable
-    if (PMA_getenv('HTTP_ACCEPT_LANGUAGE')) {
-        foreach (explode(',', PMA_getenv('HTTP_ACCEPT_LANGUAGE')) as $lang) {
+    // try to find out user's language by checking its HTTP_ACCEPT_LANGUAGE variable;
+    // prevent XSS
+    $accepted_languages = PMA_getenv('HTTP_ACCEPT_LANGUAGE');
+    if ($accepted_languages && false === strpos($accepted_languages, '<')) {
+        foreach (explode(',', $accepted_languages) as $lang) {
             if (PMA_langDetect($lang, 1)) {
                 return true;
             }
         }
     }
+    unset($accepted_languages);
 
-    // try to findout user's language by checking its HTTP_USER_AGENT variable
+    // try to find out user's language by checking its HTTP_USER_AGENT variable
     if (PMA_langDetect(PMA_getenv('HTTP_USER_AGENT'), 2)) {
         return true;
     }
@@ -104,17 +108,21 @@ function PMA_langCheck()
 
 /**
  * checks given lang and sets it if valid
- * returns true on success, otherwise flase
+ * returns true on success, otherwise false
  *
- * @param string  $lang   language to set
- * @return  bool    success
+ * @param string &$lang language to set
+ *
+ * @return bool  success
  */
 function PMA_langSet(&$lang)
 {
     /* Partial backward compatibility with 3.3 and older branches */
     $lang = str_replace('-utf-8', '', $lang);
 
-    if (!is_string($lang) || empty($lang) || empty($GLOBALS['available_languages'][$lang])) {
+    if (!is_string($lang)
+        || empty($lang)
+        || empty($GLOBALS['available_languages'][$lang])
+    ) {
         return false;
     }
     $GLOBALS['lang'] = $lang;
@@ -125,11 +133,10 @@ function PMA_langSet(&$lang)
  * Analyzes some PHP environment variables to find the most probable language
  * that should be used
  *
- * @param string   string to analyze
- * @param integer  type of the PHP environment variable which value is $str
+ * @param string  $str     string to analyze
+ * @param integer $envType type of the PHP environment variable which value is $str
  *
- * @return  bool    true on success, otherwise false
- *
+ * @return bool    true on success, otherwise false
  *
  * @access  private
  */
@@ -150,7 +157,8 @@ function PMA_langDetect($str, $envType)
             $expr = str_replace('|', '([-_][[:alpha:]]{2,3})?|', $expr);
         }
         if (($envType == 1 && preg_match('/^(' . addcslashes($expr, '/') . ')(;q=[0-9]\\.[0-9])?$/i', $str))
-            || ($envType == 2 && preg_match('/(\(|\[|;[[:space:]])(' . addcslashes($expr, '/') . ')(;|\]|\))/i', $str))) {
+            || ($envType == 2 && preg_match('/(\(|\[|;[[:space:]])(' . addcslashes($expr, '/') . ')(;|\]|\))/i', $str))
+        ) {
             if (PMA_langSet($lang)) {
                 return true;
             }
@@ -185,7 +193,8 @@ function PMA_langDetect($str, $envType)
  * traditional) must be detected before 'zh' (chinese simplified) for
  * example.
  *
- * @param string $lang
+ * @param string $lang language
+ *
  * @return array
  */
 function PMA_langDetails($lang)
@@ -211,6 +220,8 @@ function PMA_langDetails($lang)
         return array('br|breton', 'br', 'Brezhoneg');
     case 'ca':
         return array('ca|catalan', 'ca', 'Catal&agrave;');
+    case 'ckb':
+        return array('ckb', 'ckb', 'سۆرانی');
     case 'cs':
         return array('cs|czech', 'cs', 'Čeština');
     case 'cy':
@@ -247,6 +258,10 @@ function PMA_langDetails($lang)
         return array('hr|croatian', 'hr', 'Hrvatski');
     case 'hu':
         return array('hu|hungarian', 'hu', 'Magyar');
+    case 'hy':
+        return array('hy|armenian', 'hy', 'Հայերէն');
+    case 'ia':
+        return array('ia|interlingua', 'ia', 'Interlingua');
     case 'id':
         return array('id|indonesian', 'id', 'Bahasa Indonesia');
     case 'it':
@@ -257,12 +272,20 @@ function PMA_langDetails($lang)
         return array('ko|korean', 'ko', '&#54620;&#44397;&#50612;');
     case 'ka':
         return array('ka|georgian', 'ka', '&#4325;&#4304;&#4320;&#4311;&#4323;&#4314;&#4312;');
+    case 'kk':
+        return array('kk|kazakh', 'kk', 'Қазақ');
+    case 'kn':
+        return array('kn|kannada', 'kn', 'ಕನ್ನಡ');
+    case 'ky':
+        return array('ky|kyrgyz', 'ky', 'Кыргызча');
     case 'lt':
         return array('lt|lithuanian', 'lt', 'Lietuvi&#371;');
     case 'lv':
         return array('lv|latvian', 'lv', 'Latvie&scaron;u');
     case 'mk':
         return array('mk|macedonian', 'mk', 'Macedonian');
+    case 'ml':
+        return array('ml|malayalam', 'ml', 'Malayalam');
     case 'mn':
         return array('mn|mongolian', 'mn', '&#1052;&#1086;&#1085;&#1075;&#1086;&#1083;');
     case 'ms':
@@ -271,6 +294,8 @@ function PMA_langDetails($lang)
         return array('nl|dutch', 'nl', 'Nederlands');
     case 'nb':
         return array('nb|norwegian', 'nb', 'Norsk');
+    case 'pa':
+        return array('pa|punjabi', 'pa', 'ਪੰਜਾਬੀ');
     case 'pl':
         return array('pl|polish', 'pl', 'Polski');
     case 'pt_BR':
@@ -317,10 +342,18 @@ function PMA_langDetails($lang)
         return array('uz[-_]lat|uzbek-latin', 'uz-lat', 'O&lsquo;zbekcha');
     case 'uz':
         return array('uz[-_]cyr|uzbek-cyrillic', 'uz-cyr', '&#1038;&#1079;&#1073;&#1077;&#1082;&#1095;&#1072;');
+    case 'vls':
+        return array('vls|flemish', 'vls', 'West-Vlams');
     case 'zh_TW':
         return array('zh[-_](tw|hk)|chinese traditional', 'zh-TW', '&#20013;&#25991;');
     case 'zh_CN':
-        return array('zh|chinese simplified', 'zh', '&#20013;&#25991;');
+        // only TW and HK use traditional Chinese while others (CN, SG, MY)
+        // use simplified Chinese
+        return array(
+            'zh(?![-_](tw|hk))([-_][[:alpha:]]{2,3})?|chinese simplified',
+            'zh',
+            '&#20013;&#25991;'
+        );
     }
     return array("$lang|$lang", $lang, $lang);
 }
@@ -349,7 +382,10 @@ function PMA_langList()
 
     /* Process all files */
     while (false !== ($file = readdir($handle))) {
-        if ($file != "." && $file != ".." && file_exists($GLOBALS['lang_path'] . '/' . $file . '/LC_MESSAGES/phpmyadmin.mo')) {
+        if ($file != "."
+            && $file != ".."
+            && file_exists($GLOBALS['lang_path'] . '/' . $file . '/LC_MESSAGES/phpmyadmin.mo')
+        ) {
             $result[$file] = PMA_langDetails($file);
         }
     }
@@ -360,7 +396,8 @@ function PMA_langList()
 }
 
 /**
- * @global string  path to the translations directory; may be absent if the kit is English-only
+ * @global string  path to the translations directory;
+ *                 may be absent if the kit is English-only
  */
 $GLOBALS['lang_path'] = './locale/';
 
@@ -447,12 +484,17 @@ if (! PMA_langCheck()) {
     $fall_back_lang = 'en';
     $line = __LINE__;
     if (! PMA_langSet($fall_back_lang)) {
-        trigger_error('phpMyAdmin-ERROR: invalid lang code: '
+        trigger_error(
+            'phpMyAdmin-ERROR: invalid lang code: '
             . __FILE__ . '#' . $line . ', check hard coded fall back language.',
-            E_USER_WARNING);
+            E_USER_WARNING
+        );
         // stop execution
         // and tell the user that his chosen language is invalid
-        PMA_fatalError('Could not load any language, please check your language settings and folder.');
+        PMA_fatalError(
+            'Could not load any language, '
+            . 'please check your language settings and folder.'
+        );
     }
 }
 
@@ -471,11 +513,15 @@ _textdomain('phpmyadmin');
  */
 
 if (! function_exists('__')) {
-    die('Bad invocation!');
+    PMA_fatalError('Bad invocation!');
 }
 
-/* l10n: Text direction, use either ltr or rtl */
-$GLOBALS['text_dir'] = __('ltr');
+/* Text direction for language */
+if (in_array($GLOBALS['lang'], array('ar', 'fa', 'he', 'ur'))) {
+    $GLOBALS['text_dir'] = 'rtl';
+} else {
+    $GLOBALS['text_dir'] = 'ltr';
+}
 
 /* TCPDF */
 $GLOBALS['l'] = array();
@@ -492,23 +538,34 @@ $GLOBALS['l']['w_page'] = __('Page number:');
 // now, that we have loaded the language strings we can send the errors
 if ($GLOBALS['lang_failed_cfg']) {
     trigger_error(
-        sprintf(__('Unknown language: %1$s.'),
-            htmlspecialchars($GLOBALS['lang_failed_cfg'])),
-        E_USER_ERROR);
+        sprintf(
+            __('Unknown language: %1$s.'),
+            htmlspecialchars($GLOBALS['lang_failed_cfg'])
+        ),
+        E_USER_ERROR
+    );
 }
 if ($GLOBALS['lang_failed_cookie']) {
     trigger_error(
-        sprintf(__('Unknown language: %1$s.'),
-            htmlspecialchars($GLOBALS['lang_failed_cookie'])),
-        E_USER_ERROR);
+        sprintf(
+            __('Unknown language: %1$s.'),
+            htmlspecialchars($GLOBALS['lang_failed_cookie'])
+        ),
+        E_USER_ERROR
+    );
 }
 if ($GLOBALS['lang_failed_request']) {
     trigger_error(
-        sprintf(__('Unknown language: %1$s.'),
-            htmlspecialchars($GLOBALS['lang_failed_request'])),
-        E_USER_ERROR);
+        sprintf(
+            __('Unknown language: %1$s.'),
+            htmlspecialchars($GLOBALS['lang_failed_request'])
+        ),
+        E_USER_ERROR
+    );
 }
 
-unset($line, $fall_back_lang,
-    $GLOBALS['lang_failed_cfg'], $GLOBALS['lang_failed_cookie'], $GLOBALS['lang_failed_request']);
+unset(
+    $line, $fall_back_lang, $GLOBALS['lang_failed_cfg'],
+    $GLOBALS['lang_failed_cookie'], $GLOBALS['lang_failed_request']
+);
 ?>

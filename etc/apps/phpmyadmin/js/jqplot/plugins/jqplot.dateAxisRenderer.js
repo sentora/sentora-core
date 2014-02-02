@@ -1,18 +1,737 @@
-(function(e){e.jqplot.DateAxisRenderer=function(){e.jqplot.LinearAxisRenderer.call(this);this.date=new e.jsDate};var n=30.4368499*864E5,p=365.242199*864E5,q=["%M:%S.%#N","%M:%S.%#N","%M:%S.%#N","%M:%S","%M:%S","%M:%S","%M:%S","%H:%M:%S","%H:%M:%S","%H:%M","%H:%M","%H:%M","%H:%M","%H:%M","%H:%M","%a %H:%M","%a %H:%M","%b %e %H:%M","%b %e %H:%M","%b %e %H:%M","%b %e %H:%M","%v","%v","%v","%v","%v","%v","%v"],o=[100,200,500,1E3,2E3,5E3,1E4,15E3,3E4,6E4,12E4,3E5,6E5,9E5,18E5,36E5,72E5,144E5,216E5,288E5,
-432E5,864E5,1728E5,2592E5,3456E5,432E6,6048E5,12096E5];e.jqplot.DateAxisRenderer.prototype=new e.jqplot.LinearAxisRenderer;e.jqplot.DateAxisRenderer.prototype.constructor=e.jqplot.DateAxisRenderer;e.jqplot.DateTickFormatter=function(f,h){f||(f="%Y/%m/%d");return e.jsDate.strftime(h,f)};e.jqplot.DateAxisRenderer.prototype.init=function(f){this.tickOptions.formatter=e.jqplot.DateTickFormatter;this.tickInset=0;this.drawBaseline=true;this._daTickInterval=this.daTickInterval=this.baselineColor=this.baselineWidth=
-null;e.extend(true,this,f);f=this._dataBounds;for(var h,m,j,g,a,c,d,l=0;l<this._series.length;l++){h={intervals:[],frequencies:{},sortedIntervals:[],min:null,max:null,mean:null};m=0;j=this._series[l];g=j.data;a=j._plotData;c=j._stackData;for(var b=d=0;b<g.length;b++){if(this.name=="xaxis"||this.name=="x2axis"){g[b][0]=(new e.jsDate(g[b][0])).getTime();a[b][0]=(new e.jsDate(g[b][0])).getTime();c[b][0]=(new e.jsDate(g[b][0])).getTime();if(g[b][0]!=null&&g[b][0]<f.min||f.min==null)f.min=g[b][0];if(g[b][0]!=
-null&&g[b][0]>f.max||f.max==null)f.max=g[b][0];if(b>0){d=Math.abs(g[b][0]-g[b-1][0]);h.intervals.push(d);if(h.frequencies.hasOwnProperty(d))h.frequencies[d]+=1;else h.frequencies[d]=1}m+=d}else{g[b][1]=(new e.jsDate(g[b][1])).getTime();a[b][1]=(new e.jsDate(g[b][1])).getTime();c[b][1]=(new e.jsDate(g[b][1])).getTime();if(g[b][1]!=null&&g[b][1]<f.min||f.min==null)f.min=g[b][1];if(g[b][1]!=null&&g[b][1]>f.max||f.max==null)f.max=g[b][1];if(b>0){d=Math.abs(g[b][1]-g[b-1][1]);h.intervals.push(d);if(h.frequencies.hasOwnProperty(d))h.frequencies[d]+=
-1;else h.frequencies[d]=1}}m+=d}if(j.renderer.bands){if(j.renderer.bands.hiData.length){a=j.renderer.bands.hiData;b=0;for(c=a.length;b<c;b++)if(this.name==="xaxis"||this.name==="x2axis"){a[b][0]=(new e.jsDate(a[b][0])).getTime();if(a[b][0]!=null&&a[b][0]>f.max||f.max==null)f.max=a[b][0]}else{a[b][1]=(new e.jsDate(a[b][1])).getTime();if(a[b][1]!=null&&a[b][1]>f.max||f.max==null)f.max=a[b][1]}}if(j.renderer.bands.lowData.length){a=j.renderer.bands.lowData;b=0;for(c=a.length;b<c;b++)if(this.name==="xaxis"||
-this.name==="x2axis"){a[b][0]=(new e.jsDate(a[b][0])).getTime();if(a[b][0]!=null&&a[b][0]<f.min||f.min==null)f.min=a[b][0]}else{a[b][1]=(new e.jsDate(a[b][1])).getTime();if(a[b][1]!=null&&a[b][1]<f.min||f.min==null)f.min=a[b][1]}}}for(var i in h.frequencies)h.sortedIntervals.push({interval:i,frequency:h.frequencies[i]});h.sortedIntervals.sort(function(k,r){return r.frequency-k.frequency});h.min=e.jqplot.arrayMin(h.intervals);h.max=e.jqplot.arrayMax(h.intervals);h.mean=m/g.length;this._intervalStats.push(h);
-h=m=j=g=a=c=null}f=null};e.jqplot.DateAxisRenderer.prototype.reset=function(){this.min=this._options.min;this.max=this._options.max;this.tickInterval=this._options.tickInterval;this.numberTicks=this._options.numberTicks;this._autoFormatString="";if(this._overrideFormatString&&this.tickOptions&&this.tickOptions.formatString)this.tickOptions.formatString="";this.daTickInterval=this._daTickInterval};e.jqplot.DateAxisRenderer.prototype.createTicks=function(f){var h=this.ticks,m=this.name,j=this._dataBounds,
-g=this.name.charAt(0)==="x"?this._plotDimensions.width:this._plotDimensions.height,a,c,d,l=1,b=null;if(this.tickInterval!=null)if(Number(this.tickInterval))b=[Number(this.tickInterval),"seconds"];else if(typeof this.tickInterval=="string"){c=this.tickInterval.split(" ");if(c.length==1)b=[1,c[0]];else if(c.length==2)b=[c[0],c[1]]}a=this.min!=null?(new e.jsDate(this.min)).getTime():j.min;c=this.max!=null?(new e.jsDate(this.max)).getTime():j.max;if((f=f.plugins.cursor)&&f._zoom&&f._zoom.zooming)this.max=
-this.min=null;f=c-a;if(this.tickOptions==null||!this.tickOptions.formatString)this._overrideFormatString=true;if(h.length){for(c=0;c<h.length;c++){d=h[c];a=new this.tickRenderer(this.tickOptions);if(d.constructor==Array){a.value=(new e.jsDate(d[0])).getTime();a.label=d[1]}else a.value=(new e.jsDate(d)).getTime();if(this.showTicks){if(!this.showTickMarks)a.showMark=false}else{a.showLabel=false;a.showMark=false}a.setTick(a.value,this.name);this._ticks.push(a)}this.numberTicks=h.length;this.min=this._ticks[0].value;
-this.max=this._ticks[this.numberTicks-1].value;this.daTickInterval=[(this.max-this.min)/(this.numberTicks-1)/1E3,"seconds"]}else if(this.min==null&&this.max==null&&j.min==j.max){d=e.extend(true,{},this.tickOptions,{name:this.name,value:null});this.min=j.min-3E5;this.max=j.max+3E5;this.numberTicks=3;for(c=this.min;c<=this.max;c+=3E5){d.value=c;a=new this.tickRenderer(d);if(this._overrideFormatString&&this._autoFormatString!="")a.formatString=this._autoFormatString;a.showLabel=false;a.showMark=false;
-this._ticks.push(a)}if(this.showTicks)this._ticks[1].showLabel=true;if(this.showTickMarks)this._ticks[1].showTickMarks=true}else if(this.min==null&&this.max==null){l=e.extend(true,{},this.tickOptions,{name:this.name,value:null});var i;if(!this.tickInterval&&!this.numberTicks){i=Math.max(g,31);h=115;if(this.tickRenderer===e.jqplot.CanvasAxisTickRenderer&&this.tickOptions.angle)h=115-40*Math.abs(Math.sin(this.tickOptions.angle/180*Math.PI));i=Math.ceil((i-30)/h+1);i=(c-a)/(i-1)}else if(this.tickInterval)i=
-(new e.jsDate(0)).add(b[0],b[1]).getTime();else if(this.numberTicks){i=this.numberTicks;i=(c-a)/(i-1)}if(i<=16416E5){var k;h=Number.MAX_VALUE;j=0;for(b=o.length;j<b;j++){g=Math.abs(i-o[j]);if(g<h){h=g;d=o[j];k=q[j]}}k=[d,k];d=k[0];this._autoFormatString=k[1];a=new e.jsDate(a);a=Math.floor((a.getTime()-a.getUtcOffset())/d)*d+a.getUtcOffset();i=Math.ceil((c-a)/d)+1;this.min=a;this.max=a+(i-1)*d;if(this.max<c){this.max+=d;i+=1}this.tickInterval=d;this.numberTicks=i;for(c=0;c<i;c++){l.value=this.min+
-c*d;a=new this.tickRenderer(l);if(this._overrideFormatString&&this._autoFormatString!="")a.formatString=this._autoFormatString;if(this.showTicks){if(!this.showTickMarks)a.showMark=false}else{a.showLabel=false;a.showMark=false}this._ticks.push(a)}l=this.tickInterval}else if(i<=9*n){this._autoFormatString="%v";d=Math.round(i/n);if(d<1)d=1;else if(d>6)d=6;k=(new e.jsDate(a)).setDate(1).setHours(0,0,0,0);a=new e.jsDate(c);c=(new e.jsDate(c)).setDate(1).setHours(0,0,0,0);if(a.getTime()!==c.getTime())c=
-c.add(1,"month");c=c.diff(k,"month");i=Math.ceil(c/d)+1;this.min=k.getTime();this.max=k.clone().add((i-1)*d,"month").getTime();this.numberTicks=i;for(c=0;c<i;c++){l.value=c===0?k.getTime():k.add(d,"month").getTime();a=new this.tickRenderer(l);if(this._overrideFormatString&&this._autoFormatString!="")a.formatString=this._autoFormatString;if(this.showTicks){if(!this.showTickMarks)a.showMark=false}else{a.showLabel=false;a.showMark=false}this._ticks.push(a)}l=d*n}else{this._autoFormatString="%v";d=Math.round(i/
-p);if(d<1)d=1;k=(new e.jsDate(a)).setMonth(0,1).setHours(0,0,0,0);c=(new e.jsDate(c)).add(1,"year").setMonth(0,1).setHours(0,0,0,0);c=c.diff(k,"year");i=Math.ceil(c/d)+1;this.min=k.getTime();this.max=k.clone().add((i-1)*d,"year").getTime();this.numberTicks=i;for(c=0;c<i;c++){l.value=c===0?k.getTime():k.add(d,"year").getTime();a=new this.tickRenderer(l);if(this._overrideFormatString&&this._autoFormatString!="")a.formatString=this._autoFormatString;if(this.showTicks){if(!this.showTickMarks)a.showMark=
-false}else{a.showLabel=false;a.showMark=false}this._ticks.push(a)}l=d*p}}else{g=m=="xaxis"||m=="x2axis"?this._plotDimensions.width:this._plotDimensions.height;if(this.min!=null&&this.max!=null&&this.numberTicks!=null)this.tickInterval=null;if(this.tickInterval!=null&&b!=null)this.daTickInterval=b;if(a==c){a-=432E5;c+=432E5}f=c-a;parseInt(Math.max(0,g-100)/100,10);a=this.min!=null?(new e.jsDate(this.min)).getTime():a-f/2*(this.padMin-1);c=this.max!=null?(new e.jsDate(this.max)).getTime():c+f/2*(this.padMax-
-1);this.min=a;this.max=c;f=this.max-this.min;if(this.numberTicks==null)if(this.daTickInterval!=null){c=(new e.jsDate(this.max)).diff(this.min,this.daTickInterval[1],true);this.numberTicks=Math.ceil(c/this.daTickInterval[0])+1;this.max=(new e.jsDate(this.min)).add((this.numberTicks-1)*this.daTickInterval[0],this.daTickInterval[1]).getTime()}else this.numberTicks=g>200?parseInt(3+(g-200)/100,10):2;l=f/(this.numberTicks-1)/1E3;if(this.daTickInterval==null)this.daTickInterval=[l,"seconds"];for(c=0;c<
-this.numberTicks;c++){a=new e.jsDate(this.min);d=a.add(c*this.daTickInterval[0],this.daTickInterval[1]).getTime();a=new this.tickRenderer(this.tickOptions);if(this.showTicks){if(!this.showTickMarks)a.showMark=false}else{a.showLabel=false;a.showMark=false}a.setTick(d,this.name);this._ticks.push(a)}}if(this.tickInset){this.min-=this.tickInset*l;this.max+=this.tickInset*l}if(this._daTickInterval==null)this._daTickInterval=this.daTickInterval}})(jQuery);
+/**
+ * jqPlot
+ * Pure JavaScript plotting plugin using jQuery
+ *
+ * Version: 1.0.4
+ * Revision: 1121
+ *
+ * Copyright (c) 2009-2012 Chris Leonello
+ * jqPlot is currently available for use in all personal or commercial projects 
+ * under both the MIT (http://www.opensource.org/licenses/mit-license.php) and GPL 
+ * version 2.0 (http://www.gnu.org/licenses/gpl-2.0.html) licenses. This means that you can 
+ * choose the license that best suits your project and use it accordingly. 
+ *
+ * Although not required, the author would appreciate an email letting him 
+ * know of any substantial use of jqPlot.  You can reach the author at: 
+ * chris at jqplot dot com or see http://www.jqplot.com/info.php .
+ *
+ * If you are feeling kind and generous, consider supporting the project by
+ * making a donation at: http://www.jqplot.com/donate.php .
+ *
+ * sprintf functions contained in jqplot.sprintf.js by Ash Searle:
+ *
+ *     version 2007.04.27
+ *     author Ash Searle
+ *     http://hexmen.com/blog/2007/03/printf-sprintf/
+ *     http://hexmen.com/js/sprintf.js
+ *     The author (Ash Searle) has placed this code in the public domain:
+ *     "This code is unrestricted: you are free to use it however you like."
+ * 
+ */
+(function($) {  
+    /**
+     * Class: $.jqplot.DateAxisRenderer
+     * A plugin for a jqPlot to render an axis as a series of date values.
+     * This renderer has no options beyond those supplied by the <Axis> class.
+     * It supplies it's own tick formatter, so the tickOptions.formatter option
+     * should not be overridden.
+     * 
+     * Thanks to Ken Synder for his enhanced Date instance methods which are
+     * included with this code <http://kendsnyder.com/sandbox/date/>.
+     * 
+     * To use this renderer, include the plugin in your source
+     * > <script type="text/javascript" language="javascript" src="plugins/jqplot.dateAxisRenderer.js"></script>
+     * 
+     * and supply the appropriate options to your plot
+     * 
+     * > {axes:{xaxis:{renderer:$.jqplot.DateAxisRenderer}}}
+     * 
+     * Dates can be passed into the axis in almost any recognizable value and 
+     * will be parsed.  They will be rendered on the axis in the format
+     * specified by tickOptions.formatString.  e.g. tickOptions.formatString = '%Y-%m-%d'.
+     * 
+     * Accecptable format codes 
+     * are:
+     * 
+     * > Code    Result                  Description
+     * >             == Years ==
+     * > %Y      2008                Four-digit year
+     * > %y      08                  Two-digit year
+     * >             == Months ==
+     * > %m      09                  Two-digit month
+     * > %#m     9                   One or two-digit month
+     * > %B      September           Full month name
+     * > %b      Sep                 Abbreviated month name
+     * >             == Days ==
+     * > %d      05                  Two-digit day of month
+     * > %#d     5                   One or two-digit day of month
+     * > %e      5                   One or two-digit day of month
+     * > %A      Sunday              Full name of the day of the week
+     * > %a      Sun                 Abbreviated name of the day of the week
+     * > %w      0                   Number of the day of the week (0 = Sunday, 6 = Saturday)
+     * > %o      th                  The ordinal suffix string following the day of the month
+     * >             == Hours ==
+     * > %H      23                  Hours in 24-hour format (two digits)
+     * > %#H     3                   Hours in 24-hour integer format (one or two digits)
+     * > %I      11                  Hours in 12-hour format (two digits)
+     * > %#I     3                   Hours in 12-hour integer format (one or two digits)
+     * > %p      PM                  AM or PM
+     * >             == Minutes ==
+     * > %M      09                  Minutes (two digits)
+     * > %#M     9                   Minutes (one or two digits)
+     * >             == Seconds ==
+     * > %S      02                  Seconds (two digits)
+     * > %#S     2                   Seconds (one or two digits)
+     * > %s      1206567625723       Unix timestamp (Seconds past 1970-01-01 00:00:00)
+     * >             == Milliseconds ==
+     * > %N      008                 Milliseconds (three digits)
+     * > %#N     8                   Milliseconds (one to three digits)
+     * >             == Timezone ==
+     * > %O      360                 difference in minutes between local time and GMT
+     * > %Z      Mountain Standard Time  Name of timezone as reported by browser
+     * > %G      -06:00              Hours and minutes between GMT
+     * >             == Shortcuts ==
+     * > %F      2008-03-26          %Y-%m-%d
+     * > %T      05:06:30            %H:%M:%S
+     * > %X      05:06:30            %H:%M:%S
+     * > %x      03/26/08            %m/%d/%y
+     * > %D      03/26/08            %m/%d/%y
+     * > %#c     Wed Mar 26 15:31:00 2008  %a %b %e %H:%M:%S %Y
+     * > %v      3-Sep-2008          %e-%b-%Y
+     * > %R      15:31               %H:%M
+     * > %r      3:31:00 PM          %I:%M:%S %p
+     * >             == Characters ==
+     * > %n      \n                  Newline
+     * > %t      \t                  Tab
+     * > %%      %                   Percent Symbol 
+     */
+    $.jqplot.DateAxisRenderer = function() {
+        $.jqplot.LinearAxisRenderer.call(this);
+        this.date = new $.jsDate();
+    };
+
+    var second = 1000;
+    var minute = 60 * second;
+    var hour = 60 * minute;
+    var day = 24 * hour;
+    var week = 7 * day;
+
+    // these are less definitive
+    var month = 30.4368499 * day;
+    var year = 365.242199 * day;
+
+    var daysInMonths = [31,28,31,30,31,30,31,30,31,30,31,30];
+    // array of consistent nice intervals.  Longer intervals
+    // will depend on days in month, days in year, etc.
+    var niceFormatStrings = ['%M:%S.%#N', '%M:%S.%#N', '%M:%S.%#N', '%M:%S', '%M:%S', '%M:%S', '%M:%S', '%H:%M:%S', '%H:%M:%S', '%H:%M', '%H:%M', '%H:%M', '%H:%M', '%H:%M', '%H:%M', '%a %H:%M', '%a %H:%M', '%b %e %H:%M', '%b %e %H:%M', '%b %e %H:%M', '%b %e %H:%M', '%v', '%v', '%v', '%v', '%v', '%v', '%v'];
+    var niceIntervals = [0.1*second, 0.2*second, 0.5*second, second, 2*second, 5*second, 10*second, 15*second, 30*second, minute, 2*minute, 5*minute, 10*minute, 15*minute, 30*minute, hour, 2*hour, 4*hour, 6*hour, 8*hour, 12*hour, day, 2*day, 3*day, 4*day, 5*day, week, 2*week];
+
+    var niceMonthlyIntervals = [];
+
+    function bestDateInterval(min, max, titarget) {
+        // iterate through niceIntervals to find one closest to titarget
+        var badness = Number.MAX_VALUE;
+        var temp, bestTi, bestfmt;
+        for (var i=0, l=niceIntervals.length; i < l; i++) {
+            temp = Math.abs(titarget - niceIntervals[i]);
+            if (temp < badness) {
+                badness = temp;
+                bestTi = niceIntervals[i];
+                bestfmt = niceFormatStrings[i];
+            }
+        }
+
+        return [bestTi, bestfmt];
+    }
+    
+    $.jqplot.DateAxisRenderer.prototype = new $.jqplot.LinearAxisRenderer();
+    $.jqplot.DateAxisRenderer.prototype.constructor = $.jqplot.DateAxisRenderer;
+    
+    $.jqplot.DateTickFormatter = function(format, val) {
+        if (!format) {
+            format = '%Y/%m/%d';
+        }
+        return $.jsDate.strftime(val, format);
+    };
+    
+    $.jqplot.DateAxisRenderer.prototype.init = function(options){
+        // prop: tickRenderer
+        // A class of a rendering engine for creating the ticks labels displayed on the plot, 
+        // See <$.jqplot.AxisTickRenderer>.
+        // this.tickRenderer = $.jqplot.AxisTickRenderer;
+        // this.labelRenderer = $.jqplot.AxisLabelRenderer;
+        this.tickOptions.formatter = $.jqplot.DateTickFormatter;
+        // prop: tickInset
+        // Controls the amount to inset the first and last ticks from 
+        // the edges of the grid, in multiples of the tick interval.
+        // 0 is no inset, 0.5 is one half a tick interval, 1 is a full
+        // tick interval, etc.
+        this.tickInset = 0;
+        // prop: drawBaseline
+        // True to draw the axis baseline.
+        this.drawBaseline = true;
+        // prop: baselineWidth
+        // width of the baseline in pixels.
+        this.baselineWidth = null;
+        // prop: baselineColor
+        // CSS color spec for the baseline.
+        this.baselineColor = null;
+        this.daTickInterval = null;
+        this._daTickInterval = null;
+        
+        $.extend(true, this, options);
+        
+        var db = this._dataBounds,
+            stats, 
+            sum,
+            s,
+            d,
+            pd,
+            sd,
+            intv;
+        
+        // Go through all the series attached to this axis and find
+        // the min/max bounds for this axis.
+        for (var i=0; i<this._series.length; i++) {
+            stats = {intervals:[], frequencies:{}, sortedIntervals:[], min:null, max:null, mean:null};
+            sum = 0;
+            s = this._series[i];
+            d = s.data;
+            pd = s._plotData;
+            sd = s._stackData;
+            intv = 0;
+            
+            for (var j=0; j<d.length; j++) { 
+                if (this.name == 'xaxis' || this.name == 'x2axis') {
+                    d[j][0] = new $.jsDate(d[j][0]).getTime();
+                    pd[j][0] = new $.jsDate(d[j][0]).getTime();
+                    sd[j][0] = new $.jsDate(d[j][0]).getTime();
+                    if ((d[j][0] != null && d[j][0] < db.min) || db.min == null) {
+                        db.min = d[j][0];
+                    }
+                    if ((d[j][0] != null && d[j][0] > db.max) || db.max == null) {
+                        db.max = d[j][0];
+                    }
+                    if (j>0) {
+                        intv = Math.abs(d[j][0] - d[j-1][0]);
+                        stats.intervals.push(intv);
+                        if (stats.frequencies.hasOwnProperty(intv)) {
+                            stats.frequencies[intv] += 1;
+                        }
+                        else {
+                            stats.frequencies[intv] = 1;
+                        }
+                    }
+                    sum += intv;
+                    
+                }              
+                else {
+                    d[j][1] = new $.jsDate(d[j][1]).getTime();
+                    pd[j][1] = new $.jsDate(d[j][1]).getTime();
+                    sd[j][1] = new $.jsDate(d[j][1]).getTime();
+                    if ((d[j][1] != null && d[j][1] < db.min) || db.min == null) {
+                        db.min = d[j][1];
+                    }
+                    if ((d[j][1] != null && d[j][1] > db.max) || db.max == null) {
+                        db.max = d[j][1];
+                    }
+                    if (j>0) {
+                        intv = Math.abs(d[j][1] - d[j-1][1]);
+                        stats.intervals.push(intv);
+                        if (stats.frequencies.hasOwnProperty(intv)) {
+                            stats.frequencies[intv] += 1;
+                        }
+                        else {
+                            stats.frequencies[intv] = 1;
+                        }
+                    }
+                }
+                sum += intv;              
+            }
+
+            if (s.renderer.bands) {
+                if (s.renderer.bands.hiData.length) {
+                    var bd = s.renderer.bands.hiData;
+                    for (var j=0, l=bd.length; j < l; j++) {
+                        if (this.name === 'xaxis' || this.name === 'x2axis') {
+                            bd[j][0] = new $.jsDate(bd[j][0]).getTime();
+                            if ((bd[j][0] != null && bd[j][0] > db.max) || db.max == null) {
+                                db.max = bd[j][0];
+                            }                        
+                        }              
+                        else {
+                            bd[j][1] = new $.jsDate(bd[j][1]).getTime();
+                            if ((bd[j][1] != null && bd[j][1] > db.max) || db.max == null) {
+                                db.max = bd[j][1];
+                            }
+                        }
+                    }
+                }
+                if (s.renderer.bands.lowData.length) {
+                    var bd = s.renderer.bands.lowData;
+                    for (var j=0, l=bd.length; j < l; j++) {
+                        if (this.name === 'xaxis' || this.name === 'x2axis') {
+                            bd[j][0] = new $.jsDate(bd[j][0]).getTime();
+                            if ((bd[j][0] != null && bd[j][0] < db.min) || db.min == null) {
+                                db.min = bd[j][0];
+                            }                       
+                        }              
+                        else {
+                            bd[j][1] = new $.jsDate(bd[j][1]).getTime();
+                            if ((bd[j][1] != null && bd[j][1] < db.min) || db.min == null) {
+                                db.min = bd[j][1];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            var tempf = 0,
+                tempn=0;
+            for (var n in stats.frequencies) {
+                stats.sortedIntervals.push({interval:n, frequency:stats.frequencies[n]});
+            }
+            stats.sortedIntervals.sort(function(a, b){
+                return b.frequency - a.frequency;
+            });
+            
+            stats.min = $.jqplot.arrayMin(stats.intervals);
+            stats.max = $.jqplot.arrayMax(stats.intervals);
+            stats.mean = sum/d.length;
+            this._intervalStats.push(stats);
+            stats = sum = s = d = pd = sd = null;
+        }
+        db = null;
+        
+    };
+    
+    // called with scope of an axis
+    $.jqplot.DateAxisRenderer.prototype.reset = function() {
+        this.min = this._options.min;
+        this.max = this._options.max;
+        this.tickInterval = this._options.tickInterval;
+        this.numberTicks = this._options.numberTicks;
+        this._autoFormatString = '';
+        if (this._overrideFormatString && this.tickOptions && this.tickOptions.formatString) {
+            this.tickOptions.formatString = '';
+        }
+        this.daTickInterval = this._daTickInterval;
+        // this._ticks = this.__ticks;
+    };
+    
+    $.jqplot.DateAxisRenderer.prototype.createTicks = function(plot) {
+        // we're are operating on an axis here
+        var ticks = this._ticks;
+        var userTicks = this.ticks;
+        var name = this.name;
+        // databounds were set on axis initialization.
+        var db = this._dataBounds;
+        var iv = this._intervalStats;
+        var dim = (this.name.charAt(0) === 'x') ? this._plotDimensions.width : this._plotDimensions.height;
+        var interval;
+        var min, max;
+        var pos1, pos2;
+        var tt, i;
+        var threshold = 30;
+        var insetMult = 1;
+
+        var tickInterval = this.tickInterval;
+        
+        // if we already have ticks, use them.
+        // ticks must be in order of increasing value.
+        
+        min = ((this.min != null) ? new $.jsDate(this.min).getTime() : db.min);
+        max = ((this.max != null) ? new $.jsDate(this.max).getTime() : db.max);
+
+        // see if we're zooming.  if we are, don't use the min and max we're given,
+        // but compute some nice ones.  They will be reset later.
+
+        var cursor = plot.plugins.cursor;
+
+        if (cursor && cursor._zoom && cursor._zoom.zooming) {
+            this.min = null;
+            this.max = null;
+        }
+
+        var range = max - min;
+
+        if (this.tickOptions == null || !this.tickOptions.formatString) {
+            this._overrideFormatString = true;
+        }
+        
+        if (userTicks.length) {
+            // ticks could be 1D or 2D array of [val, val, ,,,] or [[val, label], [val, label], ...] or mixed
+            for (i=0; i<userTicks.length; i++){
+                var ut = userTicks[i];
+                var t = new this.tickRenderer(this.tickOptions);
+                if (ut.constructor == Array) {
+                    t.value = new $.jsDate(ut[0]).getTime();
+                    t.label = ut[1];
+                    if (!this.showTicks) {
+                        t.showLabel = false;
+                        t.showMark = false;
+                    }
+                    else if (!this.showTickMarks) {
+                        t.showMark = false;
+                    }
+                    t.setTick(t.value, this.name);
+                    this._ticks.push(t);
+                }
+                
+                else {
+                    t.value = new $.jsDate(ut).getTime();
+                    if (!this.showTicks) {
+                        t.showLabel = false;
+                        t.showMark = false;
+                    }
+                    else if (!this.showTickMarks) {
+                        t.showMark = false;
+                    }
+                    t.setTick(t.value, this.name);
+                    this._ticks.push(t);
+                }
+            }
+            this.numberTicks = userTicks.length;
+            this.min = this._ticks[0].value;
+            this.max = this._ticks[this.numberTicks-1].value;
+            this.daTickInterval = [(this.max - this.min) / (this.numberTicks - 1)/1000, 'seconds'];
+        }
+
+        ////////
+        // We don't have any ticks yet, let's make some!
+        ////////
+
+        // special case when there is only one point, make three tick marks to center the point
+        else if (this.min == null && this.max == null && db.min == db.max)
+        {
+             var onePointOpts = $.extend(true, {}, this.tickOptions, {name: this.name, value: null});
+             var delta = 300000;
+             this.min = db.min - delta;
+             this.max = db.max + delta;
+             this.numberTicks = 3;
+
+             for(var i=this.min;i<=this.max;i+= delta)
+             {
+                 onePointOpts.value = i;
+
+                 var t = new this.tickRenderer(onePointOpts);
+
+                 if (this._overrideFormatString && this._autoFormatString != '') {
+                    t.formatString = this._autoFormatString;
+                 }
+
+                 t.showLabel = false;
+                 t.showMark = false;
+
+                 this._ticks.push(t);
+             }
+
+             if(this.showTicks) {
+                 this._ticks[1].showLabel = true;
+             }
+             if(this.showTickMarks) {
+                 this._ticks[1].showTickMarks = true;
+             }                   
+        }
+        // if user specified min and max are null, we set those to make best ticks.
+        else if (this.min == null && this.max == null) {
+
+            var opts = $.extend(true, {}, this.tickOptions, {name: this.name, value: null});
+
+            // want to find a nice interval 
+            var nttarget,
+                titarget;
+
+            // if no tickInterval or numberTicks options specified,  make a good guess.
+            if (!this.tickInterval && !this.numberTicks) {
+                var tdim = Math.max(dim, threshold+1);
+                // how many ticks to put on the axis?
+                // date labels tend to be long.  If ticks not rotated,
+                // don't use too many and have a high spacing factor.
+                // If we are rotating ticks, use a lower factor.
+                var spacingFactor = 115;
+                if (this.tickRenderer === $.jqplot.CanvasAxisTickRenderer && this.tickOptions.angle) {
+                    spacingFactor = 115 - 40 * Math.abs(Math.sin(this.tickOptions.angle/180*Math.PI));
+                }
+
+                nttarget =  Math.ceil((tdim-threshold)/spacingFactor + 1);
+                titarget = (max - min) / (nttarget - 1);
+            }
+
+            // If tickInterval is specified, we'll try to honor it.
+            // Not gauranteed to get this interval, but we'll get as close as
+            // we can.
+            // tickInterval will be used before numberTicks, that is if
+            // both are specified, numberTicks will be ignored.
+            else if (this.tickInterval) {
+                titarget = this.tickInterval;
+            }
+
+            // if numberTicks specified, try to honor it.
+            // Not gauranteed, but will try to get close.
+            else if (this.numberTicks) {
+                nttarget = this.numberTicks;
+                titarget = (max - min) / (nttarget - 1);
+            }
+
+            // If we can use an interval of 2 weeks or less, pick best one
+            if (titarget <= 19*day) {
+                var ret = bestDateInterval(min, max, titarget);
+                var tempti = ret[0];
+                this._autoFormatString = ret[1];
+
+                min = Math.floor(min/tempti) * tempti;
+                min = new $.jsDate(min);
+                min = min.getTime() + min.getUtcOffset();
+
+                nttarget = Math.ceil((max - min) / tempti) + 1;
+                this.min = min;
+                this.max = min + (nttarget - 1) * tempti;
+
+                // if max is less than max, add an interval
+                if (this.max < max) {
+                    this.max += tempti;
+                    nttarget += 1;
+                }
+                this.tickInterval = tempti;
+                this.numberTicks = nttarget;
+
+                for (var i=0; i<nttarget; i++) {
+                    opts.value = this.min + i * tempti;
+                    t = new this.tickRenderer(opts);
+                    
+                    if (this._overrideFormatString && this._autoFormatString != '') {
+                        t.formatString = this._autoFormatString;
+                    }
+                    if (!this.showTicks) {
+                        t.showLabel = false;
+                        t.showMark = false;
+                    }
+                    else if (!this.showTickMarks) {
+                        t.showMark = false;
+                    }
+                    this._ticks.push(t);
+                }
+
+                insetMult = this.tickInterval;
+            }
+
+            // should we use a monthly interval?
+            else if (titarget <= 9 * month) {
+
+                this._autoFormatString = '%v';
+
+                // how many months in an interval?
+                var intv = Math.round(titarget/month);
+                if (intv < 1) {
+                    intv = 1;
+                }
+                else if (intv > 6) {
+                    intv = 6;
+                }
+
+                // figure out the starting month and ending month.
+                var mstart = new $.jsDate(min).setDate(1).setHours(0,0,0,0);
+
+                // See if max ends exactly on a month
+                var tempmend = new $.jsDate(max);
+                var mend = new $.jsDate(max).setDate(1).setHours(0,0,0,0);
+
+                if (tempmend.getTime() !== mend.getTime()) {
+                    mend = mend.add(1, 'month');
+                }
+
+                var nmonths = mend.diff(mstart, 'month');
+
+                nttarget = Math.ceil(nmonths/intv) + 1;
+
+                this.min = mstart.getTime();
+                this.max = mstart.clone().add((nttarget - 1) * intv, 'month').getTime();
+                this.numberTicks = nttarget;
+
+                for (var i=0; i<nttarget; i++) {
+                    if (i === 0) {
+                        opts.value = mstart.getTime();
+                    }
+                    else {
+                        opts.value = mstart.add(intv, 'month').getTime();
+                    }
+                    t = new this.tickRenderer(opts);
+                    
+                    if (this._overrideFormatString && this._autoFormatString != '') {
+                        t.formatString = this._autoFormatString;
+                    }
+                    if (!this.showTicks) {
+                        t.showLabel = false;
+                        t.showMark = false;
+                    }
+                    else if (!this.showTickMarks) {
+                        t.showMark = false;
+                    }
+                    this._ticks.push(t);
+                }
+
+                insetMult = intv * month;
+            }
+
+            // use yearly intervals
+            else {
+
+                this._autoFormatString = '%v';
+
+                // how many years in an interval?
+                var intv = Math.round(titarget/year);
+                if (intv < 1) {
+                    intv = 1;
+                }
+
+                // figure out the starting and ending years.
+                var mstart = new $.jsDate(min).setMonth(0, 1).setHours(0,0,0,0);
+                var mend = new $.jsDate(max).add(1, 'year').setMonth(0, 1).setHours(0,0,0,0);
+
+                var nyears = mend.diff(mstart, 'year');
+
+                nttarget = Math.ceil(nyears/intv) + 1;
+
+                this.min = mstart.getTime();
+                this.max = mstart.clone().add((nttarget - 1) * intv, 'year').getTime();
+                this.numberTicks = nttarget;
+
+                for (var i=0; i<nttarget; i++) {
+                    if (i === 0) {
+                        opts.value = mstart.getTime();
+                    }
+                    else {
+                        opts.value = mstart.add(intv, 'year').getTime();
+                    }
+                    t = new this.tickRenderer(opts);
+                    
+                    if (this._overrideFormatString && this._autoFormatString != '') {
+                        t.formatString = this._autoFormatString;
+                    }
+                    if (!this.showTicks) {
+                        t.showLabel = false;
+                        t.showMark = false;
+                    }
+                    else if (!this.showTickMarks) {
+                        t.showMark = false;
+                    }
+                    this._ticks.push(t);
+                }
+
+                insetMult = intv * year;
+            }
+        }
+
+        ////////
+        // Some option(s) specified, work around that.
+        ////////
+        
+        else {      
+            if (name == 'xaxis' || name == 'x2axis') {
+                dim = this._plotDimensions.width;
+            }
+            else {
+                dim = this._plotDimensions.height;
+            }
+            
+            // if min, max and number of ticks specified, user can't specify interval.
+            if (this.min != null && this.max != null && this.numberTicks != null) {
+                this.tickInterval = null;
+            }
+            
+            // if user specified a tick interval, convert to usable.
+            if (this.tickInterval != null)
+            {
+                // if interval is a number or can be converted to one, use it.
+                // Assume it is in SECONDS!!!
+                if (Number(this.tickInterval)) {
+                    this.daTickInterval = [Number(this.tickInterval), 'seconds'];
+                }
+                // else, parse out something we can build from.
+                else if (typeof this.tickInterval == "string") {
+                    var parts = this.tickInterval.split(' ');
+                    if (parts.length == 1) {
+                        this.daTickInterval = [1, parts[0]];
+                    }
+                    else if (parts.length == 2) {
+                        this.daTickInterval = [parts[0], parts[1]];
+                    }
+                }
+            }
+            
+            // if min and max are same, space them out a bit
+            if (min == max) {
+                var adj = 24*60*60*500;  // 1/2 day
+                min -= adj;
+                max += adj;
+            }
+
+            range = max - min;
+            
+            var optNumTicks = 2 + parseInt(Math.max(0, dim-100)/100, 10);
+            
+            
+            var rmin, rmax;
+            
+            rmin = (this.min != null) ? new $.jsDate(this.min).getTime() : min - range/2*(this.padMin - 1);
+            rmax = (this.max != null) ? new $.jsDate(this.max).getTime() : max + range/2*(this.padMax - 1);
+            this.min = rmin;
+            this.max = rmax;
+            range = this.max - this.min;
+            
+            if (this.numberTicks == null){
+                // if tickInterval is specified by user, we will ignore computed maximum.
+                // max will be equal or greater to fit even # of ticks.
+                if (this.daTickInterval != null) {
+                    var nc = new $.jsDate(this.max).diff(this.min, this.daTickInterval[1], true);
+                    this.numberTicks = Math.ceil(nc/this.daTickInterval[0]) +1;
+                    // this.max = new $.jsDate(this.min).add(this.numberTicks-1, this.daTickInterval[1]).getTime();
+                    this.max = new $.jsDate(this.min).add((this.numberTicks-1) * this.daTickInterval[0], this.daTickInterval[1]).getTime();
+                }
+                else if (dim > 200) {
+                    this.numberTicks = parseInt(3+(dim-200)/100, 10);
+                }
+                else {
+                    this.numberTicks = 2;
+                }
+            }
+            
+            insetMult = range / (this.numberTicks-1)/1000;
+
+            if (this.daTickInterval == null) {
+                this.daTickInterval = [insetMult, 'seconds'];
+            }
+
+
+            for (var i=0; i<this.numberTicks; i++){
+                var min = new $.jsDate(this.min);
+                tt = min.add(i*this.daTickInterval[0], this.daTickInterval[1]).getTime();
+                var t = new this.tickRenderer(this.tickOptions);
+                // var t = new $.jqplot.AxisTickRenderer(this.tickOptions);
+                if (!this.showTicks) {
+                    t.showLabel = false;
+                    t.showMark = false;
+                }
+                else if (!this.showTickMarks) {
+                    t.showMark = false;
+                }
+                t.setTick(tt, this.name);
+                this._ticks.push(t);
+            }
+        }
+
+        if (this.tickInset) {
+            this.min = this.min - this.tickInset * insetMult;
+            this.max = this.max + this.tickInset * insetMult;
+        }
+
+        if (this._daTickInterval == null) {
+            this._daTickInterval = this.daTickInterval;    
+        }
+
+        ticks = null;
+    };
+   
+})(jQuery);
+

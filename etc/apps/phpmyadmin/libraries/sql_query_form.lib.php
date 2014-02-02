@@ -18,11 +18,20 @@ if (! defined('PHPMYADMIN')) {
 /**
  *
  */
-require_once './libraries/file_listing.php'; // used for file listing
-require_once './libraries/bookmark.lib.php'; // used for file listing
+require_once './libraries/file_listing.lib.php'; // used for file listing
+require_once './libraries/bookmark.lib.php'; // used for bookmarks
 
 /**
- * prints the sql query boxes
+ * return HTML for the sql query boxes
+ *
+ * @param boolean|string $query       query to display in the textarea
+ *                                    or true to display last executed
+ * @param boolean|string $display_tab sql|files|history|full|false
+ *                                    what part to display
+ *                                    false if not inside querywindow
+ * @param string         $delimiter   delimeter
+ *
+ * @return string
  *
  * @usedby  server_sql.php
  * @usedby  db_sql.php
@@ -30,15 +39,11 @@ require_once './libraries/bookmark.lib.php'; // used for file listing
  * @usedby  tbl_structure.php
  * @usedby  tbl_tracking.php
  * @usedby  querywindow.php
- * @param boolean|string  $query          query to display in the textarea
- *                                          or true to display last executed
- * @param boolean|string  $display_tab    sql|files|history|full|false
- *                                          what part to display
- *                                          false if not inside querywindow
- * @param string          $delimiter
  */
-function PMA_sqlQueryForm($query = true, $display_tab = false, $delimiter = ';')
-{
+function PMA_getHtmlForSqlQueryForm(
+    $query = true, $display_tab = false, $delimiter = ';'
+) {
+    $html = '';
     // check tab to display if inside querywindow
     if (! $display_tab) {
         $display_tab = 'full';
@@ -77,96 +82,85 @@ function PMA_sqlQueryForm($query = true, $display_tab = false, $delimiter = ';')
                     'tbl_sql.php' : $GLOBALS['goto'];
     }
 
-
     // start output
     if ($is_querywindow) {
-        ?>
-        <form method="post" id="sqlqueryform" target="frame_content"
-              action="import.php"<?php echo $enctype; ?> name="sqlform"
-              onsubmit="var save_name = window.opener.parent.frame_content.name;
-              window.opener.parent.frame_content.name = save_name + '<?php echo time(); ?>';
-              this.target = window.opener.parent.frame_content.name;
-              return checkSqlQuery(this)">
-        <?php
+        $html .= '<form method="post" id="sqlqueryform"';
+        $html .= ' action="import.php" ' . $enctype . ' name="sqlform">';
     } else {
-        echo '<form method="post" action="import.php" ' . $enctype;
-        if ($GLOBALS['cfg']['AjaxEnable']) {
-            echo ' class="ajax"';
-        }
-        echo ' id="sqlqueryform" name="sqlform">' . "\n";
+        $html .= '<form method="post" action="import.php" ' . $enctype;
+        $html .= ' class="ajax"';
+        $html .= ' id="sqlqueryform" name="sqlform">' . "\n";
     }
 
     if ($is_querywindow) {
-        echo '<input type="hidden" name="focus_querywindow" value="true" />'
-            ."\n";
+        $html .= '<input type="hidden" name="focus_querywindow"'
+            .' value="true" />' . "\n";
         if ($display_tab != 'sql' && $display_tab != 'full') {
-            echo '<input type="hidden" name="sql_query" value="" />' . "\n";
-            echo '<input type="hidden" name="show_query" value="1" />' . "\n";
+            $html .= '<input type="hidden" name="sql_query"'
+                .' value="" />' . "\n";
+            $html .= '<input type="hidden" name="show_query"'
+                .' value="1" />' . "\n";
         }
     }
-    echo '<input type="hidden" name="is_js_confirmed" value="0" />' . "\n"
-        .PMA_generate_common_hidden_inputs($db, $table) . "\n"
+    $html .= '<input type="hidden" name="is_js_confirmed" value="0" />'
+        . "\n" . PMA_URL_getHiddenInputs($db, $table) . "\n"
         .'<input type="hidden" name="pos" value="0" />' . "\n"
         .'<input type="hidden" name="goto" value="'
         .htmlspecialchars($goto) . '" />' . "\n"
         .'<input type="hidden" name="message_to_show" value="'
-        . __('Your SQL query has been executed successfully') . '" />' . "\n"
-        .'<input type="hidden" name="prev_sql_query" value="'
+        . __('Your SQL query has been executed successfully') . '" />'
+        . "\n" .'<input type="hidden" name="prev_sql_query" value="'
         . htmlspecialchars($query) . '" />' . "\n";
 
     // display querybox
     if ($display_tab === 'full' || $display_tab === 'sql') {
-        PMA_sqlQueryFormInsert($query, $is_querywindow, $delimiter);
+        $html .= PMA_getHtmlForSqlQueryFormInsert(
+            $query, $is_querywindow, $delimiter
+        );
     }
 
     // display uploads
     if ($display_tab === 'files' && $GLOBALS['is_upload']) {
-        PMA_sqlQueryFormUpload();
+        $html .= PMA_getHtmlForSqlQueryFormUpload();
     }
 
     // Bookmark Support
     if ($display_tab === 'full' || $display_tab === 'history') {
         if (! empty($GLOBALS['cfg']['Bookmark'])) {
-            PMA_sqlQueryFormBookmark();
+            $html .= PMA_getHtmlForSqlQueryFormBookmark();
         }
     }
 
     // Encoding setting form appended by Y.Kawada
-    if (function_exists('PMA_set_enc_form')) {
-        echo PMA_set_enc_form('    ');
+    if (function_exists('PMA_Kanji_encodingForm')) {
+        $html .= PMA_Kanji_encodingForm();
     }
 
-    echo '</form>' . "\n";
-    if ($is_querywindow) {
-        ?>
-        <script type="text/javascript">
-        //<![CDATA[
-            if (window.opener) {
-                window.opener.parent.insertQuery();
-            }
-        //]]>
-        </script>
-        <?php
-    }
+    $html .= '</form>' . "\n";
+    // print an empty div, which will be later filled with
+    // the sql query results by ajax
+    $html .= '<div id="sqlqueryresults"></div>';
 
-    // print an empty div, which will be later filled with the sql query results by ajax
-    echo '<div id="sqlqueryresults"></div>';
+    return $html;
 }
 
 /**
- * prints querybox fieldset
+ * return HTML for Sql Query Form Insert
  *
- * @usedby  PMA_sqlQueryForm()
- * @param string      $query          query to display in the textarea
- * @param boolean     $is_querywindow if inside querywindow or not
- * @param string      $delimiter      default delimiter to use
+ * @param string  $query          query to display in the textarea
+ * @param boolean $is_querywindow if inside querywindow or not
+ * @param string  $delimiter      default delimiter to use
+ *
+ * @return string
+ *
+ * @usedby  PMA_getHtmlForSqlQueryForm()
  */
-function PMA_sqlQueryFormInsert($query = '', $is_querywindow = false, $delimiter = ';')
-{
-
+function PMA_getHtmlForSqlQueryFormInsert(
+    $query = '', $is_querywindow = false, $delimiter = ';'
+) {
     // enable auto select text in textarea
     if ($GLOBALS['cfg']['TextareaAutoSelect']) {
-        $auto_sel = ' onclick="selectContent(this, sql_box_locked, true)"';
+        $auto_sel = ' onclick="selectContent(this, sql_box_locked, true);"';
     } else {
         $auto_sel = '';
     }
@@ -186,15 +180,20 @@ function PMA_sqlQueryFormInsert($query = '', $is_querywindow = false, $delimiter
     $fields_list    = array();
     if (! strlen($GLOBALS['db'])) {
         // prepare for server related
-        $legend = sprintf(__('Run SQL query/queries on server %s'),
+        $legend = sprintf(
+            __('Run SQL query/queries on server %s'),
             '&quot;' . htmlspecialchars(
-                ! empty($GLOBALS['cfg']['Servers'][$GLOBALS['server']]['verbose']) ? $GLOBALS['cfg']['Servers'][$GLOBALS['server']]['verbose'] : $GLOBALS['cfg']['Servers'][$GLOBALS['server']]['host']) . '&quot;');
+                ! empty($GLOBALS['cfg']['Servers'][$GLOBALS['server']]['verbose'])
+                ? $GLOBALS['cfg']['Servers'][$GLOBALS['server']]['verbose']
+                : $GLOBALS['cfg']['Servers'][$GLOBALS['server']]['host']
+            ) . '&quot;'
+        );
     } elseif (! strlen($GLOBALS['table'])) {
         // prepare for db related
         $db     = $GLOBALS['db'];
         // if you want navigation:
         $tmp_db_link = '<a href="' . $GLOBALS['cfg']['DefaultTabDatabase']
-            . '?' . PMA_generate_common_url($db) . '"';
+            . '?' . PMA_URL_getCommon($db) . '"';
         if ($is_querywindow) {
             $tmp_db_link .= ' target="_self"'
                 . ' onclick="this.target=window.opener.frame_content.name"';
@@ -205,7 +204,9 @@ function PMA_sqlQueryFormInsert($query = '', $is_querywindow = false, $delimiter
         // $tmp_db_link = htmlspecialchars($db);
         $legend = sprintf(__('Run SQL query/queries on database %s'), $tmp_db_link);
         if (empty($query)) {
-            $query = PMA_expandUserString($GLOBALS['cfg']['DefaultQueryDatabase'], 'PMA_backquote');
+            $query = PMA_Util::expandUserString(
+                $GLOBALS['cfg']['DefaultQueryDatabase'], 'backquote'
+            );
         }
     } else {
         $table  = $GLOBALS['table'];
@@ -213,13 +214,17 @@ function PMA_sqlQueryFormInsert($query = '', $is_querywindow = false, $delimiter
         // Get the list and number of fields
         // we do a try_query here, because we could be in the query window,
         // trying to synchonize and the table has not yet been created
-        $fields_list = PMA_DBI_get_columns($db, $GLOBALS['table'], null, true);
+        $fields_list = $GLOBALS['dbi']->getColumns(
+            $db, $GLOBALS['table'], null, true
+        );
 
         $tmp_db_link = '<a href="' . $GLOBALS['cfg']['DefaultTabDatabase']
-            . '?' . PMA_generate_common_url($db) . '"';
+            . '?' . PMA_URL_getCommon($db) . '"';
         if ($is_querywindow) {
-            $tmp_db_link .= ' target="_self"'
-                . ' onclick="this.target=window.opener.frame_content.name"';
+            $tmp_db_link .= 'target="_parent" '
+                . 'onclick="window.opener.location.href = \''
+                . $GLOBALS['cfg']['DefaultTabDatabase']
+                . '?' . PMA_URL_getCommon($db).'\';return false;"';
         }
         $tmp_db_link .= '>'
             . htmlspecialchars($db) . '</a>';
@@ -227,10 +232,12 @@ function PMA_sqlQueryFormInsert($query = '', $is_querywindow = false, $delimiter
         // $tmp_db_link = htmlspecialchars($db);
         $legend = sprintf(__('Run SQL query/queries on database %s'), $tmp_db_link);
         if (empty($query)) {
-            $query = PMA_expandUserString($GLOBALS['cfg']['DefaultQueryTable'], 'PMA_backquote');
+            $query = PMA_Util::expandUserString(
+                $GLOBALS['cfg']['DefaultQueryTable'], 'backquote'
+            );
         }
     }
-    $legend .= ': ' . PMA_showMySQLDocu('SQL-Syntax', 'SELECT');
+    $legend .= ': ' . PMA_Util::showMySQLDocu('SELECT');
 
     if (count($fields_list)) {
         $sqlquerycontainer_id = 'sqlquerycontainer';
@@ -238,243 +245,276 @@ function PMA_sqlQueryFormInsert($query = '', $is_querywindow = false, $delimiter
         $sqlquerycontainer_id = 'sqlquerycontainerfull';
     }
 
-    echo '<a name="querybox"></a>' . "\n"
-        .'<div id="queryboxcontainer">' . "\n"
-        .'<fieldset id="querybox">' . "\n";
-    echo '<legend>' . $legend . '</legend>' . "\n";
-    echo '<div id="queryfieldscontainer">' . "\n";
-    echo '<div id="' . $sqlquerycontainer_id . '">' . "\n"
-        .'<textarea tabindex="100" name="sql_query" id="sqlquery"'
-        .'  cols="' . $GLOBALS['cfg']['TextareaCols'] . '"'
-        .'  rows="' . $height . '"'
-        .'  dir="' . $GLOBALS['text_dir'] . '"'
-        .$auto_sel . $locking . '>' . htmlspecialchars($query) . '</textarea>' . "\n";
-    // Add buttons to generate query easily for select all,single select,insert,update and delete
+    $html = '<a id="querybox"></a>'
+        . '<div id="queryboxcontainer">'
+        . '<fieldset id="queryboxf">';
+    $html .= '<legend>' . $legend . '</legend>';
+    $html .= '<div id="queryfieldscontainer">';
+    $html .= '<div id="' . $sqlquerycontainer_id . '">'
+        . '<textarea tabindex="100" name="sql_query" id="sqlquery"'
+        . '  cols="' . $GLOBALS['cfg']['TextareaCols'] . '"'
+        . '  rows="' . $height . '"'
+        . '  dir="' . $GLOBALS['text_dir'] . '"'
+        . $auto_sel . $locking . '>'
+        . htmlspecialchars($query)
+        . '</textarea>';
+    // Add buttons to generate query easily for
+    // select all, single select, insert, update and delete
     if (count($fields_list)) {
-        echo '<input type="button" value="SELECT *" id="selectall" class="sqlbutton" />';
-        echo '<input type="button" value="SELECT" id="select" class="sqlbutton" />';
-        echo '<input type="button" value="INSERT" id="insert" class="sqlbutton" />';
-        echo '<input type="button" value="UPDATE" id="update" class="sqlbutton" />';
-        echo '<input type="button" value="DELETE" id="delete" class="sqlbutton" />';
+        $html .= '<input type="button" value="SELECT *" id="selectall"'
+            . ' class="button sqlbutton" />';
+        $html .= '<input type="button" value="SELECT" id="select"'
+            . ' class="button sqlbutton" />';
+        $html .= '<input type="button" value="INSERT" id="insert"'
+            . ' class="button sqlbutton" />';
+        $html .= '<input type="button" value="UPDATE" id="update"'
+            . ' class="button sqlbutton" />';
+        $html .= '<input type="button" value="DELETE" id="delete"'
+            . ' class="button sqlbutton" />';
     }
-    echo '<input type="button" value="' . __('Clear') . '" id="clear" class="sqlbutton" />';
-    echo '</div>' . "\n";
+    $html .= '<input type="button" value="' . __('Clear') . '" id="clear"'
+        . ' class="button sqlbutton" />';
+    $html .= '</div>' . "\n";
 
     if (count($fields_list)) {
-        echo '<div id="tablefieldscontainer">' . "\n"
-            .'<label>' . __('Columns') . '</label>' . "\n"
-            .'<select id="tablefields" name="dummy" '
-            .'size="' . ($GLOBALS['cfg']['TextareaRows'] - 2) . '" '
-            .'multiple="multiple" ondblclick="insertValueQuery()">' . "\n";
+        $html .= '<div id="tablefieldscontainer">'
+            . '<label>' . __('Columns') . '</label>'
+            . '<select id="tablefields" name="dummy" '
+            . 'size="' . ($GLOBALS['cfg']['TextareaRows'] - 2) . '" '
+            . 'multiple="multiple" ondblclick="insertValueQuery()">';
         foreach ($fields_list as $field) {
-            echo '<option value="'
-                .PMA_backquote(htmlspecialchars($field['Field'])) . '"';
-            if (isset($field['Field']) && strlen($field['Field']) && isset($field['Comment'])) {
-                echo ' title="' . htmlspecialchars($field['Comment']) . '"';
+            $html .= '<option value="'
+                . PMA_Util::backquote(htmlspecialchars($field['Field'])) . '"';
+            if (isset($field['Field'])
+                && strlen($field['Field'])
+                && isset($field['Comment'])
+            ) {
+                $html .= ' title="' . htmlspecialchars($field['Comment']) . '"';
             }
-            echo '>' . htmlspecialchars($field['Field']) . '</option>' . "\n";
+            $html .= '>' . htmlspecialchars($field['Field']) . '</option>' . "\n";
         }
-        echo '</select>' . "\n"
-            .'<div id="tablefieldinsertbuttoncontainer">' . "\n";
-        if ($GLOBALS['cfg']['PropertiesIconic']) {
-            echo '<input type="button" name="insert" value="&lt;&lt;"'
-                .' onclick="insertValueQuery()"'
-                .' title="' . __('Insert') . '" />' . "\n";
+        $html .= '</select>'
+            . '<div id="tablefieldinsertbuttoncontainer">';
+        if (PMA_Util::showIcons('ActionLinksMode')) {
+            $html .= '<input type="button" class="button" name="insert"'
+                . ' value="&lt;&lt;" onclick="insertValueQuery()"'
+                . ' title="' . __('Insert') . '" />';
         } else {
-            echo '<input type="button" name="insert"'
-                .' value="' . __('Insert') . '"'
-                .' onclick="insertValueQuery()" />' . "\n";
+            $html .= '<input type="button" class="button" name="insert"'
+                . ' value="' . __('Insert') . '"'
+                . ' onclick="insertValueQuery()" />';
         }
-        echo '</div>' . "\n"
+        $html .= '</div>' . "\n"
             .'</div>' . "\n";
     }
 
-    echo '<div class="clearfloat"></div>' . "\n";
-    echo '</div>' . "\n";
+    $html .= '<div class="clearfloat"></div>' . "\n";
+    $html .= '</div>' . "\n";
 
     if (! empty($GLOBALS['cfg']['Bookmark'])) {
-        ?>
-        <div id="bookmarkoptions">
-        <div class="formelement">
-        <label for="bkm_label">
-            <?php echo __('Bookmark this SQL query'); ?>:</label>
-        <input type="text" name="bkm_label" id="bkm_label" tabindex="110" value="" />
-        </div>
-        <div class="formelement">
-        <input type="checkbox" name="bkm_all_users" tabindex="111" id="id_bkm_all_users"
-            value="true" />
-        <label for="id_bkm_all_users">
-            <?php echo __('Let every user access this bookmark'); ?></label>
-        </div>
-        <div class="formelement">
-        <input type="checkbox" name="bkm_replace" tabindex="112" id="id_bkm_replace"
-            value="true" />
-        <label for="id_bkm_replace">
-            <?php echo __('Replace existing bookmark of same name'); ?></label>
-        </div>
-        </div>
-        <?php
+        $html .= '<div id="bookmarkoptions">';
+        $html .= '<div class="formelement">';
+        $html .= '<label for="bkm_label">'
+            . __('Bookmark this SQL query:') . '</label>';
+        $html .= '<input type="text" name="bkm_label" id="bkm_label"'
+            . ' tabindex="110" value="" />';
+        $html .= '</div>';
+        $html .= '<div class="formelement">';
+        $html .= '<input type="checkbox" name="bkm_all_users" tabindex="111"'
+            . ' id="id_bkm_all_users" value="true" />';
+        $html .= '<label for="id_bkm_all_users">'
+            . __('Let every user access this bookmark') . '</label>';
+        $html .= '</div>';
+        $html .= '<div class="formelement">';
+        $html .= '<input type="checkbox" name="bkm_replace" tabindex="112"'
+            . ' id="id_bkm_replace" value="true" />';
+        $html .= '<label for="id_bkm_replace">'
+            . __('Replace existing bookmark of same name') . '</label>';
+        $html .= '</div>';
+        $html .= '</div>';
     }
 
-    echo '<div class="clearfloat"></div>' . "\n";
-    echo '</fieldset>' . "\n"
+    $html .= '<div class="clearfloat"></div>' . "\n";
+    $html .= '</fieldset>' . "\n"
         .'</div>' . "\n";
 
-    echo '<fieldset id="queryboxfooter" class="tblFooters">' . "\n";
-    echo '<div class="formelement">' . "\n";
-    if ($is_querywindow) {
-        ?>
-        <script type="text/javascript">
-        //<![CDATA[
-            document.writeln(' <input type="checkbox" name="LockFromUpdate" checked="checked" tabindex="120" id="checkbox_lock" /> <label for="checkbox_lock"><?php echo __('Do not overwrite this query from outside the window'); ?></label> ');
-        //]]>
-        </script>
-        <?php
-    }
-    echo '</div>' . "\n";
-    echo '<div class="formelement">' . "\n";
-    echo '<label for="id_sql_delimiter">[ ' . __('Delimiter')
-        .'</label>' . "\n";
-    echo '<input type="text" name="sql_delimiter" tabindex="131" size="3" '
-        .'value="' . $delimiter . '" '
-        .'id="id_sql_delimiter" /> ]' . "\n";
+    $html .= '<fieldset id="queryboxfooter" class="tblFooters">' . "\n";
+    $html .= '<div class="formelement">' . "\n";
 
-    echo '<input type="checkbox" name="show_query" value="1" '
-        .'id="checkbox_show_query" tabindex="132" checked="checked" />' . "\n"
-        .'<label for="checkbox_show_query">' . __('Show this query here again')
+    if ($is_querywindow) {
+        $html .= '<input type="checkbox" '
+            . 'name="LockFromUpdate" checked="checked" tabindex="120" '
+            . 'id="checkbox_lock" /> <label for="checkbox_lock">'
+            . __('Do not overwrite this query from outside the window')
+            . '</label>';
+    }
+    $html .= '</div>' . "\n";
+    $html .= '<div class="formelement">' . "\n";
+    $html .= '<label for="id_sql_delimiter">[ ' . __('Delimiter')
         .'</label>' . "\n";
+    $html .= '<input type="text" name="sql_delimiter" tabindex="131" size="3" '
+        . 'value="' . $delimiter . '" '
+        . 'id="id_sql_delimiter" /> ]';
+
+    $html .= '<input type="checkbox" name="show_query" value="1" '
+        . 'id="checkbox_show_query" tabindex="132" checked="checked" />'
+        . '<label for="checkbox_show_query">' . __('Show this query here again')
+        . '</label>';
 
     if (! $is_querywindow) {
-        echo '<input type="checkbox" name="retain_query_box" value="1" '
+        $html .= '<input type="checkbox" name="retain_query_box" value="1" '
             . 'id="retain_query_box" tabindex="133" '
-            . ($GLOBALS['cfg']['RetainQueryBox'] === false ? '' : ' checked="checked"')
+            . ($GLOBALS['cfg']['RetainQueryBox'] === false
+                ? '' : ' checked="checked"')
             . ' />'
             . '<label for="retain_query_box">' . __('Retain query box')
             . '</label>';
     }
-    echo '</div>' . "\n";
-    echo '<input type="submit" id="button_submit_query" name="SQL" tabindex="200" value="' . __('Go') . '" />'
-        ."\n";
-    echo '<div class="clearfloat"></div>' . "\n";
-    echo '</fieldset>' . "\n";
+    $html .= '</div>' . "\n";
+    $html .= '<input type="submit" id="button_submit_query" name="SQL"';
+    if ($is_querywindow){
+        $html .= 'onclick="var form = this.parentNode.parentNode;'
+            . ' window.opener.name = \'sqlParentWindow\';'
+            . ' form.target = \'sqlParentWindow\';'
+            . ' return checkSqlQuery(form);"';
+    }
+    $html .= ' tabindex="200" value="' . __('Go') . '" />' . "\n";
+    $html .= '<div class="clearfloat"></div>' . "\n";
+    $html .= '</fieldset>' . "\n";
+
+    return $html;
 }
 
 /**
- * prints bookmark fieldset
+ * return HTML for sql Query Form Bookmark
  *
- * @usedby  PMA_sqlQueryForm()
+ * @return string|void
+ *
+ * @usedby  PMA_getHtmlForSqlQueryForm()
  */
-function PMA_sqlQueryFormBookmark()
+function PMA_getHtmlForSqlQueryFormBookmark()
 {
     $bookmark_list = PMA_Bookmark_getList($GLOBALS['db']);
     if (! $bookmark_list || count($bookmark_list) < 1) {
         return;
     }
 
-    echo '<fieldset id="bookmarkoptions">';
-    echo '<legend>';
-    echo __('Bookmarked SQL query') . '</legend>' . "\n";
-    echo '<div class="formelement">';
-    echo '<select name="id_bookmark" id="id_bookmark">' . "\n";
-    echo '<option value="">&nbsp;</option>' . "\n";
+    $html  = '<fieldset id="fieldsetBookmarkOptions">';
+    $html .= '<legend>';
+    $html .= __('Bookmarked SQL query') . '</legend>' . "\n";
+    $html .= '<div class="formelement">';
+    $html .= '<select name="id_bookmark" id="id_bookmark">' . "\n";
+    $html .= '<option value="">&nbsp;</option>' . "\n";
     foreach ($bookmark_list as $key => $value) {
-        echo '<option value="' . htmlspecialchars($key) . '">'
+        $html .= '<option value="' . htmlspecialchars($key) . '">'
             .htmlspecialchars($value) . '</option>' . "\n";
     }
     // &nbsp; is required for correct display with styles/line height
-    echo '</select>&nbsp;' . "\n";
-    echo '</div>' . "\n";
-    echo '<div class="formelement">' . "\n";
-    echo __('Variable');
-    if ($GLOBALS['cfg']['ReplaceHelpImg']) {
-        echo ' <a href="./Documentation.html#faqbookmark"'
-            .' target="documentation">'
-            . PMA_getImage('b_help.png', __('Documentation')) . '</a>';
-    } else {
-        echo ' (<a href="./Documentation.html#faqbookmark"'
-            .' target="documentation">' . __('Documentation') . '</a>): ';
-    }
-    echo '<input type="text" name="bookmark_variable" class="textfield"'
+    $html .= '</select>&nbsp;' . "\n";
+    $html .= '</div>' . "\n";
+    $html .= '<div class="formelement">' . "\n";
+    $html .= __('Variable');
+    $html .= PMA_Util::showDocu('faq', 'faqbookmark');
+    $html .= '<input type="text" name="bookmark_variable" class="textfield"'
         .' size="10" />' . "\n";
-    echo '</div>' . "\n";
-    echo '<div class="formelement">' . "\n";
-    echo '<input type="radio" name="action_bookmark" value="0"'
+    $html .= '</div>' . "\n";
+    $html .= '<div class="formelement">' . "\n";
+    $html .= '<input type="radio" name="action_bookmark" value="0"'
         .' id="radio_bookmark_exe" checked="checked" />'
         .'<label for="radio_bookmark_exe">' . __('Submit')
         .'</label>' . "\n";
-    echo '<input type="radio" name="action_bookmark" value="1"'
+    $html .= '<input type="radio" name="action_bookmark" value="1"'
         .' id="radio_bookmark_view" />'
         .'<label for="radio_bookmark_view">' . __('View only')
         .'</label>' . "\n";
-    echo '<input type="radio" name="action_bookmark" value="2"'
+    $html .= '<input type="radio" name="action_bookmark" value="2"'
         .' id="radio_bookmark_del" />'
         .'<label for="radio_bookmark_del">' . __('Delete')
         .'</label>' . "\n";
-    echo '</div>' . "\n";
-    echo '<div class="clearfloat"></div>' . "\n";
-    echo '</fieldset>' . "\n";
+    $html .= '</div>' . "\n";
+    $html .= '<div class="clearfloat"></div>' . "\n";
+    $html .= '</fieldset>' . "\n";
 
-    echo '<fieldset id="bookmarkoptionsfooter" class="tblFooters">' . "\n";
-    echo '<input type="submit" name="SQL" id="button_submit_bookmark" value="' . __('Go') . '" />';
-    echo '<div class="clearfloat"></div>' . "\n";
-    echo '</fieldset>' . "\n";
+    $html .= '<fieldset id="fieldsetBookmarkOptionsFooter" class="tblFooters">' . "\n";
+    $html .= '<input type="submit" name="SQL" id="button_submit_bookmark" value="'
+        . __('Go') . '" />';
+    $html .= '<div class="clearfloat"></div>' . "\n";
+    $html .= '</fieldset>' . "\n";
+
+    return $html;
 }
 
 /**
- * prints bookmark fieldset
+ * return HTML for Sql Query Form Upload
  *
- * @usedby  PMA_sqlQueryForm()
+ * @return string
+ *
+ * @usedby  PMA_getHtmlForSqlQueryForm()
  */
-function PMA_sqlQueryFormUpload()
+function PMA_getHtmlForSqlQueryFormUpload()
 {
-    $errors = array ();
+    global $timeout_passed, $local_import_file;
 
-    $matcher = '@\.sql(\.(' . PMA_supportedDecompressions() . '))?$@'; // we allow only SQL here
+    $errors = array();
+
+    // we allow only SQL here
+    $matcher = '@\.sql(\.(' . PMA_supportedDecompressions() . '))?$@';
 
     if (!empty($GLOBALS['cfg']['UploadDir'])) {
-        $files = PMA_getFileSelectOptions(PMA_userDir($GLOBALS['cfg']['UploadDir']), $matcher, (isset($timeout_passed) && $timeout_passed && isset($local_import_file)) ? $local_import_file : '');
+        $files = PMA_getFileSelectOptions(
+            PMA_Util::userDir($GLOBALS['cfg']['UploadDir']), $matcher,
+            (isset($timeout_passed) && $timeout_passed && isset($local_import_file))
+            ? $local_import_file
+            : ''
+        );
     } else {
         $files = '';
     }
 
     // start output
-    echo '<fieldset id="">';
-    echo '<legend>';
-    echo __('Browse your computer:') . '</legend>';
-    echo '<div class="formelement">';
-    echo '<input type="file" name="sql_file" class="textfield" /> ';
-    echo PMA_displayMaximumUploadSize($GLOBALS['max_upload_size']);
+    $html  = '<fieldset id="">';
+    $html .= '<legend>';
+    $html .= __('Browse your computer:') . '</legend>';
+    $html .= '<div class="formelement">';
+    $html .= '<input type="file" name="sql_file" class="textfield" /> ';
+    $html .= PMA_Util::getFormattedMaximumUploadSize($GLOBALS['max_upload_size']);
     // some browsers should respect this :)
-    echo PMA_generateHiddenMaxFileSize($GLOBALS['max_upload_size']) . "\n";
-    echo '</div>';
+    $html .= PMA_Util::generateHiddenMaxFileSize($GLOBALS['max_upload_size']) . "\n";
+    $html .= '</div>';
 
     if ($files === false) {
-        $errors[] = PMA_Message::error( __('The directory you set for upload work cannot be reached'));
+        $errors[] = PMA_Message::error(
+            __('The directory you set for upload work cannot be reached.')
+        );
     } elseif (!empty($files)) {
-        echo '<div class="formelement">';
-        echo '<strong>' . __('web server upload directory') .':</strong>' . "\n";
-        echo '<select size="1" name="sql_localfile">' . "\n";
-        echo '<option value="" selected="selected"></option>' . "\n";
-        echo $files;
-        echo '</select>' . "\n";
-        echo '</div>';
+        $html .= '<div class="formelement">';
+        $html .= '<strong>' . __('web server upload directory:') .'</strong>' . "\n";
+        $html .= '<select size="1" name="sql_localfile">' . "\n";
+        $html .= '<option value="" selected="selected"></option>' . "\n";
+        $html .= $files;
+        $html .= '</select>' . "\n";
+        $html .= '</div>';
     }
 
-    echo '<div class="clearfloat"></div>' . "\n";
-    echo '</fieldset>';
+    $html .= '<div class="clearfloat"></div>' . "\n";
+    $html .= '</fieldset>';
 
 
-    echo '<fieldset id="" class="tblFooters">';
-    echo __('Character set of the file:') . "\n";
-    echo PMA_generateCharsetDropdownBox(PMA_CSDROPDOWN_CHARSET,
-            'charset_of_file', null, 'utf8', false);
-    echo '<input type="submit" name="SQL" value="' . __('Go')
+    $html .= '<fieldset id="" class="tblFooters">';
+    $html .= __('Character set of the file:') . "\n";
+    $html .= PMA_generateCharsetDropdownBox(
+        PMA_CSDROPDOWN_CHARSET,
+        'charset_of_file', null, 'utf8', false
+    );
+    $html .= '<input type="submit" name="SQL" value="' . __('Go')
         .'" />' . "\n";
-    echo '<div class="clearfloat"></div>' . "\n";
-    echo '</fieldset>';
+    $html .= '<div class="clearfloat"></div>' . "\n";
+    $html .= '</fieldset>';
 
     foreach ($errors as $error) {
-        $error->display();
+        $html .= $error->getDisplay();
     }
+
+    return $html;
 }
 ?>

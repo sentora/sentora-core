@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- SQL Commands to set up the pmadb as described in Documentation.html.
+-- SQL Commands to set up the pmadb as described in the documentation.
 -- 
 -- This file is meant for use with MySQL 5 and above!
 -- 
@@ -33,10 +33,10 @@ USE phpmyadmin;
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_bookmark`
+-- Table structure for table `pma__bookmark`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_bookmark` (
+CREATE TABLE IF NOT EXISTS `pma__bookmark` (
   `id` int(11) NOT NULL auto_increment,
   `dbase` varchar(255) NOT NULL default '',
   `user` varchar(255) NOT NULL default '',
@@ -44,16 +44,16 @@ CREATE TABLE IF NOT EXISTS `pma_bookmark` (
   `query` text NOT NULL,
   PRIMARY KEY  (`id`)
 )
-  ENGINE=MyISAM COMMENT='Bookmarks'
+  COMMENT='Bookmarks'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_column_info`
+-- Table structure for table `pma__column_info`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_column_info` (
+CREATE TABLE IF NOT EXISTS `pma__column_info` (
   `id` int(5) unsigned NOT NULL auto_increment,
   `db_name` varchar(64) NOT NULL default '',
   `table_name` varchar(64) NOT NULL default '',
@@ -65,16 +65,16 @@ CREATE TABLE IF NOT EXISTS `pma_column_info` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `db_name` (`db_name`,`table_name`,`column_name`)
 )
-  ENGINE=MyISAM COMMENT='Column information for phpMyAdmin'
+  COMMENT='Column information for phpMyAdmin'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_history`
+-- Table structure for table `pma__history`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_history` (
+CREATE TABLE IF NOT EXISTS `pma__history` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `username` varchar(64) NOT NULL default '',
   `db` varchar(64) NOT NULL default '',
@@ -84,46 +84,46 @@ CREATE TABLE IF NOT EXISTS `pma_history` (
   PRIMARY KEY  (`id`),
   KEY `username` (`username`,`db`,`table`,`timevalue`)
 )
-  ENGINE=MyISAM COMMENT='SQL history for phpMyAdmin'
+  COMMENT='SQL history for phpMyAdmin'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_pdf_pages`
+-- Table structure for table `pma__pdf_pages`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_pdf_pages` (
+CREATE TABLE IF NOT EXISTS `pma__pdf_pages` (
   `db_name` varchar(64) NOT NULL default '',
   `page_nr` int(10) unsigned NOT NULL auto_increment,
   `page_descr` varchar(50) COLLATE utf8_general_ci NOT NULL default '',
   PRIMARY KEY  (`page_nr`),
   KEY `db_name` (`db_name`)
 )
-  ENGINE=MyISAM COMMENT='PDF relation pages for phpMyAdmin'
+  COMMENT='PDF relation pages for phpMyAdmin'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pma_recent`
+-- Table structure for table `pma__recent`
 --
 
-CREATE TABLE IF NOT EXISTS `pma_recent` (
+CREATE TABLE IF NOT EXISTS `pma__recent` (
   `username` varchar(64) NOT NULL,
   `tables` text NOT NULL,
   PRIMARY KEY (`username`)
 )
-  ENGINE=MyISAM COMMENT='Recently accessed tables'
+  COMMENT='Recently accessed tables'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pma_table_uiprefs`
+-- Table structure for table `pma__table_uiprefs`
 --
 
-CREATE TABLE IF NOT EXISTS `pma_table_uiprefs` (
+CREATE TABLE IF NOT EXISTS `pma__table_uiprefs` (
   `username` varchar(64) NOT NULL,
   `db_name` varchar(64) NOT NULL,
   `table_name` varchar(64) NOT NULL,
@@ -131,16 +131,16 @@ CREATE TABLE IF NOT EXISTS `pma_table_uiprefs` (
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`username`,`db_name`,`table_name`)
 )
-  ENGINE=MyISAM COMMENT='Tables'' UI preferences'
+  COMMENT='Tables'' UI preferences'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_relation`
+-- Table structure for table `pma__relation`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_relation` (
+CREATE TABLE IF NOT EXISTS `pma__relation` (
   `master_db` varchar(64) NOT NULL default '',
   `master_table` varchar(64) NOT NULL default '',
   `master_field` varchar(64) NOT NULL default '',
@@ -150,16 +150,16 @@ CREATE TABLE IF NOT EXISTS `pma_relation` (
   PRIMARY KEY  (`master_db`,`master_table`,`master_field`),
   KEY `foreign_field` (`foreign_db`,`foreign_table`)
 )
-  ENGINE=MyISAM COMMENT='Relation table'
+  COMMENT='Relation table'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_table_coords`
+-- Table structure for table `pma__table_coords`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_table_coords` (
+CREATE TABLE IF NOT EXISTS `pma__table_coords` (
   `db_name` varchar(64) NOT NULL default '',
   `table_name` varchar(64) NOT NULL default '',
   `pdf_page_number` int(11) NOT NULL default '0',
@@ -167,31 +167,31 @@ CREATE TABLE IF NOT EXISTS `pma_table_coords` (
   `y` float unsigned NOT NULL default '0',
   PRIMARY KEY  (`db_name`,`table_name`,`pdf_page_number`)
 )
-  ENGINE=MyISAM COMMENT='Table coordinates for phpMyAdmin PDF output'
+  COMMENT='Table coordinates for phpMyAdmin PDF output'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_table_info`
+-- Table structure for table `pma__table_info`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_table_info` (
+CREATE TABLE IF NOT EXISTS `pma__table_info` (
   `db_name` varchar(64) NOT NULL default '',
   `table_name` varchar(64) NOT NULL default '',
   `display_field` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`db_name`,`table_name`)
 )
-  ENGINE=MyISAM COMMENT='Table information for phpMyAdmin'
+  COMMENT='Table information for phpMyAdmin'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_designer_coords`
+-- Table structure for table `pma__designer_coords`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_designer_coords` (
+CREATE TABLE IF NOT EXISTS `pma__designer_coords` (
   `db_name` varchar(64) NOT NULL default '',
   `table_name` varchar(64) NOT NULL default '',
   `x` INT,
@@ -200,16 +200,16 @@ CREATE TABLE IF NOT EXISTS `pma_designer_coords` (
   `h` TINYINT,
   PRIMARY KEY (`db_name`,`table_name`)
 )
-  ENGINE=MyISAM COMMENT='Table coordinates for Designer'
+  COMMENT='Table coordinates for Designer'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pma_tracking`
+-- Table structure for table `pma__tracking`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pma_tracking` (
+CREATE TABLE IF NOT EXISTS `pma__tracking` (
   `db_name` varchar(64) NOT NULL,
   `table_name` varchar(64) NOT NULL,
   `version` int(10) unsigned NOT NULL,
@@ -222,20 +222,66 @@ CREATE TABLE IF NOT EXISTS `pma_tracking` (
   `tracking_active` int(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (`db_name`,`table_name`,`version`)
 )
-  ENGINE=MyISAM ROW_FORMAT=COMPACT COMMENT='Database changes tracking for phpMyAdmin'
+  COMMENT='Database changes tracking for phpMyAdmin'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pma_userconfig`
+-- Table structure for table `pma__userconfig`
 --
 
-CREATE TABLE IF NOT EXISTS `pma_userconfig` (
+CREATE TABLE IF NOT EXISTS `pma__userconfig` (
   `username` varchar(64) NOT NULL,
   `timevalue` timestamp NOT NULL,
   `config_data` text NOT NULL,
   PRIMARY KEY  (`username`)
 )
-  ENGINE=MyISAM COMMENT='User preferences storage for phpMyAdmin'
+  COMMENT='User preferences storage for phpMyAdmin'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pma__users`
+--
+
+CREATE TABLE IF NOT EXISTS `pma__users` (
+  `username` varchar(64) NOT NULL,
+  `usergroup` varchar(64) NOT NULL,
+  PRIMARY KEY (`username`,`usergroup`)
+) 
+  COMMENT='Users and their assignments to user groups'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pma__usergroups`
+--
+
+CREATE TABLE IF NOT EXISTS `pma__usergroups` (
+  `usergroup` varchar(64) NOT NULL,
+  `tab` varchar(64) NOT NULL,
+  `allowed` enum('Y','N') NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`usergroup`,`tab`,`allowed`)
+) 
+  COMMENT='User groups with configured menu items'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+  
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pma__navigationhiding`
+--
+
+CREATE TABLE IF NOT EXISTS `pma__navigationhiding` (
+  `username` varchar(64) NOT NULL,
+  `item_name` varchar(64) NOT NULL,
+  `item_type` varchar(64) NOT NULL,
+  `db_name` varchar(64) NOT NULL,
+  `table_name` varchar(64) NOT NULL,
+  PRIMARY KEY (`username`,`item_name`,`item_type`,`db_name`,`table_name`)
+) 
+  COMMENT='Hidden items of navigation tree'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
