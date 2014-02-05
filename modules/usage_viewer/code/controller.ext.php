@@ -155,7 +155,13 @@ class module_controller extends ctrl_module
         $maximum = self::$diskquota;
         $used = self::$diskspace;
         if ($maximum == 0) {
-            $free = disk_free_space('/var'); // Need to add support for Windows in here!
+            if (sys_versions::ShowOSPlatformVersion() != 'Windows') {
+                // We'll specify the full path to the hsoted directory to ensure that NFS mounts etc are taken into account.
+                $free = disk_free_space(ctrl_options::GetOption('hosted_dir'));
+            } else {
+                // On Windows we'll check the disk (partition) that is configured for the 'hostdata' directory.
+                $free = disk_free_space(substr(ctrl_options::GetOption('hosted_dir'), 0, 2));
+            }
             $freeLabel = fs_director::ShowHumanFileSize($free) . ' (' . ui_language::translate('Server disk') . ')';
         } else {
             $free = max($maximum - $used, 0);
