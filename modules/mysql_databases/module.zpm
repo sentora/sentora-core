@@ -32,7 +32,7 @@
     <% endif %>
 
     <div class="zgrid_wrapper">
-        <h2><: Current MySQL&reg Databases :></h2>
+        <h2><: Current MySQL&reg; Databases :></h2>
         <% if DatabaseList %>
         <form action="./?module=mysql_databases&action=DeleteDatabase" method="post">
             <table class="table table-striped">
@@ -63,7 +63,7 @@
         <table class="none" width="100%" cellborder="0" cellspacing="0">
             <tr valign="top">
                 <td>
-                    <h2><: Create a new MySQL&reg database :></h2>
+                    <h2><: Create a new MySQL&reg; database :></h2>
                     <% if QuotaLimit %>
                     <form action="./?module=mysql_databases&action=CreateDatabase" method="post">
                         <table class="table table-striped">

@@ -110,7 +110,7 @@
     <% endif %>
 
     <div class="zgrid_wrapper">
-        <h2><: Current MySQL&reg Users :></h2>
+        <h2><: Current MySQL&reg; Users :></h2>
         <% if UserList %>
         <form action="./?module=mysql_users&action=EditUser" method="post">
             <table class="table table-striped">
@@ -137,7 +137,7 @@
             <@ CSFR_Tag @>
         </form>
         <% else %>
-        <: You have no MySQL&reg users at this time. Create a user using the form below. :>
+        <: You have no MySQL&reg; users at this time. Create a user using the form below. :>
         <% endif %>
     </div>
 
@@ -146,7 +146,7 @@
         <table class="none" width="100%" cellborder="0" cellspacing="0">
             <tr valign="top">
                 <td>
-                    <h2><: Create a new MySQL&reg User :></h2>
+                    <h2><: Create a new MySQL&reg; User :></h2>
                     <form action="./?module=mysql_users&action=CreateUser" method="post">
                         <table class="table table-striped">
                             <tr>
