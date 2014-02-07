@@ -11,3 +11,4 @@
     </div>
 
     <button class="btn btn-large btn-primary" onclick="window.open('etc/apps/phpsysinfo/')"><: Launch phpSysInfo :></button>
+</div>
