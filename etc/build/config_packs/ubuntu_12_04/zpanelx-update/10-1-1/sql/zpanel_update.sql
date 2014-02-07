@@ -16,3 +16,6 @@ UPDATE  `zpanel_core`.`x_modules` SET  `mo_desc_tx` = 'MySQL&reg; databases are 
 UPDATE  `zpanel_core`.`x_modules` SET  `mo_desc_tx` = 'MySQL&reg; Users allows you to add users and permissions to your MySQL&reg; databases.' WHERE  `mo_id_pk` = '39';
 UPDATE  `zpanel_core`.`x_translations` SET  `tr_en_tx` = 'The backup manager module enables you to backup your entire hosting account including all your MySQL&reg; databases.' WHERE  `tr_id_pk` = '103';
 UPDATE  `zpanel_core`.`x_translations` SET  `tr_de_tx` = 'Der Backup-Manager-Modul ermöglicht es Ihnen, Ihre gesamte Hosting-Account inklusive aller Ihrer MySQL &reg; Datenbank-Backup.' WHERE  `tr_id_pk` = '103';
+
+/* Update the default zpanel debug mode from 'dev' to 'prod' */
+UPDATE  `zpanel_core`.`x_settings` SET  `so_value_tx` =  'prod' WHERE  `so_name_vc` = 'debug_mode';
