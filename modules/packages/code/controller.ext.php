@@ -467,6 +467,19 @@ class module_controller extends ctrl_module
         return false;
     }
 
+    static function getPackageListDropdown()
+    {
+        $currentuser = ctrl_users::GetUserDetail();
+        $packages = self::ListPackages($currentuser['userid']);
+        $available = array();
+        foreach ($packages as $package) {
+            if ($package['packageid'] != $_GET['other']) $available[] = $package;
+        }
+        if (count($available) > 0)
+            return $available;
+        return false;
+    }
+
     static function getisCreatePackage()
     {
         global $controller;

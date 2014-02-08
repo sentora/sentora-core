@@ -33,7 +33,7 @@
                     <th><: Move current package members to :>:</th>
                     <td>
                         <select name="inMovePackage" id="inMovePackage">
-                            <% loop PackageList %>
+                            <% loop PackageListDropdown %>
                             <option value="<& packageid &>"><& packagename &></option>
                             <% endloop %>
                         </select>
