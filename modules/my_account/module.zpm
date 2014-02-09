@@ -34,7 +34,7 @@
                 <tr>
                     <th><: Choose Language :>:</th>
                     <td>
-                        <select name="inLanguage" id="inLanguage" style="width:50px;">
+                        <select name="inLanguage" id="inLanguage" style="width:65px;">
 
                             <% loop LangList %>
                             <option value="<& language &>" <& selected &>><& language &></option>"
