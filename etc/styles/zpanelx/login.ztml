@@ -101,7 +101,7 @@
 
             <!-- Reset Password Form -->
             <?php if (isset($_GET['resetkey']) && ctype_alnum($_GET['resetkey'])) { ?>
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm" class="form-horizontal loginform">
+            <form action="?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm" class="form-horizontal loginform">
                 <div class="loginmid">
                     <div class="control-group">
                         <label class="control-label" for="inputNewPass1">New Password:</label>
@@ -138,7 +138,7 @@
             <?php } else {?>
 
             <!-- Forgot Password Form -->
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="frmZForgot" id="frmZForgot" class="form-horizontal loginform" style="display: none;">
+            <form action="" method="post" name="frmZForgot" id="frmZForgot" class="form-horizontal loginform" style="display: none;">
                 <div class="loginmid">
                     <div class="control-group">
                         <label class="control-label" for="inputEmail">
@@ -164,7 +164,7 @@
 
 
             <!-- Login Form -->
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="frmZLogin" id="frmZLogin" class="form-horizontal loginform">
+            <form action="" method="post" name="frmZLogin" id="frmZLogin" class="form-horizontal loginform">
                 <div class="loginmid">
                     <div class="control-group">
                         <label class="control-label" for="inputUsername">Username:</label>
