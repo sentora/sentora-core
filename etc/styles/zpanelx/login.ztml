@@ -100,7 +100,7 @@
         ?>
 
             <!-- Reset Password Form -->
-            <?php if (isset($_GET['resetkey'])) { ?>
+            <?php if (isset($_GET['resetkey']) && ctype_alnum($_GET['resetkey'])) { ?>
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm" class="form-horizontal loginform">
                 <div class="loginmid">
                     <div class="control-group">
