@@ -49,5 +49,5 @@ if (file_exists('modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/co
         $api->SendResponse($response_nokey->getDataObject());
     }
 } else {
-    echo "No modular web service found using this request URL (" . $_SERVER['REQUEST_URI'] . ")";
+    echo "No modular web service found using this request URL (" . htmlspecialchars($_SERVER['REQUEST_URI']) . ")";
 }
