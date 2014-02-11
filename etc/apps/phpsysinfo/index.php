@@ -27,6 +27,11 @@ define('APP_ROOT', dirname(__FILE__));
  */
 define('PSI_INTERNAL_XML', false);
 
+session_start();
+if (!isset($_SESSION['zpuid'])) {
+    die("<h1>Unathorised request!</h1><p>You must be logged in before you are able to view the server resource information.</p>");
+}
+
 if (version_compare("5.2", PHP_VERSION, ">")) {
     die("PHP 5.2 or greater is required!!!");
 }

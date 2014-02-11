@@ -28,6 +28,11 @@ define('APP_ROOT', dirname(__FILE__));
  */
 define('PSI_INTERNAL_XML', true);
 
+session_start();
+if (!isset($_SESSION['zpuid'])) {
+    die("<h1>Unathorised request!</h1><p>You must be logged in before you are able to view the server resource information.</p>");
+}
+
 require_once APP_ROOT.'/includes/autoloader.inc.php';
 
 // check what xml part should be generated
