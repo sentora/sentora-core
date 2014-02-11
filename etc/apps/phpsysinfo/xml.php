@@ -28,11 +28,6 @@ define('APP_ROOT', dirname(__FILE__));
  */
 define('PSI_INTERNAL_XML', true);
 
-session_start();
-if (!isset($_SESSION['zpuid'])) {
-    die("<h1>Unathorised request!</h1><p>You must be logged in before you are able to view the server resource information.</p>");
-}
-
 require_once APP_ROOT.'/includes/autoloader.inc.php';
 
 // check what xml part should be generated
@@ -55,7 +50,7 @@ if (isset($output) && is_object($output)) {
             simplexml_load_string($output->getXMLString())
         );
         // check for jsonp with callback name restriction
-        echo (isset($_GET['jsonp'])) ? (!preg_match('/[^A-Za-z0-9_]/', $_GET['callback'])?$_GET['callback']:'') . '('.$json.')' : $json;
+        echo (isset($_GET['jsonp'])) ? (!preg_match('/[^A-Za-z0-9_\?]/', $_GET['callback'])?$_GET['callback']:'') . '('.$json.')' : $json;
     } else {
         $output->run();
     }
