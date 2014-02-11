@@ -19,6 +19,3 @@ UPDATE  `zpanel_core`.`x_translations` SET  `tr_de_tx` = 'Der Backup-Manager-Mod
 
 /* Update the default zpanel debug mode from 'dev' to 'prod' */
 UPDATE  `zpanel_core`.`x_settings` SET  `so_value_tx` =  'prod' WHERE  `so_name_vc` = 'debug_mode';
-
-/* Update RoundCube version */
-UPDATE  `zpanel_roundcube`.`system` SET  `value` = '2013011700' WHERE  `name` = 'roundcube-version';
