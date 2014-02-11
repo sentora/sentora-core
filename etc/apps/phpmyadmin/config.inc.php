@@ -72,8 +72,8 @@ $cfg['Servers'][$i]['AllowNoPassword'] = false;
 /*
  * Directories for saving/loading files from server
  */
-$cfg['UploadDir'] = '../tmp/';
-$cfg['SaveDir'] = '../tmp/';
+$cfg['UploadDir'] = '../../tmp';
+$cfg['SaveDir'] = '../../tmp';
 
 /**
  * Defines whether a user should be displayed a "show all (records)"
