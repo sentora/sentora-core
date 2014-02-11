@@ -257,6 +257,23 @@ class rcmail extends rcube
 
 
   /**
+   * Return identifier of the address book object
+   *
+   * @param rcube_addressbook Addressbook source object
+   *
+   * @return string Source identifier
+   */
+  public function get_address_book_id($object)
+  {
+    foreach ($this->address_books as $index => $book) {
+      if ($book === $object) {
+        return $index;
+      }
+    }
+  }
+
+
+  /**
    * Return address books list
    *
    * @param boolean True if the address book needs to be writeable
@@ -958,6 +975,10 @@ class rcmail extends rcube
             'options' => $options,
         ));
 
+        if ($plugin['abort']) {
+            return isset($plugin['result']) ? $plugin['result'] : false;
+        }
+
         $from    = $plugin['from'];
         $mailto  = $plugin['mailto'];
         $options = $plugin['options'];
@@ -1054,7 +1075,7 @@ class rcmail extends rcube
                     $subject    = str_replace("\r\n", $delim, $subject);
                 }
 
-                if (ini_get('safe_mode'))
+                if (filter_var(ini_get('safe_mode'), FILTER_VALIDATE_BOOLEAN))
                     $sent = mail($to, $subject, $msg_body, $header_str);
                 else
                     $sent = mail($to, $subject, $msg_body, $header_str, "-f$from");
@@ -1934,7 +1955,8 @@ class rcmail extends rcube
     public function upload_init()
     {
         // Enable upload progress bar
-        if (($seconds = $this->config->get('upload_progress')) && ini_get('apc.rfc1867')) {
+        $rfc1867 = filter_var(ini_get('apc.rfc1867'), FILTER_VALIDATE_BOOLEAN);
+        if ($rfc1867 && ($seconds = $this->config->get('upload_progress'))) {
             if ($field_name = ini_get('apc.rfc1867_name')) {
                 $this->output->set_env('upload_progress_name', $field_name);
                 $this->output->set_env('upload_progress_time', (int) $seconds);
