@@ -21,11 +21,10 @@
     <link rel="icon" href="/etc/styles/zpanelx/img/ico/fav32.png">
     <!--[if IE]><link rel="shortcut icon" href="/etc/styles/zpanelx/img/ico/favicon.ico"><![endif]-->
 
-
     <meta name="msapplication-TileColor" content="#222222">
     <meta name="msapplication-TileImage" content="/etc/styles/zpanelx/img/ico/fav144.png">
 
-    <!-- styles -->
+    <!-- Stylesheets -->
     <link href="/etc/styles/zpanelx/global-css/bootstrap.css" rel="stylesheet">
     <link href="/etc/styles/zpanelx/global-css/login.css" rel="stylesheet">
     <!-- HTML5 shim for IE6-8 support of HTML5 elements -->
@@ -35,7 +34,7 @@
     <script>
         document.write('<style type="text/css">body {display:none;}<\/style>');
     </script>
-    <!-- Anti ClickJacking Protection! -->
+    <!-- Anti-ClickJacking Protection -->
     <style id="antiClickjack">body{display:none !important;}</style>
     <script>
         if (self === top) {
@@ -91,7 +90,7 @@
                 //  </div>';
                 //}
                 ?>
-                <!-- Reset Password Form -->
+                <!-- Reset password form -->
                 <?php if (isset($_GET['resetkey']) && ctype_alnum($_GET['resetkey'])) { ?>
                 <form action="?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm" class="form-horizontal loginform">
                     <div class="loginmid">
@@ -124,9 +123,9 @@
                     </div>
                     <?php echo runtime_csfr::Token(); ?>
                 </form>
-                <!-- End Reset Password Form -->
+                <!-- End Reeset password form -->
                 <?php } else {?>
-                <!-- Forgot Password Form -->
+                <!-- Forgot password form -->
                 <form method="post" name="frmZForgot" id="frmZForgot" class="form-horizontal loginform" style="display: none;">
                     <div class="loginmid">
                         <div class="control-group">
@@ -148,8 +147,8 @@
                     </div>
                     <?php echo runtime_csfr::Token(); ?>
                 </form>
-                <!-- End Forgot Password Form -->
-                <!-- Login Form -->
+                <!-- End Forgot password form -->
+                <!-- Login form -->
                 <form method="post" name="frmZLogin" id="frmZLogin" class="form-horizontal loginform">
                     <div class="loginmid">
                         <div class="control-group">
@@ -183,17 +182,17 @@
                     </div>
                     <?php echo runtime_csfr::Token(); ?>
                 </form>
-                <!-- End Login Form -->
+                <!-- End Login form -->
                 <?php }?>
-            </div><!--/panel content-->
+            </div><!-- End Panel content-->
         </div>
         <p class="vbox">Powered By: <a href="http://www.zpanelcp.com/" target="_blank">ZPanel</a></p>
     </div>
-    <!-- javascript
+    <!-- Javascript
     ================================================== -->
     <script src="/etc/styles/zpanelx/js/jquery.js"></script>
     <script src="/etc/styles/zpanelx/js/prettyCheckable.js"></script>
-    <!-- Pretty Checkable @ https://github.com/arthurgouveia/prettyCheckable -->
+    <!-- Pretty checkable @ https://github.com/arthurgouveia/prettyCheckable -->
     <script>
         $().ready(function() {
             $('input:checkbox').prettyCheckable({
@@ -202,7 +201,7 @@
             });
         });
     </script>
-    <!-- Login Form Transitions -->
+    <!-- Login form transitions -->
     <script>
         $('#forgotpw').click(function() {
             $('#frmZLogin').slideUp('slow', function() {
@@ -221,7 +220,7 @@
         });
 
     </script>
-    <!-- Page Fade In After Load -->
+    <!-- Page fade in after load -->
     <script>
         $(window).load(function() {
             $("body").fadeIn();
