@@ -1,4 +1,0 @@
-----------/etc/version----------
-1.8.1
-----------/etc/eisfair-system----------
-eisfair-2

@@ -1,2 +1,0 @@
-----------/etc/turbolinux-release----------
-Turbolinux Client 12.5 (Magny-cours2)

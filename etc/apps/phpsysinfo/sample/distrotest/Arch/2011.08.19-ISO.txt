@@ -1,2 +1,0 @@
-----------/etc/arch-release----------
-Arch Linux Live ISO
