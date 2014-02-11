@@ -20,6 +20,9 @@ input:focus,
   padding-top: 25px;
   margin-left: 249px;
 }
+.zmodule_content .panel-heading {
+    min-height: 55px;
+}
 .navbar-inverse {
   background-color: rgb(28, 28, 28);
 }
