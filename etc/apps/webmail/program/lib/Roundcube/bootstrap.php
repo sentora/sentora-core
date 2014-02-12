@@ -26,26 +26,26 @@
  */
 
 $config = array(
-    'error_reporting'         => E_ALL &~ (E_NOTICE | E_STRICT),
+    'error_reporting'         => E_ALL & ~E_NOTICE & ~E_STRICT,
     // Some users are not using Installer, so we'll check some
     // critical PHP settings here. Only these, which doesn't provide
     // an error/warning in the logs later. See (#1486307).
     'mbstring.func_overload'  => 0,
-    'magic_quotes_runtime'    => 0,
-    'magic_quotes_sybase'     => 0, // #1488506
+    'magic_quotes_runtime'    => false,
+    'magic_quotes_sybase'     => false, // #1488506
 );
 
 // check these additional ini settings if not called via CLI
 if (php_sapi_name() != 'cli') {
     $config += array(
-        'suhosin.session.encrypt' => 0,
-        'session.auto_start'      => 0,
-        'file_uploads'            => 1,
+        'suhosin.session.encrypt' => false,
+        'file_uploads'            => true,
     );
 }
 
 foreach ($config as $optname => $optval) {
-    if ($optval != ini_get($optname) && @ini_set($optname, $optval) === false) {
+    $ini_optval = filter_var(ini_get($optname), is_bool($optval) ? FILTER_VALIDATE_BOOLEAN : FILTER_VALIDATE_INT);
+    if ($optval != $ini_optval && @ini_set($optname, $optval) === false) {
         $error = "ERROR: Wrong '$optname' option value and it wasn't possible to set it to required value ($optval).\n"
             . "Check your PHP configuration (including php_admin_flag).";
         if (defined('STDERR')) fwrite(STDERR, $error); else echo $error;
@@ -54,7 +54,7 @@ foreach ($config as $optname => $optval) {
 }
 
 // framework constants
-define('RCUBE_VERSION', '0.9.2');
+define('RCUBE_VERSION', '0.9.5');
 define('RCUBE_CHARSET', 'UTF-8');
 
 if (!defined('RCUBE_LIB_DIR')) {
@@ -81,6 +81,16 @@ if (!defined('RCUBE_LOCALIZATION_DIR')) {
 if (extension_loaded('mbstring')) {
     mb_internal_encoding(RCUBE_CHARSET);
     @mb_regex_encoding(RCUBE_CHARSET);
+}
+
+// make sure the Roundcube lib directory is in the include_path
+$rcube_path = realpath(RCUBE_LIB_DIR . '..');
+$sep        = PATH_SEPARATOR;
+$regexp     = "!(^|$sep)" . preg_quote($rcube_path, '!') . "($sep|\$)!";
+$path       = ini_get('include_path');
+
+if (!preg_match($regexp, $path)) {
+    set_include_path($path . PATH_SEPARATOR . $rcube_path);
 }
 
 // Register autoloader

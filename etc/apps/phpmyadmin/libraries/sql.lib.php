@@ -224,8 +224,9 @@ function PMA_getTableHtmlForMultipleQueries(
  *
  * @return void
  */
-function PMA_handleSortOrder($db, $table, &$analyzed_sql_results, &$full_sql_query)
-{
+function PMA_handleSortOrder(
+    $db, $table, &$analyzed_sql_results, &$full_sql_query
+) {
     $pmatable = new PMA_Table($table, $db);
     if (empty($analyzed_sql_results['analyzed_sql'][0]['order_by_clause'])) {
         $sorted_col = $pmatable->getUiProp(PMA_Table::PROP_SORTED_COLUMN);
@@ -2265,23 +2266,22 @@ function PMA_executeQueryAndSendQueryResponse($analyzed_sql_results,
 
     include 'libraries/DisplayResults.class.php';
 
-    $displayResultsObject = new PMA_DisplayResults(
-        $GLOBALS['db'], $GLOBALS['table'], $GLOBALS['goto'], $GLOBALS['sql_query']
-    );
-
-    $displayResultsObject->setConfigParamsForDisplayTable();
-
-    // assign default full_sql_query
-    $full_sql_query = $sql_query;
-
     // Handle remembered sorting order, only for single table query
     // Handling is not required when it's a union query
     // (the parser never sets the 'union' key to 0)
     if (PMA_isRememberSortingOrder($analyzed_sql_results)
         && ! isset($analyzed_sql_results['analyzed_sql'][0]['queryflags']['union'])
     ) {
-        PMA_handleSortOrder($db, $table, $analyzed_sql_results, $full_sql_query);
+        PMA_handleSortOrder($db, $table, $analyzed_sql_results, $sql_query);
     }
+
+    $displayResultsObject = new PMA_DisplayResults(
+        $GLOBALS['db'], $GLOBALS['table'], $GLOBALS['goto'], $sql_query
+    );
+    $displayResultsObject->setConfigParamsForDisplayTable();
+
+    // assign default full_sql_query
+    $full_sql_query = $sql_query;
 
     // Do append a "LIMIT" clause?
     if (PMA_isAppendLimitClause($analyzed_sql_results)) {

@@ -3945,9 +3945,10 @@ class PMA_DisplayResults
                     );
                     $formatted = true;
                 }
-            } elseif ((substr($meta->type, 0, 9) == self::TIMESTAMP_FIELD)
-                || ($meta->type == self::DATETIME_FIELD)
-                || ($meta->type == self::TIME_FIELD)
+            } elseif (((substr($meta->type, 0, 9) == self::TIMESTAMP_FIELD)
+                  || ($meta->type == self::DATETIME_FIELD)
+                  || ($meta->type == self::TIME_FIELD)
+                  || ($meta->type == self::TIME_FIELD)) && (strpos ($column,"." ) === TRUE)
             ) {
                 $column = PMA_Util::addMicroseconds($column);
             }
@@ -5523,7 +5524,7 @@ class PMA_DisplayResults
 
         $relational_display = $_SESSION['tmpval']['relational_display'];
         $printview = $this->__get('printview');
-        $result = '<td class="'
+        $result = '<td data-decimals="'.$meta->decimals.'" data-type="'.$meta->type.'" class="'
             . $this->_addClass(
                 $class, $condition_field, $meta, $nowrap,
                 $is_field_truncated, $transformation_plugin, $default_function
@@ -5986,7 +5987,7 @@ class PMA_DisplayResults
     }
 
     /**
-     * Display binary columns as hex string if requested 
+     * Display binary columns as hex string if requested
      * otherwise escape the contents using the best possible way
      *
      * @param string $content        String to parse

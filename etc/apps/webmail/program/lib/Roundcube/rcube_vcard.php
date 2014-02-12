@@ -611,8 +611,8 @@ class rcube_vcard
                 $enc   = null;
 
                 foreach($regs2[1] as $attrid => $attr) {
+                    $attr = preg_replace('/[\s\t\n\r\0\x0B]/', '', $attr);
                     if ((list($key, $value) = explode('=', $attr)) && $value) {
-                        $value = trim($value);
                         if ($key == 'ENCODING') {
                             $value = strtoupper($value);
                             // add next line(s) to value string if QP line end detected
@@ -714,9 +714,15 @@ class rcube_vcard
                             $value[] = $attrvalues;
                         }
                         else if (is_bool($attrvalues)) {
-                            // true means just tag, not tag=value, as in PHOTO;BASE64:...
+                            // true means just a tag, not tag=value, as in PHOTO;BASE64:...
                             if ($attrvalues) {
-                                $attr .= strtoupper(";$attrname");
+                                // vCard v3 uses ENCODING=B (#1489183)
+                                if ($attrname == 'base64') {
+                                    $attr .= ";ENCODING=B";
+                                }
+                                else {
+                                    $attr .= strtoupper(";$attrname");
+                                }
                             }
                         }
                         else {
@@ -785,7 +791,7 @@ class rcube_vcard
                 return $result;
             }
 
-            $s = strtr($s, $rep2);
+            $s = trim(strtr($s, $rep2));
         }
 
         // some implementations (GMail) use non-standard backslash before colon (#1489085)

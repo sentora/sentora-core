@@ -1,6 +1,24 @@
 phpMyAdmin - ChangeLog
 ======================
 
+4.1.7.0 (2014-02-09)
+- bug #4245 initial Browse query does not match sorting order
+- bug #4250 Notice on export page
+- bug #4253 "New" text in navigation frame acts like a database
+- bug #4262 Cannot define a column with fractional seconds
+- bug #4265 Missing datepicker icon for DATETIME(length)
+- bug #4257 Hide fractional seconds when applicable
+- bug #4264 Uncheck "Ignore" while inserting, upon leaving a textarea
+- bug #4260 reCaptcha is ignoring language settings
+- bug #4259 reCaptcha sound session expired problem
+- bug #4263 Japanese character encoding not working properly when exporting
+- bug #4269 Notice on table relation page
+- bug #4270 Bad text-color for table comments
+- bug #4278 reCaptcha re-login requires double effort
+- bug #4272 Incorrect tabindex
+- bug #4271 Query by example and the second criteria line
+- bug #4242 Wildcard-containing only_db failure in sidebar
+
 4.1.6.0 (2014-01-26)
 - bug #4232 User not found after creating the user
 - bug #4241 Confusing dialog when trying to create an already existing user

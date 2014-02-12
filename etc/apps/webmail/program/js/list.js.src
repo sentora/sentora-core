@@ -110,17 +110,25 @@ init_row: function(row)
     row.onmousedown = function(e){ return self.drag_row(e, this.uid); };
     row.onmouseup = function(e){ return self.click_row(e, this.uid); };
 
-    if (bw.mobile) {
+    if (bw.touch) {
       row.addEventListener('touchstart', function(e) {
         if (e.touches.length == 1) {
-          if (!self.drag_row(rcube_event.touchevent(e.touches[0]), this.uid))
-            e.preventDefault();
+          self.touchmoved = false;
+          self.drag_row(rcube_event.touchevent(e.touches[0]), this.uid)
         }
       }, false);
       row.addEventListener('touchend', function(e) {
-        if (e.changedTouches.length == 1)
-          if (!self.click_row(rcube_event.touchevent(e.changedTouches[0]), this.uid))
+        if (e.changedTouches.length == 1) {
+          if (!self.touchmoved && !self.click_row(rcube_event.touchevent(e.changedTouches[0]), this.uid))
             e.preventDefault();
+        }
+      }, false);
+      row.addEventListener('touchmove', function(e) {
+        if (e.changedTouches.length == 1) {
+          self.touchmoved = true;
+          if (self.drag_active)
+            e.preventDefault();
+        }
       }, false);
     }
 
@@ -299,7 +307,7 @@ drag_row: function(e, id)
   if (rcube_event.get_button(e) == 2)
     return true;
 
-  this.in_selection_before = this.in_selection(id) ? id : false;
+  this.in_selection_before = e && e.istouch || this.in_selection(id) ? id : false;
 
   // selects currently unselected row
   if (!this.in_selection_before) {
@@ -307,12 +315,12 @@ drag_row: function(e, id)
     this.select_row(id, mod_key, false);
   }
 
-  if (this.draggable && this.selection.length) {
+  if (this.draggable && this.selection.length && this.in_selection(id)) {
     this.drag_start = true;
     this.drag_mouse_start = rcube_event.get_mouse_pos(e);
     rcube_event.add_listener({event:'mousemove', object:this, method:'drag_mouse_move'});
     rcube_event.add_listener({event:'mouseup', object:this, method:'drag_mouse_up'});
-    if (bw.mobile) {
+    if (bw.touch) {
       rcube_event.add_listener({event:'touchmove', object:this, method:'drag_mouse_move'});
       rcube_event.add_listener({event:'touchend', object:this, method:'drag_mouse_up'});
     }
@@ -1115,7 +1123,7 @@ drag_mouse_move: function(e)
 {
   // convert touch event
   if (e.type == 'touchmove') {
-    if (e.changedTouches.length == 1)
+    if (e.touches.length == 1 && e.changedTouches.length == 1)
       e = rcube_event.touchevent(e.changedTouches[0]);
     else
       return rcube_event.cancel(e);
@@ -1231,7 +1239,7 @@ drag_mouse_up: function(e)
   rcube_event.remove_listener({event:'mousemove', object:this, method:'drag_mouse_move'});
   rcube_event.remove_listener({event:'mouseup', object:this, method:'drag_mouse_up'});
 
-  if (bw.mobile) {
+  if (bw.touch) {
     rcube_event.remove_listener({event:'touchmove', object:this, method:'drag_mouse_move'});
     rcube_event.remove_listener({event:'touchend', object:this, method:'drag_mouse_up'});
   }

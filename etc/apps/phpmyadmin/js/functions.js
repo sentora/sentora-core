@@ -858,8 +858,25 @@ function insertValueQuery()
 function addDateTimePicker() {
     if ($.timepicker !== undefined) {
         $('input.datefield, input.datetimefield').each(function () {
-            PMA_addDatepicker($(this));
-        });
+
+            no_decimals = $(this).parent().data('decimals');
+            var showMillisec = false;
+            var showMicrosec = false;
+            var timeFormat = 'HH:mm:ss';
+            // check for decimal places of seconds
+            if (($(this).parent().data('decimals') > 0) && ($(this).parent().data('type').indexOf('time') != -1)){
+                showMillisec = true;                       
+                timeFormat = 'HH:mm:ss.lc';
+                if ($(this).parent().data('decimals') > 3) {
+                    showMicrosec = true;
+                }
+            }
+            PMA_addDatepicker($(this), {
+                showMillisec: showMillisec,
+                showMicrosec: showMicrosec,
+                timeFormat: timeFormat,                        
+            });               
+         })
     }
 }
 
@@ -1671,7 +1688,7 @@ function PMA_ajaxShowMessage(message, timeout)
         $retval
         .delay(timeout)
         .fadeOut('medium', function () {
-            if ($(this).is('.dismissable')) {
+            if ($(this).is(':data(tooltip)')) {
                 $(this).tooltip('destroy');
             }
             // Remove the notification
@@ -1710,10 +1727,8 @@ function PMA_ajaxRemoveMessage($this_msgbox)
         $this_msgbox
         .stop(true, true)
         .fadeOut('medium');
-        if ($this_msgbox.is('.dismissable')) {
-            if ($.isFunction($this_msgbox.tooltip)) {
-                $this_msgbox.tooltip('destroy');
-            }
+        if ($this_msgbox.is(':data(tooltip)')) {
+            $this_msgbox.tooltip('destroy');
         } else {
             $this_msgbox.remove();
         }
