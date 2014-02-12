@@ -436,6 +436,10 @@ class rcube
         $this->session->set_secret($this->config->get('des_key') . dirname($_SERVER['SCRIPT_NAME']));
         $this->session->set_ip_check($this->config->get('ip_check'));
 
+        if ($this->config->get('session_auth_name')) {
+            $this->session->set_cookiename($this->config->get('session_auth_name'));
+        }
+
         // start PHP session (if not in CLI mode)
         if ($_SERVER['REMOTE_ADDR']) {
             session_start();
@@ -1065,8 +1069,8 @@ class rcube
      *      - code:    Error code (required)
      *      - type:    Error type [php|db|imap|javascript] (required)
      *      - message: Error message
-     *      - file:    File where error occured
-     *      - line:    Line where error occured
+     *      - file:    File where error occurred
+     *      - line:    Line where error occurred
      * @param boolean True to log the error
      * @param boolean Terminate script execution
      */
@@ -1291,6 +1295,7 @@ class rcube
             return $_SESSION['language'];
         }
     }
+
 }
 
 

@@ -14,7 +14,7 @@
  * This is needed for cookie based authentication to encrypt password in
  * cookie
  */
-$cfg['blowfish_secret'] = '_ZPANELX___'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
+$cfg['blowfish_secret'] = 'a8b7c6d'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
 
 /*
  * Servers configuration
@@ -71,11 +71,9 @@ $cfg['Servers'][$i]['AllowNoPassword'] = false;
 
 /*
  * Directories for saving/loading files from server
- * You may need to specify an exact path here or warnings may show
- * For example, on Linux: '/etc/zpanel/panel/etc/tmp/'
  */
-$cfg['UploadDir'] = '../tmp/';
-$cfg['SaveDir'] = '../tmp/';
+$cfg['UploadDir'] = '../../tmp';
+$cfg['SaveDir'] = '../../tmp';
 
 /**
  * Defines whether a user should be displayed a "show all (records)"

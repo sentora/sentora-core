@@ -189,8 +189,6 @@ CREATE TABLE `searches` (
 ) /*!40000 ENGINE=INNODB */ /*!40101 CHARACTER SET utf8 COLLATE utf8_general_ci */;
 
 
-/*!40014 SET FOREIGN_KEY_CHECKS=1 */;
-
 -- Table structure for table `system`
 
 CREATE TABLE `system` (

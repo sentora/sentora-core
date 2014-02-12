@@ -360,12 +360,8 @@ class rcube_utils
             return $value;
         }
 
-        // strip single quotes if magic_quotes_sybase is enabled
-        if (ini_get('magic_quotes_sybase')) {
-            $value = str_replace("''", "'", $value);
-        }
         // strip slashes if magic_quotes enabled
-        else if (get_magic_quotes_gpc() || get_magic_quotes_runtime()) {
+        if (get_magic_quotes_gpc() || get_magic_quotes_runtime()) {
             $value = stripslashes($value);
         }
 
@@ -480,9 +476,9 @@ class rcube_utils
 
         // remove html comments and add #container to each tag selector.
         // also replace body definition because we also stripped off the <body> tag
-        $styles = preg_replace(
+        $source = preg_replace(
             array(
-                '/(^\s*<!--)|(-->\s*$)/',
+                '/(^\s*<\!--)|(-->\s*$)/m',
                 '/(^\s*|,\s*|\}\s*)([a-z0-9\._#\*][a-z0-9\.\-_]*)/im',
                 '/'.preg_quote($container_id, '/').'\s+body/i',
             ),
@@ -494,9 +490,9 @@ class rcube_utils
             $source);
 
         // put block contents back in
-        $styles = $replacements->resolve($styles);
+        $source = $replacements->resolve($source);
 
-        return $styles;
+        return $source;
     }
 
 
@@ -721,16 +717,37 @@ class rcube_utils
      */
     public static function strtotime($date)
     {
+        $date = trim($date);
+
         // check for MS Outlook vCard date format YYYYMMDD
-        if (preg_match('/^([12][90]\d\d)([01]\d)(\d\d)$/', trim($date), $matches)) {
-            return mktime(0,0,0, intval($matches[2]), intval($matches[3]), intval($matches[1]));
-        }
-        else if (is_numeric($date)) {
-            return $date;
+        if (preg_match('/^([12][90]\d\d)([01]\d)([0123]\d)$/', $date, $m)) {
+            return mktime(0,0,0, intval($m[2]), intval($m[3]), intval($m[1]));
         }
 
-        // support non-standard "GMTXXXX" literal
-        $date = preg_replace('/GMT\s*([+-][0-9]+)/', '\\1', $date);
+        // common little-endian formats, e.g. dd/mm/yyyy (not all are supported by strtotime)
+        if (preg_match('/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/', $date, $m)
+            && $m[1] > 0 && $m[1] <= 31 && $m[2] > 0 && $m[2] <= 12 && $m[3] >= 1970
+        ) {
+            return mktime(0,0,0, intval($m[2]), intval($m[1]), intval($m[3]));
+        }
+
+        // unix timestamp
+        if (is_numeric($date)) {
+            return (int) $date;
+        }
+
+        // Clean malformed data
+        $date = preg_replace(
+            array(
+                '/GMT\s*([+-][0-9]+)/',                   // support non-standard "GMTXXXX" literal
+                '/[^a-z0-9\x20\x09:+-]/i',                // remove any invalid characters
+                '/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s*/i', // remove weekday names
+            ),
+            array(
+                '\\1',
+                '',
+                '',
+            ), $date);
 
         // if date parsing fails, we have a date in non-rfc format.
         // remove token from the end and try again
@@ -743,7 +760,7 @@ class rcube_utils
             $date = implode(' ', $d);
         }
 
-        return $ts;
+        return (int) $ts;
     }
 
 

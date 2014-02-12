@@ -3,7 +3,7 @@ if (!defined('PSI_CONFIG_FILE')) {
     /**
      * phpSysInfo version
      */
-    define('PSI_VERSION','3.1.8');
+    define('PSI_VERSION','3.1.9');
     /**
      * phpSysInfo configuration
      */
@@ -122,7 +122,7 @@ if (!defined('PSI_CONFIG_FILE')) {
                                         }
                                     }
                                 }
- 
+
                                 if (is_null($out) || (trim($out) == "") || (substr(trim($out),0 ,1) != "/")) {
                                     define('PSI_MODE_POPEN', true);
                                 }

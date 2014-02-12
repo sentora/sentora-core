@@ -388,7 +388,7 @@ function rcube_webmail()
         }
         else if (this.env.action == 'edit-folder' && this.gui_objects.editform) {
           this.enable_command('save', 'folder-size', true);
-          parent.rcmail.env.messagecount = this.env.messagecount;
+          parent.rcmail.env.exists = this.env.messagecount;
           parent.rcmail.enable_command('purge', this.env.messagecount);
           $("input[type='text']").first().select();
         }
@@ -1733,6 +1733,14 @@ function rcube_webmail()
     if (!row.depth && row.has_children && (expando = document.getElementById('rcmexpando'+row.uid))) {
       row.expando = expando;
       expando.onmousedown = function(e) { return self.expand_message_row(e, uid); };
+      if (bw.touch) {
+        expando.addEventListener('touchend', function(e) {
+          if (e.changedTouches.length == 1) {
+            self.expand_message_row(e, uid);
+            return rcube_event.cancel(e);
+          }
+        }, false);
+      }
     }
 
     this.triggerEvent('insertrow', { uid:uid, row:row });
@@ -1778,7 +1786,6 @@ function rcube_webmail()
         + (!flags.seen ? ' unread' : '')
         + (flags.deleted ? ' deleted' : '')
         + (flags.flagged ? ' flagged' : '')
-        + (flags.unread_children && flags.seen && !this.env.autoexpand_threads ? ' unroot' : '')
         + (message.selected ? ' selected' : ''),
       // for performance use DOM instead of jQuery here
       row = document.createElement('tr');
@@ -1831,6 +1838,9 @@ function rcube_webmail()
         expando = '<div id="rcmexpando' + uid + '" class="' + (message.expanded ? 'expanded' : 'collapsed') + '">&nbsp;&nbsp;</div>';
         row_class += ' thread' + (message.expanded? ' expanded' : '');
       }
+
+      if (flags.unread_children && flags.seen && !message.expanded)
+        row_class += ' unroot';
     }
 
     tree += '<span id="msgicn'+uid+'" class="'+css_class+'">&nbsp;</span>';
@@ -1877,7 +1887,7 @@ function rcube_webmail()
         html = expando;
       else if (c == 'subject') {
         if (bw.ie) {
-          col.onmouseover = function() { rcube_webmail.long_subject_title_ie(this, message.depth+1); };
+          col.onmouseover = function() { rcube_webmail.long_subject_title_ex(this, message.depth+1); };
           if (bw.ie8)
             tree = '<span></span>' + tree; // #1487821
         }
@@ -3069,7 +3079,7 @@ function rcube_webmail()
       this.set_caret_pos(input_message, this.env.top_posting ? 0 : $(input_message).val().length);
       // add signature according to selected identity
       // if we have HTML editor, signature is added in callback
-      if (input_from.prop('type') == 'select-one' && !this.env.opened_extwin) {
+      if (input_from.prop('type') == 'select-one') {
         this.change_identity(input_from[0]);
       }
     }
@@ -3400,6 +3410,15 @@ function rcube_webmail()
     if (!show_sig)
       show_sig = this.env.show_sig;
 
+    // first function execution
+    if (!this.env.identities_initialized) {
+      this.env.identities_initialized = true;
+      if (this.env.show_sig_later)
+        this.env.show_sig = true;
+      if (this.env.opened_extwin)
+        return;
+    }
+
     var cursor_pos, p = -1,
       id = obj.options[obj.selectedIndex].value,
       input_message = $("[name='_message']"),
@@ -3585,7 +3604,12 @@ function rcube_webmail()
       att.html = '<a title="'+this.get_label('cancel')+'" onclick="return rcmail.cancel_attachment_upload(\''+name+'\', \''+att.frame+'\');" href="#cancelupload" class="cancelupload">'
         + (this.env.cancelicon ? '<img src="'+this.env.cancelicon+'" alt="" />' : this.get_label('cancel')) + '</a>' + att.html;
 
-    var indicator, li = $('<li>').attr('id', name).addClass(att.classname).html(att.html);
+    var indicator, li = $('<li>');
+
+    li.attr('id', name)
+      .addClass(att.classname)
+      .html(att.html)
+      .on('mouseover', function() { rcube_webmail.long_subject_title_ex(this, 0); });
 
     // replace indicator's li
     if (upload_id && (indicator = document.getElementById(upload_id))) {
@@ -5872,7 +5896,7 @@ function rcube_webmail()
         }
         th.appendChild(tr);
         thead.parentNode.replaceChild(th, thead);
-        thead = th;
+        list.thead = thead = th;
       }
 
       for (n=0, len=this.env.coltypes.length; n<len; n++) {
@@ -6397,7 +6421,7 @@ function rcube_webmail()
   // post the given form to a hidden iframe
   this.async_upload_form = function(form, action, onload)
   {
-    var ts = new Date().getTime(),
+    var frame, ts = new Date().getTime(),
       frame_name = 'rcmupload'+ts;
 
     // upload progress support
@@ -6416,21 +6440,19 @@ function rcube_webmail()
     // have to do it this way for IE
     // otherwise the form will be posted to a new window
     if (document.all) {
-      var html = '<iframe name="'+frame_name+'" src="program/resources/blank.gif" style="width:0;height:0;visibility:hidden;"></iframe>';
-      document.body.insertAdjacentHTML('BeforeEnd', html);
+      document.body.insertAdjacentHTML('BeforeEnd', '<iframe name="'+frame_name+'"'
+        + ' src="program/resources/blank.gif" style="width:0;height:0;visibility:hidden;"></iframe>');
+      frame = $('iframe[name="'+frame_name+'"]');
     }
-    else { // for standards-compilant browsers
-      var frame = document.createElement('iframe');
-      frame.name = frame_name;
-      frame.style.border = 'none';
-      frame.style.width = 0;
-      frame.style.height = 0;
-      frame.style.visibility = 'hidden';
-      document.body.appendChild(frame);
+    // for standards-compliant browsers
+    else {
+      frame = $('<iframe>').attr('name', frame_name)
+        .css({border: 'none', width: 0, height: 0, visibility: 'hidden'})
+        .appendTo(document.body);
     }
 
     // handle upload errors, parsing iframe content in onload
-    $(frame_name).bind('load', {ts:ts}, onload);
+    frame.bind('load', {ts:ts}, onload);
 
     $(form).attr({
         target: frame_name,
@@ -6496,7 +6518,7 @@ function rcube_webmail()
         timeout: 0, // disable default timeout set in ajaxSetup()
         data: formdata || multipart,
         headers: {'X-Roundcube-Request': ref.env.request_token},
-        beforeSend: function(xhr, s) { if (!formdata && xhr.sendAsBinary) xhr.send = xhr.sendAsBinary; },
+        xhr: function() { var xhr = jQuery.ajaxSettings.xhr(); if (!formdata && xhr.sendAsBinary) xhr.send = xhr.sendAsBinary; return xhr; },
         success: function(data){ ref.http_response(data); },
         error: function(o, status, err) { ref.http_error(o, status, err, null, 'attachment'); }
       });
@@ -6536,7 +6558,7 @@ function rcube_webmail()
             multipart += '; filename="' + (f.name_bin || file.name) + '"' + crlf;
             multipart += 'Content-Length: ' + file.size + crlf;
             multipart += 'Content-Type: ' + file.type + crlf + crlf;
-            multipart += e.target.result + crlf;
+            multipart += reader.result + crlf;
             multipart += dashdash + boundary + crlf;
 
             if (j == last)  // we're done, submit the data
@@ -6857,11 +6879,11 @@ rcube_webmail.long_subject_title = function(elem, indent)
   if (!elem.title) {
     var $elem = $(elem);
     if ($elem.width() + indent * 15 > $elem.parent().width())
-      elem.title = $elem.html();
+      elem.title = $elem.text();
   }
 };
 
-rcube_webmail.long_subject_title_ie = function(elem, indent)
+rcube_webmail.long_subject_title_ex = function(elem, indent)
 {
   if (!elem.title) {
     var $elem = $(elem),

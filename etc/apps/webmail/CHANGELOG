@@ -1,6 +1,72 @@
 CHANGELOG Roundcube Webmail
 ===========================
 
+RELEASE 0.9.5
+-------------
+- Fix failing vCard import when email address field contains spaces (#1489386)
+- Fix default spell-check configuration after Google suspended their spell service
+- Fix vulnerability in handling _session argument of utils/save-prefs (#1489382)
+- Fix iframe onload for upload errors handling (#1489379)
+- Fix address matching in Return-Path header on identity selection (#1489374)
+- Fix text wrapping issue with long unwrappable lines (#1489371)
+- Fixed mispelling: occured -> occurred (#1489366)
+- Fixed issues where HTML comments inside style tag would hang Internet Explorer
+- Fix setting domain in virtualmin password driver (#1489332)
+- Hide Delivery Status Notification option when smtp_server is unset (#1489336)
+- Display full attachment name using title attribute when name is too long to display (#1489320)
+- Fix attachment icon issue when rare font/language is used (#1489326)
+- Fix expanded thread root message styling after refreshing messages list (#1489327)
+- Fix issue where From address was removed from Cc and Bcc fields when editing a draft (#1489319)
+- Fix error_reporting directive check (#1489323)
+- Fix de_DE localization of "About" label in Help plugin (#1489325)
+
+RELEASE 0.9.4
+-------------
+- Make identities matching case insensitive (#1485480)
+- Fix issue where too big message data was stored in cache causing sql errors (#1489316)
+- Fix iframe scrollbars on webkit desktop browsers (#1489306)
+- Fix issue where legacy config was overriden by default config (#1489288)
+- Fix newmail_notifier issue where favicon wasn't changed back to default (#1489313)
+- Fix setting of Junk and NonJunk flags by markasjunk plugin (#1489285)
+- Fix lack of Reply-To address in header of forwarded message body (#1489298)
+- Fix bugs when invoking contact creation form when read-only addressbook is selected (#1489296)
+- Fix identity selection on reply (#1489291)
+- Fix so additional headers are added to all messages sent (#1489284)
+- Fix display issue after moving folder in Folder Manager (#1489293)
+- Fix handling of non-default date formats (#1489294)
+- Fix unquoted path in PREG expression on Windows (#1489290)
+- Fix Junk folder icon alignment when it's nested in inbox folder (#1489292)
+- Fix wrong close tag in /template/mail.html (#1489295)
+
+RELEASE 0.9.3
+-------------
+- Fix setting refresh_interval to "Never" in Preferences (#1489286)
+- Optimized UI behavior for touch devices
+- Fix purge action in folder manager (#1489280)
+- Fix base URL resolving on attribute values with no quotes (#1489275)
+- Fix wrong handling of links with '|' character (#1489276)
+- Fix colorspace issue on image conversion using ImageMagick (#1489270)
+- Fix XSS vulnerability when saving HTML signatures (#1489251)
+- Fix XSS vulnerability when editing a message "as new" or draft (#1489251)
+- Fix rewrite rule in .htaccess (#1489240)
+- Fix detecting Turkish language in ISO-8859-9 encoding (#1489252)
+- Fix identity-selection using Return-Path headers (#1489241)
+- Fix parsing of links with ... in URL (#1489192)
+- Fix compose priority selector when opening in new window (#1489257)
+- Fix bug where signature wasn't changed on identity selection when editing a draft (#1489229)
+- Fix IMAP SETMETADATA parameters quoting (#1489231)
+- Fix "could not load message" error on valid empty message body (#1489228)
+- Fix handling of message/rfc822 attachments on message forward and edit (#1489214)
+- Fix parsing of square bracket characters in IMAP response strings (#1489223)
+- Don't clear References and in-Reply-To when a message is "edited as new" (#1489216)
+- Fix messages list sorting with THREAD=REFS
+- Remove deprecated (in PHP 5.5) PREG /e modifier usage (#1489174)
+- Fix empty messages list when register_globals is enabled (#1489157)
+- Fix so valid and set date.timezone is not required by installer checks (#1489180)
+- Canonize boolean ini_get() results (#1489189)
+- Fix so install do not fail when one of DB driver checks fails but other drivers exist (#1489178)
+- Fix so exported vCard specifies encoding in v3-compatible format (#1489183)
+
 RELEASE 0.9.2
 -------------
 - Fix image thumbnails display in print mode (#1489134)
@@ -203,4 +269,3 @@ RELEASE 0.9-beta
     Unified global functions naming (rcube_ prefix)
     Better classes separation
     Framework files moved to lib/Roundcube
-

@@ -260,8 +260,9 @@ class AuthenticationCookie extends AuthenticationPlugin
         ) {
             // If enabled show captcha to the user on the login screen.
             echo '<script type="text/javascript"
-                    src="https://www.google.com/recaptcha/api/challenge?k='
-                . $GLOBALS['cfg']['CaptchaLoginPublicKey'] . '">
+                    src="https://www.google.com/recaptcha/api/challenge?'
+                    . 'k=' . $GLOBALS['cfg']['CaptchaLoginPublicKey'] . '&amp;'
+                    . 'hl=' . $GLOBALS['lang'] . '">
                  </script>
                  <noscript>
                     <iframe src="https://www.google.com/recaptcha/api/noscript?k='
@@ -276,6 +277,10 @@ class AuthenticationCookie extends AuthenticationPlugin
                     $("#recaptcha_reload_btn").addClass("disableAjax");
                     $("#recaptcha_switch_audio_btn").addClass("disableAjax");
                     $("#recaptcha_switch_img_btn").addClass("disableAjax");
+                    $("#recaptcha_whatsthis_btn").addClass("disableAjax");
+                    $("#recaptcha_audio_play_again").live("mouseover", function() {
+                        $(this).addClass("disableAjax");
+                    });
                  </script>';
         }
 
@@ -424,6 +429,8 @@ class AuthenticationCookie extends AuthenticationPlugin
 
             if (! defined('TESTSUITE')) {
                 session_destroy();
+                // $_SESSION array is not immediately emptied
+                $_SESSION['last_valid_captcha'] = false;
             }
             // -> delete password cookie(s)
             if ($GLOBALS['cfg']['LoginCookieDeleteAll']) {
