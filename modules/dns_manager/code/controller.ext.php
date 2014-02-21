@@ -474,6 +474,53 @@ class module_controller
         }
     }
 
+    static function createDNSRecord($rec) {
+        global $zdbh;
+        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+                            dn_name_vc,
+                            dn_vhost_fk,
+                            dn_type_vc,
+                            dn_host_vc,
+                            dn_ttl_in,
+                            dn_target_vc,
+                            dn_priority_in,
+                            dn_weight_in,
+                            dn_port_in,
+                            dn_created_ts) VALUES (
+                            :userid,
+                            :domainName,
+                            :domainID,
+                            :type_new,
+                            :hostName_new,
+                            :ttl_new,
+                            :target_new,
+                            :priority_new,
+                            :weight_new,
+                            :port_new,
+                            :time)"
+                        );
+
+        $priority_new  = array_key_exists("priority", $rec) ? $rec["priority"] : 0;
+        $weight_new = array_key_exists("weight", $rec) ? $rec["weight"] : 0;
+        $port_new = array_key_exists("port", $rec) ? $rec["port"] : 0;
+        $time = array_key_exists("time", $rec) ? $rec["time"] : time();
+
+        $sql->bindParam(':userid', $rec["uid"]);
+        $sql->bindParam(':domainName', $rec["domainName"]);
+        $sql->bindParam(':domainID', $rec["domainID"]);
+        $sql->bindParam(':type_new', $rec["type"]);
+        $sql->bindParam(':hostName_new', $rec["hostName"]);
+        $sql->bindParam(':ttl_new', $rec["ttl"]);
+        $sql->bindParam(':target_new', $rec["target"]);
+        $sql->bindParam(':priority_new', $priority_new);
+        $sql->bindParam(':weight_new', $weight_new);
+        $sql->bindParam(':port_new', $port_new);
+        $sql->bindParam(':time', $time);
+        $sql->execute();
+
+        self::TriggerDNSUpdate($rec['domainID']);
+    }
+
     static function doCreateDefaultRecords()
     {
         global $zdbh;
@@ -493,278 +540,98 @@ class module_controller
         } else {
             $target = $_SERVER["SERVER_ADDR"]; //This needs checking on windows 7 we may need to use LOCAL_ADDR :- Sam Mottley
         }
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'A',
-            '@',
-            3600,
-            :target,
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $sql->bindParam(':target', $target);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'CNAME',
-            'www',
-            3600,
-            '@',
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'CNAME',
-            'ftp',
-            3600,
-            '@',
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'A',
-            'mail',
-            86400,
-            :target,
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $sql->bindParam(':target', $target);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'MX',
-            '@',
-            86400,
-            :vh_name_vc,
-            10,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $vh_name_vc = 'mail.' . $domainName['vh_name_vc'];
-        $sql->bindParam(':vh_name_vc', $vh_name_vc);
-        $sql->bindParam(':domainID', $domainID);
-        $sql->bindParam(':target', $target);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'A',
-            'ns1',
-            172800,
-            :target,
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $sql->bindParam(':target', $target);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'A',
-            'ns2',
-            172800,
-            :target,
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $sql->bindParam(':target', $target);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'NS',
-            '@',
-            172800,
-            :target2,
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $target2 = 'ns1.' . $domainName['vh_name_vc'];
-        $sql->bindParam(':target2', $target2);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-            dn_name_vc,
-            dn_vhost_fk,
-            dn_type_vc,
-            dn_host_vc,
-            dn_ttl_in,
-            dn_target_vc,
-            dn_priority_in,
-            dn_weight_in,
-            dn_port_in,
-            dn_created_ts) VALUES (
-            :userID,
-            :vh_name_vc,
-            :domainID,
-            'NS',
-            '@',
-            172800,
-            :target2,
-            NULL,
-            NULL,
-            NULL,
-            :time)"
-        );
-        $sql->bindParam(':userID', $userID);
-        $sql->bindParam(':vh_name_vc', $domainName['vh_name_vc']);
-        $sql->bindParam(':domainID', $domainID);
-        $target2 = 'ns2.' . $domainName['vh_name_vc'];
-        $sql->bindParam(':target2', $target2);
-        $time = time();
-        $sql->bindParam(':time', $time);
-        $sql->execute();
-        self::TriggerDNSUpdate($domainID);
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "A",
+                   "hostName"       => "@",
+                   "ttl"            => 3600 ,
+                   "target"         => $target
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "CNAME",
+                   "hostName"       => "www",
+                   "ttl"            => 3600 ,
+                   "target"         => '@'
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "CNAME",
+                   "hostName"       => "ftp",
+                   "ttl"            => 3600 ,
+                   "target"         => '@'
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "A",
+                   "hostName"       => "mail",
+                   "ttl"            => 86400,
+                   "target"         => $target
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => "mail."  . $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "MX",
+                   "hostName"       => "@",
+                   "ttl"            => 86400,
+                   "target"         => "mail."  . $domainName['vh_name_vc'],
+                   "priority"       => 10
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "A",
+                   "hostName"       => "ns1",
+                   "ttl"            => 172800,
+                   "target"         => $target
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "A",
+                   "hostName"       => "ns2",
+                   "ttl"            => 172800,
+                   "target"         => $target
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "NS",
+                   "hostName"       => "@",
+                   "ttl"            => 172800,
+                   "target"         => 'ns1.' . $domainName['vh_name_vc']
+        ));
+
+        self::createDNSRecord( array(
+                   "uid"            => $userID,
+                   "domainName"     => $domainName['vh_name_vc'],
+                   "domainID"       => $domainID,
+                   "type"           => "NS",
+                   "hostName"       => "@",
+                   "ttl"            => 172800,
+                   "target"         => 'ns2.' . $domainName['vh_name_vc']
+        ));
+
         self::$editdomain = $domainID;
         return;
     }
