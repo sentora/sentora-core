@@ -1,8 +1,10 @@
 <?php
 
-class webservice extends ws_xmws {
+class webservice extends ws_xmws
+{
 
-    public function CreateDNSRecord() {
+    public function CreateDNSRecord()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $response_xml = "\n";
 
@@ -14,23 +16,23 @@ class webservice extends ws_xmws {
         $target = ws_generic::GetTagValue('target', $request_data['content']);
         $ttl = ws_generic::GetTagValue('ttl', $request_data['content']);
 
-        module_controller::createDNSRecord( array(
-                   "uid"            => $uid,
-                   "domainName"     => $domainName,
-                   "domainID"       => $domainID,
-                   "type"           => $type,
-                   "hostName"       => $hostName,
-                   "ttl"            => $ttl ,
-                   "target"         => $target
+        module_controller::createDNSRecord(array(
+            "uid" => $uid,
+            "domainName" => $domainName,
+            "domainID" => $domainID,
+            "type" => $type,
+            "hostName" => $hostName,
+            "ttl" => $ttl,
+            "target" => $target
         ));
 
 
         $response_xml = $response_xml . ws_xmws::NewXMLContentSection('dns_record', array(
-                            'domainName' => $domainName,
-                            'hostName' => $hostName,
-                            'type' => $type,
-                            'target' => $target,
-                            'created' => 'true'
+                    'domainName' => $domainName,
+                    'hostName' => $hostName,
+                    'type' => $type,
+                    'target' => $target,
+                    'created' => 'true'
         ));
 
         $dataobject = new runtime_dataobject();
@@ -40,7 +42,3 @@ class webservice extends ws_xmws {
     }
 
 }
-
-?>
-
-

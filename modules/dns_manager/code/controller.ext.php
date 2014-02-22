@@ -474,7 +474,13 @@ class module_controller extends ctrl_module
         }
     }
 
-    static function createDNSRecord($rec) {
+    /**
+     * Creates a new DNS record from an array of key value pairs.
+     * @param array $rec Array of record properties (uid, domainName, domainID, type, hostName, ttl, target)
+     * @return void
+     */
+    static function createDNSRecord(array $rec)
+    {
         global $zdbh;
         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
                             dn_name_vc,
@@ -498,9 +504,9 @@ class module_controller extends ctrl_module
                             :weight_new,
                             :port_new,
                             :time)"
-                        );
+        );
 
-        $priority_new  = array_key_exists("priority", $rec) ? $rec["priority"] : 0;
+        $priority_new = array_key_exists("priority", $rec) ? $rec["priority"] : 0;
         $weight_new = array_key_exists("weight", $rec) ? $rec["weight"] : 0;
         $port_new = array_key_exists("port", $rec) ? $rec["port"] : 0;
         $time = array_key_exists("time", $rec) ? $rec["time"] : time();
@@ -541,95 +547,95 @@ class module_controller extends ctrl_module
             $target = $_SERVER["SERVER_ADDR"]; //This needs checking on windows 7 we may need to use LOCAL_ADDR :- Sam Mottley
         }
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "A",
-                   "hostName"       => "@",
-                   "ttl"            => 3600 ,
-                   "target"         => $target
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "A",
+            "hostName" => "@",
+            "ttl" => 3600,
+            "target" => $target
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "CNAME",
-                   "hostName"       => "www",
-                   "ttl"            => 3600 ,
-                   "target"         => '@'
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "CNAME",
+            "hostName" => "www",
+            "ttl" => 3600,
+            "target" => '@'
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "CNAME",
-                   "hostName"       => "ftp",
-                   "ttl"            => 3600 ,
-                   "target"         => '@'
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "CNAME",
+            "hostName" => "ftp",
+            "ttl" => 3600,
+            "target" => '@'
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "A",
-                   "hostName"       => "mail",
-                   "ttl"            => 86400,
-                   "target"         => $target
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "A",
+            "hostName" => "mail",
+            "ttl" => 86400,
+            "target" => $target
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => "mail."  . $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "MX",
-                   "hostName"       => "@",
-                   "ttl"            => 86400,
-                   "target"         => "mail."  . $domainName['vh_name_vc'],
-                   "priority"       => 10
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => "mail." . $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "MX",
+            "hostName" => "@",
+            "ttl" => 86400,
+            "target" => "mail." . $domainName['vh_name_vc'],
+            "priority" => 10
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "A",
-                   "hostName"       => "ns1",
-                   "ttl"            => 172800,
-                   "target"         => $target
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "A",
+            "hostName" => "ns1",
+            "ttl" => 172800,
+            "target" => $target
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "A",
-                   "hostName"       => "ns2",
-                   "ttl"            => 172800,
-                   "target"         => $target
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "A",
+            "hostName" => "ns2",
+            "ttl" => 172800,
+            "target" => $target
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "NS",
-                   "hostName"       => "@",
-                   "ttl"            => 172800,
-                   "target"         => 'ns1.' . $domainName['vh_name_vc']
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "NS",
+            "hostName" => "@",
+            "ttl" => 172800,
+            "target" => 'ns1.' . $domainName['vh_name_vc']
         ));
 
-        self::createDNSRecord( array(
-                   "uid"            => $userID,
-                   "domainName"     => $domainName['vh_name_vc'],
-                   "domainID"       => $domainID,
-                   "type"           => "NS",
-                   "hostName"       => "@",
-                   "ttl"            => 172800,
-                   "target"         => 'ns2.' . $domainName['vh_name_vc']
+        self::createDNSRecord(array(
+            "uid" => $userID,
+            "domainName" => $domainName['vh_name_vc'],
+            "domainID" => $domainID,
+            "type" => "NS",
+            "hostName" => "@",
+            "ttl" => 172800,
+            "target" => 'ns2.' . $domainName['vh_name_vc']
         ));
 
         self::$editdomain = $domainID;
