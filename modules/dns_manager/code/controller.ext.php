@@ -27,21 +27,16 @@
 class module_controller extends ctrl_module
 {
 
-    static $ok;
     static $editdomain;
     static $showform;
-    static $ttl_error;
-    static $invalidIPv4_error;
-    static $invalidIPv6_error;
-    static $invalidDomainName_error;
-    static $invalidIP_error;
-    static $priorityNumeric_error;
-    static $priorityRange_error;
-    static $weightNumeric_error;
-    static $weightRange_error;
-    static $portNumeric_error;
-    static $portRange_error;
-    static $hostname_error;
+    static $ResultOk;
+    static $ResultErr;
+
+    private function SetError($ErrorText)
+    {
+        if (empty(self::$ResultErr))
+            self::$ResultErr = $ErrorText;
+    }
 
     /* Load DNS CSS and JS files */
 
@@ -118,7 +113,6 @@ class module_controller extends ctrl_module
         $line .= "<table class=\"zform\">";
         $line .= "<tr>";
         $line .= "<td>";
-        //$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\">" . ui_language::translate("Create Records") . "</button>";
         $line .= '<button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i> ' . ui_language::translate("Create Records") . '</button>';
         $line .= "</td>";
         $line .= "</tr>";
@@ -126,7 +120,7 @@ class module_controller extends ctrl_module
         $line .= "<input type=\"hidden\" name=\"inDomain\" value =\"" . $controller->GetControllerRequest('FORM', 'inDomain') . "\" />";
         $line .= "<input type=\"hidden\" name=\"inUserID\" value =\"" . $currentuser['userid'] . "\" />";
         $line .= self::getCSFR_Tag();
-        $line .= "</form>";
+        $line .= '</form>';
         $line .= '</div>';
         return $line;
     }
@@ -202,16 +196,9 @@ class module_controller extends ctrl_module
                 $line .= '<br>';
                 $line .= '</div>';
             }
-            //$line .= "<div class=\"add row\"><span><span><button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\">" . ui_language::translate("Add New Record") . "</button></span></span></div>";
-            //
-            $line .= '<div class="add row"><button type="submit" class="add-row btn btn-primary"><i class="glyphicon glyphicon-pencil"></i>  ' . ui_language::translate("Add New Record") . '</button>
+            $line .= '<div class="add row"><button type="submit" class="add-row btn btn-primary"><i class="glyphicon glyphicon-pencil"></i> ' . ui_language::translate("Add New Record") . '</button>
 
-            <button type="submit" class="save disabled btn btn-primary btn-default pull-right">' . ui_language::translate("Save") . '</button></div>';
-
-
-
-
-
+           <button type="submit" class="save disabled btn btn-primary btn-default pull-right">' . ui_language::translate("Save") . '</button></div>';
 
             // New Record Template
             $line .= '<div class="newRecord row" style="display: none">';
@@ -243,7 +230,7 @@ class module_controller extends ctrl_module
 
     static function DisplayRecords()
     {
-        //print_r($_POST); //Post Debug
+        //Post Debug
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
@@ -341,12 +328,9 @@ class module_controller extends ctrl_module
         $line .= self::DnsRecordField('NS', $tts, $nsDescription, $currentuser['userid'], $domainID);
 
         $line .= '<input name="newRecords" value="0" type="hidden">';
-        $line .= "</div> <!-- END TABS CONTENT -->";
+        $line .= '</div> <!-- END TABS CONTENT -->';
         /* END TABS SECTION */
-        $line .= "</div> <!-- END TABS -->";
-
-
-
+        $line .= '</div> <!-- END TABS -->';
 
         // Bottom Edit buttons
         $line .= "<div id=\"dnsTitle\" class=\"account accountTitle\">";
@@ -355,11 +339,8 @@ class module_controller extends ctrl_module
         $line .= "<div class=\"actions\"><a class=\"undo disabled\">" . ui_language::translate("Undo Changes") . "</a><a class=\"save disabled\">" . ui_language::translate("Save Changes") . "</a><a class=\"back\" href=\"./?module=" . $controller->GetControllerRequest('URL', 'module') . "\">" . ui_language::translate("Domain List") . "</a></div>";
         $line .= "</div><br class=\"clear\">";
         $line .= '</div>';
-        //$line .= '</div>';
         $line .= self::getCSFR_Tag();
         $line .= "</form>";
-
-        //$line .= '</div>';
         $line .= "<!-- END DNS FORM -->";
         $line .= "<div class=\"zgrid_wrapper\">";
         $line .= "<h2>DNS Status for domain: " . $domain['vh_name_vc'] . "</h2>";
@@ -373,15 +354,15 @@ class module_controller extends ctrl_module
 
         $line .='
 <div id="dns-modal" class="modal fade in" tabindex="-1" role="dialog" style="display: none;">
-    <div class="modal-dialog">
-        <div class="alert alert-block alert-error fade in">
-            <h4 class="alert-heading">Oh snap! You got an error!</h4>
-            <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
-            <p>
-            <a class="btn btn-danger" href="#" data-dismiss="modal">Ok</a>
-            </p>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dalog -->
+   <div class="modal-dialog">
+       <div class="alert alert-block alert-error fade in">
+           <h4 class="alert-heading">Oh snap! You got an error!</h4>
+           <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
+           <p>
+           <a class="btn btn-danger" href="#" data-dismiss="modal">Ok</a>
+           </p>
+       </div><!-- /.modal-content -->
+   </div><!-- /.modal-dalog -->
 </div>';
 
         return $line;
@@ -398,7 +379,7 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        $line = "<div class=\"zgrid_wrapper\">";
+        $line = '<div class="zgrid_wrapper">';
         $line .= "<h2>" . ui_language::translate("Manage Domains") . "</h2>";
         $line .= "" . ui_language::translate("Choose fom the list of domains below") . "";
         $line .= "<form name=DisplayDNS action=\"./?module=dns_manager&action=DisplayRecords\" method=\"post\">";
@@ -407,25 +388,21 @@ class module_controller extends ctrl_module
         $line .= "<tr>";
         $line .= "<td><select name=\"inDomain\" id=\"inDomain\">";
         $line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
-        //$sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=" . $currentuser['userid'] . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
         $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
         $sql->bindParam(':userid', $currentuser['userid']);
-        $sql->execute();
-
         $sql->execute();
         while ($rowdomains = $sql->fetch()) {
             $line .= "<option value=\"" . $rowdomains['vh_id_pk'] . "\">" . $rowdomains['vh_name_vc'] . "</option>";
         }
         $line .= "</select></td>";
         $line .= "<td>";
-        //$line .= "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"submit\" id=\"button\" name=\"inSelect\" value=\"" . $rowdomains['vh_id_pk'] . "\">" . ui_language::translate("Select") . "</button>";
         $line .= '<button type="submit" class="btn btn-large btn-primary" name="inSelect" value="' . $rowdomains['vh_id_pk'] . '"><i class="glyphicon glyphicon-pencil"></i>  ' . ui_language::translate("Edit") . '</button>';
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "</table>";
+        $line .= '</td>';
+        $line .= '</tr>';
+        $line .= '</table>';
         $line .= self::getCSFR_Tag();
-        $line .= "</form>";
-        $line .= "<p>&nbsp;</p>";
+        $line .= '</form>';
+        $line .= '<p>&nbsp;</p>';
         $line .= '</div>';
         return $line;
     }
@@ -469,7 +446,7 @@ class module_controller extends ctrl_module
         if (!fs_director::CheckForEmptyValue(self::CheckForErrors())) {
             self::SaveDNS();
             //self::WriteRecord();
-            self::$ok = TRUE;
+            self::$ResultOk = 'Changes to your DNS have been saved successfully!';
             return;
         }
     }
@@ -482,42 +459,42 @@ class module_controller extends ctrl_module
     static function createDNSRecord(array $rec)
     {
         global $zdbh;
-        $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-                            dn_name_vc,
-                            dn_vhost_fk,
-                            dn_type_vc,
-                            dn_host_vc,
-                            dn_ttl_in,
-                            dn_target_vc,
-                            dn_priority_in,
-                            dn_weight_in,
-                            dn_port_in,
-                            dn_created_ts) VALUES (
-                            :userid,
-                            :domainName,
-                            :domainID,
-                            :type_new,
-                            :hostName_new,
-                            :ttl_new,
-                            :target_new,
-                            :priority_new,
-                            :weight_new,
-                            :port_new,
-                            :time)"
+        $sql = $zdbh->prepare('INSERT INTO x_dns (dn_acc_fk,
+                           dn_name_vc,
+                           dn_vhost_fk,
+                           dn_type_vc,
+                           dn_host_vc,
+                           dn_ttl_in,
+                           dn_target_vc,
+                           dn_priority_in,
+                           dn_weight_in,
+                           dn_port_in,
+                           dn_created_ts) VALUES (
+                           :userid,
+                           :domainName,
+                           :domainID,
+                           :type_new,
+                           :hostName_new,
+                           :ttl_new,
+                           :target_new,
+                           :priority_new,
+                           :weight_new,
+                           :port_new,
+                           :time)'
         );
 
-        $priority_new = array_key_exists("priority", $rec) ? $rec["priority"] : 0;
-        $weight_new = array_key_exists("weight", $rec) ? $rec["weight"] : 0;
-        $port_new = array_key_exists("port", $rec) ? $rec["port"] : 0;
-        $time = array_key_exists("time", $rec) ? $rec["time"] : time();
+        $priority_new = array_key_exists('priority', $rec) ? $rec['priority'] : 0;
+        $weight_new = array_key_exists('weight', $rec) ? $rec['weight'] : 0;
+        $port_new = array_key_exists('port', $rec) ? $rec['port'] : 0;
+        $time = array_key_exists('time', $rec) ? $rec['time'] : time();
 
-        $sql->bindParam(':userid', $rec["uid"]);
-        $sql->bindParam(':domainName', $rec["domainName"]);
-        $sql->bindParam(':domainID', $rec["domainID"]);
-        $sql->bindParam(':type_new', $rec["type"]);
-        $sql->bindParam(':hostName_new', $rec["hostName"]);
-        $sql->bindParam(':ttl_new', $rec["ttl"]);
-        $sql->bindParam(':target_new', $rec["target"]);
+        $sql->bindParam(':userid', $rec['uid']);
+        $sql->bindParam(':domainName', $rec['domainName']);
+        $sql->bindParam(':domainID', $rec['domainID']);
+        $sql->bindParam(':type_new', $rec['type']);
+        $sql->bindParam(':hostName_new', $rec['hostName']);
+        $sql->bindParam(':ttl_new', $rec['ttl']);
+        $sql->bindParam(':target_new', $rec['target']);
         $sql->bindParam(':priority_new', $priority_new);
         $sql->bindParam(':weight_new', $weight_new);
         $sql->bindParam(':port_new', $port_new);
@@ -534,109 +511,55 @@ class module_controller extends ctrl_module
         runtime_csfr::Protect();
 
         $domainID = $controller->GetControllerRequest('FORM', 'inDomain');
-        //$domainName = $domain = $zdbh->query("SELECT * FROM x_vhosts WHERE vh_id_pk=" . $domainID . " AND vh_type_in !=2 AND vh_deleted_ts IS NULL")->Fetch();
-        $numrows = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+        $numrows = $zdbh->prepare('SELECT * FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL');
         $numrows->bindParam(':domainID', $domainID);
         $numrows->execute();
         $domainName = $numrows->fetch();
+        $domainName = $domainName['vh_name_vc'];
 
         $userID = $controller->GetControllerRequest('FORM', 'inUserID');
         if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
-            $target = ctrl_options::GetSystemOption('server_ip');
+            $targetIP = ctrl_options::GetSystemOption('server_ip');
         } else {
-            $target = $_SERVER["SERVER_ADDR"]; //This needs checking on windows 7 we may need to use LOCAL_ADDR :- Sam Mottley
+            $targetIP = $_SERVER["SERVER_ADDR"]; //This needs checking on windows 7 we may need to use LOCAL_ADDR :- Sam Mottley
         }
+        //Get list of DNS rows to create
+        $RowCount = $zdbh->prepare('SELECT count(*) FROM x_dns_create WHERE dc_acc_fk=:userId');
+        $RowCount->bindparam(':userId', $userID);
+        $RowCount->execute();
+        if ($RowCount->fetchColumn() > 0) {
+            //The current user have specifics entries, use them only
+            $CreateList = $zdbh->prepare('SELECT * FROM x_dns_create WHERE dc_acc_fk=:userId');
+            $CreateList->bindparam(':userId', $userID);
+            $CreateList->execute();
+        } else {
+            //no entry specific to this user is present, use default entries (user number = 0)
+            $CreateList = $zdbh->query('SELECT * FROM x_dns_create WHERE dc_acc_fk=0');
+        }
+        while ($CreateItem = $CreateList->fetch()) {
+            $Target = str_replace(':IP:', $targetIP, $CreateItem['dc_target_vc']);
+            $Target = str_replace(':DOMAIN:', $domainName, $Target);
 
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "A",
-            "hostName" => "@",
-            "ttl" => 3600,
-            "target" => $target
-        ));
+            $Row = array(
+                'uid' => $userID,
+                'domainName' => $domainName,
+                'domainID' => $domainID,
+                'type' => $CreateItem['dc_type_vc'],
+                'hostName' => $CreateItem['dc_host_vc'],
+                'ttl' => $CreateItem['dc_ttl_in'],
+                'target' => $Target);
 
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "CNAME",
-            "hostName" => "www",
-            "ttl" => 3600,
-            "target" => '@'
-        ));
+            if (!empty($CreateItem['dc_priority_in']))
+                $Row['priority'] = $CreateItem['dc_priority_in'];
 
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "CNAME",
-            "hostName" => "ftp",
-            "ttl" => 3600,
-            "target" => '@'
-        ));
+            if (!empty($CreateItem['dc_weight_in']))
+                $Row['weight'] = $CreateItem['dc_weight_in'];
 
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "A",
-            "hostName" => "mail",
-            "ttl" => 86400,
-            "target" => $target
-        ));
+            if (!empty($CreateItem['dc_port_in']))
+                $Row['port'] = $CreateItem['dc_port_in'];
 
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => "mail." . $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "MX",
-            "hostName" => "@",
-            "ttl" => 86400,
-            "target" => "mail." . $domainName['vh_name_vc'],
-            "priority" => 10
-        ));
-
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "A",
-            "hostName" => "ns1",
-            "ttl" => 172800,
-            "target" => $target
-        ));
-
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "A",
-            "hostName" => "ns2",
-            "ttl" => 172800,
-            "target" => $target
-        ));
-
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "NS",
-            "hostName" => "@",
-            "ttl" => 172800,
-            "target" => 'ns1.' . $domainName['vh_name_vc']
-        ));
-
-        self::createDNSRecord(array(
-            "uid" => $userID,
-            "domainName" => $domainName['vh_name_vc'],
-            "domainID" => $domainID,
-            "type" => "NS",
-            "hostName" => "@",
-            "ttl" => 172800,
-            "target" => 'ns2.' . $domainName['vh_name_vc']
-        ));
+            self::createDNSRecord($Row);
+        }
 
         self::$editdomain = $domainID;
         return;
@@ -724,11 +647,6 @@ class module_controller extends ctrl_module
                 $sql->bindParam(':time', $time);
                 $sql->execute();
                 self::TriggerDNSUpdate($domainID);
-                //If deleting an A recod, also delete cnames pointing to it.
-                if ($type[$id] == "A") {
-                    //$sql = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=" . time() . " WHERE dn_type_vc='CNAME' AND dn_vhost_fk=".$domainID." AND dn_target_vc='".$target[$id]."' AND dn_deleted_ts IS NULL");
-                    //$sql->execute();
-                }
             } else {
                 //The record needs updating instead.
                 //TTL
@@ -829,27 +747,27 @@ class module_controller extends ctrl_module
                             $port_new = "NULL";
                         }
                         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
-                            dn_name_vc,
-                            dn_vhost_fk,
-                            dn_type_vc,
-                            dn_host_vc,
-                            dn_ttl_in,
-                            dn_target_vc,
-                            dn_priority_in,
-                            dn_weight_in,
-                            dn_port_in,
-                            dn_created_ts) VALUES (
-                            :userid,
-                            :domainName,
-                            :domainID,
-                            :type_new,
-                            :hostName_new,
-                            :ttl_new,
-                            :target_new,
-                            :priority_new,
-                            :weight_new,
-                            :port_new,
-                            :time)"
+                           dn_name_vc,
+                           dn_vhost_fk,
+                           dn_type_vc,
+                           dn_host_vc,
+                           dn_ttl_in,
+                           dn_target_vc,
+                           dn_priority_in,
+                           dn_weight_in,
+                           dn_port_in,
+                           dn_created_ts) VALUES (
+                           :userid,
+                           :domainName,
+                           :domainID,
+                           :type_new,
+                           :hostName_new,
+                           :ttl_new,
+                           :target_new,
+                           :priority_new,
+                           :weight_new,
+                           :port_new,
+                           :time)"
                         );
                         $sql->bindParam(':userid', $currentuser['userid']);
                         $sql->bindParam(':domainName', $domainName);
@@ -881,6 +799,7 @@ class module_controller extends ctrl_module
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
         $dnsrecords = array();
+
         //Grab form inputs in array and assign them to variables
         if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'domainName'))) {
             $domainName = $controller->GetControllerRequest('FORM', 'domainName');
@@ -931,13 +850,12 @@ class module_controller extends ctrl_module
             $newRecords = $controller->GetControllerRequest('FORM', 'newRecords');
         }
         //Get all existing records for domain and add the id's to an array
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL";
-        $numrows = $zdbh->prepare($sql);
+        $numrows = $zdbh->prepare('SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL');
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->bindParam(':domainID', $domainID);
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
-                $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL");
+                $sql = $zdbh->prepare('SELECT dn_id_pk FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL');
                 $sql->bindParam(':userid', $currentuser['userid']);
                 $sql->bindParam(':domainID', $domainID);
                 $sql->execute();
@@ -946,6 +864,7 @@ class module_controller extends ctrl_module
                 }
             }
         }
+
         //Existing Records
         //Sort through the dns record array by id and update as needed
         foreach ($dnsrecords as $id) {
@@ -953,182 +872,184 @@ class module_controller extends ctrl_module
                 //TTL
                 if (isset($ttl[$id]) && !fs_director::CheckForEmptyValue($ttl[$id]) && $ttl[$id] != $original_ttl[$id]) {
                     if (!is_numeric($ttl[$id])) {
-                        self::$ttl_error = TRUE;
+                        self::SetError('TTL must be a numeric value.');
                         return FALSE;
                     }
                 }
+
                 //TARGET
                 if (isset($target[$id]) && !fs_director::CheckForEmptyValue($target[$id]) && $target[$id] != $original_target[$id]) {
                     if ($type[$id] == "A") {
                         if (!self::IsValidIPv4($target[$id])) {
-                            self::$invalidIPv4_error = TRUE;
+                            self::SetError('IP Address is not a valid IPV4 address.');
                             return FALSE;
                         }
                     } elseif ($type[$id] == "AAAA") {
                         if (!self::IsValidIPv6($target[$id])) {
-                            self::$invalidIPv6_error = TRUE;
+                            self::SetError('IP Address is not a valid IPV6 address');
                             return FALSE;
                         }
                     } elseif ($type[$id] == "TXT") {
-                        
+
                     } elseif ($type[$id] == "SPF") {
-                        
+
                     } else {
                         if (!self::IsValidIP($target[$id])) {
                             if (!self::IsValidDomainName($target[$id])) {
-                                self::$invalidDomainName_error = TRUE;
+                                self::SetError('An invalid domain name character was entered. Domain names are limited to alphanumeric characters and hyphens.');
                                 return FALSE;
                             }
                         }
                         if (!self::IsValidDomainName($target[$id])) {
                             if (!self::IsValidIP($target[$id])) {
-                                self::$invalidIP_error = TRUE;
+                                self::SetError('Target is not a valid IP address');
                                 return FALSE;
                             }
                         }
                     }
                 }
+
                 //PRIORITY
                 if (isset($priority[$id]) && !fs_director::CheckForEmptyValue($priority[$id]) && $priority[$id] != $original_priority[$id]) {
                     if (!is_numeric($priority[$id])) {
-                        self::$priorityNumeric_error = TRUE;
+                        self::SetError('Priority must be a numeric value.');
                         return FALSE;
                     }
                     if ($priority[$id] < 0 || $priority[$id] > 65535) {
-                        self::$priorityRange_error = TRUE;
+                        self::SetError('The priority of a dns record must be a numeric value between 0 and 65535');
                         return FALSE;
                     }
                 }
+
                 //WEIGHT
                 if (isset($weight[$id]) && !fs_director::CheckForEmptyValue($weight[$id]) && $weight[$id] != $original_weight[$id]) {
                     if (!is_numeric($weight[$id])) {
-                        self::$weightNumeric_error = TRUE;
+                        self::SetError('Weight must be a numeric value.');
                         return FALSE;
                     }
                     if ($weight[$id] < 0 || $weight[$id] > 65535) {
-                        self::$weightRange_error = TRUE;
+                        self::SetError('The weight of a dns record must be a numeric value between 0 and 65535');
                         return FALSE;
                     }
                 }
+
                 //PORT
                 if (isset($port[$id]) && !fs_director::CheckForEmptyValue($port[$id]) && $port[$id] != $original_port[$id]) {
                     if (!is_numeric($port[$id])) {
-                        self::$portNumeric_error = TRUE;
+                        self::SetError('PORT must be a numeric value.');
                         return FALSE;
                     }
                     if ($port[$id] < 0 || $port[$id] > 65535) {
-                        self::$portRange_error = TRUE;
+                        self::SetError('The port of a dns record must be a numeric value between 0 and 65535');
                         return FALSE;
                     }
                 }
             }
         }
+
         //NEW Records
         //Find all new records in post array
         if (isset($newRecords) && !fs_director::CheckForEmptyValue($newRecords)) {
             $numnew = $newRecords;
-            $id = 1;
-            while ($numnew >= $id) {
-                if (isset($type['new_' . $id])) {
-                    if ($delete['new_' . $id] == "false" && !fs_director::CheckForEmptyValue($type['new_' . $id])) {
+            for ($id = 1; $id <= $numnew; $id++) {
+                $NewId = 'new_' . $id;
+                if (isset($type[$NewId])) {
+                    if ($delete[$NewId] == "false" && !fs_director::CheckForEmptyValue($type[$NewId])) {
                         //HOSTNAME
-                        if (isset($hostName['new_' . $id]) && !fs_director::CheckForEmptyValue($hostName['new_' . $id]) && $hostName['new_' . $id] != "@") {
-
+                        if (isset($hostName[$NewId]) && !fs_director::CheckForEmptyValue($hostName[$NewId]) && $hostName[$NewId] != "@") {
                             //Check that hostname does not already exist.
-                            //$hostname = $zdbh->query("SELECT * FROM x_dns WHERE dn_host_vc='" . $hostName['new_' . $id] . "' AND dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();
-                            $numrows = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_host_vc=:hostName2 AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL");
-                            $hostName2 = $hostName['new_' . $id];
+                            $numrows = $zdbh->prepare('SELECT dn_id_pk FROM x_dns WHERE dn_host_vc=:hostName2 AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL');
+                            $hostName2 = $hostName[$NewId];
                             $numrows->bindParam(':hostName2', $hostName2);
                             $numrows->bindParam(':domainID', $domainID);
                             $numrows->execute();
-                            $hostname = $numrows->fetch();
-                            if ($hostname) {
-                                self::$hostname_error = TRUE;
+                            if ($numrows->fetch()) {
+                                self::SetError('Hostnames must be unique.');
                                 return FALSE;
                             }
 
-                            if ($type['new_' . $id] != "SRV") {
-                                if (!self::IsValidTargetName($hostName['new_' . $id])) {
+                            if ($type[$NewId] != "SRV") {
+                                if (!($hostName[$NewId] == '*' or self::IsValidTargetName($hostName[$NewId]) )) {
+                                    self::SetError('Hostname invalid.');
                                     return FALSE;
                                 }
                             }
                         }
                         //TTL
-                        if (isset($ttl['new_' . $id]) && !fs_director::CheckForEmptyValue($ttl['new_' . $id])) {
-                            if (!is_numeric($ttl['new_' . $id])) {
-                                self::$ttl_error = TRUE;
+                        if (isset($ttl[$NewId]) && !fs_director::CheckForEmptyValue($ttl[$NewId])) {
+                            if (!is_numeric($ttl[$NewId])) {
+                                self::SetError('TTL must be a numeric value.');
                                 return FALSE;
                             }
                         }
                         //TARGET
-                        if (isset($target['new_' . $id]) && !fs_director::CheckForEmptyValue($target['new_' . $id])) {
-                            if ($type['new_' . $id] == "A") {
-                                if (!self::IsValidIPv4($target['new_' . $id])) {
-                                    self::$invalidIPv4_error = TRUE;
+                        if (isset($target[$NewId]) && !fs_director::CheckForEmptyValue($target[$NewId])) {
+                            if ($type[$NewId] == "A") {
+                                if (!self::IsValidIPv4($target[$NewId])) {
+                                    self::SetError('IP Address is not a valid IPV4 address.');
                                     return FALSE;
                                 }
-                            } elseif ($type['new_' . $id] == "AAAA") {
-                                if (!self::IsValidIPv6($target['new_' . $id])) {
-                                    self::$invalidIPv6_error = TRUE;
+                            } elseif ($type[$NewId] == "AAAA") {
+                                if (!self::IsValidIPv6($target[$NewId])) {
+                                    self::SetError('IP Address is not a valid IPV6 address');
                                     return FALSE;
                                 }
-                            } elseif ($type['new_' . $id] == "TXT") {
-                                
-                            } elseif ($type['new_' . $id] == "SPF") {
-                                
-                            } elseif ($type['new_' . $id] == "NS") {
-                                
+                            } elseif ($type[$NewId] == "TXT") {
+
+                            } elseif ($type[$NewId] == "SPF") {
+
+                            } elseif ($type[$NewId] == "NS") {
+
                             } else {
-                                if (!self::IsValidIP($target['new_' . $id])) {
-                                    if (!self::IsValidDomainName($target['new_' . $id])) {
-                                        self::$invalidDomainName_error = TRUE;
+                                if (!self::IsValidIP($target[$NewId])) {
+                                    if (!self::IsValidDomainName($target[$NewId])) {
+                                        self::SetError('An invalid domain name character was entered. Domain names are limited to alphanumeric characters and hyphens.');
                                         return FALSE;
                                     }
                                 }
-                                if (!self::IsValidDomainName($target['new_' . $id])) {
-                                    if (!self::IsValidIP($target['new_' . $id])) {
-                                        self::$invalidIP_error = TRUE;
+                                if (!self::IsValidDomainName($target[$NewId])) {
+                                    if (!self::IsValidIP($target[$NewId])) {
+                                        self::SetError('Target is not a valid IP address');
                                         return FALSE;
                                     }
                                 }
                             }
                         }
                         //PRIORITY
-                        if (isset($priority['new_' . $id]) && !fs_director::CheckForEmptyValue($priority['new_' . $id])) {
-                            if (!is_numeric($priority['new_' . $id])) {
-                                self::$priorityNumeric_error = TRUE;
+                        if (isset($priority[$NewId]) && !fs_director::CheckForEmptyValue($priority[$NewId])) {
+                            if (!is_numeric($priority[$NewId])) {
+                                self::SetError('Priority must be a numeric value.');
                                 return FALSE;
                             }
-                            if ($priority['new_' . $id] < 0 || $priority['new_' . $id] > 65535) {
-                                self::$priorityRange_error = TRUE;
+                            if ($priority[$NewId] < 0 || $priority[$NewId] > 65535) {
+                                self::SetError('The priority of a dns record must be a numeric value between 0 and 65535');
                                 return FALSE;
                             }
                         }
                         //WEIGHT
-                        if (isset($weight['new_' . $id]) && !fs_director::CheckForEmptyValue($weight['new_' . $id])) {
-                            if (!is_numeric($weight['new_' . $id])) {
-                                self::$weightNumeric_error = TRUE;
+                        if (isset($weight[$NewId]) && !fs_director::CheckForEmptyValue($weight[$NewId])) {
+                            if (!is_numeric($weight[$NewId])) {
+                                self::SetError('Weight must be a numeric value.');
                                 return FALSE;
                             }
-                            if ($weight['new_' . $id] < 0 || $weight['new_' . $id] > 65535) {
-                                self::$weightRange_error = TRUE;
+                            if ($weight[$NewId] < 0 || $weight[$NewId] > 65535) {
+                                self::SetError('The weight of a dns record must be a numeric value between 0 and 65535');
                                 return FALSE;
                             }
                         }
                         //PORT
-                        if (isset($port['new_' . $id]) && !fs_director::CheckForEmptyValue($port['new_' . $id])) {
-                            if (!is_numeric($port['new_' . $id])) {
-                                self::$portNumeric_error = TRUE;
+                        if (isset($port[$NewId]) && !fs_director::CheckForEmptyValue($port[$NewId])) {
+                            if (!is_numeric($port[$NewId])) {
+                                self::SetError('PORT must be a numeric value.');
                                 return FALSE;
                             }
-                            if ($port['new_' . $id] < 0 || $port['new_' . $id] > 65535) {
-                                self::$portRange_error = TRUE;
+                            if ($port[$NewId] < 0 || $port[$NewId] > 65535) {
+                                self::SetError('The port of a dns record must be a numeric value between 0 and 65535');
                                 return FALSE;
                             }
                         }
                     }
                 }
-                $id++;
             }
         }
         return true;
@@ -1164,7 +1085,7 @@ class module_controller extends ctrl_module
     {
         $data = trim($data);
         if ($type == 'SPF' || $type == 'TXT') {
-            $data = str_replace('', '', $data);
+            $data = str_replace('"', '', $data);
             $data = str_replace('\'', '', $data);
             $data = addslashes($data);
         } else {
@@ -1222,70 +1143,10 @@ class module_controller extends ctrl_module
 
     static function getResult()
     {
-        if (!fs_director::CheckForEmptyValue(self::$ttl_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('TTL must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$hostname_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('Hostnames must be unique.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$invalidIPv4_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('IP Address is not a valid IPV4 address.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$invalidIPv6_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('IP Address is not a valid IPV6 address'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$invalidDomainName_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('An invalid domain name character was entered. Domain names are limited to alphanumeric characters and hyphens.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$invalidIP_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('Target is not a valid IP address'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$priorityNumeric_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('Priority must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$priorityRange_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('The priority of a dns record must be a numeric value between 0 and 65535'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$weightNumeric_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('Weight must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$weightRange_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('The weight of a dns record must be a numeric value between 0 and 65535'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$portNumeric_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('PORT must be a numeric value.'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$portRange_error)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('The port of a dns record must be a numeric value between 0 and 65535'), 'zannounceerror', 'ERROR DNS NOT SAVED'
-            );
-        }
-        if (!fs_director::CheckForEmptyValue(self::$ok)) {
-            return ui_sysmessage::shout(
-                            ui_language::translate('Changes to your DNS have been saved successfully!'), 'zannouncesuccess', 'SUCCESS DNS SAVED'
-            );
+        if (!fs_director::CheckForEmptyValue(self::$ResultOk)) {
+            return ui_sysmessage::shout(ui_language::translate($ResultOk), 'zannouncesuccess', 'SUCCESS DNS SAVED');
+        } elseif (!fs_director::CheckForEmptyValue(self::$ResultErr)) {
+            return ui_sysmessage::shout(ui_language::translate(self::$ResultErr), 'zannounceerror', 'ERROR DNS NOT SAVED');
         }
         return;
     }
@@ -1314,7 +1175,7 @@ class module_controller extends ctrl_module
     {
         global $zdbh;
         $hasrecords = false;
-        $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:domainID  AND dn_deleted_ts IS NULL";
+        $sql = 'SELECT COUNT(*) FROM x_dns WHERE dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL';
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':domainID', $domainID);
 
@@ -1324,46 +1185,44 @@ class module_controller extends ctrl_module
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL ORDER BY dn_type_vc");
                 $sql->bindParam(':domainID', $domainID);
                 $sql->execute();
-                //$domain = $zdbh->query("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=" . $domainID . " AND dn_deleted_ts IS NULL")->Fetch();
                 $numrows = $zdbh->prepare("SELECT dn_name_vc FROM x_dns WHERE dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL");
                 $numrows->bindParam(':domainID', $domainID);
                 $numrows->execute();
                 $domain = $numrows->fetch();
 
-
                 $zonecheck_file = (ctrl_options::GetSystemOption('temp_dir')) . $domain['dn_name_vc'] . ".txt";
                 $checkline = "$" . "TTL 10800" . fs_filehandler::NewLine();
-                $checkline .= "@ IN SOA " . $domain['dn_name_vc'] . ".    ";
+                $checkline .= "@ IN SOA " . $domain['dn_name_vc'] . ". ";
                 $checkline .= "postmaster." . $domain['dn_name_vc'] . ". (" . fs_filehandler::NewLine();
-                $checkline .= "                       " . date("Ymdt") . "  ;serial" . fs_filehandler::NewLine();
-                $checkline .= "                       " . ctrl_options::GetSystemOption('refresh_ttl') . "      ;refresh after 6 hours" . fs_filehandler::NewLine();
-                $checkline .= "                       " . ctrl_options::GetSystemOption('retry_ttl') . "       ;retry after 1 hour" . fs_filehandler::NewLine();
-                $checkline .= "                       " . ctrl_options::GetSystemOption('expire_ttl') . "     ;expire after 1 week" . fs_filehandler::NewLine();
-                $checkline .= "                       " . ctrl_options::GetSystemOption('minimum_ttl') . " )    ;minimum TTL of 1 day" . fs_filehandler::NewLine();
+                $checkline .= " " . date("Ymdt") . " ;serial" . fs_filehandler::NewLine();
+                $checkline .= " " . ctrl_options::GetSystemOption('refresh_ttl') . " ;refresh after 6 hours" . fs_filehandler::NewLine();
+                $checkline .= " " . ctrl_options::GetSystemOption('retry_ttl') . " ;retry after 1 hour" . fs_filehandler::NewLine();
+                $checkline .= " " . ctrl_options::GetSystemOption('expire_ttl') . " ;expire after 1 week" . fs_filehandler::NewLine();
+                $checkline .= " " . ctrl_options::GetSystemOption('minimum_ttl') . " ) ;minimum TTL of 1 day" . fs_filehandler::NewLine();
                 while ($rowdns = $sql->fetch()) {
                     if ($rowdns['dn_type_vc'] == "A") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      A       " . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN A " . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "AAAA") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      AAAA        " . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN AAAA " . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "CNAME") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      CNAME       " . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN CNAME " . $rowdns['dn_target_vc'] . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "MX") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      MX      " . $rowdns['dn_priority_in'] . "   " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN MX " . $rowdns['dn_priority_in'] . " " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "TXT") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      TXT     \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN TXT \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "SRV") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      SRV     " . $rowdns['dn_priority_in'] . "   " . $rowdns['dn_weight_in'] . " " . $rowdns['dn_port_in'] . "   " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN SRV " . $rowdns['dn_priority_in'] . " " . $rowdns['dn_weight_in'] . " " . $rowdns['dn_port_in'] . " " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "SPF") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      SPF     \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN SPF \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "NS") {
-                        $checkline .= $rowdns['dn_host_vc'] . "     " . $rowdns['dn_ttl_in'] . "        IN      NS      " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN NS " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
                     }
                 }
                 fs_filehandler::UpdateFile($zonecheck_file, 0777, $checkline);
@@ -1374,7 +1233,6 @@ class module_controller extends ctrl_module
             if (file_exists($zonecheck_file)) {
                 ob_start();
 
-
                 $command = ctrl_options::GetSystemOption('named_checkzone');
                 $args = array(
                     $domain['dn_name_vc'],
@@ -1382,10 +1240,8 @@ class module_controller extends ctrl_module
                 );
                 $retval = ctrl_system::systemCommand($command, $args);
 
-
                 $content_grabbed = ob_get_contents();
                 ob_end_clean();
-                //var_dump($retval);
                 unlink($zonecheck_file);
                 if ($retval == 0) {
                     //Syntax check passed.
