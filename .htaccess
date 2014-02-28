@@ -1,3 +1,10 @@
 RewriteEngine on
 RewriteRule ^api/([^/\.]+)/?$ bin/api.php?m=$1 [L]
 RewriteRule ^apps/([^/\.]+)/?$ etc/apps/$1 [L]
+
+# Sample rules how to ban Zpanel from IP Access:
+# Uncomment following lines and set your domain to 
+# restrict zpanel only on this domain
+
+# RewriteCond %{SERVER_NAME} !^zpanel\.domain\.com$ 
+# RewriteRule ^ - [F]
