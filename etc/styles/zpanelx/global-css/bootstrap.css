@@ -3684,6 +3684,7 @@ button.close {
 
 .navbar-inverse .navbar-nav > li > a {
   color: #999999;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover,
