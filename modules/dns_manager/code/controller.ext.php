@@ -1144,7 +1144,7 @@ class module_controller extends ctrl_module
     static function getResult()
     {
         if (!fs_director::CheckForEmptyValue(self::$ResultOk)) {
-            return ui_sysmessage::shout(ui_language::translate($ResultOk), 'zannouncesuccess', 'SUCCESS DNS SAVED');
+            return ui_sysmessage::shout(ui_language::translate(self::$ResultOk), 'zannouncesuccess', 'SUCCESS DNS SAVED');
         } elseif (!fs_director::CheckForEmptyValue(self::$ResultErr)) {
             return ui_sysmessage::shout(ui_language::translate(self::$ResultErr), 'zannounceerror', 'ERROR DNS NOT SAVED');
         }
