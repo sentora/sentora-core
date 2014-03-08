@@ -39,6 +39,15 @@ var zPanel = {
             container: 'body',
             trigger: 'hover'
         });
+        
+        // When Client Notice is Closed Hide Until it Changes
+        var Notice_Cookie = $('.notice-manager-alert').find('p').text().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+        if($.cookie(Notice_Cookie) != 'closed') {
+            $('.notice-manager-alert').removeClass('hidden');
+        }
+        $('.notice-manager-alert > .close').click( function () {
+            $.cookie(Notice_Cookie, 'closed', {path: '/'});
+        });
 
 
         //zPanelDNS.utils.cache.dnsTitleId = $("#dnsTitle");
