@@ -90,20 +90,26 @@
                 //  </div>';
                 //}
                 ?>
-                <!-- Reset password form -->
+                
                 <?php if (isset($_GET['resetkey']) && ctype_alnum($_GET['resetkey'])) { ?>
+                
+                <!-- Reset password form -->
+                <div id="msgMatchErr" class="alert alert-danger fade in" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Passwords are different.
+                </div> 
                 <form action="?resetkey=<?php echo $_GET['resetkey']; ?>" method="post" name="frmZConfirm" id="frmZConfirm" class="form-horizontal loginform">
                     <div class="loginmid">
                         <div class="control-group">
                             <label class="control-label" for="inputNewPass1">New Password:</label>
                             <div class="controls">
-                                <input type="password" class="input-medium" id="inputNewPass1" name="inConfEmail" placeholder="New Password" required>
+                                <input type="password" class="input-medium" id="inputNewPass1" name="inNewPass" placeholder="New Password" required>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="inputNewPass2">Confirm Password:</label>
                             <div class="controls">
-                                <input type="password" class="input-medium" id="inputNewPass2" name="inConfEmail" placeholder="Confirm Password" required>
+                                <input type="password" class="input-medium" id="inputNewPass2" name="inputNewPass2" placeholder="Confirm Password" required>
                             </div>
                         </div>
                         <div class="control-group">
@@ -118,7 +124,7 @@
                             <!-- <a href="javascript:void(0);" id="backtologin2">Back To Login</a> -->
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" name="sublogin2" value="LogIn">Submit</button>
+                            <button type="submit" class="btn btn-primary" id="btnReset" name="sublogin2" value="Reset">Submit</button>
                         </div>
                     </div>
                     <?php echo runtime_csfr::Token(); ?>
@@ -218,6 +224,18 @@
                 $('#frmZLogin').slideDown("slow");
             });
         });
+        
+        <?php if (isset($_GET['resetkey']) && ctype_alnum($_GET['resetkey'])) { ?>
+        $('#frmZConfirm').submit(function() {
+                $('#msgMatchErr').slideUp("slow");
+                if ( $('#inputNewPass1').val().length == 0 || $('#inputNewPass1').val() != $('#inputNewPass2').val() )
+                {
+                        $('#msgMatchErr').slideDown("slow");
+                        return false;
+                }
+                return true;
+        });
+        <?php  } ?>
 
     </script>
     <!-- Page fade in after load -->
