@@ -30,6 +30,9 @@ echo "Complete!"
 echo "Setting permissions.."
 chmod -R 777 /etc/zpanel/
 chmod -R 777 /var/zpanel/
+chmod 751 /var/named
+chmod 771 /var/named/data
+chmod 744 /var/spool/cron
 echo "Complete!"
 echo "Registering 'zppy' client.."
 ln -s /etc/zpanel/panel/bin/zppy /usr/bin/zppy

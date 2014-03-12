@@ -100,7 +100,8 @@ function WriteVhostConfigFile()
     $line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
     $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'zpanel_root' ) . "\"" . fs_filehandler::NewLine();
     $line .= "ServerName " . ctrl_options::GetSystemOption( 'zpanel_domain' ) . "" . fs_filehandler::NewLine();
-    $line .= "ServerAlias *." . ctrl_options::GetSystemOption( 'zpanel_domain' ) . "" . fs_filehandler::NewLine();
+    // disable *.zpaneldomain as Zpanel host is already default
+    // $line .= "ServerAlias *." . ctrl_options::GetSystemOption( 'zpanel_domain' ) . "" . fs_filehandler::NewLine();
     $line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
     $line .= "<Directory \"" . ctrl_options::GetSystemOption( 'zpanel_root' ) . "\">" . fs_filehandler::NewLine();
     $line .= "Options FollowSymLinks" . fs_filehandler::NewLine();
