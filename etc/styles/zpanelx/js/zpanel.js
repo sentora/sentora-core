@@ -41,7 +41,7 @@ var zPanel = {
         });
         
         // When Client Notice is Closed Hide Until it Changes
-        var Notice_Cookie = $('.notice-manager-alert').find('p').text().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+        var Notice_Cookie = $('.notice-manager-alert').find('p').text().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-').substring(0, 64);
         if($.cookie(Notice_Cookie) != 'closed') {
             $('.notice-manager-alert').removeClass('hidden');
         }
