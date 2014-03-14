@@ -1098,8 +1098,8 @@ class module_controller extends ctrl_module
             }
         }
 
-        if ($type == 'CNAME') {
-            // For CNAME records we'll set the target to lowercase (looks better and now means that SPF/TXT DKIM values are valid as no longer being forced to lowercase.)
+        // We'll leave the content for SPF and TXT records and won't try to make them look better by strtolower'ing them.
+        if ($type != 'SPF' || $type != 'TXT') {
             $data = strtolower($data);
         }
 
