@@ -20,7 +20,7 @@ class ui_tpl_notice {
             if ($result['ac_notice_tx'] <> "")
                 return ui_sysmessage::shout(
                     runtime_xss::xssClean($result['ac_notice_tx']),
-                    'zannounce',
+                    'notice',
                     'Notice:',
                     true
                 );
