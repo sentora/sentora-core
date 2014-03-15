@@ -1098,7 +1098,11 @@ class module_controller extends ctrl_module
             }
         }
 
-        $data = strtolower($data);
+        // We'll leave the content for SPF and TXT records and won't try to make them look better by strtolower'ing them.
+        if ($type != 'SPF' || $type != 'TXT') {
+            $data = strtolower($data);
+        }
+
         return $data;
     }
 

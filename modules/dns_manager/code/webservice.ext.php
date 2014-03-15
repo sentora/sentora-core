@@ -1,8 +1,10 @@
 <?php
 
-class webservice extends ws_xmws {
+class webservice extends ws_xmws
+{
 
-    private function GetDomainID($uid, $domainName) {
+    private function GetDomainID($uid, $domainName)
+    {
         global $zdbh;
 
         $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=:uid AND vh_type_in !=2 AND vh_deleted_ts IS NULL AND vh_name_vc=:name");
@@ -18,7 +20,8 @@ class webservice extends ws_xmws {
      *       uid - user ID
      *       domainName - name of domain
      */
-    public function GetAllDNSRecords() {
+    public function GetAllDNSRecords()
+    {
         global $zdbh;
 
         $request_data = $this->RawXMWSToArray($this->wsdata);
@@ -34,10 +37,10 @@ class webservice extends ws_xmws {
 
         while ($rowdns = $sql->fetch()) {
             $response_xml = $response_xml . ws_xmws::NewXMLContentSection('dns_record', array(
-                            'hostName' => $rowdns['dn_host_vc'],
-                            'type' => $rowdns['dn_type_vc'],
-                            'target' => $rowdns['dn_target_vc'],
-                            'ttl' => $rowdns['dn_ttl_in'],
+                        'hostName' => $rowdns['dn_host_vc'],
+                        'type' => $rowdns['dn_type_vc'],
+                        'target' => $rowdns['dn_target_vc'],
+                        'ttl' => $rowdns['dn_ttl_in'],
             ));
         }
 
@@ -46,7 +49,6 @@ class webservice extends ws_xmws {
         $dataobject->addItemValue('content', $response_xml);
         return $dataobject->getDataObject();
     }
-
 
     /**
      *   Create a new DNS record.  Parameters of XML request:
@@ -57,7 +59,8 @@ class webservice extends ws_xmws {
      *       target - the destination of DNS record (e.g. '@')
      *       ttl - time to live (e.g. '3600')
      */
-    public function CreateDNSRecord() {
+    public function CreateDNSRecord()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $response_xml = "\n";
 
@@ -93,21 +96,21 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
-
     /**
      *   Delete one or multiple DNS records
      *   Mandatory parameters: uid and domainName
      *   Optional parameters: hostName, record type, target
      *   The meaning of parameters is same as in CreateDNSRecord()
      */
-    public function DeleteDNSRecords() {
+    public function DeleteDNSRecords()
+    {
         global $zdbh;
 
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $response_xml = "\n";
-        $tags = array('hostName' => 'dn_host_vc', 
-                      'type' => 'dn_type_vc', 
-                      'target' => 'dn_target_vc');
+        $tags = array('hostName' => 'dn_host_vc',
+            'type' => 'dn_type_vc',
+            'target' => 'dn_target_vc');
 
         // these are mandatory parameters
         $uid = ws_generic::GetTagValue('uid', $request_data['content']);
@@ -118,8 +121,8 @@ class webservice extends ws_xmws {
 
         // iterate through optional parameters
         foreach ($tags as $tag => $sql_param) {
-          if (!is_null(ws_generic::GetTagValue($tag, $request_data['content']))) 
-            $sqlstr .= " AND " . $sql_param . '=:' . $tag;
+            if (!is_null(ws_generic::GetTagValue($tag, $request_data['content'])))
+                $sqlstr .= " AND " . $sql_param . '=:' . $tag;
         }
 
         $sql = $zdbh->prepare($sqlstr);
@@ -128,19 +131,19 @@ class webservice extends ws_xmws {
 
         $params = array();
         foreach ($tags as $tag => $sql_param) {
-          if (!is_null($params[$tag] = ws_generic::GetTagValue($tag, $request_data['content']))) 
-            $sql->bindParam(":".$tag, $params[$tag]); 
+            if (!is_null($params[$tag] = ws_generic::GetTagValue($tag, $request_data['content'])))
+                $sql->bindParam(":" . $tag, $params[$tag]);
         }
 
         $sql->execute();
 
         while ($rowdns = $sql->fetch()) {
             $response_xml = $response_xml . ws_xmws::NewXMLContentSection('dns_record', array(
-                'hostName' => $rowdns['dn_host_vc'],
-                'type' => $rowdns['dn_type_vc'],
-                'target' => $rowdns['dn_target_vc'],
-                'ttl' => $rowdns['dn_ttl_in'],
-                'deleted' => 'true'
+                        'hostName' => $rowdns['dn_host_vc'],
+                        'type' => $rowdns['dn_type_vc'],
+                        'target' => $rowdns['dn_target_vc'],
+                        'ttl' => $rowdns['dn_ttl_in'],
+                        'deleted' => 'true'
             ));
 
             $sql2 = $zdbh->prepare("UPDATE x_dns SET dn_deleted_ts=:time WHERE dn_id_pk =:id AND dn_deleted_ts IS NULL");
@@ -159,7 +162,6 @@ class webservice extends ws_xmws {
     }
 
 }
-
 ?>
 
 
