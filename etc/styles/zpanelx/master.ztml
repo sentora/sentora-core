@@ -194,7 +194,7 @@
 
                 <div class="stats-row">
                   <div class="stats-column"><strong><: MySQL&reg; databases :>:</strong></div>
-                  <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedmysql #></span> / <span class="Side_Info_max"><# ui_tpl_totalmysql #></div>
+                  <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedmysql #></span> / <span class="Side_Info_max"><# ui_tpl_totalmysql #></span></div>
                   <div class="stats-column"><strong><: Distribution lists :>:</strong></div>
                   <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_useddistlists #></span> / <span class="Side_Info_max"><# ui_tpl_totaldistlists #></span></div>
                 </div>
