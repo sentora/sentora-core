@@ -781,6 +781,11 @@ li.highlight {
     -o-filter: grayscale(100%);
     filter: gray;
 }
+.transparent {
+    zoom: 1;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
 
 /*
 .icon-password-assistant:before
