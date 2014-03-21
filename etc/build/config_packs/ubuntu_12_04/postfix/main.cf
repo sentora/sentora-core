@@ -97,3 +97,5 @@ smtpd_helo_required = yes
 unknown_local_recipient_reject_code = 550
 disable_vrfy_command = yes
 smtpd_data_restrictions = reject_unauth_pipelining
+smtpd_banner = $myhostname ESMTP
+message_size_limit = 20480000
