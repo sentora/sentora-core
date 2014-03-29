@@ -203,8 +203,7 @@ class module_controller extends ctrl_module
             return FALSE;
         }
         // Check to make sure the domain is in the correct format before we go any further...
-        $wwwclean = stristr($domain, 'www.');
-        if ($wwwclean == true) {
+        if (strpos($domain, 'www.') === 0) {
             self::$error = TRUE;
             return FALSE;
         }
