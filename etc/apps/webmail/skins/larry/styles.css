@@ -50,6 +50,8 @@ textarea {
 
 input[type="text"]:focus,
 input[type="password"]:focus,
+input[type="text"]:required,
+input[type="password"]:required,
 input.button:focus,
 textarea:focus {
 	border-color: #4787b1;
@@ -177,7 +179,8 @@ input.mainaction {
 
 /** link buttons **/
 
-a.button {
+a.button,
+.buttongroup {
 	display: inline-block;
 	margin: 0 2px;
 	padding: 2px 5px;
@@ -196,6 +199,11 @@ a.button {
 	-webkit-box-shadow: 0 1px 1px 0 rgba(140, 140, 140, 0.3);
 	-moz-box-shadow: 0 1px 1px 0 rgba(140, 140, 140, 0.3);
 	text-decoration: none;
+}
+
+.buttongroup {
+	padding: 0;
+	white-space: nowrap;
 }
 
 a.button:focus,
@@ -229,6 +237,29 @@ input.button[disabled]:hover {
 a.button.disabled span.inner {
 	opacity: 0.4;
 	filter: alpha(opacity=40);
+}
+
+.buttongroup a.button {
+	margin: 0;
+	border-width: 0 1px 0 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+	-o-box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+
+.buttongroup a.button.first,
+.buttongroup a.button:first-child {
+	border-radius: 4px 0 0 4px;
+	border-left: 0;
+}
+
+.buttongroup a.button.last,
+.buttongroup a.button:last-child {
+	border-radius: 0 4px 4px 0;
+	border-right: 0;
 }
 
 a.button.pressed,
@@ -266,11 +297,32 @@ input.button:active {
 	background: linear-gradient(top, #bababa 0%, #d8d8d8 100%);
 }
 
+.buttongroup a.button.selected,
+.buttongroup a.button.selected:hover {
+	background: #8a8a8a;
+	background: -moz-linear-gradient(top, #909090 0%, #858585 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#909090), color-stop(100%,#858585));
+	background: -o-linear-gradient(top, #909090 0%, #858585 100%);
+	background: -ms-linear-gradient(top, #909090 0%, #858585 100%);
+	background: linear-gradient(top, #909090 0%, #858585 100%);
+	-webkit-box-shadow: inset 0 1px 2px 0 #555;
+	-moz-box-shadow: inset 0 1px 2px 0 #555;
+	box-shadow: inset 0 1px 2px 0 #555;
+	border-right-color: #555;
+	border-left-color: #555;
+}
+
 .pagenav a.button {
 	padding: 1px 3px;
 	height: 16px;
 	vertical-align: middle;
 	margin-bottom: 1px;
+}
+
+.pagenav .buttongroup a.button,
+.pagenav .buttongroup a.button:hover {
+	padding: 1px 5px;
+	margin-bottom: 0;
 }
 
 .pagenav a.button span.inner {
@@ -279,7 +331,7 @@ input.button:active {
 	height: 13px;
 	text-indent: 1000px;
 	overflow: hidden;
-	background: url(images/buttons.png?v=abf1.36693) -6px -211px no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -6px -211px no-repeat;
 }
 
 .pagenav a.prevpage span.inner {
@@ -318,6 +370,20 @@ input.button:active {
 	background-position: -29px -271px;
 }
 
+.pagenav a.changeformat.html span.inner {
+	background-position: -7px -1859px;
+}
+.pagenav a.changeformat.html.selected span.inner {
+	background-position: -29px -1859px;
+}
+
+.pagenav a.changeformat.text span.inner {
+	background-position: -7px -1874px;
+}
+.pagenav a.changeformat.text.selected span.inner {
+	background-position: -29px -1874px;
+}
+
 .pagenav .countdisplay {
 	display: inline-block;
 	padding: 3px 1em 0 1em;
@@ -336,7 +402,7 @@ a.iconbutton {
 	height: 18px;
 	text-decoration: none;
 	text-indent: -5000px;
-	background: url(images/buttons.png?v=abf1.36693) -1000px 0 no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -1000px 0 no-repeat;
 }
 
 a.iconbutton.disabled {
@@ -363,7 +429,7 @@ a.iconlink {
 	text-decoration: none;
 	white-space: nowrap;
 	padding: 2px 8px 2px 20px;
-	background: url(images/buttons.png?v=abf1.36693) -1000px 0 no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -1000px 0 no-repeat;
 }
 
 a.iconlink:hover {
@@ -443,6 +509,7 @@ a.iconlink.upload {
 }
 
 #message.statusbar {
+	display: none;
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -460,6 +527,102 @@ a.iconlink.upload {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+#messagestack {
+	position: absolute;
+	bottom: 20px;
+	right: 12px;
+	z-index: 50000;
+	width: auto;
+	height: auto;
+	max-height: 85%;
+	overflow-y: auto;
+	padding: 2px;
+}
+
+#messagestack div {
+	display: block;
+	position: relative;
+	width: 280px;
+	height: auto;
+	min-height: 16px;
+	margin: 3px 2px 5px 2px;
+	padding: 8px 10px 7px 30px;
+	cursor: default;
+	font-size: 12px;
+	font-weight: bold;
+	border-radius: 4px;
+	border: 1px solid #444;
+	color: #ebebeb;
+	text-shadow: 0 1px 1px #000;
+
+	background: rgba(64,64,64,0.85);
+	background: -moz-linear-gradient(top, rgba(64,64,64,0.85) 0%, rgba(48,48,48,0.9) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(64,64,64,0.85)), color-stop(100%,rgba(48,48,48,0.9)));
+	background: -webkit-linear-gradient(top, rgba(64,64,64,0.85) 0%, rgba(48,48,48,0.85) 100%);
+	background: -o-linear-gradient(top, rgba(64,64,64,0.85) 0%, rgba(48,48,48,0.85) 100%);
+	background: -ms-linear-gradient(top, rgba(64,64,64,0.85) 0%, rgba(48,48,48,0.85) 100%);
+	background: linear-gradient(to bottom, rgba(64,64,64,0.85) 0%, rgba(48,48,48,0.85) 100%);
+
+	-moz-box-shadow: 0 1px 4px 0 rgba(50,50,50,0.8), inset 0px 1px 0 0px #888;
+	-webkit-box-shadow: 0 1px 4px 0 rgba(50,50,50,0.8), inset 0px 1px 0 0px #888;
+	-o-box-shadow: 0 1px 4px 0 rgba(50,50,50,0.8), inset 0px 1px 0 0px #888;
+	box-shadow: 0 1px 4px 0 rgba(50,50,50,0.8), inset 0px 1px 0 0px #888;
+}
+
+#messagestack div:after {
+	content: "";
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 4px;
+	width: 20px;
+	height: 24px;
+	background: url(images/messages_dark.png?v=2e3f.1779) 0 7px no-repeat;
+}
+
+#messagestack div.error {
+	color: #ff615d;
+}
+
+#messagestack div.error:after {
+	background-position: 0 -55px;
+}
+
+#messagestack div.warning {
+	color: #f4bf0e;
+}
+
+#messagestack div.warning:after {
+	background-position: 0 -84px;
+}
+
+#messagestack div.confirmation {
+	color: #00e05a;
+}
+
+#messagestack div.confirmation:after {
+	background-position: 0 -25px;
+}
+
+#messagestack div.loading {
+	color: #ddd;
+}
+
+#messagestack div.loading:after {
+	top: 4px;
+	left: 6px;
+	background: url(images/ajaxloader_dark.gif?v=cf1b.1849) 0 4px no-repeat;
+}
+
+#messagestack div a {
+	color: #94c0da;
+}
+
+#messagestack div a:hover {
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .ui-dialog.error .ui-dialog-title,
@@ -547,6 +710,7 @@ a.iconlink.upload {
 #toplogo {
 	padding-top: 2px;
 	cursor: pointer;
+	border: none;
 }
 
 .topleft {
@@ -575,7 +739,7 @@ a.iconlink.upload {
 #topline a.button-logout {
 	display: inline-block;
 	padding: 2px 10px 2px 20px;
-	background: url(images/buttons.png?v=abf1.36693) -6px -193px no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -6px -193px no-repeat;
 	color: #fff;
 }
 
@@ -624,17 +788,6 @@ a.iconlink.upload {
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	opacity: 0.999;
-}
-
-.partwin #topline {
-	position: absolute;
-	right: 6px;
-	top: 18px;
-	width: auto;
-	z-index: 100;
-	background: transparent;
-	background: none;
-	border: 0;
 }
 
 .minimal #topline a.button-logout {
@@ -743,7 +896,7 @@ a.iconlink.upload {
 	text-shadow: 0px 1px 1px black;
 	padding: 5px 0 0 34px;
 	height: 19px;
-	background: url(images/buttons.png?v=abf1.36693) -1000px 0 no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -1000px 0 no-repeat;
 }
 
 #taskbar a.button-selected {
@@ -795,7 +948,7 @@ a.iconlink.upload {
 	width: 19px;
 	height: 46px;
 	cursor: pointer;
-	background: url(images/buttons.png?v=abf1.36693) -35px -1778px no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -35px -1778px no-repeat;
 }
 
 .minimal #taskbar .minmodetoggle {
@@ -819,10 +972,6 @@ a.iconlink.upload {
 	top: 102px;
 }
 
-.partwin #mainscreen {
-	top: 60px
-}
-
 .extwin #mainscreen {
 	top: 40px;
 }
@@ -832,7 +981,7 @@ a.iconlink.upload {
 }
 
 #mainscreen .offset {
-	margin-top: 42px;
+	top: 42px;
 }
 
 .uibox {
@@ -993,11 +1142,22 @@ ul.listing {
 
 ul.listing li {
 	background-color: #d9ecf4;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+ul.listing li ul {
+	border-top: 1px solid #bbd3da;
 }
 
 ul.listing li.droptarget,
 table.listing tr.droptarget td {
 	background-color: #e8e798;
+}
+
+.listbox table.listing {
+	background-color: #d9ecf4;
 }
 
 table.listing,
@@ -1009,6 +1169,32 @@ table.layout {
 
 table.layout td {
 	vertical-align: top;
+}
+
+ul.treelist li {
+	position: relative;
+}
+
+ul.treelist li div.treetoggle {
+	position: absolute;
+	top: 13px;
+	left: 19px;
+	width: 13px;
+	height: 13px;
+	background: url(images/listicons.png?v=017c.29530) -3px -144px no-repeat;
+	cursor: pointer;
+}
+
+ul.treelist li div.treetoggle.expanded {
+	background-position: -3px -168px;
+}
+
+ul.treelist li.selected > div.collapsed {
+	background-position: -23px -144px;
+}
+
+ul.treelist li.selected > div.expanded {
+	background-position: -23px -168px;
 }
 
 .listbox .boxfooter {
@@ -1049,7 +1235,7 @@ table.layout td {
 	width: 48px;
 	height: 35px;
 	text-indent: -5000px;
-	background: url(images/buttons.png?v=abf1.36693) -1000px 0 no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -1000px 0 no-repeat;
 }
 
 .boxfooter .listbutton.add .inner {
@@ -1113,7 +1299,7 @@ table.layout td {
 	text-indent: 1000px;
 	vertical-align: bottom;
 	overflow: hidden;
-	background: url(images/buttons.png?v=abf1.36693) -4px -286px no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -4px -286px no-repeat;
 }
 
 .boxpagenav a.icon.prevpage {
@@ -1155,7 +1341,6 @@ table.records-table {
 	display: table;
 	width: 100%;
 	table-layout: fixed;
-	border-collapse: collapse;
 	border-spacing: 0;
 	border: 1px solid #bbd3da;
 }
@@ -1205,9 +1390,21 @@ table.records-table {
 	background-color: #fff;
 }
 
+/* This padding-left minus the focused padding left should be half of the focused border-left */
 .records-table thead tr td:first-child,
 .records-table tbody tr td:first-child {
 	border-left: 0;
+	padding-left: 6px;
+}
+
+/* because of border-collapse, we make the left border twice what we want it to be - half will be hidden to the left */
+.records-table tbody tr.focused > td:first-child {
+	border-left: 2px solid #b0ccd7;
+	padding-left: 4px;
+}
+
+.records-table tbody tr.selected.focused > td:first-child {
+	border-left-color: #49b3d2;
 }
 
 .records-table tr.selected td {
@@ -1227,7 +1424,7 @@ table.records-table {
 
 .records-table tr.unfocused td {
 	color: #fff !important;
-	background: #4db0d2 !important;
+	background-color: #4db0d2 !important;
 }
 
 .records-table tr.unfocused td a,
@@ -1239,7 +1436,6 @@ table.records-table {
 .records-table tr.deleted td a {
 	color: #ccc !important;
 }
-
 
 /*** iFrames ***/
 
@@ -1319,7 +1515,7 @@ body.iframe .footerleft.floating:before,
 	top: 34px;
 	left: 0;
 	right: 0;
-	bottom: 28px;
+	bottom: 0px;
 	overflow: auto;
 }
 
@@ -1328,7 +1524,7 @@ body.iframe .footerleft.floating:before,
 	top: 0;
 	left: 0;
 	right: 0;
-	bottom: 28px;
+	bottom: 0px;
 }
 
 .footerleft {
@@ -1352,6 +1548,26 @@ body.iframe .footerleft.floating:before,
 .propform fieldset fieldset legend {
 	color: #666;
 	font-size: 12px;
+}
+
+.propform div.prop {
+	margin-bottom: 0.5em;
+}
+
+.propform div.prop.block label {
+	display: block;
+	margin-bottom: 0.3em;
+}
+
+.propform div.prop.block input,
+.propform div.prop.block textarea {
+	width: 95%;
+}
+
+.propform a.disabled {
+	color: #999;
+	text-decoration: none;
+	cursor: default;
 }
 
 fieldset.floating {
@@ -1504,17 +1720,20 @@ ul.proplist li {
 
 #login-form #logo {
 	margin-bottom: 20px;
+	border: none;
 }
 
 #login-form #message {
 	min-height: 40px;
 	padding: 5px 25px;
 	text-align: center;
+	font-size: 1.1em;
 }
 
 #login-form #message div {
 	display: inline-block;
 	padding-right: 0;
+	font-size: 12px;
 }
 
 #bottomline {
@@ -1533,7 +1752,7 @@ ul.proplist li {
 
 #quicksearchbar {
 	position: absolute;
-	right: 1px;
+	right: 2px;
 	top: 2px;
 	width: 240px;
 }
@@ -1590,7 +1809,7 @@ ul.proplist li {
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	-o-box-shadow: none;
-	background: url(images/buttons.png?v=abf1.36693) -100px 0 no-repeat transparent;
+	background: url(images/buttons.png?v=3e15.39327) -100px 0 no-repeat transparent;
 	border: 0;
 	border-radius: 0;
 }
@@ -1612,7 +1831,7 @@ ul.proplist li {
 	top: 0;
 	height: 42px;
 	width: 18px;
-	background: url(images/buttons.png?v=abf1.36693) 0 -1255px no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) 0 -1255px no-repeat;
 	cursor: pointer;
 }
 
@@ -1682,6 +1901,10 @@ ul.proplist li {
 	background-position: center -1094px;
 }
 
+.toolbar a.button.move {
+	background-position: center -1971px;
+}
+
 .toolbar a.button.more {
 	background-position: center -850px;
 }
@@ -1713,6 +1936,7 @@ ul.proplist li {
 }
 
 .toolbar a.button.export {
+	min-width: 74px;
 	background-position: center -1054px;
 }
 
@@ -1728,6 +1952,13 @@ ul.proplist li {
 	background-position: 0 -1745px;
 }
 
+.toolbar a.button.download {
+	background-position: center -1892px;
+}
+
+.toolbar a.button.responses {
+	background-position: center -1932px;
+}
 
 a.menuselector {
 	display: inline-block;
@@ -1774,6 +2005,7 @@ select.decorated {
 	filter: alpha(opacity=0);
 	-khtml-appearance: none;
 	-webkit-appearance: none;
+	border: 0;
 }
 
 html.opera select.decorated {
@@ -1789,6 +2021,7 @@ select.decorated option {
 	text-shadow: 0px 1px 1px #333;
 	padding: 4px 6px;
 	outline: none;
+	cursor: default;
 }
 
 
@@ -1796,11 +2029,11 @@ select.decorated option {
 
 #quotadisplay {
 	left: 6px;
+	height: 18px;
 	font-size: 12px;
 	font-weight: bold;
 	text-shadow: 0px 1px 1px #fff;
 	padding-left: 30px;
-	height: 18px;
 	background: url(images/quota.png?v=4835.3622) -100px 0 no-repeat;
 }
 
@@ -1813,6 +2046,9 @@ select.decorated option {
 	top: 32px;
 	left: 90px;
 	width: auto;
+	max-height: 70%;
+	overflow: -moz-scrollbars-vertical;
+	overflow-y: auto;
 	background: #444;
 	border: 1px solid #999;
 	z-index: 240;
@@ -1829,6 +2065,7 @@ select.decorated option {
 }
 
 ul.toolbarmenu,
+ul.toolbarmenu ul,
 #rcmKSearchpane ul {
 	margin: 0;
 	padding: 0;
@@ -1847,13 +2084,13 @@ ul.toolbarmenu li,
 }
 
 .googie_list tr:first-child td,
-ul.toolbarmenu li:first-child,
+ul.toolbarmenu > li:first-child,
 select.decorated option:first-child {
 	border-top: 0;
 }
 
 .googie_list tr:last-child td,
-ul.toolbarmenu li:last-child,
+ul.toolbarmenu > li:last-child,
 select.decorated option:last-child {
 	border-bottom: 0;
 }
@@ -1907,6 +2144,11 @@ ul.toolbarmenu li label {
 	text-shadow: 0px 1px 1px #333;
 }
 
+ul.toolbarmenu li.separator label {
+	color: #bbb;
+	font-style: italic;
+}
+
 ul.toolbarmenu li a.icon {
 	color: #eee;
 	padding: 2px 6px;
@@ -1917,7 +2159,7 @@ ul.toolbarmenu li span.icon {
 	min-height: 14px;
 	padding: 4px 4px 1px 24px;
 	height: 17px;
-	background-image: url(images/listicons.png?v=bd98.25486);
+	background-image: url(images/listicons.png?v=017c.29530);
 	background-position: -100px 0;
 	background-repeat: no-repeat;
 	opacity: 0.2;
@@ -1983,6 +2225,23 @@ ul.toolbarmenu li span.extwin {
 
 ul.toolbarmenu li span.conversation {
 	background-position: 0 -1532px;
+}
+
+ul.toolbarmenu li span.move {
+	background-position: 0 -2126px;
+}
+
+ul.toolbarmenu li span.copy {
+	background-position: 0 -2150px;
+}
+
+#snippetslist {
+	max-width: 200px;
+}
+
+#snippetslist li a {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #rcmKSearchpane {
@@ -2084,10 +2343,46 @@ ul.toolbarmenu li span.conversation {
 	content: " ";
 	width: 16px;
 	height: 16px;
-	background: url(images/buttons.png?v=abf1.36693) -7px -358px no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -7px -358px no-repeat;
 	z-index: 255;
 }
 
+/*** folder selector ***/
+
+#folder-selector {
+	z-index: 1000;
+}
+
+#folder-selector li a span {
+	background: url(images/listicons.png?v=017c.29530) 4px -2021px no-repeat;
+	display: block;
+	height: 17px;
+	min-height: 14px;
+	padding: 4px 4px 1px 28px;
+	overflow: hidden;
+	max-width: 120px;
+	text-overflow: ellipsis;
+}
+
+#folder-selector li a.virtual {
+	opacity: .2;
+}
+
+#folder-selector li a.inbox span {
+	background-position: 4px -2049px;
+}
+#folder-selector li a.drafts span {
+	background-position: 4px -1388px;
+}
+#folder-selector li a.sent span {
+	background-position: 4px -2074px;
+}
+#folder-selector li a.trash span {
+	background-position: 4px -1508px;
+}
+#folder-selector li a.junk span {
+	background-position: 4px -2100px;
+}
 
 /*** attachment list ***/
 
@@ -2102,7 +2397,7 @@ ul.toolbarmenu li span.conversation {
 .attachmentslist li {
 	display: block;
 	position: relative;
-	background: url(images/filetypes.png?v=3aa2.8551) 0 0 no-repeat;
+	background: url(images/filetypes.png?v=a710.9018) 0 0 no-repeat;
 	margin-bottom: 1px;
 }
 
@@ -2194,18 +2489,41 @@ ul.toolbarmenu li span.conversation {
 	background-position: 0 -494px;
 }
 
+.attachmentslist li.ppt,
+.attachmentslist li.pptx,
+.attachmentslist li.ppsx,
+.attachmentslist li.vnd.mspowerpoint {
+	background-position: 0 -520px;
+}
+
+.attachmentslist li.odp,
+.attachmentslist li.otp {
+	background-position: 0 -546px;
+}
+
 .attachmentslist li a,
 #compose-attachments ul li {
 	display: block;
 	color: #333;
 	font-weight: bold;
-	padding: 3px 4px 3px 30px;
+	padding: 3px 15px 3px 30px;
 	text-shadow: 0px 1px 1px #fff;
 	text-decoration: none;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	line-height: 20px;
+}
+
+.attachmentslist li a.drop {
+	background: url(images/buttons.png?v=3e15.39327) no-repeat scroll center -1570px;
+	width: 14px;
+	height: 20px;
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 0;
 }
 
 #compose-attachments ul li {
@@ -2230,7 +2548,7 @@ ul.toolbarmenu li span.conversation {
 	padding: 0;
 	text-decoration: none;
 	text-indent: -5000px;
-	background: url(images/buttons.png?v=abf1.36693) -7px -337px no-repeat;
+	background: url(images/buttons.png?v=3e15.39327) -7px -337px no-repeat;
 }
 
 .attachmentslist li a.cancelupload {

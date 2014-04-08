@@ -308,14 +308,7 @@ class rcube_imap extends rcube_storage
      */
     public function set_folder($folder)
     {
-        if ($this->folder == $folder) {
-            return;
-        }
-
         $this->folder = $folder;
-
-        // clear messagecount cache for this folder
-        $this->clear_messagecount($folder);
     }
 
 
@@ -613,7 +606,7 @@ class rcube_imap extends rcube_storage
         }
 
         if ($mode == 'THREADS') {
-            $res   = $this->fetch_threads($folder, $force);
+            $res   = $this->threads($folder);
             $count = $res->count();
 
             if ($status) {
@@ -643,11 +636,11 @@ class rcube_imap extends rcube_storage
                     $keys[] = 'ALL';
                 }
                 if ($status) {
-                    $keys[]   = 'MAX';
+                    $keys[] = 'MAX';
                 }
             }
 
-            // @TODO: if $force==false && $mode == 'ALL' we could try to use cache index here
+            // @TODO: if $mode == 'ALL' we could try to use cache index here
 
             // get message count using (E)SEARCH
             // not very performant but more precise (using UNDELETED)
@@ -683,6 +676,41 @@ class rcube_imap extends rcube_storage
         $this->update_cache('messagecount', $a_folder_cache);
 
         return (int)$count;
+    }
+
+
+    /**
+     * Public method for listing message flags
+     *
+     * @param string $folder  Folder name
+     * @param array  $uids    Message UIDs
+     * @param int    $mod_seq Optional MODSEQ value (of last flag update)
+     *
+     * @return array Indexed array with message flags
+     */
+    public function list_flags($folder, $uids, $mod_seq = null)
+    {
+        if (!strlen($folder)) {
+            $folder = $this->folder;
+        }
+
+        if (!$this->check_connection()) {
+            return array();
+        }
+
+        // @TODO: when cache was synchronized in this request
+        // we might already have asked for flag updates, use it.
+
+        $flags  = $this->conn->fetch($folder, $uids, true, array('FLAGS'), $mod_seq);
+        $result = array();
+
+        if (!empty($flags)) {
+            foreach ($flags as $message) {
+                $result[$message->uid] = $message->flags;
+            }
+        }
+
+        return $result;
     }
 
 
@@ -778,7 +806,7 @@ class rcube_imap extends rcube_storage
             $threads = $mcache->get_thread($folder);
         }
         else {
-            $threads = $this->fetch_threads($folder);
+            $threads = $this->threads($folder);
         }
 
         return $this->fetch_thread_headers($folder, $threads, $page, $slice);
@@ -787,32 +815,47 @@ class rcube_imap extends rcube_storage
     /**
      * Method for fetching threads data
      *
-     * @param  string $folder  Folder name
-     * @param  bool   $force   Use IMAP server, no cache
+     * @param  string $folder Folder name
      *
      * @return rcube_imap_thread Thread data object
      */
-    function fetch_threads($folder, $force = false)
+    function threads($folder)
     {
-        if (!$force && ($mcache = $this->get_mcache_engine())) {
+        if ($mcache = $this->get_mcache_engine()) {
             // don't store in self's internal cache, cache has it's own internal cache
             return $mcache->get_thread($folder);
         }
 
-        if (empty($this->icache['threads'])) {
-            if (!$this->check_connection()) {
-                return new rcube_result_thread();
+        if (!empty($this->icache['threads'])) {
+            if ($this->icache['threads']->get_parameters('MAILBOX') == $folder) {
+                return $this->icache['threads'];
             }
-
-            // get all threads
-            $result = $this->conn->thread($folder, $this->threading,
-                $this->options['skip_deleted'] ? 'UNDELETED' : '', true);
-
-            // add to internal (fast) cache
-            $this->icache['threads'] = $result;
         }
 
-        return $this->icache['threads'];
+        // get all threads
+        $result = $this->threads_direct($folder);
+
+        // add to internal (fast) cache
+        return $this->icache['threads'] = $result;
+    }
+
+
+    /**
+     * Method for direct fetching of threads data
+     *
+     * @param  string $folder Folder name
+     *
+     * @return rcube_imap_thread Thread data object
+     */
+    function threads_direct($folder)
+    {
+        if (!$this->check_connection()) {
+            return new rcube_result_thread();
+        }
+
+        // get all threads
+        return $this->conn->thread($folder, $this->threading,
+            $this->options['skip_deleted'] ? 'UNDELETED' : '', true);
     }
 
 
@@ -1083,16 +1126,17 @@ class rcube_imap extends rcube_storage
 
 
     /**
-     * Returns current status of folder
+     * Returns current status of a folder (compared to the last time use)
      *
      * We compare the maximum UID to determine the number of
      * new messages because the RECENT flag is not reliable.
      *
      * @param string $folder Folder name
+     * @param array  $diff   Difference data
      *
-     * @return int   Folder status
+     * @return int Folder status
      */
-    public function folder_status($folder = null)
+    public function folder_status($folder = null, &$diff = array())
     {
         if (!strlen($folder)) {
             $folder = $this->folder;
@@ -1113,6 +1157,9 @@ class rcube_imap extends rcube_storage
         // got new messages
         if ($new['maxuid'] > $old['maxuid']) {
             $result += 1;
+            // get new message UIDs range, that can be used for example
+            // to get the data of these messages
+            $diff['new'] = ($old['maxuid'] + 1 < $new['maxuid'] ? ($old['maxuid']+1).':' : '') . $new['maxuid'];
         }
         // some messages has been deleted
         if ($new['cnt'] < $old['cnt']) {
@@ -1163,12 +1210,15 @@ class rcube_imap extends rcube_storage
      * @param string $folder     Folder to get index from
      * @param string $sort_field Sort column
      * @param string $sort_order Sort order [ASC, DESC]
+     * @param bool   $no_threads Get not threaded index
+     * @param bool   $no_search  Get index not limited to search result (optionally)
      *
      * @return rcube_result_index|rcube_result_thread List of messages (UIDs)
      */
-    public function index($folder = '', $sort_field = NULL, $sort_order = NULL)
-    {
-        if ($this->threading) {
+    public function index($folder = '', $sort_field = NULL, $sort_order = NULL,
+        $no_threads = false, $no_search = false
+    ) {
+        if (!$no_threads && $this->threading) {
             return $this->thread_index($folder, $sort_field, $sort_order);
         }
 
@@ -1180,43 +1230,50 @@ class rcube_imap extends rcube_storage
 
         // we have a saved search result, get index from there
         if ($this->search_string) {
-            if ($this->search_threads) {
-                $this->search($folder, $this->search_string, $this->search_charset, $this->sort_field);
+            if ($this->search_set->is_empty()) {
+                return new rcube_result_index($folder, '* SORT');
             }
 
-            // use message index sort as default sorting
-            if (!$this->sort_field || $this->search_sorted) {
-                if ($this->sort_field && $this->search_sort_field != $this->sort_field) {
-                    $this->search($folder, $this->search_string, $this->search_charset, $this->sort_field);
-                }
+            // search result is an index with the same sorting?
+            if (($this->search_set instanceof rcube_result_index)
+                && ((!$this->sort_field && !$this->search_sorted) ||
+                    ($this->search_sorted && $this->search_sort_field == $this->sort_field))
+            ) {
                 $index = $this->search_set;
             }
-            else if (!$this->check_connection()) {
-                return new rcube_result_index();
-            }
-            else {
-                $index = $this->conn->index($folder, $this->search_set->get(),
-                    $this->sort_field, $this->options['skip_deleted'], true, true);
+            // $no_search is enabled when we are not interested in
+            // fetching index for search result, e.g. to sort
+            // threaded search result we can use full mailbox index.
+            // This makes possible to use index from cache
+            else if (!$no_search) {
+                if (!$this->sort_field) {
+                    // No sorting needed, just build index from the search result
+                    // @TODO: do we need to sort by UID here?
+                    $search = $this->search_set->get_compressed();
+                    $index  = new rcube_result_index($folder, '* ESEARCH ALL ' . $search);
+                }
+                else {
+                    $index = $this->index_direct($folder, $this->search_charset,
+                        $this->sort_field, $this->search_set);
+                }
             }
 
-            if ($this->sort_order != $index->get_parameters('ORDER')) {
-                $index->revert();
-            }
+            if (isset($index)) {
+                if ($this->sort_order != $index->get_parameters('ORDER')) {
+                    $index->revert();
+                }
 
-            return $index;
+                return $index;
+            }
         }
 
         // check local cache
         if ($mcache = $this->get_mcache_engine()) {
-            $index = $mcache->get_index($folder, $this->sort_field, $this->sort_order);
-        }
-        // fetch from IMAP server
-        else {
-            $index = $this->index_direct(
-                $folder, $this->sort_field, $this->sort_order);
+            return $mcache->get_index($folder, $this->sort_field, $this->sort_order);
         }
 
-        return $index;
+        // fetch from IMAP server
+        return $this->index_direct($folder, $this->sort_field, $this->sort_order);
     }
 
 
@@ -1224,22 +1281,24 @@ class rcube_imap extends rcube_storage
      * Return sorted list of message UIDs ignoring current search settings.
      * Doesn't uses cache by default.
      *
-     * @param string $folder     Folder to get index from
-     * @param string $sort_field Sort column
-     * @param string $sort_order Sort order [ASC, DESC]
-     * @param bool   $skip_cache Disables cache usage
+     * @param string         $folder     Folder to get index from
+     * @param string         $sort_field Sort column
+     * @param string         $sort_order Sort order [ASC, DESC]
+     * @param rcube_result_* $search     Optional messages set to limit the result
      *
      * @return rcube_result_index Sorted list of message UIDs
      */
-    public function index_direct($folder, $sort_field = null, $sort_order = null, $skip_cache = true)
+    public function index_direct($folder, $sort_field = null, $sort_order = null, $search = null)
     {
-        if (!$skip_cache && ($mcache = $this->get_mcache_engine())) {
-            $index = $mcache->get_index($folder, $sort_field, $sort_order);
+        if (!empty($search)) {
+            $search = $this->search_set->get_compressed();
         }
+
         // use message index sort as default sorting
-        else if (!$sort_field) {
+        if (!$sort_field) {
             // use search result from count() if possible
-            if ($this->options['skip_deleted'] && !empty($this->icache['undeleted_idx'])
+            if (empty($search) && $this->options['skip_deleted']
+                && !empty($this->icache['undeleted_idx'])
                 && $this->icache['undeleted_idx']->get_parameters('ALL') !== null
                 && $this->icache['undeleted_idx']->get_parameters('MAILBOX') == $folder
             ) {
@@ -1249,8 +1308,12 @@ class rcube_imap extends rcube_storage
                 return new rcube_result_index();
             }
             else {
-                $index = $this->conn->search($folder,
-                    'ALL' .($this->options['skip_deleted'] ? ' UNDELETED' : ''), true);
+                $query = $this->options['skip_deleted'] ? 'UNDELETED' : '';
+                if ($search) {
+                    $query = trim($query . ' UID ' . $search);
+                }
+
+                $index = $this->conn->search($folder, $query, true);
             }
         }
         else if (!$this->check_connection()) {
@@ -1259,13 +1322,18 @@ class rcube_imap extends rcube_storage
         // fetch complete message index
         else {
             if ($this->get_capability('SORT')) {
-                $index = $this->conn->sort($folder, $sort_field,
-                    $this->options['skip_deleted'] ? 'UNDELETED' : '', true);
+                $query = $this->options['skip_deleted'] ? 'UNDELETED' : '';
+                if ($search) {
+                    $query = trim($query . ' UID ' . $search);
+                }
+
+                $index = $this->conn->sort($folder, $sort_field, $query, true);
             }
 
             if (empty($index) || $index->is_error()) {
-                $index = $this->conn->index($folder, "1:*", $sort_field,
-                    $this->options['skip_deleted'], false, true);
+                $index = $this->conn->index($folder, $search ? $search : "1:*",
+                    $sort_field, $this->options['skip_deleted'],
+                    $search ? true : false, true);
             }
         }
 
@@ -1298,7 +1366,7 @@ class rcube_imap extends rcube_storage
         }
         else {
             // get all threads (default sort order)
-            $threads = $this->fetch_threads($folder);
+            $threads = $this->threads($folder);
         }
 
         $this->set_sort_order($sort_field, $sort_order);
@@ -1309,9 +1377,10 @@ class rcube_imap extends rcube_storage
 
 
     /**
-     * Sort threaded result, using THREAD=REFS method
+     * Sort threaded result, using THREAD=REFS method if available.
+     * If not, use any method and re-sort the result in THREAD=REFS way.
      *
-     * @param rcube_result_thread $threads  Threads result set
+     * @param rcube_result_thread $threads Threads result set
      */
     protected function sort_threads($threads)
     {
@@ -1325,7 +1394,7 @@ class rcube_imap extends rcube_storage
 
         if ($this->threading != 'REFS' || ($this->sort_field && $this->sort_field != 'date')) {
             $sortby = $this->sort_field ? $this->sort_field : 'date';
-            $index  = $this->index_direct($this->folder, $sortby, $this->sort_order, false);
+            $index  = $this->index($this->folder, $sortby, $this->sort_order, true, true);
 
             if (!$index->is_empty()) {
                 $threads->sort($index);
@@ -1375,7 +1444,7 @@ class rcube_imap extends rcube_storage
     public function search_once($folder = null, $str = 'ALL')
     {
         if (!$str) {
-            return 'ALL';
+            $str = 'ALL';
         }
 
         if (!strlen($folder)) {
@@ -1405,8 +1474,6 @@ class rcube_imap extends rcube_storage
      */
     protected function search_index($folder, $criteria='ALL', $charset=NULL, $sort_field=NULL)
     {
-        $orig_criteria = $criteria;
-
         if (!$this->check_connection()) {
             if ($this->threading) {
                 return new rcube_result_thread();
@@ -2047,17 +2114,18 @@ class rcube_imap extends rcube_storage
     /**
      * Fetch message body of a specific message from the server
      *
-     * @param  int                $uid    Message UID
-     * @param  string             $part   Part number
-     * @param  rcube_message_part $o_part Part object created by get_structure()
-     * @param  mixed              $print  True to print part, ressource to write part contents in
-     * @param  resource           $fp     File pointer to save the message part
-     * @param  boolean            $skip_charset_conv Disables charset conversion
-     * @param  int                $max_bytes  Only read this number of bytes
+     * @param int                Message UID
+     * @param string             Part number
+     * @param rcube_message_part Part object created by get_structure()
+     * @param mixed              True to print part, resource to write part contents in
+     * @param resource           File pointer to save the message part
+     * @param boolean            Disables charset conversion
+     * @param int                Only read this number of bytes
+     * @param boolean            Enables formatting of text/* parts bodies
      *
      * @return string Message/part body if not printed
      */
-    public function get_message_part($uid, $part=1, $o_part=NULL, $print=NULL, $fp=NULL, $skip_charset_conv=false, $max_bytes=0)
+    public function get_message_part($uid, $part=1, $o_part=NULL, $print=NULL, $fp=NULL, $skip_charset_conv=false, $max_bytes=0, $formatted=true)
     {
         if (!$this->check_connection()) {
             return null;
@@ -2076,8 +2144,9 @@ class rcube_imap extends rcube_storage
         }
 
         if ($o_part && $o_part->size) {
+            $formatted = $formatted && $o_part->ctype_primary == 'text';
             $body = $this->conn->handlePartBody($this->folder, $uid, true,
-                $part ? $part : 'TEXT', $o_part->encoding, $print, $fp, $o_part->ctype_primary == 'text', $max_bytes);
+                $part ? $part : 'TEXT', $o_part->encoding, $print, $fp, $formatted, $max_bytes);
         }
 
         if ($fp || $print) {
@@ -2087,7 +2156,7 @@ class rcube_imap extends rcube_storage
         // convert charset (if text or message part)
         if ($body && preg_match('/^(text|message)$/', $o_part->ctype_primary)) {
             // Remove NULL characters if any (#1486189)
-            if (strpos($body, "\x00") !== false) {
+            if ($formatted && strpos($body, "\x00") !== false) {
                 $body = str_replace("\x00", '', $body);
             }
 
@@ -2222,13 +2291,14 @@ class rcube_imap extends rcube_storage
     /**
      * Append a mail message (source) to a specific folder
      *
-     * @param string  $folder  Target folder
-     * @param string  $message The message source string or filename
-     * @param string  $headers Headers string if $message contains only the body
-     * @param boolean $is_file True if $message is a filename
-     * @param array   $flags   Message flags
-     * @param mixed   $date    Message internal date
-     * @param bool    $binary  Enables BINARY append
+     * @param string       $folder  Target folder
+     * @param string|array $message The message source string or filename
+     *                              or array (of strings and file pointers)
+     * @param string       $headers Headers string if $message contains only the body
+     * @param boolean      $is_file True if $message is a filename
+     * @param array        $flags   Message flags
+     * @param mixed        $date    Message internal date
+     * @param bool         $binary  Enables BINARY append
      *
      * @return int|bool Appended message UID or True on success, False on error
      */
@@ -2319,10 +2389,7 @@ class rcube_imap extends rcube_storage
         // move messages
         $moved = $this->conn->move($uids, $from_mbox, $to_mbox);
 
-        // send expunge command in order to have the moved message
-        // really deleted from the source folder
         if ($moved) {
-            $this->expunge_message($uids, $from_mbox, false);
             $this->clear_messagecount($from_mbox);
             $this->clear_messagecount($to_mbox);
         }
@@ -2624,7 +2691,6 @@ class rcube_imap extends rcube_storage
 
         if ($list_extended) {
             // unsubscribe non-existent folders, remove from the list
-            // we can do this only when LIST response is available
             if (is_array($a_folders) && $name == '*' && !empty($this->conn->data['LIST'])) {
                 foreach ($a_folders as $idx => $folder) {
                     if (($opts = $this->conn->data['LIST'][$folder])
@@ -2637,19 +2703,14 @@ class rcube_imap extends rcube_storage
             }
         }
         else {
-            // unsubscribe non-existent folders, remove them from the list,
-            // we can do this only when LIST response is available
-            if (is_array($a_folders) && $name == '*' && !empty($this->conn->data['LIST'])) {
-                foreach ($a_folders as $idx => $folder) {
-                    if (!isset($this->conn->data['LIST'][$folder])
-                        || in_array('\\Noselect', $this->conn->data['LIST'][$folder])
-                    ) {
-                        // Some servers returns \Noselect for existing folders
-                        if (!$this->folder_exists($folder)) {
-                            $this->conn->unsubscribe($folder);
-                            unset($a_folders[$idx]);
-                        }
-                    }
+            // unsubscribe non-existent folders, remove them from the list
+            if (is_array($a_folders) && !empty($a_folders) && $name == '*') {
+                $existing    = $this->list_folders($root, $name);
+                $nonexisting = array_diff($a_folders, $existing);
+                $a_folders   = array_diff($a_folders, $nonexisting);
+
+                foreach ($nonexisting as $folder) {
+                    $this->conn->unsubscribe($folder);
                 }
             }
         }
@@ -2768,7 +2829,6 @@ class rcube_imap extends rcube_storage
      */
     private function list_folders_update(&$result, $type = null)
     {
-        $delim     = $this->get_hierarchy_delimiter();
         $namespace = $this->get_namespace();
         $search    = array();
 
@@ -2818,12 +2878,21 @@ class rcube_imap extends rcube_storage
 
     /**
      * Filter the given list of folders according to access rights
+     *
+     * For performance reasons we assume user has full rights
+     * on all personal folders.
      */
     protected function filter_rights($a_folders, $rights)
     {
         $regex = '/('.$rights.')/';
+
         foreach ($a_folders as $idx => $folder) {
+            if ($this->folder_namespace($folder) == 'personal') {
+                continue;
+            }
+
             $myrights = join('', (array)$this->my_rights($folder));
+
             if ($myrights !== null && !preg_match($regex, $myrights)) {
                 unset($a_folders[$idx]);
             }
@@ -3679,7 +3748,7 @@ class rcube_imap extends rcube_storage
     {
         if ($this->caching && !$this->cache) {
             $rcube = rcube::get_instance();
-            $ttl = $rcube->config->get('message_cache_lifetime', '10d');
+            $ttl   = $rcube->config->get('imap_cache_ttl', '10d');
             $this->cache = $rcube->get_cache('IMAP', $this->caching, $ttl);
         }
 
@@ -3727,21 +3796,6 @@ class rcube_imap extends rcube_storage
         }
     }
 
-    /**
-     * Delete outdated cache entries
-     */
-    public function expunge_cache()
-    {
-        if ($this->mcache) {
-            $ttl = rcube::get_instance()->config->get('message_cache_lifetime', '10d');
-            $this->mcache->expunge($ttl);
-        }
-
-        if ($this->cache) {
-            $this->cache->expunge();
-        }
-    }
-
 
     /* --------------------------------
      *   message caching methods
@@ -3750,12 +3804,17 @@ class rcube_imap extends rcube_storage
     /**
      * Enable or disable messages caching
      *
-     * @param boolean $set Flag
+     * @param boolean $set  Flag
+     * @param int     $mode Cache mode
      */
-    public function set_messages_caching($set)
+    public function set_messages_caching($set, $mode = null)
     {
         if ($set) {
             $this->messages_caching = true;
+
+            if ($mode && ($cache = $this->get_mcache_engine())) {
+                $cache->set_mode($mode);
+            }
         }
         else {
             if ($this->mcache) {
@@ -3775,8 +3834,10 @@ class rcube_imap extends rcube_storage
         if ($this->messages_caching && !$this->mcache) {
             $rcube = rcube::get_instance();
             if (($dbh = $rcube->get_dbh()) && ($userid = $rcube->get_user_id())) {
+                $ttl       = $rcube->config->get('messages_cache_ttl', '10d');
+                $threshold = $rcube->config->get('messages_cache_threshold', 50);
                 $this->mcache = new rcube_imap_cache(
-                    $dbh, $this, $userid, $this->options['skip_deleted']);
+                    $dbh, $this, $userid, $this->options['skip_deleted'], $ttl, $threshold);
             }
         }
 
@@ -3788,13 +3849,22 @@ class rcube_imap extends rcube_storage
      * Clears the messages cache.
      *
      * @param string $folder Folder name
-     * @param array  $uids    Optional message UIDs to remove from cache
+     * @param array  $uids   Optional message UIDs to remove from cache
      */
     protected function clear_message_cache($folder = null, $uids = null)
     {
         if ($mcache = $this->get_mcache_engine()) {
             $mcache->clear($folder, $uids);
         }
+    }
+
+
+    /**
+     * Delete outdated cache entries
+     */
+    function cache_gc()
+    {
+        rcube_imap_cache::gc();
     }
 
 
@@ -3822,21 +3892,24 @@ class rcube_imap extends rcube_storage
     /**
      * Sort folders first by default folders and then in alphabethical order
      *
-     * @param array $a_folders Folders list
+     * @param array $a_folders    Folders list
+     * @param bool  $skip_default Skip default folders handling
+     *
+     * @return array Sorted list
      */
-    protected function sort_folder_list($a_folders)
+    public function sort_folder_list($a_folders, $skip_default = false)
     {
         $a_out = $a_defaults = $folders = array();
 
         $delimiter = $this->get_hierarchy_delimiter();
 
         // find default folders and skip folders starting with '.'
-        foreach ($a_folders as $i => $folder) {
+        foreach ($a_folders as $folder) {
             if ($folder[0] == '.') {
                 continue;
             }
 
-            if (($p = array_search($folder, $this->default_folders)) !== false && !$a_defaults[$p]) {
+            if (!$skip_default && ($p = array_search($folder, $this->default_folders)) !== false && !$a_defaults[$p]) {
                 $a_defaults[$p] = $folder;
             }
             else {
@@ -4091,9 +4164,9 @@ class rcube_imap extends rcube_storage
         return $this->index($folder, $sort_field, $sort_order);
     }
 
-    public function message_index_direct($folder, $sort_field = null, $sort_order = null, $skip_cache = true)
+    public function message_index_direct($folder, $sort_field = null, $sort_order = null)
     {
-        return $this->index_direct($folder, $sort_field, $sort_order, $skip_cache);
+        return $this->index_direct($folder, $sort_field, $sort_order);
     }
 
     public function list_mailboxes($root='', $name='*', $filter=null, $rights=null, $skip_sort=false)

@@ -5,7 +5,7 @@
  | program/steps/mail/getunread.inc                                      |
  |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -21,28 +21,36 @@
 
 $a_folders = $RCMAIL->storage->list_folders_subscribed('', '*', 'mail');
 
-if (!empty($a_folders))
-{
-  $current = $RCMAIL->storage->get_folder();
-  $inbox = ($current == 'INBOX');
-  $check_all = (bool)$RCMAIL->config->get('check_all_folders');
+if (!empty($a_folders)) {
+    $current   = $RCMAIL->storage->get_folder();
+    $inbox     = ($current == 'INBOX');
+    $trash     = $RCMAIL->config->get('trash_mbox');
+    $check_all = (bool)$RCMAIL->config->get('check_all_folders');
 
-  foreach ($a_folders as $mbox_row) {
-    $unseen_old = rcmail_get_unseen_count($mbox_row);
+    foreach ($a_folders as $mbox) {
+        $unseen_old = rcmail_get_unseen_count($mbox);
 
-    if (!$check_all && $unseen_old !== null && $mbox_row != $current)
-      $unseen = $unseen_old;
-    else
-      $unseen = $RCMAIL->storage->count($mbox_row, 'UNSEEN', $unseen_old === null);
+        if (!$check_all && $unseen_old !== null && $mbox != $current) {
+            $unseen = $unseen_old;
+        }
+        else {
+            $unseen = $RCMAIL->storage->count($mbox, 'UNSEEN', $unseen_old === null);
+        }
 
-    if ($unseen || $unseen_old === null) {
-      $OUTPUT->command('set_unread_count', $mbox_row, $unseen, $inbox && $mbox_row == 'INBOX');
+        // call it always for current folder, so it can update counter
+        // after possible message status change when opening a message
+        // not in preview frame
+        if ($unseen || $unseen_old === null || $mbox == $current) {
+            $OUTPUT->command('set_unread_count', $mbox, $unseen, $inbox && $mbox_row == 'INBOX');
+        }
+
+        rcmail_set_unseen_count($mbox, $unseen);
+
+        // set trash folder state
+        if ($mbox === $trash) {
+            $OUTPUT->command('set_trash_count', $RCMAIL->storage->count($mbox, 'EXISTS'));
+        }
     }
-
-    rcmail_set_unseen_count($mbox_row, $unseen);
-  }
 }
 
 $OUTPUT->send();
-
-

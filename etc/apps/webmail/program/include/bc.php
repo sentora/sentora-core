@@ -62,7 +62,7 @@ function rcmail_url($action, $p=array(), $task=null)
 
 function rcmail_temp_gc()
 {
-  $rcmail = rcmail::get_instance()->temp_gc();
+  rcmail::get_instance()->gc_temp();
 }
 
 function rcube_charset_convert($str, $from, $to=NULL)
@@ -205,9 +205,9 @@ function rcmail_quota_content($attrib = null)
     return rcmail::get_instance()->quota_content($attrib);
 }
 
-function rcmail_display_server_error($fallback=null, $fallback_args=null)
+function rcmail_display_server_error($fallback=null, $fallback_args=null, $suffix='')
 {
-    rcmail::get_instance()->display_server_error($fallback, $fallback_args);
+    rcmail::get_instance()->display_server_error($fallback, $fallback_args, $suffix);
 }
 
 function rcmail_filetype2classname($mimetype, $filename)
@@ -403,6 +403,16 @@ function get_boolean($str)
 function enriched_to_html($data)
 {
     return rcube_enriched::to_html($data);
+}
+
+function strip_quotes($str)
+{
+    return str_replace(array("'", '"'), '', $str);
+}
+
+function strip_newlines($str)
+{
+    return preg_replace('/[\r\n]/', '', $str);
 }
 
 class rcube_html_page extends rcmail_html_page

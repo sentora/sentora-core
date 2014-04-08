@@ -15,7 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-newmail_notifier/
 */
-
 $labels['basic'] = 'Zobrazit upozornění v prohlížeči při příchozí zprávě';
 $labels['desktop'] = 'Zobrazit upozornění na ploše při příchozí zprávě';
 $labels['sound'] = 'Přehrát zvuk při příchozí zprávě';
@@ -25,5 +24,5 @@ $labels['body'] = 'Dostali jste novou zprávu.';
 $labels['testbody'] = 'Toto je zkouška upozornění.';
 $labels['desktopdisabled'] = 'Upozornění na ploše jsou ve vašem prohlížeči vypnuté.';
 $labels['desktopunsupported'] = 'Váš prohlížeč nepodporuje upozornění na ploše.';
-
+$labels['desktoptimeout'] = 'Zavřít upozornění na ploše';
 ?>

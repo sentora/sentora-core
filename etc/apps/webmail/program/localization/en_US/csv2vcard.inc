@@ -5,7 +5,7 @@
  | localization/<lang>/csv2vcard.inc                                     |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -91,3 +91,20 @@ $map['work_phone'] = "Work Phone";
 $map['work_address'] = "Work Address";
 $map['work_country'] = "Work Country";
 $map['work_zipcode'] = "Work ZipCode";
+
+// Atmail
+$map['date_of_birth'] = "Date of Birth";
+$map['email'] = "Email";
+$map['home_mobile'] = "Home Mobile";
+$map['home_zip'] = "Home Zip";
+$map['info'] = "Info";
+$map['user_photo'] = "User Photo";
+$map['url'] = "URL";
+$map['work_city'] = "Work City";
+$map['work_company'] = "Work Company";
+$map['work_dept'] = "Work Dept";
+$map['work_fax'] = "Work Fax";
+$map['work_mobile'] = "Work Mobile";
+$map['work_state'] = "Work State";
+$map['work_title'] = "Work Title";
+$map['work_zip'] = "Work Zip";

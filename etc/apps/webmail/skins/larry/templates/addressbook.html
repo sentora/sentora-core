@@ -13,7 +13,11 @@
 <!-- toolbar -->
 <div id="addressbooktoolbar" class="toolbar">
 	<roundcube:button command="import" type="link" class="button import disabled" classAct="button import" classSel="button import pressed" label="import" title="importcontacts" />
-	<roundcube:button command="export" type="link" class="button export disabled" classAct="button export" classSel="button export pressed" label="export" title="exportvcards" />
+	<span class="dropbutton">
+		<roundcube:button command="export" type="link" class="button export disabled" classAct="button export" classSel="button export pressed" label="export" title="exportvcards" />
+		<span class="dropbuttontip" id="exportmenulink" onclick="UI.show_popup('exportmenu');return false"></span>
+	</span>
+
 	<span class="spacer"></span>
 	<roundcube:button command="compose" type="link" class="button compose disabled" classAct="button compose" classSel="button compose pressed" label="compose" title="writenewmessage" />
 	<roundcube:button command="advanced-search" type="link" class="button search disabled" classAct="button search" classSel="button search pressed" label="advanced" title="advsearch" />
@@ -26,7 +30,7 @@
 <div id="directorylistbox" class="uibox listbox">
 <h2 id="directorylist-header" class="boxtitle"><roundcube:label name="groups" /></h2>
 <div id="directorylist-content" class="scroller withfooter">
-	<roundcube:object name="directorylist" id="directorylist" class="listing" />
+	<roundcube:object name="directorylist" id="directorylist" class="treelist listing" />
 </div>
 <div id="directorylist-footer" class="boxfooter">
 	<roundcube:button command="group-create" type="link" title="newcontactgroup" class="listbutton add disabled" classAct="listbutton add" innerClass="inner" content="+" /><roundcube:button name="groupoptions" id="groupoptionslink" type="link" title="moreactions" class="listbutton groupactions" onclick="UI.show_popup('groupoptions');return false" innerClass="inner" content="&#9881;" />
@@ -46,7 +50,7 @@
 
 <!-- contacts list -->
 <div id="addresslist" class="uibox listbox">
-<h2 class="boxtitle"><roundcube:label name="contacts" /></h2>
+<roundcube:object name="addresslisttitle" label="contacts" tag="h2" class="boxtitle" />
 <div class="scroller withfooter">
 <roundcube:object name="addresslist" id="contacts-table" class="listing" noheader="true" />
 </div>
@@ -67,7 +71,6 @@
 	<div class="iframebox">
 		<roundcube:object name="addressframe" id="contact-frame" style="width:100%; height:100%" frameborder="0" src="/watermark.html" />
 	</div>
-	<roundcube:object name="message" id="message" class="statusbar" />
 </div>
 
 
@@ -75,6 +78,12 @@
 
 </div><!-- end mainscreen -->
 
+<div id="exportmenu" class="popupmenu">
+	<ul class="toolbarmenu">
+		<li><roundcube:button command="export" label="exportall" prop="sub" class="exportalllink" classAct="exportalllink active" /></li>
+		<li><roundcube:button command="export-selected" label="exportsel" prop="sub" class="exportsellink" classAct="exportsellink active" /></li>
+	</ul>
+</div>
 
 <div id="searchmenu" class="popupmenu">
 	<ul class="toolbarmenu">
@@ -93,6 +102,13 @@
 		<li><roundcube:button command="search-create" label="searchsave" classAct="active" /></li>
 		<li><roundcube:button command="search-delete" label="searchdelete" classAct="active" /></li>
 		<roundcube:container name="groupoptions" id="groupoptionsmenu" />
+	</ul>
+</div>
+
+<div id="dragcontactmenu" class="popupmenu">
+	<ul class="toolbarmenu">
+		<li><roundcube:button command="move" onclick="return rcmail.drag_menu_action('move')" label="move" classAct="active" /></li>
+		<li><roundcube:button command="copy" onclick="return rcmail.drag_menu_action('copy')" label="copy" classAct="active" /></li>
 	</ul>
 </div>
 

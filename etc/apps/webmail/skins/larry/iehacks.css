@@ -29,7 +29,8 @@ input.button.mainaction:active {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2a2e31', endColorstr='#505050', GradientType=0);
 }
 
-a.button {
+a.button,
+.buttongroup {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e6e6e6', GradientType=0);
 }
 
@@ -47,8 +48,16 @@ input.button:active {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bababa', endColorstr='#d8d8d8', GradientType=0);
 }
 
+.buttongroup a.button.selected {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#909090', endColorstr='#858585', GradientType=0);
+}
+
 #message.statusbar {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eaeaea', endColorstr='#c8c8c8', GradientType=0);
+}
+
+#messagestack div {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e0404040', endColorstr='#e0303030', GradientType=0);
 }
 
 .ui-dialog.popupmessage .ui-dialog-titlebar {
@@ -118,7 +127,7 @@ ul.toolbarmenu li a.active:hover,
 .pagenav a.button.disabled span.inner,
 .boxfooter .listbutton.disabled .inner,
 .dropbutton a.button.disabled + .dropbuttontip {
-	background-image: url(images/buttons.gif?v=aab8.13054);
+	background-image: url(images/buttons.gif?v=0538.14997);
 }
 
 /*** addressbook.css ***/

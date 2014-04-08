@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-archive/
 */
-
-$labels = array();
 $labels['buttontext'] = 'Arkistoi';
 $labels['buttontitle'] = 'Arkistoi viesti';
 $labels['archived'] = 'Arkistoitu onnistuneesti';
@@ -30,5 +28,4 @@ $labels['archivetypemonth'] = 'Kuukaudella (esim. Arkisto/2012/06)';
 $labels['archivetypefolder'] = 'Alkuperäinen kansio';
 $labels['archivetypesender'] = 'Lähettäjän osoite';
 $labels['unkownsender'] = 'tuntematon';
-
 ?>

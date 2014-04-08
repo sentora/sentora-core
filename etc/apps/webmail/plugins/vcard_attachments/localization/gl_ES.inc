@@ -15,9 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-vcard_attachments/
 */
-
-$labels = array();
-$labels['addvcardmsg'] = 'Engadir a tarxeta ao caderno de enderezos';
-$labels['vcardsavefailed'] = 'Non foi posible gardar a tarxeta';
-
+$labels['addvcardmsg'] = 'Engadir vCard á Axenda de enderezos';
+$labels['vcardsavefailed'] = 'Non foi posíbel gardar a vCard';
 ?>

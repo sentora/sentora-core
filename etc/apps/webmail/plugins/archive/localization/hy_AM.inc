@@ -15,20 +15,17 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-archive/
 */
-
-$labels = array();
 $labels['buttontext'] = 'Արխիվ';
 $labels['buttontitle'] = 'Արխիվացնել այս հաղորդագրությունը';
 $labels['archived'] = 'Բարեհաջող արխիվացվեց';
-$labels['archivedreload'] = 'Successfully archived. Reload the page to see the new archive folders.';
-$labels['archiveerror'] = 'Some messages could not be archived';
+$labels['archivedreload'] = 'Բարեհաջող արխիվացվեց: Վերբեռնեք էջը նոր արխիվացված պանակները տեսնելու համար:';
+$labels['archiveerror'] = 'Որոշ հաղորդագրություններ հնարավոր չէ արխիվացնել';
 $labels['archivefolder'] = 'Արխիվ';
-$labels['settingstitle'] = 'Archive';
-$labels['archivetype'] = 'Divide archive by';
-$labels['archivetypeyear'] = 'Year (e.g. Archive/2012)';
-$labels['archivetypemonth'] = 'Month (e.g. Archive/2012/06)';
-$labels['archivetypefolder'] = 'Original folder';
-$labels['archivetypesender'] = 'Sender email';
-$labels['unkownsender'] = 'unknown';
-
+$labels['settingstitle'] = 'Արխիվ';
+$labels['archivetype'] = 'Բաժանել արխիվը';
+$labels['archivetypeyear'] = 'Տարեթիվ (օր.՝ Արխիվ/2012)';
+$labels['archivetypemonth'] = 'Ամսաթիվ (օր.՝ Արխիվ/2012/06)';
+$labels['archivetypefolder'] = 'Առաջին պանակը';
+$labels['archivetypesender'] = 'Ուղարկողի էլ-փոստը';
+$labels['unkownsender'] = 'անհայտ';
 ?>

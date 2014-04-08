@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Er is een fout opgetreden!';
 $messages['loginfailed']  = 'Aanmelden mislukt...';
 $messages['cookiesdisabled'] = 'Uw browser accepteert geen cookies...';
@@ -28,13 +26,10 @@ $messages['dberror'] = 'Database Fout!';
 $messages['requesttimedout'] = 'Aanvraag verlopen';
 $messages['errorreadonly'] = 'Kon opdracht niet uitvoeren. Map is alleen-lezen.';
 $messages['errornoperm'] = 'Kon opdracht niet uitvoeren. Toegang geweigerd.';
-$messages['erroroverquota'] = 'Unable to perform operation. No free disk space.';
-$messages['erroroverquotadelete'] = 'No free disk space. Use SHIFT+DEL to delete a message.';
 $messages['invalidrequest'] = 'Ongeldige aanvraag! Er zijn geen gegevens opgeslagen.';
 $messages['invalidhost'] = 'Ongeldige server.';
 $messages['nomessagesfound'] = 'Er zijn geen berichten in deze map...';
 $messages['loggedout'] = 'U bent nu afgemeld. Tot ziens!';
-$messages['mailboxempty'] = 'Mailbox is leeg...';
 $messages['refreshing'] = 'Bezig met vernieuwen...';
 $messages['loading'] = 'Bezig met ophalen gegevens...';
 $messages['uploading'] = 'Bezig met uploaden...';
@@ -56,8 +51,6 @@ $messages['contactnotfound'] = 'De gevraagde contactpersoon was niet gevonden.';
 $messages['contactsearchonly'] = 'Voer enkele zoektermen in om de contactpersonen te zoeken.';
 $messages['sendingfailed'] = 'Kon het bericht niet versturen...';
 $messages['senttooquickly'] = 'U moet $sec second(en) wachten om het bericht te versturen.';
-$messages['errorsavingsent'] = 'Er is een fout opgetreden tijdens het opslaan van het verzonden bericht.';
-$messages['errorsaving'] = 'Er is een fout opgetreden bij het opslaan van het bericht...';
 $messages['errormoving'] = 'Kon de bericht(en) niet verplaatsen...';
 $messages['errorcopying'] = 'Kon de bericht(en) niet kopiëren';
 $messages['errordeleting'] = 'Kon de bericht(en) niet verwijderen...';
@@ -101,8 +94,6 @@ $messages['converting'] = 'Opmaak van het bericht wordt gewist...';
 $messages['messageopenerror'] = 'Kon het bericht niet ophalen van de server.';
 $messages['fileuploaderror'] = 'Bestandsupload mislukt.';
 $messages['filesizeerror'] = 'Het bestand overschrijdt de maximum grootte van $size.';
-$messages['copysuccess'] = '$nr adressen met succes gekopieerd.';
-$messages['copyerror'] = 'Kon de adressen niet kopiëren.';
 $messages['sourceisreadonly'] = 'Het adres kan niet worden opgeslagen.';
 $messages['errorsavingcontact'] = 'Kon de contactpersoon niet bewaren.';
 $messages['movingmessage'] = 'Bericht wordt verplaatst...';
@@ -139,7 +130,6 @@ $messages['smtperror'] = 'SMTP Fout: $msg';
 $messages['emailformaterror'] = 'Ongeldig e-mailadres: $email';
 $messages['toomanyrecipients'] = 'Te veel geadresseerden. Verminder de hoeveelheid geadresseerden tot $max.';
 $messages['maxgroupmembersreached'] = 'Het aantal leden van de groep groter is dan de maximale van $max.';
-$messages['internalerror'] = 'Er is een interne fout opgetreden. Probeer het nogmaals.';
 $messages['contactdelerror'] = 'Kon contactpersoon niet verwijderen.';
 $messages['contactdeleted'] = 'Contactpersoon succesvol verwijderd.';
 $messages['contactrestoreerror'] = 'Verwijderde contactpersonen konden niet hersteld worden.';
@@ -167,5 +157,4 @@ $messages['parentnotwritable'] = 'U heeft niet voldoende rechten een map te make
 $messages['messagetoobig'] = 'Dit deel van uw bericht is te groot om het te verwerken.';
 $messages['attachmentvalidationerror'] = 'OPGELET! Deze bijlage is verdacht omdat het aangetroffen bestandstype niet overeenkomt met het verwachte type. Indien u de afzender niet vertrouwd open deze bijlage in geen geval in uw browser aangezien deze schadelijk data kan bevatten.<br /><br /><em>Verwacht: $expected; Aangetroffen: $detected</em>';
 $messages['noscriptwarning'] = 'Opgelet: deze webmail service vereist JavaScript! Om deze service te kunnen gebruiken dient u JavaScript toe te staan in de instellingen van uw browser.';
-
 ?>

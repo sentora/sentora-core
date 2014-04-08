@@ -15,20 +15,17 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-archive/
 */
-
-$labels = array();
 $labels['buttontext'] = 'بایگانی';
 $labels['buttontitle'] = 'بایگانی این پیغام';
 $labels['archived'] = 'با موفقیت بایگانی شد';
-$labels['archivedreload'] = 'با موفقیت بایگانی شد، بارگذاری مجدد صفحه برای دیدن پوشه‌های بایگانی جدید.';
-$labels['archiveerror'] = 'برخی پیغام‌ها بایگانی نخواهند شد';
+$labels['archivedreload'] = 'با موفقیت بایگانی شد. برای دیدن پوشه‌های بایگانی جدید صفحه را مجددا بارگذاری نمایید.';
+$labels['archiveerror'] = 'برخی از پیغام‌ها بایگانی نشدند.';
 $labels['archivefolder'] = 'بایگانی';
 $labels['settingstitle'] = 'بایگانی';
-$labels['archivetype'] = 'جدا کردن بایگانی با';
+$labels['archivetype'] = 'تقسیم بایگانی با';
 $labels['archivetypeyear'] = 'سال (به عنوان مثال بایگانی/۲۰۱۲)';
 $labels['archivetypemonth'] = 'ماه (به عنوان مثال بایگانی/۲۰۱۲/۰۶)';
 $labels['archivetypefolder'] = 'پوشه اصلی';
 $labels['archivetypesender'] = 'ایمیل فرستنده';
 $labels['unkownsender'] = 'ناشناخته';
-
 ?>

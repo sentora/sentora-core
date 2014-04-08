@@ -15,20 +15,17 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-archive/
 */
-
-$labels = array();
 $labels['buttontext'] = 'Lưu trữ';
 $labels['buttontitle'] = 'Lưu lại bức thư này';
 $labels['archived'] = 'Lưu lại thành công';
-$labels['archivedreload'] = 'Successfully archived. Reload the page to see the new archive folders.';
-$labels['archiveerror'] = 'Some messages could not be archived';
+$labels['archivedreload'] = 'Đã lưu thành công. Tải lại trang này để thấy các thư mục lưu trữ mới.';
+$labels['archiveerror'] = 'Một số thư không thể lưu lại được';
 $labels['archivefolder'] = 'Lưu trữ';
-$labels['settingstitle'] = 'Archive';
-$labels['archivetype'] = 'Divide archive by';
-$labels['archivetypeyear'] = 'Year (e.g. Archive/2012)';
-$labels['archivetypemonth'] = 'Month (e.g. Archive/2012/06)';
-$labels['archivetypefolder'] = 'Original folder';
-$labels['archivetypesender'] = 'Sender email';
-$labels['unkownsender'] = 'unknown';
-
+$labels['settingstitle'] = 'Lưu trữ';
+$labels['archivetype'] = 'Chia bộ lưu trữ bởi';
+$labels['archivetypeyear'] = 'Năm (ví dụ: Lưu trữ/2012)';
+$labels['archivetypemonth'] = 'Tháng (ví dụ: Lưu trữ/2012/06)';
+$labels['archivetypefolder'] = 'Thư mục nguyên gốc';
+$labels['archivetypesender'] = 'Địa chỉ thư điện tử của người gửi';
+$labels['unkownsender'] = 'Không rõ';
 ?>

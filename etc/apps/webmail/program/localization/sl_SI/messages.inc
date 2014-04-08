@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Prišlo je do napake!';
 $messages['loginfailed']  = 'Prijava ni uspela';
 $messages['cookiesdisabled'] = 'Vaš spletni brskalnik ne sprejema piškotkov.';
@@ -35,6 +33,7 @@ $messages['invalidhost'] = 'Nepravilno ime strežnika';
 $messages['nomessagesfound'] = 'V poštnem predalu ni sporočil.';
 $messages['loggedout'] = 'Odjava je bila uspešna.';
 $messages['mailboxempty'] = 'Poštni predal je prazen.';
+$messages['nomessages'] = 'Ni sporočil';
 $messages['refreshing'] = 'Osvežujem...';
 $messages['loading'] = 'Nalaganje...';
 $messages['uploading'] = 'Prenos dokumenta na strežnik...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'Sporočilo je bilo uspešno poslano.';
 $messages['savingmessage'] = 'Shranjevanje sporočila...';
 $messages['messagesaved'] = 'Sporočilo je bilo shranjeno v Osnutke';
 $messages['successfullysaved'] = 'Uspešno shranjeno.';
+$messages['savingresponse'] = 'Shranjevanje odgovora...';
+$messages['deleteresponseconfirm'] = 'Ste prepričani, da želite izbrisati ta odgovor?';
 $messages['addedsuccessfully'] = 'Stik je bil uspešno dodan v imenik.';
 $messages['contactexists'] = 'Stik s tem elektronskim naslovom že obstaja.';
 $messages['contactnameexists'] = 'Stik s tem imenom že obstaja';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'Vnesite vsaj enega prejemnika sporočila';
 $messages['nosubjectwarning']  = 'Polje "Zadeva" je prazno. Želite dodati tekst v to polje?';
 $messages['nobodywarning'] = 'Želite poslati sporočilo brez vsebine?';
 $messages['notsentwarning'] = 'Sporočilo ni bilo poslano. Želite zavreči to sporočilo?';
+$messages['restoresavedcomposedata'] = 'Ali želite nadaljevati z urejanjem še neodposlanega osnutka:\n\nZadeva: $subject\nShranjeno dne: $date\n\n ';
 $messages['noldapserver'] = 'Izberite LDAP strežnik, v katerem želite iskati?';
 $messages['nosearchname'] = 'Vnesite ime ali elektronski naslov stika';
 $messages['notuploadedwarning'] = 'Priponke se še nalagajo na strežnik. Počakajte ali prekinite prenos.';
@@ -101,13 +103,16 @@ $messages['converting'] = 'Odstranjevanje nastavitev oblikovanja...';
 $messages['messageopenerror'] = 'Sporočila ni bilo mogoče prenesti iz strežnika';
 $messages['fileuploaderror'] = 'Prenos datoteke je spodletel';
 $messages['filesizeerror'] = 'Naložena datoteka presega največjo dovoljeno velikost $size';
-$messages['copysuccess'] = '$nr naslovov je bilo uspešno prenešenih';
-$messages['copyerror'] = 'Nobenih naslovov ni bilo mogoče kopirati';
+$messages['copysuccess'] = 'Uspešno ste kopirali $nr stikov.';
+$messages['movesuccess'] = 'Uspešno ste premaknili $nr stikov.';
+$messages['copyerror'] = 'Stikov ni bilo mogoče kopirati.';
+$messages['moveerror'] = 'Stikov ni bilo mogoče premakniti.';
 $messages['sourceisreadonly'] = 'Ta naslov je na voljo samo za branje';
 $messages['errorsavingcontact'] = 'Stika ni bilo mogoče shraniti';
 $messages['movingmessage'] = 'Premikanje sporočila...';
 $messages['copyingmessage'] = 'Kopiranje sporočila...';
 $messages['copyingcontact'] = 'Kopiranje stika/ov';
+$messages['movingcontact'] = 'Premikanje stika(ov)...';
 $messages['deletingmessage'] = 'Brisanje sporočil/a';
 $messages['markingmessage'] = 'Označevanje sporočil/a';
 $messages['addingmember'] = 'Dodajanje stika/ov v skupino...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'Uvažanje poteka...';
 $messages['importformaterror'] = 'Uvoz ni uspel! Uvožena datoteka ni pravega formata.';
 $messages['importconfirm'] = '<b>Uspešno uvoženi $inserted stiki, $skipped stikov že obstaja v imeniku</b>:<p><em>$names</em></p>';
 $messages['importconfirmskipped'] = '<b>Preskočeni že obstoječi vnosi $skipped </b>';
+$messages['importmessagesuccess'] = 'Upešno ste uvozili $nr sporočil.';
+$messages['importmessageerror'] = 'Uvoz je spodletel. Naložena datoteka ni veljavno sporočilo ali poštna datoteka';
 $messages['opnotpermitted'] = 'Operacija ni dovoljena.';
 $messages['nofromaddress'] = 'V izbrani identiteti manjka elektronski naslov.';
 $messages['editorwarning'] = 'Preklop v splošen urejevalnik onemogoča uporabo izbranih nastavitev oblikovanja. Želite nadaljevati?';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = 'Podmape v tej mapi ni bilo mogoče ustvariti/p
 $messages['messagetoobig'] = 'Sporočilo je preveliko za obdelavo.';
 $messages['attachmentvalidationerror'] = 'OPOZORILO! Priponka vsebuje sumljivo vsebino, saj tip priponke ne ustreza tipu, določenemu v sporočilu. Če ne zaupate pošiljatelju, priponke v brskalniku ne odpirajte, saj lahko vsebuje zlonamerno vsebino. <br/><br/><em>Pričakovano: $expected; Najdeno: $detected</em>';
 $messages['noscriptwarning'] = 'Opozorilo: Ta spletna stran zahteva Javascript! Za uporabo jo vključite v nastavitvah vašega brskalnika.';
-
 ?>

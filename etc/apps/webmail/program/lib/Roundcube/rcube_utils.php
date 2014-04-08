@@ -390,20 +390,21 @@ class rcube_utils
      * Convert array of request parameters (prefixed with _)
      * to a regular array with non-prefixed keys.
      *
-     * @param int    $mode   Source to get value from (GPC)
-     * @param string $ignore PCRE expression to skip parameters by name
+     * @param int     $mode       Source to get value from (GPC)
+     * @param string  $ignore     PCRE expression to skip parameters by name
+     * @param boolean $allow_html Allow HTML tags in field value
      *
      * @return array Hash array with all request parameters
      */
-    public static function request2param($mode = null, $ignore = 'task|action')
+    public static function request2param($mode = null, $ignore = 'task|action', $allow_html = false)
     {
         $out = array();
         $src = $mode == self::INPUT_GET ? $_GET : ($mode == self::INPUT_POST ? $_POST : $_REQUEST);
 
-        foreach ($src as $key => $value) {
+        foreach (array_keys($src) as $key) {
             $fname = $key[0] == '_' ? substr($key, 1) : $key;
             if ($ignore && !preg_match('/^(' . $ignore . ')$/', $fname)) {
-                $out[$fname] = self::get_input_value($key, $mode);
+                $out[$fname] = self::get_input_value($key, $mode, $allow_html);
             }
         }
 
@@ -444,34 +445,41 @@ class rcube_utils
         $source   = self::xss_entity_decode($source);
         $stripped = preg_replace('/[^a-z\(:;]/i', '', $source);
         $evilexpr = 'expression|behavior|javascript:|import[^a]' . (!$allow_remote ? '|url\(' : '');
+
         if (preg_match("/$evilexpr/i", $stripped)) {
             return '/* evil! */';
         }
 
+        $strict_url_regexp = '!url\s*\([ "\'](https?:)//[a-z0-9/._+-]+["\' ]\)!Uims';
+
         // cut out all contents between { and }
         while (($pos = strpos($source, '{', $last_pos)) && ($pos2 = strpos($source, '}', $pos))) {
-            $styles = substr($source, $pos+1, $pos2-($pos+1));
+            $nested = strpos($source, '{', $pos+1);
+            if ($nested && $nested < $pos2)  // when dealing with nested blocks (e.g. @media), take the inner one
+                $pos = $nested;
+            $length = $pos2 - $pos - 1;
+            $styles = substr($source, $pos+1, $length);
 
             // check every line of a style block...
             if ($allow_remote) {
                 $a_styles = preg_split('/;[\r\n]*/', $styles, -1, PREG_SPLIT_NO_EMPTY);
+
                 foreach ($a_styles as $line) {
                     $stripped = preg_replace('/[^a-z\(:;]/i', '', $line);
                     // ... and only allow strict url() values
-                    $regexp = '!url\s*\([ "\'](https?:)//[a-z0-9/._+-]+["\' ]\)!Uims';
-                    if (stripos($stripped, 'url(') && !preg_match($regexp, $line)) {
+                    if (stripos($stripped, 'url(') && !preg_match($strict_url_regexp, $line)) {
                         $a_styles = array('/* evil! */');
                         break;
                     }
                 }
+
                 $styles = join(";\n", $a_styles);
             }
 
-            $key = $replacements->add($styles);
-            $source = substr($source, 0, $pos+1)
-                . $replacements->get_replacement($key)
-                . substr($source, $pos2, strlen($source)-$pos2);
-            $last_pos = $pos+2;
+            $key      = $replacements->add($styles);
+            $repl     = $replacements->get_replacement($key);
+            $source   = substr_replace($source, $repl, $pos+1, $length);
+            $last_pos = $pos2 - ($length - strlen($repl));
         }
 
         // remove html comments and add #container to each tag selector.
@@ -506,17 +514,24 @@ class rcube_utils
      */
     public static function file2class($mimetype, $filename)
     {
+        $mimetype = strtolower($mimetype);
+        $filename = strtolower($filename);
+
         list($primary, $secondary) = explode('/', $mimetype);
 
         $classes = array($primary ? $primary : 'unknown');
+
         if ($secondary) {
             $classes[] = $secondary;
         }
-        if (preg_match('/\.([a-z0-9]+)$/i', $filename, $m)) {
-            $classes[] = $m[1];
+
+        if (preg_match('/\.([a-z0-9]+)$/', $filename, $m)) {
+            if (!in_array($m[1], $classes)) {
+                $classes[] = $m[1];
+            }
         }
 
-        return strtolower(join(" ", $classes));
+        return join(" ", $classes);
     }
 
 
@@ -607,6 +622,10 @@ class rcube_utils
      */
     public static function parse_host($name, $host = '')
     {
+        if (!is_string($name)) {
+            return $name;
+        }
+
         // %n - host
         $n = preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']);
         // %t - host name without first part, e.g. %n=mail.domain.tld, %t=domain.tld
@@ -627,8 +646,7 @@ class rcube_utils
             }
         }
 
-        $name = str_replace(array('%n', '%t', '%d', '%h', '%z', '%s'), array($n, $t, $d, $h, $z, $s[2]), $name);
-        return $name;
+        return str_replace(array('%n', '%t', '%d', '%h', '%z', '%s'), array($n, $t, $d, $h, $z, $s[2]), $name);
     }
 
 
@@ -657,6 +675,29 @@ class rcube_utils
         return $address;
     }
 
+
+    /**
+     * Returns the real remote IP address
+     *
+     * @return string Remote IP address
+     */
+    public static function remote_addr()
+    {
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'], 2);
+            return $hosts[0];
+        }
+
+        if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
+            return $_SERVER['HTTP_X_REAL_IP'];
+        }
+
+        if (!empty($_SERVER['REMOTE_ADDR'])) {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+
+        return '';
+    }
 
     /**
      * Read a specific HTTP request header.
@@ -717,37 +758,12 @@ class rcube_utils
      */
     public static function strtotime($date)
     {
-        $date = trim($date);
-
-        // check for MS Outlook vCard date format YYYYMMDD
-        if (preg_match('/^([12][90]\d\d)([01]\d)([0123]\d)$/', $date, $m)) {
-            return mktime(0,0,0, intval($m[2]), intval($m[3]), intval($m[1]));
-        }
-
-        // common little-endian formats, e.g. dd/mm/yyyy (not all are supported by strtotime)
-        if (preg_match('/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/', $date, $m)
-            && $m[1] > 0 && $m[1] <= 31 && $m[2] > 0 && $m[2] <= 12 && $m[3] >= 1970
-        ) {
-            return mktime(0,0,0, intval($m[2]), intval($m[1]), intval($m[3]));
-        }
+        $date = self::clean_datestr($date);
 
         // unix timestamp
         if (is_numeric($date)) {
             return (int) $date;
         }
-
-        // Clean malformed data
-        $date = preg_replace(
-            array(
-                '/GMT\s*([+-][0-9]+)/',                   // support non-standard "GMTXXXX" literal
-                '/[^a-z0-9\x20\x09:+-]/i',                // remove any invalid characters
-                '/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s*/i', // remove weekday names
-            ),
-            array(
-                '\\1',
-                '',
-                '',
-            ), $date);
 
         // if date parsing fails, we have a date in non-rfc format.
         // remove token from the end and try again
@@ -763,6 +779,90 @@ class rcube_utils
         return (int) $ts;
     }
 
+    /**
+     * Date parsing function that turns the given value into a DateTime object
+     *
+     * @param string $date  Date string
+     *
+     * @return object DateTime instance or false on failure
+     */
+    public static function anytodatetime($date)
+    {
+        if (is_object($date) && is_a($date, 'DateTime')) {
+            return $date;
+        }
+
+        $dt   = false;
+        $date = self::clean_datestr($date);
+
+        // try to parse string with DateTime first
+        if (!empty($date)) {
+            try {
+                $dt = new DateTime($date);
+            }
+            catch (Exception $e) {
+                // ignore
+            }
+        }
+
+        // try our advanced strtotime() method
+        if (!$dt && ($timestamp = self::strtotime($date))) {
+            try {
+                $dt = new DateTime("@".$timestamp);
+            }
+            catch (Exception $e) {
+                // ignore
+            }
+        }
+
+        return $dt;
+    }
+
+    /**
+     * Clean up date string for strtotime() input
+     *
+     * @param string $date Date string
+     *
+     * @return string Date string
+     */
+    public static function clean_datestr($date)
+    {
+        $date = trim($date);
+
+        // check for MS Outlook vCard date format YYYYMMDD
+        if (preg_match('/^([12][90]\d\d)([01]\d)([0123]\d)$/', $date, $m)) {
+            return sprintf('%04d-%02d-%02d 00:00:00', intval($m[1]), intval($m[2]), intval($m[3]));
+        }
+
+        // Clean malformed data
+        $date = preg_replace(
+            array(
+                '/GMT\s*([+-][0-9]+)/',                     // support non-standard "GMTXXXX" literal
+                '/[^a-z0-9\x20\x09:+-\/]/i',                  // remove any invalid characters
+                '/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s*/i',   // remove weekday names
+            ),
+            array(
+                '\\1',
+                '',
+                '',
+            ), $date);
+
+        $date = trim($date);
+
+        // try to fix dd/mm vs. mm/dd discrepancy, we can't do more here
+        if (preg_match('/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/', $date, $m)) {
+            $mdy   = $m[2] > 12 && $m[1] <= 12;
+            $day   = $mdy ? $m[2] : $m[1];
+            $month = $mdy ? $m[1] : $m[2];
+            $date  = sprintf('%04d-%02d-%02d 00:00:00', intval($m[3]), $month, $day);
+        }
+        // I've found that YYYY.MM.DD is recognized wrong, so here's a fix
+        else if (preg_match('/^(\d{4})\.(\d{1,2})\.(\d{1,2})$/', $date)) {
+            $date = str_replace('.', '-', $date) . ' 00:00:00';
+        }
+
+        return $date;
+    }
 
     /*
      * Idn_to_ascii wrapper.
@@ -823,10 +923,20 @@ class rcube_utils
      *
      * @param string  Input string (UTF-8)
      * @param boolean True to return list of words as array
+     *
      * @return mixed  Normalized string or a list of normalized tokens
      */
     public static function normalize_string($str, $as_array = false)
     {
+        // replace 4-byte unicode characters with '?' character,
+        // these are not supported in default utf-8 charset on mysql,
+        // the chance we'd need them in searching is very low
+        $str = preg_replace('/('
+            . '\xF0[\x90-\xBF][\x80-\xBF]{2}'
+            . '|[\xF1-\xF3][\x80-\xBF]{3}'
+            . '|\xF4[\x80-\x8F][\x80-\xBF]{2}'
+            . ')/', '?', $str);
+
         // split by words
         $arr = self::tokenize_string($str);
 
@@ -935,4 +1045,16 @@ class rcube_utils
         return !in_array($str, array('false', '0', 'no', 'off', 'nein', ''), true);
     }
 
+    /**
+     * OS-dependent absolute path detection
+     */
+    public static function is_absolute_path($path)
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+            return (bool) preg_match('!^[a-z]:[\\\\/]!i', $path);
+        }
+        else {
+            return $path[0] == DIRECTORY_SEPARATOR;
+        }
+    }
 }

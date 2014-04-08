@@ -67,6 +67,14 @@
   background-position: -128px -32px;
 }
 
+#abooktoolbar a.exportAll {
+  background-position: -128px 0;
+}
+
+#abooktoolbar a.exportAllSel {
+  background-position: -128px -32px;
+}
+
 #abooktoolbar span.separator {
   width: 5px;
   background-position: -162px 0;
@@ -110,7 +118,7 @@
 
 #directorylistbox input
 {
-  margin: 0px;
+  margin: 0 0 0 20px;
   font-size: 11px;
   width: 90%;
 }
@@ -136,7 +144,8 @@
   width: 280px;
 }
 
-#directorylist
+#directorylist,
+#directorylist li ul
 {
   list-style: none;
   margin: 0;
@@ -144,11 +153,15 @@
   background-color: #FFFFFF;
 }
 
+#directorylist li ul
+{
+  border-top: 1px solid #EBEBEB;
+}
+
 #directorylist li
 {
   display: block;
   font-size: 11px;
-  background: url(images/icons/folders.png?v=87af.4822) 5px -108px no-repeat;
   border-bottom: 1px solid #EBEBEB;
   white-space: nowrap;
 }
@@ -160,31 +173,37 @@
   padding-left: 25px;
   padding-top: 2px;
   padding-bottom: 2px;
+  height: 16px;
   text-decoration: none;
   white-space: nowrap;
+  background: url(images/icons/folders.png?v=d9d2.5356) 5px -108px no-repeat;
 }
 
-#directorylist li.contactgroup
+#directorylist li ul li a
 {
-  padding-left: 15px;
-  background-position: 20px -143px;
+  padding-left: 45px;
 }
 
-#directorylist li.contactsearch
+#directorylist li ul li:last-child
+{
+  border-bottom: 0;
+}
+
+#directorylist li.contactgroup a
+{
+  background-position: 22px -143px;
+}
+
+#directorylist li.contactsearch a
 {
   background-position: 6px -162px;
 }
 
-#directorylist li.selected
-{
-  background-color: #929292;
-  border-bottom: 1px solid #898989;
-}
-
-#directorylist li.selected a
+#directorylist li.selected > a
 {
   color: #FFF;
   font-weight: bold;
+  background-color: #929292;
 }
 
 #directorylist li.droptarget
@@ -203,6 +222,55 @@
   cursor: default;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
+}
+
+/* This padding-left should be equal to the focused border-left + the focused padding-left */
+#contacts-table thead tr td:first-child,
+#contacts-table tbody tr td:first-child {
+	border-left: 0;
+	padding-left: 8px;
+}
+
+/* because of border-collapse, we make the left border twice what we want it to be - half will be hidden to the left */
+#contacts-table tbody tr.focused > td:first-child {
+	border-left: 2px solid #d4d4d4;
+	padding-left: 6px;
+}
+
+#contacts-table tbody tr.selected.focused > td:first-child {
+	border-left: 1px solid #ccc;
+	padding-left: 7px;
+}
+
+#contacts-table .contact.readonly td
+{
+  font-style: italic;
+}
+
+#contacts-table td.name
+{
+  width: 95%;
+}
+
+#contacts-table td.action
+{
+  width: 12px;
+  padding: 0px 6px 0 4px;
+  text-align: right;
+}
+
+#contacts-table td.action a
+{
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  text-decoration: none;
+  color: #333;
+}
+
+#contacts-table .selected td.action a
+{
+  color: #fff;
 }
 
 #contacts-box
@@ -307,7 +375,8 @@ body.iframe,
 }
 
 #contactpic img {
-	width: 60px;
+	max-width: 60px;
+	max-height: 80px;
 }
 
 #contactpic.droptarget.hover {

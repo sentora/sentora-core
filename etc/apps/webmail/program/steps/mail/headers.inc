@@ -19,8 +19,7 @@
  +-----------------------------------------------------------------------+
 */
 
-if ($uid = get_input_value('_uid', RCUBE_INPUT_POST))
-{
+if ($uid = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_POST)) {
     $source = $RCMAIL->storage->get_raw_headers($uid);
 
     if ($source !== false) {
@@ -48,5 +47,3 @@ if ($uid = get_input_value('_uid', RCUBE_INPUT_POST))
 }
 
 exit;
-
-

@@ -25,6 +25,7 @@ if (empty($_REQUEST['_folderlist']) && empty($_REQUEST['_list'])) {
     return;
 }
 
+$trash     = $RCMAIL->config->get('trash_mbox');
 $current   = $RCMAIL->storage->get_folder();
 $check_all = $RCMAIL->action != 'refresh' || (bool)$RCMAIL->config->get('check_all_folders');
 
@@ -52,12 +53,12 @@ foreach ($a_mailboxes as $mbox_name) {
     }
 
     // Get mailbox status
-    $status = $RCMAIL->storage->folder_status($mbox_name);
+    $status = $RCMAIL->storage->folder_status($mbox_name, $diff);
 
     if ($status & 1) {
         // trigger plugin hook
         $RCMAIL->plugins->exec_hook('new_messages',
-            array('mailbox' => $mbox_name, 'is_current' => $is_current));
+            array('mailbox' => $mbox_name, 'is_current' => $is_current, 'diff' => $diff));
     }
 
     rcmail_send_unread_count($mbox_name, true, null,
@@ -65,7 +66,7 @@ foreach ($a_mailboxes as $mbox_name) {
 
     if ($status && $is_current) {
         // refresh saved search set
-        $search_request = get_input_value('_search', RCUBE_INPUT_GPC);
+        $search_request = rcube_utils::get_input_value('_search', rcube_utils::INPUT_GPC);
         if ($search_request && isset($_SESSION['search'])
             && $_SESSION['search_request'] == $search_request
         ) {
@@ -73,7 +74,7 @@ foreach ($a_mailboxes as $mbox_name) {
         }
 
         if (!empty($_GET['_quota']))
-            $OUTPUT->command('set_quota', rcmail_quota_content());
+            $OUTPUT->command('set_quota', $RCMAIL->quota_content());
 
         $OUTPUT->set_env('exists', $RCMAIL->storage->count($mbox_name, 'EXISTS'));
 
@@ -81,9 +82,10 @@ foreach ($a_mailboxes as $mbox_name) {
         if (empty($_GET['_list']))
             continue;
 
-        // get overall message count; allow caching because rcube_storage::folder_status() did a refresh
+        // get overall message count; allow caching because rcube_storage::folder_status()
+        // did a refresh but only in list mode
         $list_mode = $RCMAIL->storage->get_threading() ? 'THREADS' : 'ALL';
-        $all_count = $RCMAIL->storage->count($mbox_name, $list_mode, false, false);
+        $all_count = $RCMAIL->storage->count($mbox_name, $list_mode, $list_mode == 'THREADS', false);
         $page      = $RCMAIL->storage->get_page();
         $page_size = $RCMAIL->storage->get_pagesize();
 
@@ -112,6 +114,29 @@ foreach ($a_mailboxes as $mbox_name) {
             // remove messages that don't exists from list selection array
             $OUTPUT->command('update_selection');
         }
+    }
+    // handle flag updates
+    else if ($is_current && ($uids = rcube_utils::get_input_value('_uids', rcube_utils::INPUT_GPC))) {
+        $data = $RCMAIL->storage->folder_data($mbox_name);
+
+        if (empty($_SESSION['list_mod_seq']) || $_SESSION['list_mod_seq'] != $data['HIGHESTMODSEQ']) {
+            $flags = $RCMAIL->storage->list_flags($mbox_name, explode(',', $uids), $_SESSION['list_mod_seq']);
+            foreach ($flags as $idx => $row) {
+                $flags[$idx] = array_change_key_case(array_map('intval', $row));
+            }
+
+            // remember last HIGHESTMODSEQ value (if supported)
+            if (!empty($data['HIGHESTMODSEQ'])) {
+                $_SESSION['list_mod_seq'] = $data['HIGHESTMODSEQ'];
+            }
+
+            $RCMAIL->output->set_env('recent_flags', $flags);
+        }
+    }
+
+    // set trash folder state
+    if ($mbox_name === $trash) {
+        $OUTPUT->command('set_trash_count', $RCMAIL->storage->count($mbox_name, 'EXISTS'));
     }
 }
 

@@ -7,7 +7,7 @@
  *
  * Configuration:
  * // redirect the client to this URL after logout. This page is then responsible to clear HTTP auth
- * $rcmail_config['logout_url'] = 'http://server.tld/logout.html';
+ * $config['logout_url'] = 'http://server.tld/logout.html';
  *
  * See logout.html (in this directory) for an example how HTTP auth can be cleared.
  *
@@ -29,7 +29,7 @@ class http_authentication extends rcube_plugin
 
     function startup($args)
     {
-        if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+        if (!empty($_SERVER['PHP_AUTH_USER'])) {
             $rcmail = rcmail::get_instance();
             $rcmail->add_shutdown_function(array('http_authentication', 'shutdown'));
 
@@ -38,7 +38,8 @@ class http_authentication extends rcube_plugin
                 $args['action'] = 'login';
             }
             // Set user password in session (see shutdown() method for more info)
-            else if (!empty($_SESSION['user_id']) && empty($_SESSION['password'])) {
+            else if (!empty($_SESSION['user_id']) && empty($_SESSION['password'])
+                     && !empty($_SERVER['PHP_AUTH_PW'])) {
                 $_SESSION['password'] = $rcmail->encrypt($_SERVER['PHP_AUTH_PW']);
             }
         }
@@ -52,8 +53,8 @@ class http_authentication extends rcube_plugin
         $this->load_config();
 
         $host = rcmail::get_instance()->config->get('http_authentication_host');
-        if (is_string($host) && trim($host) !== '')
-            $args['host'] = rcube_idn_to_ascii(rcube_parse_host($host));
+        if (is_string($host) && trim($host) !== '' && empty($args['host']))
+            $args['host'] = rcube_utils::idn_to_ascii(rcube_utils::parse_host($host));
 
         // Allow entering other user data in login form,
         // e.g. after log out (#1487953)
@@ -61,9 +62,10 @@ class http_authentication extends rcube_plugin
             return $args;
         }
 
-        if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+        if (!empty($_SERVER['PHP_AUTH_USER'])) {
             $args['user'] = $_SERVER['PHP_AUTH_USER'];
-            $args['pass'] = $_SERVER['PHP_AUTH_PW'];
+            if (!empty($_SERVER['PHP_AUTH_PW']))
+                $args['pass'] = $_SERVER['PHP_AUTH_PW'];
         }
 
         $args['cookiecheck'] = false;

@@ -3,7 +3,7 @@
 /*
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2012, The Roundcube Dev Team                       |
+ | Copyright (C) 2008-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -26,6 +26,8 @@ class rcube_config
 {
     const DEFAULT_SKIN = 'larry';
 
+    private $env = '';
+    private $paths = array();
     private $prop = array();
     private $errors = array();
     private $userprefs = array();
@@ -43,14 +45,46 @@ class rcube_config
         'reply_mode'           => 'top_posting',
         'refresh_interval'     => 'keep_alive',
         'min_refresh_interval' => 'min_keep_alive',
+        'messages_cache_ttl'   => 'message_cache_lifetime',
+        'redundant_attachments_cache_ttl' => 'redundant_attachments_memcache_ttl',
     );
 
 
     /**
      * Object constructor
+     *
+     * @param string Environment suffix for config files to load
      */
-    public function __construct()
+    public function __construct($env = '')
     {
+        $this->env = $env;
+
+        if ($paths = getenv('RCUBE_CONFIG_PATH')) {
+            $this->paths = explode(PATH_SEPARATOR, $paths);
+            // make all paths absolute
+            foreach ($this->paths as $i => $path) {
+                if (!rcube_utils::is_absolute_path($path)) {
+                    if ($realpath = realpath(RCUBE_INSTALL_PATH . $path)) {
+                        $this->paths[$i] = unslashify($realpath) . '/';
+                    }
+                    else {
+                        unset($this->paths[$i]);
+                    }
+                }
+                else {
+                    $this->paths[$i] = unslashify($path) . '/';
+                }
+            }
+        }
+
+        if (defined('RCUBE_CONFIG_DIR') && !in_array(RCUBE_CONFIG_DIR, $this->paths)) {
+            $this->paths[] = RCUBE_CONFIG_DIR;
+        }
+
+        if (empty($this->paths)) {
+            $this->paths[] = RCUBE_INSTALL_PATH . 'config/';
+        }
+
         $this->load();
 
         // Defaults, that we do not require you to configure,
@@ -67,13 +101,22 @@ class rcube_config
      */
     private function load()
     {
-        // load main config file
-        if (!$this->load_from_file(RCUBE_CONFIG_DIR . 'main.inc.php'))
-            $this->errors[] = 'main.inc.php was not found.';
+        // Load default settings
+        if (!$this->load_from_file('defaults.inc.php')) {
+            $this->errors[] = 'defaults.inc.php was not found.';
+        }
 
-        // load database config
-        if (!$this->load_from_file(RCUBE_CONFIG_DIR . 'db.inc.php'))
-            $this->errors[] = 'db.inc.php was not found.';
+        // load main config file
+        if (!$this->load_from_file('config.inc.php')) {
+            // Old configuration files
+            if (!$this->load_from_file('main.inc.php') ||
+                !$this->load_from_file('db.inc.php')) {
+                $this->errors[] = 'config.inc.php was not found.';
+            }
+            else if (rand(1,100) == 10) {  // log warning on every 100th request (average)
+                trigger_error("config.inc.php was not found. Please migrate your config by running bin/update.sh", E_USER_WARNING);
+            }
+        }
 
         // load host-specific configuration
         $this->load_host_config();
@@ -119,17 +162,6 @@ class rcube_config
         // enable display_errors in 'show' level, but not for ajax requests
         ini_set('display_errors', intval(empty($_REQUEST['_remote']) && ($this->prop['debug_level'] & 4)));
 
-        // set timezone auto settings values
-        if ($this->prop['timezone'] == 'auto') {
-          $this->prop['_timezone_value'] = $this->client_timezone();
-        }
-        else if (is_numeric($this->prop['timezone']) && ($tz = timezone_name_from_abbr("", $this->prop['timezone'] * 3600, 0))) {
-          $this->prop['timezone'] = $tz;
-        }
-        else if (empty($this->prop['timezone'])) {
-          $this->prop['timezone'] = 'UTC';
-        }
-
         // remove deprecated properties
         unset($this->prop['dst_active']);
 
@@ -143,45 +175,99 @@ class rcube_config
      */
     private function load_host_config()
     {
-        $fname = null;
-
-        if (is_array($this->prop['include_host_config'])) {
-            $fname = $this->prop['include_host_config'][$_SERVER['HTTP_HOST']];
-        }
-        else if (!empty($this->prop['include_host_config'])) {
-            $fname = preg_replace('/[^a-z0-9\.\-_]/i', '', $_SERVER['HTTP_HOST']) . '.inc.php';
+        if (empty($this->prop['include_host_config'])) {
+            return;
         }
 
-        if ($fname) {
-            $this->load_from_file(RCUBE_CONFIG_DIR . $fname);
+        foreach (array('HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR') as $key) {
+            $fname = null;
+            $name  = $_SERVER[$key];
+
+            if (!$name) {
+                continue;
+            }
+
+            if (is_array($this->prop['include_host_config'])) {
+                $fname = $this->prop['include_host_config'][$name];
+            }
+            else {
+                $fname = preg_replace('/[^a-z0-9\.\-_]/i', '', $name) . '.inc.php';
+            }
+
+            if ($fname && $this->load_from_file($fname)) {
+                return;
+            }
         }
     }
-
 
     /**
      * Read configuration from a file
      * and merge with the already stored config values
      *
-     * @param string $fpath Full path to the config file to be loaded
+     * @param string $file Name of the config file to be loaded
      * @return booelan True on success, false on failure
      */
-    public function load_from_file($fpath)
+    public function load_from_file($file)
     {
-        if (is_file($fpath) && is_readable($fpath)) {
-            // use output buffering, we don't need any output here 
-            ob_start();
-            include($fpath);
-            ob_end_clean();
+        $success = false;
 
-            if (is_array($rcmail_config)) {
-                $this->merge($rcmail_config);
-                return true;
+        foreach ($this->resolve_paths($file) as $fpath) {
+            if ($fpath && is_file($fpath) && is_readable($fpath)) {
+                // use output buffering, we don't need any output here 
+                ob_start();
+                include($fpath);
+                ob_end_clean();
+
+                if (is_array($config)) {
+                    $this->merge($config);
+                    $success = true;
+                }
+                // deprecated name of config variable
+                if (is_array($rcmail_config)) {
+                    $this->merge($rcmail_config);
+                    $success = true;
+                }
             }
         }
 
-        return false;
+        return $success;
     }
 
+    /**
+     * Helper method to resolve absolute paths to the given config file.
+     * This also takes the 'env' property into account.
+     *
+     * @param string  Filename or absolute file path
+     * @param boolean Return -$env file path if exists
+     * @return array  List of candidates in config dir path(s)
+     */
+    public function resolve_paths($file, $use_env = true)
+    {
+        $files    = array();
+        $abs_path = rcube_utils::is_absolute_path($file);
+
+        foreach ($this->paths as $basepath) {
+            $realpath = $abs_path ? $file : realpath($basepath . '/' . $file);
+
+            // check if <file>-env.ini exists
+            if ($realpath && $use_env && !empty($this->env)) {
+                $envfile = preg_replace('/\.(inc.php)$/', '-' . $this->env . '.\\1', $realpath);
+                if (is_file($envfile))
+                    $realpath = $envfile;
+            }
+
+            if ($realpath) {
+                $files[] = $realpath;
+
+                // no need to continue the loop if an absolute file path is given
+                if ($abs_path) {
+                    break;
+                }
+            }
+        }
+
+        return $files;
+    }
 
     /**
      * Getter for a specific config parameter
@@ -201,8 +287,10 @@ class rcube_config
 
         $rcube = rcube::get_instance();
 
-        if ($name == 'timezone' && isset($this->prop['_timezone_value'])) {
-            $result = $this->prop['_timezone_value'];
+        if ($name == 'timezone') {
+            if (empty($result) || $result == 'auto') {
+                $result = $this->client_timezone();
+            }
         }
         else if ($name == 'client_mimetypes') {
             if ($result == null && $def == null)
@@ -260,11 +348,6 @@ class rcube_config
             }
         }
 
-        // convert user's timezone into the new format
-        if (is_numeric($prefs['timezone']) && ($tz = timezone_name_from_abbr('', $prefs['timezone'] * 3600, 0))) {
-            $prefs['timezone'] = $tz;
-        }
-
         // larry is the new default skin :-)
         if ($prefs['skin'] == 'default') {
             $prefs['skin'] = self::DEFAULT_SKIN;
@@ -272,13 +355,6 @@ class rcube_config
 
         $this->userprefs = $prefs;
         $this->prop      = array_merge($this->prop, $prefs);
-
-        // override timezone settings with client values
-        if ($this->prop['timezone'] == 'auto') {
-            $this->prop['_timezone_value'] = isset($_SESSION['timezone']) ? $this->client_timezone() : $this->prop['_timezone_value'];
-        }
-        else if (isset($this->prop['_timezone_value']))
-           unset($this->prop['_timezone_value']);
     }
 
 
@@ -289,7 +365,11 @@ class rcube_config
      */
     public function all()
     {
-        return $this->prop;
+        $rcube  = rcube::get_instance();
+        $plugin = $rcube->plugins->exec_hook('config_get', array(
+            'name' => '*', 'result' => $this->prop));
+
+        return $plugin['result'];
     }
 
     /**
@@ -419,13 +499,12 @@ class rcube_config
      */
     private function client_timezone()
     {
-        if (isset($_SESSION['timezone']) && is_numeric($_SESSION['timezone'])
-              && ($ctz = timezone_name_from_abbr("", $_SESSION['timezone'] * 3600, 0))) {
-            return $ctz;
-        }
-        else if (!empty($_SESSION['timezone'])) {
+        // @TODO: remove this legacy timezone handling in the future
+        $props = $this->fix_legacy_props(array('timezone' => $_SESSION['timezone']));
+
+        if (!empty($props['timezone'])) {
             try {
-                $tz = timezone_open($_SESSION['timezone']);
+                $tz = new DateTimeZone($props['timezone']);
                 return $tz->getName();
             }
             catch (Exception $e) { /* gracefully ignore */ }
@@ -453,6 +532,77 @@ class rcube_config
             }
         }
 
+        // convert deprecated numeric timezone value
+        if (isset($props['timezone']) && is_numeric($props['timezone'])) {
+            if ($tz = self::timezone_name_from_abbr($props['timezone'])) {
+                $props['timezone'] = $tz;
+            }
+            else {
+                unset($props['timezone']);
+            }
+        }
+
         return $props;
+    }
+
+    /**
+     * timezone_name_from_abbr() replacement. Converts timezone offset
+     * into timezone name abbreviation.
+     *
+     * @param float $offset Timezone offset (in hours)
+     *
+     * @return string Timezone abbreviation
+     */
+    static public function timezone_name_from_abbr($offset)
+    {
+        // List of timezones here is not complete - https://bugs.php.net/bug.php?id=44780
+        if ($tz = timezone_name_from_abbr('', $offset * 3600, 0)) {
+            return $tz;
+        }
+
+        // try with more complete list (#1489261)
+        $timezones = array(
+            '-660' => "Pacific/Apia",
+            '-600' => "Pacific/Honolulu",
+            '-570' => "Pacific/Marquesas",
+            '-540' => "America/Anchorage",
+            '-480' => "America/Los_Angeles",
+            '-420' => "America/Denver",
+            '-360' => "America/Chicago",
+            '-300' => "America/New_York",
+            '-270' => "America/Caracas",
+            '-240' => "America/Halifax",
+            '-210' => "Canada/Newfoundland",
+            '-180' => "America/Sao_Paulo",
+             '-60' => "Atlantic/Azores",
+               '0' => "Europe/London",
+              '60' => "Europe/Paris",
+             '120' => "Europe/Helsinki",
+             '180' => "Europe/Moscow",
+             '210' => "Asia/Tehran",
+             '240' => "Asia/Dubai",
+             '300' => "Asia/Karachi",
+             '270' => "Asia/Kabul",
+             '300' => "Asia/Karachi",
+             '330' => "Asia/Kolkata",
+             '345' => "Asia/Katmandu",
+             '360' => "Asia/Yekaterinburg",
+             '390' => "Asia/Rangoon",
+             '420' => "Asia/Krasnoyarsk",
+             '480' => "Asia/Shanghai",
+             '525' => "Australia/Eucla",
+             '540' => "Asia/Tokyo",
+             '570' => "Australia/Adelaide",
+             '600' => "Australia/Melbourne",
+             '630' => "Australia/Lord_Howe",
+             '660' => "Asia/Vladivostok",
+             '690' => "Pacific/Norfolk",
+             '720' => "Pacific/Auckland",
+             '765' => "Pacific/Chatham",
+             '780' => "Pacific/Enderbury",
+             '840' => "Pacific/Kiritimati",
+        );
+
+        return $timezones[(string) intval($offset * 60)];
     }
 }

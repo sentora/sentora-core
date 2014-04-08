@@ -6,18 +6,18 @@
  * Copyright (C) 2008-2011, The Roundcube Dev Team
  * Copyright (C) 2011, Kolab Systems AG
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
 class rcube_sieve_script
@@ -27,23 +27,26 @@ class rcube_sieve_script
     private $vars = array();        // "global" variables
     private $prefix = '';           // script header (comments)
     private $supported = array(     // Sieve extensions supported by class
-        'fileinto',                 // RFC5228
-        'envelope',                 // RFC5228
-        'reject',                   // RFC5429
-        'ereject',                  // RFC5429
+        'body',                     // RFC5173
         'copy',                     // RFC3894
-        'vacation',                 // RFC5230
-        'relational',               // RFC3431
-        'regex',                    // draft-ietf-sieve-regex-01
+        'date',                     // RFC5260
+        'enotify',                  // RFC5435
+        'envelope',                 // RFC5228
+        'ereject',                  // RFC5429
+        'fileinto',                 // RFC5228
         'imapflags',                // draft-melnikov-sieve-imapflags-06
         'imap4flags',               // RFC5232
         'include',                  // draft-ietf-sieve-include-12
-        'variables',                // RFC5229
-        'body',                     // RFC5173
-        'subaddress',               // RFC5233
-        'enotify',                  // RFC5435
+        'index',                    // RFC5260
         'notify',                   // draft-ietf-sieve-notify-00
-        // @TODO: spamtest+virustest, mailbox, date
+        'regex',                    // draft-ietf-sieve-regex-01
+        'reject',                   // RFC5429
+        'relational',               // RFC3431
+        'subaddress',               // RFC5233
+        'vacation',                 // RFC5230
+        'vacation-seconds',         // RFC6131
+        'variables',                // RFC5229
+        // @TODO: spamtest+virustest, mailbox
     );
 
     /**
@@ -205,7 +208,6 @@ class rcube_sieve_script
 
         // rules
         foreach ($this->content as $rule) {
-            $extension = '';
             $script    = '';
             $tests     = array();
             $i         = 0;
@@ -238,24 +240,8 @@ class rcube_sieve_script
                         $tests[$i] .= ($test['not'] ? 'not ' : '');
                         $tests[$i] .= 'header';
 
-                        if (!empty($test['type'])) {
-                            // relational operator + comparator
-                            if (preg_match('/^(value|count)-([gteqnl]{2})/', $test['type'], $m)) {
-                                array_push($exts, 'relational');
-                                array_push($exts, 'comparator-i;ascii-numeric');
-
-                                $tests[$i] .= ' :' . $m[1] . ' "' . $m[2] . '" :comparator "i;ascii-numeric"';
-                            }
-                            else {
-                                $this->add_comparator($test, $tests[$i], $exts);
-
-                                if ($test['type'] == 'regex') {
-                                    array_push($exts, 'regex');
-                                }
-
-                                $tests[$i] .= ' :' . $test['type'];
-                            }
-                        }
+                        $this->add_index($test, $tests[$i], $exts);
+                        $this->add_operator($test, $tests[$i], $exts);
 
                         $tests[$i] .= ' ' . self::escape_string($test['arg1']);
                         $tests[$i] .= ' ' . self::escape_string($test['arg2']);
@@ -270,21 +256,19 @@ class rcube_sieve_script
                         $tests[$i] .= ($test['not'] ? 'not ' : '');
                         $tests[$i] .= $test['test'];
 
-                        if (!empty($test['part'])) {
+                        if ($test['test'] != 'envelope') {
+                            $this->add_index($test, $tests[$i], $exts);
+                        }
+
+                        // :all address-part is optional, skip it
+                        if (!empty($test['part']) && $test['part'] != 'all') {
                             $tests[$i] .= ' :' . $test['part'];
                             if ($test['part'] == 'user' || $test['part'] == 'detail') {
                                 array_push($exts, 'subaddress');
                             }
                         }
 
-                        $this->add_comparator($test, $tests[$i], $exts);
-
-                        if (!empty($test['type'])) {
-                            if ($test['type'] == 'regex') {
-                                array_push($exts, 'regex');
-                            }
-                            $tests[$i] .= ' :' . $test['type'];
-                        }
+                        $this->add_operator($test, $tests[$i], $exts);
 
                         $tests[$i] .= ' ' . self::escape_string($test['arg1']);
                         $tests[$i] .= ' ' . self::escape_string($test['arg2']);
@@ -295,8 +279,6 @@ class rcube_sieve_script
 
                         $tests[$i] .= ($test['not'] ? 'not ' : '') . 'body';
 
-                        $this->add_comparator($test, $tests[$i], $exts);
-
                         if (!empty($test['part'])) {
                             $tests[$i] .= ' :' . $test['part'];
 
@@ -305,14 +287,35 @@ class rcube_sieve_script
                             }
                         }
 
-                        if (!empty($test['type'])) {
-                            if ($test['type'] == 'regex') {
-                                array_push($exts, 'regex');
-                            }
-                            $tests[$i] .= ' :' . $test['type'];
-                        }
+                        $this->add_operator($test, $tests[$i], $exts);
 
                         $tests[$i] .= ' ' . self::escape_string($test['arg']);
+                        break;
+
+                    case 'date':
+                    case 'currentdate':
+                        array_push($exts, 'date');
+
+                        $tests[$i] .= ($test['not'] ? 'not ' : '') . $test['test'];
+
+                        $this->add_index($test, $tests[$i], $exts);
+
+                        if (!empty($test['originalzone']) && $test['test'] == 'date') {
+                            $tests[$i] .= ' :originalzone';
+                        }
+                        else if (!empty($test['zone'])) {
+                            $tests[$i] .= ' :zone ' . self::escape_string($test['zone']);
+                        }
+
+                        $this->add_operator($test, $tests[$i], $exts);
+
+                        if ($test['test'] == 'date') {
+                            $tests[$i] .= ' ' . self::escape_string($test['header']);
+                        }
+
+                        $tests[$i] .= ' ' . self::escape_string($test['part']);
+                        $tests[$i] .= ' ' . self::escape_string($test['arg']);
+
                         break;
                     }
                     $i++;
@@ -447,8 +450,13 @@ class rcube_sieve_script
                     case 'vacation':
                         array_push($exts, 'vacation');
                         $action_script .= 'vacation';
-                        if (!empty($action['days']))
-                            $action_script .= " :days " . $action['days'];
+                        if (isset($action['seconds'])) {
+                            array_push($exts, 'vacation-seconds');
+                            $action_script .= " :seconds " . intval($action['seconds']);
+                        }
+                        else if (!empty($action['days'])) {
+                            $action_script .= " :days " . intval($action['days']);
+                        }
                         if (!empty($action['addresses']))
                             $action_script .= " :addresses " . self::escape_string($action['addresses']);
                         if (!empty($action['subject']))
@@ -477,8 +485,17 @@ class rcube_sieve_script
         }
 
         // requires
-        if (!empty($exts))
-            $output = 'require ["' . implode('","', array_unique($exts)) . "\"];\n" . $output;
+        if (!empty($exts)) {
+            $exts = array_unique($exts);
+
+            if (in_array('vacation-seconds', $exts) && ($key = array_search('vacation', $exts)) !== false) {
+                unset($exts[$key]);
+            }
+
+            sort($exts); // for convenience use always the same order
+
+            $output = 'require ["' . implode('","', $exts) . "\"];\n" . $output;
+        }
 
         if (!empty($this->prefix)) {
             $output = $this->prefix . "\n\n" . $output;
@@ -568,6 +585,7 @@ class rcube_sieve_script
                     if ($rule[0]['type'] == 'set') {
                         unset($rule[0]['type']);
                         $this->vars[] = $rule[0];
+                        unset($rule);
                     }
                     else {
                         $rule = array('actions' => $rule);
@@ -640,86 +658,85 @@ class rcube_sieve_script
                 break;
 
             case 'size':
-                $size = array('test' => 'size', 'not'  => $not);
+                $test = array('test' => 'size', 'not'  => $not);
+
+                $test['arg'] = array_pop($tokens);
+
                 for ($i=0, $len=count($tokens); $i<$len; $i++) {
                     if (!is_array($tokens[$i])
                         && preg_match('/^:(under|over)$/i', $tokens[$i])
                     ) {
-                        $size['type'] = strtolower(substr($tokens[$i], 1));
-                    }
-                    else {
-                        $size['arg'] = $tokens[$i];
+                        $test['type'] = strtolower(substr($tokens[$i], 1));
                     }
                 }
 
-                $tests[] = $size;
+                $tests[] = $test;
                 break;
 
             case 'header':
-                $header = array('test' => 'header', 'not' => $not, 'arg1' => '', 'arg2' => '');
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    if (!is_array($tokens[$i]) && preg_match('/^:comparator$/i', $tokens[$i])) {
-                        $header['comparator'] = $tokens[++$i];
-                    }
-                    else if (!is_array($tokens[$i]) && preg_match('/^:(count|value)$/i', $tokens[$i])) {
-                        $header['type'] = strtolower(substr($tokens[$i], 1)) . '-' . $tokens[++$i];
-                    }
-                    else if (!is_array($tokens[$i]) && preg_match('/^:(is|contains|matches|regex)$/i', $tokens[$i])) {
-                        $header['type'] = strtolower(substr($tokens[$i], 1));
-                    }
-                    else {
-                        $header['arg1'] = $header['arg2'];
-                        $header['arg2'] = $tokens[$i];
-                    }
-                }
-
-                $tests[] = $header;
-                break;
-
             case 'address':
             case 'envelope':
-                $header = array('test' => $token, 'not' => $not, 'arg1' => '', 'arg2' => '');
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    if (!is_array($tokens[$i]) && preg_match('/^:comparator$/i', $tokens[$i])) {
-                        $header['comparator'] = $tokens[++$i];
-                    }
-                    else if (!is_array($tokens[$i]) && preg_match('/^:(is|contains|matches|regex)$/i', $tokens[$i])) {
-                        $header['type'] = strtolower(substr($tokens[$i], 1));
-                    }
-                    else if (!is_array($tokens[$i]) && preg_match('/^:(localpart|domain|all|user|detail)$/i', $tokens[$i])) {
-                        $header['part'] = strtolower(substr($tokens[$i], 1));
-                    }
-                    else {
-                        $header['arg1'] = $header['arg2'];
-                        $header['arg2'] = $tokens[$i];
+                $test = array('test' => $token, 'not' => $not);
+
+                $test['arg2'] = array_pop($tokens);
+                $test['arg1'] = array_pop($tokens);
+
+                $test += $this->test_tokens($tokens);
+
+                if ($token != 'header' && !empty($tokens)) {
+                    for ($i=0, $len=count($tokens); $i<$len; $i++) {
+                        if (!is_array($tokens[$i]) && preg_match('/^:(localpart|domain|all|user|detail)$/i', $tokens[$i])) {
+                            $test['part'] = strtolower(substr($tokens[$i], 1));
+                        }
                     }
                 }
 
-                $tests[] = $header;
+                $tests[] = $test;
                 break;
 
             case 'body':
-                $header = array('test' => 'body', 'not' => $not, 'arg' => '');
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    if (!is_array($tokens[$i]) && preg_match('/^:comparator$/i', $tokens[$i])) {
-                        $header['comparator'] = $tokens[++$i];
-                    }
-                    else if (!is_array($tokens[$i]) && preg_match('/^:(is|contains|matches|regex)$/i', $tokens[$i])) {
-                        $header['type'] = strtolower(substr($tokens[$i], 1));
-                    }
-                    else if (!is_array($tokens[$i]) && preg_match('/^:(raw|content|text)$/i', $tokens[$i])) {
-                        $header['part'] = strtolower(substr($tokens[$i], 1));
+                $test = array('test' => 'body', 'not' => $not);
 
-                        if ($header['part'] == 'content') {
-                            $header['content'] = $tokens[++$i];
+                $test['arg'] = array_pop($tokens);
+
+                $test += $this->test_tokens($tokens);
+
+                for ($i=0, $len=count($tokens); $i<$len; $i++) {
+                    if (!is_array($tokens[$i]) && preg_match('/^:(raw|content|text)$/i', $tokens[$i])) {
+                        $test['part'] = strtolower(substr($tokens[$i], 1));
+
+                        if ($test['part'] == 'content') {
+                            $test['content'] = $tokens[++$i];
                         }
-                    }
-                    else {
-                        $header['arg'] = $tokens[$i];
                     }
                 }
 
-                $tests[] = $header;
+                $tests[] = $test;
+                break;
+
+            case 'date':
+            case 'currentdate':
+                $test = array('test' => $token, 'not' => $not);
+
+                $test['arg']  = array_pop($tokens);
+                $test['part'] = array_pop($tokens);
+
+                if ($token == 'date') {
+                    $test['header']  = array_pop($tokens);
+                }
+
+                $test += $this->test_tokens($tokens);
+
+                for ($i=0, $len=count($tokens); $i<$len; $i++) {
+                    if (!is_array($tokens[$i]) && preg_match('/^:zone$/i', $tokens[$i])) {
+                        $test['zone'] = $tokens[++$i];
+                    }
+                    else if (!is_array($tokens[$i]) && preg_match('/^:originalzone$/i', $tokens[$i])) {
+                        $test['originalzone'] = true;
+                    }
+                }
+
+                $tests[] = $test;
                 break;
 
             case 'exists':
@@ -771,15 +788,9 @@ class rcube_sieve_script
         $result = null;
 
         while (strlen($content)) {
-            $tokens = self::tokenize($content, true);
+            $tokens    = self::tokenize($content, true);
             $separator = array_pop($tokens);
-
-            if (!empty($tokens)) {
-                $token = array_shift($tokens);
-            }
-            else {
-                $token = $separator;
-            }
+            $token     = !empty($tokens) ? array_shift($tokens) : $separator;
 
             switch ($token) {
             case 'discard':
@@ -790,125 +801,78 @@ class rcube_sieve_script
 
             case 'fileinto':
             case 'redirect':
-                $copy   = false;
-                $target = '';
+                $action  = array('type' => $token, 'target' => array_pop($tokens));
+                $args    = array('copy');
+                $action += $this->action_arguments($tokens, $args);
 
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    if (strtolower($tokens[$i]) == ':copy') {
-                        $copy = true;
-                    }
-                    else {
-                        $target = $tokens[$i];
-                    }
-                }
+                $result[] = $action;
+                break;
 
-                $result[] = array('type' => $token, 'copy' => $copy,
-                    'target' => $target);
+            case 'vacation':
+                $action  = array('type' => 'vacation', 'reason' => array_pop($tokens));
+                $args    = array('mime');
+                $vargs   = array('seconds', 'days', 'addresses', 'subject', 'handle', 'from');
+                $action += $this->action_arguments($tokens, $args, $vargs);
+
+                $result[] = $action;
                 break;
 
             case 'reject':
             case 'ereject':
-                $result[] = array('type' => $token, 'target' => array_pop($tokens));
-                break;
-
-            case 'vacation':
-                $vacation = array('type' => 'vacation', 'reason' => array_pop($tokens));
-
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    $tok = strtolower($tokens[$i]);
-                    if ($tok == ':days') {
-                        $vacation['days'] = $tokens[++$i];
-                    }
-                    else if ($tok == ':subject') {
-                        $vacation['subject'] = $tokens[++$i];
-                    }
-                    else if ($tok == ':addresses') {
-                        $vacation['addresses'] = $tokens[++$i];
-                    }
-                    else if ($tok == ':handle') {
-                        $vacation['handle'] = $tokens[++$i];
-                    }
-                    else if ($tok == ':from') {
-                        $vacation['from'] = $tokens[++$i];
-                    }
-                    else if ($tok == ':mime') {
-                        $vacation['mime'] = true;
-                    }
-                }
-
-                $result[] = $vacation;
-                break;
-
             case 'setflag':
             case 'addflag':
             case 'removeflag':
-                $result[] = array('type' => $token,
-                    // Flags list: last token (skip optional variable)
-                    'target' => $tokens[count($tokens)-1]
-                );
+                $result[] = array('type' => $token, 'target' => array_pop($tokens));
                 break;
 
             case 'include':
-                $include = array('type' => 'include', 'target' => array_pop($tokens));
+                $action  = array('type' => 'include', 'target' => array_pop($tokens));
+                $args    = array('once', 'optional', 'global', 'personal');
+                $action += $this->action_arguments($tokens, $args);
 
-                // Parameters: :once, :optional, :global, :personal
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    $tok = strtolower($tokens[$i]);
-                    if ($tok[0] == ':') {
-                        $include[substr($tok, 1)] = true;
-                    }
-                }
-
-                $result[] = $include;
+                $result[] = $action;
                 break;
 
             case 'set':
-                $set = array('type' => 'set', 'value' => array_pop($tokens), 'name' => array_pop($tokens));
+                $action  = array('type' => 'set', 'value' => array_pop($tokens), 'name' => array_pop($tokens));
+                $args    = array('lower', 'upper', 'lowerfirst', 'upperfirst', 'quotewildcard', 'length');
+                $action += $this->action_arguments($tokens, $args);
 
-                // Parameters: :lower :upper :lowerfirst :upperfirst :quotewildcard :length
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    $tok = strtolower($tokens[$i]);
-                    if ($tok[0] == ':') {
-                        $set[substr($tok, 1)] = true;
-                    }
-                }
-
-                $result[] = $set;
+                $result[] = $action;
                 break;
 
             case 'require':
                 // skip, will be build according to used commands
-                // $result[] = array('type' => 'require', 'target' => $tokens);
+                // $result[] = array('type' => 'require', 'target' => array_pop($tokens));
                 break;
 
             case 'notify':
-                $notify = array('type' => 'notify');
-                $priorities = array(':high' => 1, ':normal' => 2, ':low' => 3);
+                $action     = array('type' => 'notify');
+                $priorities = array('high' => 1, 'normal' => 2, 'low' => 3);
+                $vargs      = array('from', 'importance', 'options', 'message', 'method');
+                $args       = array_keys($priorities);
+                $action    += $this->action_arguments($tokens, $args, $vargs);
 
-                // Parameters: :from, :importance, :options, :message
-                //     additional (optional) :method parameter for notify extension
-                for ($i=0, $len=count($tokens); $i<$len; $i++) {
-                    $tok = strtolower($tokens[$i]);
-                    if ($tok[0] == ':') {
-                        // Here we support only 00 version of notify draft, there
-                        // were a couple regressions in 00 to 04 changelog, we use
-                        // the version used by Cyrus
-                        if (isset($priorities[$tok])) {
-                            $notify['importance'] = $priorities[$tok];
+                // Here we support only 00 version of notify draft, there
+                // were a couple regressions in 00 to 04 changelog, we use
+                // the version used by Cyrus
+                if (!isset($action['importance'])) {
+                    foreach ($priorities as $key => $val) {
+                        if (isset($action[$key])) {
+                            $action['importance'] = $val;
+                            unset($action[$key]);
                         }
-                        else {
-                            $notify[substr($tok, 1)] = $tokens[++$i];
-                        }
-                    }
-                    else {
-                        // unnamed parameter is a :method in enotify extension
-                        $notify['method'] = $tokens[$i];
                     }
                 }
 
-                $method_components = parse_url($notify['method']);
+                // unnamed parameter is a :method in enotify extension
+                if (!isset($action['method'])) {
+                    $action['method'] = array_pop($tokens);
+                }
+
+                $method_components = parse_url($action['method']);
                 if ($method_components['scheme'] == 'mailto') {
-                    $notify['address'] = $method_components['path'];
+                    $action['address'] = $method_components['path'];
                     $method_params = array();
                     if (array_key_exists('query', $method_components)) {
                         parse_str($method_components['query'], $method_params);
@@ -918,10 +882,10 @@ class rcube_sieve_script
                     if (ini_get('magic_quotes_gpc') || ini_get('magic_quotes_sybase')) {
                         array_map('stripslashes', $method_params);
                     }
-                    $notify['body'] = (array_key_exists('body', $method_params)) ? $method_params['body'] : '';
+                    $action['body'] = (array_key_exists('body', $method_params)) ? $method_params['body'] : '';
                 }
 
-                $result[] = $notify;
+                $result[] = $action;
                 break;
 
             }
@@ -934,7 +898,7 @@ class rcube_sieve_script
     }
 
     /**
-     *
+     * Add comparator to the test
      */
     private function add_comparator($test, &$out, &$exts)
     {
@@ -954,6 +918,110 @@ class rcube_sieve_script
         if ($test['comparator'] != 'i;ascii-casemap') {
             $out .= ' :comparator ' . self::escape_string($test['comparator']);
         }
+    }
+
+    /**
+     * Add index argument to the test
+     */
+    private function add_index($test, &$out, &$exts)
+    {
+        if (!empty($test['index'])) {
+            array_push($exts, 'index');
+            $out .= ' :index ' . intval($test['index']) . ($test['last'] ? ' :last' : '');
+        }
+    }
+
+    /**
+     * Add operators to the test
+     */
+    private function add_operator($test, &$out, &$exts)
+    {
+        if (empty($test['type'])) {
+            return;
+        }
+
+        // relational operator
+        if (preg_match('/^(value|count)-([gteqnl]{2})/', $test['type'], $m)) {
+            array_push($exts, 'relational');
+
+            $out .= ' :' . $m[1] . ' "' . $m[2] . '"';
+        }
+        else {
+            if ($test['type'] == 'regex') {
+                array_push($exts, 'regex');
+            }
+
+            $out .= ' :' . $test['type'];
+        }
+
+        $this->add_comparator($test, $out, $exts);
+    }
+
+    /**
+     * Extract test tokens
+     */
+    private function test_tokens(&$tokens)
+    {
+        $test   = array();
+        $result = array();
+
+        for ($i=0, $len=count($tokens); $i<$len; $i++) {
+            if (!is_array($tokens[$i]) && preg_match('/^:comparator$/i', $tokens[$i])) {
+                $test['comparator'] = $tokens[++$i];
+            }
+            else if (!is_array($tokens[$i]) && preg_match('/^:(count|value)$/i', $tokens[$i])) {
+                $test['type'] = strtolower(substr($tokens[$i], 1)) . '-' . $tokens[++$i];
+            }
+            else if (!is_array($tokens[$i]) && preg_match('/^:(is|contains|matches|regex)$/i', $tokens[$i])) {
+                $test['type'] = strtolower(substr($tokens[$i], 1));
+            }
+            else if (!is_array($tokens[$i]) && preg_match('/^:index$/i', $tokens[$i])) {
+                $test['index'] = intval($tokens[++$i]);
+                if ($tokens[$i+1] && preg_match('/^:last$/i', $tokens[$i+1])) {
+                    $test['last'] = true;
+                    $i++;
+                }
+           }
+           else {
+               $result[] = $tokens[$i];
+           }
+        }
+
+        $tokens = $result;
+
+        return $test;
+    }
+
+    /**
+     * Extract action arguments
+     */
+    private function action_arguments(&$tokens, $bool_args, $val_args = array())
+    {
+        $action = array();
+        $result = array();
+
+        for ($i=0, $len=count($tokens); $i<$len; $i++) {
+            $tok = $tokens[$i];
+            if (!is_array($tok) && $tok[0] == ':') {
+                $tok = strtolower(substr($tok, 1));
+                if (in_array($tok, $bool_args)) {
+                    $action[$tok] = true;
+                }
+                else if (in_array($tok, $val_args)) {
+                    $action[$tok] = $tokens[++$i];
+                }
+                else {
+                    $result[] = $tok;
+                }
+            }
+            else {
+                $result[] = $tok;
+            }
+        }
+
+        $tokens = $result;
+
+        return $action;
     }
 
     /**
@@ -1014,11 +1082,10 @@ class rcube_sieve_script
      * @param mixed  $num     Number of tokens to return, 0 for all
      *                        or True for all tokens until separator is found.
      *                        Separator will be returned as last token.
-     * @param int    $in_list Enable to call recursively inside a list
      *
      * @return mixed Tokens array or string if $num=1
      */
-    static function tokenize(&$str, $num=0, $in_list=false)
+    static function tokenize(&$str, $num=0)
     {
         $result = array();
 
@@ -1053,7 +1120,7 @@ class rcube_sieve_script
             // Parenthesized list
             case '[':
                 $str = substr($str, 1);
-                $result[] = self::tokenize($str, 0, true);
+                $result[] = self::tokenize($str, 0);
                 break;
             case ']':
                 $str = substr($str, 1);

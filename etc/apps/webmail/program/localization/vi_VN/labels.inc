@@ -15,36 +15,27 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/labels/
 */
-
-$labels = array();
-
-// login page
-$labels['welcome']   = 'Chào bạn đã đến với $product';
+$labels['welcome']   = 'Chào mừng bạn đã sử dụng $product';
 $labels['username']  = 'Tên đăng nhập';
 $labels['password']  = 'Mật khẩu';
 $labels['server']    = 'Máy chủ';
 $labels['login']     = 'Đăng nhập';
-
-// taskbar
 $labels['logout']   = 'Thoát';
 $labels['mail']     = 'Thư';
-$labels['settings'] = 'Tùy chọn';
+$labels['settings'] = 'Thiết lập cấu hình';
 $labels['addressbook'] = 'Sổ địa chỉ';
-
-// mailbox names
 $labels['inbox']  = 'Hộp thư';
 $labels['drafts'] = 'Thư nháp';
 $labels['sent']   = 'Đã gửi';
-$labels['trash']  = 'Sọt rác';
+$labels['trash']  = 'Thùng rác';
 $labels['junk']   = 'Thư rác';
-
-// message listing
+$labels['show_real_foldernames'] = 'Hiển thị tên thật cho các thư mục đặc biệt';
 $labels['subject'] = 'Tiêu đề';
-$labels['from']    = 'Người gửi';
+$labels['from']    = 'Gửi từ';
 $labels['sender']  = 'Người gửi';
 $labels['to']      = 'Người nhận';
 $labels['cc']      = 'Đồng kính gửi';
-$labels['bcc']     = 'Người đồng nhận (ngừoi nhận không thấy email của người khác cùng được nhận thư)';
+$labels['bcc']     = 'Người đồng nhận (người nhận không thấy email của người khác cùng được nhận thư)';
 $labels['replyto'] = 'Trả lời cho';
 $labels['followupto'] = 'Đánh dấu thư cần theo dõi';
 $labels['date']    = 'Ngày';
@@ -53,27 +44,22 @@ $labels['priority'] = 'Độ ưu tiên';
 $labels['organization'] = 'Tổ chức';
 $labels['readstatus'] = 'Trạng thái của thư';
 $labels['listoptions'] = 'Danh sách lựa chọn';
-
 $labels['mailboxlist'] = 'Các thư mục';
 $labels['messagesfromto'] = 'Thư từ $from đến $to trong tổng số $count';
 $labels['threadsfromto'] = 'Dòng thư từ $from đến $to của tổng số $count';
 $labels['messagenrof'] = 'Thư thứ $nr trong tổng số $count';
 $labels['fromtoshort'] = '$from - $to của $count';
-
 $labels['copy']     = 'Sao chép';
 $labels['move']     = 'Di Chuyển';
 $labels['moveto']   = 'Di chuyển tới...';
+$labels['copyto']   = 'Sao dữ liệu đến...';
 $labels['download'] = 'Tải về';
-$labels['open']     = 'Open';
+$labels['open']     = 'Mở';
 $labels['showattachment'] = 'Hiển thị';
 $labels['showanyway'] = 'Tiếp tục hiển thị';
-
 $labels['filename'] = 'Tên tập tin';
 $labels['filesize'] = 'Kích cỡ tập tin';
-
 $labels['addtoaddressbook'] = 'Thêm vào danh bạ';
-
-// weekdays short
 $labels['sun'] = 'Chủ Nhật';
 $labels['mon'] = 'Thứ Hai';
 $labels['tue'] = 'Thứ Ba';
@@ -81,8 +67,6 @@ $labels['wed'] = 'Thứ Tư';
 $labels['thu'] = 'Thứ Năm';
 $labels['fri'] = 'Thứ Sáu';
 $labels['sat'] = 'Thứ Bảy';
-
-// weekdays long
 $labels['sunday']    = 'Chủ Nhật';
 $labels['monday']    = 'Thứ Hai';
 $labels['tuesday']   = 'Thứ Ba';
@@ -90,8 +74,6 @@ $labels['wednesday'] = 'Thứ Tư';
 $labels['thursday']  = 'Thứ Năm';
 $labels['friday']    = 'Thứ Sáu';
 $labels['saturday']  = 'Thứ Bảy';
-
-// months short
 $labels['jan']	= 'Tháng Một';
 $labels['feb']	= 'Tháng Hai';
 $labels['mar']	= 'Tháng Ba';
@@ -104,8 +86,6 @@ $labels['sep']	= 'Tháng Chín';
 $labels['oct']	= 'Tháng Mười';
 $labels['nov']	= 'Tháng Mười Một';
 $labels['dec']	= 'Tháng Mười Hai';
-
-// months long
 $labels['longjan']	= 'Tháng Một';
 $labels['longfeb']	= 'Tháng Hai';
 $labels['longmar']	= 'Tháng Ba';
@@ -118,10 +98,7 @@ $labels['longsep']	= 'Tháng Chín';
 $labels['longoct']	= 'Tháng Mười';
 $labels['longnov']	= 'Tháng Mười Một';
 $labels['longdec']	= 'Tháng Mười Hai';
-
 $labels['today'] = 'Hôm nay';
-
-// toolbar buttons
 $labels['refresh']          = 'Nạp lại';
 $labels['checkmail']        = 'Kiểm tra thư mới';
 $labels['compose']          = 'Soạn thư';
@@ -154,7 +131,6 @@ $labels['moreactions']      = 'Thêm hành động...';
 $labels['more']             = 'Thêm';
 $labels['back']             = 'Quay lại';
 $labels['options']          = 'Tuỳ chọn';
-
 $labels['select'] = 'Lựa chọn';
 $labels['all'] = 'Tất cả';
 $labels['none'] = 'Không có';
@@ -162,7 +138,7 @@ $labels['currpage'] = 'Trang hiện tại';
 $labels['unread'] = 'Chưa đọc';
 $labels['flagged'] = 'Đã đánh dấu';
 $labels['unanswered'] = 'Chưa trả lời';
-$labels['withattachment'] = 'With attachment';
+$labels['withattachment'] = 'Có tệp tin đính kèm';
 $labels['deleted'] = 'Đã xóa';
 $labels['undeleted'] = 'Chưa xóa được';
 $labels['invert'] = 'Đảo ngược';
@@ -173,7 +149,6 @@ $labels['expand-all'] = 'Mở rộng tất cả';
 $labels['expand-unread'] = 'Mở rộng thư chưa đọc';
 $labels['collapse-all'] = 'Đóng hết';
 $labels['threaded'] = 'Đã nhóm theo chủ đề thư';
-
 $labels['autoexpand_threads'] = 'Mở rộng các chủ đề thư';
 $labels['do_expand'] = 'Tất cả các chủ đề thư';
 $labels['expand_only_unread'] = 'Chỉ với những thư chưa đọc';
@@ -189,27 +164,24 @@ $labels['listcolumns'] = 'Các cột danh sách';
 $labels['listsorting'] = 'Cột sắp xếp';
 $labels['listorder'] = 'Thứ tự sắp xếp';
 $labels['listmode'] = 'Xem dạng danh sách';
-
 $labels['folderactions'] = 'Thao tác với thư mục';
 $labels['compact'] = 'Nén';
 $labels['empty'] = 'Trống';
-
+$labels['importmessages'] = 'Nhập thư';
 $labels['quota'] = 'Lượng đĩa sử dụng';
 $labels['unknown']  = 'Không rõ';
 $labels['unlimited']  = 'không giới hạn';
-
 $labels['quicksearch']  = 'Tìm nhanh';
 $labels['resetsearch']  = 'Thiết lập lại tìm kiếm';
 $labels['searchmod']  = 'Tìm kiếm với từ khóa và ký tự đặc biệt [() : " - ]';
 $labels['msgtext']  = 'Toàn bộ thư';
 $labels['body']  = 'Nội dung thư';
-
+$labels['type'] = 'Định dạng';
+$labels['namex'] = 'Họ tên';
 $labels['openinextwin'] = 'Mở trong khung cửa mới';
 $labels['emlsave'] = 'Tải về theo định dạng .eml';
-$labels['changeformattext'] = 'Display in plain text format';
-$labels['changeformathtml'] = 'Display in HTML format';
-
-// message compose
+$labels['changeformattext'] = 'Hiển thị ở chế độ text';
+$labels['changeformathtml'] = 'Hiển thị ở chế độ HTML';
 $labels['editasnew']      = 'Sửa như một email mới';
 $labels['send']           = 'Gửi';
 $labels['sendmessage']    = 'Gửi thư';
@@ -221,26 +193,32 @@ $labels['returnreceipt']  = 'Báo nhận';
 $labels['dsn']            = 'Thông báo trạng thái gửi thư';
 $labels['mailreplyintro'] = 'Vào ngày $date, $sender viết:';
 $labels['originalmessage'] = 'Thư gốc';
-
 $labels['editidents']    = 'Chỉnh sửa nhận diện';
 $labels['spellcheck']    = 'Đánh vần';
 $labels['checkspelling'] = 'Kiểm tra chính tả';
 $labels['resumeediting'] = 'Tiếp tục soạn thảo';
 $labels['revertto']      = 'Trở lại với';
-
+$labels['restore'] = 'Khôi phục';
+$labels['restoremessage'] = 'Khôi phục thư?';
+$labels['responses'] = 'Các phản hồi';
+$labels['insertresponse'] = 'Thêm một phản hồi';
+$labels['manageresponses'] = 'Quản lý các phản hồi';
+$labels['savenewresponse'] = 'Lưu một phản hồi mới';
+$labels['editresponses'] = 'Sửa các phản hồi';
+$labels['editresponse'] = 'Sửa phản hồi';
+$labels['responsename'] = 'Tên';
+$labels['responsetext'] = 'Thông tin phản hồi';
 $labels['attach'] = 'Đính kèm';
 $labels['attachments'] = 'Các đính kèm';
 $labels['upload'] = 'Tải lên';
 $labels['uploadprogress'] = '$percent ($current từ $total)';
 $labels['close']  = 'Đóng';
 $labels['messageoptions']  = 'Tùy chọn cho thư...';
-
 $labels['low']     = 'Thấp';
 $labels['lowest']  = 'Thấp nhất';
 $labels['normal']  = 'Bình thường';
 $labels['high']    = 'Cao';
 $labels['highest'] = 'Cao nhất';
-
 $labels['nosubject']  = '(Không có chủ đề)';
 $labels['showimages'] = 'Hiển thị ảnh';
 $labels['alwaysshow'] = 'Luôn luôn hiển thị ảnh từ $sender';
@@ -248,25 +226,19 @@ $labels['isdraft']    = 'Đây là thư nháp';
 $labels['andnmore']   = 'Thêm $nr';
 $labels['togglemoreheaders'] = 'Hiển thị chi tiết thông tin thư';
 $labels['togglefullheaders'] = 'Mở/đóng chi tiết thông tin thư';
-
 $labels['htmltoggle'] = 'Mã HTML';
 $labels['plaintoggle'] = 'Văn bản thô';
 $labels['savesentmessagein'] = 'Lưu thư đã gửi trong';
 $labels['dontsave'] = 'Không lưu';
 $labels['maxuploadsize'] = 'Dung lượng tập tin tối đa cho phép là $size';
-
 $labels['addcc'] = 'Thêm Cc';
 $labels['addbcc'] = 'Thêm Bcc';
 $labels['addreplyto'] = 'Thêm trả lời tới';
 $labels['addfollowupto'] = 'Thêm sự theo dõi tới';
-
-// mdn
 $labels['mdnrequest'] = 'Người gửi thư này muốn nhận được thông báo khi bạn đọc thư. Bạn có muốn cho người gửi biết thông báo này không?';
 $labels['receiptread'] = 'Biên nhận (đã đọc)';
 $labels['yourmessage'] = 'Đây là sự trả lại xác nhận cho thư của bạn';
 $labels['receiptnote'] = 'Lưu ý: Biên nhận này chỉ báo rằng thư đã được hiển thị trên máy tính của người nhận. Không bảo đảm rằng người nhận đó đã có đọc hoặc hiểu nội dung thư.';
-
-// address boook
 $labels['name']         = 'Tên hiển thị';
 $labels['firstname']    = 'Tên Gọi';
 $labels['surname']      = 'Tên Họ';
@@ -301,7 +273,6 @@ $labels['search'] = 'Tìm kiếm';
 $labels['advsearch'] = 'Tìm kiếm chi tiết';
 $labels['advanced'] = 'Nâng cao';
 $labels['other'] = 'Loại khác';
-
 $labels['typehome']   = 'Thư mục chính';
 $labels['typework']   = 'Cơ quan';
 $labels['typeother']  = 'Loại khác';
@@ -316,14 +287,12 @@ $labels['typeassistant']  = 'Trợ lý';
 $labels['typehomepage']  = 'Trang nhà';
 $labels['typeblog'] = 'Trang nhật ký';
 $labels['typeprofile'] = 'Lý lịch';
-
 $labels['addfield'] = 'Thêm lĩnh vực...';
 $labels['addcontact'] = 'Thêm một liên hệ mới';
 $labels['editcontact'] = 'Sửa liên lạc';
 $labels['contacts'] = 'Danh bạ';
 $labels['contactproperties'] = 'Tính chất của liên hệ';
 $labels['personalinfo'] = 'Thông tin cá nhân';
-
 $labels['edit']   = 'Chỉnh sửa';
 $labels['cancel'] = 'Huỷ';
 $labels['save']   = 'Lưu';
@@ -332,7 +301,6 @@ $labels['rename'] = 'Đổi tên';
 $labels['addphoto'] = 'Thêm';
 $labels['replacephoto'] = 'Thay thế';
 $labels['uploadphoto'] = 'Tải ảnh lên';
-
 $labels['newcontact']     = 'Tạo danh bạ mới';
 $labels['deletecontact']  = 'Xoá các liên lạc đã chọn';
 $labels['composeto']      = 'Soạn thư cho';
@@ -346,41 +314,36 @@ $labels['newcontactgroup'] = 'Tạo nhóm liên lạc mới';
 $labels['grouprename']    = 'Đổi tên nhóm';
 $labels['groupdelete']    = 'Xóa nhóm';
 $labels['groupremoveselected'] = 'Xóa bỏ các liên lạc được chọn từ nhóm';
-
 $labels['previouspage']   = 'Hiển thị trang trước';
 $labels['firstpage']      = 'Hiển thị trang đầu tiên';
 $labels['nextpage']       = 'Hiển thị trang kế tiếp';
 $labels['lastpage']       = 'Hiển thị trang cuối';
-
 $labels['group'] = 'Nhóm';
 $labels['groups'] = 'Các nhóm';
+$labels['listgroup'] = 'Danh sách các thành viên nhóm';
 $labels['personaladrbook'] = 'Các địa chỉ cá nhân';
-
 $labels['searchsave'] = 'Lưu tìm kiếm';
 $labels['searchdelete'] = 'Xóa tìm kiếm';
-
 $labels['import'] = 'Nhập';
 $labels['importcontacts'] = 'Nhập liên lạc';
 $labels['importfromfile'] = 'Nhập từ tập tin:';
-$labels['importtarget'] = 'Thêm liên lạc mới vào sổ địa chỉ';
+$labels['importtarget'] = 'Thêm các địa chỉ liên hệ vào';
 $labels['importreplace'] = 'Thay thế toàn bộ sổ địa chỉ';
+$labels['importgroups'] = 'Nhập nhóm';
+$labels['importgroupsall'] = 'Tất cả (tạo nhóm nếu cần thiết)';
+$labels['importgroupsexisting'] = 'Chỉ dành cho các nhóm đang tồn tại';
 $labels['importdesc'] = 'Bạn có thể cập nhật các liên hệ từ một sổ địa chỉ có sẵn.<br />Hiện tại, chúng tôi hỗ trợ nhập địa chỉ từ dạng dữ liệu <a href="http://en.wikipedia.org/wiki/VCard">vCard</a> hoặc CSV (dạng thức dữ liệu ngăn cách bằng dấu phẩy)';
 $labels['done'] = 'Hoàn tất';
-
-// settings
 $labels['settingsfor'] = 'Thiết lập cho';
 $labels['about'] = 'Lời ngõ';
 $labels['preferences'] = 'Sở thích';
 $labels['userpreferences'] = 'Sở thích người dùng';
 $labels['editpreferences'] = 'Chỉnh sửa sở thích';
-
 $labels['identities'] = 'Các nhận diện';
 $labels['manageidentities'] = 'Quản lý nhận diện cho trương mục này';
 $labels['newidentity'] = 'Nhận diện mới';
-
 $labels['newitem'] = 'Mục mới';
 $labels['edititem'] = 'Sửa đổi mục';
-
 $labels['preferhtml'] = 'Hiển thị HTML';
 $labels['defaultcharset'] = 'Bộ ký tự mặc định';
 $labels['htmlmessage'] = 'Thư theo định dạng HTML';
@@ -402,7 +365,7 @@ $labels['htmleditor'] = 'Soạn thư dạng HTML';
 $labels['htmlonreply'] = 'Chỉ trả lời lại bằng thư HTML';
 $labels['htmlonreplyandforward'] = 'Khi chuyển tiếp hoặc trả lời thư theo định dạng HTML';
 $labels['htmlsignature'] = 'Chữ ký HTML';
-$labels['showemail'] = 'Show email address with display name';
+$labels['showemail'] = 'Hiển thị địa chỉ email kèm theo tên ';
 $labels['previewpane'] = 'Hiển thị ô Xem thử';
 $labels['skin'] = 'Bề mặt giao diện';
 $labels['logoutclear'] = 'Xóa sạch rác khi thoát';
@@ -472,10 +435,13 @@ $labels['spellcheckignorenums'] = 'Bỏ qua các từ kèm số';
 $labels['spellcheckignorecaps'] = 'Bỏ qua các từ được viết hoa';
 $labels['addtodict'] = 'Thêm vào từ điển';
 $labels['mailtoprotohandler'] = 'Xác định cách xử lý giao thức mailto: liên kết';
+$labels['standardwindows'] = 'Mở các popup như là các cửa sổ thông thường';
 $labels['forwardmode'] = 'Chuyển tiếp thư';
 $labels['inline'] = 'nội tuyến';
 $labels['asattachment'] = 'dạng gửi kèm';
-
+$labels['replyallmode'] = 'Thao tác mặc định cho nút [Trả lời tất cả]';
+$labels['replyalldefault'] = 'Trả lời tất cả';
+$labels['replyalllist'] = 'Chỉ gửi trả lời đến danh sách thư (nếu có tồn tại)';
 $labels['folder']  = 'Thư mục';
 $labels['folders']  = 'Các thư mục';
 $labels['foldername']  = 'Tên thư mục';
@@ -496,26 +462,20 @@ $labels['foldertype'] = 'Kiểu thư mục';
 $labels['personalfolder']  = 'Thư mục cá nhân';
 $labels['otherfolder']  = 'Thư mục khác của Người dùng';
 $labels['sharedfolder']  = 'Thư mục công khai';
-
 $labels['sortby'] = 'Soạn theo';
 $labels['sortasc']  = 'Soạn tăng dần';
 $labels['sortdesc'] = 'Soạn giảm dần';
 $labels['undo'] = 'Hoàn lại';
-
 $labels['installedplugins'] = 'Các chương trình phụ trợ đã được cài đặt';
 $labels['plugin'] = 'Phần bổ sung';
 $labels['version'] = 'Phiên bản';
 $labels['source'] = 'Nguồn';
 $labels['license'] = 'Bản quyền';
 $labels['support'] = 'Yêu cầu hỗ trợ';
-
-// units
 $labels['B'] = 'B';
 $labels['KB'] = 'KB';
 $labels['MB'] = 'MB';
 $labels['GB'] = 'GB';
-
-// character sets
 $labels['unicode'] = 'Unicode';
 $labels['english'] = 'Tiếng Anh';
 $labels['westerneuropean'] = 'Tiếng Tây Âu';
@@ -534,5 +494,4 @@ $labels['vietnamese'] = 'Tiếng Việt';
 $labels['japanese'] = 'Tiếng Nhật';
 $labels['korean'] = 'Tiếng Hàn';
 $labels['chinese'] = 'Tiếng Hoa';
-
 ?>

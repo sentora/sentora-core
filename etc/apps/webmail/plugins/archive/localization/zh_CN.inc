@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-archive/
 */
-
-$labels = array();
 $labels['buttontext'] = '存档';
 $labels['buttontitle'] = '存档该信息';
 $labels['archived'] = '存档成功';
@@ -30,5 +28,4 @@ $labels['archivetypemonth'] = '月(例如 存档/2012/06)';
 $labels['archivetypefolder'] = '原始文件夹';
 $labels['archivetypesender'] = '发件人邮件';
 $labels['unkownsender'] = '未知';
-
 ?>

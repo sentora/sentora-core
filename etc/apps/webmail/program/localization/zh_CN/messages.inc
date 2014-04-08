@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = '发生错误！';
 $messages['loginfailed']  = '登录失败。';
 $messages['cookiesdisabled'] = '您的浏览器不支持 Cookies。';
@@ -34,9 +32,8 @@ $messages['invalidrequest'] = '请求无效！未保存数据。';
 $messages['invalidhost'] = '无效的主机名。';
 $messages['nomessagesfound'] = '此邮件夹内无邮件。';
 $messages['loggedout'] = '您已成功注销，再见！';
-$messages['mailboxempty'] = '邮件夹为空。';
 $messages['refreshing'] = '正在刷新...';
-$messages['loading'] = '正在登录...';
+$messages['loading'] = '正在载入...';
 $messages['uploading'] = '正在上传文件...';
 $messages['uploadingmany'] = '正在上传文件...';
 $messages['loadingdata'] = '正在载入数据...';
@@ -46,6 +43,8 @@ $messages['messagesent'] = '邮件已发送。';
 $messages['savingmessage'] = '正在保存邮件...';
 $messages['messagesaved'] = '邮件已暂存至草稿箱。';
 $messages['successfullysaved'] = '保存成功。';
+$messages['savingresponse'] = '正在保存响应文本...';
+$messages['deleteresponseconfirm'] = '是否确认删除响应文本?';
 $messages['addedsuccessfully'] = '联系人已添加。';
 $messages['contactexists'] = '当前联系人的电子邮件地址已存在。';
 $messages['contactnameexists'] = '已存在同名联系人。';
@@ -82,6 +81,7 @@ $messages['norecipientwarning'] = '至少输入一个收件人。';
 $messages['nosubjectwarning']  = '主题为空。您要输入一个主题吗？';
 $messages['nobodywarning'] = '要发送没有正文的邮件吗？';
 $messages['notsentwarning'] = '邮件未发送。您确定要离开并舍弃当前邮件吗？';
+$messages['restoresavedcomposedata'] = '您有一封邮件尚未发送.\n\nSubject: $subject\nSaved: $date\n\n您是否要恢复这封邮件？';
 $messages['noldapserver'] = '请选择一个用来查找的 LDAP 服务器。';
 $messages['nosearchname'] = '请输入联系人姓名或电子邮件地址。';
 $messages['notuploadedwarning'] = '附件尚未全部上传，请耐心等待或者取消上传。';
@@ -101,13 +101,16 @@ $messages['converting'] = '格式转换中...';
 $messages['messageopenerror'] = '无法从服务器加载邮件内容。';
 $messages['fileuploaderror'] = '文件上传失败。';
 $messages['filesizeerror'] = '上传的文件超过了 $size 的大小限制。';
-$messages['copysuccess'] = '成功复制 $nr 个地址。';
-$messages['copyerror'] = '无法复制地址。';
+$messages['copysuccess'] = '成功复制 $nr 个联系人。';
+$messages['movesuccess'] = '成功移动 $nr 个联系人。';
+$messages['copyerror'] = '无法复制联系人。';
+$messages['moveerror'] = '无法移动联系人。';
 $messages['sourceisreadonly'] = '源地址为只读。';
 $messages['errorsavingcontact'] = '无法保存联系人地址。';
 $messages['movingmessage'] = '正在移动邮件...';
 $messages['copyingmessage'] = '正在复制邮件...';
 $messages['copyingcontact'] = '正在复制联系人...';
+$messages['movingcontact'] = '移动联系人...';
 $messages['deletingmessage'] = '正在删除邮件...';
 $messages['markingmessage'] = '正在标记邮件...';
 $messages['addingmember'] = '正在添加联系人至群组...';
@@ -116,7 +119,7 @@ $messages['receiptsent'] = '成功发送一个已读回执。';
 $messages['errorsendingreceipt'] = '无法发送已读回执。';
 $messages['deleteidentityconfirm'] = '是否删除该身份？';
 $messages['nodeletelastidentity'] = '无法删除该身份，这是最后一个。';
-$messages['forbiddencharacter'] = '目录名包含禁止字符。';
+$messages['forbiddencharacter'] = '文件夹名包含禁止字符。';
 $messages['selectimportfile'] = '请选择要上传的文件。';
 $messages['addresswriterror'] = '选中的通讯录不可写。';
 $messages['contactaddedtogroup'] = '添加联系人至该群组成功。';
@@ -126,6 +129,8 @@ $messages['importwait'] = '正在导入，请稍后...';
 $messages['importformaterror'] = '导入失败！文件无效。';
 $messages['importconfirm'] = '<b>成功导入 $inserted 联系人</b>';
 $messages['importconfirmskipped'] = '<b>跳过已存在的 $skipped 项目</b>';
+$messages['importmessagesuccess'] = '成功导入 $nr 条信息';
+$messages['importmessageerror'] = '导入失败！文件无效';
 $messages['opnotpermitted'] = '不允许的操作!';
 $messages['nofromaddress'] = '选中的身份没有邮件地址。';
 $messages['editorwarning'] = '切换至纯文本编辑器将导致邮件正文中的所有文本格式失效，您确定要这样做吗？';
@@ -139,7 +144,7 @@ $messages['smtperror'] = 'SMTP 错误: $msg';
 $messages['emailformaterror'] = '无效的邮件地址：$email';
 $messages['toomanyrecipients'] = '收件人太多，请减少人数至 $max。';
 $messages['maxgroupmembersreached'] = '组员数量超过最大值 $max。';
-$messages['internalerror'] = '发生一个内部错误，请重试。';
+$messages['internalerror'] = '遇到一个内部错误，请重试。';
 $messages['contactdelerror'] = '无法删除联系人。';
 $messages['contactdeleted'] = '删除联系人成功。';
 $messages['contactrestoreerror'] = '无法恢复已删除的联系人。';
@@ -163,9 +168,8 @@ $messages['folderupdated'] = '成功更新文件夹';
 $messages['foldercreated'] = '成功创建文件夹';
 $messages['invalidimageformat'] = '非法的图像类型。';
 $messages['mispellingsfound'] = '检查到拼写错误。';
-$messages['parentnotwritable'] = '无法创建/转移文件夹至指定的上级目录,权限不足。';
+$messages['parentnotwritable'] = '无法创建/转移文件夹至指定的上级文件夹，没有权限。';
 $messages['messagetoobig'] = '邮件过大无法处理。';
 $messages['attachmentvalidationerror'] = '警告！该附件很可疑，因为其自身的格式与邮件中声明的格式不符。如果您不信任发送人，则不应该在浏览器中打开该附件。<br/><br/><em>声明格式：$expected；实际格式：$detected</em>';
 $messages['noscriptwarning'] = '警告：本程序需要 Javascript 支持！请在浏览器设置中启用 Javascript。';
-
 ?>

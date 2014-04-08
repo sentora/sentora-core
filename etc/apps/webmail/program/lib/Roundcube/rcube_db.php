@@ -31,7 +31,10 @@ class rcube_db
     protected $db_dsnr;               // DSN for read operations
     protected $db_connected = false;  // Already connected ?
     protected $db_mode;               // Connection mode
+    protected $db_table_dsn_map = array();
     protected $dbh;                   // Connection handle
+    protected $dbhs = array();
+    protected $table_connections = array();
 
     protected $db_error     = false;
     protected $db_error_msg = '';
@@ -47,6 +50,7 @@ class rcube_db
         'identifier_end'   => '"',
     );
 
+    const DEBUG_LINE_LENGTH = 4096;
 
     /**
      * Factory, returns driver-specific instance of the class
@@ -96,33 +100,31 @@ class rcube_db
         $this->db_dsnw  = $db_dsnw;
         $this->db_dsnr  = $db_dsnr;
         $this->db_pconn = $pconn;
+        $this->db_dsnw_noread = rcube::get_instance()->config->get('db_dsnw_noread', false);
 
         $this->db_dsnw_array = self::parse_dsn($db_dsnw);
         $this->db_dsnr_array = self::parse_dsn($db_dsnr);
 
-        // Initialize driver class
-        $this->init();
-    }
-
-    /**
-     * Initialization of the object with driver specific code
-     */
-    protected function init()
-    {
-        // To be used by driver classes
+        $this->db_table_dsn_map = array_map(array($this, 'table_name'), rcube::get_instance()->config->get('db_table_dsn', array()));
     }
 
     /**
      * Connect to specific database
      *
-     * @param array $dsn DSN for DB connections
-     *
-     * @return PDO database handle
+     * @param array  $dsn  DSN for DB connections
+     * @param string $mode Connection mode (r|w)
      */
-    protected function dsn_connect($dsn)
+    protected function dsn_connect($dsn, $mode)
     {
         $this->db_error     = false;
         $this->db_error_msg = null;
+
+        // return existing handle
+        if ($this->dbhs[$mode]) {
+            $this->dbh = $this->dbhs[$mode];
+            $this->db_mode = $mode;
+            return $this->dbh;
+        }
 
         // Get database specific connection options
         $dsn_string  = $this->dsn_string($dsn);
@@ -157,9 +159,11 @@ class rcube_db
             return null;
         }
 
+        $this->dbh          = $dbh;
+        $this->dbhs[$mode]  = $dbh;
+        $this->db_mode      = $mode;
+        $this->db_connected = true;
         $this->conn_configure($dsn, $dbh);
-
-        return $dbh;
     }
 
     /**
@@ -182,21 +186,12 @@ class rcube_db
     }
 
     /**
-     * Driver-specific database character set setting
-     *
-     * @param string $charset Character set name
-     */
-    protected function set_charset($charset)
-    {
-        $this->query("SET NAMES 'utf8'");
-    }
-
-    /**
      * Connect to appropriate database depending on the operation
      *
      * @param string $mode Connection mode (r|w)
+     * @param boolean $force Enforce using the given mode
      */
-    public function db_connect($mode)
+    public function db_connect($mode, $force = false)
     {
         // previous connection failed, don't attempt to connect again
         if ($this->conn_failure) {
@@ -210,31 +205,61 @@ class rcube_db
 
         // Already connected
         if ($this->db_connected) {
-            // connected to db with the same or "higher" mode
-            if ($this->db_mode == 'w' || $this->db_mode == $mode) {
+            // connected to db with the same or "higher" mode (if allowed)
+            if ($this->db_mode == $mode || $this->db_mode == 'w' && !$force && !$this->db_dsnw_noread) {
                 return;
             }
         }
 
         $dsn = ($mode == 'r') ? $this->db_dsnr_array : $this->db_dsnw_array;
-
-        $this->dbh          = $this->dsn_connect($dsn);
-        $this->db_connected = is_object($this->dbh);
+        $this->dsn_connect($dsn, $mode);
 
         // use write-master when read-only fails
-        if (!$this->db_connected && $mode == 'r') {
-            $mode = 'w';
-            $this->dbh          = $this->dsn_connect($this->db_dsnw_array);
-            $this->db_connected = is_object($this->dbh);
+        if (!$this->db_connected && $mode == 'r' && $this->is_replicated()) {
+            $this->dsn_connect($this->db_dsnw_array, 'w');
         }
 
-        if ($this->db_connected) {
-            $this->db_mode = $mode;
-            $this->set_charset('utf8');
+        $this->conn_failure = !$this->db_connected;
+    }
+
+    /**
+     * Analyze the given SQL statement and select the appropriate connection to use
+     */
+    protected function dsn_select($query)
+    {
+        // no replication
+        if ($this->db_dsnw == $this->db_dsnr) {
+            return 'w';
         }
-        else {
-            $this->conn_failure = true;
+
+        // Read or write ?
+        $mode = preg_match('/^(select|show|set)/i', $query) ? 'r' : 'w';
+
+        // find tables involved in this query
+        if (preg_match_all('/(?:^|\s)(from|update|into|join)\s+'.$this->options['identifier_start'].'?([a-z0-9._]+)'.$this->options['identifier_end'].'?\s+/i', $query, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $m) {
+                $table = $m[2];
+
+                // always use direct mapping
+                if ($this->db_table_dsn_map[$table]) {
+                    $mode = $this->db_table_dsn_map[$table];
+                    break;  // primary table rules
+                }
+                else if ($mode == 'r') {
+                    // connected to db with the same or "higher" mode for this table
+                    $db_mode = $this->table_connections[$table];
+                    if ($db_mode == 'w' && !$this->db_dsnw_noread) {
+                        $mode = $db_mode;
+                    }
+                }
+            }
+
+            // remember mode chosen (for primary table)
+            $table = $matches[0][2];
+            $this->table_connections[$table] = $mode;
         }
+
+        return $mode;
     }
 
     /**
@@ -255,6 +280,11 @@ class rcube_db
     protected function debug($query)
     {
         if ($this->options['debug_mode']) {
+            if (($len = strlen($query)) > self::DEBUG_LINE_LENGTH) {
+                $diff  = $len - self::DEBUG_LINE_LENGTH;
+                $query = substr($query, 0, self::DEBUG_LINE_LENGTH)
+                    . "... [truncated $diff bytes]";
+            }
             rcube::write_log('sql', '[' . (++$this->db_index) . '] ' . $query . ';');
         }
     }
@@ -362,10 +392,9 @@ class rcube_db
      */
     protected function _query($query, $offset, $numrows, $params)
     {
-        // Read or write ?
-        $mode = preg_match('/^(select|show)/i', ltrim($query)) ? 'r' : 'w';
+        $query = ltrim($query);
 
-        $this->db_connect($mode);
+        $this->db_connect($this->dsn_select($query), true);
 
         // check connection before proceeding
         if (!$this->is_connected()) {
@@ -376,27 +405,28 @@ class rcube_db
             $query = $this->set_limit($query, $numrows, $offset);
         }
 
-        $params = (array) $params;
-
         // Because in Roundcube we mostly use queries that are
         // executed only once, we will not use prepared queries
         $pos = 0;
         $idx = 0;
 
-        while ($pos = strpos($query, '?', $pos)) {
-            if ($query[$pos+1] == '?') {  // skip escaped ?
-                $pos += 2;
-            }
-            else {
-                $val = $this->quote($params[$idx++]);
-                unset($params[$idx-1]);
-                $query = substr_replace($query, $val, $pos, 1);
-                $pos += strlen($val);
+        if (count($params)) {
+            while ($pos = strpos($query, '?', $pos)) {
+                if ($query[$pos+1] == '?') {  // skip escaped '?'
+                    $pos += 2;
+                }
+                else {
+                    $val = $this->quote($params[$idx++]);
+                    unset($params[$idx-1]);
+                    $query = substr_replace($query, $val, $pos, 1);
+                    $pos += strlen($val);
+                }
             }
         }
 
-        // replace escaped ? back to normal
-        $query = rtrim(strtr($query, array('??' => '?')), ';');
+        // replace escaped '?' back to normal, see self::quote()
+        $query = str_replace('??', '?', $query);
+        $query = rtrim($query, " \t\n\r\0\x0B;");
 
         $this->debug($query);
 
@@ -408,7 +438,26 @@ class rcube_db
         $result = $this->dbh->query($query);
 
         if ($result === false) {
-            $error = $this->dbh->errorInfo();
+            $result = $this->handle_error($query);
+        }
+
+        $this->last_result = $result;
+
+        return $result;
+    }
+
+    /**
+     * Helper method to handle DB errors.
+     * This by default logs the error but could be overriden by a driver implementation
+     *
+     * @param string Query that triggered the error
+     * @return mixed Result to be stored and returned
+     */
+    protected function handle_error($query)
+    {
+        $error = $this->dbh->errorInfo();
+
+        if (empty($this->options['ignore_key_errors']) || !in_array($error[0], array('23000', '23505'))) {
             $this->db_error = true;
             $this->db_error_msg = sprintf('[%s] %s', $error[1], $error[2]);
 
@@ -418,9 +467,7 @@ class rcube_db
                 ), true, false);
         }
 
-        $this->last_result = $result;
-
-        return $result;
+        return false;
     }
 
     /**
@@ -702,11 +749,19 @@ class rcube_db
     /**
      * Return SQL function for current time and date
      *
+     * @param int $interval Optional interval (in seconds) to add/subtract
+     *
      * @return string SQL function to use in query
      */
-    public function now()
+    public function now($interval = 0)
     {
-        return "now()";
+        if ($interval) {
+            $add = ' ' . ($interval > 0 ? '+' : '-') . ' INTERVAL ';
+            $add .= $interval > 0 ? intval($interval) : intval($interval) * -1;
+            $add .= ' SECOND';
+        }
+
+        return "now()" . $add;
     }
 
     /**
@@ -865,16 +920,40 @@ class rcube_db
      */
     public function table_name($table)
     {
-        $rcube = rcube::get_instance();
+        static $rcube;
 
-        // return table name if configured
-        $config_key = 'db_table_'.$table;
+        if (!$rcube) {
+            $rcube = rcube::get_instance();
+        }
 
-        if ($name = $rcube->config->get($config_key)) {
-            return $name;
+        // add prefix to the table name if configured
+        if (($prefix = $rcube->config->get('db_prefix')) && strpos($table, $prefix) !== 0) {
+            return $prefix . $table;
         }
 
         return $table;
+    }
+
+    /**
+     * Set class option value
+     *
+     * @param string $name  Option name
+     * @param mixed  $value Option value
+     */
+    public function set_option($name, $value)
+    {
+        $this->options[$name] = $value;
+    }
+
+    /**
+     * Set DSN connection to be used for the given table
+     *
+     * @param string Table name
+     * @param string DSN connection ('r' or 'w') to be used
+     */
+    public function set_table_dsn($table, $mode)
+    {
+        $this->db_table_dsn_map[$this->table_name($table)] = $mode;
     }
 
     /**

@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
-
-
 $labels['filters'] = 'Süzgəclər';
 $labels['managefilters'] = 'Gələn məktub üçün süzgəclərin idarəsi';
 $labels['filtername'] = 'Süzgəcin adı';
@@ -49,19 +47,20 @@ $labels['messagesendcopy'] = 'Məktubun kopyasını göndər';
 $labels['messagereply'] = 'Məktubla cavab ver';
 $labels['messagedelete'] = 'Sil';
 $labels['messagediscard'] = 'Məktubla rədd et';
+$labels['messagekeep'] = 'Məktubu gələnlərdə saxla';
 $labels['messagesrules'] = 'Daxil olan məktub üçün:';
 $labels['messagesactions'] = '...növbəti hərəkəti yerinə yetir:';
 $labels['add'] = 'Əlavə et';
 $labels['del'] = 'Sil';
 $labels['sender'] = 'Göndərən';
 $labels['recipient'] = 'Qəbul edən';
-$labels['vacationaddresses'] = 'Əlavə ünvanlarım üçün siyahı (vergüllər ilə ayrılmış):';
+$labels['vacationaddr'] = 'Mənim əlavə e-poçt ünvan(lar)ım: ';
 $labels['vacationdays'] = 'Məktub neçə müddətdən bir göndərilsin (gündə):';
 $labels['vacationinterval'] = 'Məktublar nə qədər sıx göndərilsin:';
-$labels['days'] = 'günlər';
-$labels['seconds'] = 'saniyələr';
 $labels['vacationreason'] = 'Məktubun mətni (səbəb yoxdur):';
 $labels['vacationsubject'] = 'Məktubun mövzusu:';
+$labels['days'] = 'günlər';
+$labels['seconds'] = 'saniyələr';
 $labels['rulestop'] = 'Yerinə yetirməyi dayandır';
 $labels['enable'] = 'Yandır/Söndür';
 $labels['filterset'] = 'Süzgəc dəsti';
@@ -121,6 +120,22 @@ $labels['filtercreate'] = 'Süzgəc yarat';
 $labels['usedata'] = 'Süzgəcdə bu məlumatları istifadə et:';
 $labels['nextstep'] = 'Sonrakı';
 $labels['...'] = '...';
+$labels['currdate'] = 'İndiki tarix';
+$labels['datetest'] = 'Tarix';
+$labels['dateheader'] = 'başlıq:';
+$labels['year'] = 'il';
+$labels['month'] = 'ay';
+$labels['day'] = 'gün';
+$labels['date'] = 'tarix (iiii-aa-gg)';
+$labels['julian'] = 'tarix (yulian)';
+$labels['hour'] = 'saat';
+$labels['minute'] = 'dəqiqə';
+$labels['second'] = 'saniyə';
+$labels['time'] = 'saat (sa:dd:sn)';
+$labels['iso8601'] = 'tarix (ISO8601)';
+$labels['std11'] = 'tarix (RFC2822)';
+$labels['zone'] = 'saat-zona';
+$labels['weekday'] = 'həftənin günü (0-6)';
 $labels['advancedopts'] = 'Əlavə ayarlar';
 $labels['body'] = 'Məzmun';
 $labels['address'] = 'ünvan';
@@ -140,8 +155,8 @@ $labels['default'] = 'ön qurğulu';
 $labels['octet'] = 'ciddi (oktet)';
 $labels['asciicasemap'] = 'qeydiyyat üzrə müstəqil (ascii-casemap)';
 $labels['asciinumeric'] = 'ədədi (ascii-numeric)';
-
-$messages = array();
+$labels['index'] = 'indeks:';
+$labels['indexlast'] = 'arxaya';
 $messages['filterunknownerror'] = 'Serverin naməlum xətası.';
 $messages['filterconnerror'] = 'Serverə qoşulmaq alınmır';
 $messages['filterdeleteerror'] = 'Süzgəci silmək mümkün deyil. Server xətası.';
@@ -154,14 +169,14 @@ $messages['actiondeleteconfirm'] = 'Bu hərəkəti silməkdə əminsiniz?';
 $messages['forbiddenchars'] = 'Sahədə qadağan edilən işarələr.';
 $messages['cannotbeempty'] = 'Sahə boş ola bilməz.';
 $messages['ruleexist'] = 'Bu adla süzgəc artıq mövcuddur.';
-$messages['setactivateerror'] = 'Seçilmiş süzgəc dəstini yandırmaq mümkün deyil. Server xətası.';
-$messages['setdeactivateerror'] = 'Seçilmiş süzgəc dəstini söndürmək mümkün deyil. Server xətası.';
-$messages['setdeleteerror'] = 'Seçilmiş süzgəc dəstini silmək mümkün deyil. Server xətası.';
+$messages['setactivateerror'] = 'Seçilmiş süzgəcləri aktiv etmək mümkün deyil. Server xətası.';
+$messages['setdeactivateerror'] = 'Seçilmiş süzgəcləri deaktiv mümkün deyil. Server xətası.';
+$messages['setdeleteerror'] = 'Seçilmiş süzgəcləri silmək mümkün deyil. Server xətası.';
 $messages['setactivated'] = 'Süzgəc dəsti yandırıldı.';
 $messages['setdeactivated'] = 'Süzgəc dəsti söndürüldü.';
 $messages['setdeleted'] = 'Süzgəc dəsti silindi.';
 $messages['setdeleteconfirm'] = 'Bu süzgəc dəstini silməkdə əminsiniz?';
-$messages['setcreateerror'] = 'Süzgəc dəstini yaratmaq mümkün deyil. Server xərası.';
+$messages['setcreateerror'] = 'Süzgəcləri yaratmaq mümkün deyil. Server xətası.';
 $messages['setcreated'] = 'Süzgəc dəsti uğurla yaradıldı.';
 $messages['activateerror'] = 'Seçilmiş süzgəc(lər)i yandırmaq mümkün deyil. Server xətası.';
 $messages['deactivateerror'] = 'Seçilmiş süzgəc(lər)i söndürmək mümkün deyil. Server xətası.';
@@ -173,5 +188,5 @@ $messages['nametoolong'] = 'Süzgəc dəstini yaratmaq mümkün deyil. Ad çox u
 $messages['namereserved'] = 'Rezerv edilmiş ad.';
 $messages['setexist'] = 'Dəst artıq mövcuddur.';
 $messages['nodata'] = 'Heç olmasa bir mövqe tutmaq lazımdır!';
-
+$messages['invaliddateformat'] = 'Tarix və ya tarix formatının bir hissəsi səhvdir';
 ?>

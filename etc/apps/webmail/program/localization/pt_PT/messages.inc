@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Ocorreu um erro!';
 $messages['loginfailed']  = 'O utilizador ou palavra-passe que introduziu não correspondem.';
 $messages['cookiesdisabled'] = 'O seu navegador não suporta cookies';
@@ -35,6 +33,7 @@ $messages['invalidhost'] = 'Nome do servidor inválido.';
 $messages['nomessagesfound'] = 'Não existem mensagens nesta pasta.';
 $messages['loggedout'] = 'A sua sessão foi encerrada com sucesso. Até breve!';
 $messages['mailboxempty'] = 'A caixa de entrada está vazia';
+$messages['nomessages'] = 'Não existem mensagens';
 $messages['refreshing'] = 'A actualizar...';
 $messages['loading'] = 'A carregar...';
 $messages['uploading'] = 'A enviar ficheiro...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'Mensagem enviada com sucesso';
 $messages['savingmessage'] = 'A guardar mensagem...';
 $messages['messagesaved'] = 'Mensagem guardada como rascunho';
 $messages['successfullysaved'] = 'Guardado com sucesso';
+$messages['savingresponse'] = 'A guardar texto de resposta...';
+$messages['deleteresponseconfirm'] = 'Deseja realmente apagar este texto de resposta?';
 $messages['addedsuccessfully'] = 'Contacto adicionado com sucesso';
 $messages['contactexists'] = 'Já existe um contacto com este e-mail';
 $messages['contactnameexists'] = 'Já existe um contacto com este nome.';
@@ -56,8 +57,8 @@ $messages['contactnotfound'] = 'O contacto especificado não foi encontrado';
 $messages['contactsearchonly'] = 'Insira os termos de pesquisa para localizar os contactos';
 $messages['sendingfailed'] = 'Falha no envio da mensagem';
 $messages['senttooquickly'] = 'Por favor espere $sec seg(s) antes de enviar esta mensagem';
-$messages['errorsavingsent'] = 'Ocorreu um erro ao guardar a mensagem enviada';
-$messages['errorsaving'] = 'Ocorreu um erro ao guardar';
+$messages['errorsavingsent'] = 'Ocorreu um erro ao gravar a mensagem enviada.';
+$messages['errorsaving'] = 'Ocorreu um erro ao gravar.';
 $messages['errormoving'] = 'Não foi possível mover a mensagem';
 $messages['errorcopying'] = 'Não foi possível copiar a mensagem';
 $messages['errordeleting'] = 'Não foi possível eliminar a mensagem';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'Por favor, insira pelo menos um destinatário
 $messages['nosubjectwarning']  = 'O campo "Assunto" não foi preenchido. Deseja incluí-lo agora?';
 $messages['nobodywarning'] = 'Enviar a mensagem sem texto?';
 $messages['notsentwarning'] = 'A mensagem não foi enviada, deseja apagá-la?';
+$messages['restoresavedcomposedata'] = 'Uma mensagem, anteriormente, composta mas não enviada foi encontrado.\n\nAssunto: $subject\nGuardada: $date\n\nDeseja restaurar esta mensagem?';
 $messages['noldapserver'] = 'Seleccione um servidor LDAP para efectuar a pesquisa';
 $messages['nosearchname'] = 'Por favor, insira o nome do contacto ou endereço de e-mail';
 $messages['notuploadedwarning'] = 'Nem todos os anexos foram ainda enviados. Por favor aguarde ou cancele o envio.';
@@ -101,13 +103,16 @@ $messages['converting'] = 'A remover a formatação...';
 $messages['messageopenerror'] = 'Não foi possível carregar a mensagem.';
 $messages['fileuploaderror'] = 'Falha ao carregar o ficheiro';
 $messages['filesizeerror'] = 'O ficheiro excede o tamanho máximo permitido de $size';
-$messages['copysuccess'] = 'Foram copiados $nr endereços com sucesso';
-$messages['copyerror'] = 'Não foi possível copiar os endereços';
+$messages['copysuccess'] = '$nr contacto(s) copiado(s) com sucesso.';
+$messages['movesuccess'] = '$nr contacto(s) movido(s) com sucesso.';
+$messages['copyerror'] = 'Não foi possível copiar o(s) contacto(s).';
+$messages['moveerror'] = 'Não foi possível mover o(s) contacto(s).';
 $messages['sourceisreadonly'] = 'Esta origem de endereços é só de leitura';
 $messages['errorsavingcontact'] = 'Não foi possível guardar o endereço deste contacto';
 $messages['movingmessage'] = 'A mover mensagem(ns)...';
 $messages['copyingmessage'] = 'A copiar mensagem(ns)...';
 $messages['copyingcontact'] = 'A copiar contacto(s)...';
+$messages['movingcontact'] = 'A mover contacto(s)...';
 $messages['deletingmessage'] = 'A eliminar mensagem(ns)...';
 $messages['markingmessage'] = 'A marcar mensagem(ns)...';
 $messages['addingmember'] = 'A adicionar contacto(s) ao grupo...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'A importar, por favor aguarde...';
 $messages['importformaterror'] = 'A importação falhou! O ficheiro enviado não é um ficheiro de dados válido.';
 $messages['importconfirm'] = '<b>$inserted contactos importados com sucesso, $skipped contactos já existentes foram ignorados</b>:<p><em>$names</em></p>';
 $messages['importconfirmskipped'] = 'Ignoradas $skipped entradas já existentes.';
+$messages['importmessagesuccess'] = '$nr mensagens importadas com sucesso';
+$messages['importmessageerror'] = 'A importação falhou! O ficheiro carregado não é um arquivo de caixa de correio ou ficheiro de mensagem válido.';
 $messages['opnotpermitted'] = 'Operação não permitida';
 $messages['nofromaddress'] = 'Falta o endereço de e-mail na identidade seleccionada';
 $messages['editorwarning'] = 'Ao mudar para o editor Plain Text vai perder toda a formação de texto. Deseja continuar?';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = 'Não é possível criar/mover esta pasta para 
 $messages['messagetoobig'] = 'A mensagem é demasiado grande para ser processada.';
 $messages['attachmentvalidationerror'] = 'ATENÇÃO! Este anexo é suspeito porque o seu tipo não coincide com o tipo declarado na mensagem. Se não confiar no remetente, não o deve abrir no navegador, pois pode ter conteúdos maliciosos.<br/><br/><em>Esperado: $expected; Encontrado: $detected</em>';
 $messages['noscriptwarning'] = 'Aviso: Este serviço de webmail utiliza Javascript! Para o poder utilizar, active o Javascript nas definições do seu navegador.';
-
 ?>

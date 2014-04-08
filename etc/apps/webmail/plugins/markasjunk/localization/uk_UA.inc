@@ -15,10 +15,7 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-markasjunk/
 */
-
-$labels = array();
-$labels['buttontext'] = 'Junk';
+$labels['buttontext'] = 'Спам';
 $labels['buttontitle'] = 'Перемістити в "Спам';
 $labels['reportedasjunk'] = 'Переміщено до "Спаму';
-
 ?>

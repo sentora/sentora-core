@@ -5,7 +5,7 @@
  | program/steps/addressbook/edit.inc                                    |
  |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2007, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -36,12 +36,12 @@ if ($RCMAIL->action == 'edit') {
     // editing not allowed here
     if ($CONTACTS->readonly || $record['readonly']) {
         $OUTPUT->show_message('sourceisreadonly');
-        rcmail_overwrite_action('show');
+        $RCMAIL->overwrite_action('show');
         return;
     }
 }
 else {
-    $source = get_input_value('_source', RCUBE_INPUT_GPC);
+    $source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_GPC);
 
     if (strlen($source)) {
         $CONTACTS = $RCMAIL->get_address_book($source, true);
@@ -59,6 +59,25 @@ else {
 $SOURCE_ID = $source;
 rcmail_set_sourcename($CONTACTS);
 
+
+$OUTPUT->add_handlers(array(
+    'contactedithead' => 'rcmail_contact_edithead',
+    'contacteditform' => 'rcmail_contact_editform',
+    'contactphoto'    => 'rcmail_contact_photo',
+    'photouploadform' => 'rcmail_upload_photo_form',
+    'sourceselector'  => 'rcmail_source_selector',
+    'filedroparea'    => 'rcmail_photo_drop_area',
+));
+
+if ($RCMAIL->action == 'add' && $OUTPUT->template_exists('contactadd')) {
+    $OUTPUT->send('contactadd');
+}
+
+// this will be executed if no template for addcontact exists
+$OUTPUT->send('contactedit');
+
+
+
 function rcmail_get_edit_record()
 {
     global $RCMAIL, $CONTACTS;
@@ -70,7 +89,7 @@ function rcmail_get_edit_record()
      else if ($RCMAIL->action != 'add'
          && !(($result = $CONTACTS->get_result()) && ($record = $result->first()))
      ) {
-         $RCMAIL->output->show_message('contactnotfound');
+         $RCMAIL->output->show_message('contactnotfound', 'error');
          return false;
      }
 
@@ -125,7 +144,7 @@ function rcmail_contact_editform($attrib)
 
     $form = array(
         'contact' => array(
-            'name'    => rcube_label('properties'),
+            'name'    => $RCMAIL->gettext('properties'),
             'content' => array(
                 'email' => array('size' => $i_size, 'visible' => true),
                 'phone' => array('size' => $i_size, 'visible' => true),
@@ -135,7 +154,7 @@ function rcmail_contact_editform($attrib)
             ),
         ),
         'personal' => array(
-            'name'    => rcube_label('personalinfo'),
+            'name'    => $RCMAIL->gettext('personalinfo'),
             'content' => array(
                 'gender' => array('visible' => true),
                 'maidenname' => array('size' => $i_size),
@@ -150,7 +169,7 @@ function rcmail_contact_editform($attrib)
 
     if (isset($CONTACT_COLTYPES['notes'])) {
         $form['notes'] = array(
-            'name'    => rcube_label('notes'),
+            'name'    => $RCMAIL->gettext('notes'),
             'content' => array(
                 'notes' => array('size' => $t_cols, 'rows' => $t_rows, 'label' => false, 'visible' => true, 'limit' => 1),
             ),
@@ -169,37 +188,56 @@ function rcmail_contact_editform($attrib)
 
 function rcmail_upload_photo_form($attrib)
 {
-  global $OUTPUT;
+    global $RCMAIL, $OUTPUT;
 
-  // set defaults
-  $attrib += array('id' => 'rcmUploadform', 'buttons' => 'yes');
+    // set defaults
+    $attrib += array('id' => 'rcmUploadform', 'buttons' => 'yes');
 
-  // find max filesize value
-  $max_filesize = parse_bytes(ini_get('upload_max_filesize'));
-  $max_postsize = parse_bytes(ini_get('post_max_size'));
-  if ($max_postsize && $max_postsize < $max_filesize)
-    $max_filesize = $max_postsize;
-  $max_filesize = show_bytes($max_filesize);
+    // find max filesize value
+    $max_filesize = parse_bytes(ini_get('upload_max_filesize'));
+    $max_postsize = parse_bytes(ini_get('post_max_size'));
 
-  $hidden = new html_hiddenfield(array('name' => '_cid', 'value' => $GLOBALS['cid']));
-  $input = new html_inputfield(array('type' => 'file', 'name' => '_photo', 'size' => $attrib['size']));
-  $button = new html_inputfield(array('type' => 'button'));
+    if ($max_postsize && $max_postsize < $max_filesize) {
+        $max_filesize = $max_postsize;
+    }
+    $max_filesize = $RCMAIL->show_bytes($max_filesize);
 
-  $out = html::div($attrib,
-    $OUTPUT->form_tag(array('id' => $attrib['id'].'Frm', 'name' => 'uploadform', 'method' => 'post', 'enctype' => 'multipart/form-data'),
-      $hidden->show() .
-      html::div(null, $input->show()) .
-      html::div('hint', rcube_label(array('name' => 'maxuploadsize', 'vars' => array('size' => $max_filesize)))) .
-      (get_boolean($attrib['buttons']) ? html::div('buttons',
-        $button->show(rcube_label('close'), array('class' => 'button', 'onclick' => "$('#$attrib[id]').hide()")) . ' ' .
-        $button->show(rcube_label('upload'), array('class' => 'button mainaction', 'onclick' => JS_OBJECT_NAME . ".command('upload-photo', this.form)"))
-      ) : '')
-    )
-  );
+    $hidden = new html_hiddenfield(array('name' => '_cid', 'value' => $GLOBALS['cid']));
+    $input  = new html_inputfield(array('type' => 'file', 'name' => '_photo', 'size' => $attrib['size']));
+    $button = new html_inputfield(array('type' => 'button'));
 
-  $OUTPUT->add_label('addphoto','replacephoto');
-  $OUTPUT->add_gui_object('uploadform', $attrib['id'].'Frm');
-  return $out;
+    $content = $hidden->show() . html::div(null, $input->show())
+        . html::div('hint', $RCMAIL->gettext(array('name' => 'maxuploadsize', 'vars' => array('size' => $max_filesize))));
+
+    if (rcube_utils::get_boolean($attrib['buttons'])) {
+        $content .= html::div('buttons',
+            $button->show($RCMAIL->gettext('close'), array(
+                'class'   => 'button',
+                'onclick' => "$('#$attrib[id]').hide()"
+            ))
+            . ' ' .
+            $button->show($RCMAIL->gettext('upload'), array(
+                'class'   => 'button mainaction',
+                'onclick' => rcmail_output::JS_OBJECT_NAME . ".command('upload-photo', this.form)"
+            ))
+        );
+    }
+
+    $out = html::div($attrib,
+        $OUTPUT->form_tag(array(
+                'id'      => $attrib['id'] . 'Frm',
+                'name'    => 'uploadform',
+                'method'  => 'post',
+                'enctype' => 'multipart/form-data'
+            ),
+            $content
+        )
+    );
+
+    $OUTPUT->add_label('addphoto','replacephoto');
+    $OUTPUT->add_gui_object('uploadform', $attrib['id'].'Frm');
+
+    return $out;
 }
 
 // similar function as in /steps/settings/edit_identity.inc
@@ -247,7 +285,7 @@ function rcmail_source_selector($attrib)
 
     $attrib['name']       = '_source';
     $attrib['is_escaped'] = true;
-    $attrib['onchange']   = JS_OBJECT_NAME . ".command('save', 'reload', this.form)";
+    $attrib['onchange']   = rcmail_output::JS_OBJECT_NAME . ".command('save', 'reload', this.form)";
 
     $select = new html_select($attrib);
 
@@ -270,19 +308,3 @@ function rcmail_photo_drop_area($attrib)
         $OUTPUT->set_env('filedrop', array('action' => 'upload-photo', 'fieldname' => '_photo', 'single' => 1, 'filter' => '^image/.+'));
     }
 }
-
-
-$OUTPUT->add_handlers(array(
-    'contactedithead' => 'rcmail_contact_edithead',
-    'contacteditform' => 'rcmail_contact_editform',
-    'contactphoto'    => 'rcmail_contact_photo',
-    'photouploadform' => 'rcmail_upload_photo_form',
-    'sourceselector'  => 'rcmail_source_selector',
-    'filedroparea'    => 'rcmail_photo_drop_area',
-));
-
-if ($RCMAIL->action == 'add' && $OUTPUT->template_exists('contactadd'))
-    $OUTPUT->send('contactadd');
-
-// this will be executed if no template for addcontact exists
-$OUTPUT->send('contactedit');

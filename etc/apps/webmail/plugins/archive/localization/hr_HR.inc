@@ -15,20 +15,17 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-archive/
 */
-
-$labels = array();
 $labels['buttontext'] = 'Arhiva';
 $labels['buttontitle'] = 'Arhiviraj poruku';
-$labels['archived'] = 'Uspješno arhivirana';
-$labels['archivedreload'] = 'Successfully archived. Reload the page to see the new archive folders.';
-$labels['archiveerror'] = 'Some messages could not be archived';
+$labels['archived'] = 'Uspješno arhivirano';
+$labels['archivedreload'] = 'Uspješno arhivirano. Osvježite stranicu kako biste vidjeli nove arhivske mape.';
+$labels['archiveerror'] = 'Neke poruke nije bilo moguće arhivirati';
 $labels['archivefolder'] = 'Arhiva';
-$labels['settingstitle'] = 'Archive';
-$labels['archivetype'] = 'Divide archive by';
-$labels['archivetypeyear'] = 'Year (e.g. Archive/2012)';
-$labels['archivetypemonth'] = 'Month (e.g. Archive/2012/06)';
-$labels['archivetypefolder'] = 'Original folder';
-$labels['archivetypesender'] = 'Sender email';
-$labels['unkownsender'] = 'unknown';
-
+$labels['settingstitle'] = 'Arhiva';
+$labels['archivetype'] = 'Podijeli arhivu po';
+$labels['archivetypeyear'] = 'Godina (npr. Arhiva/2012)';
+$labels['archivetypemonth'] = 'Mjesec (e.g. Arhiva/2012/06)';
+$labels['archivetypefolder'] = 'Izvorna mapa';
+$labels['archivetypesender'] = 'E-mail adresa pošiljatelja';
+$labels['unkownsender'] = 'nepoznato';
 ?>

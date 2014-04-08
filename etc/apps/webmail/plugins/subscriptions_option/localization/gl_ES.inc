@@ -15,8 +15,5 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-subscriptions_option/
 */
-
-$labels = array();
-$labels['useimapsubscriptions']  = 'Usar suscripcións IMAP';
-
+$labels['useimapsubscriptions']  = 'Usar subscricións IMAP';
 ?>

@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'エラーが発生しました!';
 $messages['loginfailed']  = 'ログインできませんでした。';
 $messages['cookiesdisabled'] = 'ブラウザーがCookieを受け付けません。';
@@ -35,6 +33,7 @@ $messages['invalidhost'] = '正しくないサーバー名です。';
 $messages['nomessagesfound'] = 'このフォルダーにはメッセージはありません。';
 $messages['loggedout'] = 'ログアウトしました。さようなら!';
 $messages['mailboxempty'] = 'メールボックスは空です。';
+$messages['nomessages'] = 'メッセージなし';
 $messages['refreshing'] = '再表示中...';
 $messages['loading'] = '読み込み中...';
 $messages['uploading'] = 'ファイルをアップロード中...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'メッセージを送信しました。';
 $messages['savingmessage'] = 'メッセージを保存中...';
 $messages['messagesaved'] = 'メッセージを下書きに保存しました。';
 $messages['successfullysaved'] = '保存しました。';
+$messages['savingresponse'] = '回答の文章を保存中...';
+$messages['deleteresponseconfirm'] = 'この回答の文章を本当に削除しますか?';
 $messages['addedsuccessfully'] = '連絡先をアドレス帳に追加しました。';
 $messages['contactexists'] = '同じメールアドレスの連絡先が既に存在します。';
 $messages['contactnameexists'] = '同じ名前の連絡先が既に存在します。';
@@ -56,7 +57,7 @@ $messages['contactnotfound'] = '連絡先が見つかりません。';
 $messages['contactsearchonly'] = '連絡先を探すための検索語を入力してください';
 $messages['sendingfailed'] = 'メッセージを送信できませんでした。';
 $messages['senttooquickly'] = 'このメッセージを送信するまで、$sec秒お待ちください。';
-$messages['errorsavingsent'] = '送信メッセージの保存中にエラーが発生しました。';
+$messages['errorsavingsent'] = '送信したメッセージの保存中にエラーが発生しました。';
 $messages['errorsaving'] = '保存中にエラーが発生しました。';
 $messages['errormoving'] = 'メッセージを移動できません。';
 $messages['errorcopying'] = 'メッセージをコピーできません。';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = '少なくとも1つ宛先を入力してく�
 $messages['nosubjectwarning']  = '件名(Subject)の欄が空です。今、入力しますか?';
 $messages['nobodywarning'] = '本文の無いメッセージを送信しますか?';
 $messages['notsentwarning'] = 'メッセージを送信しませんでした。このメッセージを破棄しますか。';
+$messages['restoresavedcomposedata'] = '以前に作成して未送信のメッセージがあります。\n\n件名: $subject\n保存日: $date\n\nこのメッセージを回復しますか?';
 $messages['noldapserver'] = '検索するLDAPサーバーを選択してください。';
 $messages['nosearchname'] = '連絡先の名前か電子メールアドレスを入力してください。';
 $messages['notuploadedwarning'] = 'すべての添付ファイルのアップロードを完了していません。今しばらく待つか、取り消ししてください。';
@@ -101,13 +103,16 @@ $messages['converting'] = 'メールから書式を削除中...';
 $messages['messageopenerror'] = 'サーバーからメールを読み込めません。';
 $messages['fileuploaderror'] = 'ファイルをアップロードできませんでした。';
 $messages['filesizeerror'] = 'アップロードするファイルのサイズが上限($size)を超えました。';
-$messages['copysuccess'] = '$nr件のアドレスをコピーしました。';
-$messages['copyerror'] = 'どのアドレスもコピーできませんでした。';
+$messages['copysuccess'] = 'Successfully copied $nr contacts.';
+$messages['movesuccess'] = 'Successfully moved $nr contacts.';
+$messages['copyerror'] = 'Could not copy any contacts.';
+$messages['moveerror'] = 'Could not move any contacts.';
 $messages['sourceisreadonly'] = 'このアドレスソースは読み込み専用です。';
 $messages['errorsavingcontact'] = '連絡先のアドレスを保存できません。';
 $messages['movingmessage'] = 'メッセージを移動中...';
 $messages['copyingmessage'] = 'メッセージをコピー中...';
 $messages['copyingcontact'] = '連絡先をコピー中...';
+$messages['movingcontact'] = 'Moving contact(s)...';
 $messages['deletingmessage'] = 'メッセージを削除中...';
 $messages['markingmessage'] = 'メッセージにマークを設定中...';
 $messages['addingmember'] = 'グループに連絡先をコピー中...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'インポート中です。しばらくお待ちく�
 $messages['importformaterror'] = 'インポートできませんでした!  アップロードしたファイルは正しいデータをインポートするファイルではありません。';
 $messages['importconfirm'] = '<b>$inserted件の連絡先をインポートしました。</b>';
 $messages['importconfirmskipped'] = '<b>$skipped件の既存する項目を飛ばした。</b>';
+$messages['importmessagesuccess'] = '$nr件のメッセージをインポートしました。';
+$messages['importmessageerror'] = 'インポートできませんでした!  アップロードしたファイルは有効なメッセージやメールボックスのファイルではありません。';
 $messages['opnotpermitted'] = '許可されていない操作です。';
 $messages['nofromaddress'] = '選択している識別情報に電子メールアドレスが抜けています。';
 $messages['editorwarning'] = 'テキストエディターに切り替えると、すべての書式はなくなります。本当に続けますか?';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = '選択した親フォルダーに作成また�
 $messages['messagetoobig'] = 'その処理をするにはメッセージ部分が大きすぎます。';
 $messages['attachmentvalidationerror'] = '警告!  この添付ファイルはメッセージの宣言と一致しない種類という理由のため疑わしいです。送信者を信頼できないなら、悪意のある内容を含んでいるかもしれないのでブラウザーで開いてはなりません。<br/><br/><em>予測した種類: $expected; 発見した種類: $found</em>';
 $messages['noscriptwarning'] = '警告: このウェブメールサービスにはJavascriptが必要です!  使用するにはJavascriptをブラウザーの設定で有効にしてください。';
-
 ?>

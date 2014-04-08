@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Der opstod en fejl!';
 $messages['loginfailed']  = 'Det lykkedes ikke at logge på.';
 $messages['cookiesdisabled'] = 'Din browser accepterer ikke cookies.';
@@ -35,6 +33,7 @@ $messages['invalidhost'] = 'Ugyldigt servernavn.';
 $messages['nomessagesfound'] = 'Der blev ikke fundet nogen beskeder i denne postkasse.';
 $messages['loggedout'] = 'Du er nu logget af webmail. Farvel så længe!';
 $messages['mailboxempty'] = 'Postkassen er tom.';
+$messages['nomessages'] = 'Ingen beskeder';
 $messages['refreshing'] = 'Opdaterer...';
 $messages['loading'] = 'Indlæser...';
 $messages['uploading'] = 'Uploader fil...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'Beskeden blev afsendt succesfuldt.';
 $messages['savingmessage'] = 'Gemmer besked...';
 $messages['messagesaved'] = 'Beskeden er gemt i kladdemappen.';
 $messages['successfullysaved'] = 'Gemt succesfuldt';
+$messages['savingresponse'] = 'Gemmer svartekst...';
+$messages['deleteresponseconfirm'] = 'Er du sikker på, at du ønsker at slette svarteksten?';
 $messages['addedsuccessfully'] = 'Kontakten blev tilføjet adressebogen.';
 $messages['contactexists'] = 'Der er allerede en kontakt med denne e-mailadresse.';
 $messages['contactnameexists'] = 'En kontakt med samme navn eksisterer allerede.';
@@ -56,8 +57,8 @@ $messages['contactnotfound'] = 'Den søgte kontakt blev ikke fundet.';
 $messages['contactsearchonly'] = 'Indtast søgeord for at finde kontakter.';
 $messages['sendingfailed'] = 'Beskeden kunne ikke sendes.';
 $messages['senttooquickly'] = 'Vent venligst $sec sekunder før du sender denne besked.';
-$messages['errorsavingsent'] = 'Der opstod en fejl da den sendte besked blev gemt.';
-$messages['errorsaving'] = 'Der opstod en fejl under gemning.';
+$messages['errorsavingsent'] = 'Der opstod en fejl ved at gemme den sendte besked.';
+$messages['errorsaving'] = 'Der opstod en fejl ved at gemme.';
 $messages['errormoving'] = 'Beskeden kunne ikke flyttes.';
 $messages['errorcopying'] = 'Beskeden kunne ikke kopieres.';
 $messages['errordeleting'] = 'Beskeden kunne ikke slettes.';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'Indtast mindst én modtager.';
 $messages['nosubjectwarning']  = '\'Emne\'-feltet er tomt. Kunne du tænke dig at skrive et nu?';
 $messages['nobodywarning'] = 'Send denne besked uden tekst?';
 $messages['notsentwarning'] = 'Beskeden er ikke sendt. Vil du kassere din besked?';
+$messages['restoresavedcomposedata'] = 'En tidligere skreven men usendt besked blev fundet.\n\nEmne: $subject\nGemt: $date\n\nØnsker du at gendanne denne besked?';
 $messages['noldapserver'] = 'Vælg venligst hvilken LDAP-server der skal søges i.';
 $messages['nosearchname'] = 'Indtast venligst en kontakts navn eller e-mailadresse.';
 $messages['notuploadedwarning'] = 'Ikke alle vedhæftede filer er blevet uploadet endnu. Vent venligst eller afbryd upload.';
@@ -101,13 +103,16 @@ $messages['converting'] = 'Fjerner formatering fra besked...';
 $messages['messageopenerror'] = 'Beskeden kunne ikke hentes fra serveren.';
 $messages['fileuploaderror'] = 'Upload mislykkedes.';
 $messages['filesizeerror'] = 'Den indsatte fil fylder mere end det maksimale på $size.';
-$messages['copysuccess'] = 'Det lykkedes at kopiere $nr adresser.';
-$messages['copyerror'] = 'Kunne ikke kopiere adresserne.';
+$messages['copysuccess'] = '$nr blev kopieret.';
+$messages['movesuccess'] = '$nr kontakter blev flyttet.';
+$messages['copyerror'] = 'Kunne ikke kopiere nogen kontakter.';
+$messages['moveerror'] = 'Kunne ikke flytte nogen kontakter.';
 $messages['sourceisreadonly'] = 'Denne adressekilde er kun til læsning.';
 $messages['errorsavingcontact'] = 'Kunne ikke gemme kontaktadressen.';
 $messages['movingmessage'] = 'Flytter besked(er)...';
 $messages['copyingmessage'] = 'Kopierer besked(er)...';
 $messages['copyingcontact'] = 'Kopierer kontakt(er)...';
+$messages['movingcontact'] = 'Flytter kontakt(er)...';
 $messages['deletingmessage'] = 'Sletter besked(er)...';
 $messages['markingmessage'] = 'Markerer besked(er)...';
 $messages['addingmember'] = 'Tilføjer kontakt(er) til gruppen...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'Importerer, vent venligst...';
 $messages['importformaterror'] = 'Importering mislykkedes! Den uploadede fil indeholder ikke gyldige data til importering.';
 $messages['importconfirm'] = '<b>Importerede $inserted kontakter</b>';
 $messages['importconfirmskipped'] = '<b>Sprang over $skipped eksisterende kontakter</b>';
+$messages['importmessagesuccess'] = 'Importerede $nr beskeder';
+$messages['importmessageerror'] = 'Import mislykkedes! Den uploadede fil er ikke en gyldig besked eller mailbox-fil';
 $messages['opnotpermitted'] = 'Handlingen er ikke tilladt!';
 $messages['nofromaddress'] = 'Der mangler en e-mailadresse i den valgte identitet.';
 $messages['editorwarning'] = 'Al formatering af teksten forsvinder, hvis der skiftes til ren tekst. Vil du fortsætte?';
@@ -139,7 +146,7 @@ $messages['smtperror'] = 'SMTP fejl: $msg';
 $messages['emailformaterror'] = 'Ugyldig e-mailadresse: $email';
 $messages['toomanyrecipients'] = 'For mange modtagere. Reducer antallet af modtagere til $max.';
 $messages['maxgroupmembersreached'] = 'Antallet af gruppemedlemmer overstiger maksimum på $max.';
-$messages['internalerror'] = 'Der opstod en intern fejl - prøv venligst igen.';
+$messages['internalerror'] = 'En intern fejl opstod. Prøv venligst igen.';
 $messages['contactdelerror'] = 'Kunne ikke slette kontakt(er).';
 $messages['contactdeleted'] = 'Kontakt(er) slettet.';
 $messages['contactrestoreerror'] = 'Kunne ikke gendanne slettede kontakt(er).';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = 'Kan ikke oprette/flytte mappe ind i valgt mapp
 $messages['messagetoobig'] = 'Denne del af beskeden er for stor til at blive behandlet.';
 $messages['attachmentvalidationerror'] = 'ADVARSEL! Den vedhæftede fil er mistænkelig - Typen stemmer ikke overens med den oplyste type. Hvis du ikke har tillid til afsender, skal du ikke åbne filen da den kan indholde onsindet indhold. <br/><br/><em>Forventet: $expected; Fundet: $detected</em>';
 $messages['noscriptwarning'] = 'Advarsel: Denne webmailclient kræver Javascript! For at kunne bruge den slå venligst Javascripts til i din browserindstillinger.';
-
 ?>

@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
-
-
 $labels['filters'] = 'Hidlyddion';
 $labels['managefilters'] = 'Rheoli hidlyddion ebost i fewn';
 $labels['filtername'] = 'Enw hidlydd';
@@ -49,19 +47,20 @@ $labels['messagesendcopy'] = 'Danfon copi o\'r neges i';
 $labels['messagereply'] = 'Ymateb gyda\'r neges';
 $labels['messagedelete'] = 'Dileu neges';
 $labels['messagediscard'] = 'Gwaredu gyda neges';
+$labels['messagekeep'] = 'Cadw\'r neges yn y Mewnflwch';
 $labels['messagesrules'] = 'Ar gyfer ebost i fewn:';
 $labels['messagesactions'] = '...rhedeg y gweithredoedd canlynol:';
 $labels['add'] = 'Ychwanegu';
 $labels['del'] = 'Dileu';
 $labels['sender'] = 'Anfonwr';
 $labels['recipient'] = 'Derbynnwr';
-$labels['vacationaddresses'] = 'Fy chyfeiriadau ebost ychwanegol (gwahanir gyda coma):';
+$labels['vacationaddr'] = 'Fy nghyfeiriad(au) ebost ychwanegol:';
 $labels['vacationdays'] = 'Pa mor aml i ddanfon negeseuon (mewn dyddiau):';
 $labels['vacationinterval'] = 'Pa mor aml i ddanfon negeseuon:';
-$labels['days'] = 'dyddiau';
-$labels['seconds'] = 'eiliadau';
 $labels['vacationreason'] = 'Corff neges (rheswm ar wyliau):';
 $labels['vacationsubject'] = 'Pwnc neges:';
+$labels['days'] = 'dyddiau';
+$labels['seconds'] = 'eiliadau';
 $labels['rulestop'] = 'Stopio gwerthuso rheolau';
 $labels['enable'] = 'Galluogi/Analluogi';
 $labels['filterset'] = 'Set hidlyddion';
@@ -121,6 +120,22 @@ $labels['filtercreate'] = 'Creu hidlydd';
 $labels['usedata'] = 'Defnyddio\'r wybodaeth ganlynol yn yr hidlydd:';
 $labels['nextstep'] = 'Cam nesaf';
 $labels['...'] = '...';
+$labels['currdate'] = 'Dyddiad cyfredol';
+$labels['datetest'] = 'Dyddiad';
+$labels['dateheader'] = 'pennawd:';
+$labels['year'] = 'blwyddyn';
+$labels['month'] = 'mis';
+$labels['day'] = 'dydd';
+$labels['date'] = 'dyddiad (bbbb-mm-dd)';
+$labels['julian'] = 'dyddiad (julian)';
+$labels['hour'] = 'awr';
+$labels['minute'] = 'munud';
+$labels['second'] = 'eiliad';
+$labels['time'] = 'amser (aa:mm:ee)';
+$labels['iso8601'] = 'dyddiad (ISO8601)';
+$labels['std11'] = 'dyddiad (RFC2822)';
+$labels['zone'] = 'parth-amser';
+$labels['weekday'] = 'dydd yr wythnos (0-6)';
 $labels['advancedopts'] = 'Dewisiadau uwch';
 $labels['body'] = 'Corff';
 $labels['address'] = 'cyfeiriad';
@@ -140,8 +155,8 @@ $labels['default'] = 'rhagosodiad';
 $labels['octet'] = 'llym (octet)';
 $labels['asciicasemap'] = 'maint llythrennau (ascii-casemap)';
 $labels['asciinumeric'] = 'rhifau (ascii-numeric)';
-
-$messages = array();
+$labels['index'] = 'mynegai:';
+$labels['indexlast'] = 'o chwith';
 $messages['filterunknownerror'] = 'Gwall gweinydd anhysbys.';
 $messages['filterconnerror'] = 'Methwyd cysylltu a\'r gweinydd.';
 $messages['filterdeleteerror'] = 'Methwyd dileu hidlydd. Cafwydd gwall gweinydd.';
@@ -154,9 +169,9 @@ $messages['actiondeleteconfirm'] = 'Ydych chi\'n siwr eich bod am ddileu\'r weit
 $messages['forbiddenchars'] = 'Llythrennau gwaharddedig yn y maes.';
 $messages['cannotbeempty'] = 'Ni all y maes fod yn wag.';
 $messages['ruleexist'] = 'Mae hidlydd gyda\'r enw yma yn bodoli\'n barod.';
-$messages['setactivateerror'] = 'Methwyd bywiogi y set hidlydd dewiswyd. Cafwyd gwall gweinydd.';
-$messages['setdeactivateerror'] = 'Methwyd dadfywiogi y set hidlydd dewiswyd. Cafwyd gwall gweinydd.';
-$messages['setdeleteerror'] = 'Methwyd dileu y set hidlydd dewiswyd. Cafwyd gwall gweinydd.';
+$messages['setactivateerror'] = 'Methwyd galluogi y hidlyddion dewiswyd. Cafwyd gwall gweinydd.';
+$messages['setdeactivateerror'] = 'Methwyd analluogi y hidlyddion dewiswyd. Cafwyd gwall gweinydd.';
+$messages['setdeleteerror'] = 'Methwyd dileu y set hidlyddion ddewiswyd. Cafwyd gwall gweinydd.';
 $messages['setactivated'] = 'Bywiogwyd y set hidlydd yn llwyddiannus.';
 $messages['setdeactivated'] = 'Dadfywiogwyd y set hidlydd yn llwyddiannus.';
 $messages['setdeleted'] = 'Dilëuwyd y set hidlydd yn llwyddiannus.';
@@ -173,5 +188,5 @@ $messages['nametoolong'] = 'Enw yn rhy hir.';
 $messages['namereserved'] = 'Enw neilltuedig.';
 $messages['setexist'] = 'Mae\'r set yn bodoli\'n barod.';
 $messages['nodata'] = 'Rhaid dewis o leia un safle!';
-
+$messages['invaliddateformat'] = 'Dyddiad neu fformat dyddiad annilys';
 ?>

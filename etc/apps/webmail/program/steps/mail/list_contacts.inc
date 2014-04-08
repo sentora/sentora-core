@@ -5,7 +5,7 @@
  | program/steps/mail/list_contacts.inc                                  |
  |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2012-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -23,14 +23,21 @@ $afields       = $RCMAIL->config->get('contactlist_fields');
 $addr_sort_col = $RCMAIL->config->get('addressbook_sort_col', 'name');
 $page_size     = $RCMAIL->config->get('addressbook_pagesize', $RCMAIL->config->get('pagesize', 50));
 $list_page     = max(1, intval($_GET['_page']));
+$jsresult      = array();
 
 // Use search result
 if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search']])) {
     $search  = (array)$_SESSION['search'][$_REQUEST['_search']];
+    $sparam = $_SESSION['search_params']['id'] == $_REQUEST['_search'] ? $_SESSION['search_params']['data'] : array();
 
     // get records from all sources
     foreach ($search as $s => $set) {
         $CONTACTS = $RCMAIL->get_address_book($s);
+
+        // list matching groups of this source (on page one)
+        if ($sparam[1] && $CONTACTS->groups && $list_page == 1) {
+            $jsresult += rcmail_compose_contact_groups($CONTACTS, $s, $sparam[1], (int)$RCMAIL->config->get('addressbook_search_mode'));
+        }
 
         // reset page
         $CONTACTS->set_page(1);
@@ -65,7 +72,7 @@ if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search
 }
 // list contacts from selected source
 else {
-    $source = get_input_value('_source', RCUBE_INPUT_GPC);
+    $source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_GPC);
     $CONTACTS = $RCMAIL->get_address_book($source);
 
     if ($CONTACTS && $CONTACTS->ready) {
@@ -73,34 +80,15 @@ else {
         $CONTACTS->set_pagesize($page_size);
         $CONTACTS->set_page($list_page);
 
+        if ($group_id = rcube_utils::get_input_value('_gid', rcube_utils::INPUT_GPC)) {
+            $CONTACTS->set_group($group_id);
+        }
         // list groups of this source (on page one)
-        if ($CONTACTS->groups && $CONTACTS->list_page == 1) {
-            foreach ($CONTACTS->list_groups() as $group) {
-                $CONTACTS->reset();
-                $CONTACTS->set_group($group['ID']);
-                $group_prop = $CONTACTS->get_group($group['ID']);
-
-                // group (distribution list) with email address(es)
-                if ($group_prop['email']) {
-                    foreach ((array)$group_prop['email'] as $email) {
-                        $row_id = 'G'.$group['ID'];
-                        $jsresult[$row_id] = format_email_recipient($email, $group['name']);
-                        $OUTPUT->command('add_contact_row', $row_id, array(
-                            'contactgroup' => html::span(array('title' => $email), Q($group['name']))), 'group');
-                    }
-                }
-                // show group with count
-                else if (($result = $CONTACTS->count()) && $result->count) {
-                    $row_id = 'E'.$group['ID'];
-                    $jsresult[$row_id] = $group['name'];
-                    $OUTPUT->command('add_contact_row', $row_id, array(
-                        'contactgroup' => Q($group['name'] . ' (' . intval($result->count) . ')')), 'group');
-                }
-            }
+        else if ($CONTACTS->groups && $CONTACTS->list_page == 1) {
+            $jsresult = rcmail_compose_contact_groups($CONTACTS, $source);
         }
 
         // get contacts for this user
-        $CONTACTS->set_group(0);
         $result = $CONTACTS->list_records($afields);
     }
 }
@@ -116,12 +104,15 @@ else if (!empty($result) && $result->count > 0) {
         // add record for every email address of the contact
         $emails = $CONTACTS->get_col_values('email', $row, true);
         foreach ($emails as $i => $email) {
-            $row_id = $row['ID'].$i;
+            $row_id = $row['ID'].'-'.$i;
             $jsresult[$row_id] = format_email_recipient($email, $name);
+            $classname = $row['_type'] == 'group' ? 'group' : 'person';
+            $keyname = $row['_type'] == 'group' ? 'contactgroup' : 'contact';
+
             $OUTPUT->command('add_contact_row', $row_id, array(
-                'contact' => html::span(array('title' => $email), Q($name ? $name : $email) .
-                    ($name && count($emails) > 1 ? '&nbsp;' . html::span('email', Q($email)) : '')
-                )), 'person');
+                $keyname => html::span(array('title' => $email), rcube::Q($name ? $name : $email) .
+                    ($name && count($emails) > 1 ? '&nbsp;' . html::span('email', rcube::Q($email)) : '')
+                )), $classname);
         }
     }
 }

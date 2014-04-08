@@ -366,6 +366,9 @@ class rcube_mime
                 $address = 'MAILER-DAEMON';
                 $name    = substr($val, 0, -strlen($m[1]));
             }
+            else if (preg_match('/('.$email_rx.')/', $val, $m)) {
+                $name = $m[1];
+            }
             else {
                 $name = $val;
             }
@@ -378,11 +381,16 @@ class rcube_mime
                 }
                 if ($decode) {
                     $name = self::decode_header($name, $fallback);
+                    // some clients encode addressee name with quotes around it
+                    if ($name[0] == '"' && $name[strlen($name)-1] == '"') {
+                        $name = substr($name, 1, -1);
+                    }
                 }
             }
 
             if (!$address && $name) {
                 $address = $name;
+                $name    = '';
             }
 
             if ($address) {
@@ -708,12 +716,20 @@ class rcube_mime
      */
     public static function file_content_type($path, $name, $failover = 'application/octet-stream', $is_stream = false, $skip_suffix = false)
     {
+        static $mime_ext = array();
+
         $mime_type = null;
-        $mime_magic = rcube::get_instance()->config->get('mime_magic');
-        $mime_ext = $skip_suffix ? null : @include(RCUBE_CONFIG_DIR . '/mimetypes.php');
+        $config = rcube::get_instance()->config;
+        $mime_magic = $config->get('mime_magic');
+
+        if (!$skip_suffix && empty($mime_ext)) {
+            foreach ($config->resolve_paths('mimetypes.php') as $fpath) {
+                $mime_ext = array_merge($mime_ext, (array) @include($fpath));
+            }
+        }
 
         // use file name suffix with hard-coded mime-type map
-        if (is_array($mime_ext) && $name) {
+        if (!$skip_suffix && is_array($mime_ext) && $name) {
             if ($suffix = substr($name, strrpos($name, '.')+1)) {
                 $mime_type = $mime_ext[strtolower($suffix)];
             }
@@ -802,7 +818,7 @@ class rcube_mime
         }
 
         $mime_types = $mime_extensions = array();
-        $regex = "/([\w\+\-\.\/]+)\t+([\w\s]+)/i"; 
+        $regex = "/([\w\+\-\.\/]+)\s+([\w\s]+)/i";
         foreach((array)$lines as $line) {
              // skip comments or mime types w/o any extensions
             if ($line[0] == '#' || !preg_match($regex, $line, $matches))
@@ -818,7 +834,9 @@ class rcube_mime
 
         // fallback to some well-known types most important for daily emails
         if (empty($mime_types)) {
-            $mime_extensions = (array) @include(RCUBE_CONFIG_DIR . '/mimetypes.php');
+            foreach (rcube::get_instance()->config->resolve_paths('mimetypes.php') as $fpath) {
+                $mime_extensions = array_merge($mime_extensions, (array) @include($fpath));
+            }
 
             foreach ($mime_extensions as $ext => $mime) {
                 $mime_types[$mime][] = $ext;

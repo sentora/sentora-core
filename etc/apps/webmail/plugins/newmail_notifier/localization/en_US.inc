@@ -5,7 +5,7 @@
  | plugins/newmail_notifier/localization/<lang>.inc                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail New Mail Notifier plugin   |
- | Copyright (C) 2012, The Roundcube Dev Team                            |
+ | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -25,5 +25,6 @@ $labels['body'] = 'You\'ve received a new message.';
 $labels['testbody'] = 'This is a test notification.';
 $labels['desktopdisabled'] = 'Desktop notifications are disabled in your browser.';
 $labels['desktopunsupported'] = 'Your browser does not support desktop notifications.';
+$labels['desktoptimeout'] = 'Close desktop notification';
 
 ?>

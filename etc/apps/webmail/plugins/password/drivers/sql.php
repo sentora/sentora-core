@@ -34,8 +34,9 @@ class rcube_sql_password
             $db = $rcmail->get_dbh();
         }
 
-        if ($err = $db->is_error())
+        if ($db->is_error()) {
             return PASSWORD_ERROR;
+        }
 
         // crypted password
         if (strpos($sql, '%c') !== FALSE) {
@@ -117,7 +118,7 @@ class rcube_sql_password
         // hashed passwords
         if (preg_match('/%[n|q]/', $sql)) {
             if (!extension_loaded('hash')) {
-                raise_error(array(
+                rcube::raise_error(array(
                     'code' => 600,
                     'type' => 'php',
                     'file' => __FILE__, 'line' => __LINE__,
@@ -164,14 +165,14 @@ class rcube_sql_password
 
         // convert domains to/from punnycode
         if ($rcmail->config->get('password_idn_ascii')) {
-            $domain_part = rcube_idn_to_ascii($domain_part);
-            $username    = rcube_idn_to_ascii($username);
-            $host        = rcube_idn_to_ascii($host);
+            $domain_part = rcube_utils::idn_to_ascii($domain_part);
+            $username    = rcube_utils::idn_to_ascii($username);
+            $host        = rcube_utils::idn_to_ascii($host);
         }
         else {
-            $domain_part = rcube_idn_to_utf8($domain_part);
-            $username    = rcube_idn_to_utf8($username);
-            $host        = rcube_idn_to_utf8($host);
+            $domain_part = rcube_utils::idn_to_utf8($domain_part);
+            $username    = rcube_utils::idn_to_utf8($username);
+            $host        = rcube_utils::idn_to_utf8($host);
         }
 
         // at least we should always have the local part
@@ -184,7 +185,7 @@ class rcube_sql_password
 
         if (!$db->is_error()) {
             if (strtolower(substr(trim($sql),0,6)) == 'select') {
-                if ($result = $db->fetch_array($res))
+                if ($db->fetch_array($res))
                     return PASSWORD_SUCCESS;
             } else {
                 // This is the good case: 1 row updated

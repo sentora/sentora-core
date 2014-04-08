@@ -3,7 +3,7 @@
 /*
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -21,7 +21,7 @@
  * Class for HTML code creation
  *
  * @package    Framework
- * @subpackage HTML
+ * @subpackage View
  */
 class html
 {
@@ -32,8 +32,8 @@ class html
 
     public static $doctype = 'xhtml';
     public static $lc_tags = true;
-    public static $common_attrib = array('id','class','style','title','align');
-    public static $containers = array('iframe','div','span','p','h1','h2','h3','form','textarea','table','thead','tbody','tr','th','td','style','script');
+    public static $common_attrib = array('id','class','style','title','align','unselectable');
+    public static $containers = array('iframe','div','span','p','h1','h2','h3','ul','form','textarea','table','thead','tbody','tr','th','td','style','script');
 
 
     /**
@@ -218,7 +218,7 @@ class html
             $attr = array('src' => $attr);
         }
         return self::tag('iframe', $attr, $cont, array_merge(self::$common_attrib,
-            array('src','name','width','height','border','frameborder')));
+            array('src','name','width','height','border','frameborder','onload')));
     }
 
     /**
@@ -269,17 +269,26 @@ class html
             return '';
         }
 
-        $allowed_f = array_flip((array)$allowed);
+        $allowed_f  = array_flip((array)$allowed);
         $attrib_arr = array();
+
         foreach ($attrib as $key => $value) {
             // skip size if not numeric
             if ($key == 'size' && !is_numeric($value)) {
                 continue;
             }
 
-            // ignore "internal" or not allowed attributes
-            if ($key == 'nl' || ($allowed && !isset($allowed_f[$key])) || $value === null) {
+            // ignore "internal" or empty attributes
+            if ($key == 'nl' || $value === null) {
                 continue;
+            }
+
+            // ignore not allowed attributes
+            if (!empty($allowed)) {
+                $is_data_attr = substr_compare($key, 'data-', 0, 5) === 0;
+                if (!isset($allowed_f[$key]) && (!$is_data_attr || !isset($allowed_f['data-*']))) {
+                    continue;
+                }
             }
 
             // skip empty eventhandlers
@@ -288,7 +297,7 @@ class html
             }
 
             // attributes with no value
-            if (in_array($key, array('checked', 'multiple', 'disabled', 'selected'))) {
+            if (in_array($key, array('checked', 'multiple', 'disabled', 'selected', 'autofocus'))) {
                 if ($value) {
                     $attrib_arr[] = $key . '="' . $key . '"';
                 }
@@ -350,16 +359,18 @@ class html
 /**
  * Class to create an HTML input field
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
 class html_inputfield extends html
 {
     protected $tagname = 'input';
     protected $type = 'text';
     protected $allowed = array(
-        'type','name','value','size','tabindex','autocapitalize',
+        'type','name','value','size','tabindex','autocapitalize','required',
         'autocomplete','checked','onchange','onclick','disabled','readonly',
-        'spellcheck','results','maxlength','src','multiple','placeholder',
+        'spellcheck','results','maxlength','src','multiple','accept',
+        'placeholder','autofocus',
     );
 
     /**
@@ -405,7 +416,8 @@ class html_inputfield extends html
 /**
  * Class to create an HTML password field
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
 class html_passwordfield extends html_inputfield
 {
@@ -415,9 +427,9 @@ class html_passwordfield extends html_inputfield
 /**
  * Class to create an hidden HTML input field
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
-
 class html_hiddenfield extends html
 {
     protected $tagname = 'input';
@@ -465,7 +477,8 @@ class html_hiddenfield extends html
 /**
  * Class to create HTML radio buttons
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
 class html_radiobutton extends html_inputfield
 {
@@ -495,7 +508,8 @@ class html_radiobutton extends html_inputfield
 /**
  * Class to create HTML checkboxes
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
 class html_checkbox extends html_inputfield
 {
@@ -525,7 +539,8 @@ class html_checkbox extends html_inputfield
 /**
  * Class to create an HTML textarea
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
 class html_textarea extends html
 {
@@ -583,7 +598,8 @@ class html_textarea extends html
  * print $select->show('CH');
  * </pre>
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
 class html_select extends html
 {
@@ -597,16 +613,17 @@ class html_select extends html
      *
      * @param mixed $names  Option name or array with option names
      * @param mixed $values Option value or array with option values
+     * @param array $attrib Additional attributes for the option entry
      */
-    public function add($names, $values = null)
+    public function add($names, $values = null, $attrib = array())
     {
         if (is_array($names)) {
             foreach ($names as $i => $text) {
-                $this->options[] = array('text' => $text, 'value' => $values[$i]);
+                $this->options[] = array('text' => $text, 'value' => $values[$i]) + $attrib;
             }
         }
         else {
-            $this->options[] = array('text' => $names, 'value' => $values);
+            $this->options[] = array('text' => $names, 'value' => $values) + $attrib;
         }
     }
 
@@ -637,7 +654,7 @@ class html_select extends html
                 $option_content = self::quote($option_content);
             }
 
-            $this->content .= self::tag('option', $attr, $option_content);
+            $this->content .= self::tag('option', $attr + $option, $option_content, array('value','label','class','style','title','disabled','selected'));
         }
 
         return parent::show();
@@ -648,7 +665,8 @@ class html_select extends html
 /**
  * Class to build an HTML table
  *
- * @package HTML
+ * @package    Framework
+ * @subpackage View
  */
 class html_table extends html
 {
@@ -668,8 +686,13 @@ class html_table extends html
      */
     public function __construct($attrib = array())
     {
-        $default_attrib = self::$doctype == 'xhtml' ? array('summary' => '', 'border' => 0) : array();
-        $this->attrib = array_merge($attrib, $default_attrib);
+        $default_attrib = self::$doctype == 'xhtml' ? array('summary' => '', 'border' => '0') : array();
+        $this->attrib   = array_merge($attrib, $default_attrib);
+
+        if (!empty($attrib['tagname']) && $attrib['tagname'] != 'table') {
+          $this->tagname = $attrib['tagname'];
+          $this->allowed = self::$common_attrib;
+        }
     }
 
     /**
@@ -813,19 +836,20 @@ class html_table extends html
         if (!empty($this->header)) {
             $rowcontent = '';
             foreach ($this->header as $c => $col) {
-                $rowcontent .= self::tag('td', $col->attrib, $col->content);
+                $rowcontent .= self::tag($this->_col_tagname(), $col->attrib, $col->content);
             }
-            $thead = self::tag('thead', null, self::tag('tr', null, $rowcontent, parent::$common_attrib));
+            $thead = $this->tagname == 'table' ? self::tag('thead', null, self::tag('tr', null, $rowcontent, parent::$common_attrib)) :
+                self::tag($this->_row_tagname(), array('class' => 'thead'), $rowcontent, parent::$common_attrib);
         }
 
         foreach ($this->rows as $r => $row) {
             $rowcontent = '';
             foreach ($row->cells as $c => $col) {
-                $rowcontent .= self::tag('td', $col->attrib, $col->content);
+                $rowcontent .= self::tag($this->_col_tagname(), $col->attrib, $col->content);
             }
 
             if ($r < $this->rowindex || count($row->cells)) {
-                $tbody .= self::tag('tr', $row->attrib, $rowcontent, parent::$common_attrib);
+                $tbody .= self::tag($this->_row_tagname(), $row->attrib, $rowcontent, parent::$common_attrib);
             }
         }
 
@@ -834,7 +858,7 @@ class html_table extends html
         }
 
         // add <tbody>
-        $this->content = $thead . self::tag('tbody', null, $tbody);
+        $this->content = $thead . ($this->tagname == 'table' ? self::tag('tbody', null, $tbody) : $tbody);
 
         unset($this->attrib['cols'], $this->attrib['rowsonly']);
         return parent::show();
@@ -857,6 +881,24 @@ class html_table extends html
     {
         $this->rows     = array();
         $this->rowindex = 0;
+    }
+
+    /**
+     * Getter for the corresponding tag name for table row elements
+     */
+    private function _row_tagname()
+    {
+        static $row_tagnames = array('table' => 'tr', 'ul' => 'li', '*' => 'div');
+        return $row_tagnames[$this->tagname] ? $row_tagnames[$this->tagname] : $row_tagnames['*'];
+    }
+
+    /**
+     * Getter for the corresponding tag name for table cell elements
+     */
+    private function _col_tagname()
+    {
+        static $col_tagnames = array('table' => 'td', '*' => 'span');
+        return $col_tagnames[$this->tagname] ? $col_tagnames[$this->tagname] : $col_tagnames['*'];
     }
 
 }

@@ -47,6 +47,7 @@ class rcube_vcard
         'manager'     => 'X-MANAGER',
         'spouse'      => 'X-SPOUSE',
         'edit'        => 'X-AB-EDIT',
+        'groups'      => 'CATEGORIES',
     );
     private $typemap = array(
         'IPHONE'   => 'mobile',
@@ -357,8 +358,8 @@ class rcube_vcard
 
         case 'birthday':
         case 'anniversary':
-            if (($val = rcube_utils::strtotime($value)) && ($fn = self::$fieldmap[$field])) {
-                $this->raw[$fn][] = array(0 => date('Y-m-d', $val), 'value' => array('date'));
+            if (($val = rcube_utils::anytodatetime($value)) && ($fn = self::$fieldmap[$field])) {
+                $this->raw[$fn][] = array(0 => $val->format('Y-m-d'), 'value' => array('date'));
             }
             break;
 
@@ -377,7 +378,7 @@ class rcube_vcard
         default:
             if ($field == 'phone' && $this->phonetypemap[$type_uc]) {
                 $type = $this->phonetypemap[$type_uc];
-             }
+            }
 
             if (($tag = self::$fieldmap[$field]) && (is_array($value) || strlen($value))) {
                 $index = count($this->raw[$tag]);
@@ -481,7 +482,7 @@ class rcube_vcard
         $vcard_block    = '';
         $in_vcard_block = false;
 
-        foreach (preg_split("/[\r\n]+/", $data) as $i => $line) {
+        foreach (preg_split("/[\r\n]+/", $data) as $line) {
             if ($in_vcard_block && !empty($line)) {
                 $vcard_block .= $line . "\n";
             }
@@ -517,29 +518,34 @@ class rcube_vcard
      */
     public static function cleanup($vcard)
     {
-        // Convert special types (like Skype) to normal type='skype' classes with this simple regex ;)
-        $vcard = preg_replace(
-            '/item(\d+)\.(TEL|EMAIL|URL)([^:]*?):(.*?)item\1.X-ABLabel:(?:_\$!<)?([\w-() ]*)(?:>!\$_)?./s',
-            '\2;type=\5\3:\4',
-            $vcard);
-
         // convert Apple X-ABRELATEDNAMES into X-* fields for better compatibility
         $vcard = preg_replace_callback(
             '/item(\d+)\.(X-ABRELATEDNAMES)([^:]*?):(.*?)item\1.X-ABLabel:(?:_\$!<)?([\w-() ]*)(?:>!\$_)?./s',
             array('self', 'x_abrelatednames_callback'),
             $vcard);
 
-        // Remove cruft like item1.X-AB*, item1.ADR instead of ADR, and empty lines
-        $vcard = preg_replace(array('/^item\d*\.X-AB.*$/m', '/^item\d*\./m', "/\n+/"), array('', '', "\n"), $vcard);
+        // Cleanup
+        $vcard = preg_replace(array(
+                // convert special types (like Skype) to normal type='skype' classes with this simple regex ;)
+                '/item(\d+)\.(TEL|EMAIL|URL)([^:]*?):(.*?)item\1.X-ABLabel:(?:_\$!<)?([\w-() ]*)(?:>!\$_)?./s',
+                '/^item\d*\.X-AB.*$/m',  // remove cruft like item1.X-AB*
+                '/^item\d*\./m',         // remove item1.ADR instead of ADR
+                '/\n+/',                 // remove empty lines
+                '/^(N:[^;\R]*)$/m',      // if N doesn't have any semicolons, add some
+            ),
+            array(
+                '\2;type=\5\3:\4',
+                '',
+                '',
+                "\n",
+                '\1;;;;',
+            ), $vcard);
 
         // convert X-WAB-GENDER to X-GENDER
         if (preg_match('/X-WAB-GENDER:(\d)/', $vcard, $matches)) {
             $value = $matches[1] == '2' ? 'male' : 'female';
             $vcard = preg_replace('/X-WAB-GENDER:\d/', 'X-GENDER:' . $value, $vcard);
         }
-
-        // if N doesn't have any semicolons, add some 
-        $vcard = preg_replace('/^(N:[^;\R]*)$/m', '\1;;;;', $vcard);
 
         return $vcard;
     }
@@ -756,7 +762,7 @@ class rcube_vcard
      *
      * @return string Joined and quoted string
      */
-    private static function vcard_quote($s, $sep = ';')
+    public static function vcard_quote($s, $sep = ';')
     {
         if (is_array($s)) {
             foreach($s as $part) {
@@ -765,7 +771,7 @@ class rcube_vcard
             return(implode($sep, (array)$r));
         }
 
-        return strtr($s, array('\\' => '\\\\', "\r" => '', "\n" => '\n', ',' => '\,', ';' => '\;'));
+        return strtr($s, array('\\' => '\\\\', "\r" => '', "\n" => '\n', $sep => '\\'.$sep));
     }
 
     /**

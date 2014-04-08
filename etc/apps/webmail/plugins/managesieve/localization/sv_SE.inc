@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
-
-
 $labels['filters'] = 'Filter';
 $labels['managefilters'] = 'Administrera filter';
 $labels['filtername'] = 'Filternamn';
@@ -49,19 +47,20 @@ $labels['messagesendcopy'] = 'Skicka kopia av meddelande till';
 $labels['messagereply'] = 'Besvara meddelande';
 $labels['messagedelete'] = 'Ta bort meddelande';
 $labels['messagediscard'] = 'Avböj med felmeddelande';
+$labels['messagekeep'] = 'Behåll meddelande i Inkorg';
 $labels['messagesrules'] = 'För inkommande meddelande';
 $labels['messagesactions'] = 'Utför följande åtgärd';
 $labels['add'] = 'Lägg till';
 $labels['del'] = 'Ta bort';
 $labels['sender'] = 'Avsändare';
 $labels['recipient'] = 'Mottagare';
-$labels['vacationaddresses'] = 'Ytterligare mottagaradresser (avdelade med kommatecken)';
+$labels['vacationaddr'] = 'Ytterligare mottagaradresser:';
 $labels['vacationdays'] = 'Antal dagar mellan auto-svar:';
 $labels['vacationinterval'] = 'Tid mellan auto-svar:';
+$labels['vacationreason'] = 'Meddelandetext (frånvaroanledning):';
+$labels['vacationsubject'] = 'Meddelandeämne:';
 $labels['days'] = 'Dagar';
 $labels['seconds'] = 'Sekunder';
-$labels['vacationreason'] = 'Meddelande i auto-svar:';
-$labels['vacationsubject'] = 'Meddelandeämne:';
 $labels['rulestop'] = 'Avsluta filtrering';
 $labels['enable'] = 'Aktivera/deaktivera';
 $labels['filterset'] = 'Filtergrupp';
@@ -121,6 +120,22 @@ $labels['filtercreate'] = 'Skapa filter';
 $labels['usedata'] = 'Använd följande information i filtret:';
 $labels['nextstep'] = 'Nästa steg';
 $labels['...'] = '...';
+$labels['currdate'] = 'Dagens datum';
+$labels['datetest'] = 'Datum';
+$labels['dateheader'] = 'huvud:';
+$labels['year'] = 'år';
+$labels['month'] = 'månad';
+$labels['day'] = 'dag';
+$labels['date'] = 'datum (åååå-mm-dd)';
+$labels['julian'] = 'datum (Julianskt)';
+$labels['hour'] = 'timme';
+$labels['minute'] = 'minut';
+$labels['second'] = 'sekund';
+$labels['time'] = 'tid (hh:mm:ss)';
+$labels['iso8601'] = 'datum (ISO 8601)';
+$labels['std11'] = 'datum (RFC 2822)';
+$labels['zone'] = 'tidszon';
+$labels['weekday'] = 'veckodag (0-6)';
 $labels['advancedopts'] = 'Avancerade inställningar';
 $labels['body'] = 'Meddelandeinnehåll';
 $labels['address'] = 'adress';
@@ -140,8 +155,23 @@ $labels['default'] = 'standard';
 $labels['octet'] = 'strikt (oktalt)';
 $labels['asciicasemap'] = 'teckenlägesokänslig (ascii-casemap)';
 $labels['asciinumeric'] = 'numerisk (ascii-numeric)';
-
-$messages = array();
+$labels['index'] = 'index:';
+$labels['indexlast'] = 'omvänd';
+$labels['vacation'] = 'Frånvaro';
+$labels['vacation.reply'] = 'Besvara meddelande';
+$labels['vacation.advanced'] = 'Avancerade inställningar';
+$labels['vacation.subject'] = 'Ämne';
+$labels['vacation.body'] = 'Innehåll';
+$labels['vacation.dates'] = 'Frånvarotid';
+$labels['vacation.from'] = 'Avsändare:';
+$labels['vacation.to'] = 'Mottagare:';
+$labels['vacation.status'] = 'Status';
+$labels['vacation.on'] = 'På';
+$labels['vacation.off'] = 'Av';
+$labels['vacation.addresses'] = 'Ytterligare mottagaradresser';
+$labels['vacation.interval'] = 'Svarsintervall';
+$labels['vacation.after'] = 'Placera frånvaroregel efter';
+$labels['vacation.saving'] = 'Sparar data...';
 $messages['filterunknownerror'] = 'Okänt serverfel';
 $messages['filterconnerror'] = 'Anslutning till serverns filtertjänst misslyckades';
 $messages['filterdeleteerror'] = 'Filtret kunde inte tas bort på grund av serverfel';
@@ -169,9 +199,11 @@ $messages['deactivated'] = 'Filter aktiverat.';
 $messages['activated'] = 'Filter deaktiverat.';
 $messages['moved'] = 'Filter flyttat.';
 $messages['moveerror'] = 'Kunde inte flytta filter på grund av serverfel.';
-$messages['nametoolong'] = 'Filtergruppen kan inte läggas till med för långt namn';
+$messages['nametoolong'] = 'För långt namn.';
 $messages['namereserved'] = 'Reserverat namn.';
 $messages['setexist'] = 'Filtergrupp finns redan.';
 $messages['nodata'] = 'Minst en position måste väljas!';
-
+$messages['invaliddateformat'] = 'Ogiltigt datum eller del av datumformat';
+$messages['saveerror'] = 'Datan kunde inte sparas på grund av serverfel.';
+$messages['vacationsaved'] = 'Frånvarodatan har sparats.';
 ?>

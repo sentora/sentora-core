@@ -473,6 +473,9 @@ class rcube_html2text
         // Replace known html entities
         $text = html_entity_decode($text, ENT_QUOTES, $this->charset);
 
+        // Replace unicode nbsp to regular spaces
+        $text = preg_replace('/\xC2\xA0/', ' ', $text);
+
         // Remove unknown/unhandled entities (this cannot be done in search-and-replace block)
         $text = preg_replace('/&([a-zA-Z0-9]{2,6}|#[0-9]{2,4});/', '', $text);
 
@@ -608,24 +611,31 @@ class rcube_html2text
                     $this->width = $p_width;
 
                     // Add citation markers and create <pre> block
-                    $body = preg_replace_callback('/((?:^|\n)>*)([^\n]*)/', array($this, 'blockquote_citation_ballback'), trim($body));
+                    $body = preg_replace_callback('/((?:^|\n)>*)([^\n]*)/', array($this, 'blockquote_citation_callback'), trim($body));
                     $body = '<pre>' . htmlspecialchars($body) . '</pre>';
 
-                    $text = substr($text, 0, $start) . $body . "\n" . substr($text, $end + 13);
+                    $text = substr_replace($text, $body . "\n", $start, $end + 13 - $start);
                     $offset = 0;
+
                     break;
                 }
-            } while ($end || $next);
+                // abort on invalid tag structure (e.g. no closing tag found)
+                else {
+                    break;
+                }
+            }
+            while ($end || $next);
         }
     }
 
     /**
      * Callback function to correctly add citation markers for blockquote contents
      */
-    public function blockquote_citation_ballback($m)
+    public function blockquote_citation_callback($m)
     {
-        $line = ltrim($m[2]);
+        $line  = ltrim($m[2]);
         $space = $line[0] == '>' ? '' : ' ';
+
         return $m[1] . '>' . $space . $line;
     }
 

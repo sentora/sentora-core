@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Дошло је до грешке!';
 $messages['loginfailed']  = 'Неуспешно пријављивање';
 $messages['cookiesdisabled'] = 'Ваш интернет прегледач не подржава колачиће';
@@ -28,13 +26,10 @@ $messages['dberror'] = 'Грешка у бази података!';
 $messages['requesttimedout'] = 'Захтев је истекао';
 $messages['errorreadonly'] = 'Не може да изврши операцију. Фасцикла се може само читати.';
 $messages['errornoperm'] = 'Извршење операције није могуће. Одбијен захтев за дозволу.';
-$messages['erroroverquota'] = 'Unable to perform operation. No free disk space.';
-$messages['erroroverquotadelete'] = 'No free disk space. Use SHIFT+DEL to delete a message.';
 $messages['invalidrequest'] = 'Погрешан захтев! Подаци нису сачувани.';
 $messages['invalidhost'] = 'Погрешно име сервера.';
 $messages['nomessagesfound'] = 'Немате порука у сандучету.';
 $messages['loggedout'] = 'Успешно сте се одјавили.';
-$messages['mailboxempty'] = 'Сандуче је празно.';
 $messages['refreshing'] = 'Освежавам...';
 $messages['loading'] = 'Учитавам...';
 $messages['uploading'] = 'Шаљем датотеку...';
@@ -56,8 +51,6 @@ $messages['contactnotfound'] = 'Жељени контакт није нађен'
 $messages['contactsearchonly'] = 'Унесите шта тражите да пронађете контакте';
 $messages['sendingfailed'] = 'Грешка при слању поруке';
 $messages['senttooquickly'] = 'Молимо Вас да сачекате $sec секунд(и) пре него пошаљете ову поруку';
-$messages['errorsavingsent'] = 'Приликом похрањивања послате поруке десила се грешка';
-$messages['errorsaving'] = 'Грешка при снимању поруке';
 $messages['errormoving'] = 'Грешка при премештању поруке';
 $messages['errorcopying'] = 'Копирање поруке није било успешно';
 $messages['errordeleting'] = 'Грешка при брисању поруке';
@@ -101,8 +94,6 @@ $messages['converting'] = 'Уклањање форматирања из пору
 $messages['messageopenerror'] = 'Порука се не може учитати са сервера';
 $messages['fileuploaderror'] = 'Слање датотеке неуспешно';
 $messages['filesizeerror'] = 'Послата датотека не може да прекорачи величину од $size';
-$messages['copysuccess'] = 'Успешно копирано $nr адреса';
-$messages['copyerror'] = 'Немогуће је ископирати иједну адресу';
 $messages['sourceisreadonly'] = 'Овај извор адресе је само за читање';
 $messages['errorsavingcontact'] = 'Неуспело снимање адресе контакта';
 $messages['movingmessage'] = 'Премештам поруку...';
@@ -139,7 +130,6 @@ $messages['smtperror'] = 'SMTP Error ($code): $msg';
 $messages['emailformaterror'] = 'Имејл адреса није валидна: $email';
 $messages['toomanyrecipients'] = 'Превише прималаца. Смањите број прималаца на $max.';
 $messages['maxgroupmembersreached'] = 'Број чланова гупе прелази максимум од $max';
-$messages['internalerror'] = 'Десила се интерна грешка. Молимо покушајте поново';
 $messages['contactdelerror'] = 'Брисање контакта неуспешно';
 $messages['contactdeleted'] = 'Брисање контакта успешно';
 $messages['contactrestoreerror'] = 'Не може да врати обрисане контакте.';
@@ -167,5 +157,4 @@ $messages['parentnotwritable'] = 'Не може да направи/премес
 $messages['messagetoobig'] = 'Део са поруком је превелик за обраду.';
 $messages['attachmentvalidationerror'] = 'УПОЗОРЕЊЕ! Овај прилог је сумњив зато што се његов тип не поклапа са типом објављеним у поруци. Уколико немате поверења у пошиљаоца, не отварајте је у прегледачу зато што може садржати злонамерни садржај.<br/><br/><em>Очекивао: $expected; нашао: $detected</em>';
 $messages['noscriptwarning'] = 'Упозорење: ова поштанска услуга захтева Јаваскрипт! Да бисте је користили, укључите Јаваскрипт у подешавањима вашег прегледача.';
-
 ?>

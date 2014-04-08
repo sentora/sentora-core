@@ -43,7 +43,7 @@ class rcube_directadmin_password
         $response = $Socket->fetch_parsed_body();
 
         //DEBUG
-        //console("Password Plugin: [USER: $da_user] [HOST: $da_host] - Response: [SOCKET: ".$Socket->result_status_code."] [DA ERROR: ".strip_tags($response['error'])."] [TEXT: ".$response[text]."]");
+        //rcube::console("Password Plugin: [USER: $da_user] [HOST: $da_host] - Response: [SOCKET: ".$Socket->result_status_code."] [DA ERROR: ".strip_tags($response['error'])."] [TEXT: ".$response[text]."]");
 
         if($Socket->result_status_code != 200)
             return array('code' => PASSWORD_CONNECT_ERROR, 'message' => $Socket->error[0]);
@@ -297,7 +297,6 @@ class HTTPSocket {
             $status = socket_get_status($socket);
             $startTime = time();
             $length = 0;
-            $prevSecond = 0;
             while ( !feof($socket) && !$status['timed_out'] )
             {
                 $chunk = fgets($socket,1024);

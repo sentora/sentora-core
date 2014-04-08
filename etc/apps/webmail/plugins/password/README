@@ -1,31 +1,29 @@
  -----------------------------------------------------------------------
  Password Plugin for Roundcube
  -----------------------------------------------------------------------
-
  Plugin that adds a possibility to change user password using many
  methods (drivers) via Settings/Password tab.
-
  -----------------------------------------------------------------------
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License version 2
- as published by the Free Software Foundation.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License along
- with this program; if not, write to the Free Software Foundation, Inc.,
- 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see http://www.gnu.org/licenses/.
 
  @version @package_version@
- @author Aleksander 'A.L.E.C' Machniak <alec@alec.pl>
+ @author Aleksander Machniak <alec@alec.pl>
  @author <see driver files for driver authors>
  -----------------------------------------------------------------------
 
- 1. 	Configuration
- 2.	Drivers
+ 1. Configuration
+ 2. Drivers
  2.1.  Database (sql)
  2.2.  Cyrus/SASL (sasl)
  2.3.  Poppassd/Courierpassd (poppassd)
@@ -44,7 +42,8 @@
  2.16. DBMail (dbmail)
  2.17. Expect (expect)
  2.18. Samba (smb)
- 3.	Driver API
+ 2.19. Vpopmail daemon (vpopmaild)
+ 3. Driver API
 
 
  1. Configuration
@@ -65,40 +64,40 @@
  -------------------
 
  You can specify which database to connect by 'password_db_dsn' option and
- what SQL query to execute by 'password_query'. See main.inc.php.dist file for
+ what SQL query to execute by 'password_query'. See config.inc.php.dist file for
  more info.
 
  Example implementations of an update_passwd function:
 
  - This is for use with LMS (http://lms.org.pl) database and postgres:
 
-	CREATE OR REPLACE FUNCTION update_passwd(hash text, account text) RETURNS integer AS $$
-	DECLARE
-    	    res integer;
-	BEGIN
-    	    UPDATE passwd SET password = hash
-	    WHERE login = split_part(account, '@', 1)
-		AND domainid = (SELECT id FROM domains WHERE name = split_part(account, '@', 2))
-	    RETURNING id INTO res;
-	    RETURN res;
-	END;
-	$$ LANGUAGE plpgsql SECURITY DEFINER;
+    CREATE OR REPLACE FUNCTION update_passwd(hash text, account text) RETURNS integer AS $$
+    DECLARE
+            res integer;
+    BEGIN
+        UPDATE passwd SET password = hash
+        WHERE login = split_part(account, '@', 1)
+            AND domainid = (SELECT id FROM domains WHERE name = split_part(account, '@', 2))
+        RETURNING id INTO res;
+        RETURN res;
+    END;
+    $$ LANGUAGE plpgsql SECURITY DEFINER;
 
  - This is for use with a SELECT update_passwd(%o,%c,%u) query
-	Updates the password only when the old password matches the MD5 password
-	in the database
+   Updates the password only when the old password matches the MD5 password
+   in the database
 
-	CREATE FUNCTION update_password (oldpass text, cryptpass text, user text) RETURNS text
-    	    MODIFIES SQL DATA
-	BEGIN
-	    DECLARE currentsalt varchar(20);
-	    DECLARE error text;
-	    SET error = 'incorrect current password';
-	    SELECT substring_index(substr(user.password,4),_latin1'$',1) INTO currentsalt FROM users WHERE username=user;
-	    SELECT '' INTO error FROM users WHERE username=user AND password=ENCRYPT(oldpass,currentsalt);
-	    UPDATE users SET password=cryptpass WHERE username=user AND password=ENCRYPT(oldpass,currentsalt);
-	    RETURN error;
-	END
+    CREATE FUNCTION update_password (oldpass text, cryptpass text, user text) RETURNS text
+        MODIFIES SQL DATA
+    BEGIN
+        DECLARE currentsalt varchar(20);
+        DECLARE error text;
+        SET error = 'incorrect current password';
+        SELECT substring_index(substr(user.password,4),_latin1'$',1) INTO currentsalt FROM users WHERE username=user;
+        SELECT '' INTO error FROM users WHERE username=user AND password=ENCRYPT(oldpass,currentsalt);
+        UPDATE users SET password=cryptpass WHERE username=user AND password=ENCRYPT(oldpass,currentsalt);
+        RETURN error;
+    END
 
  Example SQL UPDATEs:
 
@@ -142,7 +141,7 @@
  documented within it.
 
  Compile the wrapper program:
-	gcc -o chgsaslpasswd chgsaslpasswd.c
+    gcc -o chgsaslpasswd chgsaslpasswd.c
 
  Chown the compiled chgsaslpasswd binary to the cyrus user and group
  that your browser runs as, then chmod them to 4550.
@@ -150,13 +149,13 @@
  For example, if your cyrus user is 'cyrus' and the apache server group is
  'nobody' (I've been told Redhat runs Apache as user 'apache'):
 
-	chown cyrus:nobody chgsaslpasswd
-	chmod 4550 chgsaslpasswd
+    chown cyrus:nobody chgsaslpasswd
+    chmod 4550 chgsaslpasswd
 
  Stephen Carr has suggested users should try to run the scripts on a test
  account as the cyrus user eg;
 
-	su cyrus -c "./chgsaslpasswd -p test_account"
+    su cyrus -c "./chgsaslpasswd -p test_account"
 
  This will allow you to make sure that the script will work for your setup.
  Should the script not work, make sure that:
@@ -192,8 +191,12 @@
  2.6. cPanel (cpanel)
  --------------------
 
- You can specify parameters for HTTP connection to cPanel's admin
- interface. See config.inc.php.dist file for more info.
+ Install cPanel XMLAPI Client Class into Roundcube program/lib directory
+ or any other place in PHP include path. You can get the class from
+ https://raw.github.com/CpanelInc/xmlapi-php/master/xmlapi.php
+
+ You can configure parameters for connection to cPanel's API interface.
+ See config.inc.php.dist file for more info.
 
 
  2.7. XIMSS/Communigate (ximms)
@@ -244,7 +247,7 @@
 
  This driver is fully compatible with the ldap driver, but
  does not require (or uses) the
-    $rcmail_config['password_ldap_force_replace'] variable.
+    $config['password_ldap_force_replace'] variable.
  Other advantages:
     * Connects only once with the LDAP server when using the search user.
     * Does not read the DN, but only replaces the password within (that is
@@ -296,6 +299,16 @@
 
  Driver to change Samba user password via the 'smbpasswd' command.
  See config.inc.php.dist file for configuration description.
+
+ 2.19. Vpopmail daemon (vpopmaild)
+ -----------------------------------
+
+ Driver for the daemon of vpopmail. Vpopmail is used with qmail to
+ enable virtual users that are saved in a database and not in /etc/passwd.
+
+ Set $config['password_vpopmaild_host'] to the host where vpopmaild runs.
+
+ Set $config['password_vpopmaild_port'] to the port of vpopmaild.
 
 
  3. Driver API

@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Xəta baş verdi!';
 $messages['loginfailed']  = 'Giriş uğursuz oldu.';
 $messages['cookiesdisabled'] = 'Sizin brauzer kukiləri qəbul etmir.';
@@ -34,7 +32,8 @@ $messages['invalidrequest'] = 'Səhv sorğu! Məlumat yaddaşda qalmadı.';
 $messages['invalidhost'] = 'Səhv server adı.';
 $messages['nomessagesfound'] = 'Poçt qutusunda məktub tapılmadı.';
 $messages['loggedout'] = 'Çıxış uğurlu oldu. Sağ olun!';
-$messages['mailboxempty'] = 'Poçt qutusu boşdur';
+$messages['mailboxempty'] = 'Poçt boşdur';
+$messages['nomessages'] = 'Məktub yoxdur';
 $messages['refreshing'] = 'Yenilənmə...';
 $messages['loading'] = 'Yüklənir...';
 $messages['uploading'] = 'Fayl yüklənir...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'Məktub uğurla göndərildi';
 $messages['savingmessage'] = 'Məktubu saxla...';
 $messages['messagesaved'] = 'Məktub qaralamada saxlandı';
 $messages['successfullysaved'] = 'Yaddaşa yazıldı';
+$messages['savingresponse'] = 'Cavab mətninin saxlanılması...';
+$messages['deleteresponseconfirm'] = 'Siz cavab mətnini silmək istəyirsiniz?';
 $messages['addedsuccessfully'] = 'Əlaqə ünvan kitabçasına əlavə olundu';
 $messages['contactexists'] = 'Ünvan kitabçasında bu e-poçtla əlaqə mövcuddur';
 $messages['contactnameexists'] = 'Bu adda kontakt artıq mövcuddur.';
@@ -56,8 +57,8 @@ $messages['contactnotfound'] = 'Tələb olunan ünvan tapılmadı';
 $messages['contactsearchonly'] = 'Kontaqların axtarışı üçün şərti daxil edin';
 $messages['sendingfailed'] = 'Məktub göndərilmədi';
 $messages['senttooquickly'] = 'Məktub göndərmək üçün $sec saniyə gözləmək gərəkir';
-$messages['errorsavingsent'] = 'Göndərilən məktub saxlanılan zaman xəta baş verdi';
-$messages['errorsaving'] = 'Saxlanma prosesi zamanı problem baş verdi';
+$messages['errorsavingsent'] = 'Göndərilən məktubun saxlanılması zamanı xəta baş verdi.';
+$messages['errorsaving'] = 'Saxlanılma zamanı xəta baş verdi.';
 $messages['errormoving'] = 'Məktubu (məktubları) köçürmək alnmadı';
 $messages['errorcopying'] = 'Məktubu (məktubları) kopyalamaq alınmadı';
 $messages['errordeleting'] = 'Məktubu (məktubları) silmək alınmadı';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'Lütfən, qəbul edənin ünvanını daxil ed
 $messages['nosubjectwarning']  = '"Mövzu" sahəsi boşdur. Mövzu daxil etmək istəyirsiniz?';
 $messages['nobodywarning'] = 'Məktub boş göndərilsin?';
 $messages['notsentwarning'] = 'Məktub göndərilmədi. Göndərilmədən imtina etmək istəyirsiniz?';
+$messages['restoresavedcomposedata'] = 'Əvvəlki göndərildi, ancaq göndərilməyən məktub da tapıldı.\n\nSubject: $subject\nSaved: $date\n\nSiz bu məktubu bərpa etmək istəyirsiniz?';
 $messages['noldapserver'] = 'Lütfən, axtarış üçün LDAP server seçin';
 $messages['nosearchname'] = 'Lütfən, ad və ya e-poçt əlavə edin';
 $messages['notuploadedwarning'] = 'Əlavələr tam yüklənilməyib. Gözləyin və ya yükləməni ləğv edin.';
@@ -101,13 +103,16 @@ $messages['converting'] = 'Məktubun formatlaşması silinir...';
 $messages['messageopenerror'] = 'Məktubu serverdən yükləmək alınmır';
 $messages['fileuploaderror'] = 'Fayl yüklənilmədi';
 $messages['filesizeerror'] = 'Yüklənilən fayl maksimal ölçüdən çoxdur - $size';
-$messages['copysuccess'] = '$nr ünvan kopyalandı';
-$messages['copyerror'] = 'Ünvanları kopyalamaq alınmır';
+$messages['copysuccess'] = '$nr kontaktlar uğurlar kopyalanmışdır.';
+$messages['movesuccess'] = '$nr kontaktlar uğurla köçürülmüşdür.';
+$messages['copyerror'] = 'Heç bir kontaktı kopyalamaq olmur.';
+$messages['moveerror'] = 'Heç bir kontaktı köçürmək alınmır.';
 $messages['sourceisreadonly'] = 'Verilən ünvanlar mənbəyi yalnız oxunmaq üçün';
 $messages['errorsavingcontact'] = 'Əlaqəni ünvanda saxlamaq mümkün deyil';
 $messages['movingmessage'] = 'Məktub köçürülür...';
 $messages['copyingmessage'] = 'Məktub kopyalanır...';
 $messages['copyingcontact'] = 'Kontakt(lar)ın kopyalanması...';
+$messages['movingcontact'] = 'Kontak(lar)ın köçürülməsi...';
 $messages['deletingmessage'] = 'Məktub(lar) silinir...';
 $messages['markingmessage'] = 'Məktub(lar) işarələnir...';
 $messages['addingmember'] = 'Kontakt(lar)ın qrupa əlavə edilməsi...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'İdxal gedir, lütfən gözləyin...';
 $messages['importformaterror'] = 'İdxal xətası. Yüklənilən fayl naməlum məlumat formatına malikdir.';
 $messages['importconfirm'] = '<b>$inserted ünvanlar müvəffəqiyyətlə idxal edildi, mövcud $skipped buraxılıb</b>:<p><em>$names</em></p>';
 $messages['importconfirmskipped'] = '<b>Buraxılmış $skipped mövcud daxillər</b>';
+$messages['importmessagesuccess'] = '$nr məktublar uğurla idxal edildi';
+$messages['importmessageerror'] = 'İdxal alınmadı! Yüklənilmiş fayl düzgün məktub və ya poçt faylı deyil';
 $messages['opnotpermitted'] = 'Əməliyyat qadağandır!';
 $messages['nofromaddress'] = 'Seçilmiş kimlikdə e-poçt ünvanları yoxdur';
 $messages['editorwarning'] = 'Adi mətn redaktoruna keçid, bütün mətn formatlarının itkisinə gətirəcək. Davam edilsin?';
@@ -139,7 +146,7 @@ $messages['smtperror'] = 'SMTP Error ($code): $msg';
 $messages['emailformaterror'] = 'Səhv ünvan: $email';
 $messages['toomanyrecipients'] = 'Qəbul edənlər həddindən artıq çoxdur. Lütfən, $max qədər azaldın.';
 $messages['maxgroupmembersreached'] = 'Qrupun ölçüsü imkan verilən maksimumdan artıqdır - $max';
-$messages['internalerror'] = 'Daxili xəta baş verdi. Lütfən, bir daha cəhd edin';
+$messages['internalerror'] = 'Daxili xəta. Lütfən bir daha cəhd edin.';
 $messages['contactdelerror'] = 'Kontak(lar)ı silmək alınmadı';
 $messages['contactdeleted'] = 'Kontak(lar) uğurla silindi';
 $messages['contactrestoreerror'] = 'Silinmiş kontakt(lar)ın bərpası alınmadı';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = 'Qovluğu seçilmiş ana qovluğa köçürmək/
 $messages['messagetoobig'] = 'Məktubun bir hissəsi emal üçün böyükdür.';
 $messages['attachmentvalidationerror'] = 'DİQQƏT! Bu qoşma şübhəlidir, çünki məktubda deyilən növlə eyni deyil. Əgər siz göndərə güvənmirsinizsə, brauzerdə bunu açmayın. Tərkibi təhlükəli ola bilər.<br/><br/><em>Expected: $expected; found: $detected</em>';
 $messages['noscriptwarning'] = 'Xəbərdarlıq: Bu vebmeyl xidməti Javascript tələb edir! Funksiyanı istifadə etmək üçün lütfən, brauzerinizin ayarlarında Javascript-i yandırın.';
-
 ?>

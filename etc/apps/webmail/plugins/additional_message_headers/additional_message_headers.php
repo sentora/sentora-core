@@ -6,8 +6,8 @@
  * Very simple plugin which will add additional headers
  * to or remove them from outgoing messages.
  *
- * Enable the plugin in config/main.inc.php and add your desired headers:
- * $rcmail_config['additional_message_headers'] = array('User-Agent');
+ * Enable the plugin in config.inc.php and add your desired headers:
+ * $config['additional_message_headers'] = array('User-Agent' => 'My-Very-Own-Webmail');
  *
  * @version @package_version@
  * @author Ziba Scott
