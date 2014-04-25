@@ -30,7 +30,7 @@ class module_controller extends ctrl_module
     public static function getZpanelUpdates()
     {
         if (ctrl_options::GetSystemOption('dbversion') < ctrl_options::GetSystemOption('latestzpversion')) {
-            $msg = ui_language::translate("There are currently new updates for your ZPanel installation, please download the latest release") . " (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>) from <a hre=\"http://www.zpanelcp.com/\">http://www.zpanelcp.com/</a>.";
+            $msg = ui_language::translate("There are currently new updates for your ZPanel installation, please download the latest release") . " (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>) from <a href=\"http://www.zpanelcp.com/\">http://www.zpanelcp.com/</a>.";
         } elseif (ctrl_options::GetSystemOption('dbversion') == ctrl_options::GetSystemOption('latestzpversion')) {
             $msg = "Congratulations, You are running the most recent version of ZPanel (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>)!";
         } else {
