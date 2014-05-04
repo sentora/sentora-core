@@ -103,7 +103,7 @@ if (isset($_POST['inUsername'])) {
     $rememberdetails = isset($_POST['inRemember']);
     $inSessionSecuirty = isset($_POST['inSessionSecuirty']);
 
-    $sql = $zdbh->prepare("SELECT ac_passsalt_vc FROM x_accounts WHERE ac_user_vc = :username");
+    $sql = $zdbh->prepare("SELECT ac_passsalt_vc FROM x_accounts WHERE ac_user_vc = :username AND ac_deleted_ts IS NULL");
     $sql->bindParam(':username', $_POST['inUsername']);
     $sql->execute();
     $result = $sql->fetch();
