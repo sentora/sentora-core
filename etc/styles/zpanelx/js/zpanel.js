@@ -263,9 +263,9 @@ var zPanel = {
             zPanel.utils.deepExtend(this.options, options);
 
             // Check for Hidden Buttons
-            okButtonStyle  = this.options.okButton.show === false ? 'style="display: none;"'  :  
+            okButtonStyle = this.options.okButton.show === false ? 'style="display: none;"' : 
             '';
-            cancelButtonStyle  = this.options.cancelButton.show === false ? 'style="display: none;"'  :  
+            cancelButtonStyle = this.options.cancelButton.show === false ? 'style="display: none;"' : 
             '';
 
             // Create Dialog Div
