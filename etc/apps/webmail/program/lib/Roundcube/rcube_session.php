@@ -32,7 +32,9 @@ class rcube_session
     private $ip;
     private $start;
     private $changed;
+    private $time_diff = 0;
     private $reloaded = false;
+    private $appends = array();
     private $unsets = array();
     private $gc_handlers = array();
     private $cookiename = 'roundcube_sessauth';
@@ -42,6 +44,7 @@ class rcube_session
     private $secret = '';
     private $ip_check = false;
     private $logging = false;
+    private $storage;
     private $memcache;
 
 
@@ -52,18 +55,21 @@ class rcube_session
     {
         $this->db      = $db;
         $this->start   = microtime(true);
-        $this->ip      = $_SERVER['REMOTE_ADDR'];
+        $this->ip      = rcube_utils::remote_addr();
         $this->logging = $config->get('log_session', false);
 
         $lifetime = $config->get('session_lifetime', 1) * 60;
         $this->set_lifetime($lifetime);
 
         // use memcache backend
-        if ($config->get('session_storage', 'db') == 'memcache') {
+        $this->storage = $config->get('session_storage', 'db');
+        if ($this->storage == 'memcache') {
             $this->memcache = rcube::get_instance()->get_memcache();
 
             // set custom functions for PHP session management if memcache is available
             if ($this->memcache) {
+                ini_set('session.serialize_handler', 'php');
+
                 session_set_save_handler(
                     array($this, 'open'),
                     array($this, 'close'),
@@ -79,7 +85,9 @@ class rcube_session
                 true, true);
             }
         }
-        else {
+        else if ($this->storage != 'php') {
+            ini_set('session.serialize_handler', 'php');
+
             // set custom functions for PHP session management
             session_set_save_handler(
                 array($this, 'open'),
@@ -87,7 +95,23 @@ class rcube_session
                 array($this, 'db_read'),
                 array($this, 'db_write'),
                 array($this, 'db_destroy'),
-                array($this, 'db_gc'));
+                array($this, 'gc'));
+        }
+    }
+
+
+    /**
+     * Wrapper for session_start()
+     */
+    public function start()
+    {
+        session_start();
+
+        // copy some session properties to object vars
+        if ($this->storage == 'php') {
+            $this->key     = session_id();
+            $this->ip      = $_SESSION['__IP'];
+            $this->changed = $_SESSION['__MTIME'];
         }
     }
 
@@ -116,6 +140,25 @@ class rcube_session
 
 
     /**
+     * Wrapper for session_write_close()
+     */
+    public function write_close()
+    {
+        if ($this->storage == 'php') {
+            $_SESSION['__IP'] = $this->ip;
+            $_SESSION['__MTIME'] = time();
+        }
+
+        session_write_close();
+
+        // write_close() is called on script shutdown, see rcube::shutdown()
+        // execute cleanup functionality if enabled by session gc handler
+        // we do this after closing the session for better performance
+        $this->gc_shutdown();
+    }
+
+
+    /**
      * Read session data from database
      *
      * @param string Session ID
@@ -125,14 +168,16 @@ class rcube_session
     public function db_read($key)
     {
         $sql_result = $this->db->query(
-            "SELECT vars, ip, changed FROM ".$this->db->table_name('session')
-            ." WHERE sess_id = ?", $key);
+            "SELECT vars, ip, changed, " . $this->db->now() . " AS ts"
+            . " FROM " . $this->db->table_name('session')
+            . " WHERE sess_id = ?", $key);
 
         if ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result))) {
-            $this->changed = strtotime($sql_arr['changed']);
-            $this->ip      = $sql_arr['ip'];
-            $this->vars    = base64_decode($sql_arr['vars']);
-            $this->key     = $key;
+            $this->time_diff = time() - strtotime($sql_arr['ts']);
+            $this->changed   = strtotime($sql_arr['changed']);
+            $this->ip        = $sql_arr['ip'];
+            $this->vars      = base64_decode($sql_arr['vars']);
+            $this->key       = $key;
 
             return !empty($this->vars) ? (string) $this->vars : '';
         }
@@ -152,8 +197,9 @@ class rcube_session
      */
     public function db_write($key, $vars)
     {
-        $ts  = microtime(true);
-        $now = $this->db->fromunixtime((int)$ts);
+        $now   = $this->db->now();
+        $table = $this->db->table_name('session');
+        $ts    = microtime(true);
 
         // no session row in DB (db_read() returns false)
         if (!$this->key) {
@@ -171,22 +217,19 @@ class rcube_session
             $newvars = $this->_fixvars($vars, $oldvars);
 
             if ($newvars !== $oldvars) {
-                $this->db->query(
-                    sprintf("UPDATE %s SET vars=?, changed=%s WHERE sess_id=?",
-                        $this->db->table_name('session'), $now),
-                        base64_encode($newvars), $key);
+                $this->db->query("UPDATE $table "
+                    . "SET changed = $now, vars = ? WHERE sess_id = ?",
+                    base64_encode($newvars), $key);
             }
-            else if ($ts - $this->changed > $this->lifetime / 2) {
-                $this->db->query("UPDATE ".$this->db->table_name('session')
-                    ." SET changed=$now WHERE sess_id=?", $key);
+            else if ($ts - $this->changed + $this->time_diff > $this->lifetime / 2) {
+                $this->db->query("UPDATE $table SET changed = $now"
+                    . " WHERE sess_id = ?", $key);
             }
         }
         else {
-            $this->db->query(
-                sprintf("INSERT INTO %s (sess_id, vars, ip, created, changed) ".
-                    "VALUES (?, ?, ?, %s, %s)",
-                    $this->db->table_name('session'), $now, $now),
-                    $key, base64_encode($vars), (string)$this->ip);
+            $this->db->query("INSERT INTO $table (sess_id, vars, ip, created, changed)"
+                . " VALUES (?, ?, ?, $now, $now)",
+                $key, base64_encode($vars), (string)$this->ip);
         }
 
         return true;
@@ -240,25 +283,6 @@ class rcube_session
             $this->db->query(sprintf("DELETE FROM %s WHERE sess_id = ?",
                 $this->db->table_name('session')), $key);
         }
-
-        return true;
-    }
-
-
-    /**
-     * Garbage collecting function
-     *
-     * @param string Session lifetime in seconds
-     * @return boolean True on success
-     */
-    public function db_gc($maxlifetime)
-    {
-        // just delete all expired sessions
-        $this->db->query(
-            sprintf("DELETE FROM %s WHERE changed < %s",
-                $this->db->table_name('session'), $this->db->fromunixtime(time() - $maxlifetime)));
-
-        $this->gc();
 
         return true;
     }
@@ -340,11 +364,11 @@ class rcube_session
     /**
      * Execute registered garbage collector routines
      */
-    public function gc()
+    public function gc($maxlifetime)
     {
-        foreach ($this->gc_handlers as $fct) {
-            call_user_func($fct);
-        }
+        // move gc execution to the script shutdown function
+        // see rcube::shutdown() and rcube_session::write_close()
+        return $this->gc_enabled = $maxlifetime;
     }
 
 
@@ -362,6 +386,25 @@ class rcube_session
         }
 
         $this->gc_handlers[] = $func;
+    }
+
+
+    /**
+     * Garbage collector handler to run on script shutdown
+     */
+    protected function gc_shutdown()
+    {
+        if ($this->gc_enabled) {
+            // just delete all expired sessions
+            if ($this->storage == 'db') {
+                $this->db->query("DELETE FROM " . $this->db->table_name('session')
+                    . " WHERE changed < " . $this->db->now(-$this->gc_enabled));
+            }
+
+            foreach ($this->gc_handlers as $fct) {
+                call_user_func($fct);
+            }
+        }
     }
 
 
@@ -399,8 +442,19 @@ class rcube_session
 
         $node = &$this->get_node(explode('.', $path), $_SESSION);
 
-        if ($key !== null) $node[$key] = $value;
-        else               $node[] = $value;
+        if ($key !== null) {
+            $node[$key] = $value;
+            $path .= '.' . $key;
+        }
+        else {
+            $node[] = $value;
+        }
+
+        $this->appends[] = $path;
+
+        // when overwriting a previously unset variable
+        if ($this->unsets[$path])
+            unset($this->unsets[$path]);
     }
 
 
@@ -438,7 +492,7 @@ class rcube_session
     public function kill()
     {
         $this->vars = null;
-        $this->ip = $_SERVER['REMOTE_ADDR']; // update IP (might have changed)
+        $this->ip = rcube_utils::remote_addr(); // update IP (might have changed)
         $this->destroy(session_id());
         rcube_utils::setcookie($this->cookiename, '-del-', time() - 60);
     }
@@ -449,13 +503,40 @@ class rcube_session
      */
     public function reload()
     {
+        // collect updated data from previous appends
+        $merge_data = array();
+        foreach ((array)$this->appends as $var) {
+            $path = explode('.', $var);
+            $value = $this->get_node($path, $_SESSION);
+            $k = array_pop($path);
+            $node = &$this->get_node($path, $merge_data);
+            $node[$k] = $value;
+        }
+
         if ($this->key && $this->memcache)
             $data = $this->mc_read($this->key);
         else if ($this->key)
             $data = $this->db_read($this->key);
 
-        if ($data)
+        if ($data) {
             session_decode($data);
+
+            // apply appends and unsets to reloaded data
+            $_SESSION = array_merge_recursive($_SESSION, $merge_data);
+
+            foreach ((array)$this->unsets as $var) {
+                if (isset($_SESSION[$var])) {
+                    unset($_SESSION[$var]);
+                }
+                else {
+                    $path = explode('.', $var);
+                    $k = array_pop($path);
+                    $node = &$this->get_node($path, $_SESSION);
+                    unset($node[$k]);
+                }
+            }
+        }
+
     }
 
     /**
@@ -652,10 +733,10 @@ class rcube_session
     function check_auth()
     {
         $this->cookie = $_COOKIE[$this->cookiename];
-        $result = $this->ip_check ? $_SERVER['REMOTE_ADDR'] == $this->ip : true;
+        $result = $this->ip_check ? rcube_utils::remote_addr() == $this->ip : true;
 
         if (!$result) {
-            $this->log("IP check failed for " . $this->key . "; expected " . $this->ip . "; got " . $_SERVER['REMOTE_ADDR']);
+            $this->log("IP check failed for " . $this->key . "; expected " . $this->ip . "; got " . rcube_utils::remote_addr());
         }
 
         if ($result && $this->_mkcookie($this->now) != $this->cookie) {

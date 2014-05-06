@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
-
-
 $labels['filters'] = 'صافی‌ها';
 $labels['managefilters'] = 'مدیریت صافی‌های نامه ورودی';
 $labels['filtername'] = 'نام صافی';
@@ -49,19 +47,20 @@ $labels['messagesendcopy'] = 'ارسال رونوشت پیغام به';
 $labels['messagereply'] = 'پاسخ همراه پیغام';
 $labels['messagedelete'] = 'حذف پیغام';
 $labels['messagediscard'] = 'دور ریختن با پیغام';
+$labels['messagekeep'] = 'پیغام را در صندوق ورودی نگه دار';
 $labels['messagesrules'] = 'برای  صندوق ورودی:';
 $labels['messagesactions'] = '...انجام اعمال ذیل:';
 $labels['add'] = 'افزودن';
 $labels['del'] = 'حذف';
 $labels['sender'] = 'فرستنده';
 $labels['recipient'] = 'گیرنده';
-$labels['vacationaddresses'] = 'آدرس‌های ایمیل دیگر من (جدا شده با ویرگول):';
+$labels['vacationaddr'] = 'آدرس(های) ایمیل اضافی من:';
 $labels['vacationdays'] = 'پیغام ها در چه مواقعی فرستاده شدند (در روزهای):';
 $labels['vacationinterval'] = 'مواقعی که پیغام‌ها ارسال می‌شوند:';
-$labels['days'] = 'روزها';
-$labels['seconds'] = 'ثانیه‌ها';
 $labels['vacationreason'] = 'بدنه پیغام (علت مسافرت):';
 $labels['vacationsubject'] = 'موضوع پیغام:';
+$labels['days'] = 'روزها';
+$labels['seconds'] = 'ثانیه‌ها';
 $labels['rulestop'] = 'توقف قوانین ارزیابی';
 $labels['enable'] = 'فعال/غیرفعال‌سازی';
 $labels['filterset'] = 'مجموعه صافی‌ها';
@@ -83,13 +82,13 @@ $labels['countisgreaterthanequal'] = 'تعداد بیشتر یا مساوی اس
 $labels['countislessthan'] = 'تعداد کمتر است از';
 $labels['countislessthanequal'] = 'تعداد کمتر یا مساوی است با';
 $labels['countequals'] = 'تعداد مساوی است با';
-$labels['countnotequals'] = 'تعداد  مساوی نیست با';
+$labels['countnotequals'] = 'تعداد برابر نیست با';
 $labels['valueisgreaterthan'] = 'مقدار بیشتر است از';
 $labels['valueisgreaterthanequal'] = 'مقدار بیشتر یا مساوی است با';
 $labels['valueislessthan'] = 'مقدار کمتر است از';
 $labels['valueislessthanequal'] = 'مقدار کمتر یا مساوی است با';
 $labels['valueequals'] = 'مقدار مساوی است با';
-$labels['valuenotequals'] = 'مقدار مساوی نیست با';
+$labels['valuenotequals'] = 'مقدار برابر نیست با';
 $labels['setflags'] = 'انتخاب پرچم‌ها برای پیغام';
 $labels['addflags'] = 'افزودن پرچم‌ها برای پیغام';
 $labels['removeflags'] = 'حذف پرچم‌ها از پیغام';
@@ -121,6 +120,22 @@ $labels['filtercreate'] = 'ایجاد صافی';
 $labels['usedata'] = 'استفاده از داده ذیل در صافی:';
 $labels['nextstep'] = 'مرحله بعدی';
 $labels['...'] = '...';
+$labels['currdate'] = 'تاریخ جاری';
+$labels['datetest'] = 'تاریخ';
+$labels['dateheader'] = 'سربرگ:';
+$labels['year'] = 'سال';
+$labels['month'] = 'ماه';
+$labels['day'] = 'روز';
+$labels['date'] = 'تاریخ (yyyy-mm-dd)';
+$labels['julian'] = 'تاریخ (میلادی)';
+$labels['hour'] = 'ساعت';
+$labels['minute'] = 'دقیقه';
+$labels['second'] = 'ثانیه';
+$labels['time'] = 'ساعت (hh:mm:ss)';
+$labels['iso8601'] = 'تاریخ (ISO8601)';
+$labels['std11'] = 'تاریخ (RFC2822)';
+$labels['zone'] = 'منطقه زمانی';
+$labels['weekday'] = 'روز هفته (0-6)';
 $labels['advancedopts'] = 'گزینه‌های پیشرفته';
 $labels['body'] = 'بدنه';
 $labels['address'] = 'نشانی';
@@ -140,8 +155,8 @@ $labels['default'] = 'پیش‌فرض';
 $labels['octet'] = 'سخت (octet)';
 $labels['asciicasemap'] = 'حساس به حروه کوچک و بزرگ (ascii-casemap)';
 $labels['asciinumeric'] = 'عددی (ascii-numeric)';
-
-$messages = array();
+$labels['index'] = 'فهرست:';
+$labels['indexlast'] = 'به عقب';
 $messages['filterunknownerror'] = 'خطای سرور نامعلوم.';
 $messages['filterconnerror'] = 'ناتوانی در اتصال به سرور.';
 $messages['filterdeleteerror'] = 'ناتوانی در حذف صافی. خطای سرور رخ داد.';
@@ -173,5 +188,5 @@ $messages['nametoolong'] = 'نام خیلی بلند.';
 $messages['namereserved'] = 'نام رزرو شده.';
 $messages['setexist'] = 'مجموعه در حال حاضر موجود است.';
 $messages['nodata'] = 'حداقل باید یک موقعیت باید انتخاب شود.';
-
+$messages['invaliddateformat'] = 'قالب تاریخ اشتباه';
 ?>

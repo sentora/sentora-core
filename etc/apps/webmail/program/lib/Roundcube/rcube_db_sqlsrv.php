@@ -29,29 +29,46 @@ class rcube_db_sqlsrv extends rcube_db
     public $db_provider = 'mssql';
 
     /**
-     * Driver initialization
+     * Object constructor
+     *
+     * @param string $db_dsnw DSN for read/write operations
+     * @param string $db_dsnr Optional DSN for read only operations
+     * @param bool   $pconn   Enables persistent connections
      */
-    protected function init()
+    public function __construct($db_dsnw, $db_dsnr = '', $pconn = false)
     {
+        parent::__construct($db_dsnw, $db_dsnr, $pconn);
+
         $this->options['identifier_start'] = '[';
         $this->options['identifier_end'] = ']';
     }
 
     /**
-     * Database character set setting
+     * Driver-specific configuration of database connection
+     *
+     * @param array $dsn DSN for DB connections
+     * @param PDO   $dbh Connection handler
      */
-    protected function set_charset($charset)
+    protected function conn_configure($dsn, $dbh)
     {
-        // UTF-8 is default
+        // Set date format in case of non-default language (#1488918)
+        $dbh->query("SET DATEFORMAT ymd");
     }
 
     /**
      * Return SQL function for current time and date
      *
+     * @param int $interval Optional interval (in seconds) to add/subtract
+     *
      * @return string SQL function to use in query
      */
-    public function now()
+    public function now($interval = 0)
     {
+        if ($interval) {
+            $interval = intval($interval);
+            return "dateadd(second, $interval, getdate())";
+        }
+
         return "getdate()";
     }
 

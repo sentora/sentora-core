@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Došlo k chybě!';
 $messages['loginfailed']  = 'Přihlášení selhalo';
 $messages['cookiesdisabled'] = 'Váš prohlížeč nepodporuje cookies, které jsou pro přihlášení nezbytné';
@@ -24,7 +22,7 @@ $messages['sessionerror'] = 'Vaše přihlášení je neplatné nebo vypršelo';
 $messages['storageerror'] = 'Připojení na IMAP server selhalo';
 $messages['servererror'] = 'Chyba serveru!';
 $messages['servererrormsg'] = 'Chyba serveru: $msg';
-$messages['dberror'] = 'Chyba v databázi!';
+$messages['dberror'] = 'Chyba databáze!';
 $messages['requesttimedout'] = 'Došlo k vypršení požadavku';
 $messages['errorreadonly'] = 'Příkaz nelze provést, složka je určena jen ke čtení.';
 $messages['errornoperm'] = 'Příkaz nelze provést, nemáte oprávnění.';
@@ -33,8 +31,9 @@ $messages['erroroverquotadelete'] = 'Není volné místo na disku. Použijte SHI
 $messages['invalidrequest'] = 'Nesprávný požadavek. Data nebyla uložena.';
 $messages['invalidhost'] = 'Špatné jméno serveru.';
 $messages['nomessagesfound'] = 'Ve schránce nebyla nalezena žádná zpráva';
-$messages['loggedout'] = 'Byli jste úspěšně odhlášeni. Nashledanou!';
+$messages['loggedout'] = 'Byli jste úspěšně odhlášeni. Na shledanou!';
 $messages['mailboxempty'] = 'Schránka je prázdná';
+$messages['nomessages'] = 'Žádné zprávy';
 $messages['refreshing'] = 'Obnovuji...';
 $messages['loading'] = 'Načítám...';
 $messages['uploading'] = 'Nahrávám soubor...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'Zpráva byla odeslána';
 $messages['savingmessage'] = 'Ukládám zprávu...';
 $messages['messagesaved'] = 'Zpráva uložena do Rozepsané';
 $messages['successfullysaved'] = 'Uloženo';
+$messages['savingresponse'] = 'Ukládám text odpovědi...';
+$messages['deleteresponseconfirm'] = 'Opravdu chcete odstranit tento text odpovědi?';
 $messages['addedsuccessfully'] = 'Kontakt byl úspěšně přidán do adresáře';
 $messages['contactexists'] = 'Kontakt se zadanou e-mailovou adresou již existuje';
 $messages['contactnameexists'] = 'Kontakt se stejným jménem již existuje';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'Zadejte, prosím, alespoň jednoho příjemce
 $messages['nosubjectwarning']  = 'Předmět nebyl vyplňen. Přejete si jej zadat nyní?';
 $messages['nobodywarning'] = 'Opravdu chtete odeslat prázdnou zprávu?';
 $messages['notsentwarning'] = 'Zpráva nebyla odeslána. Přejete si zprávu zahodit?';
+$messages['restoresavedcomposedata'] = 'Byla nalezena dříve vytvořená ale neodeslaná zpráva.\n\nPředmět: $subject\nUloženo: $date\n\nPřejete si obnovit tuto zprávu?';
 $messages['noldapserver'] = 'Zvolte, prosím, LDAP server k hledání';
 $messages['nosearchname'] = 'Zadejte, prosím, jméno nebo e-mail kontaktu';
 $messages['notuploadedwarning'] = 'Ještě nebyly nahrány všechny přílohy. Počkejte prosím nebo nahrávání zrušte.';
@@ -101,13 +103,16 @@ $messages['converting'] = 'Odstraňuji formátování ze zprávy...';
 $messages['messageopenerror'] = 'Nemohu načíst zprávu ze serveru';
 $messages['fileuploaderror'] = 'Nahrávání souboru selhalo';
 $messages['filesizeerror'] = 'Soubor přesáhl maximální velikost $size';
-$messages['copysuccess'] = 'Úspěšně zkopírováno $nr adres';
-$messages['copyerror'] = 'Nemohu zkopírovat žádnou adresu';
+$messages['copysuccess'] = 'Úspěšně zkopírováno $nr kontaktů.';
+$messages['movesuccess'] = 'Úspěšně přesunuto $nr kontaktů.';
+$messages['copyerror'] = 'Kontakty nelze kopírovat.';
+$messages['moveerror'] = 'Kontakty nelze přesunout.';
 $messages['sourceisreadonly'] = 'Tento zdroj adres je pouze pro čtení';
 $messages['errorsavingcontact'] = 'Nemohu uložit adresu kontaktu';
 $messages['movingmessage'] = 'Přesouvám zprávu...';
 $messages['copyingmessage'] = 'Kopíruji zprávu...';
 $messages['copyingcontact'] = 'Kopíruji kontakty...';
+$messages['movingcontact'] = 'Přesouvání kontaktů()...';
 $messages['deletingmessage'] = 'Odstraňuji zprávu...';
 $messages['markingmessage'] = 'Označuji zprávu...';
 $messages['addingmember'] = 'Přidávám kontakty do skupiny...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'Importuji, prosím čekejte...';
 $messages['importformaterror'] = 'Import se nezdařil! Typ souboru není podporován.';
 $messages['importconfirm'] = 'Úspěšně naimportováno $inserted kontaktů, $skipped existujících záznamů přeskočeno: $names';
 $messages['importconfirmskipped'] = '<b>Přeskočeno $skipped existujících položek</b>';
+$messages['importmessagesuccess'] = 'Úspěšně naimportováno $nr zpráv';
+$messages['importmessageerror'] = 'Import se nezdařil! Nahraný soubor není platnou zprávou nebo souborem mailboxu';
 $messages['opnotpermitted'] = 'Operace není povolena!';
 $messages['nofromaddress'] = 'Chybějící e-mailová adresa v označeném profilu';
 $messages['editorwarning'] = 'Přepnutím do režimu prostého textu ztratíte veškeré formátování. Chcete pokračovat?';
@@ -139,7 +146,7 @@ $messages['smtperror'] = 'Chyba SMTP: $msg';
 $messages['emailformaterror'] = 'Neplatná e-mailová adresa: $email';
 $messages['toomanyrecipients'] = 'Příliš mnoho příjemců. Změňte počet příjemců na $max.';
 $messages['maxgroupmembersreached'] = 'Počet členských skupin dosáhl maximum z $max';
-$messages['internalerror'] = 'Došlo k interní chybě. Zkuste to znovu';
+$messages['internalerror'] = 'Došlo k interní chybě. Zkuste to prosím znovu.';
 $messages['contactdelerror'] = 'Kontakty nelze odstranit';
 $messages['contactdeleted'] = 'Kontakty byly odstraněny';
 $messages['contactrestoreerror'] = 'Nelze obnovit smazané kontakty';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = 'Nelze vytvořit/přesunout složku do vybrané
 $messages['messagetoobig'] = 'Část zprávy je příliš velká pro zpracování.';
 $messages['attachmentvalidationerror'] = 'Varování: Tato příloha je podezřelá, protože její typ se neshoduje s typem uvedeným ve zprávě. Pokud nedůvěřujete odesílateli, neměli byste přílohu otevírat v prohlížeči, protože může obsahovat škodlivý obsah.<br/><br/><em>Očekáváno: $expected; nalezeno: $detected</em>';
 $messages['noscriptwarning'] = 'Upozornění: Tato emailová aplikace vyžaduje Javascript! Prosím, zapněte Javascript v nastavení prohlížeče.';
-
 ?>

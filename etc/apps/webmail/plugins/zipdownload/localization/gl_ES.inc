@@ -15,9 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-zipdownload/
 */
-
-$labels = array();
-$labels['downloadall'] = 'Descargar tódolos adxuntos';
+$labels['downloadall'] = 'Descargar todos os adxuntos';
 $labels['downloadfolder'] = 'Descargar o cartafol';
-
 ?>

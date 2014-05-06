@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Terjadi error!';
 $messages['loginfailed']  = 'Login gagal.';
 $messages['cookiesdisabled'] = 'Browser Anda tidak menerima cookies.';
@@ -34,7 +32,6 @@ $messages['invalidrequest'] = 'Permintaan tidak valid! Tidak ada data yang tersi
 $messages['invalidhost'] = 'Nama server invalid.';
 $messages['nomessagesfound'] = 'Surat tidak ditemukan di kotak masuk ini';
 $messages['loggedout'] = 'Anda berhasil mengakhiri session. Selamat Tinggal!';
-$messages['mailboxempty'] = 'Kotak masuk kosong.';
 $messages['refreshing'] = 'Menyegarkan...';
 $messages['loading'] = 'Memuat...';
 $messages['uploading'] = 'Menggungah berkas ...';
@@ -44,7 +41,7 @@ $messages['checkingmail'] = 'Memeriksa pesan baru...';
 $messages['sendingmessage'] = 'Mengirim pesan...';
 $messages['messagesent'] = 'Pesan berhasil dikirim.';
 $messages['savingmessage'] = 'Menyimpan pesan...';
-$messages['messagesaved'] = 'Menyimpan pesan ke daftar tunggu';
+$messages['messagesaved'] = 'Pesan tersimpan kedalam Konsep';
 $messages['successfullysaved'] = 'Berhasil disimpan';
 $messages['addedsuccessfully'] = 'Kontak berhasil ditambahkan ke buku alamat';
 $messages['contactexists'] = 'Kontak dengan alamat e-mail ini sudah ada.';
@@ -56,8 +53,6 @@ $messages['contactnotfound'] = 'Kontak yang diminta tidak ditemukan';
 $messages['contactsearchonly'] = 'Masukkan jenis pencarian untuk mencari kontak';
 $messages['sendingfailed'] = 'Gagal mengirim pesan.';
 $messages['senttooquickly'] = 'Mohon tunggu $sec detik sebelum mengirim pesan ini.';
-$messages['errorsavingsent'] = 'Error ketika menyimpan pesan terkirim.';
-$messages['errorsaving'] = 'Error ketika menyimpan.';
 $messages['errormoving'] = 'Pesan tidak bisa dipindahkan';
 $messages['errorcopying'] = 'Pesan tidak dapat disalin';
 $messages['errordeleting'] = 'Pesan tidak bisa dihapus';
@@ -101,13 +96,16 @@ $messages['converting'] = 'Mengembalikan pesan ke format awal...';
 $messages['messageopenerror'] = 'Tidak dapat mengambil pesan dari server';
 $messages['fileuploaderror'] = 'Gagal mengunggah berkas';
 $messages['filesizeerror'] = 'Berkas terunggah mencapai ukuran maksimal dari $size';
-$messages['copysuccess'] = 'Berhasil menyalin $nr alamat';
-$messages['copyerror'] = 'Tidak bisa menyalin alamat manapun';
+$messages['copysuccess'] = 'Berhasil menyalin kontak $nr';
+$messages['movesuccess'] = 'Berhasil memindahkan kontak $nr';
+$messages['copyerror'] = 'Tidak dapat menyalin kontak';
+$messages['moveerror'] = 'Tidak dapat memindahkan kontak';
 $messages['sourceisreadonly'] = 'Sumber dari alamat ini hanya dapat dibaca';
 $messages['errorsavingcontact'] = 'Tidak bisa menyimpan alamat kontak';
 $messages['movingmessage'] = 'Memindahkan pesan...';
 $messages['copyingmessage'] = 'Menyalin pesan...';
 $messages['copyingcontact'] = 'Menyalin kontak...';
+$messages['movingcontact'] = 'Memindahkan kontak(s)...';
 $messages['deletingmessage'] = 'Menghapus pesan...';
 $messages['markingmessage'] = 'Menandai Pesan...';
 $messages['addingmember'] = 'Menambahkan kontak ke grup...';
@@ -126,6 +124,8 @@ $messages['importwait'] = 'Sedang mengimpor, harap menunggu...';
 $messages['importformaterror'] = 'Proses import gagal. File yang di upload bukan file import yang valid.';
 $messages['importconfirm'] = '<b>Berhasil mengimpor $inserted kontak</b>';
 $messages['importconfirmskipped'] = '<b>$skipped entri yang sudah ada dilewatkan</b>';
+$messages['importmessagesuccess'] = 'Berhasil mengimport $nr pesan';
+$messages['importmessageerror'] = 'Gagal mengimport! File yang di upload buka pesan yang valid atau file mailbox';
 $messages['opnotpermitted'] = 'Operasi tidak diperbolehkan!';
 $messages['nofromaddress'] = 'kekurangan alamat e-mail pada identitas terpilih';
 $messages['editorwarning'] = 'Beralih pada editor teks murni akan mengakibatkan semua pemformatan teks hilang. Lanjutkan?';
@@ -139,7 +139,6 @@ $messages['smtperror'] = 'SMTP Error : $msg';
 $messages['emailformaterror'] = 'Alamat e-mail salah: $email';
 $messages['toomanyrecipients'] = 'Terlalu banyak penerima. Batas maksimal penerima adalah $max';
 $messages['maxgroupmembersreached'] = 'Jumlah grup melebihi jumlah maksimum $max';
-$messages['internalerror'] = 'Terjadi kesalahan internal. Silahkan diulang kembali';
 $messages['contactdelerror'] = 'Kontak tidak bisa dihapus';
 $messages['contactdeleted'] = 'Kontak berhasil dihapus';
 $messages['contactrestoreerror'] = 'Tidak bisa mengembalikan kontak yang terhapus.';
@@ -167,5 +166,4 @@ $messages['parentnotwritable'] = 'Tidak bisa membuat/memindahkan map ke map indu
 $messages['messagetoobig'] = 'Pesan terlalu besar untuk diproses.';
 $messages['attachmentvalidationerror'] = 'PERINGATAN! Lampiran ini mencurigakan karena jenisnya tidak cocok dengan jenis yang dinyatakan di dalam pesan. Jika Anda tidak mempercayai pengirim, Anda tidak perlu membukanya di browser karena mungkin berisi konten berbahaya.<br/><br/><em>Expected: $expected; found: $detected</em>';
 $messages['noscriptwarning'] = 'Peringatan: Layanan ini membutuhkan Javascript! Untuk menggunakannya silahkan aktifkan Javascript di pengaturan browser Anda.';
-
 ?>

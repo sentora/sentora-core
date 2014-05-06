@@ -19,7 +19,7 @@
  +-----------------------------------------------------------------------+
 */
 
-$uid   = get_input_value('_uid', RCUBE_INPUT_GET);
+$uid   = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_GET);
 $index = $RCMAIL->storage->index(null, rcmail_sort_column(), rcmail_sort_order());
 $cnt   = $index->count_messages();
 
@@ -35,23 +35,27 @@ if ($prev) {
     $OUTPUT->set_env('prev_uid', $prev);
     $OUTPUT->command('enable_command', 'previousmessage', 'firstmessage', true);
 }
+
 if ($next) {
     $OUTPUT->set_env('next_uid', $next);
     $OUTPUT->command('enable_command', 'nextmessage', 'lastmessage', true);
 }
-if ($first)
+
+if ($first) {
     $OUTPUT->set_env('first_uid', $first);
-if ($last)
+}
+
+if ($last) {
     $OUTPUT->set_env('last_uid', $last);
+}
 
 // Don't need a real messages count value
 $OUTPUT->set_env('messagecount', 1);
 
 // Set rowcount text
-$OUTPUT->command('set_rowcount', rcube_label(array(
+$OUTPUT->command('set_rowcount', $RCMAIL->gettext(array(
     'name' => 'messagenrof',
     'vars' => array('nr'  => $pos+1, 'count' => $cnt)
 )));
 
 $OUTPUT->send();
-

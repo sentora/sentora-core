@@ -15,20 +15,17 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-archive/
 */
-
-$labels = array();
 $labels['buttontext'] = 'Arxiva';
 $labels['buttontitle'] = 'Arxiva aquest missatge';
 $labels['archived'] = 'Arxivat correctament';
 $labels['archivedreload'] = 'Arxivat correctament. Recarregueu la pàgina per veure les noves carpetes de l\'arxiu.';
-$labels['archiveerror'] = 'Alguns missatges no han pogut ser arxivats';
-$labels['archivefolder'] = 'Arxiva';
+$labels['archiveerror'] = 'Alguns missatges no s\'han pogut arxivar';
+$labels['archivefolder'] = 'Arxiu';
 $labels['settingstitle'] = 'Arxiu';
-$labels['archivetype'] = 'Dividir arxiu per';
+$labels['archivetype'] = 'Divideix arxiu per';
 $labels['archivetypeyear'] = 'Any (p.ex. Arxiu/2012)';
 $labels['archivetypemonth'] = 'Mes (p.ex. Arxiu/2012/06)';
 $labels['archivetypefolder'] = 'Carpeta original';
 $labels['archivetypesender'] = 'Adreça del remitent';
 $labels['unkownsender'] = 'desconegut';
-
 ?>

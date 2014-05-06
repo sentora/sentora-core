@@ -5,11 +5,11 @@
 <roundcube:include file="/includes/links.html" />
 <script type="text/javascript" src="/functions.js"></script>
 </head>
-<body class="iframe" onload="rcube_init_mail_ui()">
+<body class="iframe">
 
 <div id="contact-title" class="boxtitle"><roundcube:label name="editcontact" /></div>
 <div id="contact-details" class="boxcontent">
-<form name="editform" method="post" action="./">
+<roundcube:form name="editform" method="post">
   <roundcube:if condition="strlen(env:sourcename)" />
     <div id="sourcename"><roundcube:label name="addressbook" />: <roundcube:var name="env:sourcename" /></div>
   <roundcube:endif />
@@ -35,7 +35,10 @@
 <roundcube:object name="photoUploadForm" id="upload-form" size="30" class="popupmenu" />
 <roundcube:object name="fileDropArea" id="contactpic" />
 
-<script type="text/javascript">rcube_init_tabs('contacttabs')</script>
+<script type="text/javascript">
+rcube_init_tabs('contacttabs');
+rcube_init_mail_ui();
+</script>
 
 </body>
 </html>

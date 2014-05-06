@@ -15,7 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-newmail_notifier/
 */
-
 $labels['basic'] = 'Näytä selainilmoitus uuden viestin saapuessa';
 $labels['desktop'] = 'Näytä työpöytäilmoitus uuden viestin saapuessa';
 $labels['sound'] = 'Toista ääni uuden viestin saapuessa';
@@ -25,5 +24,5 @@ $labels['body'] = 'Sait uuden viestin.';
 $labels['testbody'] = 'Tämä on testi-ilmoitus.';
 $labels['desktopdisabled'] = 'Työpöytäilmoitukset on estetty selaimessa.';
 $labels['desktopunsupported'] = 'Selaimesi ei tue työpöytäilmoituksia.';
-
+$labels['desktoptimeout'] = 'Sulje työpöytäilmoitus';
 ?>

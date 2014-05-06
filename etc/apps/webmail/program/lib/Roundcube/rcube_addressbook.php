@@ -3,7 +3,7 @@
 /*
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2006-2012, The Roundcube Dev Team                       |
+ | Copyright (C) 2006-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -35,6 +35,7 @@ abstract class rcube_addressbook
     /** public properties (mandatory) */
     public $primary_key;
     public $groups = false;
+    public $export_groups = true;
     public $readonly = true;
     public $searchonly = false;
     public $undelete = false;
@@ -208,6 +209,7 @@ abstract class rcube_addressbook
     public function validate(&$save_data, $autofix = false)
     {
         $rcube = rcube::get_instance();
+        $valid = true;
 
         // check validity of email addresses
         foreach ($this->get_col_values('email', $save_data, true) as $email) {
@@ -215,12 +217,28 @@ abstract class rcube_addressbook
                 if (!rcube_utils::check_email(rcube_utils::idn_to_ascii($email))) {
                     $error = $rcube->gettext(array('name' => 'emailformaterror', 'vars' => array('email' => $email)));
                     $this->set_error(self::ERROR_VALIDATE, $error);
-                    return false;
+                    $valid = false;
+                    break;
                 }
             }
         }
 
-        return true;
+        // allow plugins to do contact validation and auto-fixing
+        $plugin = $rcube->plugins->exec_hook('contact_validate', array(
+            'record'  => $save_data,
+            'autofix' => $autofix,
+            'valid'   => $valid,
+        ));
+
+        if ($valid && !$plugin['valid']) {
+            $this->set_error(self::ERROR_VALIDATE, $plugin['error']);
+        }
+
+        if (is_array($plugin['record'])) {
+            $save_data = $plugin['record'];
+        }
+
+        return $plugin['valid'];
     }
 
     /**
@@ -263,7 +281,8 @@ abstract class rcube_addressbook
      * @param array Assoziative array with save data
      *  Keys:   Field name with optional section in the form FIELD:SECTION
      *  Values: Field value. Can be either a string or an array of strings for multiple values
-     * @return boolean True on success, False on error
+     *
+     * @return mixed On success if ID has been changed returns ID, otherwise True, False on error
      */
     function update($id, $save_cols)
     {
@@ -293,8 +312,10 @@ abstract class rcube_addressbook
 
     /**
      * Mark all records in database as deleted
+     *
+     * @param bool $with_groups Remove also groups
      */
-    function delete_all()
+    function delete_all($with_groups = false)
     {
         /* empty for read-only address books */
     }
@@ -423,7 +444,7 @@ abstract class rcube_addressbook
      * @param boolean True to return one array with all values, False for hash array with values grouped by type
      * @return array List of column values
      */
-    function get_col_values($col, $data, $flat = false)
+    public static function get_col_values($col, $data, $flat = false)
     {
         $out = array();
         foreach ((array)$data as $c => $values) {
@@ -432,7 +453,7 @@ abstract class rcube_addressbook
                     $out = array_merge($out, (array)$values);
                 }
                 else {
-                    list($f, $type) = explode(':', $c);
+                    list(, $type) = explode(':', $c);
                     $out[$type] = array_merge((array)$out[$type], (array)$values);
                 }
             }
@@ -476,7 +497,8 @@ abstract class rcube_addressbook
             $fn = trim(join(' ', array_filter(array($contact['prefix'], $contact['firstname'], $contact['middlename'], $contact['surname'], $contact['suffix']))));
 
         // use email address part for name
-        $email = is_array($contact['email']) ? $contact['email'][0] : $contact['email'];
+        $email = self::get_col_values('email', $contact, true);
+        $email = $email[0];
 
         if ($email && (empty($fn) || $fn == $email)) {
             // return full email
@@ -513,8 +535,12 @@ abstract class rcube_addressbook
             $fn = join(' ', array($contact['surname'], $contact['firstname'], $contact['middlename']));
         else if ($compose_mode == 1)
             $fn = join(' ', array($contact['firstname'], $contact['middlename'], $contact['surname']));
-        else
+        else if ($compose_mode == 0)
             $fn = !empty($contact['name']) ? $contact['name'] : join(' ', array($contact['prefix'], $contact['firstname'], $contact['middlename'], $contact['surname'], $contact['suffix']));
+        else {
+            $plugin = rcube::get_instance()->plugins->exec_hook('contact_listname', array('contact' => $contact));
+            $fn     = $plugin['fn'];
+        }
 
         $fn = trim($fn, ', ');
 
@@ -523,9 +549,9 @@ abstract class rcube_addressbook
             $fn = $contact['name'];
 
         // fallback to email address
-        $email = is_array($contact['email']) ? $contact['email'][0] : $contact['email'];
-        if (empty($fn) && $email)
-            return $email;
+        if (empty($fn) && ($email = self::get_col_values('email', $contact, true)) && !empty($email)) {
+            return $email[0];
+        }
 
         return $fn;
     }
@@ -538,11 +564,11 @@ abstract class rcube_addressbook
         $key = $contact[$sort_col] . ':' . $contact['sourceid'];
 
         // add email to a key to not skip contacts with the same name (#1488375)
-        if (!empty($contact['email'])) {
-             $key .= ':' . implode(':', (array)$contact['email']);
-         }
+        if (($email = self::get_col_values('email', $contact, true)) && !empty($email)) {
+            $key .= ':' . implode(':', (array)$email);
+        }
 
-         return $key;
+        return $key;
     }
 
     /**
@@ -561,9 +587,9 @@ abstract class rcube_addressbook
         // use only strict comparison (mode = 1)
         // @TODO: partial search, e.g. match only day and month
         if (in_array($colname, $this->date_cols)) {
-            return (($value = rcube_utils::strtotime($value))
-                && ($search = rcube_utils::strtotime($search))
-                && date('Ymd', $value) == date('Ymd', $search));
+            return (($value = rcube_utils::anytodatetime($value))
+                && ($search = rcube_utils::anytodatetime($search))
+                && $value->format('Ymd') == $search->format('Ymd'));
         }
 
         // composite field, e.g. address

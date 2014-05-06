@@ -5,7 +5,7 @@
  | localization/<lang>/labels.inc                                        |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -37,6 +37,7 @@ $labels['drafts'] = 'Drafts';
 $labels['sent']   = 'Sent';
 $labels['trash']  = 'Trash';
 $labels['junk']   = 'Junk';
+$labels['show_real_foldernames'] = 'Show real names for special folders';
 
 // message listing
 $labels['subject'] = 'Subject';
@@ -63,7 +64,9 @@ $labels['fromtoshort'] = '$from – $to of $count';
 $labels['copy']     = 'Copy';
 $labels['move']     = 'Move';
 $labels['moveto']   = 'Move to...';
+$labels['copyto']   = 'Copy to...';
 $labels['download'] = 'Download';
+$labels['open']     = 'Open';
 $labels['showattachment'] = 'Show';
 $labels['showanyway'] = 'Show it anyway';
 
@@ -161,6 +164,7 @@ $labels['currpage'] = 'Current page';
 $labels['unread'] = 'Unread';
 $labels['flagged'] = 'Flagged';
 $labels['unanswered'] = 'Unanswered';
+$labels['withattachment'] = 'With attachment';
 $labels['deleted'] = 'Deleted';
 $labels['undeleted'] = 'Not deleted';
 $labels['invert'] = 'Invert';
@@ -191,6 +195,7 @@ $labels['listmode'] = 'List view mode';
 $labels['folderactions'] = 'Folder actions...';
 $labels['compact'] = 'Compact';
 $labels['empty'] = 'Empty';
+$labels['importmessages'] = 'Import messages';
 
 $labels['quota'] = 'Disk usage';
 $labels['unknown']  = 'unknown';
@@ -201,9 +206,13 @@ $labels['resetsearch']  = 'Reset search';
 $labels['searchmod']  = 'Search modifiers';
 $labels['msgtext']  = 'Entire message';
 $labels['body']  = 'Body';
+$labels['type'] = 'Type';
+$labels['namex'] = 'Name';
 
 $labels['openinextwin'] = 'Open in new window';
 $labels['emlsave'] = 'Download (.eml)';
+$labels['changeformattext'] = 'Display in plain text format';
+$labels['changeformathtml'] = 'Display in HTML format';
 
 // message compose
 $labels['editasnew']      = 'Edit as new';
@@ -223,6 +232,18 @@ $labels['spellcheck']    = 'Spell';
 $labels['checkspelling'] = 'Check spelling';
 $labels['resumeediting'] = 'Resume editing';
 $labels['revertto']      = 'Revert to';
+
+$labels['restore'] = 'Restore';
+$labels['restoremessage'] = 'Restore message?';
+
+$labels['responses'] = 'Responses';
+$labels['insertresponse'] = 'Insert a response';
+$labels['manageresponses'] = 'Manage responses';
+$labels['savenewresponse'] = 'Save new response';
+$labels['editresponses'] = 'Edit responses';
+$labels['editresponse'] = 'Edit response';
+$labels['responsename'] = 'Name';
+$labels['responsetext'] = 'Response Text';
 
 $labels['attach'] = 'Attach';
 $labels['attachments'] = 'Attachments';
@@ -335,6 +356,8 @@ $labels['composeto']      = 'Compose mail to';
 $labels['contactsfromto'] = 'Contacts $from to $to of $count';
 $labels['print']          = 'Print';
 $labels['export']         = 'Export';
+$labels['exportall']      = 'Export all';
+$labels['exportsel']      = 'Export selected';
 $labels['exportvcards']   = 'Export contacts in vCard format';
 $labels['newcontactgroup'] = 'Create new contact group';
 $labels['grouprename']    = 'Rename group';
@@ -348,6 +371,7 @@ $labels['lastpage']       = 'Show last page';
 
 $labels['group'] = 'Group';
 $labels['groups'] = 'Groups';
+$labels['listgroup'] = 'List group members';
 $labels['personaladrbook'] = 'Personal Addresses';
 
 $labels['searchsave'] = 'Save search';
@@ -356,8 +380,11 @@ $labels['searchdelete'] = 'Delete search';
 $labels['import'] = 'Import';
 $labels['importcontacts'] = 'Import contacts';
 $labels['importfromfile'] = 'Import from file:';
-$labels['importtarget'] = 'Add new contacts to address book:';
+$labels['importtarget'] = 'Add contacts to';
 $labels['importreplace'] = 'Replace the entire address book';
+$labels['importgroups'] = 'Import group assignments';
+$labels['importgroupsall'] = 'All (create groups if necessary)';
+$labels['importgroupsexisting'] = 'Only for existing groups';
 $labels['importdesc'] = 'You can upload contacts from an existing address book.<br/>We currently support importing addresses from the <a href="http://en.wikipedia.org/wiki/VCard">vCard</a> or CSV (comma-separated) data format.';
 $labels['done'] = 'Done';
 
@@ -396,6 +423,7 @@ $labels['htmleditor'] = 'Compose HTML messages';
 $labels['htmlonreply'] = 'on reply to HTML message';
 $labels['htmlonreplyandforward'] = 'on forward or reply to HTML message';
 $labels['htmlsignature'] = 'HTML signature';
+$labels['showemail'] = 'Show email address with display name';
 $labels['previewpane'] = 'Show preview pane';
 $labels['skin'] = 'Interface skin';
 $labels['logoutclear'] = 'Clear Trash on logout';
@@ -465,9 +493,13 @@ $labels['spellcheckignorenums'] = 'Ignore words with numbers';
 $labels['spellcheckignorecaps'] = 'Ignore words with all letters capitalized';
 $labels['addtodict'] = 'Add to dictionary';
 $labels['mailtoprotohandler'] = 'Register protocol handler for mailto: links';
+$labels['standardwindows'] = 'Handle popups as standard windows';
 $labels['forwardmode'] = 'Messages forwarding';
 $labels['inline'] = 'inline';
 $labels['asattachment'] = 'as attachment';
+$labels['replyallmode'] = 'Default action of [Reply all] button';
+$labels['replyalldefault'] = 'reply to all';
+$labels['replyalllist'] = 'reply to mailing list only (if found)';
 
 $labels['folder']  = 'Folder';
 $labels['folders']  = 'Folders';

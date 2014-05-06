@@ -29,7 +29,6 @@
 #acltable td
 {
   white-space: nowrap;
-  border: none;
   text-align: center;
 }
 
@@ -38,19 +37,24 @@
   border-left: #BBD3DA dotted 1px;
   font-size: 11px;
   font-weight: bold;
+  width: auto;
 }
 
 #acltable tbody td
 {
   border-bottom: #DDDDDD 1px solid;
   text-align: center;
-  padding: 2px;
+  height: 16px;
   cursor: default;
 }
 
 #acltable thead td.user
 {
-  border-left: none;
+  width: 30%;
+}
+
+#acltable.advanced thead td.user {
+	width: 25%;
 }
 
 #acltable tbody td.user
@@ -60,7 +64,6 @@
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   border-left: none;
-  width: 50px;
 }
 
 #acltable tbody td.partial
@@ -99,10 +102,7 @@
 
 #aclform
 {
-  top: 80px;
-  width: 480px;
-  padding: 10px;
-  background-color: white;
+  display: none;
 }
 
 #aclform div

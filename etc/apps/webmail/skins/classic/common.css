@@ -20,7 +20,7 @@ body.extwin
   margin: 10px;
 }
 
-td, th, div, p, select, input, textarea
+select, input, textarea
 {
   font-size: 12px;
   font-family: inherit;
@@ -53,6 +53,13 @@ a.tab
   width: 80px;
   display: block;
   text-align: center;
+}
+
+a.disabled
+{
+  color: #999;
+  text-decoration: none;
+  cursor: default;
 }
 
 hr
@@ -283,6 +290,15 @@ body > #message a
   text-decoration: underline;
 }
 
+body.extwin #closelink
+{
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  text-align: right;
+  z-index:100;
+}
+
 .box
 {
   border: 1px solid #999;
@@ -474,6 +490,9 @@ body.iframe .boxtitle
   top: 32px;
   left: 90px;
   width: auto;
+  max-height: 70%;
+  overflow: -moz-scrollbars-vertical;
+  overflow-y: auto;
   display: none;
   background-color: #fff;
   background-color: rgba(255, 255, 255, 0.95);
@@ -483,6 +502,7 @@ body.iframe .boxtitle
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  box-shadow: 1px 1px 12px #999;
   -moz-box-shadow: 1px 1px 12px #999;
   -webkit-box-shadow: #999 1px 1px 12px;
 }
@@ -502,14 +522,23 @@ body.iframe .boxtitle
   margin: 3px -4px;
 }
 
-.popupmenu li a
+.popupmenu li a,
+.popupmenu li label
 {
   display: block;
   color: #a0a0a0;
-  padding: 2px 10px;
+  padding: 2px 16px 2px 10px;
   text-decoration: none;
   min-height: 14px;
   background: transparent;
+}
+
+.popupmenu li label.comment
+{
+  color: #999;
+  font-style: italic;
+  padding-top: 4px;
+  padding-bottom: 3px;
 }
 
 .popupmenu li a.active,
@@ -622,6 +651,32 @@ table.records-table tr.unfocused td
   background-color: #929292;
 }
 
+ul.treelist li
+{
+  position: relative;
+}
+
+ul.treelist li div.treetoggle
+{
+  position: absolute;
+  left: 8px !important;
+  left: -16px;
+  top: 1px;
+  width: 14px;
+  height: 16px;
+  cursor: pointer;
+}
+
+ul.treelist li div.collapsed
+{
+  background: url(images/icons/collapsed.png?v=45aa.97) bottom right no-repeat;
+}
+
+ul.treelist li div.expanded
+{
+  background: url(images/icons/expanded.png?v=f647.107) bottom right no-repeat;
+}
+
 
 /***** mac-style quicksearch field *****/
 
@@ -666,7 +721,26 @@ table.records-table tr.unfocused td
   font-size: 11px;
   padding: 0px;
   border: none;
+  outline: none;
 }
+
+.propform div.prop
+{
+  margin-bottom: 0.5em;
+}
+
+.propform div.prop.block label
+{
+  display: block;
+  margin-bottom: 2px;
+}
+
+.propform div.prop.block input,
+.propform div.prop.block textarea
+{
+  width: 97%;
+}
+
 
 /***** roundcube webmail pre-defined classes *****/
 
@@ -698,6 +772,7 @@ table.records-table tr.unfocused td
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  box-shadow: 1px 1px 12px #999;
   -moz-box-shadow: 1px 1px 12px #999;
   -webkit-box-shadow: #999 1px 1px 12px;
 }
@@ -710,7 +785,7 @@ table.records-table tr.unfocused td
   content: " ";
   width: 14px;
   height: 14px;
-  background: url(images/messageactions.png?v=e5b9.2211) -2px -128px no-repeat;
+  background: url(images/messageactions.png?v=d93e.3223) -2px -128px no-repeat;
 }
 
 a.rcmContactAddress
@@ -814,6 +889,10 @@ font.bold
   font-weight: bold;
 }
 
+.formbuttons
+{
+  text-align: center;
+}
 
 /***** onclick menu list *****/
 
@@ -896,6 +975,57 @@ ul.toolbarmenu li.separator_above
 #searchmenu ul.toolbarmenu li
 {
   margin: 1px 4px 1px;
+}
+
+
+/*** folder selector ***/
+
+#folder-selector li a
+{
+  padding: 0;
+}
+
+#folder-selector li a span
+{
+  background: url(images/icons/folders.png?v=d9d2.5356) no-repeat 6px 0;
+  display: block;
+  height: 15px;
+  min-height: 14px;
+  padding: 2px 4px 2px 28px;
+  overflow: hidden;
+  max-width: 120px;
+  text-overflow: ellipsis;
+}
+
+#folder-selector li a.virtual
+{
+  color: #A0A0A0;
+}
+
+#folder-selector li a.active:hover span
+{
+  color: white;
+}
+
+#folder-selector li a.inbox span
+{
+  background-position: 6px -18px;
+}
+#folder-selector li a.drafts span
+{
+  background-position: 6px -37px;
+}
+#folder-selector li a.sent span
+{
+  background-position: 6px -54px;
+}
+#folder-selector li a.trash span
+{
+  background-position: 6px -91px;
+}
+#folder-selector li a.junk span
+{
+  background-position: 6px -73px;
 }
 
 

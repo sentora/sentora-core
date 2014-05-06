@@ -5,7 +5,7 @@
  | program/localization/index.inc                                        |
  |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -26,7 +26,8 @@
 
 $rcube_languages = array(
   'sq_AL' => 'Albanian (Shqip)',
-  'ar_SA' => 'Arabic (العربية)',
+  'ar'    => 'Arabic (العربية)',
+  'ar_SA' => 'Arabic (Saudi Arabia)',
   'hy_AM' => 'Armenian (Հայերեն)',
   'ast'	  => 'Asturiana (Asturianu)',
   'az_AZ' => 'Azerbaijani (Azərbaycanca)',
@@ -46,10 +47,12 @@ $rcube_languages = array(
   'de_DE' => 'German (Deutsch)',
   'de_CH' => 'German (Schweiz)',
   'nl_NL' => 'Dutch (Nederlands)',
+  'en_CA' => 'English (Canada)',
   'en_GB' => 'English (GB)',
   'en_US' => 'English (US)',
   'eo'    => 'Esperanto',
   'et_EE' => 'Estonian (Eesti)',
+  'fo_FO' => 'Faroese (Føroyskt)',
   'fi_FI' => 'Finnish (Suomi)',
   'nl_BE' => 'Flemish (Vlaams)',
   'fr_FR' => 'French (Français)',
@@ -66,10 +69,12 @@ $rcube_languages = array(
   'it_IT' => 'Italian (Italiano)',
   'ja_JP' => 'Japanese (日本語)',
   'km_KH' => 'Khmer (ភាសាខ្មែរ)',
+  'kn_IN' => 'Konkani (कोंकणी)',
   'ko_KR' => 'Korean (한국어)',
   'ku'    => 'Kurdish (Kurmancî)',
   'lv_LV' => 'Latvian (Latviešu)',
   'lt_LT' => 'Lithuanian (Lietuviškai)',
+  'lb_LU' => 'Luxembourgish (Lëtzebuergesch)',
   'mk_MK' => 'Macedonian (Македонски)',
   'ms_MY' => 'Malay (Bahasa Melayu)',
   'ml_IN' => 'Malayalam (മലയാളം)',
@@ -90,11 +95,14 @@ $rcube_languages = array(
   'sl_SI' => 'Slovenian (Slovenščina)',
   'es_AR' => 'Spanish (Argentina)',
   'es_ES' => 'Spanish (Español)',
+  'es_419' => 'Spanish (Latin America)',
   'sv_SE' => 'Swedish (Svenska)',
   'ta_IN' => 'Tamil (தமிழ்)',
+  'ti'    => 'Tigrinya (ትግርኛ)',
   'th_TH' => 'Thai (ไทย)',
   'tr_TR' => 'Turkish (Türkçe)',
   'uk_UA' => 'Ukrainian (Українська)',
+  'ur_PK' => 'Urdu (اُردو)',
   'vi_VN' => 'Vietnamese (Tiếng Việt)',
   'cy_GB' => 'Welsh (Cymraeg)',
   'fy_NL' => 'West Frisian (Frysk)',
@@ -102,7 +110,6 @@ $rcube_languages = array(
 
 $rcube_language_aliases = array(
   'am' => 'hy_AM',
-  'ar' => 'ar_SA',
   'az' => 'az_AZ',
   'bg' => 'bg_BG',
   'bs' => 'bs_BA',
@@ -132,7 +139,9 @@ $rcube_language_aliases = array(
   'kr' => 'ko_KR',
   'kh' => 'km_KH',
   'kh_KH' => 'km_KH',
+  'kn' => 'kn_IN',
   'km' => 'km_KH',
+  'lb' => 'lb_LU',
   'ne' => 'ne_NP',
   'no' => 'nn_NO',
   'ms' => 'ms_MY',

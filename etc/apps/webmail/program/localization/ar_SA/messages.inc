@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,9 +15,7 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
-$messages['errortitle']  = 'An error occurred!';
+$messages['errortitle']  = 'حدث خطأ!';
 $messages['loginfailed']  = 'فشل تسجيل الدخول';
 $messages['cookiesdisabled'] = 'المتصفح الخاص بك لا يقبل الكوكيز';
 $messages['sessionerror'] = 'انتهت صلاحية الجلسة الحالية أو أنها غيرصالحة';
@@ -25,17 +23,18 @@ $messages['storageerror'] = 'فشل الاتصال بخادم IMAP';
 $messages['servererror'] = 'خطأ في الخادم!';
 $messages['servererrormsg'] = 'خطأ خادم: $msg';
 $messages['dberror'] = 'خطأ في قاعدة البيانات!';
-$messages['requesttimedout'] = 'Request timed out';
+$messages['requesttimedout'] = 'انتهت مهلة الطلب ';
 $messages['errorreadonly'] = 'تعذر تنفيذ العملية. المجلد للقراءة فقط.';
 $messages['errornoperm'] = 'تعذر تنفيذ العملية. ليست لديك الصلاحية.';
-$messages['erroroverquota'] = 'Unable to perform operation. No free disk space.';
-$messages['erroroverquotadelete'] = 'No free disk space. Use SHIFT+DEL to delete a message.';
+$messages['erroroverquota'] = 'تعذر تنفيذ العملية. لايوجد مساحة كافية.';
+$messages['erroroverquotadelete'] = 'لا يوجد مساحة كافية. استخدم SHIFT+DEL لحذف الرسالة.';
 $messages['invalidrequest'] = 'طلب غير صالح! لم تحفظ أية بيانات.';
-$messages['invalidhost'] = 'Invalid server name.';
+$messages['invalidhost'] = 'اسم الملقم غير صالح.';
 $messages['nomessagesfound'] = 'لم يعثر على أية رسائل في صندوق البريد هذا';
 $messages['loggedout'] = 'قمت بإنهاء هذه الجلسة بنجاح. إلى اللقاء!';
 $messages['mailboxempty'] = 'صندوق البريد فارغ';
-$messages['refreshing'] = 'Refreshing...';
+$messages['nomessages'] = 'لا يوجد رسائل';
+$messages['refreshing'] = 'جاري التحديث...';
 $messages['loading'] = 'جاري العمل...';
 $messages['uploading'] = 'جاري رفع الملف...';
 $messages['uploadingmany'] = 'جاري تحميل الملفات...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'تم إرسال الرسالة بنجاح';
 $messages['savingmessage'] = 'حفظ الرسالة...';
 $messages['messagesaved'] = 'تم حفظ الرسالة في المسودات';
 $messages['successfullysaved'] = 'تم الحفظ بنجاح';
+$messages['savingresponse'] = 'جاري حفظ نص الرد...';
+$messages['deleteresponseconfirm'] = 'هل تريد فعلاً حذف نص الرد هذا؟';
 $messages['addedsuccessfully'] = 'تمت إضافة المراسل إلى دفتر العناوينبنجاح';
 $messages['contactexists'] = 'هناك مراسل له نفس هذا البريد الالكترونيموجود مسبقاً';
 $messages['contactnameexists'] = 'هناك مُرسال له نفس الإسم موجود مسبقاً.';
@@ -56,8 +57,8 @@ $messages['contactnotfound'] = 'تعذر العثور على المراسل ال
 $messages['contactsearchonly'] = 'اكتب بعض كلمات البحث للعثور علىالمُراسلين';
 $messages['sendingfailed'] = 'فشل إرسال الرسالة';
 $messages['senttooquickly'] = 'رجاء انتظر $sec ثوان قبل إرسال هذه الرسالة';
-$messages['errorsavingsent'] = 'حدث خطأ أثناء حفظ الرسالة المُرسلة';
-$messages['errorsaving'] = 'حدث خطأ أثناء الحفظ';
+$messages['errorsavingsent'] = 'حدث خطأ أثناء حفظ الرسالة المُرسلة.';
+$messages['errorsaving'] = 'حدث خطأ أثناء الحفظ.';
 $messages['errormoving'] = 'تعذر نقل هذه الرسالة';
 $messages['errorcopying'] = 'تعذر نسخ الرسائل';
 $messages['errordeleting'] = 'تعذر حذف هذه الرسالة';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'الرجاء إدخال اسم مستقبل �
 $messages['nosubjectwarning']  = 'حقل "الموضوع" فارغ. هل تريد كتابة موضوعللرسالة؟';
 $messages['nobodywarning'] = 'إرسال هذه الرسالة دون نص؟';
 $messages['notsentwarning'] = 'لم يتم إرسال الرسالة. هل تريد تجاهلالرسالة؟';
+$messages['restoresavedcomposedata'] = 'يوجد رسالة سابقة ولاكن غير مرسلة.\n\nالموضوع: $subject\nحفظ: $date\n\n هل تريد بالفعل استعادة هذة الرسالة ؟';
 $messages['noldapserver'] = 'الرجاء اختيار خادم ldap للبحث فيه';
 $messages['nosearchname'] = 'الرجاء إدخال اسم مراسل أو عنوان بريدإلكتروني';
 $messages['notuploadedwarning'] = 'لم يتم رفع جميع المرفقات بعد. رجاءً الانتظار أو إلغاء عملية الرفع.';
@@ -101,31 +103,36 @@ $messages['converting'] = 'إزالة التنسيق من الرسالة...';
 $messages['messageopenerror'] = 'تعذرت قراءة الرسالة من الخادم';
 $messages['fileuploaderror'] = 'فشل رفع الملف';
 $messages['filesizeerror'] = 'حجم الملف الذي تحاول رفعه أكبر من الحجمالأقصى $size';
-$messages['copysuccess'] = 'تم نسخ $nr رسائل بنجاح';
-$messages['copyerror'] = 'لم يمكن نسخ أية عناوين';
+$messages['copysuccess'] = 'تم نسخ $nr جهة اتصال بنجاح.';
+$messages['movesuccess'] = 'تم نقل $nr جهة اتصال بنجاح.';
+$messages['copyerror'] = 'لا يمكن نسخ أية جهة اتصال.';
+$messages['moveerror'] = 'لا يمكن نقل أية جهة اتصال.';
 $messages['sourceisreadonly'] = 'لا يمكن تعديل مصدر العنوان هذا';
 $messages['errorsavingcontact'] = 'تعذر حفظ عنوان المراسل';
 $messages['movingmessage'] = 'جاري نقل الرسالة...';
 $messages['copyingmessage'] = 'جاري نسخ الرسالة...';
 $messages['copyingcontact'] = 'جاري نسخ المُراسلين...';
+$messages['movingcontact'] = 'جاري نقل جهات الاتصال...';
 $messages['deletingmessage'] = 'جاري حذف الرسائل...';
 $messages['markingmessage'] = 'جاري تحديد الرسائل...';
 $messages['addingmember'] = 'جاري إضافة المُراسلين إلى المجموعة...';
 $messages['removingmember'] = 'جاري إزالة المراسلين من المجموعة...';
 $messages['receiptsent'] = 'أرسل إيصال الاستلام بنجاح';
 $messages['errorsendingreceipt'] = 'تعذر إرسال إيصال الاستلام';
-$messages['deleteidentityconfirm'] = 'Do you really want to delete this identity?';
+$messages['deleteidentityconfirm'] = 'هل تريد فعلاً حذف هذا المعرف؟';
 $messages['nodeletelastidentity'] = 'لا يمكن حذف هذا السجل حيث أنه الوحيدالمتبقي.';
 $messages['forbiddencharacter'] = 'اسم المجلّد يحتوي حروفاً ممنوعة';
 $messages['selectimportfile'] = 'رجاء اختر ملفاً لرفعه';
 $messages['addresswriterror'] = 'دفتر العناوين المحدد غير قابل للكتابة';
 $messages['contactaddedtogroup'] = 'تمت إضافة المراسلين إلى هذه المجموعةبنجاح';
 $messages['contactremovedfromgroup'] = 'تمت إزالة المراسلين من هذه المجموعةبنجاح';
-$messages['nogroupassignmentschanged'] = 'No group assignments changed.';
+$messages['nogroupassignmentschanged'] = 'لم يتم تغيير مهام المجموعة.';
 $messages['importwait'] = 'جاري الاستيراد، رجاء انتظر...';
-$messages['importformaterror'] = 'Import failed! The uploaded file is not a valid import data file.';
+$messages['importformaterror'] = 'فشل في الاستيراد! الملف الذي تحاول رفعة ليس ملف استيراد صالح. ';
 $messages['importconfirm'] = '<b>تم استيراد $inserted مراسلين بنجاح، وتجاهل$skipped موجودين مسبقاً</b>:<p><em>$names</em></p>';
 $messages['importconfirmskipped'] = '<b>تم تجاهل $skipped عناصر موجودة</b>';
+$messages['importmessagesuccess'] = 'تم استرداد $nr رسالة بنجاح';
+$messages['importmessageerror'] = 'فشل في الاستيراد! الملف الذي تحاول رفعة ليس رسالة او صندوق بريد صالح. ';
 $messages['opnotpermitted'] = 'العملية ممنوعة!';
 $messages['nofromaddress'] = 'عنوان البريد الالكتروني غير محدد فيالهويّة المنتقاة';
 $messages['editorwarning'] = 'يتسبب الانتقال إلى محرر النص البسيط بضياع جميع التنسيق. هل تريد الاستمرار؟';
@@ -139,7 +146,7 @@ $messages['smtperror'] = 'خطأ SMTP: $msg';
 $messages['emailformaterror'] = 'عنوان بريد إلكتروني غير صالح: $email';
 $messages['toomanyrecipients'] = 'عدد المرسل إليهم كبير. قلص العدد إلى $max.';
 $messages['maxgroupmembersreached'] = 'عدد أعضاء المجموعة أكثر من $max';
-$messages['internalerror'] = 'حدث خطأ داخلي. الرجاء المحاولة مرة أخرى';
+$messages['internalerror'] = 'حدث خطأ داخلي. الرجاء المحاولة مرة أخرى.';
 $messages['contactdelerror'] = 'تعذر حذف أسماء جهات الإتصال';
 $messages['contactdeleted'] = 'تم حذف أسماء جهات الإتصال بنجاح';
 $messages['contactrestoreerror'] = 'تعذر استعادة المُراسل المحذوف.';
@@ -165,7 +172,6 @@ $messages['invalidimageformat'] = 'ليست صيغة صورة صحيحة';
 $messages['mispellingsfound'] = 'عُثر على أخطاء إملائية في الرسالة';
 $messages['parentnotwritable'] = 'تعذر إنشاء/نقل المجلد إلى المجلد المحدد.ليست لديك الصلاحية.';
 $messages['messagetoobig'] = 'جزء الرسالة أكبر بكثير مما يمكن معالجته.';
-$messages['attachmentvalidationerror'] = 'WARNING! This attachment is suspicious because its type doesn\'t match the type declared in the message. If you do not trust the sender, you shouldn\'t open it in the browser because it may contain malicious contents.<br/><br/><em>Expected: $expected; found: $detected</em>';
-$messages['noscriptwarning'] = 'Warning: This webmail service requires Javascript! In order to use it please enable Javascript in your browser\'s settings.';
-
+$messages['attachmentvalidationerror'] = 'تحذير! المرفق ادناة مشكوك في امره بسبب ان نوع المرفق لا يتناسب مع نوع المرفق المصرح بة في هذه الرسالة.اذا كنت لا تثق في المرسل, يجب عليك ان لا تفتحة في المتصفح لأنها قد تحتوي على محتويات ضارة.<br/><br/><em>متوقع : $expected; موجود : $detected</em>';
+$messages['noscriptwarning'] = 'تحذير: خادم البريد الالكتروني هذا يتطلب جافاسكربت , يرجى تفعيل الـ جافاسكربت في اعدادت المتصفح الخاص بك لتتمكن من استخدامة.';
 ?>

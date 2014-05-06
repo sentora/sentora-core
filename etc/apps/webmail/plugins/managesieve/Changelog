@@ -1,4 +1,35 @@
+- Added optional separate interface for out-of-office management (#1488266)
+
+* version 7.2 [2014-02-14]
+-----------------------------------------------------------
+- Nicely handle server-side modification of script names (#1489412)
+- Add Filters tab/section using plugin API hook
+- Fix issue where folder selector wasn't visible on new filter form
+- Fix issue where multi-select fields were not visible in new filter action rows (#1489600)
+- Fix issue in displaying filter form when managesieve_kolab_master=true
+  and sieve variables extension is supported by the server (#1489599)
+- Fix wrong action folder selection if managesieve_domains is not empty (#1489617)
+- Fix filter creation from an email when preview frame is disabled (#1489647)
+
+* version 7.1 [2013-11-22]
+-----------------------------------------------------------
+- lib/Net_Sieve.php moved to Roundcube /lib directory
+- Added managesieve_domains option to limit redirect destinations
+- Fix bug where at least one additional address of vacation message was required (#1489345)
+- Fix so i;ascii-numeric comparator is not forced as default for :count and :value operators
+- Fix date/currentdate related form issues and comparators handling (#1489346)
+- Fix a bug where deleted filter was not removed from the list
+
+* version 7.0 [2013-09-09]
+-----------------------------------------------------------
+- Add vacation-seconds extension support (RFC 6131)
+- Several script parser code improvements
+- Support string list arguments in filter form (#1489018)
+- Support date, currendate and index tests - RFC5260 (#1488120)
+- Split plugin file into two files
 - Fix handling of &, <, > characters in scripts/filter names (#1489208)
+- Support 'keep' action (#1489226)
+- Add common headers to header selector (#1489271)
 
 * version 6.2 [2013-02-17]
 -----------------------------------------------------------
@@ -205,18 +236,18 @@
 - Added it_IT localization
 
 * version 1.1 [2009-05-27]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Added new icons
 - Added support for headers lists (coma-separated) in rules
 - Added de_CH localization
 
 * version 1.0 [2009-05-21]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Rewritten using plugin API
 - Added hu_HU localization (Tamas Tevesz)
 
 * version beta7 (svn-r2300) [2009-03-01]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Added SquirrelMail script auto-import (Jonathan Ernst)
 - Added 'vacation' support (Jonathan Ernst & alec)
 - Added 'stop' support (Jonathan Ernst)
@@ -225,47 +256,47 @@
 - Small style fixes
 
 * version 0.2-stable1 (svn-r2205) [2009-01-03]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Fix moving down filter row
 - Fixes for compressed js files in stable release package
 - Created patch for svn version r2205
 
 * version 0.2-stable [2008-12-31]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Added ru_RU, fr_FR, zh_CN translation
 - Fixes for Roundcube 0.2-stable
 
-* version rc0.2beta [2008-09-21]
------------------------------------------------------------    
+* version 0.2-beta [2008-09-21]
+-----------------------------------------------------------
 - Small css fixes for IE
 - Fixes for Roundcube 0.2-beta
 
 * version beta6 [2008-08-08]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Added de_DE translation
 - Fix for Roundcube r1634
 
 * version beta5 [2008-06-10]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Fixed 'exists' operators
 - Fixed 'not*' operators for custom headers
 - Fixed filters deleting
 
 * version beta4 [2008-06-09]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Fix for Roundcube r1490
 
 * version beta3 [2008-05-22]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Fixed textarea error class setting
 - Added pagetitle setting
 - Added option 'managesieve_replace_delimiter'
 - Fixed errors on IE (still need some css fixes)
-    
+
 * version beta2 [2008-05-20]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Use 'if' only for first filter and 'elsif' for the rest
 
 * version beta1 [2008-05-15]
------------------------------------------------------------    
+-----------------------------------------------------------
 - Initial version for Roundcube r1388.

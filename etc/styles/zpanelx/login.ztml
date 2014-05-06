@@ -197,6 +197,8 @@
     <!-- Javascript
     ================================================== -->
     <script src="/etc/styles/zpanelx/js/jquery.js"></script>
+    <script src="/etc/styles/zpanelx/js/bootstrap-transition.js"></script>
+    <script src="/etc/styles/zpanelx/js/bootstrap-alert.js"></script>
     <script src="/etc/styles/zpanelx/js/prettyCheckable.js"></script>
     <!-- Pretty checkable @ https://github.com/arthurgouveia/prettyCheckable -->
     <script>

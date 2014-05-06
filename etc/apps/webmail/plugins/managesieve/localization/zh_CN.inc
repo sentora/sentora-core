@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
-
-
 $labels['filters'] = '过滤器';
 $labels['managefilters'] = '管理邮件过滤规则';
 $labels['filtername'] = '过滤规则名称';
@@ -55,13 +53,12 @@ $labels['add'] = '添加';
 $labels['del'] = '删除';
 $labels['sender'] = '发件人';
 $labels['recipient'] = '收件人';
-$labels['vacationaddresses'] = '收件人地址的附加名单（以半角逗号分隔）';
 $labels['vacationdays'] = '发送邮件频率(单位：天):';
-$labels['vacationinterval'] = 'How often send messages:';
-$labels['days'] = 'days';
-$labels['seconds'] = 'seconds';
+$labels['vacationinterval'] = '发送邮件频率:';
 $labels['vacationreason'] = '邮件正文(假期原因)';
 $labels['vacationsubject'] = '邮件主题';
+$labels['days'] = '天';
+$labels['seconds'] = '秒';
 $labels['rulestop'] = '停止评价规则';
 $labels['enable'] = '启用/禁用';
 $labels['filterset'] = '过滤器设置';
@@ -83,13 +80,11 @@ $labels['countisgreaterthanequal'] = '计数大于或等于';
 $labels['countislessthan'] = '计数小于';
 $labels['countislessthanequal'] = '计数小于或等于';
 $labels['countequals'] = '计数等于';
-$labels['countnotequals'] = '计数不等于';
 $labels['valueisgreaterthan'] = '值大于';
 $labels['valueisgreaterthanequal'] = '值大于或等于';
 $labels['valueislessthan'] = '值小于';
 $labels['valueislessthanequal'] = '值小于或等于';
 $labels['valueequals'] = '值等于';
-$labels['valuenotequals'] = '值不等于';
 $labels['setflags'] = '设定邮件的标识';
 $labels['addflags'] = '增加邮件的标识';
 $labels['removeflags'] = '删除邮件的标识';
@@ -121,6 +116,16 @@ $labels['filtercreate'] = '创建过滤规则';
 $labels['usedata'] = '在过滤器中使用下列数据';
 $labels['nextstep'] = '下一步';
 $labels['...'] = '...';
+$labels['currdate'] = '当前日期';
+$labels['datetest'] = '日期';
+$labels['year'] = '年';
+$labels['month'] = '月';
+$labels['day'] = '天';
+$labels['date'] = '日期 (年-月-日)';
+$labels['hour'] = '小时';
+$labels['minute'] = '分钟';
+$labels['second'] = '秒';
+$labels['zone'] = '时区';
 $labels['advancedopts'] = '高级选项';
 $labels['body'] = '正文';
 $labels['address'] = '地址';
@@ -140,38 +145,26 @@ $labels['default'] = '默认';
 $labels['octet'] = '严格模式(字节)';
 $labels['asciicasemap'] = '不区分大小写(ascii 字符)';
 $labels['asciinumeric'] = '数字类型(ascii 数字)';
-
-$messages = array();
 $messages['filterunknownerror'] = '未知的服务器错误';
 $messages['filterconnerror'] = '无法连接至服务器';
-$messages['filterdeleteerror'] = '无法删除过滤器。服务器发生错误';
 $messages['filterdeleted'] = '过滤器已成功删除';
 $messages['filtersaved'] = '过滤器已成功保存。';
-$messages['filtersaveerror'] = '无法保存过滤器。服务器发生错误';
 $messages['filterdeleteconfirm'] = '您确定要删除所选择的过滤器吗？';
 $messages['ruledeleteconfirm'] = '您确定要删除所选择的规则吗？';
 $messages['actiondeleteconfirm'] = '您确定要删除所选择的操作吗？';
 $messages['forbiddenchars'] = '内容包含禁用字符';
 $messages['cannotbeempty'] = '内容不能为空';
 $messages['ruleexist'] = '指定过滤器名称已存在。';
-$messages['setactivateerror'] = '无法启用指定过滤器，服务器发生错误。';
-$messages['setdeactivateerror'] = '无法停用指定过滤器，服务器发生错误。';
-$messages['setdeleteerror'] = '无法删除指定过滤器，服务器发生错误。';
 $messages['setactivated'] = '启用过滤器集成功。';
 $messages['setdeactivated'] = '禁用过滤器集成功。';
 $messages['setdeleted'] = '删除过滤器成功。';
 $messages['setdeleteconfirm'] = '您确定要删除指定的过滤器吗？';
-$messages['setcreateerror'] = '无法创建过滤器，服务器发生错误。';
 $messages['setcreated'] = '过滤器成功创建。';
-$messages['activateerror'] = '无法启用选中的过滤器，服务器发生错误。';
-$messages['deactivateerror'] = '无法禁用选中的过滤器，服务器发生错误。';
 $messages['deactivated'] = '启用过滤器成功。';
 $messages['activated'] = '禁用过滤器成功。';
 $messages['moved'] = '移动过滤器成功。';
-$messages['moveerror'] = '无法移动选中的过滤器，服务器发生错误。';
 $messages['nametoolong'] = '无法创建过滤器集，名称太长。';
 $messages['namereserved'] = '保留名称。';
 $messages['setexist'] = '设置已存在。';
 $messages['nodata'] = '至少选择一个位置！';
-
 ?>

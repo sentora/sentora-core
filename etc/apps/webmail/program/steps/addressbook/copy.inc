@@ -5,7 +5,7 @@
  | program/steps/addressbook/copy.inc                                    |
  |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2007, The Roundcube Dev Team                            |
+ | Copyright (C) 2007-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -25,15 +25,14 @@ if (!$OUTPUT->ajax_call)
 
 
 $cids         = rcmail_get_cids();
-$target       = get_input_value('_to', RCUBE_INPUT_POST);
-$target_group = get_input_value('_togid', RCUBE_INPUT_POST);
+$target       = rcube_utils::get_input_value('_to', rcube_utils::INPUT_POST);
+$target_group = rcube_utils::get_input_value('_togid', rcube_utils::INPUT_POST);
 
 $success  = 0;
 $errormsg = 'copyerror';
 $maxnum   = $RCMAIL->config->get('max_group_members', 0);
 
-foreach ($cids as $source => $cid)
-{
+foreach ($cids as $source => $cid) {
     // Something wrong, target not specified
     if (!strlen($target)) {
         break;
@@ -57,10 +56,16 @@ foreach ($cids as $source => $cid)
     foreach ($cid as $cid) {
         $a_record = $CONTACTS->get_record($cid, true);
 
+        // avoid copying groups
+        if ($a_record['_type'] == 'group')
+            continue;
+
         // Check if contact exists, if so, we'll need it's ID
         // Note: Some addressbooks allows empty email address field
-        if (!empty($a_record['email']))
-            $result = $TARGET->search('email', $a_record['email'], 1, true, true);
+        // @TODO: should we check all email addresses?
+        $email = $CONTACTS->get_col_values('email', $a_record, true);
+        if (!empty($email))
+            $result = $TARGET->search('email', $email[0], 1, true, true);
         else if (!empty($a_record['name']))
             $result = $TARGET->search('name', $a_record['name'], 1, true, true);
         else
@@ -114,7 +119,7 @@ foreach ($cids as $source => $cid)
     }
 }
 
-if ($success == 0)
+if (!$success)
     $OUTPUT->show_message($errormsg, 'error');
 else
     $OUTPUT->show_message('copysuccess', 'notice', array('nr' => $success));

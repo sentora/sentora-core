@@ -5,7 +5,7 @@
  | program/steps/mail/folders.inc                                        |
  |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -20,14 +20,14 @@
 */
 
 // only process ajax requests
-if (!$OUTPUT->ajax_call)
+if (!$OUTPUT->ajax_call) {
     return;
+}
 
-$mbox = get_input_value('_mbox', RCUBE_INPUT_POST, true);
+$mbox = rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_POST, true);
 
 // send EXPUNGE command
 if ($RCMAIL->action == 'expunge') {
-
     $success = $RCMAIL->storage->expunge_folder($mbox);
 
     // reload message list if current mailbox
@@ -35,26 +35,26 @@ if ($RCMAIL->action == 'expunge') {
         $OUTPUT->show_message('folderexpunged', 'confirmation');
 
         if (!empty($_REQUEST['_reload'])) {
-            $OUTPUT->command('set_quota', rcmail_quota_content());
+            $OUTPUT->command('set_quota', $RCMAIL->quota_content());
             $OUTPUT->command('message_list.clear');
             $RCMAIL->action = 'list';
             return;
         }
     }
     else {
-        rcmail_display_server_error();
+        $RCMAIL->display_server_error();
     }
 }
-
 // clear mailbox
-else if ($RCMAIL->action == 'purge')
-{
-    $delimiter = $RCMAIL->storage->get_hierarchy_delimiter();
-    $trash_regexp = '/^' . preg_quote($CONFIG['trash_mbox'] . $delimiter, '/') . '/';
-    $junk_regexp  = '/^' . preg_quote($CONFIG['junk_mbox'] . $delimiter, '/') . '/';
+else if ($RCMAIL->action == 'purge') {
+    $delimiter    = $RCMAIL->storage->get_hierarchy_delimiter();
+    $trash_mbox   = $RCMAIL->config->get('trash_mbox');
+    $junk_mbox    = $RCMAIL->config->get('junk_mbox');
+    $trash_regexp = '/^' . preg_quote($trash_mbox . $delimiter, '/') . '/';
+    $junk_regexp  = '/^' . preg_quote($junk_mbox . $delimiter, '/') . '/';
 
     // we should only be purging trash and junk (or their subfolders)
-    if ($mbox == $CONFIG['trash_mbox'] || $mbox == $CONFIG['junk_mbox']
+    if ($mbox == $trash_mbox || $mbox == $junk_mbox
         || preg_match($trash_regexp, $mbox) || preg_match($junk_regexp, $mbox)
     ) {
         $success = $RCMAIL->storage->clear_folder($mbox);
@@ -69,12 +69,17 @@ else if ($RCMAIL->action == 'purge')
                 $OUTPUT->command('message_list.clear');
                 $OUTPUT->command('set_rowcount', rcmail_get_messagecount_text(), $mbox);
                 $OUTPUT->command('set_unread_count', $mbox, 0);
-                $OUTPUT->command('set_quota', rcmail_quota_content());
+                $OUTPUT->command('set_quota', $RCMAIL->quota_content());
                 rcmail_set_unseen_count($mbox, 0);
+
+                // set trash folder state
+                if ($mbox === $trash_mbox) {
+                    $OUTPUT->command('set_trash_count', 0);
+                }
             }
         }
         else {
-            rcmail_display_server_error();
+            $RCMAIL->display_server_error();
         }
     }
 }

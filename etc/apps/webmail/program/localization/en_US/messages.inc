@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -24,15 +24,19 @@ $messages['sessionerror'] = 'Your session is invalid or expired.';
 $messages['storageerror'] = 'Connection to storage server failed.';
 $messages['servererror'] = 'Server Error!';
 $messages['servererrormsg'] = 'Server Error: $msg';
+$messages['connerror'] = 'Connection Error (Failed to reach the server)!';
 $messages['dberror'] = 'Database Error!';
 $messages['requesttimedout'] = 'Request timed out';
 $messages['errorreadonly'] = 'Unable to perform operation. Folder is read-only.';
 $messages['errornoperm'] = 'Unable to perform operation. Permission denied.';
+$messages['erroroverquota'] = 'Unable to perform operation. No free disk space.';
+$messages['erroroverquotadelete'] = 'No free disk space. Use SHIFT+DEL to delete a message.';
 $messages['invalidrequest'] = 'Invalid request! No data was saved.';
 $messages['invalidhost'] = 'Invalid server name.';
 $messages['nomessagesfound'] = 'No messages found in this mailbox.';
 $messages['loggedout'] = 'You have successfully terminated the session. Good bye!';
-$messages['mailboxempty'] = 'Mailbox is empty.';
+$messages['mailboxempty'] = 'Mailbox is empty';
+$messages['nomessages'] = 'No messages';
 $messages['refreshing'] = 'Refreshing...';
 $messages['loading'] = 'Loading...';
 $messages['uploading'] = 'Uploading file...';
@@ -44,6 +48,8 @@ $messages['messagesent'] = 'Message sent successfully.';
 $messages['savingmessage'] = 'Saving message...';
 $messages['messagesaved'] = 'Message saved to Drafts.';
 $messages['successfullysaved'] = 'Successfully saved.';
+$messages['savingresponse'] = 'Saving response text...';
+$messages['deleteresponseconfirm'] = 'Do you really want to delete this response text?';
 $messages['addedsuccessfully'] = 'Contact added successfully to address book.';
 $messages['contactexists'] = 'A contact with the same e-mail address already exists.';
 $messages['contactnameexists'] = 'A contact with the same name already exists.';
@@ -80,6 +86,7 @@ $messages['norecipientwarning'] = 'Please enter at least one recipient.';
 $messages['nosubjectwarning']  = 'The "Subject" field is empty. Would you like to enter one now?';
 $messages['nobodywarning'] = 'Send this message without text?';
 $messages['notsentwarning'] = 'Message has not been sent. Do you want to discard your message?';
+$messages['restoresavedcomposedata'] = 'A previously composed but unsent message was found.\n\nSubject: $subject\nSaved: $date\n\nDo you want to restore this message?';
 $messages['noldapserver'] = 'Please select an ldap server to search.';
 $messages['nosearchname'] = 'Please enter a contact name or email address.';
 $messages['notuploadedwarning'] = 'Not all attachments have been uploaded yet. Please wait or cancel the upload.';
@@ -99,13 +106,16 @@ $messages['converting'] = 'Removing formatting...';
 $messages['messageopenerror'] = 'Could not load message from server.';
 $messages['fileuploaderror'] = 'File upload failed.';
 $messages['filesizeerror'] = 'The uploaded file exceeds the maximum size of $size.';
-$messages['copysuccess'] = 'Successfully copied $nr addresses.';
-$messages['copyerror'] = 'Could not copy any addresses.';
+$messages['copysuccess'] = 'Successfully copied $nr contacts.';
+$messages['movesuccess'] = 'Successfully moved $nr contacts.';
+$messages['copyerror'] = 'Could not copy any contacts.';
+$messages['moveerror'] = 'Could not move any contacts.';
 $messages['sourceisreadonly'] = 'This address source is read only.';
 $messages['errorsavingcontact'] = 'Could not save the contact address.';
 $messages['movingmessage'] = 'Moving message(s)...';
 $messages['copyingmessage'] = 'Copying message(s)...';
 $messages['copyingcontact'] = 'Copying contact(s)...';
+$messages['movingcontact'] = 'Moving contact(s)...';
 $messages['deletingmessage'] = 'Deleting message(s)...';
 $messages['markingmessage'] = 'Marking message(s)...';
 $messages['addingmember'] = 'Adding contact(s) to the group...';
@@ -124,6 +134,8 @@ $messages['importwait'] = 'Importing, please wait...';
 $messages['importformaterror'] = 'Import failed! The uploaded file is not a valid import data file.';
 $messages['importconfirm'] = '<b>Successfully imported $inserted contacts</b>';
 $messages['importconfirmskipped'] = '<b>Skipped $skipped existing entries</b>';
+$messages['importmessagesuccess'] = 'Successfully imported $nr messages';
+$messages['importmessageerror'] = 'Import failed! The uploaded file is not a valid message or mailbox file';
 $messages['opnotpermitted'] = 'Operation not permitted!';
 $messages['nofromaddress'] = 'Missing e-mail address in selected identity.';
 $messages['editorwarning'] = 'Switching to the plain text editor will cause all text formatting to be lost. Do you wish to continue?';

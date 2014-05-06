@@ -9,14 +9,12 @@
 
 <div id="login-form">
 <div class="box-inner">
-<roundcube:object name="logo" src="/images/roundcube_logo.png" id="logo" border="0" />
+<roundcube:object name="logo" src="/images/roundcube_logo.png" id="logo" />
 
-<form name="form" action="./" method="post">
-<roundcube:object name="loginform" form="form" size="40" />
-
-<p class="formbuttons"><input type="submit" class="button mainaction" value="<roundcube:label name='login' />" /></p>
-
+<roundcube:form name="form" method="post">
+<roundcube:object name="loginform" form="form" size="40" submit=true />
 </form>
+
 </div>
 
 <div class="box-bottom">
@@ -39,11 +37,13 @@
 
 <roundcube:object name="preloader" images="
   /images/ajaxloader.gif
+  /images/ajaxloader_dark.gif
   /images/buttons.png
   /images/addcontact.png
   /images/filetypes.png
   /images/listicons.png
   /images/messages.png
+  /images/messages_dark.png
   /images/quota.png
   /images/selector.png
   /images/splitter.png

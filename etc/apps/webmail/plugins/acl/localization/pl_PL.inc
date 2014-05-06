@@ -15,17 +15,16 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
-
 $labels['sharing'] = 'Udostępnianie';
 $labels['myrights'] = 'Prawa dostępu';
 $labels['username'] = 'Użytkownik:';
-$labels['advanced'] = 'tryb zaawansowany';
+$labels['advanced'] = 'Tryb zaawansowany';
 $labels['newuser'] = 'Dodaj rekord';
+$labels['editperms'] = 'Edytuj zezwolenia';
 $labels['actions'] = 'Akcje na prawach...';
 $labels['anyone'] = 'Wszyscy (anyone)';
 $labels['anonymous'] = 'Goście (anonymous)';
 $labels['identifier'] = 'Identyfikator';
-
 $labels['acll'] = 'Podgląd';
 $labels['aclr'] = 'Odczyt (Read)';
 $labels['acls'] = 'Zmiana stanu wiadomości (Keep)';
@@ -39,13 +38,12 @@ $labels['aclt'] = 'Usuwanie wiadomości (Delete)';
 $labels['acle'] = 'Porządkowanie';
 $labels['aclx'] = 'Usuwanie folderu (Delete)';
 $labels['acla'] = 'Administracja';
-
+$labels['acln'] = 'Adnotacje wiadomości';
 $labels['aclfull'] = 'Wszystkie';
 $labels['aclother'] = 'Pozostałe';
 $labels['aclread'] = 'Odczyt';
 $labels['aclwrite'] = 'Zapis';
 $labels['acldelete'] = 'Usuwanie';
-
 $labels['shortacll'] = 'Podgląd';
 $labels['shortaclr'] = 'Odczyt';
 $labels['shortacls'] = 'Zmiana';
@@ -59,12 +57,11 @@ $labels['shortaclt'] = 'Usuwanie';
 $labels['shortacle'] = 'Porządkowanie';
 $labels['shortaclx'] = 'Usuwanie folderu';
 $labels['shortacla'] = 'Administracja';
-
+$labels['shortacln'] = 'Adnotacje';
 $labels['shortaclother'] = 'Pozostałe';
 $labels['shortaclread'] = 'Odczyt';
 $labels['shortaclwrite'] = 'Zapis';
 $labels['shortacldelete'] = 'Usuwanie';
-
 $labels['longacll'] = 'Pozwala na subskrybowanie folderu i powoduje, że jest on widoczny na liście';
 $labels['longaclr'] = 'Folder może być otwarty w trybie do odczytu';
 $labels['longacls'] = 'Pozwala na zmienę stanu wiadomości';
@@ -78,22 +75,20 @@ $labels['longaclt'] = 'Pozwala zmianiać flagę "Usunięto" wiadomości';
 $labels['longacle'] = 'Pozwala na usuwanie wiadomości oznaczonych do usunięcia';
 $labels['longaclx'] = 'Pozwala na zmianę nazwy lub usunięcie folderu';
 $labels['longacla'] = 'Pozwala na zmiane praw dostępu do folderu';
-
+$labels['longacln'] = 'Pozwala na zmianę współdzielonych meta-danych wiadomości (adnotacji)';
 $labels['longaclfull'] = 'Pełna kontrola włącznie z administrowaniem folderem';
 $labels['longaclread'] = 'Folder może być otwarty w trybie do odczytu';
 $labels['longaclwrite'] = 'Wiadomości mogą być oznaczane, zapisywane i kopiowane do folderu';
 $labels['longacldelete'] = 'Wiadomości mogą być usuwane';
-
 $messages['deleting'] = 'Usuwanie praw dostępu...';
 $messages['saving'] = 'Zapisywanie praw dostępu...';
 $messages['updatesuccess'] = 'Pomyślnie zmieniono prawa dostępu';
 $messages['deletesuccess'] = 'Pomyślnie usunięto prawa dostępu';
 $messages['createsuccess'] = 'Pomyślnie dodano prawa dostępu';
-$messages['updateerror'] = 'Nie udało się zmienić praw dostępu';
+$messages['updateerror'] = 'Nie udało się zaktualizować praw dostępu';
 $messages['deleteerror'] = 'Nie udało się usunąć praw dostępu';
 $messages['createerror'] = 'Nie udało się dodać praw dostępu';
 $messages['deleteconfirm'] = 'Czy na pewno chcesz usunąć prawa wybranym użytkownikom?';
 $messages['norights'] = 'Nie wybrano praw dostępu!';
 $messages['nouser'] = 'Nie podano nazwy użytkownika!';
-
 ?>

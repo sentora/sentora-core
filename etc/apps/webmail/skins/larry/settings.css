@@ -2,7 +2,7 @@
  * Roundcube webmail styles for the Settings section
  *
  * Copyright (c) 2012, The Roundcube Dev Team
- * Screendesign by FLINT / Büro für Gestaltung, bueroflint.com
+ * Screendesign by FLINT / BÃ¼ro fÃ¼r Gestaltung, bueroflint.com
  *
  * The contents are subject to the Creative Commons Attribution-ShareAlike
  * License. It is allowed to copy, distribute, transmit and to adapt the work
@@ -48,11 +48,41 @@
 	border-radius: 4px 4px 0 0;
 }
 
+#preferences-details fieldset.advanced legend {
+	position: relative;
+	display: block;
+	width: 100%;
+	cursor: pointer;
+}
+
+#preferences-details fieldset.advanced .propform {
+	display: none;
+}
+
+#preferences-details fieldset.advanced .advanced-toggle {
+	position: absolute;
+	display: block;
+	top: 0px;
+	right: 6px;
+	text-decoration: none;
+	color: #666;
+	font-size: 11px;
+	width: 20px;
+	height: 18px;
+	background: url(images/listicons.png?v=017c.29530) 0 -1157px no-repeat;
+	text-indent: 1000px;
+	overflow: hidden;
+}
+
+#preferences-details fieldset.advanced .collapsed .advanced-toggle {
+	background-position: -24px -1137px;
+}
+
 #sections-table tbody td.section,
 #settings-sections span.listitem a,
 #settings-sections span.tablink a {
 	padding-left: 36px;
-	background-image: url(images/listicons.png?v=bd98.25486);
+	background-image: url(images/listicons.png?v=017c.29530);
 	background-position: -100px 0;
 	background-repeat: no-repeat;
 }
@@ -108,6 +138,14 @@
 
 #settings-sections span.password.selected a {
 	background-position: 6px -1819px;
+}
+
+#settings-sections span.responses a {
+	background-position: 6px -1972px;
+}
+
+#settings-sections span.responses.selected a {
+	background-position: 6px -1996px;
 }
 
 #sections-table #rcmrowgeneral td.section {
@@ -184,6 +222,10 @@
 	width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+#identities-table tbody tr.readonly td {
+	font-style: italic;
 }
 
 #folder-details,
@@ -266,4 +308,19 @@ img.skinthumbnail {
 .webkit #pluginlist td.license,
 .webkit #pluginlist td.source {
 	width: 9em;
+}
+
+#rcmfd_signature {
+	width: 99%;
+	min-width: 390px;
+}
+
+#rcmfd_signature_toolbar1 td,
+#rcmfd_signature_toolbar2 td {
+	width: auto;
+}
+
+.mailtoprotohandler-status {
+	padding-left: 1em;
+	font-style: italic;
 }

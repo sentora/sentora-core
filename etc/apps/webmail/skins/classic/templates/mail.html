@@ -18,7 +18,7 @@
 }
 </style>
 </head>
-<body onload="rcube_init_mail_ui()">
+<body>
 
 <roundcube:include file="/includes/taskbar.html" />
 <roundcube:include file="/includes/header.html" />
@@ -28,7 +28,7 @@
 <div id="mailboxlist-container">
 <div id="mailboxlist-title" class="boxtitle"><roundcube:label name="mailboxlist" /></div>
 <div id="mailboxlist-content"  class="boxlistcontent">
-<roundcube:object name="mailboxlist" id="mailboxlist" folder_filter="mail" />
+<roundcube:object name="mailboxlist" id="mailboxlist" class="treelist" folder_filter="mail" />
 </div>
 <div id="mailboxlist-footer" class="boxfooter">
   <roundcube:button name="mailboxmenulink" id="mailboxmenulink" type="link" title="folderactions" class="button groupactions" onclick="rcmail_ui.show_popup('mailboxmenu');return false" content=" " />
@@ -55,6 +55,7 @@
 <div id="messagelistcontainer" class="boxlistcontent" style="top:0">
 <roundcube:object name="messages"
   id="messagelist"
+  class="messagelist fixedheader"
   cellspacing="0"
   columns=""
   summary="Message list"
@@ -130,9 +131,9 @@
 <roundcube:button command="reset-search" id="searchreset" image="/images/icons/reset.gif" title="resetsearch" width="13" height="13" />
 </div>
 
-<div id="dragmessagemenu" class="popupmenu">
+<div id="dragmenu" class="popupmenu">
   <ul>
-    <li><roundcube:button command="moveto" onclick="return rcmail.drag_menu_action('moveto')" label="move" classAct="active" /></li>
+    <li><roundcube:button command="move" onclick="return rcmail.drag_menu_action('move')" label="move" classAct="active" /></li>
     <li><roundcube:button command="copy" onclick="return rcmail.drag_menu_action('copy')" label="copy" classAct="active" /></li>
   </ul>
 </div>
@@ -140,7 +141,8 @@
 <div id="mailboxoptionsmenu" class="popupmenu">
   <ul>
     <li><roundcube:button command="expunge" type="link" label="compact" classAct="active" /></li>
-    <li class="separator_below"><roundcube:button command="purge" type="link" label="empty" classAct="active" /></li>
+    <li><roundcube:button command="purge" type="link" label="empty" classAct="active" /></li>
+    <li class="separator_below"><roundcube:button name="messageimport" type="link" class="active" label="importmessages" id="uploadformlink" onclick="rcmail_ui.show_popup('uploadform', true); return false" /></li>
     <li><roundcube:button command="folders" task="settings" type="link" label="managefolders" classAct="active" /></li>
     <roundcube:container name="mailboxoptions" id="mailboxoptionsmenu" />
   </ul>
@@ -203,6 +205,12 @@
   <roundcube:button command="menu-save" id="listmenusave" type="input" class="button mainaction" label="save" />
 </div>
 </div>
+
+<roundcube:object name="messageimportform" id="upload-form" attachmentFieldSize="40" class="popupmenu" />
+
+<script type="text/javascript">
+rcube_init_mail_ui();
+</script>
 
 </body>
 </html>

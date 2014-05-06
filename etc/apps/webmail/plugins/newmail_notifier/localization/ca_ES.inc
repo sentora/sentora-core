@@ -15,15 +15,14 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-newmail_notifier/
 */
-
 $labels['basic'] = 'Mostra notificacions del navegador quan hi hagi un missatge nou';
 $labels['desktop'] = 'Mostra notificacions de l\'escriptori quan hi hagi un missatge nou';
 $labels['sound'] = 'Reprodueix el so quan hi hagi un missatge nou';
-$labels['test'] = 'Comprova';
+$labels['test'] = 'Prova';
 $labels['title'] = 'Missatge nou!';
 $labels['body'] = 'Heu rebut un missatge nou.';
 $labels['testbody'] = 'Això és una notificació de prova.';
 $labels['desktopdisabled'] = 'Les notificacions d\'escriptori estan deshabilitades al vostre navegador.';
 $labels['desktopunsupported'] = 'El vostre navegador no permet les notificacions d\'escriptori.';
-
+$labels['desktoptimeout'] = 'Tanca la notificació de l\'escriptori';
 ?>

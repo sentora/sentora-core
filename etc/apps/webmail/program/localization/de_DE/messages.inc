@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Ein Fehler ist aufgetreten!';
 $messages['loginfailed']  = 'Die Anmeldung ist fehlgeschlagen.';
 $messages['cookiesdisabled'] = 'Ihr Browser akzeptiert keine Cookies.';
@@ -34,7 +32,8 @@ $messages['invalidrequest'] = 'Ungültige Anfrage! Es wurden keine Daten gespeic
 $messages['invalidhost'] = 'Ungültiger Server Name';
 $messages['nomessagesfound'] = 'Keine Nachrichten in diesem Ordner.';
 $messages['loggedout'] = 'Sie haben Ihre Sitzung erfolgreich beendet. Auf Wiedersehen!';
-$messages['mailboxempty'] = 'Mailbox ist leer.';
+$messages['mailboxempty'] = 'Mailbox ist leer';
+$messages['nomessages'] = 'Keine Nachrichten';
 $messages['refreshing'] = 'Aktualisieren…';
 $messages['loading'] = 'Wird geladen...';
 $messages['uploading'] = 'Datei wird hochgeladen...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'Nachricht erfolgreich gesendet.';
 $messages['savingmessage'] = 'Nachricht wird gespeichert...';
 $messages['messagesaved'] = 'Nachricht als Entwurf gespeichert.';
 $messages['successfullysaved'] = 'Erfolgreich gespeichert.';
+$messages['savingresponse'] = 'Antwortvorlage wird gespeichert...';
+$messages['deleteresponseconfirm'] = 'Möchten Sie diese Vorlage wirklich löschen?';
 $messages['addedsuccessfully'] = 'Kontakt zum Adressbuch hinzugefügt.';
 $messages['contactexists'] = 'Es existiert bereits ein Kontakt mit dieser E-Mail-Adresse.';
 $messages['contactnameexists'] = 'Ein Kontakt mit dem gleichen Namen existiert bereits.';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'Bitte geben Sie mindestens einen Empfänger a
 $messages['nosubjectwarning']  = 'Die Betreffzeile ist leer. Möchten Sie jetzt einen Betreff eingeben?';
 $messages['nobodywarning'] = 'Diese Nachricht ohne Inhalt senden?';
 $messages['notsentwarning'] = 'Ihre Nachricht wurde nicht gesendet. Wollen Sie die Nachricht verwerfen?';
+$messages['restoresavedcomposedata'] = 'Es wurde ein nicht versandter Entwurf einer Nachricht gefunden.\n\nBetreff: $subject\nGespeichert am: $date\n\nMöchten Sie diese Nachricht wiederherstellen?';
 $messages['noldapserver'] = 'Bitte wählen Sie einen LDAP-Server aus.';
 $messages['nosearchname'] = 'Bitte geben Sie einen Namen oder eine E-Mail-Adresse ein.';
 $messages['notuploadedwarning'] = 'Es wurden noch nicht alle Dateien hochgeladen. Bitte warten oder Upload abbrechen.';
@@ -101,13 +103,16 @@ $messages['converting'] = 'Entferne Formatierungen...';
 $messages['messageopenerror'] = 'Die Nachricht konnte nicht vom Server geladen werden.';
 $messages['fileuploaderror'] = 'Hochladen der Datei fehlgeschlagen.';
 $messages['filesizeerror'] = 'Die hochzuladende Datei überschreitet die Maximalgröße von $size.';
-$messages['copysuccess'] = '$nr Adressen erfolgreich kopiert.';
-$messages['copyerror'] = 'Die Adressen konnten nicht kopiert werden.';
+$messages['copysuccess'] = 'Erfolgreich kopiert $ nr Kontakte.';
+$messages['movesuccess'] = 'Erfolgreich verschoben $ nr Kontakte.';
+$messages['copyerror'] = 'Die Kontakte konnten nicht kopiert werden.';
+$messages['moveerror'] = 'Die Kontakte konnten nicht verschoben werden.';
 $messages['sourceisreadonly'] = 'Das Adressverzeichnis kann nicht verändert werden.';
 $messages['errorsavingcontact'] = 'Die Änderungen konnten nicht gespeichert werden.';
 $messages['movingmessage'] = 'Die E-Mail wird verschoben...';
 $messages['copyingmessage'] = 'Kopiere Nachrichten...';
 $messages['copyingcontact'] = 'Kontakte werden kopiert...';
+$messages['movingcontact'] = 'Kontakt(e) wird verschoben...';
 $messages['deletingmessage'] = 'Lösche Nachricht(en)...';
 $messages['markingmessage'] = 'Markiere Nachricht(en)...';
 $messages['addingmember'] = 'Füge Kontakte der Gruppe hinzu...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'Daten werden importiert, bitte warten...';
 $messages['importformaterror'] = 'Import fehlgeschlagen! Die hochgeladene Datei ist keine gültige Importdatei.';
 $messages['importconfirm'] = '<b>Es wurden $inserted Adressen erfolgreich importiert.</b>';
 $messages['importconfirmskipped'] = '<b>$skipped bestehende Einträge wurden übersprungen.</b>';
+$messages['importmessagesuccess'] = 'Nachrichten $nr erfolgreich importiert';
+$messages['importmessageerror'] = 'Import fehlgeschlagen! Die hochgeladene Datei ist keine gültige Importdatei.';
 $messages['opnotpermitted'] = 'Operation nicht erlaubt!';
 $messages['nofromaddress'] = 'Fehlende E-Mail-Adresse in ausgewählter Identität.';
 $messages['editorwarning'] = 'Beim Wechseln in den Texteditor gehen alle Textformatierungen verloren. Möchten Sie fortfahren?';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = 'Konnte den Ordner nicht erstellen/verschieben.
 $messages['messagetoobig'] = 'Die Nachricht ist zu gross und kann nicht verarbeitet werden.';
 $messages['attachmentvalidationerror'] = 'WARNUNG! Dieser Anhang ist verdächtig, weil sein Typ nicht dem in der Nachricht deklarierten Typ entspricht. Wenn Sie dem Sender nicht trauen, sollten Sie den Anhang nicht öffnen, weil er schadhaften Inhalte beinhalten könnte.<br/><br/><em>Erwartet: $expected; gefunden: $detected</em>';
 $messages['noscriptwarning'] = 'Warnung: Dieser Webmail-Service erfordert Javascript. Um ihn zu benutzten aktivieren Sie Javascript in ihren Browser-Einstellungen.';
-
 ?>

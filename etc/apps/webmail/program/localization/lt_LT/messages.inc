@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'Įvyko klaida!';
 $messages['loginfailed']  = 'Prisijungti nepavyko.';
 $messages['cookiesdisabled'] = 'Jūsų naršyklė nepriima slapukų.';
@@ -34,7 +32,6 @@ $messages['invalidrequest'] = 'Netinkama užklausa! Duomenys neišsaugoti.';
 $messages['invalidhost'] = 'Negalimas serverio vardas.';
 $messages['nomessagesfound'] = 'Šioje pašto dėžutėje laiškų nėra.';
 $messages['loggedout'] = 'Jūs sėkmingai atsijungėte. Iki kito karto!';
-$messages['mailboxempty'] = 'Pašto dėžutė tuščia.';
 $messages['refreshing'] = 'Atnaujinama…';
 $messages['loading'] = 'Įkeliama…';
 $messages['uploading'] = 'Įkeliamas failas…';
@@ -46,6 +43,8 @@ $messages['messagesent'] = 'Laiškas sėkmingai nusiųstas.';
 $messages['savingmessage'] = 'Laiškas įrašomas…';
 $messages['messagesaved'] = 'Laiškas įrašytas į Juodraščių aplanką.';
 $messages['successfullysaved'] = 'Sėkmingai įrašyta.';
+$messages['savingresponse'] = 'Įrašomas atsakymo tekstas…';
+$messages['deleteresponseconfirm'] = 'Ar tikrai norite pašalinti šį atsakymo tekstą?';
 $messages['addedsuccessfully'] = 'Asmuo įtrauktas į adresų knygą.';
 $messages['contactexists'] = 'Adresatas, turintis šį el. pašto adresą, jau egzistuoja.';
 $messages['contactnameexists'] = 'Adresatas tokiu vardu jau egzistuoja.';
@@ -56,8 +55,8 @@ $messages['contactnotfound'] = 'Ieškotas adresatas nerastas.';
 $messages['contactsearchonly'] = 'Įveskite reikšminius žodžius adresatų paieškai';
 $messages['sendingfailed'] = 'Laiško išsiųsti nepavyko.';
 $messages['senttooquickly'] = 'Turite luktelėti $sec sek., kad galėtumėte išsiųsti laišką.';
-$messages['errorsavingsent'] = 'Įrašant išsiųstą laišką įvyko klaida.';
-$messages['errorsaving'] = 'Įrašant įvyko klaida.';
+$messages['errorsavingsent'] = 'Įrašant išsiųstą laišką, įvyko klaida.';
+$messages['errorsaving'] = 'Įvyko klaida įrašant.';
 $messages['errormoving'] = 'Laiško(-ų) perkelti nepavyko.';
 $messages['errorcopying'] = 'Laiško(-ų) nukopijuoti nepavyko.';
 $messages['errordeleting'] = 'Laiško(-ų) pašalinti nepavyko.';
@@ -101,13 +100,16 @@ $messages['converting'] = 'Šalinamas laiško formatavimas…';
 $messages['messageopenerror'] = 'Nepavyko įkelti laiško iš serverio.';
 $messages['fileuploaderror'] = 'Nepavyko įkelti failo.';
 $messages['filesizeerror'] = 'Įkeltas failas viršija maksimalų leistiną dydį – $size.';
-$messages['copysuccess'] = 'Nukopijuota adresų: $nr.';
-$messages['copyerror'] = 'Adresų nukopijuoti nepavyko.';
+$messages['copysuccess'] = 'Nukopijuota adresatų: $nr.';
+$messages['movesuccess'] = 'Perkelta adresatų: $nr.';
+$messages['copyerror'] = 'Adresatų nukopijuoti nepavyko.';
+$messages['moveerror'] = 'Adresatų perkelti nepavyko.';
 $messages['sourceisreadonly'] = 'Šis adresų šaltinis prieinamas tik skaitymui.';
 $messages['errorsavingcontact'] = 'Asmens adreso įrašyti nepavyko.';
 $messages['movingmessage'] = 'Laiškas(-ai) perkeliamas(-i)…';
 $messages['copyingmessage'] = 'Laiškas(-ai) kopijuojamas(-i)…';
 $messages['copyingcontact'] = 'Adresatas(-ai) kopijuojamas(-i)…';
+$messages['movingcontact'] = 'Adresatas(-ai) perkeliamas(-i)…';
 $messages['deletingmessage'] = 'Laiškas(-ai) šalinamas(-i)…';
 $messages['markingmessage'] = 'Laiškas(-ai) žymimas(-i)…';
 $messages['addingmember'] = 'Adresatas(-ai) įtraukiamas(-i) į grupę…';
@@ -126,6 +128,8 @@ $messages['importwait'] = 'Importuojama, prašome palaukti…';
 $messages['importformaterror'] = 'Importas nepavyko! Įkeltasis failas nėra tinkamas importavimui duomenų failas.';
 $messages['importconfirm'] = '<b>Sėkmingai importuoti $inserted adresatai(-ų)</b>';
 $messages['importconfirmskipped'] = '<b>Praleisti $skipped jau egzistuojantys adresatai(-ų)</b>';
+$messages['importmessagesuccess'] = 'Importuota laiškų: $nr';
+$messages['importmessageerror'] = 'Importas nepavyko! Įkeltasis failas nėra tinkamas importavimui laiško arba pašto dėžutės failas';
 $messages['opnotpermitted'] = 'Veiksmas neleistinas!';
 $messages['nofromaddress'] = 'Nenurodytas pasirinktosios tapatybės el. pašto adresas.';
 $messages['editorwarning'] = 'Pereinant į grynojo teksto redagavimą, visas laiško formatavimas bus prarastas. Ar tęsti?';
@@ -167,5 +171,4 @@ $messages['parentnotwritable'] = 'Nepavyko sukurti arba perkelti aplanko į pari
 $messages['messagetoobig'] = 'Laiško dalis yra per didelė, kad galėtų būti apdorota.';
 $messages['attachmentvalidationerror'] = 'Dėmesio! Šis priedas yra įtartinas, nes jo tipas nesutampa su deklaruotu laiške. Jeigu nepasitikite šiuo siuntėju, šio priedo atverti naršyklėje nepatartina, nes jis gali būti kenksmingas.<br/><br/><em>Tikėtasi: $expected; aptikta: $detected</em>';
 $messages['noscriptwarning'] = 'Dėmesio: šiai saityno el. pašto sistemai veikti būtini „JavaScript“ scenarijai! Norėdami ja naudotis, įjunkite „JavaScript“ savo naršyklės nuostatose.';
-
 ?>

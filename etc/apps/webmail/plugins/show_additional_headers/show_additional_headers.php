@@ -6,12 +6,12 @@
  * Proof-of-concept plugin which will fetch additional headers
  * and display them in the message view.
  *
- * Enable the plugin in config/main.inc.php and add your desired headers:
- *   $rcmail_config['show_additional_headers'] = array('User-Agent');
+ * Enable the plugin in config.inc.php and add your desired headers:
+ *   $config['show_additional_headers'] = array('User-Agent');
  *
  * @version @package_version@
  * @author Thomas Bruederli
- * @website http://roundcube.net
+ * @license GNU GPLv3+
  */
 class show_additional_headers extends rcube_plugin
 {

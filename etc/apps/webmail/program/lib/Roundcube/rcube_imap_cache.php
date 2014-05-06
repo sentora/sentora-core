@@ -27,6 +27,9 @@
  */
 class rcube_imap_cache
 {
+    const MODE_INDEX   = 1;
+    const MODE_MESSAGE = 2;
+
     /**
      * Instance of rcube_imap
      *
@@ -49,6 +52,20 @@ class rcube_imap_cache
     private $userid;
 
     /**
+     * Expiration time in seconds
+     *
+     * @var int
+     */
+    private $ttl;
+
+    /**
+     * Maximum cached message size
+     *
+     * @var int
+     */
+    private $threshold;
+
+    /**
      * Internal (in-memory) cache
      *
      * @var array
@@ -56,6 +73,7 @@ class rcube_imap_cache
     private $icache = array();
 
     private $skip_deleted = false;
+    private $mode;
 
     /**
      * List of known flags. Thanks to this we can handle flag changes
@@ -81,15 +99,32 @@ class rcube_imap_cache
     );
 
 
+
     /**
      * Object constructor.
+     *
+     * @param rcube_db   $db           DB handler
+     * @param rcube_imap $imap         IMAP handler
+     * @param int        $userid       User identifier
+     * @param bool       $skip_deleted skip_deleted flag
+     * @param string     $ttl          Expiration time of memcache/apc items
+     * @param int        $threshold    Maximum cached message size
      */
-    function __construct($db, $imap, $userid, $skip_deleted)
+    function __construct($db, $imap, $userid, $skip_deleted, $ttl=0, $threshold=0)
     {
+        // convert ttl string to seconds
+        $ttl = get_offset_sec($ttl);
+        if ($ttl > 2592000) $ttl = 2592000;
+
         $this->db           = $db;
         $this->imap         = $imap;
         $this->userid       = $userid;
         $this->skip_deleted = $skip_deleted;
+        $this->ttl          = $ttl;
+        $this->threshold    = $threshold;
+
+        // cache all possible information by default
+        $this->mode = self::MODE_INDEX | self::MODE_MESSAGE;
     }
 
 
@@ -100,6 +135,17 @@ class rcube_imap_cache
     {
         $this->save_icache();
         $this->icache = null;
+    }
+
+
+    /**
+     * Set cache mode
+     *
+     * @param int $mode Cache mode
+     */
+    public function set_mode($mode)
+    {
+        $this->mode = $mode;
     }
 
 
@@ -215,9 +261,7 @@ class rcube_imap_cache
      * Return messages thread.
      * If threaded index doesn't exist or is invalid, will be updated.
      *
-     * @param string  $mailbox     Folder name
-     * @param string  $sort_field  Sorting column
-     * @param string  $sort_order  Sorting order (ASC|DESC)
+     * @param string $mailbox Folder name
      *
      * @return array Messages threaded index
      */
@@ -256,19 +300,11 @@ class rcube_imap_cache
         if ($index === null) {
             // Get mailbox data (UIDVALIDITY, counters, etc.) for status check
             $mbox_data = $this->imap->folder_data($mailbox);
-
-            if ($mbox_data['EXISTS']) {
-                // get all threads (default sort order)
-                $threads = $this->imap->fetch_threads($mailbox, true);
-            }
-            else {
-                $threads = new rcube_result_thread($mailbox, '* THREAD');
-            }
-
-            $index['object'] = $threads;
+            // Get THREADS result
+            $index['object'] = $this->get_thread_data($mailbox, $mbox_data);
 
             // insert/update
-            $this->add_thread_row($mailbox, $threads, $mbox_data, $exists);
+            $this->add_thread_row($mailbox, $index['object'], $mbox_data, $exists);
         }
 
         $this->icache[$mailbox]['thread'] = $index;
@@ -291,38 +327,46 @@ class rcube_imap_cache
             return array();
         }
 
-        // Fetch messages from cache
-        $sql_result = $this->db->query(
-            "SELECT uid, data, flags"
-            ." FROM ".$this->db->table_name('cache_messages')
-            ." WHERE user_id = ?"
-                ." AND mailbox = ?"
-                ." AND uid IN (".$this->db->array2list($msgs, 'integer').")",
-            $this->userid, $mailbox);
-
-        $msgs   = array_flip($msgs);
         $result = array();
 
-        while ($sql_arr = $this->db->fetch_assoc($sql_result)) {
-            $uid          = intval($sql_arr['uid']);
-            $result[$uid] = $this->build_message($sql_arr);
+        if ($this->mode & self::MODE_MESSAGE) {
+            // Fetch messages from cache
+            $sql_result = $this->db->query(
+                "SELECT uid, data, flags"
+                ." FROM ".$this->db->table_name('cache_messages')
+                ." WHERE user_id = ?"
+                    ." AND mailbox = ?"
+                    ." AND uid IN (".$this->db->array2list($msgs, 'integer').")",
+                $this->userid, $mailbox);
 
-            if (!empty($result[$uid])) {
-                // save memory, we don't need message body here (?)
-                $result[$uid]->body = null;
+            $msgs = array_flip($msgs);
 
-                unset($msgs[$uid]);
+            while ($sql_arr = $this->db->fetch_assoc($sql_result)) {
+                $uid          = intval($sql_arr['uid']);
+                $result[$uid] = $this->build_message($sql_arr);
+
+                if (!empty($result[$uid])) {
+                    // save memory, we don't need message body here (?)
+                    $result[$uid]->body = null;
+
+                    unset($msgs[$uid]);
+                }
             }
+
+            $msgs = array_flip($msgs);
         }
 
         // Fetch not found messages from IMAP server
         if (!empty($msgs)) {
-            $messages = $this->imap->fetch_headers($mailbox, array_keys($msgs), false, true);
+            $messages = $this->imap->fetch_headers($mailbox, $msgs, false, true);
 
             // Insert to DB and add to result list
             if (!empty($messages)) {
                 foreach ($messages as $msg) {
-                    $this->add_message($mailbox, $msg, !array_key_exists($msg->uid, $result));
+                    if ($this->mode & self::MODE_MESSAGE) {
+                        $this->add_message($mailbox, $msg, !array_key_exists($msg->uid, $result));
+                    }
+
                     $result[$msg->uid] = $msg;
                 }
             }
@@ -353,23 +397,29 @@ class rcube_imap_cache
             return $this->icache['__message']['object'];
         }
 
-        $sql_result = $this->db->query(
-            "SELECT flags, data"
-            ." FROM ".$this->db->table_name('cache_messages')
-            ." WHERE user_id = ?"
-                ." AND mailbox = ?"
-                ." AND uid = ?",
-                $this->userid, $mailbox, (int)$uid);
+        if ($this->mode & self::MODE_MESSAGE) {
+            $sql_result = $this->db->query(
+                "SELECT flags, data"
+                ." FROM ".$this->db->table_name('cache_messages')
+                ." WHERE user_id = ?"
+                    ." AND mailbox = ?"
+                    ." AND uid = ?",
+                    $this->userid, $mailbox, (int)$uid);
 
-        if ($sql_arr = $this->db->fetch_assoc($sql_result)) {
-            $message = $this->build_message($sql_arr);
-            $found   = true;
+            if ($sql_arr = $this->db->fetch_assoc($sql_result)) {
+                $message = $this->build_message($sql_arr);
+                $found   = true;
+            }
         }
 
         // Get the message from IMAP server
         if (empty($message) && $update) {
             $message = $this->imap->get_message_headers($uid, $mailbox, true);
             // cache will be updated in close(), see below
+        }
+
+        if (!($this->mode & self::MODE_MESSAGE)) {
+            return $message;
         }
 
         // Save the message in internal cache, will be written to DB in close()
@@ -407,6 +457,10 @@ class rcube_imap_cache
             return;
         }
 
+        if (!($this->mode & self::MODE_MESSAGE)) {
+            return;
+        }
+
         $flags = 0;
         $msg   = clone $message;
 
@@ -426,23 +480,40 @@ class rcube_imap_cache
         if (!$force) {
             $res = $this->db->query(
                 "UPDATE ".$this->db->table_name('cache_messages')
-                ." SET flags = ?, data = ?, changed = ".$this->db->now()
+                ." SET flags = ?, data = ?, expires = " . ($this->ttl ? $this->db->now($this->ttl) : 'NULL')
                 ." WHERE user_id = ?"
                     ." AND mailbox = ?"
                     ." AND uid = ?",
                 $flags, $msg, $this->userid, $mailbox, (int) $message->uid);
 
-            if ($this->db->affected_rows()) {
+            if ($this->db->affected_rows($res)) {
                 return;
             }
         }
 
+        $this->db->set_option('ignore_key_errors', true);
+
         // insert new record
-        $this->db->query(
+        $res = $this->db->query(
             "INSERT INTO ".$this->db->table_name('cache_messages')
-            ." (user_id, mailbox, uid, flags, changed, data)"
-            ." VALUES (?, ?, ?, ?, ".$this->db->now().", ?)",
+            ." (user_id, mailbox, uid, flags, expires, data)"
+            ." VALUES (?, ?, ?, ?, ". ($this->ttl ? $this->db->now($this->ttl) : 'NULL') . ", ?)",
             $this->userid, $mailbox, (int) $message->uid, $flags, $msg);
+
+        // race-condition, insert failed so try update (#1489146)
+        // thanks to ignore_key_errors "duplicate row" errors will be ignored
+        if ($force && !$res && !$this->db->is_error($res)) {
+            $this->db->query(
+                "UPDATE ".$this->db->table_name('cache_messages')
+                ." SET expires = " . ($this->ttl ? $this->db->now($this->ttl) : 'NULL')
+                    .", flags = ?, data = ?"
+                ." WHERE user_id = ?"
+                    ." AND mailbox = ?"
+                    ." AND uid = ?",
+                $flags, $msg, $this->userid, $mailbox, (int) $message->uid);
+        }
+
+        $this->db->set_option('ignore_key_errors', false);
     }
 
 
@@ -458,6 +529,10 @@ class rcube_imap_cache
     function change_flag($mailbox, $uids, $flag, $enabled = false)
     {
         if (empty($uids)) {
+            return;
+        }
+
+        if (!($this->mode & self::MODE_MESSAGE)) {
             return;
         }
 
@@ -483,7 +558,7 @@ class rcube_imap_cache
 
         $this->db->query(
             "UPDATE ".$this->db->table_name('cache_messages')
-            ." SET changed = ".$this->db->now()
+            ." SET expires = ". ($this->ttl ? $this->db->now($this->ttl) : 'NULL')
             .", flags = flags ".($enabled ? "+ $idx" : "- $idx")
             ." WHERE user_id = ?"
                 ." AND mailbox = ?"
@@ -501,6 +576,10 @@ class rcube_imap_cache
      */
     function remove_message($mailbox = null, $uids = null)
     {
+        if (!($this->mode & self::MODE_MESSAGE)) {
+            return;
+        }
+
         if (!strlen($mailbox)) {
             $this->db->query(
                 "DELETE FROM ".$this->db->table_name('cache_messages')
@@ -606,23 +685,21 @@ class rcube_imap_cache
 
 
     /**
-     * Delete cache entries older than TTL
-     *
-     * @param string $ttl  Lifetime of message cache entries
+     * Delete expired cache entries
      */
-    function expunge($ttl)
+    static function gc()
     {
-        // get expiration timestamp
-        $ts = get_offset_time($ttl, -1);
+        $rcube = rcube::get_instance();
+        $db    = $rcube->get_dbh();
 
-        $this->db->query("DELETE FROM ".$this->db->table_name('cache_messages')
-              ." WHERE changed < " . $this->db->fromunixtime($ts));
+        $db->query("DELETE FROM ".$db->table_name('cache_messages')
+              ." WHERE expires < " . $db->now());
 
-        $this->db->query("DELETE FROM ".$this->db->table_name('cache_index')
-              ." WHERE changed < " . $this->db->fromunixtime($ts));
+        $db->query("DELETE FROM ".$db->table_name('cache_index')
+              ." WHERE expires < " . $db->now());
 
-        $this->db->query("DELETE FROM ".$this->db->table_name('cache_thread')
-              ." WHERE changed < " . $this->db->fromunixtime($ts));
+        $db->query("DELETE FROM ".$db->table_name('cache_thread')
+              ." WHERE expires < " . $db->now());
     }
 
 
@@ -714,20 +791,38 @@ class rcube_imap_cache
         $data = implode('@', $data);
 
         if ($exists) {
-            $sql_result = $this->db->query(
+            $res = $this->db->query(
                 "UPDATE ".$this->db->table_name('cache_index')
-                ." SET data = ?, valid = 1, changed = ".$this->db->now()
+                ." SET data = ?, valid = 1, expires = " . ($this->ttl ? $this->db->now($this->ttl) : 'NULL')
+                ." WHERE user_id = ?"
+                    ." AND mailbox = ?",
+                $data, $this->userid, $mailbox);
+
+            if ($this->db->affected_rows($res)) {
+                return;
+            }
+        }
+
+        $this->db->set_option('ignore_key_errors', true);
+
+        $res = $this->db->query(
+            "INSERT INTO ".$this->db->table_name('cache_index')
+            ." (user_id, mailbox, valid, expires, data)"
+            ." VALUES (?, ?, 1, ". ($this->ttl ? $this->db->now($this->ttl) : 'NULL') .", ?)",
+            $this->userid, $mailbox, $data);
+
+        // race-condition, insert failed so try update (#1489146)
+        // thanks to ignore_key_errors "duplicate row" errors will be ignored
+        if (!$exists && !$res && !$this->db->is_error($res)) {
+            $res = $this->db->query(
+                "UPDATE ".$this->db->table_name('cache_index')
+                ." SET data = ?, valid = 1, expires = " . ($this->ttl ? $this->db->now($this->ttl) : 'NULL')
                 ." WHERE user_id = ?"
                     ." AND mailbox = ?",
                 $data, $this->userid, $mailbox);
         }
-        else {
-            $sql_result = $this->db->query(
-                "INSERT INTO ".$this->db->table_name('cache_index')
-                ." (user_id, mailbox, data, valid, changed)"
-                ." VALUES (?, ?, ?, 1, ".$this->db->now().")",
-                $this->userid, $mailbox, $data);
-        }
+
+        $this->db->set_option('ignore_key_errors', false);
     }
 
 
@@ -744,21 +839,41 @@ class rcube_imap_cache
         );
         $data = implode('@', $data);
 
+        $expires = ($this->ttl ? $this->db->now($this->ttl) : 'NULL');
+
         if ($exists) {
-            $sql_result = $this->db->query(
+            $res = $this->db->query(
                 "UPDATE ".$this->db->table_name('cache_thread')
-                ." SET data = ?, changed = ".$this->db->now()
+                ." SET data = ?, expires = $expires"
+                ." WHERE user_id = ?"
+                    ." AND mailbox = ?",
+                $data, $this->userid, $mailbox);
+
+            if ($this->db->affected_rows($res)) {
+                return;
+            }
+        }
+
+        $this->db->set_option('ignore_key_errors', true);
+
+        $res = $this->db->query(
+            "INSERT INTO ".$this->db->table_name('cache_thread')
+            ." (user_id, mailbox, expires, data)"
+            ." VALUES (?, ?, $expires, ?)",
+            $this->userid, $mailbox, $data);
+
+        // race-condition, insert failed so try update (#1489146)
+        // thanks to ignore_key_errors "duplicate row" errors will be ignored
+        if (!$exists && !$res && !$this->db->is_error($res)) {
+            $this->db->query(
+                "UPDATE ".$this->db->table_name('cache_thread')
+                ." SET expires = $expires, data = ?"
                 ." WHERE user_id = ?"
                     ." AND mailbox = ?",
                 $data, $this->userid, $mailbox);
         }
-        else {
-            $sql_result = $this->db->query(
-                "INSERT INTO ".$this->db->table_name('cache_thread')
-                ." (user_id, mailbox, data, changed)"
-                ." VALUES (?, ?, ?, ".$this->db->now().")",
-                $this->userid, $mailbox, $data);
-        }
+
+        $this->db->set_option('ignore_key_errors', false);
     }
 
 
@@ -966,15 +1081,17 @@ class rcube_imap_cache
         $removed = array();
 
         // Get known UIDs
-        $sql_result = $this->db->query(
-            "SELECT uid"
-            ." FROM ".$this->db->table_name('cache_messages')
-            ." WHERE user_id = ?"
-                ." AND mailbox = ?",
-            $this->userid, $mailbox);
+        if ($this->mode & self::MODE_MESSAGE) {
+            $sql_result = $this->db->query(
+                "SELECT uid"
+                ." FROM ".$this->db->table_name('cache_messages')
+                ." WHERE user_id = ?"
+                    ." AND mailbox = ?",
+                $this->userid, $mailbox);
 
-        while ($sql_arr = $this->db->fetch_assoc($sql_result)) {
-            $uids[] = $sql_arr['uid'];
+            while ($sql_arr = $this->db->fetch_assoc($sql_result)) {
+                $uids[] = $sql_arr['uid'];
+            }
         }
 
         // Synchronize messages data
@@ -985,7 +1102,7 @@ class rcube_imap_cache
                 $uids, true, array('FLAGS'), $index['modseq'], $qresync);
 
             if (!empty($result)) {
-                foreach ($result as $id => $msg) {
+                foreach ($result as $msg) {
                     $uid = $msg->uid;
                     // Remove deleted message
                     if ($this->skip_deleted && !empty($msg->flags['DELETED'])) {
@@ -1006,7 +1123,7 @@ class rcube_imap_cache
 
                     $this->db->query(
                         "UPDATE ".$this->db->table_name('cache_messages')
-                        ." SET flags = ?, changed = ".$this->db->now()
+                        ." SET flags = ?, expires = " . ($this->ttl ? $this->db->now($this->ttl) : 'NULL')
                         ." WHERE user_id = ?"
                             ." AND mailbox = ?"
                             ." AND uid = ?"
@@ -1034,17 +1151,18 @@ class rcube_imap_cache
             }
         }
 
-        // Invalidate thread index (?)
-        if (!$index['valid']) {
-            $this->remove_thread($mailbox);
-        }
-
         $sort_field = $index['sort_field'];
         $sort_order = $index['object']->get_parameters('ORDER');
         $exists     = true;
 
         // Validate index
         if (!$this->validate($mailbox, $index, $exists)) {
+            // Invalidate (remove) thread index
+            // if $exists=false it was already removed in validate()
+            if ($exists) {
+                $this->remove_thread($mailbox);
+            }
+
             // Update index
             $data = $this->get_index_data($mailbox, $sort_field, $sort_order, $mbox_data);
         }
@@ -1111,11 +1229,16 @@ class rcube_imap_cache
      *
      * @param rcube_message_header|rcube_message_part
      */
-    private function message_object_prepare(&$msg)
+    private function message_object_prepare(&$msg, &$size = 0)
     {
-        // Remove body too big (>25kB)
-        if ($msg->body && strlen($msg->body) > 25 * 1024) {
-            unset($msg->body);
+        // Remove body too big
+        if ($msg->body && ($length = strlen($msg->body))) {
+            $size += $length;
+
+            if ($size > $this->threshold * 1024) {
+                $size -= $length;
+                unset($msg->body);
+            }
         }
 
         // Fix mimetype which might be broken by some code when message is displayed
@@ -1127,15 +1250,13 @@ class rcube_imap_cache
 
         unset($msg->replaces);
 
-        if (is_array($msg->structure->parts)) {
-            foreach ($msg->structure->parts as $part) {
-                $this->message_object_prepare($part);
-            }
+        if (is_object($msg->structure)) {
+            $this->message_object_prepare($msg->structure, $size);
         }
 
         if (is_array($msg->parts)) {
             foreach ($msg->parts as $part) {
-                $this->message_object_prepare($part);
+                $this->message_object_prepare($part, $size);
             }
         }
     }
@@ -1160,6 +1281,25 @@ class rcube_imap_cache
 
         return $index;
     }
+
+
+    /**
+     * Fetches thread data from IMAP server
+     */
+    private function get_thread_data($mailbox, $mbox_data = array())
+    {
+        if (empty($mbox_data)) {
+            $mbox_data = $this->imap->folder_data($mailbox);
+        }
+
+        if ($mbox_data['EXISTS']) {
+            // get all threads (default sort order)
+            return $this->imap->threads_direct($mailbox);
+        }
+
+        return new rcube_result_thread($mailbox, '* THREAD');
+    }
+
 }
 
 // for backward compat.

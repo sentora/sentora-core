@@ -21,18 +21,20 @@ php_flag	session.auto_start	Off
 php_value	session.gc_maxlifetime	21600
 php_value	session.gc_divisor	500
 php_value	session.gc_probability	1
-
-# http://bugs.php.net/bug.php?id=30766
-php_value	mbstring.func_overload	0
 </IfModule>
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule ^favicon\.ico$ skins/larry/images/favicon.ico
-# security rules
-RewriteRule \.git - [F]
-RewriteRule ^/?(README(.md)?|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ - [F]
-RewriteRule ^/?(SQL|bin) - [F]
+
+# security rules:
+# - deny access to files not containing a dot or starting with a dot
+#   in all locations except installer directory
+RewriteRule ^(?!installer)(\.?[^\.]+)$ - [F]
+# - deny access to some locations
+RewriteRule ^/?(\.git|\.tx|SQL|bin|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
+# - deny access to some documentation files
+RewriteRule /?(README\.md|composer\.json-dist|composer\.json|package\.xml)$ - [F]
 </IfModule>
 
 <IfModule mod_deflate.c>

@@ -8,7 +8,7 @@
  * Configuration:
  * // Minimum number of citation lines. Longer citation blocks will be hidden.
  * // 0 - no limit (no hidding).
- * $rcmail_config['hide_blockquote_limit'] = 0;
+ * $config['hide_blockquote_limit'] = 0;
  *
  * @version @package_version@
  * @license GNU GPLv3+
@@ -69,7 +69,7 @@ class hide_blockquote extends rcube_plugin
     function save_prefs($args)
     {
         if ($args['section'] == 'mailview') {
-            $args['prefs']['hide_blockquote_limit'] = (int) get_input_value('_hide_blockquote_limit', RCUBE_INPUT_POST);
+            $args['prefs']['hide_blockquote_limit'] = (int) rcube_utils::get_input_value('_hide_blockquote_limit', rcube_utils::INPUT_POST);
         }
 
         return $args;

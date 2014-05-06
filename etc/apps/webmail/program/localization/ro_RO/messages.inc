@@ -5,7 +5,7 @@
  | localization/<lang>/messages.inc                                      |
  |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -15,8 +15,6 @@
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-
-$messages = array();
 $messages['errortitle']  = 'A avut loc o EROARE!';
 $messages['loginfailed']  = 'Autentificare eşuată';
 $messages['cookiesdisabled'] = 'Browserul dumneavoastră nu acceptă cookies';
@@ -35,6 +33,7 @@ $messages['invalidhost'] = 'Nume server invalid.';
 $messages['nomessagesfound'] = 'Nu a fost găsit nici un mesaj în această căsuţă poştală';
 $messages['loggedout'] = 'Sesiune încheiată cu succes. La revedere!';
 $messages['mailboxempty'] = 'Căsuţa poştală este goală';
+$messages['nomessages'] = 'Nici un mesaj';
 $messages['refreshing'] = 'Reîmprospătare...';
 $messages['loading'] = 'Se încarcă...';
 $messages['uploading'] = 'Fişierul se încarcă...';
@@ -46,6 +45,8 @@ $messages['messagesent'] = 'Mesajul a fost trimis cu succes!';
 $messages['savingmessage'] = 'Salvare mesaj...';
 $messages['messagesaved'] = 'Mesajul a fost salvat în Ciorne';
 $messages['successfullysaved'] = 'Salvat cu succes.';
+$messages['savingresponse'] = 'Se salvează textul pentru răspuns...';
+$messages['deleteresponseconfirm'] = 'Chiar vrei să ștergi acest text pentru răspuns?';
 $messages['addedsuccessfully'] = 'Contactul a fost adăugat cu succes în agendă';
 $messages['contactexists'] = 'Un contact cu această adresă de e-mail există deja.';
 $messages['contactnameexists'] = 'Există deja un contact cu acelaşi nume.';
@@ -56,8 +57,8 @@ $messages['contactnotfound'] = 'Contactul solicitat nu a fost găsit.';
 $messages['contactsearchonly'] = 'Introdu nişte termeni de căutare pentru a găsi contactele';
 $messages['sendingfailed'] = 'Nu s-a reuşit trimiterea mesajului';
 $messages['senttooquickly'] = 'Vă rugăm aşteptaţi $sec sec. înainte de a trimite acest mesaj';
-$messages['errorsavingsent'] = 'A intervenit o eroare în timp ce se efectua salvarea mesajului trimis';
-$messages['errorsaving'] = 'A intervenit o eroare în timp ce se efectua salvarea';
+$messages['errorsavingsent'] = 'A intervenit o eroare în timp ce se efectua salvarea mesajului trimis.';
+$messages['errorsaving'] = 'A intervenit o eroare în timp ce se efectua salvarea.';
 $messages['errormoving'] = 'Nu am putut muta mesajul (mesajele).';
 $messages['errorcopying'] = 'Nu am putut copia mesajul (mesajele).';
 $messages['errordeleting'] = 'Nu am putut şterge mesajul (mesajele).';
@@ -82,6 +83,7 @@ $messages['norecipientwarning'] = 'Vă rugăm să introduceţi cel puţin un des
 $messages['nosubjectwarning']  = 'Mesajul nu are subiect. Vreţi să introduceţi unul acum?';
 $messages['nobodywarning'] = 'Trimiteţi acest mesaj fără text?';
 $messages['notsentwarning'] = 'Mesajul nu a fost trimis. Vreţi să renunţaţi la el?';
+$messages['restoresavedcomposedata'] = 'Un mesaj compus anterior a fost găsit.\n\nSubiect:$subject\nSalvat: $date\n\nDoriţi restaurarea acestuia ?';
 $messages['noldapserver'] = 'Vă rugăm să alegeţi un server ldap pentru căutare';
 $messages['nosearchname'] = 'Vă rugăm să introduceţi un nume de contact sau adresă de e-mail';
 $messages['notuploadedwarning'] = 'Nu toate fişierele au fost ataşate. Vă rugăm să aşteptaţi sau să anulaţi încărcarea acestora.';
@@ -101,13 +103,16 @@ $messages['converting'] = 'Resetez mesajul la parametrii iniţiali...';
 $messages['messageopenerror'] = 'Nu s-a putut încărca mesajul din server';
 $messages['fileuploaderror'] = 'Încărcarea pe server a eşuat';
 $messages['filesizeerror'] = 'Fişierul încărcat depăşeşte dimensiunea de $size';
-$messages['copysuccess'] = '$nr adrese copiat(e) cu succes';
-$messages['copyerror'] = 'Nu s-a putut copia nicio adresă';
+$messages['copysuccess'] = 'Am copiat cu succes $nr contacte.';
+$messages['movesuccess'] = 'Am mutat cu succes $nr contacte.';
+$messages['copyerror'] = 'Nu am putut copia nici un contact.';
+$messages['moveerror'] = 'Nu am putut muta nici un contact.';
 $messages['sourceisreadonly'] = 'Sursa acestei adrese este "read-only" (se poate doar citi)';
 $messages['errorsavingcontact'] = 'Nu s-a putut salva adresa de contact';
 $messages['movingmessage'] = 'Mutare mesaj....';
 $messages['copyingmessage'] = 'Copiere mesaj...';
 $messages['copyingcontact'] = 'Copiez contact(ele)...';
+$messages['movingcontact'] = 'Se muta contactul (contactele) ...';
 $messages['deletingmessage'] = 'Şterg mesaj(ele)...';
 $messages['markingmessage'] = 'Marchez mesaj(ele)...';
 $messages['addingmember'] = 'Adaug contact(ele) la grup...';
@@ -126,6 +131,8 @@ $messages['importwait'] = 'Datele sunt importate, vă rugăm să aşteptaţi...'
 $messages['importformaterror'] = 'Importul a eșuat! Fișierul încărcat nu este un fișier valid pentru import de date.';
 $messages['importconfirm'] = '<b>$inserted contacte au fost importate cu succes, $skipped intrări au fost ignorate deoarece ele există deja: $names</b>';
 $messages['importconfirmskipped'] = '<b>Am sărit peste $skipped înregistrări</b>';
+$messages['importmessagesuccess'] = 'Am importat cu succes $nr mesaje.';
+$messages['importmessageerror'] = 'Importarea a esuat. Fisierul incarca nu este un mesaj valid pentru email.';
 $messages['opnotpermitted'] = 'Operaţiunea nu este permisă!';
 $messages['nofromaddress'] = 'Nu există o adresă de e-mail în identitatea selectată';
 $messages['editorwarning'] = 'Trecerea în mod text a editorului va cauza pierderea formatării textului. Doriţi să continuaţi?';
@@ -139,7 +146,7 @@ $messages['smtperror'] = 'Eroare SMTP: $msg';
 $messages['emailformaterror'] = 'Adresă de e-mail incorectă: $email';
 $messages['toomanyrecipients'] = 'Prea mulţi destinatari. Reduceţi numărul de destinatari la $max.';
 $messages['maxgroupmembersreached'] = 'Numărul de membri ai grupului depăşeşte maximul de $max.';
-$messages['internalerror'] = 'A avut loc o eroare internă. Încearcă mai târziu.';
+$messages['internalerror'] = 'A avut loc o eroare internă. Te rog încearcă din nou.';
 $messages['contactdelerror'] = 'Nu am putut şterge contact(ele).';
 $messages['contactdeleted'] = 'Contact(ele) au fost şterse cu succes.';
 $messages['contactrestoreerror'] = 'Nu am putut restaura contact(ele) şterse.';
@@ -167,5 +174,4 @@ $messages['parentnotwritable'] = 'Nu pot crea/muta dosarul în dosarul părinte 
 $messages['messagetoobig'] = 'Partea de mesaj este prea mare pentru a o procesa.';
 $messages['attachmentvalidationerror'] = 'ATENȚIE! Acest atașament este suspect, fiindcă tipul lui nu coincide cu tipul declarat în mesaj. Dacă nu aveți încredere în expeditor, nu vă recomandăm să deschideți fișierul, fiindcă poate avea conținut malițios. <br/><br/><em>Așteptat: $expected; găsit: $detected</em>';
 $messages['noscriptwarning'] = 'Atenție: Serviciul de webmail necesită Javascript! Pentru a-l utiliza vă rugăm activați Javascript în setările browserului.';
-
 ?>
