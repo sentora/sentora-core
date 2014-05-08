@@ -8,3 +8,7 @@ RewriteRule ^apps/([^/\.]+)/?$ etc/apps/$1 [L]
 
 # RewriteCond %{SERVER_NAME} !^zpanel\.domain\.com$ 
 # RewriteRule ^ - [F]
+
+#Deny access to some file types / directories
+RewriteRule ^/?(\.git|\.tx|SQL|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
+RewriteRule ^(etc/tmp|etc/zppy-cache|/etc/lib/pChart2/cache|etc/build) - [F,L,NC]
