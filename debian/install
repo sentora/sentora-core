@@ -115,12 +115,12 @@ etc/apps/phpsysinfo/data/ModelTranslation.txt /etc/zpanelx/etc/apps/phpsysinfo/d
 
 etc/apps/phpsysinfo/gfx/images/AIX.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/Alpine.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ALT.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Amazon.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Android.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/antiX.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Apple.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Arch.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
