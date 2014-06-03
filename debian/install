@@ -112,7 +112,6 @@ etc/apps/phpinfo/index.php /etc/zpanelx/etc/apps/phpinfo
 etc/apps/phpsysinfo/data/distros.ini /etc/zpanelx/etc/apps/phpsysinfo/data
 etc/apps/phpsysinfo/data/languages.ini /etc/zpanelx/etc/apps/phpsysinfo/data
 etc/apps/phpsysinfo/data/ModelTranslation.txt /etc/zpanelx/etc/apps/phpsysinfo/data
-
 etc/apps/phpsysinfo/gfx/images/AIX.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/Alpine.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/ALT.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
@@ -168,13 +167,38 @@ etc/apps/phpsysinfo/gfx/images/PLD.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/imag
 etc/apps/phpsysinfo/gfx/images/Porteus.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/Puppy.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/ReactOS.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/RedFlag.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/RedHat.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ROSA.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Rubix.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Sabayon.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Salix.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Scientific.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Semplice.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Slackware.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Slax.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/SMEServer.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/SMS.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/SolusOS.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/SolydXK.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/StartOS.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/SteamOS.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/SunOS.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/SUSE.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Synology.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Tails.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/TinyCore.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Trisquel.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Trustix.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Turbo.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Ubuntu.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/unknown.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Vector.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Win8.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Win2000.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/WinVista.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/WinXP.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Zorin.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+
+
 etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
