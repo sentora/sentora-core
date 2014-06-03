@@ -50,7 +50,6 @@ dryden/ui/moduleloader.class.php /etc/zpanelx/dryden/ui
 dryden/ui/sysmessage.class.php /etc/zpanelx/dryden/ui
 dryden/ui/template.class.php /etc/zpanelx/dryden/ui
 dryden/ui/templateparser.class.php /etc/zpanelx/dryden/ui
-
 dryden/ui/tpl/apacheversion.class.php /etc/zpanelx/dryden/ui/tpl
 dryden/ui/tpl/assetfolderpath.class.php /etc/zpanelx/dryden/ui/tpl
 dryden/ui/tpl/breadcrumbs.class.php /etc/zpanelx/dryden/ui/tpl
@@ -106,3 +105,27 @@ dryden/ui/tpl/usergroup.class.php /etc/zpanelx/dryden/ui/tpl
 dryden/ui/tpl/username.class.php /etc/zpanelx/dryden/ui/tpl
 dryden/ui/tpl/year.class.php /etc/zpanelx/dryden/ui/tpl
 dryden/ui/tpl/zpanelversion.class.php /etc/zpanelx/dryden/ui/tpl
+dryden/ws/generic.class.php /etc/zpanelx/dryden/ws
+dryden/ws/xmws.class.php /etc/zpanelx/dryden/ws
+dryden/xml/reader.class.php /etc/zpanelx/dryden/xml
+etc/apps/phpinfo/index.php /etc/zpanelx/etc/apps/phpinfo
+etc/apps/phpsysinfo/data/distros.ini /etc/zpanelx/etc/apps/phpsysinfo/data
+etc/apps/phpsysinfo/data/languages.ini /etc/zpanelx/etc/apps/phpsysinfo/data
+etc/apps/phpsysinfo/data/ModelTranslation.txt /etc/zpanelx/etc/apps/phpsysinfo/data
+
+etc/apps/phpsysinfo/gfx/images/AIX.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/Alpine.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
