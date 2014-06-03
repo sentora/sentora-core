@@ -199,6 +199,13 @@ etc/apps/phpsysinfo/gfx/images/Win2000.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/
 etc/apps/phpsysinfo/gfx/images/WinVista.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/WinXP.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
 etc/apps/phpsysinfo/gfx/images/Zorin.png /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/treeTable/blank.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
+etc/apps/phpsysinfo/gfx/treeTable/tv-collapsable.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
+etc/apps/phpsysinfo/gfx/treeTable/tv-collapsable-last.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
+etc/apps/phpsysinfo/gfx/treeTable/tv-expandable.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
+etc/apps/phpsysinfo/gfx/treeTable/tv-expandable-last.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
+etc/apps/phpsysinfo/gfx/treeTable/tv-item.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
+etc/apps/phpsysinfo/gfx/treeTable/tv-item-last.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
+etc/apps/phpsysinfo/gfx/treeTable/vertline.gif /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
 
-
-etc/apps/phpsysinfo/gfx/images/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/images
+etc/apps/phpsysinfo/gfx/treeTable/ /etc/zpanelx/etc/apps/phpsysinfo/gfx/treeTable
