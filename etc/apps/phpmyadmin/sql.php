@@ -23,9 +23,11 @@ $response = PMA_Response::getInstance();
 $header   = $response->getHeader();
 $scripts  = $header->getScripts();
 $scripts->addFile('jquery/jquery-ui-timepicker-addon.js');
+$scripts->addFile('jquery/jquery.uitablefilter.js');
 $scripts->addFile('tbl_change.js');
 $scripts->addFile('indexes.js');
 $scripts->addFile('gis_data_editor.js');
+$scripts->addFile('columndelete.js');
 
 /**
  * Set ajax_reload in the response if it was already set

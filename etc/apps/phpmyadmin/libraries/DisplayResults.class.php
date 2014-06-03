@@ -71,6 +71,9 @@ class PMA_DisplayResults
     const ROUTINE_PROCEDURE = 'procedure';
     const ROUTINE_FUNCTION = 'function';
 
+    const ACTION_LINK_CONTENT_ICONS = 'icons';
+    const ACTION_LINK_CONTENT_TEXT = 'text';
+
 
     // Declare global fields
 
@@ -775,7 +778,7 @@ class PMA_DisplayResults
                     )
                     . ')'
                 . ')'
-            .'">';
+            . '">';
 
         $table_navigation_html .= PMA_URL_getHiddenInputs(
             $this->__get('db'), $this->__get('table')
@@ -786,6 +789,12 @@ class PMA_DisplayResults
         );
 
         $table_navigation_html .= '</form>'
+            . '</td>'
+            . '<td class="navigation_separator"></td>'
+            . '<td>'
+            . '<span>' . __('Filter rows') . ':</span>'
+            . '<input type="text" class="filter_rows" placeholder="'
+            . __('Search this table') . '">'
             . '</td>'
             . '<td class="navigation_separator"></td>'
             . '</tr>'
@@ -1137,7 +1146,7 @@ class PMA_DisplayResults
                         $sort_expression_nodirection, $i, $unsorted_sql_query,
                         $session_max_rows, $direction, $comments,
                         $sort_direction, $directionCondition, $col_visib,
-                        $col_visib[$j], $condition_field
+                        $col_visib[$j]
                     );
 
                 $table_headers_html .= $sorted_header_html;
@@ -1172,10 +1181,12 @@ class PMA_DisplayResults
         } // end for
 
         // Display column at rightside - checkboxes or empty column
-        $table_headers_html .= $this->_getColumnAtRightSide(
-            $is_display, $directionCondition, $full_or_partial_text_link,
-            $colspan, $rowspan
-        );
+        if (! $printview) {
+            $table_headers_html .= $this->_getColumnAtRightSide(
+                $is_display, $directionCondition, $full_or_partial_text_link,
+                $colspan, $rowspan
+            );
+        }
 
         if ($directionCondition) {
             $table_headers_html .= '</tr>'
@@ -1811,21 +1822,19 @@ class PMA_DisplayResults
      * Prepare parameters and html for sorted table header fields
      *
      * @param array   $fields_meta                 set of field properties
-     * @param string  $sort_expression             sort expression
-     * @param string  $sort_expression_nodirection sort expression without direction
+     * @param array   $sort_expression             sort expression
+     * @param array   $sort_expression_nodirection sort expression without direction
      * @param integer $column_index                the index of the column
      * @param string  $unsorted_sql_query          the unsorted sql query
      * @param integer $session_max_rows            maximum rows resulted by sql
-     * @param string  $direction                   the display direction
+     * @param array   $direction                   the display direction
      * @param string  $comments                    comment for row
-     * @param string  $sort_direction              sort direction
+     * @param array   $sort_direction              sort direction
      * @param boolean $directionCondition          display direction horizontal
      *                                             or horizontalflipped
      * @param boolean $col_visib                   column is visible(false)
      *        array                                column isn't visible(string array)
      * @param string  $col_visib_j                 element of $col_visib array
-     * @param boolean $condition_field             whether the column is a part of
-     *                                             the where clause
      *
      * @return  array   2 element array - $order_link, $sorted_header_html
      *
@@ -1836,8 +1845,7 @@ class PMA_DisplayResults
     private function _getOrderLinkAndSortedHeaderHtml(
         $fields_meta, $sort_expression, $sort_expression_nodirection,
         $column_index, $unsorted_sql_query, $session_max_rows, $direction,
-        $comments, $sort_direction, $directionCondition, $col_visib,
-        $col_visib_j, $condition_field
+        $comments, $sort_direction, $directionCondition, $col_visib, $col_visib_j
     ) {
 
         $sorted_header_html = '';
@@ -1855,50 +1863,13 @@ class PMA_DisplayResults
             ) . '.'
             : '';
 
-        // Checks if the current column is used to sort the
-        // results
-        // the orgname member does not exist for all MySQL versions
-        // but if found, it's the one on which to sort
         $name_to_use_in_sort = $fields_meta->name;
-        $is_orgname = false;
-        if (isset($fields_meta->orgname)
-            && strlen($fields_meta->orgname)
-        ) {
-            $name_to_use_in_sort = $fields_meta->orgname;
-            $is_orgname = true;
-        }
 
-        // $name_to_use_in_sort might contain a space due to
-        // formatting of function expressions like "COUNT(name )"
-        // so we remove the space in this situation
-        $name_to_use_in_sort = str_replace(' )', ')', $name_to_use_in_sort);
-
-        $is_in_sort = $this->_isInSorted(
-            $sort_expression, $sort_expression_nodirection,
-            $sort_tbl, $name_to_use_in_sort
-        );
-
-        // Check the field name for a bracket.
-        // If it contains one, it's probably a function column
-        // like 'COUNT(`field`)'
-        // It still might be a column name of a view. See bug #3383711
-        // Check is_orgname.
-        if ((strpos($name_to_use_in_sort, '(') !== false) && ! $is_orgname) {
-            $sort_order = "\n" . 'ORDER BY ' . $name_to_use_in_sort . ' ';
-        } else {
-            $sort_order = "\n" . 'ORDER BY ' . $sort_tbl
-                . PMA_Util::backquote(
-                    $name_to_use_in_sort
-                ) . ' ';
-        }
-        unset($name_to_use_in_sort);
-        unset($is_orgname);
-
-        // Do define the sorting URL
-
-        list($sort_order, $order_img) = $this->_getSortingUrlParams(
-            $is_in_sort, $sort_direction, $fields_meta,
-            $sort_order, $column_index
+        // Generates the orderby clause part of the query which is part
+        // of URL
+        list($sort_order, $order_img) = $this->_makeUrl(
+            $sort_expression, $sort_expression_nodirection, $sort_tbl,
+            $name_to_use_in_sort, $sort_direction, $fields_meta, $column_index
         );
 
         if (preg_match(
@@ -1926,23 +1897,129 @@ class PMA_DisplayResults
             $fields_meta, $order_url
         );
 
-        if ($directionCondition) {
-            $sorted_header_html .= $this->_getDraggableClassForSortableColumns(
-                $col_visib, $col_visib_j, $condition_field, $direction,
-                $fields_meta, $order_link, $comments
-            );
-        }
+        $sorted_header_html .= $this->_getDraggableClassForSortableColumns(
+            $col_visib, $col_visib_j, $direction,
+            $fields_meta, $order_link, $comments
+        );
 
         return array($order_link, $sorted_header_html);
 
     } // end of the '_getOrderLinkAndSortedHeaderHtml()' function
 
+    /**
+     * Prepare parameters and html for sorted table header fields
+     *
+     * @param array   $sort_expression             sort expression
+     * @param array   $sort_expression_nodirection sort expression without direction
+     * @param string  $sort_tbl                    The name of the table to which
+     *                                             the current column belongs to
+     * @param string  $name_to_use_in_sort         The current column under
+     *                                             consideration
+     * @param array   $sort_direction              sort direction
+     * @param array   $fields_meta                 set of field properties
+     * @param integer $column_index                The index number to current column
+     *
+     * @return  array   2 element array - $order_link, $sorted_header_html
+     *
+     * @access  private
+     *
+     * @see     _getOrderLinkAndSortedHeaderHtml()
+     */
+    private function _makeUrl(
+        $sort_expression, $sort_expression_nodirection, $sort_tbl,
+        $name_to_use_in_sort, $sort_direction, $fields_meta, $column_index
+    ) {
+        $sort_order = "";
+        // Check if the current column is in the order by clause
+        $is_in_sort = $this->_isInSorted(
+            $sort_expression, $sort_expression_nodirection,
+            $sort_tbl, $name_to_use_in_sort
+        );
+        $current_name = $name_to_use_in_sort;
+        if ($sort_expression_nodirection[0] == '' || !$is_in_sort) {
+            $special_index = $sort_expression_nodirection[0] == ''
+                ? 0
+                : count($sort_expression_nodirection);
+            $sort_expression_nodirection[$special_index]
+                = PMA_Util::backquote(
+                    $current_name
+                );
+            $sort_direction[$special_index] = (preg_match(
+                '@time|date@i',
+                $fields_meta->type
+            )) ? self::DESCENDING_SORT_DIR : self::ASCENDING_SORT_DIR;
+
+        }
+        $sort_expression_nodirection = array_filter($sort_expression_nodirection);
+        foreach ($sort_expression_nodirection as $index=>$expression) {
+            // check if this is the first clause,
+            // if it is then we have to add "order by"
+            $is_first_clause = ($index == 0);
+            $name_to_use_in_sort = $expression;
+            $sort_tbl_new = $sort_tbl;
+            // Test to detect if the column name is a standard name
+            // Standard name has the table name prefixed to the column name
+            $is_standard_name = false;
+            if (strpos($name_to_use_in_sort, '.') !== false) {
+                $matches = explode('.', $name_to_use_in_sort);
+                // Matches[0] has the table name
+                // Matches[1] has the column name
+                $name_to_use_in_sort = $matches[1];
+                $sort_tbl_new = $matches[0];
+                $is_standard_name = true;
+            }
+
+
+            // $name_to_use_in_sort might contain a space due to
+            // formatting of function expressions like "COUNT(name )"
+            // so we remove the space in this situation
+            $name_to_use_in_sort = str_replace(' )', ')', $name_to_use_in_sort);
+            $name_to_use_in_sort = str_replace('`', '', $name_to_use_in_sort);
+
+            // If this the first column name in the order by clause add
+            // order by clause to the  column name
+            $query_head = $is_first_clause ? "\nORDER BY " : "";
+            $tbl = $is_standard_name ? $sort_tbl_new : $sort_tbl;
+            // Again a check to see if the given column is a aggregate column
+            if (strpos($name_to_use_in_sort, '(') !== false) {
+                $sort_order .=  $query_head  . $name_to_use_in_sort . ' ' ;
+            } else {
+                $sort_order .=  $query_head  . $sort_tbl_new . "."
+                  . PMA_Util::backquote(
+                      $name_to_use_in_sort
+                  ) .  ' ' ;
+            }
+
+            // For a special case where the code generates two dots between
+            // column name and table name.
+            $sort_order = preg_replace("/\.\./", ".", $sort_order);
+            // Incase the current column name is in the order by clause
+            // We need to generate the arrow button and related html
+            if ($current_name == $name_to_use_in_sort && $is_in_sort) {
+                list($sort_order, $order_img) = $this->_getSortingUrlParams(
+                    $sort_direction, $sort_order, $column_index, $index
+                );
+            } else {
+                $sort_order .= strtoupper($sort_direction[$index]);
+            }
+            // Separate columns by a comma
+            $sort_order .= ", ";
+            unset($name_to_use_in_sort);
+        }
+        // remove the comma from the last column name in the newly
+        // constructed clause
+        $sort_order = substr($sort_order, 0, strlen($sort_order)-2);
+        if (empty($order_img)) {
+            $order_img = '';
+        }
+        return array($sort_order, $order_img);
+    }
 
     /**
      * Check whether the column is sorted
      *
-     * @param string $sort_expression             sort expression
-     * @param string $sort_expression_nodirection sort expression without direction
+     * @param array  $sort_expression             sort expression
+     * @param array  $sort_expression_nodirection sort expression without direction
      * @param string $sort_tbl                    the table name
      * @param string $name_to_use_in_sort         the sorting column name
      *
@@ -1957,7 +2034,21 @@ class PMA_DisplayResults
         $name_to_use_in_sort
     ) {
 
-        if (empty($sort_expression)) {
+        $index_in_expression = 0;
+
+        foreach ($sort_expression_nodirection as $index => $clause) {
+            if (strpos($clause, '.') !== false) {
+                $fragments = explode('.', $clause);
+                $clause2 = $fragments[0] . "." . str_replace('`', ``, $fragments[1]);
+            } else {
+                $clause2 = $sort_tbl . str_replace('`', ``, $clause);
+            }
+            if ($clause2 === $sort_tbl . $name_to_use_in_sort) {
+                $index_in_expression = $index;
+                break;
+            }
+        }
+        if (empty($sort_expression[$index_in_expression])) {
             $is_in_sort = false;
         } else {
             // Field name may be preceded by a space, or any number
@@ -1970,13 +2061,14 @@ class PMA_DisplayResults
             // SELECT p.*, FROM_UNIXTIME(p.temps) FROM mytable AS p
             // (and try clicking on each column's header twice)
             if (! empty($sort_tbl)
-                && strpos($sort_expression_nodirection, $sort_tbl) === false
-                && strpos($sort_expression_nodirection, '(') === false
+                && strpos($sort_expression_nodirection[$index_in_expression], $sort_tbl) === false
+                && strpos($sort_expression_nodirection[$index_in_expression], '(') === false
             ) {
                 $new_sort_expression_nodirection = $sort_tbl
-                    . $sort_expression_nodirection;
+                    . $sort_expression_nodirection[$index_in_expression];
             } else {
-                $new_sort_expression_nodirection = $sort_expression_nodirection;
+                $new_sort_expression_nodirection
+                    = $sort_expression_nodirection[$index_in_expression];
             }
 
             //Back quotes are removed in next comparison, so remove them from value
@@ -1987,7 +2079,7 @@ class PMA_DisplayResults
             $sort_name = str_replace('`', '', $sort_tbl) . $name_to_use_in_sort;
 
             if ($sort_name == str_replace('`', '', $new_sort_expression_nodirection)
-                || $sort_name == str_replace('`', '', $sort_expression_nodirection)
+                || $sort_name == str_replace('`', '', $sort_expression_nodirection[$index_in_expression])
             ) {
                 $is_in_sort = true;
             }
@@ -2001,39 +2093,25 @@ class PMA_DisplayResults
     /**
      * Get sort url paramaeters - sort order and order image
      *
-     * @param boolean $is_in_sort     the column sorted or not
-     * @param string  $sort_direction the sort direction
-     * @param array   $fields_meta    set of field properties
-     * @param string  $sort_order     the sorting order
+     * @param array   $sort_direction the sort direction
+     * @param array   $sort_order     the sorting order
      * @param integer $column_index   the index of the column
+     * @param integer $index          the index of sort direction array.
      *
-     * @return  array                       2 element array - $sort_order, $order_img
+     * @return  array                 2 element array - $sort_order, $order_img
      *
      * @access  private
      *
-     * @see     _getTableHeaders()
+     * @see     _makeUrl()
      */
     private function _getSortingUrlParams(
-        $is_in_sort, $sort_direction, $fields_meta, $sort_order, $column_index
+        $sort_direction, $sort_order, $column_index, $index
     ) {
 
-        if (! $is_in_sort) {
+        $index2 = $index + 1;
+        if (strtoupper(trim($sort_direction[$index])) ==  self::DESCENDING_SORT_DIR) {
 
-            // patch #455484 ("Smart" order)
-            $GLOBALS['cfg']['Order'] = strtoupper($GLOBALS['cfg']['Order']);
-
-            if ($GLOBALS['cfg']['Order'] === self::SMART_SORT_ORDER) {
-                $sort_order .= (preg_match(
-                    '@time|date@i',
-                    $fields_meta->type
-                )) ? self::DESCENDING_SORT_DIR : self::ASCENDING_SORT_DIR;
-            } else {
-                $sort_order .= $GLOBALS['cfg']['Order'];
-            }
-            $order_img   = '';
-
-        } elseif ($sort_direction == self::DESCENDING_SORT_DIR) {
-
+            $sort_number = "<small>" . $index2 . "</small>";
             $sort_order .= ' ASC';
             $order_img   = ' ' . PMA_Util::getImage(
                 's_desc.png', __('Descending'),
@@ -2043,20 +2121,22 @@ class PMA_DisplayResults
             $order_img  .= ' ' . PMA_Util::getImage(
                 's_asc.png', __('Ascending'),
                 array('class' => "soimg$column_index hide", 'title' => '')
-            );
+            ) . $sort_number;
 
         } else {
 
+            $sort_number = "<small>" . $index2 . "</small>";
             $sort_order .= ' DESC';
             $order_img   = ' ' . PMA_Util::getImage(
                 's_asc.png', __('Ascending'),
                 array('class' => "soimg$column_index", 'title' => '')
             );
 
-            $order_img  .= ' ' . PMA_Util::getImage(
+            $order_img  .=  ' ' . PMA_Util::getImage(
                 's_desc.png', __('Descending'),
                 array('class' => "soimg$column_index hide", 'title' => '')
-            );
+            ) . $sort_number;
+
         }
 
         return array($sort_order, $order_img);
@@ -2084,7 +2164,6 @@ class PMA_DisplayResults
     ) {
 
         $order_link_params = array();
-
         if (isset($order_img) && ($order_img != '')) {
             if (strstr($order_img, 'asc')) {
                 $order_link_params['onmouseover'] = "$('.soimg$col_index').toggle()";
@@ -2128,14 +2207,13 @@ class PMA_DisplayResults
     /**
      * Prepare columns to draggable effect for sortable columns
      *
-     * @param boolean $col_visib       the column is visible (false)
-     *        array                    the column is not visible (string array)
-     * @param string  $col_visib_j     element of $col_visib array
-     * @param boolean $condition_field whether to add CSS class condition
-     * @param string  $direction       the display direction
-     * @param array   $fields_meta     set of field properties
-     * @param string  $order_link      the order link
-     * @param string  $comments        the comment for the column
+     * @param boolean $col_visib   the column is visible (false)
+     *        array                the column is not visible (string array)
+     * @param string  $col_visib_j element of $col_visib array
+     * @param string  $direction   the display direction
+     * @param array   $fields_meta set of field properties
+     * @param string  $order_link  the order link
+     * @param string  $comments    the comment for the column
      *
      * @return  string  $draggable_html     html content
      *
@@ -2144,7 +2222,7 @@ class PMA_DisplayResults
      * @see     _getTableHeaders()
      */
     private function _getDraggableClassForSortableColumns(
-        $col_visib, $col_visib_j, $condition_field, $direction, $fields_meta,
+        $col_visib, $col_visib_j, $direction, $fields_meta,
         $order_link, $comments
     ) {
 
@@ -2154,10 +2232,6 @@ class PMA_DisplayResults
 
         if ($col_visib && !$col_visib_j) {
             $th_class[] = 'hide';
-        }
-
-        if ($condition_field) {
-            $th_class[] = 'condition';
         }
 
         $th_class[] = 'column_heading';
@@ -2371,7 +2445,8 @@ class PMA_DisplayResults
     private function _buildNullDisplay($class, $condition_field, $meta, $align = '')
     {
         // the null class is needed for grid editing
-        return '<td ' . $align . ' class="'
+        return '<td ' . $align . ' data-decimals="' . $meta->decimals
+            . '" data-type="' . $meta->type . '"  class="'
             . $this->_addClass(
                 $class, $condition_field, $meta, ''
             )
@@ -2834,11 +2909,14 @@ class PMA_DisplayResults
 
             // Check whether the field needs to display with syntax highlighting
 
-            if ($this->_isNeedToSyntaxHighlight($meta->name)
+            if (! empty($this->transformation_info[strtolower($this->__get('db'))][strtolower($this->__get('table'))][strtolower($meta->name)])
                 && (trim($row[$i]) != '')
             ) {
                 $row[$i] = PMA_Util::formatSql($row[$i]);
-                include_once $this->transformation_info[strtolower($this->__get('db'))][strtolower($this->__get('table'))][strtolower($meta->name)][0];
+                include_once $this->transformation_info
+                    [strtolower($this->__get('db'))]
+                    [strtolower($this->__get('table'))]
+                    [strtolower($meta->name)][0];
                 $transformation_plugin = new $this->transformation_info
                     [strtolower($this->__get('db'))]
                     [strtolower($this->__get('table'))]
@@ -2852,7 +2930,9 @@ class PMA_DisplayResults
 
                 $meta->mimetype = str_replace(
                     '_', '/',
-                    $this->transformation_info[strtolower($this->__get('db'))][strtolower($this->__get('table'))][strtolower($meta->name)][2]
+                    $this->transformation_info[strtolower($this->__get('db'))]
+                    [strtolower($this->__get('table'))]
+                    [strtolower($meta->name)][2]
                 );
 
             }
@@ -2861,7 +2941,7 @@ class PMA_DisplayResults
             include_once 'libraries/special_schema_links.lib.php';
 
             if (isset($GLOBALS['special_schema_links'])
-                && ($this->_isFieldNeedToLink(strtolower($meta->name)))
+                && (! empty($GLOBALS['special_schema_links'][strtolower($this->__get('db'))][strtolower($this->__get('table'))][strtolower($meta->name)]))
             ) {
 
                 $linking_url = $this->_getSpecialLinkUrl(
@@ -3071,37 +3151,6 @@ class PMA_DisplayResults
 
 
     /**
-     * Check whether any field is marked as need to syntax highlight
-     *
-     * @param string $field field to check
-     *
-     * @return boolean
-     */
-    private function _isNeedToSyntaxHighlight($field)
-    {
-        if (! empty($this->transformation_info[strtolower($this->__get('db'))][strtolower($this->__get('table'))][strtolower($field)])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check whether the field needs to be link
-     *
-     * @param string $field field to check
-     *
-     * @return boolean
-     */
-    private function _isFieldNeedToLink($field)
-    {
-        if (! empty($GLOBALS['special_schema_links'][strtolower($this->__get('db'))][strtolower($this->__get('table'))][$field])) {
-            return true;
-        }
-        return false;
-    }
-
-
-    /**
      * Get link for display special schema links
      *
      * @param string $column_value column value
@@ -3123,10 +3172,10 @@ class PMA_DisplayResults
             $linking_url_params[$link_relations['link_param']] = $column_value;
         } else {
             // Consider only the case of creating link for column field
-            // sql query need to be pass as url param
-            $sql = 'SELECT `'.$column_value.'` FROM `'
-                . $row_info[$link_relations['link_param'][1]] .'`.`'
-                . $row_info[$link_relations['link_param'][2]] .'`';
+            // sql query that needs to be passed as url param
+            $sql = 'SELECT `' . $column_value . '` FROM `'
+                . $row_info[$link_relations['link_param'][1]] . '`.`'
+                . $row_info[$link_relations['link_param'][2]] . '`';
             $linking_url_params[$link_relations['link_param'][0]] = $sql;
         }
 
@@ -3287,7 +3336,7 @@ class PMA_DisplayResults
 
                 $support_html .= '    <th colspan="'
                     . $vertical_display['emptypre'] . '">'
-                    . "\n".'        &nbsp;</th>' . "\n";
+                    . "\n" . '        &nbsp;</th>' . "\n";
 
             } else if ($GLOBALS['cfg']['RowActionLinks'] == self::POSITION_NONE) {
                 $support_html .= '    <th></th>' . "\n";
@@ -3348,10 +3397,10 @@ class PMA_DisplayResults
                 $_url_params + array('default_action' => 'insert')
             );
 
-        $edit_str = PMA_Util::getIcon(
+        $edit_str = $this->_getActionLinkContent(
             'b_edit.png', __('Edit')
         );
-        $copy_str = PMA_Util::getIcon(
+        $copy_str = $this->_getActionLinkContent(
             'b_insrow.png', __('Copy')
         );
 
@@ -3394,7 +3443,7 @@ class PMA_DisplayResults
                 'db'        => $this->__get('db'),
                 'table'     => $this->__get('table'),
                 'sql_query' => $url_sql_query,
-                'message_to_show' => __('The row has been deleted'),
+                'message_to_show' => __('The row has been deleted.'),
                 'goto'      => (empty($goto) ? 'tbl_sql.php' : $goto),
             );
 
@@ -3410,7 +3459,7 @@ class PMA_DisplayResults
                     'db'        => $this->__get('db'),
                     'table'     => $this->__get('table'),
                     'sql_query' => $del_query,
-                    'message_to_show' => __('The row has been deleted'),
+                    'message_to_show' => __('The row has been deleted.'),
                     'goto'      => $lnk_goto,
                 );
             $del_url  = 'sql.php' . PMA_URL_getCommon($_url_params);
@@ -3420,9 +3469,7 @@ class PMA_DisplayResults
                 . ' WHERE ' . PMA_jsFormat($where_clause, false)
                 . ($clause_is_unique ? '' : ' LIMIT 1');
 
-            $del_str = PMA_Util::getIcon(
-                'b_drop.png', __('Delete')
-            );
+            $del_str = $this->_getActionLinkContent('b_drop.png', __('Delete'));
 
         } elseif ($del_lnk == self::KILL_PROCESS) { // kill process case
 
@@ -3455,6 +3502,52 @@ class PMA_DisplayResults
         return array($del_query, $del_url, $del_str, $js_conf);
 
     } // end of the '_getDeleteAndKillLinks()' function
+
+
+    /**
+     * Get content inside the table row action links (Edit/Copy/Delete)
+     *
+     * @param string $icon         The name of the file to get
+     * @param string $display_text The text displaying after the image icon
+     *
+     * @return  string
+     *
+     * @access  private
+     *
+     * @see     _getModifiedLinks(), _getDeleteAndKillLinks()
+     */
+    private function _getActionLinkContent($icon, $display_text)
+    {
+
+        $linkContent = '';
+
+        if (isset($GLOBALS['cfg']['RowActionType'])
+            && $GLOBALS['cfg']['RowActionType'] == self::ACTION_LINK_CONTENT_ICONS
+        ) {
+
+            $linkContent .= '<span class="nowrap">'
+                . PMA_Util::getImage(
+                    $icon, $display_text
+                )
+                . '</span>';
+
+        } else if (isset($GLOBALS['cfg']['RowActionType'])
+            && $GLOBALS['cfg']['RowActionType'] == self::ACTION_LINK_CONTENT_TEXT
+        ) {
+
+            $linkContent .= '<span class="nowrap">' . $display_text . '</span>';
+
+        } else {
+
+            $linkContent .= PMA_Util::getIcon(
+                $icon, $display_text
+            );
+
+        }
+
+        return $linkContent;
+
+    }
 
 
     /**
@@ -3566,8 +3659,10 @@ class PMA_DisplayResults
             || ($type == self::DATETIME_FIELD)
         ) {
             $field_type_class = 'datetimefield';
-        } else if ($type == self::DATE_FIELD) {
+        } elseif ($type == self::DATE_FIELD) {
             $field_type_class = 'datefield';
+        } elseif ($type == self::TIME_FIELD) {
+            $field_type_class = 'timefield';
         } else {
             $field_type_class = '';
         }
@@ -3607,7 +3702,7 @@ class PMA_DisplayResults
         if (! isset($column) || is_null($column)) {
 
             $cell = $this->_buildNullDisplay(
-                'right '.$class, $condition_field, $meta, ''
+                'right ' . $class, $condition_field, $meta, ''
             );
 
         } elseif ($column != '') {
@@ -3616,7 +3711,7 @@ class PMA_DisplayResults
             $where_comparison = ' = ' . $column;
 
             $cell = $this->_getRowData(
-                'right '.$class, $condition_field,
+                'right ' . $class, $condition_field,
                 $analyzed_sql, $meta, $map, $column,
                 $transformation_plugin, $default_function, $nowrap,
                 $where_comparison, $transform_options,
@@ -3625,7 +3720,7 @@ class PMA_DisplayResults
         } else {
 
             $cell = $this->_buildEmptyDisplay(
-                'right '.$class, $condition_field, $meta, ''
+                'right ' . $class, $condition_field, $meta, ''
             );
         }
 
@@ -3699,7 +3794,7 @@ class PMA_DisplayResults
                 $limitChars = $GLOBALS['cfg']['LimitChars'];
                 if (($GLOBALS['PMA_String']->strlen($column) > $limitChars)
                     && ($_SESSION['tmpval']['pftext'] == self::DISPLAY_PARTIAL_TEXT)
-                    && ! $this->_isNeedToSyntaxHighlight(strtolower($meta->name))
+                    && empty($this->transformation_info[strtolower($this->__get('db'))][strtolower($this->__get('table'))][strtolower(strtolower($meta->name))])
                 ) {
                     $column = $GLOBALS['PMA_String']->substr(
                         $column, 0, $GLOBALS['cfg']['LimitChars']
@@ -3946,9 +4041,10 @@ class PMA_DisplayResults
                     $formatted = true;
                 }
             } elseif (((substr($meta->type, 0, 9) == self::TIMESTAMP_FIELD)
-                  || ($meta->type == self::DATETIME_FIELD)
-                  || ($meta->type == self::TIME_FIELD)
-                  || ($meta->type == self::TIME_FIELD)) && (strpos ($column,"." ) === TRUE)
+                || ($meta->type == self::DATETIME_FIELD)
+                || ($meta->type == self::TIME_FIELD)
+                || ($meta->type == self::TIME_FIELD))
+                && (strpos($column, ".") === true)
             ) {
                 $column = PMA_Util::addMicroseconds($column);
             }
@@ -4483,7 +4579,7 @@ class PMA_DisplayResults
             $pre_count = '~';
             $after_count = PMA_Util::showHint(
                 PMA_sanitize(
-                    __('May be approximate. See [doc@faq3-11]FAQ 3.11[/doc]')
+                    __('May be approximate. See [doc@faq3-11]FAQ 3.11[/doc].')
                 )
             );
         } else {
@@ -4509,16 +4605,19 @@ class PMA_DisplayResults
         // 1.3 Find the sort expression
         // we need $sort_expression and $sort_expression_nodirection
         // even if there are many table references
-        list($sort_expression, $sort_expression_nodirection, $sort_direction)
-            = $this->_getSortParams($analyzed_sql[0]['order_by_clause']);
+        list(
+            $sort_expression, $sort_expression_nodirection,
+            $sort_direction
+        ) = $this->_getSortParams($analyzed_sql[0]['order_by_clause']);
 
-
+        $number_of_columns = count($sort_expression_nodirection);
         // 1.4 Prepares display of first and last value of the sorted column
-
-        $sorted_column_message = $this->_getSortedColumnMessage(
-            $dt_result, $sort_expression_nodirection
-        );
-
+        $sorted_column_message = '';
+        for ( $i = 0; $i < $number_of_columns; $i++ ) {
+            $sorted_column_message .= $this->_getSortedColumnMessage(
+                $dt_result, $sort_expression_nodirection[$i]
+            );
+        }
 
         // 2. ----- Prepare to display the top of the page -----
 
@@ -4537,7 +4636,7 @@ class PMA_DisplayResults
         } elseif (! isset($printview) || ($printview != '1')) {
 
             $table_html .= PMA_Util::getMessage(
-                __('Your SQL query has been executed successfully'),
+                __('Your SQL query has been executed successfully.'),
                 $this->__get('sql_query'), 'success'
             );
         }
@@ -4703,27 +4802,37 @@ class PMA_DisplayResults
     private function _getSortParams($order_by_clause)
     {
 
+        $sort_expression             = array();
+        $sort_expression_nodirection = array();
+        $sort_direction              = array();
         if (! empty($order_by_clause)) {
+            // Each order by clause is assumed to be delimited by a comma
+            // A typical order by clause would be order by column1 asc, column2 desc
+            // The following line counts the number of columns in order by clause
+            $matches = explode(',', $order_by_clause);
+            // Iterate over each column in order by clause
+            foreach ($matches as $index=>$order_by_clause2) {
 
-            $sort_expression = trim(
-                str_replace('  ', ' ', $order_by_clause)
-            );
-            /**
-             * Get rid of ASC|DESC
-             */
-            preg_match(
-                '@(.*)([[:space:]]*(ASC|DESC))@si', $sort_expression, $matches
-            );
+                $sort_expression[$index] = trim(
+                    str_replace('  ', ' ', $order_by_clause2)
+                );
+                /**
+                 * Get rid of ASC|DESC
+                 */
+                preg_match(
+                    '@(.*)([[:space:]]*(ASC|DESC))@si',
+                    $sort_expression[$index], $matches
+                );
 
-            $sort_expression_nodirection = isset($matches[1])
-                ? trim($matches[1])
-                : $sort_expression;
-
-            $sort_direction = isset($matches[2]) ? trim($matches[2]) : '';
-            unset($matches);
-
+                $sort_expression_nodirection[$index] = isset($matches[1])
+                    ? trim($matches[1])
+                    : $sort_expression[$index];
+                $sort_direction[$index]
+                    = isset($matches[2]) ? trim($matches[2]) : '';
+            }
         } else {
-            $sort_expression = $sort_expression_nodirection = $sort_direction = '';
+            $sort_expression[0] = $sort_expression_nodirection[0]
+                = $sort_direction[0] = '';
         }
 
         return array($sort_expression, $sort_expression_nodirection,
@@ -4849,7 +4958,7 @@ class PMA_DisplayResults
 
 
     /**
-     * Set the content need to be show in message
+     * Set the content that needs to be shown in message
      *
      * @param string  $sorted_column_message the message for sorted column
      * @param string  $limit_clause          the limit clause of analyzed query
@@ -4872,12 +4981,6 @@ class PMA_DisplayResults
     ) {
 
         $unlim_num_rows = $this->__get('unlim_num_rows'); // To use in isset()
-
-        if (isset($unlim_num_rows) && ($unlim_num_rows != $total)) {
-            $selectstring = ', ' . $unlim_num_rows . ' ' . __('in query');
-        } else {
-            $selectstring = '';
-        }
 
         if (! empty($limit_clause)) {
 
@@ -4936,19 +5039,27 @@ class PMA_DisplayResults
         $message->addMessage('(');
 
         if (!$message_view_warning) {
-            $message_total = PMA_Message::notice($pre_count . __('%d total'));
-            $message_total->addParam($total);
+
+            if (isset($unlim_num_rows) && ($unlim_num_rows != $total)) {
+                $message_total = PMA_Message::notice(
+                    $pre_count . __('%1$d total, %2$d in query')
+                );
+                $message_total->addParam($total);
+                $message_total->addParam($unlim_num_rows);
+            } else {
+                $message_total = PMA_Message::notice($pre_count . __('%d total'));
+                $message_total->addParam($total);
+            }
 
             if (!empty($after_count)) {
                 $message_total->addMessage($after_count);
             }
             $message->addMessage($message_total, '');
 
-            $message->addMessage($selectstring, '');
             $message->addMessage(', ', '');
         }
 
-        $message_qt = PMA_Message::notice(__('Query took %01.4f sec') . ')');
+        $message_qt = PMA_Message::notice(__('Query took %01.4f seconds.') . ')');
         $message_qt->addParam($this->__get('querytime'));
 
         $message->addMessage($message_qt, '');
@@ -5062,12 +5173,12 @@ class PMA_DisplayResults
         $links_html .= "\n";
 
         $links_html .= '<input type="hidden" name="sql_query"'
-            .' value="' . htmlspecialchars($this->__get('sql_query')) . '" />'
+            . ' value="' . htmlspecialchars($this->__get('sql_query')) . '" />'
             . "\n";
 
         if (! empty($url_query)) {
             $links_html .= '<input type="hidden" name="url_query"'
-                .' value="' . $url_query . '" />' . "\n";
+                . ' value="' . $url_query . '" />' . "\n";
         }
 
         // fetch last row of the result set
@@ -5083,12 +5194,13 @@ class PMA_DisplayResults
                 $this->__get('fields_meta'),
                 $row
             );
+        unset($where_clause, $condition_array);
 
         // reset to first row for the loop in _getTableBody()
         $GLOBALS['dbi']->dataSeek($dt_result, 0);
 
         $links_html .= '<input type="hidden" name="clause_is_unique"'
-            .' value="' . $clause_is_unique . '" />' . "\n";
+            . ' value="' . $clause_is_unique . '" />' . "\n";
 
         $links_html .= '</form>' . "\n";
 
@@ -5435,7 +5547,7 @@ class PMA_DisplayResults
 
             $size = strlen($content);
             $display_size = PMA_Util::formatByteDown($size, 3, 1);
-            $result .= ' - '. $display_size[0] . ' ' . $display_size[1];
+            $result .= ' - ' . $display_size[0] . ' ' . $display_size[1];
 
         } else {
 
@@ -5524,7 +5636,8 @@ class PMA_DisplayResults
 
         $relational_display = $_SESSION['tmpval']['relational_display'];
         $printview = $this->__get('printview');
-        $result = '<td data-decimals="'.$meta->decimals.'" data-type="'.$meta->type.'" class="'
+        $result = '<td data-decimals="' . $meta->decimals . '" data-type="'
+            . $meta->type . '" class="'
             . $this->_addClass(
                 $class, $condition_field, $meta, $nowrap,
                 $is_field_truncated, $transformation_plugin, $default_function
@@ -5542,17 +5655,19 @@ class PMA_DisplayResults
                 $alias = $analyzed_sql[0]['select_expr']
                     [$select_expr_position]['alias'];
 
-                if (isset($alias) && strlen($alias)) {
-                    $true_column = $analyzed_sql[0]['select_expr']
-                        [$select_expr_position]['column'];
-
-                    if ($alias == $meta->name) {
-                        // this change in the parameter does not matter
-                        // outside of the function
-                        $meta->name = $true_column;
-                    } // end if
-
+                if (!isset($alias) || !strlen($alias)) {
+                    continue;
                 } // end if
+
+                $true_column = $analyzed_sql[0]['select_expr']
+                    [$select_expr_position]['column'];
+
+                if ($alias == $meta->name) {
+                    // this change in the parameter does not matter
+                    // outside of the function
+                    $meta->name = $true_column;
+                } // end if
+
             } // end foreach
         } // end if
 
@@ -5580,7 +5695,7 @@ class PMA_DisplayResults
                 if ($dispresult && $GLOBALS['dbi']->numRows($dispresult) > 0) {
                     list($dispval) = $GLOBALS['dbi']->fetchRow($dispresult, 0);
                 } else {
-                    $dispval = __('Link not found');
+                    $dispval = __('Link not found!');
                 }
 
                 @$GLOBALS['dbi']->freeResult($dispresult);
@@ -5689,7 +5804,7 @@ class PMA_DisplayResults
             );
 
             $result .= '<input type="hidden" class="data_browse_link" value="'
-                . PMA_URL_getCommon($_url_params_for_show_data_row). '" />';
+                . PMA_URL_getCommon($_url_params_for_show_data_row) . '" />';
 
         }
 

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &mdash; phpMyAdmin 4.1.7 documentation</title>
+    <title>Installation &mdash; phpMyAdmin 4.2.2 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.1.7',
+        VERSION:     '4.2.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="copyright" title="Copyright" href="copyright.html" />
-    <link rel="top" title="phpMyAdmin 4.1.7 documentation" href="index.html" />
+    <link rel="top" title="phpMyAdmin 4.2.2 documentation" href="index.html" />
     <link rel="next" title="Configuration" href="config.html" />
     <link rel="prev" title="Requirements" href="require.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="require.html" title="Requirements"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.1.7 documentation</a> &raquo;</li> 
+        <li><a href="index.html">phpMyAdmin 4.2.2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -152,12 +152,12 @@ some advanced features.</li>
 <h3>Manually creating the file<a class="headerlink" href="#manually-creating-the-file" title="Permalink to this headline">¶</a></h3>
 <p>To manually create the file, simply use your text editor to create the
 file <tt class="file docutils literal"><span class="pre">config.inc.php</span></tt> (you can copy <tt class="file docutils literal"><span class="pre">config.sample.inc.php</span></tt> to get
-minimal configuration file) in the main (top-level) phpMyAdmin
+a minimal configuration file) in the main (top-level) phpMyAdmin
 directory (the one that contains <tt class="file docutils literal"><span class="pre">index.php</span></tt>). phpMyAdmin first
 loads <tt class="file docutils literal"><span class="pre">libraries/config.default.php</span></tt> and then overrides those values
 with anything found in <tt class="file docutils literal"><span class="pre">config.inc.php</span></tt>. If the default value is
 okay for a particular setting, there is no need to include it in
-<tt class="file docutils literal"><span class="pre">config.inc.php</span></tt>. You&#8217;ll need a few directives to get going, a
+<tt class="file docutils literal"><span class="pre">config.inc.php</span></tt>. You&#8217;ll probably need only a few directives to get going; a
 simple configuration may look like this:</p>
 <div class="highlight-xml+php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
 <span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;blowfish_secret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ba17c1ec07d65003&#39;</span><span class="p">;</span>  <span class="c1">// use here a value of your choice</span>
@@ -203,7 +203,7 @@ server has read and write access to it. <a class="reference internal" href="faq.
 this.</p>
 <p>Next, open <tt class="docutils literal"><span class="pre">setup/</span></tt> in your browser. If you have an existing configuration,
 use the <tt class="docutils literal"><span class="pre">Load</span></tt> button to bring its content inside the setup panel.
-Note that <strong>changes are not saved to disk until explicitly choose ``Save``</strong>
+Note that <strong>changes are not saved to disk until you explicitly choose ``Save``</strong>
 from the <em>Configuration</em> area of the screen. Normally the script saves the new
 <tt class="file docutils literal"><span class="pre">config.inc.php</span></tt> to the <tt class="docutils literal"><span class="pre">config/</span></tt> directory, but if the webserver does
 not have the proper permissions you may see the error &#8220;Cannot load or
@@ -240,7 +240,7 @@ supplied <a class="reference internal" href="glossary.html#term-htaccess"><em cl
 configure this yourself. Such configuration prevents from possible
 path exposure and cross side scripting vulnerabilities that might
 happen to be found in that code.</li>
-<li>It is generally good idea to protect public phpMyAdmin installation
+<li>It is generally a good idea to protect a public phpMyAdmin installation
 against access by robots as they usually can not do anything good
 there. You can do this using <tt class="docutils literal"><span class="pre">robots.txt</span></tt> file in root of your
 webserver or limit access by web server configuration, see
@@ -250,7 +250,7 @@ webserver or limit access by web server configuration, see
 </div>
 <div class="section" id="phpmyadmin-configuration-storage">
 <span id="linked-tables"></span><span id="index-1"></span><h2>phpMyAdmin configuration storage<a class="headerlink" href="#phpmyadmin-configuration-storage" title="Permalink to this headline">¶</a></h2>
-<p>For a whole set of new features (bookmarks, comments, <a class="reference internal" href="glossary.html#term-sql"><em class="xref std std-term">SQL</em></a>-history,
+<p>For a whole set of additional features (bookmarks, comments, <a class="reference internal" href="glossary.html#term-sql"><em class="xref std std-term">SQL</em></a>-history,
 tracking mechanism, <a class="reference internal" href="glossary.html#term-pdf"><em class="xref std std-term">PDF</em></a>-generation, column contents transformation,
 etc.) you need to create a set of special tables.  Those tables can be located
 in your own database, or in a central database for a multi-user installation
@@ -269,9 +269,15 @@ the database and tables, and that the script may need some tuning,
 depending on the database name.</p>
 <p>After having imported the <tt class="file docutils literal"><span class="pre">examples/create_tables.sql</span></tt> file, you
 should specify the table names in your <tt class="file docutils literal"><span class="pre">config.inc.php</span></tt> file. The
-directives used for that can be found in the <a class="reference internal" href="config.html#config"><em>Configuration</em></a>. You will also need to
-have a controluser with the proper rights to those tables (see section
-<a class="reference internal" href="#authentication-modes"><em>Using authentication modes</em></a> below).</p>
+directives used for that can be found in the <a class="reference internal" href="config.html#config"><em>Configuration</em></a>.</p>
+<p>You will also need to have a controluser
+(<span class="target" id="index-2"></span><a class="reference internal" href="config.html#cfg_Servers_controluser"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['controluser']</span></tt></a> and
+<span class="target" id="index-3"></span><a class="reference internal" href="config.html#cfg_Servers_controlpass"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['controlpass']</span></tt></a> settings)
+with the proper rights to those tables. For example you can create it
+using following statement:</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">GRANT</span> <span class="k">SELECT</span><span class="p">,</span> <span class="k">INSERT</span><span class="p">,</span> <span class="k">UPDATE</span><span class="p">,</span> <span class="k">DELETE</span> <span class="k">ON</span> <span class="o">&lt;</span><span class="n">pma_db</span><span class="o">&gt;</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="s1">&#39;pma&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span>  <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">&#39;pmapass&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="upgrading-from-an-older-version">
 <span id="upgrading"></span><h2>Upgrading from an older version<a class="headerlink" href="#upgrading-from-an-older-version" title="Permalink to this headline">¶</a></h2>
@@ -290,7 +296,7 @@ should run the <a class="reference internal" href="glossary.html#term-sql"><em c
 <tt class="file docutils literal"><span class="pre">examples/upgrade_tables_mysql_4_1_2+.sql</span></tt>.</p>
 </div>
 <div class="section" id="using-authentication-modes">
-<span id="authentication-modes"></span><span id="index-2"></span><h2>Using authentication modes<a class="headerlink" href="#using-authentication-modes" title="Permalink to this headline">¶</a></h2>
+<span id="authentication-modes"></span><span id="index-4"></span><h2>Using authentication modes<a class="headerlink" href="#using-authentication-modes" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="glossary.html#term-http"><em class="xref std std-term">HTTP</em></a> and cookie authentication modes are recommended in a <strong>multi-user
 environment</strong> where you want to give users access to their own database and
 don&#8217;t want them to play around with others. Nevertheless be aware that MS
@@ -301,41 +307,10 @@ configuration file.</p>
 <p><a class="reference internal" href="glossary.html#term-http"><em class="xref std std-term">HTTP</em></a> and cookie authentication
 modes are more secure: the MySQL login information does not need to be
 set in the phpMyAdmin configuration file (except possibly for the
-<span class="target" id="index-3"></span><a class="reference internal" href="config.html#cfg_Servers_controluser"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['controluser']</span></tt></a>).
+<span class="target" id="index-5"></span><a class="reference internal" href="config.html#cfg_Servers_controluser"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['controluser']</span></tt></a>).
 However, keep in mind that the password travels in plain text, unless
 you are using the HTTPS protocol. In cookie mode, the password is
 stored, encrypted with the blowfish algorithm, in a temporary cookie.</p>
-<p>For &#8216;<a class="reference internal" href="glossary.html#term-http"><em class="xref std std-term">HTTP</em></a>&#8216; and &#8216;cookie&#8217; modes, phpMyAdmin needs a controluser that has
-<strong>only</strong> the <tt class="docutils literal"><span class="pre">SELECT</span></tt> privilege on the <em>`mysql`.`user` (all columns except
-`Password`)</em>, <em>`mysql`.`db` (all columns)</em>, <em>`mysql`.`host` (all columns)</em> and
-<em>`mysql`.`tables_priv` (all columns except `Grantor` and `Timestamp`)</em> tables.
-You must specify the details for the controluser in the <tt class="file docutils literal"><span class="pre">config.inc.php</span></tt>
-file under the <span class="target" id="index-4"></span><a class="reference internal" href="config.html#cfg_Servers_controluser"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['controluser']</span></tt></a> and
-<span class="target" id="index-5"></span><a class="reference internal" href="config.html#cfg_Servers_controlpass"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['controlpass']</span></tt></a> settings. The following
-example assumes you want to use <tt class="docutils literal"><span class="pre">pma</span></tt> as the controluser and <tt class="docutils literal"><span class="pre">pmapass</span></tt> as
-the controlpass, but <strong>this is only an example: use something else in your
-file!</strong> Input these statements from the phpMyAdmin <a class="reference internal" href="glossary.html#term-sql"><em class="xref std std-term">SQL</em></a> Query window or
-mysql command–line client. Of course you have to replace <tt class="docutils literal"><span class="pre">localhost</span></tt> with the
-webserver&#8217;s host if it&#8217;s not the same as the MySQL server&#8217;s one.</p>
-<div class="highlight-mysql"><div class="highlight"><pre><span class="k">GRANT</span> <span class="k">USAGE</span> <span class="k">ON</span> <span class="n">mysql</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="s1">&#39;pma&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">&#39;pmapass&#39;</span><span class="p">;</span>
-<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="p">(</span>
-<span class="n">Host</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">Select_priv</span><span class="p">,</span> <span class="n">Insert_priv</span><span class="p">,</span> <span class="n">Update_priv</span><span class="p">,</span> <span class="n">Delete_priv</span><span class="p">,</span>
-<span class="n">Create_priv</span><span class="p">,</span> <span class="n">Drop_priv</span><span class="p">,</span> <span class="n">Reload_priv</span><span class="p">,</span> <span class="n">Shutdown_priv</span><span class="p">,</span> <span class="n">Process_priv</span><span class="p">,</span>
-<span class="n">File_priv</span><span class="p">,</span> <span class="n">Grant_priv</span><span class="p">,</span> <span class="n">References_priv</span><span class="p">,</span> <span class="n">Index_priv</span><span class="p">,</span> <span class="n">Alter_priv</span><span class="p">,</span>
-<span class="n">Show_db_priv</span><span class="p">,</span> <span class="n">Super_priv</span><span class="p">,</span> <span class="n">Create_tmp_table_priv</span><span class="p">,</span> <span class="n">Lock_tables_priv</span><span class="p">,</span>
-<span class="n">Execute_priv</span><span class="p">,</span> <span class="n">Repl_slave_priv</span><span class="p">,</span> <span class="n">Repl_client_priv</span>
-<span class="p">)</span> <span class="k">ON</span> <span class="n">mysql</span><span class="p">.</span><span class="n">user</span> <span class="k">TO</span> <span class="s1">&#39;pma&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">mysql</span><span class="p">.</span><span class="n">db</span> <span class="k">TO</span> <span class="s1">&#39;pma&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="k">ON</span> <span class="n">mysql</span><span class="p">.</span><span class="n">host</span> <span class="k">TO</span> <span class="s1">&#39;pma&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-<span class="k">GRANT</span> <span class="k">SELECT</span> <span class="p">(</span><span class="n">Host</span><span class="p">,</span> <span class="n">Db</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">Table_name</span><span class="p">,</span> <span class="n">Table_priv</span><span class="p">,</span> <span class="n">Column_priv</span><span class="p">)</span>
-<span class="k">ON</span> <span class="n">mysql</span><span class="p">.</span><span class="n">tables_priv</span> <span class="k">TO</span> <span class="s1">&#39;pma&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-</pre></div>
-</div>
-<p>If you want to use the many new relation and bookmark features:</p>
-<div class="highlight-mysql"><div class="highlight"><pre><span class="k">GRANT</span> <span class="k">SELECT</span><span class="p">,</span> <span class="k">INSERT</span><span class="p">,</span> <span class="k">UPDATE</span><span class="p">,</span> <span class="k">DELETE</span> <span class="k">ON</span> <span class="o">&lt;</span><span class="n">pma_db</span><span class="o">&gt;</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="s1">&#39;pma&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-</pre></div>
-</div>
-<p>(this of course requires that your <a class="reference internal" href="#linked-tables"><em>phpMyAdmin configuration storage</em></a> be set up).</p>
 <p>Then each of the <em>true</em> users should be granted a set of privileges
 on a set of particular databases. Normally you shouldn&#8217;t give global
 privileges to an ordinary user, unless you understand the impact of those
@@ -367,9 +342,11 @@ support using <a class="reference internal" href="glossary.html#term-cgi"><em cl
 (for example, if you&#8217;re running <a class="reference internal" href="glossary.html#term-iis"><em class="xref std std-term">IIS</em></a>).</li>
 <li>Obviously, the user must enable cookies in the browser, but this is
 now a requirement for all authentication modes.</li>
-<li>With this mode, the user can truly log out of phpMyAdmin and log in
-back with the same username.</li>
-<li>If you want to log in to arbitrary server see <span class="target" id="index-9"></span><a class="reference internal" href="config.html#cfg_AllowArbitraryServer"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['AllowArbitraryServer']</span></tt></a> directive.</li>
+<li>With this mode, the user can truly log out of phpMyAdmin and log
+back in with the same username.</li>
+<li>If you want to allow users to enter any hostname to connect (rather than only
+servers that are configured in <tt class="file docutils literal"><span class="pre">config.inc.php</span></tt>),
+see the <span class="target" id="index-9"></span><a class="reference internal" href="config.html#cfg_AllowArbitraryServer"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['AllowArbitraryServer']</span></tt></a> directive.</li>
 <li>As mentioned in the <a class="reference internal" href="require.html#require"><em>Requirements</em></a> section, having the <tt class="docutils literal"><span class="pre">mcrypt</span></tt> extension will
 speed up access considerably, but is not required.</li>
 </ul>
@@ -393,17 +370,16 @@ data.</li>
 <div class="section" id="config-authentication-mode">
 <span id="index-15"></span><h3>Config authentication mode<a class="headerlink" href="#config-authentication-mode" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>This mode is the less secure one because it requires you to fill the
+<li>This mode is sometimes the less secure one because it requires you to fill the
 <span class="target" id="index-16"></span><a class="reference internal" href="config.html#cfg_Servers_user"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['user']</span></tt></a> and
 <span class="target" id="index-17"></span><a class="reference internal" href="config.html#cfg_Servers_password"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['password']</span></tt></a>
 fields (and as a result, anyone who can read your <tt class="file docutils literal"><span class="pre">config.inc.php</span></tt>
-can discover your username and password).  But you don&#8217;t need to setup
-a &#8220;controluser&#8221; here: using the <span class="target" id="index-18"></span><a class="reference internal" href="config.html#cfg_Servers_only_db"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['only_db']</span></tt></a> might be enough.</li>
+can discover your username and password).</li>
 <li>In the <a class="reference internal" href="faq.html#faqmultiuser"><em>ISPs, multi-user installations</em></a> section, there is an entry explaining how
 to protect your configuration file.</li>
 <li>For additional security in this mode, you may wish to consider the
-Host authentication <span class="target" id="index-19"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_order"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['order']</span></tt></a>
-and <span class="target" id="index-20"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> configuration directives.</li>
+Host authentication <span class="target" id="index-18"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_order"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['order']</span></tt></a>
+and <span class="target" id="index-19"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> configuration directives.</li>
 <li>Unlike cookie and http, does not require a user to log in when first
 loading the phpMyAdmin site. This is by design but could allow any
 user to access your installation. Use of some restriction method is
@@ -414,7 +390,7 @@ with Google).</li>
 </ul>
 </div>
 <div class="section" id="swekey-authentication-mode">
-<span id="swekey"></span><span id="index-21"></span><h3>Swekey authentication mode<a class="headerlink" href="#swekey-authentication-mode" title="Permalink to this headline">¶</a></h3>
+<span id="swekey"></span><span id="index-20"></span><h3>Swekey authentication mode<a class="headerlink" href="#swekey-authentication-mode" title="Permalink to this headline">¶</a></h3>
 <p>The Swekey is a low cost authentication USB key that can be used in
 web applications. When Swekey authentication is activated, phpMyAdmin
 requires the users&#8217;s Swekey to be plugged before entering the login
@@ -434,13 +410,13 @@ information. If you want to purchase a Swekey please visit
 since this link provides funding for phpMyAdmin.</p>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><span class="target" id="index-22"></span><a class="reference internal" href="config.html#cfg_Servers_auth_swekey_config"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['auth_swekey_config']</span></tt></a></p>
+<p class="last"><span class="target" id="index-21"></span><a class="reference internal" href="config.html#cfg_Servers_auth_swekey_config"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['auth_swekey_config']</span></tt></a></p>
 </div>
 </div>
 </div>
 <div class="section" id="securing-your-phpmyadmin-installation">
 <h2>Securing your phpMyAdmin installation<a class="headerlink" href="#securing-your-phpmyadmin-installation" title="Permalink to this headline">¶</a></h2>
-<p>The phpMyAdmin team tries hardly to make the application secure, however there
+<p>The phpMyAdmin team tries hard to make the application secure, however there
 are always ways to make your installation more secure:</p>
 <ul class="simple">
 <li>remove <tt class="docutils literal"><span class="pre">setup</span></tt> directory from phpMyAdmin, you will probably not
@@ -448,12 +424,12 @@ use it after initial setup</li>
 <li>properly choose authentication method - <a class="reference internal" href="#cookie"><em>Cookie authentication mode</em></a>
 is probably the best choice for shared hosting</li>
 <li>in case you don&#8217;t want all MySQL users to be able to access
-phpMyAdmin, you can use <span class="target" id="index-23"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> to limit them</li>
+phpMyAdmin, you can use <span class="target" id="index-22"></span><a class="reference internal" href="config.html#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> to limit them</li>
 <li>consider hiding phpMyAdmin behind authentication proxy, so that
 MySQL credentials are not all users need to login</li>
 <li>if you are afraid of automated attacks, enabling Captcha by
-<span class="target" id="index-24"></span><a class="reference internal" href="config.html#cfg_CaptchaLoginPublicKey"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['CaptchaLoginPublicKey']</span></tt></a> and
-<span class="target" id="index-25"></span><a class="reference internal" href="config.html#cfg_CaptchaLoginPrivateKey"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['CaptchaLoginPrivateKey']</span></tt></a> might be an option.</li>
+<span class="target" id="index-23"></span><a class="reference internal" href="config.html#cfg_CaptchaLoginPublicKey"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['CaptchaLoginPublicKey']</span></tt></a> and
+<span class="target" id="index-24"></span><a class="reference internal" href="config.html#cfg_CaptchaLoginPrivateKey"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['CaptchaLoginPrivateKey']</span></tt></a> might be an option.</li>
 </ul>
 </div>
 </div>
@@ -538,11 +514,11 @@ MySQL credentials are not all users need to login</li>
         <li class="right" >
           <a href="require.html" title="Requirements"
              >previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.1.7 documentation</a> &raquo;</li> 
+        <li><a href="index.html">phpMyAdmin 4.2.2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; <a href="copyright.html">Copyright</a> 2012 - 2013, The phpMyAdmin devel team.
+        &copy; <a href="copyright.html">Copyright</a> 2012 - 2014, The phpMyAdmin devel team.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

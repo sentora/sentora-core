@@ -175,6 +175,7 @@ class PMA_DbSearch
         // Gets where clause for the query
         $where_clause = $this->_getWhereClause($table);
         // Builds complete queries
+        $sql = array();
         $sql['select_columns'] = $sqlstr_select . ' * ' . $sqlstr_from
             . $where_clause;
         // here, I think we need to still use the COUNT clause, even for
@@ -342,7 +343,7 @@ class PMA_DbSearch
         if ($res_cnt > 0) {
             $this_url_params['sql_query'] = $newsearchsqls['select_columns'];
             $browse_result_path = 'sql.php' . PMA_URL_getCommon($this_url_params);
-            $html_output .= '<td><a name="browse_search" href="'
+            $html_output .= '<td><a name="browse_search" class="ajax" href="'
                 . $browse_result_path . '" onclick="loadResult(\''
                 . $browse_result_path . '\',\'' . $each_table . '\',\''
                 . PMA_URL_getCommon($GLOBALS['db'], $each_table) . '\''
@@ -350,7 +351,7 @@ class PMA_DbSearch
                 . __('Browse') . '</a></td>';
             $this_url_params['sql_query'] = $newsearchsqls['delete'];
             $delete_result_path = 'sql.php' . PMA_URL_getCommon($this_url_params);
-            $html_output .= '<td><a name="delete_search" href="'
+            $html_output .= '<td><a name="delete_search" class="ajax" href="'
                 . $delete_result_path . '" onclick="deleteResult(\''
                 . $delete_result_path . '\' , \''
                 . sprintf(
@@ -361,7 +362,7 @@ class PMA_DbSearch
                 . __('Delete') . '</a></td>';
         } else {
             $html_output .= '<td>&nbsp;</td>'
-                .'<td>&nbsp;</td>';
+                . '<td>&nbsp;</td>';
         }// end if else
         $html_output .= '</tr>';
         return $html_output;
@@ -465,7 +466,8 @@ class PMA_DbSearch
             . __('Go') . '" id="buttonGo" />';
         $html_output .= '</fieldset>';
         $html_output .= '</form>';
-        $html_output .= $this->_getResultDivs();
+        $html_output .= '<div id="togglesearchformdiv">'
+            . '<a id="togglesearchformlink"></a></div>';
 
         return $html_output;
     }
@@ -475,7 +477,7 @@ class PMA_DbSearch
      *
      * @return string div tags
      */
-    private function _getResultDivs()
+    public function getResultDivs()
     {
         $html_output = '<!-- These two table-image and table-link elements display'
             . ' the table name in browse search results  -->';

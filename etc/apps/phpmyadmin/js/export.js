@@ -132,8 +132,8 @@ function toggle_save_to_file()
         $("#ul_save_asfile > li> select").prop('disabled', true);
     } else {
         $("#ul_save_asfile > li").fadeTo('fast', 1);
-        $("#ul_save_asfile > li > input").removeProp('disabled');
-        $("#ul_save_asfile > li> select").removeProp('disabled');
+        $("#ul_save_asfile > li > input").prop('disabled', false);
+        $("#ul_save_asfile > li> select").prop('disabled', false);
     }
 }
 
@@ -185,9 +185,13 @@ AJAX.registerOnload('export.js', function () {
         var active_plugin = $("#plugins option:selected").val();
         var force_file = $("#force_file_" + active_plugin).val();
         if (force_file == "true") {
+            if ($("#radio_dump_asfile").prop('checked') !== true) {
+                $("#radio_dump_asfile").prop('checked', true);
+                toggle_save_to_file();
+            }
             $("#radio_view_as_text").prop('disabled', true).parent().fadeTo('fast', 0.4);
         } else {
-            $("#radio_view_as_text").removeProp('disabled').parent().fadeTo('fast', 1);
+            $("#radio_view_as_text").prop('disabled', false).parent().fadeTo('fast', 1);
         }
     });
 });
@@ -216,6 +220,9 @@ function toggle_quick_or_custom()
 var time_out;
 function check_time_out(time_limit)
 {
+    if (typeof time_limit === 'undefined' || time_limit === 0) {
+        return true;
+    }
     //margin of one second to avoid race condition to set/access session variable
     time_limit = time_limit + 1;
     var href = "export.php";
@@ -225,9 +232,9 @@ function check_time_out(time_limit)
         'check_time_out' : true
     };
      clearTimeout(time_out);
-     time_out = setTimeout(function(){        
+     time_out = setTimeout(function(){
          $.get(href, params, function (data) {
-            if (data['message'] !== 'success') {
+            if (data['message'] === 'timeout') {
                 PMA_ajaxShowMessage(
                     '<div class="error">' +
                     PMA_messages.strTimeOutError +
@@ -237,19 +244,11 @@ function check_time_out(time_limit)
             }
         });
      }, time_limit * 1000);
-     
+
 }
 AJAX.registerOnload('export.js', function () {
     $("input[type='radio'][name='quick_or_custom']").change(toggle_quick_or_custom);
 
-    /**
-     * Sets up the interface for Javascript-enabled browsers since the default is for
-     *  Javascript-disabled browsers
-     * TODO: drop non-JS behaviour
-     */
-    if ($("input[type='hidden'][name='export_method']").val() != "custom-no-form") {
-        $("#quick_or_custom").show();
-    }
     $("#scroll_to_options_msg").hide();
     $("#format_specific_opts div.format_specific_options")
     .hide()

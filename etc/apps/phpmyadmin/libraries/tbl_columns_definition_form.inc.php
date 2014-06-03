@@ -79,6 +79,7 @@ if (isset($_REQUEST['submit_num_fields'])) {
     //if adding new fields, set regenerate to keep the original values
     $regenerate = 1;
 }
+
 for ($columnNumber = 0; $columnNumber < $num_fields; $columnNumber++) {
     if (! empty($regenerate)) {
         list($columnMeta, $submit_length, $submit_attribute,
@@ -109,6 +110,7 @@ for ($columnNumber = 0; $columnNumber < $num_fields; $columnNumber++) {
         $columnMeta['Type'] = '';
         $type        = '';
         $length = '';
+        $extracted_columnspec = array();
     }
 
     // some types, for example longtext, are reported as
@@ -126,11 +128,19 @@ for ($columnNumber = 0; $columnNumber < $num_fields; $columnNumber++) {
         $length = $submit_length;
     }
 
-
     // old column attributes
     if ($is_backup) {
         $_form_params = PMA_getFormParamsForOldColumn(
-            $columnMeta, $length, $_form_params, $columnNumber
+            $columnMeta, $length, $_form_params, $columnNumber, $type,
+            $extracted_columnspec
+        );
+    }
+    // Variable tell if current column is bound in a foreign key constraint or not.
+    if (isset($columnMeta['Field']) && isset($_form_params['table'])) {
+        $columnMeta['column_status'] = PMA_checkChildForeignReferences(
+            $_form_params['db'],
+            $_form_params['table'],
+            $columnMeta['Field']
         );
     }
 
@@ -144,11 +154,11 @@ for ($columnNumber = 0; $columnNumber < $num_fields; $columnNumber++) {
         isset($submit_default_current_timestamp)
         ? $submit_default_current_timestamp : null,
         $comments_map, isset($fields_meta) ? $fields_meta : null, $is_backup,
-        isset($move_columns) ? $move_columns : null, $cfgRelation, $available_mime,
-        $mime_map
+        isset($move_columns) ? $move_columns : null, $cfgRelation,
+        isset($available_mime) ? $available_mime : null,
+        isset($mime_map) ? $mime_map : null
     );
 } // end for
-
 $html = PMA_getHtmlForTableCreateOrAddField(
     $action, $_form_params, $content_cells, $header_cells
 );

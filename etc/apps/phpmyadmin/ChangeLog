@@ -1,6 +1,150 @@
 phpMyAdmin - ChangeLog
 ======================
 
+4.2.2.0 (2014-05-20)
+- bug #4388 Disable database expansion when enabled throws Error 500 when database name is clicked in navigation tree
+- bug #4414 table display of performance_schema DB structure
+- bug #4411 Protect Binary Columns: many problems
+- bug #4395 BLOB link transformation is broken
+- bug       Respect ['ShowCreateDb'] in the navi panel
+- bug #4392 Cannot see databases in nav panel on databases grouping when disabled database expansion
+- bug #4419 No more calendar into search tab
+- bug #4398 Monitor should fit into screen width
+- bug #4418 When copying databases, primary key attributes get lost
+- bug #4421 empty maxInputVars on js/messages.php
+
+4.2.1.0 (2014-05-13)
+- bug #4380 Cannot display table structure with enums containing special characters
+- bug #4381 Cannot remove the last remembered sorted column
+- bug       Correctly fetch length of user and host fields in MySQL tables
+- bug #4364 examples/signon.php does not support the SessionSavePath directive
+- bug #4382 Missing source for OpenLayers library
+- bug       Incorrect attributes for number fields
+- bug #4383 Cannot update values in Zoom search
+- bug #4313 GIS Visualization Extension does not work with PointFromText() function
+- bug #4384 Incorrect "Rows" total shown when truncating or dropping a table on DB Structure page
+- bug #4385 Grid edit on sorted columns fails
+- bug #4389 Null checkbox covering data input when editing
+- bug #4390 Data type changing by itself (no size but attribute present)
+
+4.2.0.0 (2014-05-08)
++ rfe #1403 Export only triggers
++ rfe #1483 Export Server/Database/Table without triggers
++ rfe #1662 Add table comment tool tip in database structure page
++ rfe #1447 Single table for display Character Sets and Collations
++ rfe #1455 Display icons/text/both for the table row actions
++ rfe #1473 Transformation to convert Boolean value to text
+- bug #4157 Changing users password will delete it
++ rfe #1474 Text transformation combines Append and Prepend
++ Added warning about the mysql extension being deprecated
+  and removed the extension directive
++ Added support for scatter charts
++ rfe #1478 Make Column Headings Sticky
++ rfe #1480 Enhance privileges initials table
++ rfe #1472 [interface] Break "Edit privileges" with sub-menus
++ rfe #1466 Minor refactoring required
++ rfe #1004 Create indexes at the end in SQL export
++ rfe #1479 Relations edit form for larger monitors
++ rfe #1475 Inline query box vertical resize
++ rfe #1500 [interface] Add bottom border to top menu container
++ rfe #1498 Add datepicker for 'TIME' type
+- bug #4237 HTTP Referer disclosure in SQL links
++ rfe       Show full names on navigation hover
++ rfe #1505 Behaviour on click on a routine in nav panel
++ rfe #1418 Support more than one separating character on CSV import
++ rfe #569  Load/Save Query By Example
+- bug #4281 Grid edit ENUM field, dialog disappears when trying to select
+- bug #4304 DB export using zip compression generates an empty archive
++ rfe #1508 confirmation message at the top
+- bug #4306 breadcrubs wrong on table create
++ rfe #1511 better validate database name for copying
++ rfe #1510 Database tab "Drop" button should be a link
++ rfe #1513 Highlight required form fields after failed submission
++ rfe #1460 Redirect to login page after session has expired
+- bug #4316 Grid edit: can't change month on date fields
++ rfe #1501 add maxlength by field with length-spec
++ rfe #1512 Import happily doesn't do anything with no file name provided
++ rfe #1514 Add function to all the insert boxes automatically
++ rfe #1515 Option to skip tables larger than n
++ rfe #1486 Possibility of disabling database expansion
++ rfe #1476 Favourite tables select box
++ rfe #420  $cfg['CharEditing']='textarea' for structure edit
++ rfe #1329 Avoid editing of fields which are part of relation
++ rfe       [interface] Highlight active left menu item in setup
++ rfe       Filter on-screen rows during Browse
+  Removed support for SQL Validator (SOAP service no longer offered)
+- bug #4352 Settings > Manage: incorrect messages
+- bug #4337 "More" in Actions area doesn't collapse to fit available space
+- bug #4375 Group two DB, one's name is the prefix of the other one
+- bug #4070 Confusing database/table grouping
+- bug #4366 Creating Index doesn't update index-list
+
+4.1.14.0 (2014-04-26)
+- bug #4365 Creating bookmark with multiple queries not working
+- bug #4375 Group two DB, one's name is the prefix of the other one
+- bug #4376 [interface] Login fields show in separate line
+- bug #4372 Changing browser transformation results in unnecessary table rebuild
+
+4.1.13.0 (2014-04-13)
+- bug #4279 CTRL + up or down moves 2 fields
+- bug #4336 List server css style wrong
+- bug       Missing value on the Status > Server page
+- bug #4347 Fixed PHP Parse error in Advisor
+- bug #4350 Deleting the DB if it is renamed by the same name
+- bug #4353 makeProfilingChart is not defined
+- bug #4355 Precision specifier for DOUBLE type is truncated
+- bug #4346 Incorrect "Export incomplete" message
+- bug #4359 Notices on create table page
+- bug #4356 GROUPed selects show number of rows as if not grouped
+- bug #4357 JS Form submitted on "enter" even if focus is inside a select field
+
+4.1.12.0 (2014-03-27)
+- bug #4334 Add event : datepicker won't open
+- bug #4338 Fix missing value error while executing SQL query
+- TCPDF library is now optional dependency
+- bug #4326 Cannot find the import plugins which start with uppercase 'I'
+
+4.1.11.0 (2014-03-23)
+- bug #4335 reCaptcha problem (4.1.10 regression)
+
+4.1.10.0 (2014-03-22)
+- bug #4301 Grid edit: "SELECT" query is replaced by "UPDATE" query after edit
+- bug #4278 reCaptcha re-login requires double effort
+- bug #4324 Datepicker not showing up on insert page
+- bug #3991 Problem selecting item in select boxes with the ENTER keystroke in some browsers
+- bug #4323 QueryWindow ignores CodeMirror
+- bug       None of the live charts shown on "Status -> Monitor" (Chrome)
+
+4.1.9.0 (2014-03-06)
+- bug #4279 CTRL + up or down moves two fields (part one)
+- bug #4294 output as text radio clickable for "OpenDocument Text" export
+- bug #4297 DROP DATABASE tick box in export no longer works
+- bug #4291 Unable to export comments in OpenDocument text format
+- bug #4299 Deletion even when the user says "No" to the confirmation message
+- bug #4303 "New" link in navi panel is shown even if no privileges
+- bug #4302 Some params are being omitted from microhistory
+- bug #4298 Missing validation on Import CSV: "Columns enclosed with" and "Columns escaped with"
+- bug #4040 Fatal error while resetting settings
+- bug #4305 JS error when editing procedure from nav panel
+- bug #4308 Edit routine form submitting when pressing enter
+- bug #4307 Nav: "Columns" won't expand with specific schema
+
+4.1.8.0 (2014-02-22)
+- bug #4276 Login loop on session expiry
+- bug #4249 Incorrect number of result rows for SQL with subqueries
+- bug #4275 Broken Link to php extension manual
+- bug #4053 List of procedures is not displayed after executing with Enter
+- bug #4081 Setup page content shifted to the right edge of its tabs
+- bug #4284 Reordering a column erases comments for other columns
+- bug #4286 Open "Browse" in a new tab
+- bug #4287 Printview - Always one column too much
+- bug #4288 Expand database (+ icon) after timeout doesn't do anything
+- bug #4285 Fixed CSS for setup
+- Fixed altering table to DOUBLE/FLOAT field
+- bug #4292 Success message and failure message being shown together
+- bug #4293 opening new tab (using selflink) for import.php based actions
+            results in error and logout
+
 4.1.7.0 (2014-02-09)
 - bug #4245 initial Browse query does not match sorting order
 - bug #4250 Notice on export page
@@ -14,7 +158,6 @@ phpMyAdmin - ChangeLog
 - bug #4263 Japanese character encoding not working properly when exporting
 - bug #4269 Notice on table relation page
 - bug #4270 Bad text-color for table comments
-- bug #4278 reCaptcha re-login requires double effort
 - bug #4272 Incorrect tabindex
 - bug #4271 Query by example and the second criteria line
 - bug #4242 Wildcard-containing only_db failure in sidebar

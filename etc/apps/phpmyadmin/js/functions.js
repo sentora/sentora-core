@@ -194,11 +194,11 @@ function displayPasswordGenerateButton()
  *
  * @param object  $this_element   a jQuery object pointing to the element
  */
-function PMA_addDatepicker($this_element, options)
+function PMA_addDatepicker($this_element, type, options)
 {
-    var showTimeOption = false;
-    if ($this_element.is('.datetimefield')) {
-        showTimeOption = true;
+    var showTimepicker = true;
+    if (type=="date") {
+        showTimepicker = false;
     }
 
     var defaultOptions = {
@@ -210,7 +210,7 @@ function PMA_addDatepicker($this_element, options)
         showSecond: true,
         showMillisec: true,
         showMicrosec: true,
-        showTimepicker: showTimeOption,
+        showTimepicker: showTimepicker,
         showButtonPanel: false,
         dateFormat: 'yy-mm-dd', // yy means year with four digits
         timeFormat: 'HH:mm:ss.lc',
@@ -232,10 +232,14 @@ function PMA_addDatepicker($this_element, options)
             $this_element.data('comes_from', '');
         }
     };
-    if (showTimeOption || (typeof(options) != 'undefined'  && options.showTimepicker)) {
+    if (type == "datetime" || type == "timestamp") {
         $this_element.datetimepicker($.extend(defaultOptions, options));
-    } else {
-        $this_element.datepicker($.extend(defaultOptions, options));
+    }
+    else if (type == "date") {
+        $this_element.datetimepicker($.extend(defaultOptions, options));
+    }
+    else if (type == "time") {
+        $this_element.timepicker($.extend(defaultOptions, options));
     }
 }
 
@@ -383,7 +387,14 @@ function confirmQuery(theForm1, sqlQuery1)
  */
 function checkSqlQuery(theForm)
 {
-    var sqlQuery = theForm.elements['sql_query'];
+    // get the textarea element containing the query
+    if (codemirror_editor) {
+        codemirror_editor.save();
+        var sqlQuery = codemirror_editor.display.input;
+        sqlQuery.value = codemirror_editor.getValue();
+    } else {
+        var sqlQuery = theForm.elements['sql_query'];
+    }
     var isEmpty  = 1;
     var space_re = new RegExp('\\s+');
     if (typeof(theForm.elements['sql_file']) != 'undefined' &&
@@ -772,27 +783,27 @@ function insertQuery(queryType)
 
     if (myListBox.options.length > 0) {
         sql_box_locked = true;
-        var chaineAj = "";
+        var columnsList = "";
         var valDis = "";
         var editDis = "";
         var NbSelect = 0;
         for (var i = 0; i < myListBox.options.length; i++) {
             NbSelect++;
             if (NbSelect > 1) {
-                chaineAj += ", ";
+                columnsList += ", ";
                 valDis += ",";
                 editDis += ",";
             }
-            chaineAj += myListBox.options[i].value;
+            columnsList += myListBox.options[i].value;
             valDis += "[value-" + NbSelect + "]";
             editDis += myListBox.options[i].value + "=[value-" + NbSelect + "]";
         }
         if (queryType == "selectall") {
             query = "SELECT * FROM `" + table + "` WHERE 1";
         } else if (queryType == "select") {
-            query = "SELECT " + chaineAj + " FROM `" + table + "` WHERE 1";
+            query = "SELECT " + columnsList + " FROM `" + table + "` WHERE 1";
         } else if (queryType == "insert") {
-            query = "INSERT INTO `" + table + "`(" + chaineAj + ") VALUES (" + valDis + ")";
+            query = "INSERT INTO `" + table + "`(" + columnsList + ") VALUES (" + valDis + ")";
         } else if (queryType == "update") {
             query = "UPDATE `" + table + "` SET " + editDis + " WHERE 1";
         } else if (queryType == "delete") {
@@ -815,37 +826,37 @@ function insertValueQuery()
 
     if (myListBox.options.length > 0) {
         sql_box_locked = true;
-        var chaineAj = "";
+        var columnsList = "";
         var NbSelect = 0;
         for (var i = 0; i < myListBox.options.length; i++) {
             if (myListBox.options[i].selected) {
                 NbSelect++;
                 if (NbSelect > 1) {
-                    chaineAj += ", ";
+                    columnsList += ", ";
                 }
-                chaineAj += myListBox.options[i].value;
+                columnsList += myListBox.options[i].value;
             }
         }
 
         /* CodeMirror support */
         if (codemirror_editor) {
-            codemirror_editor.replaceSelection(chaineAj);
+            codemirror_editor.replaceSelection(columnsList);
         //IE support
         } else if (document.selection) {
             myQuery.focus();
             var sel = document.selection.createRange();
-            sel.text = chaineAj;
+            sel.text = columnsList;
             document.sqlform.insert.focus();
         }
         //MOZILLA/NETSCAPE support
         else if (document.sqlform.sql_query.selectionStart || document.sqlform.sql_query.selectionStart == "0") {
             var startPos = document.sqlform.sql_query.selectionStart;
             var endPos = document.sqlform.sql_query.selectionEnd;
-            var chaineSql = document.sqlform.sql_query.value;
+            var SqlString = document.sqlform.sql_query.value;
 
-            myQuery.value = chaineSql.substring(0, startPos) + chaineAj + chaineSql.substring(endPos, chaineSql.length);
+            myQuery.value = SqlString.substring(0, startPos) + columnsList + SqlString.substring(endPos, SqlString.length);
         } else {
-            myQuery.value += chaineAj;
+            myQuery.value += columnsList;
         }
         sql_box_locked = false;
     }
@@ -857,26 +868,26 @@ function insertValueQuery()
  */
 function addDateTimePicker() {
     if ($.timepicker !== undefined) {
-        $('input.datefield, input.datetimefield').each(function () {
+        $('input.timefield, input.datefield, input.datetimefield').each(function () {
 
-            no_decimals = $(this).parent().data('decimals');
+            no_decimals = $(this).parent().attr('data-decimals');
             var showMillisec = false;
             var showMicrosec = false;
             var timeFormat = 'HH:mm:ss';
             // check for decimal places of seconds
-            if (($(this).parent().data('decimals') > 0) && ($(this).parent().data('type').indexOf('time') != -1)){
-                showMillisec = true;                       
+            if (($(this).parent().attr('data-decimals') > 0) && ($(this).parent().attr('data-type').indexOf('time') != -1)){
+                showMillisec = true;
                 timeFormat = 'HH:mm:ss.lc';
-                if ($(this).parent().data('decimals') > 3) {
+                if ($(this).parent().attr('data-decimals') > 3) {
                     showMicrosec = true;
                 }
             }
-            PMA_addDatepicker($(this), {
+            PMA_addDatepicker($(this), $(this).parent().attr('data-type'), {
                 showMillisec: showMillisec,
                 showMicrosec: showMicrosec,
-                timeFormat: timeFormat,                        
-            });               
-         })
+                timeFormat: timeFormat
+            });
+        });
     }
 }
 
@@ -1389,8 +1400,11 @@ AJAX.registerOnload('functions.js', function () {
     });
 
     $("input#sql_query_edit_save").live('click', function () {
+        $(".success").hide();
+        //hide already existing success message
         var sql_query;
         if (codemirror_inline_editor) {
+            codemirror_inline_editor.save();
             sql_query = codemirror_inline_editor.getValue();
         } else {
             sql_query = $(this).prev().val();
@@ -1750,10 +1764,14 @@ $(function () {
      */
     $('span.ajax_notification a, span.ajax_notification button, span.ajax_notification input')
     .live('mouseover', function () {
-        $(this).parents('span.ajax_notification').tooltip('disable');
+        if ($(this).parents('span.ajax_notification').is(':data(tooltip)')) {
+            $(this).parents('span.ajax_notification').tooltip('disable');
+        }
     })
     .live('mouseout', function () {
-        $(this).parents('span.ajax_notification').tooltip('enable');
+        if ($(this).parents('span.ajax_notification').is(':data(tooltip)')) {
+            $(this).parents('span.ajax_notification').tooltip('enable');
+        }
     });
 });
 
@@ -1796,7 +1814,8 @@ function PMA_createProfilingChartJqplot(target, data)
             },
             legend: {
                 show: true,
-                location: 'e'
+                location: 'e',
+                rendererOptions: {numberColumns: 2}
             },
             // from http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines#Color_Palette
             seriesColors: [
@@ -3237,6 +3256,7 @@ AJAX.registerTeardown('functions.js', function () {
     $('#pageselector').die('change');
     $('a.formLinkSubmit').die('click');
     $('#update_recent_tables').unbind('ready');
+    $('#sync_favorite_tables').unbind('ready');
 });
 /**
  * Vertical pointer
@@ -3335,12 +3355,34 @@ AJAX.registerOnload('functions.js', function () {
             $('#update_recent_tables').attr('href'),
             function (data) {
                 if (data.success === true) {
-                    $('#recentTable').html(data.options);
+                    $('#pma_recent_list').html(data.list);
                 }
             }
         );
     }
 
+    // Sync favorite tables from localStorage to pmadb.
+    if ($('#sync_favorite_tables').length) {
+        $.ajax({
+            url: $('#sync_favorite_tables').attr("href"),
+            cache: false,
+            type: 'POST',
+            data: {
+                favorite_tables: (window.localStorage['favorite_tables']
+                    !== undefined)
+                    ? window.localStorage['favorite_tables']
+                    : ''
+            },
+            success: function (data) {
+                // Update localStorage.
+                if (window.localStorage !== undefined) {
+                    window.localStorage['favorite_tables']
+                        = data.favorite_tables;
+                }
+                $('#pma_favorite_list').html(data.list);
+            }
+        });
+    }
 }); // end of $()
 
 
@@ -3829,12 +3871,19 @@ AJAX.registerOnload('functions.js', function () {
      * Attach Ajax event handlers for input fields in the editor
      * and used to submit the Ajax request when the ENTER key is pressed.
      */
-    $('#createViewDialog').find('input, select').live('keydown', function (e) {
-        if (e.which === 13) { // 13 is the ENTER key
-            e.preventDefault();
-            $(this).closest('.ui-dialog').find('.ui-button:first').click();
-        }
-    }); // end $.live()
+    if ($('#createViewDialog').length !== 0) {
+        $('#createViewDialog').find('input, select').live('keydown', function (e) {
+            if (e.which === 13) { // 13 is the ENTER key
+                e.preventDefault();
+
+                // with preventing default, selection by <select> tag
+                // was also prevented in IE
+                $(this).blur();
+
+                $(this).closest('.ui-dialog').find('.ui-button:first').click();
+            }
+        }); // end $.live()
+    }
 
     var $elm = $('textarea[name="view[as]"]');
     if ($elm.length > 0) {
@@ -3890,7 +3939,7 @@ function PMA_createViewDialog($this)
                     $(this).remove();
                 }
             });
-            // Attach syntax highlited editor
+            // Attach syntax highlighted editor
             if (typeof CodeMirror !== 'undefined') {
                 var $elm = $dialog.find('textarea');
                 var opts = {lineNumbers: true, matchBrackets: true, indentUnit: 4, mode: "text/x-mysql", lineWrapping: true};
@@ -4087,4 +4136,27 @@ function PMA_formatDateTime(date, seconds) {
             second: date.getSeconds()
         }
     );
+}
+
+/**
+ * Check than forms have less fields than max allowed by PHP.
+ */
+function checkNumberOfFields() {
+    if (typeof maxInputVars === 'undefined') {
+        return false;
+    }
+    if (false === maxInputVars) {
+        return false;
+    }
+    $('form').each(function() {
+        var nbInputs = $(this).find(':input').length;
+        if (nbInputs > maxInputVars) {
+            var warning = $.sprintf(PMA_messages.strTooManyInputs, maxInputVars);
+            PMA_ajaxShowMessage(warning);
+            return false;
+        }
+        return true;
+    });
+
+    return true;
 }

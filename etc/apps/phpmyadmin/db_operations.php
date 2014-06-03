@@ -127,13 +127,13 @@ if (strlen($db)
             $GLOBALS['dbi']->query($local_query);
 
             $message = PMA_Message::success(
-                __('Database %1$s has been renamed to %2$s')
+                __('Database %1$s has been renamed to %2$s.')
             );
             $message->addParam($db);
             $message->addParam($_REQUEST['newname']);
         } elseif (! $_error) {
             $message = PMA_Message::success(
-                __('Database %1$s has been copied to %2$s')
+                __('Database %1$s has been copied to %2$s.')
             );
             $message->addParam($db);
             $message->addParam($_REQUEST['newname']);
@@ -237,7 +237,7 @@ if (!$is_information_schema) {
     // You won't be able to. Believe me. You won't.
     // Don't allow to easily drop mysql database, RFE #1327514.
     if (($is_superuser || $GLOBALS['cfg']['AllowUserDropDatabase'])
-        && ! $db_is_information_schema
+        && ! $db_is_system_schema
         && (PMA_DRIZZLE || $db != 'mysql')
     ) {
         $response->addHTML(PMA_getHtmlForDropDatabaseLink($db));

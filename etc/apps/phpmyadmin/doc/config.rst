@@ -142,13 +142,13 @@ Basic settings
     preferences. If the person in charge of a multi-user installation prefers
     to disable this feature for all users, a value of ``'never'`` should be
     set, and the :config:option:`$cfg['UserprefsDisallow']` directive should
-    contain ``'SendErrorReports'`` in one of its array values. 
+    contain ``'SendErrorReports'`` in one of its array values.
 
 .. config:option:: $cfg['AllowThirdPartyFraming']
 
     :type: boolean
     :default: false
-    
+
     Setting this to ``true`` allows phpMyAdmin to be included inside a frame,
     and is a potential security hole allowing cross-frame scripting attacks or
     clickjacking.
@@ -233,11 +233,10 @@ Server connection settings
 
     Whether to enable SSL for the connection between phpMyAdmin and the MySQL server.
 
-    When using :config:option:`$cfg['Servers'][$i]['extension']` = ``'mysql'``,
+    When using the ``'mysql'`` extension,
     none of the remaining ``'ssl...'`` configuration options apply.
 
-    We strongly recommend using :config:option:`$cfg['Servers'][$i]['extension']` = ``'mysqli'``
-    when using this option.
+    We strongly recommend the ``'mysqli'`` extension when using this option.
 
 .. config:option:: $cfg['Servers'][$i]['ssl_key']
 
@@ -291,21 +290,6 @@ Server connection settings
     some platforms. To use the socket mode, your MySQL server must be on the
     same machine as the Web server.
 
-.. config:option:: $cfg['Servers'][$i]['extension']
-
-    :type: string
-    :default: ``'mysqli'``
-
-    What php MySQL extension to use for the connection. Valid options are:
-
-    ``mysql``
-        The classic MySQL extension.
-
-    ``mysqli``
-        The improved MySQL extension. This extension became available with PHP
-        5.0.0 and is the recommended way to connect to a server running MySQL
-        4.1.x or newer.
-
 .. config:option:: $cfg['Servers'][$i]['compress']
 
     :type: boolean
@@ -344,23 +328,12 @@ Server connection settings
     :default: ``''``
 
     This special account is used for 2 distinct purposes: to make possible all
-    relational features (see :config:option:`$cfg['Servers'][$i]['pmadb']`) and,
-    for a MySQL server running with ``--skip-show-database``, to enable a
-    multi-user installation (:term:`HTTP` or cookie
-    authentication mode).
-
-    When using :term:`HTTP` or
-    cookie authentication modes (or 'config' authentication mode since phpMyAdmin
-    2.2.1), you need to supply the details of a MySQL account that has ``SELECT``
-    privilege on the *mysql.user (all columns except "Password")*, *mysql.db (all
-    columns)* and *mysql.tables\_priv (all columns except "Grantor" and
-    "Timestamp")* tables. This account is used to check what databases the user
-    will see at login.
+    relational features (see :config:option:`$cfg['Servers'][$i]['pmadb']`).
 
     .. versionchanged:: 2.2.5
         those were called ``stduser`` and ``stdpass``
 
-    .. seealso:: :ref:`setup`, :ref:`authentication_modes`
+    .. seealso:: :ref:`setup`, :ref:`authentication_modes`, :ref:`linked-tables`
 
 .. config:option:: $cfg['Servers'][$i]['auth_type']
 
@@ -1186,7 +1159,7 @@ Generic settings
     :default: false
 
     Whether to force using https while accessing phpMyAdmin.
-    
+
     .. note::
 
         In some setups (like separate SSL proxy or load balancer) you might
@@ -1401,13 +1374,21 @@ Cookie authentication options
 Navigation panel setup
 ----------------------
 
-.. config:option:: $cfg['MaxNavigationItems']
+.. config:option:: $cfg['FirstLevelNavigationItems']
 
     :type: integer
     :default: 250
 
-    The number of items that can be displayed on each page of the
-    navigation tree.
+    The number of first level databases that can be displayed on each page
+    of navigation tree.
+
+.. config:option:: $cfg['MaxNavigationItems']
+
+    :type: integer
+    :default: 50
+
+    The number of items (tables, columns, indexes) that can be displayed on each
+    page of the navigation tree.
 
 .. config:option:: $cfg['NavigationTreeEnableGrouping']
 
@@ -1532,6 +1513,13 @@ Navigation panel setup
     * ``tbl_change.php``
     * ``sql.php``
 
+.. config:option:: $cfg['NavigationTreeDisableDatabaseExpansion']
+
+    :type: boolean
+    :default: false
+
+    Whether or not to disable the possibility of databases expansion in the navigation panel
+
 Main panel
 ----------
 
@@ -1629,8 +1617,8 @@ Browse mode
     :type: string
     :default: ``'icons'``
 
-    Defines whether the table navigation links contain ``'icons'``, ``'text'`` 
-    or ``'both'``. 
+    Defines whether the table navigation links contain ``'icons'``, ``'text'``
+    or ``'both'``.
 
 .. config:option:: $cfg['ShowAll']
 
@@ -1818,7 +1806,7 @@ Tabs display settings
     :type: string
     :default: ``'both'``
 
-    Defines whether the menu tabs contain ``'icons'``, ``'text'`` or ``'both'``. 
+    Defines whether the menu tabs contain ``'icons'``, ``'text'`` or ``'both'``.
 
 .. config:option:: $cfg['ActionLinksMode']
 
@@ -1827,7 +1815,7 @@ Tabs display settings
 
     If set to ``icons``, will display icons instead of text for db and table
     properties links (like :guilabel:`Browse`, :guilabel:`Select`,
-    :guilabel:`Insert`, ...). Can be set to ``'both'`` 
+    :guilabel:`Insert`, ...). Can be set to ``'both'``
     if you want icons AND text. When set to ``text``, will only show text.
 
 .. config:option:: $cfg['PropertiesNumColumns']
@@ -2045,7 +2033,7 @@ Web server settings
     Limit for length of :term:`URL` in links.  When length would be above this
     limit, it is replaced by form with button. This is required as some web
     servers (:term:`IIS`) have problems with long :term:`URL` .
- 
+
 .. config:option:: $cfg['CSPAllow']
 
     :type: string
@@ -2294,7 +2282,8 @@ Text fields
     :default: ``'input'``
 
     Defines which type of editing controls should be used for CHAR and
-    VARCHAR columns. Possible values are:
+    VARCHAR columns. Applies to data editing and also to the default values
+    in structure editing. Possible values are:
 
     * input - this allows to limit size of text to size of columns in MySQL,
       but has problems with newlines in columns
@@ -2387,15 +2376,6 @@ SQL query box settings
 
     Whether to display a link to wrap a query in PHP code in any SQL Query
     box.
-
-.. config:option:: $cfg['SQLQuery']['Validate']
-
-    :type: boolean
-    :default: false
-
-    Whether to display a link to validate a query in any SQL Query box.
-
-    .. seealso:: :config:option:`$cfg['SQLValidator']`
 
 .. config:option:: $cfg['SQLQuery']['Refresh']
 
@@ -2725,42 +2705,6 @@ Default queries
     Default queries that will be displayed in query boxes when user didn't
     specify any. You can use standard :ref:`faq6_27`.
 
-SQL validator settings
-----------------------
-
-.. config:option:: $cfg['SQLValidator']
-
-    :type: array
-    :default: array(...)
-
-
-
-.. config:option:: $cfg['SQLValidator']['use']
-
-    :type: boolean
-    :default: false
-
-    phpMyAdmin now supports use of the `Mimer SQL Validator
-    <http://developer.mimer.com/validator/index.htm>`_ service, as originally
-    published on `Slashdot
-    <http://developers.slashdot.org/article.pl?sid=02/02/19/1720246>`_. For
-    help in setting up your system to use the service, see the
-    :ref:`faqsqlvalidator`.
-
-.. config:option:: $cfg['SQLValidator']['username']
-
-    :type: string
-    :default: ``''``
-
-.. config:option:: $cfg['SQLValidator']['password']
-
-    :type: string
-    :default: ``''``
-
-    The SOAP service allows you to log in with ``anonymous`` and any password,
-    so we use those by default. Instead, if you have an account with them, you
-    can put your login details here, and it will be used in place of the
-    anonymous login.
 
 MySQL settings
 --------------
@@ -2810,4 +2754,12 @@ Developer
     :default: false
 
     Whether to display errors from PHP or not.
+
+.. config:option:: $cfg['RowActionType']
+
+    :type: string
+    :default: ``'both'``
+
+    Whether to display icons or text or both icons and text in table row action
+    segment. Value can be either of ``'icons'``, ``'text'`` or ``'both'``.
 

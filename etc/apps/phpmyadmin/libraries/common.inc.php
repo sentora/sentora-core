@@ -247,17 +247,14 @@ if (isset($_POST['usesubform'])) {
 // end check if a subform is submitted
 
 /**
- * This setting was removed in PHP 5.4. But at this point PMA_PHP_INT_VERSION
- * is not yet defined so we use another way to find out the PHP version.
+ * This setting was removed in PHP 5.4, but get_magic_quotes_gpc
+ * always returns False since then.
  */
-if (version_compare(phpversion(), '5.4', 'lt')) {
-    // remove quotes added by PHP
-    if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-        PMA_arrayWalkRecursive($_GET, 'stripslashes', true);
-        PMA_arrayWalkRecursive($_POST, 'stripslashes', true);
-        PMA_arrayWalkRecursive($_COOKIE, 'stripslashes', true);
-        PMA_arrayWalkRecursive($_REQUEST, 'stripslashes', true);
-    }
+if (get_magic_quotes_gpc()) {
+    PMA_arrayWalkRecursive($_GET, 'stripslashes', true);
+    PMA_arrayWalkRecursive($_POST, 'stripslashes', true);
+    PMA_arrayWalkRecursive($_COOKIE, 'stripslashes', true);
+    PMA_arrayWalkRecursive($_REQUEST, 'stripslashes', true);
 }
 
 /**
@@ -482,10 +479,15 @@ if ($token_mismatch) {
         'pma_lang', 'pma_collation_connection',
         /* Possible login form */
         'pma_servername', 'pma_username', 'pma_password',
+        'recaptcha_challenge_field', 'recaptcha_response_field',
         /* Needed to send the correct reply */
         'ajax_request',
         /* Permit to log out even if there is a token mismatch */
-        'old_usr'
+        'old_usr',
+        /* Permit redirection with token-mismatch in url.php */
+        'url',
+        /* Permit session expiry flag */
+        'session_expired'
     );
     /**
      * Allow changing themes in test/theme.php
@@ -578,7 +580,7 @@ if ($GLOBALS['text_dir'] == 'ltr') {
 $GLOBALS['PMA_Config']->checkPermissions();
 
 if ($GLOBALS['PMA_Config']->error_config_file) {
-    $error = '[strong]' . __('Failed to read configuration file') . '[/strong]'
+    $error = '[strong]' . __('Failed to read configuration file!') . '[/strong]'
         . '[br][br]'
         . __('This usually means there is a syntax error in it, please check any errors shown below.')
         . '[br][br]'
@@ -828,8 +830,10 @@ if (! defined('PMA_MINIMUM_COMMON')) {
         // no generic solution for loading preferences from cache as some settings
         // need to be kept for processing in PMA_Config::loadUserPreferences()
         $cache_key = 'server_' . $GLOBALS['server'];
-        if (isset($_SESSION['cache'][$cache_key]['userprefs']['LoginCookieValidity'])) {
-            $value = $_SESSION['cache'][$cache_key]['userprefs']['LoginCookieValidity'];
+        if (isset($_SESSION['cache'][$cache_key]['userprefs']['LoginCookieValidity'])
+        ) {
+            $value
+                = $_SESSION['cache'][$cache_key]['userprefs']['LoginCookieValidity'];
             $GLOBALS['PMA_Config']->set('LoginCookieValidity', $value);
             $GLOBALS['cfg']['LoginCookieValidity'] = $value;
             unset($value);
@@ -1017,11 +1021,6 @@ if (! defined('PMA_MINIMUM_COMMON')) {
          * SQL Parser code
          */
         include_once './libraries/sqlparser.lib.php';
-
-        /**
-         * SQL Validator interface code
-         */
-        include_once './libraries/sqlvalidator.lib.php';
 
         /**
          * the PMA_List_Database class

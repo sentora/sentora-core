@@ -1,4 +1,8 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
+
+// global var that holds: 0- if ctrl key is not pressed 1- if ctrl key is pressed
+var ctrlKeyHistory = 0;
+
 /**
   * Allows moving around inputs/select by Ctrl+arrows
   *
@@ -7,6 +11,7 @@
 function onKeyDownArrowsHandler(e)
 {
     e = e || window.event;
+
     var o = (e.srcElement || e.target);
     if (!o) {
         return;
@@ -14,19 +19,30 @@ function onKeyDownArrowsHandler(e)
     if (o.tagName != "TEXTAREA" && o.tagName != "INPUT" && o.tagName != "SELECT") {
         return;
     }
-    console.log(e);
-    if (navigator.userAgent.toLowerCase().indexOf('applewebkit/') != -1) {
-        if (e.ctrlKey || e.shiftKey || !e.altKey) {
-            return;
-        }
-    } else {
-        if (!e.ctrlKey || e.shiftKey || e.altKey) {
-            return;
-        }
+    if ((e.which != 17) && (e.which != 37) && (e.which != 38) && (e.which != 39) && (e.which !=40)) {
+        return;
     }
     if (!o.id) {
         return;
     }
+
+    if (e.type == "keyup") {
+        if (e.which==17) {
+            ctrlKeyHistory = 0;
+        }
+        return;
+    }
+    else if (e.type == "keydown") {
+        if (e.which == 17) {
+            ctrlKeyHistory = 1;
+        }
+    }
+
+    if (ctrlKeyHistory != 1) {
+        return;
+    }
+
+    e.preventDefault();
 
     var pos = o.id.split("_");
     if (pos[0] != "field" || typeof pos[2] == "undefined") {
@@ -60,11 +76,6 @@ function onKeyDownArrowsHandler(e)
 
     var is_firefox = navigator.userAgent.toLowerCase().indexOf("firefox/") > -1;
 
-    // restore selected index, bug #3799
-    if (is_firefox && e.type == "keyup") {
-        o.selectedIndex = window["selectedIndex_" + o.id];
-    }
-
     var id = "field_" + y + "_" + x;
     nO = document.getElementById(id);
     if (! nO) {
@@ -76,12 +87,43 @@ function onKeyDownArrowsHandler(e)
     if (! nO) {
         return;
     }
-    if (e.type == "keydown") {
-        nO.focus();
-        if (is_firefox) {
-            window["selectedIndex_" + nO.id] = nO.selectedIndex;
+
+    // for firefox select tag
+    var lvalue = o.selectedIndex;
+    var nOvalue = nO.selectedIndex;
+
+    nO.focus();
+
+    if (is_firefox) {
+        var ffcheck = 0;
+        var ffversion;
+        for (ffversion = 3 ; ffversion < 25 ; ffversion++) {
+            var is_firefox_v_24 = navigator.userAgent.toLowerCase().indexOf('firefox/'+ffversion) > -1;
+            if (is_firefox_v_24) {
+                ffcheck = 1;
+                break;
+            }
+        }
+        if (ffcheck == 1) {
+            if (e.which == 38 || e.which == 37) {
+                nOvalue++;
+            }
+            else if (e.which == 40 || e.which == 39) {
+                nOvalue--;
+            }
+            nO.selectedIndex=nOvalue;
+        }
+        else {
+            if (e.which == 38 || e.which == 37) {
+                lvalue++;
+            }
+            else if (e.which == 40 || e.which == 39) {
+                lvalue--;
+            }
+            o.selectedIndex=lvalue;
         }
     }
+
     if (nO.tagName != 'SELECT') {
         nO.select();
     }

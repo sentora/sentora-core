@@ -33,6 +33,7 @@ $forms['Features']['General'] = array(
     'MaxDbList',
     'MaxTableList',
     'NumRecentTables',
+    'NumFavoriteTables',
     'ShowHint',
     'SendErrorReports');
 $forms['Features']['Text_fields'] = array(
@@ -76,15 +77,16 @@ $forms['Sql_queries']['Sql_box'] = array(
     'SQLQuery/Edit',
     'SQLQuery/Explain',
     'SQLQuery/ShowAsPHP',
-    'SQLQuery/Validate',
     'SQLQuery/Refresh');
 $forms['Navi_panel']['Navi_panel'] = array(
     'NavigationDisplayLogo',
     'NavigationLogoLink',
     'NavigationLogoLinkWindow',
     'NavigationTreePointerEnable',
+    'FirstLevelNavigationItems',
     'MaxNavigationItems',
     'NavigationTreeEnableGrouping',
+    'NavigationTreeDisableDatabaseExpansion',
     'NavigationTreeDisplayItemFilterMinimum');
 $forms['Navi_panel']['Navi_databases'] = array(
     'NavigationTreeDisplayDbFilterMinimum',
@@ -199,7 +201,10 @@ $forms['Export']['Sql'] = array(
         ':group:end',
     ':group:' . __('Structure'),
         'Export/sql_drop_table',
+        'Export/sql_create_table',
+        'Export/sql_create_view',
         'Export/sql_procedure_function',
+        'Export/sql_create_trigger',
         'Export/sql_create_table_statements' => ':group',
             'Export/sql_if_not_exists',
             'Export/sql_auto_increment',

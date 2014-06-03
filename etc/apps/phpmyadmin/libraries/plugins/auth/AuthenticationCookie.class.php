@@ -75,33 +75,10 @@ class AuthenticationCookie extends AuthenticationPlugin
         if ($response->isAjax()) {
             $response->isSuccess(false);
 
-            $login_link = '<br /><br />[ ' .
-                sprintf(
-                    '<a href="%s" class="ajax login-link">%s</a>',
-                    $GLOBALS['cfg']['PmaAbsoluteUri'],
-                    __('Log in')
-                )
-                . ' ]';
-
-            if (! empty($conn_error)) {
-
-                $conn_error .= $login_link;
-
-                $response->addJSON(
-                    'message',
-                    PMA_Message::error(
-                        $conn_error
-                    )
-                );
-            } else {
-                $response->addJSON(
-                    'message',
-                    PMA_Message::error(
-                        __('Your session has expired. Please log in again.') .
-                        $login_link
-                    )
-                );
-            }
+            $response->addJSON(
+                'redirect_flag',
+                '1'
+            );
             if (defined('TESTSUITE')) {
                 return true;
             } else {
@@ -171,11 +148,17 @@ class AuthenticationCookie extends AuthenticationPlugin
         // Show error message
         if (! empty($conn_error)) {
             PMA_Message::rawError($conn_error)->display();
+        } elseif (isset($_GET['session_expired'])
+            && intval($_GET['session_expired']) == 1
+        ) {
+            PMA_Message::rawError(
+                __('Your session has expired. Please log in again.')
+            )->display();
         }
 
         echo "<noscript>\n";
         PMA_message::error(
-            __("Javascript must be enabled past this point")
+            __("Javascript must be enabled past this point!")
         )->display();
         echo "</noscript>\n";
 
@@ -228,7 +211,7 @@ class AuthenticationCookie extends AuthenticationPlugin
             </div>';
         if (count($GLOBALS['cfg']['Servers']) > 1) {
             echo '<div class="item">
-                <label for="select_server">' . __('Server Choice:') .'</label>
+                <label for="select_server">' . __('Server Choice:') . '</label>
                 <select name="server" id="select_server"';
             if ($GLOBALS['cfg']['AllowArbitraryServer']) {
                 echo ' onchange="document.forms[\'login_form\'].'
@@ -259,7 +242,12 @@ class AuthenticationCookie extends AuthenticationPlugin
             && !$skip
         ) {
             // If enabled show captcha to the user on the login screen.
-            echo '<script type="text/javascript"
+            echo '<script type="text/javascript">
+                    var RecaptchaOptions = {
+                        theme : "white"
+                    };
+                 </script>
+                 <script type="text/javascript"
                     src="https://www.google.com/recaptcha/api/challenge?'
                     . 'k=' . $GLOBALS['cfg']['CaptchaLoginPublicKey'] . '&amp;'
                     . 'hl=' . $GLOBALS['lang'] . '">
@@ -687,7 +675,7 @@ class AuthenticationCookie extends AuthenticationPlugin
                 . ' (see AllowNoPassword)'
             );
         } elseif (! empty($GLOBALS['allowDeny_forbidden'])) {
-            $conn_error = __('Access denied');
+            $conn_error = __('Access denied!');
         } elseif (! empty($GLOBALS['no_activity'])) {
             $conn_error = sprintf(
                 __('No activity within %s seconds; please log in again.'),
