@@ -1,0 +1,5 @@
+hosts = localhost
+user = postfix
+password = postfix
+dbname = zpanel_postfix
+query = SELECT maildir FROM mailbox WHERE username='%s' AND active = '1'
