@@ -1,16 +1,15 @@
+# Standard Sentora Rewrite Ruleset
 RewriteEngine on
 RewriteRule ^api/([^/\.]+)/?$ bin/api.php?m=$1 [L]
 RewriteRule ^apps/([^/\.]+)/?$ etc/apps/$1 [L]
 
-# Sample rules how to ban Zpanel from IP Access:
-# Uncomment following lines and set your domain to 
-# restrict zpanel only on this domain
+# Optionally you can uncomment the below line and configure your domain to only allow access from the FQDN.
+#RewriteCond %{SERVER_NAME} !^zpanel\.domain\.com$ 
+#RewriteRule ^ - [F]
 
-# RewriteCond %{SERVER_NAME} !^zpanel\.domain\.com$ 
-# RewriteRule ^ - [F]
-
-#Deny access to some file types / directories
+# Deny access to some file types/directories
 RewriteRule ^/?(\.git|\.tx|SQL|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
 RewriteRule ^(etc/tmp|etc/zppy-cache|/etc/lib/pChart2/cache|etc/build) - [F,L,NC]
-#disable index listing
+
+# Disable index listing
 Options -Indexes

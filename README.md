@@ -1,27 +1,26 @@
-#ZPanelCP
+#Sentora
 
 * Version: 10.1.1
-* [Website](http://www.zpanelcp.com/)
-* [Documentation](http://www.zpanelcp.com/support/documentation/)
-* [Forums](http://forums.zpanelcp.com/) for comments, discussion and community support
-* [Bug Tracker](http://bugs.zpanelcp.com/) for any bugs or security related issues.
+* [Website](http://www.sentora.io/)
+* [Forums](http://forums.sentora.io/) for comments, discussion and community support.
+* [Bug Tracker](https://github.com/sentora/sentora-core/issues) for any bugs or security related issues.
 
 ##Description
 
-ZPanel is an open-source web hosting control panel written in PHP and is compatible
-with Microsoft Windows and POSIX (Linux, UNIX, MacOSX and the BSD's).
+Sentora is based on an original fork of ZPanelCP, Sentora is an open-source web hosting control panel written in PHP and is designed to work with with Linux, UNIX, MacOSX and the BSD's.
 
+Sentora is developed and maintained by the original ZPanle team members (ballen, tgates, kandrews, motters etc.)
 
-##Downloading ZPanel
+##Downloading Sentora
 
-To use ZPanel in a production enviroment we recommend you use our automated installers which also take care of the installation of not only ZPanel but also Apache, PHP, MySQL, BIND, ProFTPd etc.
+To use Sentora in a production enviroment we recommend you use our automated installers which also take care of the installation of not only Sentora but also Apache, PHP, MySQL, BIND, ProFTPd etc.
 
-To download ZPanel please use the links found on [our download page](http://www.zpanelcp.com/download/).
+To download ZPanel please use the links found on [our download page](http://sentora.io/download/).
 
 ##License agreement
 
-ZPanel is licensed under the GNU GENERAL PUBLIC LICENSE (GPL v3) you can view a copy of this license either by opening the LICENSE file in the root of this folder or by visiting:- http://www.gnu.org/copyleft/gpl.html
+Sentora is licensed under the GNU GENERAL PUBLIC LICENSE (GPL v3) you can view a copy of this license either by opening the LICENSE file in the root of this folder or by visiting:- http://www.gnu.org/copyleft/gpl.html
 
 ##Getting support
 
-We provide excellent free (and premium) [support](http://www.zpanelcp.com/support/) and [documentation](http://www.zpanelcp.com/support/documentation/) at our website.
+We provide excellent free (and premium) [support](http://sentora.io/support/) and [documentation](http://sentora.io/docs/) at our website.
