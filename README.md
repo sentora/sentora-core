@@ -7,15 +7,15 @@
 
 ##Description
 
-Sentora is based on an original fork of ZPanelCP, Sentora is an open-source web hosting control panel written in PHP and is designed to work with with Linux, UNIX and the BSD's.
+[Sentora](http://sentora.io) is based on an original fork of ZPanelCP, Sentora is an open-source web hosting control panel written in PHP and is designed to work with with Linux, UNIX and the BSD's.
 
-Sentora is developed and maintained by the original ZPanel team members (ballen, tgates, kandrews, motters etc.)
+Sentora is developed and maintained by the original ZPanel team members ([ballen](http://bobbyallen.me), tgates, kandrews, motters etc.)
 
 ##Downloading Sentora
 
 To use Sentora in a production enviroment we recommend you use our automated installers which also take care of the installation of not only Sentora but also Apache, PHP, MySQL, BIND, ProFTPd etc.
 
-To download ZPanel please use the links found on [our download page](http://sentora.io/download/).
+To download Sentora please use the links found on [our download page](http://sentora.io/download/).
 
 ##License agreement
 
