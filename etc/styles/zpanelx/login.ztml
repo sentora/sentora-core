@@ -192,7 +192,7 @@
                 <?php }?>
             </div><!-- End Panel content-->
         </div>
-        <p class="vbox">Powered By: <a href="http://www.zpanelcp.com/" target="_blank">ZPanel</a></p>
+        <p class="vbox">Powered By: <a href="http://www.sentora.io/" target="_blank">Sentora</a></p>
     </div>
     <!-- Javascript
     ================================================== -->

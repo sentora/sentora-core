@@ -267,7 +267,7 @@
 
       </div><!--/page-content-->
     </div>
-    <div id="footer" >Copyright &copy; 2004-<# ui_tpl_year #> <a href="http://www.zpanelcp.com/" target="_blank">ZPanel Project</a>.</div>
+    <div id="footer" >Copyright &copy; 2004-<# ui_tpl_year #> <a href="http://www.sentora.io/" target="_blank">Sentora Project</a>.</div>
     </div><!-- END CONTAINER -->
 
     <!-- javascript
