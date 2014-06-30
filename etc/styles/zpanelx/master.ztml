@@ -61,7 +61,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </a>
-            <a class="navbar-brand" href="."><img src="<# ui_tpl_assetfolderpath #>img/zplogoheader160x28.png" width="160" height="28" alt="Home"></a>
+            <a class="navbar-brand" href="."><img src="<# ui_tpl_assetfolderpath #>img/logos/sentora_logo_header.png" width="96" height="36" alt="Home"></a>
             <div class="nav-collapse collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#" class="nav-stat-button" title="View Account Info" data-toggle="collapse" data-target="#stats-data"><i class="icon-chart-bar-2"></i></a></li>
