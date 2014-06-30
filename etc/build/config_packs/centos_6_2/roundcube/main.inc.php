@@ -180,7 +180,7 @@ $rcmail_config['date_today'] = 'H:i';
 $rcmail_config['useragent'] = 'RoundCube Webmail/' . RCMAIL_VERSION;
 
 // use this name to compose page titles
-$rcmail_config['product_name'] = 'ZPanel Webmail';
+$rcmail_config['product_name'] = 'Sentora Webmail';
 
 // store draft message is this mailbox
 // leave blank if draft messages should not be stored
