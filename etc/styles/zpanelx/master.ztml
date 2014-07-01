@@ -260,7 +260,7 @@
             <div id="footer" >Copyright &copy; 2004-<# ui_tpl_year #> <a href="http://www.sentora.io/" target="_blank">Sentora Project</a>.</div>
         </div><!-- END CONTAINER -->
 
-        <!-- javascript
+        <!-- Javascript
         ================================================== -->
         <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-transition.js"></script>
         <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-alert.js"></script>
@@ -274,7 +274,6 @@
         <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-collapse.js"></script>
         <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-carousel.js"></script>
         <script src="<# ui_tpl_assetfolderpath #>js/typeahead.min.js"></script>
-        <!-- <script type="text/javascript" src="<# ui_tpl_assetfolderpath #>/inc/init.js"></script> -->
 
         <!-- Modulelist for Typeahead -->
         <script>
