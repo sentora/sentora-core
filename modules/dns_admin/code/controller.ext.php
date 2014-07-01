@@ -250,7 +250,6 @@ class module_controller extends ctrl_module
         $line .= "</div>";
         $line .= "</div>";
         $line .= "</div>";
-        $line .= "</div>";
 
         //CHARTS
         $line .= "<table class=\"none\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td>";
