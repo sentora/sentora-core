@@ -27,10 +27,7 @@
     <!-- Stylesheets -->
     <link href="/etc/styles/zpanelx/global-css/bootstrap.min.css" rel="stylesheet">
     <link href="/etc/styles/zpanelx/global-css/login.css" rel="stylesheet">
-    <!-- HTML5 shim for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="/etc/styles/zpanelx/js/html5shiv.js"></script>
-    <![endif]-->
+
     <script>
         document.write('<style type="text/css">body {display:none;}<\/style>');
     </script>
