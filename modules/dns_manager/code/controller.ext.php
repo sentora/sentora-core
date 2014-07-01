@@ -307,15 +307,15 @@ class module_controller extends ctrl_module
 
         $line .= '<div class="tab-content">';
 
-        $aDescription = ui_language::translate("The A record contains an IPv4 address. It's target is an IPv4 address, e.g. '192.168.1.1'.");
-        $aaaaDescription = ui_language::translate("The AAAA record contains an IPv6 address. It's target is an IPv6 address, e.g. '2607:fe90:2::1'.");
-        $cnameDescription = ui_language::translate("The CNAME record specifies the canonical name of a record. It's target is a fully qualified domain name, e.g.
+        $aDescription = ui_language::translate("The A record contains an IPv4 address. Its target is an IPv4 address, e.g. '192.168.1.1'.");
+        $aaaaDescription = ui_language::translate("The AAAA record contains an IPv6 address. Its target is an IPv6 address, e.g. '2607:fe90:2::1'.");
+        $cnameDescription = ui_language::translate("The CNAME record specifies the canonical name of a record. Its target is a fully qualified domain name, e.g.
 'webserver-01.example.com'.");
-        $mxDescription = ui_language::translate("The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535.  It's target is a fully qualified domain name, e.g. 'mail.example.com'.");
+        $mxDescription = ui_language::translate("The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535.  Its target is a fully qualified domain name, e.g. 'mail.example.com'.");
         $txtDescription = ui_language::translate("The TXT field can be used to attach textual data to a domain.");
-        $srvDescription = ui_language::translate("SRV records can be used to encode the location and port of services on a domain name.  It's target is a fully qualified domain name, e.g. 'host.example.com'.");
-        $spfDescription = ui_language::translate("SPF records is used to store Sender Policy Framework details.  It's target is a text string, e.g.<br>'v=spf1 a:192.168.1.1 include:example.com mx ptr -all' (Click <a href=\"http://www.microsoft.com/mscorp/safety/content/technologies/senderid/wizard/\" target=\"_blank\">HERE</a> for the Microsoft SPF Wizard.)");
-        $nsDescription = ui_language::translate("Nameserver record. Specifies nameservers for a domain. It's target is a fully qualified domain name, e.g.  'ns1.example.com'.  The records should match what the domain name has registered with the internet root servers.");
+        $srvDescription = ui_language::translate("SRV records can be used to encode the location and port of services on a domain name.  Its target is a fully qualified domain name, e.g. 'host.example.com'.");
+        $spfDescription = ui_language::translate("SPF records is used to store Sender Policy Framework details.  Its target is a text string, e.g.<br>'v=spf1 a:192.168.1.1 include:example.com mx ptr -all' (Click <a href=\"http://www.microsoft.com/mscorp/safety/content/technologies/senderid/wizard/\" target=\"_blank\">HERE</a> for the Microsoft SPF Wizard.)");
+        $nsDescription = ui_language::translate("Nameserver record. Specifies nameservers for a domain. Its target is a fully qualified domain name, e.g.  'ns1.example.com'.  The records should match what the domain name has registered with the internet root servers.");
 
         $tts = 86400;
         $line .= self::DnsRecordField('A', $tts, $aDescription, $currentuser['userid'], $domainID);
