@@ -202,7 +202,7 @@ class module_controller extends ctrl_module
     static private function DisplayChart($name, $used, $maximum)
     {
         if ($maximum < 0) { //-1 = unlimited
-            $res = '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+            $res = '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $free = max($maximum - $used, 0);
             $res = '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used

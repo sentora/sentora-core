@@ -50,7 +50,7 @@
     <div class="loginwrapper">
         <div class="panel login-panel">
             <div class="panel-heading login-head">
-                <img src="/etc/styles/zpanelx/images/zplogo_v9.png">
+                <img src="/etc/styles/zpanelx/img/logos/sentora_logo.png" alt="Sentora Logo" width="334" height="93">
             </div>
             <div class="panel-content form-horizontal">
                 <?php
@@ -192,7 +192,7 @@
                 <?php }?>
             </div><!-- End Panel content-->
         </div>
-        <p class="vbox">Powered By: <a href="http://www.zpanelcp.com/" target="_blank">ZPanel</a></p>
+        <p class="vbox">Powered By: <a href="http://www.sentora.io/" target="_blank">Sentora</a></p>
     </div>
     <!-- Javascript
     ================================================== -->

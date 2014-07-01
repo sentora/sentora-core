@@ -306,7 +306,7 @@ $rcmail_config['max_group_members'] = 0;
 $rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;
 
 // use this name to compose page titles
-$rcmail_config['product_name'] = 'ZPanel Webmail';
+$rcmail_config['product_name'] = 'Sentora Webmail';
 
 // try to load host-specific configuration
 // see http://trac.roundcube.net/wiki/Howto_Config for more details

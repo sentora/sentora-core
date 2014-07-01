@@ -471,8 +471,8 @@ li.highlight {
 
 @media screen and (min-width: 768px){
     .navbar-brand {
-        margin: 0px 58px 0px 0px;
-        padding: 11px 0px 11px 4px;
+        margin-right: 116px;
+        padding: 7px 4px;
     }
     .wrap.container {
         margin-top: 9px;
@@ -976,4 +976,8 @@ li.highlight {
 .shadow-btn {
     width: 100%;
     margin: 0 0 20px 0;
+}
+
+.navbar-nav li a img {
+	margin: -1px 0;
 }

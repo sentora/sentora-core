@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>ZPanel &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
+    <title>Sentora &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Web Hosting Control Panel">
 
@@ -61,7 +61,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </a>
-            <a class="navbar-brand" href="."><img src="<# ui_tpl_assetfolderpath #>img/zplogoheader160x28.png" width="160" height="28" alt="Home"></a>
+            <a class="navbar-brand" href="."><img src="<# ui_tpl_assetfolderpath #>img/logos/sentora_logo_header.png" width="96" height="36" alt="Home"></a>
             <div class="nav-collapse collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#" class="nav-stat-button" title="View Account Info" data-toggle="collapse" data-target="#stats-data"><i class="icon-chart-bar-2"></i></a></li>
@@ -267,7 +267,7 @@
 
       </div><!--/page-content-->
     </div>
-    <div id="footer" >Copyright &copy; 2004-<# ui_tpl_year #> <a href="http://www.zpanelcp.com/" target="_blank">ZPanel Project</a>.</div>
+    <div id="footer" >Copyright &copy; 2004-<# ui_tpl_year #> <a href="http://www.sentora.io/" target="_blank">Sentora Project</a>.</div>
     </div><!-- END CONTAINER -->
 
     <!-- javascript
