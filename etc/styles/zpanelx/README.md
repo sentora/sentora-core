@@ -1,11 +1,11 @@
-# ZPanel JavaScript API and CSS Usage #
+# Sentora Theme #
 
-Below I will try to outline some of the JavaScript and CSS functionality that I built into the new zPanel theme.  You can use any of this stuff in your own Modules and themes that you build, as long as all the proper files are loaded.
+This document outlines some of the JavaScript and CSS functionality that is built into the Sentora theme.  You can use any of this in your own modules and themes that you build, as long as all the proper files are loaded.
 
-If you have any questions about this theme, you can ask on the forums [zPanel Forums](http://forums.zpanelcp.com/forum.php) or contact me (Jason Davis [http://www.codedevelopr.com](http://www.codedevelopr.com))
+If you have any questions about this theme, please ask on the [Sentora Forums](http://forums.sentora.io/) or contact [Jason Davis](http://www.codedevelopr.com).
 
 ## Over-ride Module Icons ##
-You can replace the module icons that come with a Module on the zPanel dashboard screen with your own icons.
+You can replace the module icons that come with a Module on the Sentora dashboard screen with your own icons.
 
 To over-ride a Modules icon, simply create a folder and image file in this location...
 
@@ -16,7 +16,6 @@ Replacing **MODULE-NAME** with the name of the module you are replacing.  The Mo
 An example to over-ride the MySQL Database module's icon...
 
     /etc/styles/zpanelx/images/mysql_databases/assets/icon.png
-
 
 ## Console Logging ##
 You can log to the Browsers JavaScript Console for debugging using this function below.
@@ -121,12 +120,12 @@ Lastly the most flexible part is you can even set your own custom callback funct
     cancelCallback: (FUNCTION) A callbacck function to run when the Cancel button is clicked
     okCallback: (FUNCTION) A callbacck function to run when the Ok button is clicked
 
-## Some CSS ##
-This new theme utilizes the new Bootstrap 3 which is an amazing library.  At the time we built this theme, BS3 was still under development and not 100% complete.
+## CSS ##
+This theme utilizes Bootstrap 3 which is an amazing CSS library.  At the time the theme was built, BS3 was still under development and not 100% complete.
 
 For that reason you should **NOT** download and use the latest Bootstrap 3 as it will break some things and simply make some things not look correct.
 
-Now that is out of the way, please realize, you can use 99% of the Bootstrap 3 features in your own Module or theme.  Below I outline some of the basic stuff we use.  To really see everything that's available you need to download and compile the Bootstrap 3 documentation files from there Git repo [twitter.github.com/bootstrap/](twitter.github.com/bootstrap/)
+Now that is out of the way, please realize, you can use 99% of the Bootstrap 3 features in your own Module or theme.  Below I outline some of the basic stuff we use.  To really see everything that's available you need to download and compile the Bootstrap 3 documentation files from their [GitHub repo](https://github.com/twbs/bootstrap).
 
 ### Tables ###
 You can style tables really nicely by applying the `table` class to a table.
@@ -183,7 +182,7 @@ The examples below show Button HTML
     </p>
 
 ### Panels ###
-Panels are one of my favorite new things in Bootstrap 3 and they are used a lot in ZPanel!
+Panels are one of my favorite new things in Bootstrap 3 and they are used a lot in Sentora!
 
 You can use them as well....
 
