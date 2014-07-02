@@ -113,7 +113,7 @@ class CommonFunctions
                && !is_dir($strPath)) {
                 continue;
             }
-            // To avoid "open_basedir restriction in effect" error when testing paths if restriction is enabled//
+            // To avoid "open_basedir restriction in effect" error when testing paths if restriction is enabled
             if (isset($open_basedir)) {
                 $inBaseDir = false;
                 if (PSI_OS == 'WINNT') {
@@ -320,6 +320,31 @@ class CommonFunctions
         }
 
         return true;
+    }
+
+    /**
+     * file exists
+     *
+     * @param string $strFileName name of the file which should be check
+     *
+     * @return boolean command successfull or not
+     */
+    public static function fileexists($strFileName)
+    {
+        if (defined('PSI_LOG') && is_string(PSI_LOG) && (strlen(PSI_LOG)>0) && ((substr(PSI_LOG, 0, 1)=="-") || (substr(PSI_LOG, 0, 1)=="+"))) {
+            $log_file = substr(PSI_LOG, 1);
+            if (file_exists($log_file)
+                && ($contents = @file_get_contents($log_file))
+                && preg_match("/^\-\-\-[^-\n]+\-\-\- ".preg_quote("Reading: ".$strFileName, '/')."\n/m", $contents)) {
+                return true;
+            } else {
+                if (substr(PSI_LOG, 0, 1)=="-") {
+                    return false;
+                }
+            }
+        }
+
+        return file_exists($strFileName);
     }
 
     /**

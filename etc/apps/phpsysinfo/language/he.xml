@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 phpSysInfo language file Language: Hebrew translated by: Eliezer Croitoru
 -->
@@ -316,5 +316,14 @@ phpSysInfo language file Language: Hebrew translated by: Eliezer Croitoru
   </expression>
   <expression id="104" name="ups_battery_date">
     <exp>תאריך סוללה</exp>
+  </expression>
+  <expression id="105" name="current">
+    <exp>Current</exp>
+  </expression>
+  <expression id="106" name="current_mark">
+    <exp>A</exp>
+  </expression>
+  <expression id="107" name="machine">
+    <exp>Machine</exp>
   </expression>
 </tns:translation>

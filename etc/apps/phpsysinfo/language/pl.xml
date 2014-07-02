@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: pl.xml 699 2012-09-15 11:57:13Z namiltd $ -->
 <!--
 phpSysInfo language file Language: Polish Created by: Damian Pasternok
@@ -317,5 +317,14 @@ phpSysInfo language file Language: Polish Created by: Damian Pasternok
   </expression>
   <expression id="104" name="ups_battery_date">
     <exp>Data baterii</exp>
+  </expression>
+  <expression id="105" name="current">
+    <exp>Prąd</exp>
+  </expression>
+  <expression id="106" name="current_mark">
+    <exp>A</exp>
+  </expression>
+  <expression id="107" name="machine">
+    <exp>Maszyna</exp>
   </expression>
 </tns:translation>

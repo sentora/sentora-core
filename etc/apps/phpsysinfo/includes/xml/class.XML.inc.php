@@ -136,6 +136,7 @@ class XML
         if ($this->_sysinfo->getEncoding() !== null) {
             $vitals->addAttribute('CodePage', $this->_sysinfo->getEncoding());
         }
+        $vitals->addAttribute('OS', PSI_OS);
     }
 
     /**
@@ -178,6 +179,9 @@ class XML
     {
         $dev = new HWDevice();
         $hardware = $this->_xml->addChild('Hardware');
+        if ($this->_sys->getMachine() != "") {
+            $hardware->addAttribute('Name', $this->_sys->getMachine());
+        }
         $pci = $hardware->addChild('PCI');
         foreach (System::removeDupsAndCount($this->_sys->getPciDevices()) as $dev) {
             $tmp = $pci->addChild('Device');
@@ -425,6 +429,17 @@ class XML
                 }
             }
         }
+        if (sizeof(unserialize(PSI_MBINFO))>0) {
+            $volt = $mbinfo->addChild('Current');
+            foreach ($mbinfo_detail->getMbCurrent() as $dev) {
+                $item = $volt->addChild('Item');
+                $item->addAttribute('Label', $dev->getName());
+                $item->addAttribute('Value', $dev->getValue());
+                if ($dev->getMax() !== null) {
+                    $item->addAttribute('Max', $dev->getMax());
+                }
+            }
+        }
     }
 
     /**
@@ -438,46 +453,49 @@ class XML
         if ( defined('PSI_UPS_APCUPSD_CGI_ENABLE') && PSI_UPS_APCUPSD_CGI_ENABLE) {
             $upsinfo->addAttribute('ApcupsdCgiLinks', true);
         }
-        if (PSI_UPSINFO) {
-            $upsinfoclass = PSI_UPS_PROGRAM;
-            $upsinfo_data = new $upsinfoclass();
-            $upsinfo_detail = $upsinfo_data->getUPSInfo();
-            foreach ($upsinfo_detail->getUpsDevices() as $ups) {
-                $item = $upsinfo->addChild('UPS');
-                $item->addAttribute('Name', $ups->getName());
-                $item->addAttribute('Model', $ups->getModel());
-                $item->addAttribute('Mode', $ups->getMode());
-                $item->addAttribute('StartTime', $ups->getStartTime());
-                $item->addAttribute('Status', $ups->getStatus());
-                if ($ups->getTemperatur() !== null) {
-                    $item->addAttribute('Temperature', $ups->getTemperatur());
-                }
-                if ($ups->getOutages() !== null) {
-                    $item->addAttribute('OutagesCount', $ups->getOutages());
-                }
-                if ($ups->getLastOutage() !== null) {
-                    $item->addAttribute('LastOutage', $ups->getLastOutage());
-                }
-                if ($ups->getLastOutageFinish() !== null) {
-                    $item->addAttribute('LastOutageFinish', $ups->getLastOutageFinish());
-                }
-                if ($ups->getLineVoltage() !== null) {
-                    $item->addAttribute('LineVoltage', $ups->getLineVoltage());
-                }
-                if ($ups->getLoad() !== null) {
-                    $item->addAttribute('LoadPercent', $ups->getLoad());
-                }
-                if ($ups->getBatteryDate() !== null) {
-                    $item->addAttribute('BatteryDate', $ups->getBatteryDate());
-                }
-                if ($ups->getBatteryVoltage() !== null) {
-                    $item->addAttribute('BatteryVoltage', $ups->getBatteryVoltage());
-                }
-                if ($ups->getBatterCharge() !== null) {
-                    $item->addAttribute('BatteryChargePercent', $ups->getBatterCharge());
-                }
-                if ($ups->getTimeLeft() !== null) {
-                    $item->addAttribute('TimeLeftMinutes', $ups->getTimeLeft());
+        if (sizeof(unserialize(PSI_UPSINFO))>0) {
+            foreach (unserialize(PSI_UPSINFO) as $upsinfoclass) {
+                $upsinfo_data = new $upsinfoclass();
+                $upsinfo_detail = $upsinfo_data->getUPSInfo();
+                foreach ($upsinfo_detail->getUpsDevices() as $ups) {
+                    $item = $upsinfo->addChild('UPS');
+                    $item->addAttribute('Name', $ups->getName());
+                    $item->addAttribute('Model', $ups->getModel());
+                    $item->addAttribute('Mode', $ups->getMode());
+                    if ($ups->getStartTime() !== "") {
+                        $item->addAttribute('StartTime', $ups->getStartTime());
+                    }
+                    $item->addAttribute('Status', $ups->getStatus());
+                    if ($ups->getTemperatur() !== null) {
+                        $item->addAttribute('Temperature', $ups->getTemperatur());
+                    }
+                    if ($ups->getOutages() !== null) {
+                        $item->addAttribute('OutagesCount', $ups->getOutages());
+                    }
+                    if ($ups->getLastOutage() !== null) {
+                        $item->addAttribute('LastOutage', $ups->getLastOutage());
+                    }
+                    if ($ups->getLastOutageFinish() !== null) {
+                        $item->addAttribute('LastOutageFinish', $ups->getLastOutageFinish());
+                    }
+                    if ($ups->getLineVoltage() !== null) {
+                        $item->addAttribute('LineVoltage', $ups->getLineVoltage());
+                    }
+                    if ($ups->getLoad() !== null) {
+                        $item->addAttribute('LoadPercent', $ups->getLoad());
+                    }
+                    if ($ups->getBatteryDate() !== null) {
+                        $item->addAttribute('BatteryDate', $ups->getBatteryDate());
+                    }
+                    if ($ups->getBatteryVoltage() !== null) {
+                        $item->addAttribute('BatteryVoltage', $ups->getBatteryVoltage());
+                    }
+                    if ($ups->getBatterCharge() !== null) {
+                        $item->addAttribute('BatteryChargePercent', $ups->getBatterCharge());
+                    }
+                    if ($ups->getTimeLeft() !== null) {
+                        $item->addAttribute('TimeLeftMinutes', $ups->getTimeLeft());
+                    }
                 }
             }
         }
@@ -607,6 +625,7 @@ class XML
         }
         $options->addAttribute('showPickListTemplate', defined('PSI_SHOW_PICKLIST_TEMPLATE') ? (PSI_SHOW_PICKLIST_TEMPLATE ? 'true' : 'false') : 'false');
         $options->addAttribute('showPickListLang', defined('PSI_SHOW_PICKLIST_LANG') ? (PSI_SHOW_PICKLIST_LANG ? 'true' : 'false') : 'false');
+        $options->addAttribute('showCPUInfoExpanded', defined('PSI_SHOW_CPUINFO_EXPANDED') ? (PSI_SHOW_CPUINFO_EXPANDED ? 'true' : 'false') : 'false');
         $plug = $this->_xml->addChild('UsedPlugins');
         if ($this->_complete_request && count($this->_plugins) > 0) {
             foreach ($this->_plugins as $plugin) {
