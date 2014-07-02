@@ -580,8 +580,10 @@ function createBar(size, barclass) {
 function refreshVitals(xml) {
     var hostname = "", ip = "", kernel = "", distro = "", icon = "", uptime = "", users = 0, loadavg = "";
     var syslang = "", codepage = "";
-    var lastboot = 0, timestamp = Number(new Date());
-
+    var lastboot = 0;
+    var timestamp = parseInt($("Generation", xml).attr("timestamp"), 10)*1000; //server time
+    if (isNaN(timestamp)) timestamp = Number(new Date()); //client time
+ 
     $("Vitals", xml).each(function getVitals(id) {
         hostname = $(this).attr("Hostname");
         ip = $(this).attr("IPAddr");
@@ -629,6 +631,7 @@ function refreshVitals(xml) {
     });
 }
 
+
 /**
  * build the cpu information as table rows
  * @param {jQuery} xml phpSysInfo-XML
@@ -638,6 +641,10 @@ function refreshVitals(xml) {
  */
 function fillCpu(xml, tree, rootposition, collapsed) {
     var cpucount = 0, html = "";
+    var showCPUInfoExpanded = "";
+    $("Options", xml).each(function getOptions(id) {
+        showCPUInfoExpanded = $(this).attr("showCPUInfoExpanded");
+    });
     $("Hardware CPU CpuCore", xml).each(function getCpuCore(cpuCoreId) {
         var model = "", speed = 0, bus = 0, cache = 0, bogo = 0, temp = 0, load = 0, speedmax = 0, speedmin = 0, cpucoreposition = 0, virt = "";
         cpucount += 1;
@@ -654,7 +661,9 @@ function fillCpu(xml, tree, rootposition, collapsed) {
 
         html += "<tr><td colspan=\"2\">" + model + "</td></tr>\n";
         cpucoreposition = tree.push(rootposition);
-        collapsed.push(cpucoreposition);
+        if (showCPUInfoExpanded !== 'true') {
+            collapsed.push(cpucoreposition);
+        }
         if (!isNaN(speed)) {
             html += "<tr><td style=\"width:50%\">" + genlang(13, true) + ":</td><td>" + formatHertz(speed) + "</td></tr>\n";
             tree.push(cpucoreposition);
@@ -667,7 +676,6 @@ function fillCpu(xml, tree, rootposition, collapsed) {
             html += "<tr><td style=\"width:50%\">" + genlang(101, true) + ":</td><td>" + formatHertz(speedmin) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
-//        collapsed.push(cpucoreposition);
         if (!isNaN(cache)) {
             html += "<tr><td style=\"width:50%\">" + genlang(15, true) + ":</td><td>" + formatBytes(cache) + "</td></tr>\n";
             tree.push(cpucoreposition);
@@ -732,11 +740,20 @@ function fillHWDevice(xml, type, tree, rootposition) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshHardware(xml) {
-    var html = "", tree = [], closed = [], index = 0;
+    var html = "", tree = [], closed = [], index = 0, machine = "";
     $("#hardware").empty();
     html += "<h2>" + genlang(10, false) + "</h2>\n";
     html += "  <table id=\"HardwareTree\" class=\"tablemain\" style=\"width:100%;\">\n";
     html += "   <tbody class=\"tree\">\n";
+
+    $("Hardware", xml).each(function getMachine(id) {
+        machine = $(this).attr("Name");
+    });
+    if ( (machine !== undefined) && (machine != "") ) {
+        html += "    <tr><td colspan=\"2\"><b>" + genlang(107, false) + "</b></td></tr>\n";
+        html += "<tr><td colspan=\"2\">" + machine + "</td></tr>\n";
+        tree.push(tree.push(0));
+    }
 
     html += "    <tr><td colspan=\"2\"><b>" + genlang(11, false) + "</b></td></tr>\n";
     html += fillCpu(xml, tree, tree.push(0), closed);
@@ -1122,6 +1139,34 @@ function refreshPower(xml) {
         $("#power").remove();
     }
 }
+
+/**
+ * (re)fill the current block with the values from the given xml<br><br>
+ * build the current information into a separate block, if there is no current information available the
+ * entire table will be removed to avoid HTML warnings
+ * @param {jQuery} xml phpSysInfo-XML
+ */
+function refreshCurrent(xml) {
+    var values = false;
+    $("#currentTable tbody").empty();
+    $("MBInfo Current Item", xml).each(function getCurrents(id) {
+        var label = "", value = "", limit = 0, _limit = "";
+        label = $(this).attr("Label");
+        value = $(this).attr("Value").replace(/\+/g, "");
+        limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
+        if (isFinite(limit))
+            _limit = round(limit, 2) + "&nbsp;" + genlang(106, true);
+        $("#currentTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(106, true) + "</td><td class=\"right\">" + _limit + "</td></tr>");
+        values = true;
+    });
+    if (values) {
+        $("#current").show();
+    }
+    else {
+        $("#current").remove();
+    }
+}
+
 /**
  * (re)fill the ups block with the values from the given xml<br><br>
  * build the ups information into a separate block, if there is no ups information available the
@@ -1159,8 +1204,10 @@ function refreshUps(xml) {
         index = tree.push(0);
         html += "<tr><td style=\"width:160px\">" + genlang(70, false) + "</td><td>" + model + "</td></tr>\n";
         tree.push(index);
-        html += "<tr><td style=\"width:160px\">" + genlang(72, false) + "</td><td>" + start_time + "</td></tr>\n";
-        tree.push(index);
+        if (start_time !== undefined) {
+            html += "<tr><td style=\"width:160px\">" + genlang(72, false) + "</td><td>" + start_time + "</td></tr>\n";
+            tree.push(index);
+        }
         html += "<tr><td style=\"width:160px\">" + genlang(73, false) + "</td><td>" + upsstatus + "</td></tr>\n";
         tree.push(index);
         if (temperature !== undefined) {
@@ -1256,6 +1303,7 @@ function reload() {
             refreshFan(xml);
             refreshTemp(xml);
             refreshPower(xml);
+            refreshCurrent(xml);
             refreshUps(xml);
 
             $('.stripeMe tr:nth-child(even)').addClass('even');
@@ -1309,6 +1357,7 @@ $(document).ready(function buildpage() {
             refreshVoltage(xml);
             refreshFan(xml);
             refreshPower(xml);
+            refreshCurrent(xml);
             refreshUps(xml);
 
             changeLanguage();

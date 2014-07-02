@@ -3,13 +3,53 @@ Changelog of phpSysInfo
 
 http://phpsysinfo.sourceforge.net/
 
+phpSysInfo 3.1.13
+----------------
+
+ - [UPD] jQuery 2.1.1 and jQuery 1.11.1
+ - [UPD] Romanian Translation ro.xml
+
+ - [ADD] SHOW_CPUINFO_EXPANDED option
+ - [ADD] Machine detection on WINNT, Linux, Android and Darwin systems
+
+
+phpSysInfo 3.1.12
+----------------
+
+ - [ADD] GoboLinux, UltimateEdition, BOSS, Canaima, VortexBox, KaOS and NixOS to detected distros
+ - [ADD] OpenHardwareMonitor sensor program support
+ - [ADD] Possibility to define multiple UPS_PROGRAM
+ - [ADD] UPS_NUT_LIST option
+
+ - [FIX] Fixed incorrect network usage on FreeBSD
+
+ - [UPD] SMART plugin - Smartctl --device option value setting method
+
+phpSysInfo 3.1.11
+----------------
+
+ - [ADD] Add Access-Control-Allow-Origin on XML (JSON) interface for Ajax Load PR#47
+ - [ADD] Generations Linux and SliTaz to detected distros
+ - [ADD] IPMI and LMSensors currents information
+ - [ADD] Plugin IPMIInfo - added powers and currents values
+ - [ADD] Partial support of QNX
+
+ - [FIX] Reduce execution time on Linux systems when showing load average PR#47
+
+phpSysInfo 3.1.10
+----------------
+
+ - [ADD] Zenwalk and Raspbian to detected distros
+
+ - [FIX] /etc/os-release Linux distro detection
+
 phpSysInfo 3.1.9
 ----------------
 
  - [NEW] New plugin DMRaid - software raid status
 
  - [ADD] Calculate, Tails, SMEServer, Semplice, SolydXK, Parsix, RedFlag, Amazon, Korora, OpenMandriva, SteamOS, ROSA Enterprise Server and ROSA Desktop Fresh to detected distros
- 
+
  - [UPD] Rebuilding of the Linux distribution detection
  - [UPD] jQuery 2.1.0 and jQuery 1.11.0
 
