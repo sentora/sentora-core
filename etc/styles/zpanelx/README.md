@@ -4,14 +4,14 @@ This document outlines some of the JavaScript and CSS functionality that is buil
 
 If you have any questions about this theme, please ask on the [Sentora Forums](http://forums.sentora.io/) or contact [Jason Davis](http://www.codedevelopr.com).
 
-## Over-ride Module Icons ##
-You can replace the module icons that come with a Module on the Sentora dashboard screen with your own icons.
+## Override Module Icons ##
+You can replace the module icons that come with a module on the Sentora dashboard screen with your own icons.
 
-To over-ride a Modules icon, simply create a folder and image file in this location...
+To override a module's icon, simply create a folder and image file in this location...
 
     /etc/styles/zpanelx/images/MODULE-NAME/assets/icon.png
 
-Replacing **MODULE-NAME** with the name of the module you are replacing.  The Module name has to be the exact same name that the module uses in the modules folder for this over-ride to work!
+Replacing **MODULE-NAME** with the name of the module you are replacing.  The module name has to be the exact same name that the module uses in the module's folder for this over-ride to work!
 
 An example to over-ride the MySQL Database module's icon...
 
