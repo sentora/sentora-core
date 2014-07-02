@@ -13,7 +13,7 @@
     <@ Result @>
 
     <div class="zgrid_wrapper">
-        <h2><: Configure your ZPanel Settings :></h2>
+        <h2><: Configure your Sentora Settings :></h2>
         <form action="./?module=zpanelconfig&action=UpdateConfig" method="post">
             <table class="table table-striped">
                 <% loop Config %>
@@ -32,7 +32,7 @@
     </div>
 
     <div class="zgrid_wrapper">
-        <h2><: ZPanel Daemon :></h2>
+        <h2><: Sentora Daemon :></h2>
         <form action="./?module=zpanelconfig&action=ForceDaemon" method="post">
             <table class="table table-striped">
                 <tr valign="top">
