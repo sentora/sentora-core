@@ -11,7 +11,7 @@ To override a module's icon, simply create a folder and image file in this locat
 
     /etc/styles/zpanelx/images/MODULE-NAME/assets/icon.png
 
-Replacing **MODULE-NAME** with the name of the module you are replacing.  The module name has to be the exact same name that the module uses in the module's folder for this over-ride to work!
+Replacing **MODULE-NAME** with the name of the module you are replacing.  The module name has to be the exact same name that the module uses in the module's folder for this override to work!
 
 An example to over-ride the MySQL Database module's icon...
 
