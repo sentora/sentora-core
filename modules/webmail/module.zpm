@@ -10,6 +10,6 @@
 
     </div>
 
-    <button class="btn btn-large btn-primary" type="submit" onclick="window.open('etc/apps/webmail/')"><@ LaunchWebMail @></button>
+    <a href="etc/apps/webmail/" class="btn btn-large btn-primary" target="_blank"><@ LaunchWebMail @></a>
 
 </div>
