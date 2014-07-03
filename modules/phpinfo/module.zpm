@@ -13,8 +13,12 @@
 
     <div id="contentwrapper_phpinfo">
         <br>
-        <button class="btn btn-large btn-primary" type="submit" onclick="window.open('etc/apps/phpinfo/')"><: View full PHP configuration :></button>
-        <br><br>
+
+        <a href="etc/apps/phpinfo/" class="btn btn-large btn-primary" target="_blank"><: View full PHP configuration :></a>
+
+        <br>
+        <br>
+
         <div class="zform_wrapper" style="width:100%">
             <@ PHPInfo @>
         </div>
