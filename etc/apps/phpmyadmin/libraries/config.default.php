@@ -54,14 +54,6 @@ $cfg['PmaNoRelation_DisableWarning'] = false;
 $cfg['SuhosinDisableWarning'] = false;
 
 /**
- * Disable the default warning that is displayed if mcrypt is missing for
- * cookie authentication.
- *
- * @global boolean $cfg['McryptDisableWarning']
- */
-$cfg['McryptDisableWarning'] = false;
-
-/**
  * Disable the default warning that is displayed if a diffrence between
  * the MySQL library and server is detected.
  *
@@ -1936,9 +1928,9 @@ $cfg['Export']['sql_utc_time'] = true;
 /**
  *
  *
- * @global boolean $cfg['Export']['sql_hex_for_blob']
+ * @global boolean $cfg['Export']['sql_hex_for_binary']
  */
-$cfg['Export']['sql_hex_for_blob'] = true;
+$cfg['Export']['sql_hex_for_binary'] = true;
 
 /**
  * insert/update/replace

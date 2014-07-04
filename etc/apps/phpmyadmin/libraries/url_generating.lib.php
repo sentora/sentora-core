@@ -12,7 +12,7 @@ if (! defined('PHPMYADMIN')) {
 /**
  * Generates text with hidden inputs.
  *
- * @param string       $db     optional database name
+ * @param string|array $db     optional database name
  *                             (can also be an array of parameters)
  * @param string       $table  optional table name
  * @param int          $indent indenting level
@@ -205,6 +205,8 @@ function PMA_URL_getCommon()
         }
     } else {
         // old style
+
+        $params = array();
 
         if (PMA_isValid($args[0])) {
             $params['db'] = $args[0];

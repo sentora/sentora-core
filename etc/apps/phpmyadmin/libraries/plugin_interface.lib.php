@@ -15,7 +15,7 @@
  * @param mixed  $plugin_param  parameter to plugin by which they can
  *                              decide whether they can work
  *
- * @return object|null new plugin instance
+ * @return object new plugin instance
  */
 function PMA_getPlugin(
     $plugin_type,
@@ -34,7 +34,8 @@ function PMA_getPlugin(
         return new $class_name;
     }
 
-    return null;
+    // by default, return SQL plugin
+    return PMA_getPlugin($plugin_type, 'sql', $plugins_dir, $plugin_param);
 }
 
 /**
@@ -75,7 +76,10 @@ function PMA_getPlugins($plugin_type, $plugins_dir, $plugin_param)
             include_once $plugins_dir . $file;
             if (! $GLOBALS['skip_import']) {
                 $class_name = $class_type . $matches[1];
-                $plugin_list [] = new $class_name;
+                $plugin = new $class_name;
+                if (null !== $plugin->getProperties()) {
+                    $plugin_list[] = $plugin;
+                }
             }
         }
     }
