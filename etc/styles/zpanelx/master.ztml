@@ -205,7 +205,7 @@
 
                                     <div class="stats-row">
                                         <div class="stats-column"><strong><: Server OS :>:</strong></div>
-                                        <div class="stats-column"><img src="<# ui_tpl_assetfolderpath #>images/os_icons/<# ui_tpl_serverosname #>.png" width="16" height="16" class="pull-left">&nbsp;<# ui_tpl_serverosname #></div>
+                                        <div class="stats-column"><img src="<# ui_tpl_assetfolderpath #>images/os_icons/<# ui_tpl_serverosname #>.png" width="16" height="16" class="pull-left" alt="<# ui_tpl_serverosname #> Icon">&nbsp;<# ui_tpl_serverosname #></div>
                                     </div>
 
                                     <div class="stats-row">
