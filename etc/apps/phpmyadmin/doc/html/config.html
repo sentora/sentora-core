@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuration &mdash; phpMyAdmin 4.2.2 documentation</title>
+    <title>Configuration &mdash; phpMyAdmin 4.2.5 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.2.2',
+        VERSION:     '4.2.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="copyright" title="Copyright" href="copyright.html" />
-    <link rel="top" title="phpMyAdmin 4.2.2 documentation" href="index.html" />
+    <link rel="top" title="phpMyAdmin 4.2.5 documentation" href="index.html" />
     <link rel="next" title="User Guide" href="user.html" />
     <link rel="prev" title="Installation" href="setup.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="setup.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.2.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">phpMyAdmin 4.2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -151,24 +151,6 @@ stop this message from appearing.</p>
 </tbody>
 </table>
 <p>A warning is displayed on the main page if Suhosin is detected.</p>
-<p>You can set this parameter to <tt class="docutils literal"><span class="pre">true</span></tt> to stop this message from appearing.</p>
-</dd></dl>
-
-<dl class="option">
-<dt id="cfg_McryptDisableWarning">
-<tt class="descname">$cfg['McryptDisableWarning']</tt><a class="headerlink" href="#cfg_McryptDisableWarning" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body">false</td>
-</tr>
-</tbody>
-</table>
-<p>Disable the default warning that is displayed if mcrypt is missing for
-cookie authentication.</p>
 <p>You can set this parameter to <tt class="docutils literal"><span class="pre">true</span></tt> to stop this message from appearing.</p>
 </dd></dl>
 
@@ -1181,6 +1163,28 @@ user group) and &#8220;users&#8221; (storing users and their assignments to user
 </ul>
 </dd></dl>
 
+<span class="target" id="savedsearches"></span><dl class="option">
+<dt id="cfg_Servers_savedsearches">
+<tt class="descname">$cfg['Servers'][$i]['savedsearches']</tt><a class="headerlink" href="#cfg_Servers_savedsearches" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default value:</th><td class="field-body"><tt class="docutils literal"><span class="pre">''</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Since release 4.2.0 you can save and load query-by-example searches from the Database &gt; Query panel.</p>
+<p>To allow the usage of this functionality:</p>
+<ul class="simple">
+<li>set up <span class="target" id="index-46"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a> and the phpMyAdmin configuration storage</li>
+<li>put the table name in <span class="target" id="index-47"></span><a class="reference internal" href="#cfg_Servers_savedsearches"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['savedsearches']</span></tt></a> (e.g.
+<tt class="docutils literal"><span class="pre">pma__savedsearches</span></tt>)</li>
+</ul>
+</dd></dl>
+
 <span class="target" id="tracking"></span><dl class="option">
 <dt id="cfg_Servers_tracking">
 <tt class="descname">$cfg['Servers'][$i]['tracking']</tt><a class="headerlink" href="#cfg_Servers_tracking" title="Permalink to this definition">¶</a></dt>
@@ -1214,8 +1218,8 @@ you enter a list of names separated by &#8216;,&#8217;. In addition you can expo
 (filtered) report to a file or to a temporary database.</p>
 <p>To allow the usage of this functionality:</p>
 <ul class="simple">
-<li>set up <span class="target" id="index-46"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a> and the phpMyAdmin configuration storage</li>
-<li>put the table name in <span class="target" id="index-47"></span><a class="reference internal" href="#cfg_Servers_tracking"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['tracking']</span></tt></a> (e.g.
+<li>set up <span class="target" id="index-48"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a> and the phpMyAdmin configuration storage</li>
+<li>put the table name in <span class="target" id="index-49"></span><a class="reference internal" href="#cfg_Servers_tracking"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['tracking']</span></tt></a> (e.g.
 <tt class="docutils literal"><span class="pre">pma__tracking</span></tt>)</li>
 </ul>
 </dd></dl>
@@ -1328,13 +1332,13 @@ line to the log when creating a database.</p>
 <p>Since release 3.4.x phpMyAdmin allows users to set most preferences by
 themselves and store them in the database.</p>
 <p>If you don&#8217;t allow for storing preferences in
-<span class="target" id="index-48"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a>, users can still personalize
+<span class="target" id="index-50"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a>, users can still personalize
 phpMyAdmin, but settings will be saved in browser&#8217;s local storage, or, it
 is is unavailable, until the end of session.</p>
 <p>To allow the usage of this functionality:</p>
 <ul class="simple">
-<li>set up <span class="target" id="index-49"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a> and the phpMyAdmin configuration storage</li>
-<li>put the table name in <span class="target" id="index-50"></span><a class="reference internal" href="#cfg_Servers_userconfig"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['userconfig']</span></tt></a></li>
+<li>set up <span class="target" id="index-51"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a> and the phpMyAdmin configuration storage</li>
+<li>put the table name in <span class="target" id="index-52"></span><a class="reference internal" href="#cfg_Servers_userconfig"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['userconfig']</span></tt></a></li>
 </ul>
 </dd></dl>
 
@@ -1355,8 +1359,8 @@ is is unavailable, until the end of session.</p>
 visually manage the relations.</p>
 <p>To allow the usage of this functionality:</p>
 <ul class="simple">
-<li>set up <span class="target" id="index-51"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a> and the phpMyAdmin configuration storage</li>
-<li>put the table name in <span class="target" id="index-52"></span><a class="reference internal" href="#cfg_Servers_designer_coords"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['designer_coords']</span></tt></a>
+<li>set up <span class="target" id="index-53"></span><a class="reference internal" href="#cfg_Servers_pmadb"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['pmadb']</span></tt></a> and the phpMyAdmin configuration storage</li>
+<li>put the table name in <span class="target" id="index-54"></span><a class="reference internal" href="#cfg_Servers_designer_coords"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['designer_coords']</span></tt></a>
 (e.g. <tt class="docutils literal"><span class="pre">pma__designer_coords</span></tt>)</li>
 </ul>
 </dd></dl>
@@ -1375,11 +1379,11 @@ visually manage the relations.</p>
 </tbody>
 </table>
 <p>Maximum number of rows saved in
-<span class="target" id="index-53"></span><a class="reference internal" href="#cfg_Servers_table_uiprefs"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['table_uiprefs']</span></tt></a> table.</p>
+<span class="target" id="index-55"></span><a class="reference internal" href="#cfg_Servers_table_uiprefs"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['table_uiprefs']</span></tt></a> table.</p>
 <p>When tables are dropped or renamed,
-<span class="target" id="index-54"></span><a class="reference internal" href="#cfg_Servers_table_uiprefs"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['table_uiprefs']</span></tt></a> may contain invalid data
+<span class="target" id="index-56"></span><a class="reference internal" href="#cfg_Servers_table_uiprefs"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['table_uiprefs']</span></tt></a> may contain invalid data
 (referring to tables which no longer exist). We only keep this number of newest
-rows in <span class="target" id="index-55"></span><a class="reference internal" href="#cfg_Servers_table_uiprefs"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['table_uiprefs']</span></tt></a> and automatically
+rows in <span class="target" id="index-57"></span><a class="reference internal" href="#cfg_Servers_table_uiprefs"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['table_uiprefs']</span></tt></a> and automatically
 delete older rows.</p>
 </dd></dl>
 
@@ -1397,7 +1401,7 @@ delete older rows.</p>
 </tbody>
 </table>
 <p>Whether to allow root access. This is just a shortcut for the
-<span class="target" id="index-56"></span><a class="reference internal" href="#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> below.</p>
+<span class="target" id="index-58"></span><a class="reference internal" href="#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> below.</p>
 </dd></dl>
 
 <dl class="option">
@@ -1451,7 +1455,7 @@ listed in the <em>allow</em> rules, and not listed in the <em>deny</em> rules. T
 is the <strong>most</strong> secure means of using Allow/Deny rules, and was
 available in Apache by specifying allow and deny rules without setting
 any order.</p>
-<p>Please also see <span class="target" id="index-57"></span><a class="reference internal" href="#cfg_TrustedProxies"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['TrustedProxies']</span></tt></a> for
+<p>Please also see <span class="target" id="index-59"></span><a class="reference internal" href="#cfg_TrustedProxies"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['TrustedProxies']</span></tt></a> for
 detecting IP address behind proxies.</p>
 </dd></dl>
 
@@ -1548,7 +1552,7 @@ empty). See <tt class="file docutils literal"><span class="pre">examples/signon-
 <p>Name of session which will be used for signon authentication method.
 You should use something different than <tt class="docutils literal"><span class="pre">phpMyAdmin</span></tt>, because this
 is session which phpMyAdmin uses internally. Takes effect only if
-<span class="target" id="index-58"></span><a class="reference internal" href="#cfg_Servers_SignonScript"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['SignonScript']</span></tt></a> is not configured.</p>
+<span class="target" id="index-60"></span><a class="reference internal" href="#cfg_Servers_SignonScript"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['SignonScript']</span></tt></a> is not configured.</p>
 </dd></dl>
 
 <dl class="option">
@@ -1604,7 +1608,7 @@ absolute including protocol.</p>
 this server (in some cases <tt class="docutils literal"><span class="pre">TABLE</span> <span class="pre">STATUS</span></tt> can be very slow, so you
 may want to cache it). APC is used (if the PHP extension is available,
 if not, this setting is ignored silently). You have to provide
-<span class="target" id="index-59"></span><a class="reference internal" href="#cfg_Servers_StatusCacheLifetime"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['StatusCacheLifetime']</span></tt></a>.</p>
+<span class="target" id="index-61"></span><a class="reference internal" href="#cfg_Servers_StatusCacheLifetime"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['StatusCacheLifetime']</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="option">
@@ -1621,7 +1625,7 @@ if not, this setting is ignored silently). You have to provide
 </tbody>
 </table>
 <p>Lifetime in seconds of the <tt class="docutils literal"><span class="pre">TABLE</span> <span class="pre">STATUS</span></tt> cache if
-<span class="target" id="index-60"></span><a class="reference internal" href="#cfg_Servers_StatusCacheDatabases"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['StatusCacheDatabases']</span></tt></a> is used.</p>
+<span class="target" id="index-62"></span><a class="reference internal" href="#cfg_Servers_StatusCacheDatabases"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['StatusCacheDatabases']</span></tt></a> is used.</p>
 </dd></dl>
 
 </div>
@@ -1641,11 +1645,11 @@ if not, this setting is ignored silently). You have to provide
 </tbody>
 </table>
 <p>If you have more than one server configured, you can set
-<span class="target" id="index-61"></span><a class="reference internal" href="#cfg_ServerDefault"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ServerDefault']</span></tt></a> to any one of them to autoconnect to that
+<span class="target" id="index-63"></span><a class="reference internal" href="#cfg_ServerDefault"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ServerDefault']</span></tt></a> to any one of them to autoconnect to that
 server when phpMyAdmin is started, or set it to 0 to be given a list
 of servers without logging in.</p>
 <p>If you have only one server configured,
-<span class="target" id="index-62"></span><a class="reference internal" href="#cfg_ServerDefault"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ServerDefault']</span></tt></a> MUST be set to that server.</p>
+<span class="target" id="index-64"></span><a class="reference internal" href="#cfg_ServerDefault"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ServerDefault']</span></tt></a> MUST be set to that server.</p>
 </dd></dl>
 
 <dl class="option">
@@ -1834,7 +1838,7 @@ following extensions:</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">In some setups (like separate SSL proxy or load balancer) you might
-have to set <span class="target" id="index-63"></span><a class="reference internal" href="#cfg_PmaAbsoluteUri"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['PmaAbsoluteUri']</span></tt></a> for correct
+have to set <span class="target" id="index-65"></span><a class="reference internal" href="#cfg_PmaAbsoluteUri"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['PmaAbsoluteUri']</span></tt></a> for correct
 redirection.</p>
 </div>
 </dd></dl>
@@ -2087,7 +2091,7 @@ cookie.</p>
 <p>Define whether the previous login should be recalled or not in cookie
 authentication mode.</p>
 <p>This is automatically disabled if you do not have
-configured <span class="target" id="index-64"></span><a class="reference internal" href="#cfg_blowfish_secret"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['blowfish_secret']</span></tt></a>.</p>
+configured <span class="target" id="index-66"></span><a class="reference internal" href="#cfg_blowfish_secret"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['blowfish_secret']</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="option">
@@ -2107,7 +2111,7 @@ configured <span class="target" id="index-64"></span><a class="reference interna
 configuration option <a class="reference external" href="http://php.net/manual/en/session.configuration.php#ini.session.gc-maxlifetime">session.gc_maxlifetime</a> might limit session validity and if the session is lost,
 the login cookie is also invalidated. So it is a good idea to set
 <tt class="docutils literal"><span class="pre">session.gc_maxlifetime</span></tt> at least to the same value of
-<span class="target" id="index-65"></span><a class="reference internal" href="#cfg_LoginCookieValidity"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['LoginCookieValidity']</span></tt></a>.</p>
+<span class="target" id="index-67"></span><a class="reference internal" href="#cfg_LoginCookieValidity"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['LoginCookieValidity']</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="option">
@@ -2256,7 +2260,7 @@ page of the navigation tree.</p>
 </tbody>
 </table>
 <p>Defines whether to group the databases based on a common prefix
-in their name <span class="target" id="index-66"></span><a class="reference internal" href="#cfg_NavigationTreeDbSeparator"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['NavigationTreeDbSeparator']</span></tt></a>.</p>
+in their name <span class="target" id="index-68"></span><a class="reference internal" href="#cfg_NavigationTreeDbSeparator"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['NavigationTreeDbSeparator']</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="option">
@@ -2534,7 +2538,7 @@ for Berkeley DB tables.</p>
 </table>
 <p>Defines whether to display detailed server information on main page.
 You can additionally hide more information by using
-<span class="target" id="index-67"></span><a class="reference internal" href="#cfg_Servers_verbose"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['verbose']</span></tt></a>.</p>
+<span class="target" id="index-69"></span><a class="reference internal" href="#cfg_Servers_verbose"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['verbose']</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="option">
@@ -2885,7 +2889,7 @@ edit/insert mode. The user can toggle this setting from the interface.</p>
 </table>
 <p>If there are fewer items than this in the set of foreign keys, then a
 drop-down box of foreign keys is presented, in the style described by
-the <span class="target" id="index-68"></span><a class="reference internal" href="#cfg_ForeignKeyDropdownOrder"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ForeignKeyDropdownOrder']</span></tt></a> setting.</p>
+the <span class="target" id="index-70"></span><a class="reference internal" href="#cfg_ForeignKeyDropdownOrder"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ForeignKeyDropdownOrder']</span></tt></a> setting.</p>
 </dd></dl>
 
 <dl class="option">
@@ -3194,7 +3198,7 @@ values:</p>
 </tbody>
 </table>
 <p>Default page size to use when creating PDF pages. Valid values are any
-listed in <span class="target" id="index-69"></span><a class="reference internal" href="#cfg_PDFPageSizes"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['PDFPageSizes']</span></tt></a>.</p>
+listed in <span class="target" id="index-71"></span><a class="reference internal" href="#cfg_PDFPageSizes"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['PDFPageSizes']</span></tt></a>.</p>
 </dd></dl>
 
 </div>
@@ -3297,7 +3301,7 @@ recode)</li>
 <p>Enabled charset conversion activates a pull-down menu in the Export
 and Import pages, to choose the character set when exporting a file.
 The default value in this menu comes from
-<span class="target" id="index-70"></span><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Export']['charset']</span></tt> and <span class="target" id="index-71"></span><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Import']['charset']</span></tt>.</p>
+<span class="target" id="index-72"></span><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Export']['charset']</span></tt> and <span class="target" id="index-73"></span><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Import']['charset']</span></tt>.</p>
 </dd></dl>
 
 <dl class="option">
@@ -3377,7 +3381,7 @@ buffering.</p>
 </tbody>
 </table>
 <p>Lists proxies and HTTP headers which are trusted for
-<span class="target" id="index-72"></span><a class="reference internal" href="#cfg_Servers_AllowDeny_order"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['order']</span></tt></a>. This list is by
+<span class="target" id="index-74"></span><a class="reference internal" href="#cfg_Servers_AllowDeny_order"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['order']</span></tt></a>. This list is by
 default empty, you need to fill in some trusted proxy servers if you
 want to use rules for IP addresses behind proxy.</p>
 <p>The following example specifies that phpMyAdmin should trust a
@@ -3386,7 +3390,7 @@ HTTP_X_FORWARDED_FOR (<tt class="docutils literal"><span class="pre">X</span> <s
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$cfg</span><span class="p">[</span><span class="s1">&#39;TrustedProxies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;1.2.3.4&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;HTTP_X_FORWARDED_FOR&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>The <span class="target" id="index-73"></span><a class="reference internal" href="#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> directive uses the
+<p>The <span class="target" id="index-75"></span><a class="reference internal" href="#cfg_Servers_AllowDeny_rules"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['AllowDeny']['rules']</span></tt></a> directive uses the
 client&#8217;s IP address as usual.</p>
 </dd></dl>
 
@@ -4067,7 +4071,7 @@ emphasized (*2) for <a class="reference internal" href="glossary.html#term-sql">
 textareas and (*1.25) for <a class="reference internal" href="glossary.html#term-sql"><em class="xref std std-term">SQL</em></a>
 textareas inside the query window.</p>
 <p>The Char* values are used for CHAR
-and VARCHAR editing (if configured via <span class="target" id="index-74"></span><a class="reference internal" href="#cfg_CharEditing"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['CharEditing']</span></tt></a>).</p>
+and VARCHAR editing (if configured via <span class="target" id="index-76"></span><a class="reference internal" href="#cfg_CharEditing"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['CharEditing']</span></tt></a>).</p>
 </dd></dl>
 
 <dl class="option">
@@ -4409,18 +4413,18 @@ in your browser, a click on this opens a distinct query window, which is a
 direct interface to enter <a class="reference internal" href="glossary.html#term-sql"><em class="xref std std-term">SQL</em></a> queries. Otherwise, the right panel
 changes to display a query box.</p>
 <p>The size of this query window can be customized with
-<span class="target" id="index-75"></span><a class="reference internal" href="#cfg_QueryWindowWidth"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryWindowWidth']</span></tt></a> and
-<span class="target" id="index-76"></span><a class="reference internal" href="#cfg_QueryWindowHeight"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryWindowHeight']</span></tt></a> - both integers for the size in
+<span class="target" id="index-77"></span><a class="reference internal" href="#cfg_QueryWindowWidth"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryWindowWidth']</span></tt></a> and
+<span class="target" id="index-78"></span><a class="reference internal" href="#cfg_QueryWindowHeight"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryWindowHeight']</span></tt></a> - both integers for the size in
 pixels.  Note that normally, those parameters will be modified in
 <tt class="file docutils literal"><span class="pre">layout.inc.php`</span></tt> for the theme you are using.</p>
-<p>If <span class="target" id="index-77"></span><a class="reference internal" href="#cfg_EditInWindow"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['EditInWindow']</span></tt></a> is set to true, a click on [Edit]
+<p>If <span class="target" id="index-79"></span><a class="reference internal" href="#cfg_EditInWindow"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['EditInWindow']</span></tt></a> is set to true, a click on [Edit]
 from the results page (in the <em class="guilabel">Showing Rows</em> section) opens the
 query window and puts the current query inside it. If set to false,
 clicking on the link puts the <a class="reference internal" href="glossary.html#term-sql"><em class="xref std std-term">SQL</em></a> query
 in the right panel&#8217;s query box.</p>
-<p>If <span class="target" id="index-78"></span><a class="reference internal" href="#cfg_QueryHistoryDB"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryHistoryDB']</span></tt></a> is set to <tt class="docutils literal"><span class="pre">true</span></tt>, all your
+<p>If <span class="target" id="index-80"></span><a class="reference internal" href="#cfg_QueryHistoryDB"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryHistoryDB']</span></tt></a> is set to <tt class="docutils literal"><span class="pre">true</span></tt>, all your
 Queries are logged to a table, which has to be created by you (see
-<span class="target" id="index-79"></span><a class="reference internal" href="#cfg_Servers_history"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['history']</span></tt></a>). If set to false, all your
+<span class="target" id="index-81"></span><a class="reference internal" href="#cfg_Servers_history"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['Servers'][$i]['history']</span></tt></a>). If set to false, all your
 queries will be appended to the form, but only as long as your window is
 opened they remain saved.</p>
 <p>When using the JavaScript based query window, it will always get updated
@@ -4434,11 +4438,11 @@ you first have to look in. The checkbox will get automatically checked
 whenever you change the contents of the textarea. Please uncheck the button
 whenever you definitely want the query window to get updated even though
 you have made alterations.</p>
-<p>If <span class="target" id="index-80"></span><a class="reference internal" href="#cfg_QueryHistoryDB"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryHistoryDB']</span></tt></a> is set to <tt class="docutils literal"><span class="pre">true</span></tt> you can
+<p>If <span class="target" id="index-82"></span><a class="reference internal" href="#cfg_QueryHistoryDB"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryHistoryDB']</span></tt></a> is set to <tt class="docutils literal"><span class="pre">true</span></tt> you can
 specify the amount of saved history items using
-<span class="target" id="index-81"></span><a class="reference internal" href="#cfg_QueryHistoryMax"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryHistoryMax']</span></tt></a>.</p>
+<span class="target" id="index-83"></span><a class="reference internal" href="#cfg_QueryHistoryMax"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryHistoryMax']</span></tt></a>.</p>
 <p>The query window also has a custom tabbed look to group the features.
-Using the variable <span class="target" id="index-82"></span><a class="reference internal" href="#cfg_QueryWindowDefTab"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryWindowDefTab']</span></tt></a> you can
+Using the variable <span class="target" id="index-84"></span><a class="reference internal" href="#cfg_QueryWindowDefTab"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['QueryWindowDefTab']</span></tt></a> you can
 specify the default tab to be used when opening the query window. It can be
 set to either <tt class="docutils literal"><span class="pre">sql</span></tt>, <tt class="docutils literal"><span class="pre">files</span></tt>, <tt class="docutils literal"><span class="pre">history</span></tt> or <tt class="docutils literal"><span class="pre">full</span></tt>.</p>
 </dd></dl>
@@ -4682,7 +4686,7 @@ containing all the themes.</p>
 </tr>
 </tbody>
 </table>
-<p>The default theme (a subdirectory under <span class="target" id="index-83"></span><a class="reference internal" href="#cfg_ThemePath"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ThemePath']</span></tt></a>).</p>
+<p>The default theme (a subdirectory under <span class="target" id="index-85"></span><a class="reference internal" href="#cfg_ThemePath"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['ThemePath']</span></tt></a>).</p>
 </dd></dl>
 
 <dl class="option">
@@ -4928,7 +4932,7 @@ segment. Value can be either of <tt class="docutils literal"><span class="pre">'
         <li class="right" >
           <a href="setup.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.2.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">phpMyAdmin 4.2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

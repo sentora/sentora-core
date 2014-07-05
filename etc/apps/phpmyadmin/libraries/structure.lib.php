@@ -264,7 +264,7 @@ function PMA_getHtmlBodyForTableSummary($num_tables, $server_slave_status,
  * @param string  $text_dir            url for text directory
  * @param string  $overhead_check      overhead check
  * @param boolean $db_is_system_schema whether database is information schema or not
- * @param string  $hidden_fields       hidden fields
+ * @param array   $hidden_fields       hidden fields
  *
  * @return string $html_output
  */
@@ -479,7 +479,7 @@ function PMA_getHtmlForStructureTableRow(
     }
     //Favorite table anchor.
     $html_output .= '<td class="center">'
-        . PMA_getHtmlForFavoriteAnchor($db, $current_table, $titles)
+        . PMA_getHtmlForFavoriteAnchor($db, $current_table['TABLE_NAME'], $titles)
         . '</td>';
 
     $html_output .= '<td class="center">' . $browse_table . '</td>';
@@ -2339,6 +2339,7 @@ function PMA_columnNeedsAlterTable($i)
         || $_REQUEST['field_name'][$i] != $_REQUEST['field_orig'][$i]
         || $_REQUEST['field_null'][$i] != $_REQUEST['field_null_orig'][$i]
         || $_REQUEST['field_type'][$i] != $_REQUEST['field_type_orig'][$i]
+        || ! empty($_REQUEST['field_move_to'][$i])
 ) {
         return true;
     } else {
@@ -2728,30 +2729,31 @@ function PMA_checkFavoriteTable($db, $current_table)
  *
  * @param string $db            current database
  * @param string $current_table current table
- * @param string $titles        titles
+ * @param array  $titles        titles
  *
  * @return $html_output
  */
 function PMA_getHtmlForFavoriteAnchor($db, $current_table, $titles)
 {
     $html_output  = '<a ';
-    $html_output .= 'id="' . preg_replace(
-        '/\s+/', '', $current_table['TABLE_NAME']
-    ) . '_favorite_anchor" ';
+    $html_output .= 'id="' . md5($current_table)
+        . '_favorite_anchor" ';
     $html_output .= 'class="ajax favorite_table_anchor';
 
     // Check if current table is already in favorite list.
-    $already_favorite = PMA_checkFavoriteTable($db, $current_table['TABLE_NAME']);
+    $already_favorite = PMA_checkFavoriteTable($db, $current_table);
     $fav_params = array('db' => $db,
         'ajax_request' => true,
-        'favorite_table' => $current_table['TABLE_NAME'],
-        (($already_favorite?'remove':'add') . '_favorite') => true);
+        'favorite_table' => $current_table,
+        (($already_favorite ? 'remove' : 'add') . '_favorite') => true
+    );
     $fav_url = 'db_structure.php' . PMA_URL_getCommon($fav_params);
     $html_output .= '" ';
     $html_output .= 'href="' . $fav_url
         . '" title="' . ($already_favorite ? __("Remove from Favorites")
         : __("Add to Favorites"))
-        . '" data-favtargets="' . $db . "." . $current_table['TABLE_NAME']
+        . '" data-favtargets="'
+        . md5($db . "." . $current_table)
         . '" >'
         . (!$already_favorite ? $titles['NoFavorite']
         : $titles['Favorite']) . '</a>';

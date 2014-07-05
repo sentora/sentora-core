@@ -7,6 +7,11 @@
  */
 
 /**
+ * Core libraries.
+ */
+require_once './libraries/DatabaseInterface.class.php';
+
+/**
  * Validation class for various validation functions
  *
  * Validation function takes two argument: id for which it is called
@@ -182,9 +187,9 @@ class PMA_Validator
             $old_track_errors = ini_get('track_errors');
             $old_display_errors = ini_get('display_errors');
             $old_error_reporting = error_reporting(E_ALL);
-            ini_set('html_errors', false);
-            ini_set('track_errors', true);
-            ini_set('display_errors', true);
+            ini_set('html_errors', '0');
+            ini_set('track_errors', '1');
+            ini_set('display_errors', '1');
             set_error_handler(array("PMA_Validator", "nullErrorHandler"));
             ob_start();
         } else {

@@ -1,8 +1,0 @@
-user = root
-#password = YOUR_ROOT_MYSQL_PASSWORD
-hosts = 127.0.0.1
-dbname = zpanel_postfix
-table = domain
-select_field = domain
-where_field = domain
-additional_conditions = and backupmx = '1'

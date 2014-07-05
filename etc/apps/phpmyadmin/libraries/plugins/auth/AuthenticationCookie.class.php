@@ -29,35 +29,17 @@ if (! empty($_REQUEST['target'])) {
 require './libraries/plugins/auth/swekey/swekey.auth.lib.php';
 
 /**
- * Initialization
- * Store the initialization vector because it will be needed for
- * further decryption. I don't think necessary to have one iv
- * per server so I don't put the server number in the cookie name.
- */
-if (function_exists('mcrypt_encrypt')) {
-    if (empty($_COOKIE['pma_mcrypt_iv'])
-        || ! ($iv = base64_decode($_COOKIE['pma_mcrypt_iv'], true))
-    ) {
-        srand((double) microtime() * 1000000);
-        $td = mcrypt_module_open(MCRYPT_BLOWFISH, '', MCRYPT_MODE_CBC, '');
-        if ($td === false) {
-            PMA_fatalError(__('Failed to use Blowfish from mcrypt!'));
-        }
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-        $GLOBALS['PMA_Config']->setCookie(
-            'pma_mcrypt_iv',
-            base64_encode($iv)
-        );
-    }
-}
-
-/**
  * Handles the cookie authentication method
  *
  * @package PhpMyAdmin-Authentication
  */
 class AuthenticationCookie extends AuthenticationPlugin
 {
+    /**
+     * IV for Blowfish.
+     */
+    private $_blowfish_iv = null;
+
     /**
      * Displays authentication form
      *
@@ -463,8 +445,10 @@ class AuthenticationCookie extends AuthenticationPlugin
                 = $_COOKIE['pmaServer-' . $GLOBALS['server']];
         }
 
-        // username
-        if (empty($_COOKIE['pmaUser-' . $GLOBALS['server']])) {
+        // check cookies
+        if (empty($_COOKIE['pmaUser-' . $GLOBALS['server']])
+            || empty($_COOKIE['pma_mcrypt_iv'])
+        ) {
             return false;
         }
 
@@ -482,11 +466,11 @@ class AuthenticationCookie extends AuthenticationPlugin
         $last_access_time = time() - $GLOBALS['cfg']['LoginCookieValidity'];
         if ($_SESSION['last_access_time'] < $last_access_time
         ) {
-            PMA_Util::cacheUnset('is_create_db_priv', true);
-            PMA_Util::cacheUnset('is_process_priv', true);
-            PMA_Util::cacheUnset('is_reload_priv', true);
-            PMA_Util::cacheUnset('db_to_create', true);
-            PMA_Util::cacheUnset('dbs_where_create_table_allowed', true);
+            PMA_Util::cacheUnset('is_create_db_priv', null);
+            PMA_Util::cacheUnset('is_process_priv', null);
+            PMA_Util::cacheUnset('is_reload_priv', null);
+            PMA_Util::cacheUnset('db_to_create', null);
+            PMA_Util::cacheUnset('dbs_where_create_table_allowed', null);
             $GLOBALS['no_activity'] = true;
             $this->authFails();
             if (! defined('TESTSUITE')) {
@@ -496,7 +480,7 @@ class AuthenticationCookie extends AuthenticationPlugin
             }
         }
 
-        // password
+        // check password cookie
         if (empty($_COOKIE['pmaPass-' . $GLOBALS['server']])) {
             return false;
         }
@@ -570,6 +554,8 @@ class AuthenticationCookie extends AuthenticationPlugin
         unset($_SERVER['PHP_AUTH_PW']);
 
         $_SESSION['last_access_time'] = time();
+
+        $this->createBlowfishIV();
 
         // Name and password cookies need to be refreshed each time
         // Duration = one month for username
@@ -725,7 +711,6 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function blowfishEncrypt($data, $secret)
     {
-        global $iv;
         if (! function_exists('mcrypt_encrypt')) {
             /**
              * This library uses mcrypt when available, so
@@ -744,7 +729,7 @@ class AuthenticationCookie extends AuthenticationPlugin
                     $secret,
                     $data,
                     MCRYPT_MODE_CBC,
-                    $iv
+                    $this->_blowfish_iv
                 )
             );
         }
@@ -761,7 +746,9 @@ class AuthenticationCookie extends AuthenticationPlugin
      */
     public function blowfishDecrypt($encdata, $secret)
     {
-        global $iv;
+        if (is_null($this->_blowfish_iv)) {
+            $this->_blowfish_iv = base64_decode($_COOKIE['pma_mcrypt_iv'], true);
+        }
         if (! function_exists('mcrypt_encrypt')) {
             include_once "./libraries/phpseclib/Crypt/AES.php";
             $cipher = new Crypt_AES(CRYPT_AES_MODE_ECB);
@@ -774,10 +761,54 @@ class AuthenticationCookie extends AuthenticationPlugin
                 $secret,
                 $data,
                 MCRYPT_MODE_CBC,
-                $iv
+                $this->_blowfish_iv
             );
             return trim($decrypted);
         }
+    }
+
+    /**
+     * Initialization
+     * Store the initialization vector because it will be needed for
+     * further decryption. I don't think necessary to have one iv
+     * per server so I don't put the server number in the cookie name.
+     *
+     * @return void
+     */
+    public function createBlowfishIV()
+    {
+        if (function_exists('mcrypt_encrypt')) {
+            $td = mcrypt_module_open(MCRYPT_BLOWFISH, '', MCRYPT_MODE_CBC, '');
+            if ($td === false) {
+                PMA_fatalError(__('Failed to use Blowfish from mcrypt!'));
+            }
+            $this->_blowfish_iv = mcrypt_create_iv(
+                mcrypt_enc_get_iv_size($td),
+                MCRYPT_DEV_URANDOM
+            );
+        } else {
+            /*
+             * We don't use this value without mcrypt, but let's set it
+             * so that we don't have to check conditionally for it.
+             */
+            $this->_blowfish_iv = 'dummy';
+        }
+        $GLOBALS['PMA_Config']->setCookie(
+            'pma_mcrypt_iv',
+            base64_encode($this->_blowfish_iv)
+        );
+    }
+
+    /**
+     * Sets Blowfis IV to use
+     *
+     * @param string $vector The IV
+     *
+     * @return void
+     */
+    public function setBlowfishIv($vector)
+    {
+        $this->_blowfish_iv = $vector;
     }
 
     /**

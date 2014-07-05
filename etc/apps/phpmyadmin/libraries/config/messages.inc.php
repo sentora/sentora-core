@@ -175,7 +175,7 @@ $strConfigExport_sql_create_table_name = sprintf(__('Add %s'), 'CREATE TABLE');
 $strConfigExport_sql_create_view_name = sprintf(__('Add %s'), 'CREATE VIEW');
 $strConfigExport_sql_create_trigger_name
     = sprintf(__('Add %s'), 'CREATE TRIGGER');
-$strConfigExport_sql_hex_for_blob_name = __('Use hexadecimal for BLOB');
+$strConfigExport_sql_hex_for_binary_name = __('Use hexadecimal for BINARY & BLOB');
 $strConfigExport_sql_if_not_exists_name = sprintf(__('Add %s'), 'IF NOT EXISTS');
 $strConfigExport_sql_ignore_name = __('Use ignore inserts');
 $strConfigExport_sql_include_comments_name = __('Comments');
@@ -416,11 +416,6 @@ $strConfigMaxRows_name = __('Maximum number of rows to display');
 $strConfigMaxTableList_cmt = __('Users cannot set a higher value');
 $strConfigMaxTableList_desc = __('Maximum number of tables displayed in table list.');
 $strConfigMaxTableList_name = __('Maximum tables');
-$strConfigMcryptDisableWarning_desc = __(
-    'Disable the default warning that is displayed if mcrypt is missing for '
-    . '[kbd]cookie[/kbd] authentication.'
-);
-$strConfigMcryptDisableWarning_name = __('mcrypt warning');
 $strConfigMemoryLimit_desc = __(
     'The number of bytes a script is allowed to allocate, eg. [kbd]32M[/kbd] '
     . '([kbd]0[/kbd] for no limit).'
@@ -615,6 +610,12 @@ $strConfigServers_MaxTableUiprefs_desc = __(
 );
 $strConfigServers_MaxTableUiprefs_name
     = __('Maximal number of table preferences to store');
+$strConfigServers_savedsearches_name = __('QBE saved searches table');
+$strConfigServers_savedsearches_desc = __(
+    'Leave blank for no QBE saved searches support, suggested: '
+    . '[kbd]pma__savedsearches[/kbd].'
+);
+
 $strConfigServers_nopassword_desc = __('Try to connect without password.');
 $strConfigServers_nopassword_name = __('Connect without password');
 $strConfigServers_only_db_desc = __(

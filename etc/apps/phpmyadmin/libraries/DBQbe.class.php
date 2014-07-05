@@ -118,7 +118,7 @@ class PMA_DbQbe
      * Minimum width of a column
      *
      * @access private
-     * @var string
+     * @var int
      */
     private $_form_column_width;
     /**
@@ -791,7 +791,7 @@ class PMA_DbQbe
      * with AND/OR relationship modification options
      *
      * @param integer $row_index       Number of criteria row
-     * @param string  $checked_options If checked
+     * @param array   $checked_options If checked
      *
      * @return string HTML
      */
@@ -1313,7 +1313,7 @@ class PMA_DbQbe
     /**
      * Provides FROM clause for building SQL query
      *
-     * @param string $cfgRelation Relation Settings
+     * @param array $cfgRelation Relation Settings
      *
      * @return string FROM clause
      */
@@ -1362,7 +1362,7 @@ class PMA_DbQbe
     /**
      * Provides the generated SQL query
      *
-     * @param string $cfgRelation Relation Settings
+     * @param array $cfgRelation Relation Settings
      *
      * @return string SQL query
      */
@@ -1386,7 +1386,7 @@ class PMA_DbQbe
     /**
      * Provides the generated QBE form
      *
-     * @param string $cfgRelation Relation Settings
+     * @param array $cfgRelation Relation Settings
      *
      * @return string QBE form
      */

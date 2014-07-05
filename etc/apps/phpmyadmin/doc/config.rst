@@ -85,16 +85,6 @@ Basic settings
 
     You can set this parameter to ``true`` to stop this message from appearing.
 
-.. config:option:: $cfg['McryptDisableWarning']
-
-    :type: boolean
-    :default: false
-
-    Disable the default warning that is displayed if mcrypt is missing for
-    cookie authentication.
-
-    You can set this parameter to ``true`` to stop this message from appearing.
-
 .. config:option:: $cfg['ServerLibraryDifference_DisableWarning']
 
     :type: boolean
@@ -745,6 +735,20 @@ Server connection settings
     * set up :config:option:`$cfg['Servers'][$i]['pmadb']` and the phpMyAdmin configuration storage
     * put the table name in :config:option:`$cfg['Servers'][$i]['navigationhiding']` (e.g.
       ``pma__navigationhiding``)
+
+.. _savedsearches:
+.. config:option:: $cfg['Servers'][$i]['savedsearches']
+
+    :type: string
+    :default: ``''``
+
+    Since release 4.2.0 you can save and load query-by-example searches from the Database > Query panel. 
+
+    To allow the usage of this functionality:
+
+    * set up :config:option:`$cfg['Servers'][$i]['pmadb']` and the phpMyAdmin configuration storage
+    * put the table name in :config:option:`$cfg['Servers'][$i]['savedsearches']` (e.g.
+      ``pma__savedsearches``)
 
 .. _tracking:
 .. config:option:: $cfg['Servers'][$i]['tracking']

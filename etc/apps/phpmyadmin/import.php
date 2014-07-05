@@ -373,7 +373,10 @@ if ($import_file != 'none' && ! $error) {
          * @todo make use of the config's temp dir with fallback to the
          * system's tmp dir
          */
-        $tmp_subdir = sys_get_temp_dir();
+        $tmp_subdir = ini_get('upload_tmp_dir');
+        if (empty($tmp_subdir)) {
+            $tmp_subdir = sys_get_temp_dir();
+        }
 
         if (is_writable($tmp_subdir)) {
 
@@ -621,7 +624,7 @@ if (strlen($sql_query) <= $GLOBALS['cfg']['MaxCharactersInDisplayedSQL']) {
 if (isset($my_die)) {
     foreach ($my_die as $key => $die) {
         PMA_Util::mysqlDie(
-            $die['error'], $die['sql'], '', $err_url, $error
+            $die['error'], $die['sql'], false, $err_url, $error
         );
     }
 }

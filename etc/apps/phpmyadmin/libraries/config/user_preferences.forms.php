@@ -54,7 +54,6 @@ $forms['Features']['Warnings'] = array(
     'ServerLibraryDifference_DisableWarning',
     'PmaNoRelation_DisableWarning',
     'SuhosinDisableWarning',
-    'McryptDisableWarning',
     'ReservedWordDisableWarning');
 // settings from this form are treated specially,
 // see prefs_forms.php and user_preferences.lib.php
@@ -217,7 +216,7 @@ $forms['Export']['Sql'] = array(
         'Export/sql_type',
         'Export/sql_insert_syntax',
         'Export/sql_max_query_size',
-        'Export/sql_hex_for_blob',
+        'Export/sql_hex_for_binary',
         'Export/sql_utc_time');
 $forms['Export']['CodeGen'] = array(
     'Export/codegen_format');
