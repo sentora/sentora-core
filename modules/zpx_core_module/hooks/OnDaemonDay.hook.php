@@ -53,7 +53,7 @@ echo "END getting module version update information!" . fs_filehandler::NewLine(
 $zdbh->bindQuery('SELECT ac_email_vc AS email FROM x_accounts WHERE ac_user_vc = :user', array(':user' => 'zadmin'));
 $zadmin = $zdbh->returnRow();
 
-ws_generic::DoPostRequest('http://api.zpanelcp.com/hello.json', "version=" . sys_versions::ShowZpanelVersion() . "&platform=" . sys_versions::ShowOSPlatformVersion() . "&url=" . ctrl_options::GetSystemOption('zpanel_domain') . "&zemail=" . $zadmin['email']);
+ws_generic::DoPostRequest('http://api.sentora.io/hello.json', "version=" . sys_versions::ShowZpanelVersion() . "&platform=" . sys_versions::ShowOSPlatformVersion() . "&url=" . ctrl_options::GetSystemOption('zpanel_domain') . "mail=" . $zadmin['email']);
 
 return true;
 ?>
