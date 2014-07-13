@@ -1,7 +1,7 @@
 #Sentora
 
 * Version: 1.0.0
-* [Website](http://www.sentora.io/)
+* [Website](http://sentora.io/)
 * [Forums](http://forums.sentora.io/) for comments, discussion and community support.
 * [Bug Tracker](https://github.com/sentora/sentora-core/issues) for any bugs or security related issues.
 
