@@ -362,7 +362,7 @@ class module_controller extends ctrl_module
         $currentuser = ctrl_users::GetUserDetail();
         $maximum = $currentuser['parkeddomainquota'];
         if ($maximum < 0) { //-1 = unlimited
-            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'images/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
             $free = max($maximum - $used, 0);
