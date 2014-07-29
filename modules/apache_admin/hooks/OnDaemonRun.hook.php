@@ -429,14 +429,14 @@ function WriteVhostConfigFile()
         // Reset Apache settings to reflect that config file has been written, until the next change.
         $time = time();
         $vsql = $zdbh->prepare( "UPDATE x_settings
-									SET so_value_tx=:time
-									WHERE so_name_vc='apache_changed'" );
+                                    SET so_value_tx=:time
+                                    WHERE so_name_vc='apache_changed'" );
         $vsql->bindParam( ':time', $time );
         $vsql->execute();
         echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
 
 
-        if ( sys_versions::ShowOSPlatformVersion() == "Windows" ) {
+        if (sys_versions::ShowOSPlatformVersion() == "Windows") {
             $returnValue = system(ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart'));
         } else {
             $command = ctrl_options::GetSystemOption( 'zsudo' );
@@ -454,7 +454,7 @@ function WriteVhostConfigFile()
 
     } else {
         return false;
-    }
+    } 
 }
 
 function CheckErrorDocument( $error )
