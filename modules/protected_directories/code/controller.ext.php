@@ -4,7 +4,7 @@
  * Description of controller
  * @author Kevin
  */
-class module_controller
+class module_controller extends ctrl_module
 {
     
     #########################################################
@@ -957,29 +957,6 @@ class module_controller
     #########################################################
     # General Utility Methods
     #########################################################
-    static function getCSFR_Tag()
-    {
-        return runtime_csfr::Token();
-    }
-
-    static function getModuleDesc()
-    {
-        $message = ui_language::translate( ui_module::GetModuleDescription() );
-        return $message;
-    }
-
-    static function getModuleName()
-    {
-        $module_name = ui_language::translate( ui_module::GetModuleName() );
-        return $module_name;
-    }
-
-    static function getModuleIcon()
-    {
-        global $controller;
-        $module_icon = "modules/" . $controller->GetControllerRequest( 'URL', 'module' ) . "/assets/icon.png";
-        return $module_icon;
-    }
     
     static function getModuleMode()
     {
