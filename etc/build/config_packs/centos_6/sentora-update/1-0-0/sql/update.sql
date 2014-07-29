@@ -45,6 +45,6 @@ CREATE TABLE `x_zvps_htpasswd_user` (
   UNIQUE KEY `x_zvps_htpasswd_user_password` (`x_zvps_htpasswd_user_password`)
 ) DEFAULT CHARSET=utf8;
 
-
-
+/** separate port setting for panel */
+insert  into `x_settings`(`so_name_vc`,`so_cleanname_vc`,`so_value_tx`,`so_defvalues_tx`,`so_desc_tx`,`so_module_vc`,`so_usereditable_en`) values ('sentora_port','Sentora Apache Port','80',NULL,'Sentora Apache panel port','ZPanel Config','true');
 

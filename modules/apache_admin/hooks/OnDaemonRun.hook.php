@@ -91,7 +91,7 @@ function WriteVhostConfigFile()
 
     // ZPanel default virtual host container
     $line .= "# Configuration for ZPanel control panel." . fs_filehandler::NewLine();
-    $line .= "<VirtualHost *:" . ctrl_options::GetSystemOption( 'apache_port' ) . ">" . fs_filehandler::NewLine();
+    $line .= "<VirtualHost *:" . ctrl_options::GetSystemOption( 'sentora_port' ) . ">" . fs_filehandler::NewLine();
     $line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
     $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'zpanel_root' ) . "\"" . fs_filehandler::NewLine();
     $line .= "ServerName " . ctrl_options::GetSystemOption( 'zpanel_domain' ) . "" . fs_filehandler::NewLine();
