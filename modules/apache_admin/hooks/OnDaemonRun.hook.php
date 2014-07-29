@@ -427,7 +427,7 @@ function WriteVhostConfigFile()
 
     // write the vhost config file
     $vhconfigfile = ctrl_options::GetSystemOption( 'apache_vhost' );
-    if ( fs_filehandler::UpdateFile( $vhconfigfile, 0777, $line ) ) {
+    if ( fs_filehandler::UpdateFile( $vhconfigfile, 0777, $line )) {
         // Reset Apache settings to reflect that config file has been written, until the next change.
         $time = time();
         $vsql = $zdbh->prepare( "UPDATE x_settings
@@ -436,28 +436,23 @@ function WriteVhostConfigFile()
         $vsql->bindParam( ':time', $time );
         $vsql->execute();
         echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
-        if ( sys_versions::ShowOSPlatformVersion() == "Windows" ) {
-            $returnValue = ctrl_system::systemCommand(
-                    ctrl_options::GetSystemOption( 'httpd_exe' ), ctrl_options::GetSystemOption( 'apache_restart' )
-            );
-            echo "Apache reload" . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
-        }
-        else {
-            
+
+
+        if (sys_versions::ShowOSPlatformVersion() == "Windows") {
+            system("" . ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart') . "", $returnValue);
+            echo "Apache reload " . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
+        } else {
             $command = ctrl_options::GetSystemOption( 'zsudo' );
             $args = array(
                 "service",
                 ctrl_options::GetSystemOption( 'apache_sn' ),
                 ctrl_options::GetSystemOption( 'apache_restart' )
             );
-            $returnValue = ctrl_system::systemCommand( $command, $args );
-
+            $returnValue = ctrl_system::systemCommand($command, $args);
             echo "Apache reload " . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
         }
-
         
-    }
-    else {
+    } else {
         return false;
     }
 }
