@@ -23,6 +23,8 @@ function __autoload($class_name)
     }
 }
 
+spl_autoload_register('__autoload');
+
 if (isset($_GET['module'])) {
     $CleanModuleName = fs_protector::SanitiseFolderName($_GET['module']);
 
