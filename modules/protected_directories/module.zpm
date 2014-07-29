@@ -1,7 +1,14 @@
-<div class="zmodule_title" id="zmodule_title_<@ ModuleName @>"><img src="<@ ModuleIcon @>" border="0"><@ ModuleName @></div>
-<div class="zmodule_content" id="zmodule_header_<@ ModuleName @>">
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
 
-    <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><p><@ ModuleDesc @></p></div>
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+
+    </div>
 
     <% if ModuleMode %>
         <% loop FlashDebugMessages %><div class="alert alert-info"><& debug &></div><% endloop %>
@@ -226,3 +233,5 @@
             <@ CSFR_Tag @>
         </form>
     <% endif %>
+    
+</div>
