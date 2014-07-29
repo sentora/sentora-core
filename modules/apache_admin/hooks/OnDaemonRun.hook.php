@@ -91,7 +91,7 @@ function WriteVhostConfigFile()
 
     // ZPanel default virtual host container
     $line .= "# Configuration for ZPanel control panel." . fs_filehandler::NewLine();
-    $line .= "<VirtualHost *:" . ctrl_options::GetSystemOption( 'apache_port' ) . ">" . fs_filehandler::NewLine();
+    $line .= "<VirtualHost *:" . ctrl_options::GetSystemOption( 'zpanel_port' ) . ">" . fs_filehandler::NewLine();
     $line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
     $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'zpanel_root' ) . "\"" . fs_filehandler::NewLine();
     $line .= "ServerName " . ctrl_options::GetSystemOption( 'zpanel_domain' ) . "" . fs_filehandler::NewLine();
@@ -439,7 +439,7 @@ function WriteVhostConfigFile()
 
 
         if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-            $returnValue = system(ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart'));
+            system("" . ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart') . "", $returnValue);
         } else {
             $command = ctrl_options::GetSystemOption( 'zsudo' );
             $args = array(
