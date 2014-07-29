@@ -74,12 +74,12 @@ function WriteVhostConfigFile()
     }
     $customPortList = array_unique($customPorts);
 
-    /*
-     * ##############################################################################################################
+/*
+     * ###########################################################################​###################################
      * #
      * # Default Virtual Host Container
      * #
-     * ##############################################################################################################
+     * ###########################################################################​###################################
      */
 
     $line = "################################################################" . fs_filehandler::NewLine();
@@ -95,14 +95,12 @@ function WriteVhostConfigFile()
     $line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
     $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'zpanel_root' ) . "\"" . fs_filehandler::NewLine();
     $line .= "ServerName " . ctrl_options::GetSystemOption( 'zpanel_domain' ) . "" . fs_filehandler::NewLine();
-    // disable *.zpaneldomain as Zpanel host is already default
-    // $line .= "ServerAlias *." . ctrl_options::GetSystemOption( 'zpanel_domain' ) . "" . fs_filehandler::NewLine();
     $line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
     $line .= "<Directory \"" . ctrl_options::GetSystemOption( 'zpanel_root' ) . "\">" . fs_filehandler::NewLine();
-    $line .= "Options FollowSymLinks" . fs_filehandler::NewLine();
-    $line .= "	AllowOverride All" . fs_filehandler::NewLine();
-    $line .= "	Order allow,deny" . fs_filehandler::NewLine();
-    $line .= "	Allow from all" . fs_filehandler::NewLine();
+    $line .= "Options FollowSymLinks -Indexes" . fs_filehandler::NewLine();
+    $line .= "    AllowOverride All" . fs_filehandler::NewLine();
+    $line .= "    Order allow,deny" . fs_filehandler::NewLine();
+    $line .= "    Allow from all" . fs_filehandler::NewLine();
     $line .= "</Directory>" . fs_filehandler::NewLine();
     $line .= "" . fs_filehandler::NewLine();
     $line .= "# Custom settings are loaded below this line (if any exist)" . fs_filehandler::NewLine();
@@ -427,7 +425,7 @@ function WriteVhostConfigFile()
 
     // write the vhost config file
     $vhconfigfile = ctrl_options::GetSystemOption( 'apache_vhost' );
-    if ( fs_filehandler::UpdateFile( $vhconfigfile, 0777, $line )) {
+    if ( fs_filehandler::UpdateFile( $vhconfigfile, 0777, $line ) ) {
         // Reset Apache settings to reflect that config file has been written, until the next change.
         $time = time();
         $vsql = $zdbh->prepare( "UPDATE x_settings
@@ -438,7 +436,7 @@ function WriteVhostConfigFile()
         echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
 
 
-        if (sys_versions::ShowOSPlatformVersion() == "Windows") {
+        if ( sys_versions::ShowOSPlatformVersion() == "Windows" ) {
             $returnValue = system(ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart'));
         } else {
             $command = ctrl_options::GetSystemOption( 'zsudo' );
@@ -447,13 +445,13 @@ function WriteVhostConfigFile()
                 ctrl_options::GetSystemOption( 'apache_sn' ),
                 ctrl_options::GetSystemOption( 'apache_restart' )
             );
-            $returnValue = ctrl_system::systemCommand($command, $args);
+            $returnValue = ctrl_system::systemCommand( $command, $args );
         }
-        
+
 	if($returnValue){
         	echo "Apache reloaded successfully! " .fs_filehandler::NewLine();
-	}
-        
+        }
+
     } else {
         return false;
     }
