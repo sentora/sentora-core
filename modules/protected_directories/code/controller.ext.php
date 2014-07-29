@@ -957,10 +957,6 @@ class module_controller extends ctrl_module
     #########################################################
     # General Utility Methods
     #########################################################
-    static function getCSFR_Tag()
-    {
-        return runtime_csfr::Token();
-    }
     
     static function getModuleMode()
     {
