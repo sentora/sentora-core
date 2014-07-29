@@ -425,7 +425,7 @@ function WriteVhostConfigFile()
 
     // write the vhost config file
     $vhconfigfile = ctrl_options::GetSystemOption( 'apache_vhost' );
-    if ( fs_filehandler::UpdateFile( $vhconfigfile, 0777, $line ) ) {
+    if ( fs_filehandler::UpdateFile( $vhconfigfile, 0777, $line )) {
         // Reset Apache settings to reflect that config file has been written, until the next change.
         $time = time();
         $vsql = $zdbh->prepare( "UPDATE x_settings
@@ -434,10 +434,11 @@ function WriteVhostConfigFile()
         $vsql->bindParam( ':time', $time );
         $vsql->execute();
         echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
-
+        
+        $returnValue = 0;
 
         if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-            $returnValue = system(ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart'));
+            system("" . ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart') . "", $returnValue);
         } else {
             $command = ctrl_options::GetSystemOption( 'zsudo' );
             $args = array(
@@ -447,14 +448,12 @@ function WriteVhostConfigFile()
             );
             $returnValue = ctrl_system::systemCommand( $command, $args );
         }
-
-	if($returnValue){
-        	echo "Apache reloaded successfully! " .fs_filehandler::NewLine();
-        }
+        
+        echo "Apache reload " . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
 
     } else {
         return false;
-    } 
+    }
 }
 
 function CheckErrorDocument( $error )
