@@ -104,7 +104,7 @@ a:hover, a:active {
 .prettyradio a {
     width: 30px;
     height: 30px;
-    background: url(../img/miscellaneous/prettyCheckable-blue.png) top left no-repeat;
+    background: url(../img/misc/prettyCheckable-blue.png) top left no-repeat;
     display: block;
     float: left;
     cursor: pointer;
@@ -112,7 +112,7 @@ a:hover, a:active {
 }
 
 .prettycheckbox.green a,
-.prettyradio.green a {background-image: url(../img/miscellaneous/prettyCheckable-green.png);}
+.prettyradio.green a {background-image: url(../img/misc/prettyCheckable-green.png);}
 
 .prettyradio a {background-position: 0 -120px;}
 
