@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+	<name>Protected Directories</name>
+	<version>200</version>
+	<defaultcat>Advanced</defaultcat>
+	<desc>Password protect your web applications and directories.</desc>
+	<authorname>zVPS.uk</authorname>
+	<authoremail>support@zvps.uk</authoremail>
+	<authorurl>http://www.zvps.uk/</authorurl>
+	<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+</module>
