@@ -38,7 +38,7 @@ if (isset($_POST['inForgotPassword'])) {
     runtime_csfr::Protect();
     $randomkey = runtime_randomstring::randomHash();
     $forgotPass = runtime_xss::xssClean($_POST['inForgotPassword']);
-    $sth = $zdbh->prepare("SELECT ac_id_pk, ac_user_vc, ac_email_vc  FROM x_accounts WHERE ac_email_vc = :forgotPass");
+    $sth = $zdbh->prepare("SELECT ac_id_pk, ac_user_vc, ac_email_vc FROM x_accounts WHERE ac_email_vc = :forgotPass AND ac_deleted_ts IS NULL");
     $sth->bindParam(':forgotPass', $forgotPass);
     $sth->execute();
     $rows = $sth->fetchAll();
@@ -70,7 +70,7 @@ If you wish to proceed with the password reset on your account, please use the l
 
 if (isset($_POST['inConfEmail'])) {
     runtime_csfr::Protect();
-    $sql = $zdbh->prepare("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = :email AND ac_resethash_tx = :resetkey AND ac_resethash_tx IS NOT NULL");
+    $sql = $zdbh->prepare("SELECT ac_id_pk FROM x_accounts WHERE ac_email_vc = :email AND ac_resethash_tx = :resetkey AND ac_resethash_tx IS NOT NULL AND ac_deleted_ts IS NULL");
     $sql->bindParam(':email', $_POST['inConfEmail']);
     $sql->bindParam(':resetkey', $_GET['resetkey']);
     $sql->execute();
@@ -119,17 +119,17 @@ if (isset($_POST['inUsername'])) {
 }
 
 if (isset($_COOKIE['zUser'])) {
-    
+
     if (isset($_COOKIE['zSec'])) {
-        if($_COOKIE['zSec'] == false) {
+        if ($_COOKIE['zSec'] == false) {
             $secure = false;
         } else {
             $secure = true;
         }
-    }else{
+    } else {
         $secure = true;
     }
-    
+
     ctrl_auth::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true, $secure);
 }
 
