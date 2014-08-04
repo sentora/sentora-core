@@ -269,7 +269,7 @@ DROP TABLE IF EXISTS `x_ftpaccounts`;
 CREATE TABLE `x_ftpaccounts` (
   `ft_id_pk` int(6) unsigned NOT NULL AUTO_INCREMENT,
   `ft_acc_fk` int(6) DEFAULT NULL,
-  `ft_user_vc` varchar(20) DEFAULT NULL,
+  `ft_user_vc` varchar(50) DEFAULT NULL,
   `ft_directory_vc` varchar(255) DEFAULT NULL,
   `ft_access_vc` varchar(20) DEFAULT NULL,
   `ft_password_vc` varchar(50) DEFAULT NULL,
