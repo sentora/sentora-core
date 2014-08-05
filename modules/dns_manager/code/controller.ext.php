@@ -350,6 +350,7 @@ class module_controller extends ctrl_module
         $line .= $zone_message;
         $line .= "</td></tr></table>";
         $line .= '</div>';
+        $line .= '</div>';
 
 
         $line .='
