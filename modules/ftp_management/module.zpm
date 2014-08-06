@@ -102,7 +102,7 @@
                         <table class="table table-striped">
                             <tr>
                                 <th nowrap="nowrap"><: Username :>:</th>
-                                <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value=""/></td>
+                                <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value="" maxlength="32"/></td>
                             </tr>
                             <tr>
                                 <th><: Password :>:</th>
