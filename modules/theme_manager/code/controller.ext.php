@@ -33,6 +33,11 @@ class module_controller extends ctrl_module
     static function ExecuteUpdateTheme($uid, $theme)
     {
         global $zdbh;
+
+        /* Set CSS back to default */
+        self::ExecuteUpdateCSS($uid, 'default');
+
+        /* Set new theme */
         $sql = $zdbh->prepare("
             UPDATE x_accounts
             SET ac_usertheme_vc = :theme
