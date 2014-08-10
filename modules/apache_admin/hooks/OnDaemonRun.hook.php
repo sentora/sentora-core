@@ -434,11 +434,10 @@ function WriteVhostConfigFile()
         $vsql->bindParam( ':time', $time );
         $vsql->execute();
         echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
-        
-        $returnValue = 0;
 
         if (sys_versions::ShowOSPlatformVersion() == "Windows") {
             system("" . ctrl_options::GetSystemOption('httpd_exe') . " " . ctrl_options::GetSystemOption('apache_restart') . "", $returnValue);
+            echo "Apache reload " . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
         } else {
             $command = ctrl_options::GetSystemOption( 'zsudo' );
             $args = array(
@@ -447,10 +446,9 @@ function WriteVhostConfigFile()
                 ctrl_options::GetSystemOption( 'apache_restart' )
             );
             $returnValue = ctrl_system::systemCommand( $command, $args );
+            echo "Apache reload " . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
         }
         
-        echo "Apache reload " . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
-
     } else {
         return false;
     }
