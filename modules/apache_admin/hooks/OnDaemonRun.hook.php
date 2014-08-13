@@ -66,7 +66,7 @@ function WriteVhostConfigFile()
         $serveremail = "postmaster@" . ctrl_options::GetSystemOption( 'zpanel_domain' );
     }
 
-    $customPort = array( );
+    $customPorts = array();
     $portQuery  = $zdbh->prepare( "SELECT vh_custom_port_in, vh_deleted_ts FROM zpanel_core.x_vhosts WHERE vh_custom_port_in IS NOT NULL AND vh_deleted_ts IS NULL" );
     $portQuery->execute();
     while ( $rowport    = $portQuery->fetch() ) {
@@ -89,7 +89,17 @@ function WriteVhostConfigFile()
     $line .= "################################################################" . fs_filehandler::NewLine();
     $line .= "" . fs_filehandler::NewLine();
 
-    // ZPanel default virtual host container
+    /**
+     * NameVirtualHost is still needed for Apache 2.2
+     * @todo conditionally run this for apache version > 2.2
+     * warning apache verion not available in php functions when running over cli
+     */
+    $line .= "NameVirtualHost *:" . ctrl_options::GetSystemOption( 'apache_port' ) . "" . fs_filehandler::NewLine();
+    foreach ( $customPortList as $port ) {
+        $line .= "NameVirtualHost *:" . $port . "" . fs_filehandler::NewLine();
+    }
+
+    $line .= "" . fs_filehandler::NewLine();
     $line .= "# Configuration for ZPanel control panel." . fs_filehandler::NewLine();
     $line .= "<VirtualHost *:" . ctrl_options::GetSystemOption( 'sentora_port' ) . ">" . fs_filehandler::NewLine();
     $line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
