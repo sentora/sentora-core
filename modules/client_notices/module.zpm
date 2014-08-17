@@ -6,7 +6,7 @@
             <@ ModuleName @>
         </div>
 
-        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><: This module enables you to set a notice banner that will appear when any of your clients access ZPanel.  :></p></div>
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><: This module enables you to set a notice banner that will appear when any of your clients access Sentora.  :></p></div>
 
     </div>
 

@@ -341,8 +341,8 @@ $js_messages['strObjectsCreated'] = __('%d object(s) created.');
 $js_messages['strCellEditHint'] = __('Press escape to cancel editing.');
 $js_messages['strSaveCellWarning'] = __('You have edited some data and they have not been saved. Are you sure you want to leave this page before saving the data?');
 $js_messages['strColOrderHint'] = __('Drag to reorder.');
-$js_messages['strSortHint'] = __('Click to sort.');
-$js_messages['strRemColHint'] = __('Hold shift and click to remove column from ORDER BY clause.');
+$js_messages['strSortHint'] = __('Click to sort results by this column.');
+$js_messages['strMultiSortHint'] = __('Shift+Click to add this column to ORDER BY clause or to toggle ASC/DESC.<br />- Control+Click to remove column from ORDER BY clause');
 $js_messages['strColMarkHint'] = __('Click to mark/unmark.');
 $js_messages['strColNameCopyHint'] = __('Double-click to copy column name.');
 $js_messages['strColVisibHint'] = __(
@@ -362,7 +362,7 @@ case 'click':
 default:
     break;
 }
-$js_messages['strGoToLink'] = __('Go to link.');
+$js_messages['strGoToLink'] = __('Go to link:');
 $js_messages['strColNameCopyTitle'] = __('Copy column name.');
 $js_messages['strColNameCopyText'] = __('Right-click the column name to copy it to your clipboard.');
 $js_messages['strShowDataRowLink'] = __('Show data row(s).');

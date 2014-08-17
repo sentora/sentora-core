@@ -1087,16 +1087,13 @@ function PMA_findRealEndOfRows($db, $table)
  *
  * @param String $db            the current database
  * @param String $table         the current table
- * @param String $display_field display field
  *
  * @return void
  */
-function PMA_getRelationalValues($db, $table, $display_field)
+function PMA_getRelationalValues($db, $table)
 {
     $column = $_REQUEST['column'];
     if ($_SESSION['tmpval']['relational_display'] == 'D'
-        && isset($display_field)
-        && strlen($display_field)
         && isset($_REQUEST['relation_key_or_display_column'])
         && $_REQUEST['relation_key_or_display_column']
     ) {
@@ -1424,11 +1421,30 @@ function PMA_countQueryResults(
         // However, do not count again if we did it previously
         // due to $find_real_end == true
         if ($justBrowsing) {
+            // Get row count (is approximate for InnoDB)
             $unlim_num_rows = PMA_Table::countRecords(
                 $db,
                 $table,
-                true
+                false
             );
+            /**
+             * @todo Can we know at this point that this is InnoDB, 
+             *       (in this case there would be no need for getting
+             *       an exact count)?
+             */
+            if ($unlim_num_rows < $GLOBALS['cfg']['MaxExactCount']) {
+                // Get the exact count if approximate count
+                // is less than MaxExactCount
+                /**
+                 * @todo In countRecords(), MaxExactCount is also verified,
+                 *       so can we avoid checking it twice? 
+                 */
+                $unlim_num_rows = PMA_Table::countRecords(
+                    $db,
+                    $table,
+                    true
+                );
+            }
 
         } else {
             // add select expression after the SQL_CALC_FOUND_ROWS
