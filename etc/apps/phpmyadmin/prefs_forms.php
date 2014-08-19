@@ -18,8 +18,7 @@ require_once 'libraries/config/Form.class.php';
 require_once 'libraries/config/FormDisplay.class.php';
 require 'libraries/config/user_preferences.forms.php';
 
-$cf = new ConfigFile($GLOBALS['PMA_Config']->base_settings);
-PMA_userprefsPageInit($cf);
+PMA_userprefsPageInit();
 
 // handle form processing
 
@@ -29,7 +28,7 @@ if (! isset($forms[$form_param])) {
     $form_param = array_shift($forms_keys);
 }
 
-$form_display = new FormDisplay($cf);
+$form_display = new FormDisplay();
 foreach ($forms[$form_param] as $form_name => $form) {
     // skip Developer form if no setting is available
     if ($form_name == 'Developer' && !$GLOBALS['cfg']['UserprefsDeveloperTab']) {
@@ -45,7 +44,7 @@ if (isset($_POST['revert'])) {
     $url_params = array('form' => $form_param);
     PMA_sendHeaderLocation(
         $cfg['PmaAbsoluteUri'] . 'prefs_forms.php'
-        . PMA_URL_getCommon($url_params, '&')
+        . PMA_generate_common_url($url_params, '&')
     );
     exit;
 }
@@ -53,7 +52,7 @@ if (isset($_POST['revert'])) {
 $error = null;
 if ($form_display->process(false) && !$form_display->hasErrors()) {
     // save settings
-    $result = PMA_saveUserprefs($cf->getConfigArray());
+    $result = PMA_saveUserprefs(ConfigFile::getInstance()->getConfigArray());
     if ($result === true) {
         // reload config
         $GLOBALS['PMA_Config']->loadUserPreferences();
@@ -83,7 +82,7 @@ if ($form_display->hasErrors()) {
     // form has errors
     ?>
     <div class="error config-form">
-        <b><?php echo __('Cannot save settings, submitted form contains errors!') ?></b>
+        <b><?php echo __('Cannot save settings, submitted form contains errors') ?></b>
         <?php $form_display->displayErrors(); ?>
     </div>
     <?php

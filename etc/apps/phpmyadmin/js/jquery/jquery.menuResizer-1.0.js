@@ -51,7 +51,7 @@
                     .removeClass('tabactive');
                 }
             });
-        $container.children('.clearfloat').before($submenu);
+        $container.append($submenu);
         setTimeout(function () {
             self.resize();
         }, 4);

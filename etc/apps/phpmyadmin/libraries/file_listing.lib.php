@@ -19,24 +19,28 @@ if (! defined('PHPMYADMIN')) {
  */
 function PMA_getDirContent($dir, $expression = '')
 {
-    if (!file_exists($dir) || !($handle = @opendir($dir))) {
+    if (file_exists($dir) && $handle = @opendir($dir)) {
+        $result = array();
+        if (substr($dir, -1) != '/') {
+            $dir .= '/';
+        }
+        while ($file = @readdir($handle)) {
+            // for PHP < 5.2.4, is_file() gives a warning when using open_basedir
+            // and verifying '..' or '.'
+            if ('.' != $file
+                && '..' != $file
+                && is_file($dir . $file)
+                && ($expression == '' || preg_match($expression, $file))
+            ) {
+                $result[] = $file;
+            }
+        }
+        @closedir($handle);
+        asort($result);
+        return $result;
+    } else {
         return false;
     }
-
-    $result = array();
-    if (substr($dir, -1) != '/') {
-        $dir .= '/';
-    }
-    while ($file = @readdir($handle)) {
-        if (is_file($dir . $file)
-            && ($expression == '' || preg_match($expression, $file))
-        ) {
-            $result[] = $file;
-        }
-    }
-    @closedir($handle);
-    asort($result);
-    return $result;
 }
 
 /**
@@ -56,7 +60,7 @@ function PMA_getFileSelectOptions($dir, $extensions = '', $active = '')
     }
     $result = '';
     foreach ($list as $val) {
-        $result .= '<option value="' . htmlspecialchars($val) . '"';
+        $result .= '<option value="'. htmlspecialchars($val) . '"';
         if ($val == $active) {
             $result .= ' selected="selected"';
         }
@@ -68,7 +72,7 @@ function PMA_getFileSelectOptions($dir, $extensions = '', $active = '')
 /**
  * Get currently supported decompressions.
  *
- * @return string separated list of extensions usable in PMA_getDirContent
+ * @return string | separated list of extensions usable in PMA_getDirContent
  */
 function PMA_supportedDecompressions()
 {

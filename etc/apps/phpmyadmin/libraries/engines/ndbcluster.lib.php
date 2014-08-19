@@ -9,19 +9,23 @@ if (! defined('PHPMYADMIN')) {
     exit;
 }
 
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
 /**
  * The NDBCLUSTER storage engine
  *
  * @package PhpMyAdmin-Engines
  */
-class PMA_StorageEngine_Ndbcluster extends PMA_StorageEngine
+class PMA_StorageEngine_ndbcluster extends PMA_StorageEngine
 {
     /**
      * Returns array with variable names realted to NDBCLUSTER storage engine
      *
      * @return array   variable names
      */
-    public function getVariables()
+    function getVariables()
     {
         return array(
             'ndb_connectstring' => array(
@@ -35,7 +39,7 @@ class PMA_StorageEngine_Ndbcluster extends PMA_StorageEngine
      *
      * @return string  SQL query LIKE pattern
      */
-    public function getVariablesLikePattern()
+    function getVariablesLikePattern()
     {
         return 'ndb\\_%';
     }
@@ -46,7 +50,7 @@ class PMA_StorageEngine_Ndbcluster extends PMA_StorageEngine
      *
      * @return string  mysql helppage filename
      */
-    public function getMysqlHelpPage()
+    function getMysqlHelpPage()
     {
         return 'ndbcluster';
     }

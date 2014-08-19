@@ -59,25 +59,36 @@ class PMA_Error_Handler
                 $_SESSION['errors'] = array();
             }
 
-            // remember only not displayed errors
-            foreach ($this->errors as $key => $error) {
-                /**
-                 * We don't want to store all errors here as it would
-                 * explode user session.
-                 */
-                if (count($_SESSION['errors']) >= 10) {
-                    $error = new PMA_Error(
-                        0,
-                        __('Too many error messages, some are not displayed.'),
-                        __FILE__,
-                        __LINE__
-                    );
-                    $_SESSION['errors'][$error->getHash()] = $error;
-                    break;
-                } else if (($error instanceof PMA_Error)
-                    && ! $error->isDisplayed()
-                ) {
-                    $_SESSION['errors'][$key] = $error;
+            if (isset($GLOBALS['cfg']['Error_Handler'])
+                && $GLOBALS['cfg']['Error_Handler']['gather']
+            ) {
+                // remember all errors
+                $_SESSION['errors'] = array_merge(
+                    $_SESSION['errors'],
+                    $this->errors
+                );
+            } else {
+                // remember only not displayed errors
+                foreach ($this->errors as $key => $error) {
+                    /**
+                     * We don't want to store all errors here as it would
+                     * explode user session. In case  you want them all set
+                     * $GLOBALS['cfg']['Error_Handler']['gather'] to true
+                     */
+                    if (count($_SESSION['errors']) >= 20) {
+                        $error = new PMA_Error(
+                            0,
+                            __('Too many error messages, some are not displayed.'),
+                            __FILE__,
+                            __LINE__
+                        );
+                        $_SESSION['errors'][$error->getHash()] = $error;
+                        break;
+                    } else if (($error instanceof PMA_Error)
+                        && ! $error->isDisplayed()
+                    ) {
+                        $_SESSION['errors'][$key] = $error;
+                    }
                 }
             }
         }
@@ -95,7 +106,7 @@ class PMA_Error_Handler
     }
 
     /**
-     * Error handler - called when errors are triggered/occurred
+     * Error handler - called when errors are triggered/occured
      *
      * This calls the addError() function, escaping the error string
      *
@@ -165,7 +176,7 @@ class PMA_Error_Handler
         case E_CORE_ERROR:
         case E_COMPILE_ERROR:
         default:
-            // FATAL error, display it and exit
+            // FATAL error, dislay it and exit
             $this->dispFatalError($error);
             exit;
             break;
@@ -220,6 +231,20 @@ class PMA_Error_Handler
         $error->display();
         $this->dispPageEnd();
         exit;
+    }
+
+    /**
+     * display the whole error page with all errors
+     *
+     * @return void
+     */
+    public function dispErrorPage()
+    {
+        if (! headers_sent()) {
+            $this->dispPageStart();
+        }
+        $this->dispAllErrors();
+        $this->dispPageEnd();
     }
 
     /**
@@ -278,9 +303,21 @@ class PMA_Error_Handler
     }
 
     /**
+     * display all errors regardless already displayed or user errors
+     *
+     * @return void
+     */
+    public function dispAllErrors()
+    {
+        foreach ($this->getErrors() as $error) {
+            $error->display();
+        }
+    }
+
+    /**
      * renders errors not displayed
      *
-     * @return string
+     * @return void
      */
     public function getDispErrors()
     {
@@ -367,7 +404,7 @@ class PMA_Error_Handler
     }
 
     /**
-     * whether use errors occurred or not
+     * whether use errors occured or not
      *
      * @return boolean
      */
@@ -377,7 +414,7 @@ class PMA_Error_Handler
     }
 
     /**
-     * whether errors occurred or not
+     * whether errors occured or not
      *
      * @return boolean
      */

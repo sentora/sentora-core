@@ -10,7 +10,7 @@ if (! defined('PHPMYADMIN')) {
 }
 
 /**
-  * Get HTML for the Change password dialog
+  * Get HTML for the Change password dialog 
   *
   * @param string $username username
   * @param string $hostname hostname
@@ -29,16 +29,12 @@ function PMA_getHtmlForChangePassword($username, $hostname)
                  ? 'onpropertychange'
                  : 'onchange';
 
-    $is_privileges = basename($_SERVER['SCRIPT_NAME']) === 'server_privileges.php';
-
     $html = '<form method="post" id="change_password_form" '
         . 'action="' . $GLOBALS['PMA_PHP_SELF'] . '" '
-        . 'name="chgPassword" '
-        . 'class="ajax'
-        . ($is_privileges ? ' submenu-item' : '')
-        . '">';
+        . 'name="chgPassword" ' 
+        . 'class="ajax" >';
 
-    $html .= PMA_URL_getHiddenInputs();
+    $html .= PMA_generate_common_hidden_inputs();
 
     if (strpos($GLOBALS['PMA_PHP_SELF'], 'server_privileges') !== false) {
         $html .= '<input type="hidden" name="username" '
@@ -47,9 +43,7 @@ function PMA_getHtmlForChangePassword($username, $hostname)
             . 'value="' . htmlspecialchars($hostname) . '" />';
     }
     $html .= '<fieldset id="fieldset_change_password">'
-        . '<legend'
-        . ($is_privileges ? ' data-submenu-label="' . __('Change password') . '"' : '')
-        . '>' . __('Change password') . '</legend>'
+        . '<legend>' . __('Change password') . '</legend>'
         . '<table class="data noclick">'
         . '<tr class="odd">'
         . '<td colspan="2">'
@@ -64,20 +58,20 @@ function PMA_getHtmlForChangePassword($username, $hostname)
         . '<input type="radio" name="nopass" value="0" id="nopass_0" '
         . 'onclick="document.getElementById(\'text_pma_pw\').focus();" '
         . 'checked="checked " />'
-        . '<label for="nopass_0">' . __('Password:') . '&nbsp;</label>'
+        . '<label for="nopass_0">' . __('Password') . ':&nbsp;</label>'
         . '</td>'
         . '<td>'
         . '<input type="password" name="pma_pw" id="text_pma_pw" size="10" '
-        . 'class="textfield"'
+        . 'class="textfield"' 
         . $chg_evt_handler . '="nopass[1].checked = true" />'
-        . '&nbsp;&nbsp;' . __('Re-type:') . '&nbsp;'
+        . '&nbsp;&nbsp;' . __('Re-type') . ':&nbsp;'
         . '<input type="password" name="pma_pw2" id="text_pma_pw2" size="10" '
         . 'class="textfield"'
         . $chg_evt_handler . '="nopass[1].checked = true" />'
         . '</td>'
         . '</tr>'
         . '<tr class="vmiddle">'
-        . '<td>' . __('Password Hashing:')
+        . '<td>' . __('Password Hashing') . ':'
         . '</td>'
         . '<td>'
         . '<input type="radio" name="pw_hash" id="radio_pw_hash_new" '
@@ -90,7 +84,7 @@ function PMA_getHtmlForChangePassword($username, $hostname)
         . '<td>'
         . '<input type="radio" name="pw_hash" id="radio_pw_hash_old" '
         . 'value="old" />'
-        . '<label for="radio_pw_hash_old">' . __('MySQL 4.0 compatible')
+        . '<label for="radio_pw_hash_old">' . __('MySQL 4.0 compatible') 
         . '</label>'
         . '</td>'
         . '</tr>'

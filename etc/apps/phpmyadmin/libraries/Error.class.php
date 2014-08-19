@@ -67,14 +67,14 @@ class PMA_Error extends PMA_Message
     );
 
     /**
-     * The file in which the error occurred
+     * The file in which the error occured
      *
      * @var string
      */
     protected $file = '';
 
     /**
-     * The line in which the error occurred
+     * The line in which the error occured
      *
      * @var integer
      */
@@ -123,12 +123,6 @@ class PMA_Error extends PMA_Message
      * @param array $backtrace backtrace
      *
      * @return void
-     *
-     * @todo This function should store only processed backtrace as full
-     *       backtrace requires too much memory (especially with Response
-     *       object included). It could probably store only printable
-     *       representation as created by getBacktraceDisplay or some
-     *       intermediate form.
      */
     public function setBacktrace($backtrace)
     {
@@ -258,7 +252,7 @@ class PMA_Error extends PMA_Message
     /**
      * Get HTML backtrace
      *
-     * @return string
+     * @return void
      */
     public function getBacktraceDisplay()
     {
@@ -266,8 +260,7 @@ class PMA_Error extends PMA_Message
 
         foreach ($this->getBacktrace() as $step) {
             if (isset($step['file']) && isset($step['line'])) {
-                $retval .= PMA_Error::relPath($step['file'])
-                    . '#' . $step['line'] . ': ';
+                $retval .= PMA_Error::relPath($step['file']) . '#' . $step['line'] . ': ';
             }
             if (isset($step['class'])) {
                 $retval .= $step['class'] . $step['type'];
@@ -297,8 +290,8 @@ class PMA_Error extends PMA_Message
      * if $function is one of include/require
      * the $arg is converted to a relative path
      *
-     * @param string $arg      argument to process
-     * @param string $function function name
+     * @param string $arg
+     * @param string $function
      *
      * @return string
      */
@@ -316,8 +309,8 @@ class PMA_Error extends PMA_Message
             'mysql_pconnect',
             'mysqli_connect',
             'mysqli_real_connect',
-            'connect',
-            '_realConnect'
+            'PMA_DBI_connect',
+            'PMA_DBI_real_connect',
         );
 
         if (in_array($function, $include_functions)) {
@@ -327,8 +320,7 @@ class PMA_Error extends PMA_Message
         ) {
             $retval .= getType($arg) . ' ********';
         } elseif (is_scalar($arg)) {
-            $retval .= getType($arg) . ' '
-                . htmlspecialchars(var_export($arg, true));
+            $retval .= getType($arg) . ' ' . htmlspecialchars($arg);
         } else {
             $retval .= getType($arg);
         }
@@ -376,8 +368,8 @@ class PMA_Error extends PMA_Message
     /**
      * return short relative path to phpMyAdmin basedir
      *
-     * prevent path disclosure in error message,
-     * and make users feel safe to submit error reports
+     * prevent path disclusore in error message,
+     * and make users feel save to submit error reports
      *
      * @param string $dest path to be shorten
      *
@@ -389,31 +381,31 @@ class PMA_Error extends PMA_Message
         $dest = realpath($dest);
 
         if (substr(PHP_OS, 0, 3) == 'WIN') {
-            $separator = '\\';
+            $path_separator = '\\';
         } else {
-            $separator = '/';
+            $path_separator = '/';
         }
 
         $Ahere = explode(
-            $separator,
-            realpath(__DIR__ . $separator . '..')
+            $path_separator,
+            realpath(dirname(__FILE__) . $path_separator . '..')
         );
-        $Adest = explode($separator, $dest);
+        $Adest = explode($path_separator, $dest);
 
         $result = '.';
         // && count ($Adest)>0 && count($Ahere)>0 )
-        while (implode($separator, $Adest) != implode($separator, $Ahere)) {
+        while (implode($path_separator, $Adest) != implode($path_separator, $Ahere)) {
             if (count($Ahere) > count($Adest)) {
                 array_pop($Ahere);
-                $result .= $separator . '..';
+                $result .= $path_separator . '..';
             } else {
                 array_pop($Adest);
             }
         }
-        $path = $result . str_replace(implode($separator, $Adest), '', $dest);
+        $path = $result . str_replace(implode($path_separator, $Adest), '', $dest);
         return str_replace(
-            $separator . $separator,
-            $separator,
+            $path_separator . $path_separator,
+            $path_separator,
             $path
         );
     }

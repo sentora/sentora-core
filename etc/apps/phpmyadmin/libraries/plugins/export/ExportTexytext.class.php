@@ -188,10 +188,8 @@ class ExportTexytext extends ExportPlugin
         }
 
         // Gets the data from the database
-        $result      = $GLOBALS['dbi']->query(
-            $sql_query, null, PMA_DatabaseInterface::QUERY_UNBUFFERED
-        );
-        $fields_cnt  = $GLOBALS['dbi']->numFields($result);
+        $result      = PMA_DBI_query($sql_query, null, PMA_DBI_QUERY_UNBUFFERED);
+        $fields_cnt  = PMA_DBI_num_fields($result);
 
         // If required, get fields name at the first line
         if (isset($GLOBALS[$what . '_columns'])) {
@@ -199,7 +197,7 @@ class ExportTexytext extends ExportPlugin
             for ($i = 0; $i < $fields_cnt; $i++) {
                 $text_output .= '|'
                     . htmlspecialchars(
-                        stripslashes($GLOBALS['dbi']->fieldName($result, $i))
+                        stripslashes(PMA_DBI_field_name($result, $i))
                     );
             } // end for
             $text_output .= "\n|------\n";
@@ -209,7 +207,7 @@ class ExportTexytext extends ExportPlugin
         } // end if
 
         // Format the data
-        while ($row = $GLOBALS['dbi']->fetchRow($result)) {
+        while ($row = PMA_DBI_fetch_row($result)) {
             $text_output = '';
             for ($j = 0; $j < $fields_cnt; $j++) {
                 if (! isset($row[$j]) || is_null($row[$j])) {
@@ -229,7 +227,7 @@ class ExportTexytext extends ExportPlugin
                 return false;
             }
         } // end while
-        $GLOBALS['dbi']->freeResult($result);
+        PMA_DBI_free_result($result);
 
         return true;
     }
@@ -251,7 +249,7 @@ class ExportTexytext extends ExportPlugin
          * Get the unique keys in the table
          */
         $unique_keys = array();
-        $keys = $GLOBALS['dbi']->getTableIndexes($db, $view);
+        $keys = PMA_DBI_get_table_indexes($db, $view);
         foreach ($keys as $key) {
             if ($key['Non_unique'] == 0) {
                 $unique_keys[] = $key['Column_name'];
@@ -261,7 +259,7 @@ class ExportTexytext extends ExportPlugin
         /**
          * Gets fields properties
          */
-        $GLOBALS['dbi']->selectDb($db);
+        PMA_DBI_select_db($db);
 
         /**
          * Displays the table structure
@@ -274,7 +272,7 @@ class ExportTexytext extends ExportPlugin
             . '|' . __('Default')
             . "\n|------\n";
 
-        $columns = $GLOBALS['dbi']->getColumns($db, $view);
+        $columns = PMA_DBI_get_columns($db, $view);
         foreach ($columns as $column) {
             $text_output .= $this->formatOneColumnDefinition($column, $unique_keys);
             $text_output .= "\n";
@@ -325,7 +323,7 @@ class ExportTexytext extends ExportPlugin
          * Get the unique keys in the table
          */
         $unique_keys = array();
-        $keys        = $GLOBALS['dbi']->getTableIndexes($db, $table);
+        $keys        = PMA_DBI_get_table_indexes($db, $table);
         foreach ($keys as $key) {
             if ($key['Non_unique'] == 0) {
                 $unique_keys[] = $key['Column_name'];
@@ -335,7 +333,7 @@ class ExportTexytext extends ExportPlugin
         /**
          * Gets fields properties
          */
-        $GLOBALS['dbi']->selectDb($db);
+        PMA_DBI_select_db($db);
 
         // Check if we can use Relations
         if ($do_relation && ! empty($cfgRelation['relation'])) {
@@ -385,7 +383,7 @@ class ExportTexytext extends ExportPlugin
         }
         $text_output .= "\n|------\n";
 
-        $columns = $GLOBALS['dbi']->getColumns($db, $table);
+        $columns = PMA_DBI_get_columns($db, $table);
         foreach ($columns as $column) {
             $text_output .= $this->formatOneColumnDefinition($column, $unique_keys);
             $field_name = $column['Field'];
@@ -430,7 +428,7 @@ class ExportTexytext extends ExportPlugin
      */
     function getTriggers($db, $table)
     {
-        $text_output = "|------\n";
+        $text_output .= "|------\n";
         $text_output .= '|' . __('Column');
         $dump = "|------\n";
         $dump .= '|' . __('Name');
@@ -439,7 +437,7 @@ class ExportTexytext extends ExportPlugin
         $dump .= '|' . __('Definition');
         $dump .= "\n|------\n";
 
-        $triggers = $GLOBALS['dbi']->getTriggers($db, $table);
+        $triggers = PMA_DBI_get_triggers($db, $table);
 
         foreach ($triggers as $trigger) {
             $dump .= '|' . $trigger['name'];
@@ -495,7 +493,7 @@ class ExportTexytext extends ExportPlugin
 
         switch($export_mode) {
         case 'create_table':
-            $dump .= '== ' . __('Table structure for table') . ' ' . $table . "\n\n";
+            $dump .= '== ' . __('Table structure for table') . ' ' .$table . "\n\n";
             $dump .= $this->getTableDef(
                 $db, $table, $crlf, $error_url, $do_relation, $do_comments,
                 $do_mime, $dates
@@ -503,14 +501,14 @@ class ExportTexytext extends ExportPlugin
             break;
         case 'triggers':
             $dump = '';
-            $triggers = $GLOBALS['dbi']->getTriggers($db, $table);
+            $triggers = PMA_DBI_get_triggers($db, $table);
             if ($triggers) {
-                $dump .= '== ' . __('Triggers') . ' ' . $table . "\n\n";
+                $dump .= '== ' . __('Triggers') . ' ' .$table . "\n\n";
                 $dump .= $this->getTriggers($db, $table);
             }
             break;
         case 'create_view':
-            $dump .= '== ' . __('Structure for view') . ' ' . $table . "\n\n";
+            $dump .= '== ' . __('Structure for view') . ' ' .$table . "\n\n";
             $dump .= $this->getTableDef(
                 $db, $table, $crlf, $error_url, $do_relation, $do_comments,
                 $do_mime, $dates, true, true
@@ -518,7 +516,7 @@ class ExportTexytext extends ExportPlugin
             break;
         case 'stand_in':
             $dump .=  '== ' . __('Stand-in structure for view')
-                . ' ' . $table . "\n\n";
+                . ' ' .$table . "\n\n";
             // export a stand-in definition to resolve view dependencies
             $dump .= $this->getTableDefStandIn($db, $table, $crlf);
         } // end switch

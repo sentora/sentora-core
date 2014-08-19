@@ -1,4 +1,5 @@
-<?php /* vim: set expandtab sw=4 ts=4 sts=4: */
+<?php
+/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Output buffering wrapper
  *
@@ -22,6 +23,8 @@ class PMA_OutputBuffering
 
     /**
      * Initializes class
+     *
+     * @return void
      */
     private function __construct()
     {
@@ -47,8 +50,8 @@ class PMA_OutputBuffering
             } elseif (function_exists('ob_get_level') && ob_get_level() > 0) {
                 // If output buffering is enabled in php.ini it's not possible to
                 // add the ob_gzhandler without a warning message from php 4.3.0.
-                // Being better safe than sorry, check for any existing output
-                // handler instead of just checking the 'output_buffering' setting.
+                // Being better safe than sorry, check for any existing output handler
+                // instead of just checking the 'output_buffering' setting.
                 $mode = 0;
             } else {
                 $mode = 1;
@@ -117,7 +120,7 @@ class PMA_OutputBuffering
     /**
      * Gets buffer content
      *
-     * @return string buffer content
+     * @return buffer content
      */
     public function getContents()
     {
@@ -133,9 +136,12 @@ class PMA_OutputBuffering
     {
         if (ob_get_status() && $this->_mode) {
             ob_flush();
-        } else {
-            flush();
         }
+        /**
+         * previously we had here an "else flush()" but some PHP versions
+         * (at least PHP 5.2.11) have a bug (49816) that produces garbled
+         * data
+         */
     }
 }
 

@@ -1,7 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Wrapper script for rendering transformations
  *
  * @package PhpMyAdmin
  */
@@ -30,6 +29,9 @@ require_once './libraries/db_table_exists.lib.php';
 $request_params = array(
     'cn',
     'ct',
+    'newHeight',
+    'newWidth',
+    'resize',
     'sql_query',
     'transform_key',
     'where_clause'
@@ -44,22 +46,21 @@ foreach ($request_params as $one_request_param) {
 /**
  * Get the list of the fields of the current table
  */
-$GLOBALS['dbi']->selectDb($db);
+PMA_DBI_select_db($db);
 if (isset($where_clause)) {
-    $result = $GLOBALS['dbi']->query(
-        'SELECT * FROM ' . PMA_Util::backquote($table)
-        . ' WHERE ' . $where_clause . ';',
+    $result = PMA_DBI_query(
+        'SELECT * FROM ' . PMA_Util::backquote($table) . ' WHERE ' . $where_clause . ';',
         null,
-        PMA_DatabaseInterface::QUERY_STORE
+        PMA_DBI_QUERY_STORE
     );
-    $row = $GLOBALS['dbi']->fetchAssoc($result);
+    $row = PMA_DBI_fetch_assoc($result);
 } else {
-    $result = $GLOBALS['dbi']->query(
+    $result = PMA_DBI_query(
         'SELECT * FROM ' . PMA_Util::backquote($table) . ' LIMIT 1;',
         null,
-        PMA_DatabaseInterface::QUERY_STORE
+        PMA_DBI_QUERY_STORE
     );
-    $row = $GLOBALS['dbi']->fetchAssoc($result);
+    $row = PMA_DBI_fetch_assoc($result);
 }
 
 // No row returned
@@ -71,12 +72,12 @@ $default_ct = 'application/octet-stream';
 
 if ($cfgRelation['commwork'] && $cfgRelation['mimework']) {
     $mime_map = PMA_getMime($db, $table);
-    $mime_options = PMA_Transformation_getOptions(
+    $mime_options = PMA_transformation_getOptions(
         isset($mime_map[$transform_key]['transformation_options'])
         ? $mime_map[$transform_key]['transformation_options'] : ''
     );
 
-    foreach ($mime_options as $key => $option) {
+    foreach ($mime_options AS $key => $option) {
         if (substr($option, 0, 10) == '; charset=') {
             $mime_options['charset'] = $option;
         }
@@ -99,11 +100,11 @@ if (isset($ct) && ! empty($ct)) {
 
 PMA_downloadHeader($cn, $mime_type);
 
-if (! isset($_REQUEST['resize'])) {
+if (! isset($resize)) {
     echo $row[$transform_key];
 } else {
     // if image_*__inline.inc.php finds that we can resize,
-    // it sets the resize parameter to jpeg or png
+    // it sets $resize to jpeg or png
 
     $srcImage = imagecreatefromstring($row[$transform_key]);
     $srcWidth = ImageSX($srcImage);
@@ -111,20 +112,20 @@ if (! isset($_REQUEST['resize'])) {
 
     // Check to see if the width > height or if width < height
     // if so adjust accordingly to make sure the image
-    // stays smaller than the new width and new height
+    // stays smaller then the $newWidth and $newHeight
 
-    $ratioWidth = $srcWidth/$_REQUEST['newWidth'];
-    $ratioHeight = $srcHeight/$_REQUEST['newHeight'];
+    $ratioWidth = $srcWidth/$newWidth;
+    $ratioHeight = $srcHeight/$newHeight;
 
     if ($ratioWidth < $ratioHeight) {
         $destWidth = $srcWidth/$ratioHeight;
-        $destHeight = $_REQUEST['newHeight'];
+        $destHeight = $newHeight;
     } else {
-        $destWidth = $_REQUEST['newWidth'];
+        $destWidth = $newWidth;
         $destHeight = $srcHeight/$ratioWidth;
     }
 
-    if ($_REQUEST['resize']) {
+    if ($resize) {
         $destImage = ImageCreateTrueColor($destWidth, $destHeight);
     }
 
@@ -136,10 +137,10 @@ if (! isset($_REQUEST['resize'])) {
         $destHeight, $srcWidth, $srcHeight
     );
 
-    if ($_REQUEST['resize'] == 'jpeg') {
+    if ($resize == 'jpeg') {
         ImageJPEG($destImage, null, 75);
     }
-    if ($_REQUEST['resize'] == 'png') {
+    if ($resize == 'png') {
         ImagePNG($destImage);
     }
     ImageDestroy($srcImage);

@@ -40,7 +40,7 @@ $plugins = array(
 
 // select available plugin
 foreach ($plugins as $plugin) {
-    $check = "PMA_Import_" . $plugin . "Check";
+    $check = "PMA_import_" . $plugin . "Check";
 
     if ($check()) {
         $upload_class = "Upload" . ucwords($plugin);
@@ -56,7 +56,7 @@ foreach ($plugins as $plugin) {
   * @return boolean true if APC extension is available and if rfc1867 is enabled,
   *                      false if it is not
   */
-function PMA_Import_apcCheck()
+function PMA_import_apcCheck()
 {
     if (! extension_loaded('apc')
         || ! function_exists('apc_fetch')
@@ -73,7 +73,7 @@ function PMA_Import_apcCheck()
   * @return boolean true if UploadProgress extension is available,
   *                 false if it is not
   */
-function PMA_Import_progressCheck()
+function PMA_import_progressCheck()
 {
     if (! function_exists("uploadprogress_get_info")
         || ! function_exists('getallheaders')
@@ -89,7 +89,7 @@ function PMA_Import_progressCheck()
   * @return boolean true if PHP 5.4 session upload-progress is available,
   *                 false if it is not
   */
-function PMA_Import_sessionCheck()
+function PMA_import_sessionCheck()
 {
     if (PMA_PHP_INT_VERSION < 50400
         || ! ini_get('session.upload_progress.enabled')
@@ -105,7 +105,7 @@ function PMA_Import_sessionCheck()
   *
   * @return boolean true
   */
-function PMA_Import_nopluginCheck()
+function PMA_import_nopluginCheck()
 {
     return true;
 }
@@ -123,7 +123,10 @@ function PMA_importAjaxStatus($id)
 {
     header('Content-type: application/json');
     echo json_encode(
-        $_SESSION[$GLOBALS['SESSION_KEY']]['handler']::getUploadStatus($id)
+        call_user_func(
+            $_SESSION[$GLOBALS['SESSION_KEY']]['handler'] . '::getUploadStatus',
+            $id
+        )
     );
 }
 ?>

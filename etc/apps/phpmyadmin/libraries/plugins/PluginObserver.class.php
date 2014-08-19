@@ -25,7 +25,7 @@ abstract class PluginObserver implements SplObserver
      * PluginManager instance that contains a list with all the observer
      * plugins that attach to it
      *
-     * @var PluginManager
+     * @var type PluginManager
      */
     private $_pluginManager;
 
@@ -44,15 +44,13 @@ abstract class PluginObserver implements SplObserver
      * is attached calls PluginManager::notify()
      *
      * TODO Declare this function abstract, removing its body,
-     * as soon as we drop support for PHP 5.3.x.
-     * See bug #3625
+     * as soon as we drop support for PHP 5.2.x.
+     * See bug #3538655.
      *
      * @param SplSubject $subject The PluginManager notifying the observer
      *                            of an update.
      *
      * @return void
-     *
-     * @throws Exception
      */
     public function update (SplSubject $subject)
     {
@@ -61,6 +59,7 @@ abstract class PluginObserver implements SplObserver
         );
     }
 
+
     /* ~~~~~~~~~~~~~~~~~~~~ Getters and Setters ~~~~~~~~~~~~~~~~~~~~ */
 
 
@@ -68,7 +67,7 @@ abstract class PluginObserver implements SplObserver
      * Gets the PluginManager instance that contains the list with all the
      * plugins that attached to it
      *
-     * @return PluginManager
+     * @return type PluginManager
      */
     public function getPluginManager()
     {

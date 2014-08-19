@@ -1,7 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Server import page
  *
  * @package PhpMyAdmin
  */
@@ -22,6 +21,7 @@ $scripts->addFile('import.js');
 require 'libraries/server_common.inc.php';
 
 $import_type = 'server';
-require 'libraries/display_import.inc.php';
+require 'libraries/display_import.lib.php';
 
 ?>
+

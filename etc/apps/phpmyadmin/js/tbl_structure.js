@@ -19,73 +19,23 @@
  */
 
 /**
- * This function returns the horizontal space available for the menu in pixels.
- * To calculate this value we start we the width of the main panel, then we
- * substract the margin of the page content, then we substract any cellspacing
- * that the table may have (original theme only) and finally we substract the
- * width of all columns of the table except for the last one (which is where
- * the menu will go). What we should end up with is the distance between the
- * start of the last column on the table and the edge of the page, again this
- * is the space available for the menu.
- *
- * In the case where the table cell where the menu will be displayed is already
- * off-screen (the table is wider than the page), a negative value will be returned,
- * but this will be treated as a zero by the menuResizer plugin.
- *
- * @return int
- */
-function PMA_tbl_structure_menu_resizer_callback() {
-    var pagewidth = $('body').width();
-    var $page = $('#page_content');
-    pagewidth -= $page.outerWidth(true) - $page.outerWidth();
-    var columnsWidth = 0;
-    var $columns = $('#tablestructure').find('tr:eq(1)').find('td,th');
-    $columns.not(':last').each(function () {
-        columnsWidth += $(this).outerWidth(true);
-    });
-    var totalCellSpacing = $('#tablestructure').width();
-    $columns.each(function () {
-        totalCellSpacing -= $(this).outerWidth(true);
-    });
-    return pagewidth - columnsWidth - totalCellSpacing - 15; // 15px extra margin
-}
-
-/**
- * Reload fields table
- */
-function reloadFieldForm() {
-    $.post($("#fieldsForm").attr('action'), $("#fieldsForm").serialize() + "&ajax_request=true", function (form_data) {
-        var $temp_div = $("<div id='temp_div'><div>").append(form_data.message);
-        $("#fieldsForm").replaceWith($temp_div.find("#fieldsForm"));
-        $("#addColumns").replaceWith($temp_div.find("#addColumns"));
-        $('#move_columns_dialog ul').replaceWith($temp_div.find("#move_columns_dialog ul"));
-        $("#moveColumns").removeClass("move-active");
-        /* reinitialise the more options in table */
-        $('#fieldsForm ul.table-structure-actions').menuResizer(PMA_tbl_structure_menu_resizer_callback);
-    });
-    $('#page_content').show();
-}
-
-/**
  * Unbind all event handlers before tearing down a page
  */
-AJAX.registerTeardown('tbl_structure.js', function () {
+AJAX.registerTeardown('tbl_structure.js', function() {
     $("a.change_column_anchor.ajax").die('click');
     $("button.change_columns_anchor.ajax, input.change_columns_anchor.ajax").die('click');
     $("a.drop_column_anchor.ajax").die('click');
     $("a.add_primary_key_anchor.ajax").die('click');
-    $("a.add_index_anchor.ajax").die('click');
-    $("a.add_unique_anchor.ajax").die('click');
     $("#move_columns_anchor").die('click');
     $(".append_fields_form.ajax").unbind('submit');
 });
 
-AJAX.registerOnload('tbl_structure.js', function () {
+AJAX.registerOnload('tbl_structure.js', function() {
 
     /**
      *Ajax action for submitting the "Column Change" and "Add Column" form
      */
-    $(".append_fields_form.ajax").die().live('submit', function (event) {
+    $(".append_fields_form.ajax").die().live('submit', function(event) {
         event.preventDefault();
         /**
          * @var    the_form    object referring to the export form
@@ -104,24 +54,22 @@ AJAX.registerOnload('tbl_structure.js', function () {
             PMA_prepareForAjaxRequest($form);
             //User wants to submit the form
             $msg = PMA_ajaxShowMessage();
-            $.post($form.attr('action'), $form.serialize() + '&do_save_data=1', function (data) {
-                if ($("#sqlqueryresults").length !== 0) {
+            $.post($form.attr('action'), $form.serialize() + '&do_save_data=1', function(data) {
+                if ($("#sqlqueryresults").length != 0) {
                     $("#sqlqueryresults").remove();
-                } else if ($(".error:not(.tab)").length !== 0) {
+                } else if ($(".error:not(.tab)").length != 0) {
                     $(".error:not(.tab)").remove();
                 }
-                if (data.success === true) {
+                if (data.success == true) {
                     $("#page_content")
                         .empty()
                         .append(data.message)
                         .append(data.sql_query)
                         .show();
-                    PMA_highlightSQL($('#page_content'));
                     $("#result_query .notice").remove();
                     reloadFieldForm();
                     $form.remove();
                     PMA_ajaxRemoveMessage($msg);
-                    PMA_init_slider();
                     PMA_reloadNavigation();
                 } else {
                     PMA_ajaxShowMessage(data.error, false);
@@ -133,7 +81,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
     /**
      * Attach Event Handler for 'Change Column'
      */
-    $("a.change_column_anchor.ajax").live('click', function (event) {
+    $("a.change_column_anchor.ajax").live('click', function(event) {
         event.preventDefault();
         var $msg = PMA_ajaxShowMessage();
         $('#page_content').hide();
@@ -143,11 +91,10 @@ AJAX.registerOnload('tbl_structure.js', function () {
                 $('<div id="change_column_dialog" class="margin"></div>')
                     .html(data.message)
                     .insertBefore('#page_content');
-                PMA_highlightSQL($('#page_content'));
                 PMA_showHints();
                 PMA_verifyColumnsProperties();
             } else {
-                PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+                PMA_ajaxShowMessage(PMA_messages['strErrorProcessingRequest'] + " : " + data.error, false);
             }
         });
     });
@@ -155,7 +102,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
     /**
      * Attach Event Handler for 'Change multiple columns'
      */
-    $("button.change_columns_anchor.ajax, input.change_columns_anchor.ajax").live('click', function (event) {
+    $("button.change_columns_anchor.ajax, input.change_columns_anchor.ajax").live('click', function(event) {
         event.preventDefault();
         var $msg = PMA_ajaxShowMessage();
         $('#page_content').hide();
@@ -171,7 +118,6 @@ AJAX.registerOnload('tbl_structure.js', function () {
                             .html(data.message)
                     )
                     .show();
-                PMA_highlightSQL($('#page_content'));
                 PMA_showHints();
                 PMA_verifyColumnsProperties();
             } else {
@@ -184,7 +130,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
     /**
      * Attach Event Handler for 'Drop Column'
      */
-    $("a.drop_column_anchor.ajax").live('click', function (event) {
+    $("a.drop_column_anchor.ajax").live('click', function(event) {
         event.preventDefault();
         /**
          * @var curr_table_name String containing the name of the current table
@@ -198,6 +144,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
          * @var curr_column_name    String containing name of the field referred to by {@link curr_row}
          */
         var curr_column_name = $curr_row.children('th').children('label').text();
+        curr_column_name = escapeHtml(curr_column_name);
         /**
          * @var $after_field_item    Corresponding entry in the 'After' field.
          */
@@ -205,11 +152,11 @@ AJAX.registerOnload('tbl_structure.js', function () {
         /**
          * @var question    String containing the question to be asked for confirmation
          */
-        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` DROP `' + escapeHtml(curr_column_name) + '`;');
-        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
-            var $msg = PMA_ajaxShowMessage(PMA_messages.strDroppingColumn, false);
+        var question = $.sprintf(PMA_messages['strDoYouReally'], 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` DROP `' + escapeHtml(curr_column_name) + '`;');
+        $(this).PMA_confirm(question, $(this).attr('href'), function(url) {
+            var $msg = PMA_ajaxShowMessage(PMA_messages['strDroppingColumn'], false);
             $.get(url, {'is_js_confirmed' : 1, 'ajax_request' : true, 'ajax_page_request' : true}, function (data) {
-                if (data.success === true) {
+                if (data.success == true) {
                     PMA_ajaxRemoveMessage($msg);
                     if ($('#result_query').length) {
                         $('#result_query').remove();
@@ -218,12 +165,11 @@ AJAX.registerOnload('tbl_structure.js', function () {
                         $('<div id="result_query"></div>')
                             .html(data.sql_query)
                             .prependTo('#page_content');
-                        PMA_highlightSQL($('#page_content'));
                     }
                     toggleRowColors($curr_row.next());
                     // Adjust the row numbers
                     for (var $row = $curr_row.next(); $row.length > 0; $row = $row.next()) {
-                        var new_val = parseInt($row.find('td:nth-child(2)').text(), 10) - 1;
+                        var new_val = parseInt($row.find('td:nth-child(2)').text()) - 1;
                         $row.find('td:nth-child(2)').text(new_val);
                     }
                     $after_field_item.remove();
@@ -236,16 +182,16 @@ AJAX.registerOnload('tbl_structure.js', function () {
                     $('.index_info').replaceWith(data.indexes_list);
                     PMA_reloadNavigation();
                 } else {
-                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+                    PMA_ajaxShowMessage(PMA_messages['strErrorProcessingRequest'] + " : " + data.error, false);
                 }
             }); // end $.get()
         }); // end $.PMA_confirm()
-    }); //end of Drop Column Anchor action
+    }) ; //end of Drop Column Anchor action
 
     /**
      * Ajax Event handler for 'Add Primary Key'
      */
-    $("a.add_primary_key_anchor.ajax").live('click', function (event) {
+    $("a.add_primary_key_anchor.ajax").live('click', function(event) {
         event.preventDefault();
         /**
          * @var curr_table_name String containing the name of the current table
@@ -258,13 +204,11 @@ AJAX.registerOnload('tbl_structure.js', function () {
         /**
          * @var question    String containing the question to be asked for confirmation
          */
-        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` ADD PRIMARY KEY(`' + escapeHtml(curr_column_name) + '`);');
-        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
-            var $msg = PMA_ajaxShowMessage(PMA_messages.strAddingPrimaryKey, false);
-            $.get(url
-                , {'is_js_confirmed' : 1, 'ajax_request' : true, 'index_change' : true}
-                , function (data) {
-                if (data.success === true) {
+        var question = $.sprintf(PMA_messages['strDoYouReally'], 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` ADD PRIMARY KEY(`' + escapeHtml(curr_column_name) + '`);');
+        $(this).PMA_confirm(question, $(this).attr('href'), function(url) {
+            var $msg = PMA_ajaxShowMessage(PMA_messages['strAddingPrimaryKey'], false);
+            $.get(url, {'is_js_confirmed' : 1, 'ajax_request' : true}, function(data) {
+                if (data.success == true) {
                     PMA_ajaxRemoveMessage($msg);
                     $(this).remove();
                     if (typeof data.reload != 'undefined') {
@@ -276,113 +220,21 @@ AJAX.registerOnload('tbl_structure.js', function () {
                                 $('<div id="result_query"></div>')
                                     .html(data.sql_query)
                                     .prependTo('#page_content');
-                                PMA_highlightSQL($('#page_content'));
                             }
                         });
                         PMA_reloadNavigation();
                     }
-                    if (data.indexes_list) {
-                        $('.index_info').replaceWith(data.indexes_list);
-                    }
                 } else {
-                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
+                    PMA_ajaxShowMessage(PMA_messages['strErrorProcessingRequest'] + " : " + data.error, false);
                 }
             }); // end $.get()
         }); // end $.PMA_confirm()
     }); //end Add Primary Key
 
     /**
-     * Ajax Event handler for 'Add Index'
-     */
-    $("a.add_index_anchor.ajax").live('click', function (event) {
-        event.preventDefault();
-        /**
-         * @var curr_table_name String containing the name of the current table
-         */
-        var curr_table_name = $(this).closest('form').find('input[name=table]').val();
-        /**
-         * @var curr_column_name    String containing name of the field referred to by {@link curr_row}
-         */
-        var curr_column_name = $(this).parents('tr').children('th').children('label').text();
-        /**
-         * @var question    String containing the question to be asked for confirmation
-         */
-        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` ADD INDEX(`' + escapeHtml(curr_column_name) + '`);');
-        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
-            var $msg = PMA_ajaxShowMessage(PMA_messages.strAddingIndex, false);
-            $.get(url
-                , {'is_js_confirmed' : 1, 'ajax_request' : true, 'index_change' : true}
-                , function (data) {
-                if (data.success === true) {
-                    PMA_ajaxRemoveMessage($msg);
-                    if ($('#result_query').length) {
-                        $('#result_query').remove();
-                    }
-                    if (data.sql_query) {
-                        $('<div id="result_query"></div>')
-                            .html(data.sql_query)
-                            .prependTo('#page_content');
-                        PMA_highlightSQL($('#page_content'));
-                    }
-                    if (data.indexes_list) {
-                        $('.index_info').replaceWith(data.indexes_list);
-                    }
-                    PMA_reloadNavigation();
-                } else {
-                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
-                }
-            }); // end $.get()
-        }); // end $.PMA_confirm()
-    }); //end Add Index
-
-    /**
-     * Ajax Event handler for 'Add Unique'
-     */
-    $("a.add_unique_anchor.ajax").live('click', function (event) {
-        event.preventDefault();
-        /**
-         * @var curr_table_name String containing the name of the current table
-         */
-        var curr_table_name = $(this).closest('form').find('input[name=table]').val();
-        /**
-         * @var curr_column_name    String containing name of the field referred to by {@link curr_row}
-         */
-        var curr_column_name = $(this).parents('tr').children('th').children('label').text();
-        /**
-         * @var question    String containing the question to be asked for confirmation
-         */
-        var question = $.sprintf(PMA_messages.strDoYouReally, 'ALTER TABLE `' + escapeHtml(curr_table_name) + '` ADD UNIQUE(`' + escapeHtml(curr_column_name) + '`);');
-        $(this).PMA_confirm(question, $(this).attr('href'), function (url) {
-            var $msg = PMA_ajaxShowMessage(PMA_messages.strAddingUnique, false);
-            $.get(url
-                , {'is_js_confirmed' : 1, 'ajax_request' : true, 'index_change' : true}
-                , function (data) {
-                if (data.success === true) {
-                    PMA_ajaxRemoveMessage($msg);
-                    if ($('#result_query').length) {
-                        $('#result_query').remove();
-                    }
-                    if (data.sql_query) {
-                        $('<div id="result_query"></div>')
-                            .html(data.sql_query)
-                            .prependTo('#page_content');
-                        PMA_highlightSQL($('#page_content'));
-                    }
-                    if (data.indexes_list) {
-                        $('.index_info').replaceWith(data.indexes_list);
-                    }
-                    PMA_reloadNavigation();
-                } else {
-                    PMA_ajaxShowMessage(PMA_messages.strErrorProcessingRequest + " : " + data.error, false);
-                }
-            }); // end $.get()
-        }); // end $.PMA_confirm()
-    }); //end Add Unique
-
-    /**
      * Inline move columns
     **/
-    $("#move_columns_anchor").live('click', function (e) {
+    $("#move_columns_anchor").live('click', function(e) {
         e.preventDefault();
 
         if ($(this).hasClass("move-active")) {
@@ -395,7 +247,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
          */
         var button_options = {};
 
-        button_options[PMA_messages.strGo] = function (event) {
+        button_options[PMA_messages['strGo']] = function(event) {
             event.preventDefault();
             var $msgbox = PMA_ajaxShowMessage();
             var $this = $(this);
@@ -410,7 +262,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
             }
 
             $.post($form.prop("action"), serialized + "&ajax_request=true", function (data) {
-                if (data.success === false) {
+                if (data.success == false) {
                     PMA_ajaxRemoveMessage($msgbox);
                     $this
                     .clone()
@@ -445,7 +297,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
                         .text($row.index() + 1)
                         .end()
                         .removeClass("odd even")
-                        .addClass($row.index() % 2 === 0 ? "odd" : "even");
+                        .addClass($row.index() % 2 == 0 ? "odd" : "even");
                     }
                     PMA_ajaxShowMessage(data.message);
                     $this.dialog('close');
@@ -453,12 +305,12 @@ AJAX.registerOnload('tbl_structure.js', function () {
                 }
             });
         };
-        button_options[PMA_messages.strCancel] = function () {
+        button_options[PMA_messages['strCancel']] = function() {
             $(this).dialog('close');
         };
 
         var button_options_error = {};
-        button_options_error[PMA_messages.strOK] = function () {
+        button_options_error[PMA_messages['strOK']] = function() {
             $(this).dialog('close').remove();
         };
 
@@ -485,8 +337,7 @@ AJAX.registerOnload('tbl_structure.js', function () {
         }
         col_list.sortable({
             axis: 'y',
-            containment: $("#move_columns_dialog div"),
-            tolerance: 'pointer'
+            containment: $("#move_columns_dialog div")
         }).disableSelection();
         var $form = $("#move_columns_dialog form");
         $form.data("serialized-unmoved", $form.serialize());
@@ -501,13 +352,61 @@ AJAX.registerOnload('tbl_structure.js', function () {
     });
 });
 
+/**
+ * Reload fields table
+ */
+function reloadFieldForm() {
+    $.post($("#fieldsForm").attr('action'), $("#fieldsForm").serialize()+"&ajax_request=true", function(form_data) {
+        var $temp_div = $("<div id='temp_div'><div>").append(form_data.message);
+        $("#fieldsForm").replaceWith($temp_div.find("#fieldsForm"));
+        $("#addColumns").replaceWith($temp_div.find("#addColumns"));
+        $('#move_columns_dialog ul').replaceWith($temp_div.find("#move_columns_dialog ul"));
+        $("#moveColumns").removeClass("move-active");
+        /* reinitialise the more options in table */
+        $('#fieldsForm ul.table-structure-actions').menuResizer(PMA_tbl_structure_menu_resizer_callback);
+    });
+    $('#page_content').show();
+}
+
+/**
+ * This function returns the horizontal space available for the menu in pixels.
+ * To calculate this value we start we the width of the main panel, then we
+ * substract the margin of the page content, then we substract any cellspacing
+ * that the table may have (original theme only) and finally we substract the
+ * width of all columns of the table except for the last one (which is where
+ * the menu will go). What we should end up with is the distance between the
+ * start of the last column on the table and the edge of the page, again this
+ * is the space available for the menu.
+ *
+ * In the case where the table cell where the menu will be displayed is already
+ * off-screen (the table is wider than the page), a negative value will be returned,
+ * but this will be treated as a zero by the menuResizer plugin.
+ *
+ * @return int
+ */
+function PMA_tbl_structure_menu_resizer_callback() {
+    var pagewidth = $('body').width();
+    var $page = $('#page_content');
+    pagewidth -= $page.outerWidth(true) - $page.outerWidth();
+    var columnsWidth = 0;
+    var $columns = $('#tablestructure').find('tr:eq(1)').find('td,th');
+    $columns.not(':last').each(function (){
+        columnsWidth += $(this).outerWidth(true)
+    });
+    var totalCellSpacing = $('#tablestructure').width();
+    $columns.each(function (){
+        totalCellSpacing -= $(this).outerWidth(true);
+    });
+    return pagewidth - columnsWidth - totalCellSpacing - 15; // 15px extra margin
+}
+
 /** Handler for "More" dropdown in structure table rows */
-AJAX.registerOnload('tbl_structure.js', function () {
+AJAX.registerOnload('tbl_structure.js', function() {
     if ($('#fieldsForm').hasClass('HideStructureActions')) {
         $('#fieldsForm ul.table-structure-actions').menuResizer(PMA_tbl_structure_menu_resizer_callback);
     }
 });
-AJAX.registerTeardown('tbl_structure.js', function () {
+AJAX.registerTeardown('tbl_structure.js', function() {
     $('#fieldsForm ul.table-structure-actions').menuResizer('destroy');
 });
 $(function () {

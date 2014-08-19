@@ -73,11 +73,4 @@ define('GETTEXT_INC', './libraries/php-gettext/gettext.inc');
  * eg. /usr/share/php/tcpdf/tcpdf.php.
  */
 define('TCPDF_INC', './libraries/tcpdf/tcpdf.php');
-
-/**
- * Avoid referring to nonexistent files (causes warnings when open_basedir
- * is used)
- */
-define('K_PATH_IMAGES', '');
-
 ?>

@@ -1,7 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Internal relations for information schema.
  *
  * @package PhpMyAdmin
  */
@@ -255,7 +254,7 @@ $GLOBALS['information_schema_relations'] = array(
             'foreign_db'    => 'information_schema',
             'foreign_table' => 'ENGINES',
             'foreign_field' => 'ENGINE'
-        ),
+        )
     ),
     'TABLESAPCES' => array(
         'ENGINE' => array(

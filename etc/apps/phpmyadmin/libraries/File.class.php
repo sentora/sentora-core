@@ -77,7 +77,7 @@ class PMA_File
     /**
      * constructor
      *
-     * @param boolean|string $name file name or false
+     * @param string $name file name
      *
      * @access public
      */
@@ -100,7 +100,7 @@ class PMA_File
     }
 
     /**
-     * deletes file if it is temporary, usually from a moved upload file
+     * deletes file if it is temporary, usally from a moved upload file
      *
      * @access  public
      * @return boolean success
@@ -247,7 +247,7 @@ class PMA_File
      * Loads uploaded file from table change request.
      *
      * @param string $key       the md5 hash of the column name
-     * @param string $rownumber number of row to process
+     * @param string $rownumber
      *
      * @return boolean success
      * @access  public
@@ -320,16 +320,15 @@ class PMA_File
      * </code>
      *
      * @param array  $file      the array
-     * @param string $rownumber number of row to process
-     * @param string $key       key to process
+     * @param string $rownumber
+     * @param string $key
      *
      * @return array
      * @access  public
      * @static
      */
-    public function fetchUploadedFromTblChangeRequestMultiple(
-        $file, $rownumber, $key
-    ) {
+    public function fetchUploadedFromTblChangeRequestMultiple($file, $rownumber, $key)
+    {
         $new_file = array(
             'name' => $file['name']['multi_edit'][$rownumber][$key],
             'type' => $file['type']['multi_edit'][$rownumber][$key],
@@ -345,7 +344,7 @@ class PMA_File
      * sets the name if the file to the one selected in the tbl_change form
      *
      * @param string $key       the md5 hash of the column name
-     * @param string $rownumber number of row to process
+     * @param string $rownumber
      *
      * @return boolean success
      * @access  public
@@ -379,7 +378,7 @@ class PMA_File
      * Checks whether there was any error.
      *
      * @access  public
-     * @return boolean whether an error occurred or not
+     * @return boolean whether an error occured or not
      */
     public function isError()
     {
@@ -391,7 +390,7 @@ class PMA_File
      * and uses the submitted/selected file
      *
      * @param string $key       the md5 hash of the column name
-     * @param string $rownumber number of row to process
+     * @param string $rownumber
      *
      * @return boolean success
      * @access  public
@@ -430,7 +429,7 @@ class PMA_File
             PMA_Util::userDir($GLOBALS['cfg']['UploadDir']) . PMA_securePath($name)
         );
         if (! $this->isReadable()) {
-            $this->_error_message = __('File could not be read!');
+            $this->_error_message = __('File could not be read');
             $this->setName(null);
             return false;
         }
@@ -473,7 +472,7 @@ class PMA_File
             || ! is_writable($GLOBALS['cfg']['TempDir'])
         ) {
             // cannot create directory or access, point user to FAQ 1.11
-            $this->_error_message = __('Error moving the uploaded file, see [doc@faq1-11]FAQ 1.11[/doc].');
+            $this->_error_message = __('Error moving the uploaded file, see [doc@faq1-11]FAQ 1.11[/doc]');
             return false;
         }
 
@@ -507,13 +506,12 @@ class PMA_File
     }
 
     /**
-     * Detects what compression the file uses
+     * Detects what compression filse uses
      *
      * @todo    move file read part into readChunk() or getChunk()
      * @todo    add support for compression plugins
      * @access  protected
-     * @return  mixed false on error, otherwise string MIME type of
-     *                compression, none for none
+     * @return string MIME type of compression, none for none
      */
     protected function detectCompression()
     {
@@ -524,7 +522,7 @@ class PMA_File
         ob_end_clean();
 
         if (! $file) {
-            $this->_error_message = __('File could not be read!');
+            $this->_error_message = __('File could not be read');
             return false;
         }
 
@@ -533,14 +531,27 @@ class PMA_File
          * get registered plugins for file compression
 
         foreach (PMA_getPlugins($type = 'compression') as $plugin) {
-            if ($plugin['classname']::canHandle($this->getName())) {
+            if (call_user_func_array(array($plugin['classname'], 'canHandle'), array($this->getName()))) {
                 $this->setCompressionPlugin($plugin);
                 break;
             }
         }
          */
 
-        $this->_compression = PMA_Util::getCompressionMimeType($file);
+        $test = fread($file, 4);
+        $len = strlen($test);
+        fclose($file);
+
+        if ($len >= 2 && $test[0] == chr(31) && $test[1] == chr(139)) {
+            $this->_compression = 'application/gzip';
+        } elseif ($len >= 3 && substr($test, 0, 3) == 'BZh') {
+            $this->_compression = 'application/bzip2';
+        } elseif ($len >= 4 && $test == "PK\003\004") {
+            $this->_compression = 'application/zip';
+        } else {
+            $this->_compression = 'none';
+        }
+
         return $this->_compression;
     }
 
@@ -559,7 +570,7 @@ class PMA_File
     /**
      * Returns the file handle
      *
-     * @return resource file handle
+     * @return object file handle
      */
     public function getHandle()
     {
@@ -572,7 +583,7 @@ class PMA_File
     /**
      * Sets the file handle
      *
-     * @param resource $handle file handle
+     * @param object $handle file handle
      *
      * @return void
      */
@@ -630,7 +641,7 @@ class PMA_File
                 include_once './libraries/zip_extension.lib.php';
                 $result = PMA_getZipContents($this->getName());
                 if (! empty($result['error'])) {
-                    $this->_error_message = (string) PMA_Message::rawError($result['error']);
+                    $this->_error_message = PMA_Message::rawError($result['error']);
                     return false;
                 } else {
                     $this->content_uncompressed = $result['data'];
@@ -688,6 +699,108 @@ class PMA_File
         }
 
         return $this->_compression;
+    }
+
+    /**
+     * advances the file pointer in the file handle by $length bytes/chars
+     *
+     * @param integer $length numbers of chars/bytes to skip
+     *
+     * @return boolean
+     * @todo this function is unused
+     */
+    public function advanceFilePointer($length)
+    {
+        while ($length > 0) {
+            $this->getNextChunk($length);
+            $length -= $this->getChunkSize();
+        }
+    }
+
+    /**
+     * http://bugs.php.net/bug.php?id=29532
+     * bzip reads a maximum of 8192 bytes on windows systems
+     *
+     * @param int $max_size maximum size of the next chunk to be returned
+     *
+     * @return bool|string
+     * @todo this function is unused
+     */
+    public function getNextChunk($max_size = null)
+    {
+        if (null !== $max_size) {
+            $size = min($max_size, $this->getChunkSize());
+        } else {
+            $size = $this->getChunkSize();
+        }
+
+        // $result = $this->handler->getNextChunk($size);
+        $result = '';
+        switch ($this->getCompression()) {
+        case 'application/bzip2':
+            $result = '';
+            while (strlen($result) < $size - 8192 && ! feof($this->getHandle())) {
+                $result .= bzread($this->getHandle(), $size);
+            }
+            break;
+        case 'application/gzip':
+            $result = gzread($this->getHandle(), $size);
+            break;
+        case 'application/zip':
+            /*
+             * if getNextChunk() is used some day,
+             * replace this code by code similar to the one
+             * in open()
+             *
+            include_once './libraries/unzip.lib.php';
+            $import_handle = new SimpleUnzip();
+            $import_handle->ReadFile($this->getName());
+            if ($import_handle->Count() == 0) {
+                $this->_error_message = __('No files found inside ZIP archive!');
+                return false;
+            } elseif ($import_handle->GetError(0) != 0) {
+                $this->_error_message = __('Error in ZIP archive:')
+                    . ' ' . $import_handle->GetErrorMsg(0);
+                return false;
+            } else {
+                $result = $import_handle->GetData(0);
+            }
+             */
+            break;
+        case 'none':
+            $result = fread($this->getHandle(), $size);
+            break;
+        default:
+            return false;
+        }
+
+        if ($GLOBALS['charset_conversion']) {
+            $result = PMA_convert_string($this->getCharset(), 'utf-8', $result);
+        } else {
+            /**
+             * Skip possible byte order marks (I do not think we need more
+             * charsets, but feel free to add more, you can use wikipedia for
+             * reference: <http://en.wikipedia.org/wiki/Byte_Order_Mark>)
+             *
+             * @todo BOM could be used for charset autodetection
+             */
+            if ($this->getOffset() === 0) {
+                // UTF-8
+                if (strncmp($result, "\xEF\xBB\xBF", 3) == 0) {
+                    $result = substr($result, 3);
+                    // UTF-16 BE, LE
+                } elseif (strncmp($result, "\xFE\xFF", 2) == 0
+                 || strncmp($result, "\xFF\xFE", 2) == 0) {
+                    $result = substr($result, 2);
+                }
+            }
+        }
+
+        $this->_offset += $size;
+        if (0 === $result) {
+            return true;
+        }
+        return $result;
     }
 
     /**

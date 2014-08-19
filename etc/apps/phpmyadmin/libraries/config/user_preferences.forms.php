@@ -33,9 +33,7 @@ $forms['Features']['General'] = array(
     'MaxDbList',
     'MaxTableList',
     'NumRecentTables',
-    'NumFavoriteTables',
-    'ShowHint',
-    'SendErrorReports');
+    'ShowHint');
 $forms['Features']['Text_fields'] = array(
     'CharEditing',
     'MinSizeForInputField',
@@ -54,11 +52,13 @@ $forms['Features']['Warnings'] = array(
     'ServerLibraryDifference_DisableWarning',
     'PmaNoRelation_DisableWarning',
     'SuhosinDisableWarning',
+    'McryptDisableWarning',
     'ReservedWordDisableWarning');
 // settings from this form are treated specially,
 // see prefs_forms.php and user_preferences.lib.php
 $forms['Features']['Developer'] = array(
     'Error_Handler/display',
+    'Error_Handler/gather',
     'DBG/sql');
 $forms['Sql_queries']['Sql_queries'] = array(
     'ShowSQL',
@@ -76,16 +76,15 @@ $forms['Sql_queries']['Sql_box'] = array(
     'SQLQuery/Edit',
     'SQLQuery/Explain',
     'SQLQuery/ShowAsPHP',
+    'SQLQuery/Validate',
     'SQLQuery/Refresh');
 $forms['Navi_panel']['Navi_panel'] = array(
     'NavigationDisplayLogo',
     'NavigationLogoLink',
     'NavigationLogoLinkWindow',
     'NavigationTreePointerEnable',
-    'FirstLevelNavigationItems',
     'MaxNavigationItems',
     'NavigationTreeEnableGrouping',
-    'NavigationTreeDisableDatabaseExpansion',
     'NavigationTreeDisplayItemFilterMinimum');
 $forms['Navi_panel']['Navi_databases'] = array(
     'NavigationTreeDisplayDbFilterMinimum',
@@ -134,9 +133,6 @@ $forms['Main_panel']['Tabs'] = array(
     'DefaultTabServer',
     'DefaultTabDatabase',
     'DefaultTabTable');
-$forms['Main_panel']['DisplayRelationalSchema'] = array(
-    'PDFDefaultPageSize');
-
 $forms['Import']['Import_defaults'] = array(
     'Import/format',
     'Import/charset',
@@ -192,7 +188,6 @@ $forms['Export']['Sql'] = array(
         ':group:end',
     'Export/sql_use_transaction',
     'Export/sql_disable_fk',
-    'Export/sql_views_as_tables',
     'Export/sql_compatibility',
     ':group:' . __('Database export options'),
         'Export/sql_drop_database',
@@ -200,10 +195,7 @@ $forms['Export']['Sql'] = array(
         ':group:end',
     ':group:' . __('Structure'),
         'Export/sql_drop_table',
-        'Export/sql_create_table',
-        'Export/sql_create_view',
         'Export/sql_procedure_function',
-        'Export/sql_create_trigger',
         'Export/sql_create_table_statements' => ':group',
             'Export/sql_if_not_exists',
             'Export/sql_auto_increment',
@@ -216,7 +208,7 @@ $forms['Export']['Sql'] = array(
         'Export/sql_type',
         'Export/sql_insert_syntax',
         'Export/sql_max_query_size',
-        'Export/sql_hex_for_binary',
+        'Export/sql_hex_for_blob',
         'Export/sql_utc_time');
 $forms['Export']['CodeGen'] = array(
     'Export/codegen_format');

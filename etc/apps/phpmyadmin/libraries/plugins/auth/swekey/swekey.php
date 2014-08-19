@@ -79,7 +79,7 @@ if (! isset($gSwekeyTokenCacheEnabled)) {
  *  Change the address of the Check server.
  *  If $server is empty the default value 'http://auth-check.musbe.net' will be used
  *
- * @param int $server The protocol and hostname to use
+ * @param server              The protocol and hostname to use
  *
  * @access public
  */
@@ -97,7 +97,7 @@ function Swekey_SetCheckServer($server)
  *  Change the address of the Random Token Generator server.
  *  If $server is empty the default value 'http://auth-rnd-gen.musbe.net' will be used
  *
- * @param int $server The protocol and hostname to use
+ * @param server              The protocol and hostname to use
  *
  * @access public
  */
@@ -115,7 +115,7 @@ function Swekey_SetRndTokenServer($server)
  *  Change the address of the Satus server.
  *  If $server is empty the default value 'http://auth-status.musbe.net' will be used
  *
- * @param int $server The protocol and hostname to use
+ * @param server              The protocol and hostname to use
  *
  * @access public
  */
@@ -132,7 +132,7 @@ function Swekey_SetStatusServer($server)
 /**
  *  Change the certificat file in case of the the severs use https instead of http
  *
- * @param string $cafile The path of the crt file to use
+ * @param cafile              The path of the crt file to use
  *
  * @access public
  */
@@ -161,7 +161,7 @@ function Swekey_EnableTokenCache($enable)
 /**
  *  Return the last error.
  *
- * @return string The Last Error
+ * @return The Last Error
  * @access public
  */
 function Swekey_GetLastError()
@@ -173,7 +173,7 @@ function Swekey_GetLastError()
 /**
  *  Return the last result.
  *
- * @return string The Last Error
+ * @return The Last Error
  * @access public
  */
 function Swekey_GetLastResult()
@@ -186,10 +186,10 @@ function Swekey_GetLastResult()
  *  Send a synchronous request to the  server.
  *  This function manages timeout then will not block if one of the server is down
  *
- * @param string $url           The url to get
- * @param string $response_code The response code
+ * @param url                 The url to get
+ * @param response_code       The response code
  *
- * @return string The body of the response or "" in case of error
+ * @return The body of the response or "" in case of error
  * @access private
  */
 function Swekey_HttpGet($url, &$response_code)
@@ -208,16 +208,12 @@ function Swekey_HttpGet($url, &$response_code)
             if (! empty($gSwekeyCA)) {
                 if (file_exists($gSwekeyCA)) {
                     if (! curl_setopt($sess, CURLOPT_CAINFO, $gSwekeyCA)) {
-                        error_log(
-                            "SWEKEY_ERROR:Could not set CA file : ".curl_error($sess)
-                        );
+                        error_log("SWEKEY_ERROR:Could not set CA file : ".curl_error($sess));
                     } else {
                         $caFileOk = true;
                     }
                 } else {
-                    error_log(
-                        "SWEKEY_ERROR:Could not find CA file $gSwekeyCA getting $url"
-                    );
+                    error_log("SWEKEY_ERROR:Could not find CA file $gSwekeyCA getting $url");
                 }
             }
 
@@ -243,9 +239,7 @@ function Swekey_HttpGet($url, &$response_code)
 
         if (! empty($response_code)) {
             $gSwekeyLastError = $response_code;
-            error_log(
-                "SWEKEY_ERROR:Error $gSwekeyLastError ($curlerr) getting $url"
-            );
+            error_log("SWEKEY_ERROR:Error $gSwekeyLastError ($curlerr) getting $url");
             return "";
         }
 
@@ -273,8 +267,7 @@ function Swekey_HttpGet($url, &$response_code)
                 if (empty($name)) {
                     $name = strrchr($capath, '\\');
                 }
-                $capath = substr($capath, 0, strlen($capath) - strlen($name) + 1)
-                    . 'musbe-ca.crt';
+                $capath = substr($capath, 0, strlen($capath) - strlen($name) + 1).'musbe-ca.crt';
 
                 if (! empty($gSwekeyCA)) {
                     $sslOptions['cainfo'] = $gSwekeyCA;
@@ -285,32 +278,26 @@ function Swekey_HttpGet($url, &$response_code)
 
             $r->setOptions($options);
 
-            /*
-            try
+ //           try
             {
-            */
                $reply = $r->send();
                $res = $reply->getBody();
                $info = $r->getResponseInfo();
                $response_code = $info['response_code'];
                if ($response_code != 200) {
                     $gSwekeyLastError = $response_code;
-                    error_log(
-                        "SWEKEY_ERROR:Error ".$gSwekeyLastError." getting ".$url
-                    );
+                    error_log("SWEKEY_ERROR:Error ".$gSwekeyLastError." getting ".$url);
                     return "";
                }
 
 
                $gSwekeyLastResult = $res;
                return $res;
-            /*
             }
-            catch (HttpException $e)
-            {
-               error_log("SWEKEY_WARNING:HttpException ".$e." getting ".$url);
-            }
-            */
+ //           catch (HttpException $e)
+ //           {
+ //               error_log("SWEKEY_WARNING:HttpException ".$e." getting ".$url);
+ //           }
         }
 
         $response_code = 408; // Request Timeout
@@ -319,7 +306,7 @@ function Swekey_HttpGet($url, &$response_code)
         return "";
     }
 
-    global $http_response_header;
+       global $http_response_header;
     $res = @file_get_contents($url);
     $response_code = substr($http_response_header[0], 9, 3); //HTTP/1.0
     if ($response_code == 200) {
@@ -438,20 +425,17 @@ function Swekey_GetFastRndToken()
 /**
  *  Checks that an OTP generated by a Swekey is valid
  *
- * @param mixed $id  The id of the swekey
- * @param mixed $rt  The random token used to generate the otp
- * @param mixed $otp The otp generated by the swekey
+ * @param id                  The id of the swekey
+ * @param rt                   The random token used to generate the otp
+ * @param otp                  The otp generated by the swekey
  *
- * @return boolean Success
+ * @return true or false
  * @access public
  */
 function Swekey_CheckOtp($id, $rt, $otp)
 {
     global $gSwekeyCheckServer;
-    $res = Swekey_HttpGet(
-        $gSwekeyCheckServer.'/CHECK-OTP/'.$id.'/'.$rt.'/'.$otp,
-        $response_code
-    );
+    $res = Swekey_HttpGet($gSwekeyCheckServer.'/CHECK-OTP/'.$id.'/'.$rt.'/'.$otp, $response_code);
     return $response_code == 200 && $res == "OK";
 }
 
@@ -480,9 +464,9 @@ define("SWEKEY_STATUS_NOTPLUGGED", 200); // This key is not plugged in the compu
 /**
  *  Return the text corresponding to the integer status of a key
  *
- * @param int $status The status
+ * @param status              The status
  *
- * @return string The text corresponding to the status
+ * @return The text corresponding to the status
  * @access public
  */
 function Swekey_GetStatusStr($status)
@@ -520,9 +504,9 @@ function Swekey_GetStatusStr($status)
  *  is still valid (has not been lost or stolen) before requiring it.
  *  A key can be authenticated only if its status is SWEKEY_STATUS_OK
  *
- * @param mixed $id The id of the swekey
+ * @param id                  The id of the swekey
  *
- * @return int The status of the swekey
+ * @return The status of the swekey
  * @access public
  */
 function Swekey_GetStatus($id)
@@ -534,3 +518,5 @@ function Swekey_GetStatus($id)
     }
     return SWEKEY_STATUS_UNKOWN;
 }
+
+?>

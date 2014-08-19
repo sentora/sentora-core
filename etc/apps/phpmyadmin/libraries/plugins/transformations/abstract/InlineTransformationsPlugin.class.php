@@ -12,7 +12,7 @@ if (! defined('PHPMYADMIN')) {
 
 /* Get the transformations interface */
 require_once 'libraries/plugins/TransformationsPlugin.class.php';
-/* For PMA_Transformation_globalHtmlReplace */
+/* For PMA_transformation_global_html_replace */
 require_once 'libraries/transformations.lib.php';
 
 /**
@@ -42,7 +42,7 @@ abstract class InlineTransformationsPlugin extends TransformationsPlugin
      * @param array  $options transformation options
      * @param string $meta    meta information
      *
-     * @return string
+     * @return void
      */
     public function applyTransformation($buffer, $options = array(), $meta = '')
     {
@@ -63,10 +63,12 @@ abstract class InlineTransformationsPlugin extends TransformationsPlugin
                 . '" alt="[__BUFFER__]" width="320" height="240" />'
             );
         }
-        return PMA_Transformation_globalHtmlReplace(
+        $buffer = PMA_transformation_global_html_replace(
             $buffer,
             $transform_options
         );
+
+        return $buffer;
     }
 
     /**
