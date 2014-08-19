@@ -12,7 +12,7 @@ if (! defined('PHPMYADMIN')) {
 
 if (empty($is_db)) {
     if (strlen($db)) {
-        $is_db = @$GLOBALS['dbi']->selectDb($db);
+        $is_db = @PMA_DBI_select_db($db);
     } else {
         $is_db = false;
     }
@@ -40,7 +40,7 @@ if (empty($is_db)) {
                 }
                 PMA_sendHeaderLocation(
                     $cfg['PmaAbsoluteUri'] . 'index.php'
-                    . PMA_URL_getCommon($url_params, '&')
+                    . PMA_generate_common_url($url_params, '&')
                 );
             }
             exit;
@@ -58,13 +58,12 @@ if (empty($is_table)
         $is_table = isset(PMA_Table::$cache[$db][$table]);
 
         if (! $is_table) {
-            $_result = $GLOBALS['dbi']->tryQuery(
-                'SHOW TABLES LIKE \'' . PMA_Util::sqlAddSlashes($table, true)
-                . '\';',
-                null, PMA_DatabaseInterface::QUERY_STORE
+            $_result = PMA_DBI_try_query(
+                'SHOW TABLES LIKE \'' . PMA_Util::sqlAddSlashes($table, true) . '\';',
+                null, PMA_DBI_QUERY_STORE
             );
-            $is_table = @$GLOBALS['dbi']->numRows($_result);
-            $GLOBALS['dbi']->freeResult($_result);
+            $is_table = @PMA_DBI_num_rows($_result);
+            PMA_DBI_free_result($_result);
         }
     } else {
         $is_table = false;
@@ -81,13 +80,13 @@ if (empty($is_table)
                  * @todo should this check really
                  * only happen if IS_TRANSFORMATION_WRAPPER?
                  */
-                $_result = $GLOBALS['dbi']->tryQuery(
+                $_result = PMA_DBI_try_query(
                     'SELECT COUNT(*) FROM ' . PMA_Util::backquote($table) . ';',
                     null,
-                    PMA_DatabaseInterface::QUERY_STORE
+                    PMA_DBI_QUERY_STORE
                 );
-                $is_table = ($_result && @$GLOBALS['dbi']->numRows($_result));
-                $GLOBALS['dbi']->freeResult($_result);
+                $is_table = ($_result && @PMA_DBI_num_rows($_result));
+                PMA_DBI_free_result($_result);
             }
 
             if (! $is_table) {

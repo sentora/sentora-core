@@ -33,6 +33,7 @@ $forms['Servers']['Server'] = array('Servers' => array(1 => array(
     'socket',
     'ssl',
     'connect_type',
+    'extension',
     'compress',
     'nopassword')));
 $forms['Servers']['Server_auth'] = array('Servers' => array(1 => array(
@@ -56,20 +57,18 @@ $forms['Servers']['Server_config'] = array('Servers' => array(1 => array(
     'hide_db',
     'AllowRoot',
     'AllowNoPassword',
+    'DisableIS',
     'AllowDeny/order',
-    'AllowDeny/rules')));
+    'AllowDeny/rules',
+    'ShowDatabasesCommand')));
 $forms['Servers']['Server_pmadb'] = array('Servers' => array(1 => array(
     'pmadb' => 'phpmyadmin',
     'controlhost',
-    'controlport',
     'controluser',
     'controlpass',
     'bookmarktable' => 'pma__bookmark',
     'relation' => 'pma__relation',
     'userconfig' => 'pma__userconfig',
-    'users' => 'pma__users',
-    'usergroups' => 'pma__usergroups',
-    'navigationhiding' => 'pma__navigationhiding',
     'table_info' => 'pma__table_info',
     'column_info' => 'pma__column_info',
     'history' => 'pma__history',
@@ -79,7 +78,6 @@ $forms['Servers']['Server_pmadb'] = array('Servers' => array(1 => array(
     'table_coords' => 'pma__table_coords',
     'pdf_pages' => 'pma__pdf_pages',
     'designer_coords' => 'pma__designer_coords',
-    'savedsearches' => 'pma__savedsearches',
     'MaxTableUiprefs' => 100)));
 $forms['Servers']['Server_tracking'] = array('Servers' => array(1 => array(
     'tracking_version_auto_create',
@@ -108,9 +106,7 @@ $forms['Features']['Security'] = array(
     'LoginCookieRecall',
     'LoginCookieValidity',
     'LoginCookieStore',
-    'LoginCookieDeleteAll',
-    'CaptchaLoginPublicKey',
-    'CaptchaLoginPrivateKey');
+    'LoginCookieDeleteAll');
 $forms['Features']['Page_titles'] = array(
     'TitleDefault',
     'TitleTable',
@@ -119,18 +115,20 @@ $forms['Features']['Page_titles'] = array(
 $forms['Features']['Warnings'] = array(
     'ServerLibraryDifference_DisableWarning',
     'PmaNoRelation_DisableWarning',
-    'SuhosinDisableWarning');
+    'SuhosinDisableWarning',
+    'McryptDisableWarning');
 $forms['Features']['Developer'] = array(
     'UserprefsDeveloperTab',
     'Error_Handler/display',
+    'Error_Handler/gather',
     'DBG/sql');
 $forms['Features']['Other_core_settings'] = array(
+    'VersionCheck',
     'NaturalOrder',
     'InitialSlidersState',
     'MaxDbList',
     'MaxTableList',
     'NumRecentTables',
-    'NumFavoriteTables',
     'ShowHint',
     'OBGzip',
     'PersistentConnections',
@@ -139,13 +137,7 @@ $forms['Features']['Other_core_settings'] = array(
     'SkipLockedTables',
     'DisableMultiTableMaintenance',
     'UseDbSearch',
-    'VersionCheck',
-    'SendErrorReports',
-    'ProxyUrl',
-    'ProxyUser',
-    'ProxyPass',
-    'AllowThirdPartyFraming',
-);
+    'AllowThirdPartyFraming');
 $forms['Sql_queries']['Sql_queries'] = array(
     'ShowSQL',
     'Confirm',
@@ -163,16 +155,19 @@ $forms['Sql_queries']['Sql_box'] = array('SQLQuery' => array(
     'Edit',
     'Explain',
     'ShowAsPHP',
+    'Validate',
     'Refresh'));
+$forms['Sql_queries']['Sql_validator'] = array('SQLValidator' => array(
+    'use',
+    'username',
+    'password'));
 $forms['Navi_panel']['Navi_panel'] = array(
     'NavigationDisplayLogo',
     'NavigationLogoLink',
     'NavigationLogoLinkWindow',
     'NavigationTreePointerEnable',
-    'FirstLevelNavigationItems',
     'MaxNavigationItems',
     'NavigationTreeEnableGrouping',
-    'NavigationTreeDisableDatabaseExpansion',
     'NavigationTreeDisplayItemFilterMinimum');
 $forms['Navi_panel']['Navi_servers'] = array(
     'NavigationDisplayServers',
@@ -290,7 +285,6 @@ $forms['Export']['Sql'] = array('Export' => array(
         ':group:end',
     'sql_use_transaction',
     'sql_disable_fk',
-    'sql_views_as_tables',
     'sql_compatibility',
     ':group:' . __('Database export options'),
         'sql_drop_database',
@@ -299,9 +293,6 @@ $forms['Export']['Sql'] = array('Export' => array(
     ':group:' . __('Structure'),
         'sql_drop_table',
         'sql_procedure_function',
-        'sql_create_table',
-        'sql_create_view',
-        'sql_create_trigger',
         'sql_create_table_statements' => ':group',
             'sql_if_not_exists',
             'sql_auto_increment',
@@ -314,7 +305,7 @@ $forms['Export']['Sql'] = array('Export' => array(
         'sql_type',
         'sql_insert_syntax',
         'sql_max_query_size',
-        'sql_hex_for_binary',
+        'sql_hex_for_blob',
         'sql_utc_time'));
 $forms['Export']['CodeGen'] = array('Export' => array(
     'codegen_format'));

@@ -1,7 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Table SQL executor
  *
  * @package PhpMyAdmin
  */
@@ -39,13 +38,9 @@ require_once 'libraries/tbl_info.inc.php';
 /**
  * Query box, bookmark, insert data from textfile
  */
-$response->addHTML(
-    PMA_getHtmlForSqlQueryForm(
-        true, false,
-        isset($_REQUEST['delimiter'])
-        ? htmlspecialchars($_REQUEST['delimiter'])
-        : ';'
-    )
+PMA_sqlQueryForm(
+    true, false,
+    isset($_REQUEST['delimiter']) ? htmlspecialchars($_REQUEST['delimiter']) : ';'
 );
 
 ?>

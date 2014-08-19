@@ -212,10 +212,8 @@ class ExportHtmlword extends ExportPlugin
         }
 
         // Gets the data from the database
-        $result = $GLOBALS['dbi']->query(
-            $sql_query, null, PMA_DatabaseInterface::QUERY_UNBUFFERED
-        );
-        $fields_cnt = $GLOBALS['dbi']->numFields($result);
+        $result = PMA_DBI_query($sql_query, null, PMA_DBI_QUERY_UNBUFFERED);
+        $fields_cnt = PMA_DBI_num_fields($result);
 
         // If required, get fields name at the first line
         if (isset($GLOBALS['htmlword_columns'])) {
@@ -223,7 +221,7 @@ class ExportHtmlword extends ExportPlugin
             for ($i = 0; $i < $fields_cnt; $i++) {
                 $schema_insert .= '<td class="print"><strong>'
                     . htmlspecialchars(
-                        stripslashes($GLOBALS['dbi']->fieldName($result, $i))
+                        stripslashes(PMA_DBI_field_name($result, $i))
                     )
                     . '</strong></td>';
             } // end for
@@ -234,7 +232,7 @@ class ExportHtmlword extends ExportPlugin
         } // end if
 
         // Format the data
-        while ($row = $GLOBALS['dbi']->fetchRow($result)) {
+        while ($row = PMA_DBI_fetch_row($result)) {
             $schema_insert = '<tr class="print-category">';
             for ($j = 0; $j < $fields_cnt; $j++) {
                 if (! isset($row[$j]) || is_null($row[$j])) {
@@ -253,7 +251,7 @@ class ExportHtmlword extends ExportPlugin
                 return false;
             }
         } // end while
-        $GLOBALS['dbi']->freeResult($result);
+        PMA_DBI_free_result($result);
         if (! PMA_exportOutputHandler('</table>')) {
             return false;
         }
@@ -292,14 +290,14 @@ class ExportHtmlword extends ExportPlugin
          * Get the unique keys in the view
          */
         $unique_keys = array();
-        $keys = $GLOBALS['dbi']->getTableIndexes($db, $view);
+        $keys = PMA_DBI_get_table_indexes($db, $view);
         foreach ($keys as $key) {
             if ($key['Non_unique'] == 0) {
                 $unique_keys[] = $key['Column_name'];
             }
         }
 
-        $columns = $GLOBALS['dbi']->getColumns($db, $view);
+        $columns = PMA_DBI_get_columns($db, $view);
         foreach ($columns as $column) {
             $schema_insert .= $this->formatOneColumnDefinition(
                 $column,
@@ -355,7 +353,7 @@ class ExportHtmlword extends ExportPlugin
         /**
          * Gets fields properties
          */
-        $GLOBALS['dbi']->selectDb($db);
+        PMA_DBI_select_db($db);
 
         // Check if we can use Relations
         if ($do_relation && ! empty($cfgRelation['relation'])) {
@@ -420,12 +418,12 @@ class ExportHtmlword extends ExportPlugin
         }
         $schema_insert .= '</tr>';
 
-        $columns = $GLOBALS['dbi']->getColumns($db, $table);
+        $columns = PMA_DBI_get_columns($db, $table);
         /**
          * Get the unique keys in the table
          */
         $unique_keys = array();
-        $keys = $GLOBALS['dbi']->getTableIndexes($db, $table);
+        $keys = PMA_DBI_get_table_indexes($db, $table);
         foreach ($keys as $key) {
             if ($key['Non_unique'] == 0) {
                 $unique_keys[] = $key['Column_name'];
@@ -488,7 +486,7 @@ class ExportHtmlword extends ExportPlugin
         $dump .= '<td class="print"><strong>' . __('Definition') . '</strong></td>';
         $dump .= '</tr>';
 
-        $triggers = $GLOBALS['dbi']->getTriggers($db, $table);
+        $triggers = PMA_DBI_get_triggers($db, $table);
 
         foreach ($triggers as $trigger) {
             $dump .= '<tr class="print-category">';
@@ -559,7 +557,7 @@ class ExportHtmlword extends ExportPlugin
             break;
         case 'triggers':
             $dump = '';
-            $triggers = $GLOBALS['dbi']->getTriggers($db, $table);
+            $triggers = PMA_DBI_get_triggers($db, $table);
             if ($triggers) {
                 $dump .= '<h2>'
                     . __('Triggers') . ' ' . htmlspecialchars($table)

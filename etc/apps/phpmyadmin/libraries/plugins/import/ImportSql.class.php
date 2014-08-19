@@ -49,7 +49,7 @@ class ImportSql extends ImportPlugin
         $importPluginProperties->setExtension('sql');
         $importPluginProperties->setOptionsText(__('Options'));
 
-        $compats = $GLOBALS['dbi']->getCompatibilities();
+        $compats = PMA_DBI_getCompatibilities();
         if (count($compats) > 0) {
             $values = array();
             foreach ($compats as $val) {
@@ -152,9 +152,7 @@ class ImportSql extends ImportPlugin
             $sql_modes[] = 'NO_AUTO_VALUE_ON_ZERO';
         }
         if (count($sql_modes) > 0) {
-            $GLOBALS['dbi']->tryQuery(
-                'SET SQL_MODE="' . implode(',', $sql_modes) . '"'
-            );
+            PMA_DBI_try_query('SET SQL_MODE="' . implode(',', $sql_modes) . '"');
         }
         unset($sql_modes);
 
@@ -172,7 +170,7 @@ class ImportSql extends ImportPlugin
             $data = PMA_importGetNextChunk();
             if ($data === false) {
                 // subtract data we didn't handle yet and stop processing
-                $GLOBALS['offset'] -= strlen($buffer);
+                $offset -= strlen($buffer);
                 break;
             } elseif ($data === true) {
                 // Handle rest of buffer
@@ -189,11 +187,6 @@ class ImportSql extends ImportPlugin
                     continue;
                 }
             }
-
-            // Convert CR (but not CRLF) to LF otherwise all queries
-            // may not get executed on some platforms
-            $buffer = preg_replace("/\r($|[^\n])/", "\n$1", $buffer);
-
             // Current length of our buffer
             $len = strlen($buffer);
 
@@ -278,8 +271,10 @@ class ImportSql extends ImportPlugin
                         } elseif ($pos === false) { // No quote? Too short string
                             // We hit end of string => unclosed quote,
                             // but we handle it as end of query
-                            list($endq, $i)
-                                = $this->getEndQuoteAndPos($len, $endq, $i);
+                            if ($GLOBALS['finished']) {
+                                $endq = true;
+                                $i = $len - 1;
+                            }
                             $found_delimiter = false;
                             break;
                         }
@@ -441,23 +436,5 @@ class ImportSql extends ImportPlugin
         // Commit any possible data in buffers
         PMA_importRunQuery('', substr($buffer, 0, $len), false, $sql_data);
         PMA_importRunQuery('', '', false, $sql_data);
-    }
-
-    /**
-     * Get end quote and position
-     *
-     * @param int  $len      Length
-     * @param bool $endq     End quote
-     * @param int  $position Position
-     *
-     * @return array End quote, position
-     */
-    protected function getEndQuoteAndPos($len, $endq, $position)
-    {
-        if ($GLOBALS['finished']) {
-            $endq = true;
-            $position = $len - 1;
-        }
-        return array($endq, $position);
     }
 }

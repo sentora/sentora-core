@@ -4,7 +4,7 @@
  * Handles table search tab
  *
  * display table search form, create SQL query from form data
- * and call PMA_executeQueryAndSendQueryResponse() to execute it
+ * and include sql.php to execute it
  *
  * @package PhpMyAdmin
  */
@@ -13,9 +13,8 @@
  * Gets some core libraries
  */
 require_once 'libraries/common.inc.php';
-require_once 'libraries/mysql_charsets.inc.php';
+require_once 'libraries/mysql_charsets.lib.php';
 require_once 'libraries/TableSearch.class.php';
-require_once 'libraries/sql.lib.php';
 
 $response = PMA_Response::getInstance();
 $header   = $response->getHeader();
@@ -25,13 +24,22 @@ $scripts->addFile('sql.js');
 $scripts->addFile('tbl_select.js');
 $scripts->addFile('tbl_change.js');
 $scripts->addFile('jquery/jquery-ui-timepicker-addon.js');
-$scripts->addFile('jquery/jquery.uitablefilter.js');
 $scripts->addFile('gis_data_editor.js');
+
+$post_params = array(
+    'ajax_request',
+    'session_max_rows'
+);
+foreach ($post_params as $one_post_param) {
+    if (isset($_POST[$one_post_param])) {
+        $GLOBALS[$one_post_param] = $_POST[$one_post_param];
+    }
+}
 
 $table_search = new PMA_TableSearch($db, $table, "normal");
 
 /**
- * No selection criteria received -> display the selection form
+ * Not selection yet required -> displays the selection form
  */
 if (! isset($_POST['columnsToDisplay']) && ! isset($_POST['displayAllColumns'])) {
     // Gets some core libraries
@@ -47,9 +55,8 @@ if (! isset($_POST['columnsToDisplay']) && ! isset($_POST['displayAllColumns']))
         $goto = $GLOBALS['cfg']['DefaultTabTable'];
     }
     // Defines the url to return to in case of error in the next sql statement
-    $err_url   = $goto . '?' . PMA_URL_getCommon($db, $table);
+    $err_url   = $goto . '?' . PMA_generate_common_url($db, $table);
     // Displays the table search form
-    $response->addHTML($table_search->getSecondaryTabs());
     $response->addHTML($table_search->getSelectionForm($goto));
 
 } else {
@@ -57,16 +64,6 @@ if (! isset($_POST['columnsToDisplay']) && ! isset($_POST['displayAllColumns']))
      * Selection criteria have been submitted -> do the work
      */
     $sql_query = $table_search->buildSqlQuery();
-
-    /**
-     * Parse and analyze the query
-     */
-    include_once 'libraries/parse_analyze.inc.php';
-
-    PMA_executeQueryAndSendQueryResponse(
-        $analyzed_sql_results, false, $db, $table, null, null, null, false, null,
-        null, null, null, $goto, $pmaThemeImage, null, null, null, $sql_query,
-        null, null
-    );
+    include 'sql.php';
 }
 ?>

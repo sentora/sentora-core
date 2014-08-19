@@ -200,10 +200,9 @@ class ExportMediawiki extends ExportPlugin
         $do_mime = false,
         $dates = false
     ) {
-        $output = '';
         switch($export_mode) {
         case 'create_table':
-            $columns = $GLOBALS['dbi']->getColumns($db, $table);
+            $columns = PMA_DBI_get_columns($db, $table);
             $columns = array_values($columns);
             $row_cnt = count($columns);
 
@@ -218,17 +217,17 @@ class ExportMediawiki extends ExportPlugin
                      . $this->_exportCRLF();
 
             // Add the table name
-            if (isset($GLOBALS['mediawiki_caption'])) {
+            if ($GLOBALS['mediawiki_caption']) {
                 $output .= "|+'''" . $table . "'''" . $this->_exportCRLF();
             }
 
             // Add the table headers
-            if (isset($GLOBALS['mediawiki_headers'])) {
+            if ($GLOBALS['mediawiki_headers']) {
                 $output .= "|- style=\"background:#ffdead;\"" . $this->_exportCRLF();
                 $output .= "! style=\"background:#ffffff\" | "
                     . $this->_exportCRLF();
                 for ($i = 0; $i < $row_cnt; ++$i) {
-                    $output .= " | " . $columns[$i]['Field'] . $this->_exportCRLF();
+                    $output .= " | " . $columns[$i]['Field']. $this->_exportCRLF();
                 }
             }
 
@@ -284,7 +283,7 @@ class ExportMediawiki extends ExportPlugin
     ) {
         // Print data comment
         $output = $this->_exportComment(
-            "Table data for " . PMA_Util::backquote($table)
+            "Table data for ". PMA_Util::backquote($table)
         );
 
         // Begin the table construction
@@ -294,14 +293,14 @@ class ExportMediawiki extends ExportPlugin
             . $this->_exportCRLF();
 
         // Add the table name
-        if (isset($GLOBALS['mediawiki_caption'])) {
+        if ($GLOBALS['mediawiki_caption']) {
             $output .= "|+'''" . $table . "'''" . $this->_exportCRLF();
         }
 
         // Add the table headers
-        if (isset($GLOBALS['mediawiki_headers'])) {
+        if ($GLOBALS['mediawiki_headers']) {
             // Get column names
-            $column_names = $GLOBALS['dbi']->getColumnNames($db, $table);
+            $column_names = PMA_DBI_get_column_names($db, $table);
 
             // Add column names as table headers
             if ( ! is_null($column_names) ) {
@@ -316,12 +315,10 @@ class ExportMediawiki extends ExportPlugin
         }
 
         // Get the table data from the database
-        $result = $GLOBALS['dbi']->query(
-            $sql_query, null, PMA_DatabaseInterface::QUERY_UNBUFFERED
-        );
-        $fields_cnt = $GLOBALS['dbi']->numFields($result);
+        $result = PMA_DBI_query($sql_query, null, PMA_DBI_QUERY_UNBUFFERED);
+        $fields_cnt = PMA_DBI_num_fields($result);
 
-        while ($row = $GLOBALS['dbi']->fetchRow($result)) {
+        while ($row = PMA_DBI_fetch_row($result)) {
             $output .= "|-" . $this->_exportCRLF();
 
             // Use '|' for separating table columns

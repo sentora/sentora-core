@@ -9,14 +9,12 @@ if (! defined('PHPMYADMIN')) {
     exit;
 }
 
-require_once 'libraries/navigation/Nodes/Node_DatabaseChild.class.php';
-
 /**
  * Represents a procedure node in the navigation tree
  *
  * @package PhpMyAdmin-Navigation
  */
-class Node_Procedure extends Node_DatabaseChild
+class Node_Procedure extends Node
 {
     /**
      * Initialises the class
@@ -35,22 +33,12 @@ class Node_Procedure extends Node_DatabaseChild
         $this->links = array(
             'text' => 'db_routines.php?server=' . $GLOBALS['server']
                     . '&amp;db=%2$s&amp;item_name=%1$s&amp;item_type=PROCEDURE'
-                    . '&amp;execute_dialog=1&amp;token=' . $GLOBALS['token'],
+                    . '&amp;edit_item=1&amp;token=' . $GLOBALS['token'],
             'icon' => 'db_routines.php?server=' . $GLOBALS['server']
                     . '&amp;db=%2$s&amp;item_name=%1$s&amp;item_type=PROCEDURE'
-                    . '&amp;edit_item=1&amp;token=' . $GLOBALS['token']
+                    . '&amp;export_item=1&amp;token=' . $GLOBALS['token']
         );
         $this->classes = 'procedure';
-    }
-
-    /**
-     * Returns the type of the item represented by the node.
-     *
-     * @return string type of the item
-     */
-    protected function getItemType()
-    {
-        return 'procedure';
     }
 }
 

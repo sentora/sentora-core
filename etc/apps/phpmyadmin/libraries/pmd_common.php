@@ -1,12 +1,17 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Common functions for Designer
- *
  * @package PhpMyAdmin-Designer
  */
 /**
- * Block attempts to directly run this script
+ * block attempts to directly run this script 
+ */
+if (getcwd() == dirname(__FILE__)) {
+    die('Attack stopped');
+}
+
+/**
+ *
  */
 if (! defined('PHPMYADMIN')) {
     exit;
@@ -17,11 +22,11 @@ $GLOBALS['PMD']['STYLE']          = 'default';
 $cfgRelation = PMA_getRelationsParam();
 
 /**
- * Retrieves table info and stores it in $GLOBALS['PMD']
+ * retrieves table info and stores it in $GLOBALS['PMD']
  *
  * @return array with table info
  */
-function PMA_getTablesInfo()
+function get_tables_info()
 {
     $retval = array();
 
@@ -29,9 +34,9 @@ function PMA_getTablesInfo()
     $GLOBALS['PMD']['OWNER'] = array();
     $GLOBALS['PMD']['TABLE_NAME_SMALL'] = array();
 
-    $tables = $GLOBALS['dbi']->getTablesFull($GLOBALS['db']);
+    $tables = PMA_DBI_get_tables_full($GLOBALS['db']);
     // seems to be needed later
-    $GLOBALS['dbi']->selectDb($GLOBALS['db']);
+    PMA_DBI_select_db($GLOBALS['db']);
     $i = 0;
     foreach ($tables as $one_table) {
         $GLOBALS['PMD']['TABLE_NAME'][$i]
@@ -69,28 +74,28 @@ function PMA_getTablesInfo()
 }
 
 /**
- * Retrieves table column info
+ * retrieves table column info
  *
  * @return array   table column nfo
  */
-function PMA_getColumnsInfo()
+function get_columns_info()
 {
-    $GLOBALS['dbi']->selectDb($GLOBALS['db']);
+    PMA_DBI_select_db($GLOBALS['db']);
     $tab_column = array();
     for ($i = 0, $cnt = count($GLOBALS['PMD']["TABLE_NAME"]); $i < $cnt; $i++) {
-        $fields_rs = $GLOBALS['dbi']->query(
-            $GLOBALS['dbi']->getColumnsSql(
+        $fields_rs = PMA_DBI_query(
+            PMA_DBI_get_columns_sql(
                 $GLOBALS['db'],
                 $GLOBALS['PMD']["TABLE_NAME_SMALL"][$i],
                 null,
                 true
             ),
             null,
-            PMA_DatabaseInterface::QUERY_STORE
+            PMA_DBI_QUERY_STORE
         );
         $tbl_name_i = $GLOBALS['PMD']['TABLE_NAME'][$i];
         $j = 0;
-        while ($row = $GLOBALS['dbi']->fetchAssoc($fields_rs)) {
+        while ($row = PMA_DBI_fetch_assoc($fields_rs)) {
             $tab_column[$tbl_name_i]['COLUMN_ID'][$j]   = $j;
             $tab_column[$tbl_name_i]['COLUMN_NAME'][$j] = $row['Field'];
             $tab_column[$tbl_name_i]['TYPE'][$j]        = $row['Type'];
@@ -102,22 +107,21 @@ function PMA_getColumnsInfo()
 }
 
 /**
- * Returns JavaScript code for initializing vars
+ * returns JavaScript code for intializing vars
  *
  * @return string   JavaScript code
  */
-function PMA_getScriptContr()
+function get_script_contr()
 {
-    $GLOBALS['dbi']->selectDb($GLOBALS['db']);
-    $con = array();
+    PMA_DBI_select_db($GLOBALS['db']);
     $con["C_NAME"] = array();
     $i = 0;
-    $alltab_rs = $GLOBALS['dbi']->query(
+    $alltab_rs = PMA_DBI_query(
         'SHOW TABLES FROM ' . PMA_Util::backquote($GLOBALS['db']),
         null,
-        PMA_DatabaseInterface::QUERY_STORE
+        PMA_DBI_QUERY_STORE
     );
-    while ($val = @$GLOBALS['dbi']->fetchRow($alltab_rs)) {
+    while ($val = @PMA_DBI_fetch_row($alltab_rs)) {
         $row = PMA_getForeigners($GLOBALS['db'], $val[0], '', 'internal');
         //echo "<br> internal ".$GLOBALS['db']." - ".$val[0]." - ";
         //print_r($row);
@@ -139,10 +143,10 @@ function PMA_getScriptContr()
         if ($row !== false) {
             foreach ($row as $field => $value) {
                 $con['C_NAME'][$i] = '';
-                $con['DTN'][$i]    = urlencode($GLOBALS['db'] . "." . $val[0]);
+                $con['DTN'][$i]    = urlencode($GLOBALS['db'].".".$val[0]);
                 $con['DCN'][$i]    = urlencode($field);
                 $con['STN'][$i]    = urlencode(
-                    $value['foreign_db'] . "." . $value['foreign_table']
+                    $value['foreign_db'].".".$value['foreign_table']
                 );
                 $con['SCN'][$i]    = urlencode($value['foreign_field']);
                 $i++;
@@ -176,19 +180,19 @@ function PMA_getScriptContr()
  *
  * @return array unique or primary indices
  */
-function PMA_getPKOrUniqueKeys()
+function get_pk_or_unique_keys()
 {
-    return PMA_getAllKeys(true);
+    return get_all_keys(true);
 }
 
 /**
- * Returns all indices
+ * returns all indices
  *
  * @param bool $unique_only whether to include only unique ones
  *
  * @return array indices
  */
-function PMA_getAllKeys($unique_only = false)
+function get_all_keys($unique_only = false)
 {
     include_once './libraries/Index.class.php';
 
@@ -203,7 +207,7 @@ function PMA_getAllKeys($unique_only = false)
             }
             $columns = $index->getColumns();
             foreach ($columns as $column_name => $dummy) {
-                $keys[$schema . '.' . $table . '.' . $column_name] = 1;
+                $keys[$schema . '.' .$table . '.' . $column_name] = 1;
             }
         }
     }
@@ -215,8 +219,11 @@ function PMA_getAllKeys($unique_only = false)
  *
  * @return string
  */
-function PMA_getScriptTabs()
+function get_script_tabs()
 {
+    $script_tabs = 'var j_tabs = new Array();' . "\n"
+        . 'var h_tabs = new Array();' . "\n" ;
+
     $retval = array(
         'j_tabs' => array(),
         'h_tabs' => array()
@@ -238,7 +245,7 @@ function PMA_getScriptTabs()
  *
  * @return array table positions and sizes
  */
-function PMA_getTabPos()
+function get_tab_pos()
 {
     $cfgRelation = PMA_getRelationsParam();
 
@@ -254,34 +261,9 @@ function PMA_getTabPos()
                 `h` AS `H`
            FROM " . PMA_Util::backquote($cfgRelation['db'])
         . "." . PMA_Util::backquote($cfgRelation['designer_coords']);
-    $tab_pos = $GLOBALS['dbi']->fetchResult(
-        $query,
-        'name',
-        null,
-        $GLOBALS['controllink'],
-        PMA_DatabaseInterface::QUERY_STORE
+    $tab_pos = PMA_DBI_fetch_result(
+        $query, 'name', null, $GLOBALS['controllink'], PMA_DBI_QUERY_STORE
     );
     return count($tab_pos) ? $tab_pos : null;
-}
-
-/**
- * Prepares XML output for js/pmd/ajax.js to display a message
- *
- * @param string $b   b attribute value
- * @param string $ret Return attribute value
- *
- * @return void
- */
-function PMA_returnUpd($b, $ret)
-{
-    // not sure where this was defined...
-    global $K;
-
-    header("Content-Type: text/xml; charset=utf-8");
-    header("Cache-Control: no-cache");
-    die(
-        '<root act="relation_upd" return="' . $ret . '" b="'
-        . $b . '" K="' . $K . '"></root>'
-    );
 }
 ?>

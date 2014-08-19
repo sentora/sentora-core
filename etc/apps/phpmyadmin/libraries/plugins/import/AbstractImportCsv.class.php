@@ -25,7 +25,7 @@ abstract class AbstractImportCsv extends ImportPlugin
      * Sets the import plugin properties.
      * Called in the constructor.
      *
-     * @return OptionsPropertyMainGroup OptionsPropertyMainGroup object of the plugin
+     * @return object OptionsPropertyMainGroup object of the plugin
      */
     protected function setProperties()
     {
@@ -58,6 +58,7 @@ abstract class AbstractImportCsv extends ImportPlugin
         $leaf->setName("terminated");
         $leaf->setText(__('Columns separated with:'));
         $leaf->setSize(2);
+        $leaf->setLen(2);
         $generalOptions->addProperty($leaf);
         $leaf = new TextPropertyItem();
         $leaf->setName("enclosed");

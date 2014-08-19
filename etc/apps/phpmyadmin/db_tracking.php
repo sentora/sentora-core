@@ -1,8 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Tracking configuration for database
- *
  * @package PhpMyAdmin
  */
 
@@ -50,7 +48,7 @@ $data = PMA_Tracker::getTrackedData($_REQUEST['db'], '', '1');
 if ($num_tables == 0 && count($data['ddlog']) == 0) {
     echo '<p>' . __('No tables found in database.') . '</p>' . "\n";
 
-    if (empty($db_is_system_schema)) {
+    if (empty($db_is_information_schema)) {
         include 'libraries/display_create_table.lib.php';
     }
     exit;
@@ -69,8 +67,8 @@ $all_tables_query = ' SELECT table_name, MAX(version) as version FROM ' .
 $all_tables_result = PMA_queryAsControlUser($all_tables_query);
 
 // If a HEAD version exists
-if ($GLOBALS['dbi']->numRows($all_tables_result) > 0) {
-    ?>
+if (PMA_DBI_num_rows($all_tables_result) > 0) {
+?>
     <div id="tracked_tables">
     <h3><?php echo __('Tracked tables');?></h3>
 
@@ -93,18 +91,26 @@ if ($GLOBALS['dbi']->numRows($all_tables_result) > 0) {
     // Print out information about versions
 
     $drop_image_or_text = '';
-    if (PMA_Util::showIcons('ActionLinksMode')) {
+    if (in_array(
+        $GLOBALS['cfg']['ActionLinksMode'],
+        array('icons', 'both')
+        )
+    ) {
         $drop_image_or_text .= PMA_Util::getImage(
             'b_drop.png',
             __('Delete tracking data for this table')
         );
     }
-    if (PMA_Util::showText('ActionLinksMode')) {
+    if (in_array(
+        $GLOBALS['cfg']['ActionLinksMode'],
+        array('text', 'both')
+        )
+    ) {
         $drop_image_or_text .= __('Drop');
     }
 
     $style = 'odd';
-    while ($one_result = $GLOBALS['dbi']->fetchArray($all_tables_result)) {
+    while ($one_result = PMA_DBI_fetch_array($all_tables_result)) {
         list($table_name, $version_number) = $one_result;
         $table_query = ' SELECT * FROM ' .
              PMA_Util::backquote($GLOBALS['cfg']['Server']['pmadb']) . '.' .
@@ -114,7 +120,7 @@ if ($GLOBALS['dbi']->numRows($all_tables_result) > 0) {
              . '\' AND `version` = \'' . $version_number . '\'';
 
         $table_result = PMA_queryAsControlUser($table_query);
-        $version_data = $GLOBALS['dbi']->fetchArray($table_result);
+        $version_data = PMA_DBI_fetch_array($table_result);
 
         if ($version_data['tracking_active'] == 1) {
             $version_status = __('active');
@@ -134,22 +140,12 @@ if ($GLOBALS['dbi']->numRows($all_tables_result) > 0) {
             <td><?php echo $version_data['date_created'];?></td>
             <td><?php echo $version_data['date_updated'];?></td>
             <td><?php echo $version_status;?></td>
-            <td>
-            <a class="drop_tracking_anchor ajax" href="<?php echo $delete_link;?>" >
-            <?php echo $drop_image_or_text; ?></a>
+            <td><a class="drop_tracking_anchor ajax" href="<?php echo $delete_link;?>" ><?php echo $drop_image_or_text; ?></a></td>
+            <td> <a href="<?php echo $tmp_link; ?>"><?php echo __('Versions');?></a>
+               | <a href="<?php echo $tmp_link; ?>&amp;report=true&amp;version=<?php echo $version_data['version'];?>"><?php echo __('Tracking report');?></a>
+               | <a href="<?php echo $tmp_link; ?>&amp;snapshot=true&amp;version=<?php echo $version_data['version'];?>"><?php echo __('Structure snapshot');?></a></td>
+        </tr>
         <?php
-        echo '</td>'
-            . '<td>'
-            . '<a href="' . $tmp_link . '">' . __('Versions') . '</a>'
-            . '&nbsp;|&nbsp;'
-            . '<a href="' . $tmp_link . '&amp;report=true&amp;version='
-            . $version_data['version'] . '">' . __('Tracking report') . '</a>'
-            . '&nbsp;|&nbsp;'
-            . '<a href="' . $tmp_link . '&amp;snapshot=true&amp;version='
-            . $version_data['version'] . '">' . __('Structure snapshot')
-            . '</a>'
-            . '</td>'
-            . '</tr>';
         if ($style == 'even') {
             $style = 'odd';
         } else {
@@ -161,7 +157,7 @@ if ($GLOBALS['dbi']->numRows($all_tables_result) > 0) {
     </tbody>
     </table>
     </div>
-    <?php
+<?php
 }
 
 $sep = $GLOBALS['cfg']['NavigationTreeTableSeparator'];
@@ -199,7 +195,7 @@ foreach ($table_list as $key => $value) {
 
 // If untracked tables exist
 if (isset($my_tables)) {
-    ?>
+?>
     <h3><?php echo __('Untracked tables');?></h3>
 
     <table id="noversions" class="data">
@@ -210,7 +206,7 @@ if (isset($my_tables)) {
     </tr>
     </thead>
     <tbody>
-    <?php
+<?php
     // Print out list of untracked tables
 
     $style = 'odd';
@@ -218,15 +214,15 @@ if (isset($my_tables)) {
     foreach ($my_tables as $key => $tablename) {
         if (PMA_Tracker::getVersion($GLOBALS['db'], $tablename) == -1) {
             $my_link = '<a href="tbl_tracking.php?' . $url_query
-                . '&amp;table=' . htmlspecialchars($tablename) . '">';
+                . '&amp;table=' . htmlspecialchars($tablename) .'">';
             $my_link .= PMA_Util::getIcon('eye.png', __('Track table'));
             $my_link .= '</a>';
-            ?>
+        ?>
             <tr class="noclick <?php echo $style;?>">
             <td><?php echo htmlspecialchars($tablename);?></td>
             <td><?php echo $my_link;?></td>
             </tr>
-            <?php
+        <?php
             if ($style == 'even') {
                 $style = 'odd';
             } else {
@@ -237,7 +233,8 @@ if (isset($my_tables)) {
     ?>
     </tbody>
     </table>
-    <?php
+
+<?php
 }
 // If available print out database log
 if (count($data['ddlog']) > 0) {

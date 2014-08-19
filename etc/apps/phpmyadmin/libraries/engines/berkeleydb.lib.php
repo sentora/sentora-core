@@ -1,10 +1,12 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * The BerkeleyDB storage engine
- *
  * @package PhpMyAdmin-Engines
  */
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
 if (! defined('PHPMYADMIN')) {
     exit;
 }
@@ -19,7 +21,7 @@ require_once './libraries/engines/bdb.lib.php';
  *
  * @package PhpMyAdmin-Engines
  */
-class PMA_StorageEngine_Berkeleydb extends PMA_StorageEngine_Bdb
+class PMA_StorageEngine_berkeleydb extends PMA_StorageEngine_bdb
 {
 }
 

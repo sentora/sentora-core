@@ -32,15 +32,15 @@ class Advisor
 
         // Step 1: Get some variables to evaluate on
         $this->variables = array_merge(
-            $GLOBALS['dbi']->fetchResult('SHOW GLOBAL STATUS', 0, 1),
-            $GLOBALS['dbi']->fetchResult('SHOW GLOBAL VARIABLES', 0, 1)
+            PMA_DBI_fetch_result('SHOW GLOBAL STATUS', 0, 1),
+            PMA_DBI_fetch_result('SHOW GLOBAL VARIABLES', 0, 1)
         );
         if (PMA_DRIZZLE) {
             $this->variables = array_merge(
                 $this->variables,
-                $GLOBALS['dbi']->fetchResult(
-                    "SELECT concat('Com_', variable_name), variable_value "
-                    . "FROM data_dictionary.GLOBAL_STATEMENTS", 0, 1
+                PMA_DBI_fetch_result(
+                    "SELECT concat('Com_', variable_name), variable_value
+                    FROM data_dictionary.GLOBAL_STATEMENTS", 0, 1
                 )
             );
         }
@@ -48,8 +48,7 @@ class Advisor
         include_once 'libraries/sysinfo.lib.php';
         $sysinfo = PMA_getSysInfo();
         $memory  = $sysinfo->memory();
-        $this->variables['system_memory']
-            = isset($memory['MemTotal']) ? $memory['MemTotal'] : 0;
+        $this->variables['system_memory'] = $memory['MemTotal'];
 
         // Step 2: Read and parse the list of rules
         $this->parseResult = $this->parseRulesFile();
@@ -66,8 +65,8 @@ class Advisor
     /**
      * Stores current error in run results.
      *
-     * @param string    $description description of an error.
-     * @param Exception $exception   exception raised
+     * @param string $description description of an error.
+     * @param object $exception   exception raised
      *
      * @return void
      */
@@ -75,16 +74,13 @@ class Advisor
     {
         $this->runResult['errors'][] = $description
             . ' '
-            . sprintf(
-                __('PHP threw following error: %s'),
-                $exception->getMessage()
-            );
+            . sprintf(__('PHP threw following error: %s'), $exception->getMessage());
     }
 
     /**
      * Executes advisor rules
      *
-     * @return boolean
+     * @return void
      */
     function runRules()
     {
@@ -105,7 +101,7 @@ class Advisor
                 } catch (Exception $e) {
                     $this->storeError(
                         sprintf(
-                            __('Failed evaluating precondition for rule \'%s\'.'),
+                            __('Failed evaluating precondition for rule \'%s\''),
                             $rule['name']
                         ),
                         $e
@@ -122,7 +118,7 @@ class Advisor
                 } catch(Exception $e) {
                     $this->storeError(
                         sprintf(
-                            __('Failed calculating value for rule \'%s\'.'),
+                            __('Failed calculating value for rule \'%s\''),
                             $rule['name']
                         ),
                         $e
@@ -141,7 +137,7 @@ class Advisor
                 }  catch(Exception $e) {
                     $this->storeError(
                         sprintf(
-                            __('Failed running test for rule \'%s\'.'),
+                            __('Failed running test for rule \'%s\''),
                             $rule['name']
                         ),
                         $e
@@ -175,19 +171,21 @@ class Advisor
      */
     function translate($str, $param = null)
     {
-        $string = _gettext(Advisor::escapePercent($str));
-        if ( ! is_null($param)) {
-            $params = $this->ruleExprEvaluate('array(' . $param . ')');
+        if (is_null($param)) {
+            return sprintf(_gettext(Advisor::escapePercent($str)));
         } else {
-            $params = array();
+            $printf = 'sprintf("' . _gettext(Advisor::escapePercent($str)) . '",';
+            return $this->ruleExprEvaluate(
+                $printf . $param . ')',
+                strlen($printf)
+            );
         }
-        return vsprintf($string, $params);
     }
 
     /**
      * Splits justification to text and formula.
      *
-     * @param array $rule the rule
+     * @param string $rule the rule
      *
      * @return array
      */
@@ -204,7 +202,7 @@ class Advisor
      * Adds a rule to the result list
      *
      * @param string $type type of rule
-     * @param array  $rule rule itself
+     * @param array  $rule rule itslef
      *
      * @return void
      */
@@ -241,8 +239,7 @@ class Advisor
             // linking to server_variables.php
             $rule['recommendation'] = preg_replace(
                 '/\{([a-z_0-9]+)\}/Ui',
-                '<a href="server_variables.php?' . PMA_URL_getCommon()
-                . '&filter=\1">\1</a>',
+                '<a href="server_variables.php?' . PMA_generate_common_url() . '&filter=\1">\1</a>',
                 $this->translate($rule['recommendation'])
             );
 
@@ -263,7 +260,7 @@ class Advisor
      *
      * @param array $matches List of matched elements form preg_replace_callback
      *
-     * @return string Replacement value
+     * @return Replacement value
      */
     private function _replaceLinkURL($matches)
     {
@@ -275,7 +272,7 @@ class Advisor
      *
      * @param array $matches List of matched elements form preg_replace_callback
      *
-     * @return string Replacement value
+     * @return Replacement value
      */
     private function _ruleExprEvaluateFired($matches)
     {
@@ -299,7 +296,7 @@ class Advisor
      *
      * @param array $matches List of matched elements form preg_replace_callback
      *
-     * @return string Replacement value
+     * @return Replacement value
      */
     private function _ruleExprEvaluateVariable($matches)
     {
@@ -317,14 +314,19 @@ class Advisor
      * Runs a code expression, replacing variable names with their respective
      * values
      *
-     * @param string $expr expression to evaluate
+     * @param string $expr        expression to evaluate
+     * @param int    $ignoreUntil if > 0, it doesn't replace any variables until
+     *                            that string position, but still evaluates the
+     *                            whole expr
      *
-     * @return string result of evaluated expression
-     *
-     * @throws Exception
+     * @return result of evaluated expression
      */
-    function ruleExprEvaluate($expr)
+    function ruleExprEvaluate($expr, $ignoreUntil = 0)
     {
+        if ($ignoreUntil > 0) {
+            $exprIgnore = substr($expr, 0, $ignoreUntil);
+            $expr = substr($expr, $ignoreUntil);
+        }
         // Evaluate fired() conditions
         $expr = preg_replace_callback(
             '/fired\s*\(\s*(\'|")(.*)\1\s*\)/Ui',
@@ -337,26 +339,22 @@ class Advisor
             array($this, '_ruleExprEvaluateVariable'),
             $expr
         );
+        if ($ignoreUntil > 0) {
+            $expr = $exprIgnore . $expr;
+        }
         $value = 0;
         $err = 0;
 
         // Actually evaluate the code
         ob_start();
-        try {
-            eval('$value = ' . $expr . ';');
-            $err = ob_get_contents();
-        } catch (Exception $e) {
-            // In normal operation, there is just output in the buffer,
-            // but when running under phpunit, error in eval raises exception
-            $err = $e->getMessage();
-        }
+        eval('$value = ' . $expr . ';');
+        $err = ob_get_contents();
         ob_end_clean();
 
         // Error handling
         if ($err) {
             throw new Exception(
-                strip_tags($err)
-                . '<br />Executed code: $value = ' . htmlspecialchars($expr) . ';'
+                strip_tags($err) . '<br />Executed code: $value = ' . htmlspecialchars($expr) . ';'
             );
         }
         return $value;
@@ -392,10 +390,7 @@ class Advisor
             if (substr($line, 0, 4) == 'rule') {
                 if ($ruleLine > 0) {
                     $errors[] = sprintf(
-                        __(
-                            'Invalid rule declaration on line %1$s, expected line '
-                            . '%2$s of previous rule.'
-                        ),
+                        __('Invalid rule declaration on line %1$s, expected line %2$s of previous rule'),
                         $i + 1,
                         $ruleSyntax[$ruleLine++]
                     );
@@ -412,7 +407,7 @@ class Advisor
                     }
                 } else {
                     $errors[] = sprintf(
-                        __('Invalid rule declaration on line %s.'),
+                        __('Invalid rule declaration on line %s'),
                         $i + 1
                     );
                 }
@@ -420,7 +415,7 @@ class Advisor
             } else {
                 if ($ruleLine == -1) {
                     $errors[] = sprintf(
-                        __('Unexpected characters on line %s.'),
+                        __('Unexpected characters on line %s'),
                         $i + 1
                     );
                 }
@@ -434,10 +429,7 @@ class Advisor
                 // Non tabbed lines are not
                 if ($line[0] != "\t") {
                     $errors[] = sprintf(
-                        __(
-                            'Unexpected character on line %1$s. Expected tab, but '
-                            . 'found "%2$s".'
-                        ),
+                        __('Unexpected character on line %1$s. Expected tab, but found "%2$s"'),
                         $i + 1,
                         $line[0]
                     );
@@ -462,12 +454,13 @@ class Advisor
  * Formats interval like 10 per hour
  *
  * @param integer $num       number to format
- * @param integer $precision required precision
+ * @param intefer $precision required precision
  *
- * @return string formatted string
+ * @return formatted string
  */
 function ADVISOR_bytime($num, $precision)
 {
+    $per = '';
     if ($num >= 1) { // per second
         $per = __('per second');
     } elseif ($num * 60 >= 1) { // per minute
@@ -513,7 +506,7 @@ function ADVISOR_timespanFormat($seconds)
  */
 function ADVISOR_formatByteDown($value, $limes = 6, $comma = 0)
 {
-    return implode(' ', PMA_Util::formatByteDown($value, $limes, $comma));
+    return PMA_Util::formatByteDown($value, $limes, $comma);
 }
 
 ?>

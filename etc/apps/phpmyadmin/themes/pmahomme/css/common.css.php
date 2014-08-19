@@ -98,9 +98,7 @@ h3 {
 a,
 a:link,
 a:visited,
-a:active,
-button.mult_submit,
-.checkall_box+label {
+a:active {
     text-decoration: none;
     color: #235a81;
     cursor: pointer;
@@ -108,10 +106,7 @@ button.mult_submit,
 
 }
 
-a:hover,
-button.mult_submit:hover,
-button.mult_submit:focus,
-.checkall_box+label:hover {
+a:hover {
     text-decoration: underline;
     color: #235a81;
 }
@@ -136,13 +131,7 @@ button.mult_submit:focus,
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'e0e0e0'); ?>
-}
-
-#initials_table a.active {
-    border: 1px solid #666;
-    box-shadow: 0 0 2px #999;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('bbbbbb', 'ffffff'); ?>
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'cccccc'); ?>
 }
 
 dfn {
@@ -178,85 +167,38 @@ form {
     display: inline;
 }
 
-
-input,
-select {
-    /* Fix outline in Chrome: */
-    outline: none;
-}
-
-input[type=text],
-input[type=password],
-input[type=number],
-input[type=date] {
+input[type=text] {
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
 
+    box-shadow: 0 1px 2px #ddd;
+    -moz-box-shadow: 0 1px 2px #ddd;
+    -webkit-box-shadow: 0 1px 2px #ddd;
 
     background: white;
     border: 1px solid #aaa;
     color: #555;
     padding: 4px;
     margin: 6px;
+
 }
 
-input[type=number] {
-    width: 50px;
-}
+input[type=password] {
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
 
-input[type=text],
-input[type=password],
-input[type=number],
-input[type=date],
-select {
-    transition: all 0.2s;
-    -ms-transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-}
+    box-shadow: 0 1px 2px #ddd;
+    -moz-box-shadow: 0 1px 2px #ddd;
+    -webkit-box-shadow: 0 1px 2px #ddd;
 
-input[type=text][disabled],
-input[type=text][disabled]:hover,
-input[type=password][disabled],
-input[type=password][disabled]:hover,
-input[type=number][disabled],
-input[type=number][disabled]:hover,
-input[type=date][disabled],
-input[type=date][disabled]:hover,
-select[disabled],
-select[disabled]:hover {
-    background: #e8e8e8;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-}
+    background: white;
+    border: 1px solid #aaa;
+    color: #555;
+    padding: 4px;
+    margin: 6px;
 
-input[type=text]:hover,
-input[type=text]:focus,
-input[type=password]:hover,
-input[type=password]:focus,
-input[type=number]:hover,
-input[type=number]:focus,
-input[type=date]:hover,
-input[type=date]:focus,
-select:focus,
-select:hover {
-
-    border: 1px solid #7c7c7c;
-
-
-    background: #fff;
-}
-
-input[type=text]:hover,
-input[type=password]:hover,
-input[type=number]:hover,
-input[type=date]:hover,
-select:hover {
-    box-shadow: 0 1px 3px #aaa;
-    -webkit-box-shadow: 0 1px 3px #aaa;
-    -moz-box-shadow: 0 1px 3px #aaa;
 }
 
 input[type=submit],
@@ -282,7 +224,7 @@ input.button {
 
     text-shadow: 0 1px 0 #fff;
 
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('f8f8f8', 'd8d8d8'); ?>
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'cccccc'); ?>
 }
 
 input[type=submit]:hover,
@@ -291,7 +233,7 @@ input[type=reset]:hover,
 input[name=submit_reset]:hover,
 input.button:hover {
     position: relative;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('fff', 'ddd'); ?>
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('cccccc', 'dddddd'); ?>
     cursor: pointer;
 }
 
@@ -301,9 +243,8 @@ input[type=reset]:active,
 input[name=submit_reset]:active,
 input.button:active {
     position: relative;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('eee', 'ddd'); ?>
-    box-shadow: 0 1px 6px -2px #333 inset;
-    text-shadow: none;
+    top: 1px;
+    left: 1px;
 }
 
 textarea {
@@ -349,7 +290,6 @@ fieldset legend {
     -moz-box-shadow: <?php echo $GLOBALS['text_dir'] === 'rtl' ? '-' : ''; ?>3px 3px 15px #bbb;
     -webkit-box-shadow: <?php echo $GLOBALS['text_dir'] === 'rtl' ? '-' : ''; ?>3px 3px 15px #bbb;
     box-shadow: <?php echo $GLOBALS['text_dir'] === 'rtl' ? '-' : ''; ?>3px 3px 15px #bbb;
-    max-width: 100%;
 }
 
 .some-margin {
@@ -398,7 +338,11 @@ select {
     -webkit-border-radius: 2px;
     border-radius: 2px;
 
-    border: 1px solid #bbb;
+    -moz-box-shadow: 0 1px 2px #ddd;
+    -webkit-box-shadow: 0 1px 2px #ddd;
+    box-shadow: 0 1px 2px #ddd;
+
+    border: 1px solid #aaa;
     color: #333;
     padding: 3px;
     background: white;
@@ -503,23 +447,6 @@ fieldset .formelement {
     margin-<?php echo $right; ?>: .5em;
     /* IE */
     white-space: nowrap;
-}
-
-@media all and (min-width: 1600px) {
-    fieldset .formelement {
-        clear: none;
-    }
-    #relationalTable td:first-child + td {
-        width: 25%;
-    }
-    #relationalTable td:first-child + td select {
-        width: 32%;
-        margin-right: 1%;
-    }
-    #relationalTable {
-        width: 100%;
-    }
-
 }
 
 /* revert for Gecko */
@@ -675,11 +602,71 @@ img.lightbulb {
     border: 1px dashed #000;
 }
 
-/* Doc links in SQL */
-.cm-sql-doc {
+/* MySQL Parser */
+.syntax {
+    font-family: Verdana, 'Segoe UI', Arial, Tahoma;
+    font-size: 110%;
+}
+
+.syntax a {
     text-decoration: none;
     border-bottom: 1px dotted #000;
-    color: inherit !important;
+}
+
+.syntax_comment {
+    padding-left: 4pt;
+    padding-right: 4pt;
+}
+
+.syntax_digit {
+}
+
+.syntax_digit_hex {
+}
+
+.syntax_digit_integer {
+}
+
+.syntax_digit_float {
+}
+
+.syntax_punct {
+}
+
+.syntax_alpha {
+}
+
+.syntax_alpha_columnType {
+    text-transform: uppercase;
+}
+
+.syntax_alpha_columnAttrib {
+    text-transform: uppercase;
+}
+
+.syntax_alpha_reservedWord {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.syntax_alpha_functionName {
+    text-transform: uppercase;
+}
+
+.syntax_alpha_identifier {
+}
+
+.syntax_alpha_charset {
+}
+
+.syntax_alpha_variable {
+}
+
+.syntax_quote {
+    white-space: pre;
+}
+
+.syntax_quote_backtick {
 }
 
 /* no extra space in table cells */
@@ -693,7 +680,7 @@ td .icon {
 }
 
 /* message boxes: error, confirmation */
-#pma_errors, #pma_demo {
+#pma_errors {
     padding: 0 0.5em;
 }
 
@@ -742,7 +729,7 @@ div.error {
 
 h1.success,
 div.success {
-    border-color: #a2d246;
+    border-color: #a2d246;    
 }
 .success h1 {
     border-color: #00FF00;
@@ -770,7 +757,7 @@ div.notice {
 
 h1.error,
 div.error {
-    border-color: #333;
+    border-color: #333; 
 }
 
 div.error h1 {
@@ -882,12 +869,6 @@ form.login label {
     font-weight: bolder;
 }
 
-form.login input[type=text],
-form.login input[type=password],
-form.login select {
-    width: 14em;
-}
-
 .commented_column {
     border-bottom: 1px dashed #000;
 }
@@ -987,11 +968,6 @@ ul#topmenu ul.only {
 ul#topmenu > li {
     border-right: 1px solid #fff;
     border-left: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-}
-
-ul#topmenu > li:first-child {
-    border-left: 0;
 }
 
 /* default tab styles */
@@ -1040,7 +1016,6 @@ ul#topmenu2 a.tabactive {
 ul#topmenu > li.active {
     /* border-bottom: 0pt solid <?php echo $GLOBALS['cfg']['MainBackground']; ?>; */
     border-right: 0;
-    border-bottom-color: #fff;
 }
 /* end topmenu */
 
@@ -1095,7 +1070,7 @@ div#tablestatistics table {
     min-width: 16em;
 }
 
-/* end table stats */
+/* END table stats */
 
 
 /* server privileges */
@@ -1104,7 +1079,7 @@ div#tablestatistics table {
 #tabledatabases td {
     vertical-align: middle;
 }
-/* end server privileges */
+/* END server privileges */
 
 
 /* Heading */
@@ -1114,6 +1089,7 @@ div#tablestatistics table {
 }
 
 #serverinfo {
+    border-bottom: 1px solid #fff;
     background: #888;
     padding: .3em .9em;
     padding-<?php echo $left; ?>: 2.2em;
@@ -1125,6 +1101,7 @@ div#tablestatistics table {
 #serverinfo .item {
     white-space: nowrap;
     color: #fff;
+    float: <?php echo $left; ?>
 }
 
 #goto_pagetop {
@@ -1137,12 +1114,9 @@ div#tablestatistics table {
 }
 
 #span_table_comment {
-    font-weight: bold;
+    font-weight: normal;
     font-style: italic;
     white-space: nowrap;
-    margin-left: 10px;
-    color: #D6D6D6;
-    text-shadow: none;
 }
 
 #serverinfo img {
@@ -1233,15 +1207,7 @@ div#tablestatistics table {
 #fieldset_user_global_rights fieldset {
     float: <?php echo $left; ?>;
 }
-
-#fieldset_user_group_rights fieldset {
-    float: <?php echo $left; ?>;
-}
-
-#fieldset_user_global_rights legend input {
-    margin-<?php echo $left; ?>: 2em;
-}
-/* end user privileges */
+/* END user privileges */
 
 
 /* serverstatus */
@@ -1336,15 +1302,8 @@ div#chartVariableSettings {
     margin-left: 10px;
 }
 
-table#chartGrid td {
-    padding: 3px;
-    margin: 0;
-}
-
 table#chartGrid div.monitorChart {
     background: #EBEBEB;
-    overflow: hidden;
-    border: none;
 }
 
 div#serverstatus div.tabLinks {
@@ -1492,7 +1451,7 @@ p.notice {
     border-radius: 5px;
     -moz-box-shadow: 0 1px 2px #fff inset;
     -webkit-box-shadow: 0 1px 2px #fff inset;
-    box-shadow: 0 1px 2px #fff inset;
+    box-shadow: 0 1px 2px #fff; inset;
     background: #555;
     color: #d4fb6a;
 }
@@ -1519,45 +1478,17 @@ div#querywindowcontainer {
 div#querywindowcontainer fieldset {
     margin-top: 0;
 }
-/* end querywindow */
+/* END querywindow */
 
 /* profiling */
 
 div#profilingchart {
-    width: 850px;
+    width: 550px;
     height: 370px;
     float: <?php echo $left; ?>;
 }
 
-#profilingchart .jqplot-highlighter-tooltip{
-    top: auto !important;
-    left: 11px;
-    bottom:24px;
-}
-
-#profilesummarytable th.header, #profiletable th.header{
-    cursor: pointer;
-}
-
-#profilesummarytable th.header .sorticon, #profiletable th.header .sorticon{
-    width: 16px;
-    height: 16px;
-    background-repeat: no-repeat;
-    background-position: right center;
-    display: inline-block;
-    vertical-align: middle;
-    float: right;
-}
-
-#profilesummarytable th.headerSortUp .sorticon, #profiletable th.headerSortUp .sorticon{
-    background-image: url(<?php echo $_SESSION['PMA_Theme']->getImgPath('s_desc.png');?>);
-}
-
-#profilesummarytable th.headerSortDown .sorticon, #profiletable th.headerSortDown .sorticon{
-    background-image: url(<?php echo $_SESSION['PMA_Theme']->getImgPath('s_asc.png');?>);
-}
-
-/* end profiling */
+/* END profiling */
 
 /* table charting */
 
@@ -1568,7 +1499,7 @@ div#profilingchart {
     padding: 10px;
 }
 
-/* end table charting */
+/* END table charting */
 
 /* querybox */
 
@@ -1684,29 +1615,17 @@ div#queryboxcontainer div#bookmarkoptions {
 #maincontainer li {
     margin-bottom: .3em;
 }
-
-#full_name_layer {
-    position: absolute;
-    padding: 2px;
-    margin-top: -3px;
-    z-index: 801;
-
-    border-radius: 3px;
-    border: solid 1px #888;
-    background: #fff;
-
-}
-/* end main page */
+/* END main page */
 
 
 /* iconic view for ul items */
 
 li.no_bullets {
-    list-style-type:none !important;
+    list-style-type:none !important;    
     margin-left: -25px !important;      //align with other list items which have bullets
 }
 
-/* end iconic view for ul items */
+/* END iconic view for ul items */
 
 #body_browse_foreigners {
     background: <?php echo $GLOBALS['cfg']['NaviBackground']; ?>;
@@ -1755,35 +1674,11 @@ li.no_bullets {
     float: <?php echo $left; ?>;
 }
 
-#div_mysql_charset_collations table th,
-#div_mysql_charset_collations table td {
-    padding: 0.4em;
-}
-
-#div_mysql_charset_collations table th#collationHeader {
-    width: 35%;
-}
-
 .operations_half_width {
     width: 48%;
     float: <?php echo $left; ?>;
 }
-.operations_half_width input[type=text],
-.operations_half_width input[type=password],
-.operations_half_width input[type=number],
-.operations_half_width select {
-    width: 95%;
-}
-.operations_half_width input[type=text].halfWidth,
-.operations_half_width input[type=password].halfWidth,
-.operations_half_width input[type=number].halfWidth,
-.operations_half_width select.halfWidth {
-    width: 40%;
-}
-.operations_half_width ul {
-    list-style-type: none;
-    padding: 0;
-}
+
 .operations_full_width {
     width: 100%;
     clear: both;
@@ -1814,31 +1709,19 @@ div.sqlvalidate {
     margin-bottom: 0;
     max-height: 10em;
     overflow: auto;
-}
-
-#result_query div.sqlOuter {
-    background: <?php echo $GLOBALS['cfg']['BgOne']; ?>;
-    padding: 1em;
-}
-
-#PMA_slidingMessage code.sql,
-div.sqlvalidate {
     background: <?php echo $GLOBALS['cfg']['BgOne']; ?>;
 }
 
 #main_pane_left {
     width: 60%;
-    min-width: 260px;
     float: <?php echo $left; ?>;
     padding-top: 1em;
 }
 
 #main_pane_right {
-    overflow: hidden;
-    min-width: 160px;
+    margin-<?php echo $left; ?>: 60%;
     padding-top: 1em;
     padding-<?php echo $left; ?>: 1em;
-    padding-<?php echo $right; ?>: .5em;
 }
 
 .group {
@@ -1886,8 +1769,7 @@ textarea#partitiondefinition {
 }
 
 #list_server {
-    list-style-type: none;
-    padding: 0;
+    list-style-image: none;
 }
 
 /**
@@ -1948,9 +1830,6 @@ table#serverconnection_trg_local  {
   *  Validation error message styles
   */
 input[type=text].invalid_value,
-input[type=password].invalid_value,
-input[type=number].invalid_value,
-input[type=date].invalid_value,
 .invalid_value {
     background: #FFCCCC;
 }
@@ -2047,6 +1926,7 @@ input[type=date].invalid_value,
     padding: 5px 12px;
     color: #111;
     text-decoration: none;
+    background: #ddd;
 
     border-radius: 12px;
     -webkit-border-radius: 12px;
@@ -2056,6 +1936,9 @@ input[type=date].invalid_value,
 
     <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'cccccc'); ?>
     cursor: pointer;
+}
+#buttonGo:hover {
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('cccccc', 'dddddd'); ?>
 }
 
 .format_specific_options h3 {
@@ -2100,6 +1983,7 @@ select#table_select {
     margin-bottom: 0;
 }
 
+#quick_or_custom,
 #output_quick_export {
     display: none;
 }
@@ -2152,13 +2036,6 @@ input#input_import_file {
 #fieldsForm ul.table-structure-actions .submenu li span {
     padding: 0.3em;
     margin: 0.1em;
-}
-#structure-action-links a {
-    margin-<?php echo $right; ?>: 1em;
-}
-#addColumns input[type="radio"] {
-    margin: 3px 0 0;
-    margin-<?php echo $left; ?>: 1em;
 }
 /**
  * Indexes
@@ -2399,7 +2276,7 @@ fieldset .disabled-field td {
 }
 
 .config-form .lastrow {
-    background: <?php echo $GLOBALS['cfg']['ThBackground']; ?>;
+    background: <?php echo $GLOBALS['cfg']['ThBackground']; ?>;;
     padding: .5em;
     text-align: center;
 }
@@ -2430,8 +2307,6 @@ fieldset .disabled-field td {
 }
 
 .config-form input[type="text"],
-.config-form input[type="password"],
-.config-form input[type="number"],
 .config-form select,
 .config-form textarea {
     border: 1px #A7A6AA solid;
@@ -2439,8 +2314,6 @@ fieldset .disabled-field td {
 }
 
 .config-form input[type="text"]:focus,
-.config-form input[type="password"]:focus,
-.config-form input[type="number"]:focus,
 .config-form select:focus,
 .config-form textarea:focus {
     border: 1px #6676FF solid;
@@ -2548,8 +2421,6 @@ fieldset .disabled-field td {
 }
 
 #table_columns input[type="text"],
-#table_columns input[type="password"],
-#table_columns input[type="number"],
 #table_columns select {
     width: 10em;
     box-sizing: border-box;
@@ -2632,10 +2503,6 @@ fieldset .disabled-field td {
 .pma_table tbody td span {
     display: block;
     overflow: hidden;
-}
-
-.pma_table th.draggable span {
-    margin-<?php echo $right; ?>: 10px;
 }
 
 .modal-copy input {
@@ -2751,13 +2618,6 @@ fieldset .disabled-field td {
     background: #DDD;
 }
 
-.turnOffSelect {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
 #page_content {
     background-color: white;
 }
@@ -2860,11 +2720,6 @@ fieldset .disabled-field td {
     height: 10em;
 }
 
-.cEdit .edit_area_right {
-    position: absolute;
-    right: 0;
-}
-
 .cEdit .goto_link {
     background: #EEE;
     color: #555;
@@ -2876,16 +2731,11 @@ fieldset .disabled-field td {
     padding-<?php echo $left; ?>: 20px;
 }
 
-#relationalTable select {
-    width: 125px;
-    margin-right: 5px;
-}
-
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: <?php echo $left; ?>; }
 .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
-.ui-timepicker-div dl dd { margin: 0 10px 10px 85px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
 .ui-timepicker-div td { font-size: 90%; }
 .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 .ui-timepicker-rtl { direction: rtl; }
@@ -2913,30 +2763,4 @@ body .ui-widget {
 }
 .jqplot-axis {
     overflow:hidden;
-}
-
-.report-data {
-    height:13em;
-    overflow:scroll;
-    width:570px;
-    border: solid 1px;
-    background: white;
-    padding: 2px;
-}
-
-.report-description {
-    height:10em;
-    width:570px;
-}
-
-div#page_content div#tableslistcontainer table.data {
-    border-top: 0.1px solid #EEEEEE;
-}
-
-div#page_content form#db_search_form.ajax fieldset {
-    margin-top: -0.3em;
-}
-
-div#page_content div#tableslistcontainer, div#page_content div.notice, div#page_content div#result_query {
-    margin-top: 1em;
 }

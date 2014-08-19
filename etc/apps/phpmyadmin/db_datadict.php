@@ -1,7 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Renders data dictionary
  *
  * @package PhpMyAdmin
  */
@@ -37,9 +36,9 @@ PMA_Util::checkParameters(array('db'));
  * Defines the url to return to in case of error in a sql statement
  */
 if (strlen($table)) {
-    $err_url = 'tbl_sql.php?' . PMA_URL_getCommon($db, $table);
+    $err_url = 'tbl_sql.php?' . PMA_generate_common_url($db, $table);
 } else {
-    $err_url = 'db_sql.php?' . PMA_URL_getCommon($db);
+    $err_url = 'db_sql.php?' . PMA_generate_common_url($db);
 }
 
 if ($cfgRelation['commwork']) {
@@ -49,16 +48,16 @@ if ($cfgRelation['commwork']) {
      * Displays DB comment
      */
     if ($comment) {
-        echo '<p>' . __('Database comment:')
-            . ' <i>' . htmlspecialchars($comment) . '</i></p>';
+        echo '<p>' . __('Database comment: ')
+            . '<i>' . htmlspecialchars($comment) . '</i></p>';
     } // end if
 }
 
 /**
  * Selects the database and gets tables names
  */
-$GLOBALS['dbi']->selectDb($db);
-$tables = $GLOBALS['dbi']->getTables($db);
+PMA_DBI_select_db($db);
+$tables = PMA_DBI_get_tables($db);
 
 $count  = 0;
 foreach ($tables as $table) {
@@ -77,8 +76,8 @@ foreach ($tables as $table) {
      * Gets table keys and retains them
      */
 
-    $GLOBALS['dbi']->selectDb($db);
-    $indexes      = $GLOBALS['dbi']->getTableIndexes($db, $table);
+    PMA_DBI_select_db($db);
+    $indexes      = PMA_DBI_get_table_indexes($db, $table);
     $primary      = '';
     $indexes      = array();
     $lastIndex    = '';
@@ -97,21 +96,19 @@ foreach ($tables as $table) {
             $indexes[] = $row['Key_name'];
             $lastIndex = $row['Key_name'];
         }
-        $indexes_info[$row['Key_name']]['Sequences'][] = $row['Seq_in_index'];
-        $indexes_info[$row['Key_name']]['Non_unique'] = $row['Non_unique'];
+        $indexes_info[$row['Key_name']]['Sequences'][]     = $row['Seq_in_index'];
+        $indexes_info[$row['Key_name']]['Non_unique']      = $row['Non_unique'];
         if (isset($row['Cardinality'])) {
             $indexes_info[$row['Key_name']]['Cardinality'] = $row['Cardinality'];
         }
         // I don't know what does following column mean....
         // $indexes_info[$row['Key_name']]['Packed']          = $row['Packed'];
 
-        $indexes_info[$row['Key_name']]['Comment'] = $row['Comment'];
+        $indexes_info[$row['Key_name']]['Comment']     = $row['Comment'];
 
-        $indexes_data[$row['Key_name']][$row['Seq_in_index']]['Column_name']
-            = $row['Column_name'];
+        $indexes_data[$row['Key_name']][$row['Seq_in_index']]['Column_name']  = $row['Column_name'];
         if (isset($row['Sub_part'])) {
-            $indexes_data[$row['Key_name']][$row['Seq_in_index']]['Sub_part']
-                = $row['Sub_part'];
+            $indexes_data[$row['Key_name']][$row['Seq_in_index']]['Sub_part'] = $row['Sub_part'];
         }
 
     } // end while
@@ -119,7 +116,8 @@ foreach ($tables as $table) {
     /**
      * Gets columns properties
      */
-    $columns = $GLOBALS['dbi']->getColumns($db, $table);
+    $columns = PMA_DBI_get_columns($db, $table);
+    $fields_cnt  = count($columns);
 
     if (PMA_MYSQL_INT_VERSION < 50025) {
         // We need this to correctly learn if a TIMESTAMP is NOT NULL, since
@@ -130,7 +128,7 @@ foreach ($tables as $table) {
         $show_create_table_query = 'SHOW CREATE TABLE '
             . PMA_Util::backquote($db) . '.'
             . PMA_Util::backquote($table);
-        $show_create_table = $GLOBALS['dbi']->fetchValue(
+        $show_create_table = PMA_DBI_fetch_value(
             $show_create_table_query, 0, 1
         );
         $analyzed_sql = PMA_SQP_analyze(PMA_SQP_parse($show_create_table));
@@ -156,19 +154,22 @@ foreach ($tables as $table) {
      * Displays the comments of the table if MySQL >= 3.23
      */
     if (!empty($show_comment)) {
-        echo __('Table comments:') . ' ';
-        echo htmlspecialchars($show_comment) . '<br /><br />';
+        echo __('Table comments') . ': ' . htmlspecialchars($show_comment) . '<br /><br />';
     }
 
     /**
      * Displays the table structure
      */
+    ?>
 
-    echo '<table width="100%" class="print">';
-    echo '<tr><th width="50">' . __('Column') . '</th>';
-    echo '<th width="80">' . __('Type') . '</th>';
-    echo '<th width="40">' . __('Null') . '</th>';
-    echo '<th width="70">' . __('Default') . '</th>';
+<table width="100%" class="print">
+<tr><th width="50"><?php echo __('Column'); ?></th>
+    <th width="80"><?php echo __('Type'); ?></th>
+<?php /*    <th width="50"><?php echo __('Attributes'); ?></th>*/ ?>
+    <th width="40"><?php echo __('Null'); ?></th>
+    <th width="70"><?php echo __('Default'); ?></th>
+<?php /*    <th width="50"><?php echo __('Extra'); ?></th>*/ ?>
+    <?php
     if ($have_rel) {
         echo '    <th>' . __('Links to') . '</th>' . "\n";
     }
@@ -176,7 +177,9 @@ foreach ($tables as $table) {
     if ($cfgRelation['mimework']) {
         echo '    <th>MIME</th>' . "\n";
     }
-    echo '</tr>';
+    ?>
+</tr>
+    <?php
     $odd_row = true;
     foreach ($columns as $row) {
 
@@ -188,9 +191,7 @@ foreach ($tables as $table) {
 
         // reformat mysql query output
         // set or enum types: slashes single quotes inside options
-        if ('set' == $extracted_columnspec['type']
-            || 'enum' == $extracted_columnspec['type']
-        ) {
+        if ('set' == $extracted_columnspec['type'] || 'enum' == $extracted_columnspec['type']) {
             $type_nowrap  = '';
 
         } else {
@@ -205,82 +206,81 @@ foreach ($tables as $table) {
         } else {
             $row['Default'] = htmlspecialchars($row['Default']);
         }
-        $column_name = $row['Field'];
+        $field_name = $row['Field'];
 
-        $tmp_column = $analyzed_sql[0]['create_table_fields'][$column_name];
         if (PMA_MYSQL_INT_VERSION < 50025
-            && ! empty($tmp_column['type'])
-            && $tmp_column['type'] == 'TIMESTAMP'
-            && $tmp_column['timestamp_not_null']
+            && ! empty($analyzed_sql[0]['create_table_fields'][$field_name]['type'])
+            && $analyzed_sql[0]['create_table_fields'][$field_name]['type'] == 'TIMESTAMP'
+            && $analyzed_sql[0]['create_table_fields'][$field_name]['timestamp_not_null']
         ) {
-            // here, we have a TIMESTAMP that SHOW FULL COLUMNS reports as
-            // having the NULL attribute, but SHOW CREATE TABLE says the
-            // contrary. Believe the latter.
+            // here, we have a TIMESTAMP that SHOW FULL COLUMNS reports as having the
+            // NULL attribute, but SHOW CREATE TABLE says the contrary. Believe
+            // the latter.
             /**
              * @todo merge this logic with the one in tbl_structure.php
-             * or move it in a function similar to $GLOBALS['dbi']->getColumnsFull()
+             * or move it in a function similar to PMA_DBI_get_columns_full()
              * but based on SHOW CREATE TABLE because information_schema
              * cannot be trusted in this case (MySQL bug)
              */
              $row['Null'] = 'NO';
         }
-        echo '<tr class="';
-        echo $odd_row ? 'odd' : 'even'; $odd_row = ! $odd_row;
-        echo '">';
-        echo '<td class="nowrap">';
-
+        ?>
+<tr class="<?php echo $odd_row ? 'odd' : 'even'; $odd_row = ! $odd_row; ?>">
+    <td class="nowrap">
+        <?php
         if (isset($pk_array[$row['Field']])) {
-            echo '<u>' . htmlspecialchars($column_name) . '</u>';
+            echo '<u>' . htmlspecialchars($field_name) . '</u>';
         } else {
-            echo htmlspecialchars($column_name);
+            echo htmlspecialchars($field_name);
         }
-        echo '</td>';
-        echo '<td' . $type_nowrap . ' lang="en" dir="ltr">' . $type . '</td>';
-        echo '<td>';
-        echo (($row['Null'] == 'NO') ? __('No') : __('Yes'));
-        echo '</td>';
-        echo '<td class="nowrap">';
-        if (isset($row['Default'])) {
-            echo $row['Default'];
-        }
-        echo '</td>';
-
+        ?>
+    </td>
+    <td<?php echo $type_nowrap; ?> lang="en" dir="ltr"><?php echo $type; ?></td>
+<?php /*    <td<?php echo $type_nowrap; ?>><?php echo $attribute; ?></td>*/ ?>
+    <td><?php echo (($row['Null'] == 'NO') ? __('No') : __('Yes')); ?></td>
+    <td class="nowrap"><?php
+    if (isset($row['Default'])) {
+        echo $row['Default'];
+    }
+    ?></td>
+<?php /*    <td<?php echo $type_nowrap; ?>><?php echo $row['Extra']; ?></td>*/ ?>
+        <?php
         if ($have_rel) {
             echo '    <td>';
-            if (isset($res_rel[$column_name])) {
-                echo htmlspecialchars(
-                    $res_rel[$column_name]['foreign_table']
-                    . ' -> '
-                    . $res_rel[$column_name]['foreign_field']
-                );
+            if (isset($res_rel[$field_name])) {
+                echo htmlspecialchars($res_rel[$field_name]['foreign_table'] . ' -> ' . $res_rel[$field_name]['foreign_field']);
             }
             echo '</td>' . "\n";
         }
         echo '    <td>';
-        if (isset($comments[$column_name])) {
-            echo htmlspecialchars($comments[$column_name]);
+        if (isset($comments[$field_name])) {
+            echo htmlspecialchars($comments[$field_name]);
         }
         echo '</td>' . "\n";
         if ($cfgRelation['mimework']) {
             $mime_map = PMA_getMIME($db, $table, true);
 
             echo '    <td>';
-            if (isset($mime_map[$column_name])) {
-                echo htmlspecialchars(
-                    str_replace('_', '/', $mime_map[$column_name]['mimetype'])
-                );
+            if (isset($mime_map[$field_name])) {
+                echo htmlspecialchars(str_replace('_', '/', $mime_map[$field_name]['mimetype']));
             }
             echo '</td>' . "\n";
         }
-        echo '</tr>';
+        ?>
+</tr>
+        <?php
     } // end foreach
     $count++;
-    echo '</table>';
-    // display indexes information
+    ?>
+</table>
+<?php
+// display indexes information
     if (count(PMA_Index::getFromTable($table, $db)) > 0) {
         echo PMA_Index::getView($table, $db, true);
     }
-    echo '</div>';
+?>
+</div>
+    <?php
 } //ends main while
 
 /**

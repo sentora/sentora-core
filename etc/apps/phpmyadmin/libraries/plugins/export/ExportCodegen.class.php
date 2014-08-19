@@ -244,7 +244,7 @@ class ExportCodegen extends ExportPlugin
     {
         $lines = array();
 
-        $result = $GLOBALS['dbi']->query(
+        $result = PMA_DBI_query(
             sprintf(
                 'DESC %s.%s', PMA_Util::backquote($db),
                 PMA_Util::backquote($table)
@@ -252,10 +252,10 @@ class ExportCodegen extends ExportPlugin
         );
         if ($result) {
             $tableProperties = array();
-            while ($row = $GLOBALS['dbi']->fetchRow($result)) {
+            while ($row = PMA_DBI_fetch_row($result)) {
                 $tableProperties[] = new TableProperty($row);
             }
-            $GLOBALS['dbi']->freeResult($result);
+            PMA_DBI_free_result($result);
             $lines[] = 'using System;';
             $lines[] = 'using System.Collections;';
             $lines[] = 'using System.Collections.Generic;';
@@ -336,14 +336,14 @@ class ExportCodegen extends ExportPlugin
         $lines[] = '    <class '
             . 'name="' . ExportCodegen::cgMakeIdentifier($table) . '" '
             . 'table="' . ExportCodegen::cgMakeIdentifier($table) . '">';
-        $result = $GLOBALS['dbi']->query(
+        $result = PMA_DBI_query(
             sprintf(
                 "DESC %s.%s", PMA_Util::backquote($db),
                 PMA_Util::backquote($table)
             )
         );
         if ($result) {
-            while ($row = $GLOBALS['dbi']->fetchRow($result)) {
+            while ($row = PMA_DBI_fetch_row($result)) {
                 $tableProperty = new TableProperty($row);
                 if ($tableProperty->isPK()) {
                     $lines[] = $tableProperty->formatXml(
@@ -365,7 +365,7 @@ class ExportCodegen extends ExportPlugin
                     );
                 }
             }
-            $GLOBALS['dbi']->freeResult($result);
+            PMA_DBI_free_result($result);
         }
         $lines[] = '    </class>';
         $lines[] = '</hibernate-mapping>';

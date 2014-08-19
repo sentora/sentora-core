@@ -56,3 +56,4 @@ if (! defined('TESTSUITE')) {
 <p><?php echo PMA_sanitize($error_message); ?></p>
 </body>
 </html>
+

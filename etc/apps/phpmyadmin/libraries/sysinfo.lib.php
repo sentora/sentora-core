@@ -41,22 +41,23 @@ function PMA_getSysInfoOs($php_os = PHP_OS)
 /**
  * Gets sysinfo class mathing current OS
  *
- * @return PMA_SysInfo|mixed sysinfo class
+ * @return sysinfo class
  */
 function PMA_getSysInfo()
 {
     $php_os = PMA_getSysInfoOs();
     $supported = array('Linux', 'WINNT', 'SunOS');
 
+    $sysinfo = array();
+
     if (in_array($php_os, $supported)) {
-        $class_name = 'PMA_SysInfo' . $php_os;
-        $ret = new $class_name();
+        $ret = eval("return new PMA_SysInfo" . $php_os . "();");
         if ($ret->supported()) {
             return $ret;
         }
     }
 
-    return new PMA_SysInfo();
+    return new PMA_SysInfo;
 }
 
 /**
@@ -160,7 +161,7 @@ class PMA_SysInfoWinnt extends PMA_SysInfo
      * @param string $strClass Class to read
      * @param array  $strValue Values to read
      *
-     * @return array with results
+     * @return arrray with results
      */
     private function _getWMI($strClass, $strValue = array())
     {
@@ -176,10 +177,14 @@ class PMA_SysInfoWinnt extends PMA_SysInfo
             }
             $arrInstance = array();
             foreach ($arrProp as $propItem) {
-                $name = $propItem->Name;
-                if ( empty($strValue) || in_array($name, $strValue)) {
-                    $value = $objItem->$name;
-                    $arrInstance[$name] = trim($value);
+                if ( empty($strValue)) {
+                    eval("\$value = \$objItem->" . $propItem->Name . ";");
+                    $arrInstance[$propItem->Name] = trim($value);
+                } else {
+                    if (in_array($propItem->Name, $strValue)) {
+                        eval("\$value = \$objItem->" . $propItem->Name . ";");
+                        $arrInstance[$propItem->Name] = trim($value);
+                    }
                 }
             }
             $arrData[] = $arrInstance;
@@ -268,19 +273,10 @@ class PMA_SysInfoLinux extends PMA_SysInfo
         );
 
         $mem = array_combine($matches[1], $matches[2]);
-
-        $memTotal   = isset($mem['MemTotal'])   ? $mem['MemTotal']   : 0;
-        $memFree    = isset($mem['MemFree'])    ? $mem['MemFree']    : 0;
-        $cached     = isset($mem['Cached'])     ? $mem['Cached']     : 0;
-        $buffers    = isset($mem['Buffers'])    ? $mem['Buffers']    : 0;
-        $swapTotal  = isset($mem['SwapTotal'])  ? $mem['SwapTotal']  : 0;
-        $swapFree   = isset($mem['SwapFree'])   ? $mem['SwapFree']   : 0;
-        $swapCached = isset($mem['SwapCached']) ? $mem['SwapCached'] : 0;
-
         $mem['MemUsed']
-            = $memTotal - $memFree - $cached - $buffers;
+            = $mem['MemTotal'] - $mem['MemFree'] - $mem['Cached'] - $mem['Buffers'];
         $mem['SwapUsed']
-            = $swapTotal - $swapFree - $swapCached;
+            = $mem['SwapTotal'] - $mem['SwapFree'] - $mem['SwapCached'];
 
         foreach ($mem as $idx => $value) {
             $mem[$idx] = intval($value);
@@ -307,7 +303,7 @@ class PMA_SysInfoSunos extends PMA_SysInfo
      */
     private function _kstat($key)
     {
-        if ($m = shell_exec('kstat -p d ' . $key)) {
+        if ($m = shell_exec('kstat -p d '.$key)) {
             list($key, $value) = preg_split("/\t/", trim($m), 2);
             return $value;
         } else {
@@ -345,7 +341,12 @@ class PMA_SysInfoSunos extends PMA_SysInfo
      */
     public function memory()
     {
-        $mem = array();
+        preg_match_all(
+            MEMORY_REGEXP,
+            file_get_contents('/proc/meminfo'),
+            $matches
+        );
+
         $pagesize = $this->_kstat('unix:0:seg_cache:slab_size');
         $mem['MemTotal']
             = $this->_kstat('unix:0:system_pages:pagestotal') * $pagesize;
