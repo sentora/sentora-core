@@ -1,6 +1,8 @@
 /nbproject
 /log.txt
 /cnf/db.php
+/cnf/security.php
 /.vagrant
+/.htaccess
 .DS_Store
 Thumbs.db
