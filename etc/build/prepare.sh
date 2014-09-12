@@ -6,7 +6,7 @@ clear
 echo "Sentora Enviroment Configuration Tool"
 echo "===================================="
 echo ""
-echo "If you need help, please visit our forums: http://forums.sentora.io/"
+echo "If you need help, please visit our forums: http://forums.sentora.org/"
 echo ""
 echo "Creating folder structure.."
 mkdir /etc/zpanel

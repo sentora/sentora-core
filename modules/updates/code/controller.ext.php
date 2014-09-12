@@ -30,7 +30,7 @@ class module_controller extends ctrl_module
     public static function getZpanelUpdates()
     {
         if (ctrl_options::GetSystemOption('dbversion') < ctrl_options::GetSystemOption('latestzpversion')) {
-            $msg = ui_language::translate("There are currently new updates for your Sentora installation, please download the latest release") . " (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>) from <a href=\"http://www.sentora.io/\">http://www.sentora.io/</a>.";
+            $msg = ui_language::translate("There are currently new updates for your Sentora installation, please download the latest release") . " (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>) from <a href=\"http://www.sentora.org/\">http://www.sentora.org/</a>.";
         } elseif (ctrl_options::GetSystemOption('dbversion') == ctrl_options::GetSystemOption('latestzpversion')) {
             $msg = "Congratulations, You are running the most recent version of Sentora (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>)!";
         } else {

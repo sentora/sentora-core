@@ -2,7 +2,7 @@
 
 This document outlines some of the JavaScript and CSS functionality that is built into the Sentora theme.  You can use any of this in your own modules and themes that you build, as long as all the proper files are loaded.
 
-If you have any questions about this theme, please ask on the [Sentora Forums](http://forums.sentora.io/) or contact [Jason Davis](http://www.codedevelopr.com).
+If you have any questions about this theme, please ask on the [Sentora Forums](http://forums.sentora.org/) or contact [Jason Davis](http://www.codedevelopr.com).
 
 ## Override Module Icons ##
 You can replace the module icons that come with a module on the Sentora dashboard screen with your own icons.
