@@ -1,5 +1,4 @@
-Order deny,allow
-Deny from all
+Order Allow,Deny
 <FilesMatch "api.php">
-  Allow from all
+	Allow from all
 </FilesMatch>
