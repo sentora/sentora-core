@@ -1,67 +1,115 @@
 <?php
 
-// managesieve server port
-$rcmail_config['managesieve_port'] = 4190;
+/* Local configuration for Roundcube Webmail */
 
-// managesieve server address, default is localhost.
-// Replacement variables supported in host name:
+$config = array();
+
+// Database connection string (DSN) for read+write operations
+// Format (compatible with PEAR MDB2): db_provider://user:password@host/database
+// Currently supported db_providers: mysql, pgsql, sqlite, mssql or sqlsrv
+// For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
+// NOTE: for SQLite use absolute path: 'sqlite:////full/path/to/sqlite.db?mode=0646'
+$config['db_dsnw'] = 'mysql://root:YOUR_MYSQL_ROOT_PASSWORD@localhost/zpanel_roundcube';
+
+// The mail host chosen to perform the log-in.
+// Leave blank to show a textbox at login, give a list of hosts
+// to display a pulldown menu or set one host as string.
+// To use SSL/TLS connection, enter hostname with prefix ssl:// or tls://
+// Supported replacement variables:
+// %n - hostname ($_SERVER['SERVER_NAME'])
+// %t - hostname without the first part
+// %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
+// %s - domain name after the '@' from e-mail address provided at login screen
+// For example %n = mail.domain.tld, %t = domain.tld
+$config['default_host'] = 'localhost';
+
+// SMTP server host (for sending mails).
+// To use SSL/TLS connection, enter hostname with prefix ssl:// or tls://
+// If left blank, the PHP mail() function is used
+// Supported replacement variables:
 // %h - user's IMAP hostname
-// %n - http hostname ($_SERVER['SERVER_NAME'])
-// %d - domain (http hostname without the first part)
-// For example %n = mail.domain.tld, %d = domain.tld
-$rcmail_config['managesieve_host'] = 'localhost';
+// %n - hostname ($_SERVER['SERVER_NAME'])
+// %t - hostname without the first part
+// %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
+// %z - IMAP domain (IMAP hostname without the first part)
+// For example %n = mail.domain.tld, %t = domain.tld
+$config['smtp_server'] = 'localhost';
 
-// authentication method. Can be CRAM-MD5, DIGEST-MD5, PLAIN, LOGIN, EXTERNAL
-// or none. Optional, defaults to best method supported by server.
-$rcmail_config['managesieve_auth_type'] = null;
+// SMTP port (default is 25; use 587 for STARTTLS or 465 for the
+// deprecated SSL over SMTP (aka SMTPS))
+$config['smtp_port'] = 25;
 
-// Optional managesieve authentication identifier to be used as authorization proxy.
-// Authenticate as a different user but act on behalf of the logged in user.
-// Works with PLAIN and DIGEST-MD5 auth.
-$rcmail_config['managesieve_auth_cid'] = null;
+// SMTP username (if required) if you use %u as the username Roundcube
+// will use the current username for login
+$config['smtp_user'] = '%u';
 
-// Optional managesieve authentication password to be used for imap_auth_cid
-$rcmail_config['managesieve_auth_pw'] = null;
+// SMTP password (if required) if you use %p as the password Roundcube
+// will use the current user's password for login
+$config['smtp_pass'] = '%p';
 
-// use or not TLS for managesieve server connection
-// it's because I've problems with TLS and dovecot's managesieve plugin
-// and it's not needed on localhost
-$rcmail_config['managesieve_usetls'] = false;
+// provide an URL where a user can get support for this Roundcube installation
+// PLEASE DO NOT LINK TO THE ROUNDCUBE.NET WEBSITE HERE!
+$config['support_url'] = '';
 
-// default contents of filters script (eg. default spam filter)
-$rcmail_config['managesieve_default'] = '/etc/dovecot/sieve/global';
+// use this folder to store log files (must be writeable for apache user)
+// This is used by the 'file' log driver.
+$config['log_dir'] = '/var/zpanel/logs/roundcube/';
 
-// The name of the script which will be used when there's no user script
-$rcmail_config['managesieve_script_name'] = 'managesieve';
+// use this folder to store temp files (must be writeable for apache user)
+$config['temp_dir'] = '/var/zpanel/temp';
 
-// Sieve RFC says that we should use UTF-8 endcoding for mailbox names,
-// but some implementations does not covert UTF-8 to modified UTF-7.
-// Defaults to UTF7-IMAP
-$rcmail_config['managesieve_mbox_encoding'] = 'UTF-8';
+// Name your service. This is displayed on the login screen and in the window title
+$config['product_name'] = 'Sentora Webmail';
 
-// I need this because my dovecot (with listescape plugin) uses
-// ':' delimiter, but creates folders with dot delimiter
-$rcmail_config['managesieve_replace_delimiter'] = '';
+// Forces conversion of logins to lower case.
+// 0 - disabled, 1 - only domain part, 2 - domain and local part.
+// If users authentication is not case-sensitive this must be enabled.
+// After enabling it all user records need to be updated, e.g. with query:
+// UPDATE users SET username = LOWER(username);
+$config['login_lc'] = 0;
 
-// disabled sieve extensions (body, copy, date, editheader, encoded-character,
-// envelope, environment, ereject, fileinto, ihave, imap4flags, index,
-// mailbox, mboxmetadata, regex, reject, relational, servermetadata,
-// spamtest, spamtestplus, subaddress, vacation, variables, virustest, etc.
-// Note: not all extensions are implemented
-$rcmail_config['managesieve_disabled_extensions'] = array();
+// this key is used to encrypt the users imap password which is stored
+// in the session record (and the client cookie if remember password is enabled).
+// please provide a string of exactly 24 chars.
+// YOUR KEY MUST BE DIFFERENT THAN THE SAMPLE VALUE FOR SECURITY REASONS
+$config['des_key'] = 'rcmail-!24ByteDESkey*Str';
 
-// Enables debugging of conversation with sieve server. Logs it into <log_dir>/sieve
-$rcmail_config['managesieve_debug'] = false;
+// List of active plugins (in plugins/ directory)
+$config['plugins'] = array(
+    'archive',
+    'zipdownload',
+	'managesieve',
+);
 
-// Enables features described in http://wiki.kolab.org/KEP:14
-$rcmail_config['managesieve_kolab_master'] = false;
+# null == default
+// mime magic database
+$config['mime_magic'] = '/usr/share/misc/magic';
 
-// Script name extension used for scripts including. Dovecot uses '.sieve',
-// Cyrus uses '.siv'. Doesn't matter if you have managesieve_kolab_master disabled.
-$rcmail_config['managesieve_filename_extension'] = '.sieve';
+// skin name: folder from skins/
+$config['skin'] = 'larry';
 
-// List of reserved script names (without extension).
-// Scripts listed here will be not presented to the user.
-$rcmail_config['managesieve_filename_exceptions'] = array();
+// give this choice of date formats to the user to select from
+$config['date_formats'] = array('Y-m-d', 'd-m-Y', 'Y/m/d', 'm/d/Y', 'd/m/Y', 'd.m.Y', 'j.n.Y');
 
-?>
+// automatically create the above listed default folders on first login
+$config['create_default_folders'] = true;
+
+// display remote inline images
+// 0 - Never, always ask
+// 1 - Ask if sender is not in address book
+// 2 - Always show inline images
+$config['show_images'] = 2;
+
+// compose html formatted messages by default
+// 0 - never, 1 - always, 2 - on reply to HTML message only 
+$config['htmleditor'] = 1;
+
+// save compose message every 300 seconds (5min)
+$config['draft_autosave'] = 120;
+
+// If true, after message delete/move, the next message will be displayed
+$config['display_next'] = false;
+
+// lifetime of message cache
+// possible units: s, m, h, d, w
+$config['message_cache_lifetime'] = '10d';
