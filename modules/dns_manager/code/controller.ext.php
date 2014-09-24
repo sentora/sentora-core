@@ -308,7 +308,7 @@ class module_controller extends ctrl_module
         $line .= '<div class="tab-content">';
 
         $aDescription = ui_language::translate("The A record contains an IPv4 address. Its target is an IPv4 address, e.g. '192.168.1.1'.");
-        $aaaaDescription = ui_language::translate("The AAAA record contains an IPv6 address. Its target is an IPv6 address, e.g. '2607:fe90:2::1'.");
+        $aaaaDescription = ui_language::translate("The AAAA record contains an IPv6 address. Its target is an IPv6 address, e.g. '2001:DB8::1'.");
         $cnameDescription = ui_language::translate("The CNAME record specifies the canonical name of a record. Its target is a fully qualified domain name, e.g.
 'webserver-01.example.com'.");
         $mxDescription = ui_language::translate("The MX record specifies a mail exchanger host for a domain. Each mail exchanger has a priority or preference that is a numeric value between 0 and 65535.  Its target is a fully qualified domain name, e.g. 'mail.example.com'.");
