@@ -206,9 +206,9 @@ function WriteVhostConfigFile()
                 $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'static_dir' ) . "diskexceeded\"" . fs_filehandler::NewLine();
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
@@ -240,9 +240,9 @@ function WriteVhostConfigFile()
                 $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'static_dir' ) . "bandwidthexceeded\"" . fs_filehandler::NewLine();
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
@@ -273,9 +273,9 @@ function WriteVhostConfigFile()
                 $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'parking_path' ) . "\"" . fs_filehandler::NewLine();
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
@@ -338,9 +338,9 @@ function WriteVhostConfigFile()
                 // Directory options
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
 
                 // Get Package php and cgi enabled options
@@ -350,12 +350,6 @@ function WriteVhostConfigFile()
                 $packageinfo = $rows->fetch();
                 if ( $packageinfo[ 'pk_enablephp_in' ] <> 0 ) {
                     $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
-                }
-                if ( $packageinfo[ 'pk_enablecgi_in' ] <> 0 ) {
-                    $line .= ctrl_options::GetSystemOption( 'cgi_handler' ) . fs_filehandler::NewLine();
-                    if ( !is_dir( ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_cgi-bin" ) ) {
-                        fs_director::CreateDirectory( ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_cgi-bin" );
-                    }
                 }
 
                 // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
@@ -416,9 +410,9 @@ function WriteVhostConfigFile()
             $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'static_dir' ) . "disabled\"" . fs_filehandler::NewLine();
             $line .= "<Directory />" . fs_filehandler::NewLine();
             $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-            $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-            $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-            $line .= "  Allow from all" . fs_filehandler::NewLine();
+            $line .= "AllowOverride All" . fs_filehandler::NewLine();
+            $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
+            $line .= "Allow from all" . fs_filehandler::NewLine();
             $line .= "</Directory>" . fs_filehandler::NewLine();
             $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
             $line .= "</virtualhost>" . fs_filehandler::NewLine();
