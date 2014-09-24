@@ -2,4 +2,4 @@ SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 MAILTO=root
 HOME=/
-*/1 * * * * nice -2 php -q /etc/zpanel/panel/bin/daemon.php >> /var/zpanel/logs/daemon.log 2>&1
+*/5 * * * * nice -2 php -q /etc/zpanel/panel/bin/daemon.php >> /var/zpanel/logs/daemon.log 2>&1
