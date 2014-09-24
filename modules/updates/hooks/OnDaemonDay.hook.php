@@ -13,10 +13,20 @@ echo "END ZPanel Updates hook" . fs_filehandler::NewLine();
 function CheckZPanelLatestVersion() {
     // Grab the latest version of ZPanel from the ZPanel API servers and cache it into the database.
     $live_version = ws_generic::ReadURLRequestResult(ctrl_options::GetSystemOption('update_url'));
-    if (!$live_version)
+    if (!$live_version) {
         return false;
+    }
+        
     $versionnumber = ws_generic::JSONToArray($live_version);
-    ctrl_options::SetSystemOption('latestzpversion', $versionnumber[0]['version']);
+
+    if(count($versionnumber) > 1) {
+        $currentVersionSetting = current($versionnumber);
+        $currentVersion = $currentVersionSetting['version'];
+    } else {
+        $currentVersion = $versionnumber['version'];
+    }
+    
+    ctrl_options::SetSystemOption('latestzpversion', $currentVersion);
     return true;
 }
 
