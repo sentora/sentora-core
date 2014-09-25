@@ -73,7 +73,7 @@ VALUES
     'default',
     1,
     0,
-    'Welcome to your new ZPanel installation! You can remove this message from the Client Notice Manager module. This module allows you to notify your clients of service outages, upgrades and new features etc :-)',
+    'Welcome to your new Sentora installation! You can remove this message from the Client Notice Manager module. This module allows you to notify your clients of service outages, upgrades and new features etc :-)',
     NULL,
     0,
     NULL
