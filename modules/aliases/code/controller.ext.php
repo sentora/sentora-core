@@ -152,6 +152,7 @@ class module_controller extends ctrl_module
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateAlias');
+        $address = str_replace('*', '', $address);
         $fulladdress = $address . "@" . $domain;
         $destination = strtolower(str_replace(' ', '', $destination));
         self::$create = true;
@@ -271,7 +272,7 @@ class module_controller extends ctrl_module
 
     static function IsValidEmail($email)
     {
-        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
+        if (!preg_match('/^([\*]|[a-z0-9]+([_\\.-][a-z0-9]+)*)@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
             return false;
         }
         return true;
