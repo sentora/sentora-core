@@ -37,7 +37,7 @@ function BuildVhostPortForward( $vhostName, $customPort, $userEmail )
     $line .= "# PORT FORWARD FROM 80 TO: " . $customPort . fs_filehandler::NewLine();
     $line .= "<virtualhost *:80>" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
-    $line .= "ServerAlias " . $vhostName . " www." . $vhostName . fs_filehandler::NewLine();
+    $line .= "ServerAlias www." . $vhostName . fs_filehandler::NewLine();
     $line .= "ServerAdmin " . $userEmail . fs_filehandler::NewLine();
     $line .= "RewriteEngine on" . fs_filehandler::NewLine();
     $line .= "ReWriteCond %{SERVER_PORT} !^" . $customPort . "$" . fs_filehandler::NewLine();
@@ -158,10 +158,10 @@ function WriteVhostConfigFile()
         }
         // Check if domain or subdomain to see if we add an alias with 'www'
         if ( $rowvhost[ 'vh_type_in' ] == 2 ) {
-            $serveralias = $rowvhost[ 'vh_name_vc' ];
+            $serveralias = '';
         }
         else {
-            $serveralias = $rowvhost[ 'vh_name_vc' ] . " www." . $rowvhost[ 'vh_name_vc' ];
+            $serveralias = " www." . $rowvhost[ 'vh_name_vc' ];
         }
 
         if ( fs_director::CheckForEmptyValue( $rowvhost[ 'vh_custom_port_in' ] ) ) {
@@ -201,14 +201,14 @@ function WriteVhostConfigFile()
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR QUOTA OVERAGE" . fs_filehandler::NewLine();
                 $line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
-                $line .= "ServerAlias " . $rowvhost[ 'vh_name_vc' ] . " www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
+                $line .= "ServerAlias www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
                 $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'static_dir' ) . "diskexceeded\"" . fs_filehandler::NewLine();
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "Allow from all" . fs_filehandler::NewLine();
+                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "  Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
@@ -235,14 +235,14 @@ function WriteVhostConfigFile()
                 $line .= "# THIS DOMAIN HAS BEEN DISABLED FOR BANDWIDTH OVERAGE" . fs_filehandler::NewLine();
                 $line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
-                $line .= "ServerAlias " . $rowvhost[ 'vh_name_vc' ] . " www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
+                $line .= "ServerAlias www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
                 $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'static_dir' ) . "bandwidthexceeded\"" . fs_filehandler::NewLine();
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "Allow from all" . fs_filehandler::NewLine();
+                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "  Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
@@ -268,14 +268,14 @@ function WriteVhostConfigFile()
                 $line .= "# DOMAIN: " . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
                 $line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
                 $line .= "ServerName " . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
-                $line .= "ServerAlias " . $rowvhost[ 'vh_name_vc' ] . " www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
+                $line .= "ServerAlias www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
                 $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'parking_path' ) . "\"" . fs_filehandler::NewLine();
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "Allow from all" . fs_filehandler::NewLine();
+                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "  Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
@@ -312,7 +312,8 @@ function WriteVhostConfigFile()
                 //$line .= "Include C:/ZPanel/bin/apache/conf/mod_bw/mod_bw/mod_bw_Administration.conf" . fs_filehandler::NewLine();
                 // Server name, alias, email settings
                 $line .= "ServerName " . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
-                $line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
+                if (!empty($serveralias))
+                    $line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
                 $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
                 // Document root
                 $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "\"" . fs_filehandler::NewLine();
@@ -338,9 +339,9 @@ function WriteVhostConfigFile()
                 // Directory options
                 $line .= "<Directory />" . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-                $line .= "AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "Allow from all" . fs_filehandler::NewLine();
+                $line .= "  AllowOverride All" . fs_filehandler::NewLine();
+                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
+                $line .= "  Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
 
                 // Get Package php and cgi enabled options
@@ -351,7 +352,13 @@ function WriteVhostConfigFile()
                 if ( $packageinfo[ 'pk_enablephp_in' ] <> 0 ) {
                     $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 }
-
+# Desactivated CGI because it is not jailed, until use of suExec
+#               if ( $packageinfo[ 'pk_enablecgi_in' ] <> 0 ) {
+#                   $line .= ctrl_options::GetSystemOption( 'cgi_handler' ) . fs_filehandler::NewLine();
+#                   if ( !is_dir( ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_cgi-bin" ) ) {
+#                       fs_director::CreateDirectory( ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_cgi-bin" );
+#                   }
+#               }
                 // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
                 // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
                 $errorpages = ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_errorpages";
@@ -405,14 +412,14 @@ function WriteVhostConfigFile()
             $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
             $line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
             $line .= "ServerName " . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
-            $line .= "ServerAlias " . $rowvhost[ 'vh_name_vc' ] . " www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
+            $line .= "ServerAlias www." . $rowvhost[ 'vh_name_vc' ] . fs_filehandler::NewLine();
             $line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
             $line .= "DocumentRoot \"" . ctrl_options::GetSystemOption( 'static_dir' ) . "disabled\"" . fs_filehandler::NewLine();
             $line .= "<Directory />" . fs_filehandler::NewLine();
             $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
-            $line .= "AllowOverride All" . fs_filehandler::NewLine();
-            $line .= "Order Allow,Deny" . fs_filehandler::NewLine();
-            $line .= "Allow from all" . fs_filehandler::NewLine();
+            $line .= "  AllowOverride All" . fs_filehandler::NewLine();
+            $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
+            $line .= "  Allow from all" . fs_filehandler::NewLine();
             $line .= "</Directory>" . fs_filehandler::NewLine();
             $line .= ctrl_options::GetSystemOption( 'dir_index' ) . fs_filehandler::NewLine();
             $line .= "</virtualhost>" . fs_filehandler::NewLine();
