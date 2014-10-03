@@ -355,7 +355,13 @@ function WriteVhostConfigFile()
                 if ( $packageinfo[ 'pk_enablephp_in' ] <> 0 ) {
                     $line .= ctrl_options::GetSystemOption( 'php_handler' ) . fs_filehandler::NewLine();
                 }
-
+# Desactivated CGI because it is not jailed, until use of suExec
+#               if ( $packageinfo[ 'pk_enablecgi_in' ] <> 0 ) {
+#                   $line .= ctrl_options::GetSystemOption( 'cgi_handler' ) . fs_filehandler::NewLine();
+#                   if ( !is_dir( ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_cgi-bin" ) ) {
+#                       fs_director::CreateDirectory( ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_cgi-bin" );
+#                   }
+#               }
                 // Error documents:- Error pages are added automatically if they are found in the _errorpages directory
                 // and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
                 $errorpages = ctrl_options::GetSystemOption( 'hosted_dir' ) . $vhostuser[ 'username' ] . "/public_html" . $rowvhost[ 'vh_directory_vc' ] . "/_errorpages";
