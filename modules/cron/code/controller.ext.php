@@ -227,7 +227,7 @@ class module_controller extends ctrl_module
         SHELL=/bin/bash
         PATH=/sbin:/bin:/usr/sbin:/usr/bin
         HOME=/    
-        */5 * * * * nice -2 php -q " . ctrl_options::GetSystemOption('daemon_exer') . " >> " . ctrl_options::GetSystemOption('zpanel_root') . "/daemon_last_run.log 2>&1
+        */5 * * * * nice -2 php -q " . ctrl_options::GetSystemOption('daemon_exer') . " >> " . ctrl_options::GetSystemOption('log_dir') . "daemon.log 2>&1
         ";
 
         return $daemonCronString;
