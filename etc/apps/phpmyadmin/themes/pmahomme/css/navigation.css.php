@@ -18,6 +18,7 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
 
 #pma_navigation {
     width: <?php echo $GLOBALS['cfg']['NaviWidth']; ?>px;
+    overflow: hidden;
     position: fixed;
     top: 0;
     <?php echo $left; ?>: 0;
@@ -25,10 +26,6 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
     background: url(./themes/pmahomme/img/left_nav_bg.png) repeat-y right 0% <?php echo $GLOBALS['cfg']['NaviBackground']; ?>;
     color: <?php echo $GLOBALS['cfg']['NaviColor']; ?>;
     z-index: 800;
-}
-
-#pma_navigation_header {
-    overflow: hidden;
 }
 
 #pma_navigation_content {
@@ -71,9 +68,8 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
 
 #pma_navigation #pmalogo,
 #pma_navigation #serverChoice,
-#pma_navigation #navipanellinks,
+#pma_navigation #leftframelinks,
 #pma_navigation #recentTableList,
-#pma_navigation #favoriteTableList,
 #pma_navigation #databaseList,
 #pma_navigation div.pageselector.dbselector {
     text-align: center;
@@ -81,12 +77,7 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
     border: 0;
 }
 
-#pma_navigation #recentTable,
-#pma_navigation #favoriteTable {
-    width: 200px;
-}
-
-#pma_navigation #favoriteTableList select,
+#pma_navigation #recentTableList select,
 #pma_navigation #serverChoice select
  {
     width: 80%;
@@ -100,8 +91,7 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
 /* Navigation tree*/
 #pma_navigation_tree {
     margin: 0;
-    margin-<?php echo $left; ?>: 5px;
-    overflow: hidden;
+    margin-<?php echo $left; ?>: 10px;
     color: #444;
     height: 74%;
     position: relative;
@@ -127,21 +117,6 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
     color: <?php echo $GLOBALS['cfg']['NaviPointerColor']; ?>;
     background-color: <?php echo $GLOBALS['cfg']['NaviPointerBackground']; ?>;
 }
-#pma_navigation_tree li .dbItemControls {
-    padding-left: 4px;
-}
-#pma_navigation_tree li .navItemControls {
-    display: none;
-    padding-left: 4px;
-}
-#pma_navigation_tree li.activePointer .navItemControls {
-    display: inline;
-    opacity: 0.5;
-}
-#pma_navigation_tree li.activePointer .navItemControls:hover {
-    display: inline;
-    opacity: 1.0;
-}
 #pma_navigation_tree ul {
     clear: both;
     padding: 0;
@@ -151,20 +126,13 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
 #pma_navigation_tree ul ul {
     position: relative;
 }
-#pma_navigation_tree li,
-#pma_navigation_tree li.fast_filter {
+#pma_navigation_tree li {
     white-space: nowrap;
-    padding-bottom: 4px;
     clear: both;
     min-height: 16px;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
 }
 #pma_navigation_tree img {
     margin: 0;
-}
-#pma_navigation_tree i {
-    display: block;
 }
 #pma_navigation_tree div.block {
     position: relative;
@@ -177,7 +145,7 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
 #pma_navigation_tree div.block i,
 #pma_navigation_tree div.block b {
     width: 1.5em;
-    height: 1.7em;
+    height: 1.5em;
     min-width: 16px;
     min-height: 8px;
     position: absolute;
@@ -240,15 +208,9 @@ li.fast_filter {
     margin-<?php echo $left; ?>: 0.75em;
     padding-<?php echo $right; ?>: 35px;
     border-<?php echo $left; ?>: 1px solid #666;
-    list-style: none;
 }
 li.fast_filter input {
-    margin: 3px 0 0 0;
-    font-size: 0.7em;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-<?php echo $left; ?>: 4px;
-    padding-<?php echo $right; ?>: 1.7em;
+    padding-<?php echo $right; ?>: .4em;
     width: 100%;
 }
 li.fast_filter span {
@@ -258,21 +220,6 @@ li.fast_filter span {
     cursor: pointer;
     font-weight: bold;
     color: #800;
-}
-/* IE10+ has its own reset X */
-html.ie li.fast_filter span {
-    display: none;
-}
-html.ie.ie9 li.fast_filter span,
-html.ie.ie8 li.fast_filter span {
-    display: auto;
-}
-html.ie li.fast_filter input {
-    padding-<?php echo $right; ?>: .2em;
-}
-html.ie.ie9 li.fast_filter input,
-html.ie.ie8 li.fast_filter input {
-    padding-<?php echo $right; ?>: 1.7em;
 }
 li.fast_filter.db_fast_filter {
     border: 0;
@@ -305,68 +252,4 @@ li.fast_filter.db_fast_filter {
     text-shadow: 0px 1px 0px #fff;
     filter: dropshadow(color=#fff, offx=0, offy=1);
     border: 1px solid #888;
-}
-
-/* Quick warp links */
-#pma_quick_warp {
-    margin-top: 5px;
-    margin-<?php echo $left; ?>: 2px;
-    position: relative;
-}
-#pma_quick_warp .drop_list {
-    float: <?php echo $left; ?>;
-    margin-<?php echo $left; ?>: 3px;
-    padding: 2px 0;
-}
-#pma_quick_warp .drop_button {
-    padding: 0 .3em;
-    border: 1px solid #ddd;
-    border-radius: .3em;
-    background: #f2f2f2;
-    cursor: pointer;
-}
-#pma_quick_warp .drop_list:hover .drop_button {
-    background: #fff;
-}
-#pma_quick_warp .drop_list ul {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    overflow-y: auto;
-    list-style: none;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: .3em;
-    border-top-<?php echo $right; ?>-radius: 0;
-    border-bottom-<?php echo $right; ?>-radius: 0;
-    box-shadow: 0 0 5px #ccc;
-    top: 100%;
-    <?php echo $left; ?>: 3px;
-    <?php echo $right; ?>: 0;
-    display: none;
-    z-index: 802;
-}
-#pma_quick_warp .drop_list:hover ul {
-    display: block;
-}
-#pma_quick_warp .drop_list li {
-    white-space: nowrap;
-    padding: 0;
-    border-radius: 0;
-}
-#pma_quick_warp .drop_list li img {
-    vertical-align: sub;
-}
-#pma_quick_warp .drop_list li:hover {
-    background: #f2f2f2;
-}
-#pma_quick_warp .drop_list a {
-    display: block;
-    padding: .2em .3em;
-}
-#pma_quick_warp .drop_list a.favorite_table_anchor {
-    clear: left;
-    float: left;
-    padding: .1em .3em 0;
 }

@@ -200,9 +200,6 @@ class module_controller extends ctrl_module
         // Check to see if creating system cron file was successful...
         if (!is_file(ctrl_options::GetSystemOption('cron_file'))) {
             self::$cronnoexists = TRUE;
-            //var_dump( 'here boss' );
-            //var_dump( ctrl_options::GetSystemOption( 'cron_file' ) );
-            //var_dump( is_file( ctrl_options::GetSystemOption( 'cron_file' ) ) );
             $retval = TRUE;
         }
         // Check to makesystem cron file is writable...
@@ -223,6 +220,18 @@ class module_controller extends ctrl_module
         }
         return $retval;
     }
+    
+    static function GetDaemonCron()
+    {
+        $daemonCronString = "
+        SHELL=/bin/bash
+        PATH=/sbin:/bin:/usr/sbin:/usr/bin
+        HOME=/    
+        */5 * * * * nice -2 php -q " . ctrl_options::GetSystemOption('daemon_exer') . " >> " . ctrl_options::GetSystemOption('log_dir') . "daemon.log 2>&1
+        ";
+
+        return $daemonCronString;
+    }
 
     static function WriteCronFile()
     {
@@ -234,6 +243,9 @@ class module_controller extends ctrl_module
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             $sql->execute();
+            if (sys_versions::ShowOSPlatformVersion() != "Windows") {
+                $line .= self::GetDaemonCron() . fs_filehandler::NewLine() . fs_filehandler::NewLine();
+            }
             $line .= "#################################################################################" . fs_filehandler::NewLine();
             $line .= "# CRONTAB FOR ZPANEL CRON MANAGER MODULE                                         " . fs_filehandler::NewLine();
             $line .= "# Module Developed by Bobby Allen, 17/12/2009                                    " . fs_filehandler::NewLine();
@@ -272,14 +284,15 @@ class module_controller extends ctrl_module
                                 ctrl_options::GetSystemOption('cron_reload_user'),
                                 ctrl_options::GetSystemOption('cron_reload_path'),
                     ));
-
-                    //var_dump( $returnValue );
                 }
                 return true;
             } else {
                 return false;
             }
         } else {
+            if (sys_versions::ShowOSPlatformVersion() != "Windows") {
+                $line .= self::GetDaemonCron() . fs_filehandler::NewLine() . fs_filehandler::NewLine();
+            }
             $line .= "#################################################################################" . fs_filehandler::NewLine();
             $line .= "# CRONTAB FOR ZPANEL CRON MANAGER MODULE                                         " . fs_filehandler::NewLine();
             $line .= "# Module Developed by Bobby Allen, 17/12/2009                                    " . fs_filehandler::NewLine();
@@ -306,7 +319,6 @@ class module_controller extends ctrl_module
                                 ctrl_options::GetSystemOption('cron_reload_user'),
                                 ctrl_options::GetSystemOption('cron_reload_path'),
                     ));
-                    //var_dump( $returnValue );
                 }
                 return true;
             } else {

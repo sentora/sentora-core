@@ -12,7 +12,7 @@ if (! defined('PHPMYADMIN')) {
 
 /* Get the transformations interface */
 require_once 'libraries/plugins/TransformationsPlugin.class.php';
-/* For PMA_Transformation_globalHtmlReplace */
+/* For PMA_transformation_global_html_replace */
 require_once 'libraries/transformations.lib.php';
 
 /**
@@ -41,21 +41,20 @@ abstract class ImageLinkTransformationsPlugin extends TransformationsPlugin
      * @param array  $options transformation options
      * @param string $meta    meta information
      *
-     * @return string
+     * @return void
      */
     public function applyTransformation($buffer, $options = array(), $meta = '')
     {
-        // must disable the page loader, see
-        // https://wiki.phpmyadmin.net/pma/Page_loader#Bypassing_the_page_loader
         $transform_options = array (
-            'string' => '<a class="disableAjax"'
-                . ' target="_new" href="transformation_wrapper.php'
+            'string' => '<a href="transformation_wrapper.php'
                 . $options['wrapper_link'] . '" alt="[__BUFFER__]">[BLOB]</a>'
         );
-        return PMA_Transformation_globalHtmlReplace(
+        $buffer = PMA_transformation_global_html_replace(
             $buffer,
             $transform_options
         );
+
+        return $buffer;
     }
 
     /**
@@ -84,7 +83,7 @@ abstract class ImageLinkTransformationsPlugin extends TransformationsPlugin
      */
     public static function getName()
     {
-        return "ImageLink";
+        return "Link";
     }
 }
 ?>

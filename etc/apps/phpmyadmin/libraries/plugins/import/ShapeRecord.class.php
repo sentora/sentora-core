@@ -82,7 +82,7 @@ class PMA_ShapeRecord extends ShapeRecord
     /**
      * Loads data from a point record
      *
-     * @return array
+     * @return void
      * @see ShapeRecord::_loadPoint()
      */
     function _loadPoint()

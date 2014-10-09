@@ -20,46 +20,47 @@ if (! defined('PHPMYADMIN')) {
  * codes list
  * 2002/1/4 by Y.Kawada
  *
- * @global  string $kanji_encoding_list the available encoding codes list
+ * @global  string   the current encoding code
+ * @global  string   the available encoding codes list
  *
  * @return boolean  always true
  */
-function PMA_Kanji_checkEncoding()
+function PMA_internal_enc_check()
 {
-    global $kanji_encoding_list;
+    global $internal_enc, $enc_list;
 
     $internal_enc = mb_internal_encoding();
     if ($internal_enc == 'EUC-JP') {
-        $kanji_encoding_list = 'ASCII,EUC-JP,SJIS,JIS';
+        $enc_list = 'ASCII,EUC-JP,SJIS,JIS';
     } else {
-        $kanji_encoding_list = 'ASCII,SJIS,EUC-JP,JIS';
+        $enc_list = 'ASCII,SJIS,EUC-JP,JIS';
     }
 
     return true;
-} // end of the 'PMA_Kanji_checkEncoding' function
+} // end of the 'PMA_internal_enc_check' function
 
 
 /**
  * Reverses SJIS & EUC-JP position in the encoding codes list
  * 2002/1/4 by Y.Kawada
  *
- * @global  string $kanji_encoding_list the available encoding codes list
+ * @global  string   the available encoding codes list
  *
  * @return boolean  always true
  */
-function PMA_Kanji_changeOrder()
+function PMA_change_enc_order()
 {
-    global $kanji_encoding_list;
+    global $enc_list;
 
-    $parts = explode(',', $kanji_encoding_list);
-    if ($parts[1] == 'EUC-JP') {
-        $kanji_encoding_list = 'ASCII,SJIS,EUC-JP,JIS';
+    $p            = explode(',', $enc_list);
+    if ($p[1] == 'EUC-JP') {
+        $enc_list = 'ASCII,SJIS,EUC-JP,JIS';
     } else {
-        $kanji_encoding_list = 'ASCII,EUC-JP,SJIS,JIS';
+        $enc_list = 'ASCII,EUC-JP,SJIS,JIS';
     }
 
     return true;
-} // end of the 'PMA_Kanji_changeOrder' function
+} // end of the 'PMA_change_enc_order' function
 
 
 /**
@@ -70,30 +71,30 @@ function PMA_Kanji_changeOrder()
  * @param string $enc  the destination encoding code
  * @param string $kana set 'kana' convert to JIS-X208-kana
  *
- * @global  string $kanji_encoding_list the available encoding codes list
+ * @global  string   the available encoding codes list
  *
  * @return string   the converted string
  */
-function PMA_Kanji_strConv($str, $enc, $kana)
+function PMA_kanji_str_conv($str, $enc, $kana)
 {
-    global $kanji_encoding_list;
+    global $enc_list;
 
     if ($enc == '' && $kana == '') {
         return $str;
     }
-    $string_encoding = mb_detect_encoding($str, $kanji_encoding_list);
+    $nw       = mb_detect_encoding($str, $enc_list);
 
     if ($kana == 'kana') {
-        $dist = mb_convert_kana($str, 'KV', $string_encoding);
+        $dist = mb_convert_kana($str, 'KV', $nw);
         $str  = $dist;
     }
-    if ($string_encoding != $enc && $enc != '') {
-        $dist = mb_convert_encoding($str, $enc, $string_encoding);
+    if ($nw != $enc && $enc != '') {
+        $dist = mb_convert_encoding($str, $enc, $nw);
     } else {
         $dist = $str;
     }
     return $dist;
-} // end of the 'PMA_Kanji_strConv' function
+} // end of the 'PMA_kanji_str_conv' function
 
 
 /**
@@ -106,7 +107,7 @@ function PMA_Kanji_strConv($str, $enc, $kana)
  *
  * @return string   the name of the converted file
  */
-function PMA_Kanji_fileConv($file, $enc, $kana)
+function PMA_kanji_file_conv($file, $enc, $kana)
 {
     if ($enc == '' && $kana == '') {
         return $file;
@@ -115,54 +116,46 @@ function PMA_Kanji_fileConv($file, $enc, $kana)
     $tmpfname = tempnam('', $enc);
     $fpd      = fopen($tmpfname, 'wb');
     $fps      = fopen($file, 'r');
-    PMA_Kanji_changeOrder();
+    PMA_change_enc_order();
     while (!feof($fps)) {
         $line = fgets($fps, 4096);
-        $dist = PMA_Kanji_strConv($line, $enc, $kana);
+        $dist = PMA_kanji_str_conv($line, $enc, $kana);
         fputs($fpd, $dist);
     } // end while
-    PMA_Kanji_changeOrder();
+    PMA_change_enc_order();
     fclose($fps);
     fclose($fpd);
     unlink($file);
 
     return $tmpfname;
-} // end of the 'PMA_Kanji_fileConv' function
+} // end of the 'PMA_kanji_file_conv' function
 
 
 /**
  * Defines radio form fields to switch between encoding modes
  * 2002/1/4 by Y.Kawada
  *
+ * @param string $spaces spaces character to prepend the output with
+ *
  * @return string   xhtml code for the radio controls
  */
-function PMA_Kanji_encodingForm()
+function PMA_set_enc_form($spaces)
 {
     return "\n"
-        . '<ul>' . "\n" . '<li>'
-        . '<input type="radio" name="knjenc" value="" checked="checked" '
-        . 'id="kj-none" />'
-        . '<label for="kj-none">'
-        /* l10n: This is currently used only in Japanese locales */
-        . _pgettext('None encoding conversion', 'None')
-        . "</label>\n"
-        . '<input type="radio" name="knjenc" value="EUC-JP" id="kj-euc" />'
-        . '<label for="kj-euc">EUC</label>' . "\n"
-        . '<input type="radio" name="knjenc" value="SJIS" id="kj-sjis" />'
-        . '<label for="kj-sjis">SJIS</label>' . "\n"
-        . '</li>' . "\n" . '<li>'
-        . '<input type="checkbox" name="xkana" value="kana" id="kj-kana" />'
-        . "\n"
-        . '<label for="kj-kana">'
-        /* l10n: This is currently used only in Japanese locales */
-        . __('Convert to Kana')
-        . '</label><br />'
-        . "\n"
-        . '</li>' . "\n" . '</ul>'
-        ;
-} // end of the 'PMA_Kanji_encodingForm' function
+             /* l10n: This is currently used only in Japanese locales */
+           . $spaces . '<ul>' . "\n" . '<li>'
+           . $spaces . '<input type="radio" name="knjenc" value="" checked="checked" id="kj-none" /><label for="kj-none">' . _pgettext('None encoding conversion', 'None') . "</label>\n"
+           . $spaces . '<input type="radio" name="knjenc" value="EUC-JP" id="kj-euc" /><label for="kj-euc">EUC</label>' . "\n"
+           . $spaces . '<input type="radio" name="knjenc" value="SJIS" id="kj-sjis" /><label for="kj-sjis">SJIS</label>' . "\n"
+           . $spaces . '</li>' . "\n" . '<li>'
+           . $spaces . '<input type="checkbox" name="xkana" value="kana" id="kj-kana" />' . "\n"
+           /* l10n: This is currently used only in Japanese locales */
+           . $spaces . '<label for="kj-kana">' . __('Convert to Kana') . '</label><br />' . "\n"
+           . $spaces . '</li>' . "\n" . '</ul>'
+           ;
+} // end of the 'PMA_set_enc_form' function
 
 
-PMA_Kanji_checkEncoding();
+PMA_internal_enc_check();
 
 ?>

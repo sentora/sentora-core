@@ -25,14 +25,14 @@ class PMA_Response
      *
      * @access private
      * @static
-     * @var PMA_Response
+     * @var object
      */
     private static $_instance;
     /**
      * PMA_Header instance
      *
      * @access private
-     * @var PMA_Header
+     * @var object
      */
     private $_header;
     /**
@@ -54,7 +54,7 @@ class PMA_Response
      * PMA_Footer instance
      *
      * @access private
-     * @var PMA_Footer
+     * @var object
      */
     private $_footer;
     /**
@@ -92,6 +92,8 @@ class PMA_Response
 
     /**
      * Creates a new class instance
+     *
+     * @return new PMA_Response object
      */
     private function __construct()
     {
@@ -184,7 +186,7 @@ class PMA_Response
     /**
      * Returns a PMA_Header object
      *
-     * @return PMA_Header
+     * @return object
      */
     public function getHeader()
     {
@@ -194,7 +196,7 @@ class PMA_Response
     /**
      * Returns a PMA_Footer object
      *
-     * @return PMA_Footer
+     * @return object
      */
     public function getFooter()
     {
@@ -211,11 +213,7 @@ class PMA_Response
      */
     public function addHTML($content)
     {
-        if (is_array($content)) {
-            foreach ($content as $msg) {
-                $this->addHTML($msg);
-            }
-        } elseif ($content instanceof PMA_Message) {
+        if ($content instanceof PMA_Message) {
             $this->_HTML .= $content->getDisplay();
         } else {
             $this->_HTML .= $content;
@@ -256,7 +254,7 @@ class PMA_Response
     private function _getDisplay()
     {
         // The header may contain nothing at all,
-        // if its content was already rendered
+        // if it's content was already rendered
         // and, in this case, the header will be
         // in the content part of the request
         $retval  = $this->_header->getDisplay();
@@ -319,9 +317,8 @@ class PMA_Response
             if (empty($GLOBALS['error_message'])) {
                 // set current db, table and sql query in the querywindow
                 $query = '';
-                $maxChars = $GLOBALS['cfg']['MaxCharactersInDisplayedSQL'];
                 if (isset($GLOBALS['sql_query'])
-                    && strlen($GLOBALS['sql_query']) < $maxChars
+                    && strlen($GLOBALS['sql_query']) < $GLOBALS['cfg']['MaxCharactersInDisplayedSQL']
                 ) {
                     $query = PMA_escapeJsString($GLOBALS['sql_query']);
                 }

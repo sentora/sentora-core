@@ -51,37 +51,29 @@ class PMA_Scripts
     private function _includeFiles($files)
     {
         $dynamic_scripts = "";
-        $scripts = array();
+        $params = array();
         foreach ($files as $value) {
-            if (strpos($value['filename'], "?") !== false) {
-                $dynamic_scripts .= "<script type='text/javascript' src='js/"
-                    . $value['filename'] . "'></script>";
-                continue;
-            }
-            $include = true;
-            if ($value['conditional_ie'] !== false
-                && PMA_USR_BROWSER_AGENT === 'IE'
-            ) {
-                if ($value['conditional_ie'] === true) {
-                    $include = true;
-                } else if ($value['conditional_ie'] == PMA_USR_BROWSER_VER) {
-                    $include = true;
-                } else {
-                    $include = false;
+            if (strpos($value['filename'], "?") === false) {
+                $include = true;
+                if ($value['conditional_ie'] !== false && PMA_USR_BROWSER_AGENT === 'IE') {
+                    if ($value['conditional_ie'] === true) {
+                        $include = true;
+                    } else if ($value['conditional_ie'] == PMA_USR_BROWSER_VER) {
+                        $include = true;
+                    } else {
+                        $include = false;
+                    }
                 }
-            }
-            if ($include) {
-                $scripts[] = "scripts[]=" . $value['filename'];
+                if ($include) {
+                    $params[] = "scripts[]=" . $value['filename'];
+                }
+            } else {
+                $dynamic_scripts .= "<script type='text/javascript' src='js/" . $value['filename'] . "'></script>";
             }
         }
-        $separator = PMA_URL_getArgSeparator();
-        $url = 'js/get_scripts.js.php'
-            . PMA_URL_getCommon(array(), 'none')
-            . $separator . implode($separator, $scripts);
-
         $static_scripts = sprintf(
-            '<script type="text/javascript" src="%s"></script>',
-            htmlspecialchars($url)
+            "<script type='text/javascript' src='js/get_scripts.js.php?%s'></script>",
+            implode("&", $params)
         );
         return $static_scripts . $dynamic_scripts;
     }
@@ -111,16 +103,14 @@ class PMA_Scripts
     public function addFile($filename, $conditional_ie = false)
     {
         $hash = md5($filename);
-        if (!empty($this->_files[$hash])) {
-            return;
+        if (empty($this->_files[$hash])) {
+            $has_onload = $this->_eventBlacklist($filename);
+            $this->_files[$hash] = array(
+                'has_onload' => $has_onload,
+                'filename' => $filename,
+                'conditional_ie' => $conditional_ie
+            );
         }
-
-        $has_onload = $this->_eventBlacklist($filename);
-        $this->_files[$hash] = array(
-            'has_onload' => $has_onload,
-            'filename' => $filename,
-            'conditional_ie' => $conditional_ie
-        );
     }
 
     /**
@@ -142,9 +132,9 @@ class PMA_Scripts
             || strpos($filename, 'cross_framing_protection.js') !== false
         ) {
             return 0;
+        } else {
+            return 1;
         }
-
-        return 1;
     }
 
     /**
@@ -187,16 +177,13 @@ class PMA_Scripts
     {
         $retval = array();
         foreach ($this->_files as $file) {
-            //If filename contains a "?", continue.
-            if (strpos($file['filename'], "?") !== false) {
-                continue;
-            }
-
-            if (! $file['conditional_ie'] || PMA_USR_BROWSER_AGENT == 'IE') {
-                $retval[] = array(
-                    'name' => $file['filename'],
-                    'fire' => $file['has_onload']
-                );
+            if (strpos($file['filename'], "?") === false) {
+                if (! $file['conditional_ie'] || PMA_USR_BROWSER_AGENT == 'IE') {
+                    $retval[] = array(
+                        'name' => $file['filename'],
+                        'fire' => $file['has_onload']
+                    );
+                }
             }
         }
         return $retval;

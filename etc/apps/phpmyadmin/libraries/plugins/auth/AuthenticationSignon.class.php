@@ -42,30 +42,23 @@ class AuthenticationSignon extends AuthenticationPlugin
         } else {
             PMA_sendHeaderLocation($GLOBALS['cfg']['Server']['SignonURL']);
         }
-
-        if (! defined('TESTSUITE')) {
-            exit();
-        } else {
-            return false;
-        }
+        exit();
     }
 
-    /**
+     /**
      * Gets advanced authentication settings
      *
-     * @global  string $PHP_AUTH_USER the username if register_globals is on
-     * @global  string $PHP_AUTH_PW   the password if register_globals is on
-     * @global  array                 the array of server variables if
-     *                                register_globals is off
-     * @global  array                 the array of environment variables if
-     *                                register_globals is off
-     * @global  string                the username for the ? server
-     * @global  string                the password for the ? server
-     * @global  string                the username for the WebSite Professional
-     *                                server
-     * @global  string                the password for the WebSite Professional
-     *                                server
-     * @global  string                the username of the user who logs out
+     * @global  string    the username if register_globals is on
+     * @global  string    the password if register_globals is on
+     * @global  array     the array of server variables if register_globals is
+     *                    off
+     * @global  array     the array of environment variables if register_globals
+     *                    is off
+     * @global  string    the username for the ? server
+     * @global  string    the password for the ? server
+     * @global  string    the username for the WebSite Professional server
+     * @global  string    the password for the WebSite Professional server
+     * @global  string    the username of the user who logs out
      *
      * @return boolean   whether we get authentication settings or not
      */
@@ -107,28 +100,24 @@ class AuthenticationSignon extends AuthenticationPlugin
             if (! file_exists($script_name)) {
                 PMA_fatalError(
                     __('Can not find signon authentication script:')
-                    . ' ' . $script_name
+                    . ' '. $script_name
                 );
             }
             include $script_name;
 
             list ($PHP_AUTH_USER, $PHP_AUTH_PW)
-                = get_login_credentials($GLOBALS['cfg']['Server']['user']);
+                = get_login_credentials($cfg['Server']['user']);
 
         } elseif (isset($_COOKIE[$session_name])) { /* Does session exist? */
             /* End current session */
             $old_session = session_name();
             $old_id = session_id();
-            if (! defined('TESTSUITE')) {
-                session_write_close();
-            }
+            session_write_close();
 
             /* Load single signon session */
             session_name($session_name);
             session_id($_COOKIE[$session_name]);
-            if (! defined('TESTSUITE')) {
-                session_start();
-            }
+            session_start();
 
             /* Clear error message */
             unset($_SESSION['PMA_single_signon_error_message']);
@@ -168,18 +157,14 @@ class AuthenticationSignon extends AuthenticationPlugin
             }
 
             /* End single signon session */
-            if (! defined('TESTSUITE')) {
-                session_write_close();
-            }
+            session_write_close();
 
             /* Restart phpMyAdmin session */
             session_name($old_session);
             if (!empty($old_id)) {
                 session_id($old_id);
             }
-            if (! defined('TESTSUITE')) {
-                session_start();
-            }
+            session_start();
 
             /* Set the single signon host */
             $GLOBALS['cfg']['Server']['host'] = $single_signon_host;
@@ -217,11 +202,11 @@ class AuthenticationSignon extends AuthenticationPlugin
     /**
      * Set the user and password after last checkings if required
      *
-     * @global  array   $cfg           the valid servers settings
-     * @global  integer                the id of the current server
-     * @global  array                  the current server settings
-     * @global  string  $PHP_AUTH_USER the current username
-     * @global  string  $PHP_AUTH_PW   the current password
+     * @global  array     the valid servers settings
+     * @global  integer   the id of the current server
+     * @global  array     the current server settings
+     * @global  string    the current username
+     * @global  string    the current password
      *
      * @return boolean   always true
      */
@@ -249,16 +234,14 @@ class AuthenticationSignon extends AuthenticationPlugin
         /* Does session exist? */
         if (isset($_COOKIE[$session_name])) {
             /* End current session */
-            if (! defined('TESTSUITE')) {
-                session_write_close();
-            }
+            $old_session = session_name();
+            $old_id = session_id();
+            session_write_close();
 
             /* Load single signon session */
             session_name($session_name);
             session_id($_COOKIE[$session_name]);
-            if (! defined('TESTSUITE')) {
-                session_start();
-            }
+            session_start();
 
             /* Set error message */
             if (! empty($GLOBALS['login_without_password_is_forbidden'])) {
@@ -267,15 +250,15 @@ class AuthenticationSignon extends AuthenticationPlugin
                     . '(see AllowNoPassword)'
                 );
             } elseif (! empty($GLOBALS['allowDeny_forbidden'])) {
-                $_SESSION['PMA_single_signon_error_message'] = __('Access denied!');
+                $_SESSION['PMA_single_signon_error_message'] = __('Access denied');
             } elseif (! empty($GLOBALS['no_activity'])) {
                 $_SESSION['PMA_single_signon_error_message'] = sprintf(
-                    __('No activity within %s seconds; please log in again.'),
+                    __('No activity within %s seconds; please log in again'),
                     $GLOBALS['cfg']['LoginCookieValidity']
                 );
-            } elseif ($GLOBALS['dbi']->getError()) {
+            } elseif (PMA_DBI_getError()) {
                 $_SESSION['PMA_single_signon_error_message'] = PMA_sanitize(
-                    $GLOBALS['dbi']->getError()
+                    PMA_DBI_getError()
                 );
             } else {
                 $_SESSION['PMA_single_signon_error_message'] = __(

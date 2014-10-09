@@ -18,25 +18,19 @@ class ConfigFile
      * Stores default PMA config from config.default.php
      * @var array
      */
-    private $_defaultCfg;
+    private $_cfg;
+
+    /**
+     * Stores original PMA_Config object, not modified by user preferences
+     * @var PMA_Config
+     */
+    private $_orgCfgObject;
 
     /**
      * Stores allowed values for non-standard fields
      * @var array
      */
     private $_cfgDb;
-
-    /**
-     * Stores original PMA config, not modified by user preferences
-     * @var array
-     */
-    private $_baseCfg;
-
-    /**
-     * Whether we are currently working in PMA Setup context
-     * @var bool
-     */
-    private $_isInSetup;
 
     /**
      * Keys which will be always written to config file
@@ -71,18 +65,24 @@ class ConfigFile
     private $_flattenArrayResult;
 
     /**
-     * Constructor
-     *
-     * @param array $base_config base configuration read from
-     *                           {@link PMA_Config::$base_config},
-     *                           use only when not in PMA Setup
+     * ConfigFile instance
+     * @var ConfigFile
      */
-    public function __construct(array $base_config = null)
+    private static $_instance;
+
+    /**
+     * Private constructor, use {@link getInstance()}
+     *
+     */
+    private function __construct()
     {
         // load default config values
-        $cfg = &$this->_defaultCfg;
+        $cfg = &$this->_cfg;
         include './libraries/config.default.php';
         $cfg['fontsize'] = '82%';
+
+        // create PMA_Config to read config.inc.php values
+        $this->_orgCfgObject = new PMA_Config(CONFIG_FILE);
 
         // load additional config information
         $cfg_db = &$this->_cfgDb;
@@ -95,8 +95,6 @@ class ConfigFile
             }
         }
 
-        $this->_baseCfg = $base_config;
-        $this->_isInSetup = is_null($base_config);
         $this->_id = 'ConfigFile' . $GLOBALS['server'];
         if (!isset($_SESSION[$this->_id])) {
             $_SESSION[$this->_id] = array();
@@ -104,14 +102,37 @@ class ConfigFile
     }
 
     /**
+     * Returns class instance
+     *
+     * @return ConfigFile
+     */
+    public static function getInstance()
+    {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new ConfigFile();
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * Returns PMA_Config without user preferences applied
+     *
+     * @return PMA_Config
+     */
+    public function getOrgConfigObj()
+    {
+        return $this->_orgCfgObject;
+    }
+
+    /**
      * Sets names of config options which will be placed in config file even if
      * they are set to their default values (use only full paths)
      *
-     * @param array $keys the names of the config options
+     * @param array $keys
      *
      * @return void
      */
-    public function setPersistKeys(array $keys)
+    public function setPersistKeys($keys)
     {
         // checking key presence is much faster than searching so move values
         // to keys
@@ -152,8 +173,7 @@ class ConfigFile
      * {@link updateWithGlobalConfig()} or reading
      * by {@link getConfig()} or {@link getConfigArray()}
      *
-     * @param array $mapping Contains the mapping of "Server/config options"
-     *                       to "Server/1/config options"
+     * @param array $mapping
      *
      * @return void
      */
@@ -175,7 +195,7 @@ class ConfigFile
     /**
      * Sets configuration data (overrides old data)
      *
-     * @param array $cfg Configuration options
+     * @param array $cfg
      *
      * @return void
      */
@@ -187,9 +207,9 @@ class ConfigFile
     /**
      * Sets config value
      *
-     * @param string $path           Path
-     * @param mixed  $value          Value
-     * @param string $canonical_path Canonical path
+     * @param string $path
+     * @param mixed  $value
+     * @param string $canonical_path
      *
      * @return void
      */
@@ -204,36 +224,25 @@ class ConfigFile
         ) {
             return;
         }
-        // if the path isn't protected it may be removed
-        if (isset($this->_persistKeys[$canonical_path])) {
-            PMA_arrayWrite($path, $_SESSION[$this->_id], $value);
-            return;
-        }
-
-        $default_value = $this->getDefault($canonical_path);
-        $remove_path = $value === $default_value;
-        if ($this->_isInSetup) {
-            // remove if it has a default value or is empty
-            $remove_path = $remove_path
-                || (empty($value) && empty($default_value));
-        } else {
-            // get original config values not overwritten by user
+        // remove if the path isn't protected and it's empty or has a default
+        // value
+        if (!isset($this->_persistKeys[$canonical_path])) {
+            $default_value = $this->getDefault($canonical_path);
+            // we need original config values not overwritten by user
             // preferences to allow for overwriting options set in
             // config.inc.php with default values
             $instance_default_value = PMA_arrayRead(
                 $canonical_path,
-                $this->_baseCfg
+                $this->_orgCfgObject->settings
             );
-            // remove if it has a default value and base config (config.inc.php)
-            // uses default value
-            $remove_path = $remove_path
-                && ($instance_default_value === $default_value);
+            if (($value === $default_value && (defined('PMA_SETUP')
+                || $instance_default_value === $default_value))
+                || (empty($value) && empty($default_value) && (defined('PMA_SETUP')))
+            ) {
+                PMA_arrayRemove($path, $_SESSION[$this->_id]);
+                return;
+            }
         }
-        if ($remove_path) {
-            PMA_arrayRemove($path, $_SESSION[$this->_id]);
-            return;
-        }
-
         PMA_arrayWrite($path, $_SESSION[$this->_id], $value);
     }
 
@@ -242,9 +251,9 @@ class ConfigFile
      * (eg. 'key/subkey').
      * Used as array_walk() callback.
      *
-     * @param mixed $value  Value
-     * @param mixed $key    Key
-     * @param mixed $prefix Prefix
+     * @param mixed $value
+     * @param mixed $key
+     * @param mixed $prefix
      *
      * @return void
      */
@@ -267,9 +276,9 @@ class ConfigFile
     public function getFlatDefaultConfig()
     {
         $this->_flattenArrayResult = array();
-        array_walk($this->_defaultCfg, array($this, '_flattenArray'), '');
+        array_walk($this->_cfg, array($this, '_flattenArray'), '');
         $flat_cfg = $this->_flattenArrayResult;
-        $this->_flattenArrayResult = array();
+        $this->_flattenArrayResult = null;
         return $flat_cfg;
     }
 
@@ -277,7 +286,7 @@ class ConfigFile
      * Updates config with values read from given array
      * (config will contain differences to defaults from config.defaults.php).
      *
-     * @param array $cfg Configuration
+     * @param array $cfg
      *
      * @return void
      */
@@ -287,7 +296,7 @@ class ConfigFile
         $this->_flattenArrayResult = array();
         array_walk($cfg, array($this, '_flattenArray'), '');
         $flat_cfg = $this->_flattenArrayResult;
-        $this->_flattenArrayResult = array();
+        $this->_flattenArrayResult = null;
 
         // save values map for translating a few user preferences paths,
         // should be complemented by code reading from generated config
@@ -303,8 +312,8 @@ class ConfigFile
     /**
      * Returns config value or $default if it's not set
      *
-     * @param string $path    Path of config file
-     * @param mixed  $default Default values
+     * @param string $path
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -318,22 +327,22 @@ class ConfigFile
      * exist in config.default.php ($cfg) and config.values.php
      * ($_cfg_db['_overrides'])
      *
-     * @param string $canonical_path Canonical path
-     * @param mixed  $default        Default value
+     * @param string $canonical_path
+     * @param mixed  $default
      *
      * @return mixed
      */
     public function getDefault($canonical_path, $default = null)
     {
-        return PMA_arrayRead($canonical_path, $this->_defaultCfg, $default);
+        return PMA_arrayRead($canonical_path, $this->_cfg, $default);
     }
 
     /**
      * Returns config value, if it's not set uses the default one; returns
      * $default if the path isn't set and doesn't contain a default value
      *
-     * @param string $path    Path
-     * @param mixed  $default Default value
+     * @param string $path
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -350,7 +359,7 @@ class ConfigFile
     /**
      * Returns canonical path
      *
-     * @param string $path Path
+     * @param string $path
      *
      * @return string
      */
@@ -362,8 +371,8 @@ class ConfigFile
     /**
      * Returns config database entry for $path ($cfg_db in config_info.php)
      *
-     * @param string $path    path of the variable in config db
-     * @param mixed  $default default value
+     * @param string $path
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -399,7 +408,7 @@ class ConfigFile
     /**
      * Returns DSN of given server
      *
-     * @param integer $server server index
+     * @param integer $server
      *
      * @return string
      */
@@ -410,10 +419,10 @@ class ConfigFile
         }
 
         $path = 'Servers/' . $server;
-        $dsn = 'mysqli://';
+        $dsn = $this->getValue("$path/extension") . '://';
         if ($this->getValue("$path/auth_type") == 'config') {
             $dsn .= $this->getValue("$path/user");
-            if (! $this->getValue("$path/nopassword")) {
+            if (!$this->getValue("$path/nopassword")) {
                 $dsn .= ':***';
             }
             $dsn .= '@';
@@ -433,7 +442,7 @@ class ConfigFile
     /**
      * Returns server name
      *
-     * @param int $id server index
+     * @param int $id
      *
      * @return string
      */
@@ -453,7 +462,7 @@ class ConfigFile
     /**
      * Removes server
      *
-     * @param int $server server index
+     * @param int $server
      *
      * @return void
      */
@@ -471,7 +480,7 @@ class ConfigFile
         unset($_SESSION[$this->_id]['Servers'][$last_server]);
 
         if (isset($_SESSION[$this->_id]['ServerDefault'])
-            && $_SESSION[$this->_id]['ServerDefault'] == $last_server
+            && $_SESSION[$this->_id]['ServerDefault'] >= 0
         ) {
             unset($_SESSION[$this->_id]['ServerDefault']);
         }
@@ -501,10 +510,8 @@ class ConfigFile
     {
         $c = $_SESSION[$this->_id];
         foreach ($this->_cfgUpdateReadMapping as $map_to => $map_from) {
-            if (PMA_arrayKeyExists($map_to, $c)) {
-                PMA_arrayWrite($map_to, $c, PMA_arrayRead($map_from, $c));
-                PMA_arrayRemove($map_from, $c);
-            }
+            PMA_arrayWrite($map_to, $c, PMA_arrayRead($map_from, $c));
+            PMA_arrayRemove($map_from, $c);
         }
         return $c;
     }
@@ -519,14 +526,14 @@ class ConfigFile
         $this->_flattenArrayResult = array();
         array_walk($_SESSION[$this->_id], array($this, '_flattenArray'), '');
         $c = $this->_flattenArrayResult;
-        $this->_flattenArrayResult = array();
+        $this->_flattenArrayResult = null;
 
         $persistKeys = array_diff(
             array_keys($this->_persistKeys),
             array_keys($c)
         );
         foreach ($persistKeys as $k) {
-            $c[$k] = $this->getDefault($this->getCanonicalPath($k));
+            $c[$k] = $this->getDefault($k);
         }
 
         foreach ($this->_cfgUpdateReadMapping as $map_to => $map_from) {

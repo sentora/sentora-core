@@ -5,31 +5,9 @@
  */
 
 /**
- * Disables the "Dump some row(s)" sub-options
- */
-function disable_dump_some_rows_sub_options()
-{
-    $("label[for='limit_to']").fadeTo('fast', 0.4);
-    $("label[for='limit_from']").fadeTo('fast', 0.4);
-    $("input[type='text'][name='limit_to']").prop('disabled', 'disabled');
-    $("input[type='text'][name='limit_from']").prop('disabled', 'disabled');
-}
-
-/**
- * Enables the "Dump some row(s)" sub-options
- */
-function enable_dump_some_rows_sub_options()
-{
-    $("label[for='limit_to']").fadeTo('fast', 1);
-    $("label[for='limit_from']").fadeTo('fast', 1);
-    $("input[type='text'][name='limit_to']").prop('disabled', '');
-    $("input[type='text'][name='limit_from']").prop('disabled', '');
-}
-
-/**
  * Unbind all event handlers before tearing down a page
  */
-AJAX.registerTeardown('export.js', function () {
+AJAX.registerTeardown('export.js', function() {
     $("#plugins").unbind('change');
     $("input[type='radio'][name='sql_structure_or_data']").unbind('change');
     $("input[type='radio'][name='latex_structure_or_data']").unbind('change');
@@ -49,16 +27,16 @@ AJAX.registerOnload('export.js', function () {
      * Toggles the hiding and showing of each plugin's options
      * according to the currently selected plugin from the dropdown list
      */
-    $("#plugins").change(function () {
+    $("#plugins").change(function() {
         $("#format_specific_opts div.format_specific_options").hide();
         var selected_plugin_name = $("#plugins option:selected").val();
         $("#" + selected_plugin_name + "_options").show();
-    });
+     });
 
     /**
      * Toggles the enabling and disabling of the SQL plugin's comment options that apply only when exporting structure
      */
-    $("input[type='radio'][name='sql_structure_or_data']").change(function () {
+    $("input[type='radio'][name='sql_structure_or_data']").change(function() {
         var comments_are_present = $("#checkbox_sql_include_comments").prop("checked");
         var show = $("input[type='radio'][name='sql_structure_or_data']:checked").val();
         if (show == 'data') {
@@ -76,7 +54,7 @@ AJAX.registerOnload('export.js', function () {
             $("#checkbox_sql_relation").removeProp('disabled').parent().fadeTo('fast', 1);
             $("#checkbox_sql_mime").removeProp('disabled').parent().fadeTo('fast', 1);
         }
-    });
+     });
 });
 
 
@@ -104,19 +82,19 @@ function toggle_structure_data_opts(pluginName)
 }
 
 AJAX.registerOnload('export.js', function () {
-    $("input[type='radio'][name='latex_structure_or_data']").change(function () {
+    $("input[type='radio'][name='latex_structure_or_data']").change(function() {
         toggle_structure_data_opts("latex");
     });
-    $("input[type='radio'][name='odt_structure_or_data']").change(function () {
+    $("input[type='radio'][name='odt_structure_or_data']").change(function() {
         toggle_structure_data_opts("odt");
     });
-    $("input[type='radio'][name='texytext_structure_or_data']").change(function () {
+    $("input[type='radio'][name='texytext_structure_or_data']").change(function() {
         toggle_structure_data_opts("texytext");
     });
-    $("input[type='radio'][name='htmlword_structure_or_data']").change(function () {
+    $("input[type='radio'][name='htmlword_structure_or_data']").change(function() {
         toggle_structure_data_opts("htmlword");
     });
-    $("input[type='radio'][name='sql_structure_or_data']").change(function () {
+    $("input[type='radio'][name='sql_structure_or_data']").change(function() {
         toggle_structure_data_opts("sql");
     });
 });
@@ -132,8 +110,8 @@ function toggle_save_to_file()
         $("#ul_save_asfile > li> select").prop('disabled', true);
     } else {
         $("#ul_save_asfile > li").fadeTo('fast', 1);
-        $("#ul_save_asfile > li > input").prop('disabled', false);
-        $("#ul_save_asfile > li> select").prop('disabled', false);
+        $("#ul_save_asfile > li > input").removeProp('disabled');
+        $("#ul_save_asfile > li> select").removeProp('disabled');
     }
 }
 
@@ -147,7 +125,7 @@ AJAX.registerOnload('export.js', function () {
  */
 function toggle_sql_include_comments()
 {
-    $("#checkbox_sql_include_comments").change(function () {
+    $("#checkbox_sql_include_comments").change(function() {
         if (!$("#checkbox_sql_include_comments").prop("checked")) {
             $("#ul_include_comments > li").fadeTo('fast', 0.4);
             $("#ul_include_comments > li > input").prop('disabled', true);
@@ -169,10 +147,10 @@ AJAX.registerOnload('export.js', function () {
      */
     var $create = $("#checkbox_sql_create_table_statements");
     var $create_options = $("#ul_create_table_statements input");
-    $create.change(function () {
+    $create.change(function() {
         $create_options.prop('checked', $(this).prop("checked"));
     });
-    $create_options.change(function () {
+    $create_options.change(function() {
         if ($create_options.is(":checked")) {
             $create.prop('checked', true);
         }
@@ -181,17 +159,13 @@ AJAX.registerOnload('export.js', function () {
     /**
      * Disables the view output as text option if the output must be saved as a file
      */
-    $("#plugins").change(function () {
+    $("#plugins").change(function() {
         var active_plugin = $("#plugins option:selected").val();
         var force_file = $("#force_file_" + active_plugin).val();
         if (force_file == "true") {
-            if ($("#radio_dump_asfile").prop('checked') !== true) {
-                $("#radio_dump_asfile").prop('checked', true);
-                toggle_save_to_file();
-            }
             $("#radio_view_as_text").prop('disabled', true).parent().fadeTo('fast', 0.4);
         } else {
-            $("#radio_view_as_text").prop('disabled', false).parent().fadeTo('fast', 1);
+            $("#radio_view_as_text").removeProp('disabled').parent().fadeTo('fast', 1);
         }
     });
 });
@@ -217,38 +191,18 @@ function toggle_quick_or_custom()
         $("#output_quick_export").show();
     }
 }
-var time_out;
-function check_time_out(time_limit)
-{
-    if (typeof time_limit === 'undefined' || time_limit === 0) {
-        return true;
-    }
-    //margin of one second to avoid race condition to set/access session variable
-    time_limit = time_limit + 1;
-    var href = "export.php";
-    var params = {
-        'ajax_request' : true,
-        'token' : PMA_commonParams.get('token'),
-        'check_time_out' : true
-    };
-     clearTimeout(time_out);
-     time_out = setTimeout(function(){
-         $.get(href, params, function (data) {
-            if (data['message'] === 'timeout') {
-                PMA_ajaxShowMessage(
-                    '<div class="error">' +
-                    PMA_messages.strTimeOutError +
-                    '</div>',
-                    false
-                );
-            }
-        });
-     }, time_limit * 1000);
 
-}
 AJAX.registerOnload('export.js', function () {
     $("input[type='radio'][name='quick_or_custom']").change(toggle_quick_or_custom);
 
+    /**
+     * Sets up the interface for Javascript-enabled browsers since the default is for
+     *  Javascript-disabled browsers
+     * TODO: drop non-JS behaviour
+     */
+    if ($("input[type='hidden'][name='export_method']").val() != "custom-no-form") {
+        $("#quick_or_custom").show();
+    }
     $("#scroll_to_options_msg").hide();
     $("#format_specific_opts div.format_specific_options")
     .hide()
@@ -267,11 +221,11 @@ AJAX.registerOnload('export.js', function () {
      * Initially disables the "Dump some row(s)" sub-options
      */
     disable_dump_some_rows_sub_options();
-
+    
     /**
      * Disables the "Dump some row(s)" sub-options when it is not selected
      */
-    $("input[type='radio'][name='allrows']").change(function () {
+    $("input[type='radio'][name='allrows']").change(function() {
         if ($("input[type='radio'][name='allrows']").prop("checked")) {
             enable_dump_some_rows_sub_options();
         } else {
@@ -279,3 +233,25 @@ AJAX.registerOnload('export.js', function () {
         }
     });
 });
+
+/**
+ * Disables the "Dump some row(s)" sub-options
+ */
+function disable_dump_some_rows_sub_options()
+{
+    $("label[for='limit_to']").fadeTo('fast', 0.4);
+    $("label[for='limit_from']").fadeTo('fast', 0.4);
+    $("input[type='text'][name='limit_to']").prop('disabled', 'disabled');
+    $("input[type='text'][name='limit_from']").prop('disabled', 'disabled');
+}
+
+/**
+ * Enables the "Dump some row(s)" sub-options
+ */
+function enable_dump_some_rows_sub_options()
+{
+    $("label[for='limit_to']").fadeTo('fast', 1);
+    $("label[for='limit_from']").fadeTo('fast', 1);
+    $("input[type='text'][name='limit_to']").prop('disabled', '');
+    $("input[type='text'][name='limit_from']").prop('disabled', '');
+}

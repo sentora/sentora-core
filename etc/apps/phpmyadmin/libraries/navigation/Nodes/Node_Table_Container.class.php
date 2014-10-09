@@ -27,20 +27,16 @@ class Node_Table_Container extends Node
         $this->icon  = PMA_Util::getImage('b_browse.png', __('Tables'));
         $this->links = array(
             'text' => 'db_structure.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%1$s&amp;tbl_type=table'
-                    . '&amp;token=' . $GLOBALS['token'],
+                    . '&amp;db=%1$s&amp;token=' . $GLOBALS['token'],
             'icon' => 'db_structure.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%1$s&amp;tbl_type=table'
-                    . '&amp;token=' . $GLOBALS['token'],
+                    . '&amp;db=%1$s&amp;token=' . $GLOBALS['token'],
         );
         if ($GLOBALS['cfg']['NavigationTreeEnableGrouping']) {
             $this->separator       = $GLOBALS['cfg']['NavigationTreeTableSeparator'];
-            $this->separator_depth = (int)(
-                $GLOBALS['cfg']['NavigationTreeTableLevel']
-            );
+            $this->separator_depth = (int)($GLOBALS['cfg']['NavigationTreeTableLevel']);
         }
         $this->real_name = 'tables';
-        $this->classes   = 'tableContainer subContainer';
+        $this->classes   = 'tableContainer';
 
         $new_label = _pgettext('Create new table', 'New');
         $new        = PMA_NodeFactory::getInstance('Node', $new_label);

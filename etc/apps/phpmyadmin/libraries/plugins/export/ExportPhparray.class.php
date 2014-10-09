@@ -151,7 +151,7 @@ class ExportPhparray extends ExportPlugin
     }
 
     /**
-     * Outputs the content of a table in PHP array format
+     * Outputs the content of a table in NHibernate format
      *
      * @param string $db        database name
      * @param string $table     table name
@@ -163,14 +163,11 @@ class ExportPhparray extends ExportPlugin
      */
     public function exportData($db, $table, $crlf, $error_url, $sql_query)
     {
-        $result = $GLOBALS['dbi']->query(
-            $sql_query, null, PMA_DatabaseInterface::QUERY_UNBUFFERED
-        );
+        $result = PMA_DBI_query($sql_query, null, PMA_DBI_QUERY_UNBUFFERED);
 
-        $columns_cnt = $GLOBALS['dbi']->numFields($result);
-        $columns = array();
+        $columns_cnt = PMA_DBI_num_fields($result);
         for ($i = 0; $i < $columns_cnt; $i++) {
-            $columns[$i] = stripslashes($GLOBALS['dbi']->fieldName($result, $i));
+            $columns[$i] = stripslashes(PMA_DBI_field_name($result, $i));
         }
         unset($i);
 
@@ -196,11 +193,11 @@ class ExportPhparray extends ExportPlugin
         $record_cnt = 0;
         // Output table name as comment
         $buffer .= $crlf . '// '
-            . PMA_Util::backquote($db) . '.'
-            . PMA_Util::backquote($table) . $crlf;
+                    . PMA_Util::backquote($db) . '.'
+                    . PMA_Util::backquote($table) . $crlf;
         $buffer .= '$' . $tablefixed . ' = array(';
-
-        while ($record = $GLOBALS['dbi']->fetchRow($result)) {
+        
+        while ($record = PMA_DBI_fetch_row($result)) {
             $record_cnt++;
 
             if ($record_cnt == 1) {
@@ -223,7 +220,7 @@ class ExportPhparray extends ExportPlugin
             return false;
         }
 
-        $GLOBALS['dbi']->freeResult($result);
+        PMA_DBI_free_result($result);
         return true;
     }
 }

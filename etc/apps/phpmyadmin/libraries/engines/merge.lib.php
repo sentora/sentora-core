@@ -9,12 +9,16 @@ if (! defined('PHPMYADMIN')) {
     exit;
 }
 
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
+
 /**
  * The MERGE storage engine
  *
  * @package PhpMyAdmin-Engines
  */
-class PMA_StorageEngine_Merge extends PMA_StorageEngine
+class PMA_StorageEngine_merge extends PMA_StorageEngine
 {
 }
 

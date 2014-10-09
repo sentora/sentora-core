@@ -28,7 +28,7 @@ class PMA_Partition
     static public function getPartitionNames($db, $table)
     {
         if (PMA_Partition::havePartitioning()) {
-            return $GLOBALS['dbi']->fetchResult(
+            return PMA_DBI_fetch_result(
                 "SELECT `PARTITION_NAME` FROM `information_schema`.`PARTITIONS`"
                 . " WHERE `TABLE_SCHEMA` = '" . $db
                 . "' AND `TABLE_NAME` = '" . $table . "'"
@@ -55,14 +55,14 @@ class PMA_Partition
         if (! $already_checked) {
             if (PMA_MYSQL_INT_VERSION >= 50100) {
                 if (PMA_MYSQL_INT_VERSION < 50600) {
-                    if ($GLOBALS['dbi']->fetchValue(
+                    if (PMA_DBI_fetch_value(
                         "SHOW VARIABLES LIKE 'have_partitioning';"
                     )) {
                         $have_partitioning = true;
                     }
                 } else {
                     // see http://dev.mysql.com/doc/refman/5.6/en/partitioning.html
-                    $plugins = $GLOBALS['dbi']->fetchResult("SHOW PLUGINS");
+                    $plugins = PMA_DBI_fetch_result("SHOW PLUGINS");
                     foreach ($plugins as $value) {
                         if ($value['Name'] == 'partition') {
                             $have_partitioning = true;

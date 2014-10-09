@@ -16,7 +16,7 @@
  * requirements
  */
 require_once 'libraries/common.inc.php';
-require_once 'libraries/mysql_charsets.inc.php';
+require_once 'libraries/mysql_charsets.lib.php';
 
 /**
  * functions implementation for this script
@@ -62,9 +62,9 @@ if (strlen($db)
         PMA_runProcedureAndFunctionDefinitions($db);
 
         // go back to current db, just in case
-        $GLOBALS['dbi']->selectDb($db);
+        PMA_DBI_select_db($db);
 
-        $tables_full = $GLOBALS['dbi']->getTablesFull($db);
+        $tables_full = PMA_DBI_get_tables_full($db);
 
         include_once "libraries/plugin_interface.lib.php";
         // remove all foreign key constraints, otherwise we can get errors
@@ -109,7 +109,7 @@ if (strlen($db)
         }
 
         // go back to current db, just in case
-        $GLOBALS['dbi']->selectDb($db);
+        PMA_DBI_select_db($db);
 
         // Duplicate the bookmarks for this db (done once for each db)
         PMA_duplicateBookmarks($_error, $db);
@@ -124,17 +124,13 @@ if (strlen($db)
             // if someday the RENAME DATABASE reappears, do not DROP
             $local_query = 'DROP DATABASE ' . PMA_Util::backquote($db) . ';';
             $sql_query .= "\n" . $local_query;
-            $GLOBALS['dbi']->query($local_query);
+            PMA_DBI_query($local_query);
 
-            $message = PMA_Message::success(
-                __('Database %1$s has been renamed to %2$s.')
-            );
+            $message = PMA_Message::success(__('Database %1$s has been renamed to %2$s'));
             $message->addParam($db);
             $message->addParam($_REQUEST['newname']);
         } elseif (! $_error) {
-            $message = PMA_Message::success(
-                __('Database %1$s has been copied to %2$s.')
-            );
+            $message = PMA_Message::success(__('Database %1$s has been copied to %2$s'));
             $message->addParam($db);
             $message->addParam($_REQUEST['newname']);
         }
@@ -191,23 +187,27 @@ if (isset($_REQUEST['comment'])) {
     PMA_setDbComment($db, $_REQUEST['comment']);
 }
 
-require 'libraries/db_common.inc.php';
-$url_query .= '&amp;goto=db_operations.php';
+/**
+ * Prepares the tables list if the user where not redirected to this script
+ * because there is no table in the database ($is_info is true)
+ */
+if (empty($is_info)) {
+    include 'libraries/db_common.inc.php';
+    $url_query .= '&amp;goto=db_operations.php';
 
-// Gets the database structure
-$sub_part = '_structure';
-require 'libraries/db_info.inc.php';
-echo "\n";
+    // Gets the database structure
+    $sub_part = '_structure';
+    include 'libraries/db_info.inc.php';
+    echo "\n";
 
-if (isset($message)) {
-    echo PMA_Util::getMessage($message, $sql_query);
-    unset($message);
+    if (isset($message)) {
+        echo PMA_Util::getMessage($message, $sql_query);
+        unset($message);
+    }
 }
 
 $_REQUEST['db_collation'] = PMA_getDbCollation($db);
-$is_information_schema = $GLOBALS['dbi']->isSystemSchema($db);
-
-$response->addHTML('<div id="boxContainer" data-box-width="300">');
+$is_information_schema = PMA_is_system_schema($db);
 
 if (!$is_information_schema) {
     if ($cfgRelation['commwork']) {
@@ -237,7 +237,7 @@ if (!$is_information_schema) {
     // You won't be able to. Believe me. You won't.
     // Don't allow to easily drop mysql database, RFE #1327514.
     if (($is_superuser || $GLOBALS['cfg']['AllowUserDropDatabase'])
-        && ! $db_is_system_schema
+        && ! $db_is_information_schema
         && (PMA_DRIZZLE || $db != 'mysql')
     ) {
         $response->addHTML(PMA_getHtmlForDropDatabaseLink($db));
@@ -260,8 +260,7 @@ if (!$is_information_schema) {
             __('The phpMyAdmin configuration storage has been deactivated. To find out why click %shere%s.')
         );
         $message->addParam(
-            '<a href="' . $cfg['PmaAbsoluteUri']
-            . 'chk_rel.php?' . $url_query . '">',
+            '<a href="' . $cfg['PmaAbsoluteUri'] . 'chk_rel.php?' . $url_query . '">',
             false
         );
         $message->addParam('</a>', false);
@@ -275,7 +274,6 @@ if (!$is_information_schema) {
     } // end if
 } // end if (!$is_information_schema)
 
-$response->addHTML('</div>');
 
 // not sure about displaying the PDF dialog in case db is information_schema
 if ($cfgRelation['pdfwork'] && $num_tables > 0) {
@@ -285,11 +283,7 @@ if ($cfgRelation['pdfwork'] && $num_tables > 0) {
            FROM ' . PMA_Util::backquote($GLOBALS['cfgRelation']['db'])
             . '.' . PMA_Util::backquote($cfgRelation['pdf_pages']) . '
           WHERE db_name = \'' . PMA_Util::sqlAddSlashes($db) . '\'';
-    $test_rs = PMA_queryAsControlUser(
-        $test_query,
-        false,
-        PMA_DatabaseInterface::QUERY_STORE
-    );
+    $test_rs    = PMA_queryAsControlUser($test_query, null, PMA_DBI_QUERY_STORE);
 
     /*
      * Export Relational Schema View

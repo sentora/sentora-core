@@ -139,7 +139,7 @@ class Node
      *
      * @param Node $child A child node
      *
-     * @return void
+     * @return nothing
      */
     public function addChild($child)
     {
@@ -180,7 +180,7 @@ class Node
      *
      * @param string $name The name of child to be removed
      *
-     * @return void
+     * @return nothing
      */
     public function removeChild($name)
     {
@@ -233,11 +233,11 @@ class Node
     public function realParent()
     {
         $retval = $this->parents();
-        if (count($retval) <= 0) {
+        if (count($retval) > 0) {
+            return $retval[0];
+        } else {
             return false;
         }
-
-        return $retval[0];
     }
 
     /**
@@ -281,15 +281,14 @@ class Node
         $paths  = $this->getPaths();
         if (count($paths['aPath_clean']) > 3) {
             $retval = true;
-            return $retval;
-        }
-
-        foreach ($this->parent->children as $child) {
-            if ($child !== $this
-                && ($child->type == Node::OBJECT || $child->hasChildren(false))
-            ) {
-                $retval = true;
-                break;
+        } else {
+            foreach ($this->parent->children as $child) {
+                if ($child != $this
+                    && ($child->type == Node::OBJECT || $child->hasChildren(false))
+                ) {
+                    $retval = true;
+                    break;
+                }
             }
         }
         return $retval;
@@ -360,27 +359,13 @@ class Node
      */
     public function getData($type, $pos, $searchClause = '')
     {
+        // @todo obey the DisableIS directive
         $query  = "SELECT `SCHEMA_NAME` ";
-        $query .= "FROM `INFORMATION_SCHEMA`.`SCHEMATA`, ";
-        $query .= "(";
-        $query .= "select DB_first_level ";
-        $query .= "from ( ";
-        $query .= "SELECT distinct SUBSTRING_INDEX(SCHEMA_NAME, ";
-        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}', 1) ";
-        $query .= "DB_first_level ";
-        $query .= "FROM INFORMATION_SCHEMA.SCHEMATA ";
+        $query .= "FROM `INFORMATION_SCHEMA`.`SCHEMATA` ";
         $query .= $this->_getWhereClause($searchClause);
-        $query .= ") t ";
-        $query .= "ORDER BY DB_first_level ASC ";
-        $query .= "LIMIT $pos, {$GLOBALS['cfg']['FirstLevelNavigationItems']}";
-        $query .= ") t2 ";
-        $query .= "where 1 = locate(concat(DB_first_level, ";
-        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}'), ";
-        $query .= "concat(SCHEMA_NAME, ";
-        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}')) ";
-        $query .= "order by SCHEMA_NAME ASC";
-
-        return $GLOBALS['dbi']->fetchResult($query);
+        $query .= "ORDER BY `SCHEMA_NAME` ASC ";
+        $query .= "LIMIT $pos, {$GLOBALS['cfg']['MaxNavigationItems']}";
+        return PMA_DBI_fetch_result($query);
     }
 
     /**
@@ -395,15 +380,22 @@ class Node
      */
     public function getPresence($type = '', $searchClause = '')
     {
-        $query = "select COUNT(*) ";
-        $query .= "from ( ";
-        $query .= "SELECT distinct SUBSTRING_INDEX(SCHEMA_NAME, ";
-        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}', 1) ";
-        $query .= "DB_first_level ";
-        $query .= "FROM INFORMATION_SCHEMA.SCHEMATA ";
-        $query .= $this->_getWhereClause($searchClause);
-        $query .= ") t ";
-        $retval = (int)$GLOBALS['dbi']->fetchValue($query);
+        if (! $GLOBALS['cfg']['Servers'][$GLOBALS['server']]['DisableIS']) {
+            $query  = "SELECT COUNT(*) ";
+            $query .= "FROM `INFORMATION_SCHEMA`.`SCHEMATA` ";
+            $query .= $this->_getWhereClause($searchClause);
+            $retval = (int)PMA_DBI_fetch_value($query);
+        } else {
+            $query = "SHOW DATABASES ";
+            if (! empty($searchClause)) {
+                $query .= "LIKE '%";
+                $query .= PMA_Util::sqlAddSlashes(
+                    $searchClause, true
+                );
+                $query .= "%' ";
+            }
+            $retval = PMA_DBI_num_rows(PMA_DBI_try_query($query));
+        }
         return $retval;
     }
 
@@ -448,14 +440,5 @@ class Node
         return $whereClause;
     }
 
-    /**
-     * Returns HTML for control buttons displayed infront of a node
-     *
-     * @return String HTML for control buttons
-     */
-    public function getHtmlForControlButtons()
-    {
-        return '';
-    }
 }
 ?>

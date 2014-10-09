@@ -27,19 +27,11 @@ class Node_View_Container extends Node
         $this->icon  = PMA_Util::getImage('b_views.png', __('Views'));
         $this->links = array(
             'text' => 'db_structure.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%1$s&amp;tbl_type=view'
-                    . '&amp;token=' . $GLOBALS['token'],
+                    . '&amp;db=%1$s&amp;token=' . $GLOBALS['token'],
             'icon' => 'db_structure.php?server=' . $GLOBALS['server']
-                    . '&amp;db=%1$s&amp;tbl_type=view'
-                    . '&amp;token=' . $GLOBALS['token'],
+                    . '&amp;db=%1$s&amp;token=' . $GLOBALS['token'],
         );
-        if ($GLOBALS['cfg']['NavigationTreeEnableGrouping']) {
-            $this->separator       = $GLOBALS['cfg']['NavigationTreeTableSeparator'];
-            $this->separator_depth = (int)(
-                $GLOBALS['cfg']['NavigationTreeTableLevel']
-            );
-        }
-        $this->classes   = 'viewContainer subContainer';
+        $this->classes   = 'viewContainer';
         $this->real_name = 'views';
 
         $new_label = _pgettext('Create new view', 'New');

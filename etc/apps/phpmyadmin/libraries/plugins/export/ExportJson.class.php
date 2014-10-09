@@ -158,53 +158,63 @@ class ExportJson extends ExportPlugin
      */
     public function exportData($db, $table, $crlf, $error_url, $sql_query)
     {
-        $result = $GLOBALS['dbi']->query(
-            $sql_query, null, PMA_DatabaseInterface::QUERY_UNBUFFERED
-        );
-        $columns_cnt = $GLOBALS['dbi']->numFields($result);
+        $result = PMA_DBI_query($sql_query, null, PMA_DBI_QUERY_UNBUFFERED);
+        $columns_cnt = PMA_DBI_num_fields($result);
 
-        $columns = array();
+        // Get field information
+        $fields_meta = PMA_DBI_get_fields_meta($result);
+
         for ($i = 0; $i < $columns_cnt; $i++) {
-            $columns[$i] = stripslashes($GLOBALS['dbi']->fieldName($result, $i));
+            $columns[$i] = stripslashes(PMA_DBI_field_name($result, $i));
         }
         unset($i);
 
         $buffer = '';
         $record_cnt = 0;
-        while ($record = $GLOBALS['dbi']->fetchRow($result)) {
+        while ($record = PMA_DBI_fetch_row($result)) {
 
             $record_cnt++;
 
             // Output table name as comment if this is the first record of the table
             if ($record_cnt == 1) {
-                $buffer = '// ' . $db . '.' . $table . $crlf . $crlf;
-                $buffer .= '[';
+                $buffer .= '// ' . $db . '.' . $table . $crlf . $crlf;
+                $buffer .= '[{';
             } else {
-                $buffer = ', ';
+                $buffer .= ', {';
             }
-
-            if (! PMA_exportOutputHandler($buffer)) {
-                return false;
-            }
-
-            $data = array();
 
             for ($i = 0; $i < $columns_cnt; $i++) {
-                $data[$columns[$i]] = $record[$i];
+                $isLastLine = ($i + 1 >= $columns_cnt);
+                $column = $columns[$i];
+                if (is_null($record[$i])) {
+                    $buffer .= '"' . addslashes($column)
+                        . '": null'
+                        . (! $isLastLine ? ',' : '');
+                } elseif ($fields_meta[$i]->numeric) {
+                    $buffer .= '"' . addslashes($column)
+                        . '": '
+                        . $record[$i]
+                        . (! $isLastLine ? ',' : '');
+                } else {
+                    $buffer .= '"' . addslashes($column)
+                        . '": "'
+                        . addslashes($record[$i])
+                        . '"'
+                        . (! $isLastLine ? ',' : '');
+                }
             }
 
-            if (! PMA_exportOutputHandler(json_encode($data))) {
-                return false;
-            }
+            $buffer .= '}';
         }
 
         if ($record_cnt) {
-            if (! PMA_exportOutputHandler(']')) {
-                return false;
-            }
+            $buffer .=  ']';
+        }
+        if (! PMA_exportOutputHandler($buffer)) {
+            return false;
         }
 
-        $GLOBALS['dbi']->freeResult($result);
+        PMA_DBI_free_result($result);
         return true;
     }
 }

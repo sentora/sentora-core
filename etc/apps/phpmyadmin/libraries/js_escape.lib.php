@@ -78,16 +78,14 @@ function PMA_formatJsVal($value)
     if (is_bool($value)) {
         if ($value) {
             return 'true';
+        } else {
+            return 'false';
         }
-
-        return 'false';
-    }
-
-    if (is_int($value)) {
+    } elseif (is_int($value)) {
         return (int)$value;
+    } else {
+        return '"' . PMA_escapeJsString($value) . '"';
     }
-
-    return '"' . PMA_escapeJsString($value) . '"';
 }
 
 /**

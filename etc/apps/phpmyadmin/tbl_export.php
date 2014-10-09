@@ -1,7 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Table export
  *
  * @package PhpMyAdmin
  */
@@ -43,14 +42,14 @@ if (! empty($sql_query)) {
         $regex_array = array(
             '/\bwhere\b/i', '/\bgroup by\b/i', '/\bhaving\b/i', '/\border by\b/i'
         );
-
-        $first_occurring_regex = PMA_Util::getFirstOccurringRegularExpression(
+        
+        $first_occurring_regex = PMA_getFirstOccurringRegularExpression(
             $regex_array, $sql_query
         );
         unset($regex_array);
 
         // The part "SELECT `id`, `name` FROM `customers`"
-        // is not modified by the next code segment, when exporting
+        // is not modified by the next code segment, when exporting 
         // the result set from a query such as
         // "SELECT `id`, `name` FROM `customers` WHERE id NOT IN
         //  ( SELECT id FROM companies WHERE name LIKE '%u%')"
@@ -76,12 +75,11 @@ if (! empty($sql_query)) {
         }
     } else {
         // Just crop LIMIT clause
-        $sql_query = $analyzed_sql[0]['section_before_limit']
-            . $analyzed_sql[0]['section_after_limit'];
+        $sql_query = $analyzed_sql[0]['section_before_limit'] . $analyzed_sql[0]['section_after_limit'];
     }
     echo PMA_Util::getMessage(PMA_Message::success());
 }
 
 $export_type = 'table';
-require_once 'libraries/display_export.inc.php';
+require_once 'libraries/display_export.lib.php';
 ?>

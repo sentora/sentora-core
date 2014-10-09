@@ -17,7 +17,7 @@
  *
  * It can optionally use configured username as parameter.
  *
- * @param string $user User name
+ * @param string $user
  *
  * @return array
  */
