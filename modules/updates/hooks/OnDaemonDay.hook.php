@@ -1,8 +1,11 @@
 <?php
 
 /**
- * Hook created by Bobby Allen to obtain latest Sentora version number and add it to the DB for querying (caching bascially!)
- * This script is handy for caching the latest version of Sentora to reduce bandwidth from the server.
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
+ * Hook created by Bobby Allen to obtain latest zpanel version number and add it to the DB for querying (caching bascially!)
+ * This script is handy for caching the latest version of ZPanel to reduce bandwidth from the server.
  * 
  */
 echo fs_filehandler::NewLine() . "START Sentora Updates hook" . fs_filehandler::NewLine();

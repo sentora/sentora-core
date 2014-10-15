@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Logger class logs infomation passed to it and can record and report debug infomation in a number of ways.
  * @package zpanelx
  * @subpackage dryden -> debug

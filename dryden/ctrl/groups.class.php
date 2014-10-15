@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Group permissions class, handles user group permissions.
  * @package zpanelx
  * @subpackage dryden -> controller

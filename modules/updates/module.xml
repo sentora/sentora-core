@@ -4,8 +4,8 @@
     <version>100</version>
     <defaultcat>Server Admin</defaultcat>
     <desc>Check to see if there are any available updates to your version of the Sentora software.</desc>
-    <authorname>Sentora Project</authorname>
-    <authoremail>developers@sentora.org</authoremail>
-    <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://sentora.org/uds/core.xml</updateurl>
+    <authorname>ZPanel Project</authorname>
+    <authoremail>developers@zpanelcp.com</authoremail>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
+    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

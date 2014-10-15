@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Class to display controller debugging in the template layer.
  * @package zpanelx
  * @subpackage dryden -> ui

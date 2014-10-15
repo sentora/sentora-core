@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Security configuration file.
  * @package zpanelx
  * @subpackage core -> config

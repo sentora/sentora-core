@@ -1,7 +1,10 @@
 <?php
 
 /**
- * Authentication class handles Sentora authentication and handles user sessions.
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
+ * Authentication class handles ZPanel authentication and handles user sessions.
  * @package zpanelx
  * @subpackage dryden -> controller
  * @version 1.0.0
@@ -9,8 +12,7 @@
  * @copyright ZPanel Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
- * @copyright Sentora Project (http://sentora.org)
-*/
+ */
 class ctrl_auth
 {
 

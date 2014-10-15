@@ -1,7 +1,10 @@
 #!/usr/bin/php
 <?php
 /**
- * ZPPY - The Sentora Package Manager Tool.
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
+ * ZPPY - The ZPanel Package Manager Tool.
  * @package zpanelx
  * @subpackage core -> zppy
  * @author Bobby Allen (ballen@bobbyallen.me)
@@ -315,8 +318,8 @@ if ((isset($argv[1])) && ($argv[1] == 'update')) {
 
 if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {
     fwrite(STDOUT, "\nSentora Package Manager\n");
-    fwrite(STDOUT, "Copyright (c) 2008 - 2014 ZPanel Project - Sentora project\n");
-    fwrite(STDOUT, "http://sentora.org/\n\n");
+    fwrite(STDOUT, "Copyright (c) 2014 Sentora Project (http://sentora.org/)\n");    
+    fwrite(STDOUT, "Copyright (c) 2008 - 2014 ZPanel Project (http://www.zpanelcp.com/)\n\n");
     fwrite(STDOUT, "Usage: zppy [action] [modulename]\n\n");
     fwrite(STDOUT, "Actions:\n");
     fwrite(STDOUT, "  install [modulename]- Install a named module.\n");

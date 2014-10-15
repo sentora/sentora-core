@@ -1,4 +1,5 @@
-# Sentora Theme #
+# Sentora Default Theme #
+/* Sentora is a GPL fork of the ZPanel Project */:
 
 This document outlines some of the JavaScript and CSS functionality that is built into the Sentora theme.  You can use any of this in your own modules and themes that you build, as long as all the proper files are loaded.
 

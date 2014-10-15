@@ -1,7 +1,10 @@
 <?php
 
 /**
- * Provides bcrypt (Blowfish single-way encryption) functionality for password hashing in Sentora.
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
+ * Provides bcrypt (Blowfish single-way encryption) functionality for password hashing in ZPanel.
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.2

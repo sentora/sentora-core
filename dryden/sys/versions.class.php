@@ -1,7 +1,10 @@
 <?php
 
 /**
- * This reports on core Sentora software versions.
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
+ * This reports on core zpanel software versions.
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0

@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * The template parser class.
  * @package zpanelx
  * @subpackage dryden -> ui
@@ -14,7 +17,7 @@ class ui_templateparser
 {
 
     /**
-     * Array of all the functions allowed by Sentora Template system with the pattern to identify them
+     * Array of all the functions allowed by Sentora template system with the pattern to identify them
      * @author Sam Mottley (smottley@zpanelcp.com)
      */
     static public $Functions = array(

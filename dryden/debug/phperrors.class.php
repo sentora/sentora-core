@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Development class enables PHP error reporting for ease of development!
  * @package zpanelx
  * @subpackage dryden -> debug

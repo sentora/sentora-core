@@ -1,5 +1,8 @@
 <?php
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Home Dashboard with draggable & collapsible category sections.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl

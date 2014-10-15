@@ -1,9 +1,12 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
- * Sentora - Visitor Stats plugin, written by RusTus: sentora.org
+ * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
  *
+ * changes P;Peyremorte : reduced duplicate strings constructions
  */
 echo fs_filehandler::NewLine() . "BEGIN Webalizer Stats" . fs_filehandler::NewLine();
 if ( ui_module::CheckModuleEnabled( 'Webalizer Stats' ) ) {

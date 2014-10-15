@@ -5,8 +5,8 @@
     <defaultcat>other</defaultcat>
     <type>system</type>
     <desc>Core system modules for Sentora.</desc>
-    <authorname>Sentora Project</authorname>
+    <authorname>ZPanel Project</authorname>
     <authoremail>ballen@bobbyallen.me</authoremail>
-    <authorurl>http://sentora.org/</authorurl>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
     <updateurl></updateurl>
 </module>

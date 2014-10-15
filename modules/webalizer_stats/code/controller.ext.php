@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
- * Sentora - Visitor Stats plugin, written by RusTus: sentora.org
+ * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
  *
  */
 class module_controller extends ctrl_module

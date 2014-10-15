@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Dataobject class a means to handle data arrays.
  * @package zpanelx
  * @subpackage dryden -> runtime
