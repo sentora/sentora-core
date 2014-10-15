@@ -107,6 +107,9 @@ function WriteVhostConfigFile()
     $line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
     $line .= 'DocumentRoot "' . ctrl_options::GetSystemOption( 'sentora_root' ) . '"' . fs_filehandler::NewLine();
     $line .= "ServerName " . ctrl_options::GetSystemOption( 'sentora_domain' ) . "" . fs_filehandler::NewLine();
+    $line .= "ErrorLog \"" . ctrl_options::GetSystemOption( 'log_dir' ) . "sentora-error.log\" " . fs_filehandler::NewLine();
+    $line .= "CustomLog \"" . ctrl_options::GetSystemOption( 'log_dir' ) . "sentora-access.log\" " . ctrl_options::GetSystemOption( 'access_log_format' ) . fs_filehandler::NewLine();
+    $line .= "CustomLog \"" . ctrl_options::GetSystemOption( 'log_dir' ) . "sentora-bandwidth.log\" " . ctrl_options::GetSystemOption( 'bandwidth_log_format' ) . fs_filehandler::NewLine();
     $line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
     $line .= '<Directory "' . ctrl_options::GetSystemOption( 'sentora_root' ) . '">' . fs_filehandler::NewLine();
     $line .= "Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
