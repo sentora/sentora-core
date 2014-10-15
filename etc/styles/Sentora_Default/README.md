@@ -9,20 +9,20 @@ You can replace the module icons that come with a module on the Sentora dashboar
 
 To override a module's icon, simply create a folder and image file in this location...
 
-    /etc/styles/zpanelx/images/MODULE-NAME/assets/icon.png
+    /etc/styles/Sentora_Default/images/MODULE-NAME/assets/icon.png
 
 Replacing **MODULE-NAME** with the name of the module you are replacing.  The module name has to be the exact same name that the module uses in the module's folder for this override to work!
 
 An example to over-ride the MySQL Database module's icon...
 
-    /etc/styles/zpanelx/images/mysql_databases/assets/icon.png
+    /etc/styles/Sentora_Default/images/mysql_databases/assets/icon.png
 
 ## Console Logging ##
 You can log to the Browsers JavaScript Console for debugging using this function below.
 
-    zPanel.utils.log('my debug data');
+    sentora.utils.log('my debug data');
 
-As long as this Property `zPanel.utils.settings.debug = false;` is set to `TRUE` then the all data will print to console.  
+As long as this Property `sentora.utils.settings.debug = false;` is set to `TRUE` then the all data will print to console.  
 
 Setting to false will turn it off allowing you to keep all your debugging code in place.
 
@@ -31,12 +31,12 @@ Setting to false will turn it off allowing you to keep all your debugging code i
 
 You can Programmatically show the loading screen and spinner with...
 
-    zPanel.loader.showLoader()
+    sentora.loader.showLoader()
 
 and hide/kill it with...
 
 
-    zPanel.loader.hideLoader()
+    sentora.loader.hideLoader()
 
 To have the Loader screen show automatically when a `Button` is clicked.  You can do a Button HTML like this...
 
@@ -56,7 +56,7 @@ You can set if the Notice will have a Close X Button or not, the Notice CSS Clas
 
 **Notice Example Usage:**
 
-    zPanel.notice.show({
+    sentora.notice.show({
         type: "success",
         selector: "#alert-area",
         closeButton: true,
@@ -85,7 +85,7 @@ Lastly the most flexible part is you can even set your own custom callback funct
 
 **Dialog Example Usage:**
 
-    zPanel.dialog.confirm({
+    sentora.dialog.confirm({
         title: 'WARNING',
         message: 'Warning message content here',
         width: 300,

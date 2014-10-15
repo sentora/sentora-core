@@ -24,7 +24,7 @@ class ui_sysmessage {
      */
     static function shout($message,  $class = "zannounce", $title = '', $closeBtn = true) {
 
-        // Convert ZPanel CSS Class to Bootstrap Class
+        // Convert Sentora CSS Class to Bootstrap Class
         switch ($class) {
             case 'zannounce':
             case 'zannounceinfo':

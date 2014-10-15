@@ -2,7 +2,7 @@
 
 /**
  *
- * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
+ * Sentora - Visitor Stats plugin, written by RusTus: sentora.org
  *
  */
 echo fs_filehandler::NewLine() . "BEGIN Webalizer Stats" . fs_filehandler::NewLine();
@@ -21,17 +21,18 @@ function GenerateWebalizerStats()
     $sql->execute();
     echo "Generating webalizer stats html..." . fs_filehandler::NewLine();
     while ( $rowvhost = $sql->fetch() ) {
-        if ( !file_exists( ctrl_options::GetSystemOption( 'zpanel_root' ) . "modules/webalizer_stats/stats/" . $rowvhost[ 'ac_user_vc' ] . "/" . $rowvhost[ 'vh_name_vc' ] ) ) {
-            @mkdir( ctrl_options::GetSystemOption( 'zpanel_root' ) . "modules/webalizer_stats/stats/" . $rowvhost[ 'ac_user_vc' ] . "/" . $rowvhost[ 'vh_name_vc' ], 0755, TRUE );
+      $basedir = ctrl_options::GetSystemOption( 'sentora_root' ) . "modules/webalizer_stats/stats/" . $rowvhost[ 'ac_user_vc' ] . "/" . $rowvhost[ 'vh_name_vc' ];
+      if ( !file_exists( $basedir ) ) {
+          @mkdir( $basedir, 0755, TRUE );
         }
 
         /** set webalizer command dependant on OS */
         if ( sys_versions::ShowOSPlatformVersion() == "Windows" ) {
-            $command = ctrl_options::GetSystemOption( 'zpanel_root' ) .
+            $command = ctrl_options::GetSystemOption( 'sentora_root' ) .
                 'modules/webalizer_stats/bin/webalizer.exe';
         }
         else {
-            chmod( ctrl_options::GetSystemOption( 'zpanel_root' ) . "modules/webalizer_stats/bin/webalizer", 4777 );
+            chmod( ctrl_options::GetSystemOption( 'sentora_root' ) . "modules/webalizer_stats/bin/webalizer", 4777 );
             $command = "webalizer";
         }
 
@@ -49,7 +50,7 @@ function GenerateWebalizerStats()
             $rowvhost[ 'vh_name_vc' ] .
             '-access.log' );
 
-        $statsPath = ctrl_options::GetSystemOption( 'zpanel_root' ) .
+        $statsPath = ctrl_options::GetSystemOption( 'sentora_root' ) .
             "modules/webalizer_stats/stats/" .
             $rowvhost[ 'ac_user_vc' ] .
             '/' .

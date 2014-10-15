@@ -2,7 +2,7 @@
 
 /**
  *
- * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
+ * Sentora - A Cross-Platform Open-Source Web Hosting Control panel.
  *
  * @package ZPanel
  * @version $Id$
@@ -10,7 +10,7 @@
  * @copyright (c) 2008-2014 ZPanel Group - http://www.zpanelcp.com/
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  *
- * This program (ZPanel) is free software: you can redistribute it and/or modify
+ * This program (Sentora) is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -229,7 +229,7 @@ class module_controller extends ctrl_module
         $sql->execute();
         $sql = $zdbh->prepare("FLUSH PRIVILEGES");
         $sql->execute();
-        // Add user to zpanel database...
+        // Add user to Sentora database...
         $sql = $zdbh->prepare("INSERT INTO x_mysql_users (
 								mu_acc_fk,
 								mu_name_vc,
@@ -258,7 +258,7 @@ class module_controller extends ctrl_module
         $numrows->bindParam(':userid', $uid);
         $numrows->execute();
         $rowuser = $numrows->fetch();
-        // Add database to zpanel user account...
+        // Add database to Sentora user account...
         self::ExecuteAddDB($uid, $rowuser['mu_id_pk'], $database);
         runtime_hook::Execute('OnAfterCreateDatabaseUser');
         self::$ok = true;

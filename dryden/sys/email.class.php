@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Email class used for sending out emails from ZPanel. This class extends on the PHPMailer library included in etc/lib/PHPMailer!
+ * Email class used for sending out emails from Sentora. This class extends on the PHPMailer library included in etc/lib/PHPMailer!
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0

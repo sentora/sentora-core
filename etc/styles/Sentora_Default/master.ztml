@@ -14,7 +14,7 @@
         <script src="<# ui_tpl_assetfolderpath #>js/jquery.cookie.js"></script>
         <script src="<# ui_tpl_assetfolderpath #>js/jquery.sortable-custom.js"></script>
         <script src="<# ui_tpl_assetfolderpath #>js/spin.min.js"></script>
-        <script src="<# ui_tpl_assetfolderpath #>js/zpanel.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/sentora.js"></script>
 
         <!-- Favicons -->
         <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-57-precomposed.png">
@@ -224,8 +224,8 @@
                                     </div>
 
                                     <div class="stats-row">
-                                        <div class="stats-column"><strong><: ZPanel Version :>:</strong></div>
-                                        <div class="stats-column"><# ui_tpl_zpanelversion #></div>
+                                        <div class="stats-column"><strong><: Sentora Version :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_sentoraversion #></div>
                                     </div>
 
                                     <div class="stats-row">
@@ -278,7 +278,7 @@
         <!-- Modulelist for Typeahead -->
         <script>
                 var moduleJsonData = <# ui_tpl_modulelistjson #>;
-                zPanel.modules.typeAhead(moduleJsonData);
+                Sentora.modules.typeAhead(moduleJsonData);
         </script>
 
         <# ui_controllerdebug #>

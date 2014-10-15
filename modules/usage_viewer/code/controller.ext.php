@@ -2,7 +2,7 @@
 
 /**
  *
- * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
+ * Sentora - A Cross-Platform Open-Source Web Hosting Control panel.
  *
  * @package ZPanel
  * @version $Id$
@@ -10,7 +10,7 @@
  * @copyright (c) 2008-2014 ZPanel Group - http://www.zpanelcp.com/
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  *
- * This program (ZPanel) is free software: you can redistribute it and/or modify
+ * This program (Sentora) is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -111,7 +111,7 @@ class module_controller extends ctrl_module
         if ($quota < 0) {
             $res .= '</td><td style="text-align:center">&#8734; ' . ui_language::translate('Unlimited') . ' &#8734;</td>';
         } else {
-            $res .= ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td><td><img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . (($quota == 0 or $used == $quota) ? 100 : round($used / $quota * 100, 0)) . '"/>';
+            $res .= ' / ' . (($human) ? fs_director::ShowHumanFileSize($quota) : $quota) . '</td><td><img src="etc/lib/pChart2/sentora/zProgress.php?percent=' . (($quota == 0 or $used == $quota) ? 100 : round($used / $quota * 100, 0)) . '"/>';
         }
         return $res . '</td></tr>';
     }
@@ -174,7 +174,7 @@ class module_controller extends ctrl_module
                 '<tr>' .
                 '<td align="left" valign="top" width="350px">' .
                 '<h2>' . ui_language::translate('Disk Usage Total') . '</h2>' .
-                '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used .
+                '<img src="etc/lib/pChart2/sentora/z3DPie.php?score=' . $free . '::' . $used .
                 '&amp;imagesize=350::250&amp;chartsize=150::120&amp;radius=150' .
                 '&amp;labels=Free_Space: ' . $freeLabel . '::Used_Space: ' . $usedLabel .
                 '&amp;legendfont=verdana&amp;legendfontsize=8&amp;legendsize=10::220"/>' .
@@ -206,7 +206,7 @@ class module_controller extends ctrl_module
             $res = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $free = max($maximum - $used, 0);
-            $res = '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+            $res = '<img src="etc/lib/pChart2/sentora/z3DPie.php?score=' . $free . '::' . $used
                     . '&amp;imagesize=240::190&amp;chartsize=120::90&amp;radius=100'
                     . '&amp;labels=Free: ' . $free . '::Used: ' . $used
                     . '&amp;legendfont=verdana&amp;legendfontsize=8&amp;legendsize=10::160"'
@@ -263,10 +263,10 @@ class module_controller extends ctrl_module
         if ($typequota == 0)
             return ''; //Quota are disabled
         if (fs_director::CheckForEmptyValue($type))
-            return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=0"/>';
+            return '<img src="etc/lib/pChart2/sentora/zProgress.php?percent=0"/>';
         if ($type == $typequota)
-            return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=100"/>';
-        return '<img src="etc/lib/pChart2/zpanel/zProgress.php?percent=' . round($type / $typequota * 100, 0) . '"/>';
+            return '<img src="etc/lib/pChart2/sentora/zProgress.php?percent=100"/>';
+        return '<img src="etc/lib/pChart2/sentora/zProgress.php?percent=' . round($type / $typequota * 100, 0) . '"/>';
     }
 
 }

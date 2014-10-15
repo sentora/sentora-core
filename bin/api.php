@@ -1,11 +1,11 @@
 <?php
 
 /**
- * The the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
+ * The the main Sentora(X) (M)odular (W)eb (S)ervice controller.
  * @package zpanelx
  * @subpackage core -> api
  * @author Bobby Allen (ballen@bobbyallen.me)
- * @copyright ZPanel Project (http://www.zpanelcp.com/)
+ * @copyright Sentora Project (http://www.zpanelcp.com/)
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */

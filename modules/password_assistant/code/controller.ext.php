@@ -2,7 +2,7 @@
 
 /**
  *
- * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
+ * Sentora - A Cross-Platform Open-Source Web Hosting Control panel.
  *
  * @package ZPanel
  * @version $Id$
@@ -10,7 +10,7 @@
  * @copyright (c) 2008-2014 ZPanel Group - http://www.zpanelcp.com/
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  *
- * This program (ZPanel) is free software: you can redistribute it and/or modify
+ * This program (Sentora) is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -92,7 +92,7 @@ class module_controller extends ctrl_module
                 return ui_sysmessage::shout(ui_language::translate("Sorry, your current password does not match the one on your account!"), "zannounceerror");
             }
             if (self::$error == "error") {
-                return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
+                return ui_sysmessage::shout(ui_language::translate("An error occured and your Sentora account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
             }
         } else {
             if (!fs_director::CheckForEmptyValue(self::$badpassword)) {

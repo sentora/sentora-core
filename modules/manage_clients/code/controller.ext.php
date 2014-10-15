@@ -2,7 +2,7 @@
 
 /**
  *
- * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
+ * Sentora - A Cross-Platform Open-Source Web Hosting Control panel.
  *
  * @package ZPanel
  * @version $Id$
@@ -10,7 +10,7 @@
  * @copyright (c) 2008-2014 ZPanel Group - http://www.zpanelcp.com/
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  *
- * This program (ZPanel) is free software: you can redistribute it and/or modify
+ * This program (Sentora) is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -564,7 +564,7 @@ class module_controller extends ctrl_module
             $emailbody = str_replace("{{username}}", $username, $emailbody);
             $emailbody = str_replace("{{password}}", $password, $emailbody);
             $emailbody = str_replace("{{fullname}}", $fullname, $emailbody);
-            $emailbody = str_replace('{{controlpanelurl}}', $protocol . ctrl_options::GetSystemOption('zpanel_domain'), $emailbody);
+            $emailbody = str_replace('{{controlpanelurl}}', $protocol . ctrl_options::GetSystemOption('sentora_domain'), $emailbody);
 
             $phpmailer = new sys_email();
             $phpmailer->Subject = $emailsubject;

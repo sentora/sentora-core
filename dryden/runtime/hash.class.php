@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Provides bcrypt (Blowfish single-way encryption) functionality for password hashing in ZPanel.
+ * Provides bcrypt (Blowfish single-way encryption) functionality for password hashing in Sentora.
  * @package zpanelx
  * @subpackage dryden -> runtime
  * @version 1.0.2
@@ -87,7 +87,7 @@ class runtime_hash {
      * @return boolean Will return false if fails (the user didn't define a password or the version of PHP does not support Blowfish, PHP 5.3.0+ is required!) or the password hash if successful.
      */
     public function Crypt() {
-        require_once ctrl_options::GetSystemOption('zpanel_root') . 'cnf/security.php';
+        require_once ctrl_options::GetSystemOption('sentora_root') . 'cnf/security.php';
         global $security;
         if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
             $combined_salt = substr(sha1($this->salt . $security['server_crypto_key']), 0, 22);

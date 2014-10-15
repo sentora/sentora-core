@@ -14,8 +14,8 @@
     <div class="zform_wrapper">
         <h2><: Latest Sentora News :></h2>
         <table class="table table-striped">
-            <% if ZPanelNews %>
-            <% loop ZPanelNews %>
+            <% if SentoraNews %>
+            <% loop SentoraNews %>
             <tr>
                 <td><img src="modules/news/assets/newspaper.png"> <a href="<& url &>" target="_blank" title="<: Click to view this news item :>"><& title &></a></td>
             </tr>

@@ -11,7 +11,7 @@
 class webservice extends ws_xmws {
 
     /**
-     * Resets a user's ZPanel account password. Requires <uid> and <newpassword> tags.
+     * Resets a user's Sentora account password. Requires <uid> and <newpassword> tags.
      * @return type 
      */
     function ResetUserPassword() {

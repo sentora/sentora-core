@@ -1,5 +1,5 @@
 /*
- * zpanel.js
+ * Sentora.js
  *
  * @package ZPanel
  * @version 1.0.0
@@ -8,7 +8,7 @@
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  */
 
-// The Main ZPanel.js file requires these libraries to assist it and make it all work...
+// The Main Sentora.js file requires these libraries to assist it and make it all work...
 // /js/jquery.js
 // /js/jquery.cookie.js
 // /js/jquery.sortable-custom.js
@@ -21,17 +21,17 @@
 // /js/bootstrap-popover.js
 // /js/typeahead.js
 
-var zPanel = {
+var Sentora = {
 
     init: function() {
 
-        zPanel.utils.log('ZPanel.init() ran');
-        zPanel.menu.header();
-        zPanel.menu.sidebar();
-        zPanel.loader.init();
-        zPanel.stats.init();
-        zPanel.modules.dragDrop();
-        zPanel.modules.boxes();
+        Sentora.utils.log('Sentora.init() ran');
+        Sentora.menu.header();
+        Sentora.menu.sidebar();
+        Sentora.loader.init();
+        Sentora.stats.init();
+        Sentora.modules.dragDrop();
+        Sentora.modules.boxes();
 
         // Enable Bootstrap Pop-overs
         $('body').popover({
@@ -50,7 +50,7 @@ var zPanel = {
         });
 
 
-        //zPanelDNS.utils.cache.dnsTitleId = $("#dnsTitle");
+        //SentoraDNS.utils.cache.dnsTitleId = $("#dnsTitle");
 
     },
 
@@ -62,7 +62,7 @@ var zPanel = {
         cache: {},
 
         log: function(what) {
-            if (zPanel.utils.settings.debug) {
+            if (Sentora.utils.settings.debug) {
                 console.log(what);
             }
         },
@@ -72,13 +72,13 @@ var zPanel = {
             var property;
             for (property in source) {
                 if (source[property] && source[property].constructor && source[property].constructor === Object) {
-                    //zPanel.utils.log(source[property].constructor);
+                    //Sentora.utils.log(source[property].constructor);
                     destination[property] = destination[property] || {};
-                    zPanel.utils.deepExtend(destination[property], source[property]);
+                    Sentora.utils.deepExtend(destination[property], source[property]);
                 } else if (property in destination) {
                     destination[property] = source[property];
                 } else {
-                    throw new Error('zPanel.deepExtend was passed a non-supported Property: ' + property);
+                    throw new Error('Sentora.deepExtend was passed a non-supported Property: ' + property);
                 }
             }
             return destination;
@@ -100,39 +100,39 @@ var zPanel = {
         spinner: null,
 
         init: function() {
-            zPanel.utils.log('ZPanel.loader.init() ran - Watching for Click events');
+            Sentora.utils.log('Sentora.loader.init() ran - Watching for Click events');
             //Bind zloader to button click
             $('#button').click(function() {
-                zPanel.loader.showLoader();
+                Sentora.loader.showLoader();
             });
             // $('.fg-button').click(function() {
-            //     zPanel.loader.showLoader();
+            //     Sentora.loader.showLoader();
             // });
             $('.button-loader').click(function() {
-                zPanel.loader.showLoader();
+                Sentora.loader.showLoader();
             });
             //Bind zloader to save button click
             // $('.save').click(function() {
-            //     zPanel.loader.showLoader();
+            //     Sentora.loader.showLoader();
             // });
 
         },
 
         showLoader: function() {
             //Show Spinning Loader
-            zPanel.utils.log('ZPanel.loader.showLoader() ran - Show Spinning Loader screen');
+            Sentora.utils.log('Sentora.loader.showLoader() ran - Show Spinning Loader screen');
             $('#zloader_overlay').fadeIn('fast', function() {
                 $("#zloader").show();
-                zPanel.loader.buildSpinner();
+                Sentora.loader.buildSpinner();
             });
         },
 
         hideLoader: function() {
             //Hide  Spinning Loader
-            zPanel.utils.log('ZPanel.loader.hideLoader() ran - Remove Spinning Loader screen');
+            Sentora.utils.log('Sentora.loader.hideLoader() ran - Remove Spinning Loader screen');
             $('#zloader_overlay').fadeOut('fast', function() {
                 $("#zloader").hide();
-                zPanel.loader.spinner.stop();
+                Sentora.loader.spinner.stop();
             });
         },
 
@@ -140,7 +140,7 @@ var zPanel = {
         // REQUIRES spin.min.js to be loaded FIRST
         // http://fgnass.github.io/spin.js/
         buildSpinner: function() {
-            zPanel.utils.log('ZPanel.loader.buildSpinner() ran - Builing Spining Loader');
+            Sentora.utils.log('Sentora.loader.buildSpinner() ran - Builing Spining Loader');
             var opts = {
                 lines: 9, // The number of lines to draw
                 length: 11, // The length of each line
@@ -160,7 +160,7 @@ var zPanel = {
             };
 
             var target = document.getElementById('zloader_content');
-            zPanel.loader.spinner = new Spinner(opts).spin(target);
+            Sentora.loader.spinner = new Spinner(opts).spin(target);
         },
     },
 
@@ -169,7 +169,7 @@ var zPanel = {
 
         // Show a Custom Bootstrap Notice
         // Example Usage
-        // zPanel.notice.show({
+        // Sentora.notice.show({
         //     type: "success",
         //     selector: "#alert-area",
         //     closeTime: 6000,
@@ -181,7 +181,7 @@ var zPanel = {
         show: function(options) {
             var i;
 
-            zPanel.utils.log('ZPanel.notice.show() ran - Show Notice');
+            Sentora.utils.log('Sentora.notice.show() ran - Show Notice');
             // Default options
             this.options = {
                 selector: "#alert-area", // Selector: Specify the Div ID to Append Notice to
@@ -210,13 +210,13 @@ var zPanel = {
             // If Autoclose is enabled then Close/remove the Notice Div after X seconds
             if (this.options.autoClose) {
                 setTimeout(function() {
-                    zPanel.notice.hide(selector);
+                    Sentora.notice.hide(selector);
                 }, this.options.closeTime);
             }
         },
 
         hide: function(selector) {
-            zPanel.utils.log('ZPanel.notice.hide() ran - Hide Notice');
+            Sentora.utils.log('Sentora.notice.hide() ran - Hide Notice');
             selector.children(".alert:first").fadeOut('slow', function() {
                 $(this).remove();
 
@@ -239,7 +239,7 @@ var zPanel = {
                 dialogDiv,
                 backdropDiv;
 
-            zPanel.utils.log('ZPanel.dialog.confirm() ran - Show Dialog');
+            Sentora.utils.log('Sentora.dialog.confirm() ran - Show Dialog');
             // Default options
             this.options = {
                 title: 'ATTENTION',
@@ -260,7 +260,7 @@ var zPanel = {
             };
 
             // Merge User defined options
-            zPanel.utils.deepExtend(this.options, options);
+            Sentora.utils.deepExtend(this.options, options);
 
             // Check for Hidden Buttons
             okButtonStyle = this.options.okButton.show === false ? 'style="display: none;"' : 
@@ -294,7 +294,7 @@ var zPanel = {
             //OK button click event
             if (this.options.okButton.show !== false) {
                 var ok = dialogDiv.getElementsByTagName('button')[0];
-                zPanel.utils.addEvent(ok, 'click', function() {
+                Sentora.utils.addEvent(ok, 'click', function() {
                     //ok.addEventListener('click', function() {
                     document.body.removeChild(dialogDiv);
                     document.body.removeChild(backdropDiv);
@@ -306,7 +306,7 @@ var zPanel = {
             //Cancel button click event
             if (this.options.cancelButton.show !== false) {
                 var cancel = dialogDiv.getElementsByTagName('button')[1];
-                zPanel.utils.addEvent(cancel, 'click', function() {
+                Sentora.utils.addEvent(cancel, 'click', function() {
                     //cancel.addEventListener('click', function() {
                     document.body.removeChild(dialogDiv);
                     document.body.removeChild(backdropDiv);
@@ -325,7 +325,7 @@ var zPanel = {
             //Account Stats Tabs
             // Requires Bootstrap tabs
             $('#stats-tab a').click(function(e) {
-                zPanel.utils.log('ZPanel.stats.init Click Event - Toggle Stats Tabs');
+                Sentora.utils.log('Sentora.stats.init Click Event - Toggle Stats Tabs');
                 e.preventDefault();
                 $(this).tab('show');
             })
@@ -342,7 +342,7 @@ var zPanel = {
 
         sidebar: function() {
 
-            zPanel.utils.log('ZPanel.menu.sidebar() Ran - Handle sidebar menu clicks');
+            Sentora.utils.log('Sentora.menu.sidebar() Ran - Handle sidebar menu clicks');
             // // Handle the Sidebar Menu state based on Click events
             $('#menu-sidebar li:has(ul) .heading').click(function() {
                 $(this).next().toggle();
@@ -376,28 +376,28 @@ var zPanel = {
 
         // Requires Draggable/Sortable JS Library
         dragDrop: function() {
-            zPanel.utils.log('ZPanel.modules.dragDrop() Ran - Handle Module Box Sorting');
+            Sentora.utils.log('Sentora.modules.dragDrop() Ran - Handle Module Box Sorting');
             $('.sortable').sortable({
                 handle: '.handle',
                 onStartDrag: function() {
-                    zPanel.modules.addFloats($(".sortable"));
+                    Sentora.modules.addFloats($(".sortable"));
                 },
                 onEndDrag: function() {
-                    zPanel.modules.addFloats($(".sortable"))
+                    Sentora.modules.addFloats($(".sortable"))
                 },
                 onChangeOrder: function() {
-                    zPanel.modules.addFloats($(".sortable"))
+                    Sentora.modules.addFloats($(".sortable"))
                 }
             }).bind('sortupdate', function() {
 
                 var sortorder = new Array();
-                zPanel.modules.addFloats($(".sortable"));
+                Sentora.modules.addFloats($(".sortable"));
 
                 $('.sortable li.module-box').each(function() {
                     sortorder.push($(this).attr('data-catid'));
                 });
 
-                zPanel.loader.showLoader();
+                Sentora.loader.showLoader();
 
                 $.ajax({
                     type: "POST",
@@ -410,24 +410,24 @@ var zPanel = {
                     },
 
                     success: function(data) {
-                        zPanel.utils.log('ZPanel.modules.dragDrop() AJAX Sorting order Saved');
-                        zPanel.loader.hideLoader();
+                        Sentora.utils.log('Sentora.modules.dragDrop() AJAX Sorting order Saved');
+                        Sentora.loader.hideLoader();
                     },
 
                     error: function(ts) {
-                        zPanel.utils.log('ERROR: ZPanel.modules.dragDrop() AJAX Sorting order NOT Saved');
-                        zPanel.loader.hideLoader();
+                        Sentora.utils.log('ERROR: Sentora.modules.dragDrop() AJAX Sorting order NOT Saved');
+                        Sentora.loader.hideLoader();
                     }
 
                 });
             });
 
-            zPanel.modules.addFloats($(".sortable"));
+            Sentora.modules.addFloats($(".sortable"));
 
         },
 
         addFloats: function(container) {
-            zPanel.utils.log('ZPanel.modules.addFloats() - Floats added for Drag/Drop Modules');
+            Sentora.utils.log('Sentora.modules.addFloats() - Floats added for Drag/Drop Modules');
             $(container).find(".module-box:not(.sortable-dragging)").removeClass("sortable-first-col").each(function(index, element) {
                 if (index % 2 == 0) {
                     $(this).addClass("sortable-first-col");
@@ -445,7 +445,7 @@ var zPanel = {
 
             // Module-box Expand/Collapse click event
             $('.module-box-title .tools .expand, .module-box-title .tools .collapse').click(function(e) {
-                zPanel.utils.log('modulebox clicked');
+                Sentora.utils.log('modulebox clicked');
                 var el = $(this).parents(".module-box").children(".module-box-body");
                 var cookieName = $(this).parents(".module-box-title").children("h4").text() + 'Module';
 
@@ -493,7 +493,7 @@ var zPanel = {
         //     $('#module-search').typeahead({
         //         source: moduleNames,
         //         updater: function(item) {
-        //             zPanel.loader.showLoader();
+        //             Sentora.loader.showLoader();
         //             setTimeout(function() {
         //                 window.location.href = '/?module=' + moduleUrls[item];
         //                 return item;
@@ -522,7 +522,7 @@ var zPanel = {
                 header: '<h3 class="module-search">Modules</h3>'
             }).on('typeahead:selected typeahead:autocompleted', function($e,datum) {
                 var $typeahead = $(this);
-                zPanel.utils.log(moduleUrls[datum.value]);
+                Sentora.utils.log(moduleUrls[datum.value]);
                     window.location.href = '/?module=' + moduleUrls[datum.value];
             });
         }
@@ -533,6 +533,6 @@ var zPanel = {
 };
 
 $(function() {
-    zPanel.utils.settings.debug = false;
-    zPanel.init();
+    Sentora.utils.settings.debug = false;
+    Sentora.init();
 });

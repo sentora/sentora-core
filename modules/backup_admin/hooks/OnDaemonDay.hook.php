@@ -36,7 +36,7 @@ if (ui_module::CheckModuleEnabled('Backup Config')) {
                 // We now see what the OS is before we work out what compression command to use..
                 if (sys_versions::ShowOSPlatformVersion() == "Windows") {
                     $resault = exec(fs_director::SlashesToWin(ctrl_options::GetSystemOption('zip_exe') . " a -tzip -y-r " . ctrl_options::GetSystemOption('temp_dir') . $backupname . ".zip " . $homedir . "/public_html"));
-                } else {//cd /var/zpanel/hostdata/zadmin/; zip -r backups/backup.zip public_html/
+                } else {//cd /var/sentora/hostdata/zadmin/; zip -r backups/backup.zip public_html/
                     $resault = exec("cd " . $homedir . "/ && " . ctrl_options::GetSystemOption('zip_exe') . " -r9 " . ctrl_options::GetSystemOption('temp_dir') . $backupname . " public_html/*");
                     @chmod(ctrl_options::GetSystemOption('temp_dir') . $backupname . ".zip", 0777);
                 }
@@ -124,7 +124,7 @@ if (ui_module::CheckModuleEnabled('Backup Config')) {
     echo fs_filehandler::NewLine() . "Purging backups from temp folder..." . fs_filehandler::NewLine();
     clearstatcache();
     echo "[FILE][PURGE_DATE][FILE_DATE][ACTION]" . fs_filehandler::NewLine();
-    $temp_dir = ctrl_options::GetSystemOption('zpanel_root') . "/modules/backupmgr/temp/";
+    $temp_dir = ctrl_options::GetSystemOption('sentora_root') . "/modules/backupmgr/temp/";
     if ($handle = @opendir($temp_dir)) {
         while (false !== ($file = readdir($handle))) {
             if ($file != "." && $file != "..") {

@@ -10,10 +10,10 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class ui_tpl_zpanelversion {
+class ui_tpl_sentoraversion {
 
     public static function Template() {
-        return sys_versions::ShowZpanelVersion();
+        return sys_versions::ShowSentoraVersion();
     }
 
 }

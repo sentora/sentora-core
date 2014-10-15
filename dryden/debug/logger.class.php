@@ -54,7 +54,7 @@ class debug_logger {
             fs_filehandler::AddTextToFile(ctrl_options::GetSystemOption('logfile'), date('c') . ' - ' . $this->logcode . ' - ' . $this->detail, 1);
         } elseif ($this->method == "email") {
             $email_log = new sys_email();
-            $email_log->Subject = "ZPanel Error Log";
+            $email_log->Subject = "Sentora Error Log";
             $email_log->Body = "" . date('c') . ' - ' . $this->logcode . ' - ' . $this->detail . "";
             $email_log->AddAddress(ctrl_options::GetSystemOption('email_from_address'));
             $email_log->SendEmail();

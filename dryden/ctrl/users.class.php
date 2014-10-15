@@ -16,7 +16,7 @@ class ctrl_users {
      * Returns an array of infomation for the account details, package, groups and quota limits for a given UID.
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
-     * @param int $uid The ZPanel user account ID.
+     * @param int $uid The Sentora user account ID.
      * @return array
      */
     static function GetUserDetail($uid = "") {
@@ -173,7 +173,7 @@ class ctrl_users {
      * Checks that the specified user is active and therefore allowed to login to the panel.
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
-     * @param int $uid The ZPanel user account ID.
+     * @param int $uid The Sentora user account ID.
      * @return boolean
      */
     static function CheckUserEnabled($uid) {

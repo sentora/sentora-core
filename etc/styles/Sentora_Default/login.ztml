@@ -8,26 +8,26 @@
         <meta name="robots" content="noindex, nofollow">
 
         <!-- Stylesheets -->
-        <link href="/etc/styles/zpanelx/global-css/bootstrap.min.css" rel="stylesheet">
-        <link href="/etc/styles/zpanelx/global-css/login.css" rel="stylesheet">
+        <link href="/etc/styles/Sentora_Default/global-css/bootstrap.min.css" rel="stylesheet">
+        <link href="/etc/styles/Sentora_Default/global-css/login.css" rel="stylesheet">
 
         <!-- Favicons -->
-        <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/etc/styles/zpanelx/img/ico/apple-touch-icon-57-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/etc/styles/zpanelx/img/ico/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/etc/styles/zpanelx/img/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/etc/styles/zpanelx/img/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/etc/styles/Sentora_Default/img/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/etc/styles/Sentora_Default/img/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/etc/styles/Sentora_Default/img/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/etc/styles/Sentora_Default/img/ico/apple-touch-icon-144-precomposed.png">
 
-        <link rel="icon" href="/etc/styles/zpanelx/img/ico/fav16.png"  sizes="16x16"   type="image/png">
-        <link rel="icon" href="/etc/styles/zpanelx/img/ico/fav32.png"  sizes="32x32"   type="image/png">
-        <link rel="icon" href="/etc/styles/zpanelx/img/ico/fav48.png"  sizes="48x48"   type="image/png">
-        <link rel="icon" href="/etc/styles/zpanelx/img/ico/fav64.png"  sizes="64x64"   type="image/png">
-        <link rel="icon" href="/etc/styles/zpanelx/img/ico/fav128.png" sizes="128x128" type="image/png">
+        <link rel="icon" href="/etc/styles/Sentora_Default/img/ico/fav16.png"  sizes="16x16"   type="image/png">
+        <link rel="icon" href="/etc/styles/Sentora_Default/img/ico/fav32.png"  sizes="32x32"   type="image/png">
+        <link rel="icon" href="/etc/styles/Sentora_Default/img/ico/fav48.png"  sizes="48x48"   type="image/png">
+        <link rel="icon" href="/etc/styles/Sentora_Default/img/ico/fav64.png"  sizes="64x64"   type="image/png">
+        <link rel="icon" href="/etc/styles/Sentora_Default/img/ico/fav128.png" sizes="128x128" type="image/png">
 
-        <link rel="icon" href="/etc/styles/zpanelx/img/ico/fav32.png">
-        <!--[if IE]><link rel="shortcut icon" href="/etc/styles/zpanelx/img/ico/favicon.ico"><![endif]-->
+        <link rel="icon" href="/etc/styles/Sentora_Default/img/ico/fav32.png">
+        <!--[if IE]><link rel="shortcut icon" href="/etc/styles/Sentora_Default/img/ico/favicon.ico"><![endif]-->
 
         <meta name="msapplication-TileColor" content="#222222">
-        <meta name="msapplication-TileImage" content="/etc/styles/zpanelx/img/ico/fav144.png">
+        <meta name="msapplication-TileImage" content="/etc/styles/Sentora_Default/img/ico/fav144.png">
 
         <!-- Scripts -->
         <script>document.write('<style type="text/css">body {display:none;}<\/style>');</script>
@@ -47,7 +47,7 @@
         <div class="loginwrapper">
             <div class="panel login-panel">
                 <div class="panel-heading login-head">
-                    <img src="/etc/styles/zpanelx/img/logos/sentora_logo.png" alt="Sentora Logo" width="334" height="93">
+                    <img src="/etc/styles/Sentora_Default/img/logos/sentora_logo.png" alt="Sentora Logo" width="334" height="93">
                 </div>
                 <div class="panel-content form-horizontal">
                 <?php
@@ -193,10 +193,10 @@
         </div>
         <!-- Javascript
         ================================================== -->
-        <script src="/etc/styles/zpanelx/js/jquery.js"></script>
-        <script src="/etc/styles/zpanelx/js/bootstrap-transition.js"></script>
-        <script src="/etc/styles/zpanelx/js/bootstrap-alert.js"></script>
-        <script src="/etc/styles/zpanelx/js/prettyCheckable.js"></script>
+        <script src="/etc/styles/Sentora_Default/js/jquery.js"></script>
+        <script src="/etc/styles/Sentora_Default/js/bootstrap-transition.js"></script>
+        <script src="/etc/styles/Sentora_Default/js/bootstrap-alert.js"></script>
+        <script src="/etc/styles/Sentora_Default/js/prettyCheckable.js"></script>
         <script>
             $().ready(function() {
                 $('input:checkbox').prettyCheckable({

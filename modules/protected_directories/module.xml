@@ -7,5 +7,5 @@
 	<authorname>zVPS.uk</authorname>
 	<authoremail>support@zvps.uk</authoremail>
 	<authorurl>http://www.zvps.uk/</authorurl>
-	<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+	<updateurl>http://sentora.org/uds/core.xml</updateurl>
 </module>

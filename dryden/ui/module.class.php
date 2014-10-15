@@ -116,8 +116,9 @@ class ui_module {
     static function ScanForNewModules($init = false) {
         global $zdbh;
         $new_module_list = array();
-        $handle = @opendir(ctrl_options::GetSystemOption('zpanel_root') . "modules");
-        $chkdir = ctrl_options::GetSystemOption('zpanel_root') . "modules/";
+        $rootdir = ctrl_options::GetSystemOption('sentora_root') . 'modules';
+        $handle = @opendir($rootdir);
+        $chkdir = $rootdir . '/';
         if ($handle) {
             while ($file = readdir($handle)) {
                 if ($file != "." && $file != "..") {

@@ -32,19 +32,19 @@ class module_controller extends ctrl_module
     /**
      * 
      * @global db_driver $zdbh
-     * @param int $x_zvps_htpasswd_file_id
+     * @param int $x_htpasswd_file_id
      * @return array
      */
-    static function fetchFile( $x_zvps_htpasswd_file_id )
+    static function fetchFile( $x_htpasswd_file_id )
     {
         global $zdbh;
-        $sqlString = "SELECT * FROM x_zvps_htpasswd_file
-            WHERE x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
-            AND x_zvps_htpasswd_file_id = :x_zvps_htpasswd_file_id
-            AND x_zvps_htpasswd_file_deleted IS NULL";
+        $sqlString = "SELECT * FROM x_htpasswd_file
+            WHERE x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
+            AND x_htpasswd_file_id = :x_htpasswd_file_id
+            AND x_htpasswd_file_deleted IS NULL";
         $bindArray = array( 
-            ':x_zvps_htpasswd_file_id' => $x_zvps_htpasswd_file_id, 
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+            ':x_htpasswd_file_id' => $x_htpasswd_file_id, 
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
             );
         try {
             $zdbh->bindQuery( $sqlString, $bindArray );
@@ -54,28 +54,28 @@ class module_controller extends ctrl_module
             return false;
         }
         $row = $zdbh->returnRow();
-        $row['x_zvps_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_zvps_htpasswd_file_created']);
+        $row['x_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_htpasswd_file_created']);
         return $row;
     }
 
     /**
      * 
      * @global db_driver $zdbh
-     * @param int $x_zvps_htpasswd_zpanel_user_id
+     * @param int $x_htpasswd_sentora_user_id
      * @return array
      */
     static function fetchFileList()
     {
         global $zdbh;
-        $sqlString = "SELECT * FROM x_zvps_htpasswd_file
-            WHERE x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
-            AND x_zvps_htpasswd_file_deleted IS NULL";
-        $bindArray = array( ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId() );
+        $sqlString = "SELECT * FROM x_htpasswd_file
+            WHERE x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
+            AND x_htpasswd_file_deleted IS NULL";
+        $bindArray = array( ':x_htpasswd_sentora_user_id' => self::getCurrentUserId() );
         $zdbh->bindQuery( $sqlString, $bindArray );
         $rows = $zdbh->returnRows();
         /** format created */
         foreach($rows as &$row) {
-            $row['x_zvps_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_zvps_htpasswd_file_created']);
+            $row['x_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_htpasswd_file_created']);
         }
         return $rows;
     }
@@ -83,19 +83,19 @@ class module_controller extends ctrl_module
     /**
      * 
      * @global db_driver $zdbh
-     * @param int $x_zvps_htpasswd_user_id
+     * @param int $x_htpasswd_user_id
      * @return array
      */
     static function fetchUser()
     {
         global $zdbh;
-        $sqlString = "SELECT * FROM x_zvps_htpasswd_user
-            WHERE x_zvps_htpasswd_user_id = :x_zvps_htpasswd_user_id
-            AND x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
-            AND x_zvps_htpasswd_user_deleted IS NULL";
+        $sqlString = "SELECT * FROM x_htpasswd_user
+            WHERE x_htpasswd_user_id = :x_htpasswd_user_id
+            AND x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
+            AND x_htpasswd_user_deleted IS NULL";
         $bindArray = array( 
-            ':x_zvps_htpasswd_user_id' => self::getUserId(),
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId()
+            ':x_htpasswd_user_id' => self::getUserId(),
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId()
             );
         $zdbh->bindQuery( $sqlString, $bindArray );
         
@@ -110,24 +110,24 @@ class module_controller extends ctrl_module
     static function fetchUserList()
     {
         global $zdbh;
-        $sqlString = "SELECT * FROM zpanel_core.x_zvps_htpasswd_file 
-                     LEFT OUTER JOIN x_zvps_htpasswd_mapper
-                     ON x_zvps_htpasswd_file.x_zvps_htpasswd_file_id = x_zvps_htpasswd_mapper.x_zvps_htpasswd_file_id
-                     LEFT OUTER JOIN x_zvps_htpasswd_user
-                     ON x_zvps_htpasswd_user.x_zvps_htpasswd_user_id = x_zvps_htpasswd_mapper.x_zvps_htpasswd_user_id
-                     WHERE x_zvps_htpasswd_file.x_zvps_htpasswd_file_id = :x_zvps_htpasswd_file_id
-                     AND (x_zvps_htpasswd_user.x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
-                          OR x_zvps_htpasswd_user.x_zvps_htpasswd_zpanel_user_id IS NULL);";
+        $sqlString = "SELECT * FROM sentora_core.x_htpasswd_file 
+                     LEFT OUTER JOIN x_htpasswd_mapper
+                     ON x_htpasswd_file.x_htpasswd_file_id = x_htpasswd_mapper.x_htpasswd_file_id
+                     LEFT OUTER JOIN x_htpasswd_user
+                     ON x_htpasswd_user.x_htpasswd_user_id = x_htpasswd_mapper.x_htpasswd_user_id
+                     WHERE x_htpasswd_file.x_htpasswd_file_id = :x_htpasswd_file_id
+                     AND (x_htpasswd_user.x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
+                          OR x_htpasswd_user.x_htpasswd_sentora_user_id IS NULL);";
         $bindArray = array( 
-            ':x_zvps_htpasswd_file_id' => self::getId(), 
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),     
+            ':x_htpasswd_file_id' => self::getId(), 
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),     
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         $rows = $zdbh->returnRows();
         /** format created */
         foreach($rows as &$row) {
-            $row['x_zvps_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_zvps_htpasswd_file_created']);
-            $row['x_zvps_htpasswd_user_created'] = date('Y-m-d H:i:s', $row['x_zvps_htpasswd_user_created']);
+            $row['x_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_htpasswd_file_created']);
+            $row['x_htpasswd_user_created'] = date('Y-m-d H:i:s', $row['x_htpasswd_user_created']);
         }
         return $rows;
     }
@@ -135,28 +135,28 @@ class module_controller extends ctrl_module
     /**
      * 
      * @global db_driver $zdbh
-     * @param type $x_zvps_htpasswd_file_id
+     * @param type $x_htpasswd_file_id
      */
     static function fetchFileUserList()
     {
         global $zdbh;
         $sqlString = "
-            SELECT * FROM x_zvps_htpasswd_file f
-            INNER JOIN x_zvps_htpasswd_mapper m ON f.x_zvps_htpasswd_file_id=m.x_zvps_htpasswd_file_id
-            INNER JOIN x_zvps_htpasswd_user u ON m.x_zvps_htpasswd_user_id=u.x_zvps_htpasswd_user_id
-            WHERE f.x_zvps_htpasswd_file_id = :x_zvps_htpasswd_file_id
-            AND f.x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
+            SELECT * FROM x_htpasswd_file f
+            INNER JOIN x_htpasswd_mapper m ON f.x_htpasswd_file_id=m.x_htpasswd_file_id
+            INNER JOIN x_htpasswd_user u ON m.x_htpasswd_user_id=u.x_htpasswd_user_id
+            WHERE f.x_htpasswd_file_id = :x_htpasswd_file_id
+            AND f.x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
         ";
         $bindArray = array(
-            ':x_zvps_htpasswd_file_id' => self::getId(),
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+            ':x_htpasswd_file_id' => self::getId(),
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
         );
         $zdbh->bindQuery($sqlString, $bindArray);
         $rows = $zdbh->returnRows();
         /** format created */
         foreach($rows as &$row) {
-            $row['x_zvps_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_zvps_htpasswd_file_created']);
-            $row['x_zvps_htpasswd_user_created'] = date('Y-m-d H:i:s', $row['x_zvps_htpasswd_user_created']);
+            $row['x_htpasswd_file_created'] = date('Y-m-d H:i:s', $row['x_htpasswd_file_created']);
+            $row['x_htpasswd_user_created'] = date('Y-m-d H:i:s', $row['x_htpasswd_user_created']);
         }
         return $rows;
     }
@@ -172,26 +172,26 @@ class module_controller extends ctrl_module
     {
         global $zdbh;
         $sqlString = "
-            INSERT INTO x_zvps_htpasswd_file 
+            INSERT INTO x_htpasswd_file 
             ( 
-                x_zvps_htpasswd_file_target, 
-                x_zvps_htpasswd_file_message, 
-                x_zvps_htpasswd_file_created, 
-                x_zvps_htpasswd_zpanel_user_id
+                x_htpasswd_file_target, 
+                x_htpasswd_file_message, 
+                x_htpasswd_file_created, 
+                x_htpasswd_sentora_user_id
             )
             VALUES
             (
-                :x_zvps_htpasswd_file_target, 
-                :x_zvps_htpasswd_file_message, 
-                :x_zvps_htpasswd_file_created, 
-                :x_zvps_htpasswd_zpanel_user_id
+                :x_htpasswd_file_target, 
+                :x_htpasswd_file_message, 
+                :x_htpasswd_file_created, 
+                :x_htpasswd_sentora_user_id
             )
         ";
         $bindArray = array(
-            ':x_zvps_htpasswd_file_target'    => $fileArray[ 'x_zvps_htpasswd_file_target' ],
-            ':x_zvps_htpasswd_file_message'   => $fileArray[ 'x_zvps_htpasswd_file_message' ],
-            ':x_zvps_htpasswd_file_created'   => $fileArray[ 'x_zvps_htpasswd_file_created' ],
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+            ':x_htpasswd_file_target'    => $fileArray[ 'x_htpasswd_file_target' ],
+            ':x_htpasswd_file_message'   => $fileArray[ 'x_htpasswd_file_message' ],
+            ':x_htpasswd_file_created'   => $fileArray[ 'x_htpasswd_file_created' ],
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
         );
         try {
             $zdbh->bindQuery( $sqlString, $bindArray );
@@ -215,26 +215,26 @@ class module_controller extends ctrl_module
     {
         global $zdbh;
         $sqlString = "
-            INSERT INTO x_zvps_htpasswd_user
+            INSERT INTO x_htpasswd_user
             (
-                x_zvps_htpasswd_user_username,
-                x_zvps_htpasswd_user_password,
-                x_zvps_htpasswd_user_created,
-                x_zvps_htpasswd_zpanel_user_id
+                x_htpasswd_user_username,
+                x_htpasswd_user_password,
+                x_htpasswd_user_created,
+                x_htpasswd_sentora_user_id
             )
             VALUES
             (
-                :x_zvps_htpasswd_user_username,
-                :x_zvps_htpasswd_user_password,
-                :x_zvps_htpasswd_user_created,
-                :x_zvps_htpasswd_zpanel_user_id
+                :x_htpasswd_user_username,
+                :x_htpasswd_user_password,
+                :x_htpasswd_user_created,
+                :x_htpasswd_sentora_user_id
             )
         ";
         $bindArray = array(
-            ':x_zvps_htpasswd_user_username' => $userArray[ 'x_zvps_htpasswd_user_username' ],
-            ':x_zvps_htpasswd_user_password' => $userArray[ 'x_zvps_htpasswd_user_password' ],
-            ':x_zvps_htpasswd_user_created'  => time(),
-            ':x_zvps_htpasswd_zpanel_user_id'  => self::getCurrentUserId(),
+            ':x_htpasswd_user_username' => $userArray[ 'x_htpasswd_user_username' ],
+            ':x_htpasswd_user_password' => $userArray[ 'x_htpasswd_user_password' ],
+            ':x_htpasswd_user_created'  => time(),
+            ':x_htpasswd_sentora_user_id'  => self::getCurrentUserId(),
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         return $zdbh->lastInsertId();
@@ -243,30 +243,30 @@ class module_controller extends ctrl_module
     /**
      * 
      * @global db_driver $zdbh
-     * @param int $x_zvps_htpasswd_file_id
-     * @param int $x_zvps_htpasswd_user_id
+     * @param int $x_htpasswd_file_id
+     * @param int $x_htpasswd_user_id
      * @return int
      */
-    static function createMapper( $x_zvps_htpasswd_file_id, $x_zvps_htpasswd_user_id )
+    static function createMapper( $x_htpasswd_file_id, $x_htpasswd_user_id )
     {
         global $zdbh;
-        $x_zvps_htpasswd_file_id = (int) $x_zvps_htpasswd_file_id;
-        $x_zvps_htpasswd_user_id = (int) $x_zvps_htpasswd_user_id;
+        $x_htpasswd_file_id = (int) $x_htpasswd_file_id;
+        $x_htpasswd_user_id = (int) $x_htpasswd_user_id;
         $sqlString               = "
-            INSERT INTO x_zvps_htpasswd_mapper
+            INSERT INTO x_htpasswd_mapper
             (
-                x_zvps_htpasswd_file_id,
-                x_zvps_htpasswd_user_id
+                x_htpasswd_file_id,
+                x_htpasswd_user_id
             )
             VALUES
             (
-                :x_zvps_htpasswd_file_id,
-                :x_zvps_htpasswd_user_id
+                :x_htpasswd_file_id,
+                :x_htpasswd_user_id
             )
         ";
         $bindArray = array(
-            ':x_zvps_htpasswd_file_id' => $x_zvps_htpasswd_file_id,
-            ':x_zvps_htpasswd_user_id' => $x_zvps_htpasswd_user_id,
+            ':x_htpasswd_file_id' => $x_htpasswd_file_id,
+            ':x_htpasswd_user_id' => $x_htpasswd_user_id,
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         return $zdbh->lastInsertId();
@@ -284,17 +284,17 @@ class module_controller extends ctrl_module
     {
         global $zdbh;
         $sqlString = "
-            UPDATE x_zvps_htpasswd_file SET
-            x_zvps_htpasswd_file_target = :x_zvps_htpasswd_file_target,
-            x_zvps_htpasswd_file_message = :x_zvps_htpasswd_file_message
-            WHERE x_zvps_htpasswd_file_id = :x_zvps_htpasswd_file_id
-            AND x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
+            UPDATE x_htpasswd_file SET
+            x_htpasswd_file_target = :x_htpasswd_file_target,
+            x_htpasswd_file_message = :x_htpasswd_file_message
+            WHERE x_htpasswd_file_id = :x_htpasswd_file_id
+            AND x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
         ";
         $bindArray = array(
-            ':x_zvps_htpasswd_file_id'      => $fileArray[ 'x_zvps_htpasswd_file_id' ],
-            ':x_zvps_htpasswd_file_target'  => $fileArray[ 'x_zvps_htpasswd_file_target' ],
-            ':x_zvps_htpasswd_file_message' => $fileArray[ 'x_zvps_htpasswd_file_message' ],
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+            ':x_htpasswd_file_id'      => $fileArray[ 'x_htpasswd_file_id' ],
+            ':x_htpasswd_file_target'  => $fileArray[ 'x_htpasswd_file_target' ],
+            ':x_htpasswd_file_message' => $fileArray[ 'x_htpasswd_file_message' ],
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         return $zdbh->returnResult();
@@ -304,18 +304,18 @@ class module_controller extends ctrl_module
     {
         global $zdbh;
         $sqlString = "
-            UPDATE x_zvps_htpasswd_user SET
-            x_zvps_htpasswd_user_username = :x_zvps_htpasswd_user_username,
-            x_zvps_htpasswd_user_password = :x_zvps_htpasswd_user_password
+            UPDATE x_htpasswd_user SET
+            x_htpasswd_user_username = :x_htpasswd_user_username,
+            x_htpasswd_user_password = :x_htpasswd_user_password
             WHERE
-            x_zvps_htpasswd_user_id = :x_zvps_htpasswd_user_id
-            x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
+            x_htpasswd_user_id = :x_htpasswd_user_id
+            x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
         ";
         $bindArray = array(
-            ':x_zvps_htpasswd_user_id'       => self::getUserId(),
-            ':x_zvps_htpasswd_user_username' => $userArray[ 'x_zvps_htpasswd_user_username' ],
-            ':x_zvps_htpasswd_user_password' => $userArray[ 'x_zvps_htpasswd_user_password' ],
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+            ':x_htpasswd_user_id'       => self::getUserId(),
+            ':x_htpasswd_user_username' => $userArray[ 'x_htpasswd_user_username' ],
+            ':x_htpasswd_user_password' => $userArray[ 'x_htpasswd_user_password' ],
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         return $zdbh->returnResult();
@@ -326,20 +326,20 @@ class module_controller extends ctrl_module
     /**
      * 
      * @global db_driver $zdbh
-     * @param int $x_zvps_htpasswd_file_id
+     * @param int $x_htpasswd_file_id
      * @return int
      */
-    static function deleteFile( $x_zvps_htpasswd_file_id )
+    static function deleteFile( $x_htpasswd_file_id )
     {
         global $zdbh;
         $sqlString = "
-            DELETE FROM x_zvps_htpasswd_file 
-            WHERE x_zvps_htpasswd_file_id = :x_zvps_htpasswd_file_id
-            AND x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
+            DELETE FROM x_htpasswd_file 
+            WHERE x_htpasswd_file_id = :x_htpasswd_file_id
+            AND x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
         ";
         $bindArray = array( 
-            ':x_zvps_htpasswd_file_id' => $x_zvps_htpasswd_file_id,
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+            ':x_htpasswd_file_id' => $x_htpasswd_file_id,
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         return $zdbh->returnResult();
@@ -348,20 +348,20 @@ class module_controller extends ctrl_module
     /**
      * 
      * @global db_driver $zdbh
-     * @param int $x_zvps_htpasswd_user_id
+     * @param int $x_htpasswd_user_id
      * @return int
      */
-    static function deleteUser( $x_zvps_htpasswd_user_id )
+    static function deleteUser( $x_htpasswd_user_id )
     {
         global $zdbh;
         $sqlString = "
-            DELETE FROM x_zvps_htpasswd_user 
-            WHERE x_zvps_htpasswd_user_id = :x_zvps_htpasswd_user_id
-            AND x_zvps_htpasswd_zpanel_user_id = :x_zvps_htpasswd_zpanel_user_id
+            DELETE FROM x_htpasswd_user 
+            WHERE x_htpasswd_user_id = :x_htpasswd_user_id
+            AND x_htpasswd_sentora_user_id = :x_htpasswd_sentora_user_id
         ";
         $bindArray = array( 
-            ':x_zvps_htpasswd_user_id' => $x_zvps_htpasswd_user_id,
-            ':x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+            ':x_htpasswd_user_id' => $x_htpasswd_user_id,
+            ':x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         return $zdbh->returnResult();
@@ -370,23 +370,23 @@ class module_controller extends ctrl_module
     /**
      * 
      * @global db_driver $zdbh
-     * @param int $x_zvps_htpasswd_file_id
-     * @param int $x_zvps_htpasswd_user_id
+     * @param int $x_htpasswd_file_id
+     * @param int $x_htpasswd_user_id
      * @return int
      */
-    static function deleteMapper( $x_zvps_htpasswd_file_id, $x_zvps_htpasswd_user_id )
+    static function deleteMapper( $x_htpasswd_file_id, $x_htpasswd_user_id )
     {
         global $zdbh;
         $sqlString = "
-            DELETE FROM x_zvps_htpasswd_mapper 
+            DELETE FROM x_htpasswd_mapper 
             WHERE
-            x_zvps_htpasswd_file_id = :x_zvps_htpasswd_file_id
+            x_htpasswd_file_id = :x_htpasswd_file_id
             AND
-            x_zvps_htpasswd_user_id = :x_zvps_htpasswd_user_id
+            x_htpasswd_user_id = :x_htpasswd_user_id
         ";
         $bindArray = array(
-            ':x_zvps_htpasswd_file_id' => $x_zvps_htpasswd_file_id,
-            ':x_zvps_htpasswd_user_id' => $x_zvps_htpasswd_user_id
+            ':x_htpasswd_file_id' => $x_htpasswd_file_id,
+            ':x_htpasswd_user_id' => $x_htpasswd_user_id
         );
         $zdbh->bindQuery( $sqlString, $bindArray );
         return $zdbh->returnResult();
@@ -595,13 +595,13 @@ class module_controller extends ctrl_module
     }
     
     static function writePasswdUsers($file) {
-        $files = self::fetchFileUserList($file['x_zvps_htpasswd_file_id']);
+        $files = self::fetchFileUserList($file['x_htpasswd_file_id']);
         $userString = "";
         foreach($files as $file) {
             $userString .= 
-                $file['x_zvps_htpasswd_user_username'] . 
+                $file['x_htpasswd_user_username'] . 
                 ':' . 
-                $file['x_zvps_htpasswd_user_password'] . PHP_EOL
+                $file['x_htpasswd_user_password'] . PHP_EOL
             ; 
         }
         
@@ -610,7 +610,7 @@ class module_controller extends ctrl_module
             '/' . 
             self::getCurrentUsername() . 
             '/htpasswd/'.
-            'htpasswd-' . md5($file['x_zvps_htpasswd_file_target'])
+            'htpasswd-' . md5($file['x_htpasswd_file_target'])
             , 
             $userString
             , 
@@ -708,10 +708,10 @@ class module_controller extends ctrl_module
         {
             $id = self::createFile(
                 array(
-                    'x_zvps_htpasswd_file_target'    => $fileTarget,
-                    'x_zvps_htpasswd_file_message'   => $message,
-                    'x_zvps_htpasswd_file_created'   => time(),
-                    'x_zvps_htpasswd_zpanel_user_id' => self::getCurrentUserId(),
+                    'x_htpasswd_file_target'    => $fileTarget,
+                    'x_htpasswd_file_message'   => $message,
+                    'x_htpasswd_file_created'   => time(),
+                    'x_htpasswd_sentora_user_id' => self::getCurrentUserId(),
                 )
             );
             if(!self::hasFlashErrors()) 
@@ -737,22 +737,22 @@ class module_controller extends ctrl_module
         $id = self::getId();
         $file = self::fetchFile($id);
         
-        self::removeHtaccessLink($file['x_zvps_htpasswd_file_target'], $file['x_zvps_htpasswd_file_message']);
+        self::removeHtaccessLink($file['x_htpasswd_file_target'], $file['x_htpasswd_file_message']);
 
         // Check .htaccess exists
-        if(!self::hasFlashErrors()) { $exists = self::fileHtaccessExists($file['x_zvps_htpasswd_file_target']); }
+        if(!self::hasFlashErrors()) { $exists = self::fileHtaccessExists($file['x_htpasswd_file_target']); }
         // Create .htaccess file if needed
-        if(!self::hasFlashErrors() && !$exists) { self::createHtaccessFile($file['x_zvps_htpasswd_file_target']); }
+        if(!self::hasFlashErrors() && !$exists) { self::createHtaccessFile($file['x_htpasswd_file_target']); }
         // Write htaccess configs to link to passwd file
         $append = !$exists ? false : true;
-        if(!self::hasFlashErrors()) { self::writeHtaccessLink($file['x_zvps_htpasswd_file_target'], $append, $message); }
+        if(!self::hasFlashErrors()) { self::writeHtaccessLink($file['x_htpasswd_file_target'], $append, $message); }
         
         if(!self::hasFlashErrors())
         {
             self::updateFile(array(
-                'x_zvps_htpasswd_file_id'      => $id,
-                'x_zvps_htpasswd_file_target'  => $file['x_zvps_htpasswd_file_target'],
-                'x_zvps_htpasswd_file_message' => $message,
+                'x_htpasswd_file_id'      => $id,
+                'x_htpasswd_file_target'  => $file['x_htpasswd_file_target'],
+                'x_htpasswd_file_message' => $message,
             ));
         }
     }
@@ -763,10 +763,10 @@ class module_controller extends ctrl_module
         runtime_csfr::Protect();
         $id = self::getId();
         $file = self::fetchFile($id);
-        $htpasswdFile = self::getHostDir() . self::getCurrentUsername() . '/htpasswd/' . 'htpasswd-' . md5($file['x_zvps_htpasswd_file_target']);
+        $htpasswdFile = self::getHostDir() . self::getCurrentUsername() . '/htpasswd/' . 'htpasswd-' . md5($file['x_htpasswd_file_target']);
 
         // delete from htaccess file
-        self::removeHtaccessLink($file['x_zvps_htpasswd_file_target'],$file['x_zvps_htpasswd_file_message']);
+        self::removeHtaccessLink($file['x_htpasswd_file_target'],$file['x_htpasswd_file_message']);
         
         // delete htaccess passwd file
         self::removeHtpasswd($htpasswdFile);
@@ -776,12 +776,12 @@ class module_controller extends ctrl_module
         
         if($files && !self::hasFlashErrors()) {
             foreach ($files as $file) {
-                if($file['x_zvps_htpasswd_file_id'] && $file['x_zvps_htpasswd_user_id']) {
-                    self::deleteMapper($file['x_zvps_htpasswd_file_id'], $file['x_zvps_htpasswd_user_id']);
+                if($file['x_htpasswd_file_id'] && $file['x_htpasswd_user_id']) {
+                    self::deleteMapper($file['x_htpasswd_file_id'], $file['x_htpasswd_user_id']);
                     self::setFlashMessage('debug', 'deleting file user mapper');
                 }
-                if($file['x_zvps_htpasswd_file_id']) { 
-                    self::deleteUser($file['x_zvps_htpasswd_user_id']);
+                if($file['x_htpasswd_file_id']) { 
+                    self::deleteUser($file['x_htpasswd_user_id']);
                     self::setFlashMessage('debug', 'deleting user');
                 }
             }
@@ -811,8 +811,8 @@ class module_controller extends ctrl_module
         $encryptedPassword = crypt($password, base64_encode($password));
         
         $userId = self::createUser(array(
-            'x_zvps_htpasswd_user_username'  => $username,
-            'x_zvps_htpasswd_user_password'  => $encryptedPassword,
+            'x_htpasswd_user_username'  => $username,
+            'x_htpasswd_user_password'  => $encryptedPassword,
         ));
         
         self::createMapper($id, $userId);
@@ -836,8 +836,8 @@ class module_controller extends ctrl_module
         $encryptedPassword = crypt($password, base64_encode($password));
         
         self::updateUser(array(
-            'x_zvps_htpasswd_user_username'  => $username,
-            'x_zvps_htpasswd_user_password'  => $encryptedPassword,
+            'x_htpasswd_user_username'  => $username,
+            'x_htpasswd_user_password'  => $encryptedPassword,
         ));
         
         self::writePasswdUsers($file);

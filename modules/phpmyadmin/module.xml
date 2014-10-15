@@ -3,9 +3,9 @@
     <name>phpMyAdmin</name>
     <version>100</version>
     <defaultcat>Databases</defaultcat>
-    <desc>phpMyAdmin is a web based tool that enables you to manage your ZPanel MySQL databases via. the web.</desc>
-    <authorname>ZPanel Project</authorname>
-    <authoremail>developers@zpanelcp.com</authoremail>
-    <authorurl>http://www.zpanelcp.com/</authorurl>
-    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <desc>phpMyAdmin is a web based tool that enables you to manage your Sentora MySQL databases via. the web.</desc>
+    <authorname>Sentora Project</authorname>
+    <authoremail>developers@sentora.org</authoremail>
+    <authorurl>http://sentora.org/</authorurl>
+    <updateurl>http://sentora.org/uds/core.xml</updateurl>
 </module>

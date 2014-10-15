@@ -2,7 +2,7 @@
 
 /**
  *
- * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
+ * Sentora - A Cross-Platform Open-Source Web Hosting Control panel.
  *
  * @package ZPanel
  * @version $Id$
@@ -10,7 +10,7 @@
  * @copyright (c) 2008-2014 ZPanel Group - http://www.zpanelcp.com/
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  *
- * This program (ZPanel) is free software: you can redistribute it and/or modify
+ * This program (Sentora) is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -155,13 +155,13 @@ class module_controller extends ctrl_module
 
     static function getLastRunTime()
     {
-        return date(ctrl_options::GetSystemOption('zpanel_df'), ctrl_options::GetSystemOption('daemon_lastrun'));
+        return date(ctrl_options::GetSystemOption('sentora_df'), ctrl_options::GetSystemOption('daemon_lastrun'));
     }
 
     static function getNextRunTime()
     {
         $new_time = ctrl_options::GetSystemOption('daemon_lastrun') + ctrl_options::GetSystemOption('daemon_run_interval');
-        return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
+        return date(ctrl_options::GetSystemOption('sentora_df'), $new_time);
     }
 
 }

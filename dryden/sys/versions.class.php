@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This reports on core zpanel software versions.
+ * This reports on core Sentora software versions.
  * @package zpanelx
  * @subpackage dryden -> sys
  * @version 1.0.0
@@ -120,7 +120,7 @@ class sys_versions {
              * @todo convert the bottom bit to read from a list of OS's.
              */
             /*
-              $list = @parse_ini_file("lib/zpanel/os.ini", true);
+              $list = @parse_ini_file("lib/sentora/os.ini", true);
               foreach ($list as $section => $distribution) {
               if (!isset($distribution["Files"])) {
 
@@ -172,14 +172,13 @@ class sys_versions {
     }
 
     /**
-     * Returns the ZPanel version (based on the DB version number.)
+     * Returns the Sentora version (based on the DB version number.)
      * @author Bobby Allen (ballen@bobbyallen.me)
-     * @return string ZPanel DB Version
+     * @return string Sentora DB Version
      */
-    static function ShowZpanelVersion() {
+    static function ShowSentoraVersion() {
         return ctrl_options::GetSystemOption('dbversion');
     }
-
 }
 
 ?>

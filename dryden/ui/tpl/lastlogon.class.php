@@ -15,7 +15,7 @@ class ui_tpl_lastlogon {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail(ctrl_auth::CurrentUserID());
         if ($currentuser['lastlogon']) {
-            return date(ctrl_options::GetSystemOption('zpanel_df'), $currentuser['lastlogon']);
+            return date(ctrl_options::GetSystemOption('sentora_df'), $currentuser['lastlogon']);
         } else {
             return "<: Never :>";
         }

@@ -11,7 +11,7 @@
 class webservice extends ws_xmws {
 
     /**
-     * Returns the status of all standard ZPanel hosting ports and the current server uptime.
+     * Returns the status of all standard Sentora hosting ports and the current server uptime.
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return type 
      */

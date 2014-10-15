@@ -2,7 +2,7 @@
 
 /**
  *
- * ZPanel - Visitor Stats zpanel plugin, written by RusTus: www.zpanelcp.com.
+ * Sentora - Visitor Stats plugin, written by RusTus: sentora.org
  *
  */
 class module_controller extends ctrl_module

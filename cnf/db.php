@@ -10,6 +10,6 @@
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
 $host = 'localhost';
-$dbname = 'zpanel_core';
+$dbname = 'sentora_core';
 $user = 'root';
 $pass = 'YOUR_ROOT_MYSQL_PASSWORD';
