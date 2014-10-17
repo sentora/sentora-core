@@ -94,7 +94,12 @@ class module_controller extends ctrl_module
         $line .= "<table class=\"table table-striped\">";
         $line .= "<tr valign=\"top\">";
         $line .= "<th>" . ui_language::translate("Script") . ":</th>";
-        $line .= "<td><input name=\"inScript\" type=\"text\" id=\"inScript\" size=\"50\" /><br />" . ui_language::translate("example") . ": /folder/task.php</td>";
+        $line .= '<td><input name="inScript" type="text" id="inScript" size="50" /><br />'
+                . ui_language::translate("example") . ': /folder/task.php<br>'
+                . ui_language::translate('Note 1 : Script path is relative to your sentora-user root directory:') . '<br>'
+                . ' &nbsp; <b>' . ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . '/public_html/</b><br>'
+                . ui_language::translate('Note 2 : Each file access in your script must use absolute directory path as above.')
+                . '</td>';
         $line .= "</tr>";
         $line .= "<tr>";
         $line .= "<th>" . ui_language::translate("Comment") . ":</th>";
