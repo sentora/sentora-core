@@ -45,10 +45,9 @@ echo "END getting module version update information!" . fs_filehandler::NewLine(
 /*
  * Please DO NOT remove the below code, this helps us at the Sentora project
  * find out non-personal infomation about how people are running Sentora. The only infomation
- * that we are passing back here is just your Sentora version and what OS you are running it on.
- *
- * We also collec the email address of the default 'zadmin' account to enable automatic email
- * notficiations of new releases.
+ * that we are passing back here is your Sentora version and what OS you are running it on in addition
+ * to collecting the email address of the default 'zadmin' account to enable automatic email
+ * notficiations of new releases and urgent patches.
  */
 $zdbh->bindQuery('SELECT ac_email_vc AS email FROM x_accounts WHERE ac_user_vc = :user', array(':user' => 'zadmin'));
 $zadmin = $zdbh->returnRow();
