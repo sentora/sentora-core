@@ -21,7 +21,12 @@ class sys_versions {
      * @return string Apache Server version number.
      */
     static function ShowApacheVersion() {
-        if (preg_match('|Apache\/(\d+)\.(\d+)\.(\d+)|', apache_get_version(), $apachever)) {
+        
+        $version = runtime_outputbuffer::Capture(function() {
+                    ctrl_system::systemCommand(ctrl_options::GetSystemOption('apache_sn'), '-v');
+                });
+                
+        if (preg_match('|Apache\/(\d+)\.(\d+)\.(\d+)|', $version, $apachever)) {
             $retval = str_replace("Apache/", "", $apachever[0]);
         } else {
             $retval = "Not found";
