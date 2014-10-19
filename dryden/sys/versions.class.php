@@ -13,19 +13,21 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class sys_versions {
+class sys_versions
+{
 
     /**
      * Returns the Apache HTTPd Server Version Number
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Apache Server version number.
      */
-    static function ShowApacheVersion() {
-        
+    static function ShowApacheVersion()
+    {
+
         $version = runtime_outputbuffer::Capture(function() {
                     ctrl_system::systemCommand(ctrl_options::GetSystemOption('apache_sn'), '-v');
                 });
-                
+
         if (preg_match('|Apache\/(\d+)\.(\d+)\.(\d+)|', $version, $apachever)) {
             $retval = str_replace("Apache/", "", $apachever[0]);
         } else {
@@ -39,7 +41,8 @@ class sys_versions {
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string PHP version number
      */
-    static function ShowPHPVersion() {
+    static function ShowPHPVersion()
+    {
         return phpversion();
     }
 
@@ -48,7 +51,8 @@ class sys_versions {
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string MySQL version number 
      */
-    static function ShowMySQLVersion() {
+    static function ShowMySQLVersion()
+    {
         global $zdbh;
         $retval = $zdbh->query("SHOW VARIABLES LIKE \"version\"")->Fetch();
         return $retval['Value'];
@@ -60,7 +64,8 @@ class sys_versions {
      * @param string $platform The OS Platform (eg. Linux or Windows)
      * @return string *NIX kernal version. - Will return 'N/A' for Microsoft Windows.
      */
-    static function ShowOSKernalVersion($platform) {
+    static function ShowOSKernalVersion($platform)
+    {
         if ($platform == 'Linux') {
             $retval = exec('uname -r');
         } else {
@@ -74,7 +79,8 @@ class sys_versions {
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Human readable OS Platform name.
      */
-    static function ShowOSPlatformVersion() {
+    static function ShowOSPlatformVersion()
+    {
         $os_abbr = strtoupper(substr(PHP_OS, 0, 3));
         if ($os_abbr == "WIN") {
             $retval = "Windows";
@@ -91,69 +97,18 @@ class sys_versions {
     }
 
     /**
-     * Returns in human readable form the operating system name (eg. Windows, Ubuntu, CentOS, MacOSX, FreeBSD, Other)
+     * The Linux operating system (distrubution) name.
      * @author Bobby Allen (ballen@bobbyallen.me)
-     * @return string Human readable OS name.
+     * @return string The OS/Distrubution name.
      */
-    static function ShowOSName() {
-        preg_match_all("#(?<=\()(.*?)(?=\))#", $_SERVER['SERVER_SOFTWARE'], $osname);
-        if (!empty($osname)) {
-            if (strtoupper(substr($osname[0][0], 0, 3)) == "WIN") {
-                $retval = "Windows";
-            } else {
-                $retval = $osname[0][0];
-                if ($retval == "Unix") {
-                    // Lets just make sure it isn't MacOSX before we give up!
-                    if (sys_versions::ShowOSPlatformVersion() == "MacOSX") {
-                        $retval = "MacOSX";
-                    }
-                }
-            }
-
-            //My testing shows Linux shows correct OS, WindowsXP=Win32, Windows2007/Server=WINNT -russ
-            /*
-              $uname = strtolower(php_uname());
-              $retval = "";
-              if (strpos($uname, "darwin") !== false) {
-              $retval = "MacOSX";
-              } else if (strpos($uname, "win") !== false) {
-              $retval = "Windows";
-              } else if (strpos($uname, "freebsd") !== false) {
-              $retval = "FreeBSD";
-              } else if (strpos($uname, "openbsd") !== false) {
-              $retval = "OpenBSD";
-              } else {
-             */
-            /**
-             * @todo convert the bottom bit to read from a list of OS's.
-             */
-            /*
-              $list = @parse_ini_file("lib/sentora/os.ini", true);
-              foreach ($list as $section => $distribution) {
-              if (!isset($distribution["Files"])) {
-
-              } else {
-              $intBytes = 4096;
-              $intLines = 0;
-              $intCurLine = 0;
-              $strFile = "";
-              foreach (preg_split("/;/", $distribution["Files"], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
-              if (file_exists($filename)) {
-              if (isset($distribution["Name"])) {
-              $os = $distribution["Name"];
-              }
-              }
-              }
-              if ($os == null) {
-              $os = "Unknown";
-              }
-              }
-              }
-             */
-        } else {
-            $retval = "Unknown";
-        }
-        return $retval;
+    static function ShowOSName()
+    {
+        $os = runtime_outputbuffer::Capture(function() {
+                    ctrl_system::systemCommand('lsb_release', '-si');
+                });
+        if (!empty($os))
+            return $os;
+        return "Unknown";
     }
 
     /**
@@ -161,7 +116,8 @@ class sys_versions {
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Human readable Perl version number.
      */
-    static function ShowPerlVersion() {
+    static function ShowPerlVersion()
+    {
         ob_start();
         passthru("perl -v", $result);
         $content_grabbed = ob_get_contents();
@@ -184,9 +140,11 @@ class sys_versions {
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return string Sentora DB Version
      */
-    static function ShowSentoraVersion() {
+    static function ShowSentoraVersion()
+    {
         return ctrl_options::GetSystemOption('dbversion');
     }
+
 }
 
 ?>

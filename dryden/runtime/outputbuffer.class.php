@@ -26,7 +26,8 @@ class runtime_outputbuffer
         ob_start();
         call_user_func($command);
         $result = ob_get_clean();
-        ob_end_clean();
+        if (ob_get_length() > 0)
+            ob_end_clean();
         return $result;
     }
 
