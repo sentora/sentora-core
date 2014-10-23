@@ -35,14 +35,14 @@
         </tr>
         <% loop FileList %>
         <tr>
-            <td><& x_zvps_htpasswd_file_target &></td>
-            <td><& x_zvps_htpasswd_file_message &></td>
-            <td><& x_zvps_htpasswd_file_created &></td>
+            <td><& x_htpasswd_file_target &></td>
+            <td><& x_htpasswd_file_message &></td>
+            <td><& x_htpasswd_file_created &></td>
             <td>
-                <a href="/?module=protected_directories&control=EditProtection&id=<& x_zvps_htpasswd_file_id &>" class="button-loader btn btn-primary btn-small">
+                <a href="/?module=protected_directories&control=EditProtection&id=<& x_htpasswd_file_id &>" class="button-loader btn btn-primary btn-small">
                     Edit
                 </a>
-                <a href="/?module=protected_directories&control=DeleteProtection&id=<& x_zvps_htpasswd_file_id &>" class="button-loader btn btn-danger btn-small">
+                <a href="/?module=protected_directories&control=DeleteProtection&id=<& x_htpasswd_file_id &>" class="button-loader btn btn-danger btn-small">
                     Delete
                 </a>
             </td>
@@ -69,11 +69,11 @@
             </tr>
             <% loop File %>
             <tr>
-                <td><& x_zvps_htpasswd_file_target &></td>
+                <td><& x_htpasswd_file_target &></td>
                 <td>
-                    <input type="text" name="message" value="<& x_zvps_htpasswd_file_message &>" class="input input-medium">
+                    <input type="text" name="message" value="<& x_htpasswd_file_message &>" class="input input-medium">
                 </td>
-                <td style="white-space: nowrap;"><& x_zvps_htpasswd_file_created &></td>
+                <td style="white-space: nowrap;"><& x_htpasswd_file_created &></td>
                 <td>
                     <input type="submit" name="submitCreateProtection" value="Update" class="btn btn-primary">
                     <@ CSFR_Tag @>
@@ -100,13 +100,13 @@
         <% loop UserFileList %>
         <tr>
             
-            <td><& x_zvps_htpasswd_user_username &></td>
-            <td><& x_zvps_htpasswd_user_created &></td>
+            <td><& x_htpasswd_user_username &></td>
+            <td><& x_htpasswd_user_created &></td>
             <td>
-                <a href="/?module=protected_directories&control=DeleteUser&id=<& x_zvps_htpasswd_file_id &>&userid=<& x_zvps_htpasswd_user_id &>" class="button-loader btn btn-danger btn-small">
+                <a href="/?module=protected_directories&control=DeleteUser&id=<& x_htpasswd_file_id &>&userid=<& x_htpasswd_user_id &>" class="button-loader btn btn-danger btn-small">
                     Delete
                 </a>
-                <a href="/?module=protected_directories&control=EditUser&id=<& x_zvps_htpasswd_file_id &>&userid=<& x_zvps_htpasswd_user_id &>" class="button-loader btn btn-primary btn-small">
+                <a href="/?module=protected_directories&control=EditUser&id=<& x_htpasswd_file_id &>&userid=<& x_htpasswd_user_id &>" class="button-loader btn btn-primary btn-small">
                     Edit
                 </a>
             </td>
@@ -165,11 +165,11 @@
         </tr>
         <% loop File %>
         <tr>
-            <td><& x_zvps_htpasswd_file_target &></td>
+            <td><& x_htpasswd_file_target &></td>
             <td>
-                <& x_zvps_htpasswd_file_message &>
+                <& x_htpasswd_file_message &>
             </td>
-            <td style="white-space: nowrap;"><& x_zvps_htpasswd_file_created &></td>
+            <td style="white-space: nowrap;"><& x_htpasswd_file_created &></td>
         </tr>
         <% endloop %>
     </table>
@@ -202,11 +202,11 @@
             </tr>
             <% loop File %>
             <tr>
-                <td><& x_zvps_htpasswd_file_target &></td>
+                <td><& x_htpasswd_file_target &></td>
                 <td>
-                    <& x_zvps_htpasswd_file_message &>
+                    <& x_htpasswd_file_message &>
                 </td>
-                <td style="white-space: nowrap;"><& x_zvps_htpasswd_file_created &></td>
+                <td style="white-space: nowrap;"><& x_htpasswd_file_created &></td>
             </tr>
             <% endloop %>
         </table>
@@ -216,7 +216,7 @@
     <form action="/?module=protected_directories&control=EditUser&action=EditUser&id=<@ Id @>&userid=<@ UserId @>" method="post" name="EditUser">
         <label>Username:</label>
         <% loop User %>
-            <& x_zvps_htpasswd_user_username &>
+            <& x_htpasswd_user_username &>
         <% endloop %>
         <label>Password:</label>
         <input type="password" name="password" class="input input-medium">
