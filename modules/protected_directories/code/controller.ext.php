@@ -1,8 +1,14 @@
 <?php
 
 /**
- * Description of controller
- * @author Kevin
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * 
+ * This class handles all core module functionality.
+ * @author Kevin Andrews <kevin@zvps.uk>
+ * @copyright (c) 2014, nForced Website Hosting Limtied
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPLv3
+ * @category Security
+ * @link http://zvps.uk
  */
 class module_controller extends ctrl_module
 {
