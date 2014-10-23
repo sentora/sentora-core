@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-    <name>ZPanel News</name>
+    <name>Sentora News</name>
     <version>100</version>
     <defaultcat>Server Admin</defaultcat>
-    <desc>Find out all the latest news and infomation from the ZPanel project.</desc>
+    <desc>Find out all the latest news and infomation from the Sentora project.</desc>
     <authorname>ZPanel Project</authorname>
     <authoremail>developers@zpanelcp.com</authoremail>
     <authorurl>http://www.zpanelcp.com/</authorurl>

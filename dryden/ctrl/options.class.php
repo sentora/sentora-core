@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Options class communicates with the ZPanel database and can read and write system options.
  * @package zpanelx
  * @subpackage dryden -> controller
@@ -16,7 +19,7 @@ class ctrl_options {
      * The main 'getter' class used to retrieve the value from the system options table.
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
-     * @param string $name The name of the system option (eg. zpanel_root)
+     * @param string $name The name of the system option (eg. sentora_root)
      * @return string The system option value.
      */
     static function GetSystemOption($name) {
@@ -33,7 +36,7 @@ class ctrl_options {
     }
 
     /**
-     * An alias of 'GetSystemOption' to 'fix' the recent refactor of the ZPanel Code, this was affecting third-party modules which relied on this old function name.
+     * An alias of 'GetSystemOption' to 'fix' the recent refactor of the sentora code, this was affecting third-party modules which relied on this old function name.
      * @author Bobby Allen <ballen@bobbyallen.me>
      * @param string $name The name of the system option.
      * @return string The system option value.
@@ -47,7 +50,7 @@ class ctrl_options {
      * The main 'setter' class used to write/update system options.
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @global db_driver $zdbh The ZPX database handle.
-     * @param string $name The name of the system option (eg. zpanel_root)
+     * @param string $name The name of the system option (eg. Sentora_root)
      * @param string $value The value to set.
      * @param bool $create Instead of update the system option, create it instead?
      * @return bool

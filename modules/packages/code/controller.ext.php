@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
  *
@@ -58,7 +60,7 @@ class module_controller extends ctrl_module
                 $numrows->execute();
                 $Column = $numrows->fetchColumn();
                 array_push($res, array('packageid' => $rowpackages['pk_id_pk'],
-                    'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowpackages['pk_created_ts']),
+                    'created' => date(ctrl_options::GetSystemOption('sentora_df'), $rowpackages['pk_created_ts']),
                     'clients' => $Column[0],
                     'packagename' => ui_language::translate($rowpackages['pk_name_vc'])));
             }

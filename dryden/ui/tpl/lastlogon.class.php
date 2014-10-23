@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Generic template place holder class.
  * @package zpanelx
  * @subpackage dryden -> ui -> tpl
@@ -15,7 +18,7 @@ class ui_tpl_lastlogon {
     public static function Template() {
         $currentuser = ctrl_users::GetUserDetail(ctrl_auth::CurrentUserID());
         if ($currentuser['lastlogon']) {
-            return date(ctrl_options::GetSystemOption('zpanel_df'), $currentuser['lastlogon']);
+            return date(ctrl_options::GetSystemOption('sentora_df'), $currentuser['lastlogon']);
         } else {
             return "<: Never :>";
         }

@@ -11,7 +11,7 @@
     </div>
 
     <div class="zform_wrapper">
-        <@ ZpanelUpdates @>
+        <@ SentoraUpdates @>
     </div>
 
 </div>

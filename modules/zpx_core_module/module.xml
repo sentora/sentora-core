@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-    <name>ZPanel Core System Module</name>
+    <name>Sentora Core System Module</name>
     <version>100</version>
     <defaultcat>other</defaultcat>
     <type>system</type>
-    <desc>Core system modules for ZPanelX.</desc>
+    <desc>Core system modules for Sentora.</desc>
     <authorname>ZPanel Project</authorname>
     <authoremail>ballen@bobbyallen.me</authoremail>
     <authorurl>http://www.zpanelcp.com/</authorurl>

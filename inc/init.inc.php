@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * The web gui initiation script.
  * @package zpanelx
  * @subpackage core
@@ -58,7 +61,7 @@ You, or somebody pretending to be you, has requested a password reset link to be
         
 If you wish to proceed with the password reset on your account, please use the link below to be taken to the password reset page.
             
-" . $protocol . ctrl_options::GetSystemOption('zpanel_domain') . "/?resetkey=" . $randomkey . "
+" . $protocol . ctrl_options::GetSystemOption('sentora_domain') . "/?resetkey=" . $randomkey . "
 
 
                 ";

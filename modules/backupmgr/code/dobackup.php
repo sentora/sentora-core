@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
  * 
@@ -83,13 +85,15 @@ function ExecuteBackup($userid, $username, $download = 0) {
     } catch (PDOException $e) {
         exit();
     }
-    if (!is_dir(ctrl_options::GetSystemOption('temp_dir'))) {
-        fs_director::CreateDirectory(ctrl_options::GetSystemOption('temp_dir'));
+    $basedir = ctrl_options::GetSystemOption('temp_dir');
+    if (!is_dir($basedir)) {
+        fs_director::CreateDirectory($basedir);
     }
-    if (!is_dir(ctrl_options::GetSystemOption('zpanel_root') . "etc/tmp/")) {
-        fs_director::CreateDirectory(ctrl_options::GetSystemOption('zpanel_root') . "etc/tmp/");
+    $basedir = ctrl_options::GetSystemOption('sentora_root') . "etc/tmp/";
+    if (!is_dir($basedir)) {
+        fs_director::CreateDirectory($basedir);
     }
-    $temp_dir = ctrl_options::GetSystemOption('zpanel_root') . "etc/tmp/";
+    $temp_dir = ctrl_options::GetSystemOption('sentora_root') . "etc/tmp/";
     // Lets grab and archive the user's web data....
     $homedir = ctrl_options::GetSystemOption('hosted_dir') . $username;
     $backupname = $username . "_" . date("M-d-Y_hms", time());
@@ -97,7 +101,7 @@ function ExecuteBackup($userid, $username, $download = 0) {
     // We now see what the OS is before we work out what compression command to use..
     if (sys_versions::ShowOSPlatformVersion() == "Windows") {
         $resault = exec(fs_director::SlashesToWin(ctrl_options::GetSystemOption('zip_exe') . " a -tzip -y-r " . $temp_dir . $backupname . ".zip " . $homedir . "/public_html"));
-    } else {//cd /var/zpanel/hostdata/zadmin/; zip -r backups/backup.zip public_html/
+    } else {//cd /var/sentora/hostdata/zadmin/; zip -r backups/backup.zip public_html/
         $resault = exec("cd " . $homedir . "/ && " . ctrl_options::GetSystemOption('zip_exe') . " -r9 " . $temp_dir . $backupname . " public_html/*");
         @chmod($temp_dir . $backupname . ".zip", 0777);
     }

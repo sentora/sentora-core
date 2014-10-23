@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Database builder class build database schema based on XML files.
  * @package zpanelx
  * @subpackage dryden -> db
@@ -19,7 +22,7 @@ class db_builder {
      */
     static function moduledb_commit() {
         global $zdbh;
-        $mod_db_dir = ctrl_options::GetSystemOption('zpanel_root') . "modules/*/{dbs.xml}";
+        $mod_db_dir = ctrl_options::GetSystemOption('sentora_root') . "modules/*/{dbs.xml}";
         try {
             foreach (glob($mod_db_dir, GLOB_BRACE) as $mod_db_file) {
 
@@ -92,7 +95,7 @@ class db_builder {
     }
 
     /**
-     * Drops a database if not zpanel core
+     * Drops a database if not Sentora core
      * @author Russell Skinner (rustus@zpanelcp.com)
      * @global db_driver $zdbh The ZPX database handle.
      * @param string $database The name of the database to drop.
@@ -102,7 +105,7 @@ class db_builder {
         /**
          * @todo change to system option
          */
-        if ($database != 'zpanelx') {
+        if ($database != 'sentora_core') {
             $sql = $zdbh->prepare("DROP DATABASE IF EXISTS $database");
             $sql->execute();
         }

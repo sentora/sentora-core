@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * System message class, used to display CSS powered messages and warnings to the user through the template layer.
  * @package zpanelx
  * @subpackage dryden -> ui
@@ -24,7 +27,7 @@ class ui_sysmessage {
      */
     static function shout($message,  $class = "zannounce", $title = '', $closeBtn = true) {
 
-        // Convert ZPanel CSS Class to Bootstrap Class
+        // Convert Sentora CSS Class to Bootstrap Class
         switch ($class) {
             case 'zannounce':
             case 'zannounceinfo':

@@ -1,6 +1,9 @@
 #!/usr/bin/php
 <?php
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * ZPPY - The ZPanel Package Manager Tool.
  * @package zpanelx
  * @subpackage core -> zppy
@@ -52,7 +55,7 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
             exec("wget -UZppyClient http://" . $this_line[1] . "/" . $argv[2] . ".zpp");
             chdir($rootPath);
             if ($isfound) {
-                if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $argv[2])) {
+                if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('sentora_root') . 'modules/' . $argv[2])) {
                     if (fs_director::CreateDirectory('modules/' . $argv[2])) {
                         if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
                             fs_director::SetFileSystemPermissions('modules/' . $argv[2] . '', 0777);
@@ -61,7 +64,7 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
                                 exit(1);
                             } else {
                                 ui_module::ModuleInfoToDB($argv[2]);
-                                $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/install.run";
+                                $extra_config = ctrl_options::GetSystemOption('sentora_root') . "modules/" . $argv[2] . "/deploy/install.run";
                                 if (fs_director::CheckFileExists($extra_config))
                                     include($extra_config);
                                 fwrite(STDOUT, "Module installed successfully!\n");
@@ -111,7 +114,7 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
             chdir($rootPath);
         }
     }
-    if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('zpanel_root') . 'modules/' . $argv[2])) {
+    if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('sentora_root') . 'modules/' . $argv[2])) {
         fwrite(STDOUT, "The module '" . $argv[2] . "' is not installed, install it first before you can upgrade it!\n");
         exit(1);
     } else {
@@ -124,7 +127,7 @@ if ((isset($argv[1])) && ($argv[1] == 'upgrade')) {
                 fwrite(STDOUT, "No module.xml file found in the unzipped archive.\n");
                 exit(1);
             } else {
-                $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
+                $extra_config = ctrl_options::GetSystemOption('sentora_root') . "modules/" . $argv[2] . "/deploy/upgrade.run";
                 if (fs_director::CheckFileExists($extra_config))
                     include($extra_config);
                 fwrite(STDOUT, "Module upgraded successfully!\n");
@@ -155,7 +158,7 @@ if ((isset($argv[1])) && ($argv[1] == 'remove')) {
         }
         if ($confirm == 'y') {
             fwrite(STDOUT, "Removing " . $argv[2] . " module..\n");
-            $extra_config = ctrl_options::GetSystemOption('zpanel_root') . "modules/" . $argv[2] . "/deploy/remove.run";
+            $extra_config = ctrl_options::GetSystemOption('sentora_root') . "modules/" . $argv[2] . "/deploy/remove.run";
             if (fs_director::CheckFileExists($extra_config))
                 include($extra_config);
             ctrl_groups::DeleteGroupModulePermissions(0, $moduleid['mo_id_pk']);
@@ -314,9 +317,9 @@ if ((isset($argv[1])) && ($argv[1] == 'update')) {
 }
 
 if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {
-    fwrite(STDOUT, "\nZPanel Package Manager\n");
-    fwrite(STDOUT, "Copyright (c) 2008 - 2014 ZPanel Project\n");
-    fwrite(STDOUT, "http://www.zpanelcp.com/\n\n");
+    fwrite(STDOUT, "\nSentora Package Manager\n");
+    fwrite(STDOUT, "Copyright (c) 2014 Sentora Project (http://sentora.org/)\n");    
+    fwrite(STDOUT, "Copyright (c) 2008 - 2014 ZPanel Project (http://www.zpanelcp.com/)\n\n");
     fwrite(STDOUT, "Usage: zppy [action] [modulename]\n\n");
     fwrite(STDOUT, "Actions:\n");
     fwrite(STDOUT, "  install [modulename]- Install a named module.\n");
@@ -327,7 +330,7 @@ if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1
     fwrite(STDOUT, "  repo remove [fqdn]- Removes a package repository.\n");
     fwrite(STDOUT, "  repo list - Displays all your current avaliable package repositories.\n");
     fwrite(STDOUT, "  checkperms - Checks permissions on the cache files.\n");
-    fwrite(STDOUT, "  --version - Displays the Zpanel version\n");
+    fwrite(STDOUT, "  --version - Displays the Sentora version\n");
     fwrite(STDOUT, "  --help - Displays this text.\n\n");
     exit(0);
 }

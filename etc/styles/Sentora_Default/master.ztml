@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Sentora &gt; <# ui_tpl_username #> - <# ui_tpl_domainname #></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Stylesheets -->
+        <link href="<# ui_tpl_assetfolderpath #>global-css/bootstrap.min.css" rel="stylesheet">
+        <link href="<# ui_tpl_csspath #>" rel="stylesheet" type="text/css">
+
+        <script src="<# ui_tpl_assetfolderpath #>js/jquery.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/jquery.cookie.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/jquery.sortable-custom.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/spin.min.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/sentora.js"></script>
+
+        <!-- Favicons -->
+        <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<# ui_tpl_assetfolderpath #>img/ico/apple-touch-icon-144-precomposed.png">
+
+        <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav16.png"  sizes="16x16"   type="image/png">
+        <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav32.png"  sizes="32x32"   type="image/png">
+        <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav48.png"  sizes="48x48"   type="image/png">
+        <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav64.png"  sizes="64x64"   type="image/png">
+        <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav128.png" sizes="128x128" type="image/png">
+
+        <link rel="icon" href="<# ui_tpl_assetfolderpath #>img/ico/fav32.png">
+        <!--[if IE]><link rel="shortcut icon" href="<# ui_tpl_assetfolderpath #>img/ico/favicon.ico"><![endif]-->
+
+        <meta name="msapplication-TileColor" content="#222222">
+        <meta name="msapplication-TileImage" content="<# ui_tpl_assetfolderpath #>img/ico/fav144.png">
+
+    </head>
+    <body>
+        <!-- BEGIN ZLOADER PROGRESSBAR DIV -->
+        <div class="zloader_overlay" id="zloader_overlay" style="display:none;"></div>
+        <div class="zloader" id="zloader" style="display:none;">
+            <div class="zloader_content" id="zloader_content"></div>
+        </div>
+        <!-- END ZLOADER PROGRESSBAR DIV -->
+
+        <!-- BEGIN NAVBAR -->
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
+                <a class="navbar-toggle navbar-inverse" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="navbar-brand" href="."><img src="<# ui_tpl_assetfolderpath #>img/logos/sentora_logo_header.png" width="96" height="36" alt="Home"></a>
+                <div class="nav-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#" class="nav-stat-button" title="View Account Info" data-toggle="collapse" data-target="#stats-data"><i class="icon-chart-bar-2"></i></a></li>
+                        <# ui_tpl_modulelistznavbar #>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div><!-- /.container -->
+        </div>
+        <!-- END NAVBAR -->
+
+        <!-- BEGIN CONTAINER -->
+        <div class="wrap container">
+            <div id="module-search-wrap" class="visible-lg visible-desktop">
+                <input type="text" id="module-search" data-provide="typeahead" placeholder="Search" autocomplete="off">
+            </div>
+            <div class="inner-wrap">
+                <!-- BEGIN LEFT SIDEBAR -->
+                <div id="page-sidebar" class="col-lg-3 visible-desktop">
+                    <ul id="menu-sidebar">
+                        <li id="acc-stats"><a class="stats-but" href="#"  data-toggle="collapse" data-target="#stats-data"><: Account Info :></a></li>
+                        <# ui_tpl_modulelistzsidebar #>
+                    </ul>
+                    <div id="sidebar-bg"></div>
+                </div>
+                <!-- END LEFT SIDEBAR -->
+
+
+                <!-- BEGIN PAGE-CONTENT -->
+                <div id="page-content" class="col-lg-9">
+
+                    <# ui_tpl_shadowbar #>
+
+                    <!-- BEGIN STATSDATA -->
+                    <div id="stats-data" class="collapse">
+                        <div id="statsdatawrapper">
+
+                            <!-- BEGIN STATS -->
+                            <ul class="nav nav-tabs" id="stats-tab">
+                                <li class="active"><a href="#account"><: Account Information :></a></li>
+                                <li><a href="#usage"><: Account Usage :></a></li>
+                                <li><a href="#server"><: Server Information :></a></li>
+                                <li><a href="#domain"><: Domain Information :></a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <!-- BEGIN ACCOUNTINFO -->
+                                <div class="tab-pane active" id="account">
+                                    <div class="stats-row s-top">
+                                        <div class="stats-column"><strong><: Username :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_username #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Full name :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_fullname #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Email Address :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_email #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Package name :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_packagename #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Account type :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_usergroup #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Last Logon :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_lastlogon #></div>
+                                    </div>
+                                </div>
+                                <!-- END ACCOUNTINFO -->
+
+                                <!-- BEGIN USAGE -->
+                                <div class="tab-pane" id="usage">
+                                    <!-- Disk usage -->
+                                    <div class="stats-row bar-row s-top">
+                                        <div class="stats-column"><strong><: Disk Quota :>:</strong></div>
+                                        <div class="stats-column">
+                                            <# ui_tpl_progbardisk #>
+                                            <# ui_tpl_usagediskspace #> / <# ui_tpl_quotadiskspace #>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bandwidth usage -->
+                                    <div class="stats-row bar-row">
+                                        <div class="stats-column"><strong><: Bandwidth Quota :>:</strong></div>
+                                        <div class="stats-column">
+                                            <# ui_tpl_progbarbandwidth #>
+                                            <# ui_tpl_usagebandwidth #> / <# ui_tpl_quotabandwidth #>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"></div>
+                                        <div class="stats-column"><: Used :> / <: Max :></div>
+                                        <div class="stats-column"></div>
+                                        <div class="stats-column"><: Used :> / <: Max :></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Domains :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_useddomains #></span> / <span class="Side_Info_max"><# ui_tpl_totaldomains #></span></div>
+                                        <div class="stats-column"><strong><: Parked domains :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedparkeddomains #></span> / <span class="Side_Info_max"><# ui_tpl_totalparkeddomains #></span></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Sub-domains :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedsubdomains #></span> / <span class="Side_Info_max"><# ui_tpl_totalsubdomains #></span></div>
+                                        <div class="stats-column"><strong><: Email Accounts :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedemail #></span> / <span class="Side_Info_max"><# ui_tpl_totalemail #></span></div>
+                                    </div>
+
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: FTP accounts :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedftp #></span> / <span class="Side_Info_max"><# ui_tpl_totalftp #></span></div>
+                                        <div class="stats-column"><strong><: Email Forwarders :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedforwarders #></span> / <span class="Side_Info_max"><# ui_tpl_totalforwarders #></span></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: MySQL&reg; databases :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_usedmysql #></span> / <span class="Side_Info_max"><# ui_tpl_totalmysql #></span></div>
+                                        <div class="stats-column"><strong><: Distribution lists :>:</strong></div>
+                                        <div class="stats-column"><span class="Side_Info_used"><# ui_tpl_useddistlists #></span> / <span class="Side_Info_max"><# ui_tpl_totaldistlists #></span></div>
+                                    </div>
+                                </div>
+                                <!-- END USAGE -->
+
+                                <!-- BEGIN SERVERINFO -->
+                                <div class="tab-pane" id="server">
+                                    <div class="stats-row bar-row s-top">
+                                        <div class="stats-column"><strong><: Your IP :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_clientipaddress #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Server IP :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_serveripaddress #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Server OS :>:</strong></div>
+                                        <div class="stats-column"><img src="<# ui_tpl_assetfolderpath #>img/os_icons/<# ui_tpl_serverosname #>.png" width="16" height="16" class="pull-left" alt="<# ui_tpl_serverosname #> Icon">&nbsp;<# ui_tpl_serverosname #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Apache Version :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_apacheversion #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: PHP Version :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_phpversion #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: MySQL Version :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_mysqlversion #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Sentora Version :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_sentoraversion #></div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stats-column"><strong><: Server uptime :>:</strong></div>
+                                        <div class="stats-column"><# ui_tpl_serveruptime #></div>
+                                    </div>
+                                </div>
+                                <!-- END SERVERINFO -->
+
+                                <!-- BEGIN DOMAININFO -->
+                                <div class="tab-pane" id="domain">
+                                    <# ui_tpl_clientdomains #>
+                                </div>
+                                <!-- END DOMAININFO -->
+                            </div><!-- END tab-content -->
+                        </div><!-- END STATSDATA -->
+                    </div><!-- END STATSDATA-WRAPPER -->
+                    <!-- END STATS -->
+
+                    <# ui_tpl_notice #>
+
+                    <# ui_tpl_breadcrumbs #>
+
+                    <# ui_tpl_modulelist2column #>
+
+                    <# ui_tpl_module #>
+
+                    <div class="clearfix"></div>
+
+                </div><!--/page-content-->
+            </div>
+            <div id="footer" >Copyright &copy; 2004-<# ui_tpl_year #> <a href="http://www.sentora.org/" target="_blank">Sentora Project</a>.</div>
+        </div><!-- END CONTAINER -->
+
+        <!-- Javascript
+        ================================================== -->
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-transition.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-alert.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-modal.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-dropdown.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-scrollspy.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-tab.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-tooltip.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-popover.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-button.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-collapse.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/bootstrap-carousel.js"></script>
+        <script src="<# ui_tpl_assetfolderpath #>js/typeahead.min.js"></script>
+
+        <!-- Modulelist for Typeahead -->
+        <script>
+                var moduleJsonData = <# ui_tpl_modulelistjson #>;
+                Sentora.modules.typeAhead(moduleJsonData);
+        </script>
+
+        <# ui_controllerdebug #>
+
+    </body>
+</html>

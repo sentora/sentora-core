@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
  *
@@ -92,7 +94,7 @@ class module_controller extends ctrl_module
                 return ui_sysmessage::shout(ui_language::translate("Sorry, your current password does not match the one on your account!"), "zannounceerror");
             }
             if (self::$error == "error") {
-                return ui_sysmessage::shout(ui_language::translate("An error occured and your ZPanel account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
+                return ui_sysmessage::shout(ui_language::translate("An error occured and your Sentora account password could not be updated. Please ensure you entered all passwords correctly and try again."), "zannounceerror");
             }
         } else {
             if (!fs_director::CheckForEmptyValue(self::$badpassword)) {

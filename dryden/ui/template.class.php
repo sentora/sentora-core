@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Interface template selection class.
  * @package zpanelx
  * @subpackage dryden -> ui
@@ -35,8 +38,9 @@ class ui_template {
      */
     static function ListAvaliableTemplates() {
         $allstyles = array();
-        $handle = @opendir(ctrl_options::GetSystemOption('zpanel_root') . "etc/styles");
-        $chkdir = ctrl_options::GetSystemOption('zpanel_root') . "etc/styles/";
+        $rootdir = ctrl_options::GetSystemOption('sentora_root') . 'etc/styles';
+        $handle = @opendir($rootdir);
+        $chkdir = $rootdir . '/';
         if ($handle) {
             while ($file = readdir($handle)) {
                 if ($file != "." && $file != "..") {
@@ -58,8 +62,9 @@ class ui_template {
      */
     static function ListAvaliableCSS($template) {
         $allstyles = array();
-        $handle = @opendir(ctrl_options::GetSystemOption('zpanel_root') . "etc/styles/" . $template . "/css");
-        $chkdir = ctrl_options::GetSystemOption('zpanel_root') . "etc/styles/" . $template . "/css/";
+        $rootdir = ctrl_options::GetSystemOption('sentora_root') . 'etc/styles/' . $template . '/css';
+        $handle = @opendir($rootdir);
+        $chkdir = $rootdir. '/';
         if ($handle) {
             while ($file = readdir($handle)) {
                 if ($file != "." && $file != ".." && strtolower(substr($file, -4)) == ".css") {

@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * @package zpanelx
  * @subpackage modules
  * @author Bobby Allen (ballen@bobbyallen.me)
@@ -11,7 +14,7 @@
 class webservice extends ws_xmws {
 
     /**
-     * Returns the status of all standard ZPanel hosting ports and the current server uptime.
+     * Returns the status of all standard Sentora hosting ports and the current server uptime.
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return type 
      */

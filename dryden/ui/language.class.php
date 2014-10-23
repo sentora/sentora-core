@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Language translation class.
  * @package zpanelx
  * @subpackage dryden -> ui
@@ -16,7 +19,7 @@ class ui_language {
 
     /**
      * Used to translate a text string into the language preference of the user.
-     * @author Pascal Peyremorte (p.peyremorte@wanadoo.fr)
+     * @author Pascal Peyremorte (ppeyremorte@sentora.org)
      * @global db_driver $zdbh The ZPX database handle.
      * @param $message The string to translate.
      * @return string The transalated string.

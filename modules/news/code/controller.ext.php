@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
  *
@@ -27,7 +29,7 @@
 class module_controller extends ctrl_module
 {
 
-    static function getZpanelNews()
+    static function getSentoraNews()
     {
         $handle = @file_get_contents(ctrl_options::GetSystemOption('news_url'));
         $content = $handle;

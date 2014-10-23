@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * The the main ZPanel(X) (M)odular (W)eb (S)ervice controller.
  * @package zpanelx
  * @subpackage core -> api
@@ -36,7 +39,6 @@ if (file_exists('modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/co
         if (method_exists($api, $api->wsdataarray['request'])) {
             $api->SendResponse(call_user_func(array($api, '' . $api->wsdataarray['request'] . '')));
         } else {
-            $response_nomethod = new runtime_dataobject;
             $response_nomethod = new runtime_dataobject;
             $response_nomethod->addItemValue('response', '1102');
             $response_nomethod->addItemValue('content', 'Request not found');

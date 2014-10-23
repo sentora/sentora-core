@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Authentication class handles ZPanel authentication and handles user sessions.
  * @package zpanelx
  * @subpackage dryden -> controller
@@ -51,7 +54,7 @@ class ctrl_auth
     /**
      * Sets a user session ID.
      * @author Bobby Allen (ballen@bobbyallen.me)
-     * @param int $zpuid The ZPanel user account ID to set the session as.
+     * @param int $zpuid The Sentora user account ID to set the session as.
      * @return bool
      */
     static function SetUserSession($zpuid = 0, $sessionSecuirty = true)
@@ -145,7 +148,7 @@ class ctrl_auth
     }
 
     /**
-     * Destroys a session and ends a user's Zpanel session.
+     * Destroys a session and ends a user's Sentora session.
      * @author Bobby Allen (ballen@bobbyallen.me)
      * @return bool
      */
@@ -178,7 +181,7 @@ class ctrl_auth
     /**
      * Returns the UID (User ID) of the current logged in user.
      * @author Bobby Allen (ballen@bobbyallen.me)
-     * @global obj $controller The Zpanel controller object.
+     * @global obj $controller The Sentora controller object.
      * @return int The current user's session ID.
      */
     static function CurrentUserID()

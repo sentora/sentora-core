@@ -1,6 +1,9 @@
 #!/usr/bin/php
 <?php
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * SETSO - The ZPanel CLI System Option Tool.
  * @package zpanelx
  * @subpackage core -> setso
@@ -39,7 +42,9 @@ if ((isset($argv[1])) && ($argv[1] == '--show')) {
 }
 
 if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {
-    fwrite(STDOUT, "\nZPanel Sytem Option Tool\n");
+    fwrite(STDOUT, "\nSentora Sytem Option Tool\n");
+    fwrite(STDOUT, "Copyright (c) 2014 Sentora Project\n");
+    fwrite(STDOUT, "http://sentora.org/\n");
     fwrite(STDOUT, "Copyright (c) 2008 - 2014 ZPanel Project\n");
     fwrite(STDOUT, "http://www.zpanelcp.com/\n");
     fwrite(STDOUT, "Usage: setso [options] [name] [value]\n");

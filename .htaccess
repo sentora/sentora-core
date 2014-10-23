@@ -4,7 +4,7 @@ RewriteRule ^api/([^/\.]+)/?$ bin/api.php?m=$1 [L]
 RewriteRule ^apps/([^/\.]+)/?$ etc/apps/$1 [L]
 
 # Optionally you can uncomment the below line and configure your domain to only allow access from the FQDN.
-#RewriteCond %{SERVER_NAME} !^zpanel\.domain\.com$ 
+#RewriteCond %{SERVER_NAME} !^sentora\.domain\.com$ 
 #RewriteRule ^ - [F]
 
 # Deny access to some file types/directories

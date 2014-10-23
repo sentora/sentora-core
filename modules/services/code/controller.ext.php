@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
  *
@@ -155,13 +157,13 @@ class module_controller extends ctrl_module
 
     static function getLastRunTime()
     {
-        return date(ctrl_options::GetSystemOption('zpanel_df'), ctrl_options::GetSystemOption('daemon_lastrun'));
+        return date(ctrl_options::GetSystemOption('sentora_df'), ctrl_options::GetSystemOption('daemon_lastrun'));
     }
 
     static function getNextRunTime()
     {
         $new_time = ctrl_options::GetSystemOption('daemon_lastrun') + ctrl_options::GetSystemOption('daemon_run_interval');
-        return date(ctrl_options::GetSystemOption('zpanel_df'), $new_time);
+        return date(ctrl_options::GetSystemOption('sentora_df'), $new_time);
     }
 
 }

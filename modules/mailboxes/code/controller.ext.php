@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
  *
@@ -63,7 +65,7 @@ class module_controller extends ctrl_module
                     $status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif" alt="Down"/>';
                 }
                 $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                    'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+                    'created' => date(ctrl_options::GetSystemOption('sentora_df'), $rowmailboxes['mb_created_ts']),
                     'status' => $status,
                     'id' => $rowmailboxes['mb_id_pk']);
             }
@@ -93,7 +95,7 @@ class module_controller extends ctrl_module
                     $ischeck = NULL;
                 }
                 $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                    'created' => date(ctrl_options::GetSystemOption('zpanel_df'), $rowmailboxes['mb_created_ts']),
+                    'created' => date(ctrl_options::GetSystemOption('sentora_df'), $rowmailboxes['mb_created_ts']),
                     'ischeck' => $ischeck,
                     'id' => $rowmailboxes['mb_id_pk']);
             }
@@ -435,7 +437,7 @@ class module_controller extends ctrl_module
         } else {
             $used = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
             $free = max($maximum - $used, 0);
-            return '<img src="etc/lib/pChart2/zpanel/z3DPie.php?score=' . $free . '::' . $used
+            return '<img src="etc/lib/pChart2/sentora/z3DPie.php?score=' . $free . '::' . $used
                     . '&labels=Free: ' . $free . '::Used: ' . $used
                     . '&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=150::160"'
                     . ' alt="' . ui_language::translate('Pie chart') . '"/>';

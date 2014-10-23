@@ -53,7 +53,7 @@
 
     <div class="zform_wrapper">
         <h2><: Install a new module :></h2>
-        <p><: You can automatically install a new module by uploading your zpanel package archive (.zpp file) and then click 'Install' to begin the process. :></p>
+        <p><: You can automatically install a new module by uploading your sentora package archive (.zpp file) and then click 'Install' to begin the process. :></p>
         <form action="./?module=moduleadmin&action=InstallModule" method="post" enctype="multipart/form-data">
             <table class="table table-striped">
                 <tr>

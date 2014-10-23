@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * Logger class logs infomation passed to it and can record and report debug infomation in a number of ways.
  * @package zpanelx
  * @subpackage dryden -> debug
@@ -54,7 +57,7 @@ class debug_logger {
             fs_filehandler::AddTextToFile(ctrl_options::GetSystemOption('logfile'), date('c') . ' - ' . $this->logcode . ' - ' . $this->detail, 1);
         } elseif ($this->method == "email") {
             $email_log = new sys_email();
-            $email_log->Subject = "ZPanel Error Log";
+            $email_log->Subject = "Sentora Error Log";
             $email_log->Body = "" . date('c') . ' - ' . $this->logcode . ' - ' . $this->detail . "";
             $email_log->AddAddress(ctrl_options::GetSystemOption('email_from_address'));
             $email_log->SendEmail();

@@ -1,4 +1,7 @@
 /*
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * dns.js
  *
  * @package ZPanel DNS Manager
@@ -14,7 +17,7 @@ NEW DNS Module JavaScript by Jason Davis
  */
 
 
-var zPanelDNS = {
+var SentoraDNS = {
 
     unsavedChanges: false,
 
@@ -23,9 +26,9 @@ var zPanelDNS = {
         //this.cache.dnsTitleId = $("#dnsTitle");
 
         // Cache some Selectors for increased performance
-        zPanelDNS.cache.dnsTitleId = $("#dnsTitle");
+        SentoraDNS.cache.dnsTitleId = $("#dnsTitle");
 
-        zPanelDNS.events.init();
+        SentoraDNS.events.init();
 
     },
 
@@ -35,7 +38,7 @@ var zPanelDNS = {
 
         promptBeforeClose: function(e) {
             var e = e || window.event;
-            if (!zPanelDNS.unsavedChanges) return;
+            if (!SentoraDNS.unsavedChanges) return;
 
             if (e) {
                 e.returnValue = 'There are unsaved changes.  Are you sure you wish to leave without saving these changes?';
@@ -49,17 +52,17 @@ var zPanelDNS = {
             nSWarning;
 
             // If user trys to leave the page with UN-SAVED changes, we will Alert them
-            $(window).on('beforeunload', zPanelDNS.events.promptBeforeClose);
+            $(window).on('beforeunload', SentoraDNS.events.promptBeforeClose);
 
 
             //$("#typeMX div.hostName input").on('keypress',function() {
             $(document).on('keypress', '#typeMX div.hostName > input', function() {
-                zPanel.utils.log('MX hostname change');
+                Sentora.utils.log('MX hostname change');
                 var hostnameSelector = $(this);
                 mXWarning = 'The host name portion of an MX record is typically left blank.<BR/>' +
                     'Only enter host name if you want the email address to be similar to <strong>username@hostname.example.com</strong>, ' +
                     'where hostname is what you are entering and example.com is the current domain name.';
-                zPanel.dialog.confirm({
+                Sentora.dialog.confirm({
                     title: 'WARNING',
                     message: mXWarning,
                     width: 300,
@@ -89,7 +92,7 @@ var zPanelDNS = {
 
             // Show Dialog if Hostname Matches the Domain Name
             $(document).on('change','div.hostName > input',function() {
-                zPanel.utils.log('hostname change fired');
+                Sentora.utils.log('hostname change fired');
                 var hostnameSelector = $(this);
                 var hostName = $(this).val();
                 var domainName = $("#domainName").val();
@@ -99,7 +102,7 @@ var zPanelDNS = {
                     var msg = '<strong>Warnig:</strong> A host name record has been entered with the domain name.<BR/><BR/>' +
                          'The result will be the following:<BR/><strong>' + $(this).val() + '.' + $("#domainName").val() + '</strong><BR/><BR/>' +
                          'If this is not what you intended, <strong>Click Cancel</strong> to remove the domain name from the host name field and enter in only the host value.';
-                    zPanel.dialog.confirm({
+                    Sentora.dialog.confirm({
                         title: 'WARNING',
                         message: msg,
                         width: 300,
@@ -116,10 +119,10 @@ var zPanelDNS = {
             // Activate SAVE and UNDO Buttons when Record Row EDITED
             $(document).on("keydown", "#dnsRecords input", function() {
                 //$("#dnsTitle").find(".save, .undo").removeClass("disabled");
-                zPanel.utils.log(zPanelDNS.cache.dnsTitleId);
-                zPanel.utils.log($("#dnsTitle"));
+                Sentora.utils.log(SentoraDNS.cache.dnsTitleId);
+                Sentora.utils.log($("#dnsTitle"));
                 //$("#dnsTitle").find(".save, .undo").removeClass("disabled");
-                zPanelDNS.cache.dnsTitleId.find(".save, .undo").removeClass("disabled");
+                SentoraDNS.cache.dnsTitleId.find(".save, .undo").removeClass("disabled");
                 $(".tab-pane > .add").find(".save").removeClass("disabled");
             });
 
@@ -130,40 +133,40 @@ var zPanelDNS = {
 
             // Add new Record Row
             $("#dnsRecords div.add > .btn").click(function(e) {
-                zPanel.utils.log('add record button clicked');
-                zPanelDNS.records.addRow($(this));
+                Sentora.utils.log('add record button clicked');
+                SentoraDNS.records.addRow($(this));
                 e.preventDefault();
             });
 
             // Mark Record as "Deleted" and change the view of it's Row to reflect a Deleted item
             $(document).on("click", ".delete", function(e) {
-                zPanelDNS.records.deleteRow($(this));
+                SentoraDNS.records.deleteRow($(this));
                 e.preventDefault();
             });
 
             // Show Undo button when editing an EXISTING ROW
             $(document).on("keydown", "div.dnsRecord input[type='text']", function() {
                 $(this).parents("div.dnsRecord").find("button.undo").fadeIn('slow');
-                zPanelDNS.unsavedChanges = true;
+                SentoraDNS.unsavedChanges = true;
             });
 
             // Undo editing of an EXISTING ROW
             $("button.undo").on("click", function() {
-                zPanelDNS.records.undoRow($(this));
+                SentoraDNS.records.undoRow($(this));
             });
 
             //Save Changes
             //$("#dnsTitle").find(".save").removeClass("disabled");
             $("#dnsTitle a.save").click(function() {
                 if ($(this).hasClass("disabled")) return false;
-                zPanel.loader.showLoader();
+                Sentora.loader.showLoader();
                 $("form").submit();
                 return false;
             });
 
             $(".tab-pane > .add").find(".save").click(function() {
                 if ($(this).hasClass("disabled")) return false;
-                zPanel.loader.showLoader();
+                Sentora.loader.showLoader();
                 $("form").submit();
                 return false;
             });
@@ -174,12 +177,12 @@ var zPanelDNS = {
                 $("button.undo").click();
                 $(".tab-pane .new").remove();
                 $("#dnsTitle a.save, #dnsTitle a.undo").addClass("disabled");
-                zPanelDNS.unsavedChanges = false;
+                SentoraDNS.unsavedChanges = false;
                 return false;
             });
 
             $("form").submit(function() {
-                zPanelDNS.unsavedChanges = false;
+                SentoraDNS.unsavedChanges = false;
                 //Remove any entries that have no value for any relevant fields
                 $("div.dnsRecord").each(function() {
                     var hasValue = false;
@@ -215,8 +218,8 @@ var zPanelDNS = {
 
             // Remove Labels from New records
             if (record.parents("div.add").siblings().length > 2) {
-                zPanel.utils.log('div .add sibblings...');
-                zPanel.utils.log(record.parents("div.add").siblings());
+                Sentora.utils.log('div .add sibblings...');
+                Sentora.utils.log(record.parents("div.add").siblings());
                 //newRecord.find("label").remove();
             }
 
@@ -271,7 +274,7 @@ var zPanelDNS = {
             // Add Disabled class to Deleted inputs
             //row.siblings().children('.input-small').addClass("disabled");
             $("#dnsTitle a.save, #dnsTitle a.undo").removeClass("disabled");
-            zPanelDNS.unsavedChanges = true;
+            SentoraDNS.unsavedChanges = true;
 
         },
 
@@ -284,5 +287,5 @@ var zPanelDNS = {
 };
 
 $(function() {
-    zPanelDNS.init();
+    SentoraDNS.init();
 });

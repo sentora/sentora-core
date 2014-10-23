@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * @package zpanelx
  * @subpackage modules
  * @author Bobby Allen (ballen@bobbyallen.me)
@@ -19,15 +22,15 @@ class webservice extends ws_xmws {
         global $zdbh;
         $response_xml = "\n";
 
-        // Total Zpanel user accounts
+        // Total Sentora user accounts
         $sql = $zdbh->query("SELECT COUNT(*) AS total FROM x_accounts")->Fetch();
         $total_accounts = $sql['total'];
 
-        // Total Active Zpanel user accounts
+        // Total Active Sentora user accounts
         $sql = $zdbh->query("SELECT COUNT(*) AS total FROM x_accounts WHERE ac_enabled_in = 1")->Fetch();
         $total_activeaccounts = $sql['total'];
 
-        // Total Disabled Zpanel user accounts
+        // Total Disabled Sentora user accounts
         $sql = $zdbh->query("SELECT COUNT(*) AS total FROM x_accounts WHERE ac_enabled_in = 0")->Fetch();
         $total_disabledaccounts = $sql['total'];
 
@@ -59,9 +62,9 @@ class webservice extends ws_xmws {
 
 
         $response_xml = ws_xmws::NewXMLContentSection('stats', array(
-                    'zpanelusers' => $total_accounts,
-                    'activezpanelusers' => $total_activeaccounts,
-                    'disabledzpanelusers' => $total_disabledaccounts,
+                    'sentorausers' => $total_accounts,
+                    'activesentorausers' => $total_activeaccounts,
+                    'disabledsentorausers' => $total_disabledaccounts,
                     'diskspaceused' => $total_disk,
                     'bandwidthused' => $total_band,
                     'cronjobs' => $total_crons,

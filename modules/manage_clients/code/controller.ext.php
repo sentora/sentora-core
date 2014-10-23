@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
  *
@@ -564,7 +566,7 @@ class module_controller extends ctrl_module
             $emailbody = str_replace("{{username}}", $username, $emailbody);
             $emailbody = str_replace("{{password}}", $password, $emailbody);
             $emailbody = str_replace("{{fullname}}", $fullname, $emailbody);
-            $emailbody = str_replace('{{controlpanelurl}}', $protocol . ctrl_options::GetSystemOption('zpanel_domain'), $emailbody);
+            $emailbody = str_replace('{{controlpanelurl}}', $protocol . ctrl_options::GetSystemOption('sentora_domain'), $emailbody);
 
             $phpmailer = new sys_email();
             $phpmailer->Subject = $emailsubject;

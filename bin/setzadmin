@@ -1,6 +1,9 @@
 #!/usr/bin/php
 <?php
 /**
+ * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * Sentora is a GPL fork of the ZPanel Project whose original header follows:
+ *
  * SETZADMIN - ZPanel tool to set inital zadmin account password, salt and random API key.
  * @package zpanelx
  * @subpackage core -> setzadmin
@@ -94,7 +97,9 @@ function SetPassword($password, $generate) {
 }
 
 if ((!isset($argv[1])) || ($argv[1] == 'help') || ($argv[1] == '-h') || ($argv[1] == '--help')) {
-    fwrite(STDOUT, "\nZPanel 'zadmin' account tool\n");
+    fwrite(STDOUT, "\nSentora 'zadmin' account tool\n");
+    fwrite(STDOUT, "Copyright (c) 2014 Sentora Project\n");
+    fwrite(STDOUT, "http://sentora.org/\n");
     fwrite(STDOUT, "Copyright (c) 2008 - 2014 ZPanel Project\n");
     fwrite(STDOUT, "http://www.zpanelcp.com/\n");
     fwrite(STDOUT, "Usage: setzadmin [options]\n");
