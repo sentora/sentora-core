@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    	<name>DNS Admin</name>
+    	<version>105</version>
+    	<defaultcat>Admin</defaultcat>
+    	<type>Default</type>
+    	<desc>This module enables you to configure DNS settings for the DNS Manager</desc>
+	<updatedesc></updatedesc>
+    	<scversion>1.0.0</scversion>
+	<latestversion>105</latestversion>
+    	<authorname>Sentora Project</authorname>
+    	<authoremail>developers@sentora.org</authoremail>
+    	<authorurl>http://www.sentora.org/</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
+    	<downloadurl>http://addons.sentora.org/modules/dns_admin.zpp</downloadurl>
+</module>

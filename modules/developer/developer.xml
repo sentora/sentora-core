@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    	<name>Put the name of your module here</name>
+    	<version>The version number</version>
+    	<defaultcat>Default catergory</defaultcat>
+    	<type>This should always be user for third party modules.</type>
+    	<desc>A description of what your module does.</desc>
+	<updatedesc>A description of what was updated in your module</updatedesc>
+    	<scversion>The Sentora version number it works on</scversion>
+	<latestversion>The latest version number</latestversion>
+    	<authorname>Your name</authorname>
+    	<authoremail>Your email address</authoremail>
+    	<authorurl>A working website here please</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
+    	<downloadurl>http://addons.sentora.org/modules/.zpp</downloadurl>
+</module>

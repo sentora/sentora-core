@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-    <name>FTP Admin</name>
-    <version>100</version>
-    <defaultcat>Admin</defaultcat>
-    <desc>This module enables you to configure FTP settings for your hosting accounts.</desc>
-    <authorname>ZPanel Project</authorname>
-    <authoremail>developers@zpanelcp.com</authoremail>
-    <authorurl>http://www.zpanelcp.com/</authorurl>
-    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    	<name>FTP Admin</name>
+    	<version>100</version>
+    	<defaultcat>Admin</defaultcat>
+    	<type>Default</type>
+    	<desc>This module enables you to configure FTP settings for your hosting accounts.</desc>
+    	<scversion>1.0.0</scversion>
+    	<authorname>Sentora Project</authorname>
+    	<authoremail>developers@sentora.org</authoremail>
+    	<authorurl>http://www.sentora.org/</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
 </module>

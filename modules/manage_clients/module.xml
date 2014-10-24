@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-    <name>Manage Clients</name>
-    <version>100</version>
-    <defaultcat>Reseller</defaultcat>
-    <desc>The account manager enables you to view, update and create client accounts.</desc>
-    <authorname>ZPanel Project</authorname>
-    <authoremail>developers@zpanelcp.com</authoremail>
-    <authorurl>http://www.zpanelcp.com/</authorurl>
-    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    	<name>Manage Clients</name>
+    	<version>105</version>
+    	<defaultcat>Reseller</defaultcat>
+    	<type>Default</type>
+    	<desc>The account manager enables you to view, update and create client accounts.</desc>
+    	<scversion>1.0.0</scversion>
+    	<authorname>Sentora Project</authorname>
+    	<authoremail>developers@sentora.org</authoremail>
+    	<authorurl>http://www.sentora.org/</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
 </module>

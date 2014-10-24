@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    	<name>Mail Boxes</name>
+    	<version>105</version>
+    	<defaultcat>Mail</defaultcat>
+    	<type>Default</type>
+    	<desc>Using this module you have the ability to create IMAP and POP3 Mailboxes.</desc>
+	<updatedesc></updatedesc>
+    	<scversion>1.0.0</scversion>
+	<latestversion>105</latestversion>
+    	<authorname>Sentora Project</authorname>
+    	<authoremail>developers@sentora.org</authoremail>
+    	<authorurl>http://www.sentora.org/</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
+    	<downloadurl>http://addons.sentora.org/modules/mailboxes.zpp</downloadurl>
+</module>
