@@ -22,12 +22,13 @@ function CheckSentoraLatestVersion() {
         
     $versionnumber = ws_generic::JSONToArray($live_version);
 
-    if(count($versionnumber) > 1) {
-        $currentVersionSetting = current($versionnumber);
-        $currentVersion = $currentVersionSetting['version'];
-    } else {
+# Sentora API returns simple object not in an array like it was for zpanel.
+#    if(count($versionnumber) > 1) {
+#        $currentVersionSetting = current($versionnumber);
+#        $currentVersion = $currentVersionSetting['version'];
+#    } else {
         $currentVersion = $versionnumber['version'];
-    }
+#    }
     
     ctrl_options::SetSystemOption('latestzpversion', $currentVersion);
     return true;
