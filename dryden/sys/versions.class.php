@@ -21,7 +21,12 @@ class sys_versions {
      * @return string Apache Server version number.
      */
     static function ShowApacheVersion() {
-        if (preg_match('|Apache\/(\d+)\.(\d+)\.(\d+)|', apache_get_version(), $apachever)) {
+        
+        $version = runtime_outputbuffer::Capture(function() {
+                    ctrl_system::systemCommand(ctrl_options::GetSystemOption('apache_sn'), '-v');
+                });
+                
+        if (preg_match('|Apache\/(\d+)\.(\d+)\.(\d+)|', $version, $apachever)) {
             $retval = str_replace("Apache/", "", $apachever[0]);
         } else {
             $retval = "Not found";
@@ -86,69 +91,21 @@ class sys_versions {
     }
 
     /**
-     * Returns in human readable form the operating system name (eg. Windows, Ubuntu, CentOS, MacOSX, FreeBSD, Other)
+     * Returns the Linux operating system (distrubution) name.
      * @author Bobby Allen (ballen@bobbyallen.me)
-     * @return string Human readable OS name.
+     * @return string The OS/Distrib name.
      */
     static function ShowOSName() {
-        preg_match_all("#(?<=\()(.*?)(?=\))#", $_SERVER['SERVER_SOFTWARE'], $osname);
-        if (!empty($osname)) {
-            if (strtoupper(substr($osname[0][0], 0, 3)) == "WIN") {
-                $retval = "Windows";
-            } else {
-                $retval = $osname[0][0];
-                if ($retval == "Unix") {
-                    // Lets just make sure it isn't MacOSX before we give up!
-                    if (sys_versions::ShowOSPlatformVersion() == "MacOSX") {
-                        $retval = "MacOSX";
-                    }
-                }
+        $os = runtime_outputbuffer::Capture(
+            function() {
+                ctrl_system::systemCommand('lsb_release', '-si');
             }
-
-            //My testing shows Linux shows correct OS, WindowsXP=Win32, Windows2007/Server=WINNT -russ
-            /*
-              $uname = strtolower(php_uname());
-              $retval = "";
-              if (strpos($uname, "darwin") !== false) {
-              $retval = "MacOSX";
-              } else if (strpos($uname, "win") !== false) {
-              $retval = "Windows";
-              } else if (strpos($uname, "freebsd") !== false) {
-              $retval = "FreeBSD";
-              } else if (strpos($uname, "openbsd") !== false) {
-              $retval = "OpenBSD";
-              } else {
-             */
-            /**
-             * @todo convert the bottom bit to read from a list of OS's.
-             */
-            /*
-              $list = @parse_ini_file("lib/sentora/os.ini", true);
-              foreach ($list as $section => $distribution) {
-              if (!isset($distribution["Files"])) {
-
-              } else {
-              $intBytes = 4096;
-              $intLines = 0;
-              $intCurLine = 0;
-              $strFile = "";
-              foreach (preg_split("/;/", $distribution["Files"], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
-              if (file_exists($filename)) {
-              if (isset($distribution["Name"])) {
-              $os = $distribution["Name"];
-              }
-              }
-              }
-              if ($os == null) {
-              $os = "Unknown";
-              }
-              }
-              }
-             */
-        } else {
-            $retval = "Unknown";
+        );
+        if (!empty($os)) {
+            return $os;
         }
-        return $retval;
+           
+        return "Unknown";
     }
 
     /**

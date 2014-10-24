@@ -40,7 +40,6 @@ if (file_exists('modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/co
             $api->SendResponse(call_user_func(array($api, '' . $api->wsdataarray['request'] . '')));
         } else {
             $response_nomethod = new runtime_dataobject;
-            $response_nomethod = new runtime_dataobject;
             $response_nomethod->addItemValue('response', '1102');
             $response_nomethod->addItemValue('content', 'Request not found');
             $api->SendResponse($response_nomethod->getDataObject());

@@ -2,10 +2,13 @@
 
 /**
  * @copyright 2014 Sentora Project (http://www.sentora.org/) 
- * Sentora is a GPL fork of the ZPanel Project whose original header follows:
- *
- * Description of controller
- * @author Kevin
+ * 
+ * This class handles all core module functionality.
+ * @author Kevin Andrews <kevin@zvps.uk>
+ * @copyright (c) 2014, nForced Website Hosting Limtied
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPLv3
+ * @category Security
+ * @link http://zvps.uk
  */
 class module_controller extends ctrl_module
 {
@@ -201,7 +204,7 @@ class module_controller extends ctrl_module
         }
         catch (PDOException $exc) {
             $message = ($exc->getCode() === '23000') ? 'Folder already protected.' : 'Error adding to database.';
-            self::setFlashMessage('error', $message);
+            self::setFlashMessage('error', $exc->getMessage());
         }
 
         
@@ -540,13 +543,18 @@ class module_controller extends ctrl_module
         return true;
     }
     
-    static function writeHtaccessLink($realPath, $append=false, $message)
-    {
-        $htpasswdFile = self::getHostDir() . self::getCurrentUsername() . '/htpasswd/' . 'htpasswd-' . md5($realPath);
+    static function buildHtaccessLink($message, $htpasswdFile) {
         $htaccessString = 'AuthName "' . $message . '"' . PHP_EOL .
                           'AuthType Basic' . PHP_EOL .
                           'AuthUserFile ' . $htpasswdFile . PHP_EOL .
                           'Require valid-user' . PHP_EOL;
+        return $htaccessString;
+    }
+    
+    static function writeHtaccessLink($realPath, $append=false, $message)
+    {
+        $htpasswdFile = self::getHostDir() . self::getCurrentUsername() . '/htpasswd/' . 'htpasswd-' . md5($realPath);
+        $htaccessString = self::buildHtaccessLink($message, $htpasswdFile);
         
         $combinedPath = $realPath . '/.htaccess';
         
@@ -567,10 +575,7 @@ class module_controller extends ctrl_module
 
         $htpasswdFile = self::getHostDir() . self::getCurrentUsername(). '/' . 'htpasswd/' . 'htpasswd-' . md5($realPath);
         
-        $htaccessString = 'AuthName "' . $message . '"' . PHP_EOL . 
-            'AuthType Basic' . PHP_EOL . 
-            'AuthUserFile ' . $htpasswdFile . PHP_EOL . 
-            'Require valid-user' . PHP_EOL;
+        $htaccessString = self::buildHtaccessLink($message, $htpasswdFile);
                       
         $newFileString = str_replace($htaccessString, '', $data);
 
@@ -701,9 +706,13 @@ class module_controller extends ctrl_module
         
         // Create protected passwd file
         if(!self::hasFlashErrors()) { self::createPasswdFile($fileTarget); }
+ 
+        // Remove exiting protection to prevent duplicate entries
+        if(!self::hasFlashErrors()) { self::removeHtaccessLink($fileTarget, $message); }
+
+        $append = !$exists ? false : true;
         
         // Write htaccess configs to link to passwd file
-        $append = !$exists ? false : true;
         if(!self::hasFlashErrors()) { self::writeHtaccessLink($fileTarget, $append, $message); }
         
         // Create DB record
@@ -722,6 +731,7 @@ class module_controller extends ctrl_module
                 self::setFlashMessage('debug', 'protected directory added to db successfully.');
             }
         }
+        
 
         // No errors
         if(!self::hasFlashErrors()) 
@@ -1023,7 +1033,9 @@ class module_controller extends ctrl_module
         if(empty($messages)) { return false; }
         
         foreach( $messages as $message ) {
-            return array_key_exists('error', $message);
+            if(array_key_exists('error', $message)) {
+                return true;
+            }
         }
         
         return false;
