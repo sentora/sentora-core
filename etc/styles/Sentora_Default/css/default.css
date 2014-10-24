@@ -863,6 +863,7 @@ li.highlight {
 
 .icon-password-assistant:before,
 .icon-htpasswd:before,
+.icon-protected-directories:before,
 .icon-lock-alt:before { content: '\f510'; }
 
 .icon-my-account:before,
