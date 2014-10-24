@@ -96,11 +96,15 @@ class sys_versions {
      * @return string The OS/Distrib name.
      */
     static function ShowOSName() {
-        $os = runtime_outputbuffer::Capture(function() {
-                    ctrl_system::systemCommand('lsb_release', '-si');
-                });
-        if (!empty($os))
+        $os = runtime_outputbuffer::Capture(
+            function() {
+                ctrl_system::systemCommand('lsb_release', '-si');
+            }
+        );
+        if (!empty($os)) {
             return $os;
+        }
+           
         return "Unknown";
     }
 
