@@ -79,16 +79,18 @@ class ws_generic {
 
     /**
      * Returns the value of a tag from an XML string.
-     * @author Bobby Allen (ballen@bobbyallen.me)
+     * Note: this should function should be written to use xpath instead of these build methods. As groupings may have unintended results.
+     * 
+     * @author Bobby Allen (ballen@bobbyallen.me) && Lloyd Leung (ll@lloydleung.com)
      * @param string $tagname The name of the tag of which to retrieve the value from.
      * @param string $xml The XML string
-     * @return string The XML tag value. 
+     * @return null|string The XML tag value, or null if not found.
      */
     static function GetTagValue($tagname, $xml) {
-        $matches = array();
         $pattern = "/<$tagname>(.*?)<\/$tagname>/";
         preg_match($pattern, $xml, $matches);
-        return $matches[1];
+
+        return isset($matches[1]) ? $matches[1] : null;
     }
 
     /**
@@ -212,5 +214,3 @@ class ws_generic {
     }
 
 }
-
-?>
