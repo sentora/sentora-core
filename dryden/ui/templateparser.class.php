@@ -60,7 +60,8 @@ class ui_templateparser
     {
         $temp = $data;
         runtime_hook::Execute('OnBeforeTemplateProcessor');
-        foreach (ui_templateparser::$Functions as $Tag => $pattern) {
+        $functions = ui_templateparser::$Functions;
+        foreach ($functions as $Tag => $pattern) {
             $temp = call_user_func_array('ui_templateparser::Compile' . $Tag, array($pattern, $temp));
         }
         runtime_hook::Execute('OnAfterTemplateProcessor');
