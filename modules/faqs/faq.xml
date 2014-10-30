@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    	<name>FAQ's</name>
+    	<version>105</version>
+    	<defaultcat>Advanced</defaultcat>
+    	<type>Default</type>
+    	<desc>Please find a list of the most common questions from users, if you are unable to find a solution to your problem below please then contact your hosting provider. Simply click on the FAQ below to view the solution.</desc>
+	<updatedesc></updatedesc>
+    	<scversion>1.0.0</scversion>
+	<latestversion>105</latestversion>
+    	<authorname>Sentora Project</authorname>
+    	<authoremail>developers@sentora.org</authoremail>
+    	<authorurl>http://www.sentora.org/</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
+    	<downloadurl>http://addons.sentora.org/modules/faq.zpp</downloadurl>
+</module>

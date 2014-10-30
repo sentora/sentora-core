@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    	<name>Domains</name>
+    	<version>105</version>
+    	<defaultcat>Domain Management</defaultcat>
+    	<type>Default</type>
+    	<desc>This module enables you to add or configure domain web hosting on your account.</desc>
+	<updatedesc></updatedesc>
+    	<scversion>1.0.0</scversion>
+	<latestversion>105</latestversion>
+    	<authorname>Sentora Project</authorname>
+    	<authoremail>developers@sentora.org</authoremail>
+    	<authorurl>http://www.sentora.org/</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
+    	<downloadurl>http://addons.sentora.org/modules/domains.zpp</downloadurl>
+</module>

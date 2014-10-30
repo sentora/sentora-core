@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    	<name>DNS Manager</name>
+    	<version>105</version>
+    	<defaultcat>Domain Management</defaultcat>
+    	<type>Default</type>
+    	<desc>You can use the DNS Manager to manage the DNS for your domain names</desc>
+	<updatedesc></updatedesc>
+    	<scversion>1.0.0</scversion>
+	<latestversion>105</latestversion>
+    	<authorname>Sentora Project</authorname>
+    	<authoremail>developers@sentora.org</authoremail>
+    	<authorurl>http://www.sentora.org/</authorurl>
+    	<updateurl>http://addons.sentora.org/modules/core.xml</updateurl>
+    	<downloadurl>http://addons.sentora.org/modules/dns_manager.zpp</downloadurl>
+</module>
