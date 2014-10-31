@@ -4,8 +4,8 @@
 	<version>300</version>
 	<defaultcat>Advanced</defaultcat>
 	<desc>Password protect your web applications and directories.</desc>
-	<authorname>zVPS.uk</authorname>
-	<authoremail>support@zvps.uk</authoremail>
-	<authorurl>http://www.zvps.uk/</authorurl>
-	<updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <authorname>Sentora Project</authorname>
+    <authoremail>info@sentora.org</authoremail>
+    <authorurl>http://sentora.org/</authorurl>
+    <updateurl>http://store.sentora.org/version.xml</updateurl>
 </module>

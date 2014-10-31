@@ -4,8 +4,8 @@
     <version>100</version>
     <defaultcat>Domain Management</defaultcat>
     <desc>Domain parking refers to the registration of an Internet domain name without that domain being used to provide services such as e-mail or a website. If you have any domains that you are not using, then simply park them!</desc>
-    <authorname>ZPanel Project</authorname>
-    <authoremail>developers@zpanelcp.com</authoremail>
-    <authorurl>http://www.zpanelcp.com/</authorurl>
-    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <authorname>Sentora Project</authorname>
+    <authoremail>info@sentora.org</authoremail>
+    <authorurl>http://sentora.org/</authorurl>
+    <updateurl>http://store.sentora.org/version.xml</updateurl>
 </module>

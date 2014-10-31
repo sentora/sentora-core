@@ -4,8 +4,8 @@
     <version>100</version>
     <defaultcat>Account Information</defaultcat>
     <desc>Your current personal account details, we ask that you keep these details up-to-date in case we need to contact you regarding your hosting services.</desc>
-    <authorname>ZPanel Project</authorname>
-    <authoremail>developers@zpanelcp.com</authoremail>
-    <authorurl>http://www.zpanelcp.com/</authorurl>
-    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
+    <authorname>Sentora Project</authorname>
+    <authoremail>info@sentora.org</authoremail>
+    <authorurl>http://sentora.org/</authorurl>
+    <updateurl>http://store.sentora.org/version.xml</updateurl>
 </module>
