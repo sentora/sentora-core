@@ -135,8 +135,16 @@ class module_controller extends ctrl_module
                     $updatesql->execute();
                 }
             }
+            self::SetWriteApacheConfigTrue(); #sentora apache port changed require rewrite of vhosts
         }
         self::$ok = true;
+    }
+
+    static function SetWriteApacheConfigTrue()
+    {
+        global $zdbh;
+        $sql = $zdbh->prepare("UPDATE x_settings SET so_value_tx='true' WHERE so_name_vc='apache_changed'");
+        $sql->execute();
     }
 
     static function doForceDaemon()
