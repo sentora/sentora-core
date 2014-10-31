@@ -21,13 +21,14 @@ class runtime_outputbuffer
      * @param callable command The code of which to return the output buffer for.
      * @return string The output buffer contents.
      */
-    static function Capture(Closure $command)
+    public static function Capture(Closure $command)
     {
         ob_start();
         call_user_func($command);
         $result = ob_get_clean();
-        if (ob_get_length() > 0)
+        if (ob_get_length() > 0) {
             ob_end_clean();
+        }    
         return $result;
     }
 
