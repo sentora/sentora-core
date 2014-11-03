@@ -135,7 +135,7 @@ class module_controller extends ctrl_module
         if (self::IsTypeAllowed($type)) {
             if ($type === 'A') {
                 $activeCss = 'active';
-                if (ctrl_options::GetSystemOption('custom_ip') == strtolower("false")) {
+                if (ctrl_options::GetSystemOption('custom_ip') == 'false') {
                     $custom_ip = "READONLY";
                 } else {
                     $custom_ip = NULL;
@@ -722,7 +722,7 @@ class module_controller extends ctrl_module
                         if (isset($target['new_' . $id]) && !fs_director::CheckForEmptyValue($target['new_' . $id])) {
                             //If Custom IP addresses are not allowed.
                             if ($type['new_' . $id] == 'A') {
-                                if (ctrl_options::GetSystemOption('custom_ip') == strtolower("false")) {
+                                if (ctrl_options::GetSystemOption('custom_ip') == 'false') {
                                     if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
                                         $target['new_' . $id] = ctrl_options::GetSystemOption('server_ip');
                                     } else {
@@ -1102,7 +1102,7 @@ class module_controller extends ctrl_module
         }
 
         // We'll leave the content for SPF and TXT records and won't try to make them look better by strtolower'ing them.
-        if ($type != 'SPF' || $type != 'TXT') {
+        if (!($type == 'SPF' || $type == 'TXT')) {
             $data = strtolower($data);
         }
 
