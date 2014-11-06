@@ -25,98 +25,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * @changes P.Peyremorte
+ * - added display of ports checked (80 may be not used!)
+ * - refactored (replacement of duplicate string constructions by a fucntion)
  */
 class module_controller extends ctrl_module
 {
+    static private function status_port($PortNum, $iconpath)
+    {
+        $status = sys_monitoring::LocalPortStatus($PortNum);
+        return ($status ?  $iconpath.'up.gif">' : $iconpath.'down.gif">') . ' (port ' . $PortNum .' is ' . ($status ? 'open' : 'closed') . ')';
+    }
 
     static public function getServices()
     {
         global $controller;
+        $iconpath = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/';
+        
         $line = "<h2>" . ui_language::translate("Checking status of services...") . "</h2>";
         $line .= "<table>";
-        $line .= "<tr>";
-        $line .= "<th>HTTP</th>";
-        $line .= "<td>";
+        
+        $status = fs_director::CheckForEmptyValue(sys_monitoring::PortStatus($PortNum));
 
-        if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(80))) {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
-        } else {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-        }
-
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>FTP</th>";
-        $line .= "<td>";
-
-        if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(21))) {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
-        } else {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-        }
-
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>SMTP</th>";
-        $line .= "<td>";
-
-        if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(25))) {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
-        } else {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-        }
-
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>POP3</th>";
-        $line .= "<td>";
-
-        if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(110))) {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
-        } else {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-        }
-
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>IMAP</th>";
-        $line .= "<td>";
-
-        if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(143))) {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
-        } else {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-        }
-
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>MySQL</th>";
-        $line .= "<td>";
-        /* MySQL has to be on-line as you are viewing this page, we made this 'static' to save on port queries (saves time) amongst other reasons. */
-        $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "<tr>";
-        $line .= "<th>DNS</th>";
-        $line .= "<td>";
-
-        if (fs_director::CheckForEmptyValue(sys_monitoring::PortStatus(53))) {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/down.gif\">";
-        } else {
-            $line .= "<img src=\"modules/" . $controller->GetControllerRequest('URL', 'module') . "/assets/up.gif\">";
-        }
-
-        $line .= "</td>";
-        $line .= "</tr>";
-        $line .= "</table>";
-        $line .= "<br><h2>" . ui_language::translate("Server Uptime") . "</h2>";
-        $line .= ui_language::translate("Uptime") . ": " . sys_monitoring::ServerUptime();
+        $line .= '<tr><th>HTTP</th><td>'  . module_controller::status_port(80, $iconpath) . '</td></tr>';
+        $line .= '<tr><th>FTP</th><td>'   . module_controller::status_port(21, $iconpath) . '</td></tr>';
+        $line .= '<tr><th>SMTP</th><td>'  . module_controller::status_port(25, $iconpath) . '</td></tr>';
+        $line .= '<tr><th>POP3</th><td>'  . module_controller::status_port(110, $iconpath) . '</td></tr>';
+        $line .= '<tr><th>IMAP</th><td>'  . module_controller::status_port(143, $iconpath) . '</td></tr>';
+        $line .= '<tr><th>MySQL</th><td>' . module_controller::status_port(3306, $iconpath) . '</td></tr>';
+        $line .= '<tr><th>DNS</th><td>'   . module_controller::status_port(53, $iconpath)  . '</td></tr>';
+        $line .= '</table>';
+        $line .= '<br><h2>' . ui_language::translate('Server Uptime') . '</h2>';
+        $line .= ui_language::translate('Uptime') . ": " . sys_monitoring::ServerUptime();
         return $line;
     }
 

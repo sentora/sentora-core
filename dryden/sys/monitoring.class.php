@@ -21,24 +21,38 @@ class sys_monitoring {
      * @param int $port The port number of which to check (eg. 25 for SMTP).
      * @param boolean $udp Port is a UDP port as opposed to a TCP port.
      * @return boolean 
+     * @change P.Peyremorte
+     * - added port close if open successes
      */
     static function PortStatus($port, $udp = false) {
         $timeout = ctrl_options::GetSystemOption('servicechk_to');
-        if ($udp) {
-            $ip = 'udp://' . $_SERVER['SERVER_ADDR'];
-        } else {
-            $ip = $_SERVER['SERVER_ADDR'];
-        }
+        $ip = ($udp) ? 'udp://' . $_SERVER['SERVER_ADDR'] : $_SERVER['SERVER_ADDR'];
         $fp = @fsockopen($ip, $port, $errno, $errstr, $timeout);
         if (!$fp) {
             runtime_hook::Execute('OnPortStatusDown');
-            $retval = false;
-        } else {
-            runtime_hook::Execute('OnPortStatusUp');
-            $retval = true;
+            return false;
         }
-        return $retval;
+        fclose($fp);
+        runtime_hook::Execute('OnPortStatusUp');
+        return true;
     }
+
+    /**
+     * Reports on whether a TCP port is listening for connections.
+     * @author Pascal peyremorte
+     * @param int $port The port number of which to check (eg. 25 for SMTP).
+     * @return boolean
+     */
+    static function LocalPortStatus($port) {
+        $timeout = ctrl_options::GetSystemOption('servicechk_to');
+        $fp = @fsockopen('127.0.0.1', $port, $errno, $errstr, $timeout);
+        if ($fp !== false) {
+            fclose($fp); #do not leave the port open.
+            return true;
+        }
+        return false; 
+    }
+
 
     /**
      * Returns a nice human readable copy of the server uptime.
