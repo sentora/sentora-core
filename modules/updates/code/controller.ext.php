@@ -25,18 +25,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * Change P.Peyremorte:
+ * - packed reused strings
+ * - adapted message to not show last stable if version < 1.0.0
  */
 class module_controller extends ctrl_module
 {
 
     public static function getSentoraUpdates()
-    {
-        if (ctrl_options::GetSystemOption('dbversion') < ctrl_options::GetSystemOption('latestzpversion')) {
-            $msg = ui_language::translate("There are currently new updates for your Sentora installation, please download the latest release") . " (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>) from <a href=\"http://www.sentora.org/\">http://www.sentora.org/</a>.";
-        } elseif (ctrl_options::GetSystemOption('dbversion') == ctrl_options::GetSystemOption('latestzpversion')) {
-            $msg = "Congratulations, You are running the most recent version of Sentora (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>)!";
+    {   
+        $installed = ctrl_options::GetSystemOption('dbversion');
+        $lastest = ctrl_options::GetSystemOption('latestzpversion');
+        $lastest_tagged = ' (<strong>' . $lastest . '</strong>)';
+        
+        if ($installed < $lastest ) {
+            $msg = ui_language::translate('There are currently new updates for your Sentora installation, please download the latest release') 
+                 . $lastest_tagged .' from <a href="http://www.sentora.org/">http://www.sentora.org/</a>.';
+        } elseif ($installed == $lastest) {
+            $msg = 'Congratulations, You are running the most recent version of Sentora' . $lastest_tagged . '!';
         } else {
-            $msg = "You appear to be running a BETA release, unless you are testing or developing we recommend you download and use the latest stable release (<strong>" . ctrl_options::GetSystemOption('latestzpversion') . "</strong>).";
+            $msg = 'You are running a BETA release (<strong>' . $installed . '</strong>), thank you to report what you constated.<br>'
+                  .'<b>Do not use it for production.</b>';
+            if ($latest >= '1.0.0')
+                $msg .='<br><br>Unless you are testing or developing we recommend you to download and use the latest stable release' . $lastest_tagged . '.';
         }
         return $msg;
     }
