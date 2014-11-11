@@ -66,10 +66,6 @@
                     <td><input type="checkbox" name="inEnablePHP" id="inEnablePHP" value="1" <@ PHPChecked @>/></td>
                 </tr>
                 <tr>
-                    <th><: Enable CGI :>:</th>
-                    <td><input type="checkbox" name="inEnableCGI" id="inEnableCGI" value="1" <@ CGIChecked @>/></td>
-                </tr>
-                <tr>
                     <th><: No. Domains :>:</th>
                     <td><input name="inNoDomains" type="text" id="inNoDomains" size="5" maxlength="3" value="<@ EditCurrentDomains @>" onkeypress="return isNumberKeyOrNeg(event)"/> (-1 = unlimited)</td>
                 </tr>
@@ -166,10 +162,6 @@
                 <tr>
                     <th><: Enable PHP :>:</th>
                     <td><input type="checkbox" name="inEnablePHP" id="inEnablePHP" value="1" /></td>
-                </tr>
-                <tr>
-                    <th><: Enable CGI :>:</th>
-                    <td><input type="checkbox" name="inEnableCGI" id="inEnableCGI" value="1" /></td>
                 </tr>
                 <tr>
                     <th><: No. Domains :>:</th>

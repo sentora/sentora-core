@@ -87,18 +87,12 @@ class module_controller extends ctrl_module
             $sql->execute();
             while ($rowpackages = $sql->fetch()) {
                 $PHPChecked = "";
-                $CGIChecked = "";
                 if ($rowpackages['pk_enablephp_in'] <> 0) {
                     $PHPChecked = "CHECKED";
                 }
-                if ($rowpackages['pk_enablecgi_in']) {
-                    $CGIChecked = "CHECKED";
-                }
                 array_push($res, array('packageid' => $rowpackages['pk_id_pk'],
                     'enablePHP' => $rowpackages['pk_enablephp_in'],
-                    'enableCGI' => $rowpackages['pk_enablecgi_in'],
                     'PHPChecked' => $PHPChecked,
-                    'CGIChecked' => $CGIChecked,
                     'domains' => $rowpackages['qt_domains_in'],
                     'subdomains' => $rowpackages['qt_subdomains_in'],
                     'parkeddomains' => $rowpackages['qt_parkeddomains_in'],
@@ -159,10 +153,10 @@ class module_controller extends ctrl_module
         return true;
     }
 
-    static function ExecuteCreatePackage($uid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
+    static function ExecuteCreatePackage($uid, $packagename, $EnablePHP, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
     {
         global $zdbh;
-        if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
+        if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
             return false;
         }
         $packagename = str_replace(' ', '', $packagename);
@@ -175,17 +169,13 @@ class module_controller extends ctrl_module
         $sql = $zdbh->prepare("INSERT INTO x_packages (pk_reseller_fk,
 										pk_name_vc,
 										pk_enablephp_in,
-										pk_enablecgi_in,
 										pk_created_ts) VALUES (
 										:uid,
 										:packagename,
 										:php,
-										:cgi,
 										:time);");
         $php = fs_director::GetCheckboxValue($EnablePHP);
-        $cgi = fs_director::GetCheckboxValue($EnableCGI);
         $sql->bindParam(':php', $php);
-        $sql->bindParam(':cgi', $cgi);
         $sql->bindParam(':uid', $uid);
         $time = time();
         $sql->bindParam(':time', $time);
@@ -242,10 +232,10 @@ class module_controller extends ctrl_module
         return true;
     }
 
-    static function ExecuteUpdatePackage($uid, $pid, $packagename, $EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
+    static function ExecuteUpdatePackage($uid, $pid, $packagename, $EnablePHP, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
     {
         global $zdbh;
-        if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
+        if (fs_director::CheckForEmptyValue(self::CheckNumeric($EnablePHP, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota))) {
             return false;
         }
         $packagename = str_replace(' ', '', $packagename);
@@ -255,14 +245,11 @@ class module_controller extends ctrl_module
         }
         runtime_hook::Execute('OnBeforeUpdatePackage');
         $sql = $zdbh->prepare("UPDATE x_packages SET pk_name_vc=:packagename,
-								pk_enablephp_in = :php,
-								pk_enablecgi_in = :cgi
+								pk_enablephp_in = :php
 								WHERE pk_id_pk  = :pid");
 
         $php = fs_director::GetCheckboxValue($EnablePHP);
-        $cgi = fs_director::GetCheckboxValue($EnableCGI);
         $sql->bindParam(':php', $php);
-        $sql->bindParam(':cgi', $cgi);
         $sql->bindParam(':pid', $pid);
         $sql->bindParam(':packagename', $packagename);
         $sql->execute();
@@ -336,10 +323,9 @@ class module_controller extends ctrl_module
         return true;
     }
 
-    static function CheckNumeric($EnablePHP, $EnableCGI, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
+    static function CheckNumeric($EnablePHP, $Domains, $SubDomains, $ParkedDomains, $Mailboxes, $Fowarders, $DistLists, $FTPAccounts, $MySQL, $DiskQuota, $BandQuota)
     {
         if (!is_numeric($EnablePHP) ||
-                !is_numeric($EnableCGI) ||
                 !is_numeric($Domains) ||
                 !is_numeric($SubDomains) ||
                 !is_numeric($ParkedDomains) ||
@@ -400,12 +386,7 @@ class module_controller extends ctrl_module
         } else {
             $EnablePHP = 0;
         }
-        if (isset($formvars['inEnableCGI'])) {
-            $EnableCGI = fs_director::GetCheckboxValue($formvars['inEnableCGI']);
-        } else {
-            $EnableCGI = 0;
-        }
-        if (self::ExecuteCreatePackage($currentuser['userid'], $formvars['inPackageName'], $EnablePHP, $EnableCGI, $formvars['inNoDomains'], $formvars['inNoSubDomains'], $formvars['inNoParkedDomains'], $formvars['inNoMailboxes'], $formvars['inNoFowarders'], $formvars['inNoDistLists'], $formvars['inNoFTPAccounts'], $formvars['inNoMySQL'], $formvars['inDiskQuota'], $formvars['inBandQuota']))
+        if (self::ExecuteCreatePackage($currentuser['userid'], $formvars['inPackageName'], $EnablePHP, $formvars['inNoDomains'], $formvars['inNoSubDomains'], $formvars['inNoParkedDomains'], $formvars['inNoMailboxes'], $formvars['inNoFowarders'], $formvars['inNoDistLists'], $formvars['inNoFTPAccounts'], $formvars['inNoMySQL'], $formvars['inDiskQuota'], $formvars['inBandQuota']))
             return true;
         return false;
     }
@@ -421,12 +402,7 @@ class module_controller extends ctrl_module
         } else {
             $EnablePHP = 0;
         }
-        if (isset($formvars['inEnableCGI'])) {
-            $EnableCGI = fs_director::GetCheckboxValue($formvars['inEnableCGI']);
-        } else {
-            $EnableCGI = 0;
-        }
-        if (self::ExecuteUpdatePackage($currentuser['userid'], $formvars['inPackageID'], $formvars['inPackageName'], $EnablePHP, $EnableCGI, $formvars['inNoDomains'], $formvars['inNoSubDomains'], $formvars['inNoParkedDomains'], $formvars['inNoMailboxes'], $formvars['inNoFowarders'], $formvars['inNoDistLists'], $formvars['inNoFTPAccounts'], $formvars['inNoMySQL'], $formvars['inDiskQuota'], $formvars['inBandQuota']))
+        if (self::ExecuteUpdatePackage($currentuser['userid'], $formvars['inPackageID'], $formvars['inPackageName'], $EnablePHP, $formvars['inNoDomains'], $formvars['inNoSubDomains'], $formvars['inNoParkedDomains'], $formvars['inNoMailboxes'], $formvars['inNoFowarders'], $formvars['inNoDistLists'], $formvars['inNoFTPAccounts'], $formvars['inNoMySQL'], $formvars['inDiskQuota'], $formvars['inBandQuota']))
             return true;
         return false;
     }
@@ -655,17 +631,6 @@ class module_controller extends ctrl_module
         if ($controller->GetControllerRequest('URL', 'other')) {
             $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
             return $current[0]['PHPChecked'];
-        } else {
-            return "";
-        }
-    }
-
-    static function getCGIChecked()
-    {
-        global $controller;
-        if ($controller->GetControllerRequest('URL', 'other')) {
-            $current = self::ListCurrentPackage($controller->GetControllerRequest('URL', 'other'));
-            return $current[0]['CGIChecked'];
         } else {
             return "";
         }
