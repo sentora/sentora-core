@@ -62,14 +62,37 @@
     <div class="zgrid_wrapper">
         <h2><: Current FTP accounts :></h2>
         <% if ClientList %>
+        <script type="text/javascript">
+          var ShowPass = false;
+          function ShowHide()
+          {
+              ShowPass = !ShowPass;
+              if (ShowPass)
+              { 
+                  document.getElementById('ColPass').style.visibility = 'visible';
+                  document.getElementById('btn_sh').innerHTML = 'Hide passwords';
+              }
+              else
+              {
+                  document.getElementById('ColPass').style.visibility = 'collapse';
+                  document.getElementById('btn_sh').innerHTML = 'Show passwords';
+              }
+              return false;
+          }
+        </script>
         <form action="./?module=ftp_management&action=EditFTP" method="post">
             <table class="table table-striped">
+                <col />
+                <col />
+                <col />
+                <col id="ColPass" style="visibility:collapse"/>
+                <col />
                 <tr>
                     <th><: Account name :></th>
                     <th><: Home directory :></th>
                     <th><: Permission :></th>
                     <th><: Password :></th>
-                    <th></th>
+                    <th><button class="button btn btn-default" id="btn_sh" onClick="return ShowHide()">Show Passwords</button></th>
                 </tr>
                 <% loop ClientList %>
                 <tr>
