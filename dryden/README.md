@@ -1,8 +1,3 @@
-/**
- * @copyright 2014 Sentora Project (http://www.sentora.org/) 
- * Sentora is a GPL fork of the ZPanel Project whose original header follows:
- */
-
 # Dryden Framework for ZPanelX
 
 *Dryden* is the name of the custom framework for ZPanelX, the framework was built with simplicity in mind for novice developers to enable the rapid development of third-party modules.
