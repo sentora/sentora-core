@@ -280,7 +280,6 @@ class module_controller extends ctrl_module
             $sql->execute();
             $row = $sql->fetch();
             $domain_owner = $row['vh_acc_fk'];
-            echo 'Domain-owner: '.$domain_owner;
 
             //Get domain owner username
             $owner_username = "";
@@ -425,9 +424,7 @@ class module_controller extends ctrl_module
         $line .= "<tr>";
         $line .= "<td><select name=\"inDomain\" id=\"inDomain\">";
         $line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
-
-        ini_set('display_errors', 1); 
-        error_reporting(E_ALL);
+        
         //Check if is admin
         $sql = $zdbh->prepare("SELECT ac_group_fk FROM x_accounts WHERE ac_id_pk=:uid");
         $sql->bindParam(":uid",$currentuser['userid']);
@@ -444,7 +441,6 @@ class module_controller extends ctrl_module
             $users = array();
             while($row = $sql->fetch())
             {
-                print_r($row);
                 $users[] = $row['ac_id_pk'];
             }
             $users = implode($users,",");
