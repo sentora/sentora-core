@@ -424,7 +424,7 @@ class module_controller extends ctrl_module
         $line .= "<tr>";
         $line .= "<td><select name=\"inDomain\" id=\"inDomain\">";
         $line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
-        
+
         //Check if is admin
         $sql = $zdbh->prepare("SELECT ac_group_fk FROM x_accounts WHERE ac_id_pk=:uid");
         $sql->bindParam(":uid",$currentuser['userid']);
@@ -444,7 +444,6 @@ class module_controller extends ctrl_module
                 $users[] = $row['ac_id_pk'];
             }
             $users = implode($users,",");
-            echo $users;
 
             $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk IN($users) AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
             $sql->execute();
@@ -968,7 +967,6 @@ class module_controller extends ctrl_module
             $sql->execute();
             $row = $sql->fetch();
             $domain_owner = $row['vh_acc_fk'];
-            echo 'Domain-owner: '.$domain_owner;
         }
         else
         {
