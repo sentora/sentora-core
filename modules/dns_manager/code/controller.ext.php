@@ -26,6 +26,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 class module_controller extends ctrl_module
 {
 
@@ -262,10 +263,43 @@ class module_controller extends ctrl_module
             $zone_status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.png">';
         }
 
+        // Allow admin to edit
+        //Check if is admin
+        $sql = $zdbh->prepare("SELECT ac_group_fk FROM x_accounts WHERE ac_id_pk=:uid");
+        $sql->bindParam(":uid",$currentuser['userid']);
+        $sql->execute();
+        $userGroup = $sql->fetch();
+        $group = $userGroup['ac_group_fk'];
+        $isadmin = false;
+        if($group == 1)
+        {
+            //Get domain owner
+            $isadmin = true;
+            $sql = $zdbh->prepare("SELECT vh_acc_fk FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':domainID', $domainID);
+            $sql->execute();
+            $row = $sql->fetch();
+            $domain_owner = $row['vh_acc_fk'];
+            echo 'Domain-owner: '.$domain_owner;
+
+            //Get domain owner username
+            $owner_username = "";
+            $sql2 = $zdbh->prepare("SELECT ac_user_vc FROM x_accounts WHERE ac_id_pk=:uid");
+            $sql2->bindParam(":uid",$domain_owner);
+            $sql2->execute();
+            $sql2_row = $sql2->fetch();
+            $domain_owner_username = $sql2_row['ac_user_vc'];
+        }
+        else
+        {
+            $domain_owner = $currentuser['userid'];
+        }
+
         // Top Edit buttons
         $line = '<!-- DNS FORM -->';
         $line .= '<div id="dnsTitle" class="account accountTitle">';
         $line .= '<div class="content"><h4>' . ui_language::translate('DNS records for') . ':  <a href="http://' . $domain['vh_name_vc'] . '" target="_blank">' . $domain['vh_name_vc'] . '</a></h4>';
+        $line .= ($isadmin?'<h5>'.ui_language::translate("You are editing domain information as <b>%s</b>",$domain_owner_username).'</h5>':"");
         $line .= '<div>';
         $line .= '<div class="actions"><a class="undo disabled" rel="popover" data-title="Undo" data-content="Undo all un-saved changes." data-placement="top">' . ui_language::translate('Undo Changes') . '</a><a class="save disabled">' . ui_language::translate('Save Changes') . '</a><a class="back" href="./?module=' . $controller->GetControllerRequest('URL', 'module') . '">' . ui_language::translate('Domain List') . '</a></div>';
         $line .= '</div><br class="clear">';
@@ -320,14 +354,14 @@ class module_controller extends ctrl_module
         $nsDescription = ui_language::translate("Nameserver record. Specifies nameservers for a domain. Its target is a fully qualified domain name, e.g.  'ns1.example.com'.  The records should match what the domain name has registered with the internet root servers.");
 
         $tts = 86400;
-        $line .= self::DnsRecordField('A', $tts, $aDescription, $currentuser['userid'], $domainID);
-        $line .= self::DnsRecordField('AAAA', $tts, $aaaaDescription, $currentuser['userid'], $domainID);
-        $line .= self::DnsRecordField('CNAME', $tts, $cnameDescription, $currentuser['userid'], $domainID);
-        $line .= self::DnsRecordField('MX', $tts, $mxDescription, $currentuser['userid'], $domainID);
-        $line .= self::DnsRecordField('TXT', $tts, $txtDescription, $currentuser['userid'], $domainID);
-        $line .= self::DnsRecordField('SRV', $tts, $srvDescription, $currentuser['userid'], $domainID);
-        $line .= self::DnsRecordField('SPF', $tts, $spfDescription, $currentuser['userid'], $domainID);
-        $line .= self::DnsRecordField('NS', $tts, $nsDescription, $currentuser['userid'], $domainID);
+        $line .= self::DnsRecordField('A', $tts, $aDescription, $domain_owner, $domainID);
+        $line .= self::DnsRecordField('AAAA', $tts, $aaaaDescription, $domain_owner, $domainID);
+        $line .= self::DnsRecordField('CNAME', $tts, $cnameDescription, $domain_owner, $domainID);
+        $line .= self::DnsRecordField('MX', $tts, $mxDescription, $domain_owner, $domainID);
+        $line .= self::DnsRecordField('TXT', $tts, $txtDescription, $domain_owner, $domainID);
+        $line .= self::DnsRecordField('SRV', $tts, $srvDescription, $domain_owner, $domainID);
+        $line .= self::DnsRecordField('SPF', $tts, $spfDescription, $domain_owner, $domainID);
+        $line .= self::DnsRecordField('NS', $tts, $nsDescription, $domain_owner, $domainID);
 
         $line .= '<input name="newRecords" value="0" type="hidden">';
         $line .= '</div> <!-- END TABS CONTENT -->';
@@ -391,15 +425,60 @@ class module_controller extends ctrl_module
         $line .= "<tr>";
         $line .= "<td><select name=\"inDomain\" id=\"inDomain\">";
         $line .= "<option value=\"\" selected=\"selected\">-- " . ui_language::translate("Select a domain") . " --</option>";
-        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
-        $sql->bindParam(':userid', $currentuser['userid']);
+
+        ini_set('display_errors', 1); 
+        error_reporting(E_ALL);
+        //Check if is admin
+        $sql = $zdbh->prepare("SELECT ac_group_fk FROM x_accounts WHERE ac_id_pk=:uid");
+        $sql->bindParam(":uid",$currentuser['userid']);
         $sql->execute();
-        while ($rowdomains = $sql->fetch()) {
-            $line .= "<option value=\"" . $rowdomains['vh_id_pk'] . "\">" . $rowdomains['vh_name_vc'] . "</option>";
+        $userGroup = $sql->fetch();
+        $group = $userGroup['ac_group_fk'];
+
+        if($group == 1)
+        {
+            //Get all domains 
+            $sql = $zdbh->prepare("SELECT ac_id_pk FROM x_accounts WHERE ac_group_fk<>0 OR ac_id_pk=:uid");
+            $sql->bindParam(":uid",$currentuser['userid']);
+            $sql->execute();
+            $users = array();
+            while($row = $sql->fetch())
+            {
+                print_r($row);
+                $users[] = $row['ac_id_pk'];
+            }
+            $users = implode($users,",");
+            echo $users;
+
+            $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk IN($users) AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+            $sql->execute();
+
+        }
+        else
+        {
+            $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':userid', $currentuser['userid']);
+            $sql->execute();
+        }
+
+        //$sql->execute();
+        while($row = $sql->fetch())
+        {
+            $owner_username = "";
+            $sql2 = $zdbh->prepare("SELECT ac_user_vc FROM x_accounts WHERE ac_id_pk=:uid");
+            $sql2->bindParam(":uid",$row['vh_acc_fk']);
+            $sql2->execute();
+            $sql2_row = $sql2->fetch();
+            $owner_username = $sql2_row['ac_user_vc'];
+
+            if($row['vh_acc_fk'] != $currentuser['userid'])
+                $line .= "<option value=\"" . $row['vh_id_pk'] . "\">" . $row['vh_name_vc'] ." (".ui_language::translate("owned by %s",$owner_username).")</option>";
+            else
+                $line .= "<option value=\"" . $row['vh_id_pk'] . "\">" . $row['vh_name_vc'] . "</option>";
         }
         $line .= "</select></td>";
         $line .= "<td>";
-        $line .= '<button type="submit" class="btn btn-large btn-primary" name="inSelect" value="' . $rowdomains['vh_id_pk'] . '"><i class="glyphicon glyphicon-pencil"></i>  ' . ui_language::translate("Edit") . '</button>';
+        $line .= '<button type="submit" class="btn btn-large btn-primary" name="inSelect" value="' . $row['vh_id_pk'] . '"><i class="glyphicon glyphicon-pencil"></i>  ' . ui_language::translate("Edit") . '</button>';
         $line .= '</td>';
         $line .= '</tr>';
         $line .= '</table>';
@@ -514,6 +593,7 @@ class module_controller extends ctrl_module
         runtime_csfr::Protect();
 
         $domainID = $controller->GetControllerRequest('FORM', 'inDomain');
+
         $numrows = $zdbh->prepare('SELECT * FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL');
         $numrows->bindParam(':domainID', $domainID);
         $numrows->execute();
@@ -623,15 +703,38 @@ class module_controller extends ctrl_module
         if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'newRecords'))) {
             $newRecords = $controller->GetControllerRequest('FORM', 'newRecords');
         }
+
+        //Check if is admin
+        $sql = $zdbh->prepare("SELECT ac_group_fk FROM x_accounts WHERE ac_id_pk=:uid");
+        $sql->bindParam(":uid",$currentuser['userid']);
+        $sql->execute();
+        $userGroup = $sql->fetch();
+        $group = $userGroup['ac_group_fk'];
+        $isadmin = false;
+        if($group == 1)
+        {
+            //Get domain owner
+            $isadmin = true;
+            $sql = $zdbh->prepare("SELECT vh_acc_fk FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':domainID', $domainID);
+            $sql->execute();
+            $row = $sql->fetch();
+            $domain_owner = $row['vh_acc_fk'];
+        }
+        else
+        {
+            $domain_owner = $currentuser['userid'];
+        }
+
         //Get all existing records for domain and add the id's to an array
         $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':userid', $domain_owner);
         $numrows->bindParam(':domainID', $domainID);
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL");
-                $sql->bindParam(':userid', $currentuser['userid']);
+                $sql->bindParam(':userid', $domain_owner);
                 $sql->bindParam(':domainID', $domainID);
                 $sql->execute();
                 while ($rowdns = $sql->fetch()) {
@@ -772,7 +875,7 @@ class module_controller extends ctrl_module
                            :port_new,
                            :time)"
                         );
-                        $sql->bindParam(':userid', $currentuser['userid']);
+                        $sql->bindParam(':userid', $domain_owner);
                         $sql->bindParam(':domainName', $domainName);
                         $sql->bindParam(':domainID', $domainID);
                         $sql->bindParam(':type_new', $type_new);
@@ -853,13 +956,36 @@ class module_controller extends ctrl_module
             $newRecords = $controller->GetControllerRequest('FORM', 'newRecords');
         }
         //Get all existing records for domain and add the id's to an array
+
+        //Check if is admin
+        $sql = $zdbh->prepare("SELECT ac_group_fk FROM x_accounts WHERE ac_id_pk=:uid");
+        $sql->bindParam(":uid",$currentuser['userid']);
+        $sql->execute();
+        $userGroup = $sql->fetch();
+        $group = $userGroup['ac_group_fk'];
+
+        if($group == 1)
+        {
+            //Get domain owner
+            $sql = $zdbh->prepare("SELECT vh_acc_fk FROM x_vhosts WHERE vh_id_pk=:domainID AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
+            $sql->bindParam(':domainID', $domainID);
+            $sql->execute();
+            $row = $sql->fetch();
+            $domain_owner = $row['vh_acc_fk'];
+            echo 'Domain-owner: '.$domain_owner;
+        }
+        else
+        {
+            $domain_owner = $currentuser['userid'];
+        }
+        
         $numrows = $zdbh->prepare('SELECT COUNT(*) FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL');
-        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':userid', $domain_owner);
         $numrows->bindParam(':domainID', $domainID);
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 $sql = $zdbh->prepare('SELECT dn_id_pk FROM x_dns WHERE dn_acc_fk=:userid AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL');
-                $sql->bindParam(':userid', $currentuser['userid']);
+                $sql->bindParam(':userid', $domain_owner);
                 $sql->bindParam(':domainID', $domainID);
                 $sql->execute();
                 while ($rowdns = $sql->fetch()) {

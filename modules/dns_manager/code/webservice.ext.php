@@ -1,5 +1,4 @@
 <?php
-
 class webservice extends ws_xmws
 {
 
@@ -7,9 +6,25 @@ class webservice extends ws_xmws
     {
         global $zdbh;
 
-        $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=:uid AND vh_type_in !=2 AND vh_deleted_ts IS NULL AND vh_name_vc=:name");
-        $sql->bindParam(':uid', $uid);
-        $sql->bindParam(':name', $domainName);
+        //Check if is admin
+        $sql = $zdbh->prepare("SELECT ac_group_fk FROM x_accounts WHERE ac_id_pk=:uid");
+        $sql->bindParam(":uid",$uid);
+        $userGroup = $sql->fetch();
+        $group = $userGroup['ac_group_fk'];
+
+        if($group == 0)
+        {
+            //IS ADMIN
+            $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_type_in !=2 AND vh_deleted_ts IS NULL AND vh_name_vc=:name");
+            $sql->bindParam(':name', $domainName);
+        }
+
+        else
+        {
+            $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_acc_fk=:uid AND vh_type_in !=2 AND vh_deleted_ts IS NULL AND vh_name_vc=:name");
+            $sql->bindParam(':uid', $uid);
+            $sql->bindParam(':name', $domainName);
+        }
         $sql->execute();
         $domainID = $sql->fetch();
         return $domainID['vh_id_pk'];
