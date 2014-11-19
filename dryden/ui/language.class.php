@@ -27,6 +27,17 @@ class ui_language {
     static function translate($message) {
         global $zdbh;
 
+        $numargs = func_num_args();
+        if($numargs > 1)
+        {
+            $args = func_get_args();
+            $arg_list = array_splice($args,1);
+        }
+        else
+        {
+            $arg_list = array("");
+        }
+
         if (empty(self::$LangCol)) {
             $uid = ctrl_auth::CurrentUserID();
             $sql = $zdbh->prepare('SELECT ud_language_vc FROM x_profiles WHERE ud_user_fk=' . $uid);
@@ -35,7 +46,7 @@ class ui_language {
             self::$LangCol = 'tr_' . $lang['ud_language_vc'] . '_tx';
         }
         if (self::$LangCol == 'tr_en_tx')
-            return $message; //no translation required, english used
+            return call_user_func_array("sprintf",array_merge(array($message),$arg_list)); //no translation required, english used
 
         $SlashedMessage = addslashes($message); //protect special chars
         $sql = $zdbh->prepare('SELECT ' . self::$LangCol . ' FROM x_translations WHERE tr_en_tx =:message');
@@ -47,14 +58,57 @@ class ui_language {
             if (!fs_director::CheckForEmptyValue($result[self::$LangCol]))
                 return $result[self::$LangCol]; //valid translation present
             else
-                return $message; //translated message empty
+                return sprintf($message,$values); //translated message empty
         } else { //message not found in the table
             //add unfound message to the table with empties translations
             $sql = $zdbh->prepare('INSERT INTO x_translations SET tr_en_tx=:message');
             $sql->bindParam(':message', $SlashedMessage);
             $sql->execute();
-            return $message;
+            return sprintf($message,$values);
         }
+
+
+        /*$numargs = func_num_args();
+        if($numargs == 1)
+        {
+            $values = array();
+        }
+        else
+        {
+            $arg_list = func_get_args();
+            for ($i = 1; $i < $numargs; $i++) {
+                $values[$i] = $numargs[$i];
+            }
+        }
+        
+        if (empty(self::$LangCol)) {
+            $uid = ctrl_auth::CurrentUserID();
+            $sql = $zdbh->prepare('SELECT ud_language_vc FROM x_profiles WHERE ud_user_fk=' . $uid);
+            $sql->execute();
+            $lang = $sql->fetch();
+            self::$LangCol = 'tr_' . $lang['ud_language_vc'] . '_tx';
+        }
+        if (self::$LangCol == 'tr_en_tx')
+            return sprintf($message,$values); //no translation required, english used
+
+        $SlashedMessage = addslashes($message); //protect special chars
+        $sql = $zdbh->prepare('SELECT ' . self::$LangCol . ' FROM x_translations WHERE tr_en_tx =:message');
+        $sql->bindParam(':message', $SlashedMessage);
+        $sql->execute();
+        $result = $sql->fetch();
+
+        if ($result) {
+            if (!fs_director::CheckForEmptyValue($result[self::$LangCol]))
+                return sprintf($result[self::$LangCol],$values);
+            else
+                return sprintf($message,$values); //translated message empty
+        } else { //message not found in the table
+            //add unfound message to the table with empties translations
+            $sql = $zdbh->prepare('INSERT INTO x_translations SET tr_en_tx=:message');
+            $sql->bindParam(':message', $SlashedMessage);
+            $sql->execute();
+            return sprintf($message,$values); //translated message empty
+        }*/
     }
 
     /**
