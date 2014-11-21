@@ -56,15 +56,15 @@ class ui_language {
 
         if ($result) {
             if (!fs_director::CheckForEmptyValue($result[self::$LangCol]))
-                return $result[self::$LangCol]; //valid translation present
+                return call_user_func_array("sprintf",array_merge(array($result[self::$LangCol]),$arg_list)); //valid translation present
             else
-                return sprintf($message,$values); //translated message empty
+                return call_user_func_array("sprintf",array_merge(array($message),$arg_list)); //translated message empty
         } else { //message not found in the table
             //add unfound message to the table with empties translations
             $sql = $zdbh->prepare('INSERT INTO x_translations SET tr_en_tx=:message');
             $sql->bindParam(':message', $SlashedMessage);
             $sql->execute();
-            return sprintf($message,$values);
+            return call_user_func_array("sprintf",array_merge(array($message),$arg_list));
         }
     }
 
