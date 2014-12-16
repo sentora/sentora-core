@@ -52,7 +52,7 @@ class ui_tpl_modulelistznavbar
             $shortName = '<: ' . $shortName . ' :>';
             $mods = ui_moduleloader::GetModuleList($modcat['mc_id_pk']);
 
-            if (count($mods) > 0) {
+            if ($mods) {
                 $line .= '<li class="dropdown">';
 // IF Account, show Gravatar Image
                 if ($shortName == '<: Account :>') {
