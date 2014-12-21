@@ -1,6 +1,100 @@
 CHANGELOG Roundcube Webmail
 ===========================
 
+RELEASE 1.0.4
+-------------
+- Disable TinyMCE contextmenu plugin as there are more cons than pros in using it (#1490118)
+- Fix bug where show_real_foldernames setting wasn't honored on compose page (#1490153)
+- Fix issue where Archive folder wasn't protected in Folder Manager (#1490154)
+- Fix compatibility with PHP 5.2. in rcube_imap_generic (#1490115)
+- Fix setting flags on servers with no PERMANENTFLAGS response (#1490087)
+- Fix regression in SHAA password generation in ldap driver of password plugin (#1490094)
+- Fix displaying of HTML messages with absolutely positioned elements in Larry skin (#1490103)
+- Fix font style display issue in HTML messages with styled <span> elements (#1490101)
+- Fix download of attachments that are part of TNEF message (#1490091)
+- Fix handling of uuencoded messages if messages_cache is enabled (#1490108)
+- Fix handling of base64-encoded attachments with extra spaces (#1490111)
+- Fix handling of UNKNOWN-CTE response, try do decode content client-side (#1490046)
+- Fix bug where creating subfolders in shared folders wasn't possible without ACL extension (#1490113)
+- Fix reply scrolling issue with text mode and start message below the quote (#1490114)
+- Fix possible issues in skin/skin_path config handling (#1490125)
+- Fix lack of delimiter for recipient addresses in smtp_log (#1490150)
+- Fix generation of Blowfish-based password hashes (#1490184)
+- Fix bugs where CSRF attacks were still possible on some requests
+
+RELEASE 1.0.3
+-------------
+- Fix insert-signature command in external compose window if opened from inline compose screen (#1490074)
+- Initialize HTML editor before restoring a message from localStorage (#1490016)
+- Add 'sig_max_lines' config option to default config file (#1490071)
+- Add option to specify IMAP connection socket parameters - imap_conn_options (#1489948)
+- Add option to set default message list mode - default_list_mode (#1487312)
+- Enable contextmenu plugin for TinyMCE editor (#1487014)
+- Fix some mime-type to extension mapping checks in Installer (#1489983)
+- Fix errors when using localStorage in Safari's private browsing mode (#1489996)
+- Fix bug where $Forwarded flag was being set even if server didn't support it (#1490000)
+- Fix various iCloud vCard issues, added fallback for external photos (#1489993)
+- Fix invalid Content-Type header when send_format_flowed=false (#1489992)
+- Fix errors when adding/updating contacts in active search (#1490015)
+- Fix incorrect thumbnail rotation with GD and exif orientation data (#1490029)
+- Fix contacts list update after adding/deleting/moving a contact (#1490028, #1490033)
+- Fix handling of email addresses with quoted domain part (#1490040)
+- Fix comm_path update on task switch (#1490041)
+- Fix error in MSSQL update script 2013061000.sql (#1490061)
+- Fix validation of email addresses with IDNA domains (#1490067)
+
+RELEASE 1.0.2
+-------------
+- Fix storing unsaved drafts in localStorage (#1489818)
+- Fix redundant horizontal scrollbar in HTML editor (#1489950)
+- Fix PHP error in Preferences when default_folders was in dont_override (#1489940)
+- Add configurable LDAP_OPT_DEREF option (#1489864)
+- Fix unintentional draft autosave request if autosave is disabled (#1489882)
+- Fix malformed References: header in send/saved mail (#1489891)
+- Fix handling unicode characters in links (#1489898)
+- Fix incorrect handling of HTML comments in messages sanitization code (#1489904)
+- Fix so current page is reset on list-mode change (#1489907)
+- Fix so responses menu hides on click in classic skin (#1489915)
+- Fix unintentional line-height style modification in HTML messages (#1489917)
+- Fix broken normalize_string(), add support for ISO-8859-2 (#1489918)
+- Support csv contacts import in German localization (#1489920)
+- Fix so message list and counters are updated when a message is opened in new window (#1489919)
+- Fix malformed recipient name when composing a message by clicking on mailto link (#1489942)
+- Fix list reload after sending message in another window (#1489931)
+- Fix so address format errors are ignored when saving a draft (#1489954)
+- Fix incorrect label translation in return receipt (#1489963)
+- Fix security issue in delete-response action - allow only ajax request
+- Fix Delete button state after deleting identity/response (#1489972)
+- Fix bug where contacts with no email address were listed on compose addressbook (#1489970)
+- Fix images import from various vCard formats (#1489977)
+- Fix sorting messages by size on servers without SORT capability (#1489981)
+- Fix bug where cancelling switch from HTML to plain text didn't set editor type selector properly (#1490141)
+
+RELEASE 1.0.1
+-------------
+- Support 'error' and 'body_file' return attribs in 'message_before_send' hook (#1489595)
+- Apply user-specific replacements to group's base_dn property (#1489779)
+- Fix missing email address when importing contacts from outlook csv (#1489830)
+- Fix bug where "With attachment" option in search filter wasn't selected after return from mail view (#1489774)
+- Fix "washing" of unicoded style attributes (#1489777)
+- Fix unintentional redirect from compose page in Webkit browsers (#1489789)
+- Fix messages index cache update under some conditions (e.g. proxy) (#1489756)
+- Fix lack of translation of special folders in some configurations (#1489799)
+- Fix XSS issue in plain text spellchecker (#1489806)
+- Fix invalid page title for some folders (1489804)
+- Fix redundant alert message on over-size uploads (#1489817)
+- Fix next message display after removing a message (#1489800)
+- Fix missing Mail-Followup-To header in sent mail (#1489829)
+- Fix error when spell-checking an empty text (#1489831)
+- Avoid popupmenus being closed when scrollbar is clicked (#1489832)
+- Add proxy_whitelist configuration option (#1489729)
+- Fix identities_level=4 handling in new_user_dialog plugin (#1489840)
+- Fix various db_prefix issues (#1489839)
+- Fix too small length of users.preferences column data type on MySQL
+- Fix redundant warning when switching from html to text in empty editor (#1489819)
+- Fix invalid host validation on login (#1489841)
+- Fix IMAP connection test in installer so it is aware of imap_auth_type (#1489746)
+
 RELEASE 1.0.0
 -------------
 - Fix style of disabled protocol handler link on IE (#1489569)

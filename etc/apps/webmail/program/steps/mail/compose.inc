@@ -273,6 +273,7 @@ $from_email   = @mb_strtolower($MESSAGE->compose['from_email']);
 foreach ($parts as $header) {
     $fvalue        = '';
     $decode_header = true;
+    $charset       = $MESSAGE->headers->charset;
 
     // we have a set of recipients stored is session
     if ($header == 'to' && ($mailto_id = $COMPOSE['param']['mailto'])
@@ -280,16 +281,19 @@ foreach ($parts as $header) {
     ) {
         $fvalue        = urldecode($_SESSION['mailto'][$mailto_id]);
         $decode_header = false;
+        $charset       = $RCMAIL->output->charset;
 
         // make session to not grow up too much
         unset($_SESSION['mailto'][$mailto_id]);
         $COMPOSE['param']['to'] = $fvalue;
     }
     else if (!empty($_POST['_'.$header])) {
-        $fvalue = rcube_utils::get_input_value('_'.$header, rcube_utils::INPUT_POST, TRUE);
+        $fvalue  = rcube_utils::get_input_value('_'.$header, rcube_utils::INPUT_POST, TRUE);
+        $charset = $RCMAIL->output->charset;
     }
     else if (!empty($COMPOSE['param'][$header])) {
-        $fvalue = $COMPOSE['param'][$header];
+        $fvalue  = $COMPOSE['param'][$header];
+        $charset = $RCMAIL->output->charset;
     }
     else if ($compose_mode == RCUBE_COMPOSE_REPLY) {
         // get recipent address(es) out of the message headers
@@ -330,9 +334,9 @@ foreach ($parts as $header) {
 
             // When To: and Reply-To: are the same we add From: address to the list (#1489037)
             if ($v = $MESSAGE->headers->from) {
-                $from    = rcube_mime::decode_address_list($v, null, false, $MESSAGE->headers->charset, true);
-                $to      = rcube_mime::decode_address_list($MESSAGE->headers->to, null, false, $MESSAGE->headers->charset, true);
-                $replyto = rcube_mime::decode_address_list($MESSAGE->headers->replyto, null, false, $MESSAGE->headers->charset, true);
+                $from    = rcube_mime::decode_address_list($v, null, false, $charset, true);
+                $to      = rcube_mime::decode_address_list($MESSAGE->headers->to, null, false, $charset, true);
+                $replyto = rcube_mime::decode_address_list($MESSAGE->headers->replyto, null, false, $charset, true);
 
                 if (count($replyto) && !count(array_diff($to, $replyto)) && count(array_diff($from, $to))) {
                     $fvalue .= (!empty($fvalue) ? $separator : '') . $v;
@@ -358,7 +362,7 @@ foreach ($parts as $header) {
 
     // split recipients and put them back together in a unique way
     if (!empty($fvalue) && in_array($header, array('to', 'cc', 'bcc'))) {
-        $to_addresses = rcube_mime::decode_address_list($fvalue, null, $decode_header, $MESSAGE->headers->charset);
+        $to_addresses = rcube_mime::decode_address_list($fvalue, null, $decode_header, $charset);
         $fvalue       = array();
 
         foreach ($to_addresses as $addr_part) {
@@ -475,7 +479,7 @@ function rcmail_process_compose_params(&$COMPOSE)
         foreach ($plugin['attachments'] as $attach) {
             // we have structured data
             if (is_array($attach)) {
-                $attachment = $attach;
+                $attachment = $attach + array('group' => $COMPOSE_ID);
             }
             // only a file path is given
             else {
@@ -985,6 +989,8 @@ function rcmail_create_reply_body($body, $bodyIsHtml)
         )
     ));
 
+    $reply_mode = intval($RCMAIL->config->get('reply_mode'));
+
     if (!$bodyIsHtml) {
         $body = preg_replace('/\r?\n/', "\n", $body);
         $body = trim($body, "\n");
@@ -993,10 +999,13 @@ function rcmail_create_reply_body($body, $bodyIsHtml)
         $body = rcmail_wrap_and_quote($body, $LINE_LENGTH);
 
         $prefix .= "\n";
-        $suffix = '';
 
-        if (intval($RCMAIL->config->get('reply_mode')) > 0) { // top-posting
+        if ($reply_mode > 0) { // top-posting
             $prefix = "\n\n\n" . $prefix;
+            $suffix = '';
+        }
+        else {
+            $suffix = "\n";
         }
     }
     else {
@@ -1011,7 +1020,7 @@ function rcmail_create_reply_body($body, $bodyIsHtml)
         $prefix = '<p>' . rcube::Q($prefix) . "</p>\n";
         $prefix .= '<blockquote>';
 
-        if (intval($RCMAIL->config->get('reply_mode')) > 0) { // top-posting
+        if ($reply_mode > 0) { // top-posting
             $prefix = '<br>' . $prefix;
             $suffix = '</blockquote>';
         }

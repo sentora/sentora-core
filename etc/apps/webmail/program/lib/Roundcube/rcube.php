@@ -373,15 +373,16 @@ class rcube
 
         // set class options
         $options = array(
-            'auth_type'   => $this->config->get("{$driver}_auth_type", 'check'),
-            'auth_cid'    => $this->config->get("{$driver}_auth_cid"),
-            'auth_pw'     => $this->config->get("{$driver}_auth_pw"),
-            'debug'       => (bool) $this->config->get("{$driver}_debug"),
-            'force_caps'  => (bool) $this->config->get("{$driver}_force_caps"),
-            'disabled_caps' => $this->config->get("{$driver}_disabled_caps"),
-            'timeout'     => (int) $this->config->get("{$driver}_timeout"),
-            'skip_deleted' => (bool) $this->config->get('skip_deleted'),
-            'driver'      => $driver,
+            'auth_type'      => $this->config->get("{$driver}_auth_type", 'check'),
+            'auth_cid'       => $this->config->get("{$driver}_auth_cid"),
+            'auth_pw'        => $this->config->get("{$driver}_auth_pw"),
+            'debug'          => (bool) $this->config->get("{$driver}_debug"),
+            'force_caps'     => (bool) $this->config->get("{$driver}_force_caps"),
+            'disabled_caps'  => $this->config->get("{$driver}_disabled_caps"),
+            'socket_options' => $this->config->get("{$driver}_conn_options"),
+            'timeout'        => (int) $this->config->get("{$driver}_timeout"),
+            'skip_deleted'   => (bool) $this->config->get('skip_deleted'),
+            'driver'         => $driver,
         );
 
         if (!empty($_SESSION['storage_host'])) {
@@ -1438,6 +1439,13 @@ class rcube
         ));
 
         if ($plugin['abort']) {
+            if (!empty($plugin['error'])) {
+                $error = $plugin['error'];
+            }
+            if (!empty($plugin['body_file'])) {
+                $body_file = $plugin['body_file'];
+            }
+
             return isset($plugin['result']) ? $plugin['result'] : false;
         }
 
@@ -1450,7 +1458,7 @@ class rcube
         // send thru SMTP server using custom SMTP library
         if ($this->config->get('smtp_server')) {
             // generate list of recipients
-            $a_recipients = array($mailto);
+            $a_recipients = (array) $mailto;
 
             if (strlen($headers['Cc']))
                 $a_recipients[] = $headers['Cc'];
@@ -1550,19 +1558,24 @@ class rcube
             // remove MDN headers after sending
             unset($headers['Return-Receipt-To'], $headers['Disposition-Notification-To']);
 
-            // get all recipients
-            if ($headers['Cc'])
-                $mailto .= $headers['Cc'];
-            if ($headers['Bcc'])
-                $mailto .= $headers['Bcc'];
-            if (preg_match_all('/<([^@]+@[^>]+)>/', $mailto, $m))
-                $mailto = implode(', ', array_unique($m[1]));
-
             if ($this->config->get('smtp_log')) {
+                // get all recipient addresses
+                if (is_array($mailto)) {
+                    $mailto = implode(',', $mailto);
+                }
+                if ($headers['Cc']) {
+                    $mailto .= ',' . $headers['Cc'];
+                }
+                if ($headers['Bcc']) {
+                    $mailto .= ',' . $headers['Bcc'];
+                }
+
+                $mailto = rcube_mime::decode_address_list($mailto, null, false, null, true);
+
                 self::write_log('sendmail', sprintf("User %s [%s]; Message for %s; %s",
                     $this->user->get_username(),
-                    $_SERVER['REMOTE_ADDR'],
-                    $mailto,
+                    rcube_utils::remote_addr(),
+                    implode(', ', $mailto),
                     !empty($response) ? join('; ', $response) : ''));
             }
         }

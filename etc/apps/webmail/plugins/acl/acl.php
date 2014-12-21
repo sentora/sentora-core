@@ -111,6 +111,20 @@ class acl extends rcube_plugin
                     $users[] = $user;
                 }
             }
+
+            if ($this->rc->config->get('acl_groups')) {
+                $prefix = $this->rc->config->get('acl_group_prefix');
+                $result = $this->ldap->list_groups($search, $mode);
+
+                foreach ($result as $record) {
+                    $group = $record['name'];
+
+                    if ($group) {
+                        $users[] = array('name' => ($prefix ? $prefix : '')  . $group, 'display' => $group);
+                        $keys[]  = $group;
+                    }
+                }
+            }
         }
 
         sort($users, SORT_LOCALE_STRING);
@@ -429,19 +443,23 @@ class acl extends rcube_plugin
      */
     private function action_save()
     {
-        $mbox  = trim(rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_GPC, true)); // UTF7-IMAP
-        $user  = trim(rcube_utils::get_input_value('_user', rcube_utils::INPUT_GPC));
-        $acl   = trim(rcube_utils::get_input_value('_acl', rcube_utils::INPUT_GPC));
-        $oldid = trim(rcube_utils::get_input_value('_old', rcube_utils::INPUT_GPC));
+        $mbox  = trim(rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_POST, true)); // UTF7-IMAP
+        $user  = trim(rcube_utils::get_input_value('_user', rcube_utils::INPUT_POST));
+        $acl   = trim(rcube_utils::get_input_value('_acl', rcube_utils::INPUT_POST));
+        $oldid = trim(rcube_utils::get_input_value('_old', rcube_utils::INPUT_POST));
 
         $acl    = array_intersect(str_split($acl), $this->rights_supported());
         $users  = $oldid ? array($user) : explode(',', $user);
         $result = 0;
 
         foreach ($users as $user) {
-            $user = trim($user);
+            $user   = trim($user);
+            $prefix = $this->rc->config->get('acl_groups') ? $this->rc->config->get('acl_group_prefix') : '';
 
-            if (!empty($this->specials) && in_array($user, $this->specials)) {
+            if ($prefix && strpos($user, $prefix) === 0) {
+                $username = $user;
+            }
+            else if (!empty($this->specials) && in_array($user, $this->specials)) {
                 $username = $this->gettext($user);
             }
             else if (!empty($user)) {
@@ -481,8 +499,8 @@ class acl extends rcube_plugin
      */
     private function action_delete()
     {
-        $mbox = trim(rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_GPC, true)); //UTF7-IMAP
-        $user = trim(rcube_utils::get_input_value('_user', rcube_utils::INPUT_GPC));
+        $mbox = trim(rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_POST, true)); //UTF7-IMAP
+        $user = trim(rcube_utils::get_input_value('_user', rcube_utils::INPUT_POST));
 
         $user = explode(',', $user);
 

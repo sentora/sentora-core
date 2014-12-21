@@ -175,9 +175,11 @@ class rcube_ldap_generic
         $this->_debug("C: Connect to $hostname [{$this->config['name']}]");
 
         if ($lc = @ldap_connect($host, $this->config['port'])) {
-            if ($this->config['use_tls'] === true)
-                if (!ldap_start_tls($lc))
-                    continue;
+            if ($this->config['use_tls'] === true) {
+                if (!ldap_start_tls($lc)) {
+                    return false;
+                }
+            }
 
             $this->_debug("S: OK");
 
@@ -186,10 +188,13 @@ class rcube_ldap_generic
             $this->conn = $lc;
 
             if (!empty($this->config['network_timeout']))
-              ldap_set_option($lc, LDAP_OPT_NETWORK_TIMEOUT, $this->config['network_timeout']);
+                ldap_set_option($lc, LDAP_OPT_NETWORK_TIMEOUT, $this->config['network_timeout']);
 
             if (isset($this->config['referrals']))
                 ldap_set_option($lc, LDAP_OPT_REFERRALS, $this->config['referrals']);
+
+            if (isset($this->config['dereference']))
+                ldap_set_option($lc, LDAP_OPT_DEREF, $this->config['dereference']);
         }
         else {
             $this->_debug("S: NOT OK");
@@ -240,7 +245,7 @@ class rcube_ldap_generic
             $method = 'DIGEST-MD5';
         }
 
-        $this->_debug("C: SASL Bind [mech: $method, authc: $authc, authz: $authz, pass: $pass]");
+        $this->_debug("C: SASL Bind [mech: $method, authc: $authc, authz: $authz, pass: **** [" . strlen($pass) . "]");
 
         if (ldap_sasl_bind($this->conn, NULL, $pass, $method, NULL, $authc, $authz)) {
             $this->_debug("S: OK");
@@ -271,7 +276,7 @@ class rcube_ldap_generic
             return false;
         }
 
-        $this->_debug("C: Bind $dn [pass: $pass]");
+        $this->_debug("C: Bind $dn, pass: **** [" . strlen($pass) . "]");
 
         if (@ldap_bind($this->conn, $dn, $pass)) {
             $this->_debug("S: OK");

@@ -289,6 +289,7 @@ this.prepare = function(ignore, no_indicator)
     this.cnt_errors_fixed = 0;
     this.cnt_errors = 0;
     this.setStateChanged('checking_spell');
+    this.orginal_text = '';
 
     if (!no_indicator && this.main_controller)
         this.appendIndicator(this.spell_span);
@@ -524,7 +525,7 @@ this.showErrorWindow = function(elm, id)
             $(dummy).html(suggestions[i]);
 
             $(item).mouseover(this.item_onmouseover).mouseout(this.item_onmouseout)
-        	    .click(function(e) { ref.correctError(id, elm, e.target.firstChild) });
+              .click(function(e) { ref.correctError(id, elm, e.target.firstChild) });
 
             item.appendChild(dummy);
             row.appendChild(item);
@@ -565,14 +566,15 @@ this.showErrorWindow = function(elm, id)
                     ref.saveOldValue(elm, elm.innerHTML);
 
                 ref.updateOrginalText(offset, elm.innerHTML, edit_input.value, id);
-                $(elm).attr('is_corrected', true).css('color', 'green').html(edit_input.value);
+                $(elm).attr('is_corrected', true).css('color', 'green').text(edit_input.value);
                 ref.hideErrorWindow();
             }
             return false;
         };
 
-        $(edit_input).width(120).css({'margin': 0, 'padding': 0});
-        $(edit_input).val(elm.innerHTML).attr('googie_action_btn', '1');
+        $(edit_input).width(120)
+          .css({'margin': 0, 'padding': 0})
+          .val($(elm).text()).attr('googie_action_btn', '1');
         $(edit).css('cursor', 'default').attr('googie_action_btn', '1');
 
         $(ok_pic).attr('src', this.img_dir + 'ok.gif')

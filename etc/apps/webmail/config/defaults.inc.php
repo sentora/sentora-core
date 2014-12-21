@@ -123,6 +123,27 @@ $config['default_port'] = 143;
 // best server supported one)
 $config['imap_auth_type'] = null;
 
+// IMAP socket context options
+// See http://php.net/manual/en/context.ssl.php
+// The example below enables server certificate validation
+//$config['imap_conn_options'] = array(
+//  'ssl'         => array(
+//     'verify_peer'  => true,
+//     'verify_depth' => 3,
+//     'cafile'       => '/etc/openssl/certs/ca.crt',
+//   ),
+// );
+$config['imap_conn_options'] = null;
+
+// IMAP connection timeout, in seconds. Default: 0 (use default_socket_timeout)
+$config['imap_timeout'] = 0;
+
+// Optional IMAP authentication identifier to be used as authorization proxy
+$config['imap_auth_cid'] = null;
+
+// Optional IMAP authentication password to be used for imap_auth_cid
+$config['imap_auth_pw'] = null;
+
 // If you know your imap's folder delimiter, you can specify it here.
 // Otherwise it will be determined automatically
 $config['imap_delimiter'] = null;
@@ -160,19 +181,13 @@ $config['imap_force_ns'] = false;
 // Note: Because the list is cached, re-login is required after change.
 $config['imap_disabled_caps'] = array();
 
-// IMAP connection timeout, in seconds. Default: 0 (use default_socket_timeout)
-$config['imap_timeout'] = 0;
-
-// Optional IMAP authentication identifier to be used as authorization proxy
-$config['imap_auth_cid'] = null;
-
-// Optional IMAP authentication password to be used for imap_auth_cid
-$config['imap_auth_pw'] = null;
-
 // Type of IMAP indexes cache. Supported values: 'db', 'apc' and 'memcache'.
 $config['imap_cache'] = null;
 
 // Enables messages cache. Only 'db' cache is supported.
+// This requires an IMAP server that supports QRESYNC and CONDSTORE
+// extensions (RFC7162). See synchronize() in program/lib/Roundcube/rcube_imap_cache.php
+// for further info, or if you experience syncing problems.
 $config['messages_cache'] = false;
 
 // Lifetime of IMAP indexes cache. Possible units: s, m, h, d, w
@@ -241,12 +256,13 @@ $config['smtp_timeout'] = 0;
 // requires 'smtp_timeout' to be non zero.
 // $config['smtp_conn_options'] = array(
 //   'ssl'         => array(
-//     'verify_peer'     => true,
-//     'verify_depth     => 3,
-//     'cafile'          => '/etc/openssl/certs/ca.crt',
+//     'verify_peer'  => true,
+//     'verify_depth' => 3,
+//     'cafile'       => '/etc/openssl/certs/ca.crt',
 //   ),
 // );
 $config['smtp_conn_options'] = null;
+
 
 // ----------------------------------
 // LDAP
@@ -355,8 +371,12 @@ $config['session_storage'] = 'db';
 // Define any number of hosts in the form of hostname:port or unix:///path/to/socket.file
 $config['memcache_hosts'] = null; // e.g. array( 'localhost:11211', '192.168.1.12:11211', 'unix:///var/tmp/memcached.sock' );
 
-// check client IP in session athorization
+// check client IP in session authorization
 $config['ip_check'] = false;
+
+// List of trusted proxies
+// X_FORWARDED_* and X_REAL_IP headers are only accepted from these IPs
+$config['proxy_whitelist'] = array();
 
 // check referer of incoming requests
 $config['referer_check'] = false;
@@ -620,6 +640,10 @@ $config['spellcheck_ignore_syms'] = false;
 // Use this char/string to separate recipients when composing a new message
 $config['recipients_separator'] = ',';
 
+// Number of lines at the end of a message considered to contain the signature.
+// Increase this value if signatures are not properly detected and colored
+$config['sig_max_lines'] = 15;
+
 // don't let users set pagesize to more than this value if set
 $config['max_pagesize'] = 200;
 
@@ -785,6 +809,8 @@ $config['ldap_public']['Verisign'] = array(
   'sizelimit'      => '0',          // Enables you to limit the count of entries fetched. Setting this to 0 means no limit.
   'timelimit'      => '0',          // Sets the number of seconds how long is spend on the search. Setting this to 0 means no limit.
   'referrals'      => false,        // Sets the LDAP_OPT_REFERRALS option. Mostly used in multi-domain Active Directory setups
+  'dereference'    => 0,            // Sets the LDAP_OPT_DEREF option. One of: LDAP_DEREF_NEVER, LDAP_DEREF_SEARCHING, LDAP_DEREF_FINDING, LDAP_DEREF_ALWAYS
+                                    // Used where addressbook contains aliases to objects elsewhere in the LDAP tree.
 
   // definition for contact groups (uncomment if no groups are supported)
   // for the groups base_dn, the user replacements %fu, %u, $d and %dc work as for base_dn (see above)
@@ -961,9 +987,12 @@ $config['check_all_folders'] = false;
 // If true, after message delete/move, the next message will be displayed
 $config['display_next'] = true;
 
-// 0 - Do not expand threads 
-// 1 - Expand all threads automatically 
-// 2 - Expand only threads with unread messages 
+// Default messages listing mode. One of 'threads' or 'list'.
+$config['default_list_mode'] = 'list';
+
+// 0 - Do not expand threads
+// 1 - Expand all threads automatically
+// 2 - Expand only threads with unread messages
 $config['autoexpand_threads'] = 0;
 
 // When replying:

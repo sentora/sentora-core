@@ -44,6 +44,7 @@ $RCMAIL->register_action_map(array(
     'add-response'  => 'edit_response.inc',
     'save-response' => 'edit_response.inc',
     'delete-response' => 'responses.inc',
+    'delete-identity' => 'identities.inc',
 ));
 
 
@@ -1035,7 +1036,8 @@ function rcmail_user_prefs($current = null)
             }
 
             // Configure special folders
-            if (!isset($no_override['default_folders']) && $current) {
+            $set = array('drafts_mbox', 'sent_mbox', 'junk_mbox', 'trash_mbox');
+            if ($current && count(array_intersect($no_override, $set)) < 4) {
                 $select = $RCMAIL->folder_selector(array(
                     'noselection'   => '---',
                     'realnames'     => true,
@@ -1236,6 +1238,13 @@ function rcmail_user_prefs($current = null)
             unset($sections[$idx]);
         else
             $sections[$idx]['blocks'] = $data['blocks'];
+    }
+
+    $data = $RCMAIL->plugins->exec_hook('preferences_section_header',
+        array('section' => $sect['id'], 'header' => '', 'current' => $current));
+
+    if(!empty($data['header'])) {
+        $sections[$idx]['header'] = $data['header'];
     }
 
     return array($sections, $plugin['cols']);

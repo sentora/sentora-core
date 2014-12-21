@@ -2,9 +2,9 @@
 /*
  +-------------------------------------------------------------------------+
  | Roundcube Webmail IMAP Client                                           |
- | Version 1.0.0                                                           |
+ | Version 1.0.4                                                           |
  |                                                                         |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                         |
+ | Copyright (C) 2005-2014, The Roundcube Dev Team                         |
  |                                                                         |
  | This program is free software: you can redistribute it and/or modify    |
  | it under the terms of the GNU General Public License (with exceptions   |
@@ -172,6 +172,7 @@ if ($RCMAIL->task == 'login' && $RCMAIL->action == 'login') {
 
 // end session (after optional referer check)
 else if ($RCMAIL->task == 'logout' && isset($_SESSION['user_id'])
+    && $RCMAIL->check_request(rcube_utils::INPUT_GET)
     && (!$RCMAIL->config->get('referer_check') || rcube_utils::check_referer())
 ) {
     $userdata = array(
@@ -211,7 +212,7 @@ if (empty($RCMAIL->user->ID)) {
         $OUTPUT->show_message('sessionerror', 'error', null, true, -1);
     }
 
-    if ($OUTPUT->ajax_call || !empty($_REQUEST['_framed'])) {
+    if ($OUTPUT->ajax_call || $OUTPUT->get_env('framed')) {
         $OUTPUT->command('session_error', $RCMAIL->url(array('_err' => 'session')));
         $OUTPUT->send('iframe');
     }
