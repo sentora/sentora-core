@@ -46,11 +46,44 @@ class Linux extends OS
      */
     private function _machine()
     {
-        if ( (CommonFunctions::rfts('/var/log/dmesg', $result, 0, 4096, false) 
-              && preg_match('/^[\s\[\]\.\d]*DMI:\s*(.*)/m', $result, $ar_buf)) 
+        if ( (CommonFunctions::rfts('/var/log/dmesg', $result, 0, 4096, false)
+              && preg_match('/^[\s\[\]\.\d]*DMI:\s*(.*)/m', $result, $ar_buf))
            ||(CommonFunctions::executeProgram('dmesg', '', $result, false)
               && preg_match('/^[\s\[\]\.\d]*DMI:\s*(.*)/m', $result, $ar_buf)) ) {
             $this->sys->setMachine(trim($ar_buf[1]));
+        } else { //data from /sys/devices/virtual/dmi/id/
+            $machine = "";
+            $product = "";
+            $board = "";
+            $bios = "";
+            if (CommonFunctions::rfts('/sys/devices/virtual/dmi/id/board_vendor', $buf, 1, 4096, false) && (trim($buf)!="")) {
+                $machine = trim($buf);
+            }
+            if (CommonFunctions::rfts('/sys/devices/virtual/dmi/id/product_name', $buf, 1, 4096, false) && (trim($buf)!="")) {
+                $product = trim($buf);
+            }
+            if (CommonFunctions::rfts('/sys/devices/virtual/dmi/id/board_name', $buf, 1, 4096, false) && (trim($buf)!="")) {
+                $board = trim($buf);
+            }
+            if (CommonFunctions::rfts('/sys/devices/virtual/dmi/id/bios_version', $buf, 1, 4096, false) && (trim($buf)!="")) {
+                $bios = trim($buf);
+            }
+            if (CommonFunctions::rfts('/sys/devices/virtual/dmi/id/bios_date', $buf, 1, 4096, false) && (trim($buf)!="")) {
+                $bios = trim($bios." ".trim($buf));
+            }
+            if ($product != "") {
+                $machine .= " ".$product;
+            }
+            if ($board != "") {
+                $machine .= "/".$board;
+            }
+            if ($bios != "") {
+                $machine .= ", BIOS ".$bios;
+            }
+
+            if ($machine != "") {
+                $this->sys->setMachine(trim($machine));
+            }
         }
     }
 
@@ -110,17 +143,27 @@ class Linux extends OS
             if (CommonFunctions::executeProgram($uname, '-m', $strBuf, PSI_DEBUG)) {
                 $result .= ' '.trim($strBuf);
             }
-            $this->sys->setKernel($result);
-        } else {
-            if (CommonFunctions::rfts('/proc/version', $strBuf, 1)) {
-                if (preg_match('/version (.*?) /', $strBuf, $ar_buf)) {
-                    $result = $ar_buf[1];
-                    if (preg_match('/SMP/', $strBuf)) {
-                        $result .= ' (SMP)';
-                    }
-                    $this->sys->setKernel($result);
+            if (CommonFunctions::rfts('/proc/self/cgroup', $strBuf2, 0, 4096, false)) {
+                if (preg_match('/:\/lxc\//m', $strBuf2)) {
+                    $result .= ' [lxc]';
+                } elseif (preg_match('/:\/docker\//m', $strBuf2)) {
+                    $result .= ' [docker]';
                 }
             }
+            $this->sys->setKernel($result);
+        } elseif (CommonFunctions::rfts('/proc/version', $strBuf, 1) &&  preg_match('/version (.*?) /', $strBuf, $ar_buf)) {
+            $result = $ar_buf[1];
+            if (preg_match('/SMP/', $strBuf)) {
+                $result .= ' (SMP)';
+            }
+            if (CommonFunctions::rfts('/proc/self/cgroup', $strBuf2, 0, 4096, false)) {
+                if (preg_match('/:\/lxc\//m', $strBuf2)) {
+                    $result .= ' [lxc]';
+                } elseif (preg_match('/:\/docker\//m', $strBuf2)) {
+                    $result .= ' [docker]';
+                }
+            }
+            $this->sys->setKernel($result);
         }
     }
 
@@ -232,6 +275,7 @@ class Linux extends OS
         if (isset($this->_cpu_loads[$cpuline])) {
             return $this->_cpu_loads[$cpuline];
         }
+
         return 0;
     }
 
@@ -268,6 +312,7 @@ class Linux extends OS
                             break;
                         case 'model name':
                         case 'cpu model':
+                        case 'cpu type':
                         case 'cpu':
                             $dev->setModel($arrBuff[1]);
                             break;
@@ -491,6 +536,10 @@ class Linux extends OS
                 if (isset($device[6]) && trim($device[6]) != "") {
                     $dev = new HWDevice();
                     $dev->setName(trim($device[6]));
+                    $this->sys->setUsbDevices($dev);
+                } elseif (isset($device[5]) && trim($device[5]) != "") {
+                    $dev = new HWDevice();
+                    $dev->setName("unknown");
                     $this->sys->setUsbDevices($dev);
                 }
             }
@@ -950,6 +999,37 @@ class Linux extends OS
     }
 
     /**
+     * Processes
+     *
+     * @return void
+     */
+    protected function _processes()
+    {
+        $process = glob('/proc/*/status', GLOB_NOSORT);
+        if (($total = count($process)) > 0) {
+
+            $processes['*'] = 0;
+            $buf = "";
+            for ($i = 0; $i < $total; $i++) {
+                if (CommonFunctions::rfts($process[$i], $buf, 0, 4096, false)) {
+                    $processes['*']++; //current total
+                    if (preg_match('/^State:\s+(\w)/m', $buf, $state)) {
+                        if (isset($processes[$state[1]])) {
+                            $processes[$state[1]]++;
+                        } else {
+                            $processes[$state[1]] = 1;
+                        }
+                    }
+                }
+            }
+            if (!($processes['*'] > 0)) {
+                $processes['*'] = $processes[' '] = $total; //all unknown
+            }
+            $this->sys->setProcesses($processes);
+        }
+    }
+
+    /**
      * get the information
      *
      * @see PSI_Interface_OS::build()
@@ -974,5 +1054,6 @@ class Linux extends OS
         $this->_memory();
         $this->_filesystems();
         $this->_loadavg();
+        $this->_processes();
     }
 }

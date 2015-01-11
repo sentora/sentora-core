@@ -3,6 +3,51 @@ Changelog of phpSysInfo
 
 http://phpsysinfo.sourceforge.net/
 
+phpSysInfo 3.1.17
+----------------
+
+ - [UPD] BAT plugin - capacity unit, cycle count, FreeBSD support
+ - [UPD] Brazilian Portuguese Translation pt-br.xml
+
+ - [ADD] Show the number of processes on Haiku
+ - [ADD] ThermalZone sensor support for WinNT
+ - [ADD] Tanglu to detected distros
+ - [ADD] Android and OS X version name
+
+ - [FIX] Fixed display of treetables
+
+phpSysInfo 3.1.16
+----------------
+
+ - [ADD] Show the number of processes
+ - [ADD] Lunar and 4MLinux to detected distros
+
+phpSysInfo 3.1.15
+----------------
+
+ - [ADD] CoreOS and Pisi Linux to detected distros
+ - [ADD] pmset - UPS support on Darwin (thanks to pelletierr)
+ - [ADD] lspci support on Darwin
+ - [ADD] SHOW_CPULIST_EXPANDED option
+ - [ADD] lxc/docker detection on Linux
+ - [ADD] ability to hide all disks and all network interfaces
+
+ - [FIX] Small CSS fix
+
+ - [UPD] Memory informations on Darwin systems
+ - [UPD] BAT plugin - Darwin support
+
+phpSysInfo 3.1.14
+----------------
+
+ - [ADD] FreeIPMI sensor program support
+ - [ADD] IPMIutil sensor program support
+ - [ADD] PowerSoftPlus (EVER) UPS program support
+ - [ADD] Line frequency for the UPS info
+ - [ADD] SENSOR_EVENTS option - show events of sensors
+ - [ADD] HIDE_RAID_DEVICES option for plugins MDStatus and DMRaid - list of RAID devices to hide
+ - [ADD] idash template
+
 phpSysInfo 3.1.13
 ----------------
 
