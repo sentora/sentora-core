@@ -92,7 +92,7 @@ class webservice extends ws_xmws {
         }
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
-        $dataobject->addItemValue('content', $respons);
+        $dataobject->addItemValue('content', $response);
         return $dataobject->getDataObject();
     }
 
