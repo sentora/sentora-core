@@ -42,8 +42,8 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <th><: New password :>:<br><: (32 ascii char max) :></th>
-                    <td><input name="inPassword" type="text" id="input-password" size="30" maxlength="32" /></td>
+                    <th><: New password :>:</th>
+                    <td><input name="inPassword" type="text" id="input-password" size="30" maxlength="50" /></td>
                     <td><button class="button-loader btn btn-default" type="submit" name="inReset" id="button" value="<@ EditCurrentID @>"><: Reset Password :>
                         </button>
                         <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button></td>
@@ -125,10 +125,10 @@
                         <table class="table table-striped">
                             <tr>
                                 <th nowrap="nowrap"><: Username :>:</th>
-                                <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value="" maxlength="32"/></td>
+                                <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value="" maxlength="50"/></td>
                             </tr>
                             <tr>
-                                <th><: Password :>:<: (32 ascii char max) :></th>
+                                <th><: Password :>:</th>
                                 <td><input name="inPassword" type="password" id="inPassword" size="30" maxlength="32" /></td>
                             </tr>
                             <tr>
