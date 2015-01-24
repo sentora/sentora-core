@@ -129,7 +129,7 @@
                             </tr>
                             <tr>
                                 <th><: Password :>:</th>
-                                <td><input name="inPassword" type="password" id="inPassword" size="30" maxlength="32" /></td>
+                                <td><input name="inPassword" type="password" id="inPassword" size="30" maxlength="50" /></td>
                             </tr>
                             <tr>
                                 <th nowrap="nowrap"><: Access type :>:</th>
