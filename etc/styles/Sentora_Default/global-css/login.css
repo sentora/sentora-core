@@ -5,11 +5,11 @@ html, body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 a:link, a:visited {
-    color: #5FBF5E;
+    color: #4C4C81;
     text-decoration:none;
 }
 a:hover, a:active {
-    color: #5FBF5E;
+    color: #4C4C81;
     text-decoration: underline;
 }
 
