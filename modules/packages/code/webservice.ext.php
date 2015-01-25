@@ -30,9 +30,9 @@ class webservice extends ws_xmws
 {
 
     /**
-     * Get the full list of packages
+     * Return a full list of packages configured for a specific user (reseller) account.
      * @global type $zdbh
-     * @return type
+     * @return array
      */
     public function GetAllPackages()
     {
@@ -58,6 +58,10 @@ class webservice extends ws_xmws
         return $dataobject->getDataObject();
     }
 
+    /**
+     * Get and return package details for a specific package.
+     * @return array
+     */
     public function GetPackageId()
     {
         $request_data = $this->RawXMWSToArray($this->wsdata);
