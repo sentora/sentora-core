@@ -24,9 +24,11 @@
 	},
 
 	"config": {
-		"preferred-install": "source",
-    	"bin-dir": "bin"
+		"vendor-dir": "vendor",
+    	"bin-dir": "./bin"
 	},
 
-	"minimum-stability": "dev"
+	"minimum-stability": "dev",
+
+	"_reference_":"https://getcomposer.org/doc/04-schema.md"
 }
