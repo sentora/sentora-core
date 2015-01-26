@@ -14,7 +14,12 @@
 	"require-dev": {},
 
 	"autoload":{
-		"psr-4":{}
+		"classmap":[],
+		"files":[],
+		"psr-4":{
+			"Dryden\\":"Sentora/Dryden",
+			"Module\\":"Sentora/Module"
+		}
 	},
 
 	"scripts":{
