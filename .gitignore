@@ -3,3 +3,9 @@
 /.vagrant
 .DS_Store
 Thumbs.db
+
+# composer
+composer.lock
+vendor/
+
+#

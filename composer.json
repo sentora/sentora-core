@@ -1,0 +1,32 @@
+{
+
+	"name":"",
+	"type":"",
+	"keywords":[],
+	"licience":"",
+	"authors":[{
+		"name":"name",
+		"email":"email@email.com"
+	}],
+    "require": {
+    },
+
+	"require-dev": {},
+
+	"autoload":{
+		"psr-4":{}
+	},
+
+	"scripts":{
+		"post-install-cmd": [],
+		"post-update-cmd": [],
+		"post-create-project-cmd": []
+	},
+
+	"config": {
+		"preferred-install": "source",
+    	"bin-dir": "bin"
+	},
+
+	"minimum-stability": "dev"
+}
