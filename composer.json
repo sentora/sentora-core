@@ -1,0 +1,39 @@
+{
+
+	"name":"",
+	"type":"",
+	"keywords":[],
+	"licience":"",
+	"authors":[{
+		"name":"name",
+		"email":"email@email.com"
+	}],
+    "require": {
+    },
+
+	"require-dev": {},
+
+	"autoload":{
+		"classmap":[],
+		"files":[],
+		"psr-4":{
+			"Dryden\\":"Sentora/Dryden",
+			"Module\\":"Sentora/Module"
+		}
+	},
+
+	"scripts":{
+		"post-install-cmd": [],
+		"post-update-cmd": [],
+		"post-create-project-cmd": []
+	},
+
+	"config": {
+		"vendor-dir": "vendor",
+    	"bin-dir": "./bin"
+	},
+
+	"minimum-stability": "dev",
+
+	"_reference_":"https://getcomposer.org/doc/04-schema.md"
+}
