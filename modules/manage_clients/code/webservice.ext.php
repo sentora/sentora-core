@@ -79,16 +79,16 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
-    public function UsernameExits() {
+    public function UsernameExists() {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
         $response = null;
 
-        $UsernameExits = module_controller::CheckUserExits($contenttags['username']);
-        if ($UsernameExits === true) {
+        $UsernameExists = module_controller::CheckUserExits($contenttags['username']);
+        if ($UsernameExists === true) {
             $response = "true";
         } else {
-            $response = $UsernameExits;
+            $response = "false";
         }
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
