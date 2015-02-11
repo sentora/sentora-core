@@ -15,6 +15,8 @@
 global $controller, $zdbh, $zlo;
 $controller = new runtime_controller();
 
+runtime_hook::Execute('OnBoot');
+
 $zlo->method = ctrl_options::GetSystemOption('logmode');
 if ($zlo->hasInfo()) {
     $zlo->writeLog();
@@ -22,6 +24,7 @@ if ($zlo->hasInfo()) {
 }
 
 if (isset($_GET['logout'])) {
+    runtime_hook::Execute('OnLogout');
     ctrl_auth::KillSession();
     ctrl_auth::KillCookies();
     header("location: ./?loggedout");
