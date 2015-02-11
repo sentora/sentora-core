@@ -11,9 +11,11 @@
  * @link http://www.zpanelcp.com/
  * @license GPL (http://www.gnu.org/licenses/gpl.html)
  */
-class webservice extends ws_xmws {
+class webservice extends ws_xmws
+{
 
-    function DeleteClient() {
+    function DeleteClient()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
         module_controller::ExecuteDeleteClient($contenttags['uid']);
@@ -24,7 +26,8 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
-    function EnableClient() {
+    function EnableClient()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
         module_controller::EnableClient($contenttags['uid']);
@@ -34,7 +37,8 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
-    function DisableClient() {
+    function DisableClient()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
         module_controller::DisableClient($contenttags['uid']);
@@ -44,7 +48,8 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
-    public function GetAllClients() {
+    public function GetAllClients()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
         $response_xml = "\n";
@@ -64,7 +69,8 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
-    public function CreateClient() {
+    public function CreateClient()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $response_xml = "";
         $userExits = module_controller::CheckUserExits(ws_generic::GetTagValue('username', $request_data['content']));
@@ -79,23 +85,20 @@ class webservice extends ws_xmws {
         return $dataobject->getDataObject();
     }
 
-    public function UsernameExists() {
+    public function UsernameExists()
+    {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
-        $response = null;
-
         $UsernameExists = module_controller::CheckUserExits($contenttags['username']);
+        $response = "false";
         if ($UsernameExists === true) {
             $response = "true";
-        } else {
-            $response = "false";
         }
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', $response);
         return $dataobject->getDataObject();
     }
-
 }
 
 ?>
