@@ -702,7 +702,7 @@ class module_controller extends ctrl_module
      * @param type $username The username to check against.
      * @return boolean
      */
-    static function CheckUserExits($username)
+    static function CheckUserExists($username)
     {
         global $zdbh;
         $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username";
