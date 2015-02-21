@@ -234,7 +234,7 @@
             }
             e.preventDefault();
         });
-		$('#btn_sh').click(function(){
+		$('#btn_sh').click(function(e){
 		  if (!ShowPass)
 		  { 
 			  $('.passRow').css({'visibility': 'visible'});
@@ -247,6 +247,7 @@
 			  $('#btn_sh').innerHTML = 'Show passwords';
 			  ShowPass = false;
 		  }
+		  e.preventDefault();
 		});
 		
 	  
