@@ -62,9 +62,6 @@
     <div class="zgrid_wrapper">
         <h2><: Current FTP accounts :></h2>
         <% if ClientList %>
-        <script type="text/javascript">
-
-        </script>
         <form action="./?module=ftp_management&action=EditFTP" method="post">
             <table class="table table-striped">
 				<colgroup>
