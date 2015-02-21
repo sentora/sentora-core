@@ -69,12 +69,12 @@
               ShowPass = !ShowPass;
               if (ShowPass)
               { 
-                  document.getElementById('ColPass').style.visibility = 'visible';
+                  document.getElementById('ColPass').css({'visibility': 'visible'});
                   document.getElementById('btn_sh').innerHTML = 'Hide passwords';
               }
               else
               {
-                  document.getElementById('ColPass').style.visibility = 'collapse';
+                  document.getElementById('ColPass').css({'visibility': 'collapse'});
                   document.getElementById('btn_sh').innerHTML = 'Show passwords';
               }
               return false;
