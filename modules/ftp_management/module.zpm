@@ -246,5 +246,6 @@
             }
             e.preventDefault();
         });
+		ShowHide();
     });
 </script>
