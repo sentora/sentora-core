@@ -71,7 +71,7 @@
 					<col>
 					<col>
 					<col>
-					<col id="ColPass" style="visibility: collapse"/>
+					<col>
 					<col>
 				</colgroup>
                 <tr>
@@ -86,7 +86,7 @@
                     <td><& username &></td>
                     <td><& directory &></td>
                     <td><& access &></td>
-                    <td class="passRow" style="visibility: collapse"><& password &></td>
+                    <td><span class="passRow" style="visibility: collapse"><& password &></span></td>
                     <td>
                         <button class="button-loader btn btn-default" type="submit" name="inReset_<& id &>" id="button" value="inReset_<& id &>"><: Reset Password :></button>
                         <button class="button-loader delete btn btn-danger" type="submit" name="inDelete_<& id &>" id="button" value="inDelete_<& id &>"><: Delete :></button>
@@ -239,13 +239,13 @@
 		  { 
 			  $('.passRow').css({'visibility': 'visible'});
 			  $('#btn_sh').innerHTML = 'Hide passwords';
-			  ShowPass = false;
+			  ShowPass = true;
 		  }
 		  else 
 		  {
 			  $('.passRow').css({'visibility': 'collapse'});
 			  $('#btn_sh').innerHTML = 'Show passwords';
-			  ShowPass = true;
+			  ShowPass = false;
 		  }
 		});
 		
