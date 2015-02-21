@@ -63,43 +63,30 @@
         <h2><: Current FTP accounts :></h2>
         <% if ClientList %>
         <script type="text/javascript">
-          var ShowPass = false;
-          function ShowHide()
-          {
-              ShowPass = !ShowPass;
-              if (ShowPass)
-              { 
-                  document.getElementById('ColPass').css({'visibility': 'visible'});
-                  document.getElementById('btn_sh').innerHTML = 'Hide passwords';
-              }
-              else
-              {
-                  document.getElementById('ColPass').css({'visibility': 'collapse'});
-                  document.getElementById('btn_sh').innerHTML = 'Show passwords';
-              }
-              return false;
-          }
+
         </script>
         <form action="./?module=ftp_management&action=EditFTP" method="post">
             <table class="table table-striped">
-                <col />
-                <col />
-                <col />
-                <col id="ColPass" style="visibility:collapse"/>
-                <col />
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col id="ColPass" style="visibility: collapse"/>
+					<col>
+				</colgroup>
                 <tr>
                     <th><: Account name :></th>
                     <th><: Home directory :></th>
                     <th><: Permission :></th>
                     <th><: Password :></th>
-                    <th><button class="button btn btn-default" id="btn_sh" onClick="return ShowHide()">Show Passwords</button></th>
+                    <th><button class="button btn btn-default" id="btn_sh">Show Passwords</button></th>
                 </tr>
                 <% loop ClientList %>
                 <tr>
                     <td><& username &></td>
                     <td><& directory &></td>
                     <td><& access &></td>
-                    <td><& password &></td>
+                    <td class="passRow" style="visibility: collapse"><& password &></td>
                     <td>
                         <button class="button-loader btn btn-default" type="submit" name="inReset_<& id &>" id="button" value="inReset_<& id &>"><: Reset Password :></button>
                         <button class="button-loader delete btn btn-danger" type="submit" name="inDelete_<& id &>" id="button" value="inDelete_<& id &>"><: Delete :></button>
@@ -238,6 +225,7 @@
         }
     });
     $(document).ready(function() {
+		var ShowPass = false;
         $('.link-password').click(function(e){
             linkId = $(this).attr('id');
             if (linkId == 'generate'){
@@ -246,6 +234,21 @@
             }
             e.preventDefault();
         });
-		ShowHide();
+		$('#btn_sh').click(function(){
+		  if (!ShowPass)
+		  { 
+			  $('.passRow').css({'visibility': 'visible'});
+			  $('#btn_sh').innerHTML = 'Hide passwords';
+			  ShowPass = false;
+		  }
+		  else 
+		  {
+			  $('.passRow').css({'visibility': 'collapse'});
+			  $('#btn_sh').innerHTML = 'Show passwords';
+			  ShowPass = true;
+		  }
+		});
+		
+	  
     });
 </script>
