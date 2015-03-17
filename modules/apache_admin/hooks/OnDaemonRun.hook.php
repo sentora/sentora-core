@@ -314,8 +314,8 @@ function WriteVhostConfigFile()
                 $line .= 'CustomLog "' . ctrl_options::GetSystemOption('log_dir') . "domains/" . $vhostuser['username'] . "/" . $rowvhost['vh_name_vc'] . '-access.log" ' . ctrl_options::GetSystemOption('access_log_format') . fs_filehandler::NewLine();
                 $line .= 'CustomLog "' . ctrl_options::GetSystemOption('log_dir') . "domains/" . $vhostuser['username'] . "/" . $rowvhost['vh_name_vc'] . '-bandwidth.log" ' . ctrl_options::GetSystemOption('bandwidth_log_format') . fs_filehandler::NewLine();
 				
-				# we create logs in the user folder aswell
-				if (!is_dir(ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . '/logs/')) {
+		# we create logs in the user folder aswell
+		if (!is_dir(ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . '/logs/')) {
                     fs_director::CreateDirectory(ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . '/logs/');
                 }
                 $line .= 'ErrorLog "' . ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . '/logs/'.  $rowvhost['vh_name_vc'] . '-error.log" ' . fs_filehandler::NewLine();
