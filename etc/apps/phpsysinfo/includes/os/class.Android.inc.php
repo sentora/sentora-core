@@ -146,12 +146,17 @@ class Android extends Linux
         $buf = "";
         if (CommonFunctions::rfts('/system/build.prop', $lines, 0, 4096, false)
             && preg_match('/^ro\.build\.version\.release=([^\n]+)/m', $lines, $ar_buf)) {
-                $buf = $ar_buf[1];
+                $buf = trim($ar_buf[1]);
         }
-        if ( is_null($buf) || (trim($buf) == "")) {
+        if ( is_null($buf) || ($buf == "")) {
             $this->sys->setDistribution('Android');
-        } else {
-            $this->sys->setDistribution('Android '.trim($buf));
+        } else { 
+            if (preg_match('/^(\d+\.\d+)/', $buf, $ver) 
+                && ($list = @parse_ini_file(APP_ROOT."/data/osnames.ini", true))
+                && isset($list['Android'][$ver[1]])) {
+                    $buf.=' '.$list['Android'][$ver[1]];
+            }
+            $this->sys->setDistribution('Android '.$buf);
         }
         $this->sys->setDistributionIcon('Android.png');
     }
@@ -181,6 +186,46 @@ class Android extends Linux
     }
 
     /**
+     * PCI devices
+     *
+     * @return array
+     */
+    private function _pci()
+    {
+        if (CommonFunctions::executeProgram('lspci', '', $bufr, false)) {
+            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($bufe as $buf) {
+                $device = preg_split("/ /", $buf, 4);
+                if (isset($device[3]) && trim($device[3]) != "") {
+                    $dev = new HWDevice();
+                    $dev->setName(trim($device[3]));
+                    $this->sys->setPciDevices($dev);
+                }
+            }
+        }
+    }
+
+    /**
+     * USB devices
+     *
+     * @return array
+     */
+    private function _usb()
+    {
+        if (CommonFunctions::executeProgram('lsusb', '', $bufr, false)) {
+            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($bufe as $buf) {
+                $device = preg_split("/ /", $buf, 6);
+                if (isset($device[5]) && trim($device[5]) != "") {
+                    $dev = new HWDevice();
+                    $dev->setName(trim($device[5]));
+                    $this->sys->setUsbDevices($dev);
+                }
+            }
+        }
+    }
+
+    /**
      * get the information
      *
      * @see PSI_Interface_OS::build()
@@ -198,9 +243,12 @@ class Android extends Linux
         $this->_uptime();
         $this->_users();
         $this->_cpuinfo();
+        $this->_pci();
+        $this->_usb();
         $this->_network();
         $this->_memory();
         $this->_filesystems();
         $this->_loadavg();
+        $this->_processes();
     }
 }

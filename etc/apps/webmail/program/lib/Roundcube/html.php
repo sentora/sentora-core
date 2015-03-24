@@ -153,7 +153,7 @@ class html
             $attr = array('src' => $attr);
         }
         return self::tag('img', $attr + array('alt' => ''), null, array_merge(self::$common_attrib,
-            array('src','alt','width','height','border','usemap','onclick')));
+            array('src','alt','width','height','border','usemap','onclick','onerror')));
     }
 
     /**
@@ -285,7 +285,7 @@ class html
 
             // ignore not allowed attributes
             if (!empty($allowed)) {
-                $is_data_attr = substr_compare($key, 'data-', 0, 5) === 0;
+                $is_data_attr = @substr_compare($key, 'data-', 0, 5) === 0;
                 if (!isset($allowed_f[$key]) && (!$is_data_attr || !isset($allowed_f['data-*']))) {
                     continue;
                 }

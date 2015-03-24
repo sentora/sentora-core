@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * The web gui initiation script.
@@ -15,6 +15,8 @@
 global $controller, $zdbh, $zlo;
 $controller = new runtime_controller();
 
+runtime_hook::Execute('OnBoot');
+
 $zlo->method = ctrl_options::GetSystemOption('logmode');
 if ($zlo->hasInfo()) {
     $zlo->writeLog();
@@ -22,6 +24,7 @@ if ($zlo->hasInfo()) {
 }
 
 if (isset($_GET['logout'])) {
+    runtime_hook::Execute('OnLogout');
     ctrl_auth::KillSession();
     ctrl_auth::KillCookies();
     header("location: ./?loggedout");

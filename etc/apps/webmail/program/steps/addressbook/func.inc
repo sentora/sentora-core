@@ -81,7 +81,6 @@ if (!$RCMAIL->action && !$OUTPUT->ajax_call) {
     $OUTPUT->set_env('search_mods', $search_mods);
     $OUTPUT->set_env('address_sources', $js_list);
     $OUTPUT->set_env('writable_source', $writeable);
-    $OUTPUT->set_env('compose_extwin', $RCMAIL->config->get('compose_extwin',false));
 
     $OUTPUT->set_pagetitle($RCMAIL->gettext('addressbook'));
     $_SESSION['addressbooks_count'] = $count;
@@ -800,11 +799,15 @@ function rcmail_contact_photo($attrib)
         }
         $photo_img = $RCMAIL->url($url);
     }
-    else
+    else {
         $ff_value = '-del-'; // will disable delete-photo action
+    }
 
-    $img = html::img(array('src' => $photo_img, 'border' => 1, 'alt' => ''));
-    $content = html::div($attrib, $img);
+    $content = html::div($attrib, html::img(array(
+            'src'     => $photo_img,
+            'alt'     => '',
+            'onerror' => 'this.src = rcmail.env.photo_placeholder',
+    )));
 
     if ($CONTACT_COLTYPES['photo'] && ($RCMAIL->action == 'edit' || $RCMAIL->action == 'add')) {
         $RCMAIL->output->add_gui_object('contactphoto', $attrib['id']);
@@ -876,13 +879,13 @@ function rcmail_search_update($return = false)
  *
  * @return array List of contact IDs per-source
  */
-function rcmail_get_cids($filter = null)
+function rcmail_get_cids($filter = null, $request_type = rcube_utils::INPUT_GPC)
 {
     // contact ID (or comma-separated list of IDs) is provided in two
     // forms. If _source is an empty string then the ID is a string
     // containing contact ID and source name in form: <ID>-<SOURCE>
 
-    $cid    = rcube_utils::get_input_value('_cid', rcube_utils::INPUT_GPC);
+    $cid    = rcube_utils::get_input_value('_cid', $request_type);
     $source = (string) rcube_utils::get_input_value('_source', rcube_utils::INPUT_GPC);
 
     if (is_array($cid)) {

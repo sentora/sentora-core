@@ -73,6 +73,7 @@ class rcube_imap_generic
     const COMMAND_NORESPONSE = 1;
     const COMMAND_CAPABILITY = 2;
     const COMMAND_LASTLINE   = 4;
+    const COMMAND_ANONYMIZED = 8;
 
     const DEBUG_LINE_LENGTH = 4098; // 4KB + 2B for \r\n
 
@@ -88,16 +89,28 @@ class rcube_imap_generic
      *
      * @param string $string Command string
      * @param bool   $endln  True if CRLF need to be added at the end of command
+     * @param bool   $anonymized Don't write the given data to log but a placeholder
      *
      * @param int Number of bytes sent, False on error
      */
-    function putLine($string, $endln=true)
+    function putLine($string, $endln=true, $anonymized=false)
     {
         if (!$this->fp)
             return false;
 
         if ($this->_debug) {
-            $this->debug('C: '. rtrim($string));
+            // anonymize the sent command for logging
+            $cut = $endln ? 2 : 0;
+            if ($anonymized && preg_match('/^(A\d+ (?:[A-Z]+ )+)(.+)/', $string, $m)) {
+                $log = $m[1] . sprintf('****** [%d]', strlen($m[2]) - $cut);
+            }
+            else if ($anonymized) {
+                $log = sprintf('****** [%d]', strlen($string) - $cut);
+            }
+            else {
+                $log = rtrim($string);
+            }
+            $this->debug('C: ' . $log);
         }
 
         $res = fwrite($this->fp, $string . ($endln ? "\r\n" : ''));
@@ -116,10 +129,11 @@ class rcube_imap_generic
      *
      * @param string $string Command string
      * @param bool   $endln  True if CRLF need to be added at the end of command
+     * @param bool   $anonymized Don't write the given data to log but a placeholder
      *
      * @return int|bool Number of bytes sent, False on error
      */
-    function putLineC($string, $endln=true)
+    function putLineC($string, $endln=true, $anonymized=false)
     {
         if (!$this->fp) {
             return false;
@@ -138,7 +152,7 @@ class rcube_imap_generic
                         $parts[$i+1] = sprintf("{%d+}\r\n", $matches[1]);
                     }
 
-                    $bytes = $this->putLine($parts[$i].$parts[$i+1], false);
+                    $bytes = $this->putLine($parts[$i].$parts[$i+1], false, $anonymized);
                     if ($bytes === false)
                         return false;
                     $res += $bytes;
@@ -153,7 +167,7 @@ class rcube_imap_generic
                     $i++;
                 }
                 else {
-                    $bytes = $this->putLine($parts[$i], false);
+                    $bytes = $this->putLine($parts[$i], false, $anonymized);
                     if ($bytes === false)
                         return false;
                     $res += $bytes;
@@ -519,7 +533,7 @@ class rcube_imap_generic
                 $reply = base64_encode($user . ' ' . $hash);
 
                 // send result
-                $this->putLine($reply);
+                $this->putLine($reply, true, true);
             }
             else {
                 // RFC2831: DIGEST-MD5
@@ -537,7 +551,7 @@ class rcube_imap_generic
                     base64_decode($challenge), $this->host, 'imap', $user));
 
                 // send result
-                $this->putLine($reply);
+                $this->putLine($reply, true, true);
                 $line = trim($this->readReply());
 
                 if ($line[0] == '+') {
@@ -577,7 +591,7 @@ class rcube_imap_generic
             // RFC 4959 (SASL-IR): save one round trip
             if ($this->getCapability('SASL-IR')) {
                 list($result, $line) = $this->execute("AUTHENTICATE PLAIN", array($reply),
-                    self::COMMAND_LASTLINE | self::COMMAND_CAPABILITY);
+                    self::COMMAND_LASTLINE | self::COMMAND_CAPABILITY | self::COMMAND_ANONYMIZED);
             }
             else {
                 $this->putLine($this->nextTag() . " AUTHENTICATE PLAIN");
@@ -588,7 +602,7 @@ class rcube_imap_generic
                 }
 
                 // send result, get reply and process it
-                $this->putLine($reply);
+                $this->putLine($reply, true, true);
                 $line = $this->readReply();
                 $result = $this->parseResult($line);
             }
@@ -619,7 +633,7 @@ class rcube_imap_generic
     function login($user, $password)
     {
         list($code, $response) = $this->execute('LOGIN', array(
-            $this->escape($user), $this->escape($password)), self::COMMAND_CAPABILITY);
+            $this->escape($user), $this->escape($password)), self::COMMAND_CAPABILITY | self::COMMAND_ANONYMIZED);
 
         // re-set capabilities list if untagged CAPABILITY response provided
         if (preg_match('/\* CAPABILITY (.+)/i', $response, $matches)) {
@@ -709,103 +723,30 @@ class rcube_imap_generic
         // configure
         $this->set_prefs($options);
 
-        $auth_method = $this->prefs['auth_type'];
-        $result      = false;
-
-        // initialize connection
-        $this->error    = '';
-        $this->errornum = self::ERROR_OK;
-        $this->selected = null;
-        $this->user     = $user;
         $this->host     = $host;
+        $this->user     = $user;
         $this->logged   = false;
+        $this->selected = null;
 
         // check input
         if (empty($host)) {
             $this->setError(self::ERROR_BAD, "Empty host");
             return false;
         }
+
         if (empty($user)) {
             $this->setError(self::ERROR_NO, "Empty user");
             return false;
         }
+
         if (empty($password)) {
             $this->setError(self::ERROR_NO, "Empty password");
             return false;
         }
 
-        if (!$this->prefs['port']) {
-            $this->prefs['port'] = 143;
-        }
-        // check for SSL
-        if ($this->prefs['ssl_mode'] && $this->prefs['ssl_mode'] != 'tls') {
-            $host = $this->prefs['ssl_mode'] . '://' . $host;
-        }
-
-        if ($this->prefs['timeout'] <= 0) {
-            $this->prefs['timeout'] = max(0, intval(ini_get('default_socket_timeout')));
-        }
-
         // Connect
-        $this->fp = @fsockopen($host, $this->prefs['port'], $errno, $errstr, $this->prefs['timeout']);
-
-        if (!$this->fp) {
-            if (!$errstr) {
-                $errstr = "Unknown reason (fsockopen() function disabled?)";
-            }
-            $this->setError(self::ERROR_BAD, sprintf("Could not connect to %s:%d: %s", $host, $this->prefs['port'], $errstr));
+        if (!$this->_connect($host)) {
             return false;
-        }
-
-        if ($this->prefs['timeout'] > 0) {
-            stream_set_timeout($this->fp, $this->prefs['timeout']);
-        }
-
-        $line = trim(fgets($this->fp, 8192));
-
-        if ($this->_debug) {
-            // set connection identifier for debug output
-            preg_match('/#([0-9]+)/', (string)$this->fp, $m);
-            $this->resourceid = strtoupper(substr(md5($m[1].$this->user.microtime()), 0, 4));
-
-            if ($line)
-                $this->debug('S: '. $line);
-        }
-
-        // Connected to wrong port or connection error?
-        if (!preg_match('/^\* (OK|PREAUTH)/i', $line)) {
-            if ($line)
-                $error = sprintf("Wrong startup greeting (%s:%d): %s", $host, $this->prefs['port'], $line);
-            else
-                $error = sprintf("Empty startup greeting (%s:%d)", $host, $this->prefs['port']);
-
-            $this->setError(self::ERROR_BAD, $error);
-            $this->closeConnection();
-            return false;
-        }
-
-        // RFC3501 [7.1] optional CAPABILITY response
-        if (preg_match('/\[CAPABILITY ([^]]+)\]/i', $line, $matches)) {
-            $this->parseCapability($matches[1], true);
-        }
-
-        // TLS connection
-        if ($this->prefs['ssl_mode'] == 'tls' && $this->getCapability('STARTTLS')) {
-            $res = $this->execute('STARTTLS');
-
-            if ($res[0] != self::ERROR_OK) {
-                $this->closeConnection();
-                return false;
-            }
-
-            if (!stream_socket_enable_crypto($this->fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
-                $this->setError(self::ERROR_BAD, "Unable to negotiate TLS");
-                $this->closeConnection();
-                return false;
-            }
-
-            // Now we're secure, capabilities need to be reread
-            $this->clearCapability();
         }
 
         // Send ID info
@@ -813,6 +754,7 @@ class rcube_imap_generic
             $this->id($this->prefs['ident']);
         }
 
+        $auth_method  = $this->prefs['auth_type'];
         $auth_methods = array();
         $result       = null;
 
@@ -884,6 +826,103 @@ class rcube_imap_generic
         $this->closeConnection();
 
         return false;
+    }
+
+    /**
+     * Connects to IMAP server.
+     *
+     * @param string $host Server hostname or IP
+     *
+     * @return bool True on success, False on failure
+     */
+    protected function _connect($host)
+    {
+        // initialize connection
+        $this->error    = '';
+        $this->errornum = self::ERROR_OK;
+
+        if (!$this->prefs['port']) {
+            $this->prefs['port'] = 143;
+        }
+
+        // check for SSL
+        if ($this->prefs['ssl_mode'] && $this->prefs['ssl_mode'] != 'tls') {
+            $host = $this->prefs['ssl_mode'] . '://' . $host;
+        }
+
+        if ($this->prefs['timeout'] <= 0) {
+            $this->prefs['timeout'] = max(0, intval(ini_get('default_socket_timeout')));
+        }
+
+        if (!empty($this->prefs['socket_options'])) {
+            $context  = stream_context_create($this->prefs['socket_options']);
+            $this->fp = stream_socket_client($host . ':' . $this->prefs['port'], $errno, $errstr,
+                $this->prefs['timeout'], STREAM_CLIENT_CONNECT, $context);
+        }
+        else {
+            $this->fp = @fsockopen($host, $this->prefs['port'], $errno, $errstr, $this->prefs['timeout']);
+        }
+
+        if (!$this->fp) {
+            $this->setError(self::ERROR_BAD, sprintf("Could not connect to %s:%d: %s",
+                $host, $this->prefs['port'], $errstr ? $errstr : "Unknown reason"));
+
+            return false;
+        }
+
+        if ($this->prefs['timeout'] > 0) {
+            stream_set_timeout($this->fp, $this->prefs['timeout']);
+        }
+
+        $line = trim(fgets($this->fp, 8192));
+
+        if ($this->_debug) {
+            // set connection identifier for debug output
+            preg_match('/#([0-9]+)/', (string) $this->fp, $m);
+            $this->resourceid = strtoupper(substr(md5($m[1].$this->user.microtime()), 0, 4));
+
+            if ($line) {
+                $this->debug('S: '. $line);
+            }
+        }
+
+        // Connected to wrong port or connection error?
+        if (!preg_match('/^\* (OK|PREAUTH)/i', $line)) {
+            if ($line)
+                $error = sprintf("Wrong startup greeting (%s:%d): %s", $host, $this->prefs['port'], $line);
+            else
+                $error = sprintf("Empty startup greeting (%s:%d)", $host, $this->prefs['port']);
+
+            $this->setError(self::ERROR_BAD, $error);
+            $this->closeConnection();
+            return false;
+        }
+
+        // RFC3501 [7.1] optional CAPABILITY response
+        if (preg_match('/\[CAPABILITY ([^]]+)\]/i', $line, $matches)) {
+            $this->parseCapability($matches[1], true);
+        }
+
+        // TLS connection
+        if ($this->prefs['ssl_mode'] == 'tls' && $this->getCapability('STARTTLS')) {
+            $res = $this->execute('STARTTLS');
+
+            if ($res[0] != self::ERROR_OK) {
+                $this->closeConnection();
+                return false;
+            }
+
+            if (!stream_socket_enable_crypto($this->fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                $this->setError(self::ERROR_BAD, "Unable to negotiate TLS");
+                $this->closeConnection();
+                return false;
+            }
+
+            // Now we're secure, capabilities need to be reread
+            $this->clearCapability();
+        }
+
+        return true;
     }
 
     /**
@@ -1840,8 +1879,8 @@ class rcube_imap_generic
                         $result[$id] = '';
                     }
                 } else if ($mode == 2) {
-                    if (preg_match('/(UID|RFC822\.SIZE) ([0-9]+)/', $line, $matches)) {
-                        $result[$id] = trim($matches[2]);
+                    if (preg_match('/' . $index_field . ' ([0-9]+)/', $line, $matches)) {
+                        $result[$id] = trim($matches[1]);
                     } else {
                         $result[$id] = 0;
                     }
@@ -1950,10 +1989,6 @@ class rcube_imap_generic
      */
     private function modFlag($mailbox, $messages, $flag, $mod = '+')
     {
-        if ($mod != '+' && $mod != '-') {
-            $mod = '+';
-        }
-
         if (!$this->select($mailbox)) {
             return false;
         }
@@ -1963,12 +1998,31 @@ class rcube_imap_generic
             return false;
         }
 
+        if ($this->flags[strtoupper($flag)]) {
+            $flag = $this->flags[strtoupper($flag)];
+        }
+
+        if (!$flag) {
+            return false;
+        }
+
+        // if PERMANENTFLAGS is not specified all flags are allowed
+        if (!empty($this->data['PERMANENTFLAGS'])
+            && !in_array($flag, (array) $this->data['PERMANENTFLAGS'])
+            && !in_array('\\*', (array) $this->data['PERMANENTFLAGS'])
+        ) {
+            return false;
+        }
+
         // Clear internal status cache
         if ($flag == 'SEEN') {
             unset($this->data['STATUS:'.$mailbox]['UNSEEN']);
         }
 
-        $flag   = $this->flags[strtoupper($flag)];
+        if ($mod != '+' && $mod != '-') {
+            $mod = '+';
+        }
+
         $result = $this->execute('UID STORE', array(
             $this->compressMessageSet($messages), $mod . 'FLAGS.SILENT', "($flag)"),
             self::COMMAND_NORESPONSE);
@@ -2476,50 +2530,61 @@ class rcube_imap_generic
             return false;
         }
 
-        switch ($encoding) {
-        case 'base64':
-            $mode = 1;
-            break;
-        case 'quoted-printable':
-            $mode = 2;
-            break;
-        case 'x-uuencode':
-        case 'x-uue':
-        case 'uue':
-        case 'uuencode':
-            $mode = 3;
-            break;
-        default:
-            $mode = 0;
-        }
-
-        // Use BINARY extension when possible (and safe)
-        $binary     = $mode && preg_match('/^[0-9.]+$/', $part) && $this->hasCapability('BINARY');
-        $fetch_mode = $binary ? 'BINARY' : 'BODY';
-        $partial    = $max_bytes ? sprintf('<0.%d>', $max_bytes) : '';
-
-        // format request
-        $key     = $this->nextTag();
-        $request = $key . ($is_uid ? ' UID' : '') . " FETCH $id ($fetch_mode.PEEK[$part]$partial)";
-        $result  = false;
-        $found   = false;
-
-        // send request
-        if (!$this->putLine($request)) {
-            $this->setError(self::ERROR_COMMAND, "Unable to send command: $request");
-            return false;
-        }
-
-        if ($binary) {
-            // WARNING: Use $formatted argument with care, this may break binary data stream
-            $mode = -1;
-        }
+        $binary    = true;
 
         do {
+            if (!$initiated) {
+                switch ($encoding) {
+                case 'base64':
+                    $mode = 1;
+                    break;
+                case 'quoted-printable':
+                    $mode = 2;
+                    break;
+                case 'x-uuencode':
+                case 'x-uue':
+                case 'uue':
+                case 'uuencode':
+                    $mode = 3;
+                    break;
+                default:
+                    $mode = 0;
+                }
+
+                // Use BINARY extension when possible (and safe)
+                $binary     = $binary && $mode && preg_match('/^[0-9.]+$/', $part) && $this->hasCapability('BINARY');
+                $fetch_mode = $binary ? 'BINARY' : 'BODY';
+                $partial    = $max_bytes ? sprintf('<0.%d>', $max_bytes) : '';
+
+                // format request
+                $key       = $this->nextTag();
+                $request   = $key . ($is_uid ? ' UID' : '') . " FETCH $id ($fetch_mode.PEEK[$part]$partial)";
+                $result    = false;
+                $found     = false;
+                $initiated = true;
+
+                // send request
+                if (!$this->putLine($request)) {
+                    $this->setError(self::ERROR_COMMAND, "Unable to send command: $request");
+                    return false;
+                }
+
+                if ($binary) {
+                    // WARNING: Use $formatted argument with care, this may break binary data stream
+                    $mode = -1;
+                }
+            }
+
             $line = trim($this->readLine(1024));
 
             if (!$line) {
                 break;
+            }
+
+            // handle UNKNOWN-CTE response - RFC 3516, try again with standard BODY request
+            if ($binary && !$found && preg_match('/^' . $key . ' NO \[UNKNOWN-CTE\]/i', $line)) {
+                $binary = $initiated = false;
+                continue;
             }
 
             // skip irrelevant untagged responses (we have a result already)
@@ -2582,7 +2647,7 @@ class rcube_imap_generic
 
                     // BASE64
                     if ($mode == 1) {
-                        $line = rtrim($line, "\t\r\n\0\x0B");
+                        $line = preg_replace('|[^a-zA-Z0-9+=/]|', '', $line);
                         // create chunks with proper length for base64 decoding
                         $line = $prev.$line;
                         $length = strlen($line);
@@ -2627,7 +2692,7 @@ class rcube_imap_generic
                     }
                 }
             }
-        } while (!$this->startsWith($line, $key, true));
+        } while (!$this->startsWith($line, $key, true) || !$initiated);
 
         if ($result !== false) {
             if ($file) {
@@ -3419,7 +3484,7 @@ class rcube_imap_generic
         }
 
         // Send command
-        if (!$this->putLineC($query)) {
+        if (!$this->putLineC($query, true, ($options & self::COMMAND_ANONYMIZED))) {
             $this->setError(self::ERROR_COMMAND, "Unable to send command: $query");
             return $noresp ? self::ERROR_COMMAND : array(self::ERROR_COMMAND, '');
         }

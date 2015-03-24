@@ -72,7 +72,7 @@ class WINNT extends OS
                 $this->_wmi = $objLocator->ConnectServer();
 
             } else {
-                $this->_wmi = $objLocator->ConnectServer($strHostname, 'rootcimv2', $strHostname.'\\'.$strUser, $strPassword);
+                $this->_wmi = $objLocator->ConnectServer($strHostname, 'root\CIMv2', $strHostname.'\\'.$strUser, $strPassword);
             }
         } catch (Exception $e) {
             $this->error->addError("WMI connect error", "PhpSysInfo can not connect to the WMI interface for security reasons.\nCheck an authentication mechanism for the directory where phpSysInfo is installed.");
@@ -238,13 +238,13 @@ class WINNT extends OS
                 $icon = 'Win2000.png';
             elseif ((substr($kernel,0,4) == "6.0.") || (substr($kernel,0,4) == "6.1."))
                 $icon = 'WinVista.png';
-            elseif ((substr($kernel,0,4) == "6.2.") || (substr($kernel,0,4) == "6.3."))
+            elseif ((substr($kernel,0,4) == "6.2.") || (substr($kernel,0,4) == "6.3.") || (substr($kernel,0,4) == "6.4."))
                 $icon = 'Win8.png';
             else
                 $icon = 'WinXP.png';
             $this->sys->setDistributionIcon($icon);
         } elseif (CommonFunctions::executeProgram("cmd", "/c ver 2>nul", $ver_value, false)) {
-                if (preg_match("/ReactOS\nVersion\s+(.+)/", $ver_value, $ar_temp)) {
+                if (preg_match("/ReactOS\r?\nVersion\s+(.+)/", $ver_value, $ar_temp)) {
                     $this->sys->setDistribution("ReactOS");
                     $this->sys->setKernel($ar_temp[1]);
                     $this->sys->setDistributionIcon('ReactOS.png');
@@ -273,14 +273,16 @@ class WINNT extends OS
         $loadavg = "";
         $sum = 0;
         $buffer = CommonFunctions::getWMI($this->_wmi, 'Win32_Processor', array('LoadPercentage'));
-        foreach ($buffer as $load) {
-            $value = $load['LoadPercentage'];
-            $loadavg .= $value.' ';
-            $sum += $value;
-        }
-        $this->sys->setLoad(trim($loadavg));
-        if (PSI_LOAD_BAR) {
-            $this->sys->setLoadPercent($sum / count($buffer));
+        if ($buffer) {
+            foreach ($buffer as $load) {
+                $value = $load['LoadPercentage'];
+                $loadavg .= $value.' ';
+                $sum += $value;
+            }
+            $this->sys->setLoad(trim($loadavg));
+            if (PSI_LOAD_BAR) {
+                $this->sys->setLoadPercent($sum / count($buffer));
+            }
         }
     }
 
@@ -397,7 +399,7 @@ class WINNT extends OS
                if (preg_match('/\s-\s([^-]*)$/', $name, $ar_name))
                     $name=substr($name,0,strlen($name)-strlen($ar_name[0]));
                $dev->setName($name);
-           
+
                if (defined('PSI_SHOW_NETWORK_INFOS') && PSI_SHOW_NETWORK_INFOS) foreach ($allNetworkAdapterConfigurations as $NetworkAdapterConfiguration) {
                    if ( preg_replace('/[^A-Za-z0-9]/', '_', $NetworkAdapterConfiguration['Description']) == $cname ) {
                        if (!is_null($dev->getInfo())) {
@@ -542,6 +544,19 @@ class WINNT extends OS
         return $this->_syslang;
     }
 
+    public function _processes()
+    {
+        $processes['*'] = 0;
+        $buffer = CommonFunctions::getWMI($this->_wmi, 'Win32_Process', array('Caption'));
+
+        foreach ($buffer as $process) {
+            $processes['*']++;
+        }
+        $processes[' '] = $processes['*'];
+        $this->sys->setProcesses($processes);
+    }
+
+
     /**
      * get the information
      *
@@ -566,5 +581,6 @@ class WINNT extends OS
         $this->_filesystems();
         $this->_memory();
         $this->_loadavg();
+        $this->_processes();
     }
 }

@@ -579,11 +579,13 @@ function createBar(size, barclass) {
  */
 function refreshVitals(xml) {
     var hostname = "", ip = "", kernel = "", distro = "", icon = "", uptime = "", users = 0, loadavg = "";
+    var processes = 0, processesRunning = 0, processesSleeping = 0, processesStopped = 0, processesZombie = 0, processesWaiting = 0, processesOther = 0;
     var syslang = "", codepage = "";
     var lastboot = 0;
     var timestamp = parseInt($("Generation", xml).attr("timestamp"), 10)*1000; //server time
+    var not_first = false;
     if (isNaN(timestamp)) timestamp = Number(new Date()); //client time
- 
+
     $("Vitals", xml).each(function getVitals(id) {
         hostname = $(this).attr("Hostname");
         ip = $(this).attr("IPAddr");
@@ -601,6 +603,7 @@ function refreshVitals(xml) {
             syslang = $(this).attr("SysLang");
             document.getElementById("s_syslang_tr").style.display='';
         }
+
         if ($(this).attr("CodePage") !== undefined) {
             codepage = $(this).attr("CodePage");
             if ($(this).attr("SysLang") !== undefined) {
@@ -609,6 +612,36 @@ function refreshVitals(xml) {
                 document.getElementById("s_codepage_tr2").style.display='';
             }
         }
+
+        //processes
+        if ($(this).attr("Processes") !== undefined) {
+            processes = parseInt($(this).attr("Processes"), 10);
+            if ((($(this).attr("CodePage") !== undefined) && ($(this).attr("SysLang") == undefined)) ||
+                (($(this).attr("CodePage") == undefined) && ($(this).attr("SysLang") !== undefined))) {
+                document.getElementById("s_processes_tr1").style.display='';
+            } else {
+                document.getElementById("s_processes_tr2").style.display='';
+            }
+        }
+        if ($(this).attr("ProcessesRunning") !== undefined) {
+            processesRunning = parseInt($(this).attr("ProcessesRunning"), 10);
+        }
+        if ($(this).attr("ProcessesSleeping") !== undefined) {
+            processesSleeping = parseInt($(this).attr("ProcessesSleeping"), 10);
+        }
+        if ($(this).attr("ProcessesStopped") !== undefined) {
+            processesStopped = parseInt($(this).attr("ProcessesStopped"), 10);
+        }
+        if ($(this).attr("ProcessesZombie") !== undefined) {
+            processesZombie = parseInt($(this).attr("ProcessesZombie"), 10);
+        }
+        if ($(this).attr("ProcessesWaiting") !== undefined) {
+            processesWaiting = parseInt($(this).attr("ProcessesWaiting"), 10);
+        }
+        if ($(this).attr("ProcessesOther") !== undefined) {
+            processesOther = parseInt($(this).attr("ProcessesOther"), 10);
+        }
+
         document.title = "System information: " + hostname + " (" + ip + ")";
         $("#s_hostname_title").html(hostname);
         $("#s_ip_title").html(ip);
@@ -628,6 +661,57 @@ function refreshVitals(xml) {
         $("#s_syslang").html(syslang);
         $("#s_codepage_1").html(codepage);
         $("#s_codepage_2").html(codepage);
+        $("#s_processes_1").html(processes);
+        if (processesRunning || processesSleeping || processesStopped || processesZombie || processesWaiting || processesOther) {
+            $("#s_processes_1").append(" (");
+            not_first = false;
+
+            if (processesRunning) {
+                if (not_first) {
+                    $("#s_processes_1").append(",&nbsp;");
+                }
+                $("#s_processes_1").append(processesRunning + "&nbsp;" + genlang(111, true));
+                not_first = true;
+            }
+            if (processesSleeping) {
+                if (not_first) {
+                    $("#s_processes_1").append(",&nbsp;");
+                }
+                $("#s_processes_1").append(processesSleeping + "&nbsp;" + genlang(112, true));
+                not_first = true;
+            }
+            if (processesStopped) {
+                if (not_first) {
+                    $("#s_processes_1").append(",&nbsp;");
+                }
+                $("#s_processes_1").append(processesStopped + "&nbsp;" + genlang(113, true));
+                not_first = true;
+            }
+            if (processesZombie) {
+                if (not_first) {
+                    $("#s_processes_1").append(",&nbsp;");
+                }
+                $("#s_processes_1").append(processesZombie + "&nbsp;" + genlang(114, true));
+                not_first = true;
+            }
+            if (processesWaiting) {
+                if (not_first) {
+                    $("#s_processes_1").append(",&nbsp;");
+                }
+                $("#s_processes_1").append(processesWaiting + "&nbsp;" + genlang(115, true));
+                not_first = true;
+            }
+            if (processesOther) {
+                if (not_first) {
+                    $("#s_processes_1").append(",&nbsp;");
+                }
+                $("#s_processes_1").append(processesOther + "&nbsp;" + genlang(116, true));
+                not_first = true;
+            }
+
+            $("#s_processes_1").append(") ");
+        }
+        $("#s_processes_2").html($("#s_processes_1").html());
     });
 }
 
@@ -642,8 +726,10 @@ function refreshVitals(xml) {
 function fillCpu(xml, tree, rootposition, collapsed) {
     var cpucount = 0, html = "";
     var showCPUInfoExpanded = "";
+    var showCPUListExpanded = "";
     $("Options", xml).each(function getOptions(id) {
         showCPUInfoExpanded = $(this).attr("showCPUInfoExpanded");
+        showCPUListExpanded = $(this).attr("showCPUListExpanded");
     });
     $("Hardware CPU CpuCore", xml).each(function getCpuCore(cpuCoreId) {
         var model = "", speed = 0, bus = 0, cache = 0, bogo = 0, temp = 0, load = 0, speedmax = 0, speedmin = 0, cpucoreposition = 0, virt = "";
@@ -659,6 +745,9 @@ function fillCpu(xml, tree, rootposition, collapsed) {
         bogo = parseInt($(this).attr("Bogomips"), 10);
         load = parseInt($(this).attr("Load"), 10);
 
+        if (showCPUListExpanded === 'false') {
+            collapsed.push(rootposition);
+        }
         html += "<tr><td colspan=\"2\">" + model + "</td></tr>\n";
         cpucoreposition = tree.push(rootposition);
         if (showCPUInfoExpanded !== 'true') {
@@ -825,19 +914,19 @@ function refreshNetwork(xml) {
         tx = parseInt($(this).attr("TxBytes"), 10);
         er = parseInt($(this).attr("Err"), 10);
         dr = parseInt($(this).attr("Drops"), 10);
-        html +="<tr><td>" + name + "</td><td class=\"right\">" + formatBytes(rx, xml) + "</td><td class=\"right\">" + formatBytes(tx, xml) + "</td><td class=\"right\">" + er.toString() + "/" + dr.toString() + "</td></tr>";
+        html +="<tr><td>" + name + "</td><td class=\"right\">" + formatBytes(rx, xml) + "</td><td class=\"right\">" + formatBytes(tx, xml) + "</td><td class=\"right\">" + er.toString() + "/&#8203;" + dr.toString() + "</td></tr>";
 
         networkindex = tree.push(0);
 
         info = $(this).attr("Info");
         if ( (info !== undefined) && (info != "") ) {
-           var i =0, infos = info.split(";");
-           isinfo = true;
-           for(i = 0; i < infos.length; i++){
-              html +="<tr><td>" + infos[i] + "</td><td></td><td></td><td></td></tr>";
-              tree.push(networkindex);
-              closed.push(networkindex);
+            var i =0, infos = info.split(";");
+            isinfo = true;
+            for(i = 0; i < infos.length; i++){
+                html +="<tr><td>" + infos[i] + "</td><td></td><td></td><td></td></tr>";
+                tree.push(networkindex);
             }
+            closed.push(networkindex);
         }
     });
     html += "</tbody>\n";
@@ -1039,12 +1128,15 @@ function refreshTemp(xml) {
     var values = false;
     $("#tempTable tbody").empty();
     $("MBInfo Temperature Item", xml).each(function getTemperatures(id) {
-        var label = "", value = "", limit = 0, _limit = "";
+        var label = "", value = "", limit = 0, _limit = "", event = "";
         label = $(this).attr("Label");
         value = $(this).attr("Value").replace(/\+/g, "");
         limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
         if (isFinite(limit))
             _limit = formatTemp(limit, xml);
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.png\" alt=\"!\" title=\""+event+"\"/>";
         $("#tempTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + formatTemp(value, xml) + "</td><td class=\"right\">" + _limit + "</td></tr>");
         values = true;
     });
@@ -1066,7 +1158,7 @@ function refreshVoltage(xml) {
     var values = false;
     $("#voltageTable tbody").empty();
     $("MBInfo Voltage Item", xml).each(function getVoltages(id) {
-        var label = "", value = 0, max = 0, min = 0, _min = "", _max = "";
+        var label = "", value = 0, max = 0, min = 0, _min = "", _max = "", event = "";
         label = $(this).attr("Label");
         value = parseFloat($(this).attr("Value"));
         max = parseFloat($(this).attr("Max"));
@@ -1075,6 +1167,9 @@ function refreshVoltage(xml) {
         min = parseFloat($(this).attr("Min"));
         if (isFinite(min))
             _min = round(min, 2) + "&nbsp;" + genlang(62, true);
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.png\" alt=\"!\" title=\""+event+"\"/>";
         $("#voltageTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + _min + "</td><td class=\"right\">" + _max + "</td></tr>");
         values = true;
     });
@@ -1096,12 +1191,15 @@ function refreshFan(xml) {
     var values = false;
     $("#fanTable tbody").empty();
     $("MBInfo Fans Item", xml).each(function getFans(id) {
-        var label = "", value = 0, min = 0, _min = "";
+        var label = "", value = 0, min = 0, _min = "", event = "";
         label = $(this).attr("Label");
         value = parseFloat($(this).attr("Value"));
         min = parseFloat($(this).attr("Min"));
         if (isFinite(min))
             _min = round(min,0) + "&nbsp;" + genlang(63, true);
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.png\" alt=\"!\" title=\""+event+"\"/>";
         $("#fanTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value,0) + "&nbsp;" + genlang(63, true) + "</td><td class=\"right\">" + _min + "</td></tr>");
         values = true;
     });
@@ -1123,12 +1221,15 @@ function refreshPower(xml) {
     var values = false;
     $("#powerTable tbody").empty();
     $("MBInfo Power Item", xml).each(function getPowers(id) {
-        var label = "", value = "", limit = 0, _limit = "";
+        var label = "", value = "", limit = 0, _limit = "", event = "";
         label = $(this).attr("Label");
         value = $(this).attr("Value").replace(/\+/g, "");
         limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
         if (isFinite(limit))
             _limit = round(limit, 2) + "&nbsp;" + genlang(103, true);
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.png\" alt=\"!\" title=\""+event+"\"/>";
         $("#powerTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(103, true) + "</td><td class=\"right\">" + _limit + "</td></tr>");
         values = true;
     });
@@ -1150,12 +1251,15 @@ function refreshCurrent(xml) {
     var values = false;
     $("#currentTable tbody").empty();
     $("MBInfo Current Item", xml).each(function getCurrents(id) {
-        var label = "", value = "", limit = 0, _limit = "";
+        var label = "", value = "", limit = 0, _limit = "", event = "";
         label = $(this).attr("Label");
         value = $(this).attr("Value").replace(/\+/g, "");
         limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
         if (isFinite(limit))
             _limit = round(limit, 2) + "&nbsp;" + genlang(106, true);
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.png\" alt=\"!\" title=\""+event+"\"/>";
         $("#currentTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(106, true) + "</td><td class=\"right\">" + _limit + "</td></tr>");
         values = true;
     });
@@ -1182,7 +1286,7 @@ function refreshUps(xml) {
 
     $("#ups").empty();
     $("UPSInfo UPS", xml).each(function getUps(id) {
-        var name = "", model = "", mode = "", start_time = "", upsstatus = "", temperature = "", outages_count = "", last_outage = "", last_outage_finish = "", line_voltage = "", load_percent = "", battery_date = "", battery_voltage = "", battery_charge_percent = "", time_left_minutes = "";
+        var name = "", model = "", mode = "", start_time = "", upsstatus = "", temperature = "", outages_count = "", last_outage = "", last_outage_finish = "", line_voltage = "", line_frequency = "", load_percent = "", battery_date = "", battery_voltage = "", battery_charge_percent = "", time_left_minutes = "";
         name = $(this).attr("Name");
         model = $(this).attr("Model");
         mode = $(this).attr("Mode");
@@ -1194,6 +1298,7 @@ function refreshUps(xml) {
         last_outage = $(this).attr("LastOutage");
         last_outage_finish = $(this).attr("LastOutageFinish");
         line_voltage = $(this).attr("LineVoltage");
+        line_frequency = $(this).attr("LineFrequency");
         load_percent = parseInt($(this).attr("LoadPercent"), 10);
         battery_date = $(this).attr("BatteryDate");
         battery_voltage = $(this).attr("BatteryVoltage");
@@ -1202,8 +1307,10 @@ function refreshUps(xml) {
 
         html += "<tr><td colspan=\"2\"><strong>" + name + " (" + mode + ")</strong></td></tr>\n";
         index = tree.push(0);
-        html += "<tr><td style=\"width:160px\">" + genlang(70, false) + "</td><td>" + model + "</td></tr>\n";
-        tree.push(index);
+        if (model !== undefined) {
+            html += "<tr><td style=\"width:160px\">" + genlang(70, false) + "</td><td>" + model + "</td></tr>\n";
+            tree.push(index);
+        }
         if (start_time !== undefined) {
             html += "<tr><td style=\"width:160px\">" + genlang(72, false) + "</td><td>" + start_time + "</td></tr>\n";
             tree.push(index);
@@ -1228,6 +1335,10 @@ function refreshUps(xml) {
         }
         if (line_voltage !== undefined) {
             html += "<tr><td style=\"width:160px\">" + genlang(77, false) + "</td><td>" + line_voltage + "&nbsp;" + genlang(82, true) + "</td></tr>\n";
+            tree.push(index);
+        }
+        if (line_frequency !== undefined) {
+            html += "<tr><td style=\"width:160px\">" + genlang(108, false) + "</td><td>" + line_frequency + "&nbsp;" + genlang(109, true) + "</td></tr>\n";
             tree.push(index);
         }
         if (!isNaN(load_percent)) {

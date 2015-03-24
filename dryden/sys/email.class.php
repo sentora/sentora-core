@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * Email class used for sending out emails from ZPanel. This class extends on the PHPMailer library included in etc/lib/PHPMailer!
