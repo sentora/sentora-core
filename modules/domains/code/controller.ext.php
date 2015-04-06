@@ -174,6 +174,9 @@ class module_controller extends ctrl_module
             $sql->bindParam(':domain', $domain);
             $sql->bindParam(':destination', $destination);
             $sql->execute();
+			
+			self::auto_dns($domain);
+			
             // Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
                 if (ctrl_options::GetSystemOption('disable_hostsen') == 'false') {
@@ -352,7 +355,7 @@ class module_controller extends ctrl_module
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteAddDomain($currentuser['userid'], $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])) {
+        if (self::ExecuteAddDomain($currentuser['userid'], $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])) {			
             self::$ok = TRUE;
             return true;
         } else {
@@ -466,8 +469,96 @@ class module_controller extends ctrl_module
         }
         return;
     }
-
-    /**
+	
+    
+	static function auto_dns($domainName){
+		global $zdbh;
+        $currentuser = ctrl_users::GetUserDetail();		
+		if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
+            $targetIP = ctrl_options::GetSystemOption('server_ip');
+        } else {
+            $targetIP = $_SERVER["SERVER_ADDR"]; //This needs checking on windows 7 we may need to use LOCAL_ADDR :- Sam Mottley
+        }
+		$gsql=$zdbh->prepare("select vh_id_pk from x_vhosts where vh_name_vc=:domainName AND vh_acc_fk=:userid AND vh_deleted_ts is NULL");
+		$gsql->bindParam(':userid', $currentuser['userid']);
+        $gsql->bindParam(':domainName', $domainName);
+		$gsql->execute();
+		$res=$gsql->fetch();
+		$domainID=$res['vh_id_pk'];
+		$qsql=$zdbh->prepare("select * from x_dns_create");
+		$qsql->execute();
+		while($get_dns=$qsql->fetch()){
+			
+		$dc_target_vc=str_replace(':IP:',$targetIP,$get_dns['dc_target_vc']);
+		$dc_target_vc=str_replace(':DOMAIN:', $domainName, $dc_target_vc);
+		if($get_dns['dc_priority_in']==NULL || $get_dns['dc_priority_in']==''){
+			$get_dns['dc_priority_in']=0;
+		}
+		if($get_dns['dc_weight_in']==NULL || $get_dns['dc_weight_in']==''){
+			$get_dns['dc_weight_in']=0;
+		}
+		if($get_dns['dc_port_in']==NULL || $get_dns['dc_port_in']==''){
+			$get_dns['dc_port_in']=0;
+		}
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+                           dn_name_vc,
+                           dn_vhost_fk,
+                           dn_type_vc,
+                           dn_host_vc,
+                           dn_ttl_in,
+                           dn_target_vc,
+                           dn_priority_in,
+                           dn_weight_in,
+                           dn_port_in,
+                           dn_created_ts) VALUES (
+                           :userid,
+                           :domainName,
+                           :domainID,
+                           :type_new,
+                           :hostName_new,
+                           :ttl_new,
+                           :target_new,
+                           :priority_new,
+                           :weight_new,
+                           :port_new,
+                           :time)"
+                        );
+                        $sql->bindParam(':userid', $currentuser['userid']);
+                        $sql->bindParam(':domainName', $domainName);
+                        $sql->bindParam(':domainID', $domainID);
+                        $sql->bindParam(':type_new', $get_dns['dc_type_vc']);
+                        $sql->bindParam(':hostName_new', $get_dns['dc_host_vc']);
+                        $sql->bindParam(':ttl_new', $get_dns['dc_ttl_in']);
+                        $sql->bindParam(':target_new', $dc_target_vc);
+                        $sql->bindParam(':priority_new', $get_dns['dc_priority_in']);
+                        $sql->bindParam(':weight_new', $get_dns['dc_weight_in']);
+                        $sql->bindParam(':port_new', $get_dns['dc_port_in']);
+                        $time = time();
+                        $sql->bindParam(':time', $time);
+                        $sql->execute();
+						unset($sql);
+		}
+		
+		$records_list = ctrl_options::GetSystemOption('dns_hasupdates');
+        $record_array = explode(',', $records_list);
+        if (!in_array($domainID, $record_array)) {
+            if (empty($records_list)) {
+                $records_list .= $domainID;
+            } else {
+                $records_list .= ',' . $domainID;
+            }
+            $sql = "UPDATE x_settings SET so_value_tx=:newlist WHERE so_name_vc='dns_hasupdates'";
+            $sql = $zdbh->prepare($sql);
+            $sql->bindParam(':newlist', $records_list);
+            $sql->execute();
+			}
+			
+			return;
+	}
+	
+	
+	/**
      * Webinterface sudo methods.
      */
+	 
 }
