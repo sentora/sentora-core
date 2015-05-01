@@ -322,6 +322,8 @@ function WriteVhostConfigFile()
                 $line .= "  Allow from all" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
 
+                // Enable Gzip until we set this as an option , we might commenbt this too and allow manual switch
+				$line .= "AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript" . fs_filehandler::NewLine();
                 // Get Package php and cgi enabled options
                 $rows = $zdbh->prepare("SELECT * FROM x_packages WHERE pk_id_pk=:packageid AND pk_deleted_ts IS NULL");
                 $rows->bindParam(':packageid', $vhostuser['packageid']);
