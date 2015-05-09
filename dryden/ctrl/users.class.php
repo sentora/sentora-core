@@ -203,7 +203,7 @@ class ctrl_users {
      */
     static function CheckUserEmailIsUnique($email) {
         global $zdbh;
-            $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_email_vc)=:email";
+            $sql = "SELECT COUNT(*) FROM x_accounts WHERE ac_deleted_ts IS NULL AND LOWER(ac_email_vc)=:email";
             $uniqueuser = $zdbh->prepare($sql);
             $uniqueuser->bindParam(':email', $email);
             if ($uniqueuser->execute()) {
