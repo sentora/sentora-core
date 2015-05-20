@@ -21,6 +21,7 @@ class webservice extends ws_xmws {
     function GetServerUsageStats() {
         global $zdbh;
         $response_xml = "\n";
+        $currentmonth = date('Ym');
 
         // Total Sentora user accounts
         $sql = $zdbh->query("SELECT COUNT(*) AS total FROM x_accounts")->Fetch();
@@ -35,10 +36,18 @@ class webservice extends ws_xmws {
         $total_disabledaccounts = $sql['total'];
 
         // Total Disk space in use.
-        $total_disk = "TODO";
+        $sql = $zdbh->prepare("SELECT SUM(bd_diskamount_bi) AS total FROM x_bandwidth WHERE bd_month_in = :currentmonth");
+        $sql->bindParam(':currentmonth', $currentmonth);
+        $sql->execute();
+        $sql = $sql->fetch();
+        $total_disk = $sql['total'];
 
         // Total Bandwidth used this month
-        $total_band = "TODO";
+        $sql = $zdbh->prepare("SELECT SUM(bd_transamount_bi) AS total FROM x_bandwidth WHERE bd_month_in = :currentmonth");
+        $sql->bindParam(':currentmonth', $currentmonth);
+        $sql->execute();
+        $sql = $sql->fetch();
+        $total_band = $sql['total'];
 
         // Total CRON Jobs
         $sql = $zdbh->query("SELECT COUNT(*) AS total FROM x_cronjobs WHERE ct_deleted_ts IS NULL")->Fetch();
