@@ -115,18 +115,13 @@ class FreeBSD extends BSDCommon
     }
 
     /**
-     * get icon name and distro extended check
+     * get icon name
      *
      * @return void
      */
     private function _distroicon()
     {
-        if (extension_loaded('pfSense') && CommonFunctions::rfts('/etc/version', $version, 1, 4096, false) && (trim($version) != '')) { // pfSense detection
-            $this->sys->setDistribution('pfSense '. trim($version));
-            $this->sys->setDistributionIcon('pfSense.png');
-        } else {
-            $this->sys->setDistributionIcon('FreeBSD.png');
-        }
+        $this->sys->setDistributionIcon('FreeBSD.png');
     }
 
     /**

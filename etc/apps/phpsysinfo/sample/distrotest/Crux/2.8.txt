@@ -1,2 +1,0 @@
-----------/usr/bin/crux----------
-CRUX version 2.8

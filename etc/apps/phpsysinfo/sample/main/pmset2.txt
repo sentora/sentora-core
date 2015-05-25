@@ -1,2 +1,0 @@
-Now drawing from 'Battery Power'
- -InternalBattery-0     100%; discharging; (no estimate)

@@ -33,7 +33,6 @@
     	<attribute name="CPULoad" type="integer" use="optional"></attribute>
     	<attribute name="SysLang" type="string" use="optional"></attribute>
     	<attribute name="CodePage" type="string" use="optional"></attribute>
-    	<attribute name="Processes" type="string" use="optional"></attribute>
     </complexType>
 
     <complexType name="NetDevice">
@@ -144,7 +143,6 @@
     			</restriction>
     		</simpleType>
     	</attribute>
-    	<attribute name="Virtualization" type="string" use="optional"></attribute>
     	<attribute name="Bogomips" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
@@ -162,7 +160,6 @@
     </complexType>
 
     <complexType name="Hardware">
-    	<attribute name="Name" type="string" use="optional"></attribute>
     	<sequence>
     		<element name="PCI" type="tns:PCI" minOccurs="1" maxOccurs="1"></element>
     		<element name="USB" type="tns:USB" minOccurs="1" maxOccurs="1"></element>
@@ -243,20 +240,6 @@
     			</restriction>
     		</simpleType>
     	</attribute>
-    	<attribute name="Cached" use="optional">
-    		<simpleType>
-    			<restriction base="unsignedLong">
-    				<minInclusive value="0"></minInclusive>
-    			</restriction>
-    		</simpleType>
-    	</attribute>
-    	<attribute name="CachedPercent" use="optional">
-    		<simpleType>
-    			<restriction base="unsignedLong">
-    				<minInclusive value="0"></minInclusive>
-    			</restriction>
-    		</simpleType>
-    	</attribute>
     	<attribute name="Buffers" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
@@ -265,6 +248,20 @@
     		</simpleType>
     	</attribute>
     	<attribute name="BuffersPercent" use="optional">
+    		<simpleType>
+    			<restriction base="unsignedLong">
+    				<minInclusive value="0"></minInclusive>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="Cached" use="optional">
+    		<simpleType>
+    			<restriction base="unsignedLong">
+    				<minInclusive value="0"></minInclusive>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="CachedPercent" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
     				<minInclusive value="0"></minInclusive>

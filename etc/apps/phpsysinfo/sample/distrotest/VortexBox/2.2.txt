@@ -1,8 +1,0 @@
-----------/etc/fedora-release----------
-Fedora release 16 (Verne)
-----------/etc/redhat-release----------
-Fedora release 16 (Verne)
-----------/etc/system-release----------
-Fedora release 16 (Verne)
-----------/etc/vortexbox/vortexbox-version----------
-2.2

@@ -25,9 +25,9 @@
     <exp>Разное [0/1]</exp>
   </expression>
   <expression id="plugin_ipmiinfo_007" name="ipmiinfo_currents">
-    <exp>Ток [A]</exp>
+    <exp>Currents [A]</exp>
   </expression>
   <expression id="plugin_ipmiinfo_008" name="ipmiinfo_powers">
-    <exp>Напряжение [W]</exp>
+    <exp>Powers [W]</exp>
   </expression>
 </tns:translationPlugin>

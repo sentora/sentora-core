@@ -165,21 +165,15 @@ class BAT extends PSI_Plugin
                 $buffer_state = '';
                 CommonFunctions::executeProgram('acpiconf', '-i batt', $buffer_info, false);
             } else {
-                $buffer_info = '';
-                $buffer_state = '';
                 $bat_name = PSI_PLUGIN_BAT_DEVICE;
                 $rfts_bi = CommonFunctions::rfts('/proc/acpi/battery/'.$bat_name.'/info', $buffer_info, 0, 4096, false);
                 $rfts_bs = CommonFunctions::rfts('/proc/acpi/battery/'.$bat_name.'/state', $buffer_state, 0, 4096, false);
                 if (!$rfts_bi && !$rfts_bs) {
-                    $buffer_info = '';
-                    $buffer_state = '';
-                    if (!CommonFunctions::rfts('/sys/class/power_supply/'.$bat_name.'/uevent', $buffer_info, 0, 4096, false)) {
-                        if (CommonFunctions::rfts('/sys/class/power_supply/battery/uevent', $buffer_info, 0, 4096, false)) {
+                    if ((PSI_OS == 'Android') && !CommonFunctions::rfts('/sys/class/power_supply/'.PSI_PLUGIN_BAT_DEVICE.'/uevent', $buffer_info, 0, 4096, false)) {
                             $bat_name = 'battery';
-                        } else {
-                            CommonFunctions::rfts('/sys/class/power_supply/'.$bat_name.'/uevent', $buffer_info, 0, 4096, PSI_DEBUG); // Once again but with debug
-                        }
                     }
+                    CommonFunctions::rfts('/sys/class/power_supply/'.$bat_name.'/uevent', $buffer_info, 0, 4096, PSI_DEBUG);
+                    $buffer_state = '';
                     if (CommonFunctions::rfts('/sys/class/power_supply/'.$bat_name.'/voltage_min_design', $buffer1, 1, 4096, false)) {
                        $buffer_state .= 'POWER_SUPPLY_VOLTAGE_MIN_DESIGN='.$buffer1."\n";
                     }
@@ -303,11 +297,13 @@ class BAT extends PSI_Plugin
                 if (!isset($bat['capacity_unit']) || ($bat['capacity_unit'] == "mWh")) {
                     $bat['capacity_unit'] = "mWh";
                     $bat['remaining_capacity'] = ($data[1]/1000);
+                    $bat['capacity'] = -1;
                 }
             } elseif (preg_match('/^POWER_SUPPLY_CHARGE_NOW=(.*)$/', trim($roworig), $data)) {
                 if (!isset($bat['capacity_unit']) || ($bat['capacity_unit'] == "mAh")) {
                     $bat['capacity_unit'] = "mAh";
                     $bat['remaining_capacity'] = ($data[1]/1000);
+                    $bat['capacity'] = -1;
                 }
 
             /* auxiary */
@@ -332,7 +328,7 @@ class BAT extends PSI_Plugin
                     $bat['present_voltage'] = round($data[1]/1000);
                 }
 
-            } elseif (preg_match('/^POWER_SUPPLY_CAPACITY=(.*)$/', trim($roworig), $data)) {
+            } elseif (preg_match('/^POWER_SUPPLY_CAPACITY=(.*)$/', trim($roworig), $data) && !isset($bat['remaining_capacity'])) {
                 $bat['capacity'] = $data[1];
             } elseif (preg_match('/^POWER_SUPPLY_TEMP=(.*)$/', trim($roworig), $data)) {
                 $bat['battery_temperature'] = $data[1]/10;
@@ -383,7 +379,7 @@ class BAT extends PSI_Plugin
                 } else {
                     $bat['present_voltage'] = round($data[1]/1000);
                 }
-            } elseif (preg_match('/^Remaining capacity:\s*(.*)%$/', trim($roworig), $data)) {
+            } elseif (preg_match('/^Remaining capacity:\s*(.*)%$/', trim($roworig), $data)  && !isset($bat['remaining_capacity'])) {
                 $bat['capacity'] = $data[1];
             }
         }
@@ -392,6 +388,7 @@ class BAT extends PSI_Plugin
                 if (!isset($bat['capacity_unit']) || ($bat['capacity_unit'] == trim($data[2]))) {
                     $bat['capacity_unit'] = trim($data[2]);
                     $bat['remaining_capacity'] = $data[1];
+                    $bat['capacity'] = -1;
                 }
             } elseif (preg_match('/^present voltage:\s*(.*) (.*)$/', trim($roworig), $data)) {
                 if ($data[2]=="mV") { // uV or mV detection
@@ -432,11 +429,13 @@ class BAT extends PSI_Plugin
                 if (!isset($bat['capacity_unit']) || ($bat['capacity_unit'] == "mWh")) {
                     $bat['capacity_unit'] = "mWh";
                     $bat['remaining_capacity'] = ($data[1]/1000);
+                    $bat['capacity'] = -1;
                 }
             } elseif (preg_match('/^POWER_SUPPLY_CHARGE_NOW=(.*)$/', trim($roworig), $data)) {
                 if (!isset($bat['capacity_unit']) || ($bat['capacity_unit'] == "mAh")) {
                     $bat['capacity_unit'] = "mAh";
                     $bat['remaining_capacity'] = ($data[1]/1000);
+                    $bat['capacity'] = -1;
                 }
             } elseif (preg_match('/^POWER_SUPPLY_VOLTAGE_NOW=(.*)$/', trim($roworig), $data)) {
                 if ($data[1]<100000) { // uV or mV detection
@@ -445,7 +444,7 @@ class BAT extends PSI_Plugin
                     $bat['present_voltage'] = round($data[1]/1000);
                 }
 
-            } elseif (preg_match('/^POWER_SUPPLY_CAPACITY=(.*)$/', trim($roworig), $data)) {
+            } elseif (preg_match('/^POWER_SUPPLY_CAPACITY=(.*)$/', trim($roworig), $data) && !isset($bat['remaining_capacity'])) {
                 $bat['capacity'] = $data[1];
             } elseif (preg_match('/^POWER_SUPPLY_TEMP=(.*)$/', trim($roworig), $data)) {
                 $bat['battery_temperature'] = $data[1]/10;
@@ -470,11 +469,8 @@ class BAT extends PSI_Plugin
     {
         foreach ($this->_result as $bat_item) {
             $xmlbat = $this->xml->addChild("Bat");
-            if ((!isset($bat_item['remaining_capacity']) || (isset($bat_item['design_capacity']) && ($bat_item['design_capacity'] == 0))) &&
-                isset($bat_item['capacity']) && ($bat_item['capacity']>=0)) {
-                $xmlbat->addAttribute("DesignCapacity", 100);
-                $xmlbat->addAttribute("RemainingCapacity", $bat_item['capacity']);
-                $xmlbat->addAttribute("CapacityUnit", "%");
+            if (isset($bat_item['capacity']) && ($bat_item['capacity']>=0)) {
+                $xmlbat->addAttribute("Capacity", $bat_item['capacity']);
             } else {
                 if (isset($bat_item['design_capacity'])) {
                     $xmlbat->addAttribute("DesignCapacity", $bat_item['design_capacity']);
@@ -483,9 +479,6 @@ class BAT extends PSI_Plugin
                 }
                 if (isset($bat_item['remaining_capacity'])) {
                     $xmlbat->addAttribute("RemainingCapacity", $bat_item['remaining_capacity']);
-                }
-                if (isset($bat_item['capacity_unit'])) {
-                    $xmlbat->addAttribute("CapacityUnit", $bat_item['capacity_unit']);
                 }
             }
             if (isset($bat_item['design_voltage'])) {
@@ -522,6 +515,9 @@ class BAT extends PSI_Plugin
                 && isset($bat_item['design_capacity_max']) && ($bat_item['design_capacity_max'] != 0)
                 && (!isset($bat['capacity_unit']) || ($bat['capacity_unit'] != "???"))) {
                 $xmlbat->addAttribute("BatteryCondition", round(100*$bat_item['design_capacity']/$bat_item['design_capacity_max'])."%");
+            }
+            if (isset($bat_item['capacity_unit'])) {
+                $xmlbat->addAttribute("CapacityUnit", $bat_item['capacity_unit']);
             }
             if (isset($bat_item['cycle_count'])) {
                 $xmlbat->addAttribute("CycleCount", $bat_item['cycle_count']);

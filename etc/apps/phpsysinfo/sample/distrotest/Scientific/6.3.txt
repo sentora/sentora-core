@@ -1,4 +1,0 @@
-----------/etc/redhat-release----------
-Scientific Linux release 6.3 (Carbon)
-----------/etc/system-release----------
-Scientific Linux release 6.3 (Carbon)

@@ -260,7 +260,7 @@ class System
     public function getMemPercentUsed()
     {
         if ($this->_memTotal > 0) {
-            return round($this->_memUsed / $this->_memTotal * 100);
+            return ceil($this->_memUsed / $this->_memTotal * 100);
         } else {
             return 0;
         }
@@ -278,7 +278,7 @@ class System
     {
         if ($this->_memApplication !== null) {
             if (($this->_memApplication > 0) && ($this->_memTotal > 0)) {
-                return round($this->_memApplication / $this->_memTotal * 100);
+                return ceil($this->_memApplication / $this->_memTotal * 100);
             } else {
                 return 0;
             }
@@ -299,11 +299,7 @@ class System
     {
         if ($this->_memCache !== null) {
             if (($this->_memCache > 0) && ($this->_memTotal > 0)) {
-                if (($this->_memApplication !== null) && ($this->_memApplication > 0)) {
-                    return round(($this->_memCache + $this->_memApplication) / $this->_memTotal * 100) - $this->getMemPercentApplication();
-                } else {
-                    return round($this->_memCache / $this->_memTotal * 100);
-                }
+                return ceil($this->_memCache / $this->_memTotal * 100);
             } else {
                 return 0;
             }
@@ -324,17 +320,7 @@ class System
     {
         if ($this->_memBuffer !== null) {
             if (($this->_memBuffer > 0) && ($this->_memTotal > 0)) {
-                if (($this->_memCache !== null) && ($this->_memCache > 0)) {
-                    if (($this->_memApplication !== null) && ($this->_memApplication > 0)) {
-                        return round(($this->_memBuffer + $this->_memApplication + $this->_memCache) / $this->_memTotal * 100) - $this->getMemPercentApplication() - $this->getMemPercentCache();
-                    } else {
-                        return round(($this->_memBuffer + $this->_memCache) / $this->_memTotal * 100) - $this->getMemPercentCache();
-                    }
-                } elseif (($this->_memApplication !== null) && ($this->_memApplication > 0)) {
-                    return round(($this->_memBuffer + $this->_memApplication) / $this->_memTotal * 100) - $this->getMemPercentApplication();
-                } else {
-                    return round($this->_memBuffer / $this->_memTotal * 100);
-                }
+                return ceil($this->_memBuffer / $this->_memTotal * 100);
             } else {
                 return 0;
             }
@@ -421,7 +407,7 @@ class System
     {
         if ($this->getSwapTotal() !== null) {
             if ($this->getSwapTotal() > 0) {
-                return round($this->getSwapUsed() / $this->getSwapTotal() * 100);
+                return ceil($this->getSwapUsed() / $this->getSwapTotal() * 100);
             } else {
                 return 0;
             }

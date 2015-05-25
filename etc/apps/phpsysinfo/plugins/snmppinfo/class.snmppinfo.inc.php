@@ -153,7 +153,7 @@ class SNMPPInfo extends PSI_Plugin
                 }
                 break;
             default:
-                $this->global_error->addError("switch(PSI_PLUGIN_SNMPPINFO_ACCESS)", "Bad SNMPPInfo configuration in phpsysinfo.ini");
+                $this->global_error->addError("switch(PSI_PLUGIN_SNMPPINFO_ACCESS)", "Bad SNMPPInfo configuration in SNMPPInfo.config.php");
                 break;
         }
     }
@@ -170,7 +170,7 @@ class SNMPPInfo extends PSI_Plugin
             return;
         }
         foreach ($this->_filecontent as $printer=>$result) {
-            $lines = preg_split('/\r?\n/', $result);
+            $lines = preg_split('/\n/', $result);
             foreach ($lines as $line) {
                 if (preg_match('/^\.1\.3\.6\.1\.2\.1\.43\.11\.1\.1\.6\.1\.(.*) = STRING:\s(.*)/', $line, $data)) {
                     $this->_result[$printer][$data[1]]['prtMarkerSuppliesDescription']=trim($data[2],"\"");
