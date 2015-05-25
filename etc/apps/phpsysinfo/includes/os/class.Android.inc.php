@@ -150,8 +150,8 @@ class Android extends Linux
         }
         if ( is_null($buf) || ($buf == "")) {
             $this->sys->setDistribution('Android');
-        } else { 
-            if (preg_match('/^(\d+\.\d+)/', $buf, $ver) 
+        } else {
+            if (preg_match('/^(\d+\.\d+)/', $buf, $ver)
                 && ($list = @parse_ini_file(APP_ROOT."/data/osnames.ini", true))
                 && isset($list['Android'][$ver[1]])) {
                     $buf.=' '.$list['Android'][$ver[1]];
@@ -171,13 +171,13 @@ class Android extends Linux
         if (CommonFunctions::rfts('/system/build.prop', $lines, 0, 4096, false)) {
             $buf = "";
             if (preg_match('/^ro\.product\.manufacturer=([^\n]+)/m', $lines, $ar_buf)) {
-                $buf .= ' '.$ar_buf[1];
+                $buf .= ' '.trim($ar_buf[1]);
             }
-            if (preg_match('/^ro\.product\.model=([^\n]+)/m', $lines, $ar_buf)) {
-                $buf .= ' '.$ar_buf[1];
+            if (preg_match('/^ro\.product\.model=([^\n]+)/m', $lines, $ar_buf) && (trim($buf) !== trim($ar_buf[1]))) {
+                $buf .= ' '.trim($ar_buf[1]);
             }
             if (preg_match('/^ro\.semc\.product\.name=([^\n]+)/m', $lines, $ar_buf)) {
-                $buf .= ' '.$ar_buf[1];
+                $buf .= ' '.trim($ar_buf[1]);
             }
             if (trim($buf) != "") {
                 $this->sys->setMachine(trim($buf));
@@ -198,7 +198,7 @@ class Android extends Linux
                 $device = preg_split("/ /", $buf, 4);
                 if (isset($device[3]) && trim($device[3]) != "") {
                     $dev = new HWDevice();
-                    $dev->setName(trim($device[3]));
+                    $dev->setName('Class '.trim($device[2]).' Device '.trim($device[3]));
                     $this->sys->setPciDevices($dev);
                 }
             }
@@ -234,7 +234,6 @@ class Android extends Linux
      */
     public function build()
     {
-        $this->error->addError("WARN", "The Android version of phpSysInfo is a work in progress, some things currently don't work");
         $this->_distro();
         $this->_hostname();
         $this->_ip();
