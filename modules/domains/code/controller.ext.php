@@ -413,10 +413,15 @@ class module_controller extends ctrl_module
 
     static function getDomainUsagepChart()
     {
-        $currentuser = ctrl_users::GetUserDetail();
+        global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
         $maximum = $currentuser['domainquota'];
         if ($maximum < 0) { //-1 = unlimited
-            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+            if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
+				return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+			} else {
+				return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+			}
         } else {
             $used = ctrl_users::GetQuotaUsages('domains', $currentuser['userid']);
             $free = max($maximum - $used, 0);
