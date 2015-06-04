@@ -231,7 +231,7 @@ class module_controller extends ctrl_module
             $part = explode('.', $domain);
             foreach ($part as $check) {
                 if (!in_array($check, $SharedDomains)) {
-                    if (strlen($check) > 3) {
+                    if (strlen($check) > 13) {
                         $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_name_vc LIKE :check AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
                         $checkSql = '%' . $check . '%';
                         $sql->bindParam(':check', $checkSql);
