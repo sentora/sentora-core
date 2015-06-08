@@ -167,6 +167,7 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
+	$username = $currentuser['username'] . '_' . $username;
         runtime_hook::Execute('OnBeforeCreateFTPAccount');
         if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))) {
             // Check to see if its a new home directory or use a current one...
@@ -185,7 +186,6 @@ class module_controller extends ctrl_module
             }
             $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
             $sql->bindParam(':userid', $currentuser['userid']);
-            $username = $currentuser['username'] . '_' . $username;
             $sql->bindParam(':username', $username);
             $sql->bindParam(':homedir', $homedirectory_to_use);
             $sql->bindParam(':accesstype', $access_type);
@@ -234,7 +234,7 @@ class module_controller extends ctrl_module
 
     static function IsValidUserName($username)
     {
-        return preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
+        return preg_match('/^[a-z\d_][a-z\d_-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
     }
 
     static function ExecuteDeleteFTP($ft_id_pk)
