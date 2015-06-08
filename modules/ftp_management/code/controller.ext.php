@@ -185,6 +185,7 @@ class module_controller extends ctrl_module
             }
             $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
             $sql->bindParam(':userid', $currentuser['userid']);
+            $username = $currentuser['username'] . '_' . $username;
             $sql->bindParam(':username', $username);
             $sql->bindParam(':homedir', $homedirectory_to_use);
             $sql->bindParam(':accesstype', $access_type);
