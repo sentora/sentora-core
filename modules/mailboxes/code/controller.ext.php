@@ -52,6 +52,13 @@ class module_controller extends ctrl_module
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
+        
+        if(file_exists(ui_tpl_assetfolderpath::Template() . 'img/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.gif') && file_exists(ui_tpl_assetfolderpath::Template() . 'img/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif')) {
+            $iconpath = '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/';
+        }else{
+            $iconpath = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/';    
+        }
+
 
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
@@ -60,9 +67,9 @@ class module_controller extends ctrl_module
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
                 if ($rowmailboxes['mb_enabled_in'] == 1) {
-                    $status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.gif" alt="Up"/>';
+                    $status = $iconpath . '/up.gif" alt="Up"/>';
                 } else {
-                    $status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif" alt="Down"/>';
+                    $status = $iconpath . '/down.gif" alt="Down"/>';
                 }
                 $res[] = array('address' => $rowmailboxes['mb_address_vc'],
                     'created' => date(ctrl_options::GetSystemOption('sentora_df'), $rowmailboxes['mb_created_ts']),
