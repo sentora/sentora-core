@@ -295,18 +295,20 @@ class XML
         $memory->addAttribute('Used', $this->_sys->getMemUsed());
         $memory->addAttribute('Total', $this->_sys->getMemTotal());
         $memory->addAttribute('Percent', $this->_sys->getMemPercentUsed());
-        $details = $memory->addChild('Details');
-        if ($this->_sys->getMemApplication() !== null) {
-            $details->addAttribute('App', $this->_sys->getMemApplication());
-            $details->addAttribute('AppPercent', $this->_sys->getMemPercentApplication());
-        }
-        if ($this->_sys->getMemBuffer() !== null) {
-            $details->addAttribute('Buffers', $this->_sys->getMemBuffer());
-            $details->addAttribute('BuffersPercent', $this->_sys->getMemPercentBuffer());
-        }
-        if ($this->_sys->getMemCache() !== null) {
-            $details->addAttribute('Cached', $this->_sys->getMemCache());
-            $details->addAttribute('CachedPercent', $this->_sys->getMemPercentCache());
+        if (($this->_sys->getMemApplication() !== null) || ($this->_sys->getMemBuffer() !== null) || ($this->_sys->getMemCache() !== null)) {
+            $details = $memory->addChild('Details');
+            if ($this->_sys->getMemApplication() !== null) {
+                $details->addAttribute('App', $this->_sys->getMemApplication());
+                $details->addAttribute('AppPercent', $this->_sys->getMemPercentApplication());
+            }
+            if ($this->_sys->getMemBuffer() !== null) {
+                $details->addAttribute('Buffers', $this->_sys->getMemBuffer());
+                $details->addAttribute('BuffersPercent', $this->_sys->getMemPercentBuffer());
+            }
+            if ($this->_sys->getMemCache() !== null) {
+                $details->addAttribute('Cached', $this->_sys->getMemCache());
+                $details->addAttribute('CachedPercent', $this->_sys->getMemPercentCache());
+            }
         }
         if (count($this->_sys->getSwapDevices()) > 0) {
             $swap = $memory->addChild('Swap');
@@ -405,7 +407,7 @@ class XML
     {
         $mbinfo = $this->_xml->addChild('MBInfo');
         $temp = $fan = $volt = $power = $current = null;
-        
+
         if (sizeof(unserialize(PSI_MBINFO))>0) {
             foreach (unserialize(PSI_MBINFO) as $mbinfoclass) {
                 $mbinfo_data = new $mbinfoclass();
@@ -490,7 +492,7 @@ class XML
                 }
             }
         }
-        
+
         if (PSI_HDDTEMP) {
             $hddtemp = new HDDTemp();
             $hddtemp_data = $hddtemp->getMBInfo();
@@ -648,7 +650,10 @@ class XML
             foreach ($plugins as $plugin) {
                 $object = new $plugin($this->_sysinfo->getEncoding());
                 $object->execute();
-                $pluginroot->combinexml($object->xml());
+                $oxml = $object->xml();
+                if (sizeof($oxml) > 0) {
+                    $pluginroot->combinexml($oxml);
+                }
             }
         }
     }
@@ -698,13 +703,21 @@ class XML
         $options->addAttribute('showPickListLang', defined('PSI_SHOW_PICKLIST_LANG') ? (PSI_SHOW_PICKLIST_LANG ? 'true' : 'false') : 'false');
         $options->addAttribute('showCPUListExpanded', defined('PSI_SHOW_CPULIST_EXPANDED') ? (PSI_SHOW_CPULIST_EXPANDED ? 'true' : 'false') : 'true');
         $options->addAttribute('showCPUInfoExpanded', defined('PSI_SHOW_CPUINFO_EXPANDED') ? (PSI_SHOW_CPUINFO_EXPANDED ? 'true' : 'false') : 'false');
-        $plug = $this->_xml->addChild('UsedPlugins');
-        if ($this->_complete_request && count($this->_plugins) > 0) {
-            foreach ($this->_plugins as $plugin) {
-                $plug->addChild('Plugin')->addAttribute('name', $plugin);
+        if (count($this->_plugins) > 0) {
+            if ($this->_plugin_request) {
+                $plug = $this->_xml->addChild('UsedPlugins');
+                $plug->addChild('Plugin')->addAttribute('name', $this->_plugin);
+            } elseif ($this->_complete_request) {
+                $plug = $this->_xml->addChild('UsedPlugins');
+                foreach ($this->_plugins as $plugin) {
+                    $plug->addChild('Plugin')->addAttribute('name', $plugin);
+                }
+            } else {
+                $plug = $this->_xml->addChild('UnusedPlugins');
+                foreach ($this->_plugins as $plugin) {
+                    $plug->addChild('Plugin')->addAttribute('name', $plugin);
+                }
             }
-        } elseif ($this->_plugin_request && count($this->_plugins) > 0) {
-            $plug->addChild('Plugin')->addAttribute('name', $this->_plugin);
         }
     }
 }
