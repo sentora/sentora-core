@@ -34,6 +34,7 @@ class module_controller extends ctrl_module
     static $alreadyexists;
     static $validemail;
     static $noaddress;
+    static $validdomain;
     static $delete;
     static $create;
     static $deleteuser;
@@ -308,6 +309,10 @@ class module_controller extends ctrl_module
             self::$validemail = true;
             return false;
         }
+        if(!self::IsValidDomain($domain)){
+            self::$validdomain = true;
+            return false;        
+        }
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc=:fulladdress AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
@@ -379,6 +384,15 @@ class module_controller extends ctrl_module
     static function IsValidEmail($email)
     {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
+    }
+    static function IsValidDomain($domain)
+    {
+         foreach(self::getDomainList() as $checkDomain){
+            if($checkDomain == $domain){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -557,6 +571,9 @@ class module_controller extends ctrl_module
         }
         if (!fs_director::CheckForEmptyValue(self::$noaddress)) {
             return ui_sysmessage::shout(ui_language::translate("Your email address cannot be blank."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$validdomain)) {
+            return ui_sysmessage::shout(ui_language::translate("The selected domain was not valid."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your distrubution lists have been saved successfully!"), "zannounceok");

@@ -34,6 +34,7 @@ class module_controller extends ctrl_module
     static $alreadyexists;
     static $alreadyexistssame;
     static $validemail;
+    static $validmailbox;
     static $noaddress;
     static $delete;
     static $create;
@@ -201,6 +202,11 @@ class module_controller extends ctrl_module
             self::$validemail = true;
             return false;
         }
+         if (!self::IsValidMailbox($address)) {
+            self::$validmailbox = true;
+            return false;
+        }  
+        
         if ($address == $destination) {
             self::$alreadyexistssame = true;
             return false;
@@ -211,6 +217,17 @@ class module_controller extends ctrl_module
     static function IsValidEmail($email)
     {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
+    }
+    
+    static function IsValidMailbox($address)
+    {
+         foreach(self::getMailboxList() as $checkMailbox)
+         {
+            if($checkMailbox == $address)
+            {
+                return true;
+            }
+        }
     }
 
     /**
@@ -353,6 +370,9 @@ class module_controller extends ctrl_module
         }
         if (!fs_director::CheckForEmptyValue(self::$noaddress)) {
             return ui_sysmessage::shout(ui_language::translate("Your email address cannot be blank."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$validmailbox)) {
+            return ui_sysmessage::shout(ui_language::translate("The mailbox chosen is invalid."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your forwarders have been saved successfully!"), "zannounceok");
