@@ -32,6 +32,7 @@ class module_controller extends ctrl_module
     static $ok;
     static $alreadyexists;
     static $validemail;
+    static $validdomain;
     static $noaddress;
     static $delete;
     static $create;
@@ -224,6 +225,10 @@ class module_controller extends ctrl_module
             self::$validemail = true;
             return false;
         }
+        if(!self::IsValidDomain($domain)){
+            self::$validdomain = true;
+            return false;        
+        }
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc=:fulladdress AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
@@ -279,6 +284,16 @@ class module_controller extends ctrl_module
         }
         return true;
     }
+    
+    static function IsValidDomain($domain)
+    {
+         foreach(self::getDomainList() as $checkDomain){
+            if($checkDomain == $domain){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * End 'worker' methods.
@@ -296,7 +311,6 @@ class module_controller extends ctrl_module
         if (self::ExecuteCreateAlias($currentuser['userid'], $formvars['inAddress'], $formvars['inDomain'], $formvars['inDestination']))
             self::$ok = true;
         return true;
-        return false;
     }
 
     static function doDeleteAlias()
@@ -435,6 +449,9 @@ class module_controller extends ctrl_module
         }
         if (!fs_director::CheckForEmptyValue(self::$noaddress)) {
             return ui_sysmessage::shout(ui_language::translate("Your email address cannot be blank."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$validdomain)) {
+            return ui_sysmessage::shout(ui_language::translate("The selected domain was not valid."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your aliases have been saved successfully!"), "zannounceok");

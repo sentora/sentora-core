@@ -34,6 +34,7 @@ class module_controller extends ctrl_module
     static $writeerror;
     static $nosub;
     static $alreadyexists;
+    static $validdomain;
     static $badname;
     static $blank;
     static $ok;
@@ -215,6 +216,11 @@ class module_controller extends ctrl_module
             self::$badname = TRUE;
             return FALSE;
         }
+        // Check for input manipulation domains that aren't ours
+        if (!self::IsValidDomain($domain)) {
+            self::$badname = TRUE;
+            return FALSE;
+        }
         // Check to make sure the domain is in the correct format before we go any further...
         if (strpos($domain, 'www.') === 0) {
             self::$error = TRUE;
@@ -263,6 +269,16 @@ class module_controller extends ctrl_module
     static function IsValidEmail($email)
     {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
+    }
+    
+    static function IsValidDomain($domain)
+    {
+         foreach(self::ListDomains() as $checkDomain){
+            if($checkDomain == $domain){
+                return true;
+            }
+        }
+        return false;
     }
 
     static function SetWriteApacheConfigTrue()
