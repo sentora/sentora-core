@@ -193,7 +193,7 @@
         </div>
         <!-- Javascript
         ================================================== -->
-        <script src="/etc/styles/Sentora_Default/js/jquery.js"></script>
+        <script data-cfasync="false" src="/etc/styles/Sentora_Default/js/jquery.js"></script>
         <script src="/etc/styles/Sentora_Default/js/bootstrap-transition.js"></script>
         <script src="/etc/styles/Sentora_Default/js/bootstrap-alert.js"></script>
         <script src="/etc/styles/Sentora_Default/js/prettyCheckable.js"></script>
