@@ -30,6 +30,7 @@
         <meta name="msapplication-TileImage" content="/etc/styles/Sentora_Default/img/ico/fav144.png">
 
         <!-- Scripts -->
+        <script data-cfasync="false">document.write('<style type="text/css">body {display:none;}<\/style>');</script>
         <!-- Anti-ClickJacking Protection -->
         <style id="antiClickjack">body{display:none !important;}</style>
         <script data-cfasync="false">
@@ -238,7 +239,7 @@
         </script>
         
         <!-- Page fade in after load -->
-        <script>
+        <script data-cfasync="false">
             $(window).load(function() {
                 $("body").fadeIn();
             });
