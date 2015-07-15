@@ -168,6 +168,7 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
+  $username = $currentuser['username'] . '_' . $username;
         runtime_hook::Execute('OnBeforeCreateFTPAccount');
         if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))) {
             // Check to see if its a new home directory or use a current one...
@@ -246,7 +247,7 @@ class module_controller extends ctrl_module
 
     static function IsValidUserName($username)
     {
-        return preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
+        return preg_match('/^[a-z\d_][a-z\d_-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
     }
 
     static function ExecuteDeleteFTP($ft_id_pk)
@@ -408,15 +409,15 @@ class module_controller extends ctrl_module
 
     static function getFTPUsagepChart()
     {
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$maximum = $currentuser['ftpaccountsquota'];
-		if ($maximum < 0) { //-1 = unlimited
+    global $controller;
+    $currentuser = ctrl_users::GetUserDetail();
+    $maximum = $currentuser['ftpaccountsquota'];
+    if ($maximum < 0) { //-1 = unlimited
             if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
-				return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			} else {
-				return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			}
+        return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+      } else {
+        return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+      }
         } else {
             $used = ctrl_users::GetQuotaUsages('ftpaccounts', $currentuser['userid']);
             $free = max($maximum - $used, 0);
