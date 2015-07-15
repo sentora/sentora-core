@@ -140,6 +140,21 @@ class module_controller extends ctrl_module
     {
         global $zdbh;
         global $controller;
+
+        // Verify if Current user can Edit FTP Account.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_id_pk=:editedUsrID AND ft_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':editedUsrID', $ft_id_pk);
+        $numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Change User Password
         runtime_hook::Execute('OnBeforeResetFTPPassword');
         $rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
         $rowftpfind = $zdbh->prepare($rowftpsql);
@@ -250,10 +265,25 @@ class module_controller extends ctrl_module
         return preg_match('/^[a-z\d_][a-z\d_-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
     }
 
-    static function ExecuteDeleteFTP($ft_id_pk)
+    static function ExecuteDeleteFTP($ft_id_pk, $uid)
     {
         global $zdbh;
         global $controller;
+
+        // Verify if Current user can Edit FTP Account.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_id_pk=:editedUsrID AND ft_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':editedUsrID', $ft_id_pk);
+        $numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Delete User
         runtime_hook::Execute('OnBeforeDeleteFTPAccount');
         $rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
         $rowftpfind = $zdbh->prepare($rowftpsql);
@@ -364,17 +394,53 @@ class module_controller extends ctrl_module
         return !isset($urlvars['show']);
     }
 
-    static function getisDeleteFTP()
+    static function getisDeleteFTP($uid)
     {
         global $controller;
+        global $zdbh;
+
         $urlvars = $controller->GetAllControllerRequests('URL');
+
+        // Verify if Current user can Edit FTP Account.
+        // This shall avoid exposing ftp username based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        $sql = " SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_id_pk=:editedUsrID AND ft_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':editedUsrID', $urlvars['other']);
+        $numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Show User Info
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
-    static function getisEditFTP()
+    static function getisEditFTP($uid)
     {
         global $controller;
-        $urlvars = $controller->GetAllControllerRequests('URL');
+        global $zdbh;
+
+        $urlvars     = $controller->GetAllControllerRequests('URL');
+
+        // Verify if Current user can Edit FTP Account.
+        // This shall avoid exposing ftp username based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        $sql = " SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_id_pk=:editedUsrID AND ft_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':editedUsrID', $urlvars['other']);
+        $numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Show User Info
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Edit");
     }
 
