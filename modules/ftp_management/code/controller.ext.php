@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2015 Sentora Project (http://www.sentora.org/)
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -33,6 +33,7 @@ class module_controller extends ctrl_module
     static $alreadyexists;
     static $blank;
     static $badname;
+    static $invalidPath;
     static $ok;
     static $delete;
     static $reset;
@@ -167,7 +168,6 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-	$username = $currentuser['username'] . '_' . $username;
         runtime_hook::Execute('OnBeforeCreateFTPAccount');
         if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))) {
             // Check to see if its a new home directory or use a current one...
@@ -184,6 +184,18 @@ class module_controller extends ctrl_module
             } else {
                 $homedirectory_to_use = '/' . $destination;
             }
+
+            // Check if Path is inside user home directory.
+            $full_homeDir  = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectory_to_use . '/';
+            $baseDir       = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'];
+            $realPath      = realpath($full_homeDir);
+
+            if( 0 !== strpos($realPath, $baseDir))
+            {
+                self::$invalidPath = true;
+                return false;
+            }
+
             $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->bindParam(':username', $username);
@@ -234,7 +246,7 @@ class module_controller extends ctrl_module
 
     static function IsValidUserName($username)
     {
-        return preg_match('/^[a-z\d_][a-z\d_-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
+        return preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
     }
 
     static function ExecuteDeleteFTP($ft_id_pk)
@@ -428,6 +440,9 @@ class module_controller extends ctrl_module
         }
         if (!fs_director::CheckForEmptyValue(self::$badname)) {
             return ui_sysmessage::shout(ui_language::translate("Your ftp account name is not valid. Please enter a valid ftp account name."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$invalidPath)) {
+            return ui_sysmessage::shout(ui_language::translate("Invalid Folder."), "zannounceok");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("FTP accounts updated successfully."), "zannounceok");
