@@ -131,17 +131,17 @@ class module_controller extends ctrl_module
         return $retval;
     }
 
-    public function ExecuteAddSubDomain($uid, $domain, $destination, $autohome)
+    static function ExecuteAddSubDomain($uid, $subDomain, $domain, $destination, $autohome)
     {
         global $zdbh;
         $retval = FALSE;
         runtime_hook::Execute('OnBeforeAddSubDomain');
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $domain = strtolower(str_replace(' ', '', $domain));
-        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($domain))) {
+        $subDomain = strtolower(str_replace(' ', '', $subDomain));
+        if (!fs_director::CheckForEmptyValue(self::CheckCreateForErrors($subDomain,$domain))) {
             //** New Home Directory **//
             if ($autohome == 1) {
-                $destination = "/" . str_replace(".", "_", $domain);
+                $destination = "/" . str_replace(".", "_", $subDomain);
                 $vhost_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $destination . "/";
                 fs_director::CreateDirectory($vhost_path);
                 //** Existing Home Directory **//
@@ -182,7 +182,7 @@ class module_controller extends ctrl_module
 														 2,
 														 :time)"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->bindParam(':userid', $currentuser['userid']);
-            $sql->bindParam(':domain', $domain);
+            $sql->bindParam(':domain', $subDomain);
             $sql->bindParam(':destination', $destination);
             $time = time();
             $sql->bindParam(':time', $time);
@@ -191,7 +191,7 @@ class module_controller extends ctrl_module
             if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
                 if (ctrl_options::GetSystemOption('disable_hostsen') == 'false') {
                     # Lets add the hostname to the HOSTS file so that the server can view the domain immediately...
-                    @exec("C:/Sentora/bin/zpss/setroute.exe " . $domain . "");
+                    @exec("C:/Sentora/bin/zpss/setroute.exe " . $subDomain . "");
                 }
             }
             self::SetWriteApacheConfigTrue();
@@ -201,18 +201,18 @@ class module_controller extends ctrl_module
         }
     }
 
-    static function CheckCreateForErrors($domain)
+    static function CheckCreateForErrors($subDomain,$domain)
     {
         global $zdbh;
         // Check for spaces and remove if found...
-        $domain = strtolower(str_replace(' ', '', $domain));
+        $subDomain = strtolower(str_replace(' ', '', $subDomain));
         // Check to make sure the domain is not blank before we go any further...
-        if ($domain == '') {
+        if ($subDomain == '') {
             self::$blank = TRUE;
             return FALSE;
         }
         // Check for invalid characters in the domain...
-        if (!self::IsValidDomainName($domain)) {
+        if (!self::IsValidDomainName($subDomain)) {
             self::$badname = TRUE;
             return FALSE;
         }
@@ -222,14 +222,14 @@ class module_controller extends ctrl_module
             return FALSE;
         }
         // Check to make sure the domain is in the correct format before we go any further...
-        if (strpos($domain, 'www.') === 0) {
+        if (strpos($subDomain, 'www.') === 0) {
             self::$error = TRUE;
             return FALSE;
         }
         // Check to see if the domain already exists in Sentora somewhere and redirect if it does....
         $sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_name_vc=:domain AND vh_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':domain', $domain);
+        $numrows->bindParam(':domain', $subDomain);
 
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() > 0) {
@@ -273,9 +273,9 @@ class module_controller extends ctrl_module
     
     static function IsValidDomain($domain)
     {
-         foreach(self::ListDomains() as $checkDomain){
-            if($checkDomain == $domain){
-                return true;
+         foreach(self::getDomainList() as $checkDomain){
+            if($checkDomain["name"] == $domain){
+               return true;
             }
         }
         return false;
@@ -354,7 +354,7 @@ class module_controller extends ctrl_module
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (self::ExecuteAddSubDomain($currentuser['userid'], $formvars['inSub'] . "." . $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])) {
+        if (self::ExecuteAddSubDomain($currentuser['userid'], $formvars['inSub'] . "." . $formvars['inDomain'], $formvars['inDomain'], $formvars['inDestination'], $formvars['inAutoHome'])) {
             self::$ok = TRUE;
             return true;
         } else {
