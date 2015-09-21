@@ -113,24 +113,29 @@ class module_controller extends ctrl_module
         }
     }
 
+    /**
+     * Produces a list of domain names only.
+     * @global db_driver $zdbh
+     * @param int $uid
+     * @return boolean
+     */
     static function ListDomains($uid)
     {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
+        
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
-        //$numrows = $zdbh->query($sql);
-        $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->execute();
-        if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':userid', $currentuser['userid']);
-            $res = array();
-            $sql->execute();
-            while ($rowdomains = $sql->fetch()) {
-                $res[] = array('domain' => $rowdomains['vh_name_vc']);
+        $binds = array(':userid' => $currentuser['userid']);
+        $prepared = $zdbh->bindQuery($sql, $binds);
+        
+        $rows = $prepared->fetchAll(PDO::FETCH_ASSOC);
+        $return = array();
+        
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
+                $return[] = array('domain' => $row['vh_name_vc']);
             }
-            return $res;
+            return $return;
         } else {
             return false;
         }
@@ -306,10 +311,14 @@ class module_controller extends ctrl_module
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
     
-    static function IsValidDomain($domain)
-    {
-         foreach(self::ListDomains() as $checkDomain){
-            if($checkDomain == $domain){
+    /**
+     * 
+     * @param string $domain
+     * @return boolean
+     */
+    static function IsValidDomain($domain) {
+        foreach (self::ListDomains() as $key => $checkDomain) {
+            if (array_key_exists('domain', $checkDomain) && $checkDomain['domain'] == $domain) {
                 return true;
             }
         }
