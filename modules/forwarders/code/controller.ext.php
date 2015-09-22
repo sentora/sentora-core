@@ -98,31 +98,29 @@ class module_controller extends ctrl_module
         }
     }
 
-    static function getMailboxList()
+    /**
+     * Produces a list of mailboxes only.
+     * @global db_driver $zdbh
+     * @param int $uid
+     * @return boolean
+     */
+    static function getMailboxList($uid)
     {
         global $zdbh;
-        $currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->execute();
-        if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':userid', $currentuser['userid']);
-            $res = array();
-            $sql->execute();
-            while ($rowmailboxes = $sql->fetch()) {
-                //$result = $zdbh->query("SELECT fw_address_vc FROM x_forwarders WHERE fw_address_vc='" . $rowmailboxes['mb_address_vc'] . "' AND fw_deleted_ts IS NULL")->Fetch();
-                $numrows = $zdbh->prepare("SELECT fw_address_vc FROM x_forwarders WHERE fw_address_vc=:mb_address_vc AND fw_deleted_ts IS NULL");
-                $numrows->bindParam(':mb_address_vc', $rowmailboxes['mb_address_vc']);
-                $numrows->execute();
-                $result = $numrows->fetch();
-                if (!$result) {
-                    $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                        'id' => $rowmailboxes['mb_id_pk']);
-                }
+        $binds = array(':userid' => $currentuser['userid']);
+        $prepared = $zdbh->bindQuery($sql, $binds);
+        
+        $rows = $prepared->fetchAll(PDO::FETCH_ASSOC);
+        $return = array();
+        
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
+                $return[] = array('address' => $row['mb_address_vc'], 'id' => $row['mb_id_pk']);
             }
-            return $res;
+            return $return;
         } else {
             return false;
         }
@@ -219,15 +217,19 @@ class module_controller extends ctrl_module
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
     }
     
+    /**
+     * 
+     * @param string $address
+     * @return boolean
+     */
     static function IsValidMailbox($address)
     {
-         foreach(self::getMailboxList() as $checkMailbox)
-         {
-            if($checkMailbox == $address)
-            {
+        foreach (self::getMailboxList() as $key => $checkMailbox) {
+            if (array_key_exists('address', $checkMailbox) && $checkMailbox['address'] == $address) {
                 return true;
             }
         }
+        return false;
     }
 
     /**
