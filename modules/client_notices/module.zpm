@@ -1,3 +1,4 @@
+<@ Init @>
 <div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
     <div class="panel-heading">
         <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
@@ -6,7 +7,7 @@
             <@ ModuleName @>
         </div>
 
-        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><: This module enables you to set a notice banner that will appear when any of your clients access Sentora.  :></p></div>
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><: This module enables you to set a notice banner that will appear when any of your clients access ZPanel.  :></p></div>
 
     </div>
 
@@ -27,5 +28,4 @@
             <@ CSFR_Tag @>
         </form>
     </div>
-
 </div>
