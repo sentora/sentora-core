@@ -31,7 +31,7 @@ if (ui_module::CheckModuleEnabled('Backup Config')) {
                 $username = $rowclients['ac_user_vc'];
                 $userid = $rowclients['ac_id_pk'];
                 $homedir = ctrl_options::GetSystemOption('hosted_dir') . $username;
-                $backupname = $username . "_" . date("M-d-Y_hms", time());
+                $backupname = $username . "_" . date("M-d-Y_His", time());
                 $dbstamp = date("dmy_Gi", time());
                 // We now see what the OS is before we work out what compression command to use..
                 if (sys_versions::ShowOSPlatformVersion() == "Windows") {
