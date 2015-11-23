@@ -49,6 +49,9 @@ class module_controller extends ctrl_module
                 } else {
                     $fieldhtml = ctrl_options::OutputSettingTextArea($rowsettings['so_name_vc'], $rowsettings['so_value_tx']);
                 }
+                if (strpos(ctrl_options::OutputSettingTextArea($rowsettings['so_name_vc']),'smtp_password') !== false) {
+                    $fieldhtml = '<input type="password" name="smtp_password" value="'.$rowsettings['so_value_tx'].'">';
+                }
                 array_push($res, array('cleanname' => ui_language::translate($rowsettings['so_cleanname_vc']),
                     'name' => $rowsettings['so_name_vc'],
                     'description' => ui_language::translate($rowsettings['so_desc_tx']),
