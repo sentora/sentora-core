@@ -32,7 +32,7 @@ function BuildVhostPortForward($vhostName, $customPort, $userEmail)
     $line = fs_filehandler::NewLine() . fs_filehandler::NewLine();
     $line .= "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
     $line .= "# PORT FORWARD FROM 80 TO: " . $customPort . fs_filehandler::NewLine();
-    $line .= "<virtualhost *:80>" . fs_filehandler::NewLine();
+    $line .= "<virtualhost *:" . ctrl_options::GetSystemOption('sentora_port') . ">" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
     $line .= "ServerAlias www." . $vhostName . fs_filehandler::NewLine();
     $line .= "ServerAdmin " . $userEmail . fs_filehandler::NewLine();
