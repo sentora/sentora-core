@@ -22,7 +22,8 @@ class ui_tpl_notice {
         if ($result) {
             if ($result['ac_notice_tx'] <> "")
                 return ui_sysmessage::shout(
-                    runtime_xss::xssClean($result['ac_notice_tx']),
+                    //runtime_xss::xssClean($result['ac_notice_tx']),
+                    $result['ac_notice_tx'],
                     'notice',
                     'Notice:',
                     true
