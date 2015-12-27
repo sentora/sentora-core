@@ -17,7 +17,7 @@
  * a simple tree view which is filled with the running processes which are determined by
  * calling the "ps" command line utility, another way is to provide
  * a file with the output of the ps utility, so there is no need to run a execute by the
- * webserver, the format of the command is written down in the ps.config.php file, where also
+ * webserver, the format of the command is written down in the phpsysinfo.ini file, where also
  * the method of getting the information is configured
  *
  * @category  PHP
@@ -124,7 +124,11 @@ class PS extends PSI_Plugin
                 $items[$row[1]]['childs'][$row[0]] = &$items[$row[0]];
             }
         }
-        $this->_result = $items[0];
+        if (isset($items[0])) {
+            $this->_result = $items[0];
+        } else {
+            $_result = array();
+        }
     }
     /**
      * generates the XML content for the plugin

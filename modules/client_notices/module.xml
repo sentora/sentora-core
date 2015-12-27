@@ -4,8 +4,8 @@
     <version>100</version>
     <defaultcat>Reseller</defaultcat>
     <desc>Enables resellers to set global notices for their clients.</desc>
-    <authorname>Sentora Project</authorname>
-    <authoremail>info@sentora.org</authoremail>
-    <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+    <authorname>ZPanel Project</authorname>
+    <authoremail>developers@zpanelcp.com</authoremail>
+    <authorurl>http://www.zpanelcp.com/</authorurl>
+    <updateurl>http://www.zpanelcp.com/uds/core.xml</updateurl>
 </module>

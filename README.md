@@ -23,4 +23,4 @@ Sentora is licensed under the GNU GENERAL PUBLIC LICENSE (GPL v3) you can view a
 
 ##Getting support
 
-We provide excellent free (and premium) [support](http://sentora.org/support/) and [documentation](http://sentora.org/docs/) at our website.
+We provide excellent free (and premium) [support](http://sentora.org/support/) and [documentation](http://docs.sentora.org/?node=23) at our website.
