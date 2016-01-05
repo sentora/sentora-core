@@ -64,6 +64,9 @@ modules/*
 /etc/apps/webmail/config/config.inc.php
 /etc/apps/webmail/plugins/managesieve/config.inc.php
 
+# Ignore phpMyAdmin setup folder
+/etc/apps/phpmyadmin/setup/
+
 # Ignore temporary storage
 /etc/tmp/storage/*/
 
