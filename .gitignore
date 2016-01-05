@@ -68,6 +68,9 @@ Thumbs.db
 # Ignore phpMyAdmin setup folder
 /etc/apps/phpmyadmin/setup/
 
+# Ignore phpSysInfo tools folder
+/etc/apps/phpsysinfo/tools/
+
 # Ignore temporary storage
 /etc/tmp/storage/*/
 
