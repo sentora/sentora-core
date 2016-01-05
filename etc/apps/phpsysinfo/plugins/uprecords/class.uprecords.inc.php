@@ -44,7 +44,7 @@ class uprecords extends PSI_Plugin
 
     private function uprecords()
     {
-        $result = array ();
+        $result = array();
         $i = 0;
 
         foreach ($this->_lines as $line) {
@@ -78,7 +78,17 @@ class uprecords extends PSI_Plugin
                 $lines = "";
                 $oldtz=getenv("TZ");
                 putenv("TZ=GMT");
-                if (CommonFunctions::executeProgram('uprecords', '-a -w', $lines) && !empty($lines))
+                $options = "";
+                if (defined('PSI_PLUGIN_UPRECORDS_MAX_ENTRIES')) {
+                    if (PSI_PLUGIN_UPRECORDS_MAX_ENTRIES === false) {
+                        $options=" -m 0";
+                    } elseif (PSI_PLUGIN_UPRECORDS_MAX_ENTRIES === true) {
+                        $options=" -m 1";
+                    } elseif ((PSI_PLUGIN_UPRECORDS_MAX_ENTRIES > 1) && (PSI_PLUGIN_UPRECORDS_MAX_ENTRIES != 10)) {
+                        $options=" -m ".PSI_PLUGIN_UPRECORDS_MAX_ENTRIES;
+                    }
+                }
+                if (CommonFunctions::executeProgram('uprecords', '-a -w'.$options, $lines) && !empty($lines))
                     $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
                 putenv("TZ=".$oldtz);
                 break;
@@ -94,7 +104,7 @@ class uprecords extends PSI_Plugin
 
     public function xml()
     {
-        if ( empty($this->_lines))
+        if (empty($this->_lines))
         return $this->xml->getSimpleXmlElement();
 
         $arrBuff = $this->uprecords();

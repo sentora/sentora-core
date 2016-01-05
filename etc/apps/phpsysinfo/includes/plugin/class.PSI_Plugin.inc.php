@@ -68,7 +68,7 @@ abstract class PSI_Plugin implements PSI_Interface_Plugin
      */
     public function __construct($plugin_name, $enc)
     {
-        $this->global_error = Error::Singleton();
+        $this->global_error = PSI_Error::Singleton();
         if (trim($plugin_name) != "") {
             $this->_plugin_name = $plugin_name;
             $this->_plugin_base = APP_ROOT."/plugins/".strtolower($this->_plugin_name)."/";
@@ -87,8 +87,8 @@ abstract class PSI_Plugin implements PSI_Interface_Plugin
      */
     private function _getconfig()
     {
-        if ( (!defined('PSI_PLUGIN_'.strtoupper($this->_plugin_name).'_ACCESS')) &&
-             (!defined('PSI_PLUGIN_'.strtoupper($this->_plugin_name).'_FILE')) ) {
+        if ((!defined('PSI_PLUGIN_'.strtoupper($this->_plugin_name).'_ACCESS')) &&
+             (!defined('PSI_PLUGIN_'.strtoupper($this->_plugin_name).'_FILE'))) {
                 $this->global_error->addError("config.ini", "Config for plugin ".$this->_plugin_name." not exist!");
         }
     }

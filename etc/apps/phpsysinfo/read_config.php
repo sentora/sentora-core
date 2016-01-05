@@ -3,7 +3,7 @@ if (!defined('PSI_CONFIG_FILE')) {
     /**
      * phpSysInfo version
      */
-    define('PSI_VERSION', '3.2.1');
+    define('PSI_VERSION', '3.2.4');
     /**
      * phpSysInfo configuration
      */
@@ -24,15 +24,15 @@ if (!defined('PSI_CONFIG_FILE')) {
                 $name_prefix='PSI_PLUGIN_'.strtoupper($name).'_';
             }
             foreach ($group as $param=>$value) {
-                if (($value==="") || ($value==="0")) {
+                if ((trim($value)==="") || (trim($value)==="0")) {
                     define($name_prefix.strtoupper($param), false);
-                } elseif ($value==="1") {
+                } elseif (trim($value)==="1") {
                     define($name_prefix.strtoupper($param), true);
                 } else {
                     if (strstr($value, ',')) {
-                        define($name_prefix.strtoupper($param), 'return '.var_export(preg_split('/\s*,\s*/', $value, -1, PREG_SPLIT_NO_EMPTY),1).';');
+                        define($name_prefix.strtoupper($param), 'return '.var_export(preg_split('/\s*,\s*/', trim($value), -1, PREG_SPLIT_NO_EMPTY), 1).';');
                     } else {
-                        define($name_prefix.strtoupper($param), $value);
+                        define($name_prefix.strtoupper($param), trim($value));
                     }
                 }
             }
@@ -54,7 +54,7 @@ if (!defined('PSI_CONFIG_FILE')) {
         if ($contents && preg_match("/^ref:\s+(.*)\/([^\/\s]*)/m", $contents, $matches)) {
             $contents = @file_get_contents(APP_ROOT.'/.git/'.$matches[1]."/".$matches[2]);
             if ($contents && preg_match("/^([^\s]*)/m", $contents, $revision)) {
-                define('PSI_VERSION_STRING', PSI_VERSION ."-".$matches[2]."-".substr($revision[1],0,7));
+                define('PSI_VERSION_STRING', PSI_VERSION ."-".$matches[2]."-".substr($revision[1], 0, 7));
             } else {
                 define('PSI_VERSION_STRING', PSI_VERSION ."-".$matches[2]);
             }
@@ -110,7 +110,7 @@ if (!defined('PSI_CONFIG_FILE')) {
 
                                     $n = stream_select($read, $w, $e, 5);
 
-                                    if (($n === FALSE) || ($n === 0)) {
+                                    if (($n === false) || ($n === 0)) {
                                         break;
                                     }
 
@@ -124,7 +124,7 @@ if (!defined('PSI_CONFIG_FILE')) {
                                     }
                                 }
 
-                                if (is_null($out) || (trim($out) == "") || (substr(trim($out),0 ,1) != "/")) {
+                                if (is_null($out) || (trim($out) == "") || (substr(trim($out), 0, 1) != "/")) {
                                     define('PSI_MODE_POPEN', true);
                                 }
                                 fclose($pipes[0]);
@@ -139,7 +139,7 @@ if (!defined('PSI_CONFIG_FILE')) {
                 }
             }
             if (!(defined('PSI_SYSTEM_CODEPAGE') && defined('PSI_SYSTEM_LANG')) //also if both not overloaded in phpsysinfo.ini
-               && $contents && ( preg_match('/^(LANG="?[^"\n]*"?)/m', $contents, $matches)
+               && $contents && (preg_match('/^(LANG="?[^"\n]*"?)/m', $contents, $matches)
                || preg_match('/^RC_(LANG="?[^"\n]*"?)/m', $contents, $matches)
                || preg_match('/^export (LANG="?[^"\n]*"?)/m', $contents, $matches))) {
                 if (!defined('PSI_SYSTEM_CODEPAGE') && @exec($matches[1].' locale -k LC_CTYPE 2>/dev/null', $lines)) { //if not overloaded in phpsysinfo.ini
@@ -174,7 +174,7 @@ if (!defined('PSI_CONFIG_FILE')) {
                 foreach ($lines as $line) {
                     if (preg_match('/^"?([^\."]*)\.?([^"]*)/', $line, $matches2)) {
 
-                        if (!defined('PSI_SYSTEM_CODEPAGE') && isset($matches2[2]) && !is_null($matches2[2]) && (trim($matches2[2]) != "") ) { //also if not overloaded in phpsysinfo.ini
+                        if (!defined('PSI_SYSTEM_CODEPAGE') && isset($matches2[2]) && !is_null($matches2[2]) && (trim($matches2[2]) != "")) { //also if not overloaded in phpsysinfo.ini
                             define('PSI_SYSTEM_CODEPAGE', $matches2[2]);
                         }
 

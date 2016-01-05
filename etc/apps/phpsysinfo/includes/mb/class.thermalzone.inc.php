@@ -60,7 +60,7 @@ class ThermalZone extends Sensors
                 $this->_buf = CommonFunctions::getWMI($_wmi, 'MSAcpi_ThermalZoneTemperature', array('InstanceName', 'CriticalTripPoint', 'CurrentTemperature'));
             }
         }
-     }
+    }
 
     /**
      * get temperature information
@@ -71,7 +71,7 @@ class ThermalZone extends Sensors
     {
         if (PSI_OS == 'WINNT') {
             if ($this->_buf) foreach ($this->_buf as $buffer) {
-                if (isset($buffer['CurrentTemperature']) && (( $value = ($buffer['CurrentTemperature'] - 2732)/10 ) > -100)) {
+                if (isset($buffer['CurrentTemperature']) && (($value = ($buffer['CurrentTemperature'] - 2732)/10) > -100)) {
                     $dev = new SensorDevice();
                     if (isset($buffer['InstanceName']) && preg_match("/([^\\\\ ]+)$/", $buffer['InstanceName'], $outbuf)) {
                         $dev->setName('ThermalZone '.$outbuf[1]);
@@ -79,7 +79,7 @@ class ThermalZone extends Sensors
                         $dev->setName('ThermalZone THM0_0');
                     }
                     $dev->setValue($value);
-                    if (isset($buffer['CriticalTripPoint']) && (( $maxvalue = ($buffer['CriticalTripPoint'] - 2732)/10 ) > 0)) {
+                    if (isset($buffer['CriticalTripPoint']) && (($maxvalue = ($buffer['CriticalTripPoint'] - 2732)/10) > 0)) {
                         $dev->setMax($maxvalue);
                     }
                     $this->mbinfo->setMbTemp($dev);
@@ -94,23 +94,25 @@ class ThermalZone extends Sensors
                         $temp = $temp / 1000;
                     }
 
-                    $dev = new SensorDevice();
-                    $dev->setValue($temp);
+                    if ($temp > -40) {
+                        $dev = new SensorDevice();
+                        $dev->setValue($temp);
 
-                    $temp_type = null;
-                    if (CommonFunctions::rfts($thermalzone.'type', $temp_type, 0, 4096, false) && !is_null($temp_type) && (trim($temp_type) != "")) {
-                        $dev->setName($temp_type);
-                    }
-
-                    $temp_max = null;
-                    if (CommonFunctions::rfts($thermalzone.'trip_point_0_temp', $temp_max, 0, 4096, false) && !is_null($temp_max) && (trim($temp_max) != "") && ($temp_max > 0)) {
-                        if ($temp_max >= 1000) {
-                            $temp_max = $temp_max / 1000;
+                        $temp_type = null;
+                        if (CommonFunctions::rfts($thermalzone.'type', $temp_type, 0, 4096, false) && !is_null($temp_type) && (trim($temp_type) != "")) {
+                            $dev->setName($temp_type);
                         }
-                        $dev->setMax($temp_max);
-                    }
 
-                    $this->mbinfo->setMbTemp($dev);
+                        $temp_max = null;
+                        if (CommonFunctions::rfts($thermalzone.'trip_point_0_temp', $temp_max, 0, 4096, false) && !is_null($temp_max) && (trim($temp_max) != "") && ($temp_max > 0)) {
+                            if ($temp_max >= 1000) {
+                                $temp_max = $temp_max / 1000;
+                            }
+                            $dev->setMax($temp_max);
+                        }
+
+                        $this->mbinfo->setMbTemp($dev);
+                    }
                 }
             }
         }

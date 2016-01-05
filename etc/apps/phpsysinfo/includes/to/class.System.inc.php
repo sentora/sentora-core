@@ -114,15 +114,6 @@ class System
     private $_netDevices = array();
 
     /**
-     * array with scsi devices
-     *
-     * @see HWDevice
-     *
-     * @var Array
-     */
-    private $_scsiDevices = array();
-
-    /**
      * array with pci devices
      *
      * @see HWDevice
@@ -130,6 +121,24 @@ class System
      * @var Array
      */
     private $_pciDevices = array();
+
+    /**
+     * array with ide devices
+     *
+     * @see HWDevice
+     *
+     * @var Array
+     */
+    private $_ideDevices = array();
+
+    /**
+     * array with scsi devices
+     *
+     * @see HWDevice
+     *
+     * @var Array
+     */
+    private $_scsiDevices = array();
 
     /**
      * array with usb devices
@@ -141,13 +150,22 @@ class System
     private $_usbDevices = array();
 
     /**
-     * array with ide devices
+     * array with thunderbolt devices
      *
      * @see HWDevice
      *
      * @var Array
      */
-    private $_ideDevices = array();
+    private $_tbDevices = array();
+
+    /**
+     * array with I2C devices
+     *
+     * @see HWDevice
+     *
+     * @var Array
+     */
+    private $_i2cDevices = array();
 
     /**
      * array with disk devices
@@ -718,33 +736,6 @@ class System
     }
 
     /**
-     * Returns $_pciDevices.
-     *
-     * @see System::$_pciDevices
-     *
-     * @return Array
-     */
-    public function getPciDevices()
-    {
-        return $this->_pciDevices;
-    }
-
-    /**
-     * Sets $_pciDevices.
-     *
-     * @param HWDevice $pciDevices pci device
-     *
-     * @see System::$_pciDevices
-     * @see HWDevice
-     *
-     * @return Void
-     */
-    public function setPciDevices($pciDevices)
-    {
-        array_push($this->_pciDevices, $pciDevices);
-    }
-
-    /**
      * Returns $_netDevices.
      *
      * @see System::$_netDevices
@@ -769,6 +760,33 @@ class System
     public function setNetDevices($netDevices)
     {
         array_push($this->_netDevices, $netDevices);
+    }
+
+    /**
+     * Returns $_pciDevices.
+     *
+     * @see System::$_pciDevices
+     *
+     * @return Array
+     */
+    public function getPciDevices()
+    {
+        return $this->_pciDevices;
+    }
+
+    /**
+     * Sets $_pciDevices.
+     *
+     * @param HWDevice $pciDevices pci device
+     *
+     * @see System::$_pciDevices
+     * @see HWDevice
+     *
+     * @return Void
+     */
+    public function setPciDevices($pciDevices)
+    {
+        array_push($this->_pciDevices, $pciDevices);
     }
 
     /**
@@ -850,6 +868,60 @@ class System
     public function setUsbDevices($usbDevices)
     {
         array_push($this->_usbDevices, $usbDevices);
+    }
+
+    /**
+     * Returns $_tbDevices.
+     *
+     * @see System::$_tbDevices
+     *
+     * @return Array
+     */
+    public function getTbDevices()
+    {
+        return $this->_tbDevices;
+    }
+
+    /**
+     * Sets $_tbDevices.
+     *
+     * @param HWDevice $tbDevices thunderbolt device
+     *
+     * @see System::$_tbDevices
+     * @see HWDevice
+     *
+     * @return Void
+     */
+    public function setTbDevices($tbDevices)
+    {
+        array_push($this->_tbDevices, $tbDevices);
+    }
+
+    /**
+     * Returns $_i2cDevices.
+     *
+     * @see System::$_i2cDevices
+     *
+     * @return Array
+     */
+    public function getI2cDevices()
+    {
+        return $this->_i2cDevices;
+    }
+
+    /**
+     * Sets $_i2cDevices.
+     *
+     * @param HWDevice $i2cDevices I2C device
+     *
+     * @see System::$_i2cDevices
+     * @see HWDevice
+     *
+     * @return Void
+     */
+    public function setI2cDevices($i2cDevices)
+    {
+        array_push($this->_i2cDevices, $i2cDevices);
     }
 
     /**
