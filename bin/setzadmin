@@ -58,15 +58,19 @@ function SetPassword($password, $generate) {
             $system_hash = new runtime_hash;
             $new_hash = $system_hash->RandomSalt();
             $securityfile = "<?php\n" .
+                    "\n" .
                     "/**\n" .
-                    "* Security configuration file.\n" .
-                    "* @package zpanelx\n" .
-                    "* @subpackage core -> config\n" .
-                    "* @author Bobby Allen (ballen@bobbyallen.me)\n" .
-                    "* @copyright ZPanel Project (http://www.zpanelcp.com/)\n" .
-                    "* @link http://www.zpanelcp.com/\n" .
-                    "* @license GPL (http://www.gnu.org/licenses/gpl.html)\n" .
-                    "*/\n" .
+                    " * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) \n" .
+                    " * Sentora is a GPL fork of the ZPanel Project whose original header follows:\n" .
+                    " *\n" .
+                    " * Security configuration file.\n" .
+                    " * @package zpanelx\n" .
+                    " * @subpackage core -> config\n" .
+                    " * @author Bobby Allen (ballen@bobbyallen.me)\n" .
+                    " * @copyright ZPanel Project (http://www.zpanelcp.com/)\n" .
+                    " * @link http://www.zpanelcp.com/\n" .
+                    " * @license GPL (http://www.gnu.org/licenses/gpl.html)\n" .
+                    " */\n" .
                     "global \$security;\n" .
                     "\n" .
                     "\$security['server_crypto_key'] = \"" . $new_hash . "\";" .
