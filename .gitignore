@@ -71,6 +71,9 @@ Thumbs.db
 # Ignore phpSysInfo tools folder
 /etc/apps/phpsysinfo/tools/
 
+# Ignore pChart2 examples folder
+/etc/lib/pChart2/examples/
+
 # Ignore temporary storage
 /etc/tmp/storage/*/
 
