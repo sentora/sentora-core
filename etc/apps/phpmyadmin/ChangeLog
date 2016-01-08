@@ -1,6 +1,51 @@
 phpMyAdmin - ChangeLog
 ======================
 
+4.0.10.12 (2015-12-25)
+- issue        [Security] Path disclosure, see PMASA-2015-6
+
+4.0.10.11 (2015-09-23)
+- issue #11464 phpMyAdmin suggests upgrading to newer version not usable on that system
+
+4.0.10.10 (2015-05-13)
+- bug #4899 [security] CSRF vulnerability in setup
+- bug #4900 [security] Vulnerability allowing Man-in-the-middle attack
+
+4.0.10.9 (2015-03-04)
+- bug       [security] Risk of BREACH attack, see PMASA-2015-1
+
+4.0.10.8 (2015-01-07)
+- rfe #1588 recursive function too deep - operator change suggestion 
+- rfe #1589 support early versions of PHP5.2 (register_shutdown_function)
+
+4.0.10.7 (2014-12-03)
+- bug #4611 [security] DOS attack with long passwords
+
+4.0.10.6 (2014-11-20)
+- bug #4578 [security] XSS vulnerability in table print view
+- bug #4579 [security] XSS vulnerability in zoom search page
+- bug #4594 [security] Path traversal in file inclusion of GIS factory
+- bug #4598 [security] XSS in multi submit
+- bug #4597 [security] XSS through pma_fontsize cookie
+
+4.0.10.5 (2014-10-21)
+- bug #4562 [security] XSS in debug SQL output
+- bug #4563 [security] XSS in monitor query analyzer
+
+4.0.10.4 (2014-10-01)
+- bug #4544 [security] XSS vulnerabilities in table search and table structure pages
+
+4.0.10.3 (2014-09-13)
+- bug #4530 [security] DOM based XSS that results to a CSRF that creates a
+            ROOT account in certain conditions
+
+4.0.10.2 (2014-08-17)
+- bug #4501 [security] XSS in table browse page
+- bug #4502 [security] Self-XSS in enum value editor
+- bug #4503 [security] Self-XSSes in monitor
+- bug #4504 [security] Self-XSS in query charts
+- bug #4517 [security] XSS in relation view
+
 4.0.10.1 (2014-07-17)
 - bug #4488 [security] XSS injection due to unescaped table name (triggers)
 - bug #4492 [security] XSS in AJAX confirmation messages 
