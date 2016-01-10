@@ -560,13 +560,20 @@ class module_controller extends ctrl_module
             } else {
                 $protocol = 'http://';
             }
+            $port = ctrl_options::GetSystemOption('sentora_port');
+            $domain = ctrl_options::GetSystemOption('sentora_domain');
+            # If using non-standard port
+            if ($port !== "80" && $port !== "443" && !empty($port)) {
+                # Append port to domain
+                $domain .= ":" . ctrl_options::GetSystemOption('sentora_port');
+            }
             $emailsubject = str_replace("{{username}}", $username, $emailsubject);
             $emailsubject = str_replace("{{password}}", $password, $emailsubject);
             $emailsubject = str_replace("{{fullname}}", $fullname, $emailsubject);
             $emailbody = str_replace("{{username}}", $username, $emailbody);
             $emailbody = str_replace("{{password}}", $password, $emailbody);
             $emailbody = str_replace("{{fullname}}", $fullname, $emailbody);
-            $emailbody = str_replace('{{controlpanelurl}}', $protocol . ctrl_options::GetSystemOption('sentora_domain'), $emailbody);
+            $emailbody = str_replace('{{controlpanelurl}}', $protocol . $domain, $emailbody);
 
             $phpmailer = new sys_email();
             $phpmailer->Subject = $emailsubject;
