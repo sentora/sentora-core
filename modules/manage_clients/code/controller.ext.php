@@ -565,7 +565,7 @@ class module_controller extends ctrl_module
             # If using non-standard port
             if ($port !== "80" && $port !== "443" && !empty($port)) {
                 # Append port to domain
-                $domain .= ":" . ctrl_options::GetSystemOption('sentora_port');
+                $domain .= ":" . $port;
             }
             $emailsubject = str_replace("{{username}}", $username, $emailsubject);
             $emailsubject = str_replace("{{password}}", $password, $emailsubject);

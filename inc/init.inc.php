@@ -61,7 +61,7 @@ if (isset($_POST['inForgotPassword'])) {
         # If using non-standard port
         if ($port !== "80" && $port !== "443" && !empty($port)) {
             # Append port to domain
-            $domain .= ":" . ctrl_options::GetSystemOption('sentora_port');
+            $domain .= ":" . $port;
         }
         $phpmailer = new sys_email();
         $phpmailer->Subject = "Hosting Panel Password Reset";
