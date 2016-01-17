@@ -185,8 +185,12 @@ function WriteVhostConfigFile()
                 $line .= '<Directory "' . ctrl_options::GetSystemOption('static_dir') . 'diskexceeded">' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+			 if ((double) sys_versions::ShowApacheVersion() < 2.4) {
+			 $line .= "    Order allow,deny" . fs_filehandler::NewLine();
+			  $line .= "    Allow from all" . fs_filehandler::NewLine();
+			  } else {
+        			$line .= "    Require all granted" . fs_filehandler::NewLine();
+			 }
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
@@ -218,8 +222,12 @@ function WriteVhostConfigFile()
                 $line .= '<Directory "' . ctrl_options::GetSystemOption('static_dir') . 'bandwidthexceeded">' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+			 if ((double) sys_versions::ShowApacheVersion() < 2.4) {
+			 $line .= "    Order allow,deny" . fs_filehandler::NewLine();
+			  $line .= "    Allow from all" . fs_filehandler::NewLine();
+			  } else {
+        			$line .= "    Require all granted" . fs_filehandler::NewLine();
+			 }
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
@@ -250,8 +258,12 @@ function WriteVhostConfigFile()
                 $line .= '<Directory "' . ctrl_options::GetSystemOption('parking_path') . '">' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+			 if ((double) sys_versions::ShowApacheVersion() < 2.4) {
+			 $line .= "    Order allow,deny" . fs_filehandler::NewLine();
+			  $line .= "    Allow from all" . fs_filehandler::NewLine();
+			  } else {
+        			$line .= "    Require all granted" . fs_filehandler::NewLine();
+			 }
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
@@ -318,8 +330,12 @@ function WriteVhostConfigFile()
                 $line .= '<Directory ' . $RootDir . '>' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+			 if ((double) sys_versions::ShowApacheVersion() < 2.4) {
+			 $line .= "    Order allow,deny" . fs_filehandler::NewLine();
+			  $line .= "    Allow from all" . fs_filehandler::NewLine();
+			  } else {
+        			$line .= "    Require all granted" . fs_filehandler::NewLine();
+			 }
                 $line .= "</Directory>" . fs_filehandler::NewLine();
 
                 // Enable Gzip until we set this as an option , we might commenbt this too and allow manual switch
@@ -398,8 +414,12 @@ function WriteVhostConfigFile()
             $line .= '<Directory "' . ctrl_options::GetSystemOption('static_dir') . 'disabled">' . fs_filehandler::NewLine();
             $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
             $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-            $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-            $line .= "  Allow from all" . fs_filehandler::NewLine();
+			 if ((double) sys_versions::ShowApacheVersion() < 2.4) {
+			 $line .= "    Order allow,deny" . fs_filehandler::NewLine();
+			  $line .= "    Allow from all" . fs_filehandler::NewLine();
+			  } else {
+        			$line .= "    Require all granted" . fs_filehandler::NewLine();
+			 }
             $line .= "</Directory>" . fs_filehandler::NewLine();
             $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
             $line .= "</virtualhost>" . fs_filehandler::NewLine();
