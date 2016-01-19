@@ -54,11 +54,11 @@ class module_controller extends ctrl_module
     {
         global $zdbh;
         if ($uid == 0) {
-            $sql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+            $sql = "SELECT * FROM x_accounts WHERE ac_enabled_in=1 AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
             $numrows = $zdbh->prepare($sql);
             $numrows->execute();
         } else {
-            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid AND ac_enabled_in=1 AND ac_deleted_ts IS NULL";
+            $sql = "SELECT * FROM x_accounts WHERE ac_reseller_fk=:uid AND ac_enabled_in=1 AND ac_deleted_ts IS NULL ORDER BY ac_user_vc";
             $numrows = $zdbh->prepare($sql);
             $numrows->bindParam(':uid', $uid);
             $numrows->execute();
