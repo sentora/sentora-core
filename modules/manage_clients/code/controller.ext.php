@@ -700,7 +700,13 @@ class module_controller extends ctrl_module
     static function DefaultEmailBody()
     {
         global $zdbh;
-		$result = $zdbh->query("SELECT so_value_tx FROM x_settings WHERE so_id_pk = 122" . $user_array['resellerid'] . "")->Fetch();
+	$sql = "SELECT so_value_tx FROM x_settings WHERE so_name_vc = :configName";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindValue(':configName', 'welcome_message');
+        $numrows->execute();
+
+        $result = $numrows->fetch();
+        
         if ($result) {
             return ($result['so_value_tx']);
         } else {
