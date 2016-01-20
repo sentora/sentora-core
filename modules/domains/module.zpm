@@ -63,7 +63,7 @@
         <table class="none" width="100%" cellborder="0" cellspacing="0">
         <tr valign="top">
             <td>
-                <h2>Create a new domain</h2>
+                <h2><: Create a new domain :></h2>
                 <% if CreateDomain %>
                 <form action="./?module=domains&action=CreateDomain" method="post" name="CreateDomain">
                     <table class="table table-striped">
