@@ -699,8 +699,13 @@ class module_controller extends ctrl_module
 
     static function DefaultEmailBody()
     {
-        $line = ui_language::translate("Hi {{fullname}},\r\rWe are pleased to inform you that your new hosting account is now active!\r\rYou can access your web hosting control panel using this link:\r{{controlpanelurl}}\r\rYour username and password is as follows:\rUsername: {{username}}\rPassword: {{password}}\r\rMany thanks,\rThe management");
-        return $line;
+        global $zdbh;
+		$result = $zdbh->query("SELECT so_value_tx FROM x_settings WHERE so_id_pk = 122" . $user_array['resellerid'] . "")->Fetch();
+        if ($result) {
+            return ($result['so_value_tx']);
+        } else {
+            return false;
+        }
     }
 
     /**
