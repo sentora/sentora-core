@@ -3,6 +3,40 @@ Changelog of phpSysInfo
 
 http://phpsysinfo.sourceforge.net/
 
+phpSysInfo 3.2.4
+----------------
+ - [ADD] Solus to detected distros
+ - [ADD] Uprecords plugin - MAX_ENTRIES option - maximum number of entries to show
+
+ - [UPD] Refreshing status of all plugins for dynamic mode
+ - [UPD] bootstrap 3.3.6
+
+ - [NEW] language and template selection also for frontend "bootstrap"
+
+ - [FIX] PHP 7 class Error issues
+
+phpSysInfo 3.2.3
+----------------
+ - [UPD] jQuery 2.1.4 and jQuery 1.11.3
+ - [UPD] bootstrap 3.3.5
+
+ - [NEW] I2C devices list on Android and Linux
+
+ - [ADD] blue template
+
+phpSysInfo 3.2.2
+----------------
+ - [UPD] bootstrap 3.3.4
+
+ - [NEW] Thunderbolt (TB) devices list on Darwin
+
+ - [ADD] cleansyn template
+ - [ADD] PS plugin - support for Android
+ - [ADD] PS plugin - SHOW_KTHREADD_EXPANDED option
+ - [ADD] Qubes and HandyLinux to detected distros
+
+ - [FIX] PS plugin - fixed display of the processes tree
+
 phpSysInfo 3.2.1
 ----------------
  - [UPD] bootstrap 3.3.2
@@ -15,6 +49,8 @@ phpSysInfo 3.2.1
 
 phpSysInfo 3.2.0
 ----------------
+ - [UPD] jQuery 2.1.3 and jQuery 1.11.2
+
  - [NEW] Frontend "bootstrap" with Bootstrap3 and Transparency (JSON)
 
  - [ADD] Catalan Translation ca.xml

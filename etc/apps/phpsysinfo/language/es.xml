@@ -121,7 +121,7 @@ phpSysInfo language file Language: Spanish Created by: J.F. Ruano
     <exp>Total</exp>
   </expression>
   <expression id="039" name="kb">
-    <exp>KB</exp>
+    <exp>kB</exp>
   </expression>
   <expression id="040" name="mb">
     <exp>MB</exp>
@@ -353,5 +353,17 @@ phpSysInfo language file Language: Spanish Created by: J.F. Ruano
   </expression>
   <expression id="116" name="ProcessesOther">
     <exp>other</exp>
+  </expression>
+  <expression id="117" name="tb">
+    <exp>Dispositivos TB</exp>
+  </expression>
+  <expression id="118" name="i2c">
+    <exp>Dispositivos I2C</exp>
+  </expression>
+  <expression id="119" name="no_processors">
+    <exp>Number of processors</exp>
+  </expression>
+  <expression id="120" name="no_devices">
+    <exp>Number of devices</exp>
   </expression>
 </tns:translation>

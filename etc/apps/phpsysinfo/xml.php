@@ -14,6 +14,16 @@ header('Access-Control-Allow-Origin: *');
  * @link      http://phpsysinfo.sourceforge.net
  */
 
+/**
+ * Only allow authenticated Sentora users
+ * Please ensure this code is added when updating phpSysInfo
+ */
+session_start();
+if (!isset($_SESSION['zpuid'])) {
+    header('HTTP/1.0 403 Forbidden');
+    die('<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>Forbidden</title></head><body><h1>Forbidden</h1><p>You don\'t have permission to access phpSysInfo on this server.</p></body></html>');
+}
+
  /**
  * application root path
  *
@@ -53,7 +63,7 @@ if (isset($output) && is_object($output)) {
             $json = json_encode(simplexml_load_string($output->getXMLString()));
         }
         // check for jsonp with callback name restriction
-        echo (isset($_GET['jsonp'])) ? (!preg_match('/[^A-Za-z0-9_\?]/', $_GET['callback'])?$_GET['callback']:'') . '('.$json.')' : $json;
+        echo isset($_GET['jsonp']) ? (!preg_match('/[^A-Za-z0-9_\?]/', $_GET['callback'])?$_GET['callback']:'') . '('.$json.')' : $json;
     } else {
         $output->run();
     }

@@ -53,19 +53,19 @@ class Haiku extends OS
                     $dev->setModel($ar_buf[1]);
                     $arrLines = preg_split("/\n/", $cpu, -1, PREG_SPLIT_NO_EMPTY);
                     foreach ($arrLines as $Line) {
-                      if (preg_match("/^\s+Data TLB:\s+(.*)K-byte/", $Line, $Line_buf)) {
-                        $dev->setCache(max($Line_buf[1]*1024,$dev->getCache()));
-                      } elseif (preg_match("/^\s+Data TLB:\s+(.*)M-byte/", $Line, $Line_buf)) {
-                        $dev->setCache(max($Line_buf[1]*1024*1024,$dev->getCache()));
-                      } elseif (preg_match("/^\s+Data TLB:\s+(.*)G-byte/", $Line, $Line_buf)) {
-                        $dev->setCache(max($Line_buf[1]*1024*1024*1024,$dev->getCache()));
-                      } elseif (preg_match("/\s+VMX/", $Line, $Line_buf)) {
-                        $dev->setVirt("vmx");
-                      } elseif (preg_match("/\s+SVM/", $Line, $Line_buf)) {
-                        $dev->setVirt("svm");
-                      }
+                        if (preg_match("/^\s+Data TLB:\s+(.*)K-byte/", $Line, $Line_buf)) {
+                            $dev->setCache(max($Line_buf[1]*1024, $dev->getCache()));
+                        } elseif (preg_match("/^\s+Data TLB:\s+(.*)M-byte/", $Line, $Line_buf)) {
+                            $dev->setCache(max($Line_buf[1]*1024*1024, $dev->getCache()));
+                        } elseif (preg_match("/^\s+Data TLB:\s+(.*)G-byte/", $Line, $Line_buf)) {
+                            $dev->setCache(max($Line_buf[1]*1024*1024*1024, $dev->getCache()));
+                        } elseif (preg_match("/\s+VMX/", $Line, $Line_buf)) {
+                            $dev->setVirt("vmx");
+                        } elseif (preg_match("/\s+SVM/", $Line, $Line_buf)) {
+                            $dev->setVirt("svm");
+                        }
                     }
-                    if ($cpuspeed != "" )$dev->setCpuSpeed($cpuspeed);
+                    if ($cpuspeed != "")$dev->setCpuSpeed($cpuspeed);
                     $this->sys->setCpus($dev);
                   //echo ">>>>>".$cpu;
                 }
@@ -228,24 +228,6 @@ class Haiku extends OS
     }
 
     /**
-     * IP of the Virtual Host Name
-     *
-     *  @return void
-     */
-    private function _ip()
-    {
-        if (PSI_USE_VHOST === true) {
-            $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-        } else {
-            if (!($result = getenv('SERVER_ADDR'))) {
-                $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-            } else {
-                $this->sys->setIp($result);
-            }
-        }
-    }
-
-    /**
      *  Physical memory information and Swap Space information
      *
      *  @return void
@@ -282,23 +264,23 @@ class Haiku extends OS
      */
     private function _filesystems()
     {
-      if (CommonFunctions::executeProgram('df', '-b', $df, PSI_DEBUG)) {
-          $df = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
-          foreach ($df as $df_line) {
-              $ar_buf = preg_split("/\s+/", $df_line);
-              if ((substr($df_line,0 ,1 ) == "/") && (count($ar_buf) == 6 )) {
-                  $dev = new DiskDevice();
-                  $dev->setMountPoint($ar_buf[0]);
-                  $dev->setName($ar_buf[5]);
-                  $dev->setFsType($ar_buf[1]);
-                  $dev->setOptions($ar_buf[4]);
-                  $dev->setTotal($ar_buf[2] * 1024);
-                  $dev->setFree($ar_buf[3] * 1024);
-                  $dev->setUsed($dev->getTotal() - $dev->getFree());
-                  $this->sys->setDiskDevices($dev);
-             }
-          }
-      }
+        if (CommonFunctions::executeProgram('df', '-b', $df, PSI_DEBUG)) {
+        $df = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($df as $df_line) {
+                $ar_buf = preg_split("/\s+/", $df_line);
+                if ((substr($df_line, 0, 1) == "/") && (count($ar_buf) == 6)) {
+                    $dev = new DiskDevice();
+                    $dev->setMountPoint($ar_buf[0]);
+                    $dev->setName($ar_buf[5]);
+                    $dev->setFsType($ar_buf[1]);
+                    $dev->setOptions($ar_buf[4]);
+                    $dev->setTotal($ar_buf[2] * 1024);
+                    $dev->setFree($ar_buf[3] * 1024);
+                    $dev->setUsed($dev->getTotal() - $dev->getFree());
+                    $this->sys->setDiskDevices($dev);
+                }
+            }
+        }
     }
 
     /**
@@ -340,8 +322,8 @@ class Haiku extends OS
                                     $dev->setInfo(preg_replace('/:/', '-', $ar_buf2[1]));
                             elseif (preg_match('/^\s+inet\saddr:\s(\S*),/i', $line, $ar_buf2))
                                      $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
-                                 elseif (preg_match('/^\s+inet6\saddr:\s(\S*),/i', $line, $ar_buf2))
-                                          if (!preg_match('/^fe80::/i',$ar_buf2[1]))
+                                 elseif (preg_match('/^\s+inet6\saddr:\s(\S*),/i', $line, $ar_buf2)
+                                          && ($ar_buf2[1]!="::") && !preg_match('/^fe80::/i', $ar_buf2[1]))
                                             $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
                         }
                     }
@@ -385,9 +367,8 @@ class Haiku extends OS
     public function build()
     {
         $this->error->addError("WARN", "The Haiku version of phpSysInfo is a work in progress, some things currently don't work");
-        $this->_hostname();
-        $this->_ip();
         $this->_distro();
+        $this->_hostname();
         $this->_kernel();
         $this->_uptime();
         $this->_users();
