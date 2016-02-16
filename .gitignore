@@ -4,57 +4,81 @@
 .DS_Store
 Thumbs.db
 
-# ignore style , apps, module being developed by 3rd parties
-#Styles
-etc/styles/*
-!etc/styles/Sentora_Default/
+# Ignore non-core styles, modules and apps.
 
-#Apps
-etc/apps/*
-!etc/apps/phpinfo/
-!etc/apps/phpmyadmin/
-!etc/apps/phpsysinfo/
-!etc/apps/webmail/
+# Styles
+/etc/styles/*
+!/etc/styles/Sentora_Default/
 
-#modules
-modules/*
-!modules/aliases/
-!modules/apache_admin/
-!modules/backup_admin/
-!modules/backupmgr/
-!modules/client_notices/
-!modules/cron/
-!modules/distlists/
-!modules/dns_admin/
-!modules/dns_manager/
-!modules/domains/
-!modules/faqs/
-!modules/forwarders/
-!modules/ftp_admin/
-!modules/ftp_management/
-!modules/mail_admin/
-!modules/mailboxes/
-!modules/manage_clients/
-!modules/manage_groups/
-!modules/moduleadmin/
-!modules/my_account/
-!modules/mysql_databases/
-!modules/mysql_users/
-!modules/news/
-!modules/packages/
-!modules/parked_domains/
-!modules/password_assistant/
-!modules/phpinfo/
-!modules/phpmyadmin/
-!modules/phpsysinfo/
-!modules/protected_directories/
-!modules/sentoraconfig/
-!modules/services/
-!modules/shadowing/
-!modules/sub_domains/
-!modules/theme_manager/
-!modules/updates/
-!modules/usage_viewer/
-!modules/webalizer_stats/
-!modules/webmail/
-!modules/zpx_core_module/
+# Apps
+/etc/apps/*
+!/etc/apps/phpinfo/
+!/etc/apps/phpmyadmin/
+!/etc/apps/phpsysinfo/
+!/etc/apps/webmail/
+
+# Modules
+/modules/*
+!/modules/aliases/
+!/modules/apache_admin/
+!/modules/backup_admin/
+!/modules/backupmgr/
+!/modules/client_notices/
+!/modules/cron/
+!/modules/distlists/
+!/modules/dns_admin/
+!/modules/dns_manager/
+!/modules/domains/
+!/modules/faqs/
+!/modules/forwarders/
+!/modules/ftp_admin/
+!/modules/ftp_management/
+!/modules/mail_admin/
+!/modules/mailboxes/
+!/modules/manage_clients/
+!/modules/manage_groups/
+!/modules/moduleadmin/
+!/modules/my_account/
+!/modules/mysql_databases/
+!/modules/mysql_users/
+!/modules/news/
+!/modules/packages/
+!/modules/parked_domains/
+!/modules/password_assistant/
+!/modules/phpinfo/
+!/modules/phpmyadmin/
+!/modules/phpsysinfo/
+!/modules/protected_directories/
+!/modules/sentoraconfig/
+!/modules/services/
+!/modules/shadowing/
+!/modules/sub_domains/
+!/modules/theme_manager/
+!/modules/updates/
+!/modules/usage_viewer/
+!/modules/webalizer_stats/
+!/modules/webmail/
+!/modules/zpx_core_module/
+
+# Ignore config files
+/etc/apps/phpmyadmin/config.inc.php
+/etc/apps/webmail/config/config.inc.php
+/etc/apps/webmail/plugins/managesieve/config.inc.php
+
+# Ignore phpMyAdmin setup folder
+/etc/apps/phpmyadmin/setup/
+
+# Ignore phpSysInfo tools folder
+/etc/apps/phpsysinfo/tools/
+
+# Ignore pChart2 examples folder
+/etc/lib/pChart2/examples/
+
+# Ignore generated webalizer stats
+/modules/webalizer_stats/stats/
+
+# Ignore temporary storage
+/etc/tmp/storage/*/
+
+# Ignore zsudo executable
+/bin/zsudo
