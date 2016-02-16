@@ -520,7 +520,7 @@ class module_controller extends ctrl_module
         if (!preg_match('/^[a-z\d_][a-z\d_-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
         } else {
-            if (strlen($username) < 17) {
+            if (strlen($username) < 32) {
                 // Enforce the MySQL username limit! (http://dev.mysql.com/doc/refman/4.1/en/user-names.html)
                 return true;
             }
