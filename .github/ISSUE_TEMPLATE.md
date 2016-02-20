@@ -18,3 +18,5 @@ Suggested fix or solution if you have any:
 
 
 Thank you on the behalf of the Sentora Team.
+
+V 0.0.2
