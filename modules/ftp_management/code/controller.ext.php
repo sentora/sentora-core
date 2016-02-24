@@ -163,6 +163,7 @@ class module_controller extends ctrl_module
         $rowftp = $rowftpfind->fetch();
 
         $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc=:password WHERE ft_id_pk=:ftpid");
+        $password= hash(’sha512′,$password);
         $sql->bindParam(':password', $password);
         $sql->bindParam(':ftpid', $ft_id_pk);
         $sql->execute();
@@ -213,6 +214,7 @@ class module_controller extends ctrl_module
             }
 
             $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
+            $password= hash(’sha512′,$password);
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->bindParam(':username', $username);
             $sql->bindParam(':homedir', $homedirectory_to_use);
