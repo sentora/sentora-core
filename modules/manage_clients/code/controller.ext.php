@@ -683,7 +683,7 @@ class module_controller extends ctrl_module
 
     static function IsValidEmail($email)
     {
-        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
         return true;
