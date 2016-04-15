@@ -88,7 +88,8 @@ function WriteVhostConfigFile()
 
     # Listen is mandatory for each port <> 80 (80 is defined in system config)
     foreach ($customPortList as $port) {
-        $line .= "Listen " . $port . fs_filehandler::NewLine();
+    	if ($port <> 443)
+        	$line .= "Listen " . $port . fs_filehandler::NewLine();
     }
 
     $line .= fs_filehandler::NewLine();
