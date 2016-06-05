@@ -103,13 +103,14 @@ class rcube_utils
             }
 
             foreach ($domain_array as $part) {
-                if (!preg_match('/^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]))$/', $part)) {
+                if (!preg_match('/^((xn--)?([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]))$/', $part)) {
                     return false;
                 }
             }
 
             // last domain part
-            if (preg_match('/[^a-zA-Z]/', array_pop($domain_array))) {
+            $last_part = array_pop($domain_array);
+            if (strpos($last_part, 'xn--') !== 0 && preg_match('/[^a-zA-Z]/', $last_part)) {
                 return false;
             }
 
@@ -593,18 +594,18 @@ class rcube_utils
      */
     public static function https_check($port=null, $use_https=true)
     {
-        global $RCMAIL;
-
         if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') {
             return true;
         }
-        if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') {
+        if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])
+            && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'
+            && in_array($_SERVER['REMOTE_ADDR'], rcube::get_instance()->config->get('proxy_whitelist', array()))) {
             return true;
         }
         if ($port && $_SERVER['SERVER_PORT'] == $port) {
             return true;
         }
-        if ($use_https && isset($RCMAIL) && $RCMAIL->config->get('use_https')) {
+        if ($use_https && rcube::get_instance()->config->get('use_https')) {
             return true;
         }
 
@@ -683,13 +684,22 @@ class rcube_utils
      */
     public static function remote_addr()
     {
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'], 2);
-            return $hosts[0];
-        }
+        // Check if any of the headers are set first to improve performance
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']) || !empty($_SERVER['HTTP_X_REAL_IP'])) {
+            $proxy_whitelist = rcube::get_instance()->config->get('proxy_whitelist', array());
+            if (in_array($_SERVER['REMOTE_ADDR'], $proxy_whitelist)) {
+                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    foreach(array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $forwarded_ip) {
+                        if (!in_array($forwarded_ip, $proxy_whitelist)) {
+                            return $forwarded_ip;
+                        }
+                    }
+                }
 
-        if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
-            return $_SERVER['HTTP_X_REAL_IP'];
+                if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
+                    return $_SERVER['HTTP_X_REAL_IP'];
+                }
+            }
         }
 
         if (!empty($_SERVER['REMOTE_ADDR'])) {
@@ -919,7 +929,7 @@ class rcube_utils
 
     /**
      * Normalize the given string for fulltext search.
-     * Currently only optimized for Latin-1 characters; to be extended
+     * Currently only optimized for ISO-8859-1 and ISO-8859-2 characters; to be extended
      *
      * @param string  Input string (UTF-8)
      * @param boolean True to return list of words as array
@@ -940,15 +950,32 @@ class rcube_utils
         // split by words
         $arr = self::tokenize_string($str);
 
+        // detect character set
+        if (utf8_encode(utf8_decode($str)) == $str) {
+            // ISO-8859-1 (or ASCII)
+            preg_match_all('/./u', 'äâàåáãæçéêëèïîìíñöôòøõóüûùúýÿ', $keys);
+            preg_match_all('/./',  'aaaaaaaceeeeiiiinoooooouuuuyy', $values);
+
+            $mapping = array_combine($keys[0], $values[0]);
+            $mapping = array_merge($mapping, array('ß' => 'ss', 'ae' => 'a', 'oe' => 'o', 'ue' => 'u'));
+        }
+        else if (rcube_charset::convert(rcube_charset::convert($str, 'UTF-8', 'ISO-8859-2'), 'ISO-8859-2', 'UTF-8') == $str) {
+            // ISO-8859-2
+            preg_match_all('/./u', 'ąáâäćçčéęëěíîłľĺńňóôöŕřśšşťţůúűüźžżý', $keys);
+            preg_match_all('/./',  'aaaaccceeeeiilllnnooorrsssttuuuuzzzy', $values);
+
+            $mapping = array_combine($keys[0], $values[0]);
+            $mapping = array_merge($mapping, array('ß' => 'ss', 'ae' => 'a', 'oe' => 'o', 'ue' => 'u'));
+        }
+
         foreach ($arr as $i => $part) {
-            if (utf8_encode(utf8_decode($part)) == $part) {  // is latin-1 ?
-                $arr[$i] = utf8_encode(strtr(strtolower(strtr(utf8_decode($part),
-                    'ÇçäâàåéêëèïîìÅÉöôòüûùÿøØáíóúñÑÁÂÀãÃÊËÈÍÎÏÓÔõÕÚÛÙýÝ',
-                    'ccaaaaeeeeiiiaeooouuuyooaiounnaaaaaeeeiiioooouuuyy')),
-                    array('ß' => 'ss', 'ae' => 'a', 'oe' => 'o', 'ue' => 'u')));
+            $part = mb_strtolower($part);
+
+            if (!empty($mapping)) {
+                $part = strtr($part, $mapping);
             }
-            else
-                $arr[$i] = mb_strtolower($part);
+
+            $arr[$i] = $part;
         }
 
         return $as_array ? $arr : join(" ", $arr);
@@ -1029,7 +1056,6 @@ class rcube_utils
             return $password;
         }
     }
-
 
     /**
      * Find out if the string content means true or false

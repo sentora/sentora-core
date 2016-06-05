@@ -165,7 +165,7 @@ abstract class BSDCommon extends OS
     {
         if (count($this->_dmesg) === 0) {
             if (PSI_OS != "Darwin") {
-                if (CommonFunctions::rfts('/var/run/dmesg.boot', $buf)) {
+                if (CommonFunctions::rfts('/var/run/dmesg.boot', $buf, 0, 4096, false) || CommonFunctions::rfts('/var/log/dmesg.boot', $buf, 0, 4096, false) || CommonFunctions::rfts('/var/run/dmesg.boot', $buf)) {  // Once again but with debug
                     $parts = preg_split("/rebooting|Uptime/", $buf, -1, PREG_SPLIT_NO_EMPTY);
                     $this->_dmesg = preg_split("/\n/", $parts[count($parts) - 1], -1, PREG_SPLIT_NO_EMPTY);
                 }
@@ -209,24 +209,6 @@ abstract class BSDCommon extends OS
     }
 
     /**
-     * IP of the Canonical Host Name
-     *
-     * @return void
-     */
-    protected function ip()
-    {
-        if (PSI_USE_VHOST === true) {
-            $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-        } else {
-            if (!($result = getenv('SERVER_ADDR'))) {
-                $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-            } else {
-                $this->sys->setIp($result);
-            }
-        }
-    }
-
-    /**
      * Kernel Version
      *
      * @return void
@@ -262,7 +244,7 @@ abstract class BSDCommon extends OS
         $s = preg_replace('/{ /', '', $s);
         $s = preg_replace('/ }/', '', $s);
         $this->sys->setLoad($s);
-        if (PSI_LOAD_BAR) {
+        if (PSI_LOAD_BAR && (PSI_OS != "Darwin")) {
             if ($fd = $this->grabkey('kern.cp_time')) {
                 // Find out the CPU load
                 // user + sys = load
@@ -299,21 +281,21 @@ abstract class BSDCommon extends OS
                 }
             } else {
                 if (preg_match("/ Origin| Features/", $line, $ar_buf)) {
-                       if (preg_match("/ Features2[ ]*=.*<(.*)>/", $line, $ar_buf)) {
-                           $feats = preg_split("/,/", strtolower(trim($ar_buf[1])), -1, PREG_SPLIT_NO_EMPTY);
-                           foreach ($feats as $feat) {
-                                if (($feat=="vmx") || ($feat=="svm")) {
-                                   $dev->setVirt($feat);
-                                   break 2;
-                                }
-                           }
-                           break;
-                       }
+                    if (preg_match("/ Features2[ ]*=.*<(.*)>/", $line, $ar_buf)) {
+                        $feats = preg_split("/,/", strtolower(trim($ar_buf[1])), -1, PREG_SPLIT_NO_EMPTY);
+                        foreach ($feats as $feat) {
+                            if (($feat=="vmx") || ($feat=="svm")) {
+                                $dev->setVirt($feat);
+                                break 2;
+                            }
+                        }
+                        break;
+                    }
                 } else break;
             }
         }
         $ncpu = $this->grabkey('hw.ncpu');
-        if ( is_null($ncpu) || (trim($ncpu) == "") || (!($ncpu >= 1)) )
+        if (is_null($ncpu) || (trim($ncpu) == "") || (!($ncpu >= 1)))
             $ncpu = 1;
         for ($ncpu ; $ncpu > 0 ; $ncpu--) {
             $this->sys->setCpus($dev);
@@ -359,6 +341,52 @@ abstract class BSDCommon extends OS
     }
 
     /**
+     * parsing the output of pciconf command
+     *
+     * @return Array
+     */
+    protected function pciconf()
+    {
+        $arrResults = array();
+        $intS = 0;
+        if (CommonFunctions::executeProgram("pciconf", "-lv", $strBuf, PSI_DEBUG)) {
+            $arrTemp = array();
+            $arrBlocks = preg_split("/\n\S/", $strBuf, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($arrBlocks as $strBlock) {
+                $arrLines = preg_split("/\n/", $strBlock, -1, PREG_SPLIT_NO_EMPTY);
+                $vend = null;
+                foreach ($arrLines as $strLine) {
+                    if (preg_match("/\sclass=0x([a-fA-F0-9]{4})[a-fA-F0-9]{2}\s.*\schip=0x([a-fA-F0-9]{4})([a-fA-F0-9]{4})\s/", $strLine, $arrParts)) {
+                        $arrTemp[$intS] = 'Class '.$arrParts[1].': Device '.$arrParts[3].':'.$arrParts[2];
+                        $vend = '';
+                    } elseif (preg_match("/(.*) = '(.*)'/", $strLine, $arrParts)) {
+                        if (trim($arrParts[1]) == "vendor") {
+                            $vend = trim($arrParts[2]);
+                        } elseif (trim($arrParts[1]) == "device") {
+                            if (($vend !== null) && ($vend !== '')) {
+                                $arrTemp[$intS] = $vend." - ".trim($arrParts[2]);
+                            } else {
+                                $arrTemp[$intS] = trim($arrParts[2]);
+                                $vend = '';
+                            }
+                        }
+                    }
+                }
+                if ($vend !== null) {
+                    $intS++;
+                }
+            }
+            foreach ($arrTemp as $name) {
+                $dev = new HWDevice();
+                $dev->setName($name);
+                $arrResults[] = $dev;
+            }
+        }
+
+        return $arrResults;
+    }
+
+    /**
      * PCI devices
      * get the pci device information out of dmesg
      *
@@ -366,7 +394,7 @@ abstract class BSDCommon extends OS
      */
     protected function pci()
     {
-        if (!is_array($results = Parser::lspci()) || !is_array($results = Parser::pciconf())) {
+        if (!is_array($results = Parser::lspci(false)) || !is_array($results = $this->pciconf())) {
             foreach ($this->readdmesg() as $line) {
                 if (preg_match("/".$this->_PCIRegExp1."/", $line, $ar_buf)) {
                     $dev = new HWDevice();
@@ -493,7 +521,7 @@ abstract class BSDCommon extends OS
                     $this->sys->setUSBDevices($dev);
             }
         }
-     }
+    }
 
     /**
      * filesystem information
@@ -539,7 +567,6 @@ abstract class BSDCommon extends OS
         $this->users();
         $this->loadavg();
         $this->hostname();
-        $this->ip();
         $this->scsi();
         $this->usb();
     }

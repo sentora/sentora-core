@@ -4,8 +4,8 @@ phpSysInfo
 * Copyright (c), 1999-2008, Uriah Welcome (precision@users.sf.net)
 * Copyright (c), 1999-2009, Michael Cramer (bigmichi1@users.sf.net)
 * Copyright (c), 2007-2008, Audun Larsen (xqus@users.sf.net)
-* Copyright (c), 2007-2014, Erkan Valentin
-* Copyright (c), 2009-2014, Mieczyslaw Nalewaj (namiltd@users.sf.net)
+* Copyright (c), 2007-2015, Erkan Valentin
+* Copyright (c), 2009-2015, Mieczyslaw Nalewaj (namiltd@users.sf.net)
 * Copyright (c), 2010-2012, Damien Roth (iysaak@users.sf.net)
 
 
@@ -18,10 +18,10 @@ CURRENT TESTED PLATFORMS
 - OpenBSD 2.8+
 - NetBSD
 - DragonFly
-- IBM AIX
 - HP-UX
 - Darwin/OSX
-- Windows 2000 / Windows 2003 / Windows XP / Windows Vista / Windows 7 / Windows 8  / Windows 8.1
+- Windows 2000 / 2003 / XP / Vista / 7 / 8 / 8.1 / 10
+- Android
 - > PHP 5.2 or later
   - With PCRE, XML, XSL, MBString and SimpleXML extension.
 
@@ -30,7 +30,7 @@ CURRENT TESTED PLATFORMS
 - Minix
 - SunOS
 - ReactOS
-- Android
+- IBM AIX
 - QNX
 
 If your platform is not here try checking out the mailing list archives or
@@ -38,6 +38,8 @@ the message boards on SourceForge.
 
 INSTALLATION AND CONFIGURATION
 ------------------------------
+
+####Typical installation
 
 Just decompress and untar the source (which you should have done by now,
 if you're reading this...), into your webserver's document root.
@@ -56,6 +58,12 @@ Please see the PHP documentation for information on how you
 can do this.
 
 That's it.  Restart your webserver (if you changed php.ini), and voila.
+
+####Docker container installation
+
+- sudo docker build -t phpsysinfo github.com/phpsysinfo/phpsysinfo
+- sudo docker run -i -p 8080:80 -t phpsysinfo
+- go to http://localhost:8080/phpsysinfo/
 
 KNOWN PROBLEMS
 --------------
@@ -97,7 +105,7 @@ Submit a bug on SourceForge (preferred) (http://sourceforge.net/projects/phpsysi
 
 Ask for help in the forum (http://sourceforge.net/projects/phpsysinfo/)
 
-***!! If you have any problems, please set `DEBUG` to true in `phpsysinfo.ini` 
+***!! If you have any problems, please set `DEBUG` to true in `phpsysinfo.ini`
 and include any error messages in your bug report / help request !!***
 
 OTHER NOTES

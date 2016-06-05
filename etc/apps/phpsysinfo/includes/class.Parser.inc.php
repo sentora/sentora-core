@@ -30,10 +30,10 @@ class Parser
      *
      * @return Array
      */
-    public static function lspci()
+    public static function lspci($debug = PSI_DEBUG)
     {
         $arrResults = array();
-        if (CommonFunctions::executeProgram("lspci", "", $strBuf, PSI_DEBUG)) {
+        if (CommonFunctions::executeProgram("lspci", "", $strBuf, $debug)) {
             $arrLines = preg_split("/\n/", $strBuf, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($arrLines as $strLine) {
                 $arrParams = preg_split('/ /', trim($strLine), 2);
@@ -44,38 +44,6 @@ class Parser
                 $strName = preg_replace('/\(.*\)/', '', $strName);
                 $dev = new HWDevice();
                 $dev->setName($strName);
-                $arrResults[] = $dev;
-            }
-        }
-
-        return $arrResults;
-    }
-
-    /**
-     * parsing the output of pciconf command
-     *
-     * @return Array
-     */
-    public static function pciconf()
-    {
-        $arrResults = array();
-        $intS = 0;
-        if (CommonFunctions::executeProgram("pciconf", "-lv", $strBuf, PSI_DEBUG)) {
-            $arrTemp = array();
-            $arrLines = preg_split("/\n/", $strBuf, -1, PREG_SPLIT_NO_EMPTY);
-            foreach ($arrLines as $strLine) {
-                if (preg_match("/(.*) = '(.*)'/", $strLine, $arrParts)) {
-                    if (trim($arrParts[1]) == "vendor") {
-                        $arrTemp[$intS] = trim($arrParts[2]);
-                    } elseif (trim($arrParts[1]) == "device") {
-                        $arrTemp[$intS] .= " - ".trim($arrParts[2]);
-                        $intS++;
-                    }
-                }
-            }
-            foreach ($arrTemp as $name) {
-                $dev = new HWDevice();
-                $dev->setName($name);
                 $arrResults[] = $dev;
             }
         }

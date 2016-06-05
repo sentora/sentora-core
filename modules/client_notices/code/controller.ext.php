@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -32,6 +32,27 @@ class module_controller extends ctrl_module
     /**
      * The 'worker' methods.
      */
+    /* Load CSS and JS files */
+    static function getInit() {
+        global $controller;
+		// TinyMCE JS
+		$line = '<script type="text/javascript" src="modules/'.$controller->GetControllerRequest('URL', 'module').'/code/tinymce/tinymce.min.js"></script>
+';
+		$line .= '<script type="text/javascript">
+			tinymce.init({
+				selector: "textarea",
+				plugins: [
+					"advlist autolink lists link charmap",
+					"searchreplace visualblocks code",
+					"insertdatetime media table contextmenu paste"
+				],
+				toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+			});
+			</script>
+			';
+        return $line;
+    }
+	
     static function ExectuteUpdateNotice($uid, $notice)
     {
         global $zdbh;
@@ -72,7 +93,7 @@ class module_controller extends ctrl_module
     {
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
-        return self::ExecuteShowNotice($currentuser['resellerid']);
+		return self::ExecuteShowNotice($currentuser['resellerid']);
     }
 
     static function doUpdateMessage()

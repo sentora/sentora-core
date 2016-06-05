@@ -80,7 +80,7 @@ if ($uid) {
 
     // set configuration
     $RCMAIL->set_env_config(array('delete_junk', 'flag_for_deletion', 'read_when_deleted',
-        'skip_deleted', 'display_next', 'compose_extwin', 'forward_attachment'));
+        'skip_deleted', 'display_next', 'forward_attachment'));
 
     // set special folders
     foreach (array('drafts', 'trash', 'junk') as $mbox) {
@@ -148,11 +148,14 @@ if ($uid) {
     if (empty($MESSAGE->headers->flags['SEEN'])
         && ($RCMAIL->action == 'show' || ($RCMAIL->action == 'preview' && intval($RCMAIL->config->get('preview_pane_mark_read')) == 0))
     ) {
+        $RCMAIL->output->command('set_unread_message', $MESSAGE->uid, $mbox_name);
         $RCMAIL->plugins->exec_hook('message_read', array(
             'uid'     => $MESSAGE->uid,
             'mailbox' => $mbox_name,
             'message' => $MESSAGE,
         ));
+
+        $set_seen_flag = true;
     }
 }
 
@@ -174,9 +177,7 @@ else
 
 
 // mark message as read
-if ($MESSAGE && $MESSAGE->headers && empty($MESSAGE->headers->flags['SEEN']) &&
-    ($RCMAIL->action == 'show' || ($RCMAIL->action == 'preview' && intval($RCMAIL->config->get('preview_pane_mark_read')) == 0))
-) {
+if (!empty($set_seen_flag)) {
     if ($RCMAIL->storage->set_flag($MESSAGE->uid, 'SEEN')) {
         if ($count = rcmail_get_unseen_count($mbox_name)) {
             rcmail_set_unseen_count($mbox_name, $count - 1);
@@ -269,14 +270,13 @@ function rcmail_remote_objects_msg()
 
 function rcmail_message_buttons()
 {
-    global $RCMAIL;
+    global $RCMAIL, $MESSAGE;
 
-    $mbox  = $RCMAIL->storage->get_folder();
     $delim = $RCMAIL->storage->get_hierarchy_delimiter();
     $dbox  = $RCMAIL->config->get('drafts_mbox');
 
     // the message is not a draft
-    if ($mbox != $dbox && strpos($mbox, $dbox.$delim) !== 0) {
+    if ($MESSAGE->folder != $dbox && strpos($MESSAGE->folder, $dbox.$delim) !== 0) {
         return '';
     }
 
@@ -343,8 +343,10 @@ function rcmail_message_contactphoto($attrib)
             '_task'   => 'addressbook',
             '_action' => 'photo',
             '_email'  => $MESSAGE->sender['mailto'],
-            '_alt'    => $placeholder
+            '_alt'    => $placeholder,
         ));
+
+        $attrib['onerror'] = "this.src = '" . ($placeholder ? $placeholder : 'program/resources/blank.gif') . "'";
     }
     else {
         $photo_img = $placeholder ? $placeholder : 'program/resources/blank.gif';

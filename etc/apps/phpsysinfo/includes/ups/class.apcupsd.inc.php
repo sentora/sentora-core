@@ -34,12 +34,12 @@ class Apcupsd extends UPS
     private $_output = array();
 
     /**
-     * get all information from all configured ups in config.php and store output in internal array
+     * get all information from all configured ups in phpsysinfo.ini and store output in internal array
      */
     public function __construct()
     {
         parent::__construct();
-        if ( defined('PSI_UPS_APCUPSD_LIST') && is_string(PSI_UPS_APCUPSD_LIST) ) {
+        if (defined('PSI_UPS_APCUPSD_LIST') && is_string(PSI_UPS_APCUPSD_LIST)) {
             if (preg_match(ARRAY_EXP, PSI_UPS_APCUPSD_LIST)) {
                 $upses = eval(PSI_UPS_APCUPSD_LIST);
             } else {
@@ -56,7 +56,7 @@ class Apcupsd extends UPS
             if (! empty($temp)) {
                 $this->_output[] = $temp;
             }
-        }        
+        }
     }
 
     /**
@@ -107,6 +107,9 @@ class Apcupsd extends UPS
             // Line
             if (preg_match('/^LINEV\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
                 $dev->setLineVoltage(trim($data[1]));
+            }
+            if (preg_match('/^LINEFREQ\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
+                $dev->setLineFrequency(trim($data[1]));
             }
             if (preg_match('/^LOADPCT\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
                 $dev->setLoad(trim($data[1]));

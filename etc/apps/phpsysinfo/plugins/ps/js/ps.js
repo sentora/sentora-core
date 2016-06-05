@@ -33,7 +33,7 @@ var ps_show = false;
  */
 function ps_buildTable(xml) {
     var html = "", tree = [], closed = [2];
-
+    
     $("#Plugin_PS #Plugin_PSTable").remove();
 
     html += "  <table id=\"Plugin_PSTable\" class=\"tablemain\" style=\"width:100%;\">\n";
@@ -48,16 +48,17 @@ function ps_buildTable(xml) {
     html += "   <tbody class=\"tree\">\n";
 
     $("Plugins Plugin_PS Process", xml).each(function ps_getprocess(id) {
-        var close = 0, pid = 0, ppid = 0, name = "", percent = 0, parentId = 0;
+        var close = 0, pid = 0, ppid = 0, name = "", percent = 0, parentId = 0, expanded = 0;
         name = $(this).attr("Name");
         parentId = parseInt($(this).attr("ParentID"), 10);
         pid = parseInt($(this).attr("PID"), 10);
         ppid = parseInt($(this).attr("PPID"), 10);
         percent = parseInt($(this).attr("MemoryUsage"), 10);
+        expanded = parseInt($(this).attr("Expanded"), 10);
 
-        html += "    <tr><td>" + name + "</td><td>" + pid + "</td><td>" + ppid + "</td><td>" + createBar(percent) + "</td></tr>\n";
+        html += "    <tr><td><span class=\"treespan\">" + name + "</span></td><td>" + pid + "</td><td>" + ppid + "</td><td>" + createBar(percent) + "</td></tr>\n";
         close = tree.push(parentId);
-        if (parentId === 1) {
+        if (!isNaN(expanded) && (expanded === 0)) {
             closed.push(close);
         }
         ps_show = true;
@@ -100,6 +101,7 @@ function ps_request() {
             ps_buildTable(xml);
             if (ps_show) {
                 plugin_translate("PS");
+                $("#Reload_PSTable").attr("title",datetime());
                 $("#Plugin_PS").show();
             }
         }
@@ -114,6 +116,5 @@ $(document).ready(function ps_buildpage() {
 
     $("#Reload_PSTable").click(function ps_reload(id) {
         ps_request();
-        $("#Reload_PSTable").attr("title",datetime());
     });
 });

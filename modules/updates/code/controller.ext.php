@@ -1,7 +1,6 @@
 <?php
-
 /**
- * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -31,7 +30,6 @@
  */
 class module_controller extends ctrl_module
 {
-
     public static function getSentoraUpdates()
     {   
         $installed = ctrl_options::GetSystemOption('dbversion');
@@ -51,5 +49,4 @@ class module_controller extends ctrl_module
         }
         return $msg;
     }
-
 }

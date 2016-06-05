@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -35,6 +35,7 @@ class module_controller extends ctrl_module
     static $validemail;
     static $noaddress;
     static $editmailbox;
+    static $validdomain;
     static $update;
     static $delete;
     static $create;
@@ -52,6 +53,13 @@ class module_controller extends ctrl_module
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
         $numrows->execute();
+        
+        if(file_exists(ui_tpl_assetfolderpath::Template() . 'img/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.gif') && file_exists(ui_tpl_assetfolderpath::Template() . 'img/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif')) {
+            $iconpath = '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/';
+        }else{
+            $iconpath = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/';    
+        }
+
 
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
@@ -60,9 +68,9 @@ class module_controller extends ctrl_module
             $sql->execute();
             while ($rowmailboxes = $sql->fetch()) {
                 if ($rowmailboxes['mb_enabled_in'] == 1) {
-                    $status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/up.gif" alt="Up"/>';
+                    $status = $iconpath . '/up.gif" alt="Up"/>';
                 } else {
-                    $status = '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/down.gif" alt="Down"/>';
+                    $status = $iconpath . '/down.gif" alt="Down"/>';
                 }
                 $res[] = array('address' => $rowmailboxes['mb_address_vc'],
                     'created' => date(ctrl_options::GetSystemOption('sentora_df'), $rowmailboxes['mb_created_ts']),
@@ -105,24 +113,29 @@ class module_controller extends ctrl_module
         }
     }
 
+    /**
+     * Produces a list of domain names only.
+     * @global db_driver $zdbh
+     * @param int $uid
+     * @return boolean
+     */
     static function ListDomains($uid)
     {
         global $zdbh;
         $currentuser = ctrl_users::GetUserDetail($uid);
+        
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
-        //$numrows = $zdbh->query($sql);
-        $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->execute();
-        if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':userid', $currentuser['userid']);
-            $res = array();
-            $sql->execute();
-            while ($rowdomains = $sql->fetch()) {
-                $res[] = array('domain' => ui_language::translate($rowdomains['vh_name_vc']));
+        $binds = array(':userid' => $currentuser['userid']);
+        $prepared = $zdbh->bindQuery($sql, $binds);
+        
+        $rows = $prepared->fetchAll(PDO::FETCH_ASSOC);
+        $return = array();
+        
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
+                $return[] = array('domain' => $row['vh_name_vc']);
             }
-            return $res;
+            return $return;
         } else {
             return false;
         }
@@ -253,6 +266,11 @@ class module_controller extends ctrl_module
             self::$validemail = true;
             return false;
         }
+        if(!self::IsValidDomain($domain)){
+            self::$validdomain = true;
+            return false;        
+        }
+        
         $sql = "SELECT * FROM x_mailboxes WHERE mb_address_vc=:fulladdress AND mb_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':fulladdress', $fulladdress);
@@ -291,6 +309,20 @@ class module_controller extends ctrl_module
     static function IsValidEmail($email)
     {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
+    }
+    
+    /**
+     * 
+     * @param string $domain
+     * @return boolean
+     */
+    static function IsValidDomain($domain) {
+        foreach (self::ListDomains() as $key => $checkDomain) {
+            if (array_key_exists('domain', $checkDomain) && $checkDomain['domain'] == $domain) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -430,10 +462,15 @@ class module_controller extends ctrl_module
 
     static function getEmailUsagepChart()
     {
-        $currentuser = ctrl_users::GetUserDetail();
-        $maximum = $currentuser['mailboxquota'];
-        if ($maximum < 0) { //-1 = unlimited
-            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$maximum = $currentuser['mailboxquota'];
+		if ($maximum < 0) { //-1 = unlimited
+            if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
+				return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+			} else {
+				return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+			}
         } else {
             $used = ctrl_users::GetQuotaUsages('mailboxes', $currentuser['userid']);
             $free = max($maximum - $used, 0);
@@ -458,6 +495,9 @@ class module_controller extends ctrl_module
         if (!fs_director::CheckForEmptyValue(self::$noaddress)) {
             return ui_sysmessage::shout(ui_language::translate("Your email address cannot be blank."), "zannounceerror");
         }
+        if (!fs_director::CheckForEmptyValue(self::$validdomain)) {
+            return ui_sysmessage::shout(ui_language::translate("The selected domain was not valid."), "zannounceerror");
+        }   
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your mailboxes have been saved successfully!"), "zannounceok");
         }

@@ -68,6 +68,11 @@ class IPMI extends Sensors
                 $dev->setName($buffer[0]);
                 $dev->setValue($buffer[1]);
                 if ($buffer[8] != "na") $dev->setMax($buffer[8]);
+                switch ($buffer[3]) {
+                    case "nr": $dev->setEvent("Non-Recoverable"); break;
+                    case "cr": $dev->setEvent("Critical"); break;
+                    case "nc": $dev->setEvent("Non-Critical"); break;
+                }
                 $this->mbinfo->setMbTemp($dev);
             }
         }
@@ -88,6 +93,11 @@ class IPMI extends Sensors
                 $dev->setValue($buffer[1]);
                 if ($buffer[5] != "na") $dev->setMin($buffer[5]);
                 if ($buffer[8] != "na") $dev->setMax($buffer[8]);
+                switch ($buffer[3]) {
+                    case "nr": $dev->setEvent("Non-Recoverable"); break;
+                    case "cr": $dev->setEvent("Critical"); break;
+                    case "nc": $dev->setEvent("Non-Critical"); break;
+                }
                 $this->mbinfo->setMbVolt($dev);
             }
         }
@@ -106,7 +116,16 @@ class IPMI extends Sensors
                 $dev = new SensorDevice();
                 $dev->setName($buffer[0]);
                 $dev->setValue($buffer[1]);
-                if ($buffer[8] != "na") $dev->setMin($buffer[8]);
+                if ($buffer[8] != "na") {
+                    $dev->setMin($buffer[8]);
+                } elseif (($buffer[5] != "na") && ($buffer[5]<$buffer[1])) { //max instead min issue
+                    $dev->setMin($buffer[5]);
+                }
+                switch ($buffer[3]) {
+                    case "nr": $dev->setEvent("Non-Recoverable"); break;
+                    case "cr": $dev->setEvent("Critical"); break;
+                    case "nc": $dev->setEvent("Non-Critical"); break;
+                }
                 $this->mbinfo->setMbFan($dev);
             }
         }
@@ -126,6 +145,11 @@ class IPMI extends Sensors
                 $dev->setName($buffer[0]);
                 $dev->setValue($buffer[1]);
                 if ($buffer[8] != "na") $dev->setMax($buffer[8]);
+                switch ($buffer[3]) {
+                    case "nr": $dev->setEvent("Non-Recoverable"); break;
+                    case "cr": $dev->setEvent("Critical"); break;
+                    case "nc": $dev->setEvent("Non-Critical"); break;
+                }
                 $this->mbinfo->setMbPower($dev);
             }
         }
@@ -145,6 +169,11 @@ class IPMI extends Sensors
                 $dev->setName($buffer[0]);
                 $dev->setValue($buffer[1]);
                 if ($buffer[8] != "na") $dev->setMax($buffer[8]);
+                switch ($buffer[3]) {
+                    case "nr": $dev->setEvent("Non-Recoverable"); break;
+                    case "cr": $dev->setEvent("Critical"); break;
+                    case "nc": $dev->setEvent("Non-Critical"); break;
+                }
                 $this->mbinfo->setMbCurrent($dev);
             }
         }

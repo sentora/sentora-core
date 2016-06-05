@@ -18,4 +18,13 @@
   <expression id="plugin_updatenotifier_004" name="updatenotifier_security">
     <exp>updates are security updates.</exp>
   </expression>
+  <expression id="plugin_updatenotifier_005" name="updatenotifier_no">
+    <exp>No updates available</exp>
+  </expression>
+  <expression id="plugin_updatenotifier_006" name="updatenotifier_no_packages">
+    <exp>Number of packages</exp>
+  </expression>
+  <expression id="plugin_updatenotifier_007" name="updatenotifier_no_security">
+    <exp>Number of security packages</exp>
+  </expression>
 </tns:translationPlugin>

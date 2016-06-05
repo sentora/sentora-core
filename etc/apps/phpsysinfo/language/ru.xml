@@ -1,8 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: ru.xml 699 2012-09-15 11:57:13Z namiltd $ -->
 <!--
-phpSysInfo language file Language: Russian Created by: Max Shchuplov Updated
-by: Artem Volk
+phpSysInfo language file Language: Russian Created by: Max Shchuplov Updated by: Artem Volk
 -->
 <tns:translation language="russian" charset="utf-8"
  xmlns:tns="http://phpsysinfo.sourceforge.net/translation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -80,7 +79,7 @@ by: Artem Volk
     <exp>Отправлено</exp>
   </expression>
   <expression id="025" name="errors">
-    <exp>Err/Drop</exp>
+    <exp>Ошибки/Падения</exp>
   </expression>
   <expression id="026" name="connections">
     <exp>Установлено сетевых подключений</exp>
@@ -122,7 +121,7 @@ by: Artem Volk
     <exp>Всего</exp>
   </expression>
   <expression id="039" name="kb">
-    <exp>Кб</exp>
+    <exp>кб</exp>
   </expression>
   <expression id="040" name="mb">
     <exp>Мб</exp>
@@ -311,21 +310,60 @@ by: Artem Volk
     <exp>Минимальная скорость CPU</exp>
   </expression>
   <expression id="102" name="power">
-    <exp>Power</exp>
+    <exp>Мощность</exp>
   </expression>
   <expression id="103" name="power_mark">
     <exp>W</exp>
   </expression>
   <expression id="104" name="ups_battery_date">
-    <exp>Battery date</exp>
+    <exp>Дата батареи</exp>
   </expression>
   <expression id="105" name="current">
-    <exp>Current</exp>
+    <exp>Ток</exp>
   </expression>
   <expression id="106" name="current_mark">
     <exp>A</exp>
   </expression>
   <expression id="107" name="machine">
-    <exp>Machine</exp>
+    <exp>Машина</exp>
+  </expression>
+  <expression id="108" name="ups_line_frequency">
+    <exp>Чистота сети</exp>
+  </expression>
+  <expression id="109" name="Hz">
+    <exp>Гц</exp>
+  </expression>
+  <expression id="110" name="Processes">
+    <exp>Процессы</exp>
+  </expression>
+  <expression id="111" name="ProcessesRunning">
+    <exp>работают</exp>
+  </expression>
+  <expression id="112" name="ProcessesSleeping">
+    <exp>спят</exp>
+  </expression>
+  <expression id="113" name="ProcessesStopped">
+    <exp>остановлены</exp>
+  </expression>
+  <expression id="114" name="ProcessesZombie">
+    <exp>повисли</exp>
+  </expression>
+  <expression id="115" name="ProcessesWaiting">
+    <exp>ждущие</exp>
+  </expression>
+  <expression id="116" name="ProcessesOther">
+    <exp>Другое</exp>
+  </expression>
+  <expression id="117" name="tb">
+    <exp>TB устройства</exp>
+  </expression>
+  <expression id="118" name="i2c">
+    <exp>I2C устройства</exp>
+  </expression>
+  <expression id="119" name="no_processors">
+    <exp>Number of processors</exp>
+  </expression>
+  <expression id="120" name="no_devices">
+    <exp>Number of devices</exp>
   </expression>
 </tns:translation>

@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: de.xml 699 2012-09-15 11:57:13Z namiltd $ -->
 <!--
-phpSysInfo language file Language: German Created by: Michael Cramer
+phpSysInfo language file Language: German Created by: Michael Cramer Modified by: Daniel Potthast
 -->
 <tns:translation language="deutsch" charset="utf-8"
  xmlns:tns="http://phpsysinfo.sourceforge.net/translation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -121,7 +121,7 @@ phpSysInfo language file Language: German Created by: Michael Cramer
     <exp>Gesamt</exp>
   </expression>
   <expression id="039" name="kb">
-    <exp>KB</exp>
+    <exp>kB</exp>
   </expression>
   <expression id="040" name="mb">
     <exp>MB</exp>
@@ -286,7 +286,7 @@ phpSysInfo language file Language: German Created by: Michael Cramer
     <exp>GHz</exp>
   </expression>
   <expression id="094" name="virtualization">
-    <exp>Virtualisation</exp>
+    <exp>Virtualisierung</exp>
   </expression>
   <expression id="095" name="lastboot">
     <exp>Letzter Start</exp>
@@ -298,7 +298,7 @@ phpSysInfo language file Language: German Created by: Michael Cramer
     <exp>System Sprache</exp>
   </expression>
   <expression id="098" name="codepage">
-    <exp>Code Page</exp>
+    <exp>Codepage</exp>
   </expression>
   <expression id="099" name="details">
     <exp>Details</exp>
@@ -319,12 +319,51 @@ phpSysInfo language file Language: German Created by: Michael Cramer
     <exp>Akku Datum</exp>
   </expression>
   <expression id="105" name="current">
-    <exp>Current</exp>
+    <exp>Stromstärke</exp>
   </expression>
   <expression id="106" name="current_mark">
     <exp>A</exp>
   </expression>
   <expression id="107" name="machine">
-    <exp>Machine</exp>
+    <exp>Maschine</exp>
+  </expression>
+  <expression id="108" name="ups_line_frequency">
+    <exp>Netzfrequenz</exp>
+  </expression>
+  <expression id="109" name="Hz">
+    <exp>Hz</exp>
+  </expression>
+  <expression id="110" name="Processes">
+    <exp>Prozesse</exp>
+  </expression>
+  <expression id="111" name="ProcessesRunning">
+    <exp>laufend</exp>
+  </expression>
+  <expression id="112" name="ProcessesSleeping">
+    <exp>schlafend</exp>
+  </expression>
+  <expression id="113" name="ProcessesStopped">
+    <exp>gestoppt</exp>
+  </expression>
+  <expression id="114" name="ProcessesZombie">
+    <exp>zombie</exp>
+  </expression>
+  <expression id="115" name="ProcessesWaiting">
+    <exp>wartend</exp>
+  </expression>
+  <expression id="116" name="ProcessesOther">
+    <exp>andere</exp>
+  </expression>
+  <expression id="117" name="tb">
+    <exp>TB Geräte</exp>
+  </expression>
+  <expression id="118" name="i2c">
+    <exp>I2C Geräte</exp>
+  </expression>
+  <expression id="119" name="no_processors">
+    <exp>Anzahl Prozessoren</exp>
+  </expression>
+  <expression id="120" name="no_devices">
+    <exp>Anzahl Geräte</exp>
   </expression>
 </tns:translation>

@@ -76,7 +76,7 @@ function rcube_mail_ui()
   function get_pref(key)
   {
     if (!prefs) {
-      prefs = window.localStorage ? rcmail.local_storage_get_item('prefs.larry', {}) : {};
+      prefs = rcmail.local_storage_get_item('prefs.larry', {});
     }
 
     // fall-back to cookies
@@ -85,9 +85,8 @@ function rcube_mail_ui()
       if (cookie != null) {
         prefs[key] = cookie;
 
-        // copy value to local storage and remove cookie
-        if (window.localStorage) {
-          rcmail.local_storage_set_item('prefs.larry', prefs);
+        // copy value to local storage and remove cookie (if localStorage is supported)
+        if (rcmail.local_storage_set_item('prefs.larry', prefs)) {
           rcmail.set_cookie(key, cookie, new Date());  // expire cookie
         }
       }
@@ -103,11 +102,8 @@ function rcube_mail_ui()
   {
     prefs[key] = val;
 
-    // write prefs to local storage
-    if (window.localStorage) {
-      rcmail.local_storage_set_item('prefs.larry', prefs);
-    }
-    else {
+    // write prefs to local storage (if supported)
+    if (!rcmail.local_storage_set_item('prefs.larry', prefs)) {
       // store value in cookie
       var exp = new Date();
       exp.setYear(exp.getFullYear() + 1);
@@ -253,6 +249,10 @@ function rcube_mail_ui()
         new rcube_splitter({ id:'identviewsplitter', p1:'#identitieslist', p2:'#identity-details',
           orientation:'v', relative:true, start:266, min:180, size:12 }).init();
       }
+      else if (rcmail.env.action == 'responses') {
+        new rcube_splitter({ id:'responseviewsplitter', p1:'#identitieslist', p2:'#identity-details',
+          orientation:'v', relative:true, start:266, min:180, size:12 }).init();
+      }
       else if (rcmail.env.action == 'preferences' || !rcmail.env.action) {
         new rcube_splitter({ id:'prefviewsplitter', p1:'#sectionslist', p2:'#preferences-box',
           orientation:'v', relative:true, start:266, min:180, size:12 }).init();
@@ -378,6 +378,7 @@ function rcube_mail_ui()
       config = popupconfig[id];
       if (obj.is(':visible')
         && target.id != id+'link'
+        && target != obj.get(0)  // check if scroll bar was clicked (#1489832)
         && !config.toggle
         && (!config.editable || !target_overlaps(target, obj.get(0)))
         && (!config.sticky || !rcube_mouse_is_over(e, obj.get(0)))
@@ -467,7 +468,8 @@ function rcube_mail_ui()
           minHeight: 90
         }).show();
 
-      me.message_timer = window.setTimeout(dialog_close, p.timeout);
+      if (p.timeout > 0)
+        me.message_timer = window.setTimeout(dialog_close, p.timeout);
     }
   }
 
@@ -534,7 +536,8 @@ function rcube_mail_ui()
 //    $('#composeformbuttons')[(btns ? 'show' : 'hide')]();
 
     var abooks = $('#directorylist');
-    $('#compose-contacts .scroller').css('top', abooks.position().top + abooks.outerHeight());
+    if (abooks.length)
+      $('#compose-contacts .scroller').css('top', abooks.position().top + abooks.outerHeight());
   }
 
 
@@ -1257,8 +1260,8 @@ function rcube_splitter(p)
   this.resize = function()
   {
     if (this.horizontal) {
-      this.p1.css('height', Math.floor(this.pos - this.p1pos.top - this.halfsize) + 'px');
-      this.p2.css('top', Math.ceil(this.pos + this.halfsize + 2) + 'px');
+      this.p1.css('height', Math.floor(this.pos - this.p1pos.top - Math.floor(this.halfsize)) + 'px');
+      this.p2.css('top', Math.ceil(this.pos + Math.ceil(this.halfsize) + 2) + 'px');
       this.handle.css('top', Math.round(this.pos - this.halfsize + this.offset)+'px');
       if (bw.ie) {
         var new_height = parseInt(this.p2.parent().outerHeight(), 10) - parseInt(this.p2.css('top'), 10) - (bw.ie8 ? 2 : 0);
@@ -1266,8 +1269,8 @@ function rcube_splitter(p)
       }
     }
     else {
-      this.p1.css('width', Math.floor(this.pos - this.p1pos.left - this.halfsize) + 'px');
-      this.p2.css('left', Math.ceil(this.pos + this.halfsize) + 'px');
+      this.p1.css('width', Math.floor(this.pos - this.p1pos.left - Math.floor(this.halfsize)) + 'px');
+      this.p2.css('left', Math.ceil(this.pos + Math.ceil(this.halfsize)) + 'px');
       this.handle.css('left', Math.round(this.pos - this.halfsize + this.offset + 3)+'px');
       if (bw.ie) {
         var new_width = parseInt(this.p2.parent().outerWidth(), 10) - parseInt(this.p2.css('left'), 10) ;
@@ -1350,13 +1353,13 @@ function rcube_splitter(p)
 
     if (me.horizontal) {
       if (((pos.y - me.halfsize) > me.p1pos.top) && ((pos.y + me.halfsize) < (me.p2pos.top + me.p2.outerHeight()))) {
-        me.pos = Math.max(me.min, pos.y - me.offset);
+        me.pos = Math.max(me.min, pos.y - Math.max(0, me.offset));
         me.resize();
       }
     }
     else {
       if (((pos.x - me.halfsize) > me.p1pos.left) && ((pos.x + me.halfsize) < (me.p2pos.left + me.p2.outerWidth()))) {
-        me.pos = Math.max(me.min, pos.x - me.offset);
+        me.pos = Math.max(me.min, pos.x - Math.max(0, me.offset));
         me.resize();
       }
     }

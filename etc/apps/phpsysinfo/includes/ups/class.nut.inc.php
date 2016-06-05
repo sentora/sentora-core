@@ -40,45 +40,32 @@ class Nut extends UPS
     public function __construct()
     {
         parent::__construct();
-        if ( defined('PSI_UPS_NUT_LIST') && is_string(PSI_UPS_NUT_LIST) ) {
+        if (defined('PSI_UPS_NUT_LIST') && is_string(PSI_UPS_NUT_LIST)) {
             if (preg_match(ARRAY_EXP, PSI_UPS_NUT_LIST)) {
                 $upses = eval(PSI_UPS_NUT_LIST);
             } else {
                 $upses = array(PSI_UPS_NUT_LIST);
             }
             foreach ($upses as $ups) {
-                CommonFunctions::executeProgram('upsc', '-l '.trim($ups), $output, PSI_DEBUG);
+                CommonFunctions::executeProgram('upsc', '-l '.trim($ups), $output);
                 $ups_names = preg_split("/\n/", $output, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($ups_names as $ups_name) {
-                    CommonFunctions::executeProgram('upsc', trim($ups_name).'@'.trim($ups), $temp , PSI_DEBUG);
+                    CommonFunctions::executeProgram('upsc', trim($ups_name).'@'.trim($ups), $temp);
                     if (! empty($temp)) {
                         $this->_output[trim($ups_name).'@'.trim($ups)] = $temp;
                     }
                 }
             }
         } else { //use default if address and port not defined
-            CommonFunctions::executeProgram('upsc', '-l', $output, PSI_DEBUG);
+            CommonFunctions::executeProgram('upsc', '-l', $output);
             $ups_names = preg_split("/\n/", $output, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($ups_names as $ups_name) {
-                CommonFunctions::executeProgram('upsc', trim($ups_name), $temp, PSI_DEBUG);
+                CommonFunctions::executeProgram('upsc', trim($ups_name), $temp);
                 if (! empty($temp)) {
                     $this->_output[trim($ups_name)] = $temp;
                 }
             }
         }
-    }
-
-    /**
-     * check if a specific value is set in an array
-     *
-     * @param object $hash array in which a specific value should be found
-     * @param object $key  key that is looked for in the array
-     *
-     * @return array
-     */
-    private function _checkIsSet($hash, $key)
-    {
-        return isset($hash[$key]) ? $hash[$key] : '';
     }
 
     /**
@@ -99,19 +86,36 @@ class Nut extends UPS
                 $dev = new UPSDevice();
                 //General
                 $dev->setName($name);
-                $dev->setModel($this->_checkIsSet($ups_data, 'ups.model'));
-                $dev->setMode($this->_checkIsSet($ups_data, 'driver.name'));
-                $dev->setStatus($this->_checkIsSet($ups_data, 'ups.status'));
+                if (isset($ups_data['ups.model'])) {
+                    $dev->setModel($ups_data['ups.model']);
+                }
+                if (isset($ups_data['driver.name'])) {
+                    $dev->setMode($ups_data['driver.name']);
+                }
+                if (isset($ups_data['ups.status'])) {
+                    $dev->setStatus($ups_data['ups.status']);
+                }
 
                 //Line
-                $dev->setLineVoltage($this->_checkIsSet($ups_data, 'input.voltage'));
-                $dev->setLoad($this->_checkIsSet($ups_data, 'ups.load'));
+                if (isset($ups_data['input.voltage'])) {
+                    $dev->setLineVoltage($ups_data['input.voltage']);
+                }
+                if (isset($ups_data['input.frequency'])) {
+                    $dev->setLineFrequency($ups_data['input.frequency']);
+                }
+                if (isset($ups_data['ups.load'])) {
+                    $dev->setLoad($ups_data['ups.load']);
+                }
 
                 //Battery
-                $dev->setBatteryVoltage($this->_checkIsSet($ups_data, 'battery.voltage'));
-                $dev->setBatterCharge($this->_checkIsSet($ups_data, 'battery.charge'));
+                if (isset($ups_data['battery.voltage'])) {
+                    $dev->setBatteryVoltage($ups_data['battery.voltage']);
+                }
+                if (isset($ups_data['battery.charge'])) {
+                    $dev->setBatterCharge($ups_data['battery.charge']);
+                }
                 if (isset($ups_data['battery.runtime'])) {
-                    $dev->setTimeLeft($ups_data['battery.runtime']/60);
+                    $dev->setTimeLeft(round($ups_data['battery.runtime']/60, 2));
                 }
 
                 //Temperature

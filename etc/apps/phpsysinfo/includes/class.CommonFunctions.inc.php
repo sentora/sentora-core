@@ -31,16 +31,16 @@ class CommonFunctions
             $log_file = substr(PSI_LOG, 1);
             if (file_exists($log_file)) {
                 $contents = @file_get_contents($log_file);
-                if ($contents && preg_match("/^\-\-\-[^-\n]+\-\-\- ".preg_quote($string, '/')."\n/m", $contents, $matches, PREG_OFFSET_CAPTURE)) {
+                if ($contents && preg_match("/^\-\-\-[^-\r\n]+\-\-\- ".preg_quote($string, '/')."\r?\n/m", $contents, $matches, PREG_OFFSET_CAPTURE)) {
                     $findIndex = $matches[0][1];
-                    if (preg_match("/\n/m", $contents, $matches, PREG_OFFSET_CAPTURE, $findIndex)) {
+                    if (preg_match("/\r?\n/m", $contents, $matches, PREG_OFFSET_CAPTURE, $findIndex)) {
                         $startIndex = $matches[0][1]+1;
-                        if (preg_match("/^\-\-\-[^-\n]+\-\-\- /m", $contents, $matches, PREG_OFFSET_CAPTURE, $startIndex)) {
+                        if (preg_match("/^\-\-\-[^-\r\n]+\-\-\- /m", $contents, $matches, PREG_OFFSET_CAPTURE, $startIndex)) {
                             $stopIndex = $matches[0][1];
 
-                            return substr($contents, $startIndex, $stopIndex-$startIndex );
+                            return substr($contents, $startIndex, $stopIndex-$startIndex);
                         } else {
-                            return substr($contents, $startIndex );
+                            return substr($contents, $startIndex);
                         }
                     }
                 }
@@ -75,17 +75,18 @@ class CommonFunctions
             } else {
                 $arrPath = preg_split('/:/', getenv("PATH"), -1, PREG_SPLIT_NO_EMPTY);
             }
+            if (defined('PSI_ADD_PATHS') && is_string(PSI_ADD_PATHS)) {
+                if (preg_match(ARRAY_EXP, PSI_ADD_PATHS)) {
+                    $arrPath = array_merge(eval(PSI_ADD_PATHS), $arrPath); // In this order so $addpaths is before $arrPath when looking for a program
+                } else {
+                    $arrPath = array_merge(array(PSI_ADD_PATHS), $arrPath); // In this order so $addpaths is before $arrPath when looking for a program
+                }
+            }
         } else {
             array_push($arrPath, $path_parts['dirname']);
             $strProgram = $path_parts['basename'];
         }
-        if ( defined('PSI_ADD_PATHS') && is_string(PSI_ADD_PATHS) ) {
-            if (preg_match(ARRAY_EXP, PSI_ADD_PATHS)) {
-                $arrPath = array_merge(eval(PSI_ADD_PATHS), $arrPath); // In this order so $addpaths is before $arrPath when looking for a program
-            } else {
-                $arrPath = array_merge(array(PSI_ADD_PATHS), $arrPath); // In this order so $addpaths is before $arrPath when looking for a program
-            }
-        }
+
         //add some default paths if we still have no paths here
         if (empty($arrPath) && PSI_OS != 'WINNT') {
             if (PSI_OS == 'Android') {
@@ -94,6 +95,21 @@ class CommonFunctions
                 array_push($arrPath, '/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin');
             }
         }
+
+        $exceptPath = "";
+        if ((PSI_OS == 'WINNT') && (($windir = getenv("WinDir")) !== false)) {
+            $windir = strtolower($windir);
+            foreach ($arrPath as $strPath) {
+                if ((strtolower($strPath) == $windir."\\system32") && is_dir($windir."\\SysWOW64")) {
+                    $exceptPath = $windir."\\sysnative";
+                    array_push($arrPath, $exceptPath);
+                    break;
+                }
+            }
+        } elseif (PSI_OS == 'Android') {
+             $exceptPath = '/system/bin';
+        }
+
         // If open_basedir defined, fill the $open_basedir array with authorized paths,. (Not tested when no open_basedir restriction)
         if ((bool) ini_get('open_basedir')) {
             if (PSI_OS == 'WINNT') {
@@ -105,20 +121,16 @@ class CommonFunctions
         foreach ($arrPath as $strPath) {
             // Path with trailing slash
             if (PSI_OS == 'WINNT') {
-                $strPathS = rtrim($strPath,"\\")."\\";
+                $strPathS = rtrim($strPath, "\\")."\\";
             } else {
-                $strPathS = rtrim($strPath,"/")."/";
-            }
-            if (!((PSI_OS == 'Android') && ($strPath=='/system/bin')) //is_dir('/system/bin') Android patch
-               && !is_dir($strPath)) {
-                continue;
+                $strPathS = rtrim($strPath, "/")."/";
             }
             // To avoid "open_basedir restriction in effect" error when testing paths if restriction is enabled
             if (isset($open_basedir)) {
                 $inBaseDir = false;
                 if (PSI_OS == 'WINNT') {
                     foreach ($open_basedir as $openbasedir) {
-                        if (substr($openbasedir,-1)=="\\") {
+                        if (substr($openbasedir, -1)=="\\") {
                             $str_Path = $strPathS;
                         } else {
                             $str_Path = $strPath;
@@ -130,7 +142,7 @@ class CommonFunctions
                     }
                 } else {
                     foreach ($open_basedir as $openbasedir) {
-                        if (substr($openbasedir,-1)=="/") {
+                        if (substr($openbasedir, -1)=="/") {
                             $str_Path = $strPathS;
                         } else {
                             $str_Path = $strPath;
@@ -145,10 +157,13 @@ class CommonFunctions
                     continue;
                 }
             }
+            if (($strPath !== $exceptPath) && !is_dir($strPath)) {
+                continue;
+            }
             if (PSI_OS == 'WINNT') {
-                $strProgrammpath = rtrim($strPath,"\\")."\\".$strProgram;
+                $strProgrammpath = rtrim($strPath, "\\")."\\".$strProgram;
             } else {
-                $strProgrammpath = rtrim($strPath,"/")."/".$strProgram;
+                $strProgrammpath = rtrim($strPath, "/")."/".$strProgram;
             }
             if (is_executable($strProgrammpath)) {
                 return $strProgrammpath;
@@ -190,7 +205,7 @@ class CommonFunctions
         $strError = '';
         $pipes = array();
         $strProgram = self::_findProgram($strProgramname);
-        $error = Error::singleton();
+        $error = PSI_Error::singleton();
         if (!$strProgram) {
             if ($booErrorRep) {
                 $error->addError('find_program('.$strProgramname.')', 'program not found on the machine');
@@ -205,15 +220,19 @@ class CommonFunctions
                 if ($arrArgs[$i] == '|') {
                     $strCmd = $arrArgs[$i + 1];
                     $strNewcmd = self::_findProgram($strCmd);
-                    $strArgs = preg_replace("/\| ".$strCmd.'/', "| ".$strNewcmd, $strArgs);
+                    $strArgs = preg_replace("/\| ".$strCmd.'/', '| "'.$strNewcmd.'"', $strArgs);
                 }
             }
         }
         $descriptorspec = array(0=>array("pipe", "r"), 1=>array("pipe", "w"), 2=>array("pipe", "w"));
         if (defined("PSI_MODE_POPEN") && PSI_MODE_POPEN === true) {
-            $process = $pipes[1] = popen($strProgram." ".$strArgs." 2>/dev/null", "r");
+            if (PSI_OS == 'WINNT') {
+                $process = $pipes[1] = popen('"'.$strProgram.'" '.$strArgs." 2>nul", "r");
+            } else {
+                $process = $pipes[1] = popen('"'.$strProgram.'" '.$strArgs." 2>/dev/null", "r");
+            }
         } else {
-            $process = proc_open($strProgram." ".$strArgs, $descriptorspec, $pipes);
+            $process = proc_open('"'.$strProgram.'" '.$strArgs, $descriptorspec, $pipes);
         }
         if (is_resource($process)) {
             self::_timeoutfgets($pipes, $strBuffer, $strError);
@@ -280,7 +299,7 @@ class CommonFunctions
 
         $strFile = "";
         $intCurLine = 1;
-        $error = Error::singleton();
+        $error = PSI_Error::singleton();
         if (file_exists($strFileName)) {
             if (is_readable($strFileName)) {
                 if ($fd = fopen($strFileName, 'r')) {
@@ -295,7 +314,11 @@ class CommonFunctions
                     fclose($fd);
                     $strRet = $strFile;
                     if (defined('PSI_LOG') && is_string(PSI_LOG) && (strlen(PSI_LOG)>0) && (substr(PSI_LOG, 0, 1)!="-") && (substr(PSI_LOG, 0, 1)!="+")) {
-                        error_log("---".gmdate('r T')."--- Reading: ".$strFileName."\n".$strRet, 3, PSI_LOG);
+                        if ((strlen($strRet)>0)&&(substr($strRet, -1)!="\n")) {
+                            error_log("---".gmdate('r T')."--- Reading: ".$strFileName."\n".$strRet."\n", 3, PSI_LOG);
+                        } else {
+                            error_log("---".gmdate('r T')."--- Reading: ".$strFileName."\n".$strRet, 3, PSI_LOG);
+                        }
                     }
                 } else {
                     if ($booErrorRep) {
@@ -358,7 +381,7 @@ class CommonFunctions
     public static function gdc($strPath, $booErrorRep = true)
     {
         $arrDirectoryContent = array();
-        $error = Error::singleton();
+        $error = PSI_Error::singleton();
         if (is_dir($strPath)) {
             if ($handle = opendir($strPath)) {
                 while (($strFile = readdir($handle)) !== false) {
@@ -396,7 +419,7 @@ class CommonFunctions
      */
     public static function checkForExtensions($arrExt = array())
     {
-        if ((strcasecmp(PSI_SYSTEM_CODEPAGE,"UTF-8") == 0) || (strcasecmp(PSI_SYSTEM_CODEPAGE,"CP437") == 0))
+        if ((strcasecmp(PSI_SYSTEM_CODEPAGE, "UTF-8") == 0) || (strcasecmp(PSI_SYSTEM_CODEPAGE, "CP437") == 0))
             $arrReq = array('simplexml', 'pcre', 'xml', 'dom');
         elseif (PSI_OS == "WINNT")
             $arrReq = array('simplexml', 'pcre', 'xml', 'mbstring', 'dom', 'com_dotnet');
@@ -436,15 +459,15 @@ class CommonFunctions
      */
     private static function _timeoutfgets($pipes, &$out, &$err, $timeout = 30)
     {
-        $w = NULL;
-        $e = NULL;
+        $w = null;
+        $e = null;
 
         if (defined("PSI_MODE_POPEN") && PSI_MODE_POPEN === true) {
             $pipe2 = false;
         } else {
             $pipe2 = true;
         }
-        while (!(feof($pipes[1]) || ($pipe2 && feof($pipes[2])))) {
+        while (!(feof($pipes[1]) && (!$pipe2 || feof($pipes[2])))) {
             if ($pipe2) {
                 $read = array($pipes[1], $pipes[2]);
             } else {
@@ -453,7 +476,7 @@ class CommonFunctions
 
             $n = stream_select($read, $w, $e, $timeout);
 
-            if ($n === FALSE) {
+            if ($n === false) {
                 error_log('stream_select: failed !');
                 break;
             } elseif ($n === 0) {
@@ -464,8 +487,7 @@ class CommonFunctions
             foreach ($read as $r) {
                 if ($r == $pipes[1]) {
                     $out .= fread($r, 4096);
-                }
-                if ($pipe2 && ($r == $pipes[2])) {
+                } elseif (feof($pipes[1]) && $pipe2 && ($r == $pipes[2])) {//read STDERR after STDOUT
                     $err .= fread($r, 4096);
                 }
             }
@@ -497,8 +519,8 @@ class CommonFunctions
                     }
                     $arrInstance = array();
                     foreach ($arrProp as $propItem) {
-                        eval("\$value = \$objItem->".$propItem->Name.";");
-                        if ( empty($strValue)) {
+                        $value = $objItem->{$propItem->Name}; //instead exploitable eval("\$value = \$objItem->".$propItem->Name.";");
+                        if (empty($strValue)) {
                             if (is_string($value)) $arrInstance[$propItem->Name] = trim($value);
                             else $arrInstance[$propItem->Name] = $value;
                         } else {
@@ -512,7 +534,8 @@ class CommonFunctions
                 }
             } catch (Exception $e) {
                 if (PSI_DEBUG) {
-                    $this->error->addError($e->getCode(), $e->getMessage());
+                    $error = PSI_Error::singleton();
+                    $error->addError($e->getCode(), $e->getMessage());
                 }
             }
         }
@@ -521,13 +544,13 @@ class CommonFunctions
     }
 
     /**
-     * get all configured plugins from config.php (file must be included before calling this function)
+     * get all configured plugins from phpsysinfo.ini (file must be included and processed before calling this function)
      *
      * @return array
      */
     public static function getPlugins()
     {
-        if ( defined('PSI_PLUGINS') && is_string(PSI_PLUGINS) ) {
+        if (defined('PSI_PLUGINS') && is_string(PSI_PLUGINS)) {
             if (preg_match(ARRAY_EXP, PSI_PLUGINS)) {
                 return eval(strtolower(PSI_PLUGINS));
             } else {

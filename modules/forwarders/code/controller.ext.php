@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2015 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -34,6 +34,7 @@ class module_controller extends ctrl_module
     static $alreadyexists;
     static $alreadyexistssame;
     static $validemail;
+    static $validmailbox;
     static $noaddress;
     static $delete;
     static $create;
@@ -97,31 +98,29 @@ class module_controller extends ctrl_module
         }
     }
 
-    static function getMailboxList()
+    /**
+     * Produces a list of mailboxes only.
+     * @global db_driver $zdbh
+     * @param int $uid
+     * @return boolean
+     */
+    static function getMailboxList($uid)
     {
         global $zdbh;
-        $currentuser = ctrl_users::GetUserDetail();
+        $currentuser = ctrl_users::GetUserDetail($uid);
+        
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
-        $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->execute();
-        if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':userid', $currentuser['userid']);
-            $res = array();
-            $sql->execute();
-            while ($rowmailboxes = $sql->fetch()) {
-                //$result = $zdbh->query("SELECT fw_address_vc FROM x_forwarders WHERE fw_address_vc='" . $rowmailboxes['mb_address_vc'] . "' AND fw_deleted_ts IS NULL")->Fetch();
-                $numrows = $zdbh->prepare("SELECT fw_address_vc FROM x_forwarders WHERE fw_address_vc=:mb_address_vc AND fw_deleted_ts IS NULL");
-                $numrows->bindParam(':mb_address_vc', $rowmailboxes['mb_address_vc']);
-                $numrows->execute();
-                $result = $numrows->fetch();
-                if (!$result) {
-                    $res[] = array('address' => $rowmailboxes['mb_address_vc'],
-                        'id' => $rowmailboxes['mb_id_pk']);
-                }
+        $binds = array(':userid' => $currentuser['userid']);
+        $prepared = $zdbh->bindQuery($sql, $binds);
+        
+        $rows = $prepared->fetchAll(PDO::FETCH_ASSOC);
+        $return = array();
+        
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
+                $return[] = array('address' => $row['mb_address_vc'], 'id' => $row['mb_id_pk']);
             }
-            return $res;
+            return $return;
         } else {
             return false;
         }
@@ -201,6 +200,11 @@ class module_controller extends ctrl_module
             self::$validemail = true;
             return false;
         }
+         if (!self::IsValidMailbox($address)) {
+            self::$validmailbox = true;
+            return false;
+        }  
+        
         if ($address == $destination) {
             self::$alreadyexistssame = true;
             return false;
@@ -211,6 +215,21 @@ class module_controller extends ctrl_module
     static function IsValidEmail($email)
     {
         return preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email) == 1;
+    }
+    
+    /**
+     * 
+     * @param string $address
+     * @return boolean
+     */
+    static function IsValidMailbox($address)
+    {
+        foreach (self::getMailboxList() as $key => $checkMailbox) {
+            if (array_key_exists('address', $checkMailbox) && $checkMailbox['address'] == $address) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -318,10 +337,15 @@ class module_controller extends ctrl_module
 
     static function getForwardUsagepChart()
     {
-        $currentuser = ctrl_users::GetUserDetail();
-        $maximum = $currentuser['forwardersquota'];
-        if ($maximum < 0) { //-1 = unlimited
-            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+		global $controller;
+		$currentuser = ctrl_users::GetUserDetail();
+		$maximum = $currentuser['forwardersquota'];
+		if ($maximum < 0) { //-1 = unlimited
+            if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
+				return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+			} else {
+				return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+			}
         } else {
             $used = ctrl_users::GetQuotaUsages('forwarders', $currentuser['userid']);
             $free = max($maximum - $used, 0);
@@ -348,6 +372,9 @@ class module_controller extends ctrl_module
         }
         if (!fs_director::CheckForEmptyValue(self::$noaddress)) {
             return ui_sysmessage::shout(ui_language::translate("Your email address cannot be blank."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$validmailbox)) {
+            return ui_sysmessage::shout(ui_language::translate("The mailbox chosen is invalid."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$ok)) {
             return ui_sysmessage::shout(ui_language::translate("Changes to your forwarders have been saved successfully!"), "zannounceok");

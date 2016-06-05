@@ -92,9 +92,9 @@ class Minix extends OS
                             $_s = $arrBuff[1];
                             break;
                         case 'flags':
-                            if (preg_match("/ vmx/",$arrBuff[1])) {
+                            if (preg_match("/ vmx/", $arrBuff[1])) {
                                 $dev->setVirt("vmx");
-                            } elseif (preg_match("/ svm/",$arrBuff[1])) {
+                            } elseif (preg_match("/ svm/", $arrBuff[1])) {
                                 $dev->setVirt("svm");
                             }
                         break;
@@ -110,12 +110,12 @@ class Minix extends OS
             }
         } else
         foreach ($this->readdmesg() as $line) {
-          if (preg_match('/kernel: (CPU .*) freq (.*) MHz/', $line, $ar_buf)) {
+            if (preg_match('/kernel: (CPU .*) freq (.*) MHz/', $line, $ar_buf)) {
                 $dev = new CpuDevice();
                 $dev->setModel($ar_buf[1]);
                 $dev->setCpuSpeed($ar_buf[2]);
                 $this->sys->setCpus($dev);
-          }
+            }
         }
     }
 
@@ -139,16 +139,16 @@ class Minix extends OS
                $dev = new HWDevice();
                $dev->setName($strName);
                $arrResults[] = $dev;
-           }
-           foreach ($arrResults as $dev) {
-               $this->sys->setPciDevices($dev);
-           }
+            }
+            foreach ($arrResults as $dev) {
+                $this->sys->setPciDevices($dev);
+            }
         }
-        if ( !(isset($arrResults) && is_array($arrResults)) && is_array($results = Parser::lspci())) {
-           /* if access error: chmod 4755 /usr/bin/lspci */
-           foreach ($results as $dev) {
-              $this->sys->setPciDevices($dev);
-           }
+        if (!(isset($arrResults) && is_array($arrResults)) && is_array($results = Parser::lspci())) {
+            /* if access error: chmod 4755 /usr/bin/lspci */
+            foreach ($results as $dev) {
+                $this->sys->setPciDevices($dev);
+            }
         }
     }
 
@@ -160,9 +160,9 @@ class Minix extends OS
     private function _kernel()
     {
         foreach ($this->readdmesg() as $line) {
-          if (preg_match('/kernel: MINIX (.*) \((.*)\)/', $line, $ar_buf)) {
+            if (preg_match('/kernel: MINIX (.*) \((.*)\)/', $line, $ar_buf)) {
                 $branch = $ar_buf[2];
-          }
+            }
         }
         if (CommonFunctions::executeProgram('uname', '-rvm', $ret)) {
             if (isset($branch))
@@ -257,23 +257,6 @@ class Minix extends OS
         }
     }
 
-    /**
-     * IP of the Virtual Host Name
-     *
-     *  @return void
-     */
-    private function _ip()
-    {
-        if (PSI_USE_VHOST === true) {
-            $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-        } else {
-            if (!($result = getenv('SERVER_ADDR'))) {
-                $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-            } else {
-                $this->sys->setIp($result);
-            }
-        }
-    }
 
     /**
      *  Physical memory information and Swap Space information
@@ -284,7 +267,7 @@ class Minix extends OS
     {
         if (CommonFunctions::rfts('/proc/meminfo', $bufr, 1, 4096, false)) {
             $ar_buf = preg_split('/\s+/', trim($bufr));
-            if (count($ar_buf) >= 5 ) {
+            if (count($ar_buf) >= 5) {
                     $this->sys->setMemTotal($ar_buf[0]*$ar_buf[1]);
                     $this->sys->setMemFree($ar_buf[0]*$ar_buf[2]);
                     $this->sys->setMemCache($ar_buf[0]*$ar_buf[4]);
@@ -300,10 +283,10 @@ class Minix extends OS
      */
     private function _filesystems()
     {
-      $arrResult = Parser::df("-P 2>/dev/null");
-      foreach ($arrResult as $dev) {
-         $this->sys->setDiskDevices($dev);
-     }
+        $arrResult = Parser::df("-P 2>/dev/null");
+        foreach ($arrResult as $dev) {
+            $this->sys->setDiskDevices($dev);
+        }
     }
 
     /**
@@ -329,6 +312,35 @@ class Minix extends OS
     }
 
     /**
+     * Processes
+     *
+     * @return void
+     */
+    protected function _processes()
+    {
+        if (CommonFunctions::executeProgram('ps', 'alx', $bufr, PSI_DEBUG)) {
+            $lines = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            $processes['*'] = 0;
+            foreach ($lines as $line) {
+                if (preg_match("/^\s(\w)\s/", $line, $ar_buf)) {
+                    $processes['*']++;
+                    $state = $ar_buf[1];
+                    if ($state == 'W') $state = 'D'; //linux format
+                    elseif ($state == 'D') $state = 'd'; //invalid
+                    if (isset($processes[$state])) {
+                        $processes[$state]++;
+                    } else {
+                        $processes[$state] = 1;
+                    }
+                }
+            }
+            if ($processes['*'] > 0) {
+                $this->sys->setProcesses($processes);
+            }
+        }
+    }
+
+    /**
      * get the information
      *
      * @return Void
@@ -336,9 +348,8 @@ class Minix extends OS
     public function build()
     {
         $this->error->addError("WARN", "The Minix version of phpSysInfo is a work in progress, some things currently don't work");
-        $this->_hostname();
-        $this->_ip();
         $this->_distro();
+        $this->_hostname();
         $this->_kernel();
         $this->_uptime();
         $this->_users();
@@ -348,5 +359,6 @@ class Minix extends OS
         $this->_memory();
         $this->_filesystems();
         $this->_network();
+        $this->_processes();
     }
 }

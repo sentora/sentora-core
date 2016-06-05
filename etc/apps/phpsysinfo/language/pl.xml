@@ -327,4 +327,43 @@ phpSysInfo language file Language: Polish Created by: Damian Pasternok
   <expression id="107" name="machine">
     <exp>Maszyna</exp>
   </expression>
+  <expression id="108" name="ups_line_frequency">
+    <exp>Częstotliwość linii</exp>
+  </expression>
+  <expression id="109" name="Hz">
+    <exp>Hz</exp>
+  </expression>
+  <expression id="110" name="Processes">
+    <exp>Procesy</exp>
+  </expression>
+  <expression id="111" name="ProcessesRunning">
+    <exp>uruchomione</exp>
+  </expression>
+  <expression id="112" name="ProcessesSleeping">
+    <exp>uśpione</exp>
+  </expression>
+  <expression id="113" name="ProcessesStopped">
+    <exp>zatrzymane</exp>
+  </expression>
+  <expression id="114" name="ProcessesZombie">
+    <exp>zombi</exp>
+  </expression>
+  <expression id="115" name="ProcessesWaiting">
+    <exp>oczekujące</exp>
+  </expression>
+  <expression id="116" name="ProcessesOther">
+    <exp>inne</exp>
+  </expression>
+  <expression id="117" name="tb">
+    <exp>Urządzenia TB</exp>
+  </expression>
+  <expression id="118" name="i2c">
+    <exp>Urządzenia I2C</exp>
+  </expression>
+  <expression id="119" name="no_processors">
+    <exp>Liczba procesorów</exp>
+  </expression>
+  <expression id="120" name="no_devices">
+    <exp>Liczba urządzeń</exp>
+  </expression>
 </tns:translation>
