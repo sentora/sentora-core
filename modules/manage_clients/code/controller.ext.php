@@ -723,7 +723,7 @@ class module_controller extends ctrl_module
     static function CheckUserExists($username)
     {
         global $zdbh;
-        $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username";
+        $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username AND ac_deleted_ts IS NULL";
         $uniqueuser = $zdbh->prepare($sql);
         $uniqueuser->bindParam(':username', strtolower($username));
         if ($uniqueuser->execute()) {
