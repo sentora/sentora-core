@@ -18,7 +18,7 @@ class webservice extends ws_xmws
     {
         $request_data = $this->RawXMWSToArray($this->wsdata);
         $contenttags = $this->XMLDataToArray($request_data['content']);
-        module_controller::ExecuteDeleteClient($contenttags['uid']);
+        module_controller::ExecuteDeleteClient($contenttags['uid'], $contenttags['moveid']);
         $dataobject = new runtime_dataobject();
         $dataobject->addItemValue('response', '');
         $dataobject->addItemValue('content', ws_xmws::NewXMLTag('uid', $contenttags['uid']) . ws_xmws::NewXMLTag('deleted', 'true'));
