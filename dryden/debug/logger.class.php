@@ -69,7 +69,7 @@ class debug_logger {
                 $retval = false;
             }
             try {
-                $statement = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx, lg_when_ts) VALUES (0, '" . $this->logcode . "', 'NA', '" . $this->detail . "', '" . $this->mextra . "','" . time() . "')";
+                $statement = "INSERT INTO x_logs (lg_user_fk, lg_code_vc, lg_module_vc, lg_detail_tx, lg_stack_tx, lg_when_ts) VALUES (0, '" . $this->logcode . "', 'NA', '" . $this->detail . "', '" . $this->mextra . "','" . date("Y-m-d H:i:s") . "')";
                 if ($zdbh->exec($statement) > 0) {
                     $retval = true;
                 } else {
