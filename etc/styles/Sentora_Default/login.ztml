@@ -189,7 +189,7 @@
                 <?php }?>
                 </div><!-- End Panel content-->
             </div>
-            <p class="vbox">Powered by <a href="http://www.sentora.org/" target="_blank">Sentora</a></p>
+            <p class="vbox">Powered by <a href="http://www.sentora.org/" target="_blank">Sentora</a>Hosting Control Panel</p>
         </div>
         <!-- Javascript
         ================================================== -->
