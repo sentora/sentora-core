@@ -191,7 +191,7 @@ class module_controller extends ctrl_module
 														 2,
 														 :time)"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->bindParam(':userid', $currentuser['userid']);
-            $sql->bindParam(':domain', $domain);
+            $sql->bindParam(':domain', $subdomain);
             $sql->bindParam(':destination', $destination);
             $time = time();
             $sql->bindParam(':time', $time);
@@ -231,7 +231,7 @@ class module_controller extends ctrl_module
             return FALSE;
         }
         // Check to make sure the domain is in the correct format before we go any further...
-        if (strpos($domain, 'www.') === 0) {
+        if (strpos($subdomain, 'www.') === 0) {
             self::$error = TRUE;
             return FALSE;
         }
