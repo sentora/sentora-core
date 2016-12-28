@@ -89,7 +89,7 @@ class module_controller extends ctrl_module
         global $controller;
         $currentuser = ctrl_users::GetUserDetail();
 
-        $line = "<h2>Create a new task</h2>";
+        $line .= "<h2>" . ui_language::translate("Create a new task") . "</h2>";
         $line .= "<form action=\"./?module=cron&action=CreateCron\" method=\"post\">";
         $line .= "<table class=\"table table-striped\">";
         $line .= "<tr valign=\"top\">";
