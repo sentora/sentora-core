@@ -30,10 +30,10 @@
         <meta name="msapplication-TileImage" content="/etc/styles/Sentora_Default/img/ico/fav144.png">
 
         <!-- Scripts -->
-        <script>document.write('<style type="text/css">body {display:none;}<\/style>');</script>
+        <script data-cfasync="false">document.write('<style type="text/css">body {display:none;}<\/style>');</script>
         <!-- Anti-ClickJacking Protection -->
         <style id="antiClickjack">body{display:none !important;}</style>
-        <script>
+        <script data-cfasync="false">
             if (self === top) {
                 var antiClickjack = document.getElementById("antiClickjack");
                 antiClickjack.parentNode.removeChild(antiClickjack);
@@ -193,7 +193,7 @@
         </div>
         <!-- Javascript
         ================================================== -->
-        <script src="/etc/styles/Sentora_Default/js/jquery.js"></script>
+        <script data-cfasync="false" src="/etc/styles/Sentora_Default/js/jquery.js"></script>
         <script src="/etc/styles/Sentora_Default/js/bootstrap-transition.js"></script>
         <script src="/etc/styles/Sentora_Default/js/bootstrap-alert.js"></script>
         <script src="/etc/styles/Sentora_Default/js/prettyCheckable.js"></script>
@@ -239,7 +239,7 @@
         </script>
         
         <!-- Page fade in after load -->
-        <script>
+        <script data-cfasync="false">
             $(window).load(function() {
                 $("body").fadeIn();
             });
