@@ -196,6 +196,9 @@ class module_controller extends ctrl_module
             $time = time();
             $sql->bindParam(':time', $time);
             $sql->execute();
+			
+			self::auto_dns($domain);
+			
             # Only run if the Server platform is Windows.
             if (sys_versions::ShowOSPlatformVersion() == 'Windows') {
                 if (ctrl_options::GetSystemOption('disable_hostsen') == 'false') {
@@ -476,6 +479,86 @@ class module_controller extends ctrl_module
         }
         return;
     }
+	
+	
+	static function auto_dns($fullSubDomainName){
+		global $zdbh;
+        $currentuser = ctrl_users::GetUserDetail();		
+		if (!fs_director::CheckForEmptyValue(ctrl_options::GetSystemOption('server_ip'))) {
+            $targetIP = ctrl_options::GetSystemOption('server_ip');
+        } else {
+            $targetIP = $_SERVER["SERVER_ADDR"]; //This needs checking on windows 7 we may need to use LOCAL_ADDR :- Sam Mottley
+        }
+		$host_name = explode(".", $fullSubDomainName);
+		$domainName = $host_name[count($host_name)-2] . "." . $host_name[count($host_name)-1];
+		$gsql=$zdbh->prepare("select vh_id_pk from x_vhosts where vh_name_vc=:domainName AND vh_acc_fk=:userid AND vh_deleted_ts is NULL");
+		$gsql->bindParam(':userid', $currentuser['userid']);
+        $gsql->bindParam(':domainName', $domainName);
+		$gsql->execute();
+		$res=$gsql->fetch();
+		$domainID=$res['vh_id_pk'];		
+		$arr = explode(".", $fullSubDomainName);
+		$subDomainName=$arr[0];
+		$dsql=$zdbh->prepare("select count(*) as rcd_cnt from x_dns where dn_acc_fk=:userid AND dn_name_vc=:domainName AND dn_vhost_fk=:domainID AND dn_type_vc='A' AND dn_host_vc=:subDomain AND dn_target_vc=:target_new AND dn_deleted_ts is NULL");		
+		$dsql->bindParam(':userid', $currentuser['userid']);
+        $dsql->bindParam(':domainName', $domainName);
+        $dsql->bindParam(':domainID', $domainID);
+        $dsql->bindParam(':subDomain', $subDomainName);
+        $dsql->bindParam(':target_new', $targetIP);
+		$dsql->execute();
+		$dres=$dsql->fetch();
+		if($dres['rcd_cnt']==0){
+		$sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
+                           dn_name_vc,
+                           dn_vhost_fk,
+                           dn_type_vc,
+                           dn_host_vc,
+                           dn_ttl_in,
+                           dn_target_vc,
+                           dn_priority_in,
+                           dn_weight_in,
+                           dn_port_in,
+                           dn_created_ts) VALUES (
+                           :userid,
+                           :domainName,
+                           :domainID,
+                           'A',
+                           :hostName_new,
+                           '86400',
+                           :target_new,
+                           '0',
+                           '0',
+                           '0',
+                           :time)"
+                        );
+                        $sql->bindParam(':userid', $currentuser['userid']);
+						
+                        $sql->bindParam(':domainName', $domainName);
+                        $sql->bindParam(':domainID', $domainID);
+                        $sql->bindParam(':hostName_new', $subDomainName);
+                        $sql->bindParam(':target_new', $targetIP);
+                        $time = time();
+                        $sql->bindParam(':time', $time);
+                        $sql->execute();
+						unset($sql);
+		
+		
+				$records_list = ctrl_options::GetSystemOption('dns_hasupdates');
+				$record_array = explode(',', $records_list);
+				if (!in_array($domainID, $record_array)) {
+					if (empty($records_list)) {
+						$records_list .= $domainID;
+					} else {
+						$records_list .= ',' . $domainID;
+					}
+					$sql = "UPDATE x_settings SET so_value_tx=:newlist WHERE so_name_vc='dns_hasupdates'";
+					$sql = $zdbh->prepare($sql);
+					$sql->bindParam(':newlist', $records_list);
+					$sql->execute();
+					}
+		}
+			return;
+	}
 
     /**
      * Webinterface sudo methods.
