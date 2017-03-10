@@ -725,7 +725,7 @@ class module_controller extends ctrl_module
         global $zdbh;
         $sql = "SELECT COUNT(*) FROM x_accounts WHERE LOWER(ac_user_vc)=:username";
         $uniqueuser = $zdbh->prepare($sql);
-        $uniqueuser->bindParam(':username', strtolower($username));
+        $uniqueuser->bindValue(':username', strtolower($username));
         if ($uniqueuser->execute()) {
             if ($uniqueuser->fetchColumn() > 0) {
                 return true;
