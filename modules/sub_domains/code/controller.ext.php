@@ -191,7 +191,7 @@ class module_controller extends ctrl_module
 														 2,
 														 :time)"); //CLEANER FUNCTION ON $domain and $homedirectory_to_use (Think I got it?)
             $sql->bindParam(':userid', $currentuser['userid']);
-            $sql->bindParam(':domain', $domain);
+            $sql->bindParam(':domain', $subdomain);
             $sql->bindParam(':destination', $destination);
             $time = time();
             $sql->bindParam(':time', $time);
