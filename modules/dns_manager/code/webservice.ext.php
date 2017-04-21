@@ -117,8 +117,8 @@ class webservice extends ws_xmws
         $domainName = ws_generic::GetTagValue('domainName', $request_data['content']);
         $domainID = self::GetDomainID($uid, $domainName);
 
-        $sqlstr = "SELECT * FROM x_dns WHERE dn_acc_fk=:userid AND vh_deleted_ts IS NULL AND dn_vhost_fk=:domainID ";
-
+        $sqlstr = "SELECT * FROM x_dns WHERE dn_acc_fk=:userid AND dn_deleted_ts IS NULL AND dn_vhost_fk=:domainID ";
+		
         // iterate through optional parameters
         foreach ($tags as $tag => $sql_param) {
             if (!is_null(ws_generic::GetTagValue($tag, $request_data['content'])))
