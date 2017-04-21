@@ -53,6 +53,15 @@ if ($_SESSION['zpuid'] == $userid) {
 
                 </div>
             </div>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#BackupResult").hide();
+                    $("#SubmitBackup").click(function(){
+                        $("#BackupSubmit").hide();
+                        $("#BackupResult").show();
+                    });
+                })
+            </script>
         </body>
     </html>
 <?php } else {
@@ -61,17 +70,7 @@ if ($_SESSION['zpuid'] == $userid) {
         <h2>Unauthorized Access!</h2>
         You have no permission to view this module.
     </body>
-<?php } ?>
-<script type="text/javascript">
-    $(document).ready(function() { 
-        $("#BackupResult").hide();
-        $("#SubmitBackup").click(function(){
-            $("#BackupSubmit").hide();
-            $("#BackupResult").show();
-        }); 
-    })
-</script>
-<?php
+<?php }
 
 function dirSize($directory) {
     $size = 0;
