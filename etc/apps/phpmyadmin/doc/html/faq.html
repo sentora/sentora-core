@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>FAQ - Frequently Asked Questions &mdash; phpMyAdmin 4.0.10.1 documentation</title>
+    <title>FAQ - Frequently Asked Questions &mdash; phpMyAdmin 4.0.10.12 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '4.0.10.1',
+        URL_ROOT:    './',
+        VERSION:     '4.0.10.12',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="copyright" title="Copyright" href="copyright.html" />
-    <link rel="top" title="phpMyAdmin 4.0.10.1 documentation" href="index.html" />
+    <link rel="top" title="phpMyAdmin 4.0.10.12 documentation" href="index.html" />
     <link rel="next" title="Developers Information" href="developers.html" />
     <link rel="prev" title="Other sources of information" href="other.html" /> 
   </head>
@@ -43,7 +41,7 @@
         <li class="right" >
           <a href="other.html" title="Other sources of information"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.0.10.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">phpMyAdmin 4.0.10.12 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -70,7 +68,7 @@ or interface.</p>
 <p>You should first try the latest versions of Apache (and possibly MySQL). If
 your server keeps crashing, please ask for help in the various Apache support
 groups.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#faq1-1"><em>1.1 My server is crashing each time a specific action is required or phpMyAdmin sends a blank page or a page full of cryptic characters to my browser, what can I do?</em></a></p>
 </div>
@@ -200,8 +198,9 @@ at least the same minor version since the one that is bundled with
 some PHP distributions is rather old and might cause problems see
 <a class="reference internal" href="#faq1-17a"><em>1.17a I cannot connect to the MySQL server. It always returns the error message, &#8220;Client does not support authentication protocol requested by server; consider upgrading MySQL client&#8221;</em></a>. <a class="reference external" href="http://mariadb.org/">MariaDB</a> is also supported
 (versions 5.1 and 5.2 were tested).</p>
-<p class="versionchanged">
-<span class="versionmodified">Changed in version 3.5: </span>Since phpMyAdmin 3.5 <a class="reference external" href="http://www.drizzle.org/">Drizzle</a> is supported.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 3.5: </span>Since phpMyAdmin 3.5 <a class="reference external" href="http://www.drizzle.org/">Drizzle</a> is supported.</p>
+</div>
 </div>
 <div class="section" id="a-i-cannot-connect-to-the-mysql-server-it-always-returns-the-error-message-client-does-not-support-authentication-protocol-requested-by-server-consider-upgrading-mysql-client">
 <span id="faq1-17a"></span><h3>1.17a I cannot connect to the MySQL server. It always returns the error message, &#8220;Client does not support authentication protocol requested by server; consider upgrading MySQL client&#8221;<a class="headerlink" href="#a-i-cannot-connect-to-the-mysql-server-it-always-returns-the-error-message-client-does-not-support-authentication-protocol-requested-by-server-consider-upgrading-mysql-client" title="Permalink to this headline">¶</a></h3>
@@ -346,7 +345,7 @@ enabled.) Click <tt class="docutils literal"><span class="pre">OK</span></tt>.</
 <li>In <tt class="docutils literal"><span class="pre">Custom</span> <span class="pre">Errors</span></tt>, select the range of <tt class="docutils literal"><span class="pre">401;1</span></tt> through <tt class="docutils literal"><span class="pre">401;5</span></tt>
 and click the <tt class="docutils literal"><span class="pre">Set</span> <span class="pre">to</span> <span class="pre">Default</span></tt> button.</li>
 </ol>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><span class="target" id="index-5"></span><a class="rfc reference external" href="http://tools.ietf.org/html/rfc2616.html"><strong>RFC 2616</strong></a></p>
 </div>
@@ -442,7 +441,7 @@ slowdown</li>
 <span id="faq1-39"></span><h3>1.39 When I try to connect via https, I can log in, but then my connection is redirected back to http. What can cause this behavior?<a class="headerlink" href="#when-i-try-to-connect-via-https-i-can-log-in-but-then-my-connection-is-redirected-back-to-http-what-can-cause-this-behavior" title="Permalink to this headline">¶</a></h3>
 <p>Be sure that you have enabled <tt class="docutils literal"><span class="pre">SSLOptions</span></tt> and <tt class="docutils literal"><span class="pre">StdEnvVars</span></tt> in
 your Apache configuration.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last">&lt;<a class="reference external" href="http://httpd.apache.org/docs/2.0/mod/mod_ssl.html#ssloptions">http://httpd.apache.org/docs/2.0/mod/mod_ssl.html#ssloptions</a>&gt;</p>
 </div>
@@ -465,7 +464,7 @@ This is not specific to phpmyadmin, it&#8217;s just the behavior of Apache.</p>
 <span class="nb">ProxyPassReverseCookiePath</span> /%7Euser/phpmyadmin <span class="sx">/mirror/foo</span>
 </pre></div>
 </div>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last">&lt;<a class="reference external" href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html">http://httpd.apache.org/docs/2.2/mod/mod_proxy.html</a>&gt;</p>
 </div>
@@ -647,7 +646,7 @@ has to be enabled in your PHP.</p>
 <tt class="docutils literal"><span class="pre">session.upload_progress.enabled</span></tt> to <tt class="docutils literal"><span class="pre">1</span></tt> in your <tt class="file docutils literal"><span class="pre">php.ini</span></tt>. However,
 starting from phpMyAdmin version 4.0.4, session-based upload progress has
 been temporarily deactivated due to its problematic behavior.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><span class="target" id="index-17"></span><a class="rfc reference external" href="http://tools.ietf.org/html/rfc1867.html"><strong>RFC 1867</strong></a></p>
 </div>
@@ -698,7 +697,7 @@ a # before it:  <tt class="docutils literal"><span class="pre">--</span> <span c
 times without any characters between them, or at the beginning/end of
 your table name. If you have to, think about using another
 TableSeparator or disabling that feature.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><span class="target" id="index-19"></span><a class="reference internal" href="config.html#cfg_NavigationTreeTableSeparator"><tt class="xref config config-option docutils literal"><span class="pre">$cfg['NavigationTreeTableSeparator']</span></tt></a></p>
 </div>
@@ -801,7 +800,7 @@ accordingly. This is done for the sake of efficiency.</p>
 users. The development of this feature was kindly sponsored by NetCologne GmbH.
 This requires a properly setup MySQL user management and phpMyAdmin
 <a class="reference internal" href="glossary.html#term-http"><em class="xref std std-term">HTTP</em></a> or cookie authentication.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="setup.html#authentication-modes"><em>Using authentication modes</em></a></p>
 </div>
@@ -1317,7 +1316,7 @@ have table exported in file <tt class="file docutils literal"><span class="pre">
 DATABASES, LOCK TABLES. Those privileges also enable users to see all the
 database names. So if your users do not need those privileges, you can remove
 them and their databases list will shorten.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last">&lt;<a class="reference external" href="http://bugs.mysql.com/179">http://bugs.mysql.com/179</a>&gt;</p>
 </div>
@@ -1344,9 +1343,10 @@ public bookmark, it will be executed.</p>
 <span id="faq6-23"></span><h3>6.23 Export: I heard phpMyAdmin can export Microsoft Excel files?<a class="headerlink" href="#export-i-heard-phpmyadmin-can-export-microsoft-excel-files" title="Permalink to this headline">¶</a></h3>
 <p>You can use <a class="reference internal" href="glossary.html#term-csv"><em class="xref std std-term">CSV</em></a> for Microsoft Excel,
 which works out of the box.</p>
-<p class="versionchanged">
-<span class="versionmodified">Changed in version 3.4.5: </span>Since phpMyAdmin 3.4.5 support for direct export to Microsoft Excel version
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 3.4.5: </span>Since phpMyAdmin 3.4.5 support for direct export to Microsoft Excel version
 97 and newer was dropped.</p>
+</div>
 </div>
 <div class="section" id="now-that-phpmyadmin-supports-native-mysql-4-1-x-column-comments-what-happens-to-my-column-comments-stored-in-pmadb">
 <span id="faq6-24"></span><h3>6.24 Now that phpMyAdmin supports native MySQL 4.1.x column comments, what happens to my column comments stored in pmadb?<a class="headerlink" href="#now-that-phpmyadmin-supports-native-mysql-4-1-x-column-comments-what-happens-to-my-column-comments-stored-in-pmadb" title="Permalink to this headline">¶</a></h3>
@@ -1505,7 +1505,7 @@ our website</a>.</p>
 <p>We welcome every contribution to the development of phpMyAdmin. You
 can check out all the possibilities to contribute in the <a class="reference external" href="http://www.phpmyadmin.net/home_page/improve.php">contribute
 section on our website</a>.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="developers.html#developers"><em>Developers Information</em></a></p>
 </div>
@@ -1769,12 +1769,12 @@ attempts.</p>
         <li class="right" >
           <a href="other.html" title="Other sources of information"
              >previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.0.10.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">phpMyAdmin 4.0.10.12 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; <a href="copyright.html">Copyright</a> 2012 - 2013, The phpMyAdmin devel team.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
