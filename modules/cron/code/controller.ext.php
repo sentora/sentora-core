@@ -30,6 +30,9 @@
  * - reformated header inserted in crontab file (heading spaces and wrong EOL encoding)
  * - removed daemon task that is handled by independant crontab /etc/cron.d/zdaemon (linux)
  */
+
+require_once(dirname(__FILE__) . "/writecronfile.php");
+
 class module_controller extends ctrl_module
 {
 
@@ -111,6 +114,7 @@ class module_controller extends ctrl_module
         $line .= "<option value=\"* * * * *\">" . ui_language::translate("Every 1 minute") . "</option>";
         $line .= "<option value=\"0,5,10,15,20,25,30,35,40,45,50,55 * * * *\">" . ui_language::translate("Every 5 minutes") . "</option>";
         $line .= "<option value=\"0,10,20,30,40,50 * * * *\">" . ui_language::translate("Every 10 minutes") . "</option>";
+        $line .= "<option value=\"0,20,40 * * * *\">" . ui_language::translate("Every 20 minutes") . "</option>";
         $line .= "<option value=\"0,30 * * * *\">" . ui_language::translate("Every 30 minutes") . "</option>";
         $line .= "<option value=\"0 * * * *\">" . ui_language::translate("Every 1 hour") . "</option>";
         $line .= "<option value=\"0 0,2,4,6,8,10,12,14,16,18,20,22 * * *\">" . ui_language::translate("Every 2 hours") . "</option>";
@@ -133,6 +137,19 @@ class module_controller extends ctrl_module
         return $line;
     }
 
+    static function getSafePath($str){
+            preg_match("/^([\w\/\s\-]+).php\s*(.*)/i", $str, $matches);
+
+            $path = array(
+                "path" => trim(empty($matches[1]) ? "" : $matches[1] . ".php"),
+                "arguments" => str_getcsv($matches[2], ' ')
+            );
+
+            $path["complete"] =  trim($path["path"] . str_replace('""', '', (count($path["arguments"]) > 0 ? (' "' . implode('" "', $path["arguments"]) . '"') : '')));
+
+            return $path;
+    }
+
     static function doCreateCron()
     {
         global $zdbh;
@@ -140,13 +157,16 @@ class module_controller extends ctrl_module
         runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         if (fs_director::CheckForEmptyValue(self::CheckCronForErrors())) {
+
+            $safepath = self::getSafePath($controller->GetControllerRequest('FORM', 'inScript'));
+
             // If the user submitted a 'new' request then we will simply add the cron task to the database...
             $sql = $zdbh->prepare("INSERT INTO x_cronjobs (ct_acc_fk, ct_script_vc, ct_description_tx, ct_timing_vc, ct_fullpath_vc, ct_created_ts) VALUES (:userid, :script, :desc, :timing, :fullpath, " . time() . ")");
-            $sql->bindParam(':userid', $controller->GetControllerRequest('FORM', 'inUserID'));
-            $sql->bindParam(':script', $controller->GetControllerRequest('FORM', 'inScript'));
-            $sql->bindParam(':desc', $controller->GetControllerRequest('FORM', 'inDescription'));
-            $sql->bindParam(':timing', $controller->GetControllerRequest('FORM', 'inTiming'));
-            $full_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $controller->GetControllerRequest('FORM', 'inScript');
+            $sql->bindValue(':userid', $controller->GetControllerRequest('FORM', 'inUserID'));
+            $sql->bindParam(':script', $safepath["complete"]);
+            $sql->bindValue(':desc', $controller->GetControllerRequest('FORM', 'inDescription'));
+            $sql->bindValue(':timing', $controller->GetControllerRequest('FORM', 'inTiming'));
+            $full_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/" . $safepath["complete"];
             $sql->bindParam(':fullpath', $full_path);
             $sql->execute();
             self::WriteCronFile();
@@ -175,7 +195,7 @@ class module_controller extends ctrl_module
                     if (!fs_director::CheckForEmptyValue($controller->GetControllerRequest('FORM', 'inDelete_' . $rowcrons['ct_id_pk'] . ''))) {
                         $sql2 = $zdbh->prepare("UPDATE x_cronjobs SET ct_deleted_ts=:time WHERE ct_id_pk=:cronid");
                         $sql2->bindParam(':cronid', $rowcrons['ct_id_pk']);
-                        $sql2->bindParam(':time', time());
+                        $sql2->bindValue(':time', time());
                         $sql2->execute();
                         self::WriteCronFile();
                         self::$ok = TRUE;
@@ -204,7 +224,10 @@ class module_controller extends ctrl_module
             $retval = TRUE;
         }
         // Check to make sure the cron script exists before we go any further...
-        if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . '/public_html/' . $controller->GetControllerRequest('FORM', 'inScript'))))) {
+
+        $safepath = self::getSafePath($controller->GetControllerRequest('FORM', 'inScript'));
+
+        if (!is_file(fs_director::RemoveDoubleSlash(fs_director::ConvertSlashes(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . '/public_html/' . $safepath["path"])))) {
             self::$noexists = TRUE;
             $retval = TRUE;
         }
@@ -218,11 +241,12 @@ class module_controller extends ctrl_module
             self::$cronnowrite = TRUE;
             $retval = TRUE;
         }
+
         // Check to make sure the cron is not a duplicate...
         $sql = "SELECT COUNT(*) FROM x_cronjobs WHERE ct_acc_fk=:userid AND ct_script_vc=:inScript AND ct_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
         $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->bindParam(':inScript', $controller->GetControllerRequest('FORM', 'inScript'));
+        $numrows->bindParam(':inScript', $safepath["complete"]);
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 self::$alreadyexists = TRUE;
@@ -234,66 +258,7 @@ class module_controller extends ctrl_module
 
     static function WriteCronFile()
     {
-        global $zdbh;
-        $currentuser = ctrl_users::GetUserDetail();
-        $line = "";
-        $sql = "SELECT * FROM x_cronjobs WHERE ct_deleted_ts IS NULL";
-        $numrows = $zdbh->query($sql);
-
-        //common header whatever there are some cron task or not
-        if (sys_versions::ShowOSPlatformVersion() != "Windows") {
-            $line .= 'SHELL=/bin/bash' . fs_filehandler::NewLine();
-            $line .= 'PATH=/sbin:/bin:/usr/sbin:/usr/bin' . fs_filehandler::NewLine();
-            $line .= 'HOME=/' . fs_filehandler::NewLine();
-            $line .= fs_filehandler::NewLine();
-        }
-        $restrictinfos = ctrl_options::GetSystemOption('php_exer') . " -d suhosin.executor.func.blacklist=\"passthru, show_source, shell_exec, system, pcntl_exec, popen, pclose, proc_open, proc_nice, proc_terminate, proc_get_status, proc_close, leak, apache_child_terminate, posix_kill, posix_mkfifo, posix_setpgid, posix_setsid, posix_setuid, escapeshellcmd, escapeshellarg, exec\" -d open_basedir=\"" . ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/" . ctrl_options::GetSystemOption('openbase_seperator') . ctrl_options::GetSystemOption('openbase_temp') . "\" ";
-
-        $line .= "#################################################################################" . fs_filehandler::NewLine();
-        $line .= "# CRONTAB FOR SENTORA CRON MANAGER MODULE                                        " . fs_filehandler::NewLine();
-        $line .= "# Module Developed by Bobby Allen, 17/12/2009                                    " . fs_filehandler::NewLine();
-        $line .= "# File automatically generated by Sentora " . sys_versions::ShowSentoraVersion() . fs_filehandler::NewLine();
-        if (sys_versions::ShowOSPlatformVersion() == "Windows") {
-            $line .= "# Cron Debug infomation can be found in file C:\WINDOWS\System32\crontab.txt " . fs_filehandler::NewLine();
-            $line .= "#################################################################################" . fs_filehandler::NewLine();
-            $line .= "" . ctrl_options::GetSystemOption('daemon_timing') . " " . $restrictinfos . ctrl_options::GetSystemOption('daemon_exer') . fs_filehandler::NewLine();
-        }
-        $line .= "#################################################################################" . fs_filehandler::NewLine();
-        $line .= "# NEVER MANUALLY REMOVE OR EDIT ANY OF THE CRON ENTRIES FROM THIS FILE,          " . fs_filehandler::NewLine();
-        $line .= "#  -> USE SENTORA INSTEAD! (Menu -> Advanced -> Cron Manager)                    " . fs_filehandler::NewLine();
-        $line .= "#################################################################################" . fs_filehandler::NewLine();
-
-        //Write command lines in crontab, if any
-        if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->execute();
-            while ($rowcron = $sql->fetch()) {
-                $fetchRows = $zdbh->prepare("SELECT * FROM x_accounts WHERE ac_id_pk=:userid AND ac_deleted_ts IS NULL");
-                $fetchRows->bindParam(':userid', $rowcron['ct_acc_fk']);
-                $fetchRows->execute();
-                $rowclient = $fetchRows->fetch();
-                if ($rowclient && $rowclient['ac_enabled_in'] <> 0) {
-                    $line .= "# CRON ID: " . $rowcron['ct_id_pk'] . fs_filehandler::NewLine();
-                    $line .= $rowcron['ct_timing_vc'] . " " . $restrictinfos . $rowcron['ct_fullpath_vc'] . fs_filehandler::NewLine();
-                    $line .= "# END CRON ID: " . $rowcron['ct_id_pk'] . fs_filehandler::NewLine();
-                }
-            }
-        }
-        if (fs_filehandler::UpdateFile(ctrl_options::GetSystemOption('cron_file'), 0644, $line)) {
-            if (sys_versions::ShowOSPlatformVersion() != "Windows") {
-                $returnValue = ctrl_system::systemCommand(
-                                   ctrl_options::GetSystemOption('zsudo'), array(
-                                      ctrl_options::GetSystemOption('cron_reload_command'),
-                                      ctrl_options::GetSystemOption('cron_reload_flag'),
-                                      ctrl_options::GetSystemOption('cron_reload_user'),
-                                      ctrl_options::GetSystemOption('cron_reload_path'),
-                                   )
-                               );
-            }
-            return true;
-        } else {
-            return false;
-        }
+        WriteCronFile();
     }
 
     static function TranslateTiming($timing)
@@ -308,6 +273,9 @@ class module_controller extends ctrl_module
         }
         if ($timing == "0,10,20,30,40,50 * * * *") {
             $retval = "Every 10 minutes";
+        }
+        if ($timing == "0,20,40 * * * *") {
+            $retval = "Every 20 minutes";
         }
         if ($timing == "0,30 * * * *") {
             $retval = "Every 30 minutes";
