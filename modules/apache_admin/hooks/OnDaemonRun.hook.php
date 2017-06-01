@@ -101,6 +101,22 @@ function WriteVhostConfigFile()
     $line .= 'CustomLog "' . ctrl_options::GetSystemOption('log_dir') . 'sentora-access.log" ' . ctrl_options::GetSystemOption('access_log_format') . fs_filehandler::NewLine();
     $line .= 'CustomLog "' . ctrl_options::GetSystemOption('log_dir') . 'sentora-bandwidth.log" ' . ctrl_options::GetSystemOption('bandwidth_log_format') . fs_filehandler::NewLine();
     $line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
+	// Error documents:- Error pages are added automatically if they are found in the /etc/static/errorpages
+	// directory and if they are a valid error code, and saved in the proper format, i.e. <error_number>.html
+	$errorpages = ctrl_options::GetSystemOption('sentora_root') . "/etc/static/errorpages";
+	if (is_dir($errorpages)) {
+		if ($handle = opendir($errorpages)) {
+			while (($file = readdir($handle)) !== false) {
+				if ($file != "." && $file != "..") {
+					$page = explode(".", $file);
+					if (!fs_director::CheckForEmptyValue(CheckErrorDocument($page[0]))) {
+						$line .= "ErrorDocument " . $page[0] . " /etc/static/errorpages/" . $page[0] . ".html" . fs_filehandler::NewLine();
+					}
+				}
+			}
+			closedir($handle);
+		}
+	}
     $line .= '<Directory "' . ctrl_options::GetSystemOption('sentora_root') . '">' . fs_filehandler::NewLine();
     $line .= "Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
     $line .= "    AllowOverride All" . fs_filehandler::NewLine();
