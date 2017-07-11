@@ -32,7 +32,7 @@ function BuildVhostPortForward($vhostName, $customPort, $userEmail)
     $line = fs_filehandler::NewLine() . fs_filehandler::NewLine();
     $line .= "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
     $line .= "# PORT FORWARD FROM 80 TO: " . $customPort . fs_filehandler::NewLine();
-    $line .= "<virtualhost *:" . ctrl_options::GetSystemOption('sentora_port') . ">" . fs_filehandler::NewLine();
+    $line .= "<virtualhost *:80>" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
     $line .= "ServerAlias www." . $vhostName . fs_filehandler::NewLine();
     $line .= "ServerAdmin " . $userEmail . fs_filehandler::NewLine();
@@ -122,8 +122,7 @@ function WriteVhostConfigFile()
     $line .= "    AllowOverride All" . fs_filehandler::NewLine();
 
     if ((double) sys_versions::ShowApacheVersion() < 2.4) {
-        $line .= "    Order allow,deny" . fs_filehandler::NewLine();
-        $line .= "    Allow from all" . fs_filehandler::NewLine();
+        $line .= "    Require all granted" . fs_filehandler::NewLine();
     } else {
         $line .= "    Require all granted" . fs_filehandler::NewLine();
     }
@@ -201,11 +200,13 @@ function WriteVhostConfigFile()
                 $line .= '<Directory "' . ctrl_options::GetSystemOption('static_dir') . 'diskexceeded">' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "  Require all granted" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
+				// Client custom vh entry
+				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
+				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
                 $line .= "</virtualhost>" . fs_filehandler::NewLine();
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
@@ -234,11 +235,13 @@ function WriteVhostConfigFile()
                 $line .= '<Directory "' . ctrl_options::GetSystemOption('static_dir') . 'bandwidthexceeded">' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "  Require all granted" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
+				// Client custom vh entry
+				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
+				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
                 $line .= "</virtualhost>" . fs_filehandler::NewLine();
                 $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
                 $line .= "################################################################" . fs_filehandler::NewLine();
@@ -266,8 +269,7 @@ function WriteVhostConfigFile()
                 $line .= '<Directory "' . ctrl_options::GetSystemOption('parking_path') . '">' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "  Require all granted" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
                 $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
@@ -337,8 +339,7 @@ function WriteVhostConfigFile()
                 $line .= '<Directory ' . $RootDir . '>' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
                 $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-                $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-                $line .= "  Allow from all" . fs_filehandler::NewLine();
+                $line .= "  Require all granted" . fs_filehandler::NewLine();
                 $line .= "</Directory>" . fs_filehandler::NewLine();
 
                 // Enable Gzip until we set this as an option , we might commenbt this too and allow manual switch
@@ -417,10 +418,12 @@ function WriteVhostConfigFile()
             $line .= '<Directory "' . ctrl_options::GetSystemOption('static_dir') . 'disabled">' . fs_filehandler::NewLine();
             $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
             $line .= "  AllowOverride All" . fs_filehandler::NewLine();
-            $line .= "  Order Allow,Deny" . fs_filehandler::NewLine();
-            $line .= "  Allow from all" . fs_filehandler::NewLine();
+            $line .= "  Require all granted" . fs_filehandler::NewLine();
             $line .= "</Directory>" . fs_filehandler::NewLine();
             $line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
+			// Client custom vh entry
+			$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
+			$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
             $line .= "</virtualhost>" . fs_filehandler::NewLine();
             $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
             $line .= "################################################################" . fs_filehandler::NewLine();
@@ -527,9 +530,6 @@ function TriggerApacheQuotaUsage()
     while ($rowvhost = $sql->fetch()) {
         if ($rowvhost['vh_enabled_in'] == 1 && ctrl_users::CheckUserEnabled($rowvhost['vh_acc_fk']) ||
             $rowvhost['vh_enabled_in'] == 1 && ctrl_options::GetSystemOption('apache_allow_disabled') == strtolower("true")) {
-
-            //$checksize = $zdbh->query("SELECT * FROM x_bandwidth WHERE bd_month_in = " . date("Ym") . " AND bd_acc_fk = " . $rowvhost['vh_acc_fk'] . "")->fetch();
-
             $date = date("Ym");
             $findsize = $zdbh->prepare("SELECT * FROM x_bandwidth WHERE bd_month_in = :date AND bd_acc_fk = :acc");
             $findsize->bindParam(':date', $date);
@@ -542,8 +542,7 @@ function TriggerApacheQuotaUsage()
                 echo "Disk usage over quota, triggering Apache..." . fs_filehandler::NewLine();
                 $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
-
-                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
+				
                 $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_diskcheck_in = 1 WHERE bd_acc_fk = :acc");
                 $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
                 $updateapache2->execute();
@@ -553,7 +552,6 @@ function TriggerApacheQuotaUsage()
                 $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
 
-                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_diskcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
                 $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_diskcheck_in = 0 WHERE bd_acc_fk = :acc");
                 $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
                 $updateapache2->execute();
@@ -563,7 +561,6 @@ function TriggerApacheQuotaUsage()
                 $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
 
-                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 1 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
                 $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_transcheck_in = 1 WHERE bd_acc_fk = :acc");
                 $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
                 $updateapache2->execute();
@@ -573,7 +570,6 @@ function TriggerApacheQuotaUsage()
                 $updateapache = $zdbh->prepare("UPDATE x_settings SET so_value_tx = 'true' WHERE so_name_vc ='apache_changed'");
                 $updateapache->execute();
 
-                //$updateapache = $zdbh->query("UPDATE x_bandwidth SET bd_transcheck_in = 0 WHERE bd_acc_fk =" . $rowvhost['vh_acc_fk'] . "");
                 $updateapache2 = $zdbh->prepare("UPDATE x_bandwidth SET bd_transcheck_in = 0 WHERE bd_acc_fk = :acc");
                 $updateapache2->bindParam(':acc', $rowvhost['vh_acc_fk']);
                 $updateapache2->execute();
