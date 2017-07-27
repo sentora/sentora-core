@@ -10,7 +10,16 @@ echo fs_filehandler::NewLine() . "START Calculating disk Usage for all client ac
 while ($userdir = $userssql->fetch()) {
     $homedirectory = ctrl_options::GetSystemOption('hosted_dir') . $userdir['ac_user_vc'];
     if (fs_director::CheckFolderExists($homedirectory)) {
-        $size = fs_director::GetDirectorySize($homedirectory);
+        $sumzero=0;
+        $idmail=$userdir['ac_id_pk'];
+        $usersmail=$zdbh->query("SELECT DISTINCT vh_acc_fk,vh_name_vc FROM x_vhosts WHERE vh_acc_fk=$idmail");
+        while ($usermaildir = $usersmail->fetch()) {
+          $maildirectory = "/var/sentora/vmail/" . $usermaildir['vh_name_vc'];
+          if (fs_director::CheckFolderExists($maildirectory)) {
+            $sumzero = $sumzero + fs_director::GetDirectorySize($maildirectory);
+          }
+        };
+        $size = $sumzero + fs_director::GetDirectorySize($homedirectory);
     } else {
         $size = 0;
     }
