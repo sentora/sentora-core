@@ -60,6 +60,8 @@ function WriteVhostConfigFile()
     while ($rowport = $portQuery->fetch()) {
         $customPorts[] = (empty($rowport['vh_custom_port_in'])) ? $VHostDefaultPort : $rowport['vh_custom_port_in'];
     }
+    // Adds default vhost port to Listen port array
+    $customPorts[] = $VHostDefaultPort;
     $customPortList = array_unique($customPorts);
 
     /*
