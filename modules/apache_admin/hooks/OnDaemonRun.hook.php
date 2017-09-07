@@ -450,7 +450,7 @@ function WriteVhostConfigFile()
                                     WHERE so_name_vc='apache_changed'");
         $vsql->bindParam(':time', $time);
         $vsql->execute();
-        echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
+        echo "Finished writing Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
 
         $returnValue = 0;
 
@@ -466,7 +466,7 @@ function WriteVhostConfigFile()
             $returnValue = ctrl_system::systemCommand($command, $args);
         }
 
-        echo "Apache reload " . ((0 === $returnValue ) ? "suceeded" : "failed") . "." . fs_filehandler::NewLine();
+        echo "Apache reload " . ((0 === $returnValue ) ? "succeeded" : "failed") . "." . fs_filehandler::NewLine();
     } else {
         return false;
     }
