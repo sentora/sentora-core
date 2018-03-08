@@ -1,5 +1,6 @@
 # Sentora Default 2 Theme #
 /* Sentora Default 2 Theme is based off the original Sentora Default Theme */
+/* Changed left menu bar to show system and account information */
 /* Edited by TGates http://sentora.org/ */
 /* Sentora is a GPL fork of the ZPanel Project */:
 
