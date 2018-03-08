@@ -9,6 +9,7 @@ Thumbs.db
 # Styles
 /etc/styles/*
 !/etc/styles/Sentora_Default/
+!/etc/styles/Sentora_Default_2/
 
 # Apps
 /etc/apps/*
