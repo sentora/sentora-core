@@ -1,0 +1,685 @@
+{
+  "name": "",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
+  "glyphs": [
+    {
+      "search": [
+        "plus"
+      ],
+      "code": 43,
+      "uid": "63e91725cfc5751fe4d772325fd50830",
+      "css": "plus",
+      "orig_css": "plus",
+      "orig_code": 43,
+      "src": "mfglabs",
+      "from": 43
+    },
+    {
+      "search": [
+        "at"
+      ],
+      "code": 64,
+      "uid": "874694a9126e8193bca844356d1b6328",
+      "css": "at",
+      "orig_css": "at",
+      "orig_code": 64,
+      "src": "mfglabs",
+      "from": 64
+    },
+    {
+      "search": [
+        "home"
+      ],
+      "code": 8962,
+      "uid": "513ac180ff85bd275f2b736720cbbf5e",
+      "css": "home",
+      "orig_css": "home",
+      "orig_code": 8962,
+      "src": "entypo",
+      "from": 8962
+    },
+    {
+      "search": [
+        "home"
+      ],
+      "code": 59397,
+      "uid": "d6944e1d9af302093d43b299bbecbbbe02",
+      "file": "home",
+      "css": "home-1",
+      "orig_css": "home",
+      "orig_code": 59397,
+      "src": "iconic",
+      "from": 8962
+    },
+    {
+      "search": [
+        "settings",
+        "cog",
+        "gear",
+        "params"
+      ],
+      "code": 59393,
+      "from": 9881,
+      "uid": "e99461abfef3923546da8d745372c995",
+      "css": "cog-1",
+      "orig_css": "cog",
+      "orig_code": 59393,
+      "src": "fontawesome"
+    },
+    {
+      "search": [
+        "settings",
+        "cog",
+        "gear"
+      ],
+      "code": 9881,
+      "from": 9881,
+      "uid": "26aba7edd46944209b4961670675a813",
+      "css": "cog",
+      "orig_css": "cog",
+      "orig_code": 9881,
+      "src": "websymbols"
+    },
+    {
+      "search": [
+        "attention",
+        "warning",
+        "alert"
+      ],
+      "code": 9888,
+      "from": 9888,
+      "uid": "97ac1a82370ae58f02e4ff1bdc58ee86",
+      "css": "attention",
+      "orig_css": "attention",
+      "orig_code": 9888,
+      "src": "websymbols"
+    },
+    {
+      "search": [
+        "key"
+      ],
+      "code": 9919,
+      "uid": "76fa76eb3472394c9937f7c7734f77b2",
+      "file": "key_stroke",
+      "css": "key-1",
+      "orig_css": "key",
+      "orig_code": 9919,
+      "src": "iconic",
+      "from": 9919
+    },
+    {
+      "search": [
+        "settings",
+        "cog",
+        "gear",
+        "params"
+      ],
+      "code": 9967,
+      "from": 9967,
+      "uid": "98687378abd1faf8f6af97c254eb6cd6",
+      "css": "cog-alt",
+      "orig_css": "cog-alt",
+      "orig_code": 9967,
+      "src": "fontawesome"
+    },
+    {
+      "search": [
+        "mail",
+        "email"
+      ],
+      "code": 9993,
+      "uid": "a17986e457f3d85f26c9c240dfd6a4ba",
+      "css": "mail",
+      "orig_css": "mail",
+      "orig_code": 9993,
+      "src": "mfglabs",
+      "from": 9993
+    },
+    {
+      "search": [
+        "mail",
+        "email"
+      ],
+      "code": 59392,
+      "from": 9993,
+      "uid": "cba6018f5de17c76f70b7d2c06037e5a",
+      "css": "mail-1",
+      "orig_css": "mail",
+      "orig_code": 59392,
+      "src": "websymbols"
+    },
+    {
+      "search": [
+        "pencil",
+        "write",
+        "reply",
+        "edit"
+      ],
+      "code": 9999,
+      "uid": "0299bec28699eedda42f46c77239393e",
+      "css": "pencil",
+      "orig_css": "pencil",
+      "orig_code": 9999,
+      "src": "mfglabs",
+      "from": 9999
+    },
+    {
+      "search": [
+        "add",
+        "list"
+      ],
+      "code": 57347,
+      "uid": "97bd5542ed3e143d2ee9b60e14487615",
+      "css": "list-add",
+      "orig_css": "list-add",
+      "orig_code": 57347,
+      "src": "entypo",
+      "from": 57347
+    },
+    {
+      "search": [
+        "gift",
+        "present",
+        "package",
+        "box"
+      ],
+      "code": 57527,
+      "uid": "5e5a88921aa39b292bdd56c3b9c923d3",
+      "css": "gift",
+      "orig_css": "gift",
+      "orig_code": 57527,
+      "src": "elusive",
+      "from": 57527
+    },
+    {
+      "search": [
+        "help",
+        "question"
+      ],
+      "code": 59140,
+      "uid": "de9a631a7d18106aea1c89ba51b1990a",
+      "css": "help-circled",
+      "orig_css": "help-circled",
+      "orig_code": 59140,
+      "src": "entypo",
+      "from": 59140
+    },
+    {
+      "search": [
+        "eye",
+        "subscribe"
+      ],
+      "code": 59146,
+      "uid": "25fc99a30fecc4021fdcae5fff5ba9ac",
+      "css": "eye",
+      "orig_css": "eye",
+      "orig_code": 59146,
+      "src": "entypo",
+      "from": 59146
+    },
+    {
+      "search": [
+        "document",
+        "article"
+      ],
+      "code": 59189,
+      "from": 59189,
+      "uid": "pzy4lq1ak4datbxpdfj3ya74vjfhwxg1",
+      "css": "article-alt",
+      "orig_css": "article-alt",
+      "orig_code": 59189,
+      "src": "modernpics"
+    },
+    {
+      "search": [
+        "rss"
+      ],
+      "code": 59194,
+      "from": 59194,
+      "uid": "26f5aa38f3889213334b3990b4ad483b",
+      "css": "rss",
+      "orig_css": "rss",
+      "orig_code": 59194,
+      "src": "websymbols"
+    },
+    {
+      "search": [
+        "rss"
+      ],
+      "code": 59195,
+      "uid": "d6a9fe8ceb1a852d925452694691a41d",
+      "file": "rss",
+      "css": "rss-alt",
+      "orig_css": "rss-alt",
+      "orig_code": 59195,
+      "src": "iconic",
+      "from": 59195
+    },
+    {
+      "search": [
+        "database"
+      ],
+      "code": 59220,
+      "from": 59220,
+      "uid": "248db7c0563d8cee80b7041f7736dcad",
+      "css": "database",
+      "orig_css": "database",
+      "orig_code": 59220,
+      "src": "entypo"
+    },
+    {
+      "search": [
+        "broadcast",
+        "wifi",
+        "signal"
+      ],
+      "code": 59248,
+      "from": 59248,
+      "uid": "e6t4yvmv401e9gpo2anslq4uqy2iz692",
+      "css": "signal-1",
+      "orig_css": "signal",
+      "orig_code": 59248,
+      "src": "modernpics"
+    },
+    {
+      "search": [
+        "flow",
+        "tree",
+        "junction"
+      ],
+      "code": 59282,
+      "from": 59282,
+      "uid": "8a1d446e5555e76f82ddb1c8b526f579",
+      "css": "flow-tree",
+      "orig_css": "flow-tree",
+      "orig_code": 59282,
+      "src": "entypo"
+    },
+    {
+      "search": [
+        "equalizer"
+      ],
+      "code": 59285,
+      "uid": "e3699d145bd628d2a35d4a508b616f0c",
+      "file": "equalizer",
+      "css": "equalizer",
+      "orig_css": "equalizer",
+      "orig_code": 59285,
+      "src": "iconic",
+      "from": 59285
+    },
+    {
+      "search": [
+        "paper",
+        "plane",
+        "fly"
+      ],
+      "code": 59291,
+      "from": 59291,
+      "uid": "db112402805d9dadc01ce009fbfdb914",
+      "css": "paper-plane",
+      "orig_css": "paper-plane",
+      "orig_code": 59291,
+      "src": "entypo"
+    },
+    {
+      "search": [
+        "paint",
+        "layers"
+      ],
+      "code": 59293,
+      "uid": "d2c499942f8a7c037d5a94f123eeb478",
+      "file": "layers",
+      "css": "layers",
+      "orig_css": "layers",
+      "orig_code": 59293,
+      "src": "iconic",
+      "from": 59293
+    },
+    {
+      "search": [
+        "chart",
+        "pie",
+        "diagram"
+      ],
+      "code": 59298,
+      "uid": "ff1cd67dfb30d12965d950e8a609c31f",
+      "file": "chart",
+      "css": "chart-pie",
+      "orig_css": "chart-pie",
+      "orig_code": 59298,
+      "src": "iconic",
+      "from": 59298
+    },
+    {
+      "search": [
+        "terminal",
+        "prompt"
+      ],
+      "code": 59308,
+      "from": 59308,
+      "uid": "e92e6cad2da0ee4bc374a1ef4c6ab12b",
+      "css": "terminal",
+      "orig_css": "terminal",
+      "orig_code": 59308,
+      "src": "websymbols"
+    },
+    {
+      "search": [
+        "arrow",
+        "down"
+      ],
+      "code": 61444,
+      "uid": "d9be617b7f2fe7843118ca2d3a1b8cca",
+      "css": "down-open",
+      "orig_css": "down-open",
+      "orig_code": 61444,
+      "src": "mfglabs",
+      "from": 61444
+    },
+    {
+      "search": [
+        "arrow",
+        "up"
+      ],
+      "code": 61445,
+      "uid": "440e148d0e21100118eae7036bcd2067",
+      "css": "up-open",
+      "orig_css": "up-open",
+      "orig_code": 61445,
+      "src": "mfglabs",
+      "from": 61445
+    },
+    {
+      "search": [
+        "upload",
+        "cloud"
+      ],
+      "code": 61460,
+      "uid": "cb0d73e6d41217d85fc81cea45dd6e91",
+      "css": "upload-cloud",
+      "orig_css": "upload-cloud",
+      "orig_code": 61460,
+      "src": "mfglabs",
+      "from": 61460
+    },
+    {
+      "search": [
+        "data",
+        "network"
+      ],
+      "code": 61462,
+      "uid": "14c9e8bd3e747ecb08cae42f5564a671",
+      "css": "data-science",
+      "orig_css": "data-science",
+      "orig_code": 61462,
+      "src": "mfglabs",
+      "from": 61462
+    },
+    {
+      "search": [
+        "globe"
+      ],
+      "code": 61464,
+      "uid": "117d7f4e196f826847929c6550734615",
+      "css": "globe",
+      "orig_css": "globe",
+      "orig_code": 61464,
+      "src": "mfglabs",
+      "from": 61464
+    },
+    {
+      "search": [
+        "user",
+        "male"
+      ],
+      "code": 61538,
+      "uid": "e5fdc4247f1f9b3bf98d20a954e1327c",
+      "css": "user-male",
+      "orig_css": "user-male",
+      "orig_code": 61538,
+      "src": "mfglabs",
+      "from": 61538
+    },
+    {
+      "search": [
+        "users",
+        "contacts",
+        "friends"
+      ],
+      "code": 61540,
+      "uid": "05ef9b5e8742971aa85b23cfcbe71594",
+      "css": "users",
+      "orig_css": "users",
+      "orig_code": 61540,
+      "src": "mfglabs",
+      "from": 61540
+    },
+    {
+      "search": [
+        "folder"
+      ],
+      "code": 61543,
+      "uid": "c619e17229d6c874dfc70be359b6b3f1",
+      "css": "folder",
+      "orig_css": "folder",
+      "orig_code": 61543,
+      "src": "mfglabs",
+      "from": 61543
+    },
+    {
+      "search": [
+        "folder"
+      ],
+      "code": 61544,
+      "uid": "8e6b311d40f1002fd6de7d1bdfdc7f17",
+      "css": "folder-open",
+      "orig_css": "folder-open",
+      "orig_code": 61544,
+      "src": "mfglabs",
+      "from": 61544
+    },
+    {
+      "search": [
+        "beaker"
+      ],
+      "code": 61635,
+      "uid": "0f444c61b0d2c9966016d7ddb12f5837",
+      "css": "beaker",
+      "orig_css": "beaker",
+      "orig_code": 61635,
+      "src": "fontawesome",
+      "from": 61635
+    },
+    {
+      "search": [
+        "sitemap"
+      ],
+      "code": 61672,
+      "uid": "6fe95ffc3c807e62647d4f814a96e0d7",
+      "css": "sitemap",
+      "orig_css": "sitemap",
+      "orig_code": 61672,
+      "src": "fontawesome",
+      "from": 61672
+    },
+    {
+      "search": [
+        "desktop",
+        "screen",
+        "monitor"
+      ],
+      "code": 61704,
+      "uid": "757afacc32d82967975cbb3b45cfb41b",
+      "css": "desktop",
+      "orig_css": "desktop",
+      "orig_code": 61704,
+      "src": "fontawesome",
+      "from": 61704
+    },
+    {
+      "search": [
+        "folder"
+      ],
+      "code": 61716,
+      "uid": "b091a8bd0fdade174951f17d936f51e4",
+      "css": "folder-empty",
+      "orig_css": "folder-empty",
+      "orig_code": 61716,
+      "src": "fontawesome",
+      "from": 61716
+    },
+    {
+      "search": [
+        "lock"
+      ],
+      "code": 62736,
+      "uid": "b10e25220faa78c808527a4ba8b5c0f9",
+      "css": "lock-alt",
+      "orig_css": "lock-alt",
+      "orig_code": 62736,
+      "src": "mfglabs",
+      "from": 62736
+    },
+    {
+      "search": [
+        "lock",
+        "open",
+        "unlock"
+      ],
+      "code": 62739,
+      "uid": "e67bcab050d99eb04d44027139ae05f5",
+      "css": "lock-open",
+      "orig_css": "lock-open",
+      "orig_code": 62739,
+      "src": "mfglabs",
+      "from": 62739
+    },
+    {
+      "search": [
+        "attention",
+        "warning",
+        "alert"
+      ],
+      "code": 128165,
+      "uid": "39a5a0d7ce8342d149373b2ce219503a",
+      "css": "alert",
+      "orig_css": "alert",
+      "orig_code": 128165,
+      "src": "entypo",
+      "from": 128165
+    },
+    {
+      "search": [
+        "chart",
+        "bar",
+        "diagram"
+      ],
+      "code": 128202,
+      "uid": "7d90b6cb3f3783170a96b09e5f0de6d5",
+      "css": "chart-bar",
+      "orig_css": "chart-bar",
+      "orig_code": 128202,
+      "src": "entypo",
+      "from": 128202
+    },
+    {
+      "search": [
+        "chart",
+        "bar",
+        "diagram"
+      ],
+      "code": 59394,
+      "from": 128202,
+      "uid": "266d5d9adf15a61800477a5acf9a4462",
+      "css": "chart-bar-1",
+      "orig_css": "chart-bar",
+      "orig_code": 59394,
+      "src": "fontawesome"
+    },
+    {
+      "search": [
+        "chart",
+        "bar",
+        "diagram"
+      ],
+      "code": 59396,
+      "uid": "f1ecd8633b0ec659877c02cd796df1fd",
+      "file": "bars",
+      "css": "chart-bar-2",
+      "orig_css": "chart-bar",
+      "orig_code": 59396,
+      "src": "iconic",
+      "from": 128202
+    },
+    {
+      "search": [
+        "book",
+        "doc"
+      ],
+      "code": 128214,
+      "uid": "51727ca007aa35ceabcaffc28934faee",
+      "css": "book-open",
+      "orig_css": "book-open",
+      "orig_code": 128214,
+      "src": "entypo",
+      "from": 128214
+    },
+    {
+      "search": [
+        "chart",
+        "bar",
+        "diagram",
+        "signal",
+        "wifi"
+      ],
+      "code": 128246,
+      "from": 128246,
+      "uid": "af3a08c6f521a065252ee35392864e15",
+      "css": "signal",
+      "orig_css": "signal",
+      "orig_code": 128246,
+      "src": "websymbols"
+    },
+    {
+      "search": [
+        "key"
+      ],
+      "code": 59395,
+      "uid": "c6ecc52b6db2a649a08ff54e5ea62886",
+      "file": "key_fill",
+      "css": "key-inv",
+      "orig_css": "key-inv",
+      "orig_code": 59395,
+      "src": "iconic",
+      "from": 128273
+    },
+    {
+      "search": [
+        "settings",
+        "wrench"
+      ],
+      "code": 128295,
+      "from": 128295,
+      "uid": "i7r8vgyqewsy2rlx0xhawybpw5uyss3z",
+      "css": "wrench",
+      "orig_css": "wrench",
+      "orig_code": 128295,
+      "src": "typicons"
+    },
+    {
+      "search": [
+        "clock",
+        "time"
+      ],
+      "code": 128340,
+      "from": 128340,
+      "uid": "598a5f2bcf3521d1615de8e1881ccd17",
+      "css": "clock",
+      "orig_css": "clock",
+      "orig_code": 128340,
+      "src": "fontawesome"
+    }
+  ]
+}
