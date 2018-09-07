@@ -8,7 +8,7 @@
  * @package   PSI Android OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.Linux.inc.php 712 2012-12-05 14:09:18Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,12 +20,35 @@
  * @package   PSI Android OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
 class Android extends Linux
 {
+    /**
+     * holds the data from /system/build.prop file
+     *
+     * @var string
+     */
+    private $_buildprop = null;
+
+    /**
+     * reads the data from /system/build.prop file
+     *
+     * @return string
+     */
+    private function _get_buildprop()
+    {
+        if ($this->_buildprop === null) {
+           if (!CommonFunctions::rfts('/system/build.prop', $this->_buildprop, 0, 4096, false)) {
+               CommonFunctions::rfts('/system//build.prop', $this->_buildprop, 0, 4096, false); //fix some access issues
+           }
+        }
+
+        return $this->_buildprop;
+    }
+
     /**
      * call parent constructor
      */
@@ -42,7 +65,7 @@ class Android extends Linux
     private function _kernel()
     {
         if (CommonFunctions::rfts('/proc/version', $strBuf, 1)) {
-            if (preg_match('/version (.*?) /', $strBuf, $ar_buf)) {
+            if (preg_match('/version\s+(\S+)/', $strBuf, $ar_buf)) {
                 $result = $ar_buf[1];
                 if (preg_match('/SMP/', $strBuf)) {
                     $result .= ' (SMP)';
@@ -57,7 +80,7 @@ class Android extends Linux
      *
      * @return void
      */
-    private function _users()
+    protected function _users()
     {
         $this->sys->setUsers(1);
     }
@@ -69,7 +92,8 @@ class Android extends Linux
      */
     private function _filesystems()
     {
-        if (CommonFunctions::executeProgram('df', '2>/dev/null ', $df, PSI_DEBUG)) {
+        $notwas = true;
+        if (CommonFunctions::executeProgram('df', '2>/dev/null ', $df, PSI_DEBUG) && preg_match("/\s+[0-9\.]+[KMGT]\s+/", $df)) {
             $df = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
             if (CommonFunctions::executeProgram('mount', '', $mount, PSI_DEBUG)) {
                 $mount = preg_split("/\n/", $mount, -1, PREG_SPLIT_NO_EMPTY);
@@ -130,8 +154,15 @@ class Android extends Linux
                             }
                         }
                         $this->sys->setDiskDevices($dev);
+                        $notwas = false;
                     }
                 }
+            }
+        }
+        if ($notwas) { // try Linux df style
+            $arrResult = Parser::df("-P 2>/dev/null", false);
+            foreach ($arrResult as $dev) {
+                $this->sys->setDiskDevices($dev);
             }
         }
     }
@@ -141,11 +172,10 @@ class Android extends Linux
      *
      * @return void
      */
-    private function _distro()
+    protected function _distro()
     {
         $buf = "";
-        if (CommonFunctions::rfts('/system/build.prop', $lines, 0, 4096, false)
-            && preg_match('/^ro\.build\.version\.release=([^\n]+)/m', $lines, $ar_buf)) {
+        if (($lines = $this->_get_buildprop()) && preg_match('/^ro\.build\.version\.release=([^\n]+)/m', $lines, $ar_buf)) {
                 $buf = trim($ar_buf[1]);
         }
         if (is_null($buf) || ($buf == "")) {
@@ -168,12 +198,12 @@ class Android extends Linux
      */
     private function _machine()
     {
-        if (CommonFunctions::rfts('/system/build.prop', $lines, 0, 4096, false)) {
+        if ($lines = $this->_get_buildprop()) {
             $buf = "";
-            if (preg_match('/^ro\.product\.manufacturer=([^\n]+)/m', $lines, $ar_buf)) {
+            if (preg_match('/^ro\.product\.manufacturer=([^\n]+)/m', $lines, $ar_buf) && (trim($ar_buf[1]) !== "unknown")) {
                 $buf .= ' '.trim($ar_buf[1]);
             }
-            if (preg_match('/^ro\.product\.model=([^\n]+)/m', $lines, $ar_buf) && (trim($buf) !== trim($ar_buf[1]))) {
+            if (preg_match('/^ro\.product\.model=([^\n]+)/m', $lines, $ar_buf) && (trim($ar_buf[1]) !== trim($buf))) {
                 $buf .= ' '.trim($ar_buf[1]);
             }
             if (preg_match('/^ro\.semc\.product\.name=([^\n]+)/m', $lines, $ar_buf)) {
@@ -188,7 +218,7 @@ class Android extends Linux
     /**
      * PCI devices
      *
-     * @return array
+     * @return void
      */
     private function _pci()
     {
@@ -206,26 +236,6 @@ class Android extends Linux
     }
 
     /**
-     * USB devices
-     *
-     * @return array
-     */
-    private function _usb()
-    {
-        if (file_exists('/dev/bus/usb') && CommonFunctions::executeProgram('lsusb', '', $bufr, false)) {
-            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
-            foreach ($bufe as $buf) {
-                $device = preg_split("/ /", $buf, 6);
-                if (isset($device[5]) && trim($device[5]) != "") {
-                    $dev = new HWDevice();
-                    $dev->setName(trim($device[5]));
-                    $this->sys->setUsbDevices($dev);
-                }
-            }
-        }
-    }
-
-    /**
      * get the information
      *
      * @see PSI_Interface_OS::build()
@@ -234,20 +244,30 @@ class Android extends Linux
      */
     public function build()
     {
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_machine();
-        $this->_uptime();
-        $this->_users();
-        $this->_cpuinfo();
-        $this->_pci();
-        $this->_usb();
-        $this->_i2c();
-        $this->_network();
-        $this->_memory();
-        $this->_filesystems();
-        $this->_loadavg();
-        $this->_processes();
+        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
+            $this->_processes();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='hardware') {
+            $this->_machine();
+            $this->_cpuinfo();
+            $this->_pci();
+            $this->_usb();
+            $this->_i2c();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
+            $this->_network();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='memory') {
+            $this->_memory();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='filesystem') {
+            $this->_filesystems();
+        }
     }
 }

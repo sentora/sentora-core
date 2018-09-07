@@ -1,6 +1,6 @@
 /* 
 Copyright: Paul Hanlon
-
+version 2009-06-22+statefix+spanfix+altfix
 Released under the MIT/BSD licence which means you can do anything you want 
 with it, as long as you keep this copyright notice on the page 
 */
@@ -15,17 +15,17 @@ with it, as long as you keep this copyright notice on the page
 	},
     buildText = function(parno, preStr){//Recursively build up the text for the images that make it work
       var mp=mapa[parno], ro=0, pre="", pref, img;
-      for (var y=0,yl=mp.length;y<yl;y++){
+      if (mp!==undefined) for (var y=0,yl=mp.length;y<yl;y++){
         ro = mp[y];
         if (mapa[ro]){//It's a parent as well. Build it's string and move on to it's children
           pre=(y==yl-1)? opts.blankImg: opts.vertLineImg;
           img=(y==yl-1)? opts.lastOpenImg: opts.openImg;
-          mapb[ro-1] = preStr + '<span class="treeimg"><img src="'+img+'" class="parimg" id="'+tid+ro+'"></span>';
-          pref = preStr + '<span class="treeimg"><img src="'+pre+'" class="preimg"></span>';
+          mapb[ro-1] = preStr + '<span class="treeimg"><img src="'+img+'" alt="" class="parimg" id="'+tid+ro+'"></span>';
+          pref = preStr + '<span class="treeimg"><img src="'+pre+'" alt="" class="preimg"></span>';
           arguments.callee(ro, pref);
         }else{//it's a child
           img = (y==yl-1)? opts.lastLeafImg: opts.leafImg;//It's the last child, It's child will have a blank field behind it
-          mapb[ro-1] = preStr + '<span class="treeimg"><img src="'+img+'" class="ttimage" id="'+tid+ro+'"></span>';
+          mapb[ro-1] = preStr + '<span class="treeimg"><img src="'+img+'" alt="" class="ttimage" id="'+tid+ro+'"></span>';
         }
       }
     },

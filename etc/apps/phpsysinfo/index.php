@@ -9,21 +9,10 @@
  * @package   PSI
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: index.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
- * Only allow authenticated Sentora users
- * Please ensure this code is added when updating phpSysInfo
- */
-session_start();
-if (!isset($_SESSION['zpuid'])) {
-    header('HTTP/1.0 403 Forbidden');
-    die('<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>Forbidden</title></head><body><h1>Forbidden</h1><p>You don\'t have permission to access phpSysInfo on this server.</p></body></html>');
-}
-
 /**
  * define the application root path on the webserver
  * @var string
@@ -38,8 +27,8 @@ define('APP_ROOT', dirname(__FILE__));
  */
 define('PSI_INTERNAL_XML', false);
 
-if (version_compare("5.2", PHP_VERSION, ">")) {
-    die("PHP 5.2 or greater is required!!!");
+if (version_compare("5.1.3", PHP_VERSION, ">")) {
+    die("PHP 5.1.3 or greater is required!!!");
 }
 if (!extension_loaded("pcre")) {
     die("phpSysInfo requires the pcre extension to php in order to work properly.");
@@ -68,7 +57,7 @@ case "dynamic":
     $webpage->run();
     break;
 case "xml":
-    $webpage = new WebpageXML(true, null);
+    $webpage = new WebpageXML(true);
     $webpage->run();
     break;
 case "bootstrap":

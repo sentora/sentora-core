@@ -3,6 +3,105 @@ Changelog of phpSysInfo
 
 http://phpsysinfo.sourceforge.net/
 
+phpSysInfo 3.2.10
+----------------
+ - [UPD] jQuery 3.3.1
+
+ - [ADD] NuTyX to detected distros
+
+ - [FIX] Raid plugin - fixed zpool analize
+
+phpSysInfo 3.2.9
+----------------
+ - [UPD] Greek Translation gr.xml
+
+ - [ADD] BAT plugin - Model, Manufacturer and Serial Number information
+ - [ADD] BAT plugin - SHOW_SERIAL and UPOWER option
+ - [ADD] Springdale Linux to detected distros
+
+ - [NEW] SHOW_DEVICES_INFOS and SHOW_DEVICES_SERIAL options
+ - [NEW] Thinkpad - Lenovo Thinkpad sensors monitoring for Linux
+ - [NEW] StableBit plugin - StableBit Scanner info
+ - [NEW] HyperV plugin - Hyper-V info
+ - [NEW] Raid plugin - software, fake, zpool and megaraid RAID status
+
+ - [DEL] Removed deprecated MDStatus and DMRaid plugins
+
+phpSysInfo 3.2.8
+----------------
+ - [UPD] jQuery 3.2.1
+ - [UPD] French Translation fr.xml
+ - [UPD] CPU usage on WinNT
+ - [UPD] Ukrainian Translation uk.xml
+
+ - [FIX] Fixed incorrect network usage on FreeBSD 11
+ - [FIX] Fixed healthd sensors
+ - [FIX] Fixed displaying for code pages windows-932, windows-949 and windows-950 for WinNT
+
+ - [ADD] Container Linux, PureOS, OpenELEC, LibreELEC and Lakka to detected distros
+ - [ADD] FreeIPMI, IPMItool and IPMIutil other information
+ - [ADD] PS plugin - CPU usage
+ - [ADD] PS plugin - MEMORY_USAGE, CPU_USAGE and SHOW_PID1CHILD_EXPANDED options
+ - [ADD] SMART plugin - WMI access for WinNT
+
+ - [NEW] DATETIME_FORMAT option
+ - [NEW] BLOCKS option - order of data blocks
+ - [NEW] SHOW_NETWORK_ACTIVE_SPEED option
+ - [NEW] Ability to generate only part of the data
+ - [NEW] LOAD_BAR compact mode option
+ - [NEW] PingTest plugin
+
+ - [DEL] Removed deprecated IPMIinfo plugin
+
+phpSysInfo 3.2.7
+----------------
+ - [UPD] jQuery 3.1.1
+ - [UPD] Network interfaces info for WinNT
+ - [UPD] Turkish Translation tr.xml
+ - [UPD] Greek Translation gr.xml
+ - [UPD] Korean Translation ko.xml
+ - [UPD] Ukrainian Translation uk.xml
+
+ - [ADD] Devuan and SalentOS to detected distros
+ - [ADD] HIDE_NETWORK_MACADDR option
+
+ - [NEW] Raspberry Pi detection on Linux
+
+phpSysInfo 3.2.6
+----------------
+ - [UPD] jQuery 3.1.0 and jQuery 1.12.4
+ - [UPD] bootstrap 3.3.7
+ - [UPD] Swedish Translation sv.xml
+ - [UPD] Norwegian Translation no.xml
+
+ - [ADD] NeoKylin and Void to detected distros
+ - [ADD] schabau and lingruby template
+ - [ADD] DMRaid plugin - FreeBSD graid info
+ - [ADD] SNMPPInfo plugin - support for Ricoh printers
+ - [ADD] UpdateNotifier plugin - ACCESS option
+
+ - [NEW] sudo commands list
+ - [NEW] plugin Iptables - iptables rules list
+
+phpSysInfo 3.2.5
+----------------
+ - [UPD] jQuery 2.2.0 and jQuery 1.12.0
+
+ - [ADD] Show network interfaces infos for NetBSD and OpenBSD
+ - [ADD] SHOW_NETWORK_INFOS_EXPANDED option
+ - [ADD] SHOW_MEMORY_INFOS_EXPANDED option
+ - [ADD] QTS, OpenMamba and HipServ to detected distros
+ - [ADD] SNMPups - monitoring UPS via SNMP
+
+ - [NEW] reloading plugins also for frontend "bootstrap"
+ - [NEW] Network speed info on WinNT, Linux, Android, Darwin, NetBSD, OpenBSD and FreeBSD
+ - [NEW] Coretemp monitoring also on Linux
+ - [NEW] QTSsnmp - SNMP sensors monitoring for QTS Linux
+ - [NEW] Hwmon - sensors monitoring for Linux
+ - [NEW] SpeedFan - sensors monitoring for WinNT
+ - [NEW] Separate configuration sections for motherboard monitoring sensors programs
+ - [NEW] List of IP addresses of clients authorized to run
+
 phpSysInfo 3.2.4
 ----------------
  - [ADD] Solus to detected distros
@@ -147,7 +246,7 @@ phpSysInfo 3.1.10
 phpSysInfo 3.1.9
 ----------------
 
- - [NEW] New plugin DMRaid - software raid status
+ - [NEW] plugin DMRaid - software raid status
 
  - [ADD] Calculate, Tails, SMEServer, Semplice, SolydXK, Parsix, RedFlag, Amazon, Korora, OpenMandriva, SteamOS, ROSA Enterprise Server and ROSA Desktop Fresh to detected distros
 
