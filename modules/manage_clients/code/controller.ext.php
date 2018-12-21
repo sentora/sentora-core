@@ -681,13 +681,14 @@ class module_controller extends ctrl_module
         return true;
     }
 
-    static function IsValidEmail($email)
-    {
-        if (!preg_match('/^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}$/i', $email)) {
-            return false;
-        }
-        return true;
-    }
+	static function IsValidEmail($email)
+	{
+		if (!filter_var($email, FILTER_SANITIZE_EMAIL))
+				return false;
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+				return false;
+		return true;
+	}
 
     static function IsValidUserName($username)
     {
