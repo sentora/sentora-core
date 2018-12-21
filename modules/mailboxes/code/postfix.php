@@ -134,6 +134,25 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
     $sql = $mail_db->prepare("DELETE FROM alias WHERE address=:mb_address_vc");
     $sql->bindParam(':mb_address_vc', $rowmailbox['mb_address_vc']);
     $sql->execute();
+	
+   // If no more mailboxes or aliases for the domain exist, delete the domain to
+   // prevent Postfix using a local route when sending to this domain in future
+
+   $domaincheck = explode("@", $rowmailbox['mb_address_vc']);
+   $sql = $mail_db->prepare("SELECT * FROM mailbox WHERE domain=:domain");
+   $sql->bindParam(':domain', $domaincheck[1]);
+   $sql->execute();
+   $mailboxresult = $sql->fetch();
+   $sql = $mail_db->prepare("SELECT * FROM alias WHERE domain=:domain");
+   $sql->bindParam(':domain', $domaincheck[1]);
+   $sql->execute();
+   $aliasresult = $sql->fetch();
+
+   if (!$mailboxresult && !$aliasresult) {
+       $sql = $mail_db->prepare("DELETE FROM domain WHERE domain=:domain");
+       $sql->bindParam(':domain', $domaincheck[1]);
+       $sql->execute();
+   }
 }
 
 //Saving PostFix Mailboxes

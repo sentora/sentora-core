@@ -38,7 +38,7 @@ try {
 
 
 
-// Deleting Postfix Distubution List
+// Deleting Postfix Distribution List
 if (!fs_director::CheckForEmptyValue(self::$delete)) {
     //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
     $numrows = $mail_db->prepare("SELECT address FROM alias WHERE address=:dl_address_vc");
@@ -51,9 +51,28 @@ if (!fs_director::CheckForEmptyValue(self::$delete)) {
         $sql->bindParam(':dl_address_vc', $rowdl['dl_address_vc']);
         $sql->execute();
     }
+
+   // If no more mailboxes or aliases for the domain exist, delete the domain to
+   // prevent Postfix using a local route when sending to this domain in future
+
+   $domaincheck = explode("@", $rowdl['dl_address_vc']);
+   $sql = $mail_db->prepare("SELECT * FROM mailbox WHERE domain=:domain");
+   $sql->bindParam(':domain', $domaincheck[1]);
+   $sql->execute();
+   $mailboxresult = $sql->fetch();
+   $sql = $mail_db->prepare("SELECT * FROM alias WHERE domain=:domain");
+   $sql->bindParam(':domain', $domaincheck[1]);
+   $sql->execute();
+   $aliasresult = $sql->fetch();
+
+   if (!$mailboxresult && !$aliasresult) {
+       $sql = $mail_db->prepare("DELETE FROM domain WHERE domain=:domain");
+       $sql->bindParam(':domain', $domaincheck[1]);
+       $sql->execute();
+   }
 }
 
-// Adding Postfix Distubution List
+// Adding Postfix Distribution List
 if (!fs_director::CheckForEmptyValue(self::$create)) {
     //$result = $mail_db->query("SELECT address FROM alias WHERE address='" . $fulladdress . "'")->Fetch();
     $numrows = $mail_db->prepare("SELECT address FROM alias WHERE address=:fulladdress");
@@ -80,7 +99,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
     }
 }
 
-// Deleting Postfix Distubution List User
+// Deleting Postfix Distribution List User
 if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
     //$result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
     $numrows = $mail_db->prepare("SELECT * FROM alias WHERE address=:dl_address_vc");
@@ -99,7 +118,7 @@ if (!fs_director::CheckForEmptyValue(self::$deleteuser)) {
     }
 }
 
-// Adding Postfix Distubution List User
+// Adding Postfix Distribution List User
 if (!fs_director::CheckForEmptyValue(self::$createuser)) {
     //$result = $mail_db->query("SELECT * FROM alias WHERE address='" . $rowdl['dl_address_vc'] . "'")->Fetch();
     $numrows = $mail_db->prepare("SELECT * FROM alias WHERE address=:dl_address_vc");
