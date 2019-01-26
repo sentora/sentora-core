@@ -8,7 +8,7 @@
  * @package   PSI_UPS
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.apcupsd.inc.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,7 +20,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @author    Artem Volk <artvolk@mail.ru>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -29,7 +29,7 @@ class Apcupsd extends UPS
     /**
      * internal storage for all gathered data
      *
-     * @var Array
+     * @var array
      */
     private $_output = array();
 
@@ -75,7 +75,7 @@ class Apcupsd extends UPS
                 $dev->setName(trim($data[1]));
             }
             if (preg_match('/^MODEL\s*:\s*(.*)$/m', $ups, $data)) {
-                $model=trim($data[1]);
+                $model = trim($data[1]);
                 if (preg_match('/^APCMODEL\s*:\s*(.*)$/m', $ups, $data)) {
                     $dev->setModel($model.' ('.trim($data[1]).')');
                 } else {
@@ -92,7 +92,10 @@ class Apcupsd extends UPS
                 $dev->setStatus(trim($data[1]));
             }
             if (preg_match('/^ITEMP\s*:\s*(.*)$/m', $ups, $data)) {
-                $dev->setTemperatur(trim($data[1]));
+                $temperatur = trim($data[1]);
+                if (($temperatur !== "-273.1 C") && ($temperatur !== "-273.1 C Internal")) {
+                    $dev->setTemperatur($temperatur);
+                }
             }
             // Outages
             if (preg_match('/^NUMXFERS\s*:\s*(.*)$/m', $ups, $data)) {

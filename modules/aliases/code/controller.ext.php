@@ -288,7 +288,8 @@ class module_controller extends ctrl_module
     
     static function IsValidDomain($domain)
     {
-         foreach(self::getDomainList() as $key => $checkDomain){
+	 $currentuser = ctrl_users::GetUserDetail();   
+         foreach(self::getDomainList($currentuser['userid']) as $key => $checkDomain){
             if(array_key_exists('domain', $checkDomain) && $checkDomain['domain'] == $domain){
                 return true;
             }

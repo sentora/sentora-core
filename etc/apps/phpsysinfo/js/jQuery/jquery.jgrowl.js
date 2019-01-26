@@ -1,5 +1,5 @@
 /**
- * jGrowl 1.2.6+jquery1.9fix
+ * jGrowl 1.2.6+jquery1.9fix+jquery3fix+bindfix
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
@@ -110,7 +110,7 @@
 	/** jGrowl Wrapper - Establish a base jGrowl Container for compatibility with older releases. **/
 	$.jGrowl = function( m , o ) {
 		// To maintain compatibility with older version that only supported one instance we'll create the base container.
-		if ( $('#jGrowl').size() == 0 ) 
+		if ( $('#jGrowl').length == 0 ) 
 			$('<div id="jGrowl"></div>').addClass( (o && o.position) ? o.position : $.jGrowl.defaults.position ).appendTo('body');
 
 		// Create a notification on the container.
@@ -214,21 +214,21 @@
 				'<div class="jGrowl-close">' + o.closeTemplate + '</div>' +
 				'<div class="jGrowl-header">' + o.header + '</div>' +
 				'<div class="jGrowl-message">' + message + '</div></div>'
-			).data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
+			).data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').on("click.jGrowl", function() {
 				$(this).parent().trigger('jGrowl.close');
 			}).parent();
 
 
 			/** Notification Actions **/
-			$(notification).bind("mouseover.jGrowl", function() {
+			$(notification).on("mouseover.jGrowl", function() {
 				$('div.jGrowl-notification', self.element).data("jGrowl.pause", true);
-			}).bind("mouseout.jGrowl", function() {
+			}).on("mouseout.jGrowl", function() {
 				$('div.jGrowl-notification', self.element).data("jGrowl.pause", false);
-			}).bind('jGrowl.beforeOpen', function() {
+			}).on('jGrowl.beforeOpen', function() {
 				if ( o.beforeOpen.apply( notification , [notification,message,o,self.element] ) != false ) {
 					$(this).trigger('jGrowl.open');
 				}
-			}).bind('jGrowl.open', function() {
+			}).on('jGrowl.open', function() {
 				if ( o.open.apply( notification , [notification,message,o,self.element] ) != false ) {
 					if ( o.glue == 'after' ) {
 						$('div.jGrowl-notification:last', self.element).after(notification);
@@ -247,12 +247,12 @@
 						$(this).trigger('jGrowl.afterOpen');
 					});
 				}
-			}).bind('jGrowl.afterOpen', function() {
+			}).on('jGrowl.afterOpen', function() {
 				o.afterOpen.apply( notification , [notification,message,o,self.element] );
-			}).bind('jGrowl.beforeClose', function() {
+			}).on('jGrowl.beforeClose', function() {
 				if ( o.beforeClose.apply( notification , [notification,message,o,self.element] ) != false )
 					$(this).trigger('jGrowl.close');
-			}).bind('jGrowl.close', function() {
+			}).on('jGrowl.close', function() {
 				// Pause the notification, lest during the course of animation another close event gets called.
 				$(this).data('jGrowl.pause', true);
 				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
@@ -269,11 +269,11 @@
 			if ( o.corners != '' && $.fn.corner != undefined ) $(notification).corner( o.corners );
 
 			/** Add a Global Closer if more than one notification exists **/
-			if ( $('div.jGrowl-notification:parent', self.element).size() > 1 && 
-				 $('div.jGrowl-closer', self.element).size() == 0 && this.defaults.closer != false ) {
+			if ( $('div.jGrowl-notification:parent', self.element).length > 1 && 
+				 $('div.jGrowl-closer', self.element).length == 0 && this.defaults.closer != false ) {
 				$(this.defaults.closerTemplate).addClass('jGrowl-closer ' + this.defaults.themeState + ' ui-corner-all').addClass(this.defaults.theme)
 					.appendTo(self.element).animate(this.defaults.animateOpen, this.defaults.speed, this.defaults.easing)
-					.bind("click.jGrowl", function() {
+					.on("click.jGrowl", function() {
 						$(this).siblings().trigger("jGrowl.beforeClose");
 
 						if ( $.isFunction( self.defaults.closer ) ) {
@@ -297,10 +297,10 @@
 			});
 
 			if ( this.notifications.length > 0 && 
-				 (this.defaults.pool == 0 || $(this.element).find('div.jGrowl-notification:parent').size() < this.defaults.pool) )
+				 (this.defaults.pool == 0 || $(this.element).find('div.jGrowl-notification:parent').length < this.defaults.pool) )
 				this.render( this.notifications.shift() );
 
-			if ( $(this.element).find('div.jGrowl-notification:parent').size() < 2 ) {
+			if ( $(this.element).find('div.jGrowl-notification:parent').length < 2 ) {
 				$(this.element).find('div.jGrowl-closer').animate(this.defaults.animateClose, this.defaults.speed, this.defaults.easing, function() {
 					$(this).remove();
 				});
