@@ -150,8 +150,8 @@ class module_controller extends ctrl_module
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateMailbox');
-        $address = strtolower(str_replace(' ', '', $address));
-        $fulladdress = strtolower(str_replace(' ', '', $address . "@" . $domain));
+        $address = strtolower(trim($address));
+        $fulladdress = strtolower(trim($address) . "@" . trim($domain));
         self::$create = true;
         // Include mail server specific file here.
         $MailServerFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('mailserver_php');
@@ -253,7 +253,7 @@ class module_controller extends ctrl_module
     static function CheckCreateForErrors($address, $domain, $password)
     {
         global $zdbh;
-        $fulladdress = strtolower(str_replace(' ', '', $address . '@' . $domain));
+        $fulladdress = strtolower(trim($address) . '@' . trim($domain)));
         if (fs_director::CheckForEmptyValue($address)) {
             self::$noaddress = true;
             return false;
