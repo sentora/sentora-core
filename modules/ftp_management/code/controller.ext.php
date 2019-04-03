@@ -394,7 +394,7 @@ class module_controller extends ctrl_module
         return !isset($urlvars['show']);
     }
 
-    static function getisDeleteFTP($uid)
+    static function getisDeleteFTP($uid = null)
     {
         global $controller;
         global $zdbh;
@@ -419,7 +419,7 @@ class module_controller extends ctrl_module
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
-    static function getisEditFTP($uid)
+    static function getisEditFTP($uid = null)
     {
         global $controller;
         global $zdbh;
