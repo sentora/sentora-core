@@ -42,7 +42,7 @@ function GenerateWebalizerStats()
         /** all other args and flags are the same so keep them outsite to avoid duplication */
         $flag        = '-o';
         
-        $secondFlags = '-d -F clf -n';
+        $secondFlags = '-d -p -F clf -n';
 
         $domain = $rowvhost[ 'vh_name_vc' ];
 
