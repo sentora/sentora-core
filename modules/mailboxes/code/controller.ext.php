@@ -62,11 +62,9 @@ class module_controller extends ctrl_module
 
 
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':userid', $currentuser['userid']);
+          
             $res = array();
-            $sql->execute();
-            while ($rowmailboxes = $sql->fetch()) {
+            while ($rowmailboxes = $numrows->fetch()) {
                 if ($rowmailboxes['mb_enabled_in'] == 1) {
                     $status = $iconpath . '/up.gif" alt="Up"/>';
                 } else {
@@ -92,11 +90,9 @@ class module_controller extends ctrl_module
         $numrows->bindParam(':mid', $mid);
         $numrows->execute();
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':mid', $mid);
+           
             $res = array();
-            $sql->execute();
-            while ($rowmailboxes = $sql->fetch()) {
+            while ($rowmailboxes = $numrows->fetch()) {
                 if ($rowmailboxes['mb_enabled_in'] == 1) {
                     $ischeck = "CHECKED";
                 } else {
