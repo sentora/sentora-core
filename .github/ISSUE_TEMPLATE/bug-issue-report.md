@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Server info (please complete the following information):**
  - OS: [e.g. iOS]
- - Sentora Live BUILD version: [e.g. Build-0.X.X] Find in PANEL ADMIN->UPDATES
+ - Sentora BUILD version: [e.g. Build-0.X.X] Find in PANEL ADMIN->UPDATES
 
 **Additional context**
 Add any other context about the problem here.
