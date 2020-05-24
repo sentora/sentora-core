@@ -337,6 +337,10 @@ function WriteVhostConfigFile()
                 $line .= 'CustomLog "' . ctrl_options::GetSystemOption('log_dir') . "domains/" . $vhostuser['username'] . "/" . $rowvhost['vh_name_vc'] . '-access.log" ' . ctrl_options::GetSystemOption('access_log_format') . fs_filehandler::NewLine();
                 $line .= 'CustomLog "' . ctrl_options::GetSystemOption('log_dir') . "domains/" . $vhostuser['username'] . "/" . $rowvhost['vh_name_vc'] . '-bandwidth.log" ' . ctrl_options::GetSystemOption('bandwidth_log_format') . fs_filehandler::NewLine();
 
+		//php logs
+		$line .= '	php_admin_value log_errors on' . fs_filehandler::NewLine();
+		$line .= '	php_admin_value error_log "' . ctrl_options::GetSystemOption( 'log_dir' ) . "domains/" . $vhostuser[ 'username' ] . "/" . $rowvhost[ 'vh_name_vc' ] . '-phperror.log" ' . fs_filehandler::NewLine();
+  
                 // Directory options
                 $line .= '<Directory ' . $RootDir . '>' . fs_filehandler::NewLine();
                 $line .= "  Options +FollowSymLinks -Indexes" . fs_filehandler::NewLine();
