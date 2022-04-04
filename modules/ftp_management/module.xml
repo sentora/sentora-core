@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>FTP Accounts</name>
-    <version>100</version>
+    <version>1.1.1</version>
     <defaultcat>File Management</defaultcat>
+	<type></type>
     <desc>Using this module you can create FTP accounts which will enable you and any other accounts you create to have the ability to upload and manage files on your hosting space.</desc>
+	<ostype>all</ostype>
+	<senversion>1.0.1:1.0.2:1.0.3:2.0.0</senversion>
     <authorname>Sentora Project</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+    <updateurl>http://store.sentora.org/repo/ftp_management/ftp_management.xml</updateurl>
 </module>

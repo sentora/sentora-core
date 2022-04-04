@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-    <name>Backup</name>
-    <version>100</version>
+    <name>Backup Manager</name>
+    <version>1.0.3</version>
     <defaultcat>Advanced</defaultcat>
+	<type></type>
     <desc>The backup manager module enables you to backup your entire hosting account including all your MySQL® databases.</desc>
+	<ostype>all</ostype>
+	<senversion>1.0.1:1.0.2:1.0.3:2.0.0</senversion>
     <authorname>Sentora Project</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+    <updateurl>http://store.sentora.org/repo/backupmgr/backupmgr.xml</updateurl>
 </module>

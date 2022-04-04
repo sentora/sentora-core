@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>MySQL Databases</name>
-    <version>100</version>
+    <version>1.0.4</version>
     <defaultcat>Databases</defaultcat>
+	<type></type>
     <desc>MySQL databases are used by many PHP applications such as forums and ecommerce systems, below you can manage and create MySQL databases.</desc>
+	<ostype>all</ostype>
+	<senversion>1.0.1:1.0.2:1.0.3:2.0.0</senversion>
     <authorname>Sentora Project</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+    <updateurl>http://store.sentora.org/repo/mysql_databases/mysql_databases.xml</updateurl>
 </module>

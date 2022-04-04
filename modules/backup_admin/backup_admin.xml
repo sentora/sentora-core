@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<updateserver>
+    <name>Backup Admin</name>
+	<latestversion>1.0.4</latestversion>
+	<downloadurl>http://store.sentora.org/repo/backup_admin/backup_admin.zpp</downloadurl>
+	<desc>This module enables you to configure Backup settings for your hosting accounts.</desc>
+	<updatedesc></updatedesc>
+	<ostype>all</ostype>
+	<senversion>1.0.1:1.0.2:1.0.3</senversion>
+    <authorname>Sentora Project</authorname>
+    <authoremail>info@sentora.org</authoremail>
+    <authorurl>http://sentora.org/</authorurl>
+    <updateurl>http://store.sentora.org/repo/backup_admin/backup_admin.xml</updateurl>
+</updateserver>

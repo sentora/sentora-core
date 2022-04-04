@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Sentora Config</name>
-    <version>100</version>
+    <version>1.0.2</version>
     <defaultcat>Server Admin</defaultcat>
+	<type></type>
     <desc>Changes made here affect the entire Sentora configuration, please double check everything before saving changes.</desc>
+	<ostype>all</ostype> NOTE: win=windows only. lin=linux only. all=all operating systems.
+	<senversion>1.0.1:1.0.2:1.0.3</senversion>
     <authorname>Sentora Project</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+    <updateurl>http://store.sentora.org/repo/sentoraconfig/sentoraconfig.xml</updateurl>
 </module>

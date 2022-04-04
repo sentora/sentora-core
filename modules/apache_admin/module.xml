@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Apache Admin</name>
-    <version>100</version>
-    <defaultcat>Admin</defaultcat>
+    <version>1.1.3</version>
+    <defaultcat>Administrator</defaultcat>
+	<type></type>
     <desc>This module enables you to configure Apache Vhost settings for your hosting accounts.</desc>
+	<ostype>all</ostype>
+	<senversion>1.0.1:1.0.2:1.0.3:2.0.0</senversion>
     <authorname>Sentora Project</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+	<updateurl>http://store.sentora.org/repo/apache_admin/apache_admin.xml</updateurl>
 </module>

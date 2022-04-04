@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Cron Manager</name>
-    <version>100</version>
+    <version>1.0.6</version>
     <defaultcat>Advanced</defaultcat>
+	<type></type>
     <desc>Here you can configure PHP scripts to run automatically at different time intervals.</desc>
+	<ostype>all</ostype>
+	<senversion>1.0.1:1.0.2:1.0.3:2.0.0</senversion>
     <authorname>Sentora Project</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>http://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+    <updateurl>http://store.sentora.org/repo/cron/cron.xml</updateurl>
 </module>

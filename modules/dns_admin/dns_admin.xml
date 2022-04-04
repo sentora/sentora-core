@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<updateserver>
+    <name>DNS Admin</name>
+	<latestversion>1.0.3</latestversion>
+	<downloadurl>http://store.sentora.org/repo/dns_admin/dns_admin.zpp</downloadurl>
+	<desc>This module enables you to configure DNS settings for the DNS Manager</desc>
+	<updatedesc>Changes made to syntax.</updatedesc>
+	<ostype>all</ostype>
+	<senversion>1.0.1:1.0.2:1.0.3:2.0.0</senversion>
+    <authorname>Sentora Project</authorname>
+    <authoremail>info@sentora.org</authoremail>
+    <authorurl>http://sentora.org/</authorurl>
+    <updateurl>http://store.sentora.org/repo/dns_admin/dns_admin.xml</updateurl>
+</updateserver>
