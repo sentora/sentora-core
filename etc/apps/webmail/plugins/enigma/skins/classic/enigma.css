@@ -50,15 +50,67 @@ div.enigmawarning,
   color: #333333;
 }
 
+p.enigmaattachment
+{
+  margin: 0.5em 1em;
+  border: 1px solid #999;
+  border-radius: 4px;
+  width: auto;
+}
+
+p.enigmaattachment span
+{
+  display: inline-block;
+  background: url(key_add.png) 10px center no-repeat;
+  padding: 1em 0.5em 1em 50px;
+}
+
+
+/***** E-mail Compose Page *****/
+
+#messagetoolbar a.button.enigma {
+  text-indent: -5000px;
+  background: url(enigma.png) 0 0 no-repeat;
+}
+
+#enigmamenu div.row {
+  display: table-row;
+}
+
+#enigmamenu div.row > label {
+  display: table-cell;
+  padding: 3px;
+}
+
+#enigmamenu div.row > div {
+  display: table-cell;
+  padding: 3px;
+}
+
+#enigmamenu input {
+  vertical-align: middle;
+}
+
 /***** Keys/Certs Management *****/
+
+#mainscreen.enigma
+{
+  top: 80px;
+}
 
 div.enigmascreen
 {
   position: absolute;
-  top: 65px;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
+  top: 40px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.enigma #quicksearchbar
+{
+  top: 10px;
+  right: 0;
 }
 
 #enigmacontent-box
@@ -108,10 +160,28 @@ div.enigmascreen
   text-align: right;
 }
 
+#key-details table {
+  width: 100%;
+}
+
+#key-details table td,
+#key-details table th {
+  border: 0;
+}
+
+#keyimportform fieldset div {
+  color: #666;
+  padding: 5px 0px;
+}
+
+#keycreateform td > label {
+  display: block;
+}
+
 #keystoolbar
 {
   position: absolute;
-  top: 30px;
+  top: 0;
   left: 10px;
   height: 35px;
 }
@@ -129,7 +199,7 @@ div.enigmascreen
   width: 32px;
   height: 32px;
   padding: 0;
-  margin-right: 10px;
+  margin: 0 5px;
   overflow: hidden;
   background: url(keys_toolbar.png) 0 0 no-repeat transparent;
   opacity: 0.99; /* this is needed to make buttons appear correctly in Chrome */
@@ -145,14 +215,6 @@ div.enigmascreen
 
 #keystoolbar a.create {
   background-position: 0 0;
-}
-
-#keystoolbar a.deleteSel {
-  background-position: -32px -32px;
-}
-
-#keystoolbar a.delete {
-  background-position: -32px 0;
 }
 
 #keystoolbar a.importSel {
@@ -179,4 +241,12 @@ div.enigmascreen
 #keystoolbar span.separator {
   width: 5px;
   background-position: -166px 0;
+}
+
+#keystoolbar a.search {
+  background: url(../../../../skins/classic/images/abook_toolbar.png) -170px 0 no-repeat transparent;
+}
+
+#keystoolbar a.searchSel {
+  background: url(../../../../skins/classic/images/abook_toolbar.png) -170px -32px no-repeat transparent;
 }

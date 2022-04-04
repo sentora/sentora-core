@@ -3,7 +3,7 @@
 <!--
 phpSysInfo language file Language: Hungarian Created by: Bálint Kiss
 -->
-<tns:translation language="english" charset="utf-8"
+<tns:translation language="hungarian" charset="utf-8"
  xmlns:tns="http://phpsysinfo.sourceforge.net/translation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://phpsysinfo.sourceforge.net/translation translation.xsd">
   <expression id="001" name="title">
@@ -365,5 +365,47 @@ phpSysInfo language file Language: Hungarian Created by: Bálint Kiss
   </expression>
   <expression id="120" name="no_devices">
     <exp>Number of devices</exp>
+  </expression>
+  <expression id="121" name="other">
+    <exp>Other</exp>
+  </expression>
+  <expression id="122" name="manufacturer">
+    <exp>Manufacturer</exp>
+  </expression>
+  <expression id="123" name="product">
+    <exp>Product</exp>
+  </expression>
+  <expression id="124" name="serial">
+    <exp>Serial number</exp>
+  </expression>
+  <expression id="125" name="memfree">
+    <exp>Szabad</exp>
+  </expression>
+  <expression id="126" name="nvme">
+    <exp>NVMe Eszközök</exp>
+  </expression>
+  <expression id="127" name="os">
+    <exp>OS Type</exp>
+  </expression>
+  <expression id="128" name="no_memories">
+    <exp>Number of memory chips</exp>
+  </expression>
+  <expression id="129" name="speed">
+    <exp>Speed</exp>
+  </expression>
+  <expression id="130" name="mem">
+    <exp>Memory Chips</exp>
+  </expression>
+  <expression id="131" name="mtps">
+    <exp>MT/s</exp>
+  </expression>
+  <expression id="132" name="gtps">
+    <exp>GT/s</exp>
+  </expression>
+  <expression id="133" name="ups_beeper_status">
+    <exp>Beeper status</exp>
+  </expression>
+  <expression id="134" name="virtualizer">
+    <exp>Virtualizer</exp>
   </expression>
 </tns:translation>

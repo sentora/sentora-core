@@ -25,6 +25,7 @@
         <attribute name="Kernel" type="string" use="required"></attribute>
         <attribute name="Distro" type="string" use="required"></attribute>
         <attribute name="Distroicon" type="string" use="required"></attribute>
+        <attribute name="OS" type="string" use="required"></attribute>
         <attribute name="Uptime" type="unsignedLong" use="required"></attribute>
         <attribute name="Users" type="unsignedLong" use="required"></attribute>
         <attribute name="LoadAvg" type="string" use="required"></attribute>
@@ -40,6 +41,7 @@
         <attribute name="TxBytes" type="integer" use="required"></attribute>
         <attribute name="Err" type="integer" use="required"></attribute>
         <attribute name="Drops" type="integer" use="required"></attribute>
+        <attribute name="Info" type="string" use="optional"></attribute>
     </complexType>
 
 
@@ -52,7 +54,7 @@
 
     <complexType name="HWDevice">
         <attribute name="Name" type="string" use="required"></attribute>
-        <attribute name="Count" use="required">
+        <attribute name="Count" use="optional">
             <simpleType>
                 <restriction base="integer">
                     <minExclusive value="1"></minExclusive>
@@ -68,15 +70,21 @@
         </attribute>
     </complexType>
 
-    <complexType name="PCI">
+    <complexType name="CPU">
         <sequence>
-            <element name="PCI" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
+            <element name="CpuCore" type="tns:CpuCore" minOccurs="0" maxOccurs="unbounded"></element>
         </sequence>
     </complexType>
 
-    <complexType name="USB">
+    <complexType name="MEM">
         <sequence>
-            <element name="USB" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
+            <element name="MEM" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
+        </sequence>
+    </complexType>
+
+    <complexType name="PCI">
+        <sequence>
+            <element name="PCI" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
         </sequence>
     </complexType>
 
@@ -92,6 +100,18 @@
         </sequence>
     </complexType>
 
+    <complexType name="NVMe">
+        <sequence>
+            <element name="NVMe" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
+        </sequence>
+    </complexType>
+
+    <complexType name="USB">
+        <sequence>
+            <element name="USB" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
+        </sequence>
+    </complexType>
+
     <complexType name="TB">
         <sequence>
             <element name="TB" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
@@ -101,12 +121,6 @@
     <complexType name="I2C">
         <sequence>
             <element name="I2C" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
-        </sequence>
-    </complexType>
-
-    <complexType name="CPU">
-        <sequence>
-            <element name="CpuCore" type="tns:CpuCore" minOccurs="0" maxOccurs="unbounded"></element>
         </sequence>
     </complexType>
 
@@ -133,20 +147,6 @@
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="CpuTemp" use="optional">
-            <simpleType>
-                <restriction base="unsignedLong">
-                    <minInclusive value="0"></minInclusive>
-                </restriction>
-            </simpleType>
-        </attribute>
-        <attribute name="BusSpeed" use="optional">
-            <simpleType>
-                <restriction base="unsignedLong">
-                    <minInclusive value="0"></minInclusive>
-                </restriction>
-            </simpleType>
-        </attribute>
         <attribute name="Cache" use="optional">
             <simpleType>
                 <restriction base="unsignedLong">
@@ -155,6 +155,13 @@
             </simpleType>
         </attribute>
         <attribute name="Virtualization" type="string" use="optional"></attribute>
+        <attribute name="BusSpeed" use="optional">
+            <simpleType>
+                <restriction base="unsignedLong">
+                    <minInclusive value="0"></minInclusive>
+                </restriction>
+            </simpleType>
+        </attribute>
         <attribute name="Bogomips" use="optional">
             <simpleType>
                 <restriction base="unsignedLong">
@@ -162,6 +169,14 @@
                 </restriction>
             </simpleType>
         </attribute>
+        <attribute name="CpuTemp" use="optional">
+            <simpleType>
+                <restriction base="unsignedLong">
+                    <minInclusive value="0"></minInclusive>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="Manufacturer" type="string" use="optional"></attribute>
         <attribute name="Load" use="optional">
             <simpleType>
                 <restriction base="unsignedLong">
@@ -173,14 +188,17 @@
 
     <complexType name="Hardware">
         <attribute name="Name" type="string" use="optional"></attribute>
+        <attribute name="Virtualizer" type="string" use="optional"></attribute>
         <sequence>
-            <element name="PCI" type="tns:PCI" minOccurs="1" maxOccurs="1"></element>
-            <element name="USB" type="tns:USB" minOccurs="1" maxOccurs="1"></element>
-            <element name="IDE" type="tns:IDE" minOccurs="1" maxOccurs="1"></element>
-            <element name="SCSI" type="tns:SCSI" minOccurs="1" maxOccurs="1"></element>
-            <element name="TB" type="tns:TB" minOccurs="1" maxOccurs="1"></element>
-            <element name="I2C" type="tns:I2C" minOccurs="1" maxOccurs="1"></element>
-            <element name="CPU" type="tns:CPU" minOccurs="1" maxOccurs="1"></element>
+            <element name="CPU" type="tns:CPU" minOccurs="0" maxOccurs="1"></element>
+            <element name="MEM" type="tns:MEM" minOccurs="0" maxOccurs="1"></element>
+            <element name="PCI" type="tns:PCI" minOccurs="0" maxOccurs="1"></element>
+            <element name="IDE" type="tns:IDE" minOccurs="0" maxOccurs="1"></element>
+            <element name="SCSI" type="tns:SCSI" minOccurs="0" maxOccurs="1"></element>
+            <element name="NVMe" type="tns:NVMe" minOccurs="0" maxOccurs="1"></element>
+            <element name="USB" type="tns:USB" minOccurs="0" maxOccurs="1"></element>
+            <element name="TB" type="tns:TB" minOccurs="0" maxOccurs="1"></element>
+            <element name="I2C" type="tns:I2C" minOccurs="0" maxOccurs="1"></element>
         </sequence>
     </complexType>
 
@@ -327,7 +345,7 @@
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="FSType" type="string"></attribute>
+        <attribute name="FSType" type="string" use="optional"></attribute>
         <attribute name="Name" type="string" use="required"></attribute>
         <attribute name="Free" use="required">
             <simpleType>
@@ -431,6 +449,7 @@
         <attribute name="Mode" type="string" use="required"></attribute>
         <attribute name="StartTime" type="string" use="optional"></attribute>
         <attribute name="Status" type="string" use="required"></attribute>
+        <attribute name="BeeperStatus" type="string" use="optional"></attribute>
         <attribute name="Temperature" type="unsignedLong" use="optional"></attribute>
         <attribute name="OutagesCount" type="unsignedLong" use="optional"></attribute>
         <attribute name="LastOutage" type="string" use="optional"></attribute>

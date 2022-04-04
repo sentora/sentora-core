@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = '¡Ha ocurrido un error!';
 $messages['loginfailed']  = 'Falló el Login.';
 $messages['cookiesdisabled'] = 'Su navegador no acepta cookies.';
@@ -33,7 +32,6 @@ $messages['erroroverquotadelete'] = 'No hay espacio libre en disco. Use Mayúscu
 $messages['invalidrequest'] = '¡Solicitud no válida! No se ha guardado la información.';
 $messages['invalidhost'] = 'Nombre de servidor no válido.';
 $messages['nomessagesfound'] = 'No se encontraron mensajes en esta casilla.';
-$messages['loggedout'] = 'Has terminado correctamente la sesión. ¡Adiós!';
 $messages['mailboxempty'] = 'Casilla vacía';
 $messages['nomessages'] = 'Ningún mensaje';
 $messages['refreshing'] = 'Actualizando...';
@@ -50,13 +48,11 @@ $messages['successfullysaved'] = 'Guardado exitosamente.';
 $messages['savingresponse'] = 'Guardando texto de respuesta...';
 $messages['deleteresponseconfirm'] = '¿Estás seguro que quieres eliminar este texto de respuesta?';
 $messages['addedsuccessfully'] = 'Contacto agregado exitosamente a la libreta de direcciones.';
-$messages['contactexists'] = 'Un contacto con la misma dirección de correo electrónico ya existe.';
 $messages['contactnameexists'] = 'Un contacto con el mismo nombre ya existe.';
 $messages['blockedimages'] = 'Para proteger su privacidad, las imágenes remotas están bloqueadas en este mensaje.';
 $messages['encryptedmessage'] = 'Este es un mensaje encriptado y no se puede mostrar. ¡Lo lamento!';
 $messages['nocontactsfound'] = 'No se encontraron contactos.';
 $messages['contactnotfound'] = 'El contacto solicitado no fue encontrado.';
-$messages['contactsearchonly'] = 'Ingresa algunos términos para encontrar contactos.';
 $messages['sendingfailed'] = 'Error al enviar mensaje.';
 $messages['senttooquickly'] = 'Por favor espera $sec seg(s). antes de enviar este mensaje.';
 $messages['errorsavingsent'] = 'Ha ocurrido un error grabando el mensaje enviado.';
@@ -80,13 +76,10 @@ $messages['formincomplete'] = 'El formulario no se ha completado en su totalidad
 $messages['noemailwarning'] = 'Por favor ingresa una dirección de correo electrónico válida.';
 $messages['nonamewarning']  = 'Por favor ingresa un nombre.';
 $messages['nopagesizewarning'] = 'Por favor ingresa un tamaño de página.';
-$messages['nosenderwarning'] = 'Por favor ingresa una dirección remitente de correo electrónico.';
 $messages['norecipientwarning'] = 'Por favor ingresa al menos un destinatario.';
 $messages['nosubjectwarning']  = 'El campo "Asunto" está vacio. ¿Deseas ingresar uno ahora?';
 $messages['nobodywarning'] = '¿Enviar este mensaje sin texto?';
-$messages['notsentwarning'] = 'El mensaje no ha sido enviado. ¿Deseas descartar este mensaje?';
 $messages['restoresavedcomposedata'] = 'Se ha encontrado un mensaje escrito pero no enviado\n\nAsunto: $subject\nGuardado: $date\n\n¿Desea restaurar este mensaje?';
-$messages['noldapserver'] = 'Por favor ingresa un servidor ldap para buscar.';
 $messages['nosearchname'] = 'Por favor ingresa un nombre de contacto o dirección de correo electrónico.';
 $messages['notuploadedwarning'] = 'Aún no se han subido todos los archivos adjuntos. Por favor espera o cancela la subida.';
 $messages['searchsuccessful'] = '$nr mensajes encontrados.';
@@ -99,8 +92,6 @@ $messages['nospellerrors'] = 'No se han encontrado errores gramaticales.';
 $messages['folderdeleted'] = 'Carpeta eliminada exitosamente.';
 $messages['foldersubscribed'] = 'Carpeta suscripta exitosamente';
 $messages['folderunsubscribed'] = 'Carpeta desuscripta exitosamente';
-$messages['folderpurged'] = 'La carpeta ha sido vaciada exitosamente';
-$messages['folderexpunged'] = 'La carpeta ha sido compactada exitosamente';
 $messages['deletedsuccessfully'] = 'Eliminado exitosamente.';
 $messages['converting'] = 'Quitando el formato...';
 $messages['messageopenerror'] = 'No se pudo cargar el mensaje desde el servidor.';
@@ -137,7 +128,6 @@ $messages['importconfirmskipped'] = '<b>Salteadas $skipped entradas existentes</
 $messages['importmessagesuccess'] = 'Importados $nr mensajes exitosamente.';
 $messages['importmessageerror'] = '¡Ha fallado la importación! El archivo subido no tiene un formato válido.';
 $messages['opnotpermitted'] = '¡Operación no permitida!';
-$messages['nofromaddress'] = 'No se encuentra la dirección de correo electrónico en la entidad seleccionada.';
 $messages['editorwarning'] = 'Cambiar el tipo de editor puede causar que el formato de texto se pierda. ¿Desea continuar?';
 $messages['httpreceivedencrypterror'] = 'Ha ocurrido un error fatal de configuración. Contacte a su administrador de inmediato. <b>Su mensaje no puede ser enviado.</b>';
 $messages['smtpconnerror'] = 'Error SMTP ($code): Ha fallado la conexión con el servidor.';
@@ -146,7 +136,6 @@ $messages['smtpfromerror'] = 'Error SMTP ($code): Fallo en establecer remitente 
 $messages['smtptoerror'] = 'Error SMTP ($code): Fallo al agregar destinatario "$to" ($msg).';
 $messages['smtprecipientserror'] = 'Error SMTP: No es posible obtener la lista de destinatarios.';
 $messages['smtperror'] = 'Error SMTP: $msg';
-$messages['emailformaterror'] = 'Dirección de correo electrónico no válida: $email';
 $messages['toomanyrecipients'] = 'Demasiados destinatarios. Reduzca el número de destinatarios a $max.';
 $messages['maxgroupmembersreached'] = 'El número de miembros del grupo excede el máximo de $max.';
 $messages['internalerror'] = 'Ha ocurrido un error interno. Por favor intenta de nuevo.';
@@ -175,6 +164,4 @@ $messages['invalidimageformat'] = 'Formato de imagen no válido.';
 $messages['mispellingsfound'] = 'Errores de gramática detectados en el mensaje.';
 $messages['parentnotwritable'] = 'No se puede mover/crear la carpeta en la carpeta pariente seleccionada. No tiene derechos de acceso.';
 $messages['messagetoobig'] = 'La parte del mensaje es demasiado grande para ser procesada.';
-$messages['attachmentvalidationerror'] = '¡ATENCIÓN! Este archivo adjunto es sospechoso porque su tipo no coincide con el declarado en el mensaje. Si no confia el remitente, no debería abrirlo en su navegador porque podría tener contenido malicioso.<br/><br/><em>Esperado: $expected; encontrado: $detected</em>';
 $messages['noscriptwarning'] = 'Atención: ¡Este servicio de Webmail requiere Javascript! Para usarlo por favor habilite Javascript en las opciones de su navegador.';
-?>

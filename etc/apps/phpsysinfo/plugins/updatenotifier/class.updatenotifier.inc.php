@@ -1,25 +1,12 @@
 <?php
 /**
- * UpdateNotifier Plugin
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PSI_Plugin_UpdateNotifier
- * @author    Damien ROTH <iysaak@users.sourceforge.net>
- * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.updatenotifier.inc.php 661 2012-08-27 11:26:39Z namiltd $
- * @link      http://phpsysinfo.sourceforge.net
- */
-/**
  * UpdateNotifier Plugin, which displays update notification from Ubuntu Landscape system
  *
  * @category  PHP
  * @package   PSI_Plugin_UpdateNotifier
  * @author    Damien ROTH <iysaak@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   $Id: class.updatenotifier.inc.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -45,10 +32,30 @@ class UpdateNotifier extends PSI_Plugin
     public function __construct($enc)
     {
         parent::__construct(__CLASS__, $enc);
+        $buffer_info = "";
+        if (!defined('PSI_EMU_HOSTNAME')) switch (strtolower(PSI_PLUGIN_UPDATENOTIFIER_ACCESS)) {
+        case 'command':
+            if (defined('PSI_PLUGIN_UPDATENOTIFIER_UBUNTU_LANDSCAPE_FORMAT') && PSI_PLUGIN_UPDATENOTIFIER_UBUNTU_LANDSCAPE_FORMAT) {
+                CommonFunctions::executeProgram("/usr/lib/update-notifier/apt-check", "--human-readable", $buffer_info);
+            } else {
+                CommonFunctions::executeProgram("/usr/lib/update-notifier/apt-check", "2>&1", $buffer_info);
+            }
+            break;
+        case 'data':
+            if (defined('PSI_PLUGIN_UPDATENOTIFIER_FILE') && is_string(PSI_PLUGIN_UPDATENOTIFIER_FILE)) {
+                CommonFunctions::rfts(PSI_PLUGIN_UPDATENOTIFIER_FILE, $buffer_info);
+            } else {
+                CommonFunctions::rfts("/var/lib/update-notifier/updates-available", $buffer_info);
+            }
+            break;
+        default:
+            $this->global_error->addConfigError("__construct()", "[updatenotifier] ACCESS");
+        }
 
-        CommonFunctions::rfts(PSI_PLUGIN_UPDATENOTIFIER_FILE, $buffer_info);
-        // Remove blank lines
-        $this->_filecontent = preg_split("/\n/", $buffer_info, -1, PREG_SPLIT_NO_EMPTY);
+        if (trim($buffer_info) != "") {
+            // Remove blank lines
+            $this->_filecontent = preg_split("/\r?\n/", $buffer_info, -1, PREG_SPLIT_NO_EMPTY);
+        }
     }
 
     /**
@@ -63,16 +70,17 @@ class UpdateNotifier extends PSI_Plugin
             return;
         }
 
-        if (PSI_PLUGIN_UPDATENOTIFIER_UBUNTU_LANDSCAPE_FORMAT === true) {
+        if (defined('PSI_PLUGIN_UPDATENOTIFIER_UBUNTU_LANDSCAPE_FORMAT') && PSI_PLUGIN_UPDATENOTIFIER_UBUNTU_LANDSCAPE_FORMAT) {
             /*
              Ubuntu Landscape format:
              - line 1: packages to update
              - line 2: security packages to update
              */
-            if (count($this->_filecontent) == 2) {
+            if ((count($this->_filecontent) >= 1) || (count($this->_filecontent) <= 3)) {
                 foreach ($this->_filecontent as $line) {
-                    list($num, $text) = explode(" ", $line, 2);
-                    $this->_result[] = $num;
+                   if (preg_match("/^(\d+)\s/", $line, $num) && !preg_match("/UA Infra/", $line)) {
+                       $this->_result[] = $num[1];
+                   }
                 }
             } else {
                 $this->global_error->addWarning("Unable to parse UpdateNotifier file");
@@ -98,10 +106,14 @@ class UpdateNotifier extends PSI_Plugin
      */
     public function xml()
     {
-        if (!empty($this->_result)) {
+        if (!empty($this->_result) && is_numeric($this->_result[0])) {
             $xmluu = $this->xml->addChild("UpdateNotifier");
             $xmluu->addChild("packages", $this->_result[0]);
-            $xmluu->addChild("security", $this->_result[1]);
+            if (isset($this->_result[1]) && is_numeric($this->_result[1])) {
+                $xmluu->addChild("security", $this->_result[1]);
+            } else {
+                $xmluu->addChild("security", '0');
+            }
         }
 
         return $this->xml->getSimpleXmlElement();

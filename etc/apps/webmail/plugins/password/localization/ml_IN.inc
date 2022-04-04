@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/password/localization/<lang>.inc                              |
- |                                                                       |
  | Localization file of the Roundcube Webmail Password plugin            |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-password/
 */
+
 $labels['changepasswd']  = 'രഹസ്യവാക്ക് മാറ്റുക';
 $labels['curpasswd']  = 'ഇപ്പോഴത്തെ രഹസ്യവാക്ക്';
 $labels['newpasswd']  = 'പുതിയ രഹസ്യവാക്ക്';
@@ -30,4 +29,3 @@ $messages['passwordshort'] = 'രഹസ്യവാക്കിനു് കു�
 $messages['passwordweak'] = 'രഹസ്യവാക്കിൽ കുറഞ്ഞത് ഒരു സംഖ്യയും, ഒരു പ്രത്യേക അക്ഷരവും വേണം';
 $messages['passwordforbidden'] = 'രഹസ്യവാക്കിൽ അനുവദനീയമല്ലാത്ത അക്ഷരങ്ങൾ ഉണ്ട്';
 $messages['firstloginchange'] = 'ഇത് താങ്കളുടെ ആദ്യത്തെ പ്രവേശനമാണ്. ദയവായി താങ്കളുടെ രഹസ്യവാക്ക് മാറ്റുക.';
-?>

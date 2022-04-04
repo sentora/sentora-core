@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Partekatzen';
 $labels['myrights'] = 'Sarbide-eskubideak';
 $labels['username'] = 'Erabiltzailea:';
-$labels['advanced'] = 'modu aurreratua';
+$labels['advanced'] = 'Modu aurreratua';
+$labels['add'] = 'Gehitu';
 $labels['newuser'] = 'Gehitu sarrera';
 $labels['editperms'] = 'Editatu baimenak';
 $labels['actions'] = 'Sarbide-eskubideen ekintzak...';
@@ -95,4 +95,3 @@ $messages['createerror'] = 'Ezin dira gehitu sarbide-eskubideak';
 $messages['deleteconfirm'] = 'Seguru zaude hautatutako erabiltzaile(ar)en sarbide-eskubideak ezabatu nahi duzula?';
 $messages['norights'] = 'Eskubideak ez dira zehaztu!';
 $messages['nouser'] = 'Erabiltzaile-izana ez da zehaztu!';
-?>

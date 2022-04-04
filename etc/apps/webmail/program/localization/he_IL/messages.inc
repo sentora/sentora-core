@@ -2,91 +2,113 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-$messages['errortitle']  = 'קרתה שגיאה !';
+
+$messages['errortitle']  = 'אירעה שגיאה !';
 $messages['loginfailed']  = 'הכניסה נכשלה';
 $messages['cookiesdisabled'] = 'הדפדפן אינו מקבל עוגיות';
 $messages['sessionerror'] = 'כניסתך למערכת אינה חוקית או שפג תוקפה';
+$messages['cookiesmismatch'] = 'קיימת אי התאמה בין בעוגיות. יש לנקות עוגיות השמורות בדפדפן';
 $messages['storageerror'] = 'הקשר לשרת הדואר נכשל';
 $messages['servererror'] = '! שגיאת שרת';
 $messages['servererrormsg'] = '$msg  שגיאת שרת';
+$messages['accountlocked'] = 'יותר מדיי ניסיונות כניסה כושלים. נסה שנית מאוחר יותר.';
 $messages['connerror'] = 'שגיאת תקשורת עם השרת.';
 $messages['dberror'] = '! שגיאה במסד הנתונים';
+$messages['dbconnerror'] = 'לא ניתן ליצור קשר עם מסד הנתוים';
 $messages['windowopenerror'] = 'החלון הקופץ נחסם!';
 $messages['requesttimedout'] = 'תם הזמן המוקצב לבקשה';
-$messages['errorreadonly'] = 'לא ניתן לבצע הפעולה כי התיק ניתן לקריאה בלבד';
+$messages['errorreadonly'] = 'לא ניתן לבצע הפעולה כי התיקייה במצב קריאה בלבד';
 $messages['errornoperm'] = 'לא ניתן לבצע הפעולה כי אין הרשאה לבצעה';
-$messages['erroroverquota'] = 'לא ניתן לבצע הפעולה כי לא מקום פנוי על הדיסק';
+$messages['erroroverquota'] = 'לא ניתן לבצע את הפעולה.אין מקום פנוי על הדיסק';
 $messages['erroroverquotadelete'] = 'אין מקום פנוי על הדיסק. יש להשתמש ב SHIFT+DELETE כדי למחוק ההודעה';
 $messages['invalidrequest'] = 'בקשה לא חוקית. המידע לא נשמר';
 $messages['invalidhost'] = 'שם שרת לא חוקי';
 $messages['nomessagesfound'] = 'לא נמצאו הודעות בתיבה זו';
-$messages['loggedout'] = 'הקשר הסתיים. להתראות!';
+$messages['loggedout'] = 'הפעילות הסתיימה בהצלחה.  להתראות.';
 $messages['mailboxempty'] = 'רשימת ההודעות ריקה';
 $messages['nomessages'] = 'אין הודעות';
 $messages['refreshing'] = 'מרענן...';
 $messages['loading'] = 'טעינה...';
 $messages['uploading'] = 'קובץ עולה...';
+$messages['attaching'] = 'הוספת צרופה...';
 $messages['uploadingmany'] = 'מעלה קבצים...';
 $messages['loadingdata'] = 'טעינת מידע...';
 $messages['checkingmail'] = 'בדיקת קיום הודעות חדשות...';
-$messages['sendingmessage'] = 'ההודעה נמסרת...';
-$messages['messagesent'] = 'ההודעה נמסרה בהצלחה';
+$messages['sendingmessage'] = 'ההודעה נשלחת...';
+$messages['messagesent'] = 'ההודעה נשלחה בהצלחה';
 $messages['savingmessage'] = 'שמירת הודעה...';
 $messages['messagesaved'] = 'ההודעה נשמרה כטיוטה';
 $messages['successfullysaved'] = 'נשמרה בהצלחה';
 $messages['savingresponse'] = 'שמירת תגובה...';
 $messages['deleteresponseconfirm'] = 'האם למחוק את התגובה?';
+$messages['nocontactselected'] = 'עדיין לא נבחר איש קשר';
 $messages['addedsuccessfully'] = 'איש הקשר נוסף לפנקס בהצלחה';
-$messages['contactexists'] = 'קיים כבר איש קשר עם כתובת דוא"ל זו';
+$messages['contactexists'] = 'קים איש קשר בעל כתובת דוא"ל זהה';
 $messages['contactnameexists'] = 'קיים כבר איש קשר בעל אותו שם';
 $messages['blockedimages'] = 'תמונות משרת אחר נחסמו כדי לשמור על הפרטיות';
+$messages['blockedresources'] = 'משאבים מרוחקים נחסמו כדי לשמור על פרטיות';
+$messages['suspiciousemail'] = 'ההודעה מכילה כתובות דוא"ל חשודות כנסיון מרמה';
+$messages['bccemail'] = 'ההודעה/ות שהועברו מכילה/ות נמענים נסתרים BCC';
+$messages['bouncehint'] = 'ההודעה תישלח ללא שינוי, כלומר עם גוף ההודעה,כותרות ונמענים מקוריים.';
 $messages['encryptedmessage'] = 'זו הודעת מוצפנת ולא ניתן להציגה';
+$messages['externalmessagedecryption'] = 'זו הודעה מוצפנת שניתן לפענחה באמצעות תוסף לדפדפן';
+$messages['nopubkeyfor'] = 'לא נמצא מפתח ציבורי עבור email$';
+$messages['nopubkeyforsender'] = 'לא נמצא מפתח ציבורי תקין לשולח זה. האם ברצונך להצפין את ההודעה לנמענים בלבד?';
+$messages['encryptnoattachments'] = 'לא ניתן להצפין צרופות שכבר הועלו. נא להוסיפן מחדש בעורך ההצפנה.';
+$messages['searchpubkeyservers'] = 'האם ברצונך לחפש בשרתים של מפתחות ציבוריים אחר המפתחות החסרים?';
+$messages['encryptpubkeysfound'] = 'נמצאו המפתחות הציבוריים שלהלן';
+$messages['keyservererror'] = 'שליפת מפתח מהשרת נכשלה';
+$messages['keyimportsuccess'] = 'מפתח ציבורי $key יובא בהצלחה לצרור המפתחות שלך';
 $messages['nocontactsfound'] = 'לא נמצאו אנשי קשר';
 $messages['contactnotfound'] = 'איש הקשר המבוקש לא נמצא';
-$messages['contactsearchonly'] = 'יש להקיש מפתחות חיפוש כדי למצוא אנשי קשר';
+$messages['contactsearchonly'] = 'יש להתשמש במסך חיפוש כדי לראות אנשי קשר מספר הכתובות';
 $messages['sendingfailed'] = 'שליחת ההודעה נכשלה';
 $messages['senttooquickly'] = 'נא להמתין $sec שניות לפני מסירת הודעה זו';
 $messages['errorsavingsent'] = 'אירעה שגיאה בזמן שמירת ההודעה שנשלחה';
 $messages['errorsaving'] = 'אירעה שגיאה בזמן השמירה';
-$messages['errormoving'] = 'לא ניתן לתייק את ההודעה';
+$messages['errormoving'] = 'העברת ההודעה(ות) נכשלה';
 $messages['errorcopying'] = 'העתקת ההודעות נכשלה';
 $messages['errordeleting'] = 'לא ניתן למחוק את ההודעה';
 $messages['errormarking'] = 'לא ניתן לסמן ההודעה';
+$messages['alerttitle'] = 'שימ/י לב';
+$messages['confirmationtitle'] = 'האם את/ה בטוח/ה?....';
 $messages['deletecontactconfirm']  = 'האם למחוק את איש הקשר?';
 $messages['deletegroupconfirm']  = 'האם אכן ברצונך למחוק את הקבוצה שנבחרה?';
 $messages['deletemessagesconfirm'] = 'האם למחוק את ההודעות המסומנות?';
-$messages['deletefolderconfirm']  = 'האם למחוק תיק זה?';
-$messages['purgefolderconfirm']  = 'האם למחוק את כל ההודעות בתיק זה?';
+$messages['deletefolderconfirm']  = 'האם למחוק תיקייה זו?';
+$messages['movefolderconfirm']  = 'האם אכן ברצונך להעביר את התיקייה?';
+$messages['purgefolderconfirm']  = 'האם למחוק את כל ההודעות בתיקייה זו?';
 $messages['contactdeleting'] = 'אנשי קשר נמחקים...';
 $messages['groupdeleting'] = 'מחיקת קבוצה...';
 $messages['folderdeleting'] = 'התיקיה נמחקת...';
 $messages['foldermoving'] = 'העברת תיקיה...';
-$messages['foldersubscribing'] = 'התיק נרשם...';
-$messages['folderunsubscribing'] = 'רישום התיק בוטל...';
+$messages['foldersubscribing'] = 'התיקייה נרשמה...';
+$messages['folderunsubscribing'] = 'רישום התיקיה בוטל...';
 $messages['formincomplete'] = 'לא הוזנו כל השדות בטופס זה';
 $messages['noemailwarning'] = 'נא להוסיף כתובת דוא"ל חוקית';
 $messages['nonamewarning']  = 'נא להוסיף שם';
 $messages['nopagesizewarning'] = 'נא להוסיף גודל דף';
-$messages['nosenderwarning'] = 'נא להוסיף כתובת השולח';
+$messages['nosenderwarning'] = 'נא להקיש כתובת דוא"ל של השולח';
+$messages['recipientsadded'] = 'הנמען התוסף בהצלחה';
 $messages['norecipientwarning'] = 'נא להוסיף לפחות נמען אחד';
+$messages['disclosedrecipwarning'] = 'כל המכותבים יראו הכתובות של כולם. כדי למנוע זאת ולשמור על פרטיותם, ניתן להשתמש בתכונה של מכותבים נסתרים (Bcc)';
+$messages['disclosedreciptitle'] = 'יותר מדי מכותבים גלויים';
 $messages['nosubjectwarning']  = 'שורת הנושא ריקה. האם ברצונך להוסיף נושא כעת?';
+$messages['nosubjecttitle']  = 'אין נושא';
 $messages['nobodywarning'] = 'האם לשלוח הודעה ללא תוכן?';
-$messages['notsentwarning'] = 'ההודעה לא נשלחה. האם לבטל?';
+$messages['notsentwarning'] = 'ההודעה טרם נשלחה ויש בה שינויים שלא נשמרו. האם לוותר על כל השינויים?';
 $messages['restoresavedcomposedata'] = 'נמצאה הודעה שנערכה אך לא נשלחה. \n\nSubject: $subject\nנשמרה:  $date\n\nהאם לשחזר את ההודעה?';
-$messages['noldapserver'] = 'נא לבחור שרת כתובות לחיפוש';
 $messages['nosearchname'] = 'נא להוסיף איש קשר או כתובת דוא"ל';
 $messages['notuploadedwarning'] = 'עדיין לא הועלו כל הקבצים. נא לחכות או לבטל הפעולה.';
 $messages['searchsuccessful'] = 'נמצאו $nr הודעות';
@@ -96,27 +118,33 @@ $messages['searching'] = 'חיפוש...';
 $messages['checking'] = 'בדיקה...';
 $messages['stillsearching'] = 'עדיין בחיפוש...';
 $messages['nospellerrors'] = 'לא נמצאו שגיאות כתיב';
-$messages['folderdeleted'] = 'התיק נמחק בהצלחה';
-$messages['foldersubscribed'] = 'התיק נרשם בהצלחה';
-$messages['folderunsubscribed'] = 'ביטול רישום תיק הצליח';
-$messages['folderpurged'] = 'התיק נמחק בהצלחה';
-$messages['folderexpunged'] = 'התיק רוקן בהצלחה';
+$messages['folderdeleted'] = 'התיקייה נמחקה בהצלחה';
+$messages['foldersubscribed'] = 'התיקייה נרשמה בהצלחה';
+$messages['folderunsubscribed'] = 'ביטול רישום התיקייה הצליח';
+$messages['folderpurged'] = 'התיקייה רוקנה בהצלחה';
+$messages['folderexpunged'] = 'התיקייה צומצמה בהצלחה';
 $messages['deletedsuccessfully'] = 'המחיקה הסתיימה בהצלחה';
 $messages['converting'] = 'הסרת העיצוב מההודעה';
 $messages['messageopenerror'] = 'לא ניתן לטעון ההודעה מהשרת';
+$messages['filelinkerror'] = 'הצמדת הצרופה נכשלה';
 $messages['fileuploaderror'] = 'העלאת הקובץ נכשלה';
+$messages['csvfilemismatch'] = 'יבוא של מספר קבצים מסוג CVS בעלי שדות שונים זה מזה אינו נתמך.';
 $messages['filesizeerror'] = 'הקובץ לטעינה גדול מהגודל המקסימלי שהוא $size';
+$messages['filecounterror'] = 'ניתן להעלות לכל היותר count$ קבצים בעת ובעונה אחת';
+$messages['msgsizeerror'] = 'הוספת צרופה נכשלה. גודלה יותר מהגודל (size$) המותר.';
+$messages['msgsizeerrorfwd'] = 'גודל ההודעה (size$) דול מהמקסימום המותר. 
+num$ הודעות לא צורפו.';
 $messages['copysuccess'] = '$nr אנשי קשר הועתקו בהצלחה';
 $messages['movesuccess'] = '$nr אנשי קשר הועברו בהצלחה';
 $messages['copyerror'] = 'לא ניתן היה להעתיק אנשי קשר כלשהם';
 $messages['moveerror'] = 'לא ניתן היה להעביר אנשי קשר כלשהם';
 $messages['sourceisreadonly'] = 'המקור לכתובת הוא לקריאה בלבד';
 $messages['errorsavingcontact'] = 'לא ניתן לשמור את כתובת איש הקשר';
-$messages['movingmessage'] = 'תיוק ההודעה...';
-$messages['copyingmessage'] = 'הודעת מועתקת...';
+$messages['movingmessage'] = 'העברת הודעה(ות)...';
+$messages['copyingmessage'] = 'העתקת הודעה(ות)...';
 $messages['copyingcontact'] = 'העתקת אנשי קשר...';
-$messages['movingcontact'] = 'אנשי קשר עוברים...';
-$messages['deletingmessage'] = 'המחיקה בתהליך...';
+$messages['movingcontact'] = 'העברת אנשי קשר...';
+$messages['deletingmessage'] = 'מחיקת הודעה(ות)...';
 $messages['markingmessage'] = 'סימון ההודעה בתהליך...';
 $messages['addingmember'] = 'הוספת אנשי קשר לקבוצה...';
 $messages['removingmember'] = 'הסרת אנשי קשר מהקבוצה...';
@@ -125,7 +153,7 @@ $messages['errorsendingreceipt'] = 'לא ניתן לשלוח אישור קבלה
 $messages['deleteidentityconfirm'] = 'האם אכן ברצונך למחוק זהות זאת?';
 $messages['nodeletelastidentity'] = 'זו הזהות האחרונה ולכן לא ניתן לבטלה';
 $messages['forbiddencharacter'] = 'שם התיקיה מכיל תוים אסורים';
-$messages['selectimportfile'] = 'נא לבחור קובץ לייבוא';
+$messages['selectimportfile'] = 'נא לבחור קובץ להעלאה';
 $messages['addresswriterror'] = 'פנקס הכתובות שנבחר אינו ניתן לכתיבה';
 $messages['contactaddedtogroup'] = 'אנשי הקשר נוספו בהצלחה לקבוצה';
 $messages['contactremovedfromgroup'] = 'אנשי הקשר הוסרו בהצלחה מהקבוצה';
@@ -137,16 +165,18 @@ $messages['importconfirmskipped'] = '<b>  דילוג של $skipped נתונים 
 $messages['importmessagesuccess'] = 'יובאו בהצלחה $nr הודעות ';
 $messages['importmessageerror'] = 'היבוא נכשל ! הקובץ שהועלה אינו הודעה או קובץ הודעות במבנה מתאים';
 $messages['opnotpermitted'] = 'פעולה אסורה!';
-$messages['nofromaddress'] = 'לזהות שנבחרה חסרה כתובת דואר';
-$messages['editorwarning'] = 'החלפת טיפוס עורך עלולה לגרום לאבדן עיצוב טקסט. האם ברצונך להמשיך?';
+$messages['nofromaddress'] = 'חסרה כתובת דוא"ל בזהות שנבחרה';
+$messages['editorwarning'] = 'החלפת סוג העורך עלולה לגרום לאבדן עיצוב טקסט. האם ברצונך להמשיך?';
 $messages['httpreceivedencrypterror'] = 'ארעה שגיאת תצורה חמורה. נא להודיע מייד למנהל/ת המערכת. <B> הודעתך לא תשלח <B>';
 $messages['smtpconnerror'] = 'SMTP ($code): אבד הקשר לשרת';
 $messages['smtpautherror'] = 'SMTP ($code): ההזדהות נכשלה';
 $messages['smtpfromerror'] = '($msg) SMTP ($code): "$from" לא נרשמה כתובת השולח';
 $messages['smtptoerror'] = '($msg) SMTP ($code): "$to" לא נרשמה כתובת המקבל';
 $messages['smtprecipientserror'] = 'SMTP : לא ניתן לפענח רשימת נמענים';
+$messages['smtputf8error'] = 'שגיאת SMTP: שרת הדואר לא תומך כתובת דואר אלקטרוני מקודדת ביוניקוד.';
+$messages['smtpsizeerror'] = 'גודל ההודעה עולה על הגודל המותר בשרת  limit ($limit)';
 $messages['smtperror'] = 'SMTP: $msg';
-$messages['emailformaterror'] = '$email  כתובת דוא"ל שגויה';
+$messages['emailformaterror'] = 'כתבות דוא"ל לא תקינה: email$';
 $messages['toomanyrecipients'] = 'יותר מדי נמענים. יש להקטין מספרם ל - $max';
 $messages['maxgroupmembersreached'] = 'מספרם של חברי הקבוצה אינו יכול לעבור $max';
 $messages['internalerror'] = 'שגיאת מערכת. נא לנסות שנית.';
@@ -163,18 +193,46 @@ $messages['savedsearchcreated'] = 'החיפוש נשמר בהצלחה';
 $messages['savedsearchcreateerror'] = 'לא ניתן לשמור את החיפוש';
 $messages['messagedeleted'] = 'ההודעה נמחקה בהצלחה';
 $messages['messagemoved'] = 'ההודעה הועברה בהצלחה';
+$messages['messagemovedtotrash'] = 'ההודעה(ות) הועברו לסל המיחזור';
 $messages['messagecopied'] = 'ההודעה הועתקה בהצלחה';
 $messages['messagemarked'] = 'ההודעה סומנה בהצלחה';
 $messages['autocompletechars'] = 'יש להקיש לפחות $min תווים להשלמה אוטומטית של המחרוזת';
 $messages['autocompletemore'] = 'נמצאו רשומות נוספות. נא להקיש תווים נוספים.';
 $messages['namecannotbeempty'] = 'השם אינו יכול להיות ריק';
 $messages['nametoolong'] = 'השם ארוך מדי';
-$messages['folderupdated'] = 'התיק עודכן בהצלחה';
-$messages['foldercreated'] = 'התיק נוצר בהצלחה';
+$messages['namedotforbidden'] = 'שם תיקיה אינו יכול להתחיל בנקודה';
+$messages['folderupdated'] = 'התיקייה עודכנה בהצלחה';
+$messages['foldercreated'] = 'התיקייה נוצרה בהצלחה';
 $messages['invalidimageformat'] = 'פורמט תמונה לא חוקי';
 $messages['mispellingsfound'] = 'התגלו שגיאות כתיב בהודעה';
 $messages['parentnotwritable'] = 'לא ניתן ליצור/להעביר תיקיה לתוך תיקית האב שנבחרה. אין הרשאה לגישה.';
 $messages['messagetoobig'] = 'ההודעה גדולה מעבר ליכולת העיבוד של התוכנה';
-$messages['attachmentvalidationerror'] = 'זהירות ! הצרופה חשודה כי אינה מהסוג שצוין בהודעה. אם לא ניתן לבטוח בשולח אזי להמנע מלפתוח את הקובץ בדפדפן כי הקובץ יכול להכיל קוד זדוני.<br/><br/><em>Expected: $expected; found: $detected</em>';
+$messages['attachmentvalidationerror'] = 'הצרופה הזו חשודה כי הסוג שלה לא תואם את הסוג שהוכרז בהודעה. אם אינך בוטח/ת
+בשולח/ת, לא לפתוח אותה בדפדפן כי היא עלולה להכיל נוזקה.
+הסוג שהוכרז:  $expected, הסוג שנמצא:  $detected';
 $messages['noscriptwarning'] = 'זהירות! תוכנה זו דורשת שימוש בג\'אווהסקריפט! כדי להשתמש בכלי, יש לבחור באפשרות זו בהגדרות הדפדפן.';
-?>
+$messages['messageissent'] = 'ההודעה נשלחה אבל לא נשמרה עדיין. האם לשמור אותה כעת?';
+$messages['errnotfound'] = 'הקובץ לא נמצא';
+$messages['errnotfoundexplain'] = 'המשאב המבוקש לא נמצא!';
+$messages['errfailedrequest'] = 'הבקשה נכשלה';
+$messages['errauthorizationfailed'] = 'הרשאה נכשלה';
+$messages['errunauthorizedexplain'] = 'לא ניתו לאשר את הרשאתך לגישה לשירות זה';
+$messages['errrequestcheckfailed'] = 'בדיקת הבקשה נכשלה';
+$messages['errcsrfprotectionexplain'] = "להגנתך, הגישה למשאב זה מאובטחת כנגד CRSF.
+אם הודעה זו מופיעה, זה משום שקרוב לודאי לא היתה יציאה מסודרת לפני
+סגירת היישום בדפדפן. 
+כעת נדרשת פעולה ידנית כדי להמשיך.";
+$messages['errcontactserveradmin'] = 'נא לפנות למנהל השרת';
+$messages['clicktoresumesession'] = 'יש ללחוץ כאן כדי להמשיך מהמצב הקודם';
+$messages['errcomposesession'] = 'שגיאה במהלך יצירת ההודעה';
+$messages['errcomposesessionexplain'] = 'תהליך יצירת ההודעה לא אותר';
+$messages['clicktocompose'] = 'יש להקיש כאן כדי ליצור הודעה חדשה';
+$messages['nosupporterror'] = 'התכונה הזו אינה נתמכת על ידי הדפדפן שלך';
+$messages['siginserted'] = 'החתימה התווספה בהצלחה';
+$messages['responseinserted'] = 'התגובה התווספה בהצלחה';
+$messages['noresponsesavailable'] = 'לא נמצאו תגובות';
+$messages['listempty'] = 'הרשימה ריקה';
+$messages['listusebutton'] = 'יש להשתמש בכפתור יצירה כדי להוסיף רשומה חדשה';
+$messages['keypaircreatesuccess'] = 'הצליחה יצירת מפתח חדש ל identity$';
+$messages['emptyattachment'] = 'צרופה זו נראית כריקה. יש לבדוק עם השולח';
+$messages['oauthloginfailed'] = 'נכשל נסיון כניסה באמצעות OAUTH. נא לנסות שנית.';

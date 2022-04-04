@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Paylaşma';
 $labels['myrights'] = 'Giriş hüququ';
 $labels['username'] = 'İstifadəçi:';
 $labels['advanced'] = 'Ekspert rejimi';
+$labels['add'] = 'Əlavə et';
 $labels['newuser'] = 'Sahə əlavə et';
 $labels['editperms'] = 'Cavabları redaktə et';
 $labels['actions'] = 'Giriş hüququ ilə hərəkət...';
@@ -38,6 +38,7 @@ $labels['aclt'] = 'Məktubu sil';
 $labels['acle'] = 'Poz';
 $labels['aclx'] = 'Qovluğu sil';
 $labels['acla'] = 'İdarə';
+$labels['acln'] = 'Mesajl şərh et';
 $labels['aclfull'] = 'Tam idarə';
 $labels['aclother'] = 'Digər';
 $labels['aclread'] = 'Oxu';
@@ -56,6 +57,7 @@ $labels['shortaclt'] = 'Sil';
 $labels['shortacle'] = 'Poz';
 $labels['shortaclx'] = 'Qovluğun silinməsi';
 $labels['shortacla'] = 'İdarə';
+$labels['shortacln'] = 'Şərh';
 $labels['shortaclother'] = 'Digər';
 $labels['shortaclread'] = 'Oxu';
 $labels['shortaclwrite'] = 'Yaz';
@@ -73,10 +75,15 @@ $labels['longaclt'] = 'Silinən flaqı dəyişdirilə bilər';
 $labels['longacle'] = 'Məktublar pozula bilər';
 $labels['longaclx'] = 'Bu qovluq silinə və ya adı dəyişdirilə bilər';
 $labels['longacla'] = 'Bu qovluğa giriş hüququ dəyişdirilə bilər';
+$labels['longacln'] = 'Müştərək metaməlumatlar (şərhlər) dəyişdirilə bilər';
 $labels['longaclfull'] = 'Qovluğun idarəsi ilə birlikdə, tam giriş.';
 $labels['longaclread'] = 'Bu qovluq oxunmaq üçün açıla bilər';
 $labels['longaclwrite'] = 'Məktubu bu qovluğa qeyd etmək, yazmaq və kopyalamaq olar';
 $labels['longacldelete'] = 'Məktubu silmək olar';
+$labels['longaclother'] = 'Digər giriş hüquqları';
+$labels['ariasummaryacltable'] = 'Giriş hüquqlarının siyahısı';
+$labels['arialabelaclactions'] = 'Hərəkət siyahısı';
+$labels['arialabelaclform'] = 'Giriş hüquqlarının forması';
 $messages['deleting'] = 'Giriş hüququnun silinməsi...';
 $messages['saving'] = 'Giriş hüququnun saxlanılması...';
 $messages['updatesuccess'] = 'Giriş hüququ dəyişdirildi';
@@ -88,4 +95,3 @@ $messages['createerror'] = 'Giriş hüququnu əlavə etmək mümkün deyil';
 $messages['deleteconfirm'] = 'Seçilmiş istifadəçilərin giriş hüququnu silməkdə əminsiniz?';
 $messages['norights'] = 'Giriş hüquqları göstərilməyib!';
 $messages['nouser'] = 'İstifadəçi adı təyin olunmayıb!';
-?>

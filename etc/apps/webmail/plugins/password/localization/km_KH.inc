@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/password/localization/<lang>.inc                              |
- |                                                                       |
  | Localization file of the Roundcube Webmail Password plugin            |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-password/
 */
+
 $labels['curpasswd']  = 'ពាក្យ​សម្ងាត់​បច្ចុប្បន្ន៖';
 $labels['newpasswd']  = 'ពាក្យ​សម្ងាត់​ថ្មី៖';
 $labels['confpasswd']  = 'បញ្ជាក់​ពាក្យ​សម្ងាត់​ថ្មី៖';
@@ -28,4 +27,3 @@ $messages['internalerror'] = 'មិន​អាច​រក្សា​ទុ�
 $messages['passwordshort'] = 'ពាក្យ​សម្ងាត់​ត្រូវ​តែ​មាន​យ៉ាង​តិច $length តួ។';
 $messages['passwordweak'] = 'ពាក្យ​សម្ងាត់​ត្រូវ​តែ​មាន​បញ្ចូល​យ៉ាង​ហោច​ណាស់​លេខ​មួយ​តួ និង​អក្សរ​សញ្ញា​មួយ​តួ។';
 $messages['passwordforbidden'] = 'ពាក្យ​សម្ងាត់​មាន​អក្សរ​ដែល​ត្រូវហាម​ឃាត់។';
-?>

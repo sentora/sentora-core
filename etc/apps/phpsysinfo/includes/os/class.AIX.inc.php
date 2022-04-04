@@ -8,7 +8,7 @@
  * @package   PSI AIX OS class
  * @author    Krzysztof Paz (kpaz@gazeta.pl) based on HPUX of Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2011 Krzysztof Paz
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.AIX.inc.php 287 2009-06-26 12:11:59Z Krzysztof Paz, IBM POLSKA
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,13 +20,20 @@
 * @package   PSI AIX OS class
 * @author    Krzysztof Paz (kpaz@gazeta.pl) based on Michael Cramer <BigMichi1@users.sourceforge.net>
 * @copyright 2011 Krzysztof Paz
-* @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+* @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
 * @version   Release: 3.0
 * @link      http://phpsysinfo.sourceforge.net
 */
 class AIX extends OS
 {
+    /**
+     * uptime command result.
+     */
+    private $_uptime = null;
 
+    /**
+     * prtconf command result.
+     */
     private $_aixdata = array();
 
     /**
@@ -35,14 +42,14 @@ class AIX extends OS
      */
     private function _hostname()
     {
-        /*   if (PSI_USE_VHOST === true) {
-               $this->sys->setHostname(getenv('SERVER_NAME'));
+        /*   if (PSI_USE_VHOST) {
+               if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
            } else {
                if (CommonFunctions::executeProgram('hostname', '', $ret)) {
                    $this->sys->setHostname($ret);
                }
            } */
-        $this->sys->setHostname(getenv('SERVER_NAME'));
+        if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
 
     }
 
@@ -64,24 +71,13 @@ class AIX extends OS
      */
     private function _uptime()
     {
-        if (CommonFunctions::executeProgram('uptime', '', $buf)) {
-            if (preg_match("/up (\d+) days,\s*(\d+):(\d+),/", $buf, $ar_buf) || preg_match("/up (\d+) day,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
+        if (($this->_uptime !== null) || CommonFunctions::executeProgram('uptime', '', $this->_uptime)) {
+            if (preg_match("/up (\d+) day[s]?,\s*(\d+):(\d+),/", $this->_uptime, $ar_buf)) {
                 $min = $ar_buf[3];
                 $hours = $ar_buf[2];
                 $days = $ar_buf[1];
                 $this->sys->setUptime($days * 86400 + $hours * 3600 + $min * 60);
             }
-        }
-    }
-
-    /**
-     * Number of Users
-     * @return void
-     */
-    private function _users()
-    {
-        if (CommonFunctions::executeProgram('who', '| wc -l', $buf, PSI_DEBUG)) {
-            $this->sys->setUsers($buf);
         }
     }
 
@@ -92,8 +88,8 @@ class AIX extends OS
      */
     private function _loadavg()
     {
-        if (CommonFunctions::executeProgram('uptime', '', $buf)) {
-            if (preg_match("/average: (.*), (.*), (.*)$/", $buf, $ar_buf)) {
+        if (($this->_uptime !== null) || CommonFunctions::executeProgram('uptime', '', $this->_uptime)) {
+            if (preg_match("/average: (.*), (.*), (.*)$/", $this->_uptime, $ar_buf)) {
                 $this->sys->setLoad($ar_buf[1].' '.$ar_buf[2].' '.$ar_buf[3]);
             }
         }
@@ -288,7 +284,7 @@ class AIX extends OS
             $mounts = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
             if (CommonFunctions::executeProgram('mount', '-v', $s, PSI_DEBUG)) {
                 $lines = preg_split("/\n/", $s, -1, PREG_SPLIT_NO_EMPTY);
-                while (list(, $line) = each($lines)) {
+                foreach ($lines as $line) {
                     $a = preg_split('/ /', $line, -1, PREG_SPLIT_NO_EMPTY);
                     $fsdev[$a[0]] = $a[4];
                 }
@@ -322,7 +318,7 @@ class AIX extends OS
 
     /**
      * IBM AIX informations by K.PAZ
-     * @return void
+     * @return array
      */
     private function readaixdata()
     {
@@ -340,24 +336,34 @@ class AIX extends OS
      *
      * @see PSI_Interface_OS::build()
      *
-     * @return Void
+     * @return void
      */
     public function build()
     {
-        $this->error->addError("WARN", "The AIX version of phpSysInfo is a work in progress, some things currently don't work");
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_loadavg();
-        $this->_cpuinfo();
-        $this->_pci();
-        $this->_ide();
-        $this->_scsi();
-        $this->_usb();
-        $this->_network();
-        $this->_memory();
-        $this->_filesystems();
+        $this->error->addWarning("The AIX version of phpSysInfo is a work in progress, some things currently don't work");
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
+        }
+        if (!$this->blockname || $this->blockname==='hardware') {
+            $this->_cpuinfo();
+            $this->_pci();
+            $this->_ide();
+            $this->_scsi();
+            $this->_usb();
+        }
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
+        }
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
+        }
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
+        }
     }
 }

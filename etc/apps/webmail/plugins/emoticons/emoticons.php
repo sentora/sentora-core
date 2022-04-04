@@ -1,26 +1,133 @@
 <?php
 
 /**
- * Display Emoticons
+ * Emoticons.
  *
- * Sample plugin to replace emoticons in plain text message body with real icons
+ * Plugin to replace emoticons in plain text message body with real emoji.
+ * Also it enables emoticons in HTML compose editor. Both features are optional.
  *
- * @version @package_version@
  * @license GNU GPLv3+
  * @author Thomas Bruederli
  * @author Aleksander Machniak
- * @website http://roundcube.net
+ * @website https://roundcube.net
  */
 class emoticons extends rcube_plugin
 {
-    public $task = 'mail';
+    public $task = 'mail|settings|utils';
 
+
+    /**
+     * Plugin initialization.
+     */
     function init()
     {
-        $this->add_hook('message_part_after', array($this, 'replace'));
+        $rcube = rcube::get_instance();
+
+        $this->add_hook('message_part_after', [$this, 'message_part_after']);
+        $this->add_hook('html_editor', [$this, 'html_editor']);
+
+        if ($rcube->task == 'settings') {
+            $this->add_hook('preferences_list', [$this, 'preferences_list']);
+            $this->add_hook('preferences_save', [$this, 'preferences_save']);
+        }
     }
 
-    function replace($args)
+    /**
+     * 'message_part_after' hook handler to replace common
+     * plain text emoticons with emoji
+     */
+    function message_part_after($args)
+    {
+        if ($args['type'] == 'plain') {
+            $this->load_config();
+
+            $rcube = rcube::get_instance();
+            if (!$rcube->config->get('emoticons_display', false)) {
+                return $args;
+            }
+
+            $args['body'] = self::text2icons($args['body']);
+        }
+
+        return $args;
+    }
+
+    /**
+     * 'html_editor' hook handler, where we enable emoticons in TinyMCE
+     */
+    function html_editor($args)
+    {
+        $rcube = rcube::get_instance();
+
+        $this->load_config();
+
+        if ($rcube->config->get('emoticons_compose', true)) {
+            $args['extra_plugins'][] = 'emoticons';
+            $args['extra_buttons'][] = 'emoticons';
+        }
+
+        return $args;
+    }
+
+    /**
+     * 'preferences_list' hook handler
+     */
+    function preferences_list($args)
+    {
+        $rcube         = rcube::get_instance();
+        $dont_override = $rcube->config->get('dont_override', []);
+
+        if ($args['section'] == 'mailview' && !in_array('emoticons_display', $dont_override)) {
+            $this->load_config();
+            $this->add_texts('localization');
+
+            $field_id = 'emoticons_display';
+            $checkbox = new html_checkbox(['name' => '_' . $field_id, 'id' => $field_id, 'value' => 1]);
+
+            $args['blocks']['main']['options']['emoticons_display'] = [
+                    'title'   => html::label($field_id, $this->gettext('emoticonsdisplay')),
+                    'content' => $checkbox->show(intval($rcube->config->get('emoticons_display', false)))
+            ];
+        }
+        else if ($args['section'] == 'compose' && !in_array('emoticons_compose', $dont_override)) {
+            $this->load_config();
+            $this->add_texts('localization');
+
+            $field_id = 'emoticons_compose';
+            $checkbox = new html_checkbox(['name' => '_' . $field_id, 'id' => $field_id, 'value' => 1]);
+
+            $args['blocks']['main']['options']['emoticons_compose'] = [
+                    'title'   => html::label($field_id, $this->gettext('emoticonscompose')),
+                    'content' => $checkbox->show(intval($rcube->config->get('emoticons_compose', true)))
+            ];
+        }
+
+        return $args;
+    }
+
+    /**
+     * 'preferences_save' hook handler
+     */
+    function preferences_save($args)
+    {
+        if ($args['section'] == 'mailview') {
+            $args['prefs']['emoticons_display'] = (bool) rcube_utils::get_input_value('_emoticons_display', rcube_utils::INPUT_POST);
+        }
+        else if ($args['section'] == 'compose') {
+            $args['prefs']['emoticons_compose'] = (bool) rcube_utils::get_input_value('_emoticons_compose', rcube_utils::INPUT_POST);
+        }
+
+        return $args;
+    }
+
+    /**
+     * Replace common plain text emoticons with emoji
+     *
+     * @param string $text Text
+     *
+     * @return string Converted text
+     */
+    protected static function text2icons($text)
     {
         // This is a lookbehind assertion which will exclude html entities
         // E.g. situation when ";)" in "&quot;)" shouldn't be replaced by the icon
@@ -35,44 +142,26 @@ class emoticons extends rcube_plugin
             . ')';
 
         // map of emoticon replacements
-        $map = array(
-            '/:\)/'             => $this->img_tag('smiley-smile.gif',       ':)'    ),
-            '/:-\)/'            => $this->img_tag('smiley-smile.gif',       ':-)'   ),
-            '/(?<!mailto):D/'   => $this->img_tag('smiley-laughing.gif',    ':D'    ),
-            '/:-D/'             => $this->img_tag('smiley-laughing.gif',    ':-D'   ),
-            '/:\(/'             => $this->img_tag('smiley-frown.gif',       ':('    ),
-            '/:-\(/'            => $this->img_tag('smiley-frown.gif',       ':-('   ),
-            '/'.$entity.';\)/'  => $this->img_tag('smiley-wink.gif',        ';)'    ),
-            '/'.$entity.';-\)/' => $this->img_tag('smiley-wink.gif',        ';-)'   ),
-            '/8\)/'             => $this->img_tag('smiley-cool.gif',        '8)'    ),
-            '/8-\)/'            => $this->img_tag('smiley-cool.gif',        '8-)'   ),
-            '/(?<!mailto):O/i'  => $this->img_tag('smiley-surprised.gif',   ':O'    ),
-            '/(?<!mailto):-O/i' => $this->img_tag('smiley-surprised.gif',   ':-O'   ),
-            '/(?<!mailto):P/i'  => $this->img_tag('smiley-tongue-out.gif',  ':P'    ),
-            '/(?<!mailto):-P/i' => $this->img_tag('smiley-tongue-out.gif',  ':-P'   ),
-            '/(?<!mailto):@/i'  => $this->img_tag('smiley-yell.gif',        ':@'    ),
-            '/(?<!mailto):-@/i' => $this->img_tag('smiley-yell.gif',        ':-@'   ),
-            '/O:\)/i'           => $this->img_tag('smiley-innocent.gif',    'O:)'   ),
-            '/O:-\)/i'          => $this->img_tag('smiley-innocent.gif',    'O:-)'  ),
-            '/(?<!mailto):$/'   => $this->img_tag('smiley-embarassed.gif',  ':$'    ),
-            '/(?<!mailto):-$/'  => $this->img_tag('smiley-embarassed.gif',  ':-$'   ),
-            '/(?<!mailto):\*/i'  => $this->img_tag('smiley-kiss.gif',       ':*'    ),
-            '/(?<!mailto):-\*/i' => $this->img_tag('smiley-kiss.gif',       ':-*'   ),
-            '/(?<!mailto):S/i'  => $this->img_tag('smiley-undecided.gif',   ':S'    ),
-            '/(?<!mailto):-S/i' => $this->img_tag('smiley-undecided.gif',   ':-S'   ),
-        );
+        $map = [
+            '/(?<!mailto):-?D/'   => self::ico_tag('1f603', ':D'   ), // laugh
+            '/:-?\(/'             => self::ico_tag('1f626', ':('   ), // frown
+            '/'.$entity.';-?\)/'  => self::ico_tag('1f609', ';)'   ), // wink
+            '/8-?\)/'             => self::ico_tag('1f60e', '8)'   ), // cool
+            '/(?<!mailto):-?O/i'  => self::ico_tag('1f62e', ':O'   ), // surprised
+            '/(?<!mailto):-?P/i'  => self::ico_tag('1f61b', ':P'   ), // tongue out
+            '/(?<!mailto):-?@/i'  => self::ico_tag('1f631', ':-@'  ), // yell
+            '/O:-?\)/i'           => self::ico_tag('1f607', 'O:-)' ), // innocent
+            '/(?<!O):-?\)/'       => self::ico_tag('1f60a', ':-)'  ), // smile
+            '/(?<!mailto):-?\$/'  => self::ico_tag('1f633', ':-$'  ), // embarrassed
+            '/(?<!mailto):-?\*/i' => self::ico_tag('1f48b', ':-*'  ), // kiss
+            '/(?<!mailto):-?S/i'  => self::ico_tag('1f615', ':-S'  ), // undecided
+        ];
 
-        if ($args['type'] == 'plain') {
-            $args['body'] = preg_replace(
-                array_keys($map), array_values($map), $args['body']);
-        }
-
-        return $args;
+        return preg_replace(array_keys($map), array_values($map), $text);
     }
 
-    private function img_tag($ico, $title)
-    { 
-        $path = './program/js/tiny_mce/plugins/emotions/img/';
-        return html::img(array('src' => $path.$ico, 'title' => $title));
+    protected static function ico_tag($ico, $title)
+    {
+        return html::span(['title' => $title], "&#x{$ico};");
     }
 }

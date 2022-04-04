@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'មាន​បញ្ហា​បាន​កើត​ឡើង!';
 $messages['loginfailed']  = 'បាន​បរាជ័យ​ក្នុង​ការ​ចូល។';
 $messages['cookiesdisabled'] = 'កម្មវិធី​អ៊ីនធឺណិត​របស់​អ្នក​មិន​ទទួល​ខូគី​ទេ។';
@@ -29,7 +28,6 @@ $messages['errornoperm'] = 'មិនអាចប្រតិបត្តិប�
 $messages['invalidrequest'] = 'មិនអាចរក្សាទុកទិន្នន័យបានពីព្រោះមានបញ្ហានៅពេលបញ្ជូនទិន្នន័យ';
 $messages['invalidhost'] = 'ឈ្មោះ​ម៉ាស៊ីន​មេ​មិន​ត្រឹមត្រូវ។';
 $messages['nomessagesfound'] = 'ពុំមានសំបុត្រក្នុងប្រអប់សំបុត្រនេះទេ';
-$messages['loggedout'] = 'អ្នកបានពិនិត្យចេញដោយជោគជ័យ។';
 $messages['refreshing'] = 'កំពុង​ផ្ទុកឡើងវិញ...';
 $messages['loading'] = 'កំពុងដំណើរការ...';
 $messages['uploading'] = 'កំពុងបញ្ជូនឯកសារ...';
@@ -42,13 +40,11 @@ $messages['savingmessage'] = 'កំពុងរក្សាសំបុត្�
 $messages['messagesaved'] = 'សំបុត្រត្រូវបានរក្សាទុកក្នុងថតពង្រៀង';
 $messages['successfullysaved'] = 'រក្សាទុកដោយជោគជ័យ';
 $messages['addedsuccessfully'] = 'អាសយដ្ឋានត្រូវបានរក្សាទុកដោយជោគជ័យ';
-$messages['contactexists'] = 'ព័ត៌មានទាក់ទងដែលមានអ៊ីមែលនេះមានក្នុងសៀវភៅអាសយដ្ឋានរួចហើយ';
 $messages['contactnameexists'] = 'មាន​ទំនាក់ទំនង​ដែលមាន​ឈ្មោះ​ដូច​គ្នា​នេះ​រួច​ហើយ។';
 $messages['blockedimages'] = 'រូបភាពដែលមានក្នុងសំបុត្រនេះត្រូវបានបិទដើម្បីរក្សាសុវត្ថភាព';
 $messages['encryptedmessage'] = 'លោកអ្នកមិនអាចមើលសំបុត្រនេះបានទេពីព្រោះសំបុត្រនេះជាសំបុត្រសំងាត់';
 $messages['nocontactsfound'] = 'ពុំមានអាសយដ្ឋានទាក់ទងទេ';
 $messages['contactnotfound'] = 'អាសយដ្ឋានទាក់ទងដែលលោកអ្នកចង់រកពុំមានឡើយ';
-$messages['contactsearchonly'] = 'បញ្ចូល​ពាក្យ​ស្វែងរក​មួយ​ចំនួន ដើម្បី​រក​ទំនាក់ទំនង';
 $messages['sendingfailed'] = 'មិនអាចផ្ញើសំបុត្របាន';
 $messages['senttooquickly'] = 'សូមរងចាំ $sec វិនាទីមុននឹងផ្ញើសំបុត្រនេះ';
 $messages['errormoving'] = 'មិនអាចផ្ទេរសំបុត្របាន';
@@ -70,12 +66,9 @@ $messages['formincomplete'] = 'សូមបំពេញទិន្នន័យ�
 $messages['noemailwarning'] = 'អ៊ីមែលត្រឹមត្រូវ';
 $messages['nonamewarning']  = 'សូមសរសេរឈ្មោះរបស់អ្នក';
 $messages['nopagesizewarning'] = 'សូមកំណត់ទំហំទំព័រ';
-$messages['nosenderwarning'] = 'សូមសរសេរអ៊ីមែលរបស់អ្នកផ្ញើ';
 $messages['norecipientwarning'] = 'សូមសរសេរអ្នកទទួលយ៉ាងហោចណាស់ម្នាក់';
 $messages['nosubjectwarning']  = 'សំបុត្រគ្មានចំណងជើងតើអ្នកចង់សរសេរចំណងជើងនៅពេលនេះទេ?';
 $messages['nobodywarning'] = 'តើលោកអ្នកចង់ផ្ញើសំបុត្រដែលគ្មានតួអត្ថបទសំបុត្រទេ?';
-$messages['notsentwarning'] = 'សំបុត្រនេះមិនទាន់បានផ្ញើទេ។ តើលោកអ្នកចង់លុបចោលទេ?';
-$messages['noldapserver'] = 'សូមកំណត់ម៉ាស៊ីន LDAPដើម្បីស្វែងរក';
 $messages['nosearchname'] = 'សូមបំពេញឈ្មោះទំនាក់ទំនង ឬអាសយដ្ឋានអ៊ីមែល';
 $messages['notuploadedwarning'] = 'ឯកសារ​ភ្ជាប់​ទាំង​អស់​មិន​ត្រូវ​បាន​ផ្ទុក​ឡើង​នៅឡើយ​ទេ។ សូម​រង់ចាំ​ ឬ​បោះបង់​ការ​​ផ្ទុក​ឡើង។';
 $messages['searchsuccessful'] = 'រកឃើញសំបុត្រចំនួន $nr';
@@ -87,8 +80,6 @@ $messages['nospellerrors'] = 'គ្មានកំហុសអក្ខរា�
 $messages['folderdeleted'] = 'លុបថតបានដោយជោគជ័យ';
 $messages['foldersubscribed'] = 'អាចកំណត់ប្រើថតបានដោយជោគជ័យ';
 $messages['folderunsubscribed'] = 'កំណត់លែងប្រើថតបានដោយជោគជ័យ';
-$messages['folderpurged'] = 'សំអាតថតបានដោយជោគជ័យ';
-$messages['folderexpunged'] = 'បង្រួមថតបានដោយជោគជ័យ';
 $messages['deletedsuccessfully'] = 'លុបបានដោយជោគជ័យ';
 $messages['converting'] = 'កំពុងលុបការរចនាចោល...';
 $messages['messageopenerror'] = 'មិនអាចទាញយកសំបុត្រពីម៉ាស៊ីនមេបានទេ';
@@ -116,14 +107,12 @@ $messages['nogroupassignmentschanged'] = 'គ្មាន​ការ​ផ្�
 $messages['importwait'] = 'សូមមេត្តារង់ចាំកំពុងទាញទិន្នន័យចូល ...';
 $messages['importconfirm'] = '<b>ព័ត៌មានទំនាក់ទំនង $insertedបានបញ្ចូលដោយជោគជ័យ,ហើយបានរំលងចោលពត៌មានដែលមានស្រាប់$skipped </b>:<p><em>$names</em></p>';
 $messages['opnotpermitted'] = 'ប្រតិ្តបត្តិការត្រូវបានគេហាមឃាត់!';
-$messages['nofromaddress'] = 'ខ្វះអាសយដ្ឋានអ៊ីមែលក្នុងអត្តសញ្ណាណមួយនេះ';
 $messages['smtpconnerror'] = 'SMTP Error ($code):មិនអាចភ្ជាប់ទៅម៉ាស៊ីនមេ';
 $messages['smtpautherror'] = 'SMTP Error ($code):ព័ត៌មានគនីយមិនត្រឹមត្រូវ';
 $messages['smtpfromerror'] = 'SMTP Error ($code):មិនអាចកំនត់អ្នកផ្ញើ "$from" ($msg)';
 $messages['smtptoerror'] = 'SMTP Error ($code):មិនអាចកំនត់អ្នកទទួល "$to" ($msg)';
 $messages['smtprecipientserror'] = 'SMTP Error:មិនអាចបំលែងបញ្ជីអ្នកទទួល';
 $messages['smtperror'] = 'SMTP Error: $msg';
-$messages['emailformaterror'] = 'អាសយដ្ឋានអ៊ីមែលមិនត្រឹមត្រូវទេ:$email';
 $messages['toomanyrecipients'] = 'ចំនួនអ្នកទទួលច្រើនលើសកំនត់!សូមមេត្តាលុបចោលរហូតដល់ $max។';
 $messages['maxgroupmembersreached'] = 'ចំនួនក្រុមលើសកំនត់ហើយចំនួនច្រើនបំផុតគឺ $max';
 $messages['contactdelerror'] = 'មិនអាចលុបអាសយដ្ឋានទំនាក់ទំនង';
@@ -141,4 +130,3 @@ $messages['nametoolong'] = 'ឈ្មោះវែងពេក';
 $messages['folderupdated'] = 'ផ្លាស់ប្តូរថតបានដោយជោគជ័យ';
 $messages['foldercreated'] = 'បង្កើតថតបានដោយជោគជ័យ';
 $messages['invalidimageformat'] = 'ប្រភេទរូបភាពមិនត្រឹមត្រូវ';
-?>

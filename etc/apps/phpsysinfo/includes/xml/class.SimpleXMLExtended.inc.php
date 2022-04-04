@@ -8,7 +8,7 @@
  * @package   PSI_XML
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.SimpleXMLExtended.inc.php 610 2012-07-11 19:12:12Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -19,7 +19,7 @@
  * @package   PSI_XML
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -28,7 +28,7 @@ class SimpleXMLExtended
     /**
      * store the encoding that is used for conversation to utf8
      *
-     * @var String base encoding
+     * @var string base encoding
      */
     private $_encoding = null;
 
@@ -42,7 +42,7 @@ class SimpleXMLExtended
     /**
      * _CP437toUTF8Table for code page conversion for CP437
      *
-     * @var _CP437toUTF8Table array
+     * @var array _CP437toUTF8Table array
      */
     private static $_CP437toUTF8Table = array(
         "\xC3\x87","\xC3\xBC","\xC3\xA9","\xC3\xA2",
@@ -108,7 +108,7 @@ class SimpleXMLExtended
         if ($value == null) {
             return new SimpleXMLExtended($this->_SimpleXmlElement->addChild($nameUtf8), $this->_encoding);
         } else {
-            $valueUtf8 = htmlspecialchars($this->_toUTF8($value));
+            $valueUtf8 = htmlspecialchars($this->_toUTF8($value), ENT_COMPAT, "UTF-8");
 
             return new SimpleXMLExtended($this->_SimpleXmlElement->addChild($nameUtf8, $valueUtf8), $this->_encoding);
         }
@@ -139,13 +139,17 @@ class SimpleXMLExtended
      * @param String $name  name of the attribute
      * @param String $value value of the attribute
      *
-     * @return Void
+     * @return void
      */
     public function addAttribute($name, $value)
     {
         $nameUtf8 = $this->_toUTF8($name);
-        $valueUtf8 = htmlspecialchars($this->_toUTF8($value));
-        $this->_SimpleXmlElement->addAttribute($nameUtf8, $valueUtf8);
+        $valueUtf8 = htmlspecialchars($this->_toUTF8($value), ENT_COMPAT, "UTF-8");
+        if (($valueUtf8 === "") && (version_compare("5.2.2", PHP_VERSION, ">"))) {
+            $this->_SimpleXmlElement->addAttribute($nameUtf8, "\0"); // Fixing bug #41175 (addAttribute() fails to add an attribute with an empty value)
+        } else {
+            $this->_SimpleXmlElement->addAttribute($nameUtf8, $valueUtf8);
+        }
     }
 
     /**
@@ -153,7 +157,7 @@ class SimpleXMLExtended
      *
      * @param SimpleXMLElement $new_child child that should be appended
      *
-     * @return Void
+     * @return void
      */
     public function combinexml(SimpleXMLElement $new_child)
     {
@@ -172,31 +176,42 @@ class SimpleXMLExtended
      */
     private function _toUTF8($str)
     {
+        $str = trim(preg_replace('/[\x00-\x09\x0b-\x1F]/', ' ', strval($str))); //remove nonprintable characters
         if ($this->_encoding != null) {
             if (strcasecmp($this->_encoding, "UTF-8") == 0) {
-                return trim($str);
+                return $str;
             } elseif (strcasecmp($this->_encoding, "CP437") == 0) {
-                $str = trim($str);
                 $strr = "";
                 if (($strl = strlen($str)) > 0) for ($i = 0; $i < $strl; $i++) {
                     $strc = substr($str, $i, 1);
                     if ($strc < 128) $strr.=$strc;
-                        else $strr.=$_CP437toUTF8Table[$strc-128];
+                        else $strr.=self::$_CP437toUTF8Table[$strc-128];
                 }
 
                  return $strr;
             } else {
-                $enclist = mb_list_encodings();
-                if (in_array($this->_encoding, $enclist)) {
-                    return mb_convert_encoding(trim($str), 'UTF-8', $this->_encoding);
-                } elseif (function_exists("iconv")) {
-                    return iconv($this->_encoding, 'UTF-8', trim($str));
+                if (preg_match("/^windows-\d+ \((.+)\)$/", $this->_encoding, $buf)) {
+                    $encoding = $buf[1];
                 } else {
-                    return mb_convert_encoding(trim($str), 'UTF-8');
+                    $encoding = $this->_encoding;
                 }
-            }
+                $enclist = mb_list_encodings();
+                if (in_array($encoding, $enclist)) {
+                    return mb_convert_encoding($str, 'UTF-8', $encoding);
+                } elseif (function_exists("iconv")) {
+                    if (($iconvout=iconv($encoding, 'UTF-8', $str))!==false) {
+                        return $iconvout;
+                    } else {
+                        return mb_convert_encoding($str, 'UTF-8');
+                    }
+                } elseif (function_exists("libiconv") && (($iconvout=libiconv($encoding, 'UTF-8', $str))!==false)) {
+                    return $iconvout;
+                } else {
+                    return mb_convert_encoding($str, 'UTF-8');
+                }
+           }
         } else {
-            return mb_convert_encoding(trim($str), 'UTF-8');
+            return mb_convert_encoding($str, 'UTF-8');
         }
     }
 

@@ -6,7 +6,7 @@
 $config['acl_advanced_mode'] = false;
 
 // LDAP addressbook that would be searched for user names autocomplete.
-// That should be an array refering to the $config['ldap_public'] array key
+// That should be an array referring to the $config['ldap_public'] array key
 // or complete addressbook configuration array.
 $config['acl_users_source'] = '';
 
@@ -22,6 +22,9 @@ $config['acl_groups'] = false;
 
 // Prefix added to the group name to build IMAP ACL identifier
 $config['acl_group_prefix'] = 'group:';
+
+// The LDAP attribute (or field name) which will be used as ACL group identifier
+$config['acl_group_field'] = 'name';
 
 // Include the following 'special' access control subjects in the ACL dialog;
 // Defaults to array('anyone', 'anonymous') (not when set to an empty array)

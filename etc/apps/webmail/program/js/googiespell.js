@@ -1,23 +1,36 @@
-/*
- +-----------------------------------------------------------------------+
- | Roundcube SpellCheck script                                           |
- |   jQuery'fied spell checker based on GoogieSpell 4.0                  |
- |    (which was published under GPL "version 2 or any later version")   |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2006 Amir Salihefendic                                  |
- | Copyright (C) 2009 The Roundcube Dev Team                             |
- | Copyright (C) 2011 Kolab Systems AG                                   |
- |                                                                       |
- | Licensed under the GNU General Public License version 3 or            |
- | any later version with exceptions for skins & plugins.                |
- | See the README file for a full license statement.                     |
- |                                                                       |
- +-----------------------------------------------------------------------+
- | Authors: 4mir Salihefendic <amix@amix.dk>                             |
- |          Aleksander Machniak - <alec [at] alec.pl>                    |
- +-----------------------------------------------------------------------+
-*/
+/**
+ * Roundcube SpellCheck script
+ *
+ * jQuery'fied spell checker based on GoogieSpell 4.0
+ * (which was published under GPL "version 2 or any later version")
+ *
+ * @licstart  The following is the entire license notice for the
+ * JavaScript code in this file.
+ *
+ * Copyright (C) 2006 Amir Salihefendic
+ * Copyright (C) The Roundcube Dev Team
+ * Copyright (C) Kolab Systems AG
+ *
+ * The JavaScript code in this page is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in this file.
+ *
+ * @author 4mir Salihefendic <amix@amix.dk>
+ * @author Aleksander Machniak - <alec [at] alec.pl>
+ */
 
 var GOOGIE_CUR_LANG,
     GOOGIE_DEFAULT_LANG = 'en';
@@ -46,7 +59,7 @@ function GoogieSpell(img_dir, server_url, has_dict)
     };
     this.lang_to_word = this.org_lang_to_word;
     this.langlist_codes = this.array_keys(this.lang_to_word);
-    this.show_change_lang_pic = true;
+    this.show_change_lang_pic = false; // roundcube mod.
     this.change_lang_pic_placement = 'right';
     this.report_state_change = true;
 
@@ -61,6 +74,7 @@ function GoogieSpell(img_dir, server_url, has_dict)
     this.lang_no_suggestions = "No suggestions";
     this.lang_learn_word = "Add to dictionary";
 
+    this.use_ok_pic = false; // added by roundcube
     this.show_spell_img = false; // roundcube mod.
     this.decoration = true;
     this.use_close_btn = false;
@@ -70,8 +84,6 @@ function GoogieSpell(img_dir, server_url, has_dict)
     // Extensions
     this.custom_ajax_error = null;
     this.custom_no_spelling_error = null;
-    this.custom_menu_builder = []; // Should take an eval function and a build menu function
-    this.custom_item_evaulator = null; // Should take an eval function and a build menu function
     this.extra_menu_items = [];
     this.custom_spellcheck_starter = null;
     this.main_controller = true;
@@ -93,11 +105,9 @@ function GoogieSpell(img_dir, server_url, has_dict)
     this.cnt_errors_fixed = 0;
 
     // Set document's onclick to hide the language and error menu
-    $(document).bind('click', function(e) {
+    $(document).click(function(e) {
         var target = $(e.target);
-        if(target.attr('googie_action_btn') != '1' && ref.isLangWindowShown())
-            ref.hideLangWindow();
-        if(target.attr('googie_action_btn') != '1' && ref.isErrorWindowShown())
+        if (target.attr('googie_action_btn') != '1' && ref.isErrorWindowShown())
             ref.hideErrorWindow();
     });
 
@@ -125,8 +135,9 @@ this.decorateTextarea = function(id)
 
         this.checkSpellingState();
     }
-    else if (this.report_ta_not_found)
-        alert('Text area not found');
+    else if (this.report_ta_not_found) {
+        rcmail.alert_dialog('Text area not found');
+    }
 };
 
 //////
@@ -148,9 +159,7 @@ this.setCurrentLanguage = function(lan_code)
     GOOGIE_CUR_LANG = lan_code;
 
     //Set cookie
-    var now = new Date();
-    now.setTime(now.getTime() + 365 * 24 * 60 * 60 * 1000);
-    rcmail.set_cookie('language', lan_code, now);
+    rcmail.set_cookie('language', lan_code, false);
 };
 
 this.setForceWidthHeight = function(width, height)
@@ -173,11 +182,6 @@ this.dontUseCloseButtons = function()
 this.appendNewMenuItem = function(name, call_back_fn, checker)
 {
     this.extra_menu_items.push([name, call_back_fn, checker]);
-};
-
-this.appendCustomMenuBuilder = function(eval_fn, builder)
-{
-    this.custom_menu_builder.push([eval_fn, builder]);
 };
 
 this.setFocus = function()
@@ -233,15 +237,17 @@ this.spellCheck = function(ignore)
 {
     this.prepare(ignore);
 
-    var req_text = this.escapeSpecial(this.orginal_text),
+    var req_text = this.escapeSpecial(this.original_text),
         ref = this;
 
     $.ajax({ type: 'POST', url: this.getUrl(), data: this.createXMLReq(req_text), dataType: 'text',
         error: function(o) {
-            if (ref.custom_ajax_error)
+            if (ref.custom_ajax_error) {
                 ref.custom_ajax_error(ref);
-            else
-                alert('An error was encountered on the server. Please try again later.');
+            }
+            else {
+                rcmail.alert_dialog('An error was encountered on the server. Please try again later.');
+            }
             if (ref.main_controller) {
                 $(ref.spell_span).remove();
                 ref.removeIndicator();
@@ -270,10 +276,12 @@ this.learnWord = function(word, id)
 
     $.ajax({ type: 'POST', url: this.getUrl(), data: req_text, dataType: 'text',
         error: function(o) {
-            if (ref.custom_ajax_error)
+            if (ref.custom_ajax_error) {
                 ref.custom_ajax_error(ref);
-            else
-                alert('An error was encountered on the server. Please try again later.');
+            }
+            else {
+                rcmail.alert_dialog('An error was encountered on the server. Please try again later.');
+            }
         },
         success: function(data) {
         }
@@ -289,7 +297,7 @@ this.prepare = function(ignore, no_indicator)
     this.cnt_errors_fixed = 0;
     this.cnt_errors = 0;
     this.setStateChanged('checking_spell');
-    this.orginal_text = '';
+    this.original_text = '';
 
     if (!no_indicator && this.main_controller)
         this.appendIndicator(this.spell_span);
@@ -297,9 +305,10 @@ this.prepare = function(ignore, no_indicator)
     this.error_links = [];
     this.ta_scroll_top = this.text_area.scrollTop;
     this.ignore = ignore;
-    this.hideLangWindow();
 
-    if ($(this.text_area).val() == '' || ignore) {
+    var area = $(this.text_area);
+
+    if (area.val() == '' || ignore) {
         if (!this.custom_no_spelling_error)
             this.flashNoSpellingErrorState();
         else
@@ -308,17 +317,17 @@ this.prepare = function(ignore, no_indicator)
         return;
     }
 
-    this.createEditLayer(this.text_area.offsetWidth, this.text_area.offsetHeight);
+    var height = $(area).css('box-sizing') == 'border-box' ? this.text_area.offsetHeight : $(area).height();
+
+    this.createEditLayer(area.width(), height);
     this.createErrorWindow();
+
     $('body').append(this.error_window);
 
-    try { netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead"); }
-    catch (e) { }
-
     if (this.main_controller)
-        $(this.spell_span).unbind('click');
+        $(this.spell_span).off('click');
 
-    this.orginal_text = $(this.text_area).val();
+    this.original_text = area.val();
 };
 
 this.parseResult = function(r_text)
@@ -389,14 +398,14 @@ this.hideErrorWindow = function()
     $(this.error_window_iframe).hide();
 };
 
-this.updateOrginalText = function(offset, old_value, new_value, id)
+this.updateOriginalText = function(offset, old_value, new_value, id)
 {
-    var part_1 = this.orginal_text.substring(0, offset),
-        part_2 = this.orginal_text.substring(offset+old_value.length),
+    var part_1 = this.original_text.substring(0, offset),
+        part_2 = this.original_text.substring(offset+old_value.length),
         add_2_offset = new_value.length - old_value.length;
 
-    this.orginal_text = part_1 + new_value + part_2;
-    $(this.text_area).val(this.orginal_text);
+    this.original_text = part_1 + new_value + part_2;
+    $(this.text_area).val(this.original_text);
     for (var j=0, len=this.results.length; j<len; j++) {
         // Don't edit the offset of the current item
         if (j != id && j > id)
@@ -411,14 +420,9 @@ this.saveOldValue = function(elm, old_value) {
 
 this.createListSeparator = function()
 {
-    var td = document.createElement('td'),
-        tr = document.createElement('tr');
-
-    $(td).html(' ').attr('googie_action_btn', '1')
-        .css({'cursor': 'default', 'font-size': '3px', 'border-top': '1px solid #ccc', 'padding-top': '3px'});
-    tr.appendChild(td);
-
-    return tr;
+    return $('<li>').html('&nbsp;').attr('googie_action_btn', '1')
+        .css({'cursor': 'default', 'font-size': '3px', 'border-top': '1px solid #ccc', 'padding-top': '3px'})
+        .get(0);
 };
 
 this.correctError = function(id, elm, l_elm, rm_pre_space)
@@ -435,7 +439,7 @@ this.correctError = function(id, elm, l_elm, rm_pre_space)
     }
 
     this.hideErrorWindow();
-    this.updateOrginalText(offset, old_value, new_value, id);
+    this.updateOriginalText(offset, old_value, new_value, id);
 
     $(elm).html(new_value).css('color', 'green').attr('is_corrected', true);
 
@@ -450,7 +454,7 @@ this.correctError = function(id, elm, l_elm, rm_pre_space)
 this.ignoreError = function(elm, id)
 {
     // @TODO: ignore all same words
-    $(elm).removeAttr('class').css('color', '').unbind();
+    $(elm).removeAttr('class').css('color', '').off();
     this.hideErrorWindow();
 };
 
@@ -461,172 +465,137 @@ this.showErrorWindow = function(elm, id)
 
     var ref = this,
         pos = $(elm).offset(),
-        table = document.createElement('table'),
-        list = document.createElement('tbody');
+        list = document.createElement('ul');
 
     $(this.error_window).html('');
-    $(table).addClass('googie_list').attr('googie_action_btn', '1');
+    $(list).addClass('googie_list toolbarmenu').attr('googie_action_btn', '1');
 
-    // Check if we should use custom menu builder, if not we use the default
-    var changed = false;
-    for (var k=0; k<this.custom_menu_builder.length; k++) {
-        var eb = this.custom_menu_builder[k];
-        if (eb[0](this.results[id])) {
-            changed = eb[1](this, list, elm);
-            break;
-        }
+    // Build up the result list
+    var suggestions = this.results[id]['suggestions'],
+        offset = this.results[id]['attrs']['o'],
+        len = this.results[id]['attrs']['l'],
+        item, dummy;
+
+    // [Add to dictionary] button
+    if (this.has_dictionary && !$(elm).attr('is_corrected')) {
+        dummy = $('<a>').text(this.lang_learn_word).addClass('googie_add_to_dict active');
+
+        $('<li>').attr('googie_action_btn', '1').css('cursor', 'default')
+            .mouseover(ref.item_onmouseover)
+            .mouseout(ref.item_onmouseout)
+            .click(function(e) {
+                ref.learnWord(elm, id);
+                ref.ignoreError(elm, id);
+            })
+            .append(dummy)
+            .appendTo(list);
     }
 
-    if (!changed) {
-        // Build up the result list
-        var suggestions = this.results[id]['suggestions'],
-            offset = this.results[id]['attrs']['o'],
-            len = this.results[id]['attrs']['l'],
-            row, item, dummy;
+    for (var i=0, len=suggestions.length; i < len; i++) {
+        dummy = $('<a>').html(suggestions[i]).addClass('active');
 
-        // [Add to dictionary] button
-        if (this.has_dictionary && !$(elm).attr('is_corrected')) {
-            row = document.createElement('tr'),
-            item = document.createElement('td'),
-            dummy = document.createElement('span');
+        $('<li>').mouseover(this.item_onmouseover).mouseout(this.item_onmouseout)
+            .click(function(e) { ref.correctError(id, elm, e.target.firstChild); })
+            .append(dummy)
+            .appendTo(list);
+    }
 
-            $(dummy).text(this.lang_learn_word);
-            $(item).attr('googie_action_btn', '1').css('cursor', 'default')
-                .mouseover(ref.item_onmouseover)
-                .mouseout(ref.item_onmouseout)
-                .click(function(e) {
-                    ref.learnWord(elm, id);
-                    ref.ignoreError(elm, id);
-                });
+    // The element is changed, append the revert
+    if (elm.is_changed && elm.innerHTML != elm.old_value) {
+        var old_value = elm.old_value;
 
-            item.appendChild(dummy);
-            row.appendChild(item);
-            list.appendChild(row);
-        }
-/*
-        if (suggestions.length == 0) {
-            row = document.createElement('tr'),
-            item = document.createElement('td'),
-            dummy = document.createElement('span');
+        dummy = $('<a>').addClass('googie_list_revert active').html(this.lang_revert + ' ' + old_value);
 
-            $(dummy).text(this.lang_no_suggestions);
-            $(item).attr('googie_action_btn', '1').css('cursor', 'default');
-
-            item.appendChild(dummy);
-            row.appendChild(item);
-            list.appendChild(row);
-        }
-*/
-        for (var i=0, len=suggestions.length; i < len; i++) {
-            row = document.createElement('tr'),
-            item = document.createElement('td'),
-            dummy = document.createElement('span');
-
-            $(dummy).html(suggestions[i]);
-
-            $(item).mouseover(this.item_onmouseover).mouseout(this.item_onmouseout)
-              .click(function(e) { ref.correctError(id, elm, e.target.firstChild) });
-
-            item.appendChild(dummy);
-            row.appendChild(item);
-            list.appendChild(row);
-        }
-
-        // The element is changed, append the revert
-        if (elm.is_changed && elm.innerHTML != elm.old_value) {
-            var old_value = elm.old_value,
-                revert_row = document.createElement('tr'),
-                revert = document.createElement('td'),
-                rev_span = document.createElement('span');
-
-            $(rev_span).addClass('googie_list_revert').html(this.lang_revert + ' ' + old_value);
-
-            $(revert).mouseover(this.item_onmouseover).mouseout(this.item_onmouseout)
-                .click(function(e) {
-                    ref.updateOrginalText(offset, elm.innerHTML, old_value, id);
-                    $(elm).removeAttr('is_corrected').css('color', '#b91414').html(old_value);
-                    ref.hideErrorWindow();
-                });
-
-            revert.appendChild(rev_span);
-            revert_row.appendChild(revert);
-            list.appendChild(revert_row);
-        }
-
-        // Append the edit box
-        var edit_row = document.createElement('tr'),
-            edit = document.createElement('td'),
-            edit_input = document.createElement('input'),
-            ok_pic = document.createElement('img'),
-            edit_form = document.createElement('form');
-
-        var onsub = function () {
-            if (edit_input.value != '') {
-                if (!ref.isDefined(elm.old_value))
-                    ref.saveOldValue(elm, elm.innerHTML);
-
-                ref.updateOrginalText(offset, elm.innerHTML, edit_input.value, id);
-                $(elm).attr('is_corrected', true).css('color', 'green').text(edit_input.value);
+        $('<li>').mouseover(this.item_onmouseover).mouseout(this.item_onmouseout)
+            .click(function(e) {
+                ref.updateOriginalText(offset, elm.innerHTML, old_value, id);
+                $(elm).removeAttr('is_corrected').css('color', '#b91414').html(old_value);
                 ref.hideErrorWindow();
-            }
-            return false;
-        };
-
-        $(edit_input).width(120)
-          .css({'margin': 0, 'padding': 0})
-          .val($(elm).text()).attr('googie_action_btn', '1');
-        $(edit).css('cursor', 'default').attr('googie_action_btn', '1');
-
-        $(ok_pic).attr('src', this.img_dir + 'ok.gif')
-            .width(32).height(16)
-            .css({'cursor': 'pointer', 'margin-left': '2px', 'margin-right': '2px'})
-            .click(onsub);
-
-        $(edit_form).attr('googie_action_btn', '1')
-            .css({'margin': 0, 'padding': 0, 'cursor': 'default', 'white-space': 'nowrap'})
-            .submit(onsub);
-
-        edit_form.appendChild(edit_input);
-        edit_form.appendChild(ok_pic);
-        edit.appendChild(edit_form);
-        edit_row.appendChild(edit);
-        list.appendChild(edit_row);
-
-        // Append extra menu items
-        if (this.extra_menu_items.length > 0)
-            list.appendChild(this.createListSeparator());
-
-        var loop = function(i) {
-            if (i < ref.extra_menu_items.length) {
-                var e_elm = ref.extra_menu_items[i];
-
-                if (!e_elm[2] || e_elm[2](elm, ref)) {
-                    var e_row = document.createElement('tr'),
-                      e_col = document.createElement('td');
-
-                    $(e_col).html(e_elm[0])
-                        .mouseover(ref.item_onmouseover)
-                        .mouseout(ref.item_onmouseout)
-                        .click(function() { return e_elm[1](elm, ref) });
-
-                    e_row.appendChild(e_col);
-                    list.appendChild(e_row);
-                }
-                loop(i+1);
-            }
-        };
-
-        loop(0);
-        loop = null;
-
-        //Close button
-        if (this.use_close_btn) {
-            list.appendChild(this.createCloseButton(this.hideErrorWindow));
-        }
+            })
+            .append(dummy)
+            .appendTo(list);
     }
 
-    table.appendChild(list);
-    this.error_window.appendChild(table);
+    // Append the edit box
+    var edit_row = document.createElement('li'),
+        edit_input = document.createElement('input'),
+        ok_pic = document.createElement('button'),
+        edit_form = document.createElement('form');
+
+    var onsub = function () {
+        if (edit_input.value != '') {
+            if (!ref.isDefined(elm.old_value))
+                ref.saveOldValue(elm, elm.innerHTML);
+
+            ref.updateOriginalText(offset, elm.innerHTML, edit_input.value, id);
+            $(elm).attr('is_corrected', true).css('color', 'green').text(edit_input.value);
+            ref.hideErrorWindow();
+        }
+        return false;
+    };
+
+    $(edit_input).width(120).val($(elm).text()).attr('googie_action_btn', '1');
+    $(edit_row).css('cursor', 'default').attr('googie_action_btn', '1')
+        .on('click', function() { return false; });
+
+    // roundcube modified image use
+    if (this.use_ok_pic) {
+        $('<img>').attr('src', this.img_dir + 'ok.gif')
+            .width(32).height(16)
+            .css({cursor: 'pointer', 'margin-left': '2px', 'margin-right': '2px'})
+            .appendTo(ok_pic);
+    }
+    else {
+        $(ok_pic).text('OK');
+    }
+
+    $(ok_pic).addClass('mainaction save googie_ok_button btn-sm').click(onsub);
+
+    $(edit_form).attr('googie_action_btn', '1')
+        .css({'cursor': 'default', 'white-space': 'nowrap'})
+        .submit(onsub)
+        .append(edit_input)
+        .append(ok_pic)
+        .appendTo(edit_row);
+
+    list.appendChild(edit_row);
+
+    // Append extra menu items
+    if (this.extra_menu_items.length > 0)
+        list.appendChild(this.createListSeparator());
+
+    var loop = function(i) {
+        if (i < ref.extra_menu_items.length) {
+            var e_elm = ref.extra_menu_items[i];
+
+            if (!e_elm[2] || e_elm[2](elm, ref)) {
+                var e_row = document.createElement('tr'),
+                  e_col = document.createElement('td');
+
+                $(e_col).html(e_elm[0])
+                    .mouseover(ref.item_onmouseover)
+                    .mouseout(ref.item_onmouseout)
+                    .click(function() { return e_elm[1](elm, ref) });
+
+                e_row.appendChild(e_col);
+                list.appendChild(e_row);
+            }
+            loop(i+1);
+        }
+    };
+
+    loop(0);
+    loop = null;
+
+    //Close button
+    if (this.use_close_btn) {
+        list.appendChild(this.createCloseButton(this.hideErrorWindow));
+    }
+
+    this.error_window.appendChild(list);
+
+    // roundcube plugin api hook
+    rcmail.triggerEvent('googiespell_create', {obj: this.error_window});
 
     // calculate and set position
     var height = $(this.error_window).height(),
@@ -636,7 +605,10 @@ this.showErrorWindow = function(elm, id)
         top = pos.top + height + 20 < pageheight ? pos.top + 20 : pos.top - height,
         left = pos.left + width < pagewidth ? pos.left : pos.left - width;
 
-    $(this.error_window).css({'top': top+'px', 'left': left+'px'}).show();
+    if (left < 0) left = 0;
+    if (top < 0) top = 0;
+
+    $(this.error_window).css({'top': top+'px', 'left': left+'px', position: 'absolute'}).show();
 
     // Dummy for IE - dropdown bug fix
     if (document.all && !window.opera) {
@@ -661,10 +633,10 @@ this.createEditLayer = function(width, height)
 {
     this.edit_layer = document.createElement('div');
     $(this.edit_layer).addClass('googie_edit_layer').attr('id', 'googie_edit_layer')
-        .width('auto').height(height);
+        .width(width).height(height);
 
     if (this.text_area.nodeName.toLowerCase() != 'input' || $(this.text_area).val() == '') {
-        $(this.edit_layer).css('overflow', 'auto').height(height-4);
+        $(this.edit_layer).css('overflow', 'auto');
     } else {
         $(this.edit_layer).css('overflow', 'hidden');
     }
@@ -679,7 +651,7 @@ this.createEditLayer = function(width, height)
                     $(ref.text_area).focus();
                     fn1 = null;
                 };
-                window.setTimeout(fn1, 10);
+                setTimeout(fn1, 10);
             }
             return false;
         });
@@ -755,33 +727,33 @@ this.showErrorsInIframe = function()
         for (var i=0, length=results.length; i < length; i++) {
             var offset = results[i]['attrs']['o'],
                 len = results[i]['attrs']['l'],
-                part_1_text = this.orginal_text.substring(pointer, offset),
+                part_1_text = this.original_text.substring(pointer, offset),
                 part_1 = this.createPart(part_1_text);
 
             output.appendChild(part_1);
             pointer += offset - pointer;
 
             // If the last child was an error, then insert some space
-            var err_link = this.createErrorLink(this.orginal_text.substr(offset, len), i);
+            var err_link = this.createErrorLink(this.original_text.substr(offset, len), i);
             this.error_links.push(err_link);
             output.appendChild(err_link);
             pointer += len;
         }
 
-        // Insert the rest of the orginal text
-        var part_2_text = this.orginal_text.substr(pointer, this.orginal_text.length),
+        // Insert the rest of the original text
+        var part_2_text = this.original_text.substr(pointer, this.original_text.length),
             part_2 = this.createPart(part_2_text);
 
         output.appendChild(part_2);
     }
     else
-        output.innerHTML = this.orginal_text;
+        output.innerHTML = this.original_text;
 
     $(output).css('text-align', 'left');
 
     var me = this;
-    if (this.custom_item_evaulator)
-        $.map(this.error_links, function(elm){me.custom_item_evaulator(me, elm)});
+    if (this.custom_item_evaluator)
+        $.map(this.error_links, function(elm){me.custom_item_evaluator(me, elm)});
 
     $(this.edit_layer).append(output);
 
@@ -798,103 +770,6 @@ this.showErrorsInIframe = function()
     }
 
 //    this.edit_layer.scrollTop = this.ta_scroll_top;
-};
-
-
-//////
-// Choose language menu
-//////
-this.createLangWindow = function()
-{
-    this.language_window = document.createElement('div');
-    $(this.language_window).addClass('googie_window popupmenu')
-        .width(100).attr('googie_action_btn', '1');
-
-    // Build up the result list
-    var table = document.createElement('table'),
-        list = document.createElement('tbody'),
-        ref = this,
-        row, item, span;
-
-    $(table).addClass('googie_list').width('100%');
-    this.lang_elms = [];
-
-    for (i=0; i < this.langlist_codes.length; i++) {
-        row = document.createElement('tr');
-        item = document.createElement('td');
-        span = document.createElement('span');
-
-        $(span).text(this.lang_to_word[this.langlist_codes[i]]);
-        this.lang_elms.push(item);
-
-        $(item).attr('googieId', this.langlist_codes[i])
-            .bind('click', function(e) {
-                ref.deHighlightCurSel();
-                ref.setCurrentLanguage($(this).attr('googieId'));
-
-                if (ref.lang_state_observer != null) {
-                    ref.lang_state_observer();
-                }
-
-                ref.highlightCurSel();
-                ref.hideLangWindow();
-            })
-            .bind('mouseover', function(e) {
-                if (this.className != "googie_list_selected")
-                    this.className = "googie_list_onhover";
-            })
-            .bind('mouseout', function(e) {
-                if (this.className != "googie_list_selected")
-                    this.className = "googie_list_onout";
-            });
-
-        item.appendChild(span);
-        row.appendChild(item);
-        list.appendChild(row);
-    }
-
-    // Close button
-    if (this.use_close_btn) {
-        list.appendChild(this.createCloseButton(function () { ref.hideLangWindow.apply(ref) }));
-    }
-
-    this.highlightCurSel();
-
-    table.appendChild(list);
-    this.language_window.appendChild(table);
-};
-
-this.isLangWindowShown = function()
-{
-    return $(this.language_window).is(':visible');
-};
-
-this.hideLangWindow = function()
-{
-    $(this.language_window).hide();
-    $(this.switch_lan_pic).removeClass().addClass('googie_lang_3d_on');
-};
-
-this.showLangWindow = function(elm)
-{
-    if (this.show_menu_observer)
-        this.show_menu_observer(this);
-
-    this.createLangWindow();
-    $('body').append(this.language_window);
-
-    var pos = $(elm).offset(),
-        height = $(elm).height(),
-        width = $(elm).width(),
-        h = $(this.language_window).height(),
-        pageheight = $(document).height(),
-        left = this.change_lang_pic_placement == 'right' ?
-            pos.left - 100 + width : pos.left + width,
-        top = pos.top + h < pageheight ? pos.top + height : pos.top - h - 4;
-
-    $(this.language_window).css({'top' : top+'px','left' : left+'px'}).show();
-
-    this.highlightCurSel();
 };
 
 this.deHighlightCurSel = function()
@@ -915,30 +790,6 @@ this.highlightCurSel = function()
             this.lang_elms[i].className = 'googie_list_onout';
         }
     }
-};
-
-this.createChangeLangPic = function()
-{
-    var img = $('<img>')
-        .attr({src: this.img_dir + 'change_lang.gif', 'alt': 'Change language', 'googie_action_btn': '1'}),
-        switch_lan = document.createElement('span');
-        ref = this;
-
-    $(switch_lan).addClass('googie_lang_3d_on')
-        .append(img)
-        .bind('click', function(e) {
-            var elm = this.tagName.toLowerCase() == 'img' ? this.parentNode : this;
-            if($(elm).hasClass('googie_lang_3d_click')) {
-                elm.className = 'googie_lang_3d_on';
-                ref.hideLangWindow();
-            }
-            else {
-                elm.className = 'googie_lang_3d_click';
-                ref.showLangWindow(elm);
-            }
-        });
-
-    return switch_lan;
 };
 
 this.createSpellDiv = function()
@@ -980,7 +831,7 @@ this.flashNoSpellingErrorState = function(on_finish)
         $(this.spell_span).empty().append(rsm)
         .removeClass().addClass('googie_check_spelling_ok');
 
-        window.setTimeout(no_spell_errors, 1000);
+        setTimeout(no_spell_errors, 1000);
     }
 };
 
@@ -994,8 +845,8 @@ this.resumeEditingState = function()
     var ref = this;
 
         $(this.switch_lan_pic).hide();
-        $(this.spell_span).empty().unbind().append(rsm)
-            .bind('click', function() { ref.resumeEditing() })
+        $(this.spell_span).empty().off().append(rsm)
+            .click(function() { ref.resumeEditing(); })
             .removeClass().addClass('googie_resume_editing');
     }
 
@@ -1008,18 +859,15 @@ this.checkSpellingState = function(fire)
     if (fire)
         this.setStateChanged('ready');
 
-    if (this.show_change_lang_pic)
-        this.switch_lan_pic = this.createChangeLangPic();
-    else
-        this.switch_lan_pic = document.createElement('span');
+    this.switch_lan_pic = document.createElement('span');
 
     var span_chck = this.createSpellDiv(),
         ref = this;
 
     if (this.custom_spellcheck_starter)
-        $(span_chck).bind('click', function(e) { ref.custom_spellcheck_starter() });
+        $(span_chck).click(function(e) { ref.custom_spellcheck_starter(); });
     else {
-        $(span_chck).bind('click', function(e) { ref.spellCheck() });
+        $(span_chck).click(function(e) { ref.spellCheck(); });
     }
 
     if (this.main_controller) {
@@ -1075,9 +923,9 @@ this.createButton = function(name, css_class, c_fn)
         spn_btn = document.createTextNode(name);
     }
 
-    $(btn).bind('click', c_fn)
-        .bind('mouseover', this.item_onmouseover)
-        .bind('mouseout', this.item_onmouseout);
+    $(btn).click(c_fn)
+        .mouseover(this.item_onmouseover)
+        .mouseout(this.item_onmouseout);
 
     btn.appendChild(spn_btn);
     btn_row.appendChild(btn);

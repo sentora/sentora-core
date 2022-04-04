@@ -2,25 +2,28 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/managesieve/localization/<lang>.inc                           |
- |                                                                       |
  | Localization file of the Roundcube Webmail Managesieve plugin         |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
+
+
 $labels['filters'] = 'Filter';
 $labels['managefilters'] = 'Administrera filter';
 $labels['filtername'] = 'Filternamn';
 $labels['newfilter'] = 'Nytt filter';
 $labels['filteradd'] = 'Nytt filter';
 $labels['filterdel'] = 'Ta bort filter';
+$labels['rules'] = 'Regler';
+$labels['actions'] = 'Funktioner';
+$labels['scope'] = 'Sökomfattning';
 $labels['moveup'] = 'Flytta upp filter';
 $labels['movedown'] = 'Flytta ner filter';
 $labels['filterallof'] = 'Filtrera på alla följande regler';
@@ -38,6 +41,14 @@ $labels['filterregex'] = 'matchar reguljärt uttryck';
 $labels['filternotregex'] = 'inte matchar reguljärt uttryck';
 $labels['filterunder'] = 'under';
 $labels['filterover'] = 'över';
+$labels['mime'] = 'MIME:';
+$labels['mimepart'] = 'MIME-del:';
+$labels['mime-message'] = 'meddelande';
+$labels['mime-anychild'] = 'någon';
+$labels['mime-type'] = 'typ';
+$labels['mime-subtype'] = 'undertyp';
+$labels['mime-contenttype'] = 'innehållstyp';
+$labels['mime-param'] = 'parameter';
 $labels['addrule'] = 'Lägg till regel';
 $labels['delrule'] = 'Ta bort regel';
 $labels['messagemoveto'] = 'Flytta meddelande till';
@@ -54,21 +65,24 @@ $labels['add'] = 'Lägg till';
 $labels['del'] = 'Ta bort';
 $labels['sender'] = 'Avsändare';
 $labels['recipient'] = 'Mottagare';
-$labels['vacationaddr'] = 'Ytterligare mottagaradresser:';
+$labels['vacationaddr'] = 'Mina mottagaradresser:';
 $labels['vacationdays'] = 'Antal dagar mellan auto-svar:';
 $labels['vacationinterval'] = 'Tid mellan auto-svar:';
 $labels['vacationreason'] = 'Meddelandetext (frånvaroanledning):';
+$labels['vacationfrom'] = 'Svarsadress:';
 $labels['vacationsubject'] = 'Meddelandeämne:';
 $labels['days'] = 'Dagar';
 $labels['seconds'] = 'Sekunder';
 $labels['rulestop'] = 'Avsluta filtrering';
-$labels['enable'] = 'Aktivera/deaktivera';
+$labels['enable'] = 'Aktivera/inaktivera';
 $labels['filterset'] = 'Filtergrupp';
 $labels['filtersets'] = 'Filtergrupper';
 $labels['filtersetadd'] = 'Ny filtergrupp';
 $labels['filtersetdel'] = 'Ta bort filtergrupp';
 $labels['filtersetact'] = 'Aktivera filtergrupp';
-$labels['filtersetdeact'] = 'Deaktivera filtergrupp';
+$labels['filtersetdeact'] = 'Inaktivera filtergrupp';
+$labels['filterseteditraw'] = 'Ändra filtergrupp';
+$labels['filtersetswitch'] = 'Aktivera/inaktivera filtergrupp';
 $labels['filterdef'] = 'Filterdefinition';
 $labels['filtersetname'] = 'Filtergruppsnamn';
 $labels['newfilterset'] = 'Ny filtergrupp';
@@ -76,7 +90,8 @@ $labels['active'] = 'aktiv';
 $labels['none'] = 'ingen';
 $labels['fromset'] = 'från grupp';
 $labels['fromfile'] = 'från fil';
-$labels['filterdisabled'] = 'Filter deaktiverat';
+$labels['filterdisabled'] = 'Filter inaktiverat';
+$labels['filterenabled'] = 'Filter aktiverat';
 $labels['countisgreaterthan'] = 'antal är större än';
 $labels['countisgreaterthanequal'] = 'antal är större än eller lika med';
 $labels['countislessthan'] = 'antal är mindre än';
@@ -97,6 +112,18 @@ $labels['flagdeleted'] = 'Borttaget';
 $labels['flaganswered'] = 'Besvarat';
 $labels['flagflagged'] = 'Flaggat';
 $labels['flagdraft'] = 'Utkast';
+$labels['addheader'] = 'Lägg till meddelandeinformation';
+$labels['deleteheader'] = 'Ta bort meddelandeinformation';
+$labels['headername'] = 'Meddelandeinformation namn';
+$labels['headervalue'] = 'Meddelandeinformation värde';
+$labels['headerpos'] = 'Meddelandeinformation position';
+$labels['headeratstart'] = 'i början';
+$labels['headeratend'] = 'i slutet';
+$labels['headeroccurrence'] = ' Meddelandeinformation förekomst/position';
+$labels['headerfromstart'] = 'från början';
+$labels['headerfromend'] = 'från slutet';
+$labels['headerpatterns'] = 'Meddelandeinformation sökmönster';
+$labels['headermatchtype'] = 'resultattyp:';
 $labels['setvariable'] = 'Sätt variabel';
 $labels['setvarname'] = 'Variabelnamn:';
 $labels['setvarvalue'] = 'Variabelvärde:';
@@ -123,6 +150,7 @@ $labels['filtercreate'] = 'Skapa filter';
 $labels['usedata'] = 'Använd följande information i filtret:';
 $labels['nextstep'] = 'Nästa steg';
 $labels['...'] = '...';
+$labels['string'] = 'Textsträng';
 $labels['currdate'] = 'Dagens datum';
 $labels['datetest'] = 'Datum';
 $labels['dateheader'] = 'huvud:';
@@ -160,9 +188,18 @@ $labels['asciicasemap'] = 'teckenlägesokänslig (ascii-casemap)';
 $labels['asciinumeric'] = 'numerisk (ascii-numeric)';
 $labels['index'] = 'index:';
 $labels['indexlast'] = 'omvänd';
+$labels['spamtest'] = 'Skräppostnivå';
+$labels['spamtestisgreaterthan'] = 'är större än';
+$labels['spamtestisgreaterthanequal'] = 'är större än eller lika med';
+$labels['spamtestislessthan'] = 'är mindre än';
+$labels['spamtestislessthanequal'] = 'är mindre än eller lika med';
+$labels['spamtestequals'] = 'är lika med';
+$labels['spamtestnotequals'] = 'är inte lika med';
+$labels['spamtestisunknown'] = 'är okänd';
 $labels['vacation'] = 'Frånvaro';
 $labels['vacation.reply'] = 'Besvara meddelande';
 $labels['vacation.advanced'] = 'Avancerade inställningar';
+$labels['vacation.from'] = 'Svarsadress';
 $labels['vacation.subject'] = 'Ämne';
 $labels['vacation.body'] = 'Innehåll';
 $labels['vacation.start'] = 'Frånvaron börjar';
@@ -170,7 +207,7 @@ $labels['vacation.end'] = 'Frånvaron slutar';
 $labels['vacation.status'] = 'Status';
 $labels['vacation.on'] = 'På';
 $labels['vacation.off'] = 'Av';
-$labels['vacation.addresses'] = 'Ytterligare mottagaradresser';
+$labels['vacation.addresses'] = 'Mina mottagaradresser';
 $labels['vacation.interval'] = 'Svarsintervall';
 $labels['vacation.after'] = 'Placera frånvaroregel efter';
 $labels['vacation.saving'] = 'Sparar data...';
@@ -179,6 +216,15 @@ $labels['vacation.keep'] = 'Behåll';
 $labels['vacation.discard'] = 'Förkasta';
 $labels['vacation.redirect'] = 'Ändra mottagare till';
 $labels['vacation.copy'] = 'Skicka kopia till';
+$labels['forward'] = 'Skickar vidare';
+$labels['forward.redirect'] = 'Ändra mottagare till';
+$labels['forward.copy'] = 'Skicka kopia till';
+$labels['forward.on'] = 'På';
+$labels['forward.off'] = 'Av';
+$labels['forward.status'] = 'Status:';
+$labels['forward.action'] = 'Utför följande åtgärd på inkommande meddelanden:';
+$labels['forward.saving'] = 'Sparar data...';
+$labels['filladdresses'] = 'Fyll i alla mina mottagaradresser';
 $labels['arialabelfiltersetactions'] = 'Hantera filtergrupper';
 $labels['arialabelfilteractions'] = 'Hantera filter';
 $labels['arialabelfilterform'] = 'Filteregenskaper';
@@ -186,31 +232,42 @@ $labels['ariasummaryfilterslist'] = 'Lista med filter';
 $labels['ariasummaryfiltersetslist'] = 'Lista med filtergrupper';
 $labels['filterstitle'] = 'Ändra filter för inkommande meddelanden';
 $labels['vacationtitle'] = 'Ändra regel för frånvaromeddelande';
+$labels['forwardtitle'] = 'Ändra regel för skicka vidare meddelande';
+$labels['message'] = 'Meddelande';
+$labels['duplicate'] = 'är duplikat';
+$labels['notduplicate'] = 'är inte duplikat';
+$labels['duplicate.handle'] = 'hantera:';
+$labels['duplicate.header'] = 'huvud:';
+$labels['duplicate.uniqueid'] = 'identifikation:';
+$labels['duplicate.seconds'] = 'vänta (sekunder):';
+$labels['duplicate.last'] = 'i förhållande till senaste körningen';
 $messages['filterunknownerror'] = 'Okänt serverfel';
 $messages['filterconnerror'] = 'Anslutning till serverns filtertjänst misslyckades';
 $messages['filterdeleteerror'] = 'Filtret kunde inte tas bort på grund av serverfel';
 $messages['filterdeleted'] = 'Filtret är borttaget';
 $messages['filtersaved'] = 'Filtret har sparats';
 $messages['filtersaveerror'] = 'Filtret kunde inte sparas på grund av serverfel';
+$messages['filterformerror'] = 'Filterformuläret innehåller fel.';
 $messages['filterdeleteconfirm'] = 'Vill du ta bort det markerade filtret?';
 $messages['ruledeleteconfirm'] = 'Vill du ta bort filterregeln?';
 $messages['actiondeleteconfirm'] = 'Vill du ta bort filteråtgärden?';
 $messages['forbiddenchars'] = 'Otillåtet tecken i fältet';
 $messages['cannotbeempty'] = 'Fältet kan inte lämnas tomt';
 $messages['ruleexist'] = 'Ett filter med angivet namn finns redan.';
-$messages['setactivateerror'] = 'Filtergruppen kunde inte aktiveras på grund av serverfel';
-$messages['setdeactivateerror'] = 'Filtergruppen kunde inte deaktiveras på grund av serverfel';
-$messages['setdeleteerror'] = 'Filtergruppen kunde inte tas bort på grund av serverfel';
-$messages['setactivated'] = 'Filtergruppen är aktiverad';
-$messages['setdeactivated'] = 'Filtergruppen är deaktiverad';
-$messages['setdeleted'] = 'Filtergruppen är borttagen';
+$messages['setactivateerror'] = 'Filtergruppen kunde inte aktiveras på grund av serverfel.';
+$messages['setdeactivateerror'] = 'Filtergruppen kunde inte deaktiveras på grund av serverfel.';
+$messages['setdeleteerror'] = 'Filtergruppen kunde inte tas bort på grund av serverfel.';
+$messages['setactivated'] = 'Filtergruppen är aktiverad.';
+$messages['setdeactivated'] = 'Filtergruppen är inaktiverad.';
+$messages['setdeleted'] = 'Filtergruppen är borttagen.';
+$messages['setupdated'] = 'Filtergruppen är ändrad.';
 $messages['setdeleteconfirm'] = 'Vill du ta bort filtergruppen?';
-$messages['setcreateerror'] = 'Filtergruppen kunde inte läggas till på grund av serverfel';
-$messages['setcreated'] = 'Filtergruppen har lagts till';
+$messages['setcreateerror'] = 'Filtergruppen kunde inte läggas till på grund av serverfel.';
+$messages['setcreated'] = 'Filtergruppen har lagts till.';
 $messages['activateerror'] = 'Kunde inte aktivera filter på grund av serverfel.';
-$messages['deactivateerror'] = 'Kunde inte deaktivera filter på grund av serverfel.';
-$messages['deactivated'] = 'Filter aktiverat.';
-$messages['activated'] = 'Filter deaktiverat.';
+$messages['deactivateerror'] = 'Kunde inte inaktivera filter på grund av serverfel.';
+$messages['deactivated'] = 'Filter inaktiverat.';
+$messages['activated'] = 'Filter aktiverat.';
 $messages['moved'] = 'Filter flyttat.';
 $messages['moveerror'] = 'Kunde inte flytta filter på grund av serverfel.';
 $messages['nametoolong'] = 'För långt namn.';
@@ -220,5 +277,9 @@ $messages['nodata'] = 'Minst en position måste väljas!';
 $messages['invaliddateformat'] = 'Ogiltigt datum eller del av datumformat';
 $messages['saveerror'] = 'Datan kunde inte sparas på grund av serverfel.';
 $messages['vacationsaved'] = 'Frånvarodatan har sparats.';
+$messages['forwardsaved'] = 'Information för skicka vidare har sparats.';
 $messages['emptyvacationbody'] = 'Text för frånvaromeddelande saknas!';
-?>
+$messages['duplicate.conflict.err'] = 'Både huvud och unik identifikation är inte tillåtet.';
+$messages['disabledaction'] = 'Otillåten åtgärd.';
+$messages['lastindexempty'] = 'Index är nödvändigt för att räkna från slutet';
+$messages['noflagset'] = 'Minst en flagga måste väljas.';

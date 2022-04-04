@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Database Attachments
  *
  * This plugin which provides database backed storage for temporary
- * attachment file handling.  The primary advantage of this plugin
+ * attachment file handling. The primary advantage of this plugin
  * is its compatibility with round-robin dns multi-server roundcube
  * installations.
  *
@@ -11,7 +12,21 @@
  *
  * @author Ziba Scott <ziba@umich.edu>
  * @author Aleksander Machniak <alec@alec.pl>
- * @version @package_version@
+ *
+ * Copyright (C) The Roundcube Dev Team
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 require_once INSTALL_PATH . 'plugins/filesystem_attachments/filesystem_attachments.php';
@@ -22,7 +37,7 @@ class database_attachments extends filesystem_attachments
     protected $cache;
 
     // A prefix for the cache key used in the session and in the key field of the cache table
-    protected $prefix = "db_attach";
+    const PREFIX = "ATTACH";
 
     /**
      * Save a newly uploaded attachment
@@ -40,12 +55,12 @@ class database_attachments extends filesystem_attachments
         }
 
         $data   = base64_encode($data);
-        $status = $cache->write($key, $data);
+        $status = $cache->set($key, $data);
 
         if ($status) {
-            $args['id'] = $key;
+            $args['id']     = $key;
             $args['status'] = true;
-            unset($args['path']);
+            $args['path']   = null;
         }
 
         return $args;
@@ -61,16 +76,18 @@ class database_attachments extends filesystem_attachments
         $cache = $this->get_cache();
         $key   = $this->_key($args);
 
-        if ($args['path']) {
+        if (!empty($args['path'])) {
             $args['data'] = file_get_contents($args['path']);
 
             if ($args['data'] === false) {
                 return $args;
             }
+
+            $args['path'] = null;
         }
 
         $data   = base64_encode($args['data']);
-        $status = $cache->write($key, $data);
+        $status = $cache->set($key, $data);
 
         if ($status) {
             $args['id'] = $key;
@@ -111,11 +128,14 @@ class database_attachments extends filesystem_attachments
     function get($args)
     {
         $cache = $this->get_cache();
-        $data  = $cache->read($args['id']);
+        $data  = $cache->get($args['id']);
 
-        if ($data) {
+        if ($data !== null && $data !== false) {
             $args['data'] = base64_decode($data);
             $args['status'] = true;
+        }
+        else {
+            $args['status'] = false;
         }
 
         return $args;
@@ -128,7 +148,7 @@ class database_attachments extends filesystem_attachments
     {
         // check if cache object exist, it may be empty on session_destroy (#1489726)
         if ($cache = $this->get_cache()) {
-            $cache->remove($args['group'], true);
+            $cache->remove(isset($args['group']) ? $args['group'] : null, true);
         }
     }
 
@@ -137,8 +157,8 @@ class database_attachments extends filesystem_attachments
      */
     protected function _key($args)
     {
-        $uname = $args['path'] ? $args['path'] : $args['name'];
-        return $args['group'] . md5(mktime() . $uname . $_SESSION['user_id']);
+        $uname = !empty($args['path']) ? $args['path'] : $args['name'];
+        return $args['group'] . md5(microtime() . $uname . $_SESSION['user_id']);
     }
 
     /**
@@ -153,9 +173,16 @@ class database_attachments extends filesystem_attachments
             $ttl    = 12 * 60 * 60; // default: 12 hours
             $ttl    = $rcmail->config->get('database_attachments_cache_ttl', $ttl);
             $type   = $rcmail->config->get('database_attachments_cache', 'db');
+            $prefix = self::PREFIX;
+
+            // Add session identifier to the prefix to prevent from removing attachments
+            // in other sessions of the same user (#1490542)
+            if ($id = session_id()) {
+                $prefix .= $id;
+            }
 
             // Init SQL cache (disable cache data serialization)
-            $this->cache = $rcmail->get_cache($this->prefix, 'db', $ttl, false);
+            $this->cache = $rcmail->get_cache($prefix, $type, $ttl, false, true);
         }
 
         return $this->cache;
