@@ -2,19 +2,19 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/managesieve/localization/<lang>.inc                           |
- |                                                                       |
  | Localization file of the Roundcube Webmail Managesieve plugin         |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
+
+
 $labels['filters'] = 'Զտիչներ';
 $labels['managefilters'] = 'Կառավարել ստացվող նամակների զտիչները';
 $labels['filtername'] = 'Զտիչի անուն';
@@ -58,15 +58,8 @@ $labels['vacationreason'] = 'Հաղորդագրության բովանդակու
 $labels['vacationsubject'] = 'Հաղորդագրության վերնագիր`';
 $labels['rulestop'] = 'Դադարել պայմանների ստուգումը';
 $labels['enable'] = 'Միացնել/Անջատել';
-$labels['filterset'] = 'Զտիչների համալիր';
 $labels['filtersets'] = 'Զտիչների համալիրներ';
-$labels['filtersetadd'] = 'Ավելացնել զտիչների համալիր';
-$labels['filtersetdel'] = 'Ջնջել առկա զտիչների համալիրը';
-$labels['filtersetact'] = 'Միացնել առկա զտիչների համալիրը';
-$labels['filtersetdeact'] = 'Անջատել առկա զտիչների համալիրը';
 $labels['filterdef'] = 'Զտիչի սահմանում';
-$labels['filtersetname'] = 'Զտիչների համալիրի անուն';
-$labels['newfilterset'] = 'Նոր զտիչների համալիր';
 $labels['active'] = 'ակտիվ';
 $labels['none'] = 'ոչ մեկը';
 $labels['fromset'] = 'համալիրից';
@@ -90,10 +83,13 @@ $labels['flagdeleted'] = 'Ջնջված';
 $labels['flaganswered'] = 'Պատասխանված';
 $labels['flagflagged'] = 'Նշված';
 $labels['flagdraft'] = 'Սևագիր';
+$labels['notifymethodmailto'] = 'Էկ–փոստ';
+$labels['notifymethodtel'] = 'Հեռախոս';
 $labels['filtercreate'] = 'Ստեղծել զտիչ';
 $labels['usedata'] = 'Զտիչում օգտագործել հետևյալ տեղեկությունը.';
 $labels['nextstep'] = 'Հաջորդ քայլ';
 $labels['...'] = '…';
+$labels['datetest'] = 'Ամսաթիվ';
 $labels['advancedopts'] = 'Հավելյալ ընտրանքներ';
 $labels['body'] = 'Մարմին';
 $labels['address'] = 'հասցե';
@@ -113,6 +109,11 @@ $labels['default'] = 'լռակյաց';
 $labels['octet'] = 'անփոփոխ (օկտետ)';
 $labels['asciicasemap'] = 'case insensitive (ascii-casemap)';
 $labels['asciinumeric'] = 'numeric (ascii-numeric)';
+$labels['spamtestequals'] = 'հավասար է';
+$labels['spamtestnotequals'] = 'հավասար չէ';
+$labels['vacation.subject'] = 'Վերնագիր';
+$labels['vacation.body'] = 'Մարմին';
+$labels['vacation.keep'] = 'Պահել';
 $messages['filterunknownerror'] = 'Սերվերի անհայտ սխալ';
 $messages['filterconnerror'] = 'Սերվերի հետ կապի խնդիր։';
 $messages['filterdeleted'] = 'Զտիչը ջնջվեց։';
@@ -123,11 +124,6 @@ $messages['actiondeleteconfirm'] = 'Դուք իսկապե՞ս ցանկանում
 $messages['forbiddenchars'] = 'Դաշտում առկա են արգելված նիշեր։';
 $messages['cannotbeempty'] = 'Դաշտը դատարկ չի կարող լինել։';
 $messages['ruleexist'] = 'Տրված անունով զտիչ արդեն գոյություն ունի։';
-$messages['setactivated'] = 'Զտիչների համալիրը միացված է։';
-$messages['setdeactivated'] = 'Զտիչների համալիրը անջատված է։';
-$messages['setdeleted'] = 'Զտիչների համալիրը ջնջված է։';
-$messages['setdeleteconfirm'] = 'Դուք իսկապե՞ս ցանկանում եք ջնջել նշված զտիչների համալիրը։';
-$messages['setcreated'] = 'Զտիչների համալիրը ստեղծված է։';
 $messages['deactivated'] = 'Զտիչի միացված է։';
 $messages['activated'] = 'Զտիչի անջատված է։';
 $messages['moved'] = 'Զտիչի տեղափոխված է։';
@@ -135,4 +131,3 @@ $messages['nametoolong'] = 'Անունը չափազանց երկար է։';
 $messages['namereserved'] = 'Անթույլատրելի անուն։';
 $messages['setexist'] = 'Համալիրը արդեն գոյություն ունի։';
 $messages['nodata'] = 'Պահանջվում է նշել գոնե մեկ դիրք։';
-?>

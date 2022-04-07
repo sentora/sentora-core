@@ -8,7 +8,7 @@
  * @package   PSI_UPS
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.apcupsd.inc.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,7 +20,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @author    Artem Volk <artvolk@mail.ru>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -29,7 +29,7 @@ class Apcupsd extends UPS
     /**
      * internal storage for all gathered data
      *
-     * @var Array
+     * @var array
      */
     private $_output = array();
 
@@ -39,22 +39,53 @@ class Apcupsd extends UPS
     public function __construct()
     {
         parent::__construct();
-        if (defined('PSI_UPS_APCUPSD_LIST') && is_string(PSI_UPS_APCUPSD_LIST)) {
-            if (preg_match(ARRAY_EXP, PSI_UPS_APCUPSD_LIST)) {
-                $upses = eval(PSI_UPS_APCUPSD_LIST);
+        if (!defined('PSI_UPS_APCUPSD_ACCESS')) {
+             define('PSI_UPS_APCUPSD_ACCESS', false);
+        }
+        switch (strtolower(PSI_UPS_APCUPSD_ACCESS)) {
+        case 'data':
+            if (defined('PSI_UPS_APCUPSD_LIST') && is_string(PSI_UPS_APCUPSD_LIST)) {
+                if (preg_match(ARRAY_EXP, PSI_UPS_APCUPSD_LIST)) {
+                    $upss = eval(PSI_UPS_APCUPSD_LIST);
+                } else {
+                    $upss = array(PSI_UPS_APCUPSD_LIST);
+                }
             } else {
-                $upses = array(PSI_UPS_APCUPSD_LIST);
+               $upss = array('UPS');
             }
-            foreach ($upses as $ups) {
-                CommonFunctions::executeProgram('apcaccess', 'status '.trim($ups), $temp);
+            $un = 0;
+            foreach ($upss as $ups) {
+                $temp = "";
+                CommonFunctions::rftsdata("upsapcupsd{$un}.tmp", $temp);
                 if (! empty($temp)) {
                     $this->_output[] = $temp;
                 }
+                $un++;
             }
-        } else { //use default if address and port not defined
-            CommonFunctions::executeProgram('apcaccess', 'status', $temp);
-            if (! empty($temp)) {
-                $this->_output[] = $temp;
+            break;
+        default:
+            if (defined('PSI_UPS_APCUPSD_LIST') && is_string(PSI_UPS_APCUPSD_LIST)) {
+                if (preg_match(ARRAY_EXP, PSI_UPS_APCUPSD_LIST)) {
+                    $upses = eval(PSI_UPS_APCUPSD_LIST);
+                } else {
+                    $upses = array(PSI_UPS_APCUPSD_LIST);
+                }
+                foreach ($upses as $ups) {
+                    $temp = "";
+                    CommonFunctions::executeProgram('apcaccess', 'status '.trim($ups), $temp);
+                    if (! empty($temp)) {
+                        $this->_output[] = $temp;
+                    }
+                }
+            } else { //use default if address and port not defined
+                if (!defined('PSI_EMU_HOSTNAME')) {
+                    CommonFunctions::executeProgram('apcaccess', 'status', $temp);
+                } else {
+                    CommonFunctions::executeProgram('apcaccess', 'status '.PSI_EMU_HOSTNAME, $temp);
+                }
+                if (! empty($temp)) {
+                    $this->_output[] = $temp;
+                }
             }
         }
     }
@@ -62,7 +93,7 @@ class Apcupsd extends UPS
     /**
      * parse the input and store data in resultset for xml generation
      *
-     * @return Void
+     * @return void
      */
     private function _info()
     {
@@ -75,7 +106,7 @@ class Apcupsd extends UPS
                 $dev->setName(trim($data[1]));
             }
             if (preg_match('/^MODEL\s*:\s*(.*)$/m', $ups, $data)) {
-                $model=trim($data[1]);
+                $model = trim($data[1]);
                 if (preg_match('/^APCMODEL\s*:\s*(.*)$/m', $ups, $data)) {
                     $dev->setModel($model.' ('.trim($data[1]).')');
                 } else {
@@ -92,7 +123,10 @@ class Apcupsd extends UPS
                 $dev->setStatus(trim($data[1]));
             }
             if (preg_match('/^ITEMP\s*:\s*(.*)$/m', $ups, $data)) {
-                $dev->setTemperatur(trim($data[1]));
+                $temperatur = trim($data[1]);
+                if (($temperatur !== "-273.1 C") && ($temperatur !== "-273.1 C Internal")) {
+                    $dev->setTemperatur($temperatur);
+                }
             }
             // Outages
             if (preg_match('/^NUMXFERS\s*:\s*(.*)$/m', $ups, $data)) {
@@ -136,7 +170,7 @@ class Apcupsd extends UPS
      *
      * @see PSI_Interface_UPS::build()
      *
-     * @return Void
+     * @return void
      */
     public function build()
     {

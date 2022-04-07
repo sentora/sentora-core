@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = '发生错误！';
 $messages['loginfailed']  = '登录失败。';
 $messages['cookiesdisabled'] = '您的浏览器不支持 Cookies。';
@@ -22,7 +21,10 @@ $messages['sessionerror'] = '会话无效或已过期。';
 $messages['storageerror'] = '连接至 IMAP 服务器失败。';
 $messages['servererror'] = '服务器错误！';
 $messages['servererrormsg'] = '服务器错误：$msg';
+$messages['accountlocked'] = '登录失败太多次。请稍后再试。';
+$messages['connerror'] = '连接错误(连接服务器失败)！';
 $messages['dberror'] = '数据库错误！';
+$messages['windowopenerror'] = '弹出窗口被屏蔽！';
 $messages['requesttimedout'] = '请求超时';
 $messages['errorreadonly'] = '无法完成操作。文件夹为只读。';
 $messages['errornoperm'] = '无法完成操作。没有权限。';
@@ -31,10 +33,12 @@ $messages['erroroverquotadelete'] = '没有足够的磁盘空间。请使用 SHI
 $messages['invalidrequest'] = '请求无效！未保存数据。';
 $messages['invalidhost'] = '无效的主机名。';
 $messages['nomessagesfound'] = '此邮件夹内无邮件。';
-$messages['loggedout'] = '您已成功注销，再见！';
+$messages['mailboxempty'] = '邮箱为空';
+$messages['nomessages'] = '无邮件';
 $messages['refreshing'] = '正在刷新...';
 $messages['loading'] = '正在载入...';
 $messages['uploading'] = '正在上传文件...';
+$messages['attaching'] = '正在附加文件...';
 $messages['uploadingmany'] = '正在上传文件...';
 $messages['loadingdata'] = '正在载入数据...';
 $messages['checkingmail'] = '正在检查新邮件...';
@@ -45,14 +49,21 @@ $messages['messagesaved'] = '邮件已暂存至草稿箱。';
 $messages['successfullysaved'] = '保存成功。';
 $messages['savingresponse'] = '正在保存响应文本...';
 $messages['deleteresponseconfirm'] = '是否确认删除响应文本?';
+$messages['nocontactselected'] = '你还没有选择联系人';
 $messages['addedsuccessfully'] = '联系人已添加。';
-$messages['contactexists'] = '当前联系人的电子邮件地址已存在。';
+$messages['contactexists'] = '已经具有此电子邮件地址的联系人已经存在。';
 $messages['contactnameexists'] = '已存在同名联系人。';
 $messages['blockedimages'] = '由于保护隐私，此邮件中的远程图片未予显示。';
+$messages['blockedresources'] = '为了保护您的隐私，远程资源已被屏蔽。';
 $messages['encryptedmessage'] = '抱歉！该邮件已被加密，无法显示。';
+$messages['externalmessagedecryption'] = '这是一封已加密的邮件，并且不能用您的浏览器扩展解密。';
+$messages['nopubkeyfor'] = '没有找到 $email 的有效公钥';
+$messages['nopubkeyforsender'] = '在您的发件人身份中没有找到有效公钥。您想只对收件人加密此邮件吗？';
+$messages['encryptnoattachments'] = '已经上传的附件不能加密。请在加密编辑器中重新添加它们。';
+$messages['searchpubkeyservers'] = '您想在公钥服务器搜索缺失的密钥吗？';
+$messages['encryptpubkeysfound'] = '下列公钥已被找到：';
 $messages['nocontactsfound'] = '未找到联系人。';
 $messages['contactnotfound'] = '未找到指定的联系人。';
-$messages['contactsearchonly'] = '请输入联系人的搜索条件';
 $messages['sendingfailed'] = '发送失败。';
 $messages['senttooquickly'] = '您需要等待$sec秒才能发送邮件。';
 $messages['errorsavingsent'] = '保存已发送邮件时发生错误。';
@@ -61,6 +72,8 @@ $messages['errormoving'] = '无法移动邮件。';
 $messages['errorcopying'] = '无法复制邮件。';
 $messages['errordeleting'] = '无法删除邮件。';
 $messages['errormarking'] = '无法标记邮件。';
+$messages['alerttitle'] = '注意';
+$messages['confirmationtitle'] = '您确定……';
 $messages['deletecontactconfirm']  = '是否删除选中的联系人？';
 $messages['deletegroupconfirm']  = '是否删除选中的群组?';
 $messages['deletemessagesconfirm'] = '是否删除选中的邮件？';
@@ -76,13 +89,16 @@ $messages['formincomplete'] = '表单未填写完整。';
 $messages['noemailwarning'] = '请输入一个有效的邮件地址。';
 $messages['nonamewarning']  = '请输入名称。';
 $messages['nopagesizewarning'] = '请输入每页显示的邮件数量。';
-$messages['nosenderwarning'] = '请输入发件人地址。';
+$messages['nosenderwarning'] = '请输入发件人的电子邮件地址。';
+$messages['recipientsadded'] = '联系人添加成功';
 $messages['norecipientwarning'] = '至少输入一个收件人。';
+$messages['disclosedrecipwarning'] = '所有的收件人都能看到其他收件人的地址。如果您不想这么做并且想保护他人隐私，您可以使用"密送 (Bcc)"一栏。';
+$messages['disclosedreciptitle'] = '太多公共收件人';
 $messages['nosubjectwarning']  = '主题为空。您要输入一个主题吗？';
+$messages['nosubjecttitle']  = '无主题';
 $messages['nobodywarning'] = '要发送没有正文的邮件吗？';
-$messages['notsentwarning'] = '邮件未发送。您确定要离开并舍弃当前邮件吗？';
+$messages['notsentwarning'] = '此消息已发送并且有未保存的更改。您是否要放弃您的更改？';
 $messages['restoresavedcomposedata'] = '您有一封邮件尚未发送.\n\nSubject: $subject\nSaved: $date\n\n您是否要恢复这封邮件？';
-$messages['noldapserver'] = '请选择一个用来查找的 LDAP 服务器。';
 $messages['nosearchname'] = '请输入联系人姓名或电子邮件地址。';
 $messages['notuploadedwarning'] = '附件尚未全部上传，请耐心等待或者取消上传。';
 $messages['searchsuccessful'] = '共找到 $nr 封邮件。';
@@ -90,17 +106,19 @@ $messages['contactsearchsuccessful'] = '共找到 $nr 位联系人。';
 $messages['searchnomatch'] = '未找到任何符合条件的邮件。';
 $messages['searching'] = '正在搜索...';
 $messages['checking'] = '正在检查...';
+$messages['stillsearching'] = '仍在搜索中……';
 $messages['nospellerrors'] = '未发现拼写错误。';
 $messages['folderdeleted'] = '删除文件夹成功。';
 $messages['foldersubscribed'] = '订阅文件夹成功。';
 $messages['folderunsubscribed'] = '退订文件夹成功。';
-$messages['folderpurged'] = '清空文件夹成功。';
-$messages['folderexpunged'] = '文件夹已清空。';
 $messages['deletedsuccessfully'] = '删除成功。';
 $messages['converting'] = '格式转换中...';
 $messages['messageopenerror'] = '无法从服务器加载邮件内容。';
+$messages['filelinkerror'] = '附加文件失败。';
 $messages['fileuploaderror'] = '文件上传失败。';
 $messages['filesizeerror'] = '上传的文件超过了 $size 的大小限制。';
+$messages['filecounterror'] = '您一次最多可以上传 $count 个文件。';
+$messages['msgsizeerror'] = '附加文件失败。邮件超出最大大小 ($size)。';
 $messages['copysuccess'] = '成功复制 $nr 个联系人。';
 $messages['movesuccess'] = '成功移动 $nr 个联系人。';
 $messages['copyerror'] = '无法复制联系人。';
@@ -132,15 +150,18 @@ $messages['importconfirmskipped'] = '<b>跳过已存在的 $skipped 项目</b>';
 $messages['importmessagesuccess'] = '成功导入 $nr 条信息';
 $messages['importmessageerror'] = '导入失败！文件无效';
 $messages['opnotpermitted'] = '不允许的操作!';
-$messages['nofromaddress'] = '选中的身份没有邮件地址。';
+$messages['nofromaddress'] = '选定身份中缺少电子邮件地址。';
+$messages['editorwarning'] = '切换编辑模式可能导致文本格式丢失。是否继续？';
 $messages['httpreceivedencrypterror'] = '<b>您的邮件无法发送</b>，因为发生了一个严重的配置错误，请立即联系管理员。';
 $messages['smtpconnerror'] = 'SMTP 错误 ($code):连接服务器失败。';
 $messages['smtpautherror'] = 'SMTP 错误 ($code): 认证失败。';
 $messages['smtpfromerror'] = 'SMTP 错误 ($code):添加发件人失败 "$from" ($msg)。';
 $messages['smtptoerror'] = 'SMTP 错误 ($code): 添加收件人失败 "$to" ($msg)。';
 $messages['smtprecipientserror'] = 'SMTP 错误: 无法解析收件人列表。';
+$messages['smtputf8error'] = 'SMTP 错误：服务器不支持带 Unicode 字符的邮件地址';
+$messages['smtpsizeerror'] = 'SMTP 错误：消息长度超过服务器能接受的长度 ($limit)';
 $messages['smtperror'] = 'SMTP 错误: $msg';
-$messages['emailformaterror'] = '无效的邮件地址：$email';
+$messages['emailformaterror'] = '无效的电子邮件地址：$email';
 $messages['toomanyrecipients'] = '收件人太多，请减少人数至 $max。';
 $messages['maxgroupmembersreached'] = '组员数量超过最大值 $max。';
 $messages['internalerror'] = '遇到一个内部错误，请重试。';
@@ -157,18 +178,38 @@ $messages['savedsearchcreated'] = '成功创建保存的搜索';
 $messages['savedsearchcreateerror'] = '无法创建保存的搜索。';
 $messages['messagedeleted'] = '删除邮件成功。';
 $messages['messagemoved'] = '移动邮件成功。';
+$messages['messagemovedtotrash'] = '邮件已成功移动到已删除邮件。';
 $messages['messagecopied'] = '复制邮件成功';
 $messages['messagemarked'] = '标记邮件成功';
 $messages['autocompletechars'] = '至少需要输入 $min 个字符';
 $messages['autocompletemore'] = '找到太多的结果。请输入更多字符。';
 $messages['namecannotbeempty'] = '必须输入名字';
 $messages['nametoolong'] = '名字太长';
+$messages['namedotforbidden'] = '文件夹名称不能以“点”开头。';
 $messages['folderupdated'] = '成功更新文件夹';
 $messages['foldercreated'] = '成功创建文件夹';
 $messages['invalidimageformat'] = '非法的图像类型。';
 $messages['mispellingsfound'] = '检查到拼写错误。';
 $messages['parentnotwritable'] = '无法创建/转移文件夹至指定的上级文件夹，没有权限。';
 $messages['messagetoobig'] = '邮件过大无法处理。';
-$messages['attachmentvalidationerror'] = '警告！该附件很可疑，因为其自身的格式与邮件中声明的格式不符。如果您不信任发送人，则不应该在浏览器中打开该附件。<br/><br/><em>声明格式：$expected；实际格式：$detected</em>';
+$messages['attachmentvalidationerror'] = '这个附件很可疑：因为它的真正类型和在消息中声明的类型不一致。如果您不是很信任发件人，请不要打开此附件，因为里面可能包含恶意内容或者病毒。<br/><br/><em>声明类型： $expected ；检测到的类型： $detected</em>';
 $messages['noscriptwarning'] = '警告：本程序需要 Javascript 支持！请在浏览器设置中启用 Javascript。';
-?>
+$messages['messageissent'] = '邮件已发送，但尚未保存。是否现在保存？';
+$messages['errnotfound'] = '文件未找到';
+$messages['errnotfoundexplain'] = '请求资源未找到！';
+$messages['errfailedrequest'] = '请求失败';
+$messages['errauthorizationfailed'] = '授权失败';
+$messages['errunauthorizedexplain'] = '无法验证访问此服务的授权！';
+$messages['errrequestcheckfailed'] = '请求检查失败';
+$messages['errcsrfprotectionexplain'] = "访问此资源是保护你避免被CSRF攻击。\nlf 看到此信息，你可能在关闭web应用程序时并未登出服务。\n\n现在需要人机交互才能继续。";
+$messages['errcontactserveradmin'] = '请联系你的服务器管理员。';
+$messages['clicktoresumesession'] = '点击此处恢复你之前的会话';
+$messages['errcomposesession'] = '撰写会话错误';
+$messages['errcomposesessionexplain'] = '请求的撰写会话未找到。';
+$messages['clicktocompose'] = '点击这里撰写新邮件';
+$messages['nosupporterror'] = '你的网页浏览器不支持此功能';
+$messages['siginserted'] = '签名插入成功';
+$messages['responseinserted'] = '回复插入成功';
+$messages['listempty'] = '列表为空';
+$messages['listusebutton'] = '请使用 添加 按钮添加新的记录';
+$messages['keypaircreatesuccess'] = '已为 $identity 添加了新的钥匙对';

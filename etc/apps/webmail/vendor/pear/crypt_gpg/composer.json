@@ -1,0 +1,55 @@
+{
+    "name": "pear/crypt_gpg",
+    "description": "Provides an object oriented interface to the GNU Privacy Guard (GnuPG). It requires the GnuPG executable to be on the system.",
+    "type": "library",
+    "keywords": [
+        "gpg",
+        "gnupg",
+        "encryption",
+        "pgp"
+    ],
+    "homepage": "https://github.com/pear/Crypt_GPG",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Michael Gauthier",
+            "email": "mike@silverorange.com"
+        },
+        {
+            "name": "Nathan Fredrickson",
+            "email": "nathan@silverorange.com"
+        },
+        {
+            "name": "Aleksander Machniak",
+            "email": "alec@alec.pl"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.8",
+        "ext-mbstring": "*",
+        "pear/console_commandline": "*",
+        "pear/pear_exception": "*"
+    },
+    "suggest": {
+        "ext-posix": "May require the posix PHP extension"
+    },
+    "bin": [
+        "scripts/crypt-gpg-pinentry"
+    ],
+    "autoload": {
+        "classmap": ["Crypt/"]
+    },
+    "include-path": [
+        "./"
+    ],
+    "support": {
+        "issues": "https://pear.php.net/bugs/search.php?cmd=display&package_name[]=Crypt_GPG",
+        "source": "https://github.com/pear/Crypt_GPG"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
+    "archive": {
+        "exclude": ["tools", "package.php"]
+    }
+}

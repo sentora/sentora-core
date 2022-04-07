@@ -7,13 +7,12 @@
  * It's clickable interface which operates on text scripts and communicates
  * with server using managesieve protocol. Adds Filters tab in Settings.
  *
- * @version @package_version@
  * @author Aleksander Machniak <alec@alec.pl>
  *
  * Configuration (see config.inc.php.dist)
  *
- * Copyright (C) 2008-2013, The Roundcube Dev Team
- * Copyright (C) 2011-2013, Kolab Systems AG
+ * Copyright (C) The Roundcube Dev Team
+ * Copyright (C) Kolab Systems AG
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,26 +31,43 @@
 class managesieve extends rcube_plugin
 {
     public $task = 'mail|settings';
+
     private $rc;
     private $engine;
+    private $ui_initialized    = false;
+    private $mail_headers_done = false;
 
+    /**
+     * Plugin initialization
+     */
     function init()
     {
-        $this->rc = rcmail::get_instance();
+        $this->rc = rcube::get_instance();
+
+        $this->load_config();
+
+        $allowed_hosts = $this->rc->config->get('managesieve_allowed_hosts');
+        if (!empty($allowed_hosts) && !in_array($_SESSION['storage_host'], (array) $allowed_hosts)) {
+            return;
+        }
 
         // register actions
-        $this->register_action('plugin.managesieve', array($this, 'managesieve_actions'));
-        $this->register_action('plugin.managesieve-action', array($this, 'managesieve_actions'));
-        $this->register_action('plugin.managesieve-vacation', array($this, 'managesieve_actions'));
-        $this->register_action('plugin.managesieve-save', array($this, 'managesieve_save'));
+        $this->register_action('plugin.managesieve', [$this, 'managesieve_actions']);
+        $this->register_action('plugin.managesieve-action', [$this, 'managesieve_actions']);
+        $this->register_action('plugin.managesieve-vacation', [$this, 'managesieve_actions']);
+        $this->register_action('plugin.managesieve-forward', [$this, 'managesieve_actions']);
+        $this->register_action('plugin.managesieve-save', [$this, 'managesieve_save']);
+        $this->register_action('plugin.managesieve-saveraw', [$this, 'managesieve_saveraw']);
 
         if ($this->rc->task == 'settings') {
-            $this->add_hook('settings_actions', array($this, 'settings_actions'));
+            $this->add_hook('settings_actions', [$this, 'settings_actions']);
             $this->init_ui();
         }
         else if ($this->rc->task == 'mail') {
             // register message hook
-            $this->add_hook('message_headers_output', array($this, 'mail_headers'));
+            if ($this->rc->action == 'show') {
+                $this->add_hook('message_headers_output', [$this, 'mail_headers']);
+            }
 
             // inject Create Filter popup stuff
             if (empty($this->rc->action) || $this->rc->action == 'show'
@@ -67,7 +83,7 @@ class managesieve extends rcube_plugin
      */
     function init_ui()
     {
-        if ($this->ui_initialized) {
+        if (!empty($this->ui_initialized)) {
             return;
         }
 
@@ -82,15 +98,11 @@ class managesieve extends rcube_plugin
 
         // include styles
         $skin_path = $this->local_skin_path();
-        if ($this->rc->task == 'settings' || $sieve_action) {
-            if (is_file($this->home . "/$skin_path/managesieve.css")) {
-                $this->include_stylesheet("$skin_path/managesieve.css");
-            }
+        if ($sieve_action || ($this->rc->task == 'settings' && empty($_REQUEST['_framed']))) {
+            $this->include_stylesheet("$skin_path/managesieve.css");
         }
-        else {
-            if (is_file($this->home . "/$skin_path/managesieve_mail.css")) {
-                $this->include_stylesheet("$skin_path/managesieve_mail.css");
-            }
+        else if ($this->rc->task == 'mail') {
+            $this->include_stylesheet("$skin_path/managesieve_mail.css");
         }
 
         $this->ui_initialized = true;
@@ -101,28 +113,40 @@ class managesieve extends rcube_plugin
      */
     function settings_actions($args)
     {
-        $this->load_config();
-
         $vacation_mode = (int) $this->rc->config->get('managesieve_vacation');
+        $forward_mode  = (int) $this->rc->config->get('managesieve_forward');
 
         // register Filters action
-        if ($vacation_mode != 2) {
-            $args['actions'][] = array(
+        if ($vacation_mode != 2 && $forward_mode != 2) {
+            $args['actions'][] = [
                 'action' => 'plugin.managesieve',
                 'class'  => 'filter',
                 'label'  => 'filters',
                 'domain' => 'managesieve',
-            );
+                'title'  => 'filterstitle',
+            ];
         }
 
         // register Vacation action
         if ($vacation_mode > 0) {
-            $args['actions'][] = array(
+            $args['actions'][] = [
                 'action' => 'plugin.managesieve-vacation',
                 'class'  => 'vacation',
                 'label'  => 'vacation',
                 'domain' => 'managesieve',
-            );
+                'title'  => 'vacationtitle',
+            ];
+        }
+
+        // register Forward action
+        if ($forward_mode > 0) {
+            $args['actions'][] = [
+                'action' => 'plugin.managesieve-forward',
+                'class'  => 'forward',
+                'label'  => 'forward',
+                'domain' => 'managesieve',
+                'title'  => 'forwardtitle',
+            ];
         }
 
         return $args;
@@ -138,22 +162,26 @@ class managesieve extends rcube_plugin
             return;
         }
 
-        // use jQuery for popup window
-        $this->require_plugin('jqueryui');
+        $vacation_mode = (int) $this->rc->config->get('managesieve_vacation');
+        $forward_mode  = (int) $this->rc->config->get('managesieve_forward');
+
+        if ($vacation_mode == 2 || $forward_mode == 2) {
+            return;
+        }
 
         // include js script and localization
         $this->init_ui();
 
         // add 'Create filter' item to message menu
-        $this->api->add_content(html::tag('li', null, 
-            $this->api->output->button(array(
+        $this->add_button([
                 'command'  => 'managesieve-create',
                 'label'    => 'managesieve.filtercreate',
-                'type'     => 'link',
+                'type'     => 'link-menuitem',
                 'classact' => 'icon filterlink active',
-                'class'    => 'icon filterlink',
+                'class'    => 'icon filterlink disabled',
                 'innerclass' => 'icon filterlink',
-            ))), 'messagemenu');
+            ], 'messagemenu'
+        );
 
         // register some labels/messages
         $this->rc->output->add_label('managesieve.newfilter', 'managesieve.usedata',
@@ -168,7 +196,7 @@ class managesieve extends rcube_plugin
     function mail_headers($args)
     {
         // this hook can be executed many times
-        if ($this->mail_headers_done) {
+        if (!empty($this->mail_headers_done)) {
             return $args;
         }
 
@@ -176,10 +204,12 @@ class managesieve extends rcube_plugin
 
         $headers = $this->parse_headers($args['headers']);
 
-        if ($this->rc->action == 'preview')
-            $this->rc->output->command('parent.set_env', array('sieve_headers' => $headers));
-        else
+        if ($this->rc->action == 'preview') {
+            $this->rc->output->command('parent.set_env', ['sieve_headers' => $headers]);
+        }
+        else {
             $this->rc->output->set_env('sieve_headers', $headers);
+        }
 
         return $args;
     }
@@ -189,10 +219,12 @@ class managesieve extends rcube_plugin
      */
     function managesieve_actions()
     {
+        $uids = rcmail::get_uids(null, null, $multifolder, rcube_utils::INPUT_POST);
+
         // handle fetching email headers for the new filter form
-        if ($uid = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_GPC)) {
-            $mailbox = $this->rc->get_storage()->get_folder();
-            $message = new rcube_message($uid, $mailbox);
+        if (!empty($uids)) {
+            $mailbox = key($uids);
+            $message = new rcube_message($uids[$mailbox][0], $mailbox);
             $headers = $this->parse_headers($message->headers);
 
             $this->rc->output->set_env('sieve_headers', $headers);
@@ -202,9 +234,11 @@ class managesieve extends rcube_plugin
 
         // handle other actions
         $engine_type = $this->rc->action == 'plugin.managesieve-vacation' ? 'vacation' : '';
+        $engine_type = $this->rc->action == 'plugin.managesieve-forward' ? 'forward' : $engine_type;
         $engine      = $this->get_engine($engine_type);
 
         $this->init_ui();
+
         $engine->actions();
     }
 
@@ -214,7 +248,7 @@ class managesieve extends rcube_plugin
     function managesieve_save()
     {
         // load localization
-        $this->add_texts('localization/', array('filters','managefilters'));
+        $this->add_texts('localization/', ['filters', 'managefilters']);
 
         // include main js script
         if ($this->api->output->type == 'html') {
@@ -226,19 +260,34 @@ class managesieve extends rcube_plugin
     }
 
     /**
+     * Raw form save action handler
+     */
+    function managesieve_saveraw()
+    {
+        $engine = $this->get_engine();
+
+        if (!$this->rc->config->get('managesieve_raw_editor', true)) {
+            return;
+        }
+
+        // load localization
+        $this->add_texts('localization/', ['filters','managefilters']);
+
+        $engine->saveraw();
+    }
+
+    /**
      * Initializes engine object
      */
-    private function get_engine($type = null)
+    public function get_engine($type = null)
     {
         if (!$this->engine) {
-            $this->load_config();
-
             // Add include path for internal classes
             $include_path = $this->home . '/lib' . PATH_SEPARATOR;
             $include_path .= ini_get('include_path');
             set_include_path($include_path);
 
-            $class_name = 'rcube_sieve_' . ($type ? $type : 'engine');
+            $class_name   = 'rcube_sieve_' . ($type ?: 'engine');
             $this->engine = new $class_name($this);
         }
 
@@ -250,19 +299,20 @@ class managesieve extends rcube_plugin
      */
     private function parse_headers($headers)
     {
-        $result = array();
+        $result = [];
 
-        if ($headers->subject)
-            $result[] = array('Subject', rcube_mime::decode_header($headers->subject));
+        if ($headers->subject) {
+            $result[] = ['Subject', rcube_mime::decode_header($headers->subject)];
+        }
 
         // @TODO: List-Id, others?
-        foreach (array('From', 'To') as $h) {
+        foreach (['From', 'To'] as $h) {
             $hl = strtolower($h);
-            if ($headers->$hl) {
+            if (!empty($headers->$hl)) {
                 $list = rcube_mime::decode_address_list($headers->$hl);
                 foreach ($list as $item) {
-                    if ($item['mailto']) {
-                        $result[] = array($h, $item['mailto']);
+                    if (!empty($item['mailto'])) {
+                        $result[] = [$h, $item['mailto']];
                     }
                 }
             }

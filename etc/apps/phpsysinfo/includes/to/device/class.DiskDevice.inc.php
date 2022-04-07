@@ -8,7 +8,7 @@
  * @package   PSI_TO
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.DiskDevice.inc.php 252 2009-06-17 13:06:44Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -19,7 +19,7 @@
  * @package   PSI_TO
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -28,58 +28,65 @@ class DiskDevice
     /**
      * name of the disk device
      *
-     * @var String
+     * @var string
      */
     private $_name = "";
 
     /**
      * type of the filesystem on the disk device
      *
-     * @var String
+     * @var string
      */
     private $_fsType = "";
 
     /**
      * diskspace that is free in bytes
      *
-     * @var Integer
+     * @var int
      */
     private $_free = 0;
 
     /**
      * diskspace that is used in bytes
      *
-     * @var Integer
+     * @var int
      */
     private $_used = 0;
 
     /**
      * total diskspace
      *
-     * @var Integer
+     * @var int
      */
     private $_total = 0;
 
     /**
      * mount point of the disk device if available
      *
-     * @var String
+     * @var string
      */
     private $_mountPoint = null;
 
     /**
      * additional options of the device, like mount options
      *
-     * @var String
+     * @var string
      */
     private $_options = null;
 
     /**
      * inodes usage in percent if available
      *
-     * @var
+     * @var int
      */
     private $_percentInodesUsed = null;
+
+    /**
+     * ignore mode
+     *
+     * @var int
+     */
+    private $_ignore = 0;
 
     /**
      * Returns PercentUsed calculated when function is called from internal values
@@ -87,12 +94,12 @@ class DiskDevice
      * @see DiskDevice::$_total
      * @see DiskDevice::$_used
      *
-     * @return Integer
+     * @return int
      */
     public function getPercentUsed()
     {
         if ($this->_total > 0) {
-            return round($this->_used / $this->_total * 100);
+            return 100 - min(floor($this->_free / $this->_total * 100), 100);
         } else {
             return 0;
         }
@@ -103,7 +110,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_PercentInodesUsed
      *
-     * @return Integer
+     * @return int
      */
     public function getPercentInodesUsed()
     {
@@ -113,11 +120,11 @@ class DiskDevice
     /**
      * Sets $_PercentInodesUsed.
      *
-     * @param Integer $percentInodesUsed inodes percent
+     * @param int $percentInodesUsed inodes percent
      *
      * @see DiskDevice::$_PercentInodesUsed
      *
-     * @return Void
+     * @return void
      */
     public function setPercentInodesUsed($percentInodesUsed)
     {
@@ -129,7 +136,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_free
      *
-     * @return Integer
+     * @return int
      */
     public function getFree()
     {
@@ -139,11 +146,11 @@ class DiskDevice
     /**
      * Sets $_free.
      *
-     * @param Integer $free free bytes
+     * @param int $free free bytes
      *
      * @see DiskDevice::$_free
      *
-     * @return Void
+     * @return void
      */
     public function setFree($free)
     {
@@ -155,7 +162,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_fsType
      *
-     * @return String
+     * @return string
      */
     public function getFsType()
     {
@@ -169,7 +176,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_fsType
      *
-     * @return Void
+     * @return void
      */
     public function setFsType($fsType)
     {
@@ -181,7 +188,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_mountPoint
      *
-     * @return String
+     * @return string
      */
     public function getMountPoint()
     {
@@ -191,11 +198,11 @@ class DiskDevice
     /**
      * Sets $_mountPoint.
      *
-     * @param String $mountPoint mountpoint
+     * @param string $mountPoint mountpoint
      *
      * @see DiskDevice::$_mountPoint
      *
-     * @return Void
+     * @return void
      */
     public function setMountPoint($mountPoint)
     {
@@ -207,7 +214,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_name
      *
-     * @return String
+     * @return string
      */
     public function getName()
     {
@@ -217,11 +224,11 @@ class DiskDevice
     /**
      * Sets $_name.
      *
-     * @param String $name device name
+     * @param string $name device name
      *
      * @see DiskDevice::$_name
      *
-     * @return Void
+     * @return void
      */
     public function setName($name)
     {
@@ -233,7 +240,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_options
      *
-     * @return String
+     * @return string
      */
     public function getOptions()
     {
@@ -243,11 +250,11 @@ class DiskDevice
     /**
      * Sets $_options.
      *
-     * @param String $options additional options
+     * @param string $options additional options
      *
      * @see DiskDevice::$_options
      *
-     * @return Void
+     * @return void
      */
     public function setOptions($options)
     {
@@ -259,7 +266,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_total
      *
-     * @return Integer
+     * @return int
      */
     public function getTotal()
     {
@@ -269,11 +276,11 @@ class DiskDevice
     /**
      * Sets $_total.
      *
-     * @param Integer $total total bytes
+     * @param int $total total bytes
      *
      * @see DiskDevice::$_total
      *
-     * @return Void
+     * @return void
      */
     public function setTotal($total)
     {
@@ -285,7 +292,7 @@ class DiskDevice
      *
      * @see DiskDevice::$_used
      *
-     * @return Integer
+     * @return int
      */
     public function getUsed()
     {
@@ -295,14 +302,38 @@ class DiskDevice
     /**
      * Sets $_used.
      *
-     * @param Integer $used used bytes
+     * @param int $used used bytes
      *
      * @see DiskDevice::$_used
      *
-     * @return Void
+     * @return void
      */
     public function setUsed($used)
     {
         $this->_used = $used;
+    }
+
+    /**
+     * Returns $_ignore.
+     *
+     * @see DiskDevice::$_ignore
+     *
+     * @return int
+     */
+    public function getIgnore()
+    {
+        return $this->_ignore;
+    }
+
+    /**
+     * Sets $_ignore.
+     *
+     * @see DiskDevice::$_ignore
+     *
+     * @return void
+     */
+    public function setIgnore($ignore)
+    {
+        $this->_ignore = $ignore;
     }
 }

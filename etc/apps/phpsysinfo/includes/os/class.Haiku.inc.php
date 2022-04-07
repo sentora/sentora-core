@@ -8,7 +8,7 @@
  * @package   PSI Haiku OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.Haiku.inc.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,24 +20,16 @@
  * @package   PSI Haiku OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
 class Haiku extends OS
 {
     /**
-     * call parent constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * get the cpu information
      *
-     * @return array
+     * @return void
      */
     protected function _cpuinfo()
     {
@@ -53,21 +45,22 @@ class Haiku extends OS
                     $dev->setModel($ar_buf[1]);
                     $arrLines = preg_split("/\n/", $cpu, -1, PREG_SPLIT_NO_EMPTY);
                     foreach ($arrLines as $Line) {
-                        if (preg_match("/^\s+Data TLB:\s+(.*)K-byte/", $Line, $Line_buf)) {
-                            $dev->setCache(max($Line_buf[1]*1024, $dev->getCache()));
-                        } elseif (preg_match("/^\s+Data TLB:\s+(.*)M-byte/", $Line, $Line_buf)) {
-                            $dev->setCache(max($Line_buf[1]*1024*1024, $dev->getCache()));
-                        } elseif (preg_match("/^\s+Data TLB:\s+(.*)G-byte/", $Line, $Line_buf)) {
-                            $dev->setCache(max($Line_buf[1]*1024*1024*1024, $dev->getCache()));
+                        if (preg_match("/^\s+Data TLB:\s+(.*)K-byte/", $Line, $Line_buf) || preg_match("/^\s+L0 Data TLB:\s+(.*)K-byte/", $Line, $Line_buf)) {
+                            $dev->setCache(max(intval($Line_buf[1])*1024, $dev->getCache()));
+                        } elseif (preg_match("/^\s+Data TLB:\s+(.*)M-byte/", $Line, $Line_buf) || preg_match("/^\s+L0 Data TLB:\s+(.*)M-byte/", $Line, $Line_buf)) {
+                            $dev->setCache(max(intval($Line_buf[1])*1024*1024, $dev->getCache()));
+                        } elseif (preg_match("/^\s+Data TLB:\s+(.*)G-byte/", $Line, $Line_buf) || preg_match("/^\s+L0 Data TLB:\s+(.*)G-byte/", $Line, $Line_buf)) {
+                            $dev->setCache(max(intval($Line_buf[1])*1024*1024*1024, $dev->getCache()));
                         } elseif (preg_match("/\s+VMX/", $Line, $Line_buf)) {
                             $dev->setVirt("vmx");
                         } elseif (preg_match("/\s+SVM/", $Line, $Line_buf)) {
                             $dev->setVirt("svm");
                         }
                     }
-                    if ($cpuspeed != "")$dev->setCpuSpeed($cpuspeed);
+                    if ($cpuspeed != "") {
+                        $dev->setCpuSpeed($cpuspeed);
+                    }
                     $this->sys->setCpus($dev);
-                  //echo ">>>>>".$cpu;
                 }
             }
         }
@@ -136,7 +129,7 @@ class Haiku extends OS
     private function _kernel()
     {
         if (CommonFunctions::executeProgram('uname', '-rvm', $ret)) {
-               $this->sys->setKernel($ret);
+            $this->sys->setKernel($ret);
         }
     }
 
@@ -163,19 +156,28 @@ class Haiku extends OS
      */
     private function _uptime()
     {
-        if (CommonFunctions::executeProgram('uptime', '-u', $buf)) {
-            if (preg_match("/^up (\d+) minute[s]?/", $buf, $ar_buf)) {
-                $min = $ar_buf[1];
-                $this->sys->setUptime($min * 60);
-            } elseif (preg_match("/^up (\d+) hour[s]?, (\d+) minute[s]?/", $buf, $ar_buf)) {
-                $min = $ar_buf[2];
-                $hours = $ar_buf[1];
-                $this->sys->setUptime($hours * 3600 + $min * 60);
-            } elseif (preg_match("/^up (\d+) day[s]?, (\d+) hour[s]?, (\d+) minute[s]?/", $buf, $ar_buf)) {
+        if (CommonFunctions::executeProgram('uptime', '', $buf)) {
+            if (preg_match("/up (\d+) day[s]?,[ ]+(\d+):(\d+),/", $buf, $ar_buf)) {
                 $min = $ar_buf[3];
                 $hours = $ar_buf[2];
                 $days = $ar_buf[1];
                 $this->sys->setUptime($days * 86400 + $hours * 3600 + $min * 60);
+            } elseif (preg_match("/up[ ]+(\d+):(\d+),/", $buf, $ar_buf)) {
+                $min = $ar_buf[2];
+                $hours = $ar_buf[1];
+                $this->sys->setUptime($hours * 3600 + $min * 60);
+            } elseif (preg_match("/up (\d+) day[s]?, (\d+) hour[s]?, (\d+) minute[s]?$/", $buf, $ar_buf)) {
+                $min = $ar_buf[3];
+                $hours = $ar_buf[2];
+                $days = $ar_buf[1];
+                $this->sys->setUptime($days * 86400 + $hours * 3600 + $min * 60);
+            } elseif (preg_match("/up (\d+) hour[s]?, (\d+) minute[s]?$/", $buf, $ar_buf)) {
+                $min = $ar_buf[2];
+                $hours = $ar_buf[1];
+                $this->sys->setUptime($hours * 3600 + $min * 60);
+            } elseif (preg_match("/up (\d+) minute[s]?$/", $buf, $ar_buf)) {
+                $min = $ar_buf[1];
+                $this->sys->setUptime($min * 60);
             }
         }
     }
@@ -203,7 +205,7 @@ class Haiku extends OS
      *
      * @return void
      */
-    private function _users()
+    protected function _users()
     {
         $this->sys->setUsers(1);
     }
@@ -215,8 +217,8 @@ class Haiku extends OS
      */
     private function _hostname()
     {
-        if (PSI_USE_VHOST === true) {
-            $this->sys->setHostname(getenv('SERVER_NAME'));
+        if (PSI_USE_VHOST) {
+            if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
         } else {
             if (CommonFunctions::executeProgram('uname', '-n', $result, PSI_DEBUG)) {
                 $ip = gethostbyname($result);
@@ -238,7 +240,7 @@ class Haiku extends OS
             if (preg_match("/(.*)bytes free\s+\(used\/max\s+(.*)\s+\/\s+(.*)\)\s*\n\s+\(cached\s+(.*)\)/", $bufr, $ar_buf)) {
                 $this->sys->setMemTotal($ar_buf[3]);
                 $this->sys->setMemFree($ar_buf[1]);
-                $this->sys->setMemCache($ar_buf[4]);
+                $this->sys->setMemCache(min($ar_buf[4], $ar_buf[2]));
                 $this->sys->setMemUsed($ar_buf[2]);
             }
         }
@@ -292,10 +294,13 @@ class Haiku extends OS
     {
         if (CommonFunctions::executeProgram('ifconfig', '', $bufr, PSI_DEBUG)) {
             $lines = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
-            $notwas = true;
+            $was = false;
+            $errors = 0;
+            $drops = 0;
+            $dev = null;
             foreach ($lines as $line) {
                 if (preg_match("/^(\S+)/", $line, $ar_buf)) {
-                    if (!$notwas) {
+                    if ($was) {
                         $dev->setErrors($errors);
                         $dev->setDrops($drops);
                         $this->sys->setNetDevices($dev);
@@ -304,9 +309,9 @@ class Haiku extends OS
                     $drops = 0;
                     $dev = new NetDevice();
                     $dev->setName($ar_buf[1]);
-                    $notwas = false;
+                    $was = true;
                 } else {
-                    if (!$notwas) {
+                    if ($was) {
                         if (preg_match('/\sReceive:\s\d+\spackets,\s(\d+)\serrors,\s(\d+)\sbytes,\s\d+\smcasts,\s(\d+)\sdropped/i', $line, $ar_buf2)) {
                             $errors +=$ar_buf2[1];
                             $drops +=$ar_buf2[3];
@@ -318,18 +323,19 @@ class Haiku extends OS
                         }
 
                         if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS)) {
-                            if (preg_match('/\sEthernet,\s+Address:\s(\S*)/i', $line, $ar_buf2))
-                                    $dev->setInfo(preg_replace('/:/', '-', $ar_buf2[1]));
-                            elseif (preg_match('/^\s+inet\saddr:\s(\S*),/i', $line, $ar_buf2))
-                                     $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
-                                 elseif (preg_match('/^\s+inet6\saddr:\s(\S*),/i', $line, $ar_buf2)
-                                          && ($ar_buf2[1]!="::") && !preg_match('/^fe80::/i', $ar_buf2[1]))
-                                            $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                            if (preg_match('/\sEthernet,\s+Address:\s(\S*)/i', $line, $ar_buf2)) {
+                                if (!defined('PSI_HIDE_NETWORK_MACADDR') || !PSI_HIDE_NETWORK_MACADDR) $dev->setInfo(preg_replace('/:/', '-', strtoupper($ar_buf2[1])));
+                            } elseif (preg_match('/^\s+inet\saddr:\s(\S*),/i', $line, $ar_buf2)) {
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                            } elseif (preg_match('/^\s+inet6\saddr:\s(\S*),/i', $line, $ar_buf2)
+                                     && ($ar_buf2[1]!="::") && !preg_match('/^fe80::/i', $ar_buf2[1])) {
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').strtolower($ar_buf2[1]));
+                            }
                         }
                     }
                 }
             }
-            if (!$notwas) {
+            if ($was) {
                 $dev->setErrors($errors);
                 $dev->setDrops($drops);
                 $this->sys->setNetDevices($dev);
@@ -362,23 +368,33 @@ class Haiku extends OS
     /**
      * get the information
      *
-     * @return Void
+     * @return void
      */
     public function build()
     {
-        $this->error->addError("WARN", "The Haiku version of phpSysInfo is a work in progress, some things currently don't work");
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_loadavg();
-        $this->_pci();
-        $this->_usb();
-        $this->_cpuinfo();
-        $this->_memory();
-        $this->_filesystems();
-        $this->_network();
-        $this->_processes();
+        $this->error->addWarning("The Haiku version of phpSysInfo is a work in progress, some things currently don't work");
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
+            $this->_processes();
+        }
+        if (!$this->blockname || $this->blockname==='hardware') {
+           $this->_cpuinfo();
+           $this->_pci();
+           $this->_usb();
+        }
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
+        }
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
+        }
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
+        }
     }
 }

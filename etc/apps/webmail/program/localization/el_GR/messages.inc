@@ -2,26 +2,27 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Έχει προκύψει κάποιο σφάλμα!';
 $messages['loginfailed']  = 'Η είσοδος απέτυχε.';
 $messages['cookiesdisabled'] = 'Ο περιηγητής σας (browser) δεν αποδέχεται cookies.';
-$messages['sessionerror'] = 'Η συνεδρία σας είναι άκυρη ή έχει λήξει';
+$messages['sessionerror'] = 'Η συνεδρία σας είναι άκυρη ή έχει λήξει.';
+$messages['cookiesmismatch'] = 'Εντοπίστηκε αναντιστοιχία στα cookies. Παρακαλούμε καθαρίστε τα cookies του περιηγητή σας.';
 $messages['storageerror'] = 'Η σύνδεση με το διακομιστή αποθήκευσης απέτυχε.';
 $messages['servererror'] = 'Σφάλμα του εξυπηρετητή!';
 $messages['servererrormsg'] = 'Σφάλμα εξυπηρετητή: $msg';
+$messages['accountlocked'] = 'Πάρα πολλές αποτυχημένες προσπάθειες σύνδεσης. Δοκιμάστε ξανά αργότερα.';
 $messages['connerror'] = 'Σφάλμα σύνδεσης (Αποτυχία πρόσβασης στον διακομιστή)!';
 $messages['dberror'] = 'Σφάλμα βάσης δεδομένων!';
 $messages['windowopenerror'] = 'Το αναδυόμενο παράθυρο αποκλείστηκε!';
@@ -33,12 +34,13 @@ $messages['erroroverquotadelete'] = 'Δεν υπάρχει ελεύθερος χ
 $messages['invalidrequest'] = 'Λανθασμένο αίτημα! Δεν αποθηκεύτηκαν δεδομένα.';
 $messages['invalidhost'] = 'Άκυρο όνομα εξυπηρετητή.';
 $messages['nomessagesfound'] = 'Δεν βρέθηκαν μηνύματα σε αυτή τη θυρίδα.';
-$messages['loggedout'] = 'Έχετε τερματίσει επιτυχώς τη συνεδρία. Αντίο!';
+$messages['loggedout'] = 'Έχετε αποσυνδεθεί επιτυχώς. Καλή συνέχεια!';
 $messages['mailboxempty'] = 'Η θυρίδα είναι άδεια';
 $messages['nomessages'] = 'Δεν υπάρχουν μηνύματα';
 $messages['refreshing'] = 'Ανανέωση....';
 $messages['loading'] = 'Φόρτωση...';
 $messages['uploading'] = 'Το αρχείο φορτώνεται...';
+$messages['attaching'] = 'Το αρχείο επισυνάπτεται...';
 $messages['uploadingmany'] = 'Φόρτωση αρχείων...';
 $messages['loadingdata'] = 'Φόρτωση δεδομένων...';
 $messages['checkingmail'] = 'Έλεγχος για νέα μηνύματα...';
@@ -49,14 +51,24 @@ $messages['messagesaved'] = 'Το μήνυμα αποθηκεύτηκε στα �
 $messages['successfullysaved'] = 'Αποθηκεύτηκε επιτυχώς.';
 $messages['savingresponse'] = 'Αποθήκευση του κειμένου απάντησης...';
 $messages['deleteresponseconfirm'] = 'Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το κείμενο απάντησης;';
+$messages['nocontactselected'] = 'Δεν έχετε επιλέξει κάποια επαφή ακόμα.';
 $messages['addedsuccessfully'] = 'Η επαφή προστέθηκε επιτυχώς στο βιβλίο επαφών.';
-$messages['contactexists'] = 'Υπάρχει ήδη επαφή με αυτή τη διεύθυνση e-mail.';
+$messages['contactexists'] = 'Υπάρχει ήδη μια επαφή με την ίδια διεύθυνση ηλεκτρονικού ταχυδρομείου.';
 $messages['contactnameexists'] = 'Υπάρχει ήδη μια επαφή με το ίδιο όνομα.';
 $messages['blockedimages'] = 'Για να προστατευτεί το απόρρητο σας, οι απομακρυσμένες εικόνες έχουν απενεργοποιηθεί σε αυτό το μήνυμα.';
+$messages['blockedresources'] = 'Για την προστασία της ιδιωτικότητάς σας, κάποιοι απομακρυσμένοι πόροι έχουν μπλοκαριστεί.';
 $messages['encryptedmessage'] = 'Αυτό το μήνυμα είναι κρυπτογραφημένο και δε μπορεί να προβληθεί. Συγγνώμη!';
+$messages['externalmessagedecryption'] = 'Αυτό είναι ένα κρυπτογραφημένο μήνυμα και μπορεί να αποκρυπτογραφηθεί με την επέκταση του προγράμματος περιήγησης σας.';
+$messages['nopubkeyfor'] = 'Δε βρέθηκε έγκυρο δημόσιο κλειδί για το $email';
+$messages['nopubkeyforsender'] = 'Δεν βρέθηκε ισχύον δημόσιο κλειδί  για την ταυτότητα αποστολέα σας. Θέλετε να κρυπτογραφήσετε το μήνυμα μόνο για τους αποδέκτες;';
+$messages['encryptnoattachments'] = 'Τα ήδη ανεβασμένα συνημμένα δεν μπορούν να κρυπτογραφηθούν. Παρακαλώ προσθέστε τα ξανά στον επεξεργαστή κρυπτογράφησης.';
+$messages['searchpubkeyservers'] = 'Θέλετε να αναζητήσετε τους διακομιστές δημόσιου κλειδιού για τα κλειδιά που λείπουν;';
+$messages['encryptpubkeysfound'] = 'Βρέθηκαν τα ακόλουθα δημόσια κλειδιά:';
+$messages['keyservererror'] = 'Αποτυχία λήψης κλειδιού από τον διακομιστή κλειδιών.';
+$messages['keyimportsuccess'] = 'Το δημόσιο κλειδί $key εισήχθη επιτυχώς στη λίστα κλειδιών σας.';
 $messages['nocontactsfound'] = 'Δε βρέθηκαν επαφές.';
 $messages['contactnotfound'] = 'Η ζητούμενη επαφή δεν βρέθηκε.';
-$messages['contactsearchonly'] = 'Εισάγετε κάποιους όρους προς αναζήτηση επαφών';
+$messages['contactsearchonly'] = 'Πρέπει να χρησιμοποιήσετε μια φόρμα αναζήτησης για να δείτε επαφές από την επιλεγμένη λίστα διευθύνσεων.';
 $messages['sendingfailed'] = 'Η αποστολή του μηνύματος απέτυχε.';
 $messages['senttooquickly'] = 'Παρακαλώ περιμένετε $sec δευτερόλεπτα πριν στείλετε το μήνυμα.';
 $messages['errorsavingsent'] = 'Προέκυψε σφάλμα κατά την αποθήκευση αποσταλμένου μηνύματος.';
@@ -65,10 +77,13 @@ $messages['errormoving'] = 'Τα μηνύματα δεν ήταν δυνατό �
 $messages['errorcopying'] = 'Δεν ήταν δυνατή η αντιγραφή του μηνύματος/των.';
 $messages['errordeleting'] = 'Το μήνυμα δεν ήταν δυνατό να διαγραφεί.';
 $messages['errormarking'] = 'Δεν έγινε επισήμανση στο μήνυμα.';
+$messages['alerttitle'] = 'Προσοχή';
+$messages['confirmationtitle'] = 'Είστε βέβαιος/η...';
 $messages['deletecontactconfirm']  = 'Θέλετε να διαγράψετε τη συγκεκριμένη επαφή/ές;';
 $messages['deletegroupconfirm']  = 'Είστε βέβαιοι πως θέλετε να διαγράψετε την επιλεγμένη ομάδα;';
 $messages['deletemessagesconfirm'] = 'Θέλετε να διαγράψετε το συγκεκριμένο μήνυμα/τα;';
 $messages['deletefolderconfirm']  = 'Θέλετε να διαγράψετε τον συγκεκριμένο φάκελο;';
+$messages['movefolderconfirm']  = 'Είστε σίγουροι ότι θέλετε να μετακινήσετε αυτόν το φάκελο?';
 $messages['purgefolderconfirm']  = 'Θέλετε να διαγράψετε όλα τα μηνύματα στον συγκεκριμένο φάκελο;';
 $messages['contactdeleting'] = 'Διαγραφή επαφών...';
 $messages['groupdeleting'] = 'Διαγραφή ομάδας...';
@@ -80,13 +95,16 @@ $messages['formincomplete'] = 'Η φόρμα δεν έχει συμπληρωθ�
 $messages['noemailwarning'] = 'Παρακαλώ εισάγετε έγκυρη διεύθυνση email.';
 $messages['nonamewarning']  = 'Παρακαλώ εισάγετε όνομα.';
 $messages['nopagesizewarning'] = 'Παρακαλώ εισάγετε μέγεθος σελίδας.';
-$messages['nosenderwarning'] = 'Παρακαλώ εισάγετε την e-mail διεύθυνση αποστολέα.';
+$messages['nosenderwarning'] = 'Παρακαλώ εισάγετε τη διεύθυνση email του αποστολέα.';
+$messages['recipientsadded'] = 'Επιτυχής προσθήκη παραλήπτη(ών).';
 $messages['norecipientwarning'] = 'Παρακαλώ εισάγετε τουλάχιστο έναν παραλήπτη.';
+$messages['disclosedrecipwarning'] = 'Όλοι οι παραλήπτες θα βλέπουν τις διευθύνσεις email του καθενός. Για να προστατέψετε την ιδιωτικότητά τους μπορείτε να χρησιμοποιήσετε το πεδίο Bcc.';
+$messages['disclosedreciptitle'] = 'Υπέρβαση μέγιστου αριθμού παραληπτών';
 $messages['nosubjectwarning']  = 'Το πεδίο "Θέμα" είναι άδειο. Θέλετε να εισάγετε ένα τώρα;';
+$messages['nosubjecttitle']  = 'Κανένα θέμα';
 $messages['nobodywarning'] = 'Αποστολή μηνύματος χωρίς κείμενο;';
-$messages['notsentwarning'] = 'Το μήνυμα δεν έχει σταλεί. Θέλετε να το απορρίψετε;';
+$messages['notsentwarning'] = 'Αυτό το μήνυμα δεν έχει αποσταλεί και έχει αλλαγές που δεν έχουν αποθηκευτεί. Θέλετε να αναιρεθούν οι αλλαγές σας?';
 $messages['restoresavedcomposedata'] = 'Υπάρχει ένα προηγούμενο πρόχειρο μήνυμα το οποίο δεν έχει σταλεί.\n\nΘέμα: $subject\Αποθηκεύτηκε: $date\n\nΘέλετε να το ανακτήσετε;';
-$messages['noldapserver'] = 'Παρακαλώ επιλέξτε έναν διακομιστή LDAP για αναζήτηση.';
 $messages['nosearchname'] = 'Παρακαλώ εισάγετε όνομα επαφής ή διεύθυνση e-mail.';
 $messages['notuploadedwarning'] = 'Δεν έχουν φορτωθεί ακόμα όλα τα συνημμένα. Παρακαλώ περιμένετε ή ακυρώστε το ανέβασμα.';
 $messages['searchsuccessful'] = 'Βρέθηκαν $nr μηνύματα.';
@@ -99,13 +117,15 @@ $messages['nospellerrors'] = 'Δεν βρέθηκαν ορθογραφικά λ�
 $messages['folderdeleted'] = 'Ο φάκελος διαγράφηκε επιτυχώς.';
 $messages['foldersubscribed'] = 'Ο φάκελος εχει εγγραφεί με επιτυχία.';
 $messages['folderunsubscribed'] = 'Ο φάκελος απεγγράφηκε επιτυχώς.';
-$messages['folderpurged'] = 'Ο φάκελος καθαρίστηκε με επιτυχία.';
-$messages['folderexpunged'] = 'Ο φάκελος συμπιέστηκε με επιτυχία.';
-$messages['deletedsuccessfully'] = 'Διαγραφή επιτυχώς.';
+$messages['deletedsuccessfully'] = 'Επιτυχής διαγραφή.';
 $messages['converting'] = 'Κατάργηση διαμορφώσεων κειμένου...';
 $messages['messageopenerror'] = 'Η φόρτωση μηνυμάτων από τον διακομιστή απέτυχε.';
+$messages['filelinkerror'] = 'Η επισύναψη του αρχείου απέτυχε.';
 $messages['fileuploaderror'] = 'Το ανέβασμα του αρχείου απέτυχε.';
 $messages['filesizeerror'] = 'Το ανεβασμένο αρχείο ξεπερνάει το μέγιστο μέγεθος των $size.';
+$messages['filecounterror'] = 'Μπορείτε να ανεβάσετε το πολύ $count αρχεία ταυτόχρονα.';
+$messages['msgsizeerror'] = 'Αποτυχία επισύναψης αρχείου. Έχετε υπερβεί το μέγιστο μέγεθος ενός μηνύματος ($size).';
+$messages['msgsizeerrorfwd'] = 'Έχετε υπερβεί το μέγιστο επιτρεπόμενο μέγεθος μηνύματος ($size). $num μήνυμα(τα) δεν έχει(ουν) επισυναφθεί.';
 $messages['copysuccess'] = 'Επιτυχής αντιγραφή $nr επαφών.';
 $messages['movesuccess'] = 'Μεταφέρθηκαν με επιτυχία $nr επαφές.';
 $messages['copyerror'] = 'Αποτυχία αντιγραφής επαφών.';
@@ -137,7 +157,7 @@ $messages['importconfirmskipped'] = '<b>Παραλείφθηκαν $skipped υπ
 $messages['importmessagesuccess'] = 'Επιτυχής εισαγωγή $nr μηνυμάτων';
 $messages['importmessageerror'] = 'Η εισαγωγή απέτυχε! Το ανεβασμένο αρχείο δεν είναι έγκυρο αρχείο μηνύματος ή φακέλου μηνυμάτων.';
 $messages['opnotpermitted'] = 'Η λειτουργία δεν επιτρέπεται!';
-$messages['nofromaddress'] = 'Άδεια διεύθυνση e-mail στην επιλεγμένη ταυτότητα.';
+$messages['nofromaddress'] = 'Λείπει η διεύθυνση email στην επιλεγμένη ταυτότητα.';
 $messages['editorwarning'] = 'Η αλλαγή του τύπου επεξεργασίας μπορεί να προκαλέσει απώλεια της μορφοποίησης κειμένου. Είστε βέβαιοι πως θέλετε να συνεχίσετε;';
 $messages['httpreceivedencrypterror'] = 'Ανεπανόρθωτο σφάλμα. Επικοινωνήστε με το διαχειριστή του εξυπηρετητή. <b>Το μήνυμά σας δεν στάλθηκε.</b>';
 $messages['smtpconnerror'] = 'Σφάλμα SMTP ($code): Απέτυχε η σύνδεση με τον εξυπηρετητή.';
@@ -145,8 +165,10 @@ $messages['smtpautherror'] = 'Σφάλμα SMTP ($code): Σφάλμα ταυτο
 $messages['smtpfromerror'] = 'Σφάλμα SMTP ($code): Αποτυχία ορισμού αποστολέα "$from" ($msg).';
 $messages['smtptoerror'] = 'Σφάλμα SMTP ($code): Αποτυχία προσθήκης παραλήπτη "$to" ($msg).';
 $messages['smtprecipientserror'] = 'Σφάλμα SMTP: Αδύνατο να προσπελαστεί η λίστα παραληπτών.';
+$messages['smtputf8error'] = 'Σφάλμα SMTP: Ο διακομιστής δεν υποστηρίζει Unicode σε διευθύνσεις email.';
+$messages['smtpsizeerror'] = 'Σφάλμα SMTP: Το μέγεθος του μηνύματος υπερβαίνει το όριο του διακομιστή ($limit)';
 $messages['smtperror'] = 'Σφάλμα SMTP: $msg';
-$messages['emailformaterror'] = 'Λανθασμένη διεύθνση e-mail: $email';
+$messages['emailformaterror'] = 'Μη έγκυρη διεύθυνση e-mail: $email';
 $messages['toomanyrecipients'] = 'Υπερβολικά μεγάλο πλήθος αποδεκτών. Μειώστε τον αριθμό των αποδεκτών σε $max.';
 $messages['maxgroupmembersreached'] = 'Ο αριθμός των μελών της ομάδας υπερβαίνει τον μέγιστο των $max μελών.';
 $messages['internalerror'] = 'Προέκυψε εσωτερικό σφάλμα. Παρακαλώ δοκιμάστε ξανά.';
@@ -163,18 +185,38 @@ $messages['savedsearchcreated'] = 'Η αποθηκευμένη αναζητήσ�
 $messages['savedsearchcreateerror'] = 'Δεν ήταν δυνατό να δημιουργηθεί η αποθηκευμένη αναζήτηση.';
 $messages['messagedeleted'] = 'Το μήνυμα(τα) διαγράφηκε επιτυχώς.';
 $messages['messagemoved'] = 'Το μήνυμα(τα) μετακινήθηκε επιτυχώς.';
+$messages['messagemovedtotrash'] = ' Το μήνυμα(τα) μετακινήθηκε επιτυχώς στα Διεγραμμένα.';
 $messages['messagecopied'] = 'Το μήνυμα(τα) αντιγράφηκε επιτυχώς.';
 $messages['messagemarked'] = 'Το μήνημα(τα) σημάνθηκε επιτυχώς.';
 $messages['autocompletechars'] = 'Εισάγετε τουλάχιστον $min χαρακτήρες για αυτόματη συμπλήρωση.';
 $messages['autocompletemore'] = 'Βρέθηκαν περισσότερες καταχωρήσεις που ταιριάζουν. Παρακαλώ πληκτρολογήστε περισσότερους χαρακτήρες.';
 $messages['namecannotbeempty'] = 'Το όνομα δεν μπορεί να είναι κενό.';
 $messages['nametoolong'] = 'Το όνομα είναι πολύ μεγάλο.';
+$messages['namedotforbidden'] = 'Το όνομα του φακέλου δεν μπορεί να αρχίζει με τελεία.';
 $messages['folderupdated'] = 'Ο φάκελος ανανεώθηκε επιτυχώς.';
 $messages['foldercreated'] = 'Ο φάκελος δημιουργήθηκε επιτυχώς.';
 $messages['invalidimageformat'] = 'Μη έγκυρη μορφή εικόνας.';
 $messages['mispellingsfound'] = 'Εντοπίστηκαν ορθογραφικά λάθη στο μήνυμα. ';
 $messages['parentnotwritable'] = 'Δεν είναι δυνατή η δημιουργία/μετακινήση φάκελου στον επιλεγμένο φάκελο γονέα. Δεν υπάρχει δικαίωμα πρόσβασης. ';
 $messages['messagetoobig'] = 'Το τμήμα μηνύματος είναι πολύ μεγάλο για επεξεργασία.';
-$messages['attachmentvalidationerror'] = 'ΠΡΟΕΙΔΟΠΟΊΗΣΗ! Αυτό το συνημμένο είναι ύποπτο, επειδή ο τύπος του δεν ταιριάζει με τον τύπο που δηλώνεται στο μήνυμα. Εάν δεν εμπιστεύεστε τον αποστολέα, δεν θα πρέπει να το ανοίξετε στο πρόγραμμα περιήγησης επειδή μπορεί να περιέχει κακόβουλο περιεχόμενο.<br/><br/><em>Αναμενόμενο: $expected, εντοπίστηκε: $detected</em> ';
+$messages['attachmentvalidationerror'] = 'Αυτό το συνημμένο είναι ύποπτο επειδή ο τύπος του δεν συμφωνεί με τον τύπο που δηλώνεται στο μήνυμα. Εάν δεν εμπιστεύεστε τον αποστολέα, μην το ανοίξετε στο πρόγραμμα περιήγησης καθώς μπορεί να περιέχει κακόβουλα περιεχόμενα.<br/><br/><em>Expected: $expected; found: $detected</em>';
 $messages['noscriptwarning'] = 'Προσοχή: Αυτή η υπηρεσία webmail απαιτεί Javascript! Για να την χρησιμοποιήσετε ενεργοποιήστε το JavaScript στις ρυθμίσεις του περιηγητή σας. ';
-?>
+$messages['messageissent'] = 'Το μήνυμα έχει ήδη αποσταλεί, αλλά δεν έχει ακόμη αποθηκευτεί. Θέλετε να το αποθηκεύσετε τώρα;';
+$messages['errnotfound'] = 'Δεν βρέθηκε το αρχείο';
+$messages['errnotfoundexplain'] = 'Ο πόρος που ζητήθηκε δε βρέθηκε!';
+$messages['errfailedrequest'] = 'Αποτυχία αιτήματος';
+$messages['errauthorizationfailed'] = 'Απέτυχε η πιστοποίηση';
+$messages['errunauthorizedexplain'] = 'Δεν μπορέσαμε να βεβαιωθούμε ότι είστε εξουσιοδοτημένος να έχετε πρόσβαση σε αυτή την υπηρεσία!';
+$messages['errrequestcheckfailed'] = 'Ο έλεγχος του αιτήματος απέτυχε';
+$messages['errcsrfprotectionexplain'] = "Για την προστασία σας, η πρόσβαση σε αυτόν τον πόρο είναι εξασφαλισμένη έναντι CSRF.\nΑν βλέπετε αυτό, το μήνυμα τότε μάλλον δεν αποσυνδεθήκατε πριν φύγετε από τη web εφαρμογή.\n\nΓια να συνεχίσετε απαιτείται πλέον ανθρώπινη αλληλεπίδραση.";
+$messages['errcontactserveradmin'] = 'Παρακαλείστε να επικοινωνήσετε με το διαχειριστή του εξυπηρετητή σας.';
+$messages['clicktoresumesession'] = 'Κάντε κλικ εδώ για να συνεχίσετε την προηγούμενη συνεδρία σας';
+$messages['errcomposesession'] = 'Σφάλμα στη συνεδρία σύνταξης μηνύματος';
+$messages['errcomposesessionexplain'] = 'Η συνεδρία σύνταξης μηνύματος δε βρέθηκε.';
+$messages['clicktocompose'] = 'Πατήστε εδώ για να συντάξετε ένα νέο μήνυμα';
+$messages['nosupporterror'] = 'Αυτή η δυνατότητα δεν υποστηρίζεται από τον περιηγητή σας.';
+$messages['siginserted'] = 'Η υπογραφή εισήχθη επιτυχώς.';
+$messages['responseinserted'] = 'Η απάντηση εισήχθη επιτυχώς.';
+$messages['listempty'] = 'Η λίστα είναι κενή.';
+$messages['listusebutton'] = 'Χρησιμοποιήστε το κουμπί Δημιουργία για να προσθέσετε μια νέα καταχώρηση.';
+$messages['keypaircreatesuccess'] = 'Ένα νέο ζεύγος κλειδιών δημιουργήθηκε επιτυχώς για την ταυτότητα $identity.';

@@ -2,24 +2,25 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
-$labels['sharing'] = 'Sharing';
+
+$labels['sharing'] = 'Deelen';
 $labels['myrights'] = 'Zougrëffsrechter';
 $labels['username'] = 'Benotzer:';
 $labels['advanced'] = 'Avancéierte Modus';
+$labels['add'] = 'Dobäisetzen';
 $labels['newuser'] = 'Element dobäisetzen';
+$labels['editperms'] = 'Zougrëffsrechter beaarbechten';
 $labels['actions'] = 'Optioune fir d\'Zougrëffsrechter';
 $labels['anyone'] = 'All d\'Benotzer (jiddwereen)';
 $labels['anonymous'] = 'Gaascht (anonym)';
@@ -27,6 +28,9 @@ $labels['identifier'] = 'Identifiant';
 $labels['acll'] = 'Noschloen';
 $labels['aclr'] = 'Messagë liesen';
 $labels['acls'] = 'Lies-Status behalen';
+$labels['aclp'] = 'Schécken';
+$labels['aclc'] = 'Ënnerdossieren erstellen';
+$labels['aclk'] = 'Ënnerdossieren erstellen';
 $labels['acld'] = 'Messagë läschen';
 $labels['aclt'] = 'Messagë läschen';
 $labels['acle'] = 'Ausläschen';
@@ -50,11 +54,14 @@ $labels['shortaclt'] = 'Läschen';
 $labels['shortacle'] = 'Ausläschen';
 $labels['shortaclx'] = 'Dossier läschen';
 $labels['shortacla'] = 'Administréieren';
+$labels['shortacln'] = 'Kommentéieren';
 $labels['shortaclother'] = 'Aner';
 $labels['shortaclread'] = 'Liesen';
 $labels['shortaclwrite'] = 'Schreiwen';
 $labels['shortacldelete'] = 'Läschen';
 $labels['longacldelete'] = 'Messagë kënne geläscht ginn';
+$labels['longaclother'] = 'Aner Zougrëffsrechter';
+$labels['ariasummaryacltable'] = 'Lëscht vun Zougrëffsrechter';
 $messages['deleting'] = 'Zougrëffsrechter gi geläscht...';
 $messages['saving'] = 'Zougrëffsrechter gi gespäichert...';
 $messages['updatesuccess'] = 'Rechter erfollegräich geännert';
@@ -66,4 +73,3 @@ $messages['createerror'] = 'Zougrëffsrechter kënnen net dobäigesat ginn';
 $messages['deleteconfirm'] = 'Bass du dir sécher, dass du d\'Zougrëffsrechter fir déi ausgewielte Benotzer wëlls ewechhuelen?';
 $messages['norights'] = 'Et goufe keng Rechter uginn! ';
 $messages['nouser'] = 'Et gouf kee Benotzernumm uginn!';
-?>

@@ -1,0 +1,82 @@
+/* This file contains the CSS data for media file selector of TinyMCE */
+
+#image-selector {
+	padding-bottom: 85px;
+	border: 1px solid transparent;
+}
+
+#image-selector.droptarget.hover,
+#image-selector.droptarget.active {
+	border: 1px solid #019bc6;
+}
+
+#image-selector.droptarget.hover {
+	background-color: #d9ecf4;
+}
+
+#image-selector form {
+	position: absolute;
+	top: 0;
+}
+
+#image-selector .hint {
+	line-height: 25px;
+	color: #666;
+	font-size: 11px;
+	text-align: center;
+}
+
+#image-selector .upload-form {
+	text-align: center;
+	margin-bottom: 1rem;
+}
+
+#image-selector-list {
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 0;
+	height: 250px;
+}
+
+#image-selector-list li {
+	line-height: 80px;
+	padding: 3px;
+	padding-left: 5px;
+	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background: none;
+	display:flex;
+	align-items: center;
+	margin-bottom: 1px;
+}
+
+#image-selector-list li:hover,
+#image-selector-list li:focus {
+	background-color: #F0F0F0;
+}
+
+#image-selector-list li img {
+	vertical-align: middle;
+	max-height: 80px;
+}
+
+#image-selector-list li span.name {
+	font-weight: bold;
+	padding-left: 10px;
+}
+
+#image-selector-list li span.img {
+	height: 80px;
+	width: 80px;
+	min-width: 80px;
+	text-align: center;
+	overflow: hidden;
+	line-height: 80px;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	border: 1px solid #ddd;
+}

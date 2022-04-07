@@ -20,9 +20,9 @@ body.extwin
   margin: 10px;
 }
 
-select, input, textarea
+select, input, textarea, button
 {
-  font-size: 12px;
+  font-size: inherit;
   font-family: inherit;
 }
 
@@ -70,8 +70,10 @@ hr
 }
 
 input[type="text"],
+input[type="email"],
 input[type="button"],
 input[type="password"],
+button,
 textarea
 {
   border: 1px solid #666;
@@ -79,7 +81,7 @@ textarea
   background-color: #FFF;
 }
 
-input, textarea
+button, input, textarea
 {
   color: black;
   padding: 1px 3px;
@@ -93,6 +95,7 @@ textarea:-moz-placeholder
   color: #aaa;
 }
 
+button,
 input.button
 {
   height: 20px;
@@ -100,15 +103,18 @@ input.button
   font-size: 12px;
   padding-left: 8px;
   padding-right: 8px;
-  background: url(images/buttons/bg.gif?v=30b2.196) repeat-x #f0f0f0;
+  background: url(images/buttons/bg.gif?v=0200.203) repeat-x #f0f0f0;
   border: 1px solid #a4a4a4;
 }
 
+button:hover,
 input.button:hover
 {
   color: black;
 }
 
+button[disabled],
+button[disabled]:hover,
 input.button[disabled],
 input.button[disabled]:hover
 {
@@ -116,6 +122,7 @@ input.button[disabled]:hover
   border-color: #ccc;
 }
 
+button.mainaction,
 input.mainaction
 {
   font-weight: bold;
@@ -152,11 +159,32 @@ img
   color: #999999;
 }
 
+.voice
+{
+  display: none;
+}
+
+.noselect
+{
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+}
+
 /* fixes vertical alignment of checkboxes and labels */
 label input,
 label span
 {
   vertical-align: middle;
+}
+
+ul.proplist
+{
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 
@@ -189,7 +217,7 @@ body > #logo
   right: 0px;
   height: 24px;
   left: 250px;
-  background: url(images/taskbar.png?v=3878.1902) top right no-repeat;
+  background: url(images/taskbar.png?v=11a3.1640) top right no-repeat;
   padding: 10px 6px 5px 0px;
   text-align: right;
   white-space: nowrap;
@@ -202,7 +230,7 @@ body > #logo
   color: #666666;
   text-decoration: none;
   padding: 6px 12px 6px 26px;
-  background: url(images/taskicons.gif?v=b8e0.1519) no-repeat;
+  background: url(images/taskicons.gif?v=9719.2207) no-repeat;
 }
 
 #taskbar a:hover
@@ -251,6 +279,7 @@ body > #message div
 
 body > #message div.notice,
 body > #messagebody .part-notice,
+body > #mainscreen #messagebody .part-notice,
 #message-objects div.notice
 {
   background: url(images/display/icons.png?v=e866.4201) 6px 3px no-repeat;
@@ -277,11 +306,19 @@ body > #message div.confirmation,
 }
 
 body > #message div.loading,
+body > #message div.uploading,
 #message-objects div.loading
 {
   background: url(images/display/loading.gif?v=9bae.2710) 6px 3px no-repeat;
   background-color: #EBEBEB;
   border: 1px solid #CCCCCC;
+}
+
+body > #message div.voice
+{
+  position: absolute;
+  top: -1000px;
+  clip: rect(0 0 0 0);
 }
 
 body > #message a
@@ -307,7 +344,7 @@ body.extwin #closelink
 .boxtitle
 {
   height: 12px !important;
-  padding: 2px 10px 5px 5px;
+  padding: 3px 10px 4px 5px;
   border-bottom: 1px solid #999;
   color: #333;
   font-size: 11px;
@@ -336,6 +373,26 @@ body.iframe .boxtitle
 {
   padding: 15px 10px 10px 10px;
   background-color: #F2F2F2;
+}
+
+.boxcontent .boxwarning
+{
+  margin: 0 0 10px;
+  display: block;
+  min-height: 22px;
+  background: url(images/display/icons.png?v=e866.4201) #EF9398 6px -95px no-repeat;
+  border: 1px solid #DC5757;
+  padding: 8px 10px 8px 46px;
+}
+
+.boxcontent .boxinformation
+{
+  margin: 0 0 10px;
+  display: block;
+  min-height: 22px;
+  background: url(images/display/icons.png?v=e866.4201) #ddd 6px 4px no-repeat;
+  border: 1px solid #888;
+  padding: 8px 10px 8px 46px;
 }
 
 .boxcontent table td.title
@@ -390,7 +447,7 @@ body.iframe .boxtitle
   padding: 0px;
   margin: 0;
   overflow: hidden;
-  background: url(images/icons/groupactions.png?v=ace6.1092) 0 0 no-repeat transparent;
+  background: url(images/icons/groupactions.png?v=6760.604) 0 0 no-repeat transparent;
   opacity: 0.99; /* this is needed to make buttons appear correctly in Chrome */
 }
 
@@ -425,9 +482,8 @@ body.iframe .boxtitle
   height: 11px;
   padding: 0;
   margin: 1px;
-  margin-top: 2px;
   overflow: hidden;
-  background: url(images/pagenav.gif?v=2e75.355) 0 0 no-repeat transparent;
+  background: url(images/pagenav.gif?v=8464.1147) 0 0 no-repeat transparent;
   opacity: 0.99; /* this is needed to make buttons appear correctly in Chrome */
 }
 
@@ -461,6 +517,34 @@ body.iframe .boxtitle
 
 .pagenav a.lastpageSel {
   background-position: -33px -11px;
+}
+
+#rcmcountdisplay
+{
+  float: left;
+  margin-right: 10px;
+}
+
+#countcontrols #pagejumper
+{
+  margin: 0 5px;
+  float: right;
+  text-align: center;
+  padding: 0;
+  cursor: default;
+  font-size: 10px;
+}
+
+.toolbarseparator {
+  display: block;
+  float: left;
+  width: 5px;
+  height: 32px;
+  padding: 0;
+  margin: 0 5px;
+  overflow: hidden;
+  background: url(images/abook_toolbar.png?v=8259.4881) -162px 0 no-repeat transparent;
+  opacity: 0.99; /* this is needed to make buttons appear correctly in Chrome */
 }
 
 .splitter
@@ -527,9 +611,10 @@ body.iframe .boxtitle
 {
   display: block;
   color: #a0a0a0;
-  padding: 2px 16px 2px 10px;
+  padding: 3px 16px 3px 10px;
   text-decoration: none;
   min-height: 14px;
+  line-height: 14px;
   background: transparent;
 }
 
@@ -563,7 +648,7 @@ body.iframe .boxtitle
 
 .popupmenu.selectable li a.selected
 {
-  background: url(images/messageicons.png?v=9df0.3673) 2px -372px no-repeat;
+  background: url(images/messageicons.png?v=c493.2511) 2px -372px no-repeat;
 }
 
 .popupmenu.selectable li a
@@ -585,13 +670,13 @@ body.iframe .boxtitle
 
 .dropbutton:hover
 {
-/*  background: url(images/dbutton.png?v=7bba.240) 0 0 no-repeat transparent; */
+/*  background: url(images/dbutton.png?v=4d5a.230) 0 0 no-repeat transparent; */
 }
 
 .dropbutton span
 {
   width: 9px;
-  background: url(images/dbutton.png?v=7bba.240) -53px 0 no-repeat transparent;
+  background: url(images/dbutton.png?v=4d5a.230) -53px 0 no-repeat transparent;
 }
 
 .dropbutton span:hover
@@ -606,8 +691,25 @@ img.uploading
   height: 16px;
 }
 
+.popup label > input {
+  margin-left: 10px;
+}
+
+.ui-dialog iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.ui-dialog-content.iframe {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+
 /***** common table settings ******/
 
+table.records-table thead tr th,
 table.records-table thead tr td
 {
   height: 20px;
@@ -618,6 +720,7 @@ table.records-table thead tr td
   background: url(images/listheader.gif?v=ab42.314) top left repeat-x #CCC;
   font-size: 11px;
   font-weight: bold;
+  text-align: left;
 }
 
 table.records-table tbody tr td
@@ -628,7 +731,8 @@ table.records-table tbody tr td
   white-space: nowrap;
   border-bottom: 1px solid #EBEBEB;
   overflow: hidden;
-  text-align: left;  
+  text-align: left;
+  outline: none;
 }
 
 table.records-table tr
@@ -640,6 +744,11 @@ table.records-table tr.selected td
 {
   color: #FFFFFF;
   background-color: #CC3333;
+}
+
+table.records-table tr.selected td a
+{
+  color: #FFFFFF;
 }
 
 table.records-table tr.focused td
@@ -660,12 +769,21 @@ ul.treelist li
 ul.treelist li div.treetoggle
 {
   position: absolute;
-  left: 8px !important;
-  left: -16px;
-  top: 1px;
+  left: 8px;
+  top: 2px;
   width: 14px;
   height: 16px;
   cursor: pointer;
+}
+
+ul.treelist ul li div.treetoggle
+{
+  left: 25px;
+}
+
+ul.treelist ul ul li div.treetoggle
+{
+  left: 42px;
 }
 
 ul.treelist li div.collapsed
@@ -675,24 +793,243 @@ ul.treelist li div.collapsed
 
 ul.treelist li div.expanded
 {
-  background: url(images/icons/expanded.png?v=f647.107) bottom right no-repeat;
+  background: url(images/icons/expanded.png?v=3a53.89) bottom right no-repeat;
+}
+
+ul.treelist,
+ul.treelist li ul
+{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: #FFFFFF;
+}
+
+ul.treelist li ul
+{
+  border-top: 1px solid #EBEBEB;
+}
+
+ul.treelist li
+{
+  display: block;
+  font-size: 11px;
+  border-bottom: 1px solid #EBEBEB;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+ul.treelist li a
+{
+  cursor: default;
+  display: block;
+  padding-left: 25px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: 16px;
+  line-height: 16px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+ul.treelist li ul li a
+{
+  padding-left: 45px;
+}
+
+ul.treelist ul ul li a
+{
+  padding-left: 65px;
+}
+
+ul.treelist li ul li:last-child
+{
+  border-bottom: 0;
+}
+
+ul.treelist li.selected > a,
+ul.treelist li.selected > div a
+{
+  color: #FFF;
+  font-weight: bold;
+  background-color: #929292;
+}
+
+ul.treelist li.droptarget
+{
+  background-color: #FFFFA6;
+}
+
+/***** folders list *****/
+
+.folderlist li ul li:last-child
+{
+  border-bottom: 0 none;
+}
+
+.folderlist li.inbox a
+{
+  background-position: 5px -18px;
+}
+
+.folderlist li.drafts a
+{
+  background-position: 5px -36px;
+}
+
+.folderlist li.sent a
+{
+  background-position: 5px -53px;
+}
+
+.folderlist li.junk a
+{
+  background-position: 5px -72px;
+}
+
+.folderlist li.trash a
+{
+  background-position: 5px -180px;
+}
+
+.folderlist li.trash.empty a
+{
+  background-position: 5px -90px;
+}
+
+.folderlist li a
+{
+  cursor: default;
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-decoration: none;
+  height: 15px;
+  background: url(images/icons/folders.png?v=7c4f.5218) 5px 1px no-repeat;
+}
+
+.folderlist li.virtual > a
+{
+  color: #666;
+}
+
+.folderlist li.selected,
+.folderlist li.droptarget li.selected
+{
+  background-color: #929292;
+}
+
+.folderlist li.selected > a,
+.folderlist li.droptarget li.selected a
+{
+  color: #FFF;
+  font-weight: bold;
+}
+
+.folderlist li.droptarget
+{
+  background-color: #FFFFA6;
+}
+
+/* styles for nested folders */
+.folderlist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #EBEBEB;
+  background-color: #FFF;
+  font-weight: normal;
+}
+
+.folderlist li.mailbox ul li a {
+  padding-left: 40px;  /* 24 + 1 x 16 */
+  background-position: 20px 1px;  /* 4 + 1 x 16 */
+}
+.folderlist li.mailbox ul li div.treetoggle {
+  left: 23px !important;
+}
+
+.folderlist li.mailbox ul ul li.mailbox a {
+  padding-left: 56px;  /* 2x */
+  background-position: 36px 1px;
+}
+.folderlist li.mailbox ul ul li div.treetoggle {
+  left: 39px !important;
+}
+
+.folderlist li.mailbox ul ul ul li.mailbox a {
+  padding-left: 72px;  /* 3x */
+  background-position: 52px 1px;
+}
+.folderlist li.mailbox ul ul ul li div.treetoggle {
+  left: 55px !important;
+}
+
+.folderlist li.mailbox ul ul ul ul li.mailbox a {
+  padding-left: 88px;  /* 4x */
+  background-position: 68px 1px;
+}
+.folderlist li.mailbox ul ul ul ul li div.treetoggle {
+  left: 71px !important;
+}
+
+/* indent folders on levels > 4 */
+.folderlist li.mailbox ul ul ul ul ul li {
+  padding-left: 16px;
+}
+.folderlist li.mailbox ul ul ul ul ul li div.treetoggle {
+  left: 87px !important;
+}
+
+.folderlist li.mailbox ul li.drafts a
+{
+  background-position: 21px -36px;
+}
+
+.folderlist li.mailbox ul li.sent a
+{
+  background-position: 21px -53px;
+}
+
+.folderlist li.mailbox ul li.junk a
+{
+  background-position: 21px -72px;
+}
+
+.folderlist li.mailbox ul li.trash a
+{
+  background-position: 21px -180px;
+}
+
+.folderlist li.mailbox ul li.trash.empty a
+{
+  background-position: 21px -90px;
 }
 
 
 /***** mac-style quicksearch field *****/
+
+div.searchbox,
+#quicksearchbar
+{
+  position: relative;
+  width: 190px;
+  height: 20px;
+  text-align: right;
+  background: url(images/searchfield.gif?v=36a5.397) top left no-repeat;
+}
 
 #quicksearchbar
 {
   position: absolute;
   top: 55px;
   right: 10px;
-  width: 190px;
-  height: 20px;
-  text-align: right;
-  background: url(images/searchfield.gif?v=aaf8.313) top left no-repeat;
 }
 
-#searchreset
+#searchreset,
+div.searchbox a.searchreset
 {
   position: absolute;
   top: 3px;
@@ -700,11 +1037,33 @@ ul.treelist li div.expanded
   text-decoration: none;
 }
 
-#searchmenulink
+#searchmenulink,
+div.searchbox a.searchmenu,
+div.searchbox a.searchicon
 {
  position: absolute;
  top: 3px;
  right: 168px;
+}
+
+div.searchbox a.searchreset
+{
+  display: block;
+  width: 14px;
+  height: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-indent: 50000px;
+  background: url(images/icons/reset.gif?v=a31d.164) top left no-repeat;
+}
+
+div.searchbox a.searchicon
+{
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+  background: url(images/icons/glass.png?v=dcbc.302) top left no-repeat;
 }
 
 #quicksearchbar img
@@ -712,7 +1071,8 @@ ul.treelist li div.expanded
   vertical-align: middle;
 }
 
-#quicksearchbox
+#quicksearchbox,
+div.searchbox > input
 {
   position: absolute;
   top: 2px;
@@ -742,6 +1102,39 @@ ul.treelist li div.expanded
   width: 97%;
 }
 
+.formcontainer
+{
+  background-color: #f2f2f2;
+}
+
+.formcontent table {
+  width: 100%;
+}
+
+.formcontent input,
+.formcontent textarea {
+  width: 95%;
+}
+
+.listsearchbox
+{
+  border-bottom: solid 1px #ddd;
+  padding: 2px 4px 1px;
+  display: none;
+  background-color: #f2f2f2;
+}
+
+.listsearchbox a.iconbutton.reset
+{
+  background: url(images/icons/reset.gif?v=a31d.164) no-repeat 0 0;
+  width: 13px;
+  height: 13px;
+  text-indent: 50000px;
+  position: absolute;
+  top: 3px;
+  left: 165px;
+  overflow: hidden;
+}
 
 /***** roundcube webmail pre-defined classes *****/
 
@@ -786,7 +1179,7 @@ ul.treelist li div.expanded
   content: " ";
   width: 14px;
   height: 14px;
-  background: url(images/messageactions.png?v=d93e.3223) -2px -128px no-repeat;
+  background: url(images/messageactions.png?v=8c64.2615) -2px -128px no-repeat;
 }
 
 a.rcmContactAddress
@@ -825,7 +1218,8 @@ a.rcmContactAddress:hover
   cursor: pointer;
 }
 
-#rcmKSearchpane ul li.selected
+#rcmKSearchpane ul li.selected,
+#pagejump-selector ul li.selected
 {
   color: #ffffff;
   background-color: #CC3333;
@@ -874,11 +1268,6 @@ a.rcmContactAddress:hover
 	font-weight: bold;
 }
 
-#console
-{
-  opacity: 0.8;
-}
-
 .disabled,
 a.disabled
 {
@@ -890,7 +1279,7 @@ font.bold
   font-weight: bold;
 }
 
-.formbuttons
+#login-form .formbuttons
 {
   text-align: center;
 }
@@ -916,9 +1305,10 @@ ul.toolbarmenu li a
 {
   display: block;
   color: #a0a0a0;
-  padding: 1px 12px 3px 28px;
+  padding: 3px 12px 3px 28px;
   text-decoration: none;
   min-height: 14px;
+  line-height: 14px;
 }
 
 ul.toolbarmenu li a.active,
@@ -978,6 +1368,35 @@ ul.toolbarmenu li.separator_above
   margin: 1px 4px 1px;
 }
 
+#searchmenu ul.toolbarmenu li label
+{
+  padding: 2px 0;
+  color: black;
+}
+
+#searchmenu ul.toolbarmenu li label.comment
+{
+  color: #999;
+}
+
+#searchmenu select
+{
+  width: 100%;
+}
+
+#pagejump-selector
+{
+  max-height: 250px;
+  overflow-x: hidden;
+}
+
+#pagejump-selector ul li
+{
+  min-width: 45px;
+  padding: 2px 5px;
+  cursor: default;
+}
+
 
 /*** folder selector ***/
 
@@ -986,9 +1405,9 @@ ul.toolbarmenu li.separator_above
   padding: 0;
 }
 
-#folder-selector li a span
+#folder-selector li span
 {
-  background: url(images/icons/folders.png?v=d9d2.5356) no-repeat 6px 0;
+  background: url(images/icons/folders.png?v=7c4f.5218) no-repeat 6px 0;
   display: block;
   height: 15px;
   min-height: 14px;
@@ -1008,23 +1427,23 @@ ul.toolbarmenu li.separator_above
   color: white;
 }
 
-#folder-selector li a.inbox span
+#folder-selector li.inbox span
 {
   background-position: 6px -18px;
 }
-#folder-selector li a.drafts span
+#folder-selector li.drafts span
 {
   background-position: 6px -37px;
 }
-#folder-selector li a.sent span
+#folder-selector li.sent span
 {
   background-position: 6px -54px;
 }
-#folder-selector li a.trash span
+#folder-selector li.trash span
 {
   background-position: 6px -91px;
 }
-#folder-selector li a.junk span
+#folder-selector li.junk span
 {
   background-position: 6px -73px;
 }
@@ -1058,7 +1477,7 @@ span.tablink-selected
   height: 23px !important;
   height: 22px;
   overflow: hidden;
-  background: url(images/tabs-left.gif?v=0541.219) top left no-repeat;
+  background: url(images/tabs-left.gif?v=d7b0.230) top left no-repeat;
 }
 
 span.tablink
@@ -1085,7 +1504,7 @@ span.tablink-selected a
   overflow: hidden;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
-  background: url(images/tabs-right.gif?v=5414.733) top right no-repeat;
+  background: url(images/tabs-right.gif?v=5c83.1417) top right no-repeat;
 }
 
 span.tablink-selected a
@@ -1121,9 +1540,123 @@ fieldset.tabbed
   cursor: default;
 }
 .quota_bg { background-color: white; }
-.quota_high { background: url(images/quota-colors.png?v=c1e9.287) repeat-x 0 -28px #f90509; }
-.quota_mid { background: url(images/quota-colors.png?v=c1e9.287) repeat-x 0 -14px #e3e909; }
-.quota_low { background: url(images/quota-colors.png?v=c1e9.287) repeat-x 0 0px #05f905; }
+.quota_high { background: url(images/quota-colors.png?v=e7fa.219) repeat-x 0 -28px #f90509; }
+.quota_mid { background: url(images/quota-colors.png?v=e7fa.219) repeat-x 0 -14px #e3e909; }
+.quota_low { background: url(images/quota-colors.png?v=e7fa.219) repeat-x 0 0px #05f905; }
 .quota_text_high { color: white; }
 .quota_text_mid { color: #666; }
 .quota_text_low { color: #666; }
+
+table.quota-info {
+	border-spacing: 0;
+	border-collapse: collapse;
+	table-layout: fixed;
+	margin: 2px;
+}
+
+table.quota-info td,
+table.quota-info th {
+	border: 1px solid #999;
+	padding: 2px 3px;
+	text-align: center;
+	min-width: 80px;
+	color: #333;
+	font-size: 11px;
+}
+
+table.quota-info th {
+	font-weight: bold;
+	background-color: #ddd;
+}
+
+table.quota-info td.name {
+	text-align: left;
+}
+
+table.quota-info td.root {
+	font-style: italic;
+}
+
+/********** TinyMCE styles **********/
+
+div.tox .tox-toolbar,
+div.tox .tox-toolbar__overflow,
+div.tox .tox-toolbar__primary {
+  background-color: #f0f0f0;
+}
+
+div.tox .tox-toolbar__primary {
+  border: 0;
+}
+
+div.tox div.tox-dialog-wrap__backdrop {
+  background: #aaa;
+  opacity: .3;
+}
+
+div.tox div.tox-dialog {
+  box-shadow: 1px 1px 18px #666;
+  border-width: 0;
+}
+
+#image-selector.droptarget {
+  background: url(images/filedrop.png?v=080e.581) center bottom no-repeat;
+}
+
+#image-selector.droptarget.hover {
+  background-color: #F0F0EE;
+}
+
+/** PGP key import dialog **/
+.pgpkeyimport div.key {
+  position: relative;
+  margin-bottom: 2px;
+  padding: 1em 1em 5px;
+  background-color: #ebebeb;
+}
+
+.pgpkeyimport div.key.revoked,
+.pgpkeyimport div.key.disabled {
+  color: #a0a0a0;
+}
+
+.pgpkeyimport div.key label {
+  display: inline-block;
+  margin-right: 0.5em;
+}
+
+.pgpkeyimport div.key label:after {
+  content: ":";
+}
+
+.pgpkeyimport div.key label + a,
+.pgpkeyimport div.key label + span {
+  display: inline-block;
+  margin-right: 2em;
+  white-space: nowrap;
+}
+
+.pgpkeyimport div.key label + a {
+  font-weight: bold;
+}
+
+.pgpkeyimport ul.uids {
+  margin: 5px 1em 0 1em;
+  padding: 0;
+}
+
+.pgpkeyimport li.uid {
+  border: 0;
+  padding: 2px;
+}
+
+.pgpkeyimport div.key button.importkey {
+  position: absolute;
+  top: 0.8em;
+  right: 0.8em;
+  padding: 2px 6px;
+}
+
+.pgpkeyimport div.key button[disabled] {
+  display: none;
+}

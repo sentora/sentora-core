@@ -8,7 +8,7 @@
  * @package   PSI QNX OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.QNX.inc.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,31 +20,16 @@
  * @package   PSI QNX OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
 class QNX extends OS
 {
     /**
-     * content of the syslog
-     *
-     * @var array
-     */
-    private $_dmesg = array();
-
-    /**
-     * call parent constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * get the cpu information
      *
-     * @return array
+     * @return void
      */
     protected function _cpuinfo()
     {
@@ -103,23 +88,9 @@ class QNX extends OS
         if (CommonFunctions::executeProgram('pidin', 'info', $buf)
            && preg_match('/^.* BootTime:(.*)/', $buf, $bstart)
            && CommonFunctions::executeProgram('date', '', $bstop)) {
-            /* default error handler */
-            if (function_exists('errorHandlerPsi')) {
-                restore_error_handler();
-            }
-            /* fatal errors only */
-            $old_err_rep = error_reporting();
-            error_reporting(E_ERROR);
-
+            date_default_timezone_set('UTC');
             $uptime = strtotime($bstop)-strtotime($bstart[1]);
             if ($uptime > 0) $this->sys->setUptime($uptime);
-
-            /* restore error level */
-            error_reporting($old_err_rep);
-            /* restore error handler */
-            if (function_exists('errorHandlerPsi')) {
-                set_error_handler('errorHandlerPsi');
-            }
         }
     }
 
@@ -128,7 +99,7 @@ class QNX extends OS
      *
      * @return void
      */
-    private function _users()
+    protected function _users()
     {
         $this->sys->setUsers(1);
     }
@@ -140,8 +111,8 @@ class QNX extends OS
      */
     private function _hostname()
     {
-        if (PSI_USE_VHOST === true) {
-            $this->sys->setHostname(getenv('SERVER_NAME'));
+        if (PSI_USE_VHOST) {
+            if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
         } else {
             if (CommonFunctions::executeProgram('uname', '-n', $result, PSI_DEBUG)) {
                 $ip = gethostbyname($result);
@@ -189,20 +160,21 @@ class QNX extends OS
     {
         if (CommonFunctions::executeProgram('ifconfig', '', $bufr, PSI_DEBUG)) {
             $lines = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
-            $notwas = true;
+            $was = false;
+            $dev = null;
             foreach ($lines as $line) {
                 if (preg_match("/^([^\s:]+)/", $line, $ar_buf)) {
-                    if (!$notwas) {
+                    if ($was) {
                         $this->sys->setNetDevices($dev);
                     }
                     $dev = new NetDevice();
                     $dev->setName($ar_buf[1]);
-                    $notwas = false;
+                    $was = true;
                 } else {
-                    if (!$notwas) {
+                    if ($was) {
                         if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS)) {
                             if (preg_match('/^\s+address:\s*(\S+)/i', $line, $ar_buf2)) {
-                                    $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                                if (!defined('PSI_HIDE_NETWORK_MACADDR') || !PSI_HIDE_NETWORK_MACADDR) $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').preg_replace('/:/', '-', strtoupper($ar_buf2[1])));
                             } elseif (preg_match('/^\s+inet\s+(\S+)\s+netmask/i', $line, $ar_buf2))
                                 $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
 
@@ -210,7 +182,7 @@ class QNX extends OS
                     }
                 }
             }
-            if (!$notwas) {
+            if ($was) {
                 $this->sys->setNetDevices($dev);
             }
         }
@@ -219,19 +191,29 @@ class QNX extends OS
     /**
      * get the information
      *
-     * @return Void
+     * @return void
      */
     public function build()
     {
-        $this->error->addError("WARN", "The QNX version of phpSysInfo is a work in progress, some things currently don't work");
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_cpuinfo();
-        $this->_memory();
-        $this->_filesystems();
-        $this->_network();
+        $this->error->addWarning("The QNX version of phpSysInfo is a work in progress, some things currently don't work");
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+        }
+        if (!$this->blockname || $this->blockname==='hardware') {
+            $this->_cpuinfo();
+        }
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
+        }
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
+        }
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
+        }
     }
 }

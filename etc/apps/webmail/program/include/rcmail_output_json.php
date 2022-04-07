@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/include/rcmail_output_json.php                                |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2012, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -19,23 +18,40 @@
  +-----------------------------------------------------------------------+
 */
 
-
 /**
  * View class to produce JSON responses
  *
- * @package    Core
+ * @package    Webmail
  * @subpackage View
  */
 class rcmail_output_json extends rcmail_output
 {
-    protected $texts = array();
-    protected $commands = array();
-    protected $callbacks = array();
-    protected $message = null;
+    protected $texts     = [];
+    protected $commands  = [];
+    protected $callbacks = [];
+    protected $message   = null;
+    protected $header_sent = false;
 
-    public $type = 'js';
+    public $type      = 'js';
     public $ajax_call = true;
 
+
+    /**
+     * Object constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        if (!empty($_SESSION['skin_config'])) {
+            foreach ($_SESSION['skin_config'] as $key => $value) {
+                $this->config->set($key, $value, true);
+            }
+
+            $value = array_merge((array) $this->config->get('dont_override'), array_keys($_SESSION['skin_config']));
+            $this->config->set('dont_override', $value, true);
+        }
+    }
 
     /**
      * Issue command to set page title
@@ -44,37 +60,36 @@ class rcmail_output_json extends rcmail_output
      */
     public function set_pagetitle($title)
     {
-        if ($this->config->get('devel_mode') && !empty($_SESSION['username']))
+        if ($this->config->get('devel_mode') && !empty($_SESSION['username'])) {
             $name = $_SESSION['username'];
-        else
+        }
+        else {
             $name = $this->config->get('product_name');
+        }
 
-        $this->command('set_pagetitle', empty($name) ? $title : $name.' :: '.$title);
+        $this->command('set_pagetitle', empty($name) ? $title : $name . ' :: ' . $title);
     }
-
 
     /**
      * Register a template object handler
      *
-     * @param  string $obj Object name
-     * @param  string $func Function name to call
+     * @param string $obj  Object name
+     * @param callable $func Function name to call
      */
     public function add_handler($obj, $func)
     {
         // ignore
     }
 
-
     /**
      * Register a list of template object handlers
      *
-     * @param  array $arr Hash array with object=>handler pairs
+     * @param array $arr Hash array with object=>handler pairs
      */
     public function add_handlers($arr)
     {
         // ignore
     }
-
 
     /**
      * Call a client method
@@ -86,12 +101,13 @@ class rcmail_output_json extends rcmail_output
     {
         $cmd = func_get_args();
 
-        if (strpos($cmd[0], 'plugin.') === 0)
-          $this->callbacks[] = $cmd;
-        else
-          $this->commands[] = $cmd;
+        if (strpos($cmd[0], 'plugin.') === 0) {
+            $this->callbacks[] = $cmd;
+        }
+        else {
+            $this->commands[] = $cmd;
+        }
     }
-
 
     /**
      * Add a localized label to the client environment
@@ -99,42 +115,43 @@ class rcmail_output_json extends rcmail_output
     public function add_label()
     {
         $args = func_get_args();
-        if (count($args) == 1 && is_array($args[0]))
+        if (count($args) == 1 && is_array($args[0])) {
             $args = $args[0];
+        }
 
         foreach ($args as $name) {
             $this->texts[$name] = $this->app->gettext($name);
         }
     }
 
-
     /**
      * Invoke display_message command
      *
-     * @param string  $message  Message to display
-     * @param string  $type     Message type [notice|confirm|error]
-     * @param array   $vars     Key-value pairs to be replaced in localized text
-     * @param boolean $override Override last set message
-     * @param int     $timeout  Message displaying time in seconds
+     * @param string $message  Message to display
+     * @param string $type     Message type [notice|confirm|error]
+     * @param array  $vars     Key-value pairs to be replaced in localized text
+     * @param bool   $override Override last set message
+     * @param int    $timeout  Message displaying time in seconds
+     *
      * @uses self::command()
      */
-    public function show_message($message, $type='notice', $vars=null, $override=true, $timeout=0)
+    public function show_message($message, $type = 'notice', $vars = null, $override = true, $timeout = 0)
     {
         if ($override || !$this->message) {
             if ($this->app->text_exists($message)) {
                 if (!empty($vars)) {
-                    $vars = array_map(array('rcmail', 'Q'), $vars);
+                    $vars = array_map(['rcmail', 'Q'], $vars);
                 }
-                $msgtext = $this->app->gettext(array('name' => $message, 'vars' => $vars));
+                $msgtext = $this->app->gettext(['name' => $message, 'vars' => $vars]);
             }
-            else
+            else {
                 $msgtext = $message;
+            }
 
             $this->message = $message;
             $this->command('display_message', $msgtext, $type, $timeout * 1000);
         }
     }
-
 
     /**
      * Delete all stored env variables and commands
@@ -142,26 +159,25 @@ class rcmail_output_json extends rcmail_output
     public function reset()
     {
         parent::reset();
-        $this->texts = array();
-        $this->commands = array();
+        $this->texts    = [];
+        $this->commands = [];
     }
-
 
     /**
      * Redirect to a certain url
      *
-     * @param mixed $p Either a string with the action or url parameters as key-value pairs
-     * @param int $delay Delay in seconds
+     * @param mixed $p     Either a string with the action or url parameters as key-value pairs
+     * @param int   $delay Delay in seconds
+     *
      * @see rcmail::url()
      */
-    public function redirect($p = array(), $delay = 1)
+    public function redirect($p = [], $delay = 1)
     {
         $location = $this->app->url($p);
         $this->remote_response(sprintf("window.setTimeout(function(){ %s.redirect('%s',true); }, %d);",
             self::JS_OBJECT_NAME, $location, $delay));
         exit;
     }
-
 
     /**
      * Send an AJAX response to the client.
@@ -172,37 +188,35 @@ class rcmail_output_json extends rcmail_output
         exit;
     }
 
-
     /**
      * Show error page and terminate script execution
      *
-     * @param int    $code     Error code
-     * @param string $message  Error message
+     * @param int    $code    Error code
+     * @param string $message Error message
      */
     public function raise_error($code, $message)
     {
+        if ($code == 403) {
+            $this->header('HTTP/1.1 403 Forbidden');
+            die("Invalid Request");
+        }
+
         $this->show_message("Application Error ($code): $message", 'error');
         $this->remote_response();
         exit;
     }
 
-
     /**
      * Send an AJAX response with executable JS code
      *
-     * @param  string  $add Additional JS code
-     * @param  boolean True if output buffer should be flushed
-     * @return void
-     * @deprecated
+     * @param string $add Additional JS code
      */
-    protected function remote_response($add='')
+    protected function remote_response($add = '')
     {
-        static $s_header_sent = false;
-
-        if (!$s_header_sent) {
-            $s_header_sent = true;
+        if (!$this->header_sent) {
+            $this->header_sent = true;
             $this->nocacheing_headers();
-            header('Content-Type: text/plain; charset=' . $this->get_charset());
+            $this->header('Content-Type: application/json; charset=' . $this->get_charset());
         }
 
         // unset default env vars
@@ -215,33 +229,33 @@ class rcmail_output_json extends rcmail_output
             $response['unlock'] = $unlock;
         }
 
-        if (!empty($this->env))
+        if (!empty($this->env)) {
             $response['env'] = $this->env;
+        }
 
-        if (!empty($this->texts))
+        if (!empty($this->texts)) {
             $response['texts'] = $this->texts;
+        }
 
         // send function calls
         $response['exec'] = $this->get_js_commands() . $add;
 
-        if (!empty($this->callbacks))
+        if (!empty($this->callbacks)) {
             $response['callbacks'] = $this->callbacks;
+        }
 
         // trigger generic hook where plugins can put additional content to the response
-        $hook = $this->app->plugins->exec_hook("render_response", array('response' => $response));
+        $hook = $this->app->plugins->exec_hook("render_response", ['response' => $response]);
 
         // save some memory
         $response = $hook['response'];
         unset($hook['response']);
 
-        echo self::json_serialize($response);
+        echo self::json_serialize($response, $this->devel_mode, false);
     }
-
 
     /**
      * Return executable javascript code for all registered commands
-     *
-     * @return string $out
      */
     protected function get_js_commands()
     {
@@ -250,7 +264,7 @@ class rcmail_output_json extends rcmail_output
         foreach ($this->commands as $i => $args) {
             $method = array_shift($args);
             foreach ($args as $i => $arg) {
-                $args[$i] = self::json_serialize($arg);
+                $args[$i] = self::json_serialize($arg, $this->devel_mode, false);
             }
 
             $out .= sprintf(

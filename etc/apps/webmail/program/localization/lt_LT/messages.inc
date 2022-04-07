@@ -2,28 +2,30 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Įvyko klaida!';
 $messages['loginfailed']  = 'Prisijungti nepavyko.';
 $messages['cookiesdisabled'] = 'Jūsų naršyklė nepriima slapukų.';
 $messages['sessionerror'] = 'Jūsų sesija negaliojanti.';
+$messages['cookiesmismatch'] = 'Aptiktas slapukų neatitikimas. Prašome išvalyti savo naršyklės slapukus.';
 $messages['storageerror'] = 'Nepavyko prisijungti prie IMAP serverio.';
 $messages['servererror'] = 'Serverio klaida!';
 $messages['servererrormsg'] = 'Serverio klaida: $msg';
+$messages['accountlocked'] = 'Per daug nesėkmingų bandymų prisijungti. Bandykite jungtis vėliau.';
 $messages['connerror'] = 'Ryšio klaida (nepavyko susijungti su serveriu)!';
 $messages['dberror'] = 'Duomenų bazės klaida!';
+$messages['dbconnerror'] = 'Nepavyko prisijungti prie duomenų bazės!';
 $messages['windowopenerror'] = 'Buvo užblokuotas iššokantis langas!';
 $messages['requesttimedout'] = 'Baigėsi užklausai skirtas laikas';
 $messages['errorreadonly'] = 'Nepavyko atlikti veiksmo – aplankas prieinamas tik skaitymui.';
@@ -33,12 +35,13 @@ $messages['erroroverquotadelete'] = 'Diske trūksta laisvos vietos. Laiškui pa�
 $messages['invalidrequest'] = 'Netinkama užklausa! Duomenys neišsaugoti.';
 $messages['invalidhost'] = 'Negalimas serverio vardas.';
 $messages['nomessagesfound'] = 'Šioje pašto dėžutėje laiškų nėra.';
-$messages['loggedout'] = 'Jūs sėkmingai atsijungėte. Iki kito karto!';
+$messages['loggedout'] = 'Jūs sėkmingai užbaigėte sesiją. Viso gero!';
 $messages['mailboxempty'] = 'Pašto dėžutė tuščia.';
 $messages['nomessages'] = 'Laiškų nėra';
 $messages['refreshing'] = 'Atnaujinama…';
 $messages['loading'] = 'Įkeliama…';
 $messages['uploading'] = 'Įkeliamas failas…';
+$messages['attaching'] = 'Įkeliamas failas…';
 $messages['uploadingmany'] = 'Įkeliami failai…';
 $messages['loadingdata'] = 'Įkeliami duomenys…';
 $messages['checkingmail'] = 'Tikrinama ar nėra naujų pranešimų…';
@@ -49,14 +52,25 @@ $messages['messagesaved'] = 'Laiškas įrašytas į Juodraščių aplanką.';
 $messages['successfullysaved'] = 'Sėkmingai įrašyta.';
 $messages['savingresponse'] = 'Įrašomas atsakymo tekstas…';
 $messages['deleteresponseconfirm'] = 'Ar tikrai norite pašalinti šį atsakymo tekstą?';
+$messages['nocontactselected'] = 'Kol kas nesate pasirinkę adresato.';
 $messages['addedsuccessfully'] = 'Asmuo įtrauktas į adresų knygą.';
 $messages['contactexists'] = 'Adresatas, turintis šį el. pašto adresą, jau egzistuoja.';
 $messages['contactnameexists'] = 'Adresatas tokiu vardu jau egzistuoja.';
 $messages['blockedimages'] = 'Siekiant apsaugoti Jūsų privatumą, paveikslėliai iš interneto neįkelti.';
+$messages['blockedresources'] = 'Siekiant apsaugoti jūsų privatumą, nuotoliniai ištekliai buvo užblokuoti.';
+$messages['suspiciousemail'] = 'Šiame laiške yra įtartinų el. pašto adresų, kurie gali būti apgaulingi.';
 $messages['encryptedmessage'] = 'Apgailestaujame, tačiau šis laiškas užšifruotas ir negali būti parodytas.';
+$messages['externalmessagedecryption'] = 'Šis laiškas šifruotas. Jį iššifruoti galima jūsų naršyklės priedo pagalba.';
+$messages['nopubkeyfor'] = 'Adresui $email nerastas galiojantis viešasis raktas. Ar norite šifruoti laišką tiktai gavėjams?';
+$messages['nopubkeyforsender'] = 'Jūsų tapatybei nerastas galiojantis viešasis raktas. Ar norite užšifruoti laišką tiktai gavėjams?';
+$messages['encryptnoattachments'] = 'Jau įkeltų priedų užšifruoti negalima. Jei norite tai padaryti, įkelkite juos iš naujo šifravimo redaktoriuje.';
+$messages['searchpubkeyservers'] = 'Ar norite ieškoti trūkstamų raktų viešuosiuose raktų serveriuose?';
+$messages['encryptpubkeysfound'] = 'Aptikti šie viešieji raktai:';
+$messages['keyservererror'] = 'Nepavyko gauti rakto iš raktų serverio.';
+$messages['keyimportsuccess'] = 'Viešasis raktas $key sėkmingai įtrauktas į jūsų raktinę.';
 $messages['nocontactsfound'] = 'Adresatų nerasta.';
 $messages['contactnotfound'] = 'Ieškotas adresatas nerastas.';
-$messages['contactsearchonly'] = 'Įveskite reikšminius žodžius adresatų paieškai';
+$messages['contactsearchonly'] = 'Turite naudoti paieškos formą, norėdami pamatyti adresatus iš pasirinktos adresų knygos.';
 $messages['sendingfailed'] = 'Laiško išsiųsti nepavyko.';
 $messages['senttooquickly'] = 'Turite luktelėti $sec sek., kad galėtumėte išsiųsti laišką.';
 $messages['errorsavingsent'] = 'Įrašant išsiųstą laišką, įvyko klaida.';
@@ -65,10 +79,13 @@ $messages['errormoving'] = 'Laiško(-ų) perkelti nepavyko.';
 $messages['errorcopying'] = 'Laiško(-ų) nukopijuoti nepavyko.';
 $messages['errordeleting'] = 'Laiško(-ų) pašalinti nepavyko.';
 $messages['errormarking'] = 'Laiško(-ų) pažymėti nepavyko.';
+$messages['alerttitle'] = 'Dėmėsio';
+$messages['confirmationtitle'] = 'Ar tikrai...';
 $messages['deletecontactconfirm']  = 'Ar tikrai pašalinti pažymėtą(-us) adresatą(-us)?';
 $messages['deletegroupconfirm']  = 'Ar tikrai pašalinti pažymėtą grupę?';
 $messages['deletemessagesconfirm'] = 'Ar tikrai pašalinti pažymėtą(-us) laišką(-us)?';
 $messages['deletefolderconfirm']  = 'Ar tikrai pašalinti šį aplanką?';
+$messages['movefolderconfirm']  = 'Ar tikrai norite perkelti šį aplanką?';
 $messages['purgefolderconfirm']  = 'Ar tikrai pašalinti visus šiame aplanke esančius laiškus?';
 $messages['contactdeleting'] = 'Adresatas(-ai) šalinamas(-i)…';
 $messages['groupdeleting'] = 'Grupė šalinama…';
@@ -81,12 +98,15 @@ $messages['noemailwarning'] = 'Prašom įvesti teisingą el. pašto adresą.';
 $messages['nonamewarning']  = 'Prašom įvesti vardą.';
 $messages['nopagesizewarning'] = 'Prašom įvesti puslapio dydį.';
 $messages['nosenderwarning'] = 'Prašom įvesti siuntėjo el. pašto adresą.';
+$messages['recipientsadded'] = 'Gavėjas(-ai) sėkmingai pridėtas(-i).';
 $messages['norecipientwarning'] = 'Prašom įvesti bent vieną gavėją.';
+$messages['disclosedrecipwarning'] = 'Visi gavėjai matys vieni kitų el. pašto adresus. Tam, kad to neleistumėte ir apsaugotumėte jų privatumą, galite naudoti Bcc lauką.';
+$messages['disclosedreciptitle'] = 'Per daug viešų gavėjų';
 $messages['nosubjectwarning']  = 'Temos laukelis tuščias. Ar norite temą įvesti dabar?';
+$messages['nosubjecttitle']  = 'Nenurodyta tema';
 $messages['nobodywarning'] = 'Išsiųsti šį laišką be teksto?';
-$messages['notsentwarning'] = 'Laiškas neišsiųstas. Ar jūs tikrai norite jo atsikratyti?';
+$messages['notsentwarning'] = 'Laiškas nebuvo išsiųstas ir jame yra neišsaugotų pakeitimų. Ar norite panaikinti savo pakeitimus?';
 $messages['restoresavedcomposedata'] = 'Buvo rastas anksčiau pradėtas rašyti, bet neišsiųstas laiškas.\n\nTema:$subject\nIšsaugotas: $date\n\nAr norite šį laišką atkurti?';
-$messages['noldapserver'] = 'Prašome pasirinkti LDAP serverį paieškai.';
 $messages['nosearchname'] = 'Prašom įvesti vardą arba el. pašto adresą.';
 $messages['notuploadedwarning'] = 'Įkelti dar ne visi priedai. Prašom palaukti arba atšaukti jų įkėlimą.';
 $messages['searchsuccessful'] = 'Rasta laiškų: $nr.';
@@ -99,13 +119,16 @@ $messages['nospellerrors'] = 'Rašybos klaidų nerasta.';
 $messages['folderdeleted'] = 'Aplankas sėkmingai pašalintas.';
 $messages['foldersubscribed'] = 'Aplankas sėkmingai užprenumeruotas.';
 $messages['folderunsubscribed'] = 'Aplanko prenumeratos sėkmingai atsisakyta.';
-$messages['folderpurged'] = 'Aplankas sėkmingai ištuštintas.';
-$messages['folderexpunged'] = 'Aplankas sėkmingai išvalytas.';
 $messages['deletedsuccessfully'] = 'Sėkmingai pašalinta.';
 $messages['converting'] = 'Šalinamas laiško formatavimas…';
 $messages['messageopenerror'] = 'Nepavyko įkelti laiško iš serverio.';
+$messages['filelinkerror'] = 'Failo įkelti nepavyko.';
 $messages['fileuploaderror'] = 'Nepavyko įkelti failo.';
+$messages['csvfilemismatch'] = 'Kelių CSV failų su skirtingais laukais importavimas yra nepalaikomas.';
 $messages['filesizeerror'] = 'Įkeltas failas viršija maksimalų leistiną dydį – $size.';
+$messages['filecounterror'] = 'Jūs daugiausiai vienu metu galite įkelti $count failų(-us).';
+$messages['msgsizeerror'] = 'Nepavyko pridėti failo. Viršytas maksimalus leistinas laiko dydis ($size).';
+$messages['msgsizeerrorfwd'] = 'Viršytas maksimalus laiško dydis ($size). $num laiškai(-ų) nebuvo pridėti.';
 $messages['copysuccess'] = 'Nukopijuota adresatų: $nr.';
 $messages['movesuccess'] = 'Perkelta adresatų: $nr.';
 $messages['copyerror'] = 'Adresatų nukopijuoti nepavyko.';
@@ -145,6 +168,8 @@ $messages['smtpautherror'] = 'SMTP klaida ($code): nepavyko autentikuotis.';
 $messages['smtpfromerror'] = 'SMTP klaida ($code): nepavyko nurodyti siuntėjo „$from“ ($msg).';
 $messages['smtptoerror'] = 'SMTP klaida ($code): nepavyko pridėti gavėjo „$to“ ($msg).';
 $messages['smtprecipientserror'] = 'SMTP klaida: nepavyko apdoroti gavėjų sąrašo.';
+$messages['smtputf8error'] = 'SMTP klaida: Serveris nepalaiko unikodo el. pašto adrese.';
+$messages['smtpsizeerror'] = 'SMTP klaida: Laiško dydis viršija serverio nustatytą ribą ($limit)';
 $messages['smtperror'] = 'SMTP klaida: $msg';
 $messages['emailformaterror'] = 'Netinkamas el. pašto adresas: $email';
 $messages['toomanyrecipients'] = 'Per daug gavėjų. Sumažinkite jų bent iki $max.';
@@ -163,18 +188,41 @@ $messages['savedsearchcreated'] = 'Radinių aplankas sėkmingai sukurtas.';
 $messages['savedsearchcreateerror'] = 'Radinių aplanko sukurti nepavyko.';
 $messages['messagedeleted'] = 'Laiškas(-ai) sėkmingai pašalintas(-i).';
 $messages['messagemoved'] = 'Laiškas(-ai) sėkmingai perkeltas(-i).';
+$messages['messagemovedtotrash'] = 'Laiškas(-ai) sėkmingai perkeltas(-i) į Šiukšlinę.';
 $messages['messagecopied'] = 'Laiškas(-ai) sėkmingai nukopijuotas(-i).';
 $messages['messagemarked'] = 'Laiškas(-ai) sėkmingai pažymėtas(-i).';
 $messages['autocompletechars'] = 'Automatiniam užbaigimui būtini bent $min simboliai.';
 $messages['autocompletemore'] = 'Rasta daugiau atitikmenų. Įveskite dar porą simbolių.';
 $messages['namecannotbeempty'] = 'Vardas negali būti tuščias.';
 $messages['nametoolong'] = 'Vardas yra per ilgas.';
+$messages['namedotforbidden'] = 'Aplanko vardas negali prasidėti tašku.';
 $messages['folderupdated'] = 'Aplanko savybės sėkmingai atnaujintos.';
 $messages['foldercreated'] = 'Aplankas sėkmingai sukurtas.';
 $messages['invalidimageformat'] = 'Paveikslo formatas netinkamas.';
 $messages['mispellingsfound'] = 'Laiške rasta rašybos klaidų.';
 $messages['parentnotwritable'] = 'Nepavyko sukurti arba perkelti aplanko į parinktą tėvinį aplanką. Trūksta prieigos teisių.';
 $messages['messagetoobig'] = 'Laiško dalis yra per didelė, kad galėtų būti apdorota.';
-$messages['attachmentvalidationerror'] = 'Dėmesio! Šis priedas yra įtartinas, nes jo tipas nesutampa su deklaruotu laiške. Jeigu nepasitikite šiuo siuntėju, šio priedo atverti naršyklėje nepatartina, nes jis gali būti kenksmingas.<br/><br/><em>Tikėtasi: $expected; aptikta: $detected</em>';
+$messages['attachmentvalidationerror'] = 'Šis priedas yra įtartinas, nes jo tipas neatitinka laiške deklaruoto tipo. Jeigu nepasitikite siuntėju, tuomet jūs neturėtumėte naršyklėje atverti šio priedo, nes jame gali būti kenkėjiškas turinys.<br/><br/><em>Tikėtasi: $expected; rasta: $detected</em>';
 $messages['noscriptwarning'] = 'Dėmesio: šiai saityno el. pašto sistemai veikti būtini „JavaScript“ scenarijai! Norėdami ja naudotis, įjunkite „JavaScript“ savo naršyklės nuostatose.';
-?>
+$messages['messageissent'] = 'Laiškas jau buvo išsiųstas, bet dar neišsaugotas. Ar norite jį išsaugoti?';
+$messages['errnotfound'] = 'Failas nerastas';
+$messages['errnotfoundexplain'] = 'Ieškomas šaltinis nerastas';
+$messages['errfailedrequest'] = 'Nesėkminga užklausa';
+$messages['errauthorizationfailed'] = 'Autorizacija nepavyko';
+$messages['errunauthorizedexplain'] = 'Nepavyko patvirtinti ar jums leista naudotis šia paslauga.';
+$messages['errrequestcheckfailed'] = 'Patikrinimas nepavyko';
+$messages['errcsrfprotectionexplain'] = "Jūsų saugumui, prieiga prie šio išteklio yra apsaugota nuo CSRF.\nlfJeigu jūs tai matote, tai reiškia, kad taisyklingai neatsijungėte prieš baigdamas darbąsu programa.\n\nNorint tęsti reikalingas žmogaus įsikišimas.";
+$messages['errcontactserveradmin'] = 'Susisiekite su serverio administratoriumi.';
+$messages['clicktoresumesession'] = 'Spauskite čia, tam kad tęstumėte ankstesnę sesiją';
+$messages['errcomposesession'] = 'Laiško rašymo sesijos klaida.';
+$messages['errcomposesessionexplain'] = 'Ieškoma pranešimo kūrimo sesija nerasta.';
+$messages['clicktocompose'] = 'Spausk čia, norėdamas pradėti rašyti naują laišką';
+$messages['nosupporterror'] = 'Jūsų saityno naršyklė nepalaiko šios ypatybės.';
+$messages['siginserted'] = 'Parašas sėkmingai įterptas.';
+$messages['responseinserted'] = 'Atsakymas sėkmingai įterptas.';
+$messages['noresponsesavailable'] = 'Nėra prieinamų atsakymų';
+$messages['listempty'] = 'Sąrašas tuščias.';
+$messages['listusebutton'] = 'Norėdami sukurti naują įrašą, naudokite mygtuką "Sukurti".';
+$messages['keypaircreatesuccess'] = 'Nauja raktų pora buvo sėkmingai sukurta tapatybei $identity.';
+$messages['emptyattachment'] = 'Atrodo, kad šis priedas yra tuščias.<br>Pasiteiraukite asmens, kuris atsiuntė jums šį priedą.';
+$messages['oauthloginfailed'] = 'OAuth prisijungimas nepavyko. Bandykite dar kartą.';

@@ -1,0 +1,25 @@
+{
+    "name": "pear/net_ldap2",
+    "description": "Object oriented interface for searching and manipulating LDAP-entries",
+    "license": "LGPL-3.0",
+    "type": "library",
+    "keywords": [
+        "pear",
+        "ldap"
+    ],
+    "homepage": "http://pear.php.net/package/Net_LDAP2",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Net_LDAP2",
+        "source": "https://github.com/pear/Net_LDAP2"
+    },
+    "require": {
+        "pear/pear-core-minimal": "^1.10.1",
+        "ext-ldap": "*"
+    },
+    "include-path": ["."],
+    "autoload": {
+        "classmap": [
+            "Net/"
+        ]
+    }
+}

@@ -1,10 +1,11 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
- | Copyright (C) 2011-2012, Kolab Systems AG                             |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
+ | Copyright (C) Kolab Systems AG                                        |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -23,8 +24,6 @@
  *
  * @package    Framework
  * @subpackage Storage
- * @author     Thomas Bruederli <roundcube@gmail.com>
- * @author     Aleksander Machniak <alec@alec.pl>
  */
 class rcube_message_part
 {
@@ -56,11 +55,6 @@ class rcube_message_part
      */
     public $mimetype = 'text/plain';
 
-    public $disposition = '';
-    public $filename = '';
-    public $encoding = '8bit';
-    public $charset = '';
-
     /**
      * Part size in bytes
      *
@@ -69,14 +63,34 @@ class rcube_message_part
     public $size = 0;
 
     /**
+     * Part body
+     *
+     * @var string|null
+     */
+    public $body;
+
+    /**
      * Part headers
      *
      * @var array
      */
-    public $headers = array();
+    public $headers = [];
 
-    public $d_parameters = array();
-    public $ctype_parameters = array();
+    /**
+     * Sub-Parts
+     *
+     * @var array
+     */
+    public $parts = [];
+
+    public $type;
+    public $replaces     = [];
+    public $disposition  = '';
+    public $filename     = '';
+    public $encoding     = '8bit';
+    public $charset      = '';
+    public $d_parameters = [];
+    public $ctype_parameters = [];
 
 
     /**
@@ -92,5 +106,4 @@ class rcube_message_part
             }
         }
     }
-
 }

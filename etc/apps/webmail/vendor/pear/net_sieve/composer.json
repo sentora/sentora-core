@@ -1,0 +1,52 @@
+{
+    "authors": [
+        {
+            "email": "alec@alec.pl",
+            "name": "Aleksander Machniak",
+            "role": "Lead"
+        },
+        {
+            "email": "jan@horde.org",
+            "name": "Jan Schneider",
+            "role": "Lead"
+        },
+        {
+            "email": "richard@php.net",
+            "name": "Richard Heyes",
+            "role": "Lead"
+        },
+        {
+            "email": "damlists@cnba.uba.ar",
+            "name": "Damian Fernandez Sosa",
+            "role": "Lead"
+        },
+        {
+            "email": "amistry@am-productions.biz",
+            "name": "Anish Mistry",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "./"
+        ]
+    },
+    "description": "More info available on: https://pear.php.net/package/Net_Sieve",
+    "license": "BSD-2-Clause",
+    "name": "pear/net_sieve",
+    "support": {
+        "issues": "https://pear.php.net/bugs/search.php?cmd=display&package_name[]=Net_Sieve",
+        "source": "https://github.com/pear/Net_Sieve"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear-core-minimal": "~1.10",
+        "pear/net_socket": "~1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6 || ^7"
+    },
+    "suggest": {
+        "pear/auth_sasl": "Install optionally via your project's composer.json"
+    }
+}

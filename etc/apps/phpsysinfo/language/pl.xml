@@ -118,7 +118,7 @@ phpSysInfo language file Language: Polish Created by: Damian Pasternok
     <exp>Rozmiar</exp>
   </expression>
   <expression id="038" name="totals">
-    <exp>Całkowite</exp>
+    <exp>Łącznie</exp>
   </expression>
   <expression id="039" name="kb">
     <exp>kB</exp>
@@ -365,5 +365,47 @@ phpSysInfo language file Language: Polish Created by: Damian Pasternok
   </expression>
   <expression id="120" name="no_devices">
     <exp>Liczba urządzeń</exp>
+  </expression>
+  <expression id="121" name="other">
+    <exp>Inne</exp>
+  </expression>
+  <expression id="122" name="manufacturer">
+    <exp>Producent</exp>
+  </expression>
+  <expression id="123" name="product">
+    <exp>Produkt</exp>
+  </expression>
+  <expression id="124" name="serial">
+    <exp>Number seryjny</exp>
+  </expression>
+  <expression id="125" name="memfree">
+    <exp>Wolne</exp>
+  </expression>
+  <expression id="126" name="nvme">
+    <exp>Urządzenia NVMe</exp>
+  </expression>
+  <expression id="127" name="os">
+    <exp>Typ systemu</exp>
+  </expression>
+  <expression id="128" name="no_memories">
+    <exp>Liczba chipów pamięci</exp>
+  </expression>
+  <expression id="129" name="speed">
+    <exp>Prędkość</exp>
+  </expression>
+  <expression id="130" name="mem">
+    <exp>Chipy Pamięci</exp>
+  </expression>
+  <expression id="131" name="mtps">
+    <exp>MT/s</exp>
+  </expression>
+  <expression id="132" name="gtps">
+    <exp>GT/s</exp>
+  </expression>
+  <expression id="133" name="ups_beeper_status">
+    <exp>Status brzęczka</exp>
+  </expression>
+  <expression id="134" name="virtualizer">
+    <exp>Wirtualizer</exp>
   </expression>
 </tns:translation>

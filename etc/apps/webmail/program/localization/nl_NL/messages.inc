@@ -2,26 +2,27 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Er is een fout opgetreden!';
 $messages['loginfailed']  = 'Aanmelden mislukt.';
 $messages['cookiesdisabled'] = 'Uw browser accepteert geen cookies.';
 $messages['sessionerror'] = 'Uw sessie is verlopen of ongeldig.';
+$messages['cookiesmismatch'] = 'Cookie komt niet overeen, verwijder de cookies van uw browser.';
 $messages['storageerror'] = 'Verbinding met IMAP-server mislukt.';
 $messages['servererror'] = 'Serverfout!';
 $messages['servererrormsg'] = 'Serverfout: $msg';
+$messages['accountlocked'] = 'Te veel mislukte inlogpogingen. Probeer het later nogmaals.';
 $messages['connerror'] = 'Verbindingsfout! (Kon de server niet bereiken)';
 $messages['dberror'] = 'Databasefout!';
 $messages['windowopenerror'] = 'Het popup-venster werd geblokkeerd!';
@@ -39,6 +40,7 @@ $messages['nomessages'] = 'Geen berichten';
 $messages['refreshing'] = 'Vernieuwen...';
 $messages['loading'] = 'Laden...';
 $messages['uploading'] = 'Bestand wordt geüpload...';
+$messages['attaching'] = 'Bestand aan het toevoegen...';
 $messages['uploadingmany'] = 'Bestanden worden geüpload...';
 $messages['loadingdata'] = 'Gegevens worden geladen...';
 $messages['checkingmail'] = 'Controleren op nieuwe berichten...';
@@ -49,14 +51,24 @@ $messages['messagesaved'] = 'Bericht opgeslagen in Concepten.';
 $messages['successfullysaved'] = 'Succesvol opgeslagen.';
 $messages['savingresponse'] = 'Reactie wordt opgeslagen...';
 $messages['deleteresponseconfirm'] = 'Weet u zeker dat u deze reactie wilt verwijderen?';
+$messages['nocontactselected'] = 'U heeft nog geen contactpersoon geselecteerd.';
 $messages['addedsuccessfully'] = 'Contactpersoon succesvol toegevoegd aan het adresboek.';
-$messages['contactexists'] = 'Er bestaat al een contactpersoon met dit e-mailadres.';
+$messages['contactexists'] = 'Er bestaat al een contactpersoon met hetzelfde e-mailadres.';
 $messages['contactnameexists'] = 'Er bestaat al een contactpersoon met deze naam.';
 $messages['blockedimages'] = 'Om uw privacy te beschermen zijn externe afbeeldingen geblokkeerd in dit bericht.';
+$messages['blockedresources'] = 'Om uw privacy te beschermen zijn externe afbeeldingen geblokkeerd in dit bericht.';
 $messages['encryptedmessage'] = 'Dit is een versleuteld bericht en kan niet weergegeven worden. Excuses!';
+$messages['externalmessagedecryption'] = 'Dit is een versleuteld bericht en kan ontsleuteld worden met uw browserextensie.';
+$messages['nopubkeyfor'] = 'Geen geldige publieke sleutel gevonden voor $email';
+$messages['nopubkeyforsender'] = 'Geen geldige publieke sleutel gevonden voor uw afzenderidentiteit. Wilt u het bericht alleen voor de ontvangers versleutelen?';
+$messages['encryptnoattachments'] = 'Al geüploade bijlagen kunnen niet worden versleuteld. Voeg ze alstublieft opnieuw toe aan de versleutelingsbewerker.';
+$messages['searchpubkeyservers'] = 'Wilt u publieke sleutelservers doorzoeken voor de missende sleutels?';
+$messages['encryptpubkeysfound'] = 'The volgende publieke sleutels zijn gevonden:';
+$messages['keyservererror'] = 'Sleutel van keyserver ophalen is mislukt.';
+$messages['keyimportsuccess'] = 'Publieke sleutel $key succesvol geïmporteerd in uw sleutelhanger.';
 $messages['nocontactsfound'] = 'Geen contactpersonen gevonden.';
 $messages['contactnotfound'] = 'Opgevraagde contactpersoon niet gevonden.';
-$messages['contactsearchonly'] = 'Voer enkele zoektermen in om contactpersonen te zoeken';
+$messages['contactsearchonly'] = 'Voer enkele zoektermen in om contactpersonen te zoeken van het geselecteerde adresboek.';
 $messages['sendingfailed'] = 'Verzenden van bericht is mislukt.';
 $messages['senttooquickly'] = 'Wacht alstublieft $sec seconde(n) voordat u dit bericht verstuurt.';
 $messages['errorsavingsent'] = 'Er is een fout opgetreden tijdens het opslaan van het verzonden bericht.';
@@ -65,10 +77,13 @@ $messages['errormoving'] = 'Kan bericht(en) niet verplaatsen.';
 $messages['errorcopying'] = 'Kan bericht(en) niet kopiëren.';
 $messages['errordeleting'] = 'Kan bericht(en) niet verwijderen.';
 $messages['errormarking'] = 'Kan bericht(en) niet markeren.';
+$messages['alerttitle'] = 'Let op';
+$messages['confirmationtitle'] = 'Weet u zeker...';
 $messages['deletecontactconfirm']  = 'Weet u zeker dat u de geselecteerde contact(en) wilt verwijderen?';
 $messages['deletegroupconfirm']  = 'Weet u zeker dat u de geselecteerde groep wilt verwijderen?';
 $messages['deletemessagesconfirm'] = 'Weet u zeker dat u de geselecteerde bericht(en) wilt verwijderen?';
 $messages['deletefolderconfirm']  = 'Weet u zeker dat u deze map wilt verwijderen?';
+$messages['movefolderconfirm']  = 'Wilt u deze map echt verplaatsen?';
 $messages['purgefolderconfirm']  = 'Weet u zeker dat u alle berichten in deze map wilt verwijderen?';
 $messages['contactdeleting'] = 'Bezig met verwijderen van contact(en)...';
 $messages['groupdeleting'] = 'Groep wordt verwijderd...';
@@ -80,13 +95,16 @@ $messages['formincomplete'] = 'Het formulier was niet volledig ingevuld.';
 $messages['noemailwarning'] = 'Geef een geldig e-mailadres op.';
 $messages['nonamewarning']  = 'Vul een naam in.';
 $messages['nopagesizewarning'] = 'Geef een paginagrootte op.';
-$messages['nosenderwarning'] = 'Geef een e-mailadres van de afzender op.';
+$messages['nosenderwarning'] = 'Voer een e-mailadres van de afzender in.';
+$messages['recipientsadded'] = 'Ontvanger(s) succesvol toegevoegd.';
 $messages['norecipientwarning'] = 'Geef tenminste één ontvanger op.';
+$messages['disclosedrecipwarning'] = 'Ontvangers zien alle e-mail adressen. Gebruik het Bcc veld om de privacy van anderen te beschermen.';
+$messages['disclosedreciptitle'] = 'Te veel publiek ontvangers';
 $messages['nosubjectwarning']  = 'U heeft geen onderwerp ingevoerd. Wilt u nu een onderwerp opgeven?';
+$messages['nosubjecttitle']  = 'Geen onderwerp';
 $messages['nobodywarning'] = 'Dit bericht zonder inhoud versturen?';
-$messages['notsentwarning'] = 'Het bericht is niet verstuurd. Wilt u uw bericht weggooien?';
+$messages['notsentwarning'] = 'Het bericht is niet verzonden of opgeslagen. Wilt u wijzigen verwerpen?';
 $messages['restoresavedcomposedata'] = 'Eerder opgesteld, maar niet-verzonden bericht gevonden.\n\nOnderwerp: $subject\nOpgeslagen: $date\n\nWilt u dit bericht herstellen?';
-$messages['noldapserver'] = 'Selecteer een LDAP-server om te zoeken.';
 $messages['nosearchname'] = 'Vul de naam of e-mailadres in van een contactpersoon.';
 $messages['notuploadedwarning'] = 'Nog niet alle bijlagen zijn geüpload. Wacht even of annuleer de upload.';
 $messages['searchsuccessful'] = '$nr berichten gevonden.';
@@ -99,13 +117,16 @@ $messages['nospellerrors'] = 'Geen spelfouten gevonden.';
 $messages['folderdeleted'] = 'Map succesvol verwijderd.';
 $messages['foldersubscribed'] = 'Succesvol geabonneerd op map.';
 $messages['folderunsubscribed'] = 'Abonnement op map succesvol opgezegd.';
-$messages['folderpurged'] = 'Map succesvol leeggemaakt.';
-$messages['folderexpunged'] = 'Map succesvol opgeschoond.';
 $messages['deletedsuccessfully'] = 'Met succes verwijderd.';
 $messages['converting'] = 'Opmaak van bericht verwijderen...';
 $messages['messageopenerror'] = 'Kan het bericht niet van de server laden.';
+$messages['filelinkerror'] = 'Bestand toevoegen mislukt.';
 $messages['fileuploaderror'] = 'Bestand uploaden mislukt.';
+$messages['csvfilemismatch'] = 'Importeren van meerdere CSV-bestanden met verschillende velden wordt niet ondersteund.';
 $messages['filesizeerror'] = 'Het bestand overschrijdt de maximale grootte van $size.';
+$messages['filecounterror'] = 'Je kan maximaal $count bestanden uploaden per keer.';
+$messages['msgsizeerror'] = 'Bestand toevoegen als bijlage mislukt. Maximale grootte van een bericht ($size) overschreden.';
+$messages['msgsizeerrorfwd'] = 'De maximale grootte van een bericht ($size) is overschreden. $num bericht(en) zijn niet bijgevoegd. ';
 $messages['copysuccess'] = '$nr contactpersonen succesvol gekopieerd.';
 $messages['movesuccess'] = '$nr contactpersonen succesvol verplaatst.';
 $messages['copyerror'] = 'Kon geen contactpersoon kopieren.';
@@ -137,7 +158,7 @@ $messages['importconfirmskipped'] = '<b>$skipped bestaande contactpersonen overg
 $messages['importmessagesuccess'] = '$nr berichten succesvol geïmporteerd';
 $messages['importmessageerror'] = 'Importeren mislukt! Het verstuurde bestand is geen geldig bericht of mailboxbestand';
 $messages['opnotpermitted'] = 'Deze bewerking is niet toegestaan!';
-$messages['nofromaddress'] = 'Het e-mailadres ontbreekt in de geselecteerde identiteit.';
+$messages['nofromaddress'] = 'E-mailadres ontbreekt in geselecteerde identiteit.';
 $messages['editorwarning'] = 'Door te wisselen van type tekstverwerker kan er opmaak verloren gaan. Weet u zeker dat u verder wilt gaan?';
 $messages['httpreceivedencrypterror'] = 'Er is een onherstelbare configuratiefout opgetreden. Neem direct contact op met uw systeembeheerder. <b>Uw bericht kon niet worden verzonden.</b>';
 $messages['smtpconnerror'] = 'SMTP-fout ($code): Verbinding met server mislukt.';
@@ -145,6 +166,8 @@ $messages['smtpautherror'] = 'SMTP-fout ($code): Authenticatie mislukt.';
 $messages['smtpfromerror'] = 'SMTP-fout ($code): Afzender "$from" kan niet ingesteld worden ($msg).';
 $messages['smtptoerror'] = 'SMTP-fout ($code): Ontvanger "$to" kan niet toegevoegd worden ($msg).';
 $messages['smtprecipientserror'] = 'SMTP-fout: Lijst met ontvangers kan niet verwerkt worden.';
+$messages['smtputf8error'] = 'SMTP-fout: server ondersteunt geen Unicode in het e-mailadres.';
+$messages['smtpsizeerror'] = 'SMTP-fout: berichtgrootte overschrijdt de serverlimit ($limit)';
 $messages['smtperror'] = 'SMTP-fout: $msg';
 $messages['emailformaterror'] = 'Ongeldig e-mailadres: $email';
 $messages['toomanyrecipients'] = 'Te veel ontvangers. Reduceer het aantal ontvangers tot $max.';
@@ -163,18 +186,41 @@ $messages['savedsearchcreated'] = 'Zoekopdracht succesvol opgeslagen.';
 $messages['savedsearchcreateerror'] = 'Zoekopdracht kon niet worden opgeslagen.';
 $messages['messagedeleted'] = 'Bericht(en) succesvol verwijderd.';
 $messages['messagemoved'] = 'Bericht(en) succesvol verplaatst.';
+$messages['messagemovedtotrash'] = 'Bericht(en) succesvol verplaatst naar de prullenbak.';
 $messages['messagecopied'] = 'Bericht(en) succesvol gekopieerd.';
 $messages['messagemarked'] = 'Bericht(en) succesvol gemarkeerd.';
 $messages['autocompletechars'] = 'Voer tenminste $min karakters in voor automatisch aanvullen.';
 $messages['autocompletemore'] = 'Meerdere resultaten gevonden. Verfijn uw zoekopdracht.';
 $messages['namecannotbeempty'] = 'Naam kan niet leeg zijn.';
 $messages['nametoolong'] = 'Naam is te lang.';
+$messages['namedotforbidden'] = 'Mapnaam kan niet met een punt beginnen.';
 $messages['folderupdated'] = 'Map succesvol bijgewerkt.';
 $messages['foldercreated'] = 'Map succesvol aangemaakt.';
 $messages['invalidimageformat'] = 'Geen geldig afbeeldingsformaat.';
 $messages['mispellingsfound'] = 'Spelfouten gedetecteerd in bericht.';
 $messages['parentnotwritable'] = 'Niet in staat om map aan te maken of verplaatsen in gekozen bovenliggende map. U heeft geen toegangsrechten.';
 $messages['messagetoobig'] = 'Het bericht is te groot om te verwerken.';
-$messages['attachmentvalidationerror'] = 'WAARSCHUWING! Deze bijlage is verdacht omdat het bestandstype niet overeen komt met het bestandstype dat gespecificeerd is in het bericht. Open deze bijlage niet in uw browser als u de afzender niet vertrouwt, aangezien deze bijlage kwaadaardige inhoud kan bevatten.<br /><br /><em>Verwacht: $expected; gevonden: $detected</em>';
+$messages['attachmentvalidationerror'] = 'WAARSCHUWING! Deze bijlage is verdacht omdat het bestandstype niet overeenkomt met het bestandstype dat gespecificeerd is in het bericht. Open deze bijlage niet in uw browser als u de afzender niet vertrouwt, aangezien deze bijlage kwaadaardige inhoud kan bevatten.
+Verwacht: $expected; gevonden: $detected';
 $messages['noscriptwarning'] = 'Waarschuwing: deze webmailapplicatie vereist Javascript! U dient Javascript in te schakelen in uw browserinstellingen wanneer u gebruik wilt maken van deze applicatie.';
-?>
+$messages['messageissent'] = 'Het bericht was al verzonden, maar nog niet opgeslagen. Wilt u het nu opslaan?';
+$messages['errnotfound'] = 'Bestand niet gevonden';
+$messages['errnotfoundexplain'] = 'De opgevraagde bron werd niet gevonden!';
+$messages['errfailedrequest'] = 'Mislukt verzoek';
+$messages['errauthorizationfailed'] = 'Autoriseren mislukt';
+$messages['errunauthorizedexplain'] = 'Kon niet verifiëren dat u geautoriseerd bent voor toegang tot deze dienst!';
+$messages['errrequestcheckfailed'] = 'Controle verzoek mislukt';
+$messages['errcsrfprotectionexplain'] = "Om u te beschermen, is toegang tot deze bron beveiligd tegen CSRF.\nWanneer u dit ziet, heeft u waarschijnlijk niet uitgelogd voordat u de webapplicatie verliet.\n\nMenselijke interactie is nu vereist om door te gaan.";
+$messages['errcontactserveradmin'] = 'Neem alstublieft contact op met uw systeembeheerder.';
+$messages['clicktoresumesession'] = 'Klik hier om uw vorige sessie te hervatten';
+$messages['errcomposesession'] = 'Sessie opstellen fout';
+$messages['errcomposesessionexplain'] = 'Opgevraagde opstellingsessie niet gevonden.';
+$messages['clicktocompose'] = 'Klik hier om een nieuw bericht op te stellen';
+$messages['nosupporterror'] = 'Deze eigenschap wordt niet ondersteund door uw webbrowser.';
+$messages['siginserted'] = 'Handtekening succesvol toegevoegd.';
+$messages['responseinserted'] = 'Antwoord succesvol ingevoegd.';
+$messages['listempty'] = 'De lijst is leeg.';
+$messages['listusebutton'] = 'Gebruik de Nieuw knop om een nieuwe record toe te voegen.';
+$messages['keypaircreatesuccess'] = 'Aan nieuw sleutelpaar werd met succes aangemaakt voor de identiteit $identity.';
+$messages['emptyattachment'] = 'Deze bijlage lijkt leeg te zijn.<br>Check het met de persoon die dit verzonden heeft.';
+$messages['oauthloginfailed'] = 'OAuth login is mislukt. Probeer het opnieuw.';

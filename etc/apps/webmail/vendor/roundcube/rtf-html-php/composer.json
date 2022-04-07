@@ -1,0 +1,35 @@
+{
+  "name": "roundcube/rtf-html-php",
+  "description": "RTF to HTML converter in PHP",
+  "keywords": ["rtf", "converter"],
+  "type": "library",
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Alexander van Oostenrijk",
+      "email": "alex.vanoostenrijk@gmail.com"
+    },
+    {
+      "name": "Aleksander Machniak",
+      "email": "alec@alec.pl"
+    }
+  ],
+  "scripts": {
+    "test": [
+      "phpunit tests"
+    ]
+  },
+  "require": {
+    "php": ">=5.4",
+    "ext-iconv": "*",
+    "ext-mbstring": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "RtfHtmlPhp\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8.36 || ^5.7.21 || ^6 || ^7"
+  }
+}

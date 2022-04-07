@@ -366,4 +366,46 @@ phpSysInfo language file Language: Romană Created by: Sorin Gheorghe Update by:
   <expression id="120" name="no_devices">
     <exp>Number of devices</exp>
   </expression>
+  <expression id="121" name="other">
+    <exp>Other</exp>
+  </expression>
+  <expression id="122" name="manufacturer">
+    <exp>Manufacturer</exp>
+  </expression>
+  <expression id="123" name="product">
+    <exp>Product</exp>
+  </expression>
+  <expression id="124" name="serial">
+    <exp>Serial number</exp>
+  </expression>
+  <expression id="125" name="memfree">
+    <exp>Liber</exp>
+  </expression>
+  <expression id="126" name="nvme">
+    <exp>Dispozitive NVMe</exp>
+  </expression>
+  <expression id="127" name="os">
+    <exp>OS Type</exp>
+  </expression>
+  <expression id="128" name="no_memories">
+    <exp>Number of memory chips</exp>
+  </expression>
+  <expression id="129" name="speed">
+    <exp>Speed</exp>
+  </expression>
+  <expression id="130" name="mem">
+    <exp>Memory Chips</exp>
+  </expression>
+  <expression id="131" name="mtps">
+    <exp>MT/s</exp>
+  </expression>
+  <expression id="132" name="gtps">
+    <exp>GT/s</exp>
+  </expression>
+  <expression id="133" name="ups_beeper_status">
+    <exp>Beeper status</exp>
+  </expression>
+  <expression id="134" name="virtualizer">
+    <exp>Virtualizer</exp>
+  </expression>
 </tns:translation>

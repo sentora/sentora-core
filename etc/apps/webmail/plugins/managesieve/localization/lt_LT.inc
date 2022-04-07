@@ -2,25 +2,28 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/managesieve/localization/<lang>.inc                           |
- |                                                                       |
  | Localization file of the Roundcube Webmail Managesieve plugin         |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
+
+
 $labels['filters'] = 'Filtrai';
 $labels['managefilters'] = 'Tvarkyti gaunamų laiškų filtrus';
 $labels['filtername'] = 'Filtro pavadinimas';
 $labels['newfilter'] = 'Naujas filtras';
 $labels['filteradd'] = 'Pridėti filtrą';
 $labels['filterdel'] = 'Pašalinti filtrą';
+$labels['rules'] = 'Taisyklės';
+$labels['actions'] = 'Veiksmai';
+$labels['scope'] = 'Sritis';
 $labels['moveup'] = 'Pakelti aukštyn';
 $labels['movedown'] = 'Nuleisti žemyn';
 $labels['filterallof'] = 'atitinka visas šias taisykles';
@@ -38,6 +41,14 @@ $labels['filterregex'] = 'atitinka reguliarųjį reiškinį';
 $labels['filternotregex'] = 'neatitinka reguliariojo reiškinio';
 $labels['filterunder'] = 'nesiekia';
 $labels['filterover'] = 'viršija';
+$labels['mime'] = 'MIME:';
+$labels['mimepart'] = 'MIME dalis:';
+$labels['mime-message'] = 'laiškas';
+$labels['mime-anychild'] = 'bet kokia';
+$labels['mime-type'] = 'tipas';
+$labels['mime-subtype'] = 'potipis';
+$labels['mime-contenttype'] = 'turinio tipas';
+$labels['mime-param'] = 'parametras';
 $labels['addrule'] = 'Pridėti taisyklę';
 $labels['delrule'] = 'Pašalinti taisyklę';
 $labels['messagemoveto'] = 'Perkelti laišką į';
@@ -54,10 +65,11 @@ $labels['add'] = 'Pridėti';
 $labels['del'] = 'Pašalinti';
 $labels['sender'] = 'Siuntėjas';
 $labels['recipient'] = 'Gavėjas';
-$labels['vacationaddr'] = 'Papildomas gavėjų adresų sąrašas:';
+$labels['vacationaddr'] = 'Mano el. pašto adresai:';
 $labels['vacationdays'] = 'Kaip dažnai išsiųsti laiškus (dienomis):';
 $labels['vacationinterval'] = 'Kaip dažnai siųsti laiškus:';
 $labels['vacationreason'] = 'Laiško tekstas';
+$labels['vacationfrom'] = 'Atsakymo siuntėjo adresas:';
 $labels['vacationsubject'] = 'Laiško tema:';
 $labels['days'] = 'd.';
 $labels['seconds'] = 'sek.';
@@ -66,9 +78,11 @@ $labels['enable'] = 'Įjungti / išjungti';
 $labels['filterset'] = 'Filtrų rinkinys';
 $labels['filtersets'] = 'Filtrų rinkiniai';
 $labels['filtersetadd'] = 'Pridėti filtrų rinkinį';
-$labels['filtersetdel'] = 'Pašalinti šį filtrų rinkinį';
-$labels['filtersetact'] = 'Įgalinti šį filtrų rinkinį';
-$labels['filtersetdeact'] = 'Išjungti šį filtrų rinkinį';
+$labels['filtersetdel'] = 'Ištrinti filtrų rinkinį';
+$labels['filtersetact'] = 'Aktyvuoti dabartinį filtrų rinkinį';
+$labels['filtersetdeact'] = 'Pasyvinti dabartinį filtrų rinkinį';
+$labels['filterseteditraw'] = 'Taisyti filtrų rinkinį';
+$labels['filtersetswitch'] = 'Įjungti/išjungti filtrų rinkinį';
 $labels['filterdef'] = 'Filtro aprašas';
 $labels['filtersetname'] = 'Filtrų rinkinio pavadinimas';
 $labels['newfilterset'] = 'Naujas filtrų rinkinys';
@@ -77,6 +91,7 @@ $labels['none'] = 'joks';
 $labels['fromset'] = 'iš rinkinio';
 $labels['fromfile'] = 'iš failo';
 $labels['filterdisabled'] = 'Filtras išjungtas';
+$labels['filterenabled'] = 'Filtras įjungtas';
 $labels['countisgreaterthan'] = 'kiekis didesnis nei';
 $labels['countisgreaterthanequal'] = 'kiekis didesnis arba lygus';
 $labels['countislessthan'] = 'kiekis mažesnis nei';
@@ -97,6 +112,18 @@ $labels['flagdeleted'] = 'Pašalintas';
 $labels['flaganswered'] = 'Atsakytas';
 $labels['flagflagged'] = 'Pažymėtas gairele';
 $labels['flagdraft'] = 'Juodraštis';
+$labels['addheader'] = 'Pridėti antraštę į laišką';
+$labels['deleteheader'] = 'Šalinti antraštę iš laiško';
+$labels['headername'] = 'Antraštės pavadinimas';
+$labels['headervalue'] = 'Antraštės reikšmė';
+$labels['headerpos'] = 'Antraštės vieta';
+$labels['headeratstart'] = 'pradžioje';
+$labels['headeratend'] = 'pabaigoje';
+$labels['headeroccurrence'] = 'Antraštės atsiradimas/vieta';
+$labels['headerfromstart'] = 'nuo pradžios';
+$labels['headerfromend'] = 'nuo pabaigos';
+$labels['headerpatterns'] = 'Antraštės reikšmės šablonai';
+$labels['headermatchtype'] = 'atitikimo tipas:';
 $labels['setvariable'] = 'Nustatyti kintamąjį';
 $labels['setvarname'] = 'Kintamojo vardas:';
 $labels['setvarvalue'] = 'Kintamojo vertė:';
@@ -123,6 +150,7 @@ $labels['filtercreate'] = 'Kurti filtrą';
 $labels['usedata'] = 'Filtrui naudoti šiuos duomenis:';
 $labels['nextstep'] = 'Kitas žingsnis';
 $labels['...'] = '…';
+$labels['string'] = 'Eilutė';
 $labels['currdate'] = 'Šiandienos data';
 $labels['datetest'] = 'Data';
 $labels['dateheader'] = 'antraštė:';
@@ -160,23 +188,37 @@ $labels['asciicasemap'] = 'nepaisantis raidžių registro („ascii-casemap“)'
 $labels['asciinumeric'] = 'skaitinis („ascii-numeric“)';
 $labels['index'] = 'turinys:';
 $labels['indexlast'] = 'atbulai';
-$labels['vacation'] = 'Atostogos';
+$labels['spamtestequals'] = 'yra lygus';
+$labels['spamtestnotequals'] = 'nėra lygus';
+$labels['vacation'] = 'Ne biure';
 $labels['vacation.reply'] = 'Atsakyti laišku';
 $labels['vacation.advanced'] = 'Papildomos nuostatos';
+$labels['vacation.from'] = 'Atsakymo siuntėjo adresas';
 $labels['vacation.subject'] = 'Tema';
 $labels['vacation.body'] = 'Laiško tekstas';
+$labels['vacation.start'] = 'Pradžios laikas';
+$labels['vacation.end'] = 'Pabaigos laikas';
 $labels['vacation.status'] = 'Būsena';
 $labels['vacation.on'] = 'Įjungta';
 $labels['vacation.off'] = 'Išjungta';
-$labels['vacation.addresses'] = 'Mano papildomi adresai';
+$labels['vacation.addresses'] = 'Mano el. pašto adresai';
 $labels['vacation.interval'] = 'Atsakymo intervalas';
-$labels['vacation.after'] = 'Atostogų taisyklę pastatyti po';
+$labels['vacation.after'] = 'Išdėstyti ne-biure taisyklę po';
 $labels['vacation.saving'] = 'Išsaugomi duomenys...';
 $labels['vacation.action'] = 'Veiksmas su gaunamais laiškais';
 $labels['vacation.keep'] = 'Palikti';
 $labels['vacation.discard'] = 'Panaikinti';
 $labels['vacation.redirect'] = 'Peradresuoti kam';
 $labels['vacation.copy'] = 'Siųsti kopiją kam';
+$labels['forward'] = 'Persiuntimas';
+$labels['forward.redirect'] = 'Peradresuoti kam';
+$labels['forward.copy'] = 'Siųsti kopiją kam';
+$labels['forward.on'] = 'Įjungta';
+$labels['forward.off'] = 'Išjungta';
+$labels['forward.status'] = 'Būsena:';
+$labels['forward.action'] = 'Gaunamiems laiškams vykdyti šį veiksmą:';
+$labels['forward.saving'] = 'Išsaugomi duomenys...';
+$labels['filladdresses'] = 'Įterpti visus mano el. pašto adresus';
 $labels['arialabelfiltersetactions'] = 'Filtrų rinkinio veiksmai';
 $labels['arialabelfilteractions'] = 'Filtro veiksmai';
 $labels['arialabelfilterform'] = 'Filtro nustatymai';
@@ -184,26 +226,37 @@ $labels['ariasummaryfilterslist'] = 'Filtrų sąrašas';
 $labels['ariasummaryfiltersetslist'] = 'Filtrų rinkinių sąrašas';
 $labels['filterstitle'] = 'Tvarkyti gaunamų laiškų filtrus';
 $labels['vacationtitle'] = 'Redaguoti ne-biure taisyklę';
+$labels['forwardtitle'] = 'Taisyti laiškų persiuntimo taisyklę';
+$labels['message'] = 'Laiškas';
+$labels['duplicate'] = 'yra dubliuojamas';
+$labels['notduplicate'] = 'nėra dubliuojamas';
+$labels['duplicate.handle'] = 'doroklė:';
+$labels['duplicate.header'] = 'antraštė:';
+$labels['duplicate.uniqueid'] = 'identifikatorius:';
+$labels['duplicate.seconds'] = 'laiko limitas (sekundžių):';
+$labels['duplicate.last'] = 'santykinai paskutinio vykdymo';
 $messages['filterunknownerror'] = 'Nežinoma serverio klaida.';
 $messages['filterconnerror'] = 'Neįmanoma užmegzti ryšio su serveriu.';
 $messages['filterdeleteerror'] = 'Nepavyksta ištrinti filtro. Įvyko serverio klaida.';
 $messages['filterdeleted'] = 'Filtras panaikintas sėkmingai.';
 $messages['filtersaved'] = 'Filtras sėkmingai išsaugotas';
 $messages['filtersaveerror'] = 'Nepavyksta išsaugoti filtro. Įvyko serverio klaida.';
+$messages['filterformerror'] = 'Filtrų formoje yra klaidų.';
 $messages['filterdeleteconfirm'] = 'Ar jūs esate įsitikinęs, jog norite panaikinti pasirinktus filtrus(-ą)?';
 $messages['ruledeleteconfirm'] = 'Ar jūs įsitikinęs, jog norite panaikinti pasirinktą taisyklę?';
 $messages['actiondeleteconfirm'] = 'Ar jūs įsitikinęs, jog norite panaikinti pasirinktą veiksmą?';
 $messages['forbiddenchars'] = 'Laukelyje yra draudžiamų simbolių.';
 $messages['cannotbeempty'] = 'Laukelis negali būti tuščias';
 $messages['ruleexist'] = 'Filtras tokiu vardu jau yra.';
-$messages['setactivateerror'] = 'Neįmanoma aktyvuoti pasirinkto filtrų rinkinio. Įvyko serverio klaida.';
-$messages['setdeactivateerror'] = 'Neįmanoma išjungti pasirinkto filtrų rinkinio. Įvyko serverio klaida.';
-$messages['setdeleteerror'] = 'Neįmanoma panaikinti pasirinkto filtrų rinkinio. Įvyko serverio klaida.';
+$messages['setactivateerror'] = 'Nepavyko aktyvuoti pasirinkto filtrų rinkinio. Įvyko serverio klaida.';
+$messages['setdeactivateerror'] = 'Nepavyko pasyvinti pasirinkto filtrų rinkinio. Įvyko serverio klaida.';
+$messages['setdeleteerror'] = 'Nepavyko ištrinti pasirinkto filtrų rinkinio. Įvyko serverio klaida.';
 $messages['setactivated'] = 'Filtrų rinkinys sėkmingai aktyvuotas.';
-$messages['setdeactivated'] = 'Filtrų rinkinys sėkmingai deaktyvuotas.';
-$messages['setdeleted'] = 'Filtrų rinkinys sėkmingai panaikintas.';
-$messages['setdeleteconfirm'] = 'Ar jūs esate tikri, jog norite panaikinti pasirinktą filtrų rinkinį?';
-$messages['setcreateerror'] = 'Neįmanoma sukurti filtrų rinkinio. Įvyko serverio klaida.';
+$messages['setdeactivated'] = 'Filtrų rinkinys sėkmingai pasyvintas.';
+$messages['setdeleted'] = 'Filtrų rinkinys sėkmingai ištrintas.';
+$messages['setupdated'] = 'Filtrų rinkinys sėkmingai atnaujintas.';
+$messages['setdeleteconfirm'] = 'Ar tikrai norite ištrinti pasirinktą filtrų rinkinį?';
+$messages['setcreateerror'] = 'Nepavyko sukurti filtrų rinkinio. Įvyko serverio klaida.';
 $messages['setcreated'] = 'Filtrų rinkinys sėkmingai sukurtas.';
 $messages['activateerror'] = 'Neįmanoma įjungti pasirinktų filtrų(-o). Įvyko serverio klaida.';
 $messages['deactivateerror'] = 'Neįmanoma išjungti pasirinktų filtrų(-o). Įvyko serverio klaida.';
@@ -217,5 +270,10 @@ $messages['setexist'] = 'Rinkinys jau yra sukurtas.';
 $messages['nodata'] = 'Būtina pasirinkti bent vieną poziciją!';
 $messages['invaliddateformat'] = 'Neteisingas datos ar jos dalies formatas';
 $messages['saveerror'] = 'Nepavyksta išsaugoti duomenų. Įvyko serverio klaida.';
-$messages['vacationsaved'] = 'Sėkmingai išsaugoti atostogų duomenys.';
-?>
+$messages['vacationsaved'] = 'Ne-biure duomenys sėkmingai įrašyti.';
+$messages['forwardsaved'] = 'Persiuntimo duomenys sėkmingai įrašyti.';
+$messages['emptyvacationbody'] = 'Atostogų pranešimui turinys būtinas!';
+$messages['duplicate.conflict.err'] = 'Naudojimas antraštės ir identifikatoriaus kartu yra draudžiamas, negalimas.';
+$messages['disabledaction'] = 'Veiksmas neleistinas.';
+$messages['lastindexempty'] = 'Skaičiuojant nuo pabaigos yra reikalingas turinys';
+$messages['noflagset'] = 'Privalo būti pasirinktas bent vienas požymis.';

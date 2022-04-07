@@ -33,20 +33,29 @@ var smart_show = false, smart_table;
  * fill the plugin block with table structure
  */
 function smart_buildTable(xml) {
-    var html = "";
+    var html = "", hostname = "";
+    var smartid;
 
-    html += "<table id=\"Plugin_SMARTTable\" style=\"border-spacing:0;\">\n";
-    html += "  <thead>\n";
-    html += "    <tr>\n";
-    html += "      <th class=\"right\">" + genlang(3, false, "SMART") + "</th>\n";
+    hostname = $("Plugins Plugin_SMART", xml).attr('Hostname');
+    if (hostname !== undefined) {
+        $('span[class=Hostname_SMART]').html(hostname);
+    }
+
+    html += "<div style=\"overflow-x:auto;\">\n";
+    html += "  <table id=\"Plugin_SMARTTable\" style=\"border-collapse:collapse;\">\n";
+    html += "    <thead>\n";
+    html += "      <tr>\n";
+    html += "        <th class=\"right\">" + genlang(2, "SMART") + "</th>\n";
     $("Plugins Plugin_SMART columns column", xml).each(function smart_table_header() {
-        html += "      <th class=\"right\">" + genlang(100 + parseInt($(this).attr("id"), 10), false, "SMART") + "</th>\n";
+        smartid = $(this).attr("id");
+        html += "        <th class=\"right\">" + genlang(100 + parseInt(smartid, 10), "SMART", smartid) + "</th>\n";
     });
-    html += "    </tr>\n";
-    html += "  </thead>\n";
-    html += "  <tbody>\n";
-    html += "  </tbody>\n";
-    html += "</table>\n";
+    html += "      </tr>\n";
+    html += "    </thead>\n";
+    html += "    <tbody>\n";
+    html += "    </tbody>\n";
+    html += "  </table>\n";
+    html += "</div>\n";
 
     $("#Plugin_SMART").append(html);
 
@@ -67,25 +76,30 @@ function smart_buildTable(xml) {
  * @param {jQuery} xml plugin-XML
  */
 function smart_populate(xml) {
-    var name = "", columns = [];
+    var name = "", event = "", columns = [];
     smart_table.fnClearTable();
 
     // Get datas that the user want to be displayed
     $("Plugins Plugin_SMART columns column", xml).each(function smart_find_columns() {
         columns[parseInt($(this).attr("id"), 10)] = $(this).attr("name");
+        smart_show = true;
     });
 
     // Now we add selected datas in the table
     $("Plugins Plugin_SMART disks disk", xml).each(function smart_fill_table() {
         var values = [], display = [], i;
-        name = $(this).attr("name");
+        name = $(this).attr("name").replace(/\)/g, ")<wbr>");
         $(this).find("attribute").each(function smart_fill_data() {
             if (columns[parseInt($(this).attr("id"), 10)] && columns[parseInt($(this).attr("id"), 10)] !== "") {
                 values[parseInt($(this).attr("id"), 10)] = $(this).attr(columns[parseInt($(this).attr("id"), 10)]);
             }
         });
 
-        display.push("<span style=\"display:none;\">" + name + "</span>" + name);
+        event = $(this).attr("event");
+        if (event !== undefined)
+            display.push("<span style=\"display:none;\">" + name + "</span><table style=\"width:0;float:right;*float:right;border-spacing:0;\"><tbody><tr><td style=\"padding:0;\">" + name +" </td><td style=\"padding:0;\"><img style=\"vertical-align:middle;width:16px;\" src=\"./gfx/attention.gif\" alt=\"!\" title=\""+event+"\"/></td></tr></tbody></table>");
+        else
+            display.push("<span style=\"display:none;\">" + name + "</span>" + name);
 
         // On "columns" so we get the right order
         // fixed for Firefox (fix wrong order)
@@ -100,17 +114,16 @@ function smart_populate(xml) {
             else {
                 display.push("<span style=\"display:none;\">" + values[i] + "</span>" + values[i]);
             }
-//          }
         });
         smart_table.fnAddData(display);
     });
-    smart_show = true;
 }
 
 /**
  * load the xml via ajax
  */
 function smart_request() {
+    $("#Reload_SMARTTable").attr("title", "reload");
     $.ajax({
         url: "xml.php?plugin=SMART",
         dataType: "xml",
@@ -125,7 +138,6 @@ function smart_request() {
             smart_populate(xml);
             if (smart_show) {
                 plugin_translate("SMART");
-                $("#Reload_SMARTTable").attr("title",datetime());
                 $("#Plugin_SMART").show();
             }
         }
@@ -133,14 +145,13 @@ function smart_request() {
 }
 
 $(document).ready(function smart_buildpage() {
-    var html = "";
-
     $("#footer").before(buildBlock("SMART", 1, true));
-    $("#Plugin_SMART").css("width", "915px");
+    $("#Plugin_SMART").addClass("fullsize");
 
     smart_request();
 
     $("#Reload_SMARTTable").click(function smart_reload(id) {
         smart_request();
+        $(this).attr("title", datetime());
     });
 });
