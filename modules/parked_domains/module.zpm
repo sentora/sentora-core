@@ -61,7 +61,7 @@
 
     <div class="zform_wrapper">
         <table class="none" width="100%" cellborder="0" cellspacing="0"><tr valign="top"><td>
-                    <h2><: Create a new parked domain :></h2>
+                    <h2>Create a new parked domain</h2>
                     <% if CreateParkedDomain %>
                     <form action="./?module=parked_domains&action=CreateParkedDomain" method="post" name="CreateDomain">
                         <table class="table table-striped">

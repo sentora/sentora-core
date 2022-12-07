@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/)
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/)
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -32,7 +32,10 @@ class module_controller extends ctrl_module
     static $error;
     static $alreadyexists;
     static $blank;
+	static $blankpassword;	
     static $badname;
+	static $badpass;
+	static $badpasswordlength;
     static $invalidPath;
     static $ok;
     static $delete;
@@ -58,8 +61,8 @@ class module_controller extends ctrl_module
             while ($rowclients = $sql->fetch()) {
                 $res[] = array('id' => $rowclients['ft_id_pk'],
                     'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
-                    'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
-                    'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
+                    'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),	
+					'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),			
                     'username' => runtime_xss::xssClean($rowclients['ft_user_vc']));
             }
             return $res;
@@ -85,7 +88,7 @@ class module_controller extends ctrl_module
                 $res[] = array('id' => $rowclients['ft_id_pk'],
                     'directory' => runtime_xss::xssClean($rowclients['ft_directory_vc']),
                     'access' => runtime_xss::xssClean($rowclients['ft_access_vc']),
-                    'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
+					'password' => runtime_xss::xssClean($rowclients['ft_password_vc']),
                     'username' => runtime_xss::xssClean($rowclients['ft_user_vc']));
             }
             return $res;
@@ -141,41 +144,48 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
 
-        // Verify if Current user can Edit FTP Account.
-        $currentuser = ctrl_users::GetUserDetail($uid);
+		if (fs_director::CheckForEmptyValue(self::CheckPasswordForErrors($password))) {
 
-        $sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_id_pk=:editedUsrID AND ft_deleted_ts IS NULL";
-        $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':userid', $currentuser['userid']);
-        $numrows->bindParam(':editedUsrID', $ft_id_pk);
-        $numrows->execute();
+			// Verify if Current user can Edit FTP Account.
+			$currentuser = ctrl_users::GetUserDetail($uid);
+	
+			$sql = "SELECT * FROM x_ftpaccounts WHERE ft_acc_fk=:userid AND ft_id_pk=:editedUsrID AND ft_deleted_ts IS NULL";
+			$numrows = $zdbh->prepare($sql);
+			$numrows->bindParam(':userid', $currentuser['userid']);
+			$numrows->bindParam(':editedUsrID', $ft_id_pk);
+			$numrows->execute();
+	
+			if( $numrows->rowCount() == 0 ) {
+				return;
+			}
+	
+			// Change User Password
+			runtime_hook::Execute('OnBeforeResetFTPPassword');
+			$rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
+			$rowftpfind = $zdbh->prepare($rowftpsql);
+			$rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
+			$rowftpfind->execute();
+			$rowftp = $rowftpfind->fetch();
+	
+			$sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc=:password WHERE ft_id_pk=:ftpid");
+			$sql->bindParam(':password', $password);
+			$sql->bindParam(':ftpid', $ft_id_pk);
+			$sql->execute();
+	
+			self::$reset = true;
+			// Include FTP server specific file here.
+			$FtpModuleFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('ftp_php');
+			if (file_exists($FtpModuleFile)) {
+				include($FtpModuleFile);
+			}
+			$retval = TRUE;
+			runtime_hook::Execute('OnAfterResetFTPPassword');
+			return $retval;
 
-        if( $numrows->rowCount() == 0 ) {
-            return;
-        }
-
-        // Change User Password
-        runtime_hook::Execute('OnBeforeResetFTPPassword');
-        $rowftpsql = "SELECT * FROM x_ftpaccounts WHERE ft_id_pk=:ftIdPk";
-        $rowftpfind = $zdbh->prepare($rowftpsql);
-        $rowftpfind->bindParam(':ftIdPk', $ft_id_pk);
-        $rowftpfind->execute();
-        $rowftp = $rowftpfind->fetch();
-
-        $sql = $zdbh->prepare("UPDATE x_ftpaccounts SET ft_password_vc=:password WHERE ft_id_pk=:ftpid");
-        $sql->bindParam(':password', $password);
-        $sql->bindParam(':ftpid', $ft_id_pk);
-        $sql->execute();
-
-        self::$reset = true;
-        // Include FTP server specific file here.
-        $FtpModuleFile = 'modules/' . $controller->GetControllerRequest('URL', 'module') . '/code/' . ctrl_options::GetSystemOption('ftp_php');
-        if (file_exists($FtpModuleFile)) {
-            include($FtpModuleFile);
-        }
-        $retval = TRUE;
-        runtime_hook::Execute('OnAfterResetFTPPassword');
-        return $retval;
+		} 
+				 
+		return false;
+		
     }
 
     static function ExecuteCreateFTP($uid, $username, $password, $destination, $domainDestination, $access_type, $home)
@@ -183,7 +193,7 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-  $username = $currentuser['username'] . '_' . $username;
+  		$username = $currentuser['username'] . '_' . $username;
         runtime_hook::Execute('OnBeforeCreateFTPAccount');
         if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))) {
             // Check to see if its a new home directory or use a current one...
@@ -246,6 +256,11 @@ class module_controller extends ctrl_module
             self::$badname = true;
             $retval = TRUE;
         }
+		// Check for invalid password
+        if (!self::IsValidPassword($password)) {
+            self::$badpass = true;
+            $retval = TRUE;
+        }
         // Check to make sure the cron is not a duplicate...
         $sql = "SELECT COUNT(*) FROM x_ftpaccounts WHERE ft_user_vc=:userid AND ft_deleted_ts IS NULL";
         $numrows = $zdbh->prepare($sql);
@@ -259,13 +274,42 @@ class module_controller extends ctrl_module
         }
         return $retval;
     }
-
+	
     static function IsValidUserName($username)
     {
         return preg_match('/^[a-z\d_][a-z\d_-]{0,62}$/i', $username) || preg_match('/-$/', $username) == 1;
     }
 
-    static function ExecuteDeleteFTP($ft_id_pk, $uid)
+	static function CheckPasswordForErrors($password)
+    {
+        global $zdbh;
+        $retval = FALSE;
+		
+		// Check to make sure the password is not blank before we go any further...
+        if ($password == '') {
+            self::$blankpassword = TRUE;
+            $retval = TRUE;
+        }
+		// Check for password length...
+		if (strlen($password) < ctrl_options::GetSystemOption('password_minlength')) {
+			self::$badpasswordlength = true;
+			return false;
+		}
+        // Check for invalid password
+        if (!self::IsValidPassword($password)) {
+            self::$badpass = true;
+            $retval = TRUE;
+        }
+		return $retval;
+    }
+	
+	static function IsValidPassword($password)
+    {
+        //return preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/', $password) || preg_match('/-$/', $password) == 1;
+		return preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/', $password) || preg_match('/-$/', $password) == 1;
+    }
+	
+    static function ExecuteDeleteFTP($ft_id_pk, $uid = null)
     {
         global $zdbh;
         global $controller;
@@ -394,14 +438,14 @@ class module_controller extends ctrl_module
         return !isset($urlvars['show']);
     }
 
-    static function getisDeleteFTP($uid)
+    static function getisDeleteFTP($uid = null)
     {
         global $controller;
         global $zdbh;
 
         $urlvars = $controller->GetAllControllerRequests('URL');
 
-        // Verify if Current user can Edit FTP Account.
+        // Verify if Current user can Delete FTP Account.
         // This shall avoid exposing ftp username based on ID lookups.
         $currentuser = ctrl_users::GetUserDetail($uid);
 
@@ -419,7 +463,7 @@ class module_controller extends ctrl_module
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
-    static function getisEditFTP($uid)
+    static function getisEditFTP($uid = null)
     {
         global $controller;
         global $zdbh;
@@ -494,12 +538,27 @@ class module_controller extends ctrl_module
         }
     }
 
+    static function getMinPassLength()
+    {
+        $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
+        $trylength = 9;
+        if ($trylength < $minpasswordlength) {
+            $uselength = $minpasswordlength;
+        } else {
+            $uselength = $trylength;
+        }
+        return $uselength;
+    }
+
     static function getResult()
     {
         if (!fs_director::CheckForEmptyValue(self::$blank)) {
             return ui_sysmessage::shout(ui_language::translate("You must enter a valid username and password to create your FTP account."), "zannounceerror");
         }
-        if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
+        if (!fs_director::CheckForEmptyValue(self::$blankpassword)) {
+            return ui_sysmessage::shout(ui_language::translate("You entered blank a password. Please retry and enter a valid password."), "zannounceerror");
+        }
+		if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
             return ui_sysmessage::shout(ui_language::translate("An FTP account with that name already exists."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$error)) {
@@ -507,6 +566,12 @@ class module_controller extends ctrl_module
         }
         if (!fs_director::CheckForEmptyValue(self::$badname)) {
             return ui_sysmessage::shout(ui_language::translate("Your ftp account name is not valid. Please enter a valid ftp account name."), "zannounceerror");
+        }
+		if (!fs_director::CheckForEmptyValue(self::$badpass)) {
+            return ui_sysmessage::shout(ui_language::translate("Your MySQL password is not valid. Valid characters are A-Z, a-z, 0-9."), "zannounceerror");
+        }
+		if (!fs_director::CheckForEmptyValue(self::$badpasswordlength)) {
+            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") . ": " . ctrl_options::GetSystemOption('password_minlength'), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$invalidPath)) {
             return ui_sysmessage::shout(ui_language::translate("Invalid Folder."), "zannounceok");

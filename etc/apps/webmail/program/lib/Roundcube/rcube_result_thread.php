@@ -1,10 +1,11 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
- | Copyright (C) 2011, Kolab Systems AG                                  |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
+ | Copyright (C) Kolab Systems AG                                        |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -26,6 +27,8 @@
  */
 class rcube_result_thread
 {
+    public $incomplete = false;
+
     protected $raw_data;
     protected $mailbox;
     protected $meta = array();
@@ -44,7 +47,6 @@ class rcube_result_thread
         $this->mailbox = $mailbox;
         $this->init($data);
     }
-
 
     /**
      * Initializes object with IMAP command response
@@ -81,7 +83,6 @@ class rcube_result_thread
         $this->raw_data = $this->parse_thread($data);
     }
 
-
     /**
      * Checks the result from IMAP command
      *
@@ -89,9 +90,8 @@ class rcube_result_thread
      */
     public function is_error()
     {
-        return $this->raw_data === null ? true : false;
+        return $this->raw_data === null;
     }
-
 
     /**
      * Checks if the result is empty
@@ -100,9 +100,8 @@ class rcube_result_thread
      */
     public function is_empty()
     {
-        return empty($this->raw_data) ? true : false;
+        return empty($this->raw_data);
     }
-
 
     /**
      * Returns number of elements (threads) in the result
@@ -126,7 +125,6 @@ class rcube_result_thread
 
         return $this->meta['count'];
     }
-
 
     /**
      * Returns number of all messages in the result
@@ -153,7 +151,6 @@ class rcube_result_thread
         return $this->meta['messages'];
     }
 
-
     /**
      * Returns maximum message identifier in the result
      *
@@ -167,7 +164,6 @@ class rcube_result_thread
         return $this->meta['max'];
     }
 
-
     /**
      * Returns minimum message identifier in the result
      *
@@ -180,7 +176,6 @@ class rcube_result_thread
         }
         return $this->meta['min'];
     }
-
 
     /**
      * Slices data set.
@@ -197,7 +192,6 @@ class rcube_result_thread
         $this->meta['count'] = count($data);
         $this->raw_data      = implode(self::SEPARATOR_ELEMENT, $data);
     }
-
 
     /**
      * Filters data set. Removes threads not listed in $roots list.
@@ -238,7 +232,6 @@ class rcube_result_thread
         $this->raw_data = ltrim($result, self::SEPARATOR_ELEMENT);
     }
 
-
     /**
      * Reverts order of elements in the result
      */
@@ -250,24 +243,12 @@ class rcube_result_thread
             return;
         }
 
+        $data = explode(self::SEPARATOR_ELEMENT, $this->raw_data);
+        $data = array_reverse($data);
+        $this->raw_data = implode(self::SEPARATOR_ELEMENT, $data);
+
         $this->meta['pos'] = array();
-        $datalen = strlen($this->raw_data);
-        $result  = '';
-        $start   = 0;
-
-        while (($pos = @strpos($this->raw_data, self::SEPARATOR_ELEMENT, $start))
-            || ($start < $datalen && ($pos = $datalen))
-        ) {
-            $len   = $pos - $start;
-            $elem  = substr($this->raw_data, $start, $len);
-            $start = $pos + 1;
-
-            $result = $elem . self::SEPARATOR_ELEMENT . $result;
-        }
-
-        $this->raw_data = rtrim($result, self::SEPARATOR_ELEMENT);
     }
-
 
     /**
      * Check if the given message ID exists in the object
@@ -312,7 +293,6 @@ class rcube_result_thread
         return false;
     }
 
-
     /**
      * Return IDs of all messages in the result. Threaded data will be flattened.
      *
@@ -331,7 +311,6 @@ class rcube_result_thread
         return preg_split($regexp, $this->raw_data);
     }
 
-
     /**
      * Return all messages in the result.
      *
@@ -345,7 +324,6 @@ class rcube_result_thread
 
         return rcube_imap_generic::compressMessageSet($this->get());
     }
-
 
     /**
      * Return result element at specified index (all messages, not roots)
@@ -416,17 +394,16 @@ class rcube_result_thread
         return $data[$index];
     }
 
-
     /**
      * Returns response parameters e.g. MAILBOX, ORDER
      *
-     * @param string $param  Parameter name
+     * @param string $param Parameter name
      *
      * @return array|string Response parameters or parameter value
      */
     public function get_parameters($param=null)
     {
-        $params = $this->params;
+        $params = array();
         $params['MAILBOX'] = $this->mailbox;
         $params['ORDER']   = $this->order;
 
@@ -436,7 +413,6 @@ class rcube_result_thread
 
         return $params;
     }
-
 
     /**
      * THREAD=REFS sorting implementation (based on provided index)
@@ -507,7 +483,6 @@ class rcube_result_thread
         $this->raw_data = implode(self::SEPARATOR_ELEMENT, $result);
     }
 
-
     /**
      * Returns data as tree
      *
@@ -532,7 +507,6 @@ class rcube_result_thread
         return $result;
     }
 
-
     /**
      * Returns thread depth and children data
      *
@@ -549,7 +523,6 @@ class rcube_result_thread
         return array($depth, $children);
     }
 
-
     /**
      * Creates 'depth' and 'children' arrays from stored thread 'tree' data.
      */
@@ -564,7 +537,6 @@ class rcube_result_thread
             }
         }
     }
-
 
     /**
      * Converts part of the raw thread into an array
@@ -587,7 +559,6 @@ class rcube_result_thread
 
         return $result;
     }
-
 
     /**
      * IMAP THREAD response parser

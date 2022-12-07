@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  *
  * Output buffering support class.
  * @package sentora

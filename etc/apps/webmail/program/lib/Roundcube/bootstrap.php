@@ -1,9 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | This file is part of the Roundcube PHP suite                          |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ | This file is part of the Roundcube webmail client                     |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -17,7 +18,6 @@
  +-----------------------------------------------------------------------+
 */
 
-
 /**
  * Roundcube Framework Initialization
  *
@@ -26,13 +26,13 @@
  */
 
 $config = array(
-    'error_reporting'         => E_ALL & ~E_NOTICE & ~E_STRICT,
+    'error_reporting' => E_ALL & ~E_NOTICE & ~E_STRICT,
+    'display_errors'  => false,
+    'log_errors'      => true,
     // Some users are not using Installer, so we'll check some
     // critical PHP settings here. Only these, which doesn't provide
     // an error/warning in the logs later. See (#1486307).
-    'mbstring.func_overload'  => 0,
-    'magic_quotes_runtime'    => false,
-    'magic_quotes_sybase'     => false, // #1488506
+    'mbstring.func_overload' => 0,
 );
 
 // check these additional ini settings if not called via CLI
@@ -40,25 +40,30 @@ if (php_sapi_name() != 'cli') {
     $config += array(
         'suhosin.session.encrypt' => false,
         'file_uploads'            => true,
+        'session.auto_start'      => false,
+        'zlib.output_compression' => false,
     );
 }
 
 foreach ($config as $optname => $optval) {
     $ini_optval = filter_var(ini_get($optname), is_bool($optval) ? FILTER_VALIDATE_BOOLEAN : FILTER_VALIDATE_INT);
     if ($optval != $ini_optval && @ini_set($optname, $optval) === false) {
-        $error = "ERROR: Wrong '$optname' option value and it wasn't possible to set it to required value ($optval).\n"
+        $optval = !is_bool($optval) ? $optval : ($optval ? 'On' : 'Off');
+        $error  = "ERROR: Wrong '$optname' option value and it wasn't possible to set it to required value ($optval).\n"
             . "Check your PHP configuration (including php_admin_flag).";
+
         if (defined('STDERR')) fwrite(STDERR, $error); else echo $error;
         exit(1);
     }
 }
 
 // framework constants
-define('RCUBE_VERSION', '1.0.4');
+define('RCUBE_VERSION', '1.4.4');
 define('RCUBE_CHARSET', 'UTF-8');
+define('RCUBE_TEMP_FILE_PREFIX', 'RCMTEMP');
 
 if (!defined('RCUBE_LIB_DIR')) {
-    define('RCUBE_LIB_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR);
+    define('RCUBE_LIB_DIR', __DIR__ . '/');
 }
 
 if (!defined('RCUBE_INSTALL_PATH')) {
@@ -78,10 +83,8 @@ if (!defined('RCUBE_LOCALIZATION_DIR')) {
 }
 
 // set internal encoding for mbstring extension
-if (extension_loaded('mbstring')) {
-    mb_internal_encoding(RCUBE_CHARSET);
-    @mb_regex_encoding(RCUBE_CHARSET);
-}
+mb_internal_encoding(RCUBE_CHARSET);
+mb_regex_encoding(RCUBE_CHARSET);
 
 // make sure the Roundcube lib directory is in the include_path
 $rcube_path = realpath(RCUBE_LIB_DIR . '..');
@@ -97,35 +100,43 @@ if (!preg_match($regexp, $path)) {
 spl_autoload_register('rcube_autoload');
 
 // set PEAR error handling (will also load the PEAR main class)
-PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'rcube_pear_error');
-
+PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, function($err) { rcube::raise_error($err, true); });
 
 
 /**
- * Similar function as in_array() but case-insensitive
+ * Similar function as in_array() but case-insensitive with multibyte support.
  *
- * @param string $needle    Needle value
- * @param array  $heystack  Array to search in
+ * @param string $needle   Needle value
+ * @param array  $heystack Array to search in
  *
  * @return boolean True if found, False if not
  */
 function in_array_nocase($needle, $haystack)
 {
-    $needle = mb_strtolower($needle);
-    foreach ((array)$haystack as $value) {
-        if ($needle === mb_strtolower($value)) {
-            return true;
+    // use much faster method for ascii
+    if (is_ascii($needle)) {
+        foreach ((array) $haystack as $value) {
+            if (strcasecmp($value, $needle) === 0) {
+                return true;
+            }
+        }
+    }
+    else {
+        $needle = mb_strtolower($needle);
+        foreach ((array) $haystack as $value) {
+            if ($needle === mb_strtolower($value)) {
+                return true;
+            }
         }
     }
 
     return false;
 }
 
-
 /**
  * Parse a human readable string for a number of bytes.
  *
- * @param string $str  Input string
+ * @param string $str Input string
  *
  * @return float Number of bytes
  */
@@ -156,29 +167,34 @@ function parse_bytes($str)
     return floatval($bytes);
 }
 
-
 /**
  * Make sure the string ends with a slash
+ *
+ * @param string $str A string
+ *
+ * @return string A string ending with a slash
  */
 function slashify($str)
 {
-  return unslashify($str).'/';
+    return unslashify($str) . '/';
 }
-
 
 /**
  * Remove slashes at the end of the string
+ *
+ * @param string $str A string
+ *
+ * @return string A string ending with no slash
  */
 function unslashify($str)
 {
-  return preg_replace('/\/+$/', '', $str);
+    return rtrim($str, '/');
 }
-
 
 /**
  * Returns number of seconds for a specified offset string.
  *
- * @param string $str  String representation of the offset (e.g. 20min, 5h, 2days, 1week)
+ * @param string $str String representation of the offset (e.g. 20min, 5h, 2days, 1week)
  *
  * @return int Number of seconds
  */
@@ -207,20 +223,18 @@ function get_offset_sec($str)
     return $amount;
 }
 
-
 /**
  * Create a unix timestamp with a specified offset from now.
  *
- * @param string $offset_str  String representation of the offset (e.g. 20min, 5h, 2days)
- * @param int    $factor      Factor to multiply with the offset
+ * @param string $offset_str String representation of the offset (e.g. 20min, 5h, 2days)
+ * @param int    $factor     Factor to multiply with the offset
  *
  * @return int Unix timestamp
  */
-function get_offset_time($offset_str, $factor=1)
+function get_offset_time($offset_str, $factor = 1)
 {
     return time() + get_offset_sec($offset_str) * $factor;
 }
-
 
 /**
  * Truncate string if it is longer than the allowed length.
@@ -233,7 +247,7 @@ function get_offset_time($offset_str, $factor=1)
  *
  * @return string Abbreviated string
  */
-function abbreviate_string($str, $maxlength, $placeholder='...', $ending=false)
+function abbreviate_string($str, $maxlength, $placeholder = '...', $ending = false)
 {
     $length = mb_strlen($str);
 
@@ -246,17 +260,18 @@ function abbreviate_string($str, $maxlength, $placeholder='...', $ending=false)
         $first_part_length  = floor(($maxlength - $placeholder_length)/2);
         $second_starting_location = $length - $maxlength + $first_part_length + $placeholder_length;
 
-        $str = mb_substr($str, 0, $first_part_length) . $placeholder . mb_substr($str, $second_starting_location);
+        $prefix = mb_substr($str, 0, $first_part_length);
+        $suffix = mb_substr($str, $second_starting_location);
+        $str    = $prefix . $placeholder . $suffix;
     }
 
     return $str;
 }
 
-
 /**
  * Get all keys from array (recursive).
  *
- * @param array $array  Input array
+ * @param array $array Input array
  *
  * @return array List of array keys
  */
@@ -276,9 +291,14 @@ function array_keys_recursive($array)
     return $keys;
 }
 
-
 /**
  * Remove all non-ascii and non-word chars except ., -, _
+ *
+ * @param string $str          A string
+ * @param bool   $css_id       The result may be used as CSS identifier
+ * @param string $replace_with Replacement character
+ *
+ * @return string Clean string
  */
 function asciiwords($str, $css_id = false, $replace_with = '')
 {
@@ -286,14 +306,13 @@ function asciiwords($str, $css_id = false, $replace_with = '')
     return preg_replace("/[^$allowed]/i", $replace_with, $str);
 }
 
-
 /**
  * Check if a string contains only ascii characters
  *
  * @param string $str           String to check
  * @param bool   $control_chars Includes control characters
  *
- * @return bool
+ * @return bool True if the string contains ASCII-only, False otherwise
  */
 function is_ascii($str, $control_chars = true)
 {
@@ -301,12 +320,11 @@ function is_ascii($str, $control_chars = true)
     return preg_match($regexp, $str) ? false : true;
 }
 
-
 /**
  * Compose a valid representation of name and e-mail address
  *
- * @param string $email  E-mail address
- * @param string $name   Person name
+ * @param string $email E-mail address
+ * @param string $name  Person name
  *
  * @return string Formatted string
  */
@@ -325,7 +343,6 @@ function format_email_recipient($email, $name = '')
 
     return $email;
 }
-
 
 /**
  * Format e-mail address
@@ -349,7 +366,6 @@ function format_email($email)
     return $email;
 }
 
-
 /**
  * Fix version number so it can be used correctly in version_compare()
  *
@@ -362,58 +378,27 @@ function version_parse($version)
     return str_replace(
         array('-stable', '-git'),
         array('.0', '.99'),
-        $version);
+        $version
+    );
 }
 
-
-/**
- * mbstring replacement functions
- */
-if (!extension_loaded('mbstring'))
-{
-    function mb_strlen($str)
-    {
-        return strlen($str);
-    }
-
-    function mb_strtolower($str)
-    {
-        return strtolower($str);
-    }
-
-    function mb_strtoupper($str)
-    {
-        return strtoupper($str);
-    }
-
-    function mb_substr($str, $start, $len=null)
-    {
-        return substr($str, $start, $len);
-    }
-
-    function mb_strpos($haystack, $needle, $offset=0)
-    {
-        return strpos($haystack, $needle, $offset);
-    }
-
-    function mb_strrpos($haystack, $needle, $offset=0)
-    {
-        return strrpos($haystack, $needle, $offset);
-    }
-}
-
-/**
- * intl replacement functions
- */
+// intl replacement functions
 
 if (!function_exists('idn_to_utf8'))
 {
-    function idn_to_utf8($domain, $flags=null)
+    /**
+     * Convert domain name from IDNA ASCII to Unicode
+     *
+     * @param string $domain Domain to convert in an IDNA ASCII-compatible format.
+     *
+     * @return string|false Unicode domain, False on failure
+     */
+    function idn_to_utf8($domain)
     {
         static $idn, $loaded;
 
         if (!$loaded) {
-            $idn = new Net_IDNA2();
+            $idn    = new Net_IDNA2(array('version' => '2008'));
             $loaded = true;
         }
 
@@ -422,20 +407,29 @@ if (!function_exists('idn_to_utf8'))
                 $domain = $idn->decode($domain);
             }
             catch (Exception $e) {
+                return false;
             }
         }
+
         return $domain;
     }
 }
 
 if (!function_exists('idn_to_ascii'))
 {
-    function idn_to_ascii($domain, $flags=null)
+    /**
+     * Convert domain name to IDNA ASCII-compatible form Unicode
+     *
+     * @param string $domain The domain to convert, which must be UTF-8 encoded
+     *
+     * @return string|false The domain name encoded in ASCII-compatible form, False on failure
+     */
+    function idn_to_ascii($domain)
     {
         static $idn, $loaded;
 
         if (!$loaded) {
-            $idn = new Net_IDNA2();
+            $idn    = new Net_IDNA2(array('version' => '2008'));
             $loaded = true;
         }
 
@@ -444,8 +438,10 @@ if (!function_exists('idn_to_ascii'))
                 $domain = $idn->encode($domain);
             }
             catch (Exception $e) {
+                return false;
             }
         }
+
         return $domain;
     }
 }
@@ -453,47 +449,42 @@ if (!function_exists('idn_to_ascii'))
 /**
  * Use PHP5 autoload for dynamic class loading
  *
+ * @param string $classname Class name
+ *
+ * @return bool True when the class file has been found
+ *
  * @todo Make Zend, PEAR etc play with this
  * @todo Make our classes conform to a more straight forward CS.
  */
 function rcube_autoload($classname)
 {
-    $filename = preg_replace(
-        array(
-            '/Mail_(.+)/',
-            '/Net_(.+)/',
-            '/Auth_(.+)/',
-            '/^html_.+/',
-            '/^rcube(.*)/',
-            '/^utf8$/',
-        ),
-        array(
-            'Mail/\\1',
-            'Net/\\1',
-            'Auth/\\1',
-            'Roundcube/html',
-            'Roundcube/rcube\\1',
-            'utf8.class',
-        ),
-        $classname
-    );
+    if (strpos($classname, 'rcube') === 0) {
+        $classname = preg_replace('/^rcube_(cache|db|session|spellchecker)_/', '\\1/', $classname);
+        $classname = 'Roundcube/' . $classname;
+    }
+    else if (strpos($classname, 'html_') === 0 || $classname === 'html') {
+        $classname = 'Roundcube/html';
+    }
+    else if (strpos($classname, 'Mail_') === 0) {
+        $classname = 'Mail/' . substr($classname, 5);
+    }
+    else if (strpos($classname, 'Net_') === 0) {
+        $classname = 'Net/' . substr($classname, 4);
+    }
+    else if (strpos($classname, 'Auth_') === 0) {
+        $classname = 'Auth/' . substr($classname, 5);
+    }
 
-    if ($fp = @fopen("$filename.php", 'r', true)) {
+    // Translate PHP namespaces into directories,
+    // i.e. use \Sabre\VObject; $vcf = VObject\Reader::read(...)
+    //      -> Sabre/VObject/Reader.php
+    $classname = str_replace('\\', '/', $classname);
+
+    if ($fp = @fopen("$classname.php", 'r', true)) {
         fclose($fp);
-        include_once "$filename.php";
+        include_once "$classname.php";
         return true;
     }
 
     return false;
-}
-
-/**
- * Local callback function for PEAR errors
- */
-function rcube_pear_error($err)
-{
-    error_log(sprintf("%s (%s): %s",
-        $err->getMessage(),
-        $err->getCode(),
-        $err->getUserinfo()), 0);
 }

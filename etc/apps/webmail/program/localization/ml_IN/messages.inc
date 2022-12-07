@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'ഒരു പിഴവ് സംഭവിച്ചിരിക്കുന്നു';
 $messages['loginfailed']  = 'പ്രവേശനം പരാജയപ്പെട്ടിയിക്കുന്നു';
 $messages['cookiesdisabled'] = 'താങ്കളുടെ ബ്രൗസർ കുക്കികൾ സ്വീകരിക്കുന്നതല്ല';
@@ -38,4 +37,3 @@ $messages['checkingmail'] = 'പുതിയ സന്ദേസങ്ങള്�
 $messages['sendingmessage'] = 'സന്ദേശം അയക്കുന്നു...';
 $messages['sendingfailed'] = 'സന്ദേശം അയക്കാന്‍ സാധിച്ചില്ല.';
 $messages['senttooquickly'] = 'സന്ദേശം അയക്കുന്നതിനു മുന്പു ദയവായ്  $sec കാത്തിരിക്കൂ';
-?>

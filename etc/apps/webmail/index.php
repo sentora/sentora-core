@@ -1,10 +1,10 @@
 <?php
-/*
+/**
  +-------------------------------------------------------------------------+
  | Roundcube Webmail IMAP Client                                           |
- | Version 1.0.4                                                           |
+ | Version 1.4.4                                                           |
  |                                                                         |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                         |
+ | Copyright (C) The Roundcube Dev Team                                    |
  |                                                                         |
  | This program is free software: you can redistribute it and/or modify    |
  | it under the terms of the GNU General Public License (with exceptions   |
@@ -40,10 +40,11 @@
 require_once 'program/include/iniset.php';
 
 // init application, start session, init output class, etc.
-$RCMAIL = rcmail::get_instance($GLOBALS['env']);
+$RCMAIL = rcmail::get_instance(0, $GLOBALS['env']);
 
 // Make the whole PHP output non-cacheable (#1487797)
 $RCMAIL->output->nocacheing_headers();
+$RCMAIL->output->common_headers(!empty($_SESSION['user_id']));
 
 // turn on output buffering
 ob_start();
@@ -61,21 +62,33 @@ if ($err_str = $RCMAIL->db->is_error()) {
     rcmail::raise_error(array(
         'code' => 603,
         'type' => 'db',
-        'message' => $err_str), FALSE, TRUE);
+        'message' => $err_str), false, true);
 }
 
 // error steps
 if ($RCMAIL->action == 'error' && !empty($_GET['_code'])) {
-    rcmail::raise_error(array('code' => hexdec($_GET['_code'])), FALSE, TRUE);
+    rcmail::raise_error(array('code' => hexdec($_GET['_code'])), false, true);
 }
 
 // check if https is required (for login) and redirect if necessary
 if (empty($_SESSION['user_id']) && ($force_https = $RCMAIL->config->get('force_https', false))) {
-    $https_port = is_bool($force_https) ? 443 : $force_https;
+    // force_https can be true, <hostname>, <hostname>:<port>, <port>
+    if (!is_bool($force_https)) {
+        list($host, $port) = explode(':', $force_https);
 
-    if (!rcube_utils::https_check($https_port)) {
-        $host  = preg_replace('/:[0-9]+$/', '', $_SERVER['HTTP_HOST']);
-        $host .= ($https_port != 443 ? ':' . $https_port : '');
+        if (is_numeric($host) && empty($port)) {
+            $port = $host;
+            $host = '';
+        }
+    }
+
+    if (!rcube_utils::https_check($port ?: 443)) {
+        if (empty($host)) {
+            $host = preg_replace('/:[0-9]+$/', '', $_SERVER['HTTP_HOST']);
+        }
+        if ($port && $port != 443) {
+            $host .= ':' . $port;
+        }
 
         header('Location: https://' . $host . $_SERVER['REQUEST_URI']);
         exit;
@@ -89,18 +102,20 @@ $RCMAIL->action = $startup['action'];
 
 // try to log in
 if ($RCMAIL->task == 'login' && $RCMAIL->action == 'login') {
-    $request_valid = $_SESSION['temp'] && $RCMAIL->check_request(rcube_utils::INPUT_POST, 'login');
+    $request_valid = $_SESSION['temp'] && $RCMAIL->check_request();
+    $pass_charset  = $RCMAIL->config->get('password_charset', 'UTF-8');
 
-    // purge the session in case of new login when a session already exists 
-    $RCMAIL->kill_session();
+    // purge the session in case of new login when a session already exists
+    if ($request_valid) {
+        $RCMAIL->kill_session();
+    }
 
     $auth = $RCMAIL->plugins->exec_hook('authenticate', array(
-        'host' => $RCMAIL->autoselect_host(),
-        'user' => trim(rcube_utils::get_input_value('_user', rcube_utils::INPUT_POST)),
-        'pass' => rcube_utils::get_input_value('_pass', rcube_utils::INPUT_POST, true,
-            $RCMAIL->config->get('password_charset', 'ISO-8859-1')),
-        'cookiecheck' => true,
-        'valid'       => $request_valid,
+            'host'  => $RCMAIL->autoselect_host(),
+            'user'  => trim(rcube_utils::get_input_value('_user', rcube_utils::INPUT_POST)),
+            'pass'  => rcube_utils::get_input_value('_pass', rcube_utils::INPUT_POST, true, $pass_charset),
+            'valid' => $request_valid,
+            'cookiecheck' => true,
     ));
 
     // Login
@@ -130,7 +145,7 @@ if ($RCMAIL->task == 'login' && $RCMAIL->action == 'login') {
 
             // prevent redirect to compose with specified ID (#1488226)
             if ($query['_action'] == 'compose' && !empty($query['_id'])) {
-                $query = array();
+                $query = array('_action' => 'compose');
             }
         }
 
@@ -139,24 +154,25 @@ if ($RCMAIL->task == 'login' && $RCMAIL->action == 'login') {
         unset($redir['abort'], $redir['_err']);
 
         // send redirect
-        $OUTPUT->redirect($redir);
+        $OUTPUT->redirect($redir, 0, true);
     }
     else {
         if (!$auth['valid']) {
-            $error_code = RCMAIL::ERROR_INVALID_REQUEST;
+            $error_code = rcmail::ERROR_INVALID_REQUEST;
         }
         else {
-            $error_code = $auth['error'] ? $auth['error'] : $RCMAIL->login_error();
+            $error_code = is_numeric($auth['error']) ? $auth['error'] : $RCMAIL->login_error();
         }
 
         $error_labels = array(
-            RCMAIL::ERROR_STORAGE          => 'storageerror',
-            RCMAIL::ERROR_COOKIES_DISABLED => 'cookiesdisabled',
-            RCMAIL::ERROR_INVALID_REQUEST  => 'invalidrequest',
-            RCMAIL::ERROR_INVALID_HOST     => 'invalidhost',
+            rcmail::ERROR_STORAGE          => 'storageerror',
+            rcmail::ERROR_COOKIES_DISABLED => 'cookiesdisabled',
+            rcmail::ERROR_INVALID_REQUEST  => 'invalidrequest',
+            rcmail::ERROR_INVALID_HOST     => 'invalidhost',
+            rcmail::ERROR_RATE_LIMIT       => 'accountlocked',
         );
 
-        $error_message = $error_labels[$error_code] ? $error_labels[$error_code] : 'loginfailed';
+        $error_message = !empty($auth['error']) && !is_numeric($auth['error']) ? $auth['error'] : ($error_labels[$error_code] ?: 'loginfailed');
 
         $OUTPUT->show_message($error_message, 'warning');
 
@@ -166,15 +182,16 @@ if ($RCMAIL->task == 'login' && $RCMAIL->action == 'login') {
         $RCMAIL->plugins->exec_hook('login_failed', array(
             'code' => $error_code, 'host' => $auth['host'], 'user' => $auth['user']));
 
-        $RCMAIL->kill_session();
+        if (!isset($_SESSION['user_id'])) {
+            $RCMAIL->kill_session();
+        }
     }
 }
 
-// end session (after optional referer check)
-else if ($RCMAIL->task == 'logout' && isset($_SESSION['user_id'])
-    && $RCMAIL->check_request(rcube_utils::INPUT_GET)
-    && (!$RCMAIL->config->get('referer_check') || rcube_utils::check_referer())
-) {
+// end session
+else if ($RCMAIL->task == 'logout' && isset($_SESSION['user_id'])) {
+    $RCMAIL->request_security_check(rcube_utils::INPUT_GET | rcube_utils::INPUT_POST);
+
     $userdata = array(
         'user' => $_SESSION['username'],
         'host' => $_SESSION['storage_host'],
@@ -189,27 +206,17 @@ else if ($RCMAIL->task == 'logout' && isset($_SESSION['user_id'])
 }
 
 // check session and auth cookie
-else if ($RCMAIL->task != 'login' && $_SESSION['user_id'] && $RCMAIL->action != 'send') {
+else if ($RCMAIL->task != 'login' && $_SESSION['user_id']) {
     if (!$RCMAIL->session->check_auth()) {
         $RCMAIL->kill_session();
-        $session_error = true;
+        $session_error = 'sessionerror';
     }
 }
 
 // not logged in -> show login page
 if (empty($RCMAIL->user->ID)) {
-    // log session failures
-    $task = rcube_utils::get_input_value('_task', rcube_utils::INPUT_GPC);
-
-    if ($task && !in_array($task, array('login','logout'))
-        && !$session_error && ($sess_id = $_COOKIE[ini_get('session.name')])
-    ) {
-        $RCMAIL->session->log("Aborted session $sess_id; no valid session data found");
-        $session_error = true;
-    }
-
-    if ($session_error || $_REQUEST['_err'] == 'session') {
-        $OUTPUT->show_message('sessionerror', 'error', null, true, -1);
+    if ($session_error || $_REQUEST['_err'] === 'session' || ($session_error = $RCMAIL->session_error())) {
+        $OUTPUT->show_message($session_error ?: 'sessionerror', 'error', null, true, -1);
     }
 
     if ($OUTPUT->ajax_call || $OUTPUT->get_env('framed')) {
@@ -219,46 +226,40 @@ if (empty($RCMAIL->user->ID)) {
 
     // check if installer is still active
     if ($RCMAIL->config->get('enable_installer') && is_readable('./installer/index.php')) {
-        $OUTPUT->add_footer(html::div(array('style' => "background:#ef9398; border:2px solid #dc5757; padding:0.5em; margin:2em auto; width:50em"),
+        $OUTPUT->add_footer(html::div(array('id' => 'login-addon', 'style' => "background:#ef9398; border:2px solid #dc5757; padding:0.5em; margin:2em auto; width:50em"),
             html::tag('h2', array('style' => "margin-top:0.2em"), "Installer script is still accessible") .
             html::p(null, "The install script of your Roundcube installation is still stored in its default location!") .
-            html::p(null, "Please <b>remove</b> the whole <tt>installer</tt> folder from the Roundcube directory because .
+            html::p(null, "Please <b>remove</b> the whole <tt>installer</tt> folder from the Roundcube directory because
                 these files may expose sensitive configuration data like server passwords and encryption keys
                 to the public. Make sure you cannot access the <a href=\"./installer/\">installer script</a> from your browser.")
         ));
     }
 
-    $plugin = $RCMAIL->plugins->exec_hook('unauthenticated', array('task' => 'login', 'error' => $session_error));
+    $plugin = $RCMAIL->plugins->exec_hook('unauthenticated', array(
+            'task'      => 'login',
+            'error'     => $session_error,
+            // Return 401 only on failed logins (#7010)
+            'http_code' => empty($session_error) && !empty($error_message) ? 401 : 200
+    ));
 
     $RCMAIL->set_task($plugin['task']);
 
+    if ($plugin['http_code'] == 401) {
+        header('HTTP/1.0 401 Unauthorized');
+    }
+
     $OUTPUT->send($plugin['task']);
 }
-// CSRF prevention
 else {
-    // don't check for valid request tokens in these actions
-    $request_check_whitelist = array('login'=>1, 'spell'=>1, 'spell_html'=>1);
+    // CSRF prevention
+    $RCMAIL->request_security_check();
 
-    if (!$request_check_whitelist[$RCMAIL->action]) {
-        // check client X-header to verify request origin
-        if ($OUTPUT->ajax_call) {
-            if (rcube_utils::request_header('X-Roundcube-Request') != $RCMAIL->get_request_token()) {
-                header('HTTP/1.1 403 Forbidden');
-                die("Invalid Request");
-            }
-        }
-        // check request token in POST form submissions
-        else if (!empty($_POST) && !$RCMAIL->check_request()) {
-            $OUTPUT->show_message('invalidrequest', 'error');
-            $OUTPUT->send($RCMAIL->task);
-        }
-
-        // check referer if configured
-        if ($RCMAIL->config->get('referer_check') && !rcube_utils::check_referer()) {
-            raise_error(array(
-                'code' => 403, 'type' => 'php',
-                'message' => "Referer check failed"), true, true);
-        }
+    // check access to disabled actions
+    $disabled_actions = (array) $RCMAIL->config->get('disabled_actions');
+    if (in_array($RCMAIL->task . '.' . ($RCMAIL->action ?: 'index'), $disabled_actions)) {
+        rcube::raise_error(array(
+            'code' => 404, 'type' => 'php',
+            'message' => "Action disabled"), true, true);
     }
 }
 
@@ -284,16 +285,17 @@ if (is_file($incfile = INSTALL_PATH . 'program/steps/'.$RCMAIL->task.'/func.inc'
 }
 
 // allow 5 "redirects" to another action
-$redirects = 0; $incstep = null;
+$redirects = 0;
 while ($redirects < 5) {
     // execute a plugin action
-    if ($RCMAIL->plugins->is_plugin_task($RCMAIL->task)) {
-        if (!$RCMAIL->action) $RCMAIL->action = 'index';
-        $RCMAIL->plugins->exec_action($RCMAIL->task.'.'.$RCMAIL->action);
+    if (preg_match('/^plugin\./', $RCMAIL->action)) {
+        $RCMAIL->plugins->exec_action($RCMAIL->action);
         break;
     }
-    else if (preg_match('/^plugin\./', $RCMAIL->action)) {
-        $RCMAIL->plugins->exec_action($RCMAIL->action);
+    // execute action registered to a plugin task
+    else if ($RCMAIL->plugins->is_plugin_task($RCMAIL->task)) {
+        if (!$RCMAIL->action) $RCMAIL->action = 'index';
+        $RCMAIL->plugins->exec_action($RCMAIL->task.'.'.$RCMAIL->action);
         break;
     }
     // try to include the step file

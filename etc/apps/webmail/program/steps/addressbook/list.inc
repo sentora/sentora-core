@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/list.inc                                    |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Send contacts list to client (as remote response)                   |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -22,7 +20,7 @@
 if (!empty($_GET['_page']))
     $page = intval($_GET['_page']);
 else
-    $page = !empty($_SESSION['page']) ? $_SESSION['page'] : 1;
+    $page = $_SESSION['page'] ?: 1;
 
 $_SESSION['page'] = $page;
 
@@ -53,14 +51,16 @@ else {
 
     if (!$result->count && $result->searchonly) {
         $OUTPUT->show_message('contactsearchonly', 'notice');
-        $OUTPUT->command('command', 'advanced-search');
+        // Don't invoke advanced search dialog automatically from here (#6679)
     }
 
     if ($CONTACTS->group_id) {
-        $OUTPUT->command('set_group_prop', array('ID' => $CONTACTS->group_id)
-            + array_intersect_key((array)$CONTACTS->get_group($CONTACTS->group_id), array('name'=>1,'email'=>1)));
+        $group_data = array('ID' => $CONTACTS->group_id)
+            + array_intersect_key((array)$CONTACTS->get_group($CONTACTS->group_id), array('name'=>1,'email'=>1));
     }
 }
+
+$OUTPUT->command('set_group_prop', $group_data);
 
 // update message count display
 $OUTPUT->set_env('pagecount', ceil($result->count / $PAGE_SIZE));

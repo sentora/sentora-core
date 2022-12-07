@@ -1,12 +1,11 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/settings/about.inc                                      |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
- | Copyright (C) 2011-2013, Kolab Systems AG                             |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
+ | Copyright (C) Kolab Systems AG                                        |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -14,20 +13,27 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Display license information about program and enabled plugins       |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Aleksander Machniak <alec@alec.pl>                            |
  +-----------------------------------------------------------------------+
 */
 
+define('RC_COPYRIGHT', 'Copyright &copy; 2005-2020, The Roundcube Dev Team');
+define('RC_LICENSE', 'This program is free software; you can redistribute it and/or modify it under the terms of the '
+            . '<a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License</a> '
+            . 'as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.'
+            . '<br/>Some <a href="https://roundcube.net/license" target="_blank">exceptions</a> for skins &amp; plugins apply.');
 
 $OUTPUT->set_pagetitle($RCMAIL->gettext('about'));
 
-$OUTPUT->add_handler('supportlink', 'rcmail_supportlink');
-$OUTPUT->add_handler('pluginlist', 'rcmail_plugins_list');
+$OUTPUT->add_handlers(array(
+        'supportlink' => 'rcmail_supportlink',
+        'pluginlist'  => 'rcmail_plugins_list',
+        'copyright'   => function() { return RC_COPYRIGHT; },
+        'license'     => function() { return RC_LICENSE; },
+));
 
 $OUTPUT->send('about');
-
 
 
 function rcmail_supportlink($attrib)
@@ -35,7 +41,7 @@ function rcmail_supportlink($attrib)
     global $RCMAIL;
 
     if ($url = $RCMAIL->config->get('support_url')) {
-        $label = $attrib['label'] ? $attrib['label'] : 'support';
+        $label = $attrib['label'] ?: 'support';
         $attrib['href'] = $url;
 
         return html::a($attrib, $RCMAIL->gettext($label));
@@ -50,7 +56,7 @@ function rcmail_plugins_list($attrib)
         $attrib['id'] = 'rcmpluginlist';
     }
 
-    $plugins     = array_filter((array) $RCMAIL->config->get('plugins'));
+    $plugins     = array_filter($RCMAIL->plugins->active_plugins);
     $plugin_info = array();
 
     foreach ($plugins as $name) {
@@ -61,8 +67,8 @@ function rcmail_plugins_list($attrib)
 
     // load info from required plugins, too
     foreach ($plugin_info as $name => $info) {
-        if (is_array($info['required']) && !empty($info['required'])) {
-            foreach ($info['required'] as $req_name) {
+        if (is_array($info['require']) && !empty($info['require'])) {
+            foreach ($info['require'] as $req_name) {
                 if (!isset($plugin_info[$req_name]) && ($req_info = $RCMAIL->plugins->get_info($req_name))) {
                     $plugin_info[$req_name] = $req_info;
                 }
@@ -85,17 +91,17 @@ function rcmail_plugins_list($attrib)
     $table->add_header('source', $RCMAIL->gettext('source'));
 
     foreach ($plugin_info as $name => $data) {
-        $uri = $data['src_uri'] ? $data['src_uri'] : $data['uri'];
+        $uri = $data['src_uri'] ?: $data['uri'];
         if ($uri && stripos($uri, 'http') !== 0) {
             $uri = 'http://' . $uri;
         }
 
         $table->add_row();
-        $table->add('name', rcube::Q($data['name'] ? $data['name'] : $name));
+        $table->add('name', rcube::Q($data['name'] ?: $name));
         $table->add('version', rcube::Q($data['version']));
-        $table->add('license', $data['license_uri'] ? html::a(array('target' => '_blank', href=> rcube::Q($data['license_uri'])),
+        $table->add('license', $data['license_uri'] ? html::a(array('target' => '_blank', 'href' => rcube::Q($data['license_uri'])),
             rcube::Q($data['license'])) : $data['license']);
-        $table->add('source', $uri ? html::a(array('target' => '_blank', href=> rcube::Q($uri)),
+        $table->add('source', $uri ? html::a(array('target' => '_blank', 'href' => rcube::Q($uri)),
             rcube::Q($RCMAIL->gettext('download'))) : '');
     }
 

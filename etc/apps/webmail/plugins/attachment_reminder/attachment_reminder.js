@@ -1,4 +1,19 @@
-/* Attachment Reminder plugin script */
+/**
+ * Attachment Reminder plugin script
+ *
+ * @licstart  The following is the entire license notice for the
+ * JavaScript code in this file.
+ *
+ * Copyright (c) The Roundcube Dev Team
+ *
+ * The JavaScript code in this page is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in this file.
+ */
 
 function rcmail_get_compose_message()
 {
@@ -18,7 +33,7 @@ function rcmail_get_compose_message()
 
 function rcmail_check_message(msg)
 {
-  var i, rx, keywords = rcmail.gettext('keywords', 'attachment_reminder').split(",").concat([".doc", ".pdf"]);
+  var i, rx, keywords = rcmail.get_label('keywords', 'attachment_reminder').split(",").concat([".doc", ".pdf"]);
 
   keywords = $.map(keywords, function(n) { return RegExp.escape(n); });
   rx = new RegExp('(' + keywords.join('|') + ')', 'i');
@@ -35,21 +50,26 @@ function rcmail_attachment_reminder_dialog()
 {
   var buttons = {};
 
-  buttons[rcmail.gettext('addattachment')] = function() {
+  buttons[rcmail.get_label('addattachment')] = function() {
     $(this).remove();
     if (window.UI && UI.show_uploadform) // Larry skin
       UI.show_uploadform();
     else if (window.rcmail_ui && rcmail_ui.show_popup) // classic skin
       rcmail_ui.show_popup('uploadmenu', true);
   };
-  buttons[rcmail.gettext('send')] = function(e) {
+  buttons[rcmail.get_label('send')] = function(e) {
     $(this).remove();
     rcmail.env.attachment_reminder = true;
     rcmail.command('send', '', e);
   };
 
   rcmail.env.attachment_reminder = false;
-  rcmail.show_popup_dialog(rcmail.gettext('attachment_reminder.forgotattachment'), '', buttons);
+  rcmail.show_popup_dialog(
+    rcmail.get_label('attachment_reminder.forgotattachment'),
+    rcmail.get_label('attachment_reminder.missingattachment'),
+    buttons,
+    {button_classes: ['mainaction attach', 'send']}
+  );
 };
 
 

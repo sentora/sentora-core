@@ -3,23 +3,23 @@ if (!defined('PSI_CONFIG_FILE')) {
     /**
      * phpSysInfo version
      */
-    define('PSI_VERSION', '3.2.4');
+    define('PSI_VERSION', '3.3.1');
     /**
      * phpSysInfo configuration
      */
-    define('PSI_CONFIG_FILE', APP_ROOT.'/phpsysinfo.ini');
+    define('PSI_CONFIG_FILE', PSI_APP_ROOT.'/phpsysinfo.ini');
 
     define('ARRAY_EXP', '/^return array \([^;]*\);$/'); //array expression search
 
     if (!is_readable(PSI_CONFIG_FILE) || !($config = @parse_ini_file(PSI_CONFIG_FILE, true))) {
-        if (defined('PSI_INTERNAL_XML') && PSI_INTERNAL_XML === true) {
-            echo "ERROR: phpsysinfo.ini does not exist or is not readable by the webserver in the phpsysinfo directory";
-            die();
-        }
+        echo "ERROR: phpsysinfo.ini does not exist or is not readable by the webserver in the phpsysinfo directory";
+        die();
     } else {
         foreach ($config as $name=>$group) {
             if (strtoupper($name)=="MAIN") {
                 $name_prefix='PSI_';
+            } elseif (strtoupper(substr($name, 0, 7))=="SENSOR_") {
+                $name_prefix='PSI_'.strtoupper($name).'_';
             } else {
                 $name_prefix='PSI_PLUGIN_'.strtoupper($name).'_';
             }
@@ -39,6 +39,30 @@ if (!defined('PSI_CONFIG_FILE')) {
         }
     }
 
+    if (defined('PSI_ALLOWED') && is_string(PSI_ALLOWED)) {
+        if (preg_match(ARRAY_EXP, PSI_ALLOWED)) {
+            $allowed = eval(strtolower(PSI_ALLOWED));
+        } else {
+            $allowed = array(strtolower(PSI_ALLOWED));
+        }
+
+        if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+            $ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+        } else {
+            if (isset($_SERVER["HTTP_CLIENT_IP"])) {
+                $ip = $_SERVER["HTTP_CLIENT_IP"];
+            } else {
+                $ip = $_SERVER["REMOTE_ADDR"];
+            }
+        }
+        $ip = preg_replace("/^::ffff:/", "", strtolower($ip));
+
+        if (!in_array($ip, $allowed, true)) {
+            echo "Client IP address not allowed";
+            die();
+        }
+    }
+
     /* default error handler */
     if (function_exists('errorHandlerPsi')) {
         restore_error_handler();
@@ -49,10 +73,10 @@ if (!defined('PSI_CONFIG_FILE')) {
     error_reporting(E_ERROR);
 
     /* get git revision */
-    if (file_exists(APP_ROOT.'/.git/HEAD')) {
-        $contents = @file_get_contents(APP_ROOT.'/.git/HEAD');
+    if (file_exists(PSI_APP_ROOT.'/.git/HEAD')) {
+        $contents = @file_get_contents(PSI_APP_ROOT.'/.git/HEAD');
         if ($contents && preg_match("/^ref:\s+(.*)\/([^\/\s]*)/m", $contents, $matches)) {
-            $contents = @file_get_contents(APP_ROOT.'/.git/'.$matches[1]."/".$matches[2]);
+            $contents = @file_get_contents(PSI_APP_ROOT.'/.git/'.$matches[1]."/".$matches[2]);
             if ($contents && preg_match("/^([^\s]*)/m", $contents, $revision)) {
                 define('PSI_VERSION_STRING', PSI_VERSION ."-".$matches[2]."-".substr($revision[1], 0, 7));
             } else {
@@ -61,8 +85,8 @@ if (!defined('PSI_CONFIG_FILE')) {
         }
     }
     /* get svn revision */
-    if (!defined('PSI_VERSION_STRING') && file_exists(APP_ROOT.'/.svn/entries')) {
-        $contents = @file_get_contents(APP_ROOT.'/.svn/entries');
+    if (!defined('PSI_VERSION_STRING') && file_exists(PSI_APP_ROOT.'/.svn/entries')) {
+        $contents = @file_get_contents(PSI_APP_ROOT.'/.svn/entries');
         if ($contents && preg_match("/dir\n(.+)/", $contents, $matches)) {
             define('PSI_VERSION_STRING', PSI_VERSION."-r".$matches[1]);
         } else {
@@ -76,23 +100,23 @@ if (!defined('PSI_CONFIG_FILE')) {
     if (!defined('PSI_OS')) { //if not overloaded in phpsysinfo.ini
         /* get Linux code page */
         if (PHP_OS == 'Linux') {
-            if (file_exists('/etc/sysconfig/i18n')) {
-                $contents = @file_get_contents('/etc/sysconfig/i18n');
-            } elseif (file_exists('/etc/default/locale')) {
-                $contents = @file_get_contents('/etc/default/locale');
-            } elseif (file_exists('/etc/locale.conf')) {
-                $contents = @file_get_contents('/etc/locale.conf');
-            } elseif (file_exists('/etc/sysconfig/language')) {
-                $contents = @file_get_contents('/etc/sysconfig/language');
-            } elseif (file_exists('/etc/profile.d/lang.sh')) {
-                $contents = @file_get_contents('/etc/profile.d/lang.sh');
+            if (file_exists($fname = '/etc/sysconfig/i18n')
+               || file_exists($fname = '/etc/default/locale')
+               || file_exists($fname = '/etc/locale.conf')
+               || file_exists($fname = '/etc/sysconfig/language')
+               || file_exists($fname = '/etc/profile.d/lang.sh')
+               || file_exists($fname = '/etc/profile')) {
+                $contents = @file_get_contents($fname);
             } else {
                 $contents = false;
                 if (file_exists('/system/build.prop')) { //Android
                     define('PSI_OS', 'Android');
+                    if (@exec('uname -o 2>/dev/null', $unameo) && (sizeof($unameo)>0) && (($unameo0 = trim($unameo[0])) != "")) {
+                        define('PSI_UNAMEO', $unameo0);
+                    }
                     if (!defined('PSI_MODE_POPEN')) { //if not overloaded in phpsysinfo.ini
                         if (!function_exists("proc_open")) { //proc_open function test by executing 'pwd' command
-                            define('PSI_MODE_POPEN', true); //use popen() function - no stderr error handling
+                            define('PSI_MODE_POPEN', true); //use popen() function - no stderr error handling (but with problems with timeout)
                         } else {
                             $out = '';
                             $err = '';
@@ -105,7 +129,7 @@ if (!defined('PSI_CONFIG_FILE')) {
                                 $w = null;
                                 $e = null;
 
-                                while (!(feof($pipes[1]) || feof($pipes[2]))) {
+                                while (!(feof($pipes[1]) && feof($pipes[2]))) {
                                     $read = array($pipes[1], $pipes[2]);
 
                                     $n = stream_select($read, $w, $e, 5);
@@ -117,8 +141,7 @@ if (!defined('PSI_CONFIG_FILE')) {
                                     foreach ($read as $r) {
                                         if ($r == $pipes[1]) {
                                             $out .= fread($r, 4096);
-                                        }
-                                        if ($r == $pipes[2]) {
+                                        } elseif (feof($pipes[1]) && ($r == $pipes[2])) {//read STDERR after STDOUT
                                             $err .= fread($r, 4096);
                                         }
                                     }
@@ -141,20 +164,25 @@ if (!defined('PSI_CONFIG_FILE')) {
             if (!(defined('PSI_SYSTEM_CODEPAGE') && defined('PSI_SYSTEM_LANG')) //also if both not overloaded in phpsysinfo.ini
                && $contents && (preg_match('/^(LANG="?[^"\n]*"?)/m', $contents, $matches)
                || preg_match('/^RC_(LANG="?[^"\n]*"?)/m', $contents, $matches)
-               || preg_match('/^export (LANG="?[^"\n]*"?)/m', $contents, $matches))) {
-                if (!defined('PSI_SYSTEM_CODEPAGE') && @exec($matches[1].' locale -k LC_CTYPE 2>/dev/null', $lines)) { //if not overloaded in phpsysinfo.ini
-                    foreach ($lines as $line) {
-                        if (preg_match('/^charmap="?([^"]*)/', $line, $matches2)) {
-                            define('PSI_SYSTEM_CODEPAGE', $matches2[1]);
-                            break;
+               || preg_match('/^\s*export (LANG="?[^"\n]*"?)/m', $contents, $matches))) {
+                if (!defined('PSI_SYSTEM_CODEPAGE')) {
+                    if (file_exists($vtfname = '/sys/module/vt/parameters/default_utf8')
+                       && (trim(@file_get_contents($vtfname)) === "1")) {
+                            define('PSI_SYSTEM_CODEPAGE', 'UTF-8');
+                    } elseif (@exec($matches[1].' locale -k LC_CTYPE 2>/dev/null', $lines)) { //if not overloaded in phpsysinfo.ini
+                        foreach ($lines as $line) {
+                            if (preg_match('/^charmap="?([^"]*)/', $line, $matches2)) {
+                                define('PSI_SYSTEM_CODEPAGE', $matches2[1]);
+                                break;
+                            }
                         }
                     }
                 }
-                if (!defined('PSI_SYSTEM_LANG') && @exec($matches[1].' locale 2>/dev/null', $lines)) { //also if not overloaded in phpsysinfo.ini
-                    foreach ($lines as $line) {
+                if (!defined('PSI_SYSTEM_LANG') && @exec($matches[1].' locale 2>/dev/null', $lines2)) { //also if not overloaded in phpsysinfo.ini
+                    foreach ($lines2 as $line) {
                         if (preg_match('/^LC_MESSAGES="?([^\."@]*)/', $line, $matches2)) {
                             $lang = "";
-                            if (is_readable(APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(APP_ROOT.'/data/languages.ini', true))) {
+                            if (is_readable(PSI_APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(PSI_APP_ROOT.'/data/languages.ini', true))) {
                                 if (isset($langdata['Linux']['_'.$matches2[1]])) {
                                     $lang = $langdata['Linux']['_'.$matches2[1]];
                                 }
@@ -180,7 +208,7 @@ if (!defined('PSI_CONFIG_FILE')) {
 
                         if (!defined('PSI_SYSTEM_LANG')) { //if not overloaded in phpsysinfo.ini
                             $lang = "";
-                            if (is_readable(APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(APP_ROOT.'/data/languages.ini', true))) {
+                            if (is_readable(PSI_APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(PSI_APP_ROOT.'/data/languages.ini', true))) {
                                 if (isset($langdata['Linux']['_'.$matches2[1]])) {
                                     $lang = $langdata['Linux']['_'.$matches2[1]];
                                 }
@@ -198,7 +226,7 @@ if (!defined('PSI_CONFIG_FILE')) {
             if (!defined('PSI_SYSTEM_LANG') //if not overloaded in phpsysinfo.ini
                 && @exec('defaults read /Library/Preferences/.GlobalPreferences AppleLocale 2>/dev/null', $lines)) {
                 $lang = "";
-                if (is_readable(APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(APP_ROOT.'/data/languages.ini', true))) {
+                if (is_readable(PSI_APP_ROOT.'/data/languages.ini') && ($langdata = @parse_ini_file(PSI_APP_ROOT.'/data/languages.ini', true))) {
                     if (isset($langdata['Linux']['_'.$lines[0]])) {
                         $lang = $langdata['Linux']['_'.$lines[0]];
                     }
@@ -209,6 +237,27 @@ if (!defined('PSI_CONFIG_FILE')) {
                 define('PSI_SYSTEM_LANG', $lang.' ('.$lines[0].')');
             }
         }
+    }
+
+    /* executeProgram() timeout value in seconds */
+    if (defined('PSI_EXEC_TIMEOUT')) {
+        define('PSI_EXEC_TIMEOUT_INT', max(intval(PSI_EXEC_TIMEOUT), 1));
+    } else {
+        define('PSI_EXEC_TIMEOUT_INT', 30);
+    }
+
+    /* snmprealwalk() and executeProgram("snmpwalk") number of seconds until the first timeout */
+    if (defined('PSI_SNMP_TIMEOUT')) {
+        define('PSI_SNMP_TIMEOUT_INT', max(intval(PSI_SNMP_TIMEOUT), 1));
+    } else {
+        define('PSI_SNMP_TIMEOUT_INT', 3);
+    }
+
+    /* snmprealwalk() and executeProgram("snmpwalk") number of times to retry if timeouts occur */
+    if (defined('PSI_SNMP_RETRY')) {
+        define('PSI_SNMP_RETRY_INT', max(intval(PSI_SNMP_RETRY), 0));
+    } else {
+        define('PSI_SNMP_RETRY_INT', 0);
     }
 
     if (!defined('PSI_OS')) {
@@ -229,7 +278,10 @@ if (!defined('PSI_CONFIG_FILE')) {
     }
 
     if (!defined('PSI_JSON_ISSUE')) { //if not overloaded in phpsysinfo.ini
-        if (simplexml_load_string("<A><B><C/></B>\n</A>") !== simplexml_load_string("<A><B><C/></B></A>")) { // json_encode isue test
+        if (!extension_loaded("xml")) {
+            die("phpSysInfo requires the xml extension to php in order to work properly.");
+        }
+        if (simplexml_load_string("<A><B><C/></B>\n</A>") !== simplexml_load_string("<A><B><C/></B></A>")) { // json_encode issue test
             define('PSI_JSON_ISSUE', true); // Problem must be solved
         }
     }

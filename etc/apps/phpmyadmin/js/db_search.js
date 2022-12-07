@@ -18,92 +18,24 @@
 /**
  * Unbind all event handlers before tearing down a page
  */
-AJAX.registerTeardown('db_search.js', function() {
-    $('#buttonGo').unbind('click');
-    $('#togglesearchresultlink').unbind('click');
-    $("#togglequerybox").unbind('click');
-    $('#togglesearchformlink').unbind('click');
-    $("#db_search_form.ajax").die('submit');
+AJAX.registerTeardown('db_search.js', function () {
+    $('a.browse_results').off('click');
+    $('a.delete_results').off('click');
+    $('#buttonGo').off('click');
+    $('#togglesearchresultlink').off('click');
+    $('#togglequerybox').off('click');
+    $('#togglesearchformlink').off('click');
+    $(document).off('submit', '#db_search_form.ajax');
 });
 
-/**
- * Loads the database search results
- *
- * @param result_path Url of the page to load
- * @param table_name  Name of table to browse
- *
- * @return nothing
- */
-function loadResult(result_path, table_name, link)
-{
-    $(function() {
-        /**   Hides the results shown by the delete criteria */
-        var $msg = PMA_ajaxShowMessage(PMA_messages['strBrowsing'], false);
-        $('#sqlqueryform').hide();
-        $('#togglequerybox').hide();
-        /**  Load the browse results to the page */
-        $("#table-info").show();
-        $('#table-link').attr({"href" : 'sql.php?'+link }).text(table_name);
-        var url = result_path + " #sqlqueryresults";
-        $('#browse-results').load(url, null, function() {
-            $('html, body')
-                .animate({
-                    scrollTop: $("#browse-results").offset().top
-                }, 1000);
-            PMA_ajaxRemoveMessage($msg);
-            PMA_makegrid($('#table_results')[0], true, true, true, true);
-        }).show();
-    });
-}
-
-/**
- *  Delete the selected search results
- *
- * @param result_path Url of the page to load
- * @param msg         Text for the confirmation dialog
- *
- * @return nothing
- */
-function deleteResult(result_path, msg)
-{
-    $(function() {
-        /**  Hides the results shown by the browse criteria */
-        $("#table-info").hide();
-        $('#browse-results').hide();
-        $('#sqlqueryform').hide();
-        $('#togglequerybox').hide();
-        /** Conformation message for deletion */
-        if (confirm(msg)) {
-            var $msg = PMA_ajaxShowMessage(PMA_messages['strDeleting'], false);
-            /** Load the deleted option to the page*/
-            $('#sqlqueryform').html('');
-            var url = result_path + " #result_query, #sqlqueryform";
-            $('#browse-results').load(url, function () {
-                /** Refresh the search results after the deletion */
-                document.getElementById('buttonGo').click();
-                $('#togglequerybox').html(PMA_messages['strHideQueryBox']);
-                /** Show the results of the deletion option */
-                $('#browse-results').show();
-                $('#sqlqueryform').show();
-                $('#togglequerybox').show();
-                $('html, body')
-                    .animate({
-                        scrollTop: $("#browse-results").offset().top
-                    }, 1000);
-                PMA_ajaxRemoveMessage($msg);
-            });
-       }
-    });
-}
-
-AJAX.registerOnload('db_search.js', function() {
+AJAX.registerOnload('db_search.js', function () {
     /** Hide the table link in the initial search result */
-    var icon = PMA_getImage('s_tbl.png', '', {'id': 'table-image'}).toString();
-    $("#table-info").prepend(icon).hide();
+    var icon = PMA_getImage('s_tbl', '', { 'id': 'table-image' }).toString();
+    $('#table-info').prepend(icon).hide();
 
     /** Hide the browse and deleted results in the new search criteria */
-    $('#buttonGo').click(function(){
-        $("#table-info").hide();
+    $('#buttonGo').click(function () {
+        $('#table-info').hide();
         $('#browse-results').hide();
         $('#sqlqueryform').hide();
         $('#togglequerybox').hide();
@@ -111,99 +43,185 @@ AJAX.registerOnload('db_search.js', function() {
     /**
      * Prepare a div containing a link for toggle the search results
      */
-    $('<div id="togglesearchresultsdiv"><a id="togglesearchresultlink"></a></div>')
-    .insertAfter('#searchresults')
+    $('#togglesearchresultsdiv')
     /** don't show it until we have results on-screen */
-    .hide();
+        .hide();
 
-    $('<br class="clearfloat" />').insertAfter("#togglesearchresultsdiv").show();
     /**
      * Changing the displayed text according to
      * the hide/show criteria in search result forms
      */
     $('#togglesearchresultlink')
-    .html(PMA_messages['strHideSearchResults'])
-    .bind('click', function() {
-         var $link = $(this);
-         $('#searchresults').slideToggle();
-         if ($link.text() == PMA_messages['strHideSearchResults']) {
-             $link.text(PMA_messages['strShowSearchResults']);
-         } else {
-             $link.text(PMA_messages['strHideSearchResults']);
-         }
-         /** avoid default click action */
-         return false;
-    });
+        .html(PMA_messages.strHideSearchResults)
+        .on('click', function () {
+            var $link = $(this);
+            $('#searchresults').slideToggle();
+            if ($link.text() === PMA_messages.strHideSearchResults) {
+                $link.text(PMA_messages.strShowSearchResults);
+            } else {
+                $link.text(PMA_messages.strHideSearchResults);
+            }
+            /** avoid default click action */
+            return false;
+        });
 
     /**
      * Prepare a div containing a link for toggle the search form,
      * otherwise it's incorrectly displayed after a couple of clicks
      */
-    $('<div id="togglesearchformdiv"><a id="togglesearchformlink"></a></div>')
-    .insertAfter('#db_search_form')
-    .hide(); // don't show it until we have results on-screen
+    $('#togglesearchformdiv')
+        .hide(); // don't show it until we have results on-screen
 
     /**
      * Changing the displayed text according to
      * the hide/show criteria in search form
      */
-    $("#togglequerybox")
-    .hide()
-    .bind('click', function() {
-        var $link = $(this);
-        $('#sqlqueryform').slideToggle("medium");
-        if ($link.text() == PMA_messages['strHideQueryBox']) {
-            $link.text(PMA_messages['strShowQueryBox']);
-        } else {
-            $link.text(PMA_messages['strHideQueryBox']);
-        }
-        /** avoid default click action */
-        return false;
-    });
-
-    /** don't show it until we have results on-screen */
-
-   /**
-    * Changing the displayed text according to
-    * the hide/show criteria in search criteria form
-    */
-   $('#togglesearchformlink')
-       .html(PMA_messages['strShowSearchCriteria'])
-       .bind('click', function() {
+    $('#togglequerybox')
+        .hide()
+        .on('click', function () {
             var $link = $(this);
-            $('#db_search_form').slideToggle();
-            if ($link.text() == PMA_messages['strHideSearchCriteria']) {
-                $link.text(PMA_messages['strShowSearchCriteria']);
+            $('#sqlqueryform').slideToggle('medium');
+            if ($link.text() === PMA_messages.strHideQueryBox) {
+                $link.text(PMA_messages.strShowQueryBox);
             } else {
-                $link.text(PMA_messages['strHideSearchCriteria']);
+                $link.text(PMA_messages.strHideQueryBox);
             }
             /** avoid default click action */
             return false;
-       });
+        });
+
+    /** don't show it until we have results on-screen */
+
+    /**
+     * Changing the displayed text according to
+     * the hide/show criteria in search criteria form
+     */
+    $('#togglesearchformlink')
+        .html(PMA_messages.strShowSearchCriteria)
+        .on('click', function () {
+            var $link = $(this);
+            $('#db_search_form').slideToggle();
+            if ($link.text() === PMA_messages.strHideSearchCriteria) {
+                $link.text(PMA_messages.strShowSearchCriteria);
+            } else {
+                $link.text(PMA_messages.strHideSearchCriteria);
+            }
+            /** avoid default click action */
+            return false;
+        });
+
+    /*
+     * Ajax Event handler for retrieving the results from a table
+     */
+    $(document).on('click', 'a.browse_results', function (e) {
+        e.preventDefault();
+        /**   Hides the results shown by the delete criteria */
+        var $msg = PMA_ajaxShowMessage(PMA_messages.strBrowsing, false);
+        $('#sqlqueryform').hide();
+        $('#togglequerybox').hide();
+        /**  Load the browse results to the page */
+        $('#table-info').show();
+        var table_name = $(this).data('table-name');
+        $('#table-link').attr({ 'href' : $(this).attr('href') }).text(table_name);
+
+        var url = $(this).attr('href') + '#searchresults';
+        var browse_sql = $(this).data('browse-sql');
+        var params = {
+            'ajax_request': true,
+            'is_js_confirmed': true,
+            'sql_query' : browse_sql
+        };
+        $.post(url, params, function (data) {
+            if (typeof data !== 'undefined' && data.success) {
+                $('#browse-results').html(data.message);
+                PMA_ajaxRemoveMessage($msg);
+                $('.table_results').each(function () {
+                    PMA_makegrid(this, true, true, true, true);
+                });
+                $('#browse-results').show();
+                PMA_highlightSQL($('#browse-results'));
+                $('html, body')
+                    .animate({
+                        scrollTop: $('#browse-results').offset().top
+                    }, 1000);
+            } else {
+                PMA_ajaxShowMessage(data.error, false);
+            }
+        });
+    });
+
+    /*
+     * Ajax Event handler for deleting the results from a table
+     */
+    $(document).on('click', 'a.delete_results', function (e) {
+        e.preventDefault();
+        /**  Hides the results shown by the browse criteria */
+        $('#table-info').hide();
+        $('#sqlqueryform').hide();
+        $('#togglequerybox').hide();
+        /** Conformation message for deletion */
+        var msg = PMA_sprintf(
+            PMA_messages.strConfirmDeleteResults,
+            $(this).data('table-name')
+        );
+        if (confirm(msg)) {
+            var $msg = PMA_ajaxShowMessage(PMA_messages.strDeleting, false);
+            /** Load the deleted option to the page*/
+            $('#sqlqueryform').html('');
+            var params = {
+                'ajax_request': true,
+                'is_js_confirmed': true,
+                'sql_query': $(this).data('delete-sql')
+            };
+            var url = $(this).attr('href');
+
+            $.post(url, params, function (data) {
+                if (typeof data === 'undefined' || !data.success) {
+                    PMA_ajaxShowMessage(data.error, false);
+                    return;
+                }
+
+                $('#sqlqueryform').html(data.sql_query);
+                /** Refresh the search results after the deletion */
+                document.getElementById('buttonGo').click();
+                $('#togglequerybox').html(PMA_messages.strHideQueryBox);
+                /** Show the results of the deletion option */
+                $('#browse-results').hide();
+                $('#sqlqueryform').show();
+                $('#togglequerybox').show();
+                $('html, body')
+                    .animate({
+                        scrollTop: $('#browse-results').offset().top
+                    }, 1000);
+                PMA_ajaxRemoveMessage($msg);
+            });
+        }
+    });
+
     /**
      * Ajax Event handler for retrieving the result of an SQL Query
      */
-    $("#db_search_form.ajax").live('submit', function(event) {
+    $(document).on('submit', '#db_search_form.ajax', function (event) {
         event.preventDefault();
 
-        var $msgbox = PMA_ajaxShowMessage(PMA_messages['strSearching'], false);
+        var $msgbox = PMA_ajaxShowMessage(PMA_messages.strSearching, false);
         // jQuery object to reuse
         var $form = $(this);
 
         PMA_prepareForAjaxRequest($form);
 
-        var url = $form.serialize() + "&submit_search=" + $("#buttonGo").val();
-        $.post($form.attr('action'), url, function(data) {
-            if (data.success == true) {
+        var url = $form.serialize() + PMA_commonParams.get('arg_separator') + 'submit_search=' + $('#buttonGo').val();
+        $.post($form.attr('action'), url, function (data) {
+            if (typeof data !== 'undefined' && data.success === true) {
                 // found results
-                $("#searchresults").html(data.message);
+                $('#searchresults').html(data.message);
 
                 $('#togglesearchresultlink')
                 // always start with the Show message
-                .text(PMA_messages['strHideSearchResults']);
+                    .text(PMA_messages.strHideSearchResults);
                 $('#togglesearchresultsdiv')
                 // now it's time to show the div containing the link
-                .show();
+                    .show();
                 $('#searchresults').show();
 
 
@@ -213,16 +231,16 @@ AJAX.registerOnload('db_search.js', function() {
                     .hide();
                 $('#togglesearchformlink')
                     // always start with the Show message
-                    .text(PMA_messages['strShowSearchCriteria']);
+                    .text(PMA_messages.strShowSearchCriteria);
                 $('#togglesearchformdiv')
                     // now it's time to show the div containing the link
                     .show();
             } else {
                 // error message (zero rows)
-                $("#sqlqueryresults").html(data.error);
+                $('#searchresults').html(data.error).show();
             }
 
             PMA_ajaxRemoveMessage($msgbox);
-        })
-    })
+        });
+    });
 }); // end $()

@@ -1,18 +1,4 @@
 <?php
-
-/**
- * Uprecords Plugin
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PSI_Plugin_Uprecords
- * @author    Ambrus Sandor Olah <aolah76@freemail.hu>
- * @copyright 2014 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.uprecords.inc.php 661 2014-01-08 11:26:39Z aolah76 $
- * @link      http://phpsysinfo.sourceforge.net
- */
 /**
  * Uprecords plugin, which displays all uprecords informations available
  *
@@ -20,7 +6,7 @@
  * @package   PSI_Plugin_Uprecords
  * @author    Ambrus Sandor Olah <aolah76@freemail.hu>
  * @copyright 2014 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 1.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -42,7 +28,7 @@ class uprecords extends PSI_Plugin
      * @return array uprecords in array with label
      */
 
-    private function uprecords()
+    private function getUprecords()
     {
         $result = array();
         $i = 0;
@@ -50,8 +36,18 @@ class uprecords extends PSI_Plugin
         foreach ($this->_lines as $line) {
             if (($i > 1) and (strpos($line, '---') === false)) {
                 $buffer = preg_split("/\s*[ |]\s+/", ltrim(ltrim($line, '->'), ' '));
+                if (defined('PSI_PLUGIN_UPRECORDS_SHORT_MODE') &&
+                   (PSI_PLUGIN_UPRECORDS_SHORT_MODE === true) &&
+                   !is_numeric($buffer[0])) {
+                    break;
+                }
+
                 if (strpos($line, '->') !== false) {
-                    $buffer[0] = '-> '.$buffer[0];
+                   if (defined('PSI_PLUGIN_UPRECORDS_DENOTE_BY_ASTERISK') && (PSI_PLUGIN_UPRECORDS_DENOTE_BY_ASTERISK === true)) {
+                        $buffer[0] .= ' *';
+                    } else {
+                        $buffer[0] = '-> '.$buffer[0];
+                    }
                 }
 
                 if (count($buffer) > 4) {
@@ -62,7 +58,7 @@ class uprecords extends PSI_Plugin
                 $result[$i]['Uptime'] = $buffer[1];
                 $result[$i]['System'] = $buffer[2];
                 //Date formating
-                $result[$i]['Bootup'] = preg_replace("/^(\S+)(\s+)/", "$1,$2", preg_replace("/^(\S+\s+\S+\s+)(\d)(\s+)/", "$1 0$2$3", $buffer[3]." GMT"));
+                $result[$i]['Bootup'] = preg_replace("/^(\S+)(\s+)/", "$1,$2", preg_replace("/^(\S+\s+\S+\s+)(\d)(\s+)/", "$1 0$2$3", trim($buffer[3])." GMT"));
             }
             $i++;
         }
@@ -76,28 +72,24 @@ class uprecords extends PSI_Plugin
         switch (strtolower(PSI_PLUGIN_UPRECORDS_ACCESS)) {
             case 'command':
                 $lines = "";
-                $oldtz=getenv("TZ");
-                putenv("TZ=GMT");
                 $options = "";
                 if (defined('PSI_PLUGIN_UPRECORDS_MAX_ENTRIES')) {
-                    if (PSI_PLUGIN_UPRECORDS_MAX_ENTRIES === false) {
-                        $options=" -m 0";
-                    } elseif (PSI_PLUGIN_UPRECORDS_MAX_ENTRIES === true) {
-                        $options=" -m 1";
-                    } elseif ((PSI_PLUGIN_UPRECORDS_MAX_ENTRIES > 1) && (PSI_PLUGIN_UPRECORDS_MAX_ENTRIES != 10)) {
-                        $options=" -m ".PSI_PLUGIN_UPRECORDS_MAX_ENTRIES;
+                    if (($ment = max(intval(PSI_PLUGIN_UPRECORDS_MAX_ENTRIES), 0)) != 10) {
+                        $options=" -m ".$ment;
                     }
                 }
-                if (CommonFunctions::executeProgram('uprecords', '-a -w'.$options, $lines) && !empty($lines))
+                if (defined('PSI_PLUGIN_UPRECORDS_SHORT_MODE') && (PSI_PLUGIN_UPRECORDS_SHORT_MODE === true)) {
+                    $options .= " -s";
+                }
+                if (CommonFunctions::executeProgram('TZ=GMT uprecords', '-a -w'.$options, $lines) && !empty($lines))
                     $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
-                putenv("TZ=".$oldtz);
                 break;
             case 'data':
-                if (CommonFunctions::rfts(APP_ROOT."/data/uprecords.txt", $lines) && !empty($lines))
+                if (CommonFunctions::rfts(PSI_APP_ROOT."/data/uprecords.txt", $lines) && !empty($lines))
                     $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
                 break;
             default:
-                $this->error->addConfigError('__construct()', 'PSI_PLUGIN_UPRECORDS_ACCESS');
+                $this->global_error->addConfigError("execute()", "[uprecords] ACCESS");
                 break;
         }
     }
@@ -105,9 +97,9 @@ class uprecords extends PSI_Plugin
     public function xml()
     {
         if (empty($this->_lines))
-        return $this->xml->getSimpleXmlElement();
+            return $this->xml->getSimpleXmlElement();
 
-        $arrBuff = $this->uprecords();
+        $arrBuff = $this->getUprecords();
         if (sizeof($arrBuff) > 0) {
             $uprecords = $this->xml->addChild("Uprecords");
             foreach ($arrBuff as $arrValue) {

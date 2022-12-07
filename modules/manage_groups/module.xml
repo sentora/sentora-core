@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Maanage Groups</name>
-    <version>100</version>
+    <version>200</version>
     <defaultcat>Reseller</defaultcat>
     <desc>Manage user groups to enable greater module permissions.</desc>
     <authorname>Sentora Project</authorname>

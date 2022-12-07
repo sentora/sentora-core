@@ -1,3 +1,20 @@
+/**
+ * Hide Blockquotes plugin script
+ *
+ * @licstart  The following is the entire license notice for the
+ * JavaScript code in this file.
+ *
+ * Copyright (c) The Roundcube Dev Team
+ *
+ * The JavaScript code in this page is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in this file.
+ */
+
 if (window.rcmail)
   rcmail.addEventListener('init', function() { hide_blockquote(); });
 
@@ -8,10 +25,16 @@ function hide_blockquote()
   if (limit <= 0)
     return;
 
-  $('pre > blockquote', $('#messagebody')).each(function() {
-    var div, link, q = $(this),
-      text = $.trim(q.text()),
-      res = text.split(/\n/);
+  $('div.message-part div.pre > blockquote', $('#messagebody')).each(function() {
+    var res, text, div, link, q = $(this);
+
+    // Add new-line character before each blockquote
+    // This fixes counting lines of text, it also prevents
+    // from merging lines from different quoting level
+    $('blockquote').before(document.createTextNode("\n"));
+
+    text = $.trim(q.text());
+    res = text.split(/\n/);
 
     if (res.length <= limit) {
       // there can be also a block with very long wrapped line
@@ -26,13 +49,13 @@ function hide_blockquote()
 
     link = $('<span class="blockquote-link"></span>')
       .css({position: 'absolute', 'z-Index': 2})
-      .text(rcmail.gettext('hide_blockquote.show'))
+      .text(rcmail.get_label('hide_blockquote.show'))
       .data('parent', div)
       .click(function() {
         var t = $(this), parent = t.data('parent'), visible = parent.is(':visible');
 
-        t.text(rcmail.gettext(visible ? 'hide' : 'show', 'hide_blockquote'))
-          .detach().appendTo(visible ? q : parent);
+        t.text(rcmail.get_label(visible ? 'hide' : 'show', 'hide_blockquote'))
+          .detach().appendTo(visible ? q : parent).toggleClass('collapsed');
 
         parent[visible ? 'hide' : 'show']();
         q[visible ? 'show' : 'hide']();

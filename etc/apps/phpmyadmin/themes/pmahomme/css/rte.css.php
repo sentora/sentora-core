@@ -9,7 +9,7 @@
  */
 
 // unplanned execution path
-if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
+if (! defined('PHPMYADMIN') && ! defined('TESTSUITE')) {
     exit();
 }
 ?>
@@ -36,6 +36,13 @@ if (! defined('PMA_MINIMUM_COMMON') && ! defined('TESTSUITE')) {
     -ms-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+
+.rte_table input[type=button],
+.rte_table input[type=checkbox],
+.rte_table input[type=radio] {
+    width: auto;
+    margin-right: 6px;
 }
 
 .rte_table .routine_params_table {

@@ -10,12 +10,13 @@
  * Gets core libraries and defines some variables
  */
 require_once 'libraries/common.inc.php';
-PMA_Response::getInstance()->disable();
+$response = PhpMyAdmin\Response::getInstance();
+$response->disable();
+$response->getHeader()->sendHttpHeaders();
 
 /**
  * Displays PHP information
  */
 if ($GLOBALS['cfg']['ShowPhpInfo']) {
-    phpinfo();
+    phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES);
 }
-?>

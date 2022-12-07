@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.4.11" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+    <name>Net_LDAP2</name>
+    <channel>pear.php.net</channel>
+    <extends>Net_LDAP</extends>
+    <summary>Object oriented interface for searching and manipulating LDAP-entries</summary>
+    <description>Net_LDAP2 is the successor of Net_LDAP which is a clone of Perls Net::LDAP
+                object interface to directory servers. It does contain most of Net::LDAPs
+                features but has some own too.
+                 With Net_LDAP2 you have:
+                 * A simple object-oriented interface to connections, searches entries and filters.
+                 * Support for TLS and LDAP v3.
+                 * Simple modification, deletion and creation of LDAP entries.
+                 * Support for schema handling.
+
+                 Net_LDAP2 layers itself on top of PHP's existing ldap extensions.
+    </description>
+    <lead>
+        <name>Benedikt Hallinger</name>
+        <user>beni</user>
+        <email>beni@php.net</email>
+        <active>yes</active>
+    </lead>
+
+    <!-- Information for this release -->
+    <date>2015-10-30</date>
+    <version>
+        <release>2.2.0</release>
+        <api>2.2.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+     * Fix bug #20969: Fatal error with PEAR 1.10.0 / constructor visiblity
+     * Add support for PHP 7
+     * Improve unit tests
+    </notes>
+    <contents>
+        <dir name="/">
+       <dir name="Net">
+            <file name="LDAP2.php" role="php" />
+            <dir name="LDAP2">
+                <file name="Entry.php" role="php" />
+                <file name="Filter.php" role="php" />
+                <file name="RootDSE.php" role="php" />
+                <file name="Schema.php" role="php" />
+                <file name="Search.php" role="php" />
+                <file name="Util.php" role="php" />
+                <file name="LDIF.php" role="php" />
+                <file name="SchemaCache.interface.php" role="php" />
+                <file name="SimpleFileSchemaCache.php" role="php" />
+            </dir> <!-- /LDAP2 -->
+          </dir> <!-- /Net -->
+          <dir name="doc">
+                <file name="manual.html" role="doc" />
+                <file name="README.txt" role="doc" />
+                <file name="RootDSE.txt" role="doc" />
+                <file name="Schema.txt" role="doc" />
+                <file name="utf8.txt" role="doc" />
+                <file name="examples/connecting.php" role="doc" />
+                <file name="examples/fetch_entry.php" role="doc" />
+                <file name="examples/search_entries.php" role="doc" />
+                <file name="examples/add_entry.php" role="doc" />
+                <file name="examples/modify_entry.php" role="doc" />
+                <file name="examples/modify_entry2.php" role="doc" />
+                <file name="examples/schema_cache.php" role="doc" />
+          </dir> <!-- /doc -->
+          <dir name="tests">
+                <file name="phpunit.xml" role="test" />
+                <file name="Net_LDAP2_TestBase.php" role="test" />
+                <file name="Net_LDAP2_EntryTest.php" role="test" />
+                <file name="Net_LDAP2_FilterTest.php" role="test" />
+                <file name="Net_LDAP2_RootDSETest.php" role="test" />
+                <file name="Net_LDAP2_SearchTest.php" role="test" />
+                <file name="Net_LDAP2Test.php" role="test" />
+                <file name="Net_LDAP2_UtilTest.php" role="test" />
+                <file name="Net_LDAP2_LDIFTest.php" role="test" />
+                <file name="ldapconfig.ini.dist" role="test" />
+                <file name="ldapldifconfig.ini.dist" role="test" />
+                <file name="ldif_data/base.ldif" role="test" />
+                <file name="ldif_data/malformed_syntax.ldif" role="test" />
+                <file name="ldif_data/malformed_syntax.ldif" role="test" />
+                <file name="ldif_data/malformed_wrapping.ldif" role="test" />
+                <file name="ldif_data/slapd.conf" role="test" />
+                <file name="ldif_data/sorted_w40.ldif" role="test" />
+                <file name="ldif_data/sorted_w50.ldif" role="test" />
+                <file name="ldif_data/unsorted_w30.ldif" role="test" />
+                <file name="ldif_data/unsorted_w50.ldif" role="test" />
+                <file name="ldif_data/unsorted_w50_WIN.ldif" role="test" />
+                <file name="ldif_data/changes.ldif" role="test" />
+          </dir> <!-- /tests -->
+        </dir> <!-- / -->
+    </contents>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.4</min>
+            </php>
+            <pearinstaller>
+                <min>1.10.1</min>
+            </pearinstaller>
+            <extension>
+                <name>ldap</name>
+            </extension>
+        </required>
+    </dependencies>
+    <phprelease />
+
+    <!-- CHANGELOG -->
+    <changelog>
+        <release>
+            <version>
+                <release>0.1</release>
+                <api>0.1</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2003-06-23</date>
+            <license>LGPL License</license>
+            <notes>Initial release
+            </notes>
+        </release>
+        <release>
+            <version>
+                <release>0.2</release>
+                <api>0.2</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2003-08-23</date>
+            <license>LGPL License</license>
+            <notes>Fixed a lot of bugs that jumped in during the pearification process
+            </notes>
+        </release>
+        <release>
+            <version>
+                <release>0.3</release>
+                <api>0.3</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2003-09-21</date>
+            <license>LGPL License</license>
+            <notes>More bug squashing! Much better errorhandling in the -&gt;search() function.
+                   Also, all errors that create a Pear_error now includes the errornumber if
+                   appropriate (i.e. it was an ldap generated error).
+            </notes>
+        </release>
+        <release>
+            <version>
+                <release>0.4</release>
+                <api>0.4</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2003-10-01</date>
+            <license>LGPL License</license>
+            <notes>Many more bugfixes. Jan Wagner fixed the shift_entry function.
+                   Also a new Net_LDAP_Entry::modify function has been added that goes far making a simple way to modify entries.
+            </notes>
+        </release>
+        <release>
+            <version>
+                <release>0.5</release>
+                <api>0.5</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2003-10-11</date>
+            <license>LGPL License</license>
+            <notes>Jan Wagner Contributed a new RootDSE object and a Schema object and some fixes to the Net_LDAP::search() method
+                   The new Net_ldap_entry::modify() method seems to work very nice now.
+            </notes>
+        </release>
+        <release>
+            <version>
+                <release>0.6</release>
+                <api>0.6</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2003-10-17</date>
+            <license>LGPL License</license>
+            <notes>New Net_LDAP::ArrayUTF8Decode and Net_LDAP::ArrayUTF8Encode functions. These are used by the Net_LDAP::Entry objects to ensure that things work ok.
+            </notes>
+        </release>
+        <release>
+            <version>
+                <release>0.6.3</release>
+                <api>0.6.3</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <date>2003-11-12</date>
+            <license>LGPL License</license>
+            <notes>It seems that 0.6.2 was out too fast. So this is mainly a bugfix release:
+                   - Removed remaining Net_LDAP::UTF8Encode and Net_LDAP::UTF8Decode calls in Net_LDAP_Entry,
+                     which stopped attributes() and get_entry() from working
+                   - The UTF8 functions somehow got outside the Net_LDAP class ... FIXED.
+                   - The usuage example of the last release was wrong. We decided to move UTF8 handling into Net_LDAP.
+                     Handling should be done this way:
+
+                         $attr = $ldap-&gt;utf8Encode($attr);
+                         $entry-&gt;modify($attr);
+                         $attr = $ldap-&gt;utf8Decode( $entry-&gt;attributes() );
+                   - This means Net_LDAP_Util is useless right now, but will be extended in the future.
+                   - Jan did a complete overhaul of the phpdoc stuff. Everything seems to be fine now with phpDocumentor.
+            </notes>
+        </release>
+        <release>
+            <date>2007-02-05</date>
+            <version>
+                <release>0.7.0</release>
+                <api>0.7.0</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>This long awaited release of Net_LDAP features more stability and new functionality.
+                   The main changes are:
+                   - Rewrite of much of the code (including some api changes!)
+                   - LOTS of fixed bugs!
+                   - New class for easy filter handling (Net_LDAP_Filter)
+                   - Sorting support for searchresults (including multivalued sorting!)
+                   - Searched Entries can now be fetched as_struct() (array)!
+                   - Some memory optimizations
+
+                   Please note also that Net_LDAPs configuration changed slightly. Please see $_config in LDAP.php for the new parameters.
+            </notes>
+        </release>
+        <release>
+            <date>2007-02-23</date>
+            <version>
+                <release>0.7.1</release>
+                <api>0.7.0</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>This is not just a bugfix release of 0.7.0 but also introduces some internal optimisations:
+                   - Fixed a connection bug whith LDAP V3 only servers
+                   - clearer sanitizing of the host config parameter
+            </notes>
+        </release>
+        <release>
+            <date>2007-05-07</date>
+            <version>
+                <release>0.7.2</release>
+                <api>0.7.2</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>This release features some internal code movements to be more compatible to PERL::Net_LDAP.
+               The movements include:
+                  * Removed UTF8 en-/decoding stuff from Net_LDAP_Utils class since this was moved to Net_LDAP class in 0.6.6
+                  * Moved Filter encoding from Net_LDAP_Filter to Net_LDAP_Util
+                  * Moved ldap_explode_dn_escaped() from Net_LDAP_Entry to Net_LDAP_Util
+                  * Added perls functions from Net_LDAP::Util to our Util class, but they still need some work
+               Please note that ldap_explode_dn_escaped() is not available from Net_LDAP_Entry anymore.
+
+               Additionally some new functionality has been introduced:
+                  * You can now apply regular expressions directly to a entrys attributes
+                    and don't need to fetch the attribute values manually.
+                  * Net_LDAP_Schema can check if a attributes syntax is binary
+
+               The following bugs have been resolved:
+                  * Connections to LDAP servers that forbid anonymous binds are possible again
+                  * The JPEG attribute is now properly returned as binary value instead of string
+                  * If the array describing selected attributes in searches didn't contain consecutive keys, there was a problem sometimes
+                  * Some PHP5 return issues
+            </notes>
+        </release>
+        <release>
+            <date>2007-06-12</date>
+            <version>
+               <release>0.7.3</release>
+               <api>0.7.2</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>This release introduces some example files showing you in detail how to work with Net_LDAP.
+                   Additionally, a bug at recursive deletion of an entry is fixed and the Net_LDAP_Filter
+                   class is slightly optimized.
+             </notes>
+        </release>
+        <release>
+                <date>2007-06-20</date>
+                <version>
+                    <release>1.0.0RC1</release>
+                    <api>1.0.0RC1</api>
+                </version>
+                <stability>
+                    <release>beta</release>
+                    <api>beta</api>
+                </stability>
+                <license>LGPL License</license>
+                <notes>Again some small Bugfixes, most notably a bug within $ldap->modify() that occured when using the
+                    combined 'changes' array.
+                    Besides that, $search->popEntry() and the corresponding alias pop_entry() has been implemented.
+                    Net_LDAP_Util::unescape_filter_value() is available too now and Net_LDAP_Util::escape_filter_value()
+                    can handle ASCII chars smaller than 32. Above that, Net_LDAP_Util::canonical_dn() has been fully implemented.
+                    A new method createFresh() was added to Net_LDAP_Entry, so creation of initial entries is more
+                    standardized and clearer.
+                    A new example is available, describing the $ldap->modify() method.
+                    The add_entry.php example was updated, it shows the use of Net_LDAP_Entry::createFresh().
+                    $ldap->add() links unlinked entries now to the connection used for the add.
+                    Some new additional utility functions are available in Net_LDAP_Util to assist you in handling attributes and dns.
+                    The LDAP-Rename command now uses this functions to deal with DN escaping issues.
+                    Please note that ldap_explode_dn_escaped() is not available from Net_LDAP_Util anymore; it got superseeded by Net_LDAP_Util::ldap_explode_dn().
+                </notes>
+        </release>
+        <release>
+            <date>2007-06-28</date>
+            <version>
+                <release>1.0.0RC2</release>
+                <api>1.0.0RC2</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>Net_LDAP->dnExists() uses the Util class now, which makes it safer.
+                A new move() method is available from Net_LDAP.
+                Please note, that the copy() method was removed from the Net_LDAP_Entry class since
+                people would expect attribute moving because of the overall API of Net_LDAP.
+                Instead use the more failsafer copy() from Net_LDAP.
+            </notes>
+        </release>
+        <release>
+            <date>2007-07-24</date>
+            <version>
+                <release>1.0.0RC3</release>
+                <api>1.0.0RC3</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>
+                Fixed a bug with dnExists() that was caused mainly by bad behavior of Net_LDAP_UTIL::ldap_explode_dn().
+                Fixed a bug with call time pass-by-reference if calling $entry->update(); however this inflicted a API change:
+                The parameter $ldap is not available anymore, you need to use $entry->setLDAP() prior update now if you want to change the LDAP
+                object. This brought us a more logical API now, since Entry operations should be performed by the Net_LDAP object.
+            </notes>
+        </release>
+        <release>
+            <date>2007-09-18</date>
+            <version>
+                <release>1.0.0RC4</release>
+                <api>1.0.0RC4</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>
+                - Fixed some minor bugs of RC3
+                - Reintroduced $ldap parameter for
+                $entry-&lt;update(), but it is not prefferred to use this way.
+                    The Parameter is there for perl interface compatibility
+            </notes>
+        </release>
+        <release>
+            <date>2007-10-29</date>
+            <version>
+                <release>1.0.0</release>
+                <api>1.0.0</api>
+            </version>
+            <stability>
+                <release>stable</release>
+                <api>stable</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>
+                After more than four years of development, we are very proud to announce the
+                        ~ FIRST STABLE Net_LDAP RELEASE 1.0.0 ~
+                Net_LDAP ist tested now and should be stable enough for production use.
+                The API is finished so far, no changes should be neccessary in the future.
+
+                Changes to Release candidate 4:
+                    - Implemented PHPUnit tests
+                    - Fixed some minor bugs of RC4 (including the schema loading warning-generation)
+                    - Fixed several bugs in Net_LDAP_Util
+                    - Improved Net_LDAP_Filter and Net_LDAP_Util error handling and code cleanness
+                    - Completely implemented Net_LDAP_Filter perl interface
+                    - Improved several doc comments and fixed some spelling errors
+            </notes>
+        </release>
+        <release>
+            <date>2008-01-14</date>
+            <version>
+                <release>1.1.0a1</release>
+                <api>1.1.0a1</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>
+                * Added LDIF reading and writing support
+                * Fixed minor issues of 1.0.0 release
+            </notes>
+        </release>
+        <release>
+            <date>2008-01-21</date>
+            <version>
+                <release>1.1.0a2</release>
+                <api>1.1.0a2</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>
+                * Added parseLines() to Net_LDAP_LDIF for more convinience
+                * Added some handy methods to Net_LDAP_Entry
+                * Enhanced tests
+            </notes>
+        </release>
+        <release>
+            <date>2008-02-27</date>
+            <version>
+                <release>1.1.0</release>
+                <api>1.1.0</api>
+            </version>
+            <stability>
+                <release>stable</release>
+                <api>stable</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>* Fixed a little bug at cross directory move
+            * Fixed a bug when deleting a subtree containing several subentries that failed if
+            one called dnExists() prior calling delete()
+            * Fixed some minor bugs at NeT_LDAP->move() and Net_LDAP->dnExists()
+            * Added Net_LDAP tests
+            * Changed API of Net_LDAP->copy() to only accept Net_LDAP_Entry objects, because with DNs
+            Attribute values will be lost
+            /!\ This is the last release of Net_LDAP supporting PHP4 /!\
+            </notes>
+        </release>
+        <release>
+            <date>2008-03-19</date>
+            <version>
+                <release>2.0.0RC1</release>
+                <api>2.0.0RC1</api>
+            </version>
+            <stability>
+                <release>beta</release>
+                <api>beta</api>
+            </stability>
+            <license>LGPL License</license>
+            <notes>/!\ This release is PHP5 only, replacing the Net_LDAP package.
+                    If you still need PHP4 support, use Net_LDAP instead.
+                * Implemented iterable search results so one can use foreach() with Net_LDAP2_Search objects
+                * Fixed a problem with Net_LDAP2_LDIF and files with DOS line endings
+   </notes>
+  </release>
+  <release>
+   <date>2008-03-20</date>
+   <version>
+    <release>2.0.0RC2</release>
+    <api>2.0.0RC2</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Implemented PHP5 language stuff (thanks to Torsten Roehr for his helpful patches)
+* Changed Net_LDAP2-&gt;_markAsNew() to public access, since this is required by the api
+and may be useful to developers too
+* Changed API to create schema object, there is now a factory. Net_LDAP2-&gt;schema() calls
+that factory now instead of fetching the Schema itself
+* Changed API to create rootDSE object, there is now a factory. Net_LDAP2-&gt;rootDSE() calls
+that factory now instead of fetching the rootDSE itself
+* Net_LDAP2_Entry has a new factory constructor: createConnected() can be used to
+establish a new Net_LDAP2_Entry object that represents an already existing entry inside
+some directory
+   </notes>
+  </release>
+  <release>
+   <date>2008-06-04</date>
+   <version>
+    <release>2.0.0RC3</release>
+    <api>2.0.0RC3</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* New constructor factory for Entry objects: createExisting()
+* Several small improvements
+* New method Entry-&gt;isNew()
+* Net_LDAP2-&gt;search() and Net_LDAP2-&gt;dnExists() can handle entry objects now 
+* Added &quot;present&quot; matching rule as stated by RFC 2254 (is an alias of the former &quot;any&quot;)
+* Bugfix in filter class for approx matching and not combination
+* Bugfix for Schema-&gt;isBinary() bug if unknown attribute type is requested
+   </notes>
+  </release>
+  <release>
+   <date>2008-10-16</date>
+   <version>
+    <release>2.0.0RC4</release>
+    <api>2.0.0RC4</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Net_LDAP2_Filter::create*() methods are declared static now
+* Net_LDAP2 is able to reconnect now in case link is down during operation (thanks Del)
+* Complex updates fail: under some circumstances, $entry-&gt;update() will fail. This is
+caused by mandatory attributes set and the internal behaviour of Net_LDAP2. A
+workaround is documented in the code and in the user manual.
+* Bugfixes in Dels patches. Soemtimes there where endless loops and deleting entries
+did not always succeed.
+* Bugfix to reset unicodePwd (Active Directory): a new $force parameter was introduced to Net_LDAP2_Entry-&gt;replace()
+that forces &quot;replace&quot; mode. If not set and attribute is empty (or could not be read like in the AD case)
+replace() resulted in Net_LDAP2 thinking it should add the attribute. This can now be overriden.
+* Bugfix in unit tests: the Net_LDAP2Test suite had huge memory consumtion caused by a little error in
+Net_LDAP2-&gt;checkLDAPExtension(). If that method is called before any Net_LDAP class was instanciated, a PEAR
+error is returned instead of the documented Net_LDAP2_Error which causes the unit test to plot out very much
+debug information.
+   </notes>
+  </release>
+  <release>
+   <date>2009-01-09</date>
+   <version>
+    <release>2.0.0RC5</release>
+    <api>2.0.0RC5</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Fixed a little issue with repetive adding the same attribute value
+* Fixed Bug #14886 that caused problems with OpenLDAP and V3 only connects
+* Fixed Bug #14903 and #15494, now bind attempt is also encrypted if TLS is requested
+* Fixed issue with repetitve adding or deleting values causing Net_LDAP to send the same change multiple times
+* Fixed Bug #15364 that caused a problem with setting the ldap version if only one version is supported by server
+   </notes>
+  </release>
+  <release>
+   <date>2009-05-08</date>
+   <version>
+    <release>2.0.0RC6</release>
+    <api>2.0.0RC6</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Bugfix in LDIF writer concerning needless base64 encoding of values
+* New schema caching facility
+* PHPCS fixes, some comment changes and general code cleanup
+   </notes>
+  </release>
+  <release>
+   <date>2009-05-28</date>
+   <version>
+    <release>2.0.0</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Fixed bug #16242 (arguments for createFresh in wrong order when calling Net_LDAP2_Entry::createFresh())
+* Fixed bug #16253 (strict checking of isError())
+   </notes>
+  </release>
+  <release>
+   <date>2009-06-15</date>
+   <version>
+    <release>2.0.1</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Fixed Bugs #16272 and #16278 (Problem in starttls function)
+   </notes>
+  </release>
+  <release>
+   <date>2009-06-29</date>
+   <version>
+    <release>2.0.2</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Fixed some bugs that rendered the new schema caching facility unusable
+   </notes>
+  </release>
+  <release>
+   <date>2009-07-03</date>
+   <version>
+    <release>2.0.3</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Fixed LDAP RFC-1777 violation: bind has to be performed prior setting LDAP version
+* Fixed wrong version reported from version()
+   </notes>
+  </release>
+  <release>
+   <date>2009-07-08</date>
+   <version>
+    <release>2.0.4</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Fixed Bug #16404 (Bind fails at OpenLDAP with protocol error)
+   </notes>
+  </release>
+  <release>
+   <date>2009-07-14</date>
+   <version>
+    <release>2.0.5</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPL License</license>
+   <notes>
+* Fixed bug #16438 (SimplefileSchemaCache could not be configured due to wrong var name)
+   </notes>
+  </release>
+  <release>
+   <date>2009-08-04</date>
+   <version>
+    <release>2.0.6</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPLv3 License</license>
+   <notes>
+* switched LICENSE to LGPL v3
+* added some documentation
+   </notes>
+  </release>
+  <release>
+   <date>2009-10-28</date>
+   <version>
+    <release>2.0.7</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPLv3 License</license>
+   <notes>
+* Corrected bug #16738 (Problem with Net_LDAP2_Filter::parse() with complex filter, when first subfilter was an combined filter too)
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>2.0.8</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2010-02-12</date>
+   <license>LGPLv3 License</license>
+   <notes>
+* Fixed Bug #16940 (Net_LDAP2::startTLS should ignore errors before ldap_start_tls() being called)
+* Fixed Bug #17023 (improper handling of wrapped lines in LDIF files)
+   </notes>
+  </release>
+  <release>
+   <date>2010-02-16</date>
+   <version>
+    <release>2.0.8</release>
+    <api>2.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license>LGPLv3 License</license>
+   <notes>
+* Fixed Bug #16940 (Net_LDAP2::startTLS should ignore errors before ldap_start_tls() being called)
+* Fixed Bug #17023 (improper handling of wrapped lines in LDIF files)
+* Fixed Bug #17057 (problem with parsing certain NOT-Filters)
+   </notes>
+  </release>
+  <release>
+    <date>2010-02-16</date>
+    <version>
+        <release>2.0.9</release>
+        <api>2.0.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+        * fixed package (package.xml was unclean so 2.0.8 wouldnt install)
+    </notes>
+  </release>
+  <release>
+    <date>2010-08-23</date>
+      <version>
+          <release>2.0.10</release>
+          <api>2.0.0</api>
+      </version>
+      <stability>
+          <release>stable</release>
+          <api>stable</api>
+      </stability>
+      <license>LGPLv3 License</license>
+      <notes>
+* Added schema handling methods to make schema checks more easily accessible
+* Bugfix for #17245. The check in the code was not working properly. Schema checking is considered the users responsibility.
+  If now an attribute is requested that is not set at the entry, an empty string is returned.
+* Bugfix for #17770. Some Net_LDAP2 files were included with relative path ("Util.php"), not absolute ("Net/LDAP2/Util.php").
+* Bugfix for #17314. LDIF support for attributes with modifiers ("attr1;binary").
+      </notes>
+  </release>
+  <release>
+    <date>2011-01-19</date>
+    <version>
+        <release>2.0.11</release>
+        <api>2.0.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+* (doc issue) Fix for #17861: Missing komma in example
+* Fix for #18202: Adding attributes to a Fresh Entry saving and laterly updating fails
+    </notes>
+  </release>
+  <release>
+    <date>2011-10-27</date>
+    <version>
+        <release>2.0.12</release>
+        <api>2.0.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+        * inmproved performance with large search results
+        * Fixed some minor issues with Net_LDAP2_Filter and Net_LDAP2->dnExists()
+        * Added NOT filter to Net_LDAP2_Filter::create() so negating is more easily now
+    </notes>
+  </release>
+  <release>
+    <date>2013-12-09</date>
+    <version>
+        <release>2.1.0</release>
+        <api>2.0.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+        * New feature: Filter::matches() can do simple filtering on entry sets (supported: equals, contain, begin, end, any; NOT, AND, OR. Filtering is simple based on regexp, no schema checks and matchRules yet!)
+        * Fixed minor bugs in Filter, LDAP and Entry class
+        * Util::split_attribute_string(): Added support for extended match operators from filters
+        * Util::split_attribute_string(): Added support for delimeter retrieval
+    </notes>
+  </release>
+
+  <release>
+    <date>2015-10-30</date>
+    <version>
+        <release>2.2.0</release>
+        <api>2.2.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+     * Fix bug #20969: Fatal error with PEAR 1.10.0 / constructor visiblity
+     * Add support for PHP 7
+     * Improve unit tests
+    </notes>
+  </release>
+ </changelog>
+</package>

@@ -7,8 +7,13 @@ if (!isset($_SESSION['zpuid'])) {
 <body bgcolor="#000000">
     <font color="#009900">
     <?php
-    if (isset($_POST['inBindLog'])) {
-        $bindlog = str_replace('..', '__', $_POST['inBindLog']); // Temporary fix until I can think of a better solution, this will however stop reverse iteration of the filesystem though by causing an error if '..'  eg. '../../' is requested.
+    
+		
+		// Set Setnora DNS named/bind9 log file static to patch secerity issue. Will set to Database setting soon.
+		$bindlog = "/var/sentora/logs/bind/bind.log";
+		
+		
+        $bindlog = str_replace('..', '__', $bindlog); 
         $logerror = array();
         $logwarning = array();
         $getlog = array();
@@ -17,17 +22,17 @@ if (!isset($_SESSION['zpuid'])) {
             $getlog = array();
             if ($handle) {
                 while (!feof($handle)) {
-                    $buffer = fgets($handle, 4096);
-                    $getlog[] = $buffer;
-                    if (strstr($buffer, 'error:') || strstr($buffer, 'error ')) {
-                        $logerror[] = $buffer;
-                    }
-                    if (strstr($buffer, 'warning:') || strstr($buffer, 'warning ')) {
-                        $logwarning[] = $buffer;
-                    }
-                }fclose($handle);
-            }
+                    	$buffer = fgets($handle, 4096);
+                    	$getlog[] = $buffer;
+                    	if (strstr($buffer, 'error:') || strstr($buffer, 'error ')) {
+                        	$logerror[] = $buffer;
+                    	}
+                    	if (strstr($buffer, 'warning:') || strstr($buffer, 'warning ')) {
+                        	$logwarning[] = $buffer;
+                    	}
+              	}fclose($handle);
         }
+		
 
 
         if (isset($_POST['inViewErrors'])) {

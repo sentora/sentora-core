@@ -32,42 +32,63 @@ var ps_show = false;
  * @param {jQuery} xml plugin-XML
  */
 function ps_buildTable(xml) {
-    var html = "", tree = [], closed = [2];
-    
+    var html = "", tree = [], closed = [], memwas = false, cpuwas = false;
+
     $("#Plugin_PS #Plugin_PSTable").remove();
 
-    html += "  <table id=\"Plugin_PSTable\" class=\"tablemain\" style=\"width:100%;\">\n";
-    html += "   <thead>\n";
-    html += "    <tr>\n";
-    html += "     <th>" + genlang(3, false, "PS") + "</th>\n";
-    html += "     <th style=\"width:80px;\">" + genlang(4, false, "PS") + "</th>\n";
-    html += "     <th style=\"width:80px;\">" + genlang(5, false, "PS") + "</th>\n";
-    html += "     <th style=\"width:110px;\">" + genlang(6, false, "PS") + "</th>\n";
-    html += "    </tr>\n";
-    html += "   </thead>\n";
-    html += "   <tbody class=\"tree\">\n";
+    html += "  <div style=\"overflow-x:auto;\">\n";
+    html += "    <table id=\"Plugin_PSTable\" class=\"tablemain\" style=\"width:100%;\">\n";
+    html += "      <thead>\n";
+    html += "        <tr>\n";
+    html += "          <th>" + genlang(2, "PS") + "</th>\n";
+    html += "          <th style=\"width:40px;\">" + genlang(3, "PS") + "</th>\n";
+    html += "          <th style=\"width:40px;\">" + genlang(4, "PS") + "</th>\n";
+    html += "          <th style=\"width:120px;\">" + genlang(5, "PS") + "</th>\n";
+    html += "          <th style=\"width:120px;\">" + genlang(6, "PS") + "</th>\n";
+    html += "        </tr>\n";
+    html += "      </thead>\n";
+    html += "      <tbody class=\"tree\">\n";
 
     $("Plugins Plugin_PS Process", xml).each(function ps_getprocess(id) {
-        var close = 0, pid = 0, ppid = 0, name = "", percent = 0, parentId = 0, expanded = 0;
-        name = $(this).attr("Name");
+        var close = 0, pid = 0, ppid = 0, name = "", percent = 0, parentId = 0, expanded = 0, cpu = 0;
+        name = $(this).attr("Name").replace(/,/g, ",<wbr>").replace(/\s/g, " <wbr>").replace(/\./g, ".<wbr>").replace(/-/g, "<wbr>-").replace(/\//g, "<wbr>/"); /* split long name */
         parentId = parseInt($(this).attr("ParentID"), 10);
         pid = parseInt($(this).attr("PID"), 10);
         ppid = parseInt($(this).attr("PPID"), 10);
         percent = parseInt($(this).attr("MemoryUsage"), 10);
+        cpu = parseInt($(this).attr("CPUUsage"), 10);
         expanded = parseInt($(this).attr("Expanded"), 10);
 
-        html += "    <tr><td><span class=\"treespan\">" + name + "</span></td><td>" + pid + "</td><td>" + ppid + "</td><td>" + createBar(percent) + "</td></tr>\n";
+        html += "        <tr><td><span class=\"treespan\">" + name + "</span></td><td>" + pid + "</td><td>" + ppid + "</td><td>" + createBar(percent) + "</td><td>" + createBar(cpu) + "</td></tr>\n";
         close = tree.push(parentId);
         if (!isNaN(expanded) && (expanded === 0)) {
             closed.push(close);
         }
+        if (!memwas && !isNaN(percent)) {
+            memwas = true;
+        }
+        if (!cpuwas && !isNaN(cpu)) {
+            cpuwas = true;
+        }
         ps_show = true;
     });
 
-    html += "   </tbody>\n";
-    html += "  </table>\n";
+    html += "      </tbody>\n";
+    html += "    </table>\n";
+    html += "  </div>\n";
 
     $("#Plugin_PS").append(html);
+
+    if (memwas) {
+        $('#Plugin_PSTable td:nth-child(4),#Plugin_PSTable th:nth-child(4)').show();
+    } else {
+        $('#Plugin_PSTable td:nth-child(4),#Plugin_PSTable th:nth-child(4)').hide();
+    }
+    if (cpuwas) {
+        $('#Plugin_PSTable td:nth-child(5),#Plugin_PSTable th:nth-child(5)').show();
+    } else {
+        $('#Plugin_PSTable td:nth-child(5),#Plugin_PSTable th:nth-child(5)').hide();
+    }
 
     $("#Plugin_PSTable").jqTreeTable(tree, {
         openImg: "./gfx/treeTable/tv-collapsable.gif",
@@ -90,6 +111,7 @@ function ps_buildTable(xml) {
  * load the xml via ajax
  */
 function ps_request() {
+    $("#Reload_PSTable").attr("title", "reload");
     $.ajax({
         url: "xml.php?plugin=PS",
         dataType: "xml",
@@ -101,7 +123,6 @@ function ps_request() {
             ps_buildTable(xml);
             if (ps_show) {
                 plugin_translate("PS");
-                $("#Reload_PSTable").attr("title",datetime());
                 $("#Plugin_PS").show();
             }
         }
@@ -116,5 +137,6 @@ $(document).ready(function ps_buildpage() {
 
     $("#Reload_PSTable").click(function ps_reload(id) {
         ps_request();
+        $(this).attr("title", datetime());
     });
 });

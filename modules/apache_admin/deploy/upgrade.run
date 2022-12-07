@@ -1,0 +1,66 @@
+<?php
+/**
+ * Upgrade script for Apache_Admin Module for Sentora 1.0.3+
+ * Version : 1.0.1
+ * Author : TGates
+ * Reworked by : Anthony D. -  Duke City Solutions, LLC
+ * Email : anthony@dukecitysolutions.com
+ */
+
+require_once('cnf/db.php');
+require_once('dryden/db/driver.class.php');
+require_once('dryden/debug/logger.class.php');
+require_once('dryden/runtime/dataobject.class.php');
+require_once('dryden/sys/versions.class.php');
+require_once('dryden/ctrl/options.class.php');
+require_once('dryden/ctrl/auth.class.php');
+require_once('dryden/ctrl/users.class.php');
+require_once('dryden/fs/director.class.php');
+require_once('dryden/fs/filehandler.class.php');
+require_once('inc/dbc.inc.php');
+
+
+
+function UpgradeModule($newversion, $module){
+    global $zdbh;
+	
+	
+	/*
+	// Change apache admin version #
+    $sql = $zdbh->prepare("UPDATE x_modules SET mo_version_in = $newversion WHERE mo_folder_vc = '$module'");
+    $sql->execute();  
+	
+	// Enter new tables to sentora database for apache admin
+	$stmt = $zdbh->prepare("
+		INSERT INTO x_settings (
+			so_id_pk, so_name_vc, so_cleanname_vc, so_value_tx, so_defvalues_tx, so_desc_tx, so_module_vc, so_usereditable_en ) VALUES (
+			'', 'panel_ssl_tx', 'Panel SSL Config', null, null, 'apache ssl settings and certs', 'Sentora Config', true)"
+	);
+	$stmt->execute();
+		
+	// Copy needed templates and smarty template engine to sentora control panel
+	shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/templates /etc/sentora/configs/apache/");
+	shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/httpd.conf /etc/sentora/configs/apache/");
+	shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/smarty /etc/sentora/panel/etc/lib/");
+	*/
+	
+		// Reset Apache settings to reflect that config file has been written, until the next change.
+	echo "Reset Apache settings to reflect that config file has been written" . fs_filehandler::NewLine();
+        $time = time();
+        $stmt= $zdbh->prepare("UPDATE x_settings
+                                    SET so_value_tx=:time
+                                    WHERE so_name_vc='apache_changed'");
+        $stmt->bindParam(':time', $time);
+        $stmt->execute();
+        echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
+		
+
+	
+	// Restart after everything is done
+	shell_exec ("sudo /usr/bin/php -q /etc/sentora/panel/bin/daemon.php");
+	
+}
+
+UpgradeModule('101', 'apache_admin');
+
+?> 

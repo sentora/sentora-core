@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/move.inc                                    |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2007-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -33,7 +32,7 @@ $deleted  = 0;
 $success  = 0;
 $errormsg = 'moveerror';
 $maxnum   = $RCMAIL->config->get('max_group_members', 0);
-$page     = !empty($_SESSION['page']) ? $_SESSION['page'] : 1;
+$page     = $_SESSION['page'] ?: 1;
 
 foreach ($cids as $source => $source_cids) {
     // Something wrong, target not specified
@@ -137,7 +136,7 @@ foreach ($cids as $source => $source_cids) {
             $success = $plugin['result'];
         }
 
-        $errormsg = $plugin['message'] ? $plugin['message'] : 'moveerror';
+        $errormsg = $plugin['message'] ?: 'moveerror';
     }
 }
 
@@ -197,7 +196,7 @@ else {
 
     // update message count display
     $OUTPUT->set_env('pagecount', ceil($result->count / $PAGE_SIZE));
-    $OUTPUT->command('set_rowcount', $rowcount ? $rowcount : rcmail_get_rowcount_text($result));
+    $OUTPUT->command('set_rowcount', $rowcount ?: rcmail_get_rowcount_text($result));
 
     // add new rows from next page (if any)
     if (!empty($records)) {
@@ -208,7 +207,7 @@ else {
 if (!$success)
     $OUTPUT->show_message($errormsg, 'error');
 else
-    $OUTPUT->show_message('movesuccess', 'notice', array('nr' => $success));
+    $OUTPUT->show_message('movesuccess', 'confirmation', array('nr' => $success));
 
 // send response
 $OUTPUT->send();

@@ -3,12 +3,12 @@
  */
 a {
     text-decoration: none;
-    color: #00A;
+    color: #00a;
 }
 
 a:hover {
     text-decoration: underline;
-    color: #7D9100;
+    color: #7d9100;
 }
 
 * {
@@ -22,7 +22,7 @@ wbr {
 
 html {
     height: 100%;
-    background: url("nextgen/nextgen_bg.png") repeat-x scroll center top #F3F1E9;
+    background: url("nextgen/nextgen_bg.png") repeat-x scroll center top #f3f1e9;
 }
 
 body {
@@ -37,9 +37,16 @@ body {
     color: #000;
 }
 
-div#container {
+div#output {
     margin: -20px -10px 0 -10px;
     padding: 116px 0 0 0;
+}
+
+p {
+    padding: 4px 10px 2px 10px;
+    line-height: 1.6;
+    text-align: left;
+    vertical-align: top;
 }
 
 h1 {
@@ -53,28 +60,6 @@ h1 {
     color: #fff;
 }
 
-#select {
-    position: absolute;
-    top: 75px;
-    color: #FFF;
-    right: 30px;
-    width: 370px;
-    text-align: right;
-}
-
-#select select {
-    width: 100px;
-}
-
-#vitals, #network, #memory, #filesystem, #hardware, #temp, #voltage, #fan, #power, #current, #ups {
-    float: left;
-    width: 451px;
-    margin: 10px 0 0 10px;
-    _margin: 10px 5px 0 5px; /* ie6 */
-    padding: 1px;
-    border: 1px solid #354242;
-}
-
 h2 {
     padding: 5px 10px;
     font-family: "trebuchet ms";
@@ -82,27 +67,9 @@ h2 {
     font-weight: bold;
     letter-spacing: 0.0em;
     text-transform: uppercase;
-    color: #C9DE55; /* #7D9100; */
+    color: #c9de55; /* #7d9100; */
     background: #354242;
 }
-
-table {
-    width: 100%;
-}
-
-.plugin {
-    float: left;
-    margin: 10px 0 0 10px;
-    _margin: 10px 5px 0 5px; /* ie6 */
-    padding: 1px;
-    border: 1px solid #354242;
-}
-
-.dataTables_wrapper{
-    margin: 0 0 0 0 !important;
-    border: 0px !important;
-}
-
 
 th, td, h3 {
     padding: 4px 10px 2px 10px;
@@ -114,12 +81,46 @@ h3 {
     font-size: 120%;
 }
 
-.even {
-    background: #DDD;
+table {
+    width: 100%;
+}
+
+#select {
+    position: absolute;
+    top: 75px;
+    color: #fff;
+    right: 30px;
+    width: 370px;
+    text-align: right;
+}
+
+#select select {
+    width: 100px;
+}
+
+#vitals, #network, #memory, #filesystem, #hardware, #temperature, #voltage, #fans, #power, #current, #other, #ups {
+    float: left;
+    width: 451px;
+    margin: 10px 0 0 10px;
+    _margin: 10px 5px 0 5px; /* ie6 */
+    padding: 1px;
+    border: 1px solid #354242;
+}
+
+#pciTable, #ideTable, #scsiTable, #nvmeTable, #usbTable, #tbTable, #i2cTable {
+    padding: 0px 30px;
+}
+
+#memory, #filesystem {
+    width: 915px;
+}
+
+#filesystemTable thead tr th {
+    cursor: pointer;
 }
 
 #footer {
-    color: #777777;
+    color: #777;
     clear: both;
     margin: 12px;
     padding: 13px 25px;
@@ -127,23 +128,24 @@ h3 {
     text-align: right;
 }
 
-#memory, #filesystem {
-    width: 915px;
+.plugin {
+    float: left;
+    margin: 10px 0 0 10px;
+    _margin: 10px 5px 0 5px; /* ie6 */
+    padding: 1px;
+    border: 1px solid #354242;
+}
+
+.even {
+    background: #ddd;
 }
 
 .bar {
-    background: #C1DC70 url("../gfx/html.gif");
+    background: #c1dc70 url("../gfx/html.gif");
 }
 
 .barwarn {
-    background: #DC8B70 url("../gfx/htmlwarn.gif");
-}
-
-p {
-    padding: 4px 10px 2px 10px;
-    line-height: 1.6;
-    text-align: left;
-    vertical-align: top;
+    background: #dc8b70 url("../gfx/htmlwarn.gif");
 }
 
 .right {
@@ -151,22 +153,30 @@ p {
     padding-right: 20px;
 }
 
-#pciTable, #ideTable, #scsiTable, #usbTable, #tbTable, #i2cTable {
-    padding: 0px 30px;
+.dataTables_wrapper{
+    margin: 0 0 0 0 !important;
+    border: 0px !important;
 }
 
 .treeimg {
     display: table-cell;
+    *float: left; /* ie6 ie7 */
     vertical-align: top;
 }
 
 .treespan {
     display: table-cell;
+    *float: left; /* ie6 ie7 */
     vertical-align: middle;
 }
 
 .treespanbold {
     font-weight: bold;
     display: table-cell;
+    *float: left; /* ie6 ie7 */
     vertical-align: middle;
+}
+
+.tree tr td {
+    cursor: auto;
 }

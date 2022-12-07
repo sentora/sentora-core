@@ -34,21 +34,32 @@ var uprecords_show = false;
 
 function uprecords_populate(xml) {
 
-    var html = "";
- 
+    var html = "", datetimeFormat = "";
+
+    $("Options", xml).each(function getByteFormat(id) {
+        datetimeFormat = $(this).attr("datetimeFormat");
+    });
+
     $("Plugins Plugin_uprecords uprecords Item", xml).each(function uprecords_getitem(idp) {
-        html += "    <tr>\n";
-        html += "      <td style=\"font-weight:normal\">" +  $(this).attr("hash") + "</td>\n";
-        html += "      <td style=\"font-weight:normal\">" +  $(this).attr("Uptime") + "</td>\n";
-        html += "      <td style=\"font-weight:normal\">" +  $(this).attr("System") + "</td>\n";
-/*        var lastboot = new Date($(this).attr("Bootup"));
+        html += "      <tr>\n";
+        html += "        <td style=\"font-weight:normal\">" +  $(this).attr("hash") + "</td>\n";
+        html += "        <td style=\"font-weight:normal\">" +  $(this).attr("Uptime") + "</td>\n";
+        html += "        <td style=\"font-weight:normal\">" +  $(this).attr("System") + "</td>\n";
+/*
+        var lastboot = new Date($(this).attr("Bootup"));
         if (typeof(lastboot.toUTCString)==="function") {
-            html += "      <td style=\"font-weight:normal\">" +  lastboot.toUTCString() + "</td>\n";
+            html += "        <td style=\"font-weight:normal\">" +  lastboot.toUTCString() + "</td>\n";
         } else { //deprecated
-            html += "      <td style=\"font-weight:normal\">" +  lastboot.toGMTString() + "</td>\n";
-        } */
-        html += "      <td style=\"font-weight:normal\">" +  $(this).attr("Bootup") + "</td>\n";
-        html += "    </tr>\n";
+            html += "        <td style=\"font-weight:normal\">" +  lastboot.toGMTString() + "</td>\n";
+        }
+*/
+        if ((datetimeFormat !== undefined) && (datetimeFormat.toLowerCase() === "locale")) {
+            var lastboot = new Date($(this).attr("Bootup"));
+            html += "        <td style=\"font-weight:normal\">" +  lastboot.toLocaleString() + "</td>\n";
+        } else {
+            html += "        <td style=\"font-weight:normal\">" +  $(this).attr("Bootup") + "</td>\n";
+        }
+        html += "      </tr>\n";
         uprecords_show = true;
     });
 
@@ -60,18 +71,20 @@ function uprecords_populate(xml) {
 function uprecords_buildTable() {
     var html = "";
 
-    html += "<table id=\"Plugin_uprecordsTable\" class=\"stripeMe\" style=\"border-spacing:0;\">\n";
-    html += "  <thead>\n";
-    html += "    <tr>\n";
-    html += "      <th>" + genlang(101, true, "uprecords") + "</th>\n";
-    html += "      <th>" + genlang(102, true, "uprecords") + "</th>\n";
-    html += "      <th>" + genlang(103, true, "uprecords") + "</th>\n";
-    html += "      <th>" + genlang(104, true, "uprecords") + "</th>\n";
-    html += "    </tr>\n";
-    html += "  </thead>\n";
-    html += "  <tbody id=\"Plugin_uprecordsTable-tbody\">\n";
-    html += "  </tbody>\n";
-    html += "</table>\n";
+    html += "<div style=\"overflow-x:auto;\">\n";
+    html += "  <table id=\"Plugin_uprecordsTable\" class=\"stripeMe\" style=\"border-spacing:0;\">\n";
+    html += "    <thead>\n";
+    html += "      <tr>\n";
+    html += "        <th>" + genlang(101, "uprecords") + "</th>\n";
+    html += "        <th>" + genlang(102, "uprecords") + "</th>\n";
+    html += "        <th>" + genlang(103, "uprecords") + "</th>\n";
+    html += "        <th>" + genlang(104, "uprecords") + "</th>\n";
+    html += "      </tr>\n";
+    html += "    </thead>\n";
+    html += "    <tbody id=\"Plugin_uprecordsTable-tbody\">\n";
+    html += "    </tbody>\n";
+    html += "  </table>\n";
+    html += "</div>\n";
     $("#Plugin_uprecords").append(html);
 }
 
@@ -80,21 +93,21 @@ function uprecords_buildTable() {
  */
 
 function uprecords_request() {
+    $("#Reload_uprecordsTable").attr("title", "reload");
     $.ajax({
         url: "xml.php?plugin=uprecords",
         dataType: "xml",
         error: function uprecords_error() {
-        $.jGrowl("Error loading XML document for Plugin uprecords!");
-    },
-    success: function uprecords_buildblock(xml) {
-        populateErrors(xml);
-        uprecords_populate(xml);
-        if (uprecords_show) {
-            plugin_translate("uprecords");
-            $("#Reload_uprecordsTable").attr("title",datetime());
-            $("#Plugin_uprecords").show();
+            $.jGrowl("Error loading XML document for Plugin uprecords!");
+        },
+        success: function uprecords_buildblock(xml) {
+            populateErrors(xml);
+            uprecords_populate(xml);
+            if (uprecords_show) {
+                plugin_translate("uprecords");
+                $("#Plugin_uprecords").show();
+            }
         }
-    }
     });
 }
 
@@ -108,5 +121,6 @@ $(document).ready(function uprecords_buildpage() {
 
     $("#Reload_uprecordsTable").click(function uprecords_reload(id) {
         uprecords_request();
+        $(this).attr("title", datetime());
     });
 });

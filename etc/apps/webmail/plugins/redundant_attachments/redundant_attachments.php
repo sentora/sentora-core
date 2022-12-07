@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Redundant attachments
  *
@@ -6,7 +7,7 @@
  * attachment files. They are stored in both the database backend
  * as well as on the local file system.
  *
- * It provides also memcache store as a fallback (see config file).
+ * It provides also memcache/redis store as a fallback (see config file).
  *
  * This plugin relies on the core filesystem_attachments plugin
  * and combines it with the functionality of the database_attachments plugin.
@@ -14,8 +15,8 @@
  * @author Thomas Bruederli <roundcube@gmail.com>
  * @author Aleksander Machniak <machniak@kolabsys.com>
  *
- * Copyright (C) 2011, The Roundcube Dev Team
- * Copyright (C) 2011, Kolab Systems AG
+ * Copyright (C) The Roundcube Dev Team
+ * Copyright (C) Kolab Systems AG
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2
@@ -36,23 +37,16 @@ require_once(RCUBE_PLUGINS_DIR . 'filesystem_attachments/filesystem_attachments.
 class redundant_attachments extends filesystem_attachments
 {
     // A prefix for the cache key used in the session and in the key field of the cache table
-    private $prefix = "ATTACH";
+    const PREFIX = "ATTACH";
 
     // rcube_cache instance for SQL DB
     private $cache;
 
-    // rcube_cache instance for memcache
+    // rcube_cache instance for memcache/redis
     private $mem_cache;
 
     private $loaded;
 
-    /**
-     * Default constructor
-     */
-    function init()
-    {
-        parent::init();
-    }
 
     /**
      * Loads plugin configuration and initializes cache object(s)
@@ -63,20 +57,30 @@ class redundant_attachments extends filesystem_attachments
             return;
         }
 
-        $rcmail = rcmail::get_instance();
+        $rcmail = rcube::get_instance();
 
         // load configuration
         $this->load_config();
 
-        $ttl = 12 * 60 * 60; // 12 hours
-        $ttl = $rcmail->config->get('redundant_attachments_cache_ttl', $ttl);
+        $ttl      = 12 * 60 * 60; // 12 hours
+        $ttl      = $rcmail->config->get('redundant_attachments_cache_ttl', $ttl);
+        $fallback = $rcmail->config->get('redundant_attachments_fallback');
+        $prefix   = self::PREFIX;
+
+        if ($id = session_id()) {
+            $prefix .= $id;
+        }
+
+        if ($fallback === null) {
+            $fallback = $rcmail->config->get('redundant_attachments_memcache') ? 'memcache' : null; // BC
+        }
 
         // Init SQL cache (disable cache data serialization)
-        $this->cache = $rcmail->get_cache($this->prefix, 'db', $ttl, false);
+        $this->cache = $rcmail->get_cache($prefix, 'db', $ttl, false);
 
-        // Init memcache (fallback) cache
-        if ($rcmail->config->get('redundant_attachments_memcache')) {
-            $this->mem_cache = $rcmail->get_cache($this->prefix, 'memcache', $ttl, false);
+        // Init memcache/redis (fallback) cache
+        if ($fallback) {
+            $this->mem_cache = $rcmail->get_cache($prefix, $fallback, $ttl, false);
         }
 
         $this->loaded = true;
@@ -87,8 +91,8 @@ class redundant_attachments extends filesystem_attachments
      */
     private function _key($args)
     {
-        $uname = $args['path'] ? $args['path'] : $args['name'];
-        return $args['group'] . md5(mktime() . $uname . $_SESSION['user_id']);
+        $uname = $args['path'] ?: $args['name'];
+        return $args['group'] . md5(time() . $uname . $_SESSION['user_id']);
     }
 
     /**
@@ -128,7 +132,7 @@ class redundant_attachments extends filesystem_attachments
 
         $data = $args['path'] ? file_get_contents($args['path']) : $args['data'];
 
-        unset($args['data']);
+        $args['data'] = null;
 
         $key  = $this->_key($args);
         $data = base64_encode($data);

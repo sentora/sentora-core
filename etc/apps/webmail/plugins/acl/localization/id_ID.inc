@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Berbagi';
 $labels['myrights'] = 'Hak Akses';
 $labels['username'] = 'Pengguna:';
 $labels['advanced'] = 'Mode Lanjut';
+$labels['add'] = 'Tambah';
 $labels['newuser'] = 'Tambahkan entri';
 $labels['editperms'] = 'Ubah izin';
 $labels['actions'] = 'Aksi hak akses...';
@@ -80,6 +80,10 @@ $labels['longaclfull'] = 'Kendali penuh penuh termasuk administrasi';
 $labels['longaclread'] = 'Folder dapat dibuka untuk dibaca';
 $labels['longaclwrite'] = 'Pesan dapat ditandai, ditulis atau disalin kedalam folder';
 $labels['longacldelete'] = 'Pesan dapat dihapus';
+$labels['longaclother'] = 'Hak akses lainnya';
+$labels['ariasummaryacltable'] = 'Daftar hak akses';
+$labels['arialabelaclactions'] = 'Aksi daftar';
+$labels['arialabelaclform'] = 'Formulir hak akses';
 $messages['deleting'] = 'Menghapus hak akses...';
 $messages['saving'] = 'Menyimpan hak akses...';
 $messages['updatesuccess'] = 'Hak akses berhasil diubah';

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -96,6 +96,22 @@ class module_controller extends ctrl_module
     static function ExecuteDeleteParkedDomain($id)
     {
         global $zdbh;
+		// NEW - Delete Snuff files for domain
+		$sql2 = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_id_pk=:id");
+		$sql2->bindParam(':id', $id);
+    	$sql2->execute();
+    	while ($rowvhost = $sql2->fetch()) {
+				
+		$vhostuser = ctrl_users::GetUserDetail($rowvhost['vh_acc_fk']);
+		$vhostusername = $vhostuser['username'];
+		$vh_snuff_path = "/etc/sentora/configs/php/sp/";
+		
+			if (file_exists($vh_snuff_path . $vhostusername . "/" . $rowvhost['vh_name_vc'] . '.rules')) {
+				unlink($vh_snuff_path . $vhostusername . "/" . $rowvhost['vh_name_vc'] . '.rules') or print fs_filehandler::NewLine() . "Couldn't delete " . $rowvhost['vh_name_vc'] . "vhost sp file" . fs_filehandler::NewLine();
+			}
+		}
+		
+		// Delete Domain
         runtime_hook::Execute('OnBeforeDeleteParkedDomain');
         $sql = $zdbh->prepare("UPDATE x_vhosts
 							   SET vh_deleted_ts=:time
@@ -338,11 +354,29 @@ class module_controller extends ctrl_module
         return false;
     }
 
-    static function getisDeleteDomain()
+    static function getisDeleteDomain($uid = null)
     {
         global $controller;
+        global $zdbh;
+
         $urlvars = $controller->GetAllControllerRequests('URL');
-        return (isset($urlvars['show'])) && ($urlvars['show'] == 'Delete');
+
+        // Verify if Current user can Delete Parked Domains.
+        // This shall avoid exposing Parked Domains based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+    	$sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_id_pk=:editedUsrID AND vh_deleted_ts IS NULL";
+    	$numrows = $zdbh->prepare($sql);
+    	$numrows->bindParam(':userid', $currentuser['userid']);
+		$numrows->bindParam(':editedUsrID', $urlvars['id']);
+    	$numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Show User Info
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
     static function getCurrentID()
@@ -361,15 +395,10 @@ class module_controller extends ctrl_module
 
     static function getParkedDomainUsagepChart()
     {
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$maximum = $currentuser['parkeddomainquota'];
+        $currentuser = ctrl_users::GetUserDetail();
+        $maximum = $currentuser['parkeddomainquota'];
         if ($maximum < 0) { //-1 = unlimited
-            if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
-				return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			} else {
-				return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			}
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('parkeddomains', $currentuser['userid']);
             $free = max($maximum - $used, 0);
@@ -403,7 +432,7 @@ class module_controller extends ctrl_module
             return ui_sysmessage::shout(ui_language::translate("Your Domain name is not valid. Please enter a valid Domain Name: i.e. 'domain.com'"), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {
-            return ui_sysmessage::shout(ui_language::translate("The domain already appears to exist on this server."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("The domain already appears to exsist on this server."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$error)) {
             return ui_sysmessage::shout(ui_language::translate("Please remove 'www'. The 'www' will automatically work with all Domains / Subdomains."), "zannounceerror");

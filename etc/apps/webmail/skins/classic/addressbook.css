@@ -14,8 +14,7 @@
 }
 
 #abooktoolbar a.button,
-#abooktoolbar a.buttonPas,
-#abooktoolbar span.separator {
+#abooktoolbar a.buttonPas {
   display: block;
   float: left;
   width: 32px;
@@ -23,7 +22,7 @@
   padding: 0;
   margin: 0 5px;
   overflow: hidden;
-  background: url(images/abook_toolbar.png?v=025d.15594) 0 0 no-repeat transparent;
+  background: url(images/abook_toolbar.png?v=8259.4881) 0 0 no-repeat transparent;
   opacity: 0.99; /* this is needed to make buttons appear correctly in Chrome */
 }
 
@@ -41,6 +40,16 @@
 
 #abooktoolbar a.composeSel {
   background-position: -32px -32px;
+}
+
+#abooktoolbar a.print {
+  background: url(images/mail_toolbar.png?v=2271.13035) 0 0 no-repeat transparent;
+  background-position: -256px 0;
+}
+
+#abooktoolbar a.printSel {
+  background: url(images/mail_toolbar.png?v=2271.13035) 0 0 no-repeat transparent;
+  background-position: -256px -32px;
 }
 
 #abooktoolbar a.delete {
@@ -75,17 +84,51 @@
   background-position: -128px -32px;
 }
 
-#abooktoolbar span.separator {
-  width: 5px;
-  background-position: -162px 0;
-}
-
 #abooktoolbar a.search {
   background-position: -170px 0;
 }
 
 #abooktoolbar a.searchSel {
   background-position: -170px -32px;
+}
+
+#abooktoolbar a.contactmenu {
+  background: url(images/mail_toolbar.png?v=2271.13035) 0 0 no-repeat transparent;
+  background-position: -320px 0;
+  width: 34px;
+}
+
+#contactmenu li a
+{
+  background: url(images/contactactions.png?v=c9af.1114) no-repeat 7px 0;
+  background-position: 7px 20px;
+}
+
+#contactmenu li a.qrcode
+{
+  background-position: 7px -39px;
+}
+
+#contactmenu li a.assigngroup
+{
+  background-position: 7px 0;
+}
+
+#contactmenu li a.removegroup
+{
+  background-position: 7px -19px;
+}
+
+#contactmenu li a.movelink
+{
+  background: url(images/messageactions.png?v=8c64.2615) no-repeat 7px 0;
+  background-position: 6px -160px;
+}
+
+#contactmenu li a.copylink
+{
+  background: url(images/messageactions.png?v=8c64.2615) no-repeat 7px 0;
+  background-position: 6px -142px;
 }
 
 #abookcountbar
@@ -116,13 +159,6 @@
   overflow: hidden;
 }
 
-#directorylistbox input
-{
-  margin: 0 0 0 20px;
-  font-size: 11px;
-  width: 90%;
-}
-
 #addresslist
 {
   position: absolute;
@@ -144,29 +180,10 @@
   width: 280px;
 }
 
-#directorylist,
-#directorylist li ul
-{
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  background-color: #FFFFFF;
-}
-
-#directorylist li ul
-{
-  border-top: 1px solid #EBEBEB;
-}
-
-#directorylist li
-{
-  display: block;
-  font-size: 11px;
-  border-bottom: 1px solid #EBEBEB;
-  white-space: nowrap;
-}
-
-#directorylist li a
+#directorylist li a,
+#savedsearchlist li a,
+#addressbook-selector li a,
+#contactgroup-selector li a
 {
   cursor: default;
   display: block;
@@ -176,39 +193,69 @@
   height: 16px;
   text-decoration: none;
   white-space: nowrap;
-  background: url(images/icons/folders.png?v=d9d2.5356) 5px -108px no-repeat;
+  background-image: url(images/icons/folders.png?v=7c4f.5218);
+  background-position: 5px -108px;
+  background-repeat: no-repeat;
 }
 
-#directorylist li ul li a
+#directorylist ul li a
 {
   padding-left: 45px;
+  background-position: 22px -108px;
 }
 
-#directorylist li ul li:last-child
+#directorylist ul ul li a
 {
-  border-bottom: 0;
+  padding-left: 62px;
+  background-position: 39px -108px;
+}
+
+#directorylist ul ul ul li a
+{
+  padding-left: 79px;
+  background-position: 39px -108px;
 }
 
 #directorylist li.contactgroup a
 {
+  background-position: 5px -143px;
+}
+
+#directorylist ul li.contactgroup a
+{
   background-position: 22px -143px;
 }
 
-#directorylist li.contactsearch a
+#directorylist ul ul li.contactgroup a
+{
+  background-position: 39px -143px;
+}
+
+#directorylist ul ul ul li.contactgroup a
+{
+  background-position: 56px -143px;
+}
+
+#savedsearchlist li.contactsearch a
 {
   background-position: 6px -162px;
 }
 
-#directorylist li.selected > a
+#addressbook-selector li a.addressbook
 {
-  color: #FFF;
-  font-weight: bold;
-  background-color: #929292;
+  padding-left: 25px;
 }
 
-#directorylist li.droptarget
+#addressbook-selector li a.contactgroup
 {
-  background-color: #FFFFA6;
+  padding-left: 45px !important;
+  background-position: 25px -143px;
+}
+
+#contactgroup-selector li a
+{
+  padding-left: 25px;
+  background-position: 5px -143px;
 }
 
 #contacts-table
@@ -314,6 +361,11 @@ body.iframe,
 	margin-bottom: 1em;
 	border: 0;
 	padding: 0;
+}
+
+#contacthead > legend
+{
+	display: none;
 }
 
 #contacthead .names span.namefield,

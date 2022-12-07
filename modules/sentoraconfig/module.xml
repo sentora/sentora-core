@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Sentora Config</name>
-    <version>100</version>
+    <version>200</version>
     <defaultcat>Server Admin</defaultcat>
     <desc>Changes made here affect the entire Sentora configuration, please double check everything before saving changes.</desc>
     <authorname>Sentora Project</authorname>

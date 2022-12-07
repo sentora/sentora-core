@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Updates</name>
-    <version>100</version>
+    <version>200</version>
     <defaultcat>Server Admin</defaultcat>
     <desc>Check to see if there are any available updates to your version of the Sentora software.</desc>
     <authorname>Sentora Project</authorname>

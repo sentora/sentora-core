@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/settings/save_identity.inc                              |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Save an identity record or to add a new one                         |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -26,8 +24,8 @@ $a_boolean_cols = array('standard', 'html_signature');
 $updated = $default_id = false;
 
 // check input
-if (IDENTITIES_LEVEL != 4 && (empty($_POST['_name']) || (empty($_POST['_email']) && IDENTITIES_LEVEL != 1 && IDENTITIES_LEVEL != 3))) {
-    $OUTPUT->show_message('formincomplete', 'warning');
+if (empty($_POST['_email']) && (IDENTITIES_LEVEL == 0 || IDENTITIES_LEVEL == 2)) {
+    $OUTPUT->show_message('noemailwarning', 'warning');
     $RCMAIL->overwrite_action('edit-identity');
     return;
 }
@@ -47,6 +45,11 @@ foreach ($a_boolean_cols as $col) {
     if (!isset($_POST[$fname])) {
         $save_data[$col] = 0;
     }
+}
+
+// make the identity a "default" if only one identity is allowed
+if (IDENTITIES_LEVEL > 1) {
+    $save_data['standard'] = 1;
 }
 
 // unset email address if user has no rights to change it
@@ -79,8 +82,11 @@ foreach ($email_checks as $email) {
     }
 }
 
-// XSS protection in HTML signature (#1489251)
 if (!empty($save_data['signature']) && !empty($save_data['html_signature'])) {
+    // replace uploaded images with data URIs
+    $save_data['signature'] = rcmail_attach_images($save_data['signature']);
+
+    // XSS protection in HTML signature (#1489251)
     $save_data['signature'] = rcmail_wash_html($save_data['signature']);
 
     // clear POST data of signature, we want to use safe content
@@ -88,7 +94,7 @@ if (!empty($save_data['signature']) && !empty($save_data['html_signature'])) {
     unset($_POST['_signature']);
 }
 
-// update an existing contact
+// update an existing identity
 if ($_POST['_iid']) {
     $iid = rcube_utils::get_input_value('_iid', rcube_utils::INPUT_POST);
 
@@ -127,7 +133,7 @@ if ($_POST['_iid']) {
     }
     else {
         // show error message
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error', null, false);
+        $OUTPUT->show_message($plugin['message'] ?: 'errorsaving', 'error', null, false);
         $RCMAIL->overwrite_action('edit-identity');
         return;
     }
@@ -151,6 +157,8 @@ else if (IDENTITIES_LEVEL < 2) {
         $insert_id = $plugin['result'];
 
     if ($insert_id) {
+        $RCMAIL->plugins->exec_hook('identity_create_after', array('id' => $insert_id, 'record' => $save_data));
+
         $OUTPUT->show_message('successfullysaved', 'confirmation', null, false);
 
         $_GET['_iid'] = $insert_id;
@@ -167,7 +175,7 @@ else if (IDENTITIES_LEVEL < 2) {
     }
     else {
         // show error message
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error', null, false);
+        $OUTPUT->show_message($plugin['message'] ?: 'errorsaving', 'error', null, false);
         $RCMAIL->overwrite_action('edit-identity');
         return;
     }
@@ -189,6 +197,35 @@ else {
     $RCMAIL->overwrite_action('identities');
 }
 
+
+/**
+ * Attach uploaded images into signature as data URIs
+ */
+function rcmail_attach_images($html)
+{
+    global $RCMAIL;
+
+    $offset = 0;
+    $regexp = '/\s(poster|src)\s*=\s*[\'"]*\S+upload-display\S+file=rcmfile(\w+)[\s\'"]*/';
+
+    while (preg_match($regexp, $html, $matches, 0, $offset)) {
+        $file_id  = $matches[2];
+        $data_uri = ' ';
+
+        if ($file_id && ($file = $_SESSION['identity']['files'][$file_id])) {
+            $file = $RCMAIL->plugins->exec_hook('attachment_get', $file);
+
+            $data_uri .= 'src="data:' . $file['mimetype'] . ';base64,';
+            $data_uri .= base64_encode($file['data'] ?: file_get_contents($file['path']));
+            $data_uri .= '" ';
+        }
+
+        $html    = str_replace($matches[0], $data_uri, $html);
+        $offset += strlen($data_uri) - strlen($matches[0]) + 1;
+    }
+
+    return $html;
+}
 
 /**
  * Sanity checks/cleanups on HTML body of signature

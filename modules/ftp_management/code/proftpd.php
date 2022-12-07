@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -42,7 +42,7 @@ if (!fs_director::CheckForEmptyValue(self::$create)) {
     $sql = $ftp_db->prepare("INSERT INTO ftpquotalimits (name, quota_type, per_session, limit_type, bytes_in_avail, bytes_out_avail, bytes_xfer_avail, files_in_avail, files_out_avail, files_xfer_avail) VALUES (:username, 'user', 'true', 'hard', 0, 0, 0, 0, 0, 0);");
     $sql->bindParam(':username', $username);
     $sql->execute();
-    $sql = $ftp_db->prepare("INSERT INTO ftpuser (id, userid, passwd, homedir, shell, count, accessed, modified) VALUES ('', :username, :password, :homedir, '/sbin/nologin', 0, '', '');");
+    $sql = $ftp_db->prepare("INSERT INTO ftpuser (userid, passwd, homedir, shell, count, accessed, modified) VALUES (:username, :password, :homedir, '/sbin/nologin', 0, now(), now());");
     $sql->bindParam(':username', $username);
     $sql->bindParam(':password', $password);
     $sql->bindParam(':homedir', $homedir);

@@ -116,7 +116,8 @@ function WriteDNSNamedHook()
     $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_deleted_ts IS NULL";
     if ($numrows = $zdbh->query($sql)) {
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NULL GROUP BY dn_vhost_fk");
+            //$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NULL GROUP BY dn_vhost_fk");
+			$sql = $zdbh->prepare("SELECT dn_vhost_fk, dn_name_vc FROM x_dns WHERE dn_deleted_ts IS NULL GROUP BY dn_vhost_fk, dn_name_vc");
             $sql->execute();
             while ($rowdns = $sql->fetch()) {
                 $domains[] = $rowdns['dn_name_vc'];
@@ -171,7 +172,8 @@ function PurgeOldZoneDNSRecordsHook()
     $sql = "SELECT COUNT(*) FROM x_dns WHERE dn_deleted_ts IS NULL";
     if ($numrows = $zdbh->query($sql)) {
         if ($numrows->fetchColumn() <> 0) {
-            $sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NULL GROUP BY dn_name_vc");
+            //$sql = $zdbh->prepare("SELECT * FROM x_dns WHERE dn_deleted_ts IS NULL GROUP BY dn_name_vc");
+			$sql = $zdbh->prepare("SELECT dn_name_vc FROM x_dns WHERE dn_deleted_ts IS NULL GROUP BY dn_name_vc");
             $sql->execute();
             while ($rowvhost = $sql->fetch()) {
                 $domains[] = $rowvhost['dn_name_vc'];

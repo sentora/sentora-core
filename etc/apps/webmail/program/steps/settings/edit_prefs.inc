@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/settings/edit_prefs.inc                                 |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Provide functionality for user's settings & preferences             |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -42,7 +40,7 @@ function rcmail_user_prefs_form($attrib)
     global $RCMAIL, $CURR_SECTION, $SECTIONS;
 
     // add some labels to client
-    $RCMAIL->output->add_label('nopagesizewarning');
+    $RCMAIL->output->add_label('nopagesizewarning', 'nosupporterror');
 
     unset($attrib['form']);
 

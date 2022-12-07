@@ -8,7 +8,7 @@
  * @package   PSI FreeBSD OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.FreeBSD.inc.php 696 2012-09-09 11:24:04Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,7 +20,7 @@
  * @package   PSI FreeBSD OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -29,14 +29,15 @@ class FreeBSD extends BSDCommon
     /**
      * define the regexp for log parser
      */
-    public function __construct()
+    public function __construct($blockname = false)
     {
-        parent::__construct();
-        $this->setCPURegExp1("CPU: (.*) \((.*)-MHz (.*)\)");
+        parent::__construct($blockname);
+        $this->setCPURegExp1("/CPU: (.*) \((.*)-MHz (.*)\)/");
         $this->setCPURegExp2("/(.*) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)/");
-        $this->setSCSIRegExp1("^(.*): <(.*)> .*SCSI.*device");
-        $this->setSCSIRegExp2("^(da[0-9]): (.*)MB ");
-        $this->setPCIRegExp1("/(.*): <(.*)>(.*) pci[0-9]$/");
+        $this->setSCSIRegExp1("/^(.*): <(.*)> .*SCSI.*device/");
+        $this->setSCSIRegExp2("/^(da[0-9]+): (.*)MB /");
+        $this->setSCSIRegExp3("/^(da[0-9]+|cd[0-9]+): Serial Number (.*)/");
+        $this->setPCIRegExp1("/(.*): <(.*)>(.*) pci[0-9]+$/");
         $this->setPCIRegExp2("/(.*): <(.*)>.* at [.0-9]+ irq/");
     }
 
@@ -65,11 +66,11 @@ class FreeBSD extends BSDCommon
             $lines = preg_split("/\n/", $netstat, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($lines as $line) {
                 $ar_buf = preg_split("/\s+/", $line);
-                if (! empty($ar_buf[0])) {
+                if (!empty($ar_buf[0])) {
                     if (preg_match('/^<Link/i', $ar_buf[2])) {
                         $dev = new NetDevice();
                         $dev->setName($ar_buf[0]);
-                        if (strlen($ar_buf[3]) < 17) { /* no Address */
+                        if ((strlen($ar_buf[3]) < 17) && ($ar_buf[0] != $ar_buf[3])) { /* no MAC or dev name*/
                             if (isset($ar_buf[11]) && (trim($ar_buf[11]) != '')) { /* Idrop column exist*/
                               $dev->setTxBytes($ar_buf[9]);
                               $dev->setRxBytes($ar_buf[6]);
@@ -97,14 +98,25 @@ class FreeBSD extends BSDCommon
                         if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS) && (CommonFunctions::executeProgram('ifconfig', $ar_buf[0].' 2>/dev/null', $bufr2, PSI_DEBUG))) {
                             $bufe2 = preg_split("/\n/", $bufr2, -1, PREG_SPLIT_NO_EMPTY);
                             foreach ($bufe2 as $buf2) {
-                                if (preg_match('/^\s+ether\s+(\S+)/i', $buf2, $ar_buf2))
-                                    $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').preg_replace('/:/', '-', $ar_buf2[1]));
-                                elseif (preg_match('/^\s+inet\s+(\S+)\s+netmask/i', $buf2, $ar_buf2))
+                                if (preg_match('/^\s+ether\s+(\S+)/i', $buf2, $ar_buf2)) {
+                                    if (!defined('PSI_HIDE_NETWORK_MACADDR') || !PSI_HIDE_NETWORK_MACADDR) $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').preg_replace('/:/', '-', strtoupper($ar_buf2[1])));
+                                } elseif (preg_match('/^\s+inet\s+(\S+)\s+netmask/i', $buf2, $ar_buf2)) {
                                     $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
-                                elseif ((preg_match('/^\s+inet6\s+([^\s%]+)\s+prefixlen/i', $buf2, $ar_buf2)
+                                } elseif ((preg_match('/^\s+inet6\s+([^\s%]+)\s+prefixlen/i', $buf2, $ar_buf2)
                                       || preg_match('/^\s+inet6\s+([^\s%]+)%\S+\s+prefixlen/i', $buf2, $ar_buf2))
-                                      && ($ar_buf2[1]!="::") && !preg_match('/^fe80::/i', $ar_buf2[1]))
-                                    $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                                      && ($ar_buf2[1]!="::") && !preg_match('/^fe80::/i', $ar_buf2[1])) {
+                                    $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').strtolower($ar_buf2[1]));
+                                } elseif (preg_match('/^\s+media:\s+/i', $buf2) && preg_match('/[\(\s](\d+)(G*)base/i', $buf2, $ar_buf2)) {
+                                    if (isset($ar_buf2[2]) && strtoupper($ar_buf2[2])=="G") {
+                                        $unit = "G";
+                                    } else {
+                                        $unit = "M";
+                                    }
+                                    if (preg_match('/[<\s]([^\s<]+)-duplex/i', $buf2, $ar_buf3))
+                                        $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1].$unit.'b/s '.strtolower($ar_buf3[1]));
+                                    else
+                                        $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1].$unit.'b/s');
+                                }
                             }
                         }
                         $this->sys->setNetDevices($dev);
@@ -181,10 +193,16 @@ class FreeBSD extends BSDCommon
     public function build()
     {
         parent::build();
-        $this->_memoryadditional();
-        $this->_distroicon();
-        $this->_network();
-        $this->_uptime();
-        $this->_processes();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distroicon();
+            $this->_uptime();
+            $this->_processes();
+        }
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
+        }
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memoryadditional();
+        }
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/utils/killcache.inc                                     |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Delete rows from cache tables                                       |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Dennis P. Nikolaenko <dennis@nikolaenko.ru>                   |
  +-----------------------------------------------------------------------+
@@ -26,22 +24,27 @@ if (!$RCMAIL->config->get('devel_mode')) {
 }
 
 // @TODO: transaction here (if supported by DB) would be a good thing
-$res = $RCMAIL->db->query("DELETE FROM cache");
+$res = $RCMAIL->db->query("DELETE FROM " . $RCMAIL->db->table_name('cache', true));
 if ($err = $RCMAIL->db->is_error($res)) {
     exit($err);
 }
 
-$res = $RCMAIL->db->query("DELETE FROM cache_messages");
+$res = $RCMAIL->db->query("DELETE FROM " . $RCMAIL->db->table_name('cache_shared', true));
 if ($err = $RCMAIL->db->is_error($res)) {
     exit($err);
 }
 
-$res = $RCMAIL->db->query("DELETE FROM cache_index");
+$res = $RCMAIL->db->query("DELETE FROM " . $RCMAIL->db->table_name('cache_messages', true));
 if ($err = $RCMAIL->db->is_error($res)) {
     exit($err);
 }
 
-$res = $RCMAIL->db->query("DELETE FROM cache_thread");
+$res = $RCMAIL->db->query("DELETE FROM " . $RCMAIL->db->table_name('cache_index', true));
+if ($err = $RCMAIL->db->is_error($res)) {
+    exit($err);
+}
+
+$res = $RCMAIL->db->query("DELETE FROM " . $RCMAIL->db->table_name('cache_thread', true));
 if ($err = $RCMAIL->db->is_error($res)) {
     exit($err);
 }

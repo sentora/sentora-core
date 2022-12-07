@@ -2,26 +2,27 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
-$messages['errortitle']  = 'Fe gafwyd gwall!';
+
+$messages['errortitle']  = 'Cafwyd gwall!';
 $messages['loginfailed']  = 'Methwyd mewngofnodi.';
 $messages['cookiesdisabled'] = 'Nid yw eich porwr yn derbyn cwcis.';
 $messages['sessionerror'] = 'Mae\'r sesiwn yn anghywir neu wedi dod i ben.';
+$messages['cookiesmismatch'] = 'Gwelwyd camgymhariad cwci. Cliriwch y cwcis yn eich porwr os gwelwch yn dda.';
 $messages['storageerror'] = 'Methwyd cysylltu a\'r gweinydd storfa.';
 $messages['servererror'] = 'Gwall Gweinydd!';
 $messages['servererrormsg'] = 'Gwall Gweinydd: $msg';
+$messages['accountlocked'] = 'Gormod o geisiadau i fewngofnodi wedi methu. Triwch eto nes ymlaen.';
 $messages['connerror'] = 'Gwall Cysylltiad (Methwyd cysylltu a\'r gweinydd)!';
 $messages['dberror'] = 'Gwall Cronfa Ddata!';
 $messages['windowopenerror'] = 'Fe ataliwyd y ffenest naid!';
@@ -33,12 +34,13 @@ $messages['erroroverquotadelete'] = 'Dim gofod gwag ar y disg. Defnyddiwch SHIFT
 $messages['invalidrequest'] = 'Cais annilys! Ni chadwyd unrhyw wybodaeth.';
 $messages['invalidhost'] = 'Enw gweinydd annilys.';
 $messages['nomessagesfound'] = 'Dim negeseuon wedi eu canfod yn y blwch hwn';
-$messages['loggedout'] = 'Rydych wedi gorffen y sesiwn yn llwyddianus. Hwyl fawr!';
+$messages['loggedout'] = 'Rydych wedi cau\'r sesiwn yn llwyddiannus. Hwyl fawr!';
 $messages['mailboxempty'] = 'Mae\'r blwch yn wag';
 $messages['nomessages'] = 'Dim negeseuon';
 $messages['refreshing'] = 'Yn adnewyddu...';
 $messages['loading'] = 'Yn llwytho...';
 $messages['uploading'] = 'Yn llwytho ffeil i fyny...';
+$messages['attaching'] = 'Yn atodi ffeil...';
 $messages['uploadingmany'] = 'Yn llwytho fyny ffeiliau...';
 $messages['loadingdata'] = 'Yn llwytho data...';
 $messages['checkingmail'] = 'Yn edrych am negeseuon newydd...';
@@ -49,14 +51,24 @@ $messages['messagesaved'] = 'Cadwyd neges i\'r Drafftiau';
 $messages['successfullysaved'] = 'Cadwyd yn llwyddiannus';
 $messages['savingresponse'] = 'Yn cadw testun ymateb...';
 $messages['deleteresponseconfirm'] = 'Ydych chi wir am ddileu y testun ymateb hwn?';
+$messages['nocontactselected'] = 'Nid ydych wedi dewis cyswllt eto.';
 $messages['addedsuccessfully'] = 'Cyswllt wedi ei ychwanegu i\'r llyfr cyfeiriadau yn llwyddiannus';
 $messages['contactexists'] = 'Mae cyswllt gyda\'r cyfeiriad e-bost yma yn bodoli\'n barod';
 $messages['contactnameexists'] = 'Mae cyswllt gyda\'r un enw yn bodoli yn barod.';
 $messages['blockedimages'] = 'I amddiffyn eich preifatrwydd, fe ataliwyd lluniau allanol yn y neges yma.';
+$messages['blockedresources'] = 'I amddiffyn eich preifatrwydd, mae adnoddau allanol wedi eu atal.';
 $messages['encryptedmessage'] = 'Mae hon yn neges amgryptedig a felly ni ellir ei ddangos. Flin iawn!';
+$messages['externalmessagedecryption'] = 'Mae hon yn neges amgryptedig a gall ei ddadgryptio gyda estyniad eich porwr.';
+$messages['nopubkeyfor'] = 'Ni chafwyd hyd i allwedd cyhoeddus dilys ar gyfer $email';
+$messages['nopubkeyforsender'] = 'Ni chafwyd hyd i allwedd cyhoeddus dilys ar gyfer eich personoliaeth anfon. Ydych am amgryptio y neges ar gyfer y derbynwyr yn unig?';
+$messages['encryptnoattachments'] = 'Nid yw\'n bosib amgryptio atodiadau wedi uwchlwytho yn barod. Ychwanegwch nhw eto yn y golygydd amgryptio.';
+$messages['searchpubkeyservers'] = 'Hoffech chi chwilio y gweinyddwyr allweddi cyhoeddus ar gyfer yr allweddi sy ar goll?';
+$messages['encryptpubkeysfound'] = 'Cafwyd hyd i\'r allweddi cyhoeddus canlynol:';
+$messages['keyservererror'] = 'Methwyd cael yr allwedd o\'r gweinydd allweddi.';
+$messages['keyimportsuccess'] = 'Mewnforiwyd yr allwedd cyhoeddus $key i\'ch cylch allweddi yn llwyddiannus';
 $messages['nocontactsfound'] = 'Ni gafwyd hyd i unrhyw gysylltiadau';
 $messages['contactnotfound'] = 'Ni gafwyd hyd i\'r cysylltiad gofynnwyd amdano';
-$messages['contactsearchonly'] = 'Rhowch dermau chwilio i ganfod cysylltiadau';
+$messages['contactsearchonly'] = 'Rhaid i chi ddefnyddio\'r ffurflen chwilio i weld cysylltiadau o\'ch llyfr cyfeiriadau dewisol.';
 $messages['sendingfailed'] = 'Methwyd danfon y neges';
 $messages['senttooquickly'] = 'Arhoswch $sec eiliad cyn danfon y neges';
 $messages['errorsavingsent'] = 'Fe gafwyd gwall wrth gadw\'r neges ddanfonwyd.';
@@ -65,10 +77,13 @@ $messages['errormoving'] = 'Methwyd symud y neges';
 $messages['errorcopying'] = 'Methwyd copïo\'r neges(euon)';
 $messages['errordeleting'] = 'Methwyd dileu y neges';
 $messages['errormarking'] = 'Methwyd nodi y neges';
+$messages['alerttitle'] = 'Rhybudd';
+$messages['confirmationtitle'] = 'Ydych chi\'n siwr...';
 $messages['deletecontactconfirm']  = 'Ydych chi wir am ddileu y cysylltiadau ddewiswyd?';
 $messages['deletegroupconfirm']  = 'Ydych chi wir am ddileu\'r grŵp dewiswyd?';
 $messages['deletemessagesconfirm'] = 'Ydych chi wir am ddileu y neges(euon) ddewiswyd?';
 $messages['deletefolderconfirm']  = 'Ydych chi wir am ddileu y ffolder yma?';
+$messages['movefolderconfirm']  = 'Ydych chi wir am symud y ffolder hwn?';
 $messages['purgefolderconfirm']  = 'Ydych chi wir am ddileu yr holl negeseuon yn y ffolder yma?';
 $messages['contactdeleting'] = 'Dileu cyswllt/cysylltiadau...';
 $messages['groupdeleting'] = 'Yn dileu grŵp...';
@@ -81,12 +96,15 @@ $messages['noemailwarning'] = 'Rhowch gyfeiriad e-bost dilys';
 $messages['nonamewarning']  = 'Rhowch enw';
 $messages['nopagesizewarning'] = 'Rhowch maint tudalen';
 $messages['nosenderwarning'] = 'Rhowch gyfeiriad e-bost y danfonwr';
+$messages['recipientsadded'] = 'Ychwanegwyd derbynnydd/wyr yn llwyddiannus.';
 $messages['norecipientwarning'] = 'Rhowch o leiaf un derbynnydd';
+$messages['disclosedrecipwarning'] = 'Fe fydd pob derbynnydd yn gweld cyfeiriadau ebost pawb arall. I atal hyn ac amddiffyn eu preifatrwydd rhaid i chi ddefnyddio\'r maes Bcc.';
+$messages['disclosedreciptitle'] = 'Gormod o dderbynnwyr cyhoeddus';
 $messages['nosubjectwarning']  = 'Mae\'r pennawd "Pwnc" yn wag. Hoffech chi roi un fewn nawr?';
+$messages['nosubjecttitle']  = 'Dim pwnc';
 $messages['nobodywarning'] = 'Danfon y neges hwn heb destun?';
-$messages['notsentwarning'] = 'Ni ddanfonwyd y neges. Hoffech chi gael gwared a\'r neges?';
+$messages['notsentwarning'] = 'Nid yw\'r neges wedi ei ddanfon a mae ganddo newidiadau heb ei gadw. Hoffech chi gael gwared a\'r newidiadau?';
 $messages['restoresavedcomposedata'] = 'Cafwyd hyd i neges wedi ei ysgrifennu o\'r blaen ond heb ei ddanfon.\n\nPwnc: $subject\nCadwyd: $date\n\nYdych chi am adfer y neges?';
-$messages['noldapserver'] = 'Dewiswch weinydd ldap i chwilio';
 $messages['nosearchname'] = 'Rhowch enw cyswllt neu gyfeiriad e-bost';
 $messages['notuploadedwarning'] = 'Nid yw pob atodiad wedi eu llwytho i fyny eto. Triwch eto neu canslo.';
 $messages['searchsuccessful'] = 'Cafwyd hyd i $nr neges';
@@ -104,8 +122,12 @@ $messages['folderexpunged'] = 'Ffolder wedi ei wagio yn llwyddiannus';
 $messages['deletedsuccessfully'] = 'Dilëwyd yn llwyddiannus';
 $messages['converting'] = 'Yn cael gwared a\'r fformatio...';
 $messages['messageopenerror'] = 'Methwyd llwytho\'r neges o\'r gweinydd';
+$messages['filelinkerror'] = 'Methwyd atodi\'r ffeil.';
 $messages['fileuploaderror'] = 'Methwyd llwytho\'r ffeil i fyny';
 $messages['filesizeerror'] = 'Mae\'r ffeil a lwythyd fyny yn fwy na\'r maint uchaf ganiateir o $size';
+$messages['filecounterror'] = 'Cewch chi ddim ond llwytho fyny $count files ar unwaith.';
+$messages['msgsizeerror'] = 'Methwyd atodi ffeil. Roedd maint y neges ($size) yn rhy fawr.';
+$messages['msgsizeerrorfwd'] = 'Mae maint y neges wedi mynd yn fyw na\'r uchafswm ($size). Nid yw $num neges(euon) wedi ei atodi.';
 $messages['copysuccess'] = 'Copïwyd $nr cyswllt yn llwyddiannus';
 $messages['movesuccess'] = 'Symudwyd $nr cyswllt yn llwyddiannus.';
 $messages['copyerror'] = 'Methwyd copïo unrhyw gysylltiadau.';
@@ -145,6 +167,8 @@ $messages['smtpautherror'] = 'Gwall SMTP ($code): Methwyd dilysu\'r cyfrif';
 $messages['smtpfromerror'] = 'Gwall SMTP ($code): Methwyd gosod y danfonwr "$from" ($msg)';
 $messages['smtptoerror'] = 'Gwall SMTP ($code): Methwyd ychwanegu derbynwr "$to" ($msg)';
 $messages['smtprecipientserror'] = 'Gwall SMTP: Nid oedd yn bosib darllen y rhestr o dderbynnwyr';
+$messages['smtputf8error'] = 'Gwall SMTP: Nid yw\'r gweinydd yn cefnogi Unicode mewn cyfeiriadau ebost.';
+$messages['smtpsizeerror'] = 'Gwall SMTP: Mae maint y neges yn fwy na cyfyngiad y gweinydd ($limit)';
 $messages['smtperror'] = 'Gwall SMTP: $msg';
 $messages['emailformaterror'] = 'Cyfeiriad e-bost anghywir: $email';
 $messages['toomanyrecipients'] = 'Gormod o dderbynnwyr. Lleihewch y nifer i $max';
@@ -163,18 +187,38 @@ $messages['savedsearchcreated'] = 'Crëwyd y chwiliad yn llwyddiannus.';
 $messages['savedsearchcreateerror'] = 'Methwyd creu y chwiliad.';
 $messages['messagedeleted'] = 'Neges(euon) wedi eu dileu yn llwyddiannus';
 $messages['messagemoved'] = 'Neges(euon) wedi eu symud yn llwyddiannus';
+$messages['messagemovedtotrash'] = 'Neges(euon) wedi eu symud i\'r Sbwriel yn llwyddiannus';
 $messages['messagecopied'] = 'Neges(euon) wedi eu copïo yn llwyddiannus';
 $messages['messagemarked'] = 'Neges(euon) wedi eu marcio yn llwyddiannus';
 $messages['autocompletechars'] = 'Rhowch o leia $min llythyren ar gyfer awto-gwblhau';
 $messages['autocompletemore'] = 'Canfuwyd mwy o gofnodion sy\'n cyfateb. Teipiwch fwy o lythrennau.';
 $messages['namecannotbeempty'] = 'Ni all yr enw fod yn wag';
 $messages['nametoolong'] = 'Mae\'r enw yn rhy hir';
+$messages['namedotforbidden'] = 'Ni all enw ffolder gychwyn gyda dot.';
 $messages['folderupdated'] = 'Diweddarwyd y ffolder yn llwyddiannus';
 $messages['foldercreated'] = 'Crëwyd y ffolder yn llwyddiannus';
 $messages['invalidimageformat'] = 'Ddim yn fformat llun dilys.';
 $messages['mispellingsfound'] = 'Gwelwyd camsillafu yn y neges.';
 $messages['parentnotwritable'] = 'Methwyd creu/symud ffolder i\'r ffolder rhiant ddewiswyd. Dim hawl mynediad.';
 $messages['messagetoobig'] = 'Mae darn y neges yn rhy fawr i\'w brosesu.';
-$messages['attachmentvalidationerror'] = 'RHYBUDD! Mae\'r atodiad yn amheus oherwydd nid yw ei fath yn gymharu\'r gyda\'r math ddatganwyd yn y neges. Os nad ydych yn ymddiried yn y danfonwr, ni ddylech agor hwn yn y porwr oherwydd fe all gynnwys ffeil maleisus.<br></br><em>Disgwylwyd:$expected;canfuwyd:$detected</em>';
+$messages['attachmentvalidationerror'] = 'Mae\'r atodiad yn amheus am nad yw ei fath yn cyfateb i\'r math a ddatganir yn y neges. Os nad ydych chi\'n ymddiried yn y danfonwr, ni ddylech chi agor hwn yn eich porwr - galla\'i fod cynnwys maleisus ynddo.<br/><br/><em>Disgwylid: $expected; canfuwyd: $detected</em>';
 $messages['noscriptwarning'] = 'Rhybudd: Mae\'r gwasanaeth gwebost angen Javascript i weithio! Er mwyn ei ddefnyddio, galluogwch Javascript yng ngosodiadau eich porwr.';
-?>
+$messages['messageissent'] = 'Mae\'r neges wedi ei anfon, ond heb ei gadw eto. Hoffech chi ei gadw nawr?';
+$messages['errnotfound'] = 'Ni Ganfuwyd y Ffeil';
+$messages['errnotfoundexplain'] = 'Ni gafwyd hyd i\'r adnodd ofynnwyd amdano';
+$messages['errfailedrequest'] = 'Methodd y cais';
+$messages['errauthorizationfailed'] = 'Methiant Awdurdodi';
+$messages['errunauthorizedexplain'] = 'Methwyd gwirio eich bod wedi\'ch awdurdodi i gael mynediad i\'r gwasanaeth!';
+$messages['errrequestcheckfailed'] = 'Methiant Gwiriad Cais';
+$messages['errcsrfprotectionexplain'] = "Er eich diogelwch, mae mynediad i'r adnodd hwn wedi ei ddiogelu yn erbyn CSRF.\nOs ydych yn gweld hwn, mae'n debyg na wnaethoch chi allgofnodi cyn gadael yr ap gwe.\n\nMae'n rhaid gwirio nawr cyn parhau.";
+$messages['errcontactserveradmin'] = 'Cysylltwch a rheolwr eich gweinydd.';
+$messages['clicktoresumesession'] = 'Cliciwch yma i ail-ddechrau eich sesiwn blaenorol';
+$messages['errcomposesession'] = 'Gwall sesiwn ysgrifennu';
+$messages['errcomposesessionexplain'] = 'Ni gafwyd hyd i\'r sesiwn ysgrifennu gofynnwyd amdano';
+$messages['clicktocompose'] = 'Cliciwch yma i ysgrifennu neges newydd';
+$messages['nosupporterror'] = 'Nid yw\'r nodwedd hwn wedi eu gefnogi gan eich porwr gwe.';
+$messages['siginserted'] = 'Mewnosodwyd y llofnod yn llwyddiannus.';
+$messages['responseinserted'] = 'Mewnosodwyd yr ymateb yn llwyddiannus.';
+$messages['listempty'] = 'Mae\'r rhestr yn wag.';
+$messages['listusebutton'] = 'Defnyddiwch y botwm Creu i ychwanegu cofnod newydd.';
+$messages['keypaircreatesuccess'] = 'Creuwyd pâr allwedd newydd yn llwyddiannus ar gyfer $identity.';

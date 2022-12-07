@@ -8,17 +8,31 @@
  *   password_ximss_host - Host name of Communigate server
  *   password_ximss_port - XIMSS port on Communigate server
  *
- *
  * References:
  *   http://www.communigate.com/WebGuide/XMLAPI.html
  *
  * @version 2.0
  * @author Erik Meitner <erik wanderings.us>
+ *
+ * Copyright (C) The Roundcube Dev Team
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
 class rcube_ximss_password
 {
-    function save($pass, $newpass)
+    function save($pass, $newpass, $username)
     {
         $rcmail = rcmail::get_instance();
 
@@ -31,9 +45,9 @@ class rcube_ximss_password
         }
 
         // send all requests at once(pipelined)
-        fwrite( $sock, '<login id="A001" authData="'.$_SESSION['username'].'" password="'.$pass.'" />'."\0");
-        fwrite( $sock, '<passwordModify id="A002" oldPassword="'.$pass.'" newPassword="'.$newpass.'"  />'."\0");
-        fwrite( $sock, '<bye id="A003" />'."\0");
+        fwrite($sock, '<login id="A001" authData="'.$username.'" password="'.$pass.'" />'."\0");
+        fwrite($sock, '<passwordModify id="A002" oldPassword="'.$pass.'" newPassword="'.$newpass.'"  />'."\0");
+        fwrite($sock, '<bye id="A003" />'."\0");
 
   //example responses
   //  <session id="A001" urlID="4815-vN2Txjkggy7gjHRD10jw" userName="user@example.com"/>\0
@@ -50,27 +64,26 @@ class rcube_ximss_password
 
         fclose($sock);
 
-        foreach( explode( "\0",$responseblob) as $response ) {
+        foreach (explode( "\0",$responseblob) as $response) {
             $resp = simplexml_load_string("<xml>".$response."</xml>");
 
-            if( $resp->response[0]['id'] == 'A001' ) {
-                if( isset( $resp->response[0]['errorNum'] ) ) {
+            if ($resp->response[0]['id'] == 'A001') {
+                if (isset($resp->response[0]['errorNum'])) {
                     return PASSWORD_CONNECT_ERROR;
                 }
             }
-            else if( $resp->response[0]['id'] == 'A002' ) {
-                if( isset( $resp->response[0]['errorNum'] )) {
+            else if ($resp->response[0]['id'] == 'A002') {
+                if (isset($resp->response[0]['errorNum'])) {
                     return PASSWORD_ERROR;
                 }
             }
-            else if( $resp->response[0]['id'] == 'A003' ) {
-                if( isset($resp->response[0]['errorNum'] )) {
-                    //There was a problem during logout(This is probably harmless)
+            else if ($resp->response[0]['id'] == 'A003') {
+                if (isset($resp->response[0]['errorNum'])) {
+                    // There was a problem during logout (This is probably harmless)
                 }
             }
-        } //foreach
+        }
 
         return PASSWORD_SUCCESS;
-
     }
 }

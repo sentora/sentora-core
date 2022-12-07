@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/settings/responses.inc                                  |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2013, The Roundcube Dev Team                            |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Manage and save canned response texts                               |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -78,7 +76,6 @@ $OUTPUT->set_pagetitle($RCMAIL->gettext('responses'));
 $OUTPUT->include_script('list.js');
 
 $OUTPUT->add_handlers(array(
-    'responseframe' => 'rcmail_response_frame',
     'responseslist' => 'rcmail_responses_list',
 ));
 $OUTPUT->add_label('deleteresponseconfirm');
@@ -93,7 +90,7 @@ function rcmail_responses_list($attrib)
 {
     global $RCMAIL, $OUTPUT;
 
-    $attrib += array('id' => 'rcmresponseslist', 'tagname' => 'table', 'cols' => 1);
+    $attrib += array('id' => 'rcmresponseslist', 'tagname' => 'table');
 
     $plugin = $RCMAIL->plugins->exec_hook('responses_list', array(
         'list' => $RCMAIL->get_compose_responses(true),
@@ -114,18 +111,4 @@ function rcmail_responses_list($attrib)
     $OUTPUT->set_env('readonly_responses', $readonly_responses);
 
     return $out;
-}
-
-// similar function as /steps/addressbook/func.inc::rcmail_contact_frame()
-function rcmail_response_frame($attrib)
-{
-    global $OUTPUT;
-
-    if (!$attrib['id']) {
-        $attrib['id'] = 'rcmResponseFrame';
-    }
-
-    $OUTPUT->set_env('contentframe', $attrib['id']);
-
-    return $OUTPUT->frame($attrib, true);
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Package Manager</name>
-    <version>110</version>
+    <version>200</version>
     <defaultcat>Reseller</defaultcat>
     <desc>Welcome to the Package Manager, using this module enables you to create and manage existing reseller packages on your Sentora hosting account.</desc>
     <authorname>Sentora Project</authorname>

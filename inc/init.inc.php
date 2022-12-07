@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * The web gui initiation script.
@@ -96,7 +96,7 @@ if (isset($_POST['inConfEmail'])) {
     $secure_password = $crypto->CryptParts($crypto->Crypt())->Hash;
 
     if ($result) {
-        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = '', ac_pass_vc = :password, ac_passsalt_vc = :salt WHERE ac_id_pk = :uid");
+        $sql = $zdbh->prepare("UPDATE x_accounts SET ac_resethash_tx = NULL, ac_pass_vc = :password, ac_passsalt_vc = :salt WHERE ac_id_pk = :uid");
         $sql->bindParam(':password', $secure_password);
         $sql->bindParam(':salt', $randomsalt);
         $sql->bindParam(':uid', $result['ac_id_pk']);

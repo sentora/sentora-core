@@ -366,4 +366,22 @@ phpSysInfo language file Language: galician Created by: X.M.C. Guede
   <expression id="120" name="no_devices">
     <exp>Number of devices</exp>
   </expression>
+  <expression id="121" name="other">
+    <exp>Other</exp>
+  </expression>
+  <expression id="122" name="manufacturer">
+    <exp>Manufacturer</exp>
+  </expression>
+  <expression id="123" name="product">
+    <exp>Product</exp>
+  </expression>
+  <expression id="124" name="serial">
+    <exp>Serial number</exp>
+  </expression>
+  <expression id="125" name="memfree">
+    <exp>Libre</exp>
+  </expression>
+  <expression id="126" name="nvme">
+    <exp>Dispositivos NVMe</exp>
+  </expression>
 </tns:translation>

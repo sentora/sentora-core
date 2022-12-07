@@ -1,6 +1,8 @@
 Roundcube Webmail 
 =================
-[roundcube.net](http://roundcube.net)
+[roundcube.net](https://roundcube.net)
+
+[![Build Status](https://api.travis-ci.org/roundcube/roundcubemail.svg?branch=master)](https://travis-ci.org/roundcube/roundcubemail)
 
 
 INTRODUCTION
@@ -10,17 +12,11 @@ application-like user interface. It provides full functionality you expect
 from an email client, including MIME support, address book, folder management,
 message searching and spell checking. Roundcube Webmail is written in PHP and
 requires the MySQL, PostgreSQL or SQLite database. With its plugin API it is
-easily extendable and the user interface is fully customizable using skins
-which are pure XHTML and CSS 2.
+easily extendable and the user interface is fully customizable using skins.
 
-The code is mainly written in PHP and is designed to run on a webserver.
-It includes other open-source classes/libraries from [PEAR][pear],
-an IMAP library derived from [IlohaMail][iloha] the [TinyMCE][tinymce] rich
-text editor, [Googiespell][googiespell] library for spell checking or
-the [WASHTML][washtml] sanitizer by Frederic Motte.
-
-The current default skin uses icons designed by Stephen Horlander and [Kevin 
-Gerich][kmgerich] for Mozilla.org.
+The code designed to run on a webserver is mainly written in PHP and Javascript.
+It includes a custom framework with an IMAP library derived from [IlohaMail][iloha]
+and requires a set of external libraries (see composer.json and jsdeps.json files).
 
 
 INSTALLATION
@@ -30,6 +26,19 @@ please refer to the INSTALL document in the same directory as this document.
 
 If you're updating an older version of Roundcube please follow the steps
 described in the UPGRADING file.
+
+
+BROWSER SUPPORT
+---------------
+Roundcube uses jQuery 3.x for its client and therefore inherits the browser
+support from there. This currently includes:
+
+- Chrome: (Current - 1) and Current
+- Edge: (Current - 1) and Current
+- Firefox: (Current - 1) and Current, ESR
+- Internet Explorer: 9+ (11+ for the Elastic skin)
+- Safari: (Current - 1) and Current
+- Opera: Current
 
 
 LICENSE
@@ -72,22 +81,17 @@ For more information visit [roundcube.net/contribute][contrib]
 
 CONTACT
 -------
-For any bug reports or feature requests please refer to the tracking system
-at [trac.roundcube.net][tracreport] or subscribe to our mailing list.
+For bug reports or feature requests please refer to the tracking system
+at [Github][githubissues] or subscribe to our mailing list.
 See [roundcube.net/support][support] for details.
 
 You're always welcome to send a message to the project admin:
 hello(at)roundcube(dot)net
 
 
-[pear]:         http://pear.php.net
-[iloha]:        http://sourceforge.net/projects/ilohamail/
-[tinymce]:      http://www.tinymce.com/
-[googiespell]:  http://orangoo.com/labs/GoogieSpell/
-[washtml]:      http://www.ubixis.com/washtml/
-[kmgerich]:     http://kmgerich.com/
-[gpl]:          http://www.gnu.org/licenses/
-[license]:      http://roundcube.net/license
-[contrib]:      http://roundcube.net/contribute
-[support]:      http://roundcube.net/support
-[tracreport]:   http://trac.roundcube.net/wiki/Howto_ReportIssues
+[iloha]:        https://sourceforge.net/projects/ilohamail/
+[gpl]:          https://www.gnu.org/licenses/
+[license]:      https://roundcube.net/license
+[contrib]:      https://roundcube.net/contribute
+[support]:      https://roundcube.net/support
+[githubissues]: https://github.com/roundcube/roundcubemail/issues

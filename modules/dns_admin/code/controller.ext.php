@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -685,7 +685,7 @@ class module_controller extends ctrl_module
         $active = $numactiverecords;
         $deleted = $total - $active;
         $line = "<h2>DNS Database Usage</h2>";
-        $line .= "<img src=\"etc/lib/pChart2/sentora/z3DPie.php?score=" . $active . "::" . $deleted . "&labels=Active Domain Records:   " . $active . "::Deleted Domain Records: " . $deleted . "&legendfont=verdana&legendfontsize=8&imagesize=240::190&chartsize=120::90&radius=100&legendsize=10::160\"/>";
+        $line .= "<img src=\"etc/lib/pChart2/sentora/z3DPie.php?score=" . $active . "::" . $deleted . "&labels=Active Domain Records:   " . $active . "::Deleted Domain Records: " . $deleted . "&legendfont=verdana&legendfontsize=8&imagesize=240::200&chartsize=120::90&radius=100&legendsize=10::160\"/>";
         return $line;
     }
 
@@ -755,7 +755,7 @@ class module_controller extends ctrl_module
         $SPFrecords = $numSPFrecords;
         $NSrecords = $numNSrecords;
         $line = "<h2>Record Types Usage</h2>";
-        $line .= "<img src=\"etc/lib/pChart2/sentora/z3DPie.php?score=" . $Arecords . "::" . $NSrecords . "::" . $MXrecords . "::" . $SPFrecords . "::" . $TXTrecords . "::" . $SRVrecords . "::" . $CNAMErecords . "::" . $AAAArecords . "&labels=A: " . $Arecords . "::NS: " . $NSrecords . "::MX: " . $MXrecords . "::SPF: " . $SPFrecords . "::TXT: " . $TXTrecords . "::SRV: " . $SRVrecords . "::CNAME: " . $CNAMErecords . "::AAAA: " . $AAAArecords . "&legendfont=verdana&legendfontsize=8&imagesize=340::190&chartsize=120::90&radius=100&legendsize=240::80\"/>";
+        $line .= "<img src=\"etc/lib/pChart2/sentora/z3DPie.php?score=" . $Arecords . "::" . $NSrecords . "::" . $MXrecords . "::" . $SPFrecords . "::" . $TXTrecords . "::" . $SRVrecords . "::" . $CNAMErecords . "::" . $AAAArecords . "&labels=A: " . $Arecords . "::NS: " . $NSrecords . "::MX: " . $MXrecords . "::SPF: " . $SPFrecords . "::TXT: " . $TXTrecords . "::SRV: " . $SRVrecords . "::CNAME: " . $CNAMErecords . "::AAAA: " . $AAAArecords . "&legendfont=verdana&legendfontsize=8&imagesize=320::200&chartsize=120::90&radius=100&legendsize=250::25\"/>";
         return $line;
     }
 

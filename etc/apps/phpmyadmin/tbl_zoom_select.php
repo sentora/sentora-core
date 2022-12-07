@@ -8,163 +8,29 @@
  * @package PhpMyAdmin
  */
 
+use PhpMyAdmin\Di\Container;
+use PhpMyAdmin\Response;
+
 /**
  * Gets some core libraries
  */
 require_once './libraries/common.inc.php';
-require_once './libraries/mysql_charsets.lib.php';
-require_once './libraries/TableSearch.class.php';
-require_once './libraries/tbl_info.inc.php';
+require_once 'libraries/tbl_common.inc.php';
 
-$response = PMA_Response::getInstance();
-$header   = $response->getHeader();
-$scripts  = $header->getScripts();
-$scripts->addFile('makegrid.js');
-$scripts->addFile('sql.js');
-/* < IE 9 doesn't support canvas natively */
-if (PMA_USR_BROWSER_AGENT == 'IE' && PMA_USR_BROWSER_VER < 9) {
-    $scripts->addFile('canvg/flashcanvas.js');
-}
-$scripts->addFile('jqplot/jquery.jqplot.js');
-$scripts->addFile('jqplot/plugins/jqplot.canvasTextRenderer.js');
-$scripts->addFile('jqplot/plugins/jqplot.canvasAxisLabelRenderer.js');
-$scripts->addFile('jqplot/plugins/jqplot.dateAxisRenderer.js');
-$scripts->addFile('jqplot/plugins/jqplot.highlighter.js');
-$scripts->addFile('jqplot/plugins/jqplot.cursor.js');
-$scripts->addFile('canvg/canvg.js');
-$scripts->addFile('jquery/jquery-ui-timepicker-addon.js');
-$scripts->addFile('tbl_zoom_plot_jqplot.js');
-
-/**
- * Sets globals from $_POST
- */
-$post_params = array(
-    'dataLabel',
-    'maxPlotLimit',
-    'zoom_submit'
+$container = Container::getDefaultContainer();
+$container->factory('PhpMyAdmin\Controllers\Table\TableSearchController');
+$container->alias(
+    'TableSearchController', 'PhpMyAdmin\Controllers\Table\TableSearchController'
 );
-foreach ($post_params as $one_post_param) {
-    if (isset($_POST[$one_post_param])) {
-        $GLOBALS[$one_post_param] = $_POST[$one_post_param];
-    }
-}
+$container->set('PhpMyAdmin\Response', Response::getInstance());
+$container->alias('response', 'PhpMyAdmin\Response');
 
-$table_search = new PMA_TableSearch($db, $table, "zoom");
+/* Define dependencies for the concerned controller */
+$dependency_definitions = array(
+    'searchType' => 'zoom',
+    'url_query' => &$url_query
+);
 
-/**
- * Handle AJAX request for data row on point select
- * @var post_params Object containing parameters for the POST request
- */
-
-if (isset($_REQUEST['get_data_row']) && $_REQUEST['get_data_row'] == true) {
-    $extra_data = array();
-    $row_info_query = 'SELECT * FROM `' . $_REQUEST['db'] . '`.`'
-        . $_REQUEST['table'] . '` WHERE ' .  $_REQUEST['where_clause'];
-    $result = PMA_DBI_query($row_info_query . ";", null, PMA_DBI_QUERY_STORE);
-    $fields_meta = PMA_DBI_get_fields_meta($result);
-    while ($row = PMA_DBI_fetch_assoc($result)) {
-        // for bit fields we need to convert them to printable form
-        $i = 0;
-        foreach ($row as $col => $val) {
-            if ($fields_meta[$i]->type == 'bit') {
-                $row[$col] = PMA_Util::printableBitValue($val, $fields_meta[$i]->length);
-            }
-            $i++;
-        }
-        $extra_data['row_info'] = $row;
-    }
-    PMA_Response::getInstance()->addJSON($extra_data);
-    exit;
-}
-
-/**
- * Handle AJAX request for changing field information
- * (value,collation,operators,field values) in input form
- * @var post_params Object containing parameters for the POST request
- */
-
-if (isset($_REQUEST['change_tbl_info']) && $_REQUEST['change_tbl_info'] == true) {
-    $response = PMA_Response::getInstance();
-    $field = $_REQUEST['field'];
-    if ($field == 'pma_null') {
-        $response->addJSON('field_type', '');
-        $response->addJSON('field_collation', '');
-        $response->addJSON('field_operators', '');
-        $response->addJSON('field_value', '');
-        exit;
-    }
-    $key = array_search($field, $table_search->getColumnNames());
-    $properties = $table_search->getColumnProperties($_REQUEST['it'], $key);
-    $response->addJSON('field_type', $properties['type']);
-    $response->addJSON('field_collation', $properties['collation']);
-    $response->addJSON('field_operators', $properties['func']);
-    $response->addJSON('field_value', $properties['value']);
-    exit;
-}
-
-// Gets some core libraries
-require_once './libraries/tbl_common.inc.php';
-$url_query .= '&amp;goto=tbl_select.php&amp;back=tbl_select.php';
-
-// Gets tables informations
-require_once './libraries/tbl_info.inc.php';
-
-if (! isset($goto)) {
-    $goto = $GLOBALS['cfg']['DefaultTabTable'];
-}
-// Defines the url to return to in case of error in the next sql statement
-$err_url   = $goto . '?' . PMA_generate_common_url($db, $table);
-
-//Set default datalabel if not selected
-if ( !isset($_POST['zoom_submit']) || $_POST['dataLabel'] == '') {
-    $dataLabel = PMA_getDisplayField($db, $table);
-}
-
-// Displays the zoom search form
-$response->addHTML($table_search->getSelectionForm($goto, $dataLabel));
-
-/*
- * Handle the input criteria and generate the query result
- * Form for displaying query results
- */
-if (isset($zoom_submit)
-    && $_POST['criteriaColumnNames'][0] != 'pma_null'
-    && $_POST['criteriaColumnNames'][1] != 'pma_null'
-    && $_POST['criteriaColumnNames'][0] != $_POST['criteriaColumnNames'][1]
-) {
-    //Query generation part
-    $sql_query = $table_search->buildSqlQuery();
-    $sql_query .= ' LIMIT ' . $maxPlotLimit;
-
-    //Query execution part
-    $result = PMA_DBI_query($sql_query . ";", null, PMA_DBI_QUERY_STORE);
-    $fields_meta = PMA_DBI_get_fields_meta($result);
-    while ($row = PMA_DBI_fetch_assoc($result)) {
-        //Need a row with indexes as 0,1,2 for the getUniqueCondition
-        // hence using a temporary array
-        $tmpRow = array();
-        foreach ($row as $val) {
-            $tmpRow[] = $val;
-        }
-        //Get unique conditon on each row (will be needed for row update)
-        $uniqueCondition = PMA_Util::getUniqueCondition(
-            $result, count($table_search->getColumnNames()), $fields_meta, $tmpRow,
-            true
-        );
-        //Append it to row array as where_clause
-        $row['where_clause'] = $uniqueCondition[0];
-
-        $tmpData = array(
-            $_POST['criteriaColumnNames'][0] => $row[$_POST['criteriaColumnNames'][0]],
-            $_POST['criteriaColumnNames'][1] => $row[$_POST['criteriaColumnNames'][1]],
-            'where_clause' => $uniqueCondition[0]
-        );
-        $tmpData[$dataLabel] = ($dataLabel) ? $row[$dataLabel] : '';
-        $data[] = $tmpData;
-    }
-    unset($tmpData);
-
-    //Displays form for point data and scatter plot
-    $response->addHTML($table_search->getZoomResultsForm($goto, $data));
-}
-?>
+/** @var PhpMyAdmin\Controllers\Table\TableSearchController $controller */
+$controller = $container->get('TableSearchController', $dependency_definitions);
+$controller->indexAction();

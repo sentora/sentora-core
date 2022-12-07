@@ -1,9 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -24,13 +25,16 @@
  */
 class rcube_config
 {
-    const DEFAULT_SKIN = 'larry';
+    const DEFAULT_SKIN = 'elastic';
 
-    private $env = '';
-    private $paths = array();
-    private $prop = array();
-    private $errors = array();
+    private $env       = '';
+    private $paths     = array();
+    private $prop      = array();
+    private $errors    = array();
     private $userprefs = array();
+    private $immutable = array();
+    private $client_tz;
+
 
     /**
      * Renamed options
@@ -39,21 +43,21 @@ class rcube_config
      */
     private $legacy_props = array(
         // new name => old name
-        'default_folders'      => 'default_imap_folders',
         'mail_pagesize'        => 'pagesize',
         'addressbook_pagesize' => 'pagesize',
         'reply_mode'           => 'top_posting',
         'refresh_interval'     => 'keep_alive',
         'min_refresh_interval' => 'min_keep_alive',
         'messages_cache_ttl'   => 'message_cache_lifetime',
+        'mail_read_time'       => 'preview_pane_mark_read',
+        'session_debug'        => 'log_session',
         'redundant_attachments_cache_ttl' => 'redundant_attachments_memcache_ttl',
     );
-
 
     /**
      * Object constructor
      *
-     * @param string Environment suffix for config files to load
+     * @param string $env Environment suffix for config files to load
      */
     public function __construct($env = '')
     {
@@ -88,16 +92,109 @@ class rcube_config
         $this->load();
 
         // Defaults, that we do not require you to configure,
-        // but contain information that is used in various
-        // locations in the code:
-        $this->set('contactlist_fields', array('name', 'firstname', 'surname', 'email'));
+        // but contain information that is used in various locations in the code:
+        if (empty($this->prop['contactlist_fields'])) {
+            $this->set('contactlist_fields', array('name', 'firstname', 'surname', 'email'));
+        }
     }
 
+    /**
+     * @brief Guess the type the string may fit into.
+     *
+     * Look inside the string to determine what type might be best as a container.
+     *
+     * @param mixed $value The value to inspect
+     *
+     * @return The guess at the type.
+     */
+    private function guess_type($value)
+    {
+        $type = 'string';
+
+        // array requires hint to be passed.
+
+        if (preg_match('/^[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?$/', $value)) {
+            $type = 'double';
+        }
+        else if (preg_match('/^\d+$/', $value)) {
+            $type = 'integer';
+        }
+        else if (preg_match('/^(t(rue)?)|(f(alse)?)$/i', $value)) {
+            $type = 'boolean';
+        }
+
+        return $type;
+    }
+
+    /**
+     * @brief Parse environment variable into PHP type.
+     *
+     * Perform an appropriate parsing of the string to create the desired PHP type.
+     *
+     * @param string $string String to parse into PHP type
+     * @param string $type   Type of value to return
+     *
+     * @return Appropriately typed interpretation of $string.
+     */
+    private function parse_env($string, $type)
+    {
+        $_ = $string;
+
+        switch ($type) {
+        case 'boolean':
+            $_ = (boolean) $_;
+            break;
+        case 'integer':
+            $_ = (integer) $_;
+            break;
+        case 'double':
+            $_ = (double) $_;
+            break;
+        case 'string':
+            break;
+        case 'array':
+            $_ = json_decode($_, true);
+            break;
+        case 'object':
+            $_ = json_decode($_, false);
+            break;
+        case 'resource':
+        case 'NULL':
+        default:
+            $_ = $this->parse_env($_, $this->guess_type($_));
+        }
+
+        return $_;
+    }
+
+    /**
+     * @brief Get environment variable value.
+     *
+     * Retrieve an environment variable's value or if it's not found, return the
+     * provided default value.
+     *
+     * @param string $varname       Environment variable name
+     * @param mixed  $default_value Default value to return if necessary
+     * @param string $type          Type of value to return
+     *
+     * @return Value of the environment variable or default if not found.
+     */
+    private function getenv_default($varname, $default_value, $type = null)
+    {
+        $value = getenv($varname);
+
+        if ($value === false) {
+            $value = $default_value;
+        }
+        else {
+            $value = $this->parse_env($value, $type ?: gettype($default_value));
+        }
+
+        return $value;
+    }
 
     /**
      * Load config from local config file
-     *
-     * @todo Remove global $CONFIG
      */
     private function load()
     {
@@ -109,8 +206,7 @@ class rcube_config
         // load main config file
         if (!$this->load_from_file('config.inc.php')) {
             // Old configuration files
-            if (!$this->load_from_file('main.inc.php') ||
-                !$this->load_from_file('db.inc.php')) {
+            if (!$this->load_from_file('main.inc.php') || !$this->load_from_file('db.inc.php')) {
                 $this->errors[] = 'config.inc.php was not found.';
             }
             else if (rand(1,100) == 10) {  // log warning on every 100th request (average)
@@ -131,42 +227,38 @@ class rcube_config
             }
         }
 
-        // larry is the new default skin :-)
-        if ($this->prop['skin'] == 'default')
+        if ($this->prop['skin'] == 'default') {
             $this->prop['skin'] = self::DEFAULT_SKIN;
+        }
 
         // fix paths
-        $this->prop['log_dir'] = $this->prop['log_dir'] ? realpath(unslashify($this->prop['log_dir'])) : RCUBE_INSTALL_PATH . 'logs';
-        $this->prop['temp_dir'] = $this->prop['temp_dir'] ? realpath(unslashify($this->prop['temp_dir'])) : RCUBE_INSTALL_PATH . 'temp';
-
-        // fix default imap folders encoding
-        foreach (array('drafts_mbox', 'junk_mbox', 'sent_mbox', 'trash_mbox') as $folder)
-            $this->prop[$folder] = rcube_charset::convert($this->prop[$folder], RCUBE_CHARSET, 'UTF7-IMAP');
-
-        if (!empty($this->prop['default_folders']))
-            foreach ($this->prop['default_folders'] as $n => $folder)
-                $this->prop['default_folders'][$n] = rcube_charset::convert($folder, RCUBE_CHARSET, 'UTF7-IMAP');
-
-        // set PHP error logging according to config
-        if ($this->prop['debug_level'] & 1) {
-            ini_set('log_errors', 1);
-
-            if ($this->prop['log_driver'] == 'syslog') {
-                ini_set('error_log', 'syslog');
-            }
-            else {
-                ini_set('error_log', $this->prop['log_dir'].'/errors');
+        foreach (array('log_dir' => 'logs', 'temp_dir' => 'temp') as $key => $dir) {
+            foreach (array($this->prop[$key], '../' . $this->prop[$key], RCUBE_INSTALL_PATH . $dir) as $path) {
+                if ($path && ($realpath = realpath(unslashify($path)))) {
+                    $this->prop[$key] = $realpath;
+                    break;
+                }
             }
         }
 
-        // enable display_errors in 'show' level, but not for ajax requests
-        ini_set('display_errors', intval(empty($_REQUEST['_remote']) && ($this->prop['debug_level'] & 4)));
+        // fix default imap folders encoding
+        foreach (array('drafts_mbox', 'junk_mbox', 'sent_mbox', 'trash_mbox') as $folder) {
+            $this->prop[$folder] = rcube_charset::convert($this->prop[$folder], RCUBE_CHARSET, 'UTF7-IMAP');
+        }
+
+        // set PHP error logging according to config
+        $error_log = $this->prop['log_driver'] ?: 'file';
+        if ($error_log == 'file') {
+            $error_log  = $this->prop['log_dir'] . '/errors';
+            $error_log .= isset($this->prop['log_file_ext']) ? $this->prop['log_file_ext'] : '.log';
+        }
+
+        if ($error_log && $error_log != 'stdout') {
+            ini_set('error_log', $error_log);
+        }
 
         // remove deprecated properties
         unset($this->prop['dst_active']);
-
-        // export config data
-        $GLOBALS['CONFIG'] = &$this->prop;
     }
 
     /**
@@ -205,6 +297,7 @@ class rcube_config
      * and merge with the already stored config values
      *
      * @param string $file Name of the config file to be loaded
+     *
      * @return booelan True on success, false on failure
      */
     public function load_from_file($file)
@@ -213,7 +306,7 @@ class rcube_config
 
         foreach ($this->resolve_paths($file) as $fpath) {
             if ($fpath && is_file($fpath) && is_readable($fpath)) {
-                // use output buffering, we don't need any output here 
+                // use output buffering, we don't need any output here
                 ob_start();
                 include($fpath);
                 ob_end_clean();
@@ -237,9 +330,10 @@ class rcube_config
      * Helper method to resolve absolute paths to the given config file.
      * This also takes the 'env' property into account.
      *
-     * @param string  Filename or absolute file path
-     * @param boolean Return -$env file path if exists
-     * @return array  List of candidates in config dir path(s)
+     * @param string  $file    Filename or absolute file path
+     * @param boolean $use_env Return -$env file path if exists
+     *
+     * @return array List of candidates in config dir path(s)
      */
     public function resolve_paths($file, $use_env = true)
     {
@@ -252,8 +346,9 @@ class rcube_config
             // check if <file>-env.ini exists
             if ($realpath && $use_env && !empty($this->env)) {
                 $envfile = preg_replace('/\.(inc.php)$/', '-' . $this->env . '.\\1', $realpath);
-                if (is_file($envfile))
+                if (is_file($envfile)) {
                     $realpath = $envfile;
+                }
             }
 
             if ($realpath) {
@@ -274,6 +369,7 @@ class rcube_config
      *
      * @param  string $name Parameter name
      * @param  mixed  $def  Default value if not set
+     *
      * @return mixed  The requested config value
      */
     public function get($name, $def = null)
@@ -285,7 +381,8 @@ class rcube_config
             $result = $def;
         }
 
-        $rcube = rcube::get_instance();
+        $result = $this->getenv_default('ROUNDCUBE_' . strtoupper($name), $result);
+        $rcube  = rcube::get_instance();
 
         if ($name == 'timezone') {
             if (empty($result) || $result == 'auto') {
@@ -293,10 +390,14 @@ class rcube_config
             }
         }
         else if ($name == 'client_mimetypes') {
-            if ($result == null && $def == null)
-                $result = 'text/plain,text/html,text/xml,image/jpeg,image/gif,image/png,image/bmp,image/tiff,application/x-javascript,application/pdf,application/x-shockwave-flash';
-            if ($result && is_string($result))
+            if (!$result && !$def) {
+                $result = 'text/plain,text/html,text/xml'
+                    . ',image/jpeg,image/gif,image/png,image/bmp,image/tiff,image/webp'
+                    . ',application/x-javascript,application/pdf,application/x-shockwave-flash';
+            }
+            if ($result && is_string($result)) {
                 $result = explode(',', $result);
+            }
         }
 
         $plugin = $rcube->plugins->exec_hook('config_get', array(
@@ -305,18 +406,21 @@ class rcube_config
         return $plugin['result'];
     }
 
-
     /**
      * Setter for a config parameter
      *
-     * @param string $name  Parameter name
-     * @param mixed  $value Parameter value
+     * @param string $name      Parameter name
+     * @param mixed  $value     Parameter value
+     * @param bool   $immutable Make the value immutable
      */
-    public function set($name, $value)
+    public function set($name, $value, $immutable = false)
     {
         $this->prop[$name] = $value;
-    }
 
+        if ($immutable) {
+            $this->immutable[$name] = $value;
+        }
+    }
 
     /**
      * Override config options with the given values (eg. user prefs)
@@ -326,9 +430,8 @@ class rcube_config
     public function merge($prefs)
     {
         $prefs = $this->fix_legacy_props($prefs);
-        $this->prop = array_merge($this->prop, $prefs, $this->userprefs);
+        $this->prop = array_merge($this->prop, $prefs, $this->userprefs, $this->immutable);
     }
-
 
     /**
      * Merge the given prefs over the current config
@@ -348,60 +451,83 @@ class rcube_config
             }
         }
 
-        // larry is the new default skin :-)
         if ($prefs['skin'] == 'default') {
             $prefs['skin'] = self::DEFAULT_SKIN;
+        }
+
+        $skins_allowed = $this->get('skins_allowed');
+
+        if (!empty($prefs['skin']) && !empty($skins_allowed) && !in_array($prefs['skin'], (array) $skins_allowed)) {
+            unset($prefs['skin']);
         }
 
         $this->userprefs = $prefs;
         $this->prop      = array_merge($this->prop, $prefs);
     }
 
-
     /**
      * Getter for all config options
      *
-     * @return array  Hash array containing all config properties
+     * @return array Hash array containing all config properties
      */
     public function all()
     {
+        $props = $this->prop;
+
+        foreach ($props as $prop_name => $prop_value) {
+            $props[$prop_name] = $this->getenv_default('ROUNDCUBE_' . strtoupper($prop_name), $prop_value);
+        }
+
         $rcube  = rcube::get_instance();
         $plugin = $rcube->plugins->exec_hook('config_get', array(
-            'name' => '*', 'result' => $this->prop));
+            'name' => '*', 'result' => $props));
 
         return $plugin['result'];
     }
 
     /**
+     * Some options set as immutable that are also listed
+     * in dont_override should not be stored permanently
+     * in user preferences. Here's the list of these
+     *
+     * @return array List of transient options
+     */
+    public function transient_options()
+    {
+        return array_intersect(array_keys($this->immutable), (array) $this->get('dont_override'));
+    }
+
+    /**
      * Special getter for user's timezone offset including DST
      *
-     * @return float  Timezone offset (in hours)
+     * @return float Timezone offset (in hours)
      * @deprecated
      */
     public function get_timezone()
     {
-      if ($tz = $this->get('timezone')) {
-        try {
-          $tz = new DateTimeZone($tz);
-          return $tz->getOffset(new DateTime('now')) / 3600;
+        if ($tz = $this->get('timezone')) {
+            try {
+                $tz = new DateTimeZone($tz);
+                return $tz->getOffset(new DateTime('now')) / 3600;
+            }
+            catch (Exception $e) {
+            }
         }
-        catch (Exception $e) {
-        }
-      }
 
-      return 0;
+        return 0;
     }
 
     /**
      * Return requested DES crypto key.
      *
      * @param string $key Crypto key name
+     *
      * @return string Crypto key
      */
     public function get_crypto_key($key)
     {
         // Bomb out if the requested key does not exist
-        if (!array_key_exists($key, $this->prop)) {
+        if (!array_key_exists($key, $this->prop) || empty($this->prop[$key])) {
             rcube::raise_error(array(
                 'code' => 500, 'type' => 'php',
                 'file' => __FILE__, 'line' => __LINE__,
@@ -409,39 +535,40 @@ class rcube_config
             ), true, true);
         }
 
-        $key = $this->prop[$key];
-
-        // Bomb out if the configured key is not exactly 24 bytes long
-        if (strlen($key) != 24) {
-            rcube::raise_error(array(
-                'code' => 500, 'type' => 'php',
-                'file' => __FILE__, 'line' => __LINE__,
-                'message' => "Configured crypto key '$key' is not exactly 24 bytes long"
-            ), true, true);
-        }
-
-        return $key;
+        return $this->prop[$key];
     }
 
+    /**
+     * Return configured crypto method.
+     *
+     * @return string Crypto method
+     */
+    public function get_crypto_method()
+    {
+        return $this->get('cipher_method') ?: 'DES-EDE3-CBC';
+    }
 
     /**
      * Try to autodetect operating system and find the correct line endings
      *
      * @return string The appropriate mail header delimiter
+     * @deprecated Since 1.3 we don't use mail()
      */
     public function header_delimiter()
     {
         // use the configured delimiter for headers
         if (!empty($this->prop['mail_header_delimiter'])) {
             $delim = $this->prop['mail_header_delimiter'];
-            if ($delim == "\n" || $delim == "\r\n")
+            if ($delim == "\n" || $delim == "\r\n") {
                 return $delim;
-            else
+            }
+            else {
                 rcube::raise_error(array(
                     'code' => 500, 'type' => 'php',
                     'file' => __FILE__, 'line' => __LINE__,
                     'message' => "Invalid mail_header_delimiter setting"
                 ), true, false);
+            }
         }
 
         $php_os = strtolower(substr(PHP_OS, 0, 3));
@@ -455,12 +582,32 @@ class rcube_config
         return "\n";
     }
 
+    /**
+     * Returns list of configured PGP key servers
+     *
+     * @return array|null List of keyservers' URLs
+     */
+    public function keyservers()
+    {
+        $list = (array) $this->prop['keyservers'];
+
+        foreach ($list as $idx => $host) {
+            if (!preg_match('|^[a-z]+://|', $host)) {
+                $host = "https://$host";
+            }
+
+            $list[$idx] = slashify($host);
+        }
+
+        return !empty($list) ? $list : null;
+    }
 
     /**
      * Return the mail domain configured for the given host
      *
      * @param string  $host   IMAP host
      * @param boolean $encode If true, domain name will be converted to IDN ASCII
+     *
      * @return string Resolved SMTP host
      */
     public function mail_domain($host, $encode=true)
@@ -468,8 +615,9 @@ class rcube_config
         $domain = $host;
 
         if (is_array($this->prop['mail_domain'])) {
-            if (isset($this->prop['mail_domain'][$host]))
+            if (isset($this->prop['mail_domain'][$host])) {
                 $domain = $this->prop['mail_domain'][$host];
+            }
         }
         else if (!empty($this->prop['mail_domain'])) {
             $domain = rcube_utils::parse_host($this->prop['mail_domain']);
@@ -482,7 +630,6 @@ class rcube_config
         return $domain;
     }
 
-
     /**
      * Getter for error state
      *
@@ -490,22 +637,28 @@ class rcube_config
      */
     public function get_error()
     {
-        return empty($this->errors) ? false : join("\n", $this->errors);
+        return empty($this->errors) ? false : implode("\n", $this->errors);
     }
-
 
     /**
      * Internal getter for client's (browser) timezone identifier
      */
     private function client_timezone()
     {
+        if ($this->client_tz) {
+            return $this->client_tz;
+        }
+
         // @TODO: remove this legacy timezone handling in the future
         $props = $this->fix_legacy_props(array('timezone' => $_SESSION['timezone']));
 
         if (!empty($props['timezone'])) {
+            // Prevent from using deprecated timezone names
+            $props['timezone'] = $this->resolve_timezone_alias($props['timezone']);
+
             try {
                 $tz = new DateTimeZone($props['timezone']);
-                return $tz->getName();
+                return $this->client_tz = $tz->getName();
             }
             catch (Exception $e) { /* gracefully ignore */ }
         }
@@ -540,6 +693,18 @@ class rcube_config
             else {
                 unset($props['timezone']);
             }
+        }
+
+        // translate old `preview_pane` settings to `layout`
+        if (isset($props['preview_pane']) && !isset($props['layout'])) {
+            $props['layout'] = $props['preview_pane'] ? 'desktop' : 'list';
+            unset($props['preview_pane']);
+        }
+
+        // translate old `display_version` settings to `display_product_info`
+        if (isset($props['display_version']) && !isset($props['display_product_info'])) {
+            $props['display_product_info'] = $props['display_version'] ? 2 : 1;
+            unset($props['display_version']);
         }
 
         return $props;
@@ -581,7 +746,6 @@ class rcube_config
              '180' => "Europe/Moscow",
              '210' => "Asia/Tehran",
              '240' => "Asia/Dubai",
-             '300' => "Asia/Karachi",
              '270' => "Asia/Kabul",
              '300' => "Asia/Karachi",
              '330' => "Asia/Kolkata",
@@ -604,5 +768,143 @@ class rcube_config
         );
 
         return $timezones[(string) intval($offset * 60)];
+    }
+
+    /**
+     * Replace deprecated timezone name with a valid one.
+     *
+     * @param string $tzname Timezone name
+     *
+     * @return string Timezone name
+     */
+    static public function resolve_timezone_alias($tzname)
+    {
+        // http://www.php.net/manual/en/timezones.others.php
+        // https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+        $deprecated_timezones = array(
+            'Australia/ACT'         => 'Australia/Sydney',
+            'Australia/LHI'         => 'Australia/Lord_Howe',
+            'Australia/North'       => 'Australia/Darwin',
+            'Australia/NSW'         => 'Australia/Sydney',
+            'Australia/Queensland'  => 'Australia/Brisbane',
+            'Australia/South'       => 'Australia/Adelaide',
+            'Australia/Adelaide'    => 'Australia/Hobart',
+            'Australia/Tasmania'    => 'Australia/Hobart',
+            'Australia/Victoria'    => 'Australia/Melbourne',
+            'Australia/West'        => 'Australia/Perth',
+            'Brazil/Acre'           => 'America/Rio_Branco',
+            'Brazil/DeNoronha'      => 'America/Noronha',
+            'Brazil/East'           => 'America/Sao_Paulo',
+            'Brazil/West'           => 'America/Manaus',
+            'Canada/Atlantic'       => 'America/Halifax',
+            'Canada/Central'        => 'America/Winnipeg',
+            'Canada/Eastern'        => 'America/Toronto',
+            'Canada/Mountain'       => 'America/Edmonton',
+            'Canada/Newfoundland'   => 'America/St_Johns',
+            'Canada/Pacific'        => 'America/Vancouver',
+            'Canada/Saskatchewan'   => 'America/Regina',
+            'Canada/Yukon'          => 'America/Whitehorse',
+            'CET'                   => 'Europe/Berlin',
+            'Chile/Continental'     => 'America/Santiago',
+            'Chile/EasterIsland'    => 'Pacific/Easter',
+            'CST6CDT'               => 'America/Chicago',
+            'Cuba'                  => ' America/Havana',
+            'EET'                   => 'Europe/Berlin',
+            'Egypt'                 => 'Africa/Cairo',
+            'Eire'                  => 'Europe/Dublin',
+            'EST'                   => 'America/New_York',
+            'EST5EDT'               => 'America/New_York',
+            'Factory'               => 'UTC', // ?
+            'GB'                    => 'Europe/London',
+            'GB-Eire'               => 'Europe/London',
+            'GMT'                   => 'UTC',
+            'GMT+0'                 => 'UTC',
+            'GMT-0'                 => 'UTC',
+            'GMT0'                  => 'UTC',
+            'Greenwich'             => 'UTC',
+            'Hongkong'              => 'Asia/Hong_Kong',
+            'HST'                   => 'Pacific/Honolulu',
+            'Iceland'               => 'Atlantic/Reykjavik',
+            'Iran'                  => 'Asia/Tehran',
+            'Israel'                => 'Asia/Jerusalem',
+            'Jamaica'               => 'America/Jamaica',
+            'Japan'                 => 'Asia/Tokyo',
+            'Kwajalein'             => 'Pacific/Kwajalein',
+            'Libya'                 => 'Africa/Tripoli',
+            'MET'                   => 'Europe/Berlin',
+            'Mexico/BajaNorte'      => 'America/Tijuana',
+            'Mexico/BajaSur'        => 'America/Mazatlan',
+            'Mexico/General'        => 'America/Mexico_City',
+            'MST'                   => 'America/Denver',
+            'MST7MDT'               => 'America/Denver',
+            'Navajo'                => 'America/Denver',
+            'NZ'                    => 'Pacific/Auckland',
+            'NZ-CHAT'               => 'Pacific/Chatham',
+            'Poland'                => 'Europe/Warsaw',
+            'Portugal'              => 'Europe/Lisbon',
+            'PRC'                   => 'Asia/Shanghai',
+            'PST8PDT'               => 'America/Los_Angeles',
+            'ROC'                   => 'Asia/Taipei',
+            'ROK'                   => 'Asia/Seoul',
+            'Singapore'             => 'Asia/Singapore',
+            'Turkey'                => 'Europe/Istanbul',
+            'UCT'                   => 'UTC',
+            'Universal'             => 'UTC',
+            'US/Alaska'             => 'America/Anchorage',
+            'US/Aleutian'           => 'America/Adak',
+            'US/Arizona'            => 'America/Phoenix',
+            'US/Central'            => 'America/Chicago',
+            'US/East-Indiana'       => 'America/Indiana/Indianapolis',
+            'US/Eastern'            => 'America/New_York',
+            'US/Hawaii'             => 'Pacific/Honolulu',
+            'US/Indiana-Starke'     => 'America/Indiana/Knox',
+            'US/Michigan'           => 'America/Detroit',
+            'US/Mountain'           => 'America/Denver',
+            'US/Pacific'            => 'America/Los_Angeles',
+            'US/Pacific-New'        => 'America/Los_Angeles',
+            'US/Samoa'              => 'Pacific/Pago_Pago',
+            'W-SU'                  => 'Europe/Moscow',
+            'WET'                   => 'Europe/Berlin',
+            'Z'                     => 'UTC',
+            'Zulu'                  => 'UTC',
+            // Some of these Etc/X zones are not deprecated, but still problematic
+            'Etc/GMT'           => 'UTC',
+            'Etc/GMT+0'         => 'UTC',
+            'Etc/GMT+1'         => 'Atlantic/Azores',
+            'Etc/GMT+10'        => 'Pacific/Honolulu',
+            'Etc/GMT+11'        => 'Pacific/Midway',
+            'Etc/GMT+12'        => 'Pacific/Auckland',
+            'Etc/GMT+2'         => 'America/Noronha',
+            'Etc/GMT+3'         => 'America/Argentina/Buenos_Aires',
+            'Etc/GMT+4'         => 'America/Manaus',
+            'Etc/GMT+5'         => 'America/New_York',
+            'Etc/GMT+6'         => 'America/Chicago',
+            'Etc/GMT+7'         => 'America/Denver',
+            'Etc/GMT+8'         => 'America/Los_Angeles',
+            'Etc/GMT+9'         => 'America/Anchorage',
+            'Etc/GMT-0'         => 'UTC',
+            'Etc/GMT-1'         => 'Europe/Berlin',
+            'Etc/GMT-10'        => 'Australia/Sydney',
+            'Etc/GMT-11'        => 'Pacific/Norfolk',
+            'Etc/GMT-12'        => 'Pacific/Auckland',
+            'Etc/GMT-13'        => 'Pacific/Apia',
+            'Etc/GMT-14'        => 'Pacific/Kiritimati',
+            'Etc/GMT-2'         => 'Africa/Cairo',
+            'Etc/GMT-3'         => 'Europe/Moscow',
+            'Etc/GMT-4'         => 'Europe/Samara',
+            'Etc/GMT-5'         => 'Asia/Yekaterinburg',
+            'Etc/GMT-6'         => 'Asia/Almaty',
+            'Etc/GMT-7'         => 'Asia/Bangkok',
+            'Etc/GMT-8'         => 'Asia/Hong_Kong',
+            'Etc/GMT-9'         => 'Asia/Tokyo',
+            'Etc/GMT0'          => 'UTC',
+            'Etc/Greenwich'     => 'UTC',
+            'Etc/UCT'           => 'UTC',
+            'Etc/Universal'     => 'UTC',
+            'Etc/UTC'           => 'UTC',
+            'Etc/Zulu'          => 'UTC',
+        );
+
+        return $deprecated_timezones[$tzname] ?: $tzname;
     }
 }

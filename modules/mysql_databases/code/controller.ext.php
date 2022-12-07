@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -240,10 +240,28 @@ class module_controller extends ctrl_module
         return self::ListDatabases($currentuser['userid']);
     }
 
-    static function getisDeleteDatabase()
+    static function getisDeleteDatabase($uid = null)
     {
         global $controller;
+        global $zdbh;
+
         $urlvars = $controller->GetAllControllerRequests('URL');
+
+        // Verify if Current user can Delete Database Account.
+        // This shall avoid exposing database based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+    	$sql = "SELECT * FROM x_mysql_databases WHERE my_acc_fk=:userid AND my_id_pk=:editedUsrID AND my_deleted_ts IS NULL";
+    	$numrows = $zdbh->prepare($sql);
+    	$numrows->bindParam(':userid', $currentuser['userid']);
+		$numrows->bindParam(':editedUsrID', $urlvars['other']);
+    	$numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Show User Info
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
@@ -291,15 +309,11 @@ class module_controller extends ctrl_module
 
     static function getMysqlUsagepChart()
     {
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$maximum = $currentuser['mysqlquota'];
-		if ($maximum < 0) { //-1 = unlimited
-            if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
-				return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			} else {
-				return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			}
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        $maximum = $currentuser['mysqlquota'];
+        if ($maximum < 0) { //-1 = unlimited
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('mysql', $currentuser['userid']);
             $free = max($maximum - $used, 0);

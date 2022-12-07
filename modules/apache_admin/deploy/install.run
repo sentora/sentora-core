@@ -1,0 +1,100 @@
+<?php
+/**
+ * Install script for Apache_Admin Module for Sentora 1.0.3
+ * Version : 1.0.0
+ * Author : TGates
+ * Reworked by : Anthony D. -  Duke City Solutions, LLC
+ * Email : anthony@dukecitysolutions.com
+ */
+ 
+require_once('cnf/db.php');
+require_once('dryden/db/driver.class.php');
+require_once('dryden/debug/logger.class.php');
+require_once('dryden/runtime/dataobject.class.php');
+require_once('dryden/sys/versions.class.php');
+require_once('dryden/ctrl/options.class.php');
+require_once('dryden/ctrl/auth.class.php');
+require_once('dryden/ctrl/users.class.php');
+require_once('dryden/fs/director.class.php');
+require_once('dryden/fs/filehandler.class.php');
+require_once('inc/dbc.inc.php');
+
+function installModule()
+{
+	global $zdbh, $controller;
+	
+	/*
+	// Copy needed templates and smarty template engine to sentora control panel
+	echo "Creating sentora vhost template files ...."  . fs_filehandler::NewLine() . fs_filehandler::NewLine();
+	//shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/templates /etc/sentora/configs/apache/");
+	
+	//echo "Creating New sentora httpd.conf" . fs_filehandler::NewLine();
+	//shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/httpd.conf /etc/sentora/configs/apache/");
+	
+	echo "Creating Smarty files ...." . fs_filehandler::NewLine() . fs_filehandler::NewLine();
+	shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/smarty /etc/sentora/panel/etc/lib/");
+	
+	//echo "Creating loader.inc.php ...";
+	//shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/loader.inc.php /etc/sentora/panel/dryden/");
+	
+	// Make vhost_cp dir in sentora apache config
+	//shell_exec ("mkdir -p /etc/sentora/configs/apache/vhost_cp");
+	shell_exec ("mkdir -p /etc/sentora/configs/apache/vhosts");
+	//shell_exec ("touch /etc/sentora/configs/apache/vhosts/default.conf");
+	
+	// Copy/create control panel vhost file
+	echo "Copy sentora httpd-vhosts.conf file to /etc/sentora/configs/apache/vhosts/sentora-cp.conf" . fs_filehandler::NewLine() . fs_filehandler::NewLine();
+	//shell_exec ("cp -r /etc/sentora/panel/modules/apache_admin/deploy/vhost-cp.conf /etc/sentora/configs/apache/vhost_cp/");
+	shell_exec ("cp -r /etc/sentora/configs/apache/httpd-vhosts.conf /etc/sentora/configs/apache/vhosts/sentora-cp.conf");
+	
+	
+	// Enter new tables to x_settings sentora database for apache_admin_pro
+	echo "Enter new tables to x_settings sentora database for apache_admin...." . fs_filehandler::NewLine() . fs_filehandler::NewLine();
+	$stmt = $zdbh->prepare("
+		INSERT INTO x_settings (
+			so_id_pk, so_name_vc, so_cleanname_vc, so_value_tx, so_defvalues_tx, so_desc_tx, so_module_vc, so_usereditable_en ) VALUES (
+			'', 'panel_ssl_tx', 'Sentora Panel SSL Config', null, null, 'Sentora SSL settings and certs', 'Sentora Config', true)"
+	);
+	$stmt->execute();
+
+	// add vhost vh_ssl_tx column after vh_obasedir_in x_vhosts
+	//.....
+	$sql = $zdbh->prepare("ALTER TABLE x_vhosts ADD vh_ssl_tx text NULL AFTER vh_obasedir_in");
+	$sql->execute();
+	
+	// add vhost vh_ssl_port_in column after x_ssl_tx
+	//.....
+	$sql = $zdbh->prepare("ALTER TABLE x_vhosts ADD vh_ssl_port_in INT(6) NULL AFTER vh_ssl_tx");
+	$sql->execute();
+	
+	// add vhost vh_custom_sp_tx column after vh_ssl_port_in
+	//.....
+	$sql = $zdbh->prepare("ALTER TABLE x_vhosts ADD vh_custom_sp_tx text NULL AFTER vh_ssl_port_in");
+	$sql->execute();
+	*/
+	
+	// Reset Apache settings to reflect that config file has been written, until the next change.
+	echo "Reset Apache settings to reflect that config file has been written" . fs_filehandler::NewLine();
+        $time = time();
+        $stmt= $zdbh->prepare("UPDATE x_settings
+                                    SET so_value_tx=:time
+                                    WHERE so_name_vc='apache_changed'");
+        $stmt->bindParam(':time', $time);
+        $stmt->execute();
+        echo "Finished writting Apache Config... Now reloading Apache..." . fs_filehandler::NewLine();
+		
+
+	
+	// Restart after everything is done
+	shell_exec ("sudo /usr/bin/php -q /etc/sentora/panel/bin/daemon.php");
+	
+	
+	// Restart Apache after all is done
+	//shell_exec ("systemctl restart httpd");
+	
+
+}
+
+installModule()
+
+?>

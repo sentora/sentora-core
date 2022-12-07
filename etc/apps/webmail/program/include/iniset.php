@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/include/iniset.php                                            |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -21,7 +20,7 @@
 */
 
 // application constants
-define('RCMAIL_VERSION', '1.0.4');
+define('RCMAIL_VERSION', '1.4.4');
 define('RCMAIL_START', microtime(true));
 
 if (!defined('INSTALL_PATH')) {
@@ -29,7 +28,7 @@ if (!defined('INSTALL_PATH')) {
 }
 
 if (!defined('RCMAIL_CONFIG_DIR')) {
-    define('RCMAIL_CONFIG_DIR', INSTALL_PATH . 'config');
+    define('RCMAIL_CONFIG_DIR', getenv('ROUNDCUBE_CONFIG_DIR') ?: (INSTALL_PATH . 'config'));
 }
 
 if (!defined('RCUBE_LOCALIZATION_DIR')) {
@@ -55,8 +54,8 @@ if (set_include_path($include_path) === false) {
 @set_time_limit(120);
 
 // include composer autoloader (if available)
-if (@file_exists('vendor/autoload.php')) {
-    require 'vendor/autoload.php';
+if (@file_exists(INSTALL_PATH . 'vendor/autoload.php')) {
+    require INSTALL_PATH . 'vendor/autoload.php';
 }
 
 // include Roundcube Framework
@@ -64,10 +63,6 @@ require_once 'Roundcube/bootstrap.php';
 
 // register autoloader for rcmail app classes
 spl_autoload_register('rcmail_autoload');
-
-// backward compatybility (to be removed)
-require_once INSTALL_PATH . 'program/include/bc.php';
-
 
 /**
  * PHP5 autoloader routine for dynamic class loading

@@ -38,19 +38,19 @@ function updatenotifier_populate(xml) {
         //UpdateNotifier_table.fnAddData([packages]);
         //UpdateNotifier_table.fnAddData([security]);
 
-        html  = "  <tr>\n";
-        html += "    <td>" + packages + " " + genlang(3, true, "UpdateNotifier") + "</td>\n";
-        html += "  </tr>\n";
-        html += "  <tr>\n";
-        html += "    <td>" + security + " " + genlang(4, true, "UpdateNotifier") + "</td>\n";
-        html += "  </tr>\n";
+        html  = "    <tr>\n";
+        html += "      <td>" + packages + " " + genlang(3, "UpdateNotifier") + "</td>\n";
+        html += "    </tr>\n";
+        html += "    <tr>\n";
+        html += "      <td>" + security + " " + genlang(4, "UpdateNotifier") + "</td>\n";
+        html += "    </tr>\n";
 
         $("#Plugin_UpdateNotifier tbody").empty().append(html);
 
-        if ((packages == 0) && (security == 0)) {
-            $("#UpdateNotifierTable-info").html(genlang(5, true, "UpdateNotifier"));
+        if ((packages <= 0) && (security <= 0)) {
+            $("#UpdateNotifierTable-info").html(genlang(5, "UpdateNotifier"));
         } else {
-            $("#UpdateNotifierTable-info").html(genlang(2, true, "UpdateNotifier"));
+            $("#UpdateNotifierTable-info").html(genlang(2, "UpdateNotifier"));
         }
 
         UpdateNotifier_show = true;
@@ -63,15 +63,17 @@ function updatenotifier_populate(xml) {
 function updatenotifier_buildTable() {
     var html = "";
 
-    html += "<table id=\"Plugin_UpdateNotifierTable\" style=\"border-spacing:0;\">\n";
-    html += "  <thead>\n";
-    html += "    <tr>\n";
-    html += "      <th id=\"UpdateNotifierTable-info\">" + genlang(2, true, "UpdateNotifier") + "</th>\n";
-    html += "    </tr>\n";
-    html += "  </thead>\n";
-    html += "  <tbody>\n";
-    html += "  </tbody>\n";
-    html += "</table>\n";
+    html += "<div style=\"overflow-x:auto;\">\n";
+    html += "  <table id=\"Plugin_UpdateNotifierTable\" style=\"border-spacing:0;\">\n";
+    html += "    <thead>\n";
+    html += "      <tr>\n";
+    html += "        <th id=\"UpdateNotifierTable-info\">" + genlang(2, "UpdateNotifier") + "</th>\n";
+    html += "      </tr>\n";
+    html += "    </thead>\n";
+    html += "    <tbody>\n";
+    html += "    </tbody>\n";
+    html += "  </table>\n";
+    html += "</div>\n";
 
     $("#Plugin_UpdateNotifier").append(html);
 
@@ -81,21 +83,21 @@ function updatenotifier_buildTable() {
  * load the xml via ajax
  */
 function updatenotifier_request() {
+    $("#Reload_UpdateNotifierTable").attr("title", "reload");
     $.ajax({
         url: "xml.php?plugin=UpdateNotifier",
         dataType: "xml",
         error: function () {
-        $.jGrowl("Error loading XML document for Plugin UpdateNotifier!");
-    },
-    success: function updatenotifier_buildblock(xml) {
-        populateErrors(xml);
-        updatenotifier_populate(xml);
-        if (UpdateNotifier_show) {
-            plugin_translate("UpdateNotifier");
-            $("#Reload_UpdateNotifierTable").attr("title",datetime());
-            $("#Plugin_UpdateNotifier").show();
+            $.jGrowl("Error loading XML document for Plugin UpdateNotifier!");
+        },
+        success: function updatenotifier_buildblock(xml) {
+            populateErrors(xml);
+            updatenotifier_populate(xml);
+            if (UpdateNotifier_show) {
+                plugin_translate("UpdateNotifier");
+                $("#Plugin_UpdateNotifier").show();
+            }
         }
-    }
     });
 }
 
@@ -108,5 +110,6 @@ $(document).ready(function() {
 
     $("#Reload_UpdateNotifierTable").click(function updatenotifier_reload(id) {
         updatenotifier_request();
+        $(this).attr("title", datetime());
     });
 });

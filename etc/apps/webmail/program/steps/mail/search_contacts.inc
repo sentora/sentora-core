@@ -1,19 +1,17 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/mail/search_contacts.inc                                |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2013-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
  |                                                                       |
  | PURPOSE:                                                              |
- |   Search contacts from the adress book widget                         |
- |                                                                       |
+ |   Search contacts from the address book widget                        |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -28,6 +26,7 @@ $page_size     = $RCMAIL->config->get('addressbook_pagesize', $RCMAIL->config->g
 $records       = array();
 $search_set    = array();
 $jsresult      = array();
+$search_mode  |= rcube_addressbook::SEARCH_GROUPS;
 
 foreach ($sources as $s) {
     $source = $RCMAIL->get_address_book($s['id']);
@@ -45,9 +44,6 @@ foreach ($sources as $s) {
     if (!$result->count) {
         continue;
     }
-
-    // get records
-    $result = $source->list_records($afields);
 
     while ($row = $result->next()) {
         $row['sourceid'] = $s['id'];
@@ -78,18 +74,22 @@ $result->records = array_values($records);
 if (!empty($result) && $result->count > 0) {
     // create javascript list
     while ($row = $result->next()) {
-        $name = rcube_addressbook::compose_list_name($row);
+        $name      = rcube_addressbook::compose_list_name($row);
+        $classname = $row['_type'] == 'group' ? 'group' : 'person';
+        $keyname   = $row['_type'] == 'group' ? 'contactgroup' : 'contact';
 
         // add record for every email address of the contact
         // (same as in list_contacts.inc)
         $emails = $source->get_col_values('email', $row, true);
         foreach ($emails as $i => $email) {
-            $row_id = $row['ID'].'-'.$i;
+            $row_id = $row['sourceid'].'-'.$row['ID'].'-'.$i;
             $jsresult[$row_id] = format_email_recipient($email, $name);
+            $title = rcube_addressbook::compose_search_name($row, $email, $name);
+
             $OUTPUT->command('add_contact_row', $row_id, array(
-                'contact' => html::span(array('title' => $email), rcube::Q($name ? $name : $email) .
+                $keyname => html::a(array('title' => $title), rcube::Q($name ?: $email) .
                     ($name && count($emails) > 1 ? '&nbsp;' . html::span('email', rcube::Q($email)) : '')
-                )), 'person');
+                )), $classname);
         }
     }
 
@@ -102,8 +102,8 @@ if (!empty($result) && $result->count > 0) {
 
     $OUTPUT->show_message('contactsearchsuccessful', 'confirmation', array('nr' => $result->count));
 
-    $OUTPUT->command('set_env', 'search_request', $search_request);
-    $OUTPUT->command('set_env', 'source', '');
+    $OUTPUT->set_env('search_request', $search_request);
+    $OUTPUT->set_env('source', '');
     $OUTPUT->command('unselect_directory');
 }
 else if (!$group_count) {

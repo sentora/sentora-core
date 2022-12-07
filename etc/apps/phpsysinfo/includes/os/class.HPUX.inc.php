@@ -8,7 +8,7 @@
  * @package   PSI HPUX OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.HPUX.inc.php 596 2012-07-05 19:37:48Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,7 +20,7 @@
  * @package   PSI HPUX OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -34,7 +34,7 @@ class HPUX extends OS
     private function _hostname()
     {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setHostname(getenv('SERVER_NAME'));
+            if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
         } else {
             if (CommonFunctions::executeProgram('hostname', '', $ret)) {
                 $this->sys->setHostname($ret);
@@ -69,19 +69,6 @@ class HPUX extends OS
                 $days = $ar_buf[1];
                 $this->sys->setUptime($days * 86400 + $hours * 3600 + $min * 60);
             }
-        }
-    }
-
-    /**
-     * Number of Users
-     *
-     * @return void
-     */
-    private function _users()
-    {
-        if (CommonFunctions::executeProgram('who', '-q', $ret)) {
-            $who = preg_split('/=/', $ret, -1, PREG_SPLIT_NO_EMPTY);
-            $this->sys->setUsers($who[1]);
         }
     }
 
@@ -154,19 +141,25 @@ class HPUX extends OS
     private function _pci()
     {
         if (CommonFunctions::rfts('/proc/pci', $bufr)) {
+            $device = false;
             $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($bufe as $buf) {
-                if (preg_match('/Bus/', $buf)) {
+                if (preg_match('/^\s*Bus\s/', $buf)) {
                     $device = true;
                     continue;
                 }
                 if ($device) {
+                    $dev = new HWDevice();
+                    $dev->setName(preg_replace('/\([^\)]+\)\.$/', '', trim($buf)));
+                    $this->sys->setPciDevices($dev);
+/*
                     list($key, $value) = preg_split('/: /', $buf, 2);
                     if (!preg_match('/bridge/i', $key) && !preg_match('/USB/i', $key)) {
                         $dev = new HWDevice();
                         $dev->setName(preg_replace('/\([^\)]+\)\.$/', '', trim($value)));
                         $this->sys->setPciDevices($dev);
                     }
+*/
                     $device = false;
                 }
             }
@@ -185,10 +178,10 @@ class HPUX extends OS
             if (preg_match('/^hd/', $file)) {
                 $dev = new HWDevice();
                 $dev->setName(trim($file));
-                if (CommonFunctions::rfts("/proc/ide/".$file."/media", $buf, 1)) {
+                if (defined('PSI_SHOW_DEVICES_INFOS') && PSI_SHOW_DEVICES_INFOS && CommonFunctions::rfts("/proc/ide/".$file."/media", $buf, 1)) {
                     if (trim($buf) == 'disk') {
                         if (CommonFunctions::rfts("/proc/ide/".$file."/capacity", $buf, 1, 4096, false)) {
-                            $dev->setCapacity(trim($buf) * 512 / 1024);
+                            $dev->setCapacity(trim($buf) * 512);
                         }
                     }
                 }
@@ -232,9 +225,11 @@ class HPUX extends OS
     {
         if (CommonFunctions::rfts('/proc/bus/usb/devices', $bufr, 0, 4096, false)) {
             $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            $devnum = -1;
+            $results = array();
             foreach ($bufe as $buf) {
                 if (preg_match('/^T/', $buf)) {
-                    $devnum += 1;
+                    $devnum++;
                     $results[$devnum] = "";
                 } elseif (preg_match('/^S:/', $buf)) {
                     list($key, $value) = preg_split('/: /', $buf, 2);
@@ -326,7 +321,7 @@ class HPUX extends OS
             $mounts = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
             if (CommonFunctions::executeProgram('mount', '-v', $s, PSI_DEBUG)) {
                 $lines = preg_split("/\n/", $s, -1, PREG_SPLIT_NO_EMPTY);
-                while (list(, $line) = each($lines)) {
+                foreach ($lines as $line) {
                     $a = preg_split('/ /', $line, -1, PREG_SPLIT_NO_EMPTY);
                     $fsdev[$a[0]] = $a[4];
                 }
@@ -367,19 +362,29 @@ class HPUX extends OS
      */
     public function build()
     {
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_loadavg();
-        $this->_cpuinfo();
-        $this->_pci();
-        $this->_ide();
-        $this->_scsi();
-        $this->_usb();
-        $this->_network();
-        $this->_memory();
-        $this->_filesystems();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
+        }
+        if (!$this->blockname || $this->blockname==='hardware') {
+            $this->_cpuinfo();
+            $this->_pci();
+            $this->_ide();
+            $this->_scsi();
+            $this->_usb();
+        }
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
+        }
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
+        }
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
+        }
     }
 }

@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/password/localization/<lang>.inc                              |
- |                                                                       |
  | Localization file of the Roundcube Webmail Password plugin            |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-password/
 */
+
 $labels['changepasswd']  = 'Canvia la contrasenya';
 $labels['curpasswd']  = 'Contrasenya actual:';
 $labels['newpasswd']  = 'Nova contrasenya:';
@@ -30,4 +29,9 @@ $messages['passwordshort'] = 'La nova contrasenya ha de tenir com a mínim $leng
 $messages['passwordweak'] = 'La nova contrasenya ha d\'incloure com a mínim un nombre i un caràcter de puntuació.';
 $messages['passwordforbidden'] = 'La contrasenya conté caràcters no permesos.';
 $messages['firstloginchange'] = 'Aquest és el vostre primer accés. Si us plau, canvieu-vos la contrasenya.';
-?>
+$messages['disablednotice'] = 'El sistema és actualment sota manteniment i els canvis de contrasenya no són permesos en aquest moment. En breu tot tornarà a la normalitat. Us demanem disculpes pels inconvenients.';
+$messages['passwinhistory'] = 'Aquesta contrasenya ja es va fer servir anteriorment.';
+$messages['samepasswd'] = 'La nova contrasenya ha de ser diferent de l\'antiga.';
+$messages['passwdexpirewarning'] = 'Compte!, la vostra contrasenya caducarà aviat. Canvieu-la abans de $expirationdatetime.';
+$messages['passwdexpired'] = 'La vostra contrasenya ha caducat, l\'heu de canviar ara!';
+$messages['passwdconstraintviolation'] = 'Violació de restricció de les contrasenyes. La contrasenya és probablement massa feble.';

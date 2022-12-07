@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/mail/check_recent.inc                                   |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2010, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Check for recent messages, in all mailboxes                         |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -31,9 +29,17 @@ $check_all = $RCMAIL->action != 'refresh' || (bool)$RCMAIL->config->get('check_a
 $page      = $RCMAIL->storage->get_page();
 $page_size = $RCMAIL->storage->get_pagesize();
 
+$search_request = rcube_utils::get_input_value('_search', rcube_utils::INPUT_GPC);
+if ($search_request && $_SESSION['search_request'] != $search_request) {
+    $search_request = null;
+}
+
 // list of folders to check
 if ($check_all) {
     $a_mailboxes = $RCMAIL->storage->list_folders_subscribed('', '*', 'mail');
+}
+else if ($search_request && is_object($_SESSION['search'][1])) {
+    $a_mailboxes = (array) $_SESSION['search'][1]->get_parameters('MAILBOX');
 }
 else {
     $a_mailboxes = (array) $current;
@@ -46,9 +52,11 @@ else {
 $plugin      = $RCMAIL->plugins->exec_hook('check_recent', array('folders' => $a_mailboxes, 'all' => $check_all));
 $a_mailboxes = $plugin['folders'];
 
+$RCMAIL->storage_fatal_error();
+
 // check recent/unseen counts
 foreach ($a_mailboxes as $mbox_name) {
-    $is_current = $mbox_name == $current;
+    $is_current = $mbox_name == $current || ($search_request && is_object($_SESSION['search'][1]) && in_array($mbox_name, (array)$_SESSION['search'][1]->get_parameters('MAILBOX')));
     if ($is_current) {
         // Synchronize mailbox cache, handle flag changes
         $RCMAIL->storage->folder_sync($mbox_name);
@@ -57,29 +65,33 @@ foreach ($a_mailboxes as $mbox_name) {
     // Get mailbox status
     $status = $RCMAIL->storage->folder_status($mbox_name, $diff);
 
+    if ($is_current) {
+        $RCMAIL->storage_fatal_error();
+    }
+
     if ($status & 1) {
         // trigger plugin hook
         $RCMAIL->plugins->exec_hook('new_messages',
             array('mailbox' => $mbox_name, 'is_current' => $is_current, 'diff' => $diff));
     }
 
-    rcmail_send_unread_count($mbox_name, true, null,
-      (!$is_current && ($status & 1)) ? 'recent' : '');
+    rcmail_send_unread_count($mbox_name, true, null, (!$is_current && ($status & 1)) ? 'recent' : '');
 
     if ($status && $is_current) {
         // refresh saved search set
-        $search_request = rcube_utils::get_input_value('_search', rcube_utils::INPUT_GPC);
-        if ($search_request && isset($_SESSION['search'])
-            && $_SESSION['search_request'] == $search_request
-        ) {
+        if ($search_request && isset($_SESSION['search'])) {
+            unset($search_request);  // only do this once
             $_SESSION['search'] = $RCMAIL->storage->refresh_search();
+            if ($_SESSION['search'][1]->multi) {
+                $mbox_name = '';
+            }
         }
 
         if (!empty($_POST['_quota'])) {
-            $OUTPUT->command('set_quota', $RCMAIL->quota_content());
+            $OUTPUT->command('set_quota', $RCMAIL->quota_content(null, $mbox_name));
         }
 
-        $OUTPUT->set_env('exists', $RCMAIL->storage->count($mbox_name, 'EXISTS'));
+        $OUTPUT->set_env('exists', $RCMAIL->storage->count($mbox_name, 'EXISTS', true));
 
         // "No-list" mode, don't get messages
         if (empty($_POST['_list'])) {
@@ -118,7 +130,7 @@ foreach ($a_mailboxes as $mbox_name) {
         }
     }
     // handle flag updates
-    else if ($is_current && ($uids = rcube_utils::get_input_value('_uids', rcube_utils::INPUT_GPC))) {
+    else if ($is_current && ($uids = rcube_utils::get_input_value('_uids', rcube_utils::INPUT_GPC)) && empty($search_request)) {
         $data = $RCMAIL->storage->folder_data($mbox_name);
 
         if (empty($_SESSION['list_mod_seq']) || $_SESSION['list_mod_seq'] != $data['HIGHESTMODSEQ']) {
@@ -138,7 +150,7 @@ foreach ($a_mailboxes as $mbox_name) {
 
     // set trash folder state
     if ($mbox_name === $trash) {
-        $OUTPUT->command('set_trash_count', $RCMAIL->storage->count($mbox_name, 'EXISTS'));
+        $OUTPUT->command('set_trash_count', $RCMAIL->storage->count($mbox_name, 'EXISTS', true));
     }
 }
 

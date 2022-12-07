@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -103,6 +103,23 @@ class module_controller extends ctrl_module
     static function ExecuteDeleteDomain($id)
     {
         global $zdbh;
+		
+		// NEW - Delete Snuff files for domain
+		$sql2 = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_id_pk=:id");
+		$sql2->bindParam(':id', $id);
+    	$sql2->execute();
+    	while ($rowvhost = $sql2->fetch()) {
+				
+		$vhostuser = ctrl_users::GetUserDetail($rowvhost['vh_acc_fk']);
+		$vhostusername = $vhostuser['username'];
+		$vh_snuff_path = "/etc/sentora/configs/php/sp/";
+		
+			if (file_exists($vh_snuff_path . $vhostusername . "/" . $rowvhost['vh_name_vc'] . '.rules')) {
+				unlink($vh_snuff_path . $vhostusername . "/" . $rowvhost['vh_name_vc'] . '.rules') or print fs_filehandler::NewLine() . "Couldn't delete " . $rowvhost['vh_name_vc'] . "vhost sp file" . fs_filehandler::NewLine();
+			}
+		}
+		
+		// Delete Domain
         runtime_hook::Execute('OnBeforeDeleteDomain');
         $sql = $zdbh->prepare("UPDATE x_vhosts
 							   SET vh_deleted_ts=:time
@@ -114,9 +131,11 @@ class module_controller extends ctrl_module
         self::SetWriteApacheConfigTrue();
         $retval = TRUE;
         runtime_hook::Execute('OnAfterDeleteDomain');
-        return $retval;
+        return $retval; 
     }
-
+	
+	
+	
     static function ExecuteAddDomain($uid, $domain, $destination, $autohome)
     {
         global $zdbh;
@@ -231,7 +250,7 @@ class module_controller extends ctrl_module
             $part = explode('.', $domain);
             foreach ($part as $check) {
                 if (!in_array($check, $SharedDomains)) {
-                    if (strlen($check) > 13) {
+                    if (strlen($check) > 3) {
                         $sql = $zdbh->prepare("SELECT * FROM x_vhosts WHERE vh_name_vc LIKE :check AND vh_type_in !=2 AND vh_deleted_ts IS NULL");
                         $checkSql = '%' . $check . '%';
                         $sql->bindParam(':check', $checkSql);
@@ -390,10 +409,28 @@ class module_controller extends ctrl_module
         return false;
     }
 
-    static function getisDeleteDomain()
+    static function getisDeleteDomain($uid = null)
     {
         global $controller;
+        global $zdbh;
+
         $urlvars = $controller->GetAllControllerRequests('URL');
+
+        // Verify if Current user can Delete user domains.
+        // This shall avoid exposing domain based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+    	$sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_name_vc=:editedDomainID AND vh_deleted_ts IS NULL";
+    	$numrows = $zdbh->prepare($sql);
+    	$numrows->bindParam(':userid', $currentuser['userid']);
+		$numrows->bindParam(':editedDomainID', $urlvars['domain']);
+    	$numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Show User Info
         return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
@@ -413,15 +450,10 @@ class module_controller extends ctrl_module
 
     static function getDomainUsagepChart()
     {
-		global $controller;
-		$currentuser = ctrl_users::GetUserDetail();
-		$maximum = $currentuser['domainquota'];
-		if ($maximum < 0) { //-1 = unlimited
-            if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
-				return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			} else {
-				return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-			}
+        $currentuser = ctrl_users::GetUserDetail();
+        $maximum = $currentuser['domainquota'];
+        if ($maximum < 0) { //-1 = unlimited
+            return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
         } else {
             $used = ctrl_users::GetQuotaUsages('domains', $currentuser['userid']);
             $free = max($maximum - $used, 0);
@@ -475,4 +507,8 @@ class module_controller extends ctrl_module
     /**
      * Webinterface sudo methods.
      */
+	 
+
+	 
 }
+

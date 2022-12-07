@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Det oppsto en feil!';
 $messages['loginfailed']  = 'Pålogging mislyktes';
 $messages['cookiesdisabled'] = 'Nettleseren din tillater ikke informasjonskapsler (cookies)';
@@ -22,6 +21,7 @@ $messages['sessionerror'] = 'Din nettlesertilkobling er ugyldig eller utløpt';
 $messages['storageerror'] = 'Tilkobling til IMAP-tjener mislyktes.';
 $messages['servererror'] = 'Tjenerfeil!';
 $messages['servererrormsg'] = 'Tjenerfeil: $msg';
+$messages['connerror'] = 'Tilkoblingsfeil (Kunne ikke nå server)!';
 $messages['dberror'] = 'Databasefeil!';
 $messages['requesttimedout'] = 'Forespørselen har fått et tidsavbrudd';
 $messages['errorreadonly'] = 'Kunne ikke utføre handlingen. Mappen kan kun leses.';
@@ -31,12 +31,12 @@ $messages['erroroverquotadelete'] = 'Ingen ledig plass på disk. Bruk SHIFT+DEL 
 $messages['invalidrequest'] = 'Ugyldig forespørsel! Ingen data ble lagret.';
 $messages['invalidhost'] = 'Ugyldig servernavn.';
 $messages['nomessagesfound'] = 'Det ble ikke funnet noen meldinger i denne mappen';
-$messages['loggedout'] = 'Du er logget av webmail. Ha det bra!';
 $messages['mailboxempty'] = 'Mappen er tom';
 $messages['nomessages'] = 'Ingen meldinger';
 $messages['refreshing'] = 'Oppdaterer …';
 $messages['loading'] = 'Laster...';
 $messages['uploading'] = 'Laster opp fil...';
+$messages['attaching'] = 'Legger til vedlegg...';
 $messages['uploadingmany'] = 'Laster opp filer ...';
 $messages['loadingdata'] = 'Laster data...';
 $messages['checkingmail'] = 'Sjekker for nye meldinger...';
@@ -47,14 +47,14 @@ $messages['messagesaved'] = 'Melding er lagret som kladd';
 $messages['successfullysaved'] = 'Lagret';
 $messages['savingresponse'] = 'Lagrer svartekst...';
 $messages['deleteresponseconfirm'] = 'Vil du virkelig å slette denne svarteksten?';
+$messages['nocontactselected'] = 'Du har ennå ikke markert en kontakt.';
 $messages['addedsuccessfully'] = 'Kontakten ble lagt til i adresseboken';
-$messages['contactexists'] = 'Det finnes allerede en kontakt med denne e-postadressen';
 $messages['contactnameexists'] = 'Det finnes allerede en kontakt med dette navnet';
 $messages['blockedimages'] = 'Av sikkerhetsgrunner er bilder lagret på eksterne servere blokkert fra denne e-postmeldingen';
 $messages['encryptedmessage'] = 'Dette er en kryptert melding som ikke kan vises. Beklager!';
+$messages['nopubkeyfor'] = 'Ingen gyldig offentlig nøkkel ble funnet for $email';
 $messages['nocontactsfound'] = 'Ingen kontakter ble funnet';
 $messages['contactnotfound'] = 'Den ønskede kontakten ble ikke funnet';
-$messages['contactsearchonly'] = 'Skriv inn noen søkeord for å finne kontakter.';
 $messages['sendingfailed'] = 'Kunne ikke sende e-posten';
 $messages['senttooquickly'] = 'Vennligst vent $sec sekund(er) før du sender denne meldingen';
 $messages['errorsavingsent'] = 'En feil oppsto under lagring av sendt melding.';
@@ -63,6 +63,7 @@ $messages['errormoving'] = 'Kunne ikke flytte meldingen(e)';
 $messages['errorcopying'] = 'Kunne ikke kopiere meldingen(e)';
 $messages['errordeleting'] = 'Kunne ikke slette meldingen(e)';
 $messages['errormarking'] = 'Kunne ikke markere meldingen(e)';
+$messages['confirmationtitle'] = 'Er du sikker...';
 $messages['deletecontactconfirm']  = 'Vil du virkelig slette valgte kontakt(er)?';
 $messages['deletegroupconfirm']  = 'Vil du virkelig slette den valgte gruppa?';
 $messages['deletemessagesconfirm'] = 'Vil du virkelig slette de(n) valgte meldingen(e)?';
@@ -78,13 +79,11 @@ $messages['formincomplete'] = 'Skjemaet var ikke fullstendig fylt ut';
 $messages['noemailwarning'] = 'Vennligst oppgi en gyldig epostadresse.';
 $messages['nonamewarning']  = 'Angi et navn';
 $messages['nopagesizewarning'] = 'Angi sidestørrelsen';
-$messages['nosenderwarning'] = 'Vennligst angi avsenderadresse';
 $messages['norecipientwarning'] = 'Skriv inn minst én mottaker';
 $messages['nosubjectwarning']  = 'Emnefeltet er tomt. Vil du skrive det inn nå?';
+$messages['nosubjecttitle']  = 'Intet emne';
 $messages['nobodywarning'] = 'Send denne meldingen uten tekst?';
-$messages['notsentwarning'] = 'E-posten er ikke sendt. Er du sikker på at du vil avbryte skrivingen?';
 $messages['restoresavedcomposedata'] = 'Et tidligere usendt svar ble funnet.\n\nEmne: $subject\nLagret: $date\n\nVil du gjenopprette denne meldingen?';
-$messages['noldapserver'] = 'Velg LDAP-tjener å søke i';
 $messages['nosearchname'] = 'Venligst skriv inn kontaktens navn eller e-postadresse';
 $messages['notuploadedwarning'] = 'Ikke alle vedlegg er ferdig opplastet. Vennligst vent eller avbryt opplastingen.';
 $messages['searchsuccessful'] = '$nr meldinger funnet';
@@ -92,6 +91,7 @@ $messages['contactsearchsuccessful'] = '$nr kontakter funnet.';
 $messages['searchnomatch'] = 'Søket ga ingen resultater';
 $messages['searching'] = 'Søker …';
 $messages['checking'] = 'Sjekker …';
+$messages['stillsearching'] = 'Søker fortsatt...';
 $messages['nospellerrors'] = 'Fant ingen skrivefeil.';
 $messages['folderdeleted'] = 'Mappe slettet.';
 $messages['foldersubscribed'] = 'Abonnerte på mappen.';
@@ -134,7 +134,6 @@ $messages['importconfirmskipped'] = '<b>Hoppet over $skipped eksisterende oppfø
 $messages['importmessagesuccess'] = 'Kopierte $nr meldinger';
 $messages['importmessageerror'] = 'Importeringen var mislykket! Den opplastede filen er ikke en gyldig melding, eller er ikke kompatibel med meldingssystemet.';
 $messages['opnotpermitted'] = 'Handling ikke tillatt!';
-$messages['nofromaddress'] = 'E-postadresse mangler i valgt identitet';
 $messages['httpreceivedencrypterror'] = 'En uopprettelig feil oppsto. Vennligst kontakt systemansvarlig umiddelbart. <b>Din melding kunne ikke sendes.</b>';
 $messages['smtpconnerror'] = 'SMTP-feil ($code): Klarte ikke koble til server';
 $messages['smtpautherror'] = 'SMTP-feil ($code): Pålogging feilet';
@@ -142,7 +141,6 @@ $messages['smtpfromerror'] = 'SMTP-feil ($code): Kunne ikke sette avsender "$fro
 $messages['smtptoerror'] = 'SMTP-feil ($code): Kunne ikke legge til mottaker "$to" ($msg)';
 $messages['smtprecipientserror'] = 'SMTP-feil ($code): Kunne ikke lese mottakerliste';
 $messages['smtperror'] = 'SMTP-feil ($code): $msg';
-$messages['emailformaterror'] = 'Ukorrekt e-postadresse: $email';
 $messages['toomanyrecipients'] = 'For mange mottakere. Reduser antall mottakere til $max.';
 $messages['maxgroupmembersreached'] = 'Antall gruppemedlemmer overskrider maksgrensen på $max';
 $messages['internalerror'] = 'En intern feil har oppstått, prøv igjen senere.';
@@ -165,12 +163,13 @@ $messages['autocompletechars'] = 'Skriv inn minst $min tegn for autofullføring.
 $messages['autocompletemore'] = 'Flere like oppføring funnet. Vennligst skriv flere tegn.';
 $messages['namecannotbeempty'] = 'Navn kan ikke være tomt.';
 $messages['nametoolong'] = 'Navnet er for langt.';
+$messages['namedotforbidden'] = 'Mappenavn kan ikke starte med punktum.';
 $messages['folderupdated'] = 'Mappen er oppdatert.';
 $messages['foldercreated'] = 'Mappe opprettet.';
 $messages['invalidimageformat'] = 'Ikke et gyldig bildeformat.';
 $messages['mispellingsfound'] = 'Fant stavefeil i meldingen.';
 $messages['parentnotwritable'] = 'Kunne ikke opprette/flytte mappen i valgt overordnet mappe. Ingen tilgangsrettigheter.';
 $messages['messagetoobig'] = 'Meldingsdelen er for stor til at den kan prosesseres.';
-$messages['attachmentvalidationerror'] = 'ADVARSEL! Dette vedlegget er mistenkelig fordi det er av en type som ikke passer med det som er deklarert i meldingen. Hvis du ikke stoler på avsenderen burde du ikke åpne det i nettleseren, fordi det kan ha skadelig innhold.<br/><br/><em>Forventet: $expected; fant: $detected</em>rnrnWARNING! This attachment is suspicious because its type doesn\'t match the type declared in the message. If you do not trust the sender, you shouldn\'t open it in the browser because it may contain malicious contents.<br/><br/><em>Expected: $expected; found: $detected</em>';
 $messages['noscriptwarning'] = 'NB: Denne webmail-klienten krever Javascript! Skru på Javascript i nettleseren din for å kunne bruke den.';
-?>
+$messages['errnotfound'] = 'Filen ble ikke funnet';
+$messages['listempty'] = 'Listen er tom.';

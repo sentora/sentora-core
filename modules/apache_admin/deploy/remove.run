@@ -1,0 +1,37 @@
+<?php
+/**
+ * Remove script for Apache_Admin Module for Sentora 1.0.3+
+ * Version : 1.0.1
+ * Author : TGates
+ * Reworked by : Anthony D. -  Duke City Solutions, LLC
+ * Email : anthony@dukecitysolutions.com
+ */
+ 
+require_once('cnf/db.php');
+require_once('dryden/db/driver.class.php');
+require_once('dryden/debug/logger.class.php');
+require_once('dryden/runtime/dataobject.class.php');
+require_once('dryden/sys/versions.class.php');
+require_once('dryden/ctrl/options.class.php');
+require_once('dryden/ctrl/auth.class.php');
+require_once('dryden/ctrl/users.class.php');
+require_once('dryden/fs/director.class.php');
+require_once('dryden/fs/filehandler.class.php');
+require_once('inc/dbc.inc.php');
+
+function removeModule(){
+	global $zdbh, $controller;
+	
+	
+	/*
+    $stmt = $zdbh->prepare("DROP TABLE x_senbrand");
+    $stmt->execute();
+
+    $stmt = $zdbh->prepare("DROP TABLE x_senbrand_themes");
+    $stmt->execute();
+	*/
+}
+
+removeModule();
+	
+?>

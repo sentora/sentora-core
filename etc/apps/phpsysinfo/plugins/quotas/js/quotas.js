@@ -59,23 +59,25 @@ function quotas_populate(xml) {
 function quotas_buildTable() {
     var html = "";
 
-    html += "<table id=\"Plugin_QuotasTable\" style=\"border-spacing:0;\">\n";
-    html += "  <thead>\n";
-    html += "    <tr>\n";
-    html += "      <th>" + genlang(3, false, "Quotas") + "</th>\n";
-    html += "      <th class=\"right\">" + genlang(4, false, "Quotas") + "</th>\n";
-    html += "      <th class=\"right\">" + genlang(5, false, "Quotas") + "</th>\n";
-    html += "      <th class=\"right\">" + genlang(6, false, "Quotas") + "</th>\n";
-    html += "      <th>" + genlang(7, false, "Quotas") + "</th>\n";
-    html += "      <th class=\"right\">" + genlang(8, false, "Quotas") + "</th>\n";
-    html += "      <th class=\"right\">" + genlang(9, false, "Quotas") + "</th>\n";
-    html += "      <th class=\"right\">" + genlang(10, false, "Quotas") + "</th>\n";
-    html += "      <th>" + genlang(11, false, "Quotas") + "</th>\n";
-    html += "    </tr>\n";
-    html += "  </thead>\n";
-    html += "  <tbody>\n";
-    html += "  </tbody>\n";
-    html += "</table>\n";
+    html += "<div style=\"overflow-x:auto;\">\n";
+    html += "  <table id=\"Plugin_QuotasTable\" style=\"border-spacing:0;\">\n";
+    html += "    <thead>\n";
+    html += "      <tr>\n";
+    html += "        <th>" + genlang(2, "Quotas") + "</th>\n";
+    html += "        <th class=\"right\">" + genlang(3, "Quotas") + "</th>\n";
+    html += "        <th class=\"right\">" + genlang(4, "Quotas") + "</th>\n";
+    html += "        <th class=\"right\">" + genlang(5, "Quotas") + "</th>\n";
+    html += "        <th>" + genlang(6, "Quotas") + "</th>\n";
+    html += "        <th class=\"right\">" + genlang(7, "Quotas") + "</th>\n";
+    html += "        <th class=\"right\">" + genlang(8, "Quotas") + "</th>\n";
+    html += "        <th class=\"right\">" + genlang(9, "Quotas") + "</th>\n";
+    html += "        <th>" + genlang(10, "Quotas") + "</th>\n";
+    html += "      </tr>\n";
+    html += "    </thead>\n";
+    html += "    <tbody>\n";
+    html += "    </tbody>\n";
+    html += "  </table>\n";
+    html += "</div>\n";
 
     $("#Plugin_Quotas").append(html);
 
@@ -114,6 +116,7 @@ function quotas_buildTable() {
  * load the xml via ajax
  */
 function quotas_request() {
+    $("#Reload_QuotasTable").attr("title", "reload");
     $.ajax({
         url: "xml.php?plugin=Quotas",
         dataType: "xml",
@@ -125,7 +128,6 @@ function quotas_request() {
             quotas_populate(xml);
             if (quotas_show) {
                 plugin_translate("Quotas");
-                $("#Reload_QuotasTable").attr("title",datetime());
                 $("#Plugin_Quotas").show();
             }
         }
@@ -142,5 +144,6 @@ $(document).ready(function quotas_buildpage() {
 
     $("#Reload_QuotasTable").click(function quotas_reload(id) {
         quotas_request();
+        $(this).attr("title", datetime());
     });
 });

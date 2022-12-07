@@ -8,7 +8,7 @@
  * @package   PSI_JS
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: js.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -17,11 +17,11 @@
  *
  * @var string
  */
-define('APP_ROOT', dirname(__FILE__));
+define('PSI_APP_ROOT', dirname(__FILE__));
 
-require_once APP_ROOT.'/includes/autoloader.inc.php';
+require_once PSI_APP_ROOT.'/includes/autoloader.inc.php';
 
-require_once APP_ROOT.'/read_config.php';
+require_once PSI_APP_ROOT.'/read_config.php';
 
 $file = isset($_GET['name']) ? basename(htmlspecialchars($_GET['name'])) : null;
 $plugin = isset($_GET['plugin']) ? basename(htmlspecialchars($_GET['plugin'])) : null;
@@ -29,16 +29,16 @@ $script = null;
 
 if ($file != null && $plugin == null) {
     if (strtolower(substr($file, 0, 6)) == 'jquery') {
-        $script = APP_ROOT.'/js/jQuery/'.$file;
+        $script = PSI_APP_ROOT.'/js/jQuery/'.$file;
     } elseif (strtolower(substr($file, 0, 10)) == 'phpsysinfo') {
-        $script = APP_ROOT.'/js/phpSysInfo/'.$file;
+        $script = PSI_APP_ROOT.'/js/phpSysInfo/'.$file;
     } else {
-        $script = APP_ROOT.'/js/vendor/'.$file;
+        $script = PSI_APP_ROOT.'/js/vendor/'.$file;
     }
 } elseif ($file == null && $plugin != null) {
-    $script = APP_ROOT.'/plugins/'.strtolower($plugin).'/js/'.strtolower($plugin);
+    $script = PSI_APP_ROOT.'/plugins/'.strtolower($plugin).'/js/'.strtolower($plugin);
 } elseif ($file != null && $plugin != null) {
-    $script = APP_ROOT.'/plugins/'.strtolower($plugin).'/js/'.strtolower($file);
+    $script = PSI_APP_ROOT.'/plugins/'.strtolower($plugin).'/js/'.strtolower($file);
 }
 
 if ($script != null) {
