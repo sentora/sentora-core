@@ -37,7 +37,8 @@ class runtime_randomstring{
         }
         
         //randomise string again
-        mt_srand($seed);
+		//mt_srand($seed);
+        mt_srand();
         mt_rand();
         
         //Make the random number into a random string
@@ -76,7 +77,8 @@ class runtime_randomstring{
                     $seed .= str_replace('-','',crc32(uniqid(sha1(microtime(true) . getmypid() . rand(10000,99999999)), true)));
                 }
                 //randomise string again
-                mt_srand($seed);
+				//mt_srand($seed);
+                mt_srand();
                 mt_rand();
                 
                 //Change random number into string
