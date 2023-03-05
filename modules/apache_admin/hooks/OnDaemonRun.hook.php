@@ -41,13 +41,12 @@ echo "END Apache Config Hook." . fs_filehandler::NewLine();
  * @param string $userEmail[5~ * @return string
  *
  */
-function BuildVhostPortForward($vhostName, $customPort, $userEmail)
-{
+function BuildVhostPortForward($vhostName, $customPort, $userEmail) {
 	//($sslenabled == !null) {
 		//$customPort_in = 443;
 	//} else {
 		
-		$customPort_in = $customPort;
+	$customPort_in = $customPort;
 	//};
 	
     $line = "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
@@ -67,8 +66,7 @@ function BuildVhostPortForward($vhostName, $customPort, $userEmail)
     return $line;
 }
 
-function WriteVhostConfigFile()
-{
+function WriteVhostConfigFile() {
     global $zdbh;
 	
 	// Start Smarty Session
@@ -106,12 +104,12 @@ function WriteVhostConfigFile()
 	
     $customPortList = array_unique($customPorts);
 	
-	// Set Control vhost path and check is there folder
-	$server_panel = "/etc/sentora/configs/apache/vhosts/";	
+	// Make vhost folder/path and check is there folder #### This is a beta setup for future use. DO NOT USE!
+	//$server_panel = "/etc/sentora/configs/apache/vhosts/";	
 	
-	if ( !is_dir( $server_panel  ) ) {
-              fs_director::CreateDirectory( $server_panel  );
-       }
+	//if ( !is_dir( $server_panel  ) ) {
+    	//fs_director::CreateDirectory( $server_panel  );
+    //}
 	 
 
 	//
@@ -561,16 +559,7 @@ function WriteVhostConfigFile()
              */
         } else {
             // Domain is NOT enabled
-			
-			// Load template file into vhost cofig to save
-			$line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-            $line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
-			$line .= $smarty->fetch("vhost_disabled.tpl") . fs_filehandler::NewLine();
-					
-            $line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-            $line .= "################################################################" . fs_filehandler::NewLine();
-			$line .= fs_filehandler::NewLine();
-			
+	
 			// If vhost SSL_TX not null create spearate <virtualhost>
 			if ( $rowvhost['vh_ssl_tx'] != NULL && $rowvhost['vh_ssl_port_in'] != NULL ) {
                     // Build Vhost SSL section
@@ -580,9 +569,17 @@ function WriteVhostConfigFile()
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
     			$line .= "################################################################" . fs_filehandler::NewLine();
 				$line .= fs_filehandler::NewLine();
+			} else {
+			    // Load template file into vhost cofig to save
+				$line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
+				$line .= $smarty->fetch("vhost_disabled.tpl") . fs_filehandler::NewLine();
+				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+				$line .= "################################################################" . fs_filehandler::NewLine();
+				$line .= fs_filehandler::NewLine();
+				
 			}
 				
-			
 			//*********Write to file
 			//writetofile($vh_path . $rowvhost['vh_name_vc']. ".conf"  , $line);
 			//***********
