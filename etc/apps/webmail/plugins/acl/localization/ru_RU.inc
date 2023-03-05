@@ -2,41 +2,41 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Совместный доступ';
 $labels['myrights'] = 'Права доступа';
 $labels['username'] = 'Пользователь:';
 $labels['advanced'] = 'Экспертный режим';
+$labels['add'] = 'Добавить';
 $labels['newuser'] = 'Добавить поле';
 $labels['editperms'] = 'Редактировать права';
 $labels['actions'] = 'Действия с правами доступа...';
 $labels['anyone'] = 'Все пользователи (любые)';
 $labels['anonymous'] = 'Гости (анонимные)';
 $labels['identifier'] = 'Идентификатор';
-$labels['acll'] = 'Поиск';
-$labels['aclr'] = 'Прочитать сообщения';
-$labels['acls'] = 'Оставить состояние Увидено';
-$labels['aclw'] = 'Флаги записи';
-$labels['acli'] = 'Вставить (копировать в...)';
+$labels['acll'] = 'Просмотр';
+$labels['aclr'] = 'Чтение сообщений';
+$labels['acls'] = 'Сохранение состояния Прочитано';
+$labels['aclw'] = 'Запись флагов';
+$labels['acli'] = 'Вставка (копирование в...)';
 $labels['aclp'] = 'Отправить';
-$labels['aclc'] = 'Создать вложенные папки';
-$labels['aclk'] = 'Создать вложенные папки';
-$labels['acld'] = 'Удалить сообщения';
-$labels['aclt'] = 'Удалить сообщения';
-$labels['acle'] = 'Уничтожить сообщения';
-$labels['aclx'] = 'Удалить папку';
+$labels['aclc'] = 'Создание вложенных папок';
+$labels['aclk'] = 'Создание вложенных папок';
+$labels['acld'] = 'Удаление сообщений';
+$labels['aclt'] = 'Удаление сообщений';
+$labels['acle'] = 'Уничтожение сообщений';
+$labels['aclx'] = 'Удаление папки';
 $labels['acla'] = 'Администрировать';
 $labels['acln'] = 'Комментировать сообщения';
 $labels['aclfull'] = 'Полный доступ';
@@ -46,7 +46,7 @@ $labels['aclwrite'] = 'Запись';
 $labels['acldelete'] = 'Удаление';
 $labels['shortacll'] = 'Поиск';
 $labels['shortaclr'] = 'Чтение';
-$labels['shortacls'] = 'Оставить';
+$labels['shortacls'] = 'Прочитано';
 $labels['shortaclw'] = 'Запись';
 $labels['shortacli'] = 'Вставить';
 $labels['shortaclp'] = 'Отправить';
@@ -54,7 +54,7 @@ $labels['shortaclc'] = 'Создать';
 $labels['shortaclk'] = 'Создать';
 $labels['shortacld'] = 'Удаление';
 $labels['shortaclt'] = 'Удаление';
-$labels['shortacle'] = 'Уничтожить сообщения';
+$labels['shortacle'] = 'Уничтожение';
 $labels['shortaclx'] = 'Удаление папки';
 $labels['shortacla'] = 'Администрировать';
 $labels['shortacln'] = 'Комментировать';

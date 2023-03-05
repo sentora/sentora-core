@@ -1,0 +1,36 @@
+{
+    "authors": [
+        {
+            "email": "pear.neufeind@speedpartner.de",
+            "name": "Stefan Neufeind",
+            "role": "Lead"
+        },
+        {
+            "email": "daniel.oconnor@gmail.com",
+            "name": "Daniel O'Connor",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Net": "./"
+        }
+    },
+    "description": "More info available on: https://pear.php.net/package/Net_IDNA2",
+    "include-path": [
+        "./"
+    ],
+    "license": "LGPL",
+    "name": "pear/net_idna2",
+    "support": {
+        "issues": "https://pear.php.net/bugs/search.php?cmd=display&package_name[]=Net_IDNA2",
+        "source": "https://github.com/pear/Net_IDNA2"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "@stable"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4"
+    }
+}

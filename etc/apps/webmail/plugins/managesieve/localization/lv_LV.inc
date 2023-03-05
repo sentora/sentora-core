@@ -2,25 +2,28 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/managesieve/localization/<lang>.inc                           |
- |                                                                       |
  | Localization file of the Roundcube Webmail Managesieve plugin         |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
+
+
 $labels['filters'] = 'Vēstuļu filtri';
 $labels['managefilters'] = 'Pārvaldīt ienākošo vēstuļu filtrus';
 $labels['filtername'] = 'Filtra nosaukums';
 $labels['newfilter'] = 'Jauns filtrs';
 $labels['filteradd'] = 'Pievienot filtru';
 $labels['filterdel'] = 'Dzēst filtru';
+$labels['rules'] = 'Noteikumi';
+$labels['actions'] = 'Darbību saraksts';
+$labels['scope'] = 'Kur meklēt';
 $labels['moveup'] = 'Pārvietot augšup';
 $labels['movedown'] = 'Pārvietot lejup';
 $labels['filterallof'] = 'jāatbilst visiem sekojošajiem nosacījumiem';
@@ -38,6 +41,14 @@ $labels['filterregex'] = 'jāatbilst regulārai izteiksmei';
 $labels['filternotregex'] = 'neatbilst regulārai izteiksmei';
 $labels['filterunder'] = 'zem';
 $labels['filterover'] = 'virs';
+$labels['mime'] = 'MIME:';
+$labels['mimepart'] = 'MIME daļa:';
+$labels['mime-message'] = 'vēstule';
+$labels['mime-anychild'] = 'jebkurš';
+$labels['mime-type'] = 'tips';
+$labels['mime-subtype'] = 'apakštips';
+$labels['mime-contenttype'] = 'satura-tips';
+$labels['mime-param'] = 'parametrs';
 $labels['addrule'] = 'Pievienot nosacījumu';
 $labels['delrule'] = 'Dzēst nosacījumu';
 $labels['messagemoveto'] = 'Pārvietot vēstuli uz';
@@ -54,24 +65,19 @@ $labels['add'] = 'Pievienot';
 $labels['del'] = 'Dzēst';
 $labels['sender'] = 'Sūtītājs';
 $labels['recipient'] = 'Saņēmējs';
-$labels['vacationaddr'] = 'Mana(s) papildus e-pasta adrese(s):';
+$labels['vacationaddr'] = 'Manas e-pasta adreses:';
 $labels['vacationdays'] = 'Cik bieži sūtī ziņojumus (dienās):';
 $labels['vacationinterval'] = 'Cik bieži sūtīt vēstules:';
 $labels['vacationreason'] = 'Atvaļinājuma paziņojuma teksts:';
+$labels['vacationfrom'] = 'Atbildētāja e-pasta adrese:';
 $labels['vacationsubject'] = 'Vēstules tēma:';
 $labels['days'] = 'dienas';
 $labels['seconds'] = 'sekundes';
 $labels['rulestop'] = 'Apturēt nosacījumu pārbaudi';
 $labels['enable'] = 'Ieslēgt/Izslēgt';
-$labels['filterset'] = 'Filtru kopa';
 $labels['filtersets'] = 'Filtru kopas';
-$labels['filtersetadd'] = 'Pievienot filtru kopu';
-$labels['filtersetdel'] = 'Dzēst pašreizējo filtru kopu';
-$labels['filtersetact'] = 'Aktivizēt pašreizējo filtru kopu';
-$labels['filtersetdeact'] = 'Deaktivizēt pašreizējo filtru kopu';
+$labels['filterseteditraw'] = 'Rediģēt filtru kopu';
 $labels['filterdef'] = 'Filtra apraksts';
-$labels['filtersetname'] = 'Filtru kopas nosaukums';
-$labels['newfilterset'] = 'Jauna filtru kopa';
 $labels['active'] = 'aktīvs';
 $labels['none'] = 'nav';
 $labels['fromset'] = 'no kopas';
@@ -108,14 +114,22 @@ $labels['varupperfirst'] = 'pirmais burts kā lielais burts';
 $labels['varquotewildcard'] = '"citēt" speciālās rakstzīmes';
 $labels['varlength'] = 'garums';
 $labels['notify'] = 'Sūtīt paziņojumus';
+$labels['notifytarget'] = 'Paziņojuma mērķis:';
+$labels['notifymessage'] = 'Paziņojuma teksts (neobligāts):';
+$labels['notifyoptions'] = 'Paziņojuma opcijas (neobligāts):';
+$labels['notifyfrom'] = 'Paziņojuma sūtītājs (neobligāts):';
 $labels['notifyimportance'] = 'Svarīgums:';
 $labels['notifyimportancelow'] = 'zems';
 $labels['notifyimportancenormal'] = 'parasts';
 $labels['notifyimportancehigh'] = 'augsts';
+$labels['notifymethodmailto'] = 'E-pasts';
+$labels['notifymethodtel'] = 'Telefons';
+$labels['notifymethodsms'] = 'SMS';
 $labels['filtercreate'] = 'Izveidot filtru';
 $labels['usedata'] = 'Filtrā izmantot sekojošus datus';
 $labels['nextstep'] = 'Nākamais solis';
 $labels['...'] = '...';
+$labels['string'] = 'Teksts';
 $labels['currdate'] = 'Pašreizējais datums';
 $labels['datetest'] = 'Datums';
 $labels['dateheader'] = 'galvene:';
@@ -153,27 +167,60 @@ $labels['asciicasemap'] = 'reģistrnejutīgs (ascii tabula)';
 $labels['asciinumeric'] = 'skaitļu (ascii skaitļu)';
 $labels['index'] = 'indekss:';
 $labels['indexlast'] = 'atpakaļ';
+$labels['vacation.reply'] = 'Atbildes e-pasts';
+$labels['vacation.advanced'] = 'Paplašinātie iestatījumi';
+$labels['vacation.from'] = 'Atbildes sūtītāja e-pasta adrese';
+$labels['vacation.subject'] = 'Tēma';
+$labels['vacation.body'] = 'Saturs';
+$labels['vacation.status'] = 'Statuss';
+$labels['vacation.on'] = 'Ieslēgts';
+$labels['vacation.off'] = 'Izslēgts';
+$labels['vacation.addresses'] = 'Manas e-pasta adreses';
+$labels['vacation.interval'] = 'Atbildēšanas intervāls';
+$labels['vacation.saving'] = 'Dati tiek saglabāti...';
+$labels['vacation.action'] = 'Darbības, kuras jāveic, kad tiek atsūtīta jauna vēstule';
+$labels['vacation.keep'] = 'Saglabāt';
+$labels['vacation.discard'] = 'Nesaglabāt';
+$labels['vacation.redirect'] = 'Pārsūtīt uz';
+$labels['vacation.copy'] = 'Sūtīt kopiju uz';
+$labels['forward'] = 'Pārsūtīšana';
+$labels['forward.redirect'] = 'Pārsūtīt uz';
+$labels['forward.copy'] = 'Sūtīt kopiju uz';
+$labels['forward.on'] = 'Ieslēgts';
+$labels['forward.off'] = 'Izslēgts';
+$labels['forward.status'] = 'Statuss:';
+$labels['forward.action'] = 'Ienākot e-pastam, izpildīt sekojošo darbību:';
+$labels['forward.saving'] = 'Dati tiek saglabāti...';
+$labels['filladdresses'] = 'Aizpildīt ar visām manām e-pasta adresēm';
+$labels['arialabelfiltersetactions'] = 'Filtra kopas darbības';
+$labels['arialabelfilteractions'] = 'Filtra darbības';
+$labels['arialabelfilterform'] = 'Filtra iestatījumi';
+$labels['ariasummaryfilterslist'] = 'Filtru saraksts';
+$labels['ariasummaryfiltersetslist'] = 'Filtru kopu saraksts';
+$labels['filterstitle'] = 'Rediģēt ienākošo e-pastu filtrus';
+$labels['vacationtitle'] = 'Rediģēt "neesmu ofisā" nosacījumu';
+$labels['forwardtitle'] = 'Rediģēt e-pastu pārsūtīšanas noteikumus';
+$labels['message'] = 'Vēstule';
+$labels['duplicate'] = 'ir dublikāts';
+$labels['notduplicate'] = 'nav dublikāts';
+$labels['duplicate.handle'] = 'atslēga:';
+$labels['duplicate.header'] = 'galvene:';
+$labels['duplicate.uniqueid'] = 'identifikators:';
+$labels['duplicate.seconds'] = 'pārtraukums (sekundes):';
+$labels['duplicate.last'] = 'relatīvs pēdējai izpildei';
 $messages['filterunknownerror'] = 'Nezināma servera kļūda.';
 $messages['filterconnerror'] = 'Neizdevās pieslēgties ManageSieve serverim.';
 $messages['filterdeleteerror'] = 'Neizdevās izdzēst filtru - atgadījās servera iekšējā kļūda.';
 $messages['filterdeleted'] = 'Filtrs veiksmīgi izdzēsts.';
 $messages['filtersaved'] = 'Filtrs veiksmīgi saglabāts.';
 $messages['filtersaveerror'] = 'Neizdevās saglabāt filtru - atgadījās servera iekšējā kļūda.';
+$messages['filterformerror'] = 'Filtra forma ir kļūdaina.';
 $messages['filterdeleteconfirm'] = 'Vai Jūs tiešām vēlaties dzēst atzīmēto filtru?';
 $messages['ruledeleteconfirm'] = 'Vai Jūs tiešām vēlaties dzēst atzīmēto nosacījumu?';
 $messages['actiondeleteconfirm'] = 'Vai Jūs tiešām vēlaties dzēst atzīmēto darbību?';
 $messages['forbiddenchars'] = 'Lauks satur aizliegtus simbolus.';
 $messages['cannotbeempty'] = 'Lauks nedrīkst būt tukšs.';
 $messages['ruleexist'] = 'Filtrs ar tādu nosaukumu jau pastāv.';
-$messages['setactivateerror'] = 'Neizdevās aktivizēt atzīmēto filtru kopu - atgadījās servera iekšējā kļūda.';
-$messages['setdeactivateerror'] = 'Neizdevās deaktivizēt atzīmēto filtru kopu - atgadījās servera iekšējā kļūda.';
-$messages['setdeleteerror'] = 'Neizdevās izdzēst atzīmēto filtru kopu - atgadījās servera ieksējā kļūda.';
-$messages['setactivated'] = 'Filtru kopa veiksmīgi aktivizēta.';
-$messages['setdeactivated'] = 'Filtru kopa veiksmīgi deaktivizēta.';
-$messages['setdeleted'] = 'Filtru kopa veiksmīgi izdzēsta.';
-$messages['setdeleteconfirm'] = 'Vai tiešām Jūs vēlaties dzēst atzīmēto filtru kopu?';
-$messages['setcreateerror'] = 'Neizdevās izveidot filtru kopu - atgadījās servera iekšējā kļūda.';
-$messages['setcreated'] = 'Filtru kopa veiksmīgi izveidota.';
 $messages['activateerror'] = 'Nav iespējams ieslēgt izvēlēto(s) filtru(s) - atgadījās servera iekšējā kļūda.';
 $messages['deactivateerror'] = 'Nav iespējams atslēgt izvēlēto(s) filtru(s) - atgadījās servera iekšējā kļūda.';
 $messages['deactivated'] = 'Filtrs(i) veiksmīgi atslēgts(i).';
@@ -185,4 +232,8 @@ $messages['namereserved'] = 'Rezervētais nosaukums.';
 $messages['setexist'] = 'Kopa jau eksistē.';
 $messages['nodata'] = 'Ir jābūt atzīmētai vismaz vienai pozīcijai!';
 $messages['invaliddateformat'] = 'Nederīgs datums vai datuma formāts';
-?>
+$messages['saveerror'] = 'Nav iespējams saglabāt datus. Servera kļūda.';
+$messages['forwardsaved'] = 'Pārsūtīšanas dati veiksmīgi saglabāti.';
+$messages['emptyvacationbody'] = 'Brīvdienu e-pastam obligāti jānorāda vēstules teksts!';
+$messages['duplicate.conflict.err'] = 'Gan galvenes, gan unikālais identifikators nav atļauts.';
+$messages['disabledaction'] = 'Darbība nav atļauta!';

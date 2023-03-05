@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.10.8" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Crypt_GPG</name>
+ <channel>pear.php.net</channel>
+ <summary>GNU Privacy Guard (GnuPG)</summary>
+ <description>This package provides an object oriented interface to GNU Privacy Guard (GnuPG). It requires the GnuPG executable to be on the system.
+
+Though GnuPG can support symmetric-key cryptography, this package is intended only to facilitate public-key cryptography.
+
+This package requires PHP version 5.4.8 or greater.</description>
+ <lead>
+  <name>Mike Gauthier</name>
+  <user>gauthierm</user>
+  <email>mike@silverorange.com</email>
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Nathan Fredrickson</name>
+  <user>nrf</user>
+  <email>nathan@silverorange.com</email>
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Aleksander Machniak</name>
+  <user>alec</user>
+  <email>alec@alec.pl</email>
+  <active>yes</active>
+ </lead>
+ <date>2020-03-22</date>
+ <time>12:45:23</time>
+ <version>
+  <release>1.6.4</release>
+  <api>1.6.4</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+ <notes>
+Use classmap for autoloading in composer as this package does not follow PSR-0.
+Support default gpg binary location on NixOS.
+Fix IgnoreVerifyErrors issues with GnuPG 1.4 and PHP5.
+Add possibility to add custom arguments to gpg commands.
+Add option to choose compression algorithm.
+Compatibility with phpunit &gt;= 6.0.
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <dir name="Crypt">
+    <dir name="GPG">
+     <file baseinstalldir="/" name="Engine.php" role="php">
+      <tasks:replace from="@bin-dir@" to="bin_dir" type="pear-config" />
+     </file>
+     <file baseinstalldir="/" name="Exceptions.php" role="php" />
+     <file baseinstalldir="/" name="Key.php" role="php" />
+     <file baseinstalldir="/" name="KeyGenerator.php" role="php" />
+     <file baseinstalldir="/" name="PinEntry.php" role="php">
+      <tasks:replace from="@package-name@" to="name" type="package-info" />
+      <tasks:replace from="@data-dir@" to="data_dir" type="pear-config" />
+     </file>
+     <file baseinstalldir="/" name="ProcessControl.php" role="php" />
+     <file baseinstalldir="/" name="ProcessHandler.php" role="php" />
+     <file baseinstalldir="/" name="Signature.php" role="php" />
+     <file baseinstalldir="/" name="SignatureCreationInfo.php" role="php" />
+     <file baseinstalldir="/" name="SubKey.php" role="php" />
+     <file baseinstalldir="/" name="UserId.php" role="php" />
+    </dir> <!-- /Crypt/GPG -->
+    <file baseinstalldir="/" name="GPG.php" role="php" />
+    <file baseinstalldir="/" name="GPGAbstract.php" role="php" />
+   </dir> <!-- /Crypt -->
+   <dir name="data">
+    <file baseinstalldir="/" name="pinentry-cli.xml" role="data">
+     <tasks:replace from="@package-version@" to="version" type="package-info" />
+    </file>
+   </dir> <!-- /data -->
+   <dir name="scripts">
+    <file baseinstalldir="/" name="crypt-gpg-pinentry" role="script">
+     <tasks:replace from="@php-dir@" to="php_dir" type="pear-config" />
+    </file>
+   </dir> <!-- /scripts -->
+   <dir name="tests">
+    <dir name="data-files">
+     <file baseinstalldir="/" name="testDecryptFile.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptFileDual.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptFileDualOnePassphrase.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptFileKeyNotFoundException.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptFileNoPassphrase.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptFileToString.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptVerifyFile.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptVerifyFileDual.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptVerifyFileDualOnePassphrase.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptVerifyFileDualSignatories.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptVerifyFileNoPassphrase.asc" role="test" />
+     <file baseinstalldir="/" name="testDecryptVerifyFileToString.asc" role="test" />
+     <file baseinstalldir="/" name="testFileEmpty.plain" role="test" />
+     <file baseinstalldir="/" name="testFileMedium.plain" role="test" />
+     <file baseinstalldir="/" name="testFileSmall.plain" role="test" />
+     <file baseinstalldir="/" name="testImportKeyFile_private.asc" role="test" />
+     <file baseinstalldir="/" name="testImportKeyFile_public.asc" role="test" />
+     <file baseinstalldir="/" name="testVerifyFileClearsignedData.asc" role="test" />
+     <file baseinstalldir="/" name="testVerifyFileDualClearsignedData.asc" role="test" />
+     <file baseinstalldir="/" name="testVerifyFileDualNormalSignedData.asc" role="test" />
+     <file baseinstalldir="/" name="testVerifyFileNormalSignedData.asc" role="test" />
+    </dir> <!-- /tests/data-files -->
+    <file baseinstalldir="/" name="config.php.dist" role="test" />
+    <file baseinstalldir="/" name="DecryptAndVerifyTest.php" role="test" />
+    <file baseinstalldir="/" name="DecryptTest.php" role="test" />
+    <file baseinstalldir="/" name="DeletePrivateKeyTest.php" role="test" />
+    <file baseinstalldir="/" name="DeletePublicKeyTest.php" role="test" />
+    <file baseinstalldir="/" name="EncryptAndSignTest.php" role="test" />
+    <file baseinstalldir="/" name="EncryptTest.php" role="test" />
+    <file baseinstalldir="/" name="ExceptionsTest.php" role="test" />
+    <file baseinstalldir="/" name="ExportPrivateKeyTest.php" role="test" />
+    <file baseinstalldir="/" name="ExportPublicKeyTest.php" role="test" />
+    <file baseinstalldir="/" name="GeneralTest.php" role="test" />
+    <file baseinstalldir="/" name="GetFingerprintTest.php" role="test" />
+    <file baseinstalldir="/" name="GetKeysTest.php" role="test" />
+    <file baseinstalldir="/" name="ImportKeyTest.php" role="test" />
+    <file baseinstalldir="/" name="KeyGeneratorTest.php" role="test" />
+    <file baseinstalldir="/" name="KeyTest.php" role="test" />
+    <file baseinstalldir="/" name="phpunit.xml" role="test" />
+    <file baseinstalldir="/" name="SignatureCreationInfoTest.php" role="test" />
+    <file baseinstalldir="/" name="SignatureTest.php" role="test" />
+    <file baseinstalldir="/" name="SignTest.php" role="test" />
+    <file baseinstalldir="/" name="SubKeyTest.php" role="test" />
+    <file baseinstalldir="/" name="TestCase.php" role="test" />
+    <file baseinstalldir="/" name="UserIdTest.php" role="test" />
+    <file baseinstalldir="/" name="VerifyTest.php" role="test" />
+   </dir> <!-- /tests -->
+   <file baseinstalldir="/" name="LICENSE" role="doc" />
+   <file baseinstalldir="/" name="README.md" role="doc" />
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.4.8</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+   <package>
+    <name>Console_CommandLine</name>
+    <channel>pear.php.net</channel>
+    <min>1.1.10</min>
+   </package>
+   <extension>
+    <name>mbstring</name>
+   </extension>
+   <os>
+    <name>windows</name>
+    <conflicts />
+   </os>
+  </required>
+  <optional>
+   <extension>
+    <name>posix</name>
+   </extension>
+  </optional>
+ </dependencies>
+ <phprelease>
+  <filelist>
+   <install as="crypt-gpg-pinentry" name="scripts/crypt-gpg-pinentry" />
+  </filelist>
+ </phprelease>
+ <changelog>
+  <release>
+   <version>
+    <release>1.6.4</release>
+    <api>1.6.4</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2020-03-22</date>
+   <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>
+Use classmap for autoloading in composer as this package does not follow PSR-0.
+Support default gpg binary location on NixOS.
+Fix IgnoreVerifyErrors issues with GnuPG 1.4 and PHP5.
+Add possibility to add custom arguments to gpg commands.
+Add option to choose compression algorithm.
+Compatibility with phpunit &gt;= 6.0.
+   </notes>
+  </release>
+ </changelog>
+</package>

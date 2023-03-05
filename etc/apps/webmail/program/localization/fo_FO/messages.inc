@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Ein feilur kom fyri!';
 $messages['loginfailed']  = 'Feilur í innriting.';
 $messages['cookiesdisabled'] = 'Kagi tín noktar cookies.';
@@ -22,7 +21,10 @@ $messages['sessionerror'] = 'Seta tín er ógyldig ella útgingin.';
 $messages['storageerror'] = 'Feilur í samand til goymslu ambatara.';
 $messages['servererror'] = 'Ambatara Feilur!';
 $messages['servererrormsg'] = 'Ambatara Feilur: $msg';
+$messages['accountlocked'] = 'Ov nógvar innritingar royndir. Royn aftur seinni.';
+$messages['connerror'] = 'Ambætarasambindingar feilur (Einki samband við abmætaran)!';
 $messages['dberror'] = 'Dátugrun Feilur';
+$messages['windowopenerror'] = 'Popup vindeyga var forða!';
 $messages['requesttimedout'] = 'Umbøn gekk út';
 $messages['errorreadonly'] = 'Kann ikki fremja ger. Mappan kann einans lesast.';
 $messages['errornoperm'] = 'Kann ikki fremja ger. Atgongd nokta.';
@@ -31,12 +33,12 @@ $messages['erroroverquotadelete'] = 'Einki pláss á diski. Brúka SHIFT+DEL fyr
 $messages['invalidrequest'] = 'Ógyldig umbøn! Einki dáta varð goymt.';
 $messages['invalidhost'] = 'Ógyldigt ambatara navn.';
 $messages['nomessagesfound'] = 'Eingi boð í funnin hesum postkassa,';
-$messages['loggedout'] = 'Tú hevur strika tína setu. Farvæl!';
 $messages['mailboxempty'] = 'Postkassi er tómur';
 $messages['nomessages'] = 'Eingin boð';
 $messages['refreshing'] = 'Endur-innlesur...';
 $messages['loading'] = 'Innlesur...';
 $messages['uploading'] = 'Leggur fílu út...';
+$messages['attaching'] = 'Viðheftur fíl...';
 $messages['uploadingmany'] = 'Leggur fílur út...';
 $messages['loadingdata'] = 'Innlesur dáta...';
 $messages['checkingmail'] = 'Kannar fyri nýggj boð...';
@@ -52,9 +54,14 @@ $messages['contactexists'] = 'Ein persónur við sama telduposti er longu til.';
 $messages['contactnameexists'] = 'Ein persónur við sama navn er longu til.';
 $messages['blockedimages'] = 'Fyri at verja tín privatlív so eru fjarmyndir sperraðar í hesum boði.';
 $messages['encryptedmessage'] = 'Hetta er eini brogla boð og kann ikki sýnast. Tíverri!';
+$messages['externalmessagedecryption'] = 'Hetta eru eini brongla boð. Boðini kunnu óbronglast við einum "browser extension"';
+$messages['nopubkeyfor'] = 'Eingin gildur almennur lykil, eisini kalla "public key", var funnin, fyri teldupost bústaðin $email';
+$messages['nopubkeyforsender'] = 'Eingin gildur almenna lykil var funnin fyri tín sendara samleika. Vilt tú brongla boðini fyri mótakaran einans?';
+$messages['encryptnoattachments'] = 'Tær longu viðheftu fílirnir, kunnu ikki bronglast. Vinarliga set teir inn av nýggjum.';
+$messages['searchpubkeyservers'] = 'Vilt tú leita í almennum datagrunnum eftir manglandi lyklum?';
+$messages['encryptpubkeysfound'] = 'Teir fylgjandi almennalyklar vóru funnir:';
 $messages['nocontactsfound'] = 'Eingir persónar funnir.';
 $messages['contactnotfound'] = 'Umbindni persónurin varð ikki funnin.';
-$messages['contactsearchonly'] = 'Skriva onkur leiti orð fyri at finna persónar';
 $messages['sendingfailed'] = 'Riggaði ikki at senda boð.';
 $messages['senttooquickly'] = 'Vinarliga bíða $sec sekund(ir) áðrenn tú sendur hetta boð.';
 $messages['errorsavingsent'] = 'Ein feilur kom fyri tá ið roynt var at goyma send boð.';
@@ -82,9 +89,7 @@ $messages['nosenderwarning'] = 'Vinarliga skriva sendara teldupost búðstað.';
 $messages['norecipientwarning'] = 'Vinarliga skriva minst ein móttakara.';
 $messages['nosubjectwarning']  = 'Evna teigurin er tómur. Vilt tú skriva nakað í hann?';
 $messages['nobodywarning'] = 'Send hesi boð uttan tekst?';
-$messages['notsentwarning'] = 'Boðini vóru ikki send. Ynskir tú strika hetta boð?';
 $messages['restoresavedcomposedata'] = 'Eitt fyrrverandi skriva boð, men ósent, boð var funni.\n\nEvni: $subject\nGoymt: $date\n\nVilt tú endur stovna hetta boð?';
-$messages['noldapserver'] = 'Vinarliga vel ein ldap ambatara fyri at leita.';
 $messages['nosearchname'] = 'Vinarliga skriva eitt persón navn ella teldupost búðstað,';
 $messages['notuploadedwarning'] = 'Ikki allar viðheftingar eru uppsendar enn. Vinarliga bíða ella angra uppsendingina.';
 $messages['searchsuccessful'] = '$nr boð funnin.';
@@ -92,6 +97,7 @@ $messages['contactsearchsuccessful'] = '$nr persónar funnir.';
 $messages['searchnomatch'] = 'Leiting gav eingin úrslit.';
 $messages['searching'] = 'Leitar...';
 $messages['checking'] = 'Kannar...';
+$messages['stillsearching'] = 'Leitar enn...';
 $messages['nospellerrors'] = 'Eingin stavifeilur funnin.';
 $messages['folderdeleted'] = 'Mappa sletta.';
 $messages['foldersubscribed'] = 'Mappa tekna til.';
@@ -101,6 +107,7 @@ $messages['folderexpunged'] = 'Mappan var samantrongd.';
 $messages['deletedsuccessfully'] = 'Strika uftan feilir.';
 $messages['converting'] = 'Tekur burt forsniðing...';
 $messages['messageopenerror'] = 'Kundi ikki lesa inn boð frá servara.';
+$messages['filelinkerror'] = 'Feilur kom í, tá roynt var at viðhefta fíl.';
 $messages['fileuploaderror'] = 'Fíla uppsending riggaði ikk.';
 $messages['filesizeerror'] = 'Uppsendi fílur er stórri enn grensan ið er $size.';
 $messages['copysuccess'] = 'Avrita $nr persónar.';
@@ -135,6 +142,7 @@ $messages['importmessagesuccess'] = 'Innflutt $nr boð.';
 $messages['importmessageerror'] = 'Innflyting bar ikki til! Tann uppsendi fílurin er ikki gyldigur boð ella postkassa fílur';
 $messages['opnotpermitted'] = 'Ger ikki loyvd!';
 $messages['nofromaddress'] = 'Manglar teldupostur í valda samleika.';
+$messages['editorwarning'] = 'At broyta rættara, eisini kallað "editor", kann gera at tín tekst formaterring verður burtur. Vilt tú halda á fram?';
 $messages['httpreceivedencrypterror'] = 'Ein oyðandi samansetings feilur uppstóð. Vinarliga set teg í samband við umsitaran beinanvegin. <b>Tíni boð kundu ikki sendast.</b>';
 $messages['smtpconnerror'] = 'SMTP Feilur ($code): Samband til ambatara riggaði ikki.';
 $messages['smtpautherror'] = 'SMTP Feilur ($code): Atgongd nokta.';
@@ -165,12 +173,26 @@ $messages['autocompletechars'] = 'Skriva minst $min tekin fyri sjálvvirkin útf
 $messages['autocompletemore'] = 'Fleiri úrslit funnin. Vinarliga skriva fleiri tekin.';
 $messages['namecannotbeempty'] = 'Navn kann ikki verða tómt.';
 $messages['nametoolong'] = 'Navnið er ov langt.';
+$messages['namedotforbidden'] = 'Navni á einari mappu, kann ikki byrja við punktum.';
 $messages['folderupdated'] = 'Mappa dagført.';
 $messages['foldercreated'] = 'Mappa stovna.';
 $messages['invalidimageformat'] = 'Ikki eitt gyldigt mynda slag.';
 $messages['mispellingsfound'] = 'Stavuvillur funnar í tíni boð.';
 $messages['parentnotwritable'] = 'Kann ikki flyta/avrita mappu til valda mappu. Eingin atgongu-rættindi.';
 $messages['messagetoobig'] = 'Boðini eru ov stór til at handfara.';
-$messages['attachmentvalidationerror'] = 'ÁVARING! Hendan viðheftingin er undir illgruna av tí at viðheftingar slagið ikki samsvarar við slagið ið var nevnt í boðunum. Um tú ikki stólar uppá sendaran so burdi tú ikki opna viðheftingina í tínum kaga, tí at tað kann innihalda illviljað tilfar.<br/><br/><em>Væntað: $expected; Fann $detected</em>';
 $messages['noscriptwarning'] = 'Ávaring: Hendan webmail tænastan krevur Javascript! Um tú vilt nýta hana, so vinarliga tendra Javascript í tínum kaga.';
-?>
+$messages['messageissent'] = 'Boðini vóru longu send, men ikki goymd enn. Vilt tú goyma tey nú?';
+$messages['errnotfound'] = 'Fílurin var ikki funnin';
+$messages['errnotfoundexplain'] = 'Tann valda hjálpartól var ikki funnið!';
+$messages['errfailedrequest'] = 'Umbønin riggaði ikki';
+$messages['errauthorizationfailed'] = 'Góðkenning riggaði ikki';
+$messages['errunauthorizedexplain'] = 'Tað bar ikki til at vátta at tú hevur heimild til hesa tænastu!';
+$messages['errrequestcheckfailed'] = 'Umbøn kanning ógildig';
+$messages['errcsrfprotectionexplain'] = "Fyri tína egnu verju, so er atgongdin til hetta hjálpartól tryggja ímóti CSRF.
+Um tú sært hetta. so ritaði tú nokk ikki út áðrenn tú fór frá farritinum.
+Menniskja ávirkan er nú kravd fyri at halda áfram.";
+$messages['errcontactserveradmin'] = 'Vinarliga set teg í samband við tín ambætara umsitara';
+$messages['clicktoresumesession'] = 'Trýst her fyri at forseta tína fyrrverandi setu';
+$messages['errcomposesession'] = 'Stovning av setan riggaði ikki';
+$messages['errcomposesessionexplain'] = 'Tann umbiðna setan var ikki funnin';
+$messages['clicktocompose'] = 'Trýst her fyri at stovna nýggj boð';

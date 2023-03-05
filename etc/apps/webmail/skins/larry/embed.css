@@ -1,7 +1,7 @@
 /**
  * Roundcube webmail "embedded" stylesheets
  *
- * Copyright (c) 2012, The Roundcube Dev Team
+ * Copyright (c) The Roundcube Dev Team
  *
  * The contents are subject to the Creative Commons Attribution-ShareAlike
  * License. It is allowed to copy, distribute, transmit and to adapt the work
@@ -15,14 +15,9 @@
 	font-weight: bold;
 	color: #996600;
 	border: 1px solid #ffdf0e;
-	background: url(images/messages.png?v=01ee.1736) no-repeat scroll 5px -83px #fef893;
+	background: url(images/messages.png?v=72e9.1264) no-repeat scroll 5px -83px #fef893;
 	padding: 6px 12px 4px 30px;
 	margin-bottom: 0.8em;
-}
-
-.rcmail-inline-message > button {
-	margin-left: 1em;
-	vertical-align: baseline;
 }
 
 .rcmail-inline-message em {
@@ -31,4 +26,11 @@
 
 .rcmail-inline-buttons {
 	margin-bottom: 0;
+	display: inline;
+}
+
+.rcmail-inline-buttons > button {
+	margin-left: 1em;
+	vertical-align: baseline;
+	line-height: 12px;
 }

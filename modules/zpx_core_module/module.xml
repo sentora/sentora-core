@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Sentora Core System Module</name>
-    <version>100</version>
+    <version>200</version>
     <defaultcat>other</defaultcat>
     <type>system</type>
     <desc>Core system modules for Sentora.</desc>

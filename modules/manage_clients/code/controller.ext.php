@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -33,8 +33,9 @@ class module_controller extends ctrl_module
     static $error;
     static $alreadyexists;
     static $badname;
+	static $badpass;
     static $bademail;
-    static $badpassword;
+    static $badpasswordlength;
     static $userblank;
     static $emailblank;
     static $passwordblank;
@@ -394,7 +395,11 @@ class module_controller extends ctrl_module
                 self::$badpassword = true;
                 return false;
             }
-
+			// Check for invalid password
+        	if (!self::IsValidPassword($newpass)) {
+            	self::$badpass = true;
+            	return false;
+        	}
             $crypto = new runtime_hash;
             $crypto->SetPassword($newpass);
             $randomsalt = $crypto->RandomSalt();
@@ -587,11 +592,11 @@ class module_controller extends ctrl_module
         return true;
     }
 
-    static function CheckCreateForErrors($username, $packageid, $groupid, $email, $password = "")
+    static function CheckCreateForErrors($username, $packageid, $groupid, $email, $password)
     {
         global $zdbh;
         $username = strtolower(str_replace(' ', '', $username));
-        // Check to make sure the username is not blank or exists before we go any further...
+		// Check to make sure the username is not blank or exists before we go any further...
         if (!fs_director::CheckForEmptyValue($username)) {
             $sql = "SELECT COUNT(*) FROM x_accounts WHERE UPPER(ac_user_vc)=:user AND ac_deleted_ts IS NULL";
             $numrows = $zdbh->prepare($sql);
@@ -603,10 +608,26 @@ class module_controller extends ctrl_module
                     return false;
                 }
             }
-            if (!self::IsValidUserName($username)) {
-                self::$badname = true;
-                return false;
-            }
+		// Check to make sure the password is not blank before we go any further...
+        if ($password == '') {
+            self::$passwordblank = TRUE;
+            return false;
+        }	
+		// Check for password length...
+		if (strlen($password) < ctrl_options::GetSystemOption('password_minlength')) {
+			self::$badpasswordlength = true;
+			return false;
+		}
+		// Check for invalid password
+        if (!self::IsValidPassword($password)) {
+            self::$badpass = true;
+            return false;
+        }
+		if (!self::IsValidUserName($username)) {
+			self::$badname = true;
+			return false;
+		}
+
         } else {
             self::$userblank = true;
             return false;
@@ -666,7 +687,8 @@ class module_controller extends ctrl_module
             self::$not_unique_email = true;
             return false;
         }
-
+		
+		/*
         // Check for password length...
         if (!fs_director::CheckForEmptyValue($password)) {
             if (strlen($password) < ctrl_options::GetSystemOption('password_minlength')) {
@@ -677,10 +699,16 @@ class module_controller extends ctrl_module
             self::$passwordblank = true;
             return false;
         }
-
+		*/
         return true;
     }
 
+	static function IsValidPassword($password)
+    {
+        //return preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/', $password) || preg_match('/-$/', $password) == 1;
+		return preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/', $password) || preg_match('/-$/', $password) == 1;
+    }
+	
 	static function IsValidEmail($email)
 	{
 		if (!filter_var($email, FILTER_SANITIZE_EMAIL))
@@ -927,24 +955,54 @@ class module_controller extends ctrl_module
         return false;
     }
 
-    static function getisDeleteClient()
+    static function getisDeleteClient($uid = null)
     {
         global $controller;
+        global $zdbh;
+
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
-            return true;
-        return false;
+
+        // Verify if Current user can Delete Selected user.
+        // This shall avoid exposing User based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        $sql = " SELECT * FROM x_accounts WHERE ac_reseller_fk=:userid AND ac_id_pk=:editedUsrID AND ac_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':editedUsrID', $urlvars['other']);
+        $numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Show User Info
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
     }
 
-    static function getisEditClient()
+    static function getisEditClient($uid = null)
     {
         global $controller;
-        $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit")) {
-            return true;
-        } else {
-            return false;
+        global $zdbh;
+
+        $urlvars     = $controller->GetAllControllerRequests('URL');
+
+        // Verify if Current user can Edit Selected user.
+        // This shall avoid exposing User based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        $sql = " SELECT * FROM x_accounts WHERE ac_reseller_fk=:userid AND ac_id_pk=:editedUsrID AND ac_deleted_ts IS NULL";
+        $numrows = $zdbh->prepare($sql);
+        $numrows->bindParam(':userid', $currentuser['userid']);
+        $numrows->bindParam(':editedUsrID', $urlvars['other']);
+        $numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
         }
+
+        // Show User Info
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Edit");
     }
 
     static function getEditCurrentName()
@@ -1089,10 +1147,10 @@ class module_controller extends ctrl_module
         }
         return;
     }
-
+/*
     static function getRandomPassword()
     {
-        $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
+		$minpasswordlength = "16";
         $trylength = 9;
         if ($trylength < $minpasswordlength) {
             $uselength = $minpasswordlength;
@@ -1102,7 +1160,7 @@ class module_controller extends ctrl_module
         $password = fs_director::GenerateRandomPassword($uselength, 4);
         return $password;
     }
-
+*/
     static function getMinPassLength()
     {
         $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
@@ -1135,10 +1193,13 @@ class module_controller extends ctrl_module
         if (!fs_director::CheckForEmptyValue(self::$badname)) {
             return ui_sysmessage::shout(ui_language::translate("Your client name is not valid. Please enter a valid client name."), "zannounceerror");
         }
-        if (!fs_director::CheckForEmptyValue(self::$bademail)) {
-            return ui_sysmessage::shout(ui_language::translate("Your email adress is not valid. Please enter a valid email address."), "zannounceerror");
+		if (!fs_director::CheckForEmptyValue(self::$badpass)) {
+            return ui_sysmessage::shout(ui_language::translate("Your password is not valid. Valid characters are A-Z, a-z, 0-9."), "zannounceerror");
         }
-        if (!fs_director::CheckForEmptyValue(self::$badpassword)) {
+        if (!fs_director::CheckForEmptyValue(self::$bademail)) {
+            return ui_sysmessage::shout(ui_language::translate("Your email address is not valid. Please enter a valid email address."), "zannounceerror");
+        }
+        if (!fs_director::CheckForEmptyValue(self::$badpasswordlength)) {
             return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") . ": " . ctrl_options::GetSystemOption('password_minlength'), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$alreadyexists)) {

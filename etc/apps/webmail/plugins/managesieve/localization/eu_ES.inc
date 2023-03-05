@@ -2,25 +2,28 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/managesieve/localization/<lang>.inc                           |
- |                                                                       |
  | Localization file of the Roundcube Webmail Managesieve plugin         |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
+
+
 $labels['filters'] = 'Iragazkiak';
 $labels['managefilters'] = 'Kudeatu sarrerako posta-iragazkiak';
 $labels['filtername'] = 'Iragazkiaren izena';
 $labels['newfilter'] = 'Iragazki berria';
 $labels['filteradd'] = 'Gehitu iragazkia';
 $labels['filterdel'] = 'Ezabatu iragazkia';
+$labels['rules'] = 'Araudia';
+$labels['actions'] = 'Ekintzak';
+$labels['scope'] = 'Esparrua';
 $labels['moveup'] = 'Mugitu gora';
 $labels['movedown'] = 'Mugitu behera';
 $labels['filterallof'] = 'datozen arau guztiak parekatzen';
@@ -32,12 +35,19 @@ $labels['filteris'] = 'honen berdina da';
 $labels['filterisnot'] = 'ez da honen berdina';
 $labels['filterexists'] = 'badago';
 $labels['filternotexists'] = 'ez dago';
-$labels['filtermatches'] = 'bat datorren espresio';
-$labels['filternotmatches'] = 'bat ez datorren espresio';
-$labels['filterregex'] = 'bat datozen adierazpen erregularrak';
-$labels['filternotregex'] = 'bat ez datorren espresio erregularrak';
+$labels['filtermatches'] = 'bat datorren espresioa';
+$labels['filternotmatches'] = 'bat ez datorren espresioa';
+$labels['filterregex'] = 'bat datozen adierazpen erregularra';
+$labels['filternotregex'] = 'bat ez datorren espresio erregularra';
 $labels['filterunder'] = 'azpian';
 $labels['filterover'] = 'gainean';
+$labels['mime'] = 'MIME:';
+$labels['mimepart'] = 'MIME zatia:';
+$labels['mime-message'] = 'mezua';
+$labels['mime-anychild'] = 'baten bat';
+$labels['mime-type'] = 'mota';
+$labels['mime-subtype'] = 'azpi-mota';
+$labels['mime-contenttype'] = 'eduki mota';
 $labels['addrule'] = 'Gehitu araua';
 $labels['delrule'] = 'Ezabatu araua';
 $labels['messagemoveto'] = 'Mugitu mezua hona';
@@ -54,24 +64,19 @@ $labels['add'] = 'Gehitu';
 $labels['del'] = 'Ezabatu';
 $labels['sender'] = 'Bidaltzailea';
 $labels['recipient'] = 'Hartzailea';
-$labels['vacationaddr'] = 'Nire helbide elektroniko osagarria(k):';
-$labels['vacationdays'] = 'Zer maiztasunarekin bidaltzen ditu mezuak (egunak)';
+$labels['vacationaddr'] = 'Nire e-posta helbideak:';
+$labels['vacationdays'] = 'Zenbatero bidali mezuak (egunak)';
 $labels['vacationinterval'] = 'Zenbatero bidali mezuak:';
 $labels['vacationreason'] = 'Mezuaren gorputza (oporrak direla medio):';
-$labels['vacationsubject'] = 'Mezuaren izenburua:';
+$labels['vacationfrom'] = 'Erantzun bidaltzailearen helbidera:';
+$labels['vacationsubject'] = 'Mezuaren gaia:';
 $labels['days'] = 'egun';
 $labels['seconds'] = 'segundo';
 $labels['rulestop'] = 'Gelditu arauak ebaluatzen';
 $labels['enable'] = 'Gaitu/Ezgaitu';
-$labels['filterset'] = 'Iragazki-paketea';
 $labels['filtersets'] = 'Iragazki-paketeak';
-$labels['filtersetadd'] = 'Gehitu iragazki-paketea';
-$labels['filtersetdel'] = 'Ezabatu uneko iragazki-paketea';
-$labels['filtersetact'] = 'Gaitu uneko iragazki-paketea';
-$labels['filtersetdeact'] = 'Ezgaitu uneko iragazki-paketea';
+$labels['filterseteditraw'] = 'Editatu iragazki multzoa';
 $labels['filterdef'] = 'Iragazkiaren definizioa';
-$labels['filtersetname'] = 'Iragazki-paketearen izena';
-$labels['newfilterset'] = 'Iragazki-pakete berria';
 $labels['active'] = 'aktiboa';
 $labels['none'] = 'Bat ere ez';
 $labels['fromset'] = 'paketetik';
@@ -123,6 +128,7 @@ $labels['filtercreate'] = 'Sortu iragazkia';
 $labels['usedata'] = 'Erabili datorren data iragazkian:';
 $labels['nextstep'] = 'Hurrengo urratsa';
 $labels['...'] = '...';
+$labels['string'] = 'Katea';
 $labels['currdate'] = 'Uneko data';
 $labels['datetest'] = 'Data';
 $labels['dateheader'] = 'goiburua:';
@@ -160,23 +166,28 @@ $labels['asciicasemap'] = 'minuskulak eta maiuskulak (ascii-casemap)';
 $labels['asciinumeric'] = 'numerikoa  (ascii-numeric)';
 $labels['index'] = 'indexatu:';
 $labels['indexlast'] = 'atzeraka';
-$labels['vacation'] = 'Oporraldia';
 $labels['vacation.reply'] = 'Erantzun mezua';
 $labels['vacation.advanced'] = 'Ezarpen aurreratuak';
+$labels['vacation.from'] = 'Erantzun bidaltzailearen helbidera';
 $labels['vacation.subject'] = 'Gaia';
 $labels['vacation.body'] = 'Gorputza';
 $labels['vacation.status'] = 'Egoera';
 $labels['vacation.on'] = 'Piztuta';
 $labels['vacation.off'] = 'Itzalita';
-$labels['vacation.addresses'] = 'Nire helbide osagarriak';
+$labels['vacation.addresses'] = 'Nire e-posta helbideak';
 $labels['vacation.interval'] = 'Erantzun tartea';
-$labels['vacation.after'] = 'Jarri oporren erregela honen ondoren';
 $labels['vacation.saving'] = 'Datuak gordetzen...';
 $labels['vacation.action'] = 'Sarrerako mezuaren ekintza';
 $labels['vacation.keep'] = 'Mantendu';
 $labels['vacation.discard'] = 'Baztertu';
 $labels['vacation.redirect'] = 'Birbideratu hona';
 $labels['vacation.copy'] = 'Bidali kopia hona';
+$labels['forward.redirect'] = 'Birbideratu hona';
+$labels['forward.copy'] = 'Bidali kopia hona';
+$labels['forward.on'] = 'Piztuta';
+$labels['forward.off'] = 'Itzalita';
+$labels['forward.saving'] = 'Datuak gordetzen...';
+$labels['filladdresses'] = 'Bete nire helbide guztiekin';
 $labels['arialabelfiltersetactions'] = 'Iragazki-paketearen ekintzak';
 $labels['arialabelfilteractions'] = 'Iragazki-ekintzak';
 $labels['arialabelfilterform'] = 'Iragazkiaren ezaugarriak';
@@ -184,27 +195,27 @@ $labels['ariasummaryfilterslist'] = 'Iragazkien zerrenda';
 $labels['ariasummaryfiltersetslist'] = 'Iragazki-paketeen zerrenda';
 $labels['filterstitle'] = 'Editatu postaren sarrera-iragazkiak';
 $labels['vacationtitle'] = 'Bulegotik-kanpo -erantzun automatiko- araua';
+$labels['message'] = 'Mezua';
+$labels['duplicate'] = 'bikoiztuta dago';
+$labels['notduplicate'] = 'ez dago bikoiztuta';
+$labels['duplicate.handle'] = 'heldulekua:';
+$labels['duplicate.header'] = 'goiburua:';
+$labels['duplicate.uniqueid'] = 'Identifikatzailea:';
+$labels['duplicate.seconds'] = 'Denbora-muga (segundo)';
+$labels['duplicate.last'] = 'azken exekuzioari dagokiona';
 $messages['filterunknownerror'] = 'Zerbitzari ezezaguna errorea';
 $messages['filterconnerror'] = 'Ezin da konektatu zerbitzariarekin.';
 $messages['filterdeleteerror'] = 'Ezin da ezabatu iragazkia. Errore bat gertatu da zerbitzarian.';
 $messages['filterdeleted'] = 'Iragazkia ongi ezabatu da.';
 $messages['filtersaved'] = 'Iragazkia ongi ezabatu da.';
 $messages['filtersaveerror'] = 'Ezin da gorde iragazkia. Zerbitzarian errore bat gertatu da.';
+$messages['filterformerror'] = 'Iragazkien formularioa erroreak ditu.';
 $messages['filterdeleteconfirm'] = 'Seguru zaude hautatutako iragazkiak ezabatu nahi dituzula?';
 $messages['ruledeleteconfirm'] = 'Seguru zaude hautatutako arauak ezabatu nahi dituzula?';
 $messages['actiondeleteconfirm'] = 'Seguru zaude hautatutako ekintzak ezabatu nahi dituzula?';
 $messages['forbiddenchars'] = 'Debekatutako karaktereak eremuan.';
 $messages['cannotbeempty'] = 'Eremua ezin da hutsik egon.';
 $messages['ruleexist'] = 'Lehendik badago izen hori duen iragazki bat.';
-$messages['setactivateerror'] = 'Ezin da aktibatu hautatutako iragazki paketea. Zerbitzarian errore bat gertatu da.';
-$messages['setdeactivateerror'] = 'Ezin da ezgaitu hautatutako iragazki-paketea. Zerbitzarian errore bat gertatu da.';
-$messages['setdeleteerror'] = 'Ezin da ezabatu hautatutako iragazki-paketea. Zerbitzarian errore bat gertatu da.';
-$messages['setactivated'] = 'Iragazki paketea ongi aktibatu da.';
-$messages['setdeactivated'] = 'Iragazki paketea ongi desaktibatu da.';
-$messages['setdeleted'] = 'Iragazki paketea ongi ezabatu da.';
-$messages['setdeleteconfirm'] = 'Seguru zaude hautatutako iragazki paketea ezabatu nahi duzula?';
-$messages['setcreateerror'] = 'Ezin da iragazki-paketea sortu. Zerbitzarian errore bat gertatu da.';
-$messages['setcreated'] = 'Iragazki paketea ongi sortu da.';
 $messages['activateerror'] = 'Ezin da gaitu hautatutako iragazkia(k). Zerbitzarian errore bat gertatu da.';
 $messages['deactivateerror'] = 'Ezin da ezgaitu hautatutako iragazkia(k). Zerbitzarian errore bat gertatu da.';
 $messages['deactivated'] = 'Iragazkia(k) ongi ezgaitu da.';
@@ -217,5 +228,5 @@ $messages['setexist'] = 'Lehendik badago pakete hori.';
 $messages['nodata'] = 'Gutxienez posizio bat hautatu behar da!';
 $messages['invaliddateformat'] = 'Dataren edo dataren zati baten formatua ez da baliozkoa ';
 $messages['saveerror'] = 'Ezin dira datuak gorde. Errorea gertatu da zerbitzarian.';
-$messages['vacationsaved'] = 'Oporren data ongi gorde da.';
-?>
+$messages['emptyvacationbody'] = 'Beharrezkoa da oporraldiko mezua jartzea!';
+$messages['duplicate.conflict.err'] = 'Goiburua eta identifikatzaile bakarra ez dira onartzen.';

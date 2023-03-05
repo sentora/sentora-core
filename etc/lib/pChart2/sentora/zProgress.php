@@ -1,10 +1,12 @@
-<?php
-
+<?php   
 /* CAT:Progress bars */
 
 /* pChart library inclusions */
-include("../class/pDraw.class.php");
-include("../class/pImage.class.php");
+require_once("bootstrap.php");
+
+use pChart\pColor;
+use pChart\pDraw;
+
 
 if (isset($_GET['percent'])) {
     $percent = $_GET['percent'];
@@ -23,13 +25,18 @@ if (isset($_GET['size'])) {
 }
 
 /* Create the pChart object */
-$myPicture = new pImage($ImageSize[0], $ImageSize[1]);
-$myPicture->setFontProperties(array("FontName" => "../fonts/verdana.ttf", "FontSize" => 8, "R" => 255, "G" => 255, "B" => 255));
+$myPicture = new pDraw($ImageSize[0],$ImageSize[1]);
 
-/* Draw a progress bar */
+/* Set the font & shadow options */ 
+$myPicture->setFontProperties(["FontName"=>"pChart/fonts/Cairo-Regular.ttf", "FontSize"=>10]);
+$myPicture->setShadow(TRUE,["X"=>1, "Y"=>1, "Color"=>new pColor(0,0,0,20)]);
+
+/* Draw a progress bar */ 
+//$progressOptions = ["Color"=>new pColor(134,209,27), "Surrounding"=>20, "BoxBorderColor"=>new pColor(0), "BoxBackColor"=>new pColor(255), "FadeColor"=>new pColor(206,133,30), "ShowLabel"=>TRUE];
 $progressOptions = array("Width" => ($ImageSize[0] - 1), "Height" => ($ImageSize[1] - 1), "R" => 121, "G" => 181, "B" => 68, "Surrounding" => 50, "BoxBorderR" => 204, "BoxBorderG" => 204, "BoxBorderB" => 204, "BoxBackR" => 200, "BoxBackG" => 200, "BoxBackB" => 200, "RFade" => 244, "GFade" => 120, "BFade" => 66, "ShowLabel" => TRUE, "LabelPos" => LABEL_POS_CENTER);
-$myPicture->drawProgress(0, 0, $percent, $progressOptions);
+$myPicture->drawProgress(0,0,$percent,$progressOptions);
 
 /* Render the picture (choose the best way) */
-$myPicture->autoOutput("zProgress.png");
+$myPicture->autoOutput("temp/example.drawProgress.png");
+
 ?>

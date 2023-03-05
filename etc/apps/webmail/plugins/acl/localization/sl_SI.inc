@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Skupna raba';
 $labels['myrights'] = 'Pravice dostopa';
 $labels['username'] = 'Uporabnik:';
 $labels['advanced'] = 'Napredni način';
+$labels['add'] = 'Dodaj';
 $labels['newuser'] = 'Dodaj vnos';
 $labels['editperms'] = 'Uredi pravice';
 $labels['actions'] = 'Nastavitve pravic dostopa';
@@ -38,6 +38,7 @@ $labels['aclt'] = 'Izbriši sporočila';
 $labels['acle'] = 'Izbriši';
 $labels['aclx'] = 'Izbriši mapo';
 $labels['acla'] = 'Uredi';
+$labels['acln'] = 'Komentarji';
 $labels['aclfull'] = 'Popolno upravljanje';
 $labels['aclother'] = 'Ostalo';
 $labels['aclread'] = 'Preberi';
@@ -56,6 +57,7 @@ $labels['shortaclt'] = 'Izbriši';
 $labels['shortacle'] = 'Izbriši';
 $labels['shortaclx'] = 'Izbriši mapo';
 $labels['shortacla'] = 'Uredi';
+$labels['shortacln'] = 'Dodaj komentar';
 $labels['shortaclother'] = 'Ostalo';
 $labels['shortaclread'] = 'Preberi';
 $labels['shortaclwrite'] = 'Sestavi';
@@ -73,10 +75,15 @@ $labels['longaclt'] = 'Oznako sporočila  \'Izbrisano\' je mogoče spremeniti';
 $labels['longacle'] = 'Sporočila so lahko izbrisana';
 $labels['longaclx'] = 'Mapa je lahko izbrisana ali preimenovana';
 $labels['longacla'] = 'Pravice na mapi so lahko spremenjene';
+$labels['longacln'] = 'Metapodatke (komentarjev), ki so v skupni rabi, je mogoče spremeniti';
 $labels['longaclfull'] = 'Popolno upravljanje, vključno z urejanjem map';
 $labels['longaclread'] = 'Mapa je na voljo za branje';
 $labels['longaclwrite'] = 'Sporočila je mogoče označiti, sestaviti ali kopirati v mapo';
 $labels['longacldelete'] = 'Sporočila so lahko izbrisana';
+$labels['longaclother'] = 'Ostale pravice dostopa';
+$labels['ariasummaryacltable'] = 'Seznam pravic dostopa';
+$labels['arialabelaclactions'] = 'Prikaži možnosti';
+$labels['arialabelaclform'] = 'Obrazec za nastavitve pravic dostopa';
 $messages['deleting'] = 'Brisanje pravic';
 $messages['saving'] = 'Shranjevanje pravic';
 $messages['updatesuccess'] = 'Pravice so bile uspešno spremenjene';

@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/mail/pagenav.inc                                        |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2009, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Updates message page navigation controls                            |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Aleksander Machniak <alec@alec.pl>                            |
  +-----------------------------------------------------------------------+
@@ -28,6 +26,11 @@ if ($cnt && ($pos = $index->exists($uid, true)) !== false) {
     $first = $pos ? $index->get_element('FIRST') : 0;
     $next  = $pos < $cnt-1 ? $index->get_element($pos+1) : 0;
     $last  = $pos < $cnt-1 ? $index->get_element('LAST') : 0;
+}
+else {
+    // error, this will at least disable page navigation
+    $OUTPUT->command('set_rowcount', '');
+    $OUTPUT->send();
 }
 
 // Set UIDs and activate navigation buttons

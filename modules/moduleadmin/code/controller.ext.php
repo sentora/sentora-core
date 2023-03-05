@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -139,9 +139,16 @@ class module_controller extends ctrl_module
                         }
                         $line .= "</select>";
                     } elseif ($modules['mo_type_en'] == "modadmin") {
+									
                         $line .="" . ui_language::translate("N/A (Module Admin)") . "";
+						### Added line to prevent query adding nothing to inCategory INT cell for "modadmin" modules. Now adds "0".
+						$line .="<input type=hidden name=\"inCategory_" . $modules['mo_id_pk'] . "\" id=\"inCategory_" . $modules['mo_id_pk'] . "\" value=0>";	
+						
                     } else {
                         $line .="" . ui_language::translate("N/A (System Module)") . "";
+						### Added line to prevent query adding nothing to inCategory INT cell for "system" modules. Now adds "0".
+						$line .="<input type=hidden name=\"inCategory_" . $modules['mo_id_pk'] . "\" id=\"inCategory_" . $modules['mo_id_pk'] . "\" value=0>";
+					
                     }
                     $line .= "</td><td style=\"text-align:center\">";
                     if (ui_module::GetModuleHasUpdates($modules['mo_folder_vc'])) {

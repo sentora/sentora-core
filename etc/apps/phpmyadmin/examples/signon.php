@@ -11,12 +11,18 @@
  * @subpackage Example
  */
 
+/* Use cookies for session */
+ini_set('session.use_cookies', 'true');
+/* Change this to true if using phpMyAdmin over https */
+$secure_cookie = false;
 /* Need to have cookie visible from parent directory */
-session_set_cookie_params(0, '/', '', 0);
+session_set_cookie_params(0, '/', '', $secure_cookie, true);
 /* Create signon session */
 $session_name = 'SignonSession';
 session_name($session_name);
-session_start();
+// Uncomment and change the following line to match your $cfg['SessionSavePath']
+//session_save_path('/foobar');
+@session_start();
 
 /* Was data posted? */
 if (isset($_POST['user'])) {
@@ -29,37 +35,41 @@ if (isset($_POST['user'])) {
     $_SESSION['PMA_single_signon_cfgupdate'] = array('verbose' => 'Signon test');
     $id = session_id();
     /* Close that session */
-    session_write_close();
+    @session_write_close();
     /* Redirect to phpMyAdmin (should use absolute URL here!) */
     header('Location: ../index.php');
 } else {
     /* Show simple form */
     header('Content-Type: text/html; charset=utf-8');
-    echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+    echo '<?xml version="1.0" encoding="utf-8"?>' , "\n";
     ?>
-<!DOCTYPE HTML>
-<html lang="en" dir="ltr">
-<head>
+    <!DOCTYPE HTML>
+    <html lang="en" dir="ltr">
+    <head>
     <link rel="icon" href="../favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
     <meta charset="utf-8" />
     <title>phpMyAdmin single signon example</title>
-</head>
-<body>
-<?php
-if (isset($_SESSION['PMA_single_signon_error_message'])) {
-    echo '<p class="error">' . $_SESSION['PMA_single_signon_error_message'] . '</p>';
-}
-?>
-<form action="signon.php" method="post">
-Username: <input type="text" name="user" /><br />
-Password: <input type="password" name="password" /><br />
-Host: (will use the one from config.inc.php by default) <input type="text" name="host" /><br />
-Port: (will use the one from config.inc.php by default) <input type="text" name="port" /><br />
-<input type="submit" />
-</form>
-</body>
-</html>
-<?php
+    </head>
+    <body>
+    <?php
+    if (isset($_SESSION['PMA_single_signon_error_message'])) {
+        echo '<p class="error">';
+        echo $_SESSION['PMA_single_signon_error_message'];
+        echo '</p>';
+    }
+    ?>
+    <form action="signon.php" method="post">
+    Username: <input type="text" name="user" /><br />
+    Password: <input type="password" name="password" /><br />
+    Host: (will use the one from config.inc.php by default)
+    <input type="text" name="host" /><br />
+    Port: (will use the one from config.inc.php by default)
+    <input type="text" name="port" /><br />
+    <input type="submit" />
+    </form>
+    </body>
+    </html>
+    <?php
 }
 ?>

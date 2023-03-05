@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Partajare';
 $labels['myrights'] = 'Drepturi de acces';
 $labels['username'] = 'Utilizator:';
 $labels['advanced'] = 'Modul avansat';
+$labels['add'] = 'Adauga';
 $labels['newuser'] = 'Adăugare intrare';
 $labels['editperms'] = 'Editare permisiuni';
 $labels['actions'] = 'Acțiunea drepturilor de acces...';
@@ -38,7 +38,7 @@ $labels['aclt'] = 'Ștergere mesaje';
 $labels['acle'] = 'Elimină';
 $labels['aclx'] = 'Ștergere dosar';
 $labels['acla'] = 'Administrează';
-$labels['acln'] = 'Adnoteaza mesajele';
+$labels['acln'] = 'Adnotează mesajele';
 $labels['aclfull'] = 'Control complet';
 $labels['aclother'] = 'Altul';
 $labels['aclread'] = 'Citeşte';
@@ -80,6 +80,10 @@ $labels['longaclfull'] = 'Control complet include și administrare dosar';
 $labels['longaclread'] = 'Dosarul se poate deschide pentru citire';
 $labels['longaclwrite'] = 'Mesajul se poate marca, scrie sau copia într-un dosar';
 $labels['longacldelete'] = 'Mesajele se pot șterge';
+$labels['longaclother'] = 'Alte drepturi de acces';
+$labels['ariasummaryacltable'] = 'Listă drepturi de acces';
+$labels['arialabelaclactions'] = 'Arată acțiuni';
+$labels['arialabelaclform'] = 'Drepturi de acces de la';
 $messages['deleting'] = 'Șterg drepturile de access...';
 $messages['saving'] = 'Salvez drepturi accesare...';
 $messages['updatesuccess'] = 'Drepturile de acces au fost schimbate cu succes';

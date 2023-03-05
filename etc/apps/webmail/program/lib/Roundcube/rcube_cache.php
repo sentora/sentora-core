@@ -1,10 +1,11 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2011, The Roundcube Dev Team                            |
- | Copyright (C) 2011, Kolab Systems AG                                  |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
+ | Copyright (C) Kolab Systems AG                                        |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -18,39 +19,59 @@
  +-----------------------------------------------------------------------+
 */
 
-
 /**
  * Interface class for accessing Roundcube cache
  *
  * @package    Framework
  * @subpackage Cache
- * @author     Thomas Bruederli <roundcube@gmail.com>
- * @author     Aleksander Machniak <alec@alec.pl>
  */
 class rcube_cache
 {
-    /**
-     * Instance of database handler
-     *
-     * @var rcube_db|Memcache|bool
-     */
-    private $db;
-    private $type;
-    private $userid;
-    private $prefix;
-    private $table;
-    private $ttl;
-    private $packed;
-    private $index;
-    private $cache         = array();
-    private $cache_changes = array();
-    private $cache_sums    = array();
+    protected $type;
+    protected $userid;
+    protected $prefix;
+    protected $ttl;
+    protected $packed;
+    protected $index;
+    protected $index_changed = false;
+    protected $debug         = false;
+    protected $cache         = array();
+    protected $cache_changes = array();
+    protected $cache_sums    = array();
+    protected $max_packet    = -1;
 
+
+    /**
+     * Object factory
+     *
+     * @param string $type   Engine type ('db', 'memcache', 'apc', 'redis')
+     * @param int    $userid User identifier
+     * @param string $prefix Key name prefix
+     * @param string $ttl    Expiration time of memcache/apc items
+     * @param bool   $packed Enables/disabled data serialization.
+     *                       It's possible to disable data serialization if you're sure
+     *                       stored data will be always a safe string
+     *
+     * @param rcube_cache Cache object
+     */
+    public static function factory($type, $userid, $prefix = '', $ttl = 0, $packed = true)
+    {
+        $driver = strtolower($type) ?: 'db';
+        $class  = "rcube_cache_$driver";
+
+        if (!$driver || !class_exists($class)) {
+            rcube::raise_error(array('code' => 600, 'type' => 'db',
+                'line' => __LINE__, 'file' => __FILE__,
+                'message' => "Configuration error. Unsupported cache driver: $driver"),
+                true, true);
+        }
+
+        return new $class($userid, $prefix, $ttl, $packed);
+    }
 
     /**
      * Object constructor.
      *
-     * @param string $type   Engine type ('db' or 'memcache' or 'apc')
      * @param int    $userid User identifier
      * @param string $prefix Key name prefix
      * @param string $ttl    Expiration time of memcache/apc items
@@ -58,25 +79,8 @@ class rcube_cache
      *                       It's possible to disable data serialization if you're sure
      *                       stored data will be always a safe string
      */
-    function __construct($type, $userid, $prefix='', $ttl=0, $packed=true)
+    public function __construct($userid, $prefix = '', $ttl = 0, $packed = true)
     {
-        $rcube = rcube::get_instance();
-        $type  = strtolower($type);
-
-        if ($type == 'memcache') {
-            $this->type = 'memcache';
-            $this->db   = $rcube->get_memcache();
-        }
-        else if ($type == 'apc') {
-            $this->type = 'apc';
-            $this->db   = function_exists('apc_exists'); // APC 3.1.4 required
-        }
-        else {
-            $this->type  = 'db';
-            $this->db    = $rcube->get_dbh();
-            $this->table = $this->db->table_name('cache');
-        }
-
         // convert ttl string to seconds
         $ttl = get_offset_sec($ttl);
         if ($ttl > 2592000) $ttl = 2592000;
@@ -87,7 +91,6 @@ class rcube_cache
         $this->prefix    = $prefix;
     }
 
-
     /**
      * Returns cached value.
      *
@@ -95,7 +98,7 @@ class rcube_cache
      *
      * @return mixed Cached value
      */
-    function get($key)
+    public function get($key)
     {
         if (!array_key_exists($key, $this->cache)) {
             return $this->read_record($key);
@@ -104,20 +107,17 @@ class rcube_cache
         return $this->cache[$key];
     }
 
-
     /**
      * Sets (add/update) value in cache.
      *
      * @param string $key  Cache key name
      * @param mixed  $data Cache data
      */
-    function set($key, $data)
+    public function set($key, $data)
     {
         $this->cache[$key]         = $data;
-        $this->cache_changed       = true;
         $this->cache_changes[$key] = true;
     }
-
 
     /**
      * Returns cached value without storing it in internal memory.
@@ -126,7 +126,7 @@ class rcube_cache
      *
      * @return mixed Cached value
      */
-    function read($key)
+    public function read($key)
     {
         if (array_key_exists($key, $this->cache)) {
             return $this->cache[$key];
@@ -134,7 +134,6 @@ class rcube_cache
 
         return $this->read_record($key, true);
     }
-
 
     /**
      * Sets (add/update) value in cache and immediately saves
@@ -145,11 +144,10 @@ class rcube_cache
      *
      * @param boolean True on success, False on failure
      */
-    function write($key, $data)
+    public function write($key, $data)
     {
         return $this->write_record($key, $this->serialize($data));
     }
-
 
     /**
      * Clears the cache.
@@ -158,12 +156,11 @@ class rcube_cache
      * @param boolean $prefix_mode Enable it to clear all keys starting
      *                             with prefix specified in $key
      */
-    function remove($key=null, $prefix_mode=false)
+    public function remove($key = null, $prefix_mode = false)
     {
         // Remove all keys
         if ($key === null) {
             $this->cache         = array();
-            $this->cache_changed = false;
             $this->cache_changes = array();
             $this->cache_sums    = array();
         }
@@ -188,45 +185,28 @@ class rcube_cache
         $this->remove_record($key, $prefix_mode);
     }
 
-
     /**
      * Remove cache records older than ttl
      */
-    function expunge()
+    public function expunge()
     {
-        if ($this->type == 'db' && $this->db && $this->ttl) {
-            $this->db->query(
-                "DELETE FROM ".$this->table.
-                " WHERE user_id = ?".
-                " AND cache_key LIKE ?".
-                " AND expires < " . $this->db->now(),
-                $this->userid,
-                $this->prefix.'.%');
-        }
+        // to be overwritten by engine class
     }
-
 
     /**
      * Remove expired records of all caches
      */
-    static function gc()
+    public static function gc()
     {
-        $rcube = rcube::get_instance();
-        $db    = $rcube->get_dbh();
-
-        $db->query("DELETE FROM " . $db->table_name('cache') . " WHERE expires < " . $db->now());
+        // Only DB cache requires an action to remove expired entries
+        rcube_cache_db::gc();
     }
-
 
     /**
      * Writes the cache back to the DB.
      */
-    function close()
+    public function close()
     {
-        if (!$this->cache_changed) {
-            return;
-        }
-
         foreach ($this->cache as $key => $data) {
             // The key has been used
             if ($this->cache_changes[$key]) {
@@ -240,9 +220,44 @@ class rcube_cache
             }
         }
 
-        $this->write_index();
+        if ($this->index_changed) {
+            $this->write_index();
+        }
+
+        // reset internal cache index, thanks to this we can force index reload
+        $this->index         = null;
+        $this->index_changed = false;
+        $this->cache         = array();
+        $this->cache_sums    = array();
+        $this->cache_changes = array();
     }
 
+    /**
+     * A helper to build cache key for specified parameters.
+     *
+     * @param string $prefix Key prefix (Max. length 64 characters)
+     * @param array  $params Additional parameters
+     *
+     * @return string Key name
+     */
+    public static function key_name($prefix, $params = array())
+    {
+        $cache_key = $prefix;
+
+        if (!empty($params)) {
+            $func   = function($v) {
+                if (is_array($v)) {
+                    sort($v);
+                }
+                return is_string($v) ? $v : serialize($v);
+            };
+
+            $params = array_map($func, $params);
+            $cache_key .= '.' . md5(implode(':', $params));
+        }
+
+        return $cache_key;
+    }
 
     /**
      * Reads cache entry.
@@ -252,126 +267,72 @@ class rcube_cache
      *
      * @return mixed Cached value
      */
-    private function read_record($key, $nostore=false)
+    protected function read_record($key, $nostore = false)
     {
-        if (!$this->db) {
-            return null;
-        }
+        $this->load_index();
 
-        if ($this->type != 'db') {
-            if ($this->type == 'memcache') {
-                $data = $this->db->get($this->ckey($key));
-            }
-            else if ($this->type == 'apc') {
-                $data = apc_fetch($this->ckey($key));
-            }
-
-            if ($data) {
-                $md5sum = md5($data);
-                $data   = $this->unserialize($data);
-
-                if ($nostore) {
-                    return $data;
-                }
-
-                $this->cache_sums[$key] = $md5sum;
-                $this->cache[$key]      = $data;
-            }
-            else {
-                $this->cache[$key] = null;
-            }
+        // Consistency check (#1490390)
+        if (!in_array($key, $this->index)) {
+            // we always check if the key exist in the index
+            // to have data in consistent state. Keeping the index consistent
+            // is needed for keys delete operation when we delete all keys or by prefix.
         }
         else {
-            $sql_result = $this->db->limitquery(
-                "SELECT data, cache_key".
-                " FROM " . $this->table.
-                " WHERE user_id = ?".
-                " AND cache_key = ?".
-                // for better performance we allow more records for one key
-                // get the newer one
-                " ORDER BY created DESC",
-                0, 1, $this->userid, $this->prefix.'.'.$key);
+            $ckey = $this->ckey($key);
+            $data = $this->get_item($ckey);
+        }
 
-            if ($sql_arr = $this->db->fetch_assoc($sql_result)) {
-                $key = substr($sql_arr['cache_key'], strlen($this->prefix)+1);
-                $md5sum = $sql_arr['data'] ? md5($sql_arr['data']) : null;
-                if ($sql_arr['data']) {
-                    $data = $this->unserialize($sql_arr['data']);
-                }
+        if ($data !== false) {
+            $md5sum = md5($data);
+            $data   = $this->unserialize($data);
 
-                if ($nostore) {
-                    return $data;
-                }
-
-                $this->cache[$key]      = $data;
-                $this->cache_sums[$key] = $md5sum;
+            if ($nostore) {
+                return $data;
             }
-            else {
-                $this->cache[$key] = null;
-            }
+
+            $this->cache_sums[$key] = $md5sum;
+            $this->cache[$key]      = $data;
+        }
+        else {
+            $this->cache[$key] = null;
         }
 
         return $this->cache[$key];
     }
 
-
     /**
      * Writes single cache record into DB.
      *
      * @param string $key  Cache key name
-     * @param mxied  $data Serialized cache data 
+     * @param mixed  $data Serialized cache data
      *
      * @param boolean True on success, False on failure
      */
-    private function write_record($key, $data)
+    protected function write_record($key, $data)
     {
-        if (!$this->db) {
+        // don't attempt to write too big data sets
+        if (strlen($data) > $this->max_packet_size()) {
+            trigger_error("rcube_cache: max_packet_size ($this->max_packet) exceeded for key $key. Tried to write " . strlen($data) . " bytes", E_USER_WARNING);
             return false;
         }
 
-        if ($this->type == 'memcache' || $this->type == 'apc') {
-            return $this->add_record($this->ckey($key), $data);
+        $result = $this->add_item($this->ckey($key), $data);
+
+        // make sure index will be updated
+        if ($result) {
+            if (!array_key_exists($key, $this->cache_sums)) {
+                $this->cache_sums[$key] = true;
+            }
+
+            $this->load_index();
+
+            if (!$this->index_changed && !in_array($key, $this->index)) {
+                $this->index_changed = true;
+            }
         }
 
-        $key_exists = array_key_exists($key, $this->cache_sums);
-        $key        = $this->prefix . '.' . $key;
-
-        // Remove NULL rows (here we don't need to check if the record exist)
-        if ($data == 'N;') {
-            $this->db->query(
-                "DELETE FROM " . $this->table.
-                " WHERE user_id = ?".
-                " AND cache_key = ?",
-                $this->userid, $key);
-
-            return true;
-        }
-
-        // update existing cache record
-        if ($key_exists) {
-            $result = $this->db->query(
-                "UPDATE " . $this->table.
-                " SET created = " . $this->db->now().
-                    ", expires = " . ($this->ttl ? $this->db->now($this->ttl) : 'NULL').
-                    ", data = ?".
-                " WHERE user_id = ?".
-                " AND cache_key = ?",
-                $data, $this->userid, $key);
-        }
-        // add new cache record
-        else {
-            // for better performance we allow more records for one key
-            // so, no need to check if record exist (see rcube_cache::read_record())
-            $result = $this->db->query(
-                "INSERT INTO " . $this->table.
-                " (created, expires, user_id, cache_key, data)".
-                " VALUES (" . $this->db->now() . ", " . ($this->ttl ? $this->db->now($this->ttl) : 'NULL') . ", ?, ?, ?)",
-                $this->userid, $key, $data);
-        }
-
-        return $this->db->affected_rows($result);
+        return $result;
     }
-
 
     /**
      * Deletes the cache record(s).
@@ -380,215 +341,190 @@ class rcube_cache
      * @param boolean $prefix_mode Enable it to clear all keys starting
      *                             with prefix specified in $key
      */
-    private function remove_record($key=null, $prefix_mode=false)
+    protected function remove_record($key = null, $prefix_mode = false)
     {
-        if (!$this->db) {
-            return;
-        }
+        $this->load_index();
 
-        if ($this->type != 'db') {
-            $this->load_index();
-
-            // Remove all keys
-            if ($key === null) {
-                foreach ($this->index as $key) {
-                    $this->delete_record($key, false);
-                }
-                $this->index = array();
-            }
-            // Remove keys by name prefix
-            else if ($prefix_mode) {
-                foreach ($this->index as $k) {
-                    if (strpos($k, $key) === 0) {
-                        $this->delete_record($k);
-                    }
-                }
-            }
-            // Remove one key by name
-            else {
-                $this->delete_record($key);
-            }
-
-            return;
-        }
-
-        // Remove all keys (in specified cache)
+        // Remove all keys
         if ($key === null) {
-            $where = " AND cache_key LIKE " . $this->db->quote($this->prefix.'.%');
+            foreach ($this->index as $key) {
+                $this->delete_item($this->ckey($key));
+            }
+
+            $this->index = array();
         }
         // Remove keys by name prefix
         else if ($prefix_mode) {
-            $where = " AND cache_key LIKE " . $this->db->quote($this->prefix.'.'.$key.'%');
+            foreach ($this->index as $idx => $k) {
+                if (strpos($k, $key) === 0) {
+                    $this->delete_item($this->ckey($k));
+                    unset($this->index[$idx]);
+                }
+            }
         }
         // Remove one key by name
         else {
-            $where = " AND cache_key = " . $this->db->quote($this->prefix.'.'.$key);
-        }
-
-        $this->db->query(
-            "DELETE FROM " . $this->table.
-            " WHERE user_id = ?" . $where,
-            $this->userid);
-    }
-
-
-    /**
-     * Adds entry into memcache/apc DB.
-     *
-     * @param string  $key   Cache key name
-     * @param mxied   $data  Serialized cache data
-     * @param bollean $index Enables immediate index update
-     *
-     * @param boolean True on success, False on failure
-     */
-    private function add_record($key, $data, $index=false)
-    {
-        if ($this->type == 'memcache') {
-            $result = $this->db->replace($key, $data, MEMCACHE_COMPRESSED, $this->ttl);
-            if (!$result)
-                $result = $this->db->set($key, $data, MEMCACHE_COMPRESSED, $this->ttl);
-        }
-        else if ($this->type == 'apc') {
-            if (apc_exists($key))
-                apc_delete($key);
-            $result = apc_store($key, $data, $this->ttl);
-        }
-
-        // Update index
-        if ($index && $result) {
-            $this->load_index();
-
-            if (array_search($key, $this->index) === false) {
-                $this->index[] = $key;
-                $data = serialize($this->index);
-                $this->add_record($this->ikey(), $data);
-            }
-        }
-
-        return $result;
-    }
-
-
-    /**
-     * Deletes entry from memcache/apc DB.
-     */
-    private function delete_record($key, $index=true)
-    {
-        if ($this->type == 'memcache') {
-            // #1488592: use 2nd argument
-            $this->db->delete($this->ckey($key), 0);
-        }
-        else {
-            apc_delete($this->ckey($key));
-        }
-
-        if ($index) {
+            $this->delete_item($this->ckey($key));
             if (($idx = array_search($key, $this->index)) !== false) {
                 unset($this->index[$idx]);
             }
         }
+
+        $this->index_changed = true;
     }
 
+    /**
+     * Fetches cache entry.
+     *
+     * @param string $key Cache internal key name
+     *
+     * @return mixed Cached value
+     */
+    protected function get_item($key)
+    {
+        // to be overwritten by engine class
+    }
 
     /**
-     * Writes the index entry into memcache/apc DB.
+     * Adds entry into memcache/apc/redis DB.
+     *
+     * @param string $key  Cache internal key name
+     * @param mixed  $data Serialized cache data
+     *
+     * @param boolean True on success, False on failure
      */
-    private function write_index()
+    protected function add_item($key, $data)
     {
-        if (!$this->db) {
-            return;
-        }
+        // to be overwritten by engine class
+    }
 
-        if ($this->type == 'db') {
-            return;
-        }
+    /**
+     * Deletes entry from memcache/apc/redis DB.
+     *
+     * @param string $key Cache internal key name
+     *
+     * @param boolean True on success, False on failure
+     */
+    protected function delete_item($key)
+    {
+        // to be overwritten by engine class
+    }
 
+    /**
+     * Writes the index entry into memcache/apc/redis DB.
+     */
+    protected function write_index()
+    {
         $this->load_index();
 
         // Make sure index contains new keys
         foreach ($this->cache as $key => $value) {
-            if ($value !== null) {
-                if (array_search($key, $this->index) === false) {
-                    $this->index[] = $key;
-                }
+            if ($value !== null && !in_array($key, $this->index)) {
+                $this->index[] = $key;
             }
         }
 
-        $data = serialize($this->index);
-        $this->add_record($this->ikey(), $data);
-    }
-
-
-    /**
-     * Gets the index entry from memcache/apc DB.
-     */
-    private function load_index()
-    {
-        if (!$this->db) {
-            return;
+        // new keys added using self::write()
+        foreach ($this->cache_sums as $key => $value) {
+            if ($value === true && !in_array($key, $this->index)) {
+                $this->index[] = $key;
+            }
         }
 
+        $data = serialize(array_values($this->index));
+
+        $this->add_item($this->ikey(), $data);
+    }
+
+    /**
+     * Gets the index entry from memcache/apc/redis DB.
+     */
+    protected function load_index()
+    {
         if ($this->index !== null) {
             return;
         }
 
-        $index_key = $this->ikey();
-        if ($this->type == 'memcache') {
-            $data = $this->db->get($index_key);
-        }
-        else if ($this->type == 'apc') {
-            $data = apc_fetch($index_key);
-        }
-
+        $index_key   = $this->ikey();
+        $data        = $this->get_item($index_key);
         $this->index = $data ? unserialize($data) : array();
     }
 
-
     /**
-     * Creates per-user cache key name (for memcache and apc)
+     * Creates per-user cache key name (for memcache, apc, redis)
      *
      * @param string $key Cache key name
      *
      * @return string Cache key
      */
-    private function ckey($key)
+    protected function ckey($key)
     {
-        return sprintf('%d:%s:%s', $this->userid, $this->prefix, $key);
+        $key = $this->prefix . ':' . $key;
+
+        if ($this->userid) {
+            $key = $this->userid . ':' . $key;
+        }
+
+        return $key;
     }
 
-
     /**
-     * Creates per-user index cache key name (for memcache and apc)
+     * Creates per-user index cache key name (for memcache, apc, redis)
      *
      * @return string Cache key
      */
-    private function ikey()
+    protected function ikey()
     {
-        // This way each cache will have its own index
-        return sprintf('%d:%s%s', $this->userid, $this->prefix, 'INDEX');
+        $key = $this->prefix . 'INDEX';
+
+        if ($this->userid) {
+            $key = $this->userid . ':' . $key;
+        }
+
+        return $key;
     }
 
     /**
      * Serializes data for storing
      */
-    private function serialize($data)
+    protected function serialize($data)
     {
-        if ($this->type == 'db') {
-            return $this->db->encode($data, $this->packed);
-        }
-
         return $this->packed ? serialize($data) : $data;
     }
 
     /**
      * Unserializes serialized data
      */
-    private function unserialize($data)
+    protected function unserialize($data)
     {
-        if ($this->type == 'db') {
-            return $this->db->decode($data, $this->packed);
+        return $this->packed ? @unserialize($data) : $data;
+    }
+
+    /**
+     * Determine the maximum size for cache data to be written
+     */
+    protected function max_packet_size()
+    {
+        if ($this->max_packet < 0) {
+            $config           = rcube::get_instance()->config;
+            $max_packet       = $config->get($this->type . '_max_allowed_packet');
+            $this->max_packet = parse_bytes($max_packet) ?: 2097152; // default/max is 2 MB
         }
 
-        return $this->packed ? @unserialize($data) : $data;
+        return $this->max_packet;
+    }
+
+    /**
+     * Write memcache/apc/redis debug info to the log
+     */
+    protected function debug($type, $key, $data = null, $result = null)
+    {
+        $line = strtoupper($type) . ' ' . $key;
+
+        if ($data !== null) {
+            $line .= ' ' . ($this->packed ? $data : serialize($data));
+        }
+
+        rcube::debug($this->type, $line, $result);
     }
 }

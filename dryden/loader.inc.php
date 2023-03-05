@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * Module loader script for detecting and displaying the correct module using the Dryden framework, this handles the autolaoding of classes.
@@ -18,7 +18,7 @@ $mtime = $mtime[1] + $mtime[0];
 $starttime = $mtime;
 $class_name = null;
 
-function __autoload($class_name)
+function x__autoload($class_name)
 {
     $path = 'dryden/' . str_replace('_', '/', $class_name) . '.class.php';
     if (file_exists($path)) {
@@ -26,7 +26,7 @@ function __autoload($class_name)
     }
 }
 
-spl_autoload_register('__autoload');
+spl_autoload_register('x__autoload');
 
 if (isset($_GET['module'])) {
     $CleanModuleName = fs_protector::SanitiseFolderName($_GET['module']);

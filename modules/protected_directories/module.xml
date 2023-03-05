@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
 	<name>Protected Directories</name>
-	<version>300</version>
+	<version>200</version>
 	<defaultcat>Advanced</defaultcat>
 	<desc>Password protect your web applications and directories.</desc>
     <authorname>Sentora Project</authorname>

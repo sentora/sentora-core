@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Shadowing</name>
-    <version>100</version>
+    <version>200</version>
     <defaultcat>Server Admin</defaultcat>
     <desc>From here you can shadow any of your client's accounts, this enables you to automatically login as the user which enables you to offer remote help by seeing what they see!</desc>
     <authorname>Sentora Project</authorname>

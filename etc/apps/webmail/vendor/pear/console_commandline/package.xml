@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.6.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Console_CommandLine</name>
+ <channel>pear.php.net</channel>
+ <summary>A full featured command line options and arguments parser</summary>
+ <description>Console_CommandLine is a full featured package for managing command-line 
+options and arguments highly inspired from python optparse module, it allows 
+the developer to easily build complex command line interfaces.
+
+Main features:
+  * handles sub commands (ie. $ myscript.php -q subcommand -f file),
+  * can be completely built from an xml definition file,
+  * generate --help and --version options automatically,
+  * can be completely customized,
+  * builtin support for i18n,
+  * and much more...</description>
+ <lead>
+  <name>David JEAN LOUIS</name>
+  <user>izi</user>
+  <email>izimobil@gmail.com</email>
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Richard Quadling</name>
+  <user>rquadling</user>
+  <email>rquadling@gmail.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2016-07-14</date>
+ <version>
+  <release>1.2.2</release>
+  <api>1.2.2</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+
+ <notes>
+  * Fix bug #21063: xmlschema.rng location does not work with composer [alec]
+ </notes>
+
+ <contents>
+  <dir baseinstalldir="" name="/">
+   <file name="Console/CommandLine/Action.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Argument.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Command.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/CustomMessageProvider.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Element.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Exception.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/MessageProvider.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Option.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Outputter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Renderer.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Result.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/XmlParser.php" role="php">
+    <tasks:replace from="@data_dir@" to="data_dir" type="pear-config" />
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/Callback.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/Counter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/Help.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/List.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/Password.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/StoreArray.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/StoreFalse.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/StoreFloat.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/StoreInt.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/StoreString.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/StoreTrue.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Action/Version.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/MessageProvider/Default.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Outputter/Default.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine/Renderer/Default.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="data/xmlschema.rng" role="data">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex1.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex2.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex2.xml" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex3.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex4.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex4.xml" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex5.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="docs/examples/ex5.xml" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="tests/AllTests.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="tests/console_commandline_accept.phpt" role="test"/>
+   <file name="tests/console_commandline_addargument.phpt" role="test"/>
+   <file name="tests/console_commandline_addargument_2.phpt" role="test"/>
+   <file name="tests/console_commandline_addcommand.phpt" role="test"/>
+   <file name="tests/console_commandline_addcommand_2.phpt" role="test"/>
+   <file name="tests/console_commandline_addcommand_3.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption_errors_1.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption_errors_2.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption_errors_3.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption_errors_4.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption_errors_5.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption_errors_6.phpt" role="test"/>
+   <file name="tests/console_commandline_addoption_errors_7.phpt" role="test"/>
+   <file name="tests/console_commandline_bug18682.phpt" role="test"/>
+   <file name="tests/console_commandline_fromxmlfile.phpt" role="test"/>
+   <file name="tests/console_commandline_fromxmlfile_1.phpt" role="test"/>
+   <file name="tests/console_commandline_fromxmlfile_2.phpt" role="test"/>
+   <file name="tests/console_commandline_fromxmlfile_error.phpt" role="test"/>
+   <file name="tests/console_commandline_fromxmlstring.phpt" role="test"/>
+   <file name="tests/console_commandline_options_defaults.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_1.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_2.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_3.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_4.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_5.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_6.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_7.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_8.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_9.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_10.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_11.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_12.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_13.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_14.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_15.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_16.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_17.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_18.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_19.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_20.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_21.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_22.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_23.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_24.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_25.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_26.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_27.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_28.phpt" role="test"/>
+   <file name="tests/console_commandline_parse_29.phpt" role="test"/>
+   <file name="tests/console_commandline_webrequest_1.phpt" role="test"/>
+   <file name="tests/console_commandline_webrequest_2.phpt" role="test"/>
+   <file name="tests/console_commandline_webrequest_3.phpt" role="test"/>
+   <file name="tests/test.xml" role="test"/>
+   <file name="tests/tests.inc.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+   <file name="Console/CommandLine.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
+  </dir>
+ </contents>
+
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+   <extension>
+    <name>dom</name>
+   </extension>
+   <extension>
+    <name>xml</name>
+   </extension>
+  </required>
+ </dependencies>
+
+ <phprelease />
+
+ <changelog>
+  <release>
+   <date>2007-12-19</date>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <license uri="http://www.example.com">MIT License</license>
+   <notes>Initial release.</notes>
+  </release>
+  <release>
+   <date>2007-12-21</date>
+   <version>
+    <release>0.1.1</release>
+    <api>0.1.1</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <license uri="http://www.example.com">MIT License</license>
+   <notes>* bugs
+  - fixed bug #12711,
+  - fixed wrong error triggered when argument name is invalid.
+
+* changes
+  - some cosmetic changes,
+  - added a lot of phpt test files.</notes>
+  </release>
+  <release>
+   <date>2008-01-09</date>
+   <version>
+    <release>0.2.0</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.example.com">MIT License</license>
+   <notes>- fixed a bug in Option::toString() (values were not displayed for short options),
+- fixed a parsing bug: if &quot;-&quot; is passed on the command line it should be treated as an argument,
+- stop option parsing when a &quot;--&quot; is found as gnu getopt does,
+- added a &quot;force_posix&quot; boolean attribute that tells the parser to be POSIX compliant, POSIX demands the following behavior: the first non-option stops option processing,
+- added more regression tests.</notes>
+  </release>
+  <release>
+   <date>2008-01-09</date>
+   <version>
+    <release>0.2.1</release>
+    <api>0.2.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.example.com">MIT License</license>
+   <notes>fixed bug #12859: xmlschema.rng gets searched at the wrong folder</notes>
+  </release>
+  <release>
+   <date>2008-01-18</date>
+   <version>
+    <release>1.0.0RC1</release>
+    <api>1.0.0RC1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.example.com">MIT License</license>
+   <notes>- fixed a missing check when a short option require an argument and is the last
+  in the argv array,
+- more GNU getopt compliance: long option/argument can also be separated by a
+  space now and long options abbreviations are supported,
+- added a &quot;Password&quot; action: with this action it is possible to specify a
+  password on the command line, and if it is missing it will be prompted to
+  user (and will not be echo on stdin on UNIX systems),
+- allow &quot;force_posix&quot; option to be passed to the constructor,
+- added more tests.</notes>
+  </release>
+  <release>
+   <date>2008-03-10</date>
+   <version>
+    <release>1.0.0RC2</release>
+    <api>1.0.0RC2</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.example.com">MIT License</license>
+   <notes>- allow &quot;force_posix&quot; option to be passed to the constructor;
+- fixed bug #13038 changed the signature of the parse method to allow the 
+  developer to pass argc and argv array (instead of using $_SERVER values);
+- fixed bug #13132 : &quot;choices&quot; not supported in xml definition (also added 
+  &quot;force_posix&quot; attribute support in xml).</notes>
+  </release>
+  <release>
+   <date>2008-03-12</date>
+   <version>
+    <release>1.0.0RC3</release>
+    <api>1.0.0RC3</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>- fixed a strict standards notice: Console_CommandLine_Exception::build() should be static;
+- changed behaviour when a StoreArray option is positioned at the end;
+- now use pfm (so removed package.php and package2.xml).</notes>
+  </release>
+  <release>
+   <date>2008-03-12</date>
+   <version>
+    <release>1.0.0RC3</release>
+    <api>1.0.0RC3</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>- fixed a strict standards notice: Console_CommandLine_Exception::build() should be static;
+- changed behaviour when a StoreArray option is positioned at the end;
+- now use pfm (so removed package.php and package2.xml).</notes>
+  </release>
+  <release>
+   <date>2008-05-22</date>
+   <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>- doc is now in peardoc format (thanks to cweiske for his precious help);
+- better handling of custom instances (added an accept() method);
+- added an AllTests.php file to make phpunit happy;
+- added tests for xml usage;
+- some cosmetic changes.</notes>
+  </release>
+  <release>
+   <date>2008-08-01</date>
+   <version>
+    <release>1.0.1</release>
+    <api>1.0.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>- Better code coverage of tests (nearly 100%);
+- fixed two bad include_once;
+- fixed bug #14435 (own -h short option doesn't remove help short option) and did the same for "version" option;
+- fixed bug #14436 (Typo in error message) and some fixed other typos.
+   </notes>
+  </release>
+  <release>
+   <date>2008-08-22</date>
+   <version>
+    <release>1.0.2</release>
+    <api>1.0.2</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+- fixed bug #14454 (Console_Commandline hangs when called via browser);
+- fixed outputter bug (STDOUT/STDERR not defined with php-cgi);
+- Console_CommandLine can now handle web requests (it convert automatically a request to options/arguments).
+   </notes>
+  </release>
+  <release>
+   <date>2008-09-30</date>
+   <version>
+    <release>1.0.3</release>
+    <api>1.0.3</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+- now handles stdin with the "-" special switch;
+- fixed bug #14717 (Password not optional when parser built from an xml file);
+- added relevant unit tests;
+- removed useless require_once's in some tests.
+   </notes>
+  </release>
+  <release>
+   <date>2008-10-09</date>
+   <version>
+    <release>1.0.4</release>
+    <api>1.0.4</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+- implemented feature request #14753 (add_list_option parameter for --list-XXX option);
+- fixed bug #14762 (error message always tells me to use "-h" for help);
+- added relevant unit tests;
+- cleaned up phpdoc tags and some cosmetic changes.
+   </notes>
+  </release>
+  <release>
+   <date>2008-12-06</date>
+   <version>
+    <release>1.0.5</release>
+    <api>1.0.5</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+* implemented feature request #15251: Allow specifying optional arguments for
+  sub-commands,
+* use "name" instead of "help_name" when generating list-xxx options,
+* updated relevant unit tests,
+* added examples for sub-commands usage.
+   </notes>
+  </release>
+  <release>
+   <date>2008-12-26</date>
+   <version>
+    <release>1.0.6</release>
+    <api>1.0.6</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+Bugfix release:
+* fixed bug #15374 (RelaxNG validation should be less strict);
+* fixed bug #15375 (Cannot add a comment before the root node of the xml file);
+* fixed bug #15376 (short option and long options in separated lines in help);
+* fixed bug #15377 (StoreFalse/True actions should have a boolean default value);
+* added relevant unit tests.
+   </notes>
+  </release>
+  <release>
+   <date>2009-06-19</date>
+   <version>
+    <release>1.1.0</release>
+    <api>1.1.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+* changed sources layout to make easier to use / run tests without installing the package with pear
+* implemented subcommand aliases (as requested by Greg for pyrus)
+* implemented request #15325: add ability to detect missing sub-command (patch by gauthierm, thanks)
+* implemented request #15324: add ability to set custom error messages (patch by gauthierm, thanks)
+* fixed bug #16320: storeArray default value not cleared when options arguments given (patch by Richard Quadling, thanks!)
+* fixed bug #16329: sub command aliases do not work (was a "too early documentation" issue)
+* fixed bug #16330: nested subCommands help output not quite right
+* implemented request #16332: add support for optional arguments in XML (patch by gauthierm, thanks)
+   </notes>
+  </release>
+  <release>
+   <date>2009-11-11</date>
+   <version>
+    <release>1.1.1</release>
+    <api>1.1.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+Bugfix release:
+* fixed bug #16507: typo in code example (thanks Richard)
+* fixed bug #16497: cascade command properties to sub-commands
+* fixed bug #16370: allow pre-processing of arguments for list (thanks rquadling for the patch)
+* fixed bug #16764: Invalid Package.xml (thanks mklappstuhl for the patch)
+* fixed some test cases
+   </notes>
+  </release>
+  <release>
+   <date>2010-04-10</date>
+   <version>
+    <release>1.1.2</release>
+    <api>1.1.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+Bugfix release:
+* fixed bug #16848: Trailing spaces in quoted argument are truncated,
+* fixed bug #16849: Replaced $_GET by $_REQUEST to handle POST correctly, 
+* fixed bug #16850: Parse9 test (password) fails (on windows),
+* fixed bug #16914: Password action now operates as expected when it is the last parameter or the last parameter before a command,
+* displayUsage() should output to stdout instead of stderr,
+* added the possibility to pass "false" as exitCode to the display*() methods to prevent exit() calls,
+* fixed some typos in code comments.
+   </notes>
+  </release>
+  <release>
+   <date>2010-04-10</date>
+   <version>
+    <release>1.1.3</release>
+    <api>1.1.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+* fixed package.xml to allow installation via pyrus.
+   </notes>
+  </release>
+  <release>
+   <date>2012-10-25</date>
+   <version>
+    <release>1.2.0</release>
+    <api>1.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+  * Implemented feature request #18583 (default values for arguments) [izi]
+  * Implemented feature request #18582 (add possibility to require a subcommand) [izi]
+  * Booleans read from an XML file or string are now case insensitive [rquadling]
+  * Fixed unit tests [CloCkWeRX]
+  * arguments now accept "choices" [izi, thanks Laurent Laville]
+   </notes>
+  </release>
+
+  <release>
+   <date>2015-12-10</date>
+   <version>
+    <release>1.2.1</release>
+    <api>1.2.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+    * Fixed bug #18397: List action example is wrong [cweiske]
+    * Fixed bug #18682: columnWrap() in refault renderer eats up lines with only a EOL [izi, thanks Helgi]
+    * Fixed bug #18703: No way to override reading of stdin with - [izi, thanks Gwynne Raskind]
+    * Fixed bug #19683: Unit tests are broken [farell]
+    * Fixed bug #19921: package dependencies don't include dom [cweiske]
+    * Fixed unit tests [izi]
+    * Fixed comparison on PHP 7 [Jan Olsen]
+    * Allow multiple instances of the parser by making static variables private [Greg Oriol]
+    * Add composer support
+   </notes>
+  </release>
+
+  <release>
+   <date>2016-07-14</date>
+   <version>
+    <release>1.2.2</release>
+    <api>1.2.2</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+    * Fix bug #21063: xmlschema.rng location does not work with composer [alec]
+   </notes>
+  </release>
+
+ </changelog>
+</package>

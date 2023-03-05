@@ -1,3 +1,68 @@
+<style>
+
+
+/* Style all input fields */
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+/* Style the submit button */
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Style the container for inputs */
+.check_container {
+  background-color: #f1f1f1;
+  padding: 0px;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+  display:none;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 20px;
+  margin-top: 5px;
+}
+
+#message p {
+  padding: 0px 35px;
+  font-size: 14px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "\2714";
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "\2718";
+}
+
+</style>
+
 <div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
     <div class="panel-heading">
         <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
@@ -43,17 +108,24 @@
                 </tr>
                 <tr>
                     <th><: New password :>:</th>
-                    <td><input name="inPassword" type="text" id="input-password" size="30" maxlength="50" /></td>
-                    <td><button class="button-loader btn btn-default" type="submit" name="inReset" id="button" value="<@ EditCurrentID @>"><: Reset Password :>
+                    <td><input class="inPassword" name="inPassword" type="password" id="inPassword" size="30" maxlength="50" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{<@ MinPassLength @>,}" required /><a href="#" class="link-password" id="generate" onclick="passwordShow(), check()" ><: Generate Password :></a></td>
+					<td><input id="showPassword" type="checkbox" onclick="passwordShowHide()" >Show Password</td>
+                    <td><button class="button-nonloader btn btn-default" type="submit" name="inReset" id="button_nonloader" value="<@ EditCurrentID @>"><: Reset Password :>
                         </button>
                         <button class="button-loader btn btn-default" type="button" onclick="window.location.href='./?module=ftp_management';return false;"><: Cancel :></button></td>
                 </tr>
-                <tr>
-                    <th></th>
-                    <td><a href="#" class="link-password" id="generate"><: Generate Password :></a></td>
-                    <td></td>
-                </tr>
             </table>
+										
+			<div class="check_container">
+				<div id="message">
+					<h4>Password must contain the following:</h4>
+					<p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+					<p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+					<p id="number" class="invalid">A <b>number</b></p>
+					<p id="length" class="invalid">Minimum <b><@ MinPassLength @> characters</b></p>
+				</div>
+			</div>
+							
             <@ CSFR_Tag @>
         </form>
     </div>
@@ -64,19 +136,17 @@
         <% if ClientList %>
         <form action="./?module=ftp_management&action=EditFTP" method="post">
             <table class="table table-striped">
-				<colgroup>
-					<col>
-					<col>
-					<col>
-					<col>
-					<col>
-				</colgroup>
+                <col />
+                <col />
+                <col />
+                <col id="ColPass" style="visibility:visiable" />
+                <col />
                 <tr>
                     <th><: Account name :></th>
                     <th><: Home directory :></th>
                     <th><: Permission :></th>
                     <th><: Password :></th>
-                    <th><button class="button btn btn-default" id="btn_sh">Show Passwords</button></th>
+                    <th id="ColPass" style="visibility:visiable" ><button class="button btn btn-default" id="btn_sh">Show Passwords</button></th>
                 </tr>
                 <% loop ClientList %>
                 <tr>
@@ -105,16 +175,31 @@
                 <td>
                     <h2><: Create a new FTP Account :></h2>
                     <% if QuotaLimit %>
-                    <form action="./?module=ftp_management&action=CreateFTP" method="post">
+                    <form action="./?module=ftp_management&action=CreateFTP" method="post" >
                         <table class="table table-striped">
                             <tr>
                                 <th nowrap="nowrap"><: Username :>:</th>
-                                <td><# ui_tpl_username #>_<input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value="" maxlength="50"/></td>
+                                <td><input name="inFTPUsername" type="text" id="inFTPUsername" size="30" value="" maxlength="50" required/></td>
+								
                             </tr>
                             <tr>
                                 <th><: Password :>:</th>
-                                <td><input name="inPassword" type="password" id="inPassword" size="30" maxlength="50" /></td>
-                            </tr>
+                                <td><input class="inPassword" name="inPassword" type="password" id="inPassword" size="30" maxlength="50" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{<@ MinPassLength @>,}" required/><a href="#" class="link-password" id="generate" onclick="passwordShow(), check()" ><: Generate Password :></a></td>
+								<td><input id="showPassword" type="checkbox" onclick="passwordShowHide()" >Show Password</td>
+                            </tr>					
+						</table>
+						
+						<div class="check_container">
+							<div id="message">
+								<h4>Password must contain the following:</h4>
+								<p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+								<p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+								<p id="number" class="invalid">A <b>number</b></p>
+								<p id="length" class="invalid">Minimum <b><@ MinPassLength @> characters</b></p>
+							</div>
+						</div>
+						
+						<table class="table table-striped">
                             <tr>
                                 <th nowrap="nowrap"><: Access type :>:</th>
                                 <td><select name="inAccess" size="1">
@@ -163,7 +248,9 @@
                             </tr>
                             <tr>
                                 <th colspan="2" align="right">
-                                    <button class="button-loader btn btn-primary" type="submit" name="inSubmit" id="inSubmit" value=""><: Create :></button></th>
+
+                                    <button class=" btn btn-primary" type="submit" name="inSubmit" id="inSubmit" value="" " ><: Create :></button></th>
+																		
                             </tr>
                         </table>
                         <@ CSFR_Tag @>
@@ -189,6 +276,7 @@
     }
     //-->
 </script>
+
 <script type="text/javascript">
     <!--
     function hide_div(id) {
@@ -198,36 +286,46 @@
     }
     //-->
 </script>
+
 <script type="text/JavaScript">
     $.extend({
         password: function (length, special) {
             var iteration = 0;
             var password = "";
-            var randomNumber;
-            if(special == undefined){
-                var special = false;
-            }
-            while(iteration < length){
-                randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
-                if(!special){
-                    if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
-                    if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
-                    if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
-                    if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
-                }
-                iteration++;
-                password += String.fromCharCode(randomNumber);
-            }
-            return password;
+			
+			var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+			var string_length = <@ MinPassLength @>;
+			var randomstring = '';
+			var charCount = 0;
+			var numCount = 0;
+			
+			for (var i=0; i<string_length; i++) {
+				// If random bit is 0, there are less than 3 digits already saved, and there are not already 5 characters saved, generate a numeric value. 
+				//if((Math.floor(Math.random() * 2) == 0) && numCount < 3 || charCount >= 5) {
+				if((Math.floor(Math.random() * 2) == 0) && numCount < 5 || charCount >= 15) {
+					var rnum = Math.floor(Math.random() * 5);
+					randomstring += rnum;
+					numCount += 1;
+				} else {
+					// If any of the above criteria fail, go ahead and generate an alpha character from the chars string
+					var rnum = Math.floor(Math.random() * chars.length);
+					randomstring += chars.substring(rnum,rnum+1);
+					charCount += 1;
+				}
+			}
+		
+		return (randomstring);
+			
         }
     });
+	
     $(document).ready(function() {
 		var ShowPass = false;
         $('.link-password').click(function(e){
             linkId = $(this).attr('id');
             if (linkId == 'generate'){
-                password = $.password(9,false);
-                $('#input-password').val(password);
+                password = $.password(<@ MinPassLength @>,false);
+                $('.inPassword').val(password);
             }
             e.preventDefault();
         });
@@ -247,6 +345,137 @@
 		  e.preventDefault();
 		});
 		
-	  
     });
+
+</script>
+	
+<script type="text/JavaScript">
+	
+	var myInput = document.getElementById("inPassword");
+	var letter = document.getElementById("letter");
+	var capital = document.getElementById("capital");
+	var number = document.getElementById("number");
+	var length = document.getElementById("length");
+	
+	// When the user clicks on the password field, show the message box
+	myInput.onfocus = function() {
+	  	document.getElementById("message").style.display = "block";
+	}
+	
+	// When the user clicks outside of the password field, hide the message box
+	myInput.onblur = function() {
+	  	document.getElementById("message").style.display = "none";
+	}
+	
+	// When the user starts to type something inside the password field
+	myInput.onclick = function() {
+		  // Validate lowercase letters
+		  var lowerCaseLetters = /[a-z]/g;
+		  if(myInput.value.match(lowerCaseLetters)) {
+			letter.classList.remove("invalid");
+			letter.classList.add("valid");
+		  } else {
+			letter.classList.remove("valid");
+			letter.classList.add("invalid");
+	}
+	
+	  // Validate capital letters
+	  var upperCaseLetters = /[A-Z]/g;
+	  if(myInput.value.match(upperCaseLetters)) {
+			capital.classList.remove("invalid");
+			capital.classList.add("valid");
+	  } else {
+			capital.classList.remove("valid");
+			capital.classList.add("invalid");
+	  }
+	
+	  // Validate numbers
+	  var numbers = /[0-9]/g;
+	  if(myInput.value.match(numbers)) {
+			number.classList.remove("invalid");
+			number.classList.add("valid");
+	  } else {
+			number.classList.remove("valid");
+			number.classList.add("invalid");
+	  }
+	
+	  // Validate length
+	  if(myInput.value.length >= <@ MinPassLength @> ) {
+			length.classList.remove("invalid");
+			length.classList.add("valid");
+	  } else {
+			length.classList.remove("valid");
+			length.classList.add("invalid");
+	  }
+	}
+	
+	// When the user clicks inside the password field
+	myInput.onkeyup = function() {
+		  // Validate lowercase letters
+		  var lowerCaseLetters = /[a-z]/g;
+		  if(myInput.value.match(lowerCaseLetters)) {
+			letter.classList.remove("invalid");
+			letter.classList.add("valid");
+		  } else {
+			letter.classList.remove("valid");
+			letter.classList.add("invalid");
+	}
+	
+	  // Validate capital letters
+	  var upperCaseLetters = /[A-Z]/g;
+	  if(myInput.value.match(upperCaseLetters)) {
+			capital.classList.remove("invalid");
+			capital.classList.add("valid");
+	  } else {
+			capital.classList.remove("valid");
+			capital.classList.add("invalid");
+	  }
+	
+	  // Validate numbers
+	  var numbers = /[0-9]/g;
+	  if(myInput.value.match(numbers)) {
+			number.classList.remove("invalid");
+			number.classList.add("valid");
+	  } else {
+			number.classList.remove("valid");
+			number.classList.add("invalid");
+	  }
+	
+	  // Validate length
+	  if(myInput.value.length >= <@ MinPassLength @> ) {
+			length.classList.remove("invalid");
+			length.classList.add("valid");
+	  } else {
+			length.classList.remove("valid");
+			length.classList.add("invalid");
+	  }
+	}
+	
+</script>
+
+<script>
+
+function passwordShowHide() {
+  var x = document.getElementById("inPassword");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+
+function passwordShow() {
+  var x = document.getElementById("inPassword");
+  if (x.type === "password") {
+    x.type = "text";
+  } 
+}
+
+function check() {
+  document.getElementById("showPassword").checked = true;
+}
+function uncheck() {
+  document.getElementById("showPassword").checked = false;
+}
+
 </script>

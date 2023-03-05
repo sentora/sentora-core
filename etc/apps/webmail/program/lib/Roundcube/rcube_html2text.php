@@ -3,7 +3,8 @@
 /**
  +-----------------------------------------------------------------------+
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2012, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  | Copyright (c) 2005-2007, Jon Abernathy <jon@chuggnutt.com>            |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
@@ -136,13 +137,16 @@ class rcube_html2text
      * @see $replace
      */
     protected $search = array(
-        "/\r/",                                  // Non-legal carriage return
-        "/[\n\t]+/",                             // Newlines and tabs
-        '/<head[^>]*>.*?<\/head>/i',             // <head>
-        '/<script[^>]*>.*?<\/script>/i',         // <script>s -- which strip_tags supposedly has problems with
-        '/<style[^>]*>.*?<\/style>/i',           // <style>s -- which strip_tags supposedly has problems with
-        '/<p[^>]*>/i',                           // <P>
-        '/<br[^>]*>/i',                          // <br>
+        '/\r/',                                  // Non-legal carriage return
+        '/^.*<body[^>]*>\n*/is',                 // Anything before <body>
+        '/<head[^>]*>.*?<\/head>/is',            // <head>
+        '/<script[^>]*>.*?<\/script>/is',        // <script>
+        '/<style[^>]*>.*?<\/style>/is',          // <style>
+        '/[\n\t]+/',                             // Newlines and tabs
+        '/<p[^>]*>/i',                           // <p>
+        '/<\/p>[\s\n\t]*<div[^>]*>/i',           // </p> before <div>
+        '/<br[^>]*>[\s\n\t]*<div[^>]*>/i',       // <br> before <div>
+        '/<br[^>]*>\s*/i',                       // <br>
         '/<i[^>]*>(.*?)<\/i>/i',                 // <i>
         '/<em[^>]*>(.*?)<\/em>/i',               // <em>
         '/(<ul[^>]*>|<\/ul>)/i',                 // <ul> and </ul>
@@ -164,11 +168,14 @@ class rcube_html2text
      */
     protected $replace = array(
         '',                                     // Non-legal carriage return
-        ' ',                                    // Newlines and tabs
+        '',                                     // Anything before <body>
         '',                                     // <head>
-        '',                                     // <script>s -- which strip_tags supposedly has problems with
-        '',                                     // <style>s -- which strip_tags supposedly has problems with
-        "\n\n",                                 // <P>
+        '',                                     // <script>
+        '',                                     // <style>
+        ' ',                                    // Newlines and tabs
+        "\n\n",                                 // <p>
+        "\n<div>",                              // </p> before <div>
+        '<div>',                                // <br> before <div>
         "\n",                                   // <br>
         '_\\1_',                                // <i>
         '_\\1_',                                // <em>
@@ -216,7 +223,7 @@ class rcube_html2text
      * @see $ent_search
      */
     protected $ent_replace = array(
-        ' ',                                    // Non-breaking space
+        "\xC2\xA0",                             // Non-breaking space
         '"',                                    // Double quotes
         "'",                                    // Single quotes
         '>',
@@ -228,7 +235,7 @@ class rcube_html2text
         '-',
         '*',
         '£',
-        'EUR',                                  // Euro sign. � ?
+        'EUR',                                  // Euro sign. €
         '|+|amp|+|',                            // Ampersand: see _converter()
         ' ',                                    // Runs of spaces, post-handling
     );
@@ -242,8 +249,6 @@ class rcube_html2text
     protected $callback_search = array(
         '/<(a) [^>]*href=("|\')([^"\']+)\2[^>]*>(.*?)<\/a>/i', // <a href="">
         '/<(h)[123456]( [^>]*)?>(.*?)<\/h[123456]>/i',         // h1 - h6
-        '/<(b)( [^>]*)?>(.*?)<\/b>/i',                         // <b>
-        '/<(strong)( [^>]*)?>(.*?)<\/strong>/i',               // <strong>
         '/<(th)( [^>]*)?>(.*?)<\/th>/i',                       // <th> and </th>
     );
 
@@ -322,10 +327,10 @@ class rcube_html2text
      * will instantiate with that source propagated, all that has
      * to be done it to call get_text().
      *
-     * @param string $source HTML content
+     * @param string  $source    HTML content
      * @param boolean $from_file Indicates $source is a file to pull content from
-     * @param boolean $do_links Indicate whether a table of link URLs is desired
-     * @param integer $width Maximum width of the formatted text, 0 for no limit
+     * @param boolean $do_links  Indicate whether a table of link URLs is desired
+     * @param integer $width     Maximum width of the formatted text, 0 for no limit
      */
     function __construct($source = '', $from_file = false, $do_links = true, $width = 75, $charset = 'UTF-8')
     {
@@ -343,7 +348,7 @@ class rcube_html2text
     /**
      * Loads source HTML into memory, either from $source string or a file.
      *
-     * @param string $source HTML content
+     * @param string  $source    HTML content
      * @param boolean $from_file Indicates $source is a file to pull content from
      */
     function set_html($source, $from_file = false)
@@ -423,7 +428,7 @@ class rcube_html2text
         // Variables used for building the link list
         $this->_link_list = array();
 
-        $text = trim(stripslashes($this->html));
+        $text = $this->html;
 
         // Convert HTML to TXT
         $this->_converter($text);
@@ -448,7 +453,7 @@ class rcube_html2text
      * and newlines to a readable format, and word wraps the text to
      * $width characters.
      *
-     * @param string Reference to HTML content string
+     * @param string &$text Reference to HTML content string
      */
     protected function _converter(&$text)
     {
@@ -506,17 +511,22 @@ class rcube_html2text
      * appeared. Also makes an effort at identifying and handling absolute
      * and relative links.
      *
-     * @param string $link URL of the link
+     * @param string $link    URL of the link
      * @param string $display Part of the text to associate number with
      */
-    protected function _build_link_list( $link, $display )
+    protected function _build_link_list($link, $display)
     {
-        if (!$this->_do_links || empty($link)) {
+        if (empty($link)) {
             return $display;
         }
 
         // Ignored link types
         if (preg_match('!^(javascript:|mailto:|#)!i', $link)) {
+            return $display;
+        }
+
+        // skip links with href == content (#1490434)
+        if ($link === $display) {
             return $display;
         }
 
@@ -531,6 +541,19 @@ class rcube_html2text
             $url .= "$link";
         }
 
+        if (!$this->_do_links) {
+            // When not using link list use URL if there's no content (#5795)
+            // The content here is HTML, convert it to text first
+            $h2t     = new rcube_html2text($display, false, false, 1024, $this->charset);
+            $display = $h2t->get_text();
+
+            if (empty($display) && preg_match('!^([a-z][a-z0-9.+-]+://)!i', $link)) {
+                return $link;
+            }
+
+            return $display;
+        }
+
         if (($index = array_search($url, $this->_link_list)) === false) {
             $index = count($this->_link_list);
             $this->_link_list[] = $url;
@@ -542,7 +565,7 @@ class rcube_html2text
     /**
      * Helper function for PRE body conversion.
      *
-     * @param string HTML content
+     * @param string &$text HTML content
      */
     protected function _convert_pre(&$text)
     {
@@ -570,17 +593,17 @@ class rcube_html2text
     /**
      * Helper function for BLOCKQUOTE body conversion.
      *
-     * @param string HTML content
+     * @param string &$text HTML content
      */
     protected function _convert_blockquotes(&$text)
     {
         $level = 0;
         $offset = 0;
-        while (($start = strpos($text, '<blockquote', $offset)) !== false) {
+        while (($start = stripos($text, '<blockquote', $offset)) !== false) {
             $offset = $start + 12;
             do {
-                $end = strpos($text, '</blockquote>', $offset);
-                $next = strpos($text, '<blockquote', $offset);
+                $end = stripos($text, '</blockquote>', $offset);
+                $next = stripos($text, '<blockquote', $offset);
 
                 // nested <blockquote>, skip
                 if ($next !== false && $next < $end) {
@@ -612,7 +635,7 @@ class rcube_html2text
 
                     // Add citation markers and create <pre> block
                     $body = preg_replace_callback('/((?:^|\n)>*)([^\n]*)/', array($this, 'blockquote_citation_callback'), trim($body));
-                    $body = '<pre>' . htmlspecialchars($body) . '</pre>';
+                    $body = '<pre>' . htmlspecialchars($body, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, $this->charset) . '</pre>';
 
                     $text = substr_replace($text, $body . "\n", $start, $end + 13 - $start);
                     $offset = 0;
@@ -642,15 +665,13 @@ class rcube_html2text
     /**
      * Callback function for preg_replace_callback use.
      *
-     * @param  array PREG matches
-     * @return string
+     * @param array $matches PREG matches
+     *
+     * @return string Element content
      */
     public function tags_preg_callback($matches)
     {
         switch (strtolower($matches[1])) {
-        case 'b':
-        case 'strong':
-            return $this->_toupper($matches[3]);
         case 'th':
             return $this->_toupper("\t\t". $matches[3] ."\n");
         case 'h':
@@ -665,8 +686,9 @@ class rcube_html2text
     /**
      * Callback function for preg_replace_callback use in PRE content handler.
      *
-     * @param array PREG matches
-     * @return string
+     * @param array $matches PREG matches
+     *
+     * @return string PRE content
      */
     public function pre_preg_callback($matches)
     {
@@ -677,11 +699,12 @@ class rcube_html2text
      * Strtoupper function with HTML tags and entities handling.
      *
      * @param string $str Text to convert
+     *
      * @return string Converted text
      */
     private function _toupper($str)
     {
-        // string can containg HTML tags
+        // string can containing HTML tags
         $chunks = preg_split('/(<[^>]*>)/', $str, null, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         // convert toupper only the text between HTML tags
@@ -698,6 +721,7 @@ class rcube_html2text
      * Strtoupper multibyte wrapper function with HTML entities handling.
      *
      * @param string $str Text to convert
+     *
      * @return string Converted text
      */
     private function _strtoupper($str)

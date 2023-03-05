@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>PHP Info</name>
-    <version>100</version>
+    <version>200</version>
     <defaultcat>Server Admin</defaultcat>
     <desc>PHPInfo provides you with information regarding the version of PHP running on this system as well as installed PHP extensions and configuration details.
     </desc>

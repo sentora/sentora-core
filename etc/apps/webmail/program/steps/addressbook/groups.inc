@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/groups.inc                                  |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2010-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Create/delete/rename contact groups and assign/remove contacts      |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -39,7 +37,7 @@ if ($RCMAIL->action == 'group-addmembers') {
         $num2add = count($plugin['ids']);
 
         if (!$plugin['abort']) {
-            if (($maxnum = $RCMAIL->config->get('max_group_members', 0)) && ($CONTACTS->count()->count + $num2add > $maxnum)) {
+            if (($maxnum = $RCMAIL->config->get('max_group_members')) && ($CONTACTS->count()->count + $num2add > $maxnum)) {
                 $OUTPUT->show_message('maxgroupmembersreached', 'warning', array('max' => $maxnum));
                 $OUTPUT->send();
             }
@@ -51,11 +49,11 @@ if ($RCMAIL->action == 'group-addmembers') {
         }
 
         if ($result)
-            $OUTPUT->show_message('contactaddedtogroup');
+            $OUTPUT->show_message('contactaddedtogroup', 'confirmation');
         else if ($plugin['abort'] || $CONTACTS->get_error())
-            $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error');
+            $OUTPUT->show_message($plugin['message'] ?: 'errorsaving', 'error');
         else
-            $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'nogroupassignmentschanged');
+            $OUTPUT->show_message($plugin['message'] ?: 'nogroupassignmentschanged');
     }
 }
 else if ($RCMAIL->action == 'group-delmembers') {
@@ -72,11 +70,11 @@ else if ($RCMAIL->action == 'group-delmembers') {
             $result = $plugin['result'];
 
         if ($result) {
-            $OUTPUT->show_message('contactremovedfromgroup');
+            $OUTPUT->show_message('contactremovedfromgroup', 'confirmation');
             $OUTPUT->command('remove_group_contacts',array('source' => $source, 'gid' => $gid));
         }
         else {
-            $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error');
+            $OUTPUT->show_message($plugin['message'] ?: 'errorsaving', 'error');
         }
     }
 }
@@ -94,13 +92,11 @@ else if ($RCMAIL->action == 'group-create') {
     }
 
     if ($created && $OUTPUT->ajax_call) {
-        $created['name'] = rcube::Q($created['name']);
-
         $OUTPUT->show_message('groupcreated', 'confirmation');
         $OUTPUT->command('insert_contact_group', array('source' => $source) + $created);
     }
     else if (!$created) {
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error');
+        $OUTPUT->show_message($plugin['message'] ?: 'errorsaving', 'error');
     }
 }
 else if ($RCMAIL->action == 'group-rename') {
@@ -122,10 +118,10 @@ else if ($RCMAIL->action == 'group-rename') {
     if ($newname && $OUTPUT->ajax_call) {
         $OUTPUT->show_message('grouprenamed', 'confirmation');
         $OUTPUT->command('update_contact_group', array(
-            'source' => $source, 'id' => $gid, 'name' => rcube::Q($newname), 'newid' => $newgid));
+            'source' => $source, 'id' => $gid, 'name' => $newname, 'newid' => $newgid));
     }
     else if (!$newname) {
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error');
+        $OUTPUT->show_message($plugin['message'] ?: 'errorsaving', 'error');
     }
 }
 else if ($RCMAIL->action == 'group-delete') {
@@ -146,7 +142,7 @@ else if ($RCMAIL->action == 'group-delete') {
         $OUTPUT->command('remove_group_item', array('source' => $source, 'id' => $gid));
     }
     else {
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error');
+        $OUTPUT->show_message($plugin['message'] ?: 'errorsaving', 'error');
     }
 }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -29,16 +29,16 @@
 echo "<script src=\"http://code.jquery.com/jquery-latest.js\"></script>";
 set_time_limit(0);
 ini_set('memory_limit', '256M');
-require('../../../cnf/db.php');
-include('../../../dryden/db/driver.class.php');
-include('../../../dryden/debug/logger.class.php');
-include('../../../dryden/runtime/dataobject.class.php');
-include('../../../dryden/runtime/hook.class.php');
-include('../../../dryden/sys/versions.class.php');
-include('../../../dryden/ctrl/options.class.php');
-include('../../../dryden/fs/director.class.php');
-include('../../../dryden/fs/filehandler.class.php');
-include('../../../inc/dbc.inc.php');
+require($_SERVER["DOCUMENT_ROOT"] . 'cnf/db.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/db/driver.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/debug/logger.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/runtime/dataobject.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/runtime/hook.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/sys/versions.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/ctrl/options.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/fs/director.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'dryden/fs/filehandler.class.php');
+include($_SERVER["DOCUMENT_ROOT"] . 'inc/dbc.inc.php');
 try {
     $zdbh = new db_driver("mysql:host=" . $host . ";dbname=" . $dbname . "", $user, $pass);
 } catch (PDOException $e) {
@@ -67,7 +67,8 @@ if (isset($_GET['id']) && $_GET['id'] != "") {
 
         if ($backup = ExecuteBackup($userid, $dbvals['ac_user_vc'], $download)) {
             echo "<p>Ready to download file: <b>" . basename($backup) . "<b></p>";
-            echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='../../../etc/tmp/" . basename($backup) . "';return false;\">Download Now</button>";
+			//echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='../../../etc/tmp/" . basename($backup) . "';return false;\">Download Now</button>";
+            echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" onclick=\"window.location.href='downloadbackup.php?id=" . $userid . "&file=" . basename($backup) . "';return false;\">Download Now</button>";
             echo "<button class=\"fg-button ui-state-default ui-corner-all\" type=\"button\" value=\"Close Window\" onClick=\"return window.close()\">Close Window</button>";
         } else {
             echo "Could not find user!";
@@ -79,7 +80,7 @@ if (isset($_GET['id']) && $_GET['id'] != "") {
 }
 
 function ExecuteBackup($userid, $username, $download = 0) {
-    include('../../../cnf/db.php');
+    include($_SERVER["DOCUMENT_ROOT"] . 'cnf/db.php');
     try {
         $zdbh = new db_driver("mysql:host=" . $host . ";dbname=" . $dbname . "", $user, $pass);
     } catch (PDOException $e) {
@@ -180,6 +181,7 @@ function ExecuteBackup($userid, $username, $download = 0) {
             return $temp_dir . $backupname . ".zip";
         }
         unlink($temp_dir . $backupname . ".zip");
+		
     } else {
         echo "File not found in temp directory!";
         return FALSE;

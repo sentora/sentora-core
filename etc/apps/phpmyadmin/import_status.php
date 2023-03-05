@@ -1,9 +1,13 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
+ * Import progress bar backend
  *
  * @package PhpMyAdmin
  */
+
+use PhpMyAdmin\Core;
+use PhpMyAdmin\Display\ImportAjax;
 
 /* PHP 5.4 stores upload progress data only in the default session.
  * After calling session_name(), we won't find the progress data anymore.
@@ -16,11 +20,14 @@
  * Until this is fixed, we need to load the default session to load the data,
  * export the upload progress information from there,
  * and re-import after switching to our session.
+ *
+ * However, since https://github.com/phpmyadmin/phpmyadmin/commit/063a2d99
+ * we have deactivated this feature, so the corresponding code is now
+ * commented out.
  */
 
-if (version_compare(PHP_VERSION, '5.4.0', '>=')
-    && ini_get('session.upload_progress.enabled')
-) {
+/*
+if (ini_get('session.upload_progress.enabled')) {
 
     $sessionupload = array();
     define('UPLOAD_PREFIX', ini_get('session.upload_progress.prefix'));
@@ -28,7 +35,8 @@ if (version_compare(PHP_VERSION, '5.4.0', '>=')
     session_start();
     foreach ($_SESSION as $key => $value) {
         // only copy session-prefixed data
-        if (substr($key, 0, strlen(UPLOAD_PREFIX)) == UPLOAD_PREFIX) {
+        if (substr($key, 0, strlen(UPLOAD_PREFIX))
+            == UPLOAD_PREFIX) {
             $sessionupload[$key] = $value;
         }
     }
@@ -36,15 +44,22 @@ if (version_compare(PHP_VERSION, '5.4.0', '>=')
     define('SESSIONUPLOAD', serialize($sessionupload));
     session_write_close();
 
+    // The cookie name is not good anymore since PR #15273
     session_name('phpMyAdmin');
     session_id($_COOKIE['phpMyAdmin']);
 }
+ */
 
 define('PMA_MINIMUM_COMMON', 1);
 
 require_once 'libraries/common.inc.php';
-require_once 'libraries/display_import_ajax.lib.php';
+list(
+    $SESSION_KEY,
+    $upload_id,
+    $plugins
+) = ImportAjax::uploadProgressSetup();
 
+/*
 if (defined('SESSIONUPLOAD')) {
     // write sessionupload back into the loaded PMA session
 
@@ -55,32 +70,21 @@ if (defined('SESSIONUPLOAD')) {
 
     // remove session upload data that are not set anymore
     foreach ($_SESSION as $key => $value) {
-        if (substr($key, 0, strlen(UPLOAD_PREFIX)) == UPLOAD_PREFIX
+        if (substr($key, 0, strlen(UPLOAD_PREFIX))
+            == UPLOAD_PREFIX
             && ! isset($sessionupload[$key])
         ) {
             unset($_SESSION[$key]);
         }
     }
 }
-
-/**
- * Sets globals from $_GET
  */
-$get_params = array(
-    'message',
-    'id'
-);
-foreach ($get_params as $one_get_param) {
-    if (isset($_GET[$one_get_param])) {
-        $GLOBALS[$one_get_param] = $_GET[$one_get_param];
-    }
-}
 
-// AJAX requests can't be cached!
-PMA_noCacheHeader();
+// $_GET["message"] is used for asking for an import message
+if (isset($_GET["message"]) && $_GET["message"]) {
 
-// $GLOBALS["message"] is used for asking for an import message
-if (isset($GLOBALS["message"]) && $GLOBALS["message"]) {
+    // AJAX requests can't be cached!
+    Core::noCacheHeader();
 
     header('Content-type: text/html');
 
@@ -88,18 +92,31 @@ if (isset($GLOBALS["message"]) && $GLOBALS["message"]) {
     // which is set inside import.php
     usleep(300000);
 
+    $maximumTime = ini_get('max_execution_time');
+    $timestamp = time();
     // wait until message is available
     while ($_SESSION['Import_message']['message'] == null) {
+        // close session before sleeping
+        session_write_close();
+        // sleep
         usleep(250000); // 0.25 sec
+        // reopen session
+        session_start();
+
+        if ((time() - $timestamp) > $maximumTime) {
+            $_SESSION['Import_message']['message'] = PhpMyAdmin\Message::error(
+                __('Could not load the progress of the import.')
+            )->getDisplay();
+            break;
+        }
     }
 
     echo $_SESSION['Import_message']['message'];
-    echo '<fieldset class="tblFooters">' . "\n";
-    echo '    [ <a href="' . $_SESSION['Import_message']['go_back_url']
-        . '">' . __('Back') . '</a> ]' . "\n";
-    echo '</fieldset>'."\n";
+    echo '<fieldset class="tblFooters">' , "\n";
+    echo '    [ <a href="' , $_SESSION['Import_message']['go_back_url']
+        . '">' , __('Back') , '</a> ]' , "\n";
+    echo '</fieldset>' , "\n";
 
 } else {
-    PMA_importAjaxStatus($GLOBALS["id"]);
+    ImportAjax::status($_GET["id"]);
 }
-?>

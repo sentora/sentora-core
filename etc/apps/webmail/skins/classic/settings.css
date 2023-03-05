@@ -11,27 +11,34 @@
   background-color: #FFFFA6;
 }
 
+#folderlist-title a.iconbutton.search {
+  background: url(images/icons/glass.png?v=dcbc.302) no-repeat 0 0;
+  cursor: pointer;
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  width: 16px;
+  text-indent: 50000px;
+}
+
+.listsearchbox select {
+  width: 100%;
+  margin: 1px 0;
+}
+
 #identities-table,
-#subscription-table,
+#responses-table,
 #sections-table
 {
   width: 100%;
   table-layout: fixed;
 }
 
-#subscription-table input
-{
-  font: inherit;
-}
-
-#subscription-table tbody td,
-#identities-table tbody td,
-#sections-table tbody td
+#identities-table tbody tr td,
+#responses-table tbody tr td,
+#sections-table tbody tr td
 {
   cursor: default;
-  text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  height: 18px;
 }
 
 #identities-table tbody tr.readonly td
@@ -39,42 +46,30 @@
   font-style: italic;
 }
 
-#subscription-table tr.virtual td
+#subscription-table li.root
 {
-  color: #666;
-}
-
-#subscription-table tr.root td
-{
-  font-size: 10%;
+  font-size: 5%;
+  line-height: 5px;
   height: 5px;
+  padding: 2px;
 }
 
-#subscription-table tr.selected td
-{
-  color: #FFFFFF;
-  background-color: #CC3333;
+#subscription-table li input {
+  position: absolute;
+  right: 0;
+  top: 2px;
 }
 
-#subscription-table tr.droptarget td
-{
-  background-color: #FFFFA6;
-}
-
-#subscription-table td.name
-{
-  width: auto;
-}
-
-#subscription-table td.subscribed
-{
-  text-align: right;
-  padding-right: 12px;
+#subscription-table li a {
+  padding-right: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #folder-box,
 #prefs-box,
-#identity-box
+#identity-box,
+#response-box
 {
   position: absolute;
   top: 0;
@@ -113,6 +108,7 @@
 }
 
 #identities-list,
+#responses-list,
 #folder-manager,
 #sectionslist
 {
@@ -128,7 +124,8 @@
 body.iframe,
 #prefs-frame,
 #folder-frame,
-#identity-frame
+#identity-frame,
+#response-frame
 {
   background-color: #F2F2F2;
   border: none;
@@ -137,7 +134,8 @@ body.iframe,
 
 #prefs-title,
 #folder-title,
-#identity-title
+#identity-title,
+#response-title
 {
   /* fixes issue where tabs were overlapping box title when scrolling */
   z-index: 10;
@@ -146,6 +144,11 @@ body.iframe,
 #formfooter
 {
   width: 100%;
+}
+
+.footerleft
+{
+  padding-left: 10px;
 }
 
 #formfooter .footerleft
@@ -200,7 +203,7 @@ div.readtext
 {
   min-height: 200px;
   padding-bottom: 2em;
-  background: url(images/watermark.gif?v=4094.9288) no-repeat center;
+  background: url(images/watermark.gif?v=61d5.11081) no-repeat center;
 }
 
 #license .sysname

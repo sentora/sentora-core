@@ -2,28 +2,30 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Terjadi error!';
 $messages['loginfailed']  = 'Login gagal.';
 $messages['cookiesdisabled'] = 'Browser Anda tidak menerima cookies.';
 $messages['sessionerror'] = 'Session Anda invalid atau kadaluwarsa.';
+$messages['cookiesmismatch'] = 'Ketidakcocokan cookie terdeteksi. Harap bersihkan cookie peramban Anda.';
 $messages['storageerror'] = 'Koneksi ke server penyimpanan gagal';
 $messages['servererror'] = 'Server Error!';
 $messages['servererrormsg'] = 'Server Error: $msg';
+$messages['accountlocked'] = 'Terlalu banyak mencoba login yang gagal. Coba lagi nanti.';
 $messages['connerror'] = 'Kesalahan sambungan (Gagal menghubungi server)!';
 $messages['dberror'] = 'Basis data Error!';
+$messages['windowopenerror'] = 'Jendela popup terblokir!';
 $messages['requesttimedout'] = 'Permintaan melewati batas waktu';
 $messages['errorreadonly'] = 'Tidak bisa melakukan operasi. Folder hanya bisa dibaca.';
 $messages['errornoperm'] = 'Tidak bisa melakukan operasi. Ijin ditolak.';
@@ -32,12 +34,13 @@ $messages['erroroverquotadelete'] = 'Disk penuh. Tekan SHIFT + DEL untuk menghap
 $messages['invalidrequest'] = 'Permintaan tidak valid! Tidak ada data yang tersimpan.';
 $messages['invalidhost'] = 'Nama server invalid.';
 $messages['nomessagesfound'] = 'Surat tidak ditemukan di kotak masuk ini';
-$messages['loggedout'] = 'Anda berhasil mengakhiri session. Selamat Tinggal!';
+$messages['loggedout'] = 'Anda telah sukses mengakhiri sesi. Selamat tinggal!';
 $messages['mailboxempty'] = 'Kotak masuk kosong';
 $messages['nomessages'] = 'Tidak ada pesan';
 $messages['refreshing'] = 'Menyegarkan...';
 $messages['loading'] = 'Memuat...';
 $messages['uploading'] = 'Menggungah berkas ...';
+$messages['attaching'] = 'Melampirkan berkas...';
 $messages['uploadingmany'] = 'Mengunggah berkas-berkas...';
 $messages['loadingdata'] = 'Memuat data...';
 $messages['checkingmail'] = 'Memeriksa pesan baru...';
@@ -48,14 +51,24 @@ $messages['messagesaved'] = 'Pesan tersimpan kedalam Konsep';
 $messages['successfullysaved'] = 'Berhasil disimpan';
 $messages['savingresponse'] = 'Meyimpan pesan tanggapan....';
 $messages['deleteresponseconfirm'] = 'Anda yakin ingin menghapus pesan tanggapan ini?';
+$messages['nocontactselected'] = 'Anda belum memilih suatu kontak.';
 $messages['addedsuccessfully'] = 'Kontak berhasil ditambahkan ke buku alamat';
-$messages['contactexists'] = 'Kontak dengan alamat e-mail ini sudah ada.';
+$messages['contactexists'] = 'Kontak dengan alamat email yang sama sudah ada.';
 $messages['contactnameexists'] = 'Kontak dengan nama yang sama sudah ada.';
 $messages['blockedimages'] = 'Untuk melindungi privasi Anda, gambar-gambar diluar server diblok pada pesan ini.';
+$messages['blockedresources'] = 'Untuk melindungi privasi Anda, sumber daya remote telah diblokir.';
 $messages['encryptedmessage'] = 'Pesan ini terenkripsi dan tidak bisa ditampilkan. Maaf!';
+$messages['externalmessagedecryption'] = 'Ini adalah pesan terenkripsi dan dapat didekripsi dengan ekstensi browser Anda.';
+$messages['nopubkeyfor'] = 'Tak ada kunci publik yang ditemukan bagi $email';
+$messages['nopubkeyforsender'] = 'Tidak ada kunci publik yang valid bagi identitas pengirim Anda. Apakah Anda hendak mengenkripsi pesan hanya bagi para penerima saja?';
+$messages['encryptnoattachments'] = 'Lampiran yang telah diunggah tidak dapat dienkripsi. Harap tambahkan ulang lampiran dalam penyunting enkripsi.';
+$messages['searchpubkeyservers'] = 'Apakah Anda ingin mencari di server kunci publik untuk kunci yang kurang?';
+$messages['encryptpubkeysfound'] = 'Kunci publik berikut telah ditemukan:';
+$messages['keyservererror'] = 'Gagal mendapat kunci dari server kunci.';
+$messages['keyimportsuccess'] = 'Kunci publik $key sukses diimpor ke ring kunci Anda.';
 $messages['nocontactsfound'] = 'Kontak tidak ditemukan';
 $messages['contactnotfound'] = 'Kontak yang diminta tidak ditemukan';
-$messages['contactsearchonly'] = 'Masukkan jenis pencarian untuk mencari kontak';
+$messages['contactsearchonly'] = 'Anda mesti memakai suatu formulir pencarian untuk melihat kontak dari buku alamat yang dipilih.';
 $messages['sendingfailed'] = 'Gagal mengirim pesan.';
 $messages['senttooquickly'] = 'Mohon tunggu $sec detik sebelum mengirim pesan ini.';
 $messages['errorsavingsent'] = 'Kesalahan ketika menyimpan pesan terkirim.';
@@ -64,10 +77,13 @@ $messages['errormoving'] = 'Pesan tidak bisa dipindahkan';
 $messages['errorcopying'] = 'Pesan tidak dapat disalin';
 $messages['errordeleting'] = 'Pesan tidak bisa dihapus';
 $messages['errormarking'] = 'Tidak dapat menandai pesan';
+$messages['alerttitle'] = 'Perhatian';
+$messages['confirmationtitle'] = 'Apa Anda yakin...';
 $messages['deletecontactconfirm']  = 'Apakah anda yakin untuk menghapus kontak terpilih?';
 $messages['deletegroupconfirm']  = 'Yakinkah Anda ingin menhapus grup terpilih?';
 $messages['deletemessagesconfirm'] = 'Yakin menghapus pesan terpilih?';
 $messages['deletefolderconfirm']  = 'Apakah anda benar-benar ingin menghapus folder ini?';
+$messages['movefolderconfirm']  = 'Apakah Anda benar-benar ingin memindah folder ini?';
 $messages['purgefolderconfirm']  = 'Yakin menghapus semua pesan pada folder ini?';
 $messages['contactdeleting'] = 'Menghapus kontak...';
 $messages['groupdeleting'] = 'Menghapus grup...';
@@ -79,13 +95,16 @@ $messages['formincomplete'] = 'Formulir tidak terisi semua';
 $messages['noemailwarning'] = 'Tolong masukkan alamat email yang valid';
 $messages['nonamewarning']  = 'Tolong masukkan nama';
 $messages['nopagesizewarning'] = 'Tolong masukkan ukuran halaman';
-$messages['nosenderwarning'] = 'Mohon memasukkan alamat e-mail pengirim';
+$messages['nosenderwarning'] = 'Harap masukkan alamat email pengirim.';
+$messages['recipientsadded'] = 'Penerima telah ditambahkan.';
 $messages['norecipientwarning'] = 'Tolong masukkan sedikitnya satu penerima';
+$messages['disclosedrecipwarning'] = 'Semua penerima akan saling tahu alamat surel pihak lain. Untuk mencegah hal ini dan melindungi privasi mereka Anda dapat memakai ruas Bcc.';
+$messages['disclosedreciptitle'] = 'Terlalu banyak penerima publik';
 $messages['nosubjectwarning']  = '"Judul" kosong. Isi judul sekarang?';
+$messages['nosubjecttitle']  = 'Tanpa subjek';
 $messages['nobodywarning'] = 'Kirim pesan ini tanpa teks?';
-$messages['notsentwarning'] = 'Pesan belum terkirim. Buang pesan Anda?';
+$messages['notsentwarning'] = 'Pesan belum terkirim dan tersimpan. Apakah kamu ingin membuang pengubahan?';
 $messages['restoresavedcomposedata'] = 'Sebelumnya disimpan tetapi pesan tidak terkirim ditemukan.\n\nJudul: $subject\nDisimpan: $date\n\nAnda yakin mengembalikan pesan ini?';
-$messages['noldapserver'] = 'Tolong pilih server LDAP untuk pencarian';
 $messages['nosearchname'] = 'Tolong masukkan nama kontak atau alamat email';
 $messages['notuploadedwarning'] = 'Proses upload belum selesai. Silahkan tunggu atau batalkan proses upload.';
 $messages['searchsuccessful'] = '$nr pesan ditemukan';
@@ -103,8 +122,12 @@ $messages['folderexpunged'] = 'Folder berhasil berhenti dirampingkan';
 $messages['deletedsuccessfully'] = 'Berhasil dihapus';
 $messages['converting'] = 'Mengembalikan pesan ke format awal...';
 $messages['messageopenerror'] = 'Tidak dapat mengambil pesan dari server';
+$messages['filelinkerror'] = 'Gagal melampirkan berkas.';
 $messages['fileuploaderror'] = 'Gagal mengunggah berkas';
 $messages['filesizeerror'] = 'Berkas terunggah mencapai ukuran maksimal dari $size';
+$messages['filecounterror'] = 'Anda dapat mengunggah maksimum $count berkas sekaligus.';
+$messages['msgsizeerror'] = 'Gagal melampirkan sebuah berkas. Ukuran maksimum suatu pesan ($size) terlampaui.';
+$messages['msgsizeerrorfwd'] = 'Ukuran maksimum suatu pesan ($size) terlampaui. $num pesan belum dilampirkan.';
 $messages['copysuccess'] = 'Berhasil menyalin kontak $nr';
 $messages['movesuccess'] = 'Berhasil memindahkan kontak $nr';
 $messages['copyerror'] = 'Tidak dapat menyalin kontak';
@@ -136,15 +159,18 @@ $messages['importconfirmskipped'] = '<b>$skipped entri yang sudah ada dilewatkan
 $messages['importmessagesuccess'] = 'Berhasil mengimport $nr pesan';
 $messages['importmessageerror'] = 'Gagal mengimport! File yang di upload buka pesan yang valid atau file mailbox';
 $messages['opnotpermitted'] = 'Operasi tidak diperbolehkan!';
-$messages['nofromaddress'] = 'kekurangan alamat e-mail pada identitas terpilih';
+$messages['nofromaddress'] = 'Kurang alamat email dalam identitas yang dipilih.';
+$messages['editorwarning'] = 'Mengubah tipe penyunting dapat menyebabkan pemformatan teks hilang. Apakah Anda hendak melanjutkan?';
 $messages['httpreceivedencrypterror'] = 'Terjadi sebuah kesalahan pengaturan fatal. Segera hubungi administrator Anda. <b> Pesan Anda tidak bisa terkirim.</b>';
 $messages['smtpconnerror'] = 'SMTP Error ($code): Koneksi ke server gagal';
 $messages['smtpautherror'] = 'SMTP Error ($code): Otentifikasi gagal';
 $messages['smtpfromerror'] = 'SMTP Error ($code): Gagal mengatur pengirim "$from" ($msg)';
 $messages['smtptoerror'] = 'SMTP Error ($code): Gagal menambah penerima "$to" ($msg)';
 $messages['smtprecipientserror'] = 'SMTP Error ($code): Tidak dapat menguraikan daftar penerima';
+$messages['smtputf8error'] = 'Galat SMTP: Server tidak mendukung Unicode dalam alamat surel.';
+$messages['smtpsizeerror'] = 'Galat SMTP: Ukuran pesan melampaui batas server ($limit)';
 $messages['smtperror'] = 'SMTP Error : $msg';
-$messages['emailformaterror'] = 'Alamat e-mail salah: $email';
+$messages['emailformaterror'] = 'Alamat email tidak valid:$email';
 $messages['toomanyrecipients'] = 'Terlalu banyak penerima. Batas maksimal penerima adalah $max';
 $messages['maxgroupmembersreached'] = 'Jumlah grup melebihi jumlah maksimum $max';
 $messages['internalerror'] = 'Terjadi kesalahan dari dalam. Silahkan coba kembali.';
@@ -161,18 +187,38 @@ $messages['savedsearchcreated'] = 'Pencarian tersimpan berhasil dibuat.';
 $messages['savedsearchcreateerror'] = 'Tidak bisa membuat pencarian tersimpan.';
 $messages['messagedeleted'] = 'Pesan berhasil dihapus';
 $messages['messagemoved'] = 'Pesan berhasil dipindahkan';
+$messages['messagemovedtotrash'] = 'Pesan sukses dipindah ke Tong sampah.';
 $messages['messagecopied'] = 'Pesan berhasil disalin';
 $messages['messagemarked'] = 'Pesan berhasil ditandai';
 $messages['autocompletechars'] = 'Masukkan setidaknya $min karakter untuk pelengkapan otomatis.';
 $messages['autocompletemore'] = 'Ada banyak entri yang ditemukan. Tolong ketikkan lebih banyak karakter.';
 $messages['namecannotbeempty'] = 'Nama tidak boleh kosong';
 $messages['nametoolong'] = 'Nama terlalu panjang';
+$messages['namedotforbidden'] = 'Nama folder tidak boleh diawali dengan titik.';
 $messages['folderupdated'] = 'Folder berhasil diperbarui';
 $messages['foldercreated'] = 'Folder berhasil dibuat';
 $messages['invalidimageformat'] = 'Bukan format gambar yang valid';
 $messages['mispellingsfound'] = 'Terdapat kesalahan ejaan pada pesan.';
 $messages['parentnotwritable'] = 'Tidak bisa membuat/memindahkan map ke map induk. Tidak memiliki hak akses.';
 $messages['messagetoobig'] = 'Pesan terlalu besar untuk diproses.';
-$messages['attachmentvalidationerror'] = 'PERINGATAN! Lampiran ini mencurigakan karena jenisnya tidak cocok dengan jenis yang dinyatakan di dalam pesan. Jika Anda tidak mempercayai pengirim, Anda tidak perlu membukanya di browser karena mungkin berisi konten berbahaya.<br/><br/><em>Expected: $expected; found: $detected</em>';
+$messages['attachmentvalidationerror'] = 'Lampiran ini mencurigakan karena tipenya tidak cocok dengan tipe yang dinyatakan dalam pesan. Bila Anda tidak mempercayai si pengirim, Anda jangan membukanya dalam peramban karena itu mungkin memuat isi yang jahat. <br/> <br/> <em> Diharapkan: $expected; ditemukan: $detected </em>';
 $messages['noscriptwarning'] = 'Peringatan: Layanan ini membutuhkan Javascript! Untuk menggunakannya silahkan aktifkan Javascript di pengaturan browser Anda.';
-?>
+$messages['messageissent'] = 'Pesan telah terkirim, tapi belum disimpan. Apakah Anda hendak menyimpannya sekarang?';
+$messages['errnotfound'] = 'Berkas Tak Ditemukan';
+$messages['errnotfoundexplain'] = 'Sumber daya yang diminta tidak ditemukan!';
+$messages['errfailedrequest'] = 'Permintaan gagal';
+$messages['errauthorizationfailed'] = 'Otorisasi Gagal';
+$messages['errunauthorizedexplain'] = 'Tidak bisa verifikasi bahwa Anda punya hak untuk mengakses layanan ini!';
+$messages['errrequestcheckfailed'] = 'Pemeriksaan Permintaan Gagal';
+$messages['errcsrfprotectionexplain'] = "Untuk perlindungan Anda, akses ke sumber daya ini diamankan dari CSRF.\nBila Anda melihat ini, barangkali Anda tidak log out sebelum meninggalkan aplikasi web.\n\nInteraksi pengguna kini diperlukan untuk melanjutkan.";
+$messages['errcontactserveradmin'] = 'Harap hubungi administrator server Anda.';
+$messages['clicktoresumesession'] = 'Klik di sini untuk melanjutkan sesi Anda sebelumnya';
+$messages['errcomposesession'] = 'Kesalahan sesi menulis surat';
+$messages['errcomposesessionexplain'] = 'Sesi penulisan surat yang diminta tidak ditemukan.';
+$messages['clicktocompose'] = 'Klik di sini untuk menulis pesan baru';
+$messages['nosupporterror'] = 'Fitur ini tidak didukung oleh peramban web Anda.';
+$messages['siginserted'] = 'Tanda tangan sukses disisipkan.';
+$messages['responseinserted'] = 'Respons sukses disisipkan.';
+$messages['listempty'] = 'Daftar ini kosong.';
+$messages['listusebutton'] = 'Pakai tombol Buat untuk menambahkan sebuah record baru. ';
+$messages['keypaircreatesuccess'] = 'Sebuah pasangan kunci baru telah sukses dibuat untuk $identity.';

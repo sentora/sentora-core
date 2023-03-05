@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.1" version="2.0" xmlns="https://pear.php.net/dtd/package-2.0" xmlns:tasks="https://pear.php.net/dtd/tasks-1.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://pear.php.net/dtd/tasks-1.0 https://pear.php.net/dtd/tasks-1.0.xsd https://pear.php.net/dtd/package-2.0 https://pear.php.net/dtd/package-2.0.xsd">
+ <name>Net_IDNA2</name>
+ <channel>pear.php.net</channel>
+ <summary>Punycode encoding and decoding.</summary>
+ <description>This package helps you to encode and decode punycode strings easily.</description>
+ <lead>
+  <name>Stefan Neufeind</name>
+  <user>neufeind</user>
+  <email>pear.neufeind@speedpartner.de</email>
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Daniel O&apos;Connor</name>
+  <user>doconnor</user>
+  <email>daniel.oconnor@gmail.com</email>
+  <active>no</active>
+ </lead>
+ <date>2017-03-06</date>
+ <time>14:40:00</time>
+ <version>
+  <release>0.2.0</release>
+  <api>0.2.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="https://www.gnu.org/copyleft/lesser.html">LGPL</license>
+ <notes>
+* Set minimum PHP version to 5.4.0
+* Set minimum PEAR version to 1.10.1
+
+* Bug #19375: Add static to the fuction getInstance
+* Bug #21123: Signing the source package
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" name="Net/IDNA2.php" role="php" />
+   <file baseinstalldir="/" name="Net/IDNA2/Exception.php" role="php" />
+   <file baseinstalldir="/" name="Net/IDNA2/Exception/Nameprep.php" role="php" />
+   <file baseinstalldir="/" name="tests/Net_IDNA2Test.php" role="test" />
+   <file baseinstalldir="/" name="tests/draft-josefsson-idn-test-vectors.php" role="test" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.4.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.10.1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+
+  <release>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2010-06-03</date>
+   <license uri="https://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>
+QA Release
+Bug #17430 	Multiple Net_IDNA class declarations
+Warning: This package is now split between Net_IDNA (php4) and Net_IDNA2 (php5)
+   </notes>
+  </release>
+
+  <release>
+   <version>
+    <release>0.2.0</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2017-03-06</date>
+   <license uri="https://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>
+* Set minimum PHP version to 5.4.0
+* Set minimum PEAR version to 1.10.1
+
+* Bug #19375: Add static to the fuction getInstance
+* Bug #21123: Signing the source package
+   </notes>
+  </release>
+
+ </changelog>
+</package>

@@ -8,7 +8,9 @@ a {
 
 a:hover {
     text-decoration: underline;
-}* {
+}
+
+* {
     margin: 0;
     padding: 0;
 }
@@ -30,8 +32,15 @@ body {
     overflow: auto;
     margin: 0 auto;
     padding: 20px 20px 0 20px;
-    font: 62.5% arial, tahoma, helvetica, sans-serif;
+    font: 75% arial, tahoma, helvetica, sans-serif;
     color: #000;
+}
+
+p {
+    padding: 4px 10px 2px 10px;
+    line-height: 1.6;
+    text-align: left;
+    vertical-align: top;
 }
 
 h1 {
@@ -40,22 +49,55 @@ h1 {
     padding: 10px 10px;
     border-top: 1px solid #2971a7;
     border-bottom: 1px solid #2971a7;
-    font-size: 2em;
+    font-size: 1.67em;
     font-weight: normal;
     color: #fff;
-    background: #569FD6;
+    background: #2971a7;
+}
+
+h2 {
+    padding: 5px 10px;
+    font-family: "trebuchet ms";
+    font-size: 1em;
+    font-weight: bold;
+    letter-spacing: 0.0em;
+    text-transform: uppercase;
+    color: #fff;
+    background: #2971a7;
+    text-align: center;
+}
+
+th, td, h3 {
+    padding: 4px 10px 2px 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+h3 {
+    font-size: 100%;
+}
+
+table {
+    width: 100%;
+    font-size: 1em;
+    background-color: #fff;
+}
+
+table tfoot td {
+    color: #2e2e2e;
 }
 
 #select {
     text-align: right;
     padding: 10px;
+    font-size: 0.8em;
 }
 
 #select select {
     width: 100px;
 }
 
-#vitals, #network, #memory, #filesystem, #hardware, #temp, #voltage, #fan, #power, #current, #ups {
+#vitals, #network, #memory, #filesystem, #hardware, #temperature, #voltage, #fans, #power, #current, #other, #ups {
     float: left;
     width: 451px;
     margin: 10px 0 0 8px;
@@ -65,20 +107,24 @@ h1 {
     background: #fff;
 }
 
-h2 {
-    padding: 5px 10px;
-    font-family: "trebuchet ms";
-    font-size: 1.2em;
-    font-weight: bold;
-    letter-spacing: 0.0em;
-    text-transform: uppercase;
-    color: #fff;
+#pciTable, #ideTable, #scsiTable, #nvmeTable, #usbTable, #tbTable, #i2cTable {
+    padding: 0px 30px;
 }
 
-table {
-    width: 100%;
-    font-size: 1.2em;
-    background-color: #fff;
+#memory, #filesystem {
+    width: 915px;
+}
+
+#filesystemTable thead tr th {
+    cursor: pointer;
+}
+
+#footer {
+    clear: both;
+    color: #000;
+    margin: 12px;
+    padding: 13px 25px;
+    line-height: 18px;
 }
 
 .plugin {
@@ -90,46 +136,8 @@ table {
     background: #fff;
 }
 
-.dataTables_wrapper{
-    margin: 0 0 0 0 !important;
-    border: 0px !important;
-}
-
-th, td, h3 {
-    padding: 4px 10px 2px 10px;
-    text-align: left;
-    vertical-align: top;
-}
-
-h3 {
-    font-size: 120%;
-}
-
-
 .even {
-    background: #E4EBF3;
-}
-
-
-#footer {
-    clear: both;
-    color: #000;
-    margin: 12px;
-    padding: 13px 25px;
-    line-height: 18px;
-}
-
-h1 {
-    background: #2971a7;
-}
-
-h2 {
-    background: #2971a7;
-    text-align: center;
-}
-
-#memory, #filesystem {
-    width: 915px;
+    background: #e4ebf3;
 }
 
 .bar {
@@ -140,42 +148,35 @@ h2 {
     background: #a72971;
 }
 
-p {
-    padding: 4px 10px 2px 10px;
-    line-height: 1.6;
-    text-align: left;
-    vertical-align: top;
-}
-
-#filesystemTable thead tr .header {
-    cursor: pointer;
-}
-
-table tfoot td {
-    color: #2E2E2E;
-}
-
 .right {
     text-align: right;
     padding-right: 20px;
 }
 
-#pciTable, #ideTable, #scsiTable, #usbTable, #tbTable, #i2cTable {
-    padding: 0px 30px;
+.dataTables_wrapper{
+    margin: 0 0 0 0 !important;
+    border: 0px !important;
 }
 
 .treeimg {
     display: table-cell;
+    *float: left; /* ie6 ie7 */
     vertical-align: top;
 }
 
 .treespan {
     display: table-cell;
+    *float: left; /* ie6 ie7 */
     vertical-align: middle;
 }
 
 .treespanbold {
     font-weight: bold;
     display: table-cell;
+    *float: left; /* ie6 ie7 */
     vertical-align: middle;
+}
+
+.tree tr td {
+    cursor: auto;
 }

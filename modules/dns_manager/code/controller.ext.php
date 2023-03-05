@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -717,7 +717,7 @@ class module_controller extends ctrl_module
                         if (isset($ttl['new_' . $id]) && !fs_director::CheckForEmptyValue($ttl['new_' . $id])) {
                             $ttl_new = self::CleanRecord($ttl['new_' . $id], $type['new_' . $id]);
                         } else {
-                            $ttl_new = "NULL";
+                            $ttl_new = "0";
                         }
                         if (isset($target['new_' . $id]) && !fs_director::CheckForEmptyValue($target['new_' . $id])) {
                             //If Custom IP addresses are not allowed.
@@ -737,17 +737,17 @@ class module_controller extends ctrl_module
                         if (isset($priority['new_' . $id]) && !fs_director::CheckForEmptyValue($priority['new_' . $id])) {
                             $priority_new = self::CleanRecord($priority['new_' . $id], $type['new_' . $id]);
                         } else {
-                            $priority_new = "NULL";
+                            $priority_new = "0";
                         }
                         if (isset($weight['new_' . $id]) && !fs_director::CheckForEmptyValue($weight['new_' . $id])) {
                             $weight_new = self::CleanRecord($weight['new_' . $id], $type['new_' . $id]);
                         } else {
-                            $weight_new = "NULL";
+                            $weight_new = "0";
                         }
                         if (isset($port['new_' . $id]) && !fs_director::CheckForEmptyValue($port['new_' . $id])) {
                             $port_new = self::CleanRecord($port['new_' . $id], $type['new_' . $id]);
                         } else {
-                            $port_new = "NULL";
+                            $port_new = "0";
                         }
                         $sql = $zdbh->prepare("INSERT INTO x_dns (dn_acc_fk,
                            dn_name_vc,
@@ -961,11 +961,10 @@ class module_controller extends ctrl_module
                         //HOSTNAME
                         if (isset($hostName[$NewId]) && !fs_director::CheckForEmptyValue($hostName[$NewId]) && $hostName[$NewId] != "@") {
                             //Check that hostname does not already exist.
-                            $numrows = $zdbh->prepare('SELECT dn_id_pk FROM x_dns WHERE dn_host_vc=:hostName2 AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL AND dn_type_vc=:type');
+                            $numrows = $zdbh->prepare('SELECT dn_id_pk FROM x_dns WHERE dn_host_vc=:hostName2 AND dn_vhost_fk=:domainID AND dn_deleted_ts IS NULL');
                             $hostName2 = $hostName[$NewId];
                             $numrows->bindParam(':hostName2', $hostName2);
                             $numrows->bindParam(':domainID', $domainID);
-							 $numrows->bindParam(':type', $type[$NewId]);
                             $numrows->execute();
                             if ($numrows->fetch()) {
                                 self::SetError('Hostnames must be unique.');
@@ -1064,7 +1063,7 @@ class module_controller extends ctrl_module
         if ($a != "@") {
             $part = explode(".", $a);
             foreach ($part as $check) {
-                if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
+                if (!preg_match('/^[a-z\d][a-z\d\-]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
                     return false;
                 }
             }
@@ -1077,7 +1076,7 @@ class module_controller extends ctrl_module
         if ($a != "@") {
             $part = explode(".", $a);
             foreach ($part as $check) {
-                if (!preg_match('/^[a-z\d_][a-z\d-_]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
+                if (!preg_match('/^[a-z\d_][a-z\d\-_]{0,62}$/i', $check) || preg_match('/-$/', $check)) {
                     return false;
                 }
             }
@@ -1221,13 +1220,13 @@ class module_controller extends ctrl_module
                         $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN MX " . $rowdns['dn_priority_in'] . " " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "TXT") {
-                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN TXT \"" . rtrim(chunk_split(stripslashes($rowdns['dn_target_vc']), 100, '" "'),'" "') . "\"" . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN TXT \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "SRV") {
                         $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN SRV " . $rowdns['dn_priority_in'] . " " . $rowdns['dn_weight_in'] . " " . $rowdns['dn_port_in'] . " " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "SPF") {
-                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN SPF \"" . rtrim(chunk_split(stripslashes($rowdns['dn_target_vc']), 100, '" "'),'" "') . "\"" . fs_filehandler::NewLine();
+                        $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN SPF \"" . stripslashes($rowdns['dn_target_vc']) . "\"" . fs_filehandler::NewLine();
                     }
                     if ($rowdns['dn_type_vc'] == "NS") {
                         $checkline .= $rowdns['dn_host_vc'] . " " . $rowdns['dn_ttl_in'] . " IN NS " . $rowdns['dn_target_vc'] . "." . fs_filehandler::NewLine();

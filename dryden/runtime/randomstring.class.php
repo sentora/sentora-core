@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * Class provides functionallity to generate secure random strings
@@ -37,7 +37,8 @@ class runtime_randomstring{
         }
         
         //randomise string again
-        mt_srand($seed);
+		//mt_srand($seed);
+        mt_srand();
         mt_rand();
         
         //Make the random number into a random string
@@ -76,7 +77,8 @@ class runtime_randomstring{
                     $seed .= str_replace('-','',crc32(uniqid(sha1(microtime(true) . getmypid() . rand(10000,99999999)), true)));
                 }
                 //randomise string again
-                mt_srand($seed);
+				//mt_srand($seed);
+                mt_srand();
                 mt_rand();
                 
                 //Change random number into string

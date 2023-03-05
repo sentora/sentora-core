@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Споделяне';
 $labels['myrights'] = 'Права за достъп';
 $labels['username'] = 'Потребител:';
 $labels['advanced'] = 'Разширен режим';
+$labels['add'] = 'Добави';
 $labels['newuser'] = 'Добавяне на запис';
 $labels['editperms'] = 'Редакция на права';
 $labels['actions'] = 'Действия на права за достъп...';
@@ -80,6 +80,10 @@ $labels['longaclfull'] = 'Пълен контрол, включително и �
 $labels['longaclread'] = 'Папката може да бъде отворена за четене';
 $labels['longaclwrite'] = 'Писмата могат да бъдат маркирани, записвани или копирани в папката';
 $labels['longacldelete'] = 'Писмата могат да бъдат изтривани';
+$labels['longaclother'] = 'Други права за достъп';
+$labels['ariasummaryacltable'] = 'Списък с права за достъп';
+$labels['arialabelaclactions'] = 'Списък с действия';
+$labels['arialabelaclform'] = 'Форма с права за достъп';
 $messages['deleting'] = 'Изтриване на права за достъп...';
 $messages['saving'] = 'Запазване на права за достъп...';
 $messages['updatesuccess'] = 'Правата за достъп са променени успешно';

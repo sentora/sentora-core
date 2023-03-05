@@ -1,26 +1,44 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
+ * Table export
  *
  * @package PhpMyAdmin
  */
+use PhpMyAdmin\Config\PageSettings;
+use PhpMyAdmin\Display\Export;
+use PhpMyAdmin\Relation;
+use PhpMyAdmin\Response;
 
 /**
  *
  */
 require_once 'libraries/common.inc.php';
 
-$response = PMA_Response::getInstance();
+PageSettings::showGroup('Export');
+
+$response = Response::getInstance();
 $header   = $response->getHeader();
 $scripts  = $header->getScripts();
 $scripts->addFile('export.js');
 
+// Get the relation settings
+$relation = new Relation();
+$cfgRelation = $relation->getRelationsParam();
+
+$displayExport = new Export();
+
+// handling export template actions
+if (isset($_POST['templateAction']) && $cfgRelation['exporttemplateswork']) {
+    $displayExport->handleTemplateActions($cfgRelation);
+    exit;
+}
+
 /**
- * Gets tables informations and displays top links
+ * Gets tables information and displays top links
  */
 require_once 'libraries/tbl_common.inc.php';
 $url_query .= '&amp;goto=tbl_export.php&amp;back=tbl_export.php';
-require_once 'libraries/tbl_info.inc.php';
 
 // Dump of a table
 
@@ -30,56 +48,48 @@ $export_page_title = __('View dump (schema) of table');
 // generate WHERE clause (if we are asked to export specific rows)
 
 if (! empty($sql_query)) {
-    // Parse query so we can work with tokens
-    $parsed_sql = PMA_SQP_parse($sql_query);
-    $analyzed_sql = PMA_SQP_analyze($parsed_sql);
+    $parser = new PhpMyAdmin\SqlParser\Parser($sql_query);
 
-    // Need to generate WHERE clause?
-    if (isset($where_clause)) {
+    if ((!empty($parser->statements[0]))
+        && ($parser->statements[0] instanceof PhpMyAdmin\SqlParser\Statements\SelectStatement)
+    ) {
+        // Checking if the WHERE clause has to be replaced.
+        if ((!empty($where_clause)) && (is_array($where_clause))) {
+            $replaces[] = array(
+                'WHERE', 'WHERE (' . implode(') OR (', $where_clause) . ')'
+            );
+        }
 
-        // Regular expressions which can appear in sql query,
-        // before the sql segment which remains as it is.
-        $regex_array = array(
-            '/\bwhere\b/i', '/\bgroup by\b/i', '/\bhaving\b/i', '/\border by\b/i'
+        // Preparing to remove the LIMIT clause.
+        $replaces[] = array('LIMIT', '');
+
+        // Replacing the clauses.
+        $sql_query = PhpMyAdmin\SqlParser\Utils\Query::replaceClauses(
+            $parser->statements[0],
+            $parser->list,
+            $replaces
         );
-        
-        $first_occurring_regex = PMA_getFirstOccurringRegularExpression(
-            $regex_array, $sql_query
-        );
-        unset($regex_array);
-
-        // The part "SELECT `id`, `name` FROM `customers`"
-        // is not modified by the next code segment, when exporting 
-        // the result set from a query such as
-        // "SELECT `id`, `name` FROM `customers` WHERE id NOT IN
-        //  ( SELECT id FROM companies WHERE name LIKE '%u%')"
-        if (! is_null($first_occurring_regex)) {
-            $temp_sql_array = preg_split($first_occurring_regex, $sql_query);
-            $sql_query = $temp_sql_array[0];
-        }
-        unset($first_occurring_regex, $temp_sql_array);
-
-        // Append the where clause using the primary key of each row
-        if (is_array($where_clause) && (count($where_clause) > 0)) {
-            $sql_query .= ' WHERE (' . implode(') OR (', $where_clause) . ')';
-        }
-
-        if (!empty($analyzed_sql[0]['group_by_clause'])) {
-            $sql_query .= ' GROUP BY ' . $analyzed_sql[0]['group_by_clause'];
-        }
-        if (!empty($analyzed_sql[0]['having_clause'])) {
-            $sql_query .= ' HAVING ' . $analyzed_sql[0]['having_clause'];
-        }
-        if (!empty($analyzed_sql[0]['order_by_clause'])) {
-            $sql_query .= ' ORDER BY ' . $analyzed_sql[0]['order_by_clause'];
-        }
-    } else {
-        // Just crop LIMIT clause
-        $sql_query = $analyzed_sql[0]['section_before_limit'] . $analyzed_sql[0]['section_after_limit'];
     }
-    echo PMA_Util::getMessage(PMA_Message::success());
+
+    echo PhpMyAdmin\Util::getMessage(PhpMyAdmin\Message::success());
 }
 
-$export_type = 'table';
-require_once 'libraries/display_export.lib.php';
-?>
+if (! isset($sql_query)) {
+    $sql_query = '';
+}
+if (! isset($num_tables)) {
+    $num_tables = 0;
+}
+if (! isset($unlim_num_rows)) {
+    $unlim_num_rows = 0;
+}
+if (! isset($multi_values)) {
+    $multi_values = '';
+}
+$response = Response::getInstance();
+$response->addHTML(
+    $displayExport->getDisplay(
+        'table', $db, $table, $sql_query, $num_tables,
+        $unlim_num_rows, $multi_values
+    )
+);

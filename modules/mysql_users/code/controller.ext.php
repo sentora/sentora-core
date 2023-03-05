@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
  * ZPanel - A Cross-Platform Open-Source Web Hosting Control panel.
@@ -32,8 +32,10 @@ class module_controller extends ctrl_module
     static $alreadyexists;
     static $dbalreadyadded;
     static $blank;
+	static $blankpassword;
     static $badname;
     static $badpass;
+	static $badpasswordlength;
     static $rootabuse;
     static $badIP;
     static $ok;
@@ -191,7 +193,6 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
         $currentuser = ctrl_users::GetUserDetail($uid);
-        $username = $currentuser['username'] . '_' . $username;
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
         // If errors are found, then exit before creating user...
@@ -199,14 +200,20 @@ class module_controller extends ctrl_module
             return false;
         }
         runtime_hook::Execute('OnBeforeCreateDatabaseUser');
-        $password = fs_director::GenerateRandomPassword(9, 4);
+        $password = fs_director::GenerateRandomPassword(16, 4);
         // Create user in MySQL
         $sql = $zdbh->prepare("CREATE USER :username@:access;");
         $sql->bindParam(':username', $username);
         $sql->bindParam(':access', $access);
         $sql->execute();
         // Set MySQL password for new user...
-        $sql = $zdbh->prepare("SET PASSWORD FOR :username@:access=PASSWORD(:password)");
+		if (sys_versions::ShowMySQLVersion() <= "5.7.5") {
+			// MySQL 5.7 or OLDER
+			$sql = $zdbh->prepare("SET PASSWORD FOR :username@:access=PASSWORD(:password)");
+        } else {
+			// MySQL 5.7 + 
+			$sql = $zdbh->prepare("ALTER USER :username@:access IDENTIFIED BY :password");
+		}
         $sql->bindParam(':username', $username);
         $sql->bindParam(':access', $access);
         $sql->bindParam(':password', $password);
@@ -488,7 +495,13 @@ class module_controller extends ctrl_module
         if ($numrows->execute()) {
             if ($numrows->fetchColumn() <> 0) {
                 // Set MySQL password for new user...
-                $sql = $zdbh->prepare("SET PASSWORD FOR :mu_name_vc@:mu_access_vc=PASSWORD(:password)");
+				if (sys_versions::ShowMySQLVersion() <= "5.7.5") {
+					// MySQL 5.7 or OLDER
+					$sql = $zdbh->prepare("SET PASSWORD FOR :mu_name_vc@:mu_access_vc=PASSWORD(:password)");
+				} else {
+					// MySQL 5.7 + 
+					$sql = $zdbh->prepare("ALTER USER :mu_name_vc@:mu_access_vc IDENTIFIED BY :password");
+				}
                 $sql->bindParam(':mu_name_vc', $rowuser['mu_name_vc']);
                 $sql->bindParam(':mu_access_vc', $rowuser['mu_access_vc']);
                 $sql->bindParam(':password', $password);
@@ -508,6 +521,16 @@ class module_controller extends ctrl_module
 
     static function CheckPasswordForErrors($password)
     {
+		// Check to make sure the password is not blank before we go any further...
+        if ($password == '') {
+            self::$blankpassword = TRUE;
+            return false;
+        }
+		// Check for password length...
+		if (strlen($password) < ctrl_options::GetSystemOption('password_minlength')) {
+			self::$badpasswordlength = true;
+			return false;
+		}
         if (!self::IsValidPassword($password)) {
             self::$badpass = true;
             return false;
@@ -517,10 +540,10 @@ class module_controller extends ctrl_module
 
     static function IsValidUserName($username)
     {
-        if (!preg_match('/^[a-z\d_][a-z\d_-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
+        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
         } else {
-            if (strlen($username) < 32) {
+            if (strlen($username) < 17) {
                 // Enforce the MySQL username limit! (http://dev.mysql.com/doc/refman/4.1/en/user-names.html)
                 return true;
             }
@@ -528,13 +551,12 @@ class module_controller extends ctrl_module
         }
     }
 
-    static function IsValidPassword($password)
+	static function IsValidPassword($password)
     {
-        if (!ctype_alnum($password)) {
-            return false;
-        }
-        return true;
+        return preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/', $password) || preg_match('/-$/', $password) == 1;
+		//return preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/', $password) || preg_match('/-$/', $password) == 1;
     }
+	
 
     /**
      * End 'worker' methods.
@@ -648,22 +670,56 @@ class module_controller extends ctrl_module
         return self::ListUserDatabases($controller->GetControllerRequest('URL', 'other'));
     }
 
-    static function getisDeleteUser()
+    static function getisDeleteUser($uid = null)
     {
         global $controller;
+        global $zdbh;
+
         $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Delete"))
-            return true;
-        return false;
+
+        // Verify if Current user can Delete MySQL Account.
+        // This shall avoid exposing mysql username based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+    	$sql = "SELECT * FROM x_mysql_users WHERE mu_acc_fk=:userid AND mu_id_pk=:editedUsrID AND mu_deleted_ts IS NULL";
+    	$numrows = $zdbh->prepare($sql);
+    	$numrows->bindParam(':userid', $currentuser['userid']);
+		$numrows->bindParam(':editedUsrID', $urlvars['other']);
+    	$numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+
+        // Show User Info
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Delete");
+		
     }
 
-    static function getisEditUser()
+    static function getisEditUser($uid = null)
     {
+		
         global $controller;
-        $urlvars = $controller->GetAllControllerRequests('URL');
-        if ((isset($urlvars['show'])) && ($urlvars['show'] == "Edit"))
-            return true;
-        return false;
+        global $zdbh;
+
+        $urlvars     = $controller->GetAllControllerRequests('URL');
+
+        // Verify if Current user can Edit MySQL Account.
+        // This shall avoid exposing mysql username based on ID lookups.
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+    	$sql = "SELECT * FROM x_mysql_users WHERE mu_acc_fk=:userid AND mu_id_pk=:editedUsrID AND mu_deleted_ts IS NULL";
+    	$numrows = $zdbh->prepare($sql);
+    	$numrows->bindParam(':userid', $currentuser['userid']);
+		$numrows->bindParam(':editedUsrID', $urlvars['other']);
+    	$numrows->execute();
+
+        if( $numrows->rowCount() == 0 ) {
+            return;
+        }
+		
+        // Show User Info
+        return (isset($urlvars['show'])) && ($urlvars['show'] == "Edit");
     }
 
     static function getisCreateUser()
@@ -706,12 +762,19 @@ class module_controller extends ctrl_module
 
     static function getMysqlUsagepChart()
     {
-		global $controller;
-		if (file_exists(ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png')) {
-			return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-		} else {
-			return '<img src="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
-		}
+        return '<img src="' . ui_tpl_assetfolderpath::Template() . 'img/misc/unlimited.png" alt="' . ui_language::translate('Unlimited') . '"/>';
+    }
+
+    static function getMinPassLength()
+    {
+        $minpasswordlength = ctrl_options::GetSystemOption('password_minlength');
+        $trylength = 9;
+        if ($trylength < $minpasswordlength) {
+            $uselength = $minpasswordlength;
+        } else {
+            $uselength = $trylength;
+        }
+        return $uselength;
     }
 
     static function getResult()
@@ -730,6 +793,12 @@ class module_controller extends ctrl_module
         }
         if (!fs_director::CheckForEmptyValue(self::$badpass)) {
             return ui_sysmessage::shout(ui_language::translate("Your MySQL password is not valid. Valid characters are A-Z, a-z, 0-9."), "zannounceerror");
+        }
+		if (!fs_director::CheckForEmptyValue(self::$badpasswordlength)) {
+            return ui_sysmessage::shout(ui_language::translate("Your password did not meet the minimun length requirements. Characters needed for password length") . ": " . ctrl_options::GetSystemOption('password_minlength'), "zannounceerror");
+        }
+		if (!fs_director::CheckForEmptyValue(self::$blankpassword)) {
+            return ui_sysmessage::shout(ui_language::translate("You entered blank a password. Please retry and enter a valid password."), "zannounceerror");
         }
         if (!fs_director::CheckForEmptyValue(self::$badIP)) {
             return ui_sysmessage::shout(ui_language::translate("The IP address is not valid. Please enter a valid IP address."), "zannounceerror");

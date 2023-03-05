@@ -5,11 +5,32 @@
  *
  * @package PhpMyAdmin
  */
+use PhpMyAdmin\Relation;
+use PhpMyAdmin\Response;
 
 require_once 'libraries/common.inc.php';
-$response = PMA_Response::getInstance();
-$response->addHTML(
-    PMA_getRelationsParamDiagnostic(PMA_getRelationsParam())
-);
 
-?>
+$relation = new Relation();
+
+// If request for creating the pmadb
+if (isset($_POST['create_pmadb'])) {
+    if ($relation->createPmaDatabase()) {
+        $relation->fixPmaTables('phpmyadmin');
+    }
+}
+
+// If request for creating all PMA tables.
+if (isset($_POST['fixall_pmadb'])) {
+    $relation->fixPmaTables($GLOBALS['db']);
+}
+
+$cfgRelation = $relation->getRelationsParam();
+// If request for creating missing PMA tables.
+if (isset($_POST['fix_pmadb'])) {
+    $relation->fixPmaTables($cfgRelation['db']);
+}
+
+$response = Response::getInstance();
+$response->addHTML(
+    $relation->getRelationsParamDiagnostic($cfgRelation)
+);

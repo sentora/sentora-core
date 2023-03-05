@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/settings/save_folder.inc                                |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Provide functionality to create/edit a folder                       |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Aleksander Machniak <alec@alec.pl>                            |
  +-----------------------------------------------------------------------+
@@ -24,12 +22,11 @@
 // init IMAP connection
 $STORAGE = $RCMAIL->get_storage();
 
-$name = trim(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, true));
-$old  = rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_POST, true);
-$path = rcube_utils::get_input_value('_parent', rcube_utils::INPUT_POST, true);
-
+$name      = trim(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, true));
+$path      = rcube_utils::get_input_value('_parent', rcube_utils::INPUT_POST, true);
+$old_imap  = rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_POST, true);
+$type      = rcube_utils::get_input_value('_type', rcube_utils::INPUT_POST);
 $name_imap = rcube_charset::convert($name, RCUBE_CHARSET, 'UTF7-IMAP');
-$old_imap  = rcube_charset::convert($old, RCUBE_CHARSET, 'UTF7-IMAP');
 // $path is in UTF7-IMAP already
 
 $delimiter = $STORAGE->get_hierarchy_delimiter();
@@ -44,14 +41,11 @@ else if (!strlen($name)) {
 else if (mb_strlen($name) > 128) {
     $error = $RCMAIL->gettext('nametoolong');
 }
-else {
-    // these characters are problematic e.g. when used in LIST/LSUB
-    foreach (array($delimiter, '%', '*') as $char) {
-        if (strpos($name, $delimiter) !== false) {
-            $error = $RCMAIL->gettext('forbiddencharacter') . " ($char)";
-            break;
-        }
-    }
+else if ($name[0] == '.' && $RCMAIL->config->get('imap_skip_hidden_folders')) {
+    $error = $RCMAIL->gettext('namedotforbidden');
+}
+else if (!$STORAGE->folder_validate($name, $char)) {
+    $error = $RCMAIL->gettext('forbiddencharacter') . " ($char)";
 }
 
 if ($error) {
@@ -69,10 +63,11 @@ else {
     }
 }
 
+$dual_use_supported = $STORAGE->get_capability(rcube_storage::DUAL_USE_FOLDERS);
+$acl_supported      = $STORAGE->get_capability('ACL');
+
 // Check access rights to the parent folder
-if (!$error && strlen($path) && (!strlen($old_imap) || $old_imap != $name_imap)
-    && $STORAGE->get_capability('ACL')
-) {
+if (!$error && $acl_supported && strlen($path) && (!strlen($old_imap) || $old_imap != $name_imap)) {
     $parent_opts = $STORAGE->folder_info($path);
     if ($parent_opts['namespace'] != 'personal'
         && (empty($parent_opts['rights']) || !preg_match('/[ck]/', implode($parent_opts['rights'])))
@@ -98,15 +93,24 @@ else {
 }
 
 // create a new mailbox
-if (!$error && !strlen($old)) {
+if (!$error && !strlen($old_imap)) {
     $folder['subscribe'] = true;
+
+    // Server does not support both sub-folders and messages in a folder
+    // For folders that are supposed to contain other folders we will:
+    //    - disable subscribtion
+    //    - add a separator at the end to make them \NoSelect
+    if (!$dual_use_supported && $type == 'folder') {
+        $folder['subscribe'] = false;
+        $folder['noselect']  = true;
+    }
 
     $plugin = $RCMAIL->plugins->exec_hook('folder_create', array('record' => $folder));
 
     $folder = $plugin['record'];
 
     if (!$plugin['abort']) {
-        $created = $STORAGE->create_folder($folder['name'], $folder['subscribe']);
+        $created = $STORAGE->create_folder($folder['name'], $folder['subscribe'], null, $folder['noselect']);
     }
     else {
         $created = $plugin['result'];
@@ -131,7 +135,12 @@ if (!$error && !strlen($old)) {
     }
     else {
         // show error message
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error', null, false);
+        if (!empty($plugin['message'])) {
+            $OUTPUT->show_message($plugin['message'], 'error', null, false);
+        }
+        else {
+            $RCMAIL->display_server_error('errorsaving');
+        }
     }
 }
 // update a mailbox
@@ -178,6 +187,7 @@ else if (!$error) {
         }
 
         $OUTPUT->show_message('folderupdated', 'confirmation');
+        $OUTPUT->set_env('folder', $folder['name']);
 
         if ($rename) {
             // #1488692: update session
@@ -193,7 +203,12 @@ else if (!$error) {
     }
     else {
         // show error message
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'errorsaving', 'error', null, false);
+        if (!empty($plugin['message'])) {
+            $OUTPUT->show_message($plugin['message'], 'error', null, false);
+        }
+        else {
+            $RCMAIL->display_server_error('errorsaving');
+        }
     }
 }
 

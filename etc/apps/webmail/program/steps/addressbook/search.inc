@@ -1,12 +1,11 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/search.inc                                  |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2011, The Roundcube Dev Team                       |
- | Copyright (C) 2011, Kolab Systems AG                                  |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
+ | Copyright (C) Kolab Systems AG                                        |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -14,7 +13,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Search action (and form) for address book contacts                  |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  | Author: Aleksander Machniak <machniak@kolabsys.com>                   |
@@ -49,7 +47,7 @@ if ($RCMAIL->action == 'search-create') {
         $OUTPUT->command('insert_saved_search', rcube::Q($name), rcube::Q($result));
     }
     else
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'savedsearchcreateerror', 'error');
+        $OUTPUT->show_message($plugin['message'] ?: 'savedsearchcreateerror', 'error');
 
     $OUTPUT->send();
 }
@@ -72,7 +70,7 @@ if ($RCMAIL->action == 'search-delete') {
         $OUTPUT->set_env('pagecount', 0);
     }
     else
-        $OUTPUT->show_message($plugin['message'] ? $plugin['message'] : 'savedsearchdeleteerror', 'error');
+        $OUTPUT->show_message($plugin['message'] ?: 'savedsearchdeleteerror', 'error');
 
     $OUTPUT->send();
 }
@@ -139,6 +137,7 @@ function rcmail_contact_search()
 
     // Values matching mode
     $mode = (int) $RCMAIL->config->get('addressbook_search_mode');
+    $mode |= rcube_addressbook::SEARCH_GROUPS;
 
     // get sources list
     $sources    = $RCMAIL->get_address_sources();
@@ -208,8 +207,8 @@ function rcmail_contact_search()
 
     // search request ID
     $search_request = md5('addr'
-        .(is_array($fields) ? implode($fields, ',') : $fields)
-        .(is_array($search) ? implode($search, ',') : $search));
+        .(is_array($fields) ? implode(',', $fields) : $fields)
+        .(is_array($search) ? implode(',', $search) : $search));
 
     // save search settings in session
     $_SESSION['search'][$search_request] = $search_set;
@@ -229,13 +228,15 @@ function rcmail_contact_search()
     }
 
     // update message count display
-    $OUTPUT->command('set_env', 'search_request', $search_request);
-    $OUTPUT->command('set_env', 'pagecount', ceil($result->count / $PAGE_SIZE));
+    $OUTPUT->set_env('search_request', $search_request);
+    $OUTPUT->set_env('pagecount', ceil($result->count / $PAGE_SIZE));
     $OUTPUT->command('set_rowcount', rcmail_get_rowcount_text($result));
     // Re-set current source
-    $OUTPUT->command('set_env', 'search_id', $sid);
-    $OUTPUT->command('set_env', 'source', '');
-    $OUTPUT->command('set_env', 'group', '');
+    $OUTPUT->set_env('search_id', $sid);
+    $OUTPUT->set_env('source', '');
+    $OUTPUT->set_env('group', '');
+    // Re-set list header
+    $OUTPUT->command('set_group_prop', null);
 
     if (!$sid) {
         // unselect currently selected directory/group
@@ -246,14 +247,15 @@ function rcmail_contact_search()
     $OUTPUT->command('update_group_commands');
 
     // send response
-    $OUTPUT->send($adv ? 'iframe' : null);
+    $OUTPUT->send();
 }
 
 function rcmail_contact_search_form($attrib)
 {
     global $RCMAIL, $CONTACT_COLTYPES;
 
-    $i_size = !empty($attrib['size']) ? $attrib['size'] : 30;
+    $i_size       = $attrib['size'] ?: 30;
+    $short_labels = rcube_utils::get_boolean($attrib['short-legend-labels']);
 
     $form = array(
         'main' => array(
@@ -262,7 +264,7 @@ function rcmail_contact_search_form($attrib)
             ),
         ),
         'personal' => array(
-            'name'    => $RCMAIL->gettext('personalinfo'),
+            'name'    => $RCMAIL->gettext($short_labels ? 'personal' : 'personalinfo'),
             'content' => array(
             ),
         ),
@@ -282,7 +284,7 @@ function rcmail_contact_search_form($attrib)
 
         if (is_array($CONTACTS->coltypes)) {
             $contact_cols = $CONTACTS->coltypes[0] ? array_flip($CONTACTS->coltypes) : $CONTACTS->coltypes;
-            $coltypes = array_merge($coltypes, $contact_cols);
+            $coltypes     = array_merge($coltypes, $contact_cols);
         }
     }
 
@@ -292,22 +294,24 @@ function rcmail_contact_search_form($attrib)
     }
 
     // build form fields list
-    foreach ($coltypes as $col => $colprop)
-    {
-        if ($colprop['type'] != 'image' && !$colprop['nosearch'])
-        {
+    foreach ($coltypes as $col => $colprop) {
+        if ($colprop['type'] != 'image' && !$colprop['nosearch']) {
             $ftype    = $colprop['type'] == 'select' ? 'select' : 'text';
             $label    = isset($colprop['label']) ? $colprop['label'] : $RCMAIL->gettext($col);
-            $category = $colprop['category'] ? $colprop['category'] : 'other';
+            $category = $colprop['category'] ?: 'other';
 
-            // load jquery UI datepicker for date fields 
-            if ($colprop['type'] == 'date')
+            // load jquery UI datepicker for date fields
+            if ($colprop['type'] == 'date') {
                 $colprop['class'] .= ($colprop['class'] ? ' ' : '') . 'datepicker';
-            else if ($ftype == 'text')
+            }
+            else if ($ftype == 'text') {
                 $colprop['size'] = $i_size;
+            }
 
+            $colprop['id'] = '_search_' . $col;
 
-            $content  = html::div('row', html::div('contactfieldlabel label', rcube::Q($label))
+            $content  = html::div('row',
+                html::label(array('class' => 'contactfieldlabel label', 'for' => $colprop['id']), rcube::Q($label))
                 . html::div('contactfieldcontent', rcube_output::get_edit_field('search_'.$col, '', $colprop, $ftype)));
 
             $form[$category]['content'][] = $content;
@@ -318,9 +322,12 @@ function rcmail_contact_search_form($attrib)
     $hiddenfields->add(array('name' => '_adv', 'value' => 1));
 
     $out = $RCMAIL->output->request_form(array(
-        'name' => 'form', 'method' => 'post',
-        'task' => $RCMAIL->task, 'action' => 'search',
-        'noclose' => true) + $attrib, $hiddenfields->show());
+            'name'    => 'form',
+            'method'  => 'post',
+            'task'    => $RCMAIL->task,
+            'action'  => 'search',
+            'noclose' => true,
+        ) + $attrib, $hiddenfields->show());
 
     $RCMAIL->output->add_gui_object('editform', $attrib['id']);
 

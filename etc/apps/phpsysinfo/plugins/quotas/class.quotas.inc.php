@@ -1,18 +1,5 @@
 <?php
 /**
- * Quotas Plugin
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PSI_Plugin_Quotas
- * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
- * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @version   SVN: $Id: class.quotas.inc.php 661 2012-08-27 11:26:39Z namiltd $
- * @link      http://phpsysinfo.sourceforge.net
- */
- /**
  * Quotas Plugin, which displays all quotas on the machine
  * display all quotas in a sortable table with the current values which are determined by
  * calling the "repquota" command line utility, another way is to provide
@@ -24,7 +11,7 @@
  * @package   PSI_Plugin_Quotas
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -55,10 +42,10 @@ class Quotas extends PSI_Plugin
             CommonFunctions::executeProgram("repquota", "-au", $buffer, PSI_DEBUG);
             break;
         case 'data':
-            CommonFunctions::rfts(APP_ROOT."/data/quotas.txt", $buffer);
+            CommonFunctions::rfts(PSI_APP_ROOT."/data/quotas.txt", $buffer);
             break;
         default:
-            $this->global_error->addConfigError("__construct()", "PSI_PLUGIN_QUOTAS_ACCESS");
+            $this->global_error->addConfigError("__construct()", "[quotas] ACCESS");
             break;
         }
         if (trim($buffer) != "") {
@@ -82,7 +69,7 @@ class Quotas extends PSI_Plugin
         $quotas = array();
         foreach ($this->_filecontent as $thisline) {
             $thisline = preg_replace("/([\s]--)/", "", $thisline);
-            $thisline = preg_split("/(\s)/e", $thisline, -1, PREG_SPLIT_NO_EMPTY);
+            $thisline = preg_split("/(\s)/", $thisline, -1, PREG_SPLIT_NO_EMPTY);
             if (count($thisline) == 7) {
                 $quotas[$i]['user'] = str_replace("--", "", $thisline[0]);
                 $quotas[$i]['byte_used'] = $thisline[1] * 1024;

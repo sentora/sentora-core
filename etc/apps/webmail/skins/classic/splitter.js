@@ -1,6 +1,18 @@
-
 /**
  * Roundcube splitter GUI class
+ *
+ * @licstart  The following is the entire license notice for the
+ * JavaScript code in this file.
+ *
+ * Copyright (c) The Roundcube Dev Team
+ *
+ * The JavaScript code in this page is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in this file.
  *
  * @constructor
  */
@@ -11,7 +23,6 @@ function rcube_splitter(attrib)
   this.id = attrib.id ? attrib.id : this.p1id + '_' + this.p2id + '_splitter';
   this.orientation = attrib.orientation;
   this.horizontal = (this.orientation == 'horizontal' || this.orientation == 'h');
-  this.offset = bw.ie6 ? 2 : 0;
   this.pos = attrib.start ? attrib.start * 1 : 0;
   this.relative = attrib.relative ? true : false;
   this.drag_active = false;
@@ -45,6 +56,9 @@ function rcube_splitter(attrib)
 
     // add the mouse event listeners
     $(this.elm).mousedown(onDragStart);
+
+    // Update splitter position and elements with on window resize
+    $(window).resize(function(e) { if (e.target === window) me.resize(); });
     if (bw.ie)
       $(window).resize(onResize);
 
@@ -67,19 +81,22 @@ function rcube_splitter(attrib)
   this.resize = function()
   {
     if (this.horizontal) {
-      var lh = this.layer.height - this.offset * 2;
+      var lh = this.layer.height;
       this.p1.style.height = Math.floor(this.pos - this.p1pos.top - lh / 2) + 'px';
       this.p2.style.top = Math.ceil(this.pos + lh / 2) + 'px';
       this.layer.move(this.layer.x, Math.round(this.pos - lh / 2 + 1));
       if (bw.ie) {
-        var new_height = parseInt(this.p2.parentNode.offsetHeight, 10) - parseInt(this.p2.style.top, 10) - (bw.ie8 ? 2 : 0);
+        var new_height = parseInt(this.p2.parentNode.offsetHeight, 10) - parseInt(this.p2.style.top, 10);
         this.p2.style.height = (new_height > 0 ? new_height : 0) + 'px';
       }
     }
     else {
-      this.p1.style.width = Math.floor(this.pos - this.p1pos.left - this.layer.width / 2) + 'px';
-      this.p2.style.left = Math.ceil(this.pos + this.layer.width / 2) + 'px';
-      this.layer.move(Math.round(this.pos - this.layer.width / 2 + 1), this.layer.y);
+      var max_width = $(window).width() - $(this.p1).offset().left - 150,
+        pos = Math.min(this.pos, max_width);
+
+      this.p1.style.width = Math.floor(pos - this.p1pos.left - this.layer.width / 2) + 'px';
+      this.p2.style.left = Math.ceil(pos + this.layer.width / 2) + 'px';
+      this.layer.move(Math.round(pos - this.layer.width / 2 + 1), this.layer.y);
       if (bw.ie) {
         var new_width = parseInt(this.p2.parentNode.offsetWidth, 10) - parseInt(this.p2.style.left, 10) ;
         this.p2.style.width = (new_width > 0 ? new_width : 0) + 'px';
@@ -104,7 +121,7 @@ function rcube_splitter(attrib)
     me.p2pos = me.relative ? $(me.p2).position() : $(me.p2).offset();
 
     // start listening to mousemove events
-    $(document).bind('mousemove.'+me.id, onDrag).bind('mouseup.'+me.id, onDragStop);
+    $(document).on('mousemove.' + me.id, onDrag).on('mouseup.' + me.id, onDragStop);
 
     // enable dragging above iframes
     $('iframe').each(function() {
@@ -170,7 +187,7 @@ function rcube_splitter(attrib)
       document.body.style.webkitUserSelect = 'auto';
 
     // cancel the listening for drag events
-    $(document).unbind('.' + me.id);
+    $(document).off('.' + me.id);
 
     // remove temp divs
     $('div.iframe-splitter-fix').remove();
@@ -189,7 +206,7 @@ function rcube_splitter(attrib)
   function onResize(e)
   {
     if (me.horizontal) {
-      var new_height = parseInt(me.p2.parentNode.offsetHeight, 10) - parseInt(me.p2.style.top, 10) - (bw.ie8 ? 2 : 0);
+      var new_height = parseInt(me.p2.parentNode.offsetHeight, 10) - parseInt(me.p2.style.top, 10);
       me.p2.style.height = (new_height > 0 ? new_height : 0) +'px';
     }
     else {

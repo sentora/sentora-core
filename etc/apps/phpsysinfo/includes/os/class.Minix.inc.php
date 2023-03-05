@@ -8,7 +8,7 @@
  * @package   PSI Minix OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.Minix.inc.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,7 +20,7 @@
  * @package   PSI Minix OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -34,14 +34,6 @@ class Minix extends OS
     private $_dmesg = array();
 
     /**
-     * call parent constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * read /var/log/messages, but only if we haven't already
      *
      * @return array
@@ -50,8 +42,8 @@ class Minix extends OS
     {
         if (count($this->_dmesg) === 0) {
             if (CommonFunctions::rfts('/var/log/messages', $buf)) {
-                    $parts = preg_split("/kernel: APIC/", $buf, -1, PREG_SPLIT_NO_EMPTY);
-//                    $parts = preg_split("/ syslogd: restart\n/", $buf, -1, PREG_SPLIT_NO_EMPTY);
+                    $blocks = preg_replace("/\s(kernel: MINIX \d+\.\d+\.\d+\.)/", '<BLOCK>$1', $buf);
+                    $parts = preg_split("/<BLOCK>/", $blocks, -1, PREG_SPLIT_NO_EMPTY);
                     $this->_dmesg = preg_split("/\n/", $parts[count($parts) - 1], -1, PREG_SPLIT_NO_EMPTY);
             }
         }
@@ -62,7 +54,7 @@ class Minix extends OS
     /**
      * get the cpu information
      *
-     * @return array
+     * @return void
      */
     protected function _cpuinfo()
     {
@@ -129,6 +121,7 @@ class Minix extends OS
     {
         if (CommonFunctions::rfts('/proc/pci', $strBuf, 0, 4096, false)) {
             $arrLines = preg_split("/\n/", $strBuf, -1, PREG_SPLIT_NO_EMPTY);
+            $arrResults = array();
             foreach ($arrLines as $strLine) {
                $arrParams = preg_split('/\s+/', trim($strLine), 4);
                if (count($arrParams) == 4)
@@ -144,7 +137,7 @@ class Minix extends OS
                 $this->sys->setPciDevices($dev);
             }
         }
-        if (!(isset($arrResults) && is_array($arrResults)) && is_array($results = Parser::lspci())) {
+        if (!(isset($arrResults) && is_array($arrResults)) && ($results = Parser::lspci())) {
             /* if access error: chmod 4755 /usr/bin/lspci */
             foreach ($results as $dev) {
                 $this->sys->setPciDevices($dev);
@@ -159,12 +152,13 @@ class Minix extends OS
      */
     private function _kernel()
     {
-        foreach ($this->readdmesg() as $line) {
-            if (preg_match('/kernel: MINIX (.*) \((.*)\)/', $line, $ar_buf)) {
-                $branch = $ar_buf[2];
-            }
-        }
         if (CommonFunctions::executeProgram('uname', '-rvm', $ret)) {
+            foreach ($this->readdmesg() as $line) {
+                if (preg_match('/kernel: MINIX (\d+\.\d+\.\d+)\. \((.+)\)/', $line, $ar_buf)) {
+                    $branch = $ar_buf[2];
+                    break;
+                }
+            }
             if (isset($branch))
                $this->sys->setKernel($ret.' ('.$branch.')');
             else
@@ -196,7 +190,7 @@ class Minix extends OS
     private function _uptime()
     {
         if (CommonFunctions::executeProgram('uptime', '', $buf)) {
-            if (preg_match("/up (\d+) days,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
+            if (preg_match("/up (\d+) day[s]?,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
                 $min = $ar_buf[3];
                 $hours = $ar_buf[2];
                 $days = $ar_buf[1];
@@ -225,20 +219,6 @@ class Minix extends OS
     }
 
     /**
-     * Number of Users
-     *
-     * @return void
-     */
-    private function _users()
-    {
-        if (CommonFunctions::executeProgram('uptime', '', $buf)) {
-            if (preg_match("/, (.*) users, load averages: (.*), (.*), (.*)$/", $buf, $ar_buf)) {
-                $this->sys->setUsers($ar_buf[1]);
-            }
-        }
-    }
-
-    /**
      * Virtual Host Name
      *
      * @return void
@@ -246,7 +226,7 @@ class Minix extends OS
     private function _hostname()
     {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setHostname(getenv('SERVER_NAME'));
+            if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
         } else {
             if (CommonFunctions::executeProgram('uname', '-n', $result, PSI_DEBUG)) {
                 $ip = gethostbyname($result);
@@ -348,17 +328,27 @@ class Minix extends OS
     public function build()
     {
         $this->error->addError("WARN", "The Minix version of phpSysInfo is a work in progress, some things currently don't work");
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_loadavg();
-        $this->_pci();
-        $this->_cpuinfo();
-        $this->_memory();
-        $this->_filesystems();
-        $this->_network();
-        $this->_processes();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
+            $this->_processes();
+        }
+        if (!$this->blockname || $this->blockname==='hardware') {
+            $this->_pci();
+            $this->_cpuinfo();
+        }
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
+        }
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
+        }
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
+        }
     }
 }

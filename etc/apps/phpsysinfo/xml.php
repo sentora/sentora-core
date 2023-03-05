@@ -9,62 +9,47 @@ header('Access-Control-Allow-Origin: *');
  * @package   PSI_XML
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: xml.php 614 2012-07-28 09:02:59Z jacky672 $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
-/**
- * Only allow authenticated Sentora users
- * Please ensure this code is added when updating phpSysInfo
- */
-session_start();
-if (!isset($_SESSION['zpuid'])) {
-    header('HTTP/1.0 403 Forbidden');
-    die('<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>Forbidden</title></head><body><h1>Forbidden</h1><p>You don\'t have permission to access phpSysInfo on this server.</p></body></html>');
-}
 
  /**
  * application root path
  *
  * @var string
  */
-define('APP_ROOT', dirname(__FILE__));
+define('PSI_APP_ROOT', dirname(__FILE__));
 
-/**
- * internal xml or external
- * external is needed when running in static mode
- *
- * @var boolean
- */
-define('PSI_INTERNAL_XML', true);
+require_once PSI_APP_ROOT.'/includes/autoloader.inc.php';
 
-require_once APP_ROOT.'/includes/autoloader.inc.php';
-
-// check what xml part should be generated
-if (isset($_GET['plugin'])) {
-    $plugin = basename(htmlspecialchars($_GET['plugin']));
-    if ($plugin == "complete") {
-        $output = new WebpageXML(true, null);
-    } elseif ($plugin != "") {
-        $output = new WebpageXML(false, $plugin);
-    } else {
-        unset($output);
-    }
+if ((isset($_GET['json']) || isset($_GET['jsonp'])) && !extension_loaded("json")) {
+    echo '<Error Message="The json extension to php required!" Function="ERROR"/>';
 } else {
-    $output = new WebpageXML(false, null);
-}
-// if $output is correct generate output in proper type
-if (isset($output) && is_object($output)) {
-    if (isset($_GET['json']) || isset($_GET['jsonp'])) {
-        if (defined('PSI_JSON_ISSUE') && (PSI_JSON_ISSUE)) {
-            $json = json_encode(simplexml_load_string(str_replace(">", ">\n", $output->getXMLString()))); // solving json_encode issue
+    // check what xml part should be generated
+    if (isset($_GET['plugin'])) {
+        if (($_GET['plugin'] !== "") && !preg_match('/[^A-Za-z]/', $_GET['plugin'])) {
+            $output = new WebpageXML($_GET['plugin']);
         } else {
-            $json = json_encode(simplexml_load_string($output->getXMLString()));
+            unset($output);
         }
-        // check for jsonp with callback name restriction
-        echo isset($_GET['jsonp']) ? (!preg_match('/[^A-Za-z0-9_\?]/', $_GET['callback'])?$_GET['callback']:'') . '('.$json.')' : $json;
     } else {
-        $output->run();
+        $output = new WebpageXML();
+    }
+    // if $output is correct generate output in proper type
+    if (isset($output) && is_object($output)) {
+        if (isset($_GET['json']) || isset($_GET['jsonp'])) {
+            header("Cache-Control: no-cache, must-revalidate\n");
+            $json = $output->getJsonString();
+            if (isset($_GET['jsonp'])) {
+                header("Content-Type: application/javascript\n\n");
+                echo (!preg_match('/[^\w\?]/', $_GET['callback'])?$_GET['callback']:'') . '('.$json.')';
+            } else {
+                header("Content-Type: application/json\n\n");
+                echo $json;
+            }
+        } else {
+            $output->run();
+        }
     }
 }

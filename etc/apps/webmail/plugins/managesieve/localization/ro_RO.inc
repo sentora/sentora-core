@@ -2,19 +2,19 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/managesieve/localization/<lang>.inc                           |
- |                                                                       |
  | Localization file of the Roundcube Webmail Managesieve plugin         |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-managesieve/
 */
+
+
 $labels['filters'] = 'Filtre';
 $labels['managefilters'] = 'Administreaza filtrele pentru mesaje primite.';
 $labels['filtername'] = 'Nume filtru';
@@ -54,24 +54,19 @@ $labels['add'] = 'Adauga';
 $labels['del'] = 'Sterge';
 $labels['sender'] = 'Expeditor';
 $labels['recipient'] = 'Destinatar';
-$labels['vacationaddr'] = 'Adresele mele de e-mail (adiţionale)';
+$labels['vacationaddr'] = 'Adresele mele de e-mail ';
 $labels['vacationdays'] = 'Cat de des sa trimit mesajele (in zile):';
 $labels['vacationinterval'] = 'Cât de des să trimit mesaje:';
 $labels['vacationreason'] = 'Corpul mesajului (motivul vacantei):';
+$labels['vacationfrom'] = 'Adresa expeditorului răspunsului:';
 $labels['vacationsubject'] = 'Subiectul mesajului:';
 $labels['days'] = 'zile';
 $labels['seconds'] = 'secunde';
 $labels['rulestop'] = 'Nu mai evalua reguli';
 $labels['enable'] = 'Activeaza/Dezactiveaza';
-$labels['filterset'] = 'Filtre setate';
 $labels['filtersets'] = 'Filtrul seteaza';
-$labels['filtersetadd'] = 'Adauga set de filtre';
-$labels['filtersetdel'] = 'Sterge setul curent de filtre';
-$labels['filtersetact'] = 'Activeaza setul curent de filtre';
-$labels['filtersetdeact'] = 'Dezactiveaza setul curent de filtre';
+$labels['filterseteditraw'] = 'Modifică set filtre';
 $labels['filterdef'] = 'Definiţie filtru';
-$labels['filtersetname'] = 'Nume set filtre';
-$labels['newfilterset'] = 'Set filtre nou';
 $labels['active'] = 'activ';
 $labels['none'] = 'niciunul';
 $labels['fromset'] = 'din setul';
@@ -108,14 +103,22 @@ $labels['varupperfirst'] = 'primul caracter cu litre mari';
 $labels['varquotewildcard'] = 'caracterele speciale in citat';
 $labels['varlength'] = 'lungime';
 $labels['notify'] = 'Notificare trimitere';
+$labels['notifytarget'] = 'Scopul notificării:';
+$labels['notifymessage'] = 'Mesaj notificare (opțional)';
+$labels['notifyoptions'] = 'Opțiuni notificare (opțional)';
+$labels['notifyfrom'] = 'Expeditor notificare (opțional)';
 $labels['notifyimportance'] = 'Importanța:';
 $labels['notifyimportancelow'] = 'mică';
 $labels['notifyimportancenormal'] = 'normală';
 $labels['notifyimportancehigh'] = 'mare';
+$labels['notifymethodmailto'] = 'Email';
+$labels['notifymethodtel'] = 'Telefon';
+$labels['notifymethodsms'] = 'SMS';
 $labels['filtercreate'] = 'Crează filtru';
 $labels['usedata'] = 'Foloseşte următoarele date în filtru:';
 $labels['nextstep'] = 'Următorul Pas';
 $labels['...'] = '...';
+$labels['string'] = 'Text';
 $labels['currdate'] = 'Data curenta';
 $labels['datetest'] = 'Data';
 $labels['dateheader'] = 'header:';
@@ -153,39 +156,55 @@ $labels['asciicasemap'] = 'ignoră majusculele (ascii-casemap)';
 $labels['asciinumeric'] = 'numeric (ascii-numeric)';
 $labels['index'] = 'index:';
 $labels['indexlast'] = 'invers';
-$labels['vacation'] = 'Vacanta';
 $labels['vacation.reply'] = 'Raspunde mesajului';
 $labels['vacation.advanced'] = 'Setari avansate';
+$labels['vacation.from'] = 'Adresa expeditorului răspunsului';
 $labels['vacation.subject'] = 'Subiect';
 $labels['vacation.body'] = 'Corp';
 $labels['vacation.status'] = 'Statut';
 $labels['vacation.on'] = 'Pe';
 $labels['vacation.off'] = 'De pe';
-$labels['vacation.addresses'] = 'Adresa mea aditionala';
+$labels['vacation.addresses'] = 'Adresele mele de e-mail';
 $labels['vacation.interval'] = 'Interval de raspundere';
-$labels['vacation.after'] = 'Pune regula de vacanta dupa';
 $labels['vacation.saving'] = 'Salvez datele...';
+$labels['vacation.action'] = 'Acțiune mesaj primit';
+$labels['vacation.keep'] = 'Păstrează';
+$labels['vacation.discard'] = 'Renunță';
+$labels['vacation.redirect'] = 'Redirecționează către';
+$labels['vacation.copy'] = 'Trimite o copie către';
+$labels['forward.redirect'] = 'Redirecționează către';
+$labels['forward.copy'] = 'Trimite o copie către';
+$labels['forward.on'] = 'Pe';
+$labels['forward.off'] = 'De pe';
+$labels['forward.saving'] = 'Salvez datele...';
+$labels['filladdresses'] = 'Completează cu toate adresele mele';
+$labels['arialabelfiltersetactions'] = 'Acțiuni set filtre';
+$labels['arialabelfilteractions'] = 'Acțiuni filtru';
+$labels['arialabelfilterform'] = 'Propretăți filtru';
+$labels['ariasummaryfilterslist'] = 'Listă filtre';
+$labels['ariasummaryfiltersetslist'] = 'Listă seturi filtre';
+$labels['filterstitle'] = 'Modifică filtre de mesaje primite';
+$labels['vacationtitle'] = 'Modifică regulă out-of-office';
+$labels['message'] = 'Mesaj';
+$labels['duplicate'] = 'este duplicat';
+$labels['notduplicate'] = 'nu este duplicat';
+$labels['duplicate.header'] = 'antet:';
+$labels['duplicate.uniqueid'] = 'identificator:';
+$labels['duplicate.seconds'] = 'timeout (secunde):';
+$labels['duplicate.last'] = 'relativ ultimei execuții';
 $messages['filterunknownerror'] = 'Eroare necunoscută la server:';
 $messages['filterconnerror'] = 'Nu mă pot conecta la server.';
 $messages['filterdeleteerror'] = 'Nu pot şterge filtrul. S-a produs o eroare la server.';
 $messages['filterdeleted'] = 'Filtrul a fost şters cu succes.';
 $messages['filtersaved'] = 'Filtrul a fost salvat cu succes.';
 $messages['filtersaveerror'] = 'Nu am putut salva filtrul. S-a produs o eroare la server.';
+$messages['filterformerror'] = 'Formularul de filtre conține erori.';
 $messages['filterdeleteconfirm'] = 'Chiar vrei să ştergi filtrul selectat?';
 $messages['ruledeleteconfirm'] = 'Eşti sigur că vrei să ştergi regula selectată?';
 $messages['actiondeleteconfirm'] = 'Eşti sigur că vrei să ştergi acţiunea selectată?';
 $messages['forbiddenchars'] = 'Caractere nepermise în câmp.';
 $messages['cannotbeempty'] = 'Câmpul nu poate fi gol.';
 $messages['ruleexist'] = 'Filtrul cu numele specificat există deja.';
-$messages['setactivateerror'] = 'Nu pot activa setul de filtre selectat. S-a produs o eroare la server.';
-$messages['setdeactivateerror'] = 'Nu pot dezactiva setul de filtre selectat. S-a produs o eroare la server.';
-$messages['setdeleteerror'] = 'Nu pot şterge setul de filtre selectat. S-a produs o eroare la server.';
-$messages['setactivated'] = 'Setul de filtre activat cu succes.';
-$messages['setdeactivated'] = 'Setul de filtre dezactivat cu succes.';
-$messages['setdeleted'] = 'Setul de filtre şters cu succes.';
-$messages['setdeleteconfirm'] = 'Eşti sigur(ă) că vrei să ştergi setul de filtre selectat?';
-$messages['setcreateerror'] = 'Nu am putut crea setul de filtre. S-a produs o eroare la server.';
-$messages['setcreated'] = 'Setul de filtre creat cu succes.';
 $messages['activateerror'] = 'Nu am putut activa filtrul (filtrele) selectate. S-a produs o eroare la server.';
 $messages['deactivateerror'] = 'Nu am putut dezactiva filtrele (filtrele) selectate. S-a produs o eroare la server.';
 $messages['deactivated'] = 'Filtrele au fost activate cu succes.';
@@ -198,5 +217,5 @@ $messages['setexist'] = 'Setul există deja.';
 $messages['nodata'] = 'Trebuie selectată cel putin o poziţie!';
 $messages['invaliddateformat'] = 'Data sau parte din data in format invalid';
 $messages['saveerror'] = 'Nu am putut salva datele. A aparut o eroare de server.';
-$messages['vacationsaved'] = 'Data de vacanta salvata cu succes';
-?>
+$messages['emptyvacationbody'] = 'Corpul mesajului de vacanță este obligatoriu!';
+$messages['duplicate.conflict.err'] = 'Atât antetul, cât și identificatorul unic nu sunt permise.';

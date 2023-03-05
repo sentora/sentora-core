@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/utils/save_pref.inc                                     |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Save preferences setting in database                                |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Aleksander Machniak <alec@alec.pl>                            |
  +-----------------------------------------------------------------------+
@@ -26,7 +24,6 @@ $sessname = rcube_utils::get_input_value('_session', rcube_utils::INPUT_POST);
 // Whitelisted preferences and session variables, others
 // can be added by plugins
 $whitelist = array(
-    'preview_pane',
     'list_cols',
     'collapsed_folders',
     'collapsed_abooks',

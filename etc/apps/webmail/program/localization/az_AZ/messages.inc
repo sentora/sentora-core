@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Xəta baş verdi!';
 $messages['loginfailed']  = 'Giriş uğursuz oldu.';
 $messages['cookiesdisabled'] = 'Sizin brauzer kukiləri qəbul etmir.';
@@ -31,7 +30,6 @@ $messages['erroroverquotadelete'] = 'Boş disk həcmi yoxdur. Məktubu silmək �
 $messages['invalidrequest'] = 'Səhv sorğu! Məlumat yaddaşda qalmadı.';
 $messages['invalidhost'] = 'Səhv server adı.';
 $messages['nomessagesfound'] = 'Poçt qutusunda məktub tapılmadı.';
-$messages['loggedout'] = 'Çıxış uğurlu oldu. Sağ olun!';
 $messages['mailboxempty'] = 'Poçt boşdur';
 $messages['nomessages'] = 'Məktub yoxdur';
 $messages['refreshing'] = 'Yenilənmə...';
@@ -48,13 +46,11 @@ $messages['successfullysaved'] = 'Yaddaşa yazıldı';
 $messages['savingresponse'] = 'Cavab mətninin saxlanılması...';
 $messages['deleteresponseconfirm'] = 'Siz cavab mətnini silmək istəyirsiniz?';
 $messages['addedsuccessfully'] = 'Əlaqə ünvan kitabçasına əlavə olundu';
-$messages['contactexists'] = 'Ünvan kitabçasında bu e-poçtla əlaqə mövcuddur';
 $messages['contactnameexists'] = 'Bu adda kontakt artıq mövcuddur.';
 $messages['blockedimages'] = 'Təhlükəsizlik məqsədi ilə şəkillərin yüklənməsi bloklanıb.';
 $messages['encryptedmessage'] = 'Məktub şifrələnib və göstərilə bilməz. Server inzibatçısına müraciət edin.';
 $messages['nocontactsfound'] = 'Ünvanlar tapılmadı';
 $messages['contactnotfound'] = 'Tələb olunan ünvan tapılmadı';
-$messages['contactsearchonly'] = 'Kontaqların axtarışı üçün şərti daxil edin';
 $messages['sendingfailed'] = 'Məktub göndərilmədi';
 $messages['senttooquickly'] = 'Məktub göndərmək üçün $sec saniyə gözləmək gərəkir';
 $messages['errorsavingsent'] = 'Göndərilən məktubun saxlanılması zamanı xəta baş verdi.';
@@ -78,13 +74,10 @@ $messages['formincomplete'] = 'Bütün sətrlər doldurulmayıb';
 $messages['noemailwarning'] = 'Lütfən, düzgün e-poçt ünvanı daxil edin';
 $messages['nonamewarning']  = 'Lütfən, ad daxil edin';
 $messages['nopagesizewarning'] = 'Lütfən, səhifənin ölçüsünü daxil edin';
-$messages['nosenderwarning'] = 'Lütfən, göndərənin elektron poçt ünvanını daxil edin';
 $messages['norecipientwarning'] = 'Lütfən, qəbul edənin ünvanını daxil edin';
 $messages['nosubjectwarning']  = '"Mövzu" sahəsi boşdur. Mövzu daxil etmək istəyirsiniz?';
 $messages['nobodywarning'] = 'Məktub boş göndərilsin?';
-$messages['notsentwarning'] = 'Məktub göndərilmədi. Göndərilmədən imtina etmək istəyirsiniz?';
 $messages['restoresavedcomposedata'] = 'Əvvəlki göndərildi, ancaq göndərilməyən məktub da tapıldı.\n\nSubject: $subject\nSaved: $date\n\nSiz bu məktubu bərpa etmək istəyirsiniz?';
-$messages['noldapserver'] = 'Lütfən, axtarış üçün LDAP server seçin';
 $messages['nosearchname'] = 'Lütfən, ad və ya e-poçt əlavə edin';
 $messages['notuploadedwarning'] = 'Əlavələr tam yüklənilməyib. Gözləyin və ya yükləməni ləğv edin.';
 $messages['searchsuccessful'] = 'Tapılan məktublar: $nr';
@@ -134,7 +127,6 @@ $messages['importconfirmskipped'] = '<b>Buraxılmış $skipped mövcud daxillər
 $messages['importmessagesuccess'] = '$nr məktublar uğurla idxal edildi';
 $messages['importmessageerror'] = 'İdxal alınmadı! Yüklənilmiş fayl düzgün məktub və ya poçt faylı deyil';
 $messages['opnotpermitted'] = 'Əməliyyat qadağandır!';
-$messages['nofromaddress'] = 'Seçilmiş kimlikdə e-poçt ünvanları yoxdur';
 $messages['httpreceivedencrypterror'] = 'Serverdə qaçıımaz xəta baş verib. Təcili öz inzibatçınız ilə əlaqə qurun. <b>Sizin məktub göndərilməyə bilər.</b>';
 $messages['smtpconnerror'] = 'SMTP Error ($code): Serverlə bağlantı alınmadı';
 $messages['smtpautherror'] = 'SMTP Error ($code): İdentifikasiya xətası';
@@ -142,7 +134,6 @@ $messages['smtpfromerror'] = 'SMTP Error ($code): Göndərəni səlavə etmək m
 $messages['smtptoerror'] = 'SMTP Error ($code): Qəbul edəni əlavə etmək mümkün deyil - "$to" ($msg)';
 $messages['smtprecipientserror'] = 'SMTP Error ($code): Qəbul edənlərin siyahısını emal etmək mümkün deyil';
 $messages['smtperror'] = 'SMTP Error ($code): $msg';
-$messages['emailformaterror'] = 'Səhv ünvan: $email';
 $messages['toomanyrecipients'] = 'Qəbul edənlər həddindən artıq çoxdur. Lütfən, $max qədər azaldın.';
 $messages['maxgroupmembersreached'] = 'Qrupun ölçüsü imkan verilən maksimumdan artıqdır - $max';
 $messages['internalerror'] = 'Daxili xəta. Lütfən bir daha cəhd edin.';
@@ -171,6 +162,4 @@ $messages['invalidimageformat'] = 'Şəkil formatı düzgün deyil';
 $messages['mispellingsfound'] = 'Məktubda orfoqrafik səhvlər tapılıb';
 $messages['parentnotwritable'] = 'Qovluğu seçilmiş ana qovluğa köçürmək/yaratmaq alınmır. Giriş hüququ yoxdur.';
 $messages['messagetoobig'] = 'Məktubun bir hissəsi emal üçün böyükdür.';
-$messages['attachmentvalidationerror'] = 'DİQQƏT! Bu qoşma şübhəlidir, çünki məktubda deyilən növlə eyni deyil. Əgər siz göndərə güvənmirsinizsə, brauzerdə bunu açmayın. Tərkibi təhlükəli ola bilər.<br/><br/><em>Expected: $expected; found: $detected</em>';
 $messages['noscriptwarning'] = 'Xəbərdarlıq: Bu vebmeyl xidməti Javascript tələb edir! Funksiyanı istifadə etmək üçün lütfən, brauzerinizin ayarlarında Javascript-i yandırın.';
-?>

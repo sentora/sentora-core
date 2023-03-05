@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/copy.inc                                    |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2007-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Copy a contact record from one direcotry to another                 |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -115,14 +113,14 @@ foreach ($cids as $source => $cid) {
             $success = $plugin['result'];
         }
 
-        $errormsg = $plugin['message'] ? $plugin['message'] : 'copyerror';
+        $errormsg = $plugin['message'] ?: 'copyerror';
     }
 }
 
 if (!$success)
     $OUTPUT->show_message($errormsg, 'error');
 else
-    $OUTPUT->show_message('copysuccess', 'notice', array('nr' => $success));
+    $OUTPUT->show_message('copysuccess', 'confirmation', array('nr' => $success));
 
 // send response
 $OUTPUT->send();

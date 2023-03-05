@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/delete.inc                                  |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Delete the submitted contacts (CIDs) from the users address book    |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -61,8 +59,8 @@ foreach ($cids as $source => $cid) {
             $error = 'contactdelerror';
         }
 
-        $source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_GPC);
-        $group  = rcube_utils::get_input_value('_gid', rcube_utils::INPUT_GPC);
+        $source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_GP);
+        $group  = rcube_utils::get_input_value('_gid', rcube_utils::INPUT_GP);
 
         $OUTPUT->show_message($error, 'error');
         $OUTPUT->command('list_contacts', $source, $group);
@@ -143,7 +141,7 @@ else {
 
 // update message count display
 $OUTPUT->set_env('pagecount', ceil($result->count / $PAGE_SIZE));
-$OUTPUT->command('set_rowcount', $rowcount ? $rowcount : rcmail_get_rowcount_text($result));
+$OUTPUT->command('set_rowcount', $rowcount ?: rcmail_get_rowcount_text($result));
 
 // add new rows from next page (if any)
 if (!empty($records)) {

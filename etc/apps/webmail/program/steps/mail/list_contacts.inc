@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/mail/list_contacts.inc                                  |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2012-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Send contacts list to client (as remote response)                   |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -80,7 +78,7 @@ else {
         $CONTACTS->set_pagesize($page_size);
         $CONTACTS->set_page($list_page);
 
-        if ($group_id = rcube_utils::get_input_value('_gid', rcube_utils::INPUT_GPC)) {
+        if ($group_id = rcube_utils::get_input_value('_gid', rcube_utils::INPUT_GET)) {
             $CONTACTS->set_group($group_id);
         }
         // list groups of this source (on page one)
@@ -104,19 +102,19 @@ else if (!empty($result) && $result->count > 0) {
         // add record for every email address of the contact
         $emails = $CONTACTS->get_col_values('email', $row, true);
         foreach ($emails as $i => $email) {
-            $row_id = $row['ID'].'-'.$i;
+            $source = $row['sourceid'] ?: $source;
+            $row_id = $source.'-'.$row['ID'].'-'.$i;
             $jsresult[$row_id] = format_email_recipient($email, $name);
             $classname = $row['_type'] == 'group' ? 'group' : 'person';
             $keyname = $row['_type'] == 'group' ? 'contactgroup' : 'contact';
 
             $OUTPUT->command('add_contact_row', $row_id, array(
-                $keyname => html::span(array('title' => $email), rcube::Q($name ? $name : $email) .
+                $keyname => html::a(array('title' => $email), rcube::Q($name ?: $email) .
                     ($name && count($emails) > 1 ? '&nbsp;' . html::span('email', rcube::Q($email)) : '')
                 )), $classname);
         }
     }
 }
-
 
 // update env
 $OUTPUT->set_env('contactdata', $jsresult);

@@ -1,12 +1,11 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/export.inc                                  |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2008-2013, The Roundcube Dev Team                       |
- | Copyright (C) 2011-2013, Kolab Systems AG                             |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
+ | Copyright (C) Kolab Systems AG                                        |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -14,12 +13,13 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Export the selected address book as vCard file                      |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  | Author: Aleksander Machniak <machniak@kolabsys.com>                   |
  +-----------------------------------------------------------------------+
 */
+
+$RCMAIL->request_security_check(rcube_utils::INPUT_GET);
 
 // Use search result
 if (!empty($_REQUEST['_search']) && isset($_SESSION['search'][$_REQUEST['_search']])) {
@@ -69,6 +69,11 @@ else if (!empty($_REQUEST['_cid'])) {
 
     foreach ($cids as $s => $ids) {
         $source = $RCMAIL->get_address_book($s);
+
+        // reset page and page size (#6103)
+        $source->set_page(1);
+        $source->set_pagesize(count($ids));
+
         $result = $source->search('ID', $ids, 1, true, true);
 
         while ($record = $result->next()) {
@@ -98,12 +103,22 @@ else {
     $result = $CONTACTS->list_records(null, 0, true);
 }
 
+// Give plugins a possibility to implement other output formats or modify the result
+$plugin = $RCMAIL->plugins->exec_hook('addressbook_export', array('result' => $result));
+$result = $plugin['result'];
+
+if ($plugin['abort']) {
+    exit;
+}
+
 // send downlaod headers
-header('Content-Type: text/x-vcard; charset='.RCUBE_CHARSET);
+header('Content-Type: text/vcard; charset=' . RCUBE_CHARSET);
 header('Content-Disposition: attachment; filename="contacts.vcf"');
 
 while ($result && ($row = $result->next())) {
-    prepare_for_export($row, $CONTACTS);
+    if ($CONTACTS) {
+        prepare_for_export($row, $CONTACTS);
+    }
 
     // fix folding and end-of-line chars
     $row['vcard'] = preg_replace('/\r|\n\s+/', '', $row['vcard']);
@@ -119,20 +134,23 @@ exit;
  */
 function prepare_for_export(&$record, $source = null)
 {
-    $groups = $source && $source->groups && $source->export_groups ? $source->get_record_groups($record['ID']) : null;
+    $groups   = $source && $source->groups && $source->export_groups ? $source->get_record_groups($record['ID']) : null;
+    $fieldmap = $source ? $source->vcard_map : null;
 
     if (empty($record['vcard'])) {
-        $vcard = new rcube_vcard();
-        if ($source) {
-            $vcard->extend_fieldmap($source->vcard_map);
-        }
-        $vcard->load($record['vcard']);
+        $vcard = new rcube_vcard($record['vcard'], RCUBE_CHARSET, false, $fieldmap);
         $vcard->reset();
 
         foreach ($record as $key => $values) {
             list($field, $section) = explode(':', $key);
-            foreach ((array)$values as $value) {
-                if (is_array($value) || @strlen($value)) {
+            // avoid unwanted casting of DateTime objects to an array
+            // (same as in rcube_contacts::convert_save_data())
+            if (is_object($values) && is_a($values, 'DateTime')) {
+                $values = array($values);
+            }
+
+            foreach ((array) $values as $value) {
+                if (is_array($value) || is_a($value, 'DateTime') || @strlen($value)) {
                     $vcard->set($field, $value, strtoupper($section));
                 }
             }
@@ -143,11 +161,19 @@ function prepare_for_export(&$record, $source = null)
             $vcard->set('groups', join(',', $groups), null);
         }
 
-        $record['vcard'] = $vcard->export(true);
+        $record['vcard'] = $vcard->export();
     }
     // patch categories to alread existing vcard block
-    else if ($record['vcard'] && !empty($groups) && !strpos($record['vcard'], 'CATEGORIES:')) {
-        $vgroups = 'CATEGORIES:' . rcube_vcard::vcard_quote(join(',', $groups));
-        $record['vcard'] = str_replace('END:VCARD', $vgroups . rcube_vcard::$eol . 'END:VCARD', $record['vcard']);
+    else if ($record['vcard']) {
+        $vcard = new rcube_vcard($record['vcard'], RCUBE_CHARSET, false, $fieldmap);
+
+        // unset CATEGORIES entry, it might be not up-to-date (#1490277)
+        $vcard->set('groups', null);
+        $record['vcard'] = $vcard->export();
+
+        if (!empty($groups)) {
+            $vgroups = 'CATEGORIES:' . rcube_vcard::vcard_quote($groups, ',');
+            $record['vcard'] = str_replace('END:VCARD', $vgroups . rcube_vcard::$eol . 'END:VCARD', $record['vcard']);
+        }
     }
 }

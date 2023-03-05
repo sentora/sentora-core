@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'Radās kļūda!';
 $messages['loginfailed']  = 'Pieslēgties neizdevās';
 $messages['cookiesdisabled'] = 'Jūsu pārlūkprogramma neatbalsta sīkdatnes (cookies)';
@@ -22,6 +21,7 @@ $messages['sessionerror'] = 'Jūsu sessija ir beigusies.';
 $messages['storageerror'] = 'Neizdevās pieslēgties IMAP serverim';
 $messages['servererror'] = 'Servera kļūda!';
 $messages['servererrormsg'] = 'Servera kļūda: $msg';
+$messages['accountlocked'] = 'Pārāk daudz neveiksmīgu autorizēšanās mēģinājumu. Mēģiniet atkārtoti vēlāk.';
 $messages['connerror'] = 'Savienojuma kļūda - nav iespējams pieslēgties serverim!';
 $messages['dberror'] = 'Datubāzes kļūda!';
 $messages['windowopenerror'] = 'Izlēcošais logs tika bloķēts!';
@@ -33,12 +33,12 @@ $messages['erroroverquotadelete'] = 'Uz diska nav brīvas vietas. Lai dzēstu v�
 $messages['invalidrequest'] = 'Nederīgs pieprasījums! Dati netika saglabāti ...';
 $messages['invalidhost'] = 'Nederīgs servera nosaukums';
 $messages['nomessagesfound'] = 'Šajā pastkastē nav vēstuļu';
-$messages['loggedout'] = 'Jūs esat veiksmīgi atslēdzies no sistēmas. Uz redzēšanos!';
 $messages['mailboxempty'] = 'Pastkaste ir tukša';
 $messages['nomessages'] = 'Nav nevienas vēstules';
 $messages['refreshing'] = 'Atjauno...';
 $messages['loading'] = 'Notiek ielāde...';
 $messages['uploading'] = 'Augšupielāde failu...';
+$messages['attaching'] = 'Pievieno failu...';
 $messages['uploadingmany'] = 'Augšupielādē failus...';
 $messages['loadingdata'] = 'Ielādē datus...';
 $messages['checkingmail'] = 'Notiek pasta pārbaude ...';
@@ -49,14 +49,21 @@ $messages['messagesaved'] = 'Vēstule saglabāta Uzmetumos';
 $messages['successfullysaved'] = 'Veiksmīgi saglabāts.';
 $messages['savingresponse'] = 'Tiek saglabāts atbildes teksts ...';
 $messages['deleteresponseconfirm'] = 'Vai Jūs tiešām gribat dzēst šo atbildes tekstu?';
+$messages['nocontactselected'] = 'Jūs vēl neesat norādījuši nevienu kontaktu.';
 $messages['addedsuccessfully'] = 'Kontakts veiksmīgi pievienots adrešu grāmatai';
 $messages['contactexists'] = 'Kontakts ar šādu e-pasta adresi jau eksistē';
 $messages['contactnameexists'] = 'Kontakts ar šādu vārdu jau eksistē.';
 $messages['blockedimages'] = 'Drošības nolūkos attēli, kuri tiek ielādēti no cita servera, šajā vēstulē ir bloķēti';
+$messages['blockedresources'] = 'Lai aizsargātu Jūsu privātumu, attālinātie reursi tika nobloķēti.';
 $messages['encryptedmessage'] = 'Atvainojiet - šī ir šifrēta vēstule un diemžēl nevar tikt parādīta ...';
+$messages['externalmessagedecryption'] = 'Šis e-pasts ir šifrēts un var tikt atšifrēts izmantojot interneta pārlūka paplašinājumu.';
+$messages['nopubkeyfor'] = 'E-pastam $email netika atrasta neviena publiskā atslēga';
+$messages['nopubkeyforsender'] = 'Jūsu sūtīšanas identitātei nav iespējams atrast publisko atslēgu. Vai e-pastu šifrēt tikai saņēmējiem?';
+$messages['encryptnoattachments'] = 'Jau augšupielādētu pielikumu nav iespējams nošifrēt. Lūdzu pievienojiet to atkārtoti, izmantojot šifrēšanas redakrotu.';
+$messages['searchpubkeyservers'] = 'Vai Jūs gribat lai trūkstošās atslēgas tiek sameklēt publiskajos atslēgu serveros?';
+$messages['encryptpubkeysfound'] = 'Tika atrastas sekojošās publiskās atslēgas:';
 $messages['nocontactsfound'] = 'Kontakti netika atrasti';
 $messages['contactnotfound'] = 'Pieprasītais kontakts nav atrasts';
-$messages['contactsearchonly'] = 'Lai atrastu kontaktus, ievadiet meklēšanas kritērijus';
 $messages['sendingfailed'] = 'Vēstule netika nosūtīta';
 $messages['senttooquickly'] = 'Lūdzu uzgaidiet $sec sekundi(-es) pirms sūtiet šo vēstuli';
 $messages['errorsavingsent'] = 'Saglabājot nosūtīto vēstuli notika kļūda - vēstule netika saglabāta';
@@ -65,6 +72,8 @@ $messages['errormoving'] = 'Vēstule(s) netika pārvietota(s)';
 $messages['errorcopying'] = 'Vēstules pārkopēt neizdevās';
 $messages['errordeleting'] = 'Vēstules izdzēst neizdevās';
 $messages['errormarking'] = 'Iezīmēt vēstules nebija iespējams';
+$messages['alerttitle'] = 'Uzmanību';
+$messages['confirmationtitle'] = 'Vai Jūs esat pārliecināts...';
 $messages['deletecontactconfirm']  = 'Vai tiešām vēlaties dzēst iezīmētās kontaktpersonas?';
 $messages['deletegroupconfirm']  = 'Vai tiešām vēlaties dzēst atzīmēto grupu?';
 $messages['deletemessagesconfirm'] = 'Vai tiešām vēlaties dzēst iezīmētās vēstules?';
@@ -81,12 +90,15 @@ $messages['noemailwarning'] = 'Lūdzu ievadiet korektu e-pasta adresi';
 $messages['nonamewarning']  = 'Lūdzu ievadiet vārdu';
 $messages['nopagesizewarning'] = 'Lūdzu ievadiet lapas izmēru';
 $messages['nosenderwarning'] = 'Lūdzu ievadiet sūtītāja e-pasta adresi';
+$messages['recipientsadded'] = 'Adresāti pievienoti veiksmīgi.';
 $messages['norecipientwarning'] = 'Lūdzu ievadiet vismaz vienu saņēmēju';
+$messages['disclosedrecipwarning'] = 'Katrs adresāts redzēs pārējos adresātus. Lai to novērstu un nodrošinātu adresātu privātumu, lūdzu izmantojiet Bcc lauku.';
+$messages['disclosedreciptitle'] = 'Pārāk daudz publisku adresātu';
 $messages['nosubjectwarning']  = 'Lauks "temats" ir tukšs. Vai vēlaties to aizpildīt tagad?';
+$messages['nosubjecttitle']  = 'Bez tēmas';
 $messages['nobodywarning'] = 'Sūtīt vēstuli bez teksta?';
-$messages['notsentwarning'] = 'Vēstule netika nosūtīta. Vai tiešām vēlaties atcelt vēstules rakstīšanu?';
+$messages['notsentwarning'] = 'Vēstule netika nosūtīta un tā satur nesaglabātas izmaiņas. Vai gribat atcelt šīs izmaiņas?';
 $messages['restoresavedcomposedata'] = 'Ir atrasta pirms kāda laika uzrakstīta, bet nenosūtīta vēstule.\n\nTēma: $subject\nSaglabāta:$date\n\nVai atjaunot šo vēstuli?';
-$messages['noldapserver'] = 'Lai meklētu, lūdzu izvēlaties LDAP serveri';
 $messages['nosearchname'] = 'Lūdzu ievadiet kontaktpersonas vārdu vai e-pasta adresi';
 $messages['notuploadedwarning'] = 'Visi pielikumi vēl nav augšupielādēti - lūdzu uzgaidiet vai atceļiet augšupielādi';
 $messages['searchsuccessful'] = 'Atrastas $nr vēstules';
@@ -104,8 +116,11 @@ $messages['folderexpunged'] = 'Mape saspiesta veiksmīgi';
 $messages['deletedsuccessfully'] = 'Veiksmīgi izdzēsts';
 $messages['converting'] = 'Tiek noņemts vēstules formatējums...';
 $messages['messageopenerror'] = 'Nevarēja ielādēt vēstuli no servera';
+$messages['filelinkerror'] = 'Neizdevās faila pievienošana.';
 $messages['fileuploaderror'] = 'Faila augšupielāde neveiksmīga';
 $messages['filesizeerror'] = 'Augšupielādētais fails pārsniedz pieļaujamo $size izmēru.';
+$messages['filecounterror'] = 'Vienā reizē Jūs varat augšupielādēt maksimums $count failus.';
+$messages['msgsizeerror'] = 'Neizdevās pievienot failu. Vēstules izmērs nedrīkst pārsniegt maksimālo pieļaujamo - $size .';
 $messages['copysuccess'] = '$nr kontakti tika veiksmīgi pārkopēti.';
 $messages['movesuccess'] = '$nr kontakti tika veiksmīgi pārvietoti.';
 $messages['copyerror'] = 'Kontaktus pārkopēt neizdevās.';
@@ -145,6 +160,7 @@ $messages['smtpautherror'] = 'SMTP kļūda ($code): Neizdevās autorizēties.';
 $messages['smtpfromerror'] = 'SMTP kļūda ($code): Neizdevās iestatīt sūtītāju "$from" ($msg).';
 $messages['smtptoerror'] = 'SMTP kļūda ($code): Neizdevās pievienot saņēmēju "$to" ($msg).';
 $messages['smtprecipientserror'] = 'SMTP kļūda: Nav iespējams aptrādāt saņēmēju sarakstu.';
+$messages['smtpsizeerror'] = 'SMTP kļūda: Vēstules izmērs pārsniedz serverī noteikto limitu ($limit)';
 $messages['smtperror'] = 'SMTP kļūda: $msg';
 $messages['emailformaterror'] = 'Nepareiza e-pasta adrese: $email';
 $messages['toomanyrecipients'] = 'Pārāk daudz saņēmēju. Samaziniet skaitu līdz $max.';
@@ -163,18 +179,33 @@ $messages['savedsearchcreated'] = 'Saglabātais meklēšanas pieprasījums sagla
 $messages['savedsearchcreateerror'] = 'Meklēšanas pieprasījumu izveidot neizdevās.';
 $messages['messagedeleted'] = 'Vēstule(s) veiksmīgi izdzēsta(s).';
 $messages['messagemoved'] = 'Vēstule(s) veiksmīgi pārvietota(s).';
+$messages['messagemovedtotrash'] = 'Vēstule(s) veiksmīgi iemesta(s) papīrgrozā.';
 $messages['messagecopied'] = 'Vēstule(s) veiksmīgi pārkopēta(s).';
 $messages['messagemarked'] = 'Vēstule(s) veiksmīgi atzīmēta(s).';
 $messages['autocompletechars'] = 'Lai automātiski meklētu, ievadiet vismaz $min burtus.';
 $messages['autocompletemore'] = 'Atrasti vairāki ieraksti. Papildiniet meklēšanas kritēriju ar vairāk burtiem.';
 $messages['namecannotbeempty'] = 'Lūdzu ievadiet vārdu.';
 $messages['nametoolong'] = 'Vārds ir pārāk garš.';
+$messages['namedotforbidden'] = 'Mapes nosaukums nedrīkst sākties ar punktu.';
 $messages['folderupdated'] = 'Mape vieksmīgi atjaunota.';
 $messages['foldercreated'] = 'Mape veiksmīgi izveidota.';
 $messages['invalidimageformat'] = 'Nederīgs attēla formāts.';
 $messages['mispellingsfound'] = 'Vēstulē atrastas pareizrakstības kļūdas.';
 $messages['parentnotwritable'] = 'Neizdevās izveidot/pārvietot mapi atzīmētajā virsmapē. Nav piekļuves tiesību.';
 $messages['messagetoobig'] = 'Vēstule daļa ir pārāk liela, lai to varētu apstrādāt.';
-$messages['attachmentvalidationerror'] = 'BRĪDINĀJUMS! Šis pielikums ir aizdomīgs, jo tā tips neatbilst tipam, kurš ir uzrādīts e-pasta ziņojumā. Ja jūs neuzticaties sūtītājam, šo failu Jums vaļā vērt nevajadzētu, jo tas var saturēt ļaunprātīgu saturu. <br/><br/><em>Būtu jābūt: $expected; Bet ir: $detected</em>';
+$messages['attachmentvalidationerror'] = 'Šis e-pasta pielikums ir aizdomīgs, jo tā tips neatbilst tam, kurš norādīts pašā epasta ziņojumā. Ja Jūs neuzticaties sūtītājam, vai tas ir nepazīstams, Jums labāk nevērt vaļā šo e-pasta pielikumu, jo tas var saturēt ļaundabīgu kodu. <br/><br/><em>Norādīts: $expected; Atrasts: $detected3</em>';
 $messages['noscriptwarning'] = 'Uzmanību: lai lasītu e-pastus, Jūsu pārlūkprogrammā jābūt ieslēgtiem JavaScript.';
-?>
+$messages['messageissent'] = 'E-pasts jau ir nosūtīts, bet nav saglabāts. Vai Jūs vēlaties to tagad saglabāt?';
+$messages['errnotfound'] = 'Fails netika atrasts';
+$messages['errnotfoundexplain'] = 'Pieprasītais avots netika atrasts!';
+$messages['errfailedrequest'] = 'Pieprasījums neizdevās';
+$messages['errauthorizationfailed'] = 'Neveiksmīga autorizācija';
+$messages['errunauthorizedexplain'] = 'Nevar pārbaudīt vai Jūs esat autorizēts izmantot šo servisu!';
+$messages['errrequestcheckfailed'] = 'Pieprasījuma pārbaude neizdevās.';
+$messages['errcsrfprotectionexplain'] = "Jūsu drošībai pieeja šim resursam ir aizsargāta pret vairāku vietņu pieprasījuma viltošanu (CSRF ).\nJa Jūs redzat šo ziņojumu, iespējams Jūs iepriekš nebijāt izgājuši ārā no šī e-pasta pārlūka.\n\nLai turpinātu, ir nepieciešams veikt lietotāja darbības.";
+$messages['errcontactserveradmin'] = 'Lūdzu kontaktējieties ar servera administratoru.';
+$messages['clicktoresumesession'] = 'Lai atjaunotu Jūsu iepriekšējo sessiju, spiest šeit.';
+$messages['errcomposesession'] = 'Rakstot vēstuli radās autorizācijas sessijas kļūda';
+$messages['errcomposesessionexplain'] = 'Pieprasītā sessija, vēstules rakstīšanai, netika atrasta.';
+$messages['clicktocompose'] = 'Lai rakstītu jaunu vēstuli, spiest šeit';
+$messages['nosupporterror'] = 'Šī iespēja Jūsu interneta pārlūkā nav atbalstīta.';

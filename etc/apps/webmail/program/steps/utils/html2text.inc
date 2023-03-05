@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/utils/html2text.inc                                     |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2012, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,19 +12,18 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Convert HTML message to plain text                                  |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
 */
 
-$html = $HTTP_RAW_POST_DATA;
+$html = stream_get_contents(fopen('php://input', 'r'));
 
-// Replace emoticon images with its text representation
-$html = $RCMAIL->replace_emoticons($html);
+$params['links'] = (bool) rcube_utils::get_input_value('_do_links', rcube_utils::INPUT_GET);
+$params['width'] = (int) rcube_utils::get_input_value('_width', rcube_utils::INPUT_GET);
 
-$converter = new rcube_html2text($html, false, true, 0);
+$text = $RCMAIL->html2text($html, $params);
 
-header('Content-Type: text/plain; charset=UTF-8');
-print rtrim($converter->get_text());
+header('Content-Type: text/plain; charset=' . RCUBE_CHARSET);
+print $text;
 exit;

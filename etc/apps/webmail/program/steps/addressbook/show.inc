@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
- | program/steps/addressbook/show.inc                                    |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -13,7 +12,6 @@
  |                                                                       |
  | PURPOSE:                                                              |
  |   Show contact details                                                |
- |                                                                       |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  +-----------------------------------------------------------------------+
@@ -28,8 +26,8 @@ $cid    = $cids ? array_shift($cids[$source]) : null;
 $CONTACTS  = rcmail_contact_source($source, true);
 $SOURCE_ID = $source;
 
-// read contact record
-if ($cid && ($record = $CONTACTS->get_record($cid, true))) {
+// read contact record (or get the one defined in 'save' action)
+if ($cid && ($record = ($CONTACT_RECORD ?: $CONTACTS->get_record($cid, true)))) {
     $OUTPUT->set_env('readonly', $CONTACTS->readonly || $record['readonly']);
     $OUTPUT->set_env('cid', $record['ID']);
 
@@ -64,12 +62,19 @@ function rcmail_contact_head($attrib)
 
     $form = array(
         'head' => array(  // section 'head' is magic!
+            'name' => $RCMAIL->gettext('contactnameandorg'),
             'content' => array(
-                'prefix' => array('type' => 'text'),
-                'firstname' => array('type' => 'text'),
-                'middlename' => array('type' => 'text'),
-                'surname' => array('type' => 'text'),
-                'suffix' => array('type' => 'text'),
+                'source'       => array('type' => 'text'),
+                'prefix'       => array('type' => 'text'),
+                'firstname'    => array('type' => 'text'),
+                'middlename'   => array('type' => 'text'),
+                'surname'      => array('type' => 'text'),
+                'suffix'       => array('type' => 'text'),
+                'name'         => array('type' => 'text'),
+                'nickname'     => array('type' => 'text'),
+                'organization' => array('type' => 'text'),
+                'department'   => array('type' => 'text'),
+                'jobtitle'     => array('type' => 'text'),
             ),
         ),
     );
@@ -88,7 +93,8 @@ function rcmail_contact_details($attrib)
         return false;
     }
 
-    $i_size = !empty($attrib['size']) ? $attrib['size'] : 40;
+    $i_size       = $attrib['size'] ?: 40;
+    $short_labels = rcube_utils::get_boolean($attrib['short-legend-labels']);
 
     $form = array(
         'contact' => array(
@@ -102,7 +108,7 @@ function rcmail_contact_details($attrib)
             ),
         ),
         'personal' => array(
-            'name'    => $RCMAIL->gettext('personalinfo'),
+            'name'    => $RCMAIL->gettext($short_labels ? 'personal' : 'personalinfo'),
             'content' => array(
                 'gender' => array('size' => $i_size),
                 'maidenname' => array('size' => $i_size),
@@ -131,7 +137,7 @@ function rcmail_contact_details($attrib)
         );
     }
 
-    return rcmail_contact_form($form, $record);
+    return rcmail_contact_form($form, $record, $attrib);
 }
 
 
@@ -169,27 +175,31 @@ function rcmail_contact_record_groups($contact_id)
         return '';
     }
 
+    $form_attrs = array(
+        'name'    => 'form',
+        'method'  => 'post',
+        'task'    => $RCMAIL->task,
+        'action'  => 'save',
+        'request' => 'save.' . intval($contact_id),
+        'noclose' => true,
+    );
+
     $members  = $CONTACTS->get_record_groups($contact_id);
-    $table    = new html_table(array('cols' => 2, 'cellspacing' => 0, 'border' => 0));
+    $table    = new html_table(array('tagname' => 'ul', 'cols' => 1, 'class' => 'proplist simplelist'));
     $checkbox = new html_checkbox(array('name' => '_gid[]',
         'class' => 'groupmember', 'disabled' => $CONTACTS->readonly));
 
     foreach ($GROUPS as $group) {
-        $gid = $group['ID'];
-        $table->add(null, $checkbox->show($members[$gid] ? $gid : null,
-            array('value' => $gid, 'id' => 'ff_gid' . $gid)));
-        $table->add(null, html::label('ff_gid' . $gid, rcube::Q($group['name'])));
+        $gid   = $group['ID'];
+        $input = $checkbox->show($members[$gid] ? $gid : null, array('value' => $gid));
+        $table->add(null, html::label(null, $input . rcube::Q($group['name'])));
     }
 
     $hiddenfields = new html_hiddenfield(array('name' => '_source', 'value' => rcube_utils::get_input_value('_source', rcube_utils::INPUT_GPC)));
     $hiddenfields->add(array('name' => '_cid', 'value' => $contact_id));
 
-    $form_start = $RCMAIL->output->request_form(array(
-        'name' => "form", 'method' => "post",
-        'task' => $RCMAIL->task, 'action' => 'save',
-        'request' => 'save.'.intval($contact_id),
-        'noclose' => true), $hiddenfields->show());
-    $form_end = '</form>';
+    $form_start = $RCMAIL->output->request_form($form_attrs, $hiddenfields->show());
+    $form_end   = '</form>';
 
     $RCMAIL->output->add_gui_object('editform', 'form');
     $RCMAIL->output->add_label('addingmember', 'removingmember');

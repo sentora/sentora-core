@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2014-2019 Sentora Project (http://www.sentora.org/) 
+ * @copyright 2014-2023 Sentora Project (http://www.sentora.org/) 
  * Sentora is a GPL fork of the ZPanel Project whose original header follows:
  *
 
@@ -10,7 +10,8 @@
  * @package ZPanel
  * @version $Id$
  * @author Bobby Allen - ballen@bobbyallen.me
- * @copyright (c) 2008-2014 ZPanel Group - http://www.zpanelcp.com/
+ * Reworked by Anthony D. - Duke City Solutions, LLC
+ * @copyright (c) 2008-2019 ZPanel Group - http://www.zpanelcp.com/
  * @license http://opensource.org/licenses/gpl-3.0.html GNU Public License v3
  *
  * This program (ZPanel) is free software: you can redistribute it and/or modify
@@ -163,6 +164,9 @@ class module_controller extends ctrl_module
                     if (
                             $row['vh_suhosin_in'] == 0 ||
                             $row['vh_obasedir_in'] == 0 ||
+							$row['vh_ssl_tx'] != null ||
+							$row['vh_ssl_port_in'] != null ||
+							$row['vh_custom_sp_tx'] != null ||
                             $row['vh_custom_tx'] != "" ||
                             !fs_director::CheckForEmptyValue($row['vh_custom_port_in']) ||
                             $row['vh_portforward_in'] == 1 ||
@@ -194,6 +198,9 @@ class module_controller extends ctrl_module
                     if (
                             $row['vh_suhosin_in'] == 0 ||
                             $row['vh_obasedir_in'] == 0 ||
+							$row['vh_ssl_tx'] != null ||
+							$row['vh_ssl_port_in'] != null ||
+							$row['vh_custom_sp_tx'] != null ||
                             $row['vh_custom_tx'] != "" ||
                             !fs_director::CheckForEmptyValue($row['vh_custom_port_in']) ||
                             $row['vh_portforward_in'] == 1 ||
@@ -264,12 +271,18 @@ class module_controller extends ctrl_module
                 $row = $sql->fetch();
 
                 $line .= "<tr><th>" . ui_language::translate("Domain Enabled") . ":</th><td><input type=\"checkbox\" name=\"vh_enabled_in\" id=\"vh_enabled_in\" value=\"1\" " . fs_director::IsChecked($row['vh_enabled_in']) . "/></td></tr>";
-                $line .= "<tr><th>" . ui_language::translate("Suhosin Enabled") . ":</th><td><input type=\"checkbox\" name=\"vh_suhosin_in\" id=\"vh_suhosin_in\" value=\"1\" " . fs_director::IsChecked($row['vh_suhosin_in']) . "/></td></tr>";
+                $line .= "<tr><th>" . ui_language::translate("Suhosin/Snuffleupagus Enabled") . ":</th><td><input type=\"checkbox\" name=\"vh_suhosin_in\" id=\"vh_suhosin_in\" value=\"1\" " . fs_director::IsChecked($row['vh_suhosin_in']) . "/></td></tr>";
                 $line .= "<tr><th>" . ui_language::translate("OpenBase Enabled") . ":</th><td><input type=\"checkbox\" name=\"vh_obasedir_in\" id=\"vh_obasedir_in\" value=\"1\" " . fs_director::IsChecked($row['vh_obasedir_in']) . "/></td></tr>";
                 $line .= "<tr><th>" . ui_language::translate("Port Override") . "</th><td><input type=\"text\" name=\"vh_custom_port_in\" id=\"vh_custom_port_in\" maxlength=\"6\" value=\"" . $row['vh_custom_port_in'] . "\"/>";
                 $line .= "<tr><th>" . ui_language::translate("Forward Port 80 to Overriden Port") . ":</th><td><input type=\"checkbox\" name=\"vh_portforward_in\" id=\"vh_portforward_in\" value=\"1\" " . fs_director::IsChecked($row['vh_portforward_in']) . "/>" . ui_language::translate("Warning requires Apache mod_rewrite to be installed on the server.") . "</td></tr>";
                 $line .= "<tr><th>" . ui_language::translate("IP Override") . "</th><td><input type=\"text\" name=\"vh_custom_ip_vc\" id=\"vh_custom_ip_vc\" maxlength=\"20\" value=\"" . $row['vh_custom_ip_vc'] . "\"/>";
                 $line .= "<tr valign=\"top\"><th>" . ui_language::translate("Custom Entry") . ":</th><td><textarea cols=\"60\" rows=\"10\" name=\"vh_custom_tx\">" . $row['vh_custom_tx'] . "</textarea></td></tr>";
+				$line .= "<tr><th>" . ui_language::translate("<u>SSL Settings Options - Below</u>");
+				$line .= "<tr><th>" . ui_language::translate("SSL Port") . "</th><td><input type=\"text\" name=\"vh_ssl_port_in\" id=\"vh_ssl_port_in\" maxlength=\"6\" value=\"" . $row['vh_ssl_port_in'] . "\"/>";
+				$line .= "<tr><th>" .  ui_language::translate("SSL Cert Settings") . ":</th><td><textarea cols=\"60\" rows=\"10\" name=\"vh_ssl_tx\">" . $row['vh_ssl_tx'] . "</textarea></td></tr>";
+				//$line .= "<tr><th>" . ui_language::translate("<u>Snuffleupagus Custom settings - Below</u>");
+				//$line .= "<tr><th>" .  ui_language::translate("Snuffleupagus Custom settings") . ":</th><td><textarea cols=\"60\" rows=\"10\" name=\"vh_custom_sp_tx\">" . $row['vh_custom_sp_tx'] . "</textarea></td></tr>";
+				
             }
         }
 
@@ -328,6 +341,42 @@ class module_controller extends ctrl_module
         global $zdbh;
         global $controller;
         runtime_csfr::Protect();
+		
+		$ssl_tx = $controller->GetControllerRequest('FORM', 'vh_ssl_tx');
+        if (empty($ssl_tx)) {
+            $ssl_tx = NULL;
+        } else {
+            $ssl_tx = $controller->GetControllerRequest('FORM', 'vh_ssl_tx');
+        }
+		
+		$ssl_port_in = $controller->GetControllerRequest('FORM', 'vh_ssl_port_in');
+        if (empty($ssl_port_in)) {
+            $ssl_port_in = NULL;
+        } else {
+            $ssl_port_in = $controller->GetControllerRequest('FORM', 'vh_ssl_port_in');
+        }
+		
+		
+		
+		
+		
+		$custom_sp_tx = $controller->GetControllerRequest('FORM', 'vh_custom_sp_tx');
+        if (empty($custom_sp_tx)) {
+            $custom_sp_tx = NULL;
+        } else {
+            $custom_sp_tx = $controller->GetControllerRequest('FORM', 'vh_custom_sp_tx');
+        }
+		
+		
+		
+		
+		$vh_custom_tx = $controller->GetControllerRequest('FORM', 'vh_custom_tx');
+        if (empty($vh_custom_tx)) {
+            $vh_custom_tx = NULL;
+        } else {
+            $vh_custom_tx = $controller->GetControllerRequest('FORM', 'vh_custom_tx');
+        }
+		
         $port = $controller->GetControllerRequest('FORM', 'vh_custom_port_in');
         if (empty($port)) {
             $port = NULL;
@@ -341,6 +390,13 @@ class module_controller extends ctrl_module
         } else {
             $ip = $controller->GetControllerRequest('FORM', 'vh_custom_ip_vc');
         }
+		
+		$forward = $controller->GetControllerRequest('FORM', 'vh_portforward_in');
+        if (empty($forward)) {
+            $forward = NULL;
+        } else {
+            $forward = $controller->GetControllerRequest('FORM', 'vh_portforward_in');
+        }
 
 
 
@@ -348,7 +404,10 @@ class module_controller extends ctrl_module
 			vh_enabled_in  = ?,
 			vh_suhosin_in  = ?,
 			vh_obasedir_in = ?,
-			vh_custom_port_in   = ?,
+			vh_ssl_tx = ?,
+			vh_ssl_port_in = ?,
+			vh_custom_sp_tx = ?,
+			vh_custom_port_in  = ?,
                         vh_portforward_in   = ?,
                         vh_custom_ip_vc   = ?,
 			vh_custom_tx   = ?
@@ -360,10 +419,13 @@ class module_controller extends ctrl_module
                     fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_enabled_in')),
                     fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_suhosin_in')),
                     fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_obasedir_in')),
+					$ssl_tx,
+					$ssl_port_in,
+					$custom_sp_tx,
                     $port,
-                    fs_director::GetCheckboxValue($controller->GetControllerRequest('FORM', 'vh_portforward_in')),
+                    $forward,
                     $ip,
-                    $controller->GetControllerRequest('FORM', 'vh_custom_tx'),
+                    $vh_custom_tx,
                     $controller->GetControllerRequest('FORM', 'vh_id_pk'),
                 )
         );

@@ -1,12 +1,14 @@
-<?php
-
+<?php   
 /* CAT:Pie charts */
-error_reporting('E_ALL');
+
 /* pChart library inclusions */
-include("../class/pData.class.php");
-include("../class/pDraw.class.php");
-include("../class/pPie.class.php");
-include("../class/pImage.class.php");
+include("bootstrap.php");
+include("functions.inc.php");
+
+use pChart\pColor;
+use pChart\pDraw;
+use pChart\pPie;
+
 
 /* Start setting input configuration.  If _GET not found set defaults */
 if (isset($_GET['score'])) {
@@ -199,44 +201,50 @@ if (isset($_GET['LegendMode'])) {
     $LegendMode = "LEGEND_HORIZONTAL";
 }
 
-/* Create and populate the pData object */
-$MyData = new pData();
-$MyData->addPoints($Score, "ScoreA");
-$MyData->setSerieDescription("ScoreA", "Application A");
-
-/* Define the absissa serie */
-$MyData->addPoints($Labels, "Labels");
-$MyData->setAbscissa("Labels");
-$MyData->loadPalette('../palettes/sentora.color', TRUE);
-
 /* Create the pChart object */
-$myPicture = new pImage($ImageSize[0], $ImageSize[1], $MyData, TRUE);
+//$myPicture = new pDraw(240,180,TRUE);
+$myPicture = new pDraw($ImageSize[0], $ImageSize[1],TRUE);
 
-/* Set the default font properties */
-$myPicture->setFontProperties(array("FontName" => "../fonts/" . $Font . ".ttf", "FontSize" => $FontSize, "R" => $FontR, "G" => $FontG, "B" => $FontB));
+/* Populate the pData object */
+$myPicture->myData->addPoints($Score,"ScoreA");
+$myPicture->myData->setSerieDescription("ScoreA","Application A");
 
-/* Create the pPie object */
+/* Define the abscissa serie */
+$myPicture->myData->addPoints($Labels,"Labels");
+$myPicture->myData->setAbscissa("Labels");
+//$myPicture->myData->loadPalette("palettes/sentora.color", TRUE);
+
+/* Define the slice colors */
+$myPicture->myData->savePalette(array(
+    0 => new pColor(25,78,132,100),
+    1 => new pColor(103, 103, 103),
+    2 => new pColor(31,36,42,100),
+	3 => new pColor(55,65,74,100),
+	4 => new pColor(96,187,34,100),
+	5 => new pColor(242,186,187,100),	
+));
+
+/* Set the default font properties */ 
+$myPicture->setFontProperties(array("FontName" => "pChart/fonts/" . $Font . ".ttf", "FontSize" => $FontSize, "R" => $FontR, "G" => $FontG, "B" => $FontB));
+
+/* Create the pPie object */ 
 $PieChart = new pPie($myPicture, $MyData);
 
-/* Enable shadow computing */
+/* Enable shadow computing */ 
 $myPicture->setShadow(TRUE, array("X" => 3, "Y" => 3, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
 
-/* Draw a splitted pie chart */
+/* Draw a split pie chart */ 
+//$PieChart->draw3DPie(120,90,["Radius"=>100,"DataGapAngle"=>12,"DataGapRadius"=>10,"Border"=>TRUE]);
 $PieChart->draw3DPie($ChartSize[0], $ChartSize[1], array("Radius" => $Radius, "DataGapAngle" => $DataGapAngle, "DataGapRadius" => $DataGapRadius, "Border" => TRUE));
 
 /* Write the legend box */
 if ($ShowLabels <> 0) {
-    $myPicture->setFontProperties(array("FontName" => "../fonts/" . $LegendFont . ".ttf", "FontSize" => $LegendFontSize, "R" => $LegendFontR, "G" => $LegendFontG, "B" => $LegendFontB));
+    $myPicture->setFontProperties(array("FontName" => "pChart/fonts/" . $LegendFont . ".ttf", "FontSize" => $LegendFontSize, "R" => $LegendFontR, "G" => $LegendFontG, "B" => $LegendFontB));
     //$PieChart->drawPieLegend(140,160,array("Style"=>$LegendStyle,"Mode"=>$LegendMode));
     $PieChart->drawPieLegend($LegendSize[0], $LegendSize[1], array("Style" => LEGEND_NOBORDER, "Mode" => LEGEND_VERTICAL));
 }
 
-/*
-  $TextSettings = array("Align"=>TEXT_ALIGN_MIDDLEMIDDLE, "R"=>0, "G"=>0, "B"=>0);
-  $myPicture->drawText(10,10,"My first pChart project",$TextSettings);
-  $myPicture->drawText(10,30,"My first pChart project",$TextSettings);
- */
-
 /* Render the picture (choose the best way) */
-$myPicture->autoOutput("3DPie.png");
+$myPicture->autoOutput("temp/example.draw3DPie.transparent.png");
+
 ?>

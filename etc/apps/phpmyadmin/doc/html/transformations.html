@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Transformations &mdash; phpMyAdmin 4.0.10.1 documentation</title>
+    <title>Transformations &#8212; phpMyAdmin 4.9.2 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '4.0.10.1',
+        URL_ROOT:    './',
+        VERSION:     '4.9.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,41 +23,48 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="copyright" title="Copyright" href="copyright.html" />
-    <link rel="top" title="phpMyAdmin 4.0.10.1 documentation" href="index.html" />
+    <link rel="top" title="phpMyAdmin 4.9.2 documentation" href="index.html" />
     <link rel="up" title="User Guide" href="user.html" />
-    <link rel="next" title="User management" href="privileges.html" />
-    <link rel="prev" title="User Guide" href="user.html" /> 
+    <link rel="next" title="Bookmarks" href="bookmarks.html" />
+    <link rel="prev" title="Two-factor authentication" href="two_factor.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="privileges.html" title="User management"
+          <a href="bookmarks.html" title="Bookmarks"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="user.html" title="User Guide"
+          <a href="two_factor.html" title="Two-factor authentication"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.0.10.1 documentation</a> &raquo;</li>
-          <li><a href="user.html" accesskey="U">User Guide</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 4.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user.html" accesskey="U">User Guide</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="transformations">
 <span id="id1"></span><h1>Transformations<a class="headerlink" href="#transformations" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You need to have configured the <a class="reference internal" href="setup.html#linked-tables"><span class="std std-ref">phpMyAdmin configuration storage</span></a> for using transformations
+feature.</p>
+</div>
 <div class="section" id="introduction">
 <span id="transformationsintro"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>To enable transformations, you have to setup the <tt class="docutils literal"><span class="pre">column_info</span></tt>
-table and the proper directives. Please see the <a class="reference internal" href="config.html#config"><em>Configuration</em></a> on how to do so.</p>
+<p>To enable transformations, you have to setup the <code class="docutils literal"><span class="pre">column_info</span></code>
+table and the proper directives. Please see the <a class="reference internal" href="config.html#config"><span class="std std-ref">Configuration</span></a> on how to do so.</p>
 <p>You can apply different transformations to the contents of each
 column. The transformation will take the content of each column and
 transform it with certain rules defined in the selected
@@ -75,7 +80,7 @@ the format you want the output stored in.</p>
 options, you can consult your <em>&lt;www.your-host.com&gt;/&lt;your-install-
 dir&gt;/transformation_overview.php</em> installation.</p>
 <p>For a tutorial on how to effectively use transformations, see our
-<a class="reference external" href="http://www.phpmyadmin.net/home_page/docs.php">Link section</a> on the
+<a class="reference external" href="https://www.phpmyadmin.net/docs/">Link section</a> on the
 official phpMyAdmin homepage.</p>
 </div>
 <div class="section" id="usage">
@@ -117,15 +122,16 @@ the set. Use the format &#8220;&#8217;; charset=XXX&#8217;&#8221;. If you use a 
 which you can specify 2 options and you want to append a character
 set, enter &#8220;&#8216;first parameter&#8217;,&#8217;second parameter&#8217;,&#8217;charset=us-ascii&#8217;&#8221;.
 You can, however use the defaults for the parameters: &#8220;&#8217;&#8216;,&#8217;&#8216;,&#8217;charset
-=us-ascii&#8217;&#8221;.</li>
+=us-ascii&#8217;&#8221;. The default options can be configured using
+<span class="target" id="index-0"></span><a class="reference internal" href="config.html#cfg_DefaultTransformations"><code class="xref config config-option docutils literal"><span class="pre">$cfg['DefaultTransformations']</span></code></a></li>
 </ul>
 </div>
 <div class="section" id="file-structure">
 <span id="transformationsfiles"></span><h2>File structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">¶</a></h2>
 <p>All specific transformations for mimetypes are defined through class
-files in the directory &#8216;libraries/plugins/transformations/&#8217;. Each of
+files in the directory &#8216;libraries/classes/Plugins/Transformations/&#8217;. Each of
 them extends a certain transformation abstract class declared in
-libraries/plugins/transformations/abstract.</p>
+libraries/classes/Plugins/Transformations/Abs.</p>
 <p>They are stored in files to ease up customization and easy adding of
 new transformations.</p>
 <p>Because the user cannot enter own mimetypes, it is kept sure that
@@ -134,9 +140,9 @@ transformation to a mimetype the transform-function doesn&#8217;t know to
 handle.</p>
 <p>There is a file called &#8216;<em>transformations.lib.php</em>&#8216; that provides some
 basic functions which can be included by any other transform function.</p>
-<p>The file name convention is <tt class="docutils literal"><span class="pre">[Mimetype]_[Subtype]_[Transformation</span>
-<span class="pre">Name].class.php</span></tt>, while the abtract class that it extends has the
-name <tt class="docutils literal"><span class="pre">[Transformation</span> <span class="pre">Name]TransformationsPlugin</span></tt>. All of the
+<p>The file name convention is <code class="docutils literal"><span class="pre">[Mimetype]_[Subtype]_[Transformation</span>
+<span class="pre">Name].class.php</span></code>, while the abtract class that it extends has the
+name <code class="docutils literal"><span class="pre">[Transformation</span> <span class="pre">Name]TransformationsPlugin</span></code>. All of the
 methods that have to be implemented by a transformations plug-in are:</p>
 <ol class="arabic simple">
 <li>getMIMEType() and getMIMESubtype() in the main class;</li>
@@ -148,13 +154,13 @@ name of the MIME type, MIME Subtype and transformation accordingly.
 getInfo() returns the transformation&#8217;s description and possible
 options it may receive and applyTransformation() is the method that
 does the actual work of the transformation plug-in.</p>
-<p>Please see the libraries/plugins/transformations/TEMPLATE and
-libraries/plugins/transformations/TEMPLATE_ABSTRACT files for adding
+<p>Please see the libraries/classes/Plugins/Transformations/TEMPLATE and
+libraries/classes/Plugins/Transformations/TEMPLATE_ABSTRACT files for adding
 your own transformation plug-in. You can also generate a new
 transformation plug-in (with or without the abstract transformation
 class), by using
-<tt class="file docutils literal"><span class="pre">libraries/plugins/transformations/generator_plugin.sh</span></tt> or
-<tt class="file docutils literal"><span class="pre">libraries/plugins/transformations/generator_main_class.sh</span></tt>.</p>
+<code class="file docutils literal"><span class="pre">scripts/transformations_generator_plugin.sh</span></code> or
+<code class="file docutils literal"><span class="pre">scripts/transformations_generator_main_class.sh</span></code>.</p>
 <p>The applyTransformation() method always gets passed three variables:</p>
 <ol class="arabic simple">
 <li><strong>$buffer</strong> - Contains the text inside of the column. This is the
@@ -162,8 +168,8 @@ text, you want to transform.</li>
 <li><strong>$options</strong> - Contains any user-passed options to a transform
 function as an array.</li>
 <li><strong>$meta</strong> - Contains an object with information about your column. The
-data is drawn from the output of the <a class="reference external" href="http://www.php.net/mysql_fetch_field">mysql_fetch_field()</a> function. This means, all
-object properties described on the <a class="reference external" href="http://www.php.net/mysql_fetch_field">manual page</a> are available in this
+data is drawn from the output of the <a class="reference external" href="https://secure.php.net/mysql_fetch_field">mysql_fetch_field()</a> function. This means, all
+object properties described on the <a class="reference external" href="https://secure.php.net/mysql_fetch_field">manual page</a> are available in this
 variable and can be used to transform a column accordingly to
 unsigned/zerofill/not_null/... properties. The $meta-&gt;mimetype
 variable contains the original MIME-type of the column (i.e.
@@ -176,7 +182,7 @@ variable contains the original MIME-type of the column (i.e.
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -189,52 +195,51 @@ variable contains the original MIME-type of the column (i.e.
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="user.html"
-                        title="previous chapter">User Guide</a></p>
+  <p class="topless"><a href="two_factor.html"
+                        title="previous chapter">Two-factor authentication</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="privileges.html"
-                        title="next chapter">User management</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/transformations.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <p class="topless"><a href="bookmarks.html"
+                        title="next chapter">Bookmarks</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/transformations.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="privileges.html" title="User management"
+          <a href="bookmarks.html" title="Bookmarks"
              >next</a> |</li>
         <li class="right" >
-          <a href="user.html" title="User Guide"
+          <a href="two_factor.html" title="Two-factor authentication"
              >previous</a> |</li>
-        <li><a href="index.html">phpMyAdmin 4.0.10.1 documentation</a> &raquo;</li>
-          <li><a href="user.html" >User Guide</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">phpMyAdmin 4.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user.html" >User Guide</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; <a href="copyright.html">Copyright</a> 2012 - 2013, The phpMyAdmin devel team.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; <a href="copyright.html">Copyright</a> 2012 - 2018, The phpMyAdmin devel team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
     </div>
   </body>
 </html>

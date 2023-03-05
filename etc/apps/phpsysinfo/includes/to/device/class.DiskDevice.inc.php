@@ -8,7 +8,7 @@
  * @package   PSI_TO
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.DiskDevice.inc.php 252 2009-06-17 13:06:44Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -19,7 +19,7 @@
  * @package   PSI_TO
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -80,6 +80,13 @@ class DiskDevice
      * @var
      */
     private $_percentInodesUsed = null;
+
+    /**
+     * ignore mode
+     *
+     * @var Ignore
+     */
+    private $_ignore = 0;
 
     /**
      * Returns PercentUsed calculated when function is called from internal values
@@ -304,5 +311,29 @@ class DiskDevice
     public function setUsed($used)
     {
         $this->_used = $used;
+    }
+
+    /**
+     * Returns $_ignore.
+     *
+     * @see DiskDevice::$_ignore
+     *
+     * @return Integer
+     */
+    public function getIgnore()
+    {
+        return $this->_ignore;
+    }
+
+    /**
+     * Sets $_ignore.
+     *
+     * @see DiskDevice::$_ignore
+     *
+     * @return Void
+     */
+    public function setIgnore($ignore)
+    {
+        $this->_ignore = $ignore;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>My Account</name>
-    <version>100</version>
+    <version>200</version>
     <defaultcat>Account Information</defaultcat>
     <desc>Your current personal account details, we ask that you keep these details up-to-date in case we need to contact you regarding your hosting services.</desc>
     <authorname>Sentora Project</authorname>

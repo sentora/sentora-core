@@ -2,10 +2,9 @@
 <?php
 /*
  +-----------------------------------------------------------------------+
- | bin/updatecss.sh                                                      |
- |                                                                       |
  | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2010-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
@@ -18,7 +17,7 @@
  +-----------------------------------------------------------------------+
 */
 
-define('INSTALL_PATH', realpath(dirname(__FILE__) . '/..') . '/' );
+define('INSTALL_PATH', realpath(__DIR__ . '/..') . '/' );
 
 require_once INSTALL_PATH . 'program/include/clisetup.php';
 
@@ -118,5 +117,3 @@ function get_files($dir)
 
     return $files;
 }
-
-?>

@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'ការ​ចែក​រំលែក';
 $labels['myrights'] = 'សិទ្ធិ​ចូល';
 $labels['username'] = 'អ្នក​ប្រើ៖';
 $labels['advanced'] = 'បែប​កម្រិត​ខ្ពស់';
+$labels['add'] = 'បន្ថែម';
 $labels['newuser'] = 'បន្ថែម​ធាតុ';
 $labels['actions'] = 'សកម្មភាព​សិទ្ធិ​ចូល...';
 $labels['anyone'] = 'អ្នក​ប្រើ​ទាំង​អស់ (នរណា​ម្នាក់)';
@@ -60,6 +60,7 @@ $labels['longaclr'] = 'ថត​នេះ​អាច​បើក​សម្រ
 $labels['longacle'] = 'សារ​នេះ​អាច​ត្រូវ​បាន​ដក​ចេញ';
 $labels['longaclx'] = 'ថត​នេះ អាច​ត្រូវ​បាន​លុប ឬ​ ប្ដូរ​ឈ្មោះ';
 $labels['longacla'] = 'សិទ្ធិ​ចូល​ទៅ​កាន់​ថត​នេះ​អាច​ត្រូវ​បាន​​ផ្លាស់​ប្ដូរ​';
+$labels['longaclread'] = 'ថត​នេះ​អាច​បើក​សម្រាប់​អាន';
 $labels['longacldelete'] = 'សារ​នេះ​អាច​ត្រូវ​បាន​លុប';
 $messages['deleting'] = 'កំពុង​លុប​សិទ្ធិ​ចូល...';
 $messages['saving'] = 'រក្សា​ទុក​សិទ្ធិ​ចូល...';

@@ -2,19 +2,18 @@
 
 /*
  +-----------------------------------------------------------------------+
- | localization/<lang>/messages.inc                                      |
- |                                                                       |
  | Localization file of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2014, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/messages/
 */
+
 $messages['errortitle']  = 'An error occurred!';
 $messages['loginfailed']  = 'Login failed.';
 $messages['cookiesdisabled'] = 'Your browser does not accept cookies.';
@@ -32,7 +31,6 @@ $messages['erroroverquotadelete'] = 'No free disk space. Use SHIFT+DEL to delete
 $messages['invalidrequest'] = 'Invalid request! No data was saved.';
 $messages['invalidhost'] = 'Invalid server name.';
 $messages['nomessagesfound'] = 'No messages found in this mailbox.';
-$messages['loggedout'] = 'You have successfully terminated the session. Good bye!';
 $messages['mailboxempty'] = 'Mailbox is empty';
 $messages['nomessages'] = 'No messages';
 $messages['refreshing'] = 'Refreshing...';
@@ -49,13 +47,11 @@ $messages['successfullysaved'] = 'Successfully saved.';
 $messages['savingresponse'] = 'Saving response text...';
 $messages['deleteresponseconfirm'] = 'Do you really want to delete this response text?';
 $messages['addedsuccessfully'] = 'Contact added successfully to address book.';
-$messages['contactexists'] = 'A contact with the same e-mail address already exists.';
 $messages['contactnameexists'] = 'A contact with the same name already exists.';
 $messages['blockedimages'] = 'To protect your privacy, remote images are blocked in this message.';
 $messages['encryptedmessage'] = 'This is an encrypted message and can not be displayed. Sorry!';
 $messages['nocontactsfound'] = 'No contacts found.';
 $messages['contactnotfound'] = 'The requested contact was not found.';
-$messages['contactsearchonly'] = 'Enter some search terms to find contacts';
 $messages['sendingfailed'] = 'Failed to send message.';
 $messages['senttooquickly'] = 'Please wait $sec sec(s). before sending this message.';
 $messages['errorsavingsent'] = 'An error occurred while saving sent message.';
@@ -79,13 +75,10 @@ $messages['formincomplete'] = 'The form was not completely filled out.';
 $messages['noemailwarning'] = 'Please enter a valid email address.';
 $messages['nonamewarning']  = 'Please enter a name.';
 $messages['nopagesizewarning'] = 'Please enter a page size.';
-$messages['nosenderwarning'] = 'Please enter sender e-mail address.';
 $messages['norecipientwarning'] = 'Please enter at least one recipient.';
 $messages['nosubjectwarning']  = 'The "Subject" field is empty. Would you like to enter one now?';
 $messages['nobodywarning'] = 'Send this message without text?';
-$messages['notsentwarning'] = 'Message has not been sent. Do you want to discard your message?';
 $messages['restoresavedcomposedata'] = 'A previously composed but unsent message was found.\n\nSubject: $subject\nSaved: $date\n\nDo you want to restore this message?';
-$messages['noldapserver'] = 'Please select an ldap server to search.';
 $messages['nosearchname'] = 'Please enter a contact name or email address.';
 $messages['notuploadedwarning'] = 'Not all attachments have been uploaded yet. Please wait or cancel the upload.';
 $messages['searchsuccessful'] = '$nr messages found.';
@@ -136,7 +129,6 @@ $messages['importconfirmskipped'] = '<b>Skipped $skipped existing entries</b>';
 $messages['importmessagesuccess'] = 'Successfully imported $nr messages';
 $messages['importmessageerror'] = 'Import failed! The uploaded file is not a valid message or mailbox file';
 $messages['opnotpermitted'] = 'Operation not permitted!';
-$messages['nofromaddress'] = 'Missing e-mail address in selected identity.';
 $messages['httpreceivedencrypterror'] = 'A fatal configuration error occurred. Contact your administrator immediately. <b>Your message can not be sent.</b>';
 $messages['smtpconnerror'] = 'SMTP Error ($code): Connection to server failed.';
 $messages['smtpautherror'] = 'SMTP Error ($code): Authentication failed.';
@@ -144,7 +136,6 @@ $messages['smtpfromerror'] = 'SMTP Error ($code): Failed to set sender "$from" (
 $messages['smtptoerror'] = 'SMTP Error ($code): Failed to add recipient "$to" ($msg).';
 $messages['smtprecipientserror'] = 'SMTP Error: Unable to parse recipients list.';
 $messages['smtperror'] = 'SMTP Error: $msg';
-$messages['emailformaterror'] = 'Invalid e-mail address: $email';
 $messages['toomanyrecipients'] = 'Too many recipients. Reduce the number of recipients to $max.';
 $messages['maxgroupmembersreached'] = 'The number of group members exceeds the maximum of $max.';
 $messages['internalerror'] = 'An internal error occurred. Please try again.';
@@ -173,6 +164,4 @@ $messages['invalidimageformat'] = 'Not a valid image format.';
 $messages['mispellingsfound'] = 'Spelling errors detected in the message.';
 $messages['parentnotwritable'] = 'Unable to create/move folder into selected parent folder. No access rights.';
 $messages['messagetoobig'] = 'The message part is too big to process it.';
-$messages['attachmentvalidationerror'] = 'WARNING! This attachment is suspicious because its type doesn\'t match the type declared in the message. If you do not trust the sender, you shouldn\'t open it in the browser because it may contain malicious contents.<br/><br/><em>Expected: $expected; found: $detected</em>';
 $messages['noscriptwarning'] = 'Warning: This webmail service requires Javascript! In order to use it please enable Javascript in your browser\'s settings.';
-?>
