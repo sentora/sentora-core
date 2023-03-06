@@ -34,6 +34,17 @@ class module_controller extends ctrl_module
         }
     }
 
+    //
+    static function getIsValidDomain($domain)
+    {
+        foreach ( self::getDomains() as $key => $value ) {
+            if( in_array($domain, $value) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
     static function getDomains()
     {
         $currentuser = ctrl_users::GetUserDetail();
@@ -59,12 +70,18 @@ class module_controller extends ctrl_module
         global $controller;
         $urlvars = $controller->GetAllControllerRequests('URL');
         if (isset($urlvars['domain']) && $urlvars['domain'] != "") {
-            $currentuser = ctrl_users::GetUserDetail();
-            $report_to_show = "modules/webalizer_stats/stats/" . $currentuser['username'] . "/" . $urlvars['domain'] . "/index.html";
-            if (!file_exists($report_to_show)) {
-                $report_to_show = false;
+            if( self::getIsValidDomain($urlvars['domain']) == true ) {
+                $currentuser = ctrl_users::GetUserDetail();
+                $report_to_show = "modules/webalizer_stats/stats/" . $currentuser['username'] . "/" . $urlvars['domain'] . "/index.html";
+                if (!file_exists($report_to_show)) {
+                    $report_to_show = false;
+                }
+                return $report_to_show;
+            }else{
+                header("location: ./?module=" . $controller->GetCurrentModule());
+                exit;
             }
-            return $report_to_show;
+            //return $report_to_show;
         }
     }
 
@@ -73,7 +90,7 @@ class module_controller extends ctrl_module
         global $controller;
         runtime_csfr::Protect();
         $formvars = $controller->GetAllControllerRequests('FORM');
-        if (isset($formvars['inDomain'])) {
+        if ( isset($formvars['inDomain']) && self::getIsValidDomain($formvars['inDomain']) == true) {
             header("location: ./?module=" . $controller->GetCurrentModule() . "&show=true&domain=" . $formvars['inDomain'] . "");
             exit;
         } else {
