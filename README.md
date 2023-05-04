@@ -2,7 +2,7 @@
 
 * Version: 2.0.0
 * [Website](http://sentora.org/)
-* [Forums](http://forums.sentora.org/) for comments, discussion and community support.
+* [Forums](https://forums.sentora.org/) for comments, discussion and community support.
 * [Bug Tracker](https://github.com/sentora/sentora-core/issues) for any bugs or security related issues.
 
 ## Description
