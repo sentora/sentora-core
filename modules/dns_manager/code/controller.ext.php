@@ -298,9 +298,9 @@ class module_controller extends ctrl_module
         if (self::IsTypeAllowed('SRV')) {
             $line .= '    <li><a href="#typeSRV" data-toggle="tab">SRV</a></li>';
         }
-        if (self::IsTypeAllowed('SPF')) {
-            $line .= '    <li><a href="#typeSPF" data-toggle="tab">SPF</a></li>';
-        }
+        //if (self::IsTypeAllowed('SPF')) {
+            //$line .= '    <li><a href="#typeSPF" data-toggle="tab">SPF</a></li>';
+        //}
         if (self::IsTypeAllowed('NS')) {
             $line .= '    <li><a href="#typeNS" data-toggle="tab">NS</a></li>';
         }
