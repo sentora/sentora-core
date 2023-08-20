@@ -40,39 +40,6 @@ class module_controller extends ctrl_module
     /**
      * The 'worker' methods.
      */
-	# get package quotas - tgates
-	static function GetQuotas($pkg_quotas)
-	{
-		foreach($pkg_quotas as $pkg_quota) {
-			# remove unused keys
-			unset($pkg_quota['packageid']);
-			unset($pkg_quota['PHPChecked']);
-			unset($pkg_quota['packagename']);
-			# make the array managable
-			$pkg_quota = json_encode($pkg_quota);
-			# make values translatable and readable
-			$pkg_quota = str_replace('enablePHP', ui_language::translate('PHP Enabled'), $pkg_quota);
-			$pkg_quota = str_replace('domains', ui_language::translate('Domains'), $pkg_quota);
-			$pkg_quota = str_replace('subDomains', ui_language::translate('Sub Domains'), $pkg_quota);
-			$pkg_quota = str_replace('parkedDomains', ui_language::translate('Park Domains'), $pkg_quota);
-			$pkg_quota = str_replace('fowarders', ui_language::translate('Mail Forwarders'), $pkg_quota);
-			$pkg_quota = str_replace('distlists', ui_language::translate('Distribution Lists'), $pkg_quota);
-			$pkg_quota = str_replace('ftpaccounts', ui_language::translate('FTP Accounts'), $pkg_quota);
-			$pkg_quota = str_replace('mysql', ui_language::translate('Databases'), $pkg_quota);
-			$pkg_quota = str_replace('diskquota', ui_language::translate('Disc Quota'), $pkg_quota);
-			$pkg_quota = str_replace('bandquota', ui_language::translate('Bandwidth Quota'), $pkg_quota);
-			$pkg_quota = str_replace('mailboxes', ui_language::translate('Mailboxes'), $pkg_quota);
-			# clean up the string
-			$pkg_quota = str_replace('{', '', $pkg_quota);
-			$pkg_quota = str_replace('}', '', $pkg_quota);
-			$pkg_quota = str_replace('"', '', $pkg_quota);
-			$pkg_quota = str_replace(':', ' &nbsp;= &nbsp;', $pkg_quota);
-			$pkg_quota = str_replace('-1', ui_language::translate('Unlimited'), $pkg_quota);
-			$pkg_quota = str_replace(',', '<br>', $pkg_quota);
-		}
-		return $pkg_quota;
-	}
-
     static function ListPackages($uid)
     {
         global $zdbh;
@@ -92,15 +59,10 @@ class module_controller extends ctrl_module
                 $numrows->bindParam(':pk_id_pk', $rowpackages['pk_id_pk']);
                 $numrows->execute();
                 $Column = $numrows->fetchColumn();
-                array_push($res, array(
-					'packageid' => $rowpackages['pk_id_pk'],
+                array_push($res, array('packageid' => $rowpackages['pk_id_pk'],
                     'created' => date(ctrl_options::GetSystemOption('sentora_df'), $rowpackages['pk_created_ts']),
                     'clients' => $Column[0],
-                    'packagename' => ui_language::translate($rowpackages['pk_name_vc']),
-					# get package quotas - tgates
-					$pkg_quotas = self::ListCurrentPackage($rowpackages['pk_id_pk']),
-					'pkg_quota' => self::GetQuotas($pkg_quotas)
-					));
+                    'packagename' => ui_language::translate($rowpackages['pk_name_vc'])));
             }
             return $res;
         } else {

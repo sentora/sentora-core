@@ -129,15 +129,13 @@
                     <th scope="row"><: Package name :></th>
                     <th><: Created :></th>
                     <th><: No. of clients :></th>
-					<th><: Quotas :></th>
                     <th>&nbsp;</th>
                 </tr>
                 <% loop PackageList %>
                 <tr>
-                    <td><& packagename &></td>
+                    <td scope="row"><& packagename &></td>
                     <td><& created &></td>
                     <td><& clients &></td>
-					<td><& pkg_quota &></td>
                     <td>
                         <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& packageid &>" value="<& packageid &>"><: Edit :></button>
                         <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& packageid &>" value="<& packageid &>"><: Delete :></button>
