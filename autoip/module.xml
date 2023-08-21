@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+<name>AutoIP Updater</name>
+<version>102</version>
+<type>user</type>
+<defaultcat>Server Admin</defaultcat>
+<desc>Automatically update your control panel IP address.</desc>
+<authorname>RusTus</authorname>
+<authoremail>rustus@zpanelcp.com</authoremail>
+<authorurl>http://rustus.txt-clan.com/</authorurl>
+<updateurl>http://rustus.txt-clan.com/autoip.xml</updateurl>
+</module>

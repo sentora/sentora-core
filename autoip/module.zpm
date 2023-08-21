@@ -1,0 +1,98 @@
+<@ InstallDatabase @>
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+    <div class="panel-heading">
+        <img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
+
+        <div class="zmodule_title">
+            <@ ModuleName @>
+        </div>
+
+        <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ Description @></div>
+
+    </div>
+	
+   <@ Result @>
+
+	<div class="zform_wrapper">
+	<h2><: Configure AutoIP Settings :></h2>
+	<@ StatusMessage @><br><br>
+		<table class="none" width="100%" cellpadding="0" cellspacing="0"><tr><td>
+		<% if AutoIPSettings %>
+		<form action="./?module=autoip&action=updateautoip" method="post" name="frmStats" id="frmStats">
+		<% loop AutoIPSettings %>
+		<table class="zform table table-striped">
+			<tr>
+				<th><: Current IP :>:</th>
+				<td><& ai_oldip_vc &></td>
+			</tr>
+			<tr>
+				<th><: Detected IP :>:</th>
+				<td><@ DetectedIP @></td>
+			</tr>
+			<tr>
+				<th><: Last Update :>:</th>
+				<td><& ai_lastupdate_ts &></td>
+			</tr>
+			<tr>
+				<th><: Command :>:</th>
+				<td><input type="text" name="inCommand" value="<& ai_command_vc &>" style="width:400px;"></td>
+			</tr>
+			<tr>
+				<th><: Exec Script :>:</th>
+				<td><input type="text" name="inScript" value="<& ai_script_vc &>" style="width:400px;"></td>
+			</tr>
+			<tr>
+				<th><: Email Alert :>:</th>
+				<td><input type="text" name="inEmail" value="<& ai_email_vc &>" style="width:400px;"></td>
+			</tr>
+			<tr>
+			<tr>
+				<th><: Enabled :>:</th>
+				<td><input type="checkbox" name="inEnabled" value="1" <& ischecked &>></td>
+			</tr>
+				<th></th>
+				<td><button class="button-loader btn btn-primary fg-button ui-state-default ui-corner-all" type="submit" id="" name="inUpdate" value=""><: Save :></button></td>
+			</tr>
+		</table>
+		<% endloop %>
+		</form>
+		<% endif %>
+		</td><td>
+		<@ StatusIcon @>
+		</td></tr></table>
+	
+	</div>
+
+	<div class="zform_wrapper">
+	<h2><: Information :></h2>
+	<p>AutoIP uses an external website to check your current public IP address.  If the website reports a different IP address than your current IP address, AutoIP will automatically update your control panel's IP address and also any DNS records found to be using the old IP address as well.</p>
+	<p><b><: Command :></b><br>The command variable can be set to any website that reports your IP address.  AutoIP will attempt to find your IP that the website reports and use it.  If it cannot, then you will need to use a different website until you find one that works.<br>Default setting is: http://myip.dnsomatic.com/</p>
+	<P>
+	<b>Below is a list of websites that have proven to work with AutoIP:</b><br>
+	http://myip.dnsomatic.com/<br>
+	http://checkip.dyndns.org/<br>
+	http://checkip.eurodyndns.org/<br>
+	http://checkrealip.com/<br>
+	http://ipcheck.rehbein.net/<br>
+	http://dynamic.zoneedit.com/checkip.html<br>
+	http://www.raffar.com/checkip/<br>
+	http://mwburden.com/cgi-bin/getipaddr<br>
+	http://www.tanziars.com/<br>
+	http://www.naumann-net.org/<br>
+	http://www.antifart.com/stuff/checkip/<br>
+	http://checkmyip.com/<br>
+	http://www.ipchicken.com/<br>
+	http://glowhost.com/support/your.ip.php<br>
+	http://testip.edpsciences.org/<br>
+	http://adresseip.com/<br>
+	http://www.aboutmyx.com/AboutMyXApp/AboutMyIP.jsp<br>
+	http://www.lawrencegoetz.com/programs/ipinfo/<br>
+	</p>
+	<p><b>Email Alert</b><br>If you enter an email here, AutoIP will send an alert message if it detects a change in the IP address.  To disable email alerts, remove the email address. To send an email to more than one address, seperate emails with a comma (,)<br>i.e.: <b>address1@somedomain.com,address2@anotherdomain.com</b></p>
+	<p><b>Enabled</b><br>Uncheck this option to disable AutoIP from updating the control panel's IP address. When disabled, DNS records will also not be updated.</p>
+	<p><b>Exec Script</b><br>If you want to run a command or a script after the IP adress has been updated, enter the command here. You can enter a command, or the full path to a script you wish to run. Windows Users make sure that you run a script in the background or a command that returns an exit value so that you do not hang the daemon, wating for a script to close. For Linux users, all commands are ran through the 'at' scheduler, so this will probably not be an issue.<p>
+	<p><b>Script Examples:</b><br>path/to/php /path/to/script.php<br>C:/folder/runme.bat<br>shutdown -r now<br>/usr/bin/runme.sh</p>
+	
+	</div>
+	
+</div>
