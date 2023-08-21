@@ -1,0 +1,41 @@
+<?php
+/**
+ * Upgrade script for AutoIP Module for ZPanel 10.X
+ * Version : 102
+ * Author :  RusTus (RusTus @ ZPanel Forums)
+ * Email : rustus@zpanelcp.com
+ */
+
+require_once('cnf/db.php');
+require_once('dryden/db/driver.class.php');
+require_once('dryden/debug/logger.class.php');
+require_once('dryden/runtime/dataobject.class.php');
+require_once('dryden/sys/versions.class.php');
+require_once('dryden/ctrl/options.class.php');
+require_once('dryden/ctrl/auth.class.php');
+require_once('dryden/ctrl/users.class.php');
+require_once('dryden/fs/director.class.php');
+require_once('inc/dbc.inc.php');
+
+installModule();
+
+function installModule(){
+    global $zdbh;
+    $sql = $zdbh->prepare("DROP TABLE IF EXISTS `x_autoip`;
+						   CREATE TABLE `x_autoip` (
+  								`ai_id_pk` int(6) NOT NULL DEFAULT '0',
+								`ai_script_vc` varchar(255) DEFAULT NULL,
+								`ai_email_vc` varchar(255) DEFAULT NULL,
+								`ai_command_vc` varchar(255) DEFAULT NULL,
+								`ai_newip_vc` varchar(50) DEFAULT NULL,
+								`ai_oldip_vc` varchar(50) DEFAULT NULL,
+								`ai_enabled_in` int(1) DEFAULT '1',
+								`ai_lastupdate_ts` varchar(50) DEFAULT NULL,
+								PRIMARY KEY (`ai_id_pk`)
+								);");
+    $sql->execute();
+	$sql = $zdbh->prepare("INSERT INTO `x_autoip` VALUES ('1', null, null, 'http://myip.dnsomatic.com/', null, null, '1', null)");
+    $sql->execute();
+}
+
+?>
