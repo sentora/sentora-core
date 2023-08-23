@@ -20,6 +20,7 @@ Thumbs.db
 # Modules
 /modules/*
 !/modules/aliases/
+!/modules/autoip/
 !/modules/apache_admin/
 !/modules/backup_admin/
 !/modules/backupmgr/
@@ -49,6 +50,7 @@ Thumbs.db
 !/modules/phpmyadmin/
 !/modules/phpsysinfo/
 !/modules/protected_directories/
+!/modules/sencrypt/
 !/modules/sentoraconfig/
 !/modules/services/
 !/modules/shadowing/
