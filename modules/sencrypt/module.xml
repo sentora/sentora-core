@@ -6,6 +6,6 @@
     <desc>Sencrypt is a SSL module to Add/Manage SSL certificates for Letsencrypt or Third-party SSL Request(s)/Setup for your domains.</desc>
     <authorname>TGates</authorname>
     <authoremail>tgates@sentora.org</authoremail>
-    <authorurl>sentora.org</authorurl>
+    <authorurl>http://sentora.org</authorurl>
     <updateurl>http://repo.sentora.org/repo/sencrypt.zpp</updateurl>
 </module>
