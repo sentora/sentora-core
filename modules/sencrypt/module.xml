@@ -7,5 +7,5 @@
     <authorname>TGates</authorname>
     <authoremail>tgates@sentora.org</authoremail>
     <authorurl>http://sentora.org</authorurl>
-    <updateurl>http://repo.sentora.org/repo/sencrypt.zpp</updateurl>
+    <updateurl>http://repo.sentora.org/repo/sencrypt.xml</updateurl>
 </module>
