@@ -166,7 +166,7 @@ function WriteVhostConfigFile() {
 		
 		# Vhost PHP settings
 		$line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
-		$line .= "#php_admin_value open_basedir " . '"/var/sentora/:/etc/sentora/"' . fs_filehandler::NewLine();
+		$line .= "php_admin_value open_basedir " . '"/etc/sentora/panel/:/etc/sentora/configs/:/var/sentora/temp/:/var/sentora/hostdata/"' . fs_filehandler::NewLine();
 		$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
 		$line .= "php_admin_value session.save_path " . '"/var/sentora/sessions"' . fs_filehandler::NewLine();
 		
@@ -236,7 +236,7 @@ function WriteVhostConfigFile() {
 		
 		# Vhost PHP settings
 		$line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
-		$line .= "#php_admin_value open_basedir " . '"/var/sentora/:/etc/sentora/"' . fs_filehandler::NewLine();
+		$line .= "php_admin_value open_basedir " . '"/etc/sentora/panel/:/etc/sentora/configs/:/var/sentora/temp/:/var/sentora/hostdata/"' . fs_filehandler::NewLine();
 		$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
 		$line .= "php_admin_value session.save_path " . '"/var/sentora/sessions"' . fs_filehandler::NewLine();
 	
