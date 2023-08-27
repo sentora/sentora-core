@@ -57,7 +57,7 @@ if ((isset($argv[1])) && ($argv[1] == 'install')) {
             if ($isfound) {
                 if (!fs_director::CheckFolderExists(ctrl_options::GetSystemOption('sentora_root') . 'modules/' . $argv[2])) {
                     if (fs_director::CreateDirectory('modules/' . $argv[2])) {
-                        if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . $argv[2] . '')) {
+                        if (sys_archive::Unzip('etc/zppy-cache/package-downloads/' . $argv[2] . '.zpp', 'modules/' . '')) {
                             fs_director::SetFileSystemPermissions('modules/' . $argv[2] . '', 0777);
                             if (!fs_director::CheckFileExists('modules/' . $argv[2] . '/module.xml')) {
                                 fwrite(STDOUT, "No module.xml file found in the unzipped archive.\n");
