@@ -2,6 +2,7 @@
 <module>
     <name>Sencrypt SSL</name>
     <version>210</version>
+	<type>user</type>
     <defaultcat>Domain Management</defaultcat>
     <desc>Sencrypt is a SSL module to Add/Manage SSL certificates for Letsencrypt or Third-party SSL Request(s)/Setup for your domains.</desc>
     <authorname>TGates</authorname>
