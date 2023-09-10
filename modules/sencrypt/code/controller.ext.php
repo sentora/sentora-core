@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 	* Controller for sencrypt module for sentora version 2.0.0
 	* Version : 3.0.0
 	* Author : TGates
@@ -28,12 +28,8 @@ class module_controller extends ctrl_module {
 	static $portReqsError;
 	static $revokecert;
 	static $keyadd;
+	static $certFailed;
 	//static $loggererror;
-	
-	# For LEscript you can use any logger according to Psr\Log\LoggerInterface
-	//function __call($name, $arguments) {
-		//echo date('Y-m-d H:i:s')." [$name] ${arguments[0]}\n";
-	//}
 	
 	static function getCheckModReq() {
 		# Post message if PHP requirments are not met 
@@ -136,7 +132,7 @@ class module_controller extends ctrl_module {
 			$datediff = $your_date - $now;
 			$panelday = floor($datediff / (60 * 60 * 24));
 			$reNewDay = $panelday - 30;
-			$sslvendor = "Letsencrypt";
+			$sslvendor = "Lets Encrypt";
 			
 			if($panelday <= "-1700") {
 				$paneldays = "Not initialized yet";
@@ -166,7 +162,7 @@ class module_controller extends ctrl_module {
 			$datediff = $your_date - $now;
 			$panelday = floor($datediff / (60 * 60 * 24));
 			$reNewDay = $panelday - 30;
-			$sslvendor = "Third Party";
+			$sslvendor = "Third-Party";
 			
 			if($panelday <= "-1700") {
 				$paneldays = "Not initialized yet"; } else {
@@ -209,7 +205,7 @@ class module_controller extends ctrl_module {
 		
 		} else {
 	
-			$panelres[] = array('Panel_Domain' => "<h5 style='color:red;'>All panel domains have active SSL certificates. Please see active cert's above.<h5>", 'Panel_Button' => NULL);			
+			$panelres[] = array('Panel_Domain' => "<h5 style='color:red;'>All panel domains have active SSL certificates.<h5>", 'Panel_Button' => NULL);			
 		}
 		
 		return $panelres;
@@ -316,7 +312,7 @@ class module_controller extends ctrl_module {
 					$your_date = strtotime("$validTo");
 					$datediff = $your_date - $now;
 					$day = floor($datediff / (60 * 60 * 24));
-					$sslvendor = "Third-party";
+					$sslvendor = "Third-Party";
 					
 					$reNewDay = $day - 30;
 					
@@ -347,7 +343,7 @@ class module_controller extends ctrl_module {
 					$your_date = strtotime("$validTo");
 					$datediff = $your_date - $now;
 					$day = floor($datediff / (60 * 60 * 24));
-					$sslvendor = "Letsencrypt";
+					$sslvendor = "Lets Encrypt";
 
 					$reNewDay = $day - 30;
 					
@@ -1251,8 +1247,13 @@ class module_controller extends ctrl_module {
 		}
 	
 		catch (\Exception $e) {
-			$logger->error($e->getMessage());
+			$errorCatched = $e->getMessage();
 			$logger->error($e->getTraceAsString());
+			$logger->error($e->getMessage());
+			# Throw error and log to file
+			error_log( date('Y-m-d H:i:s') . " - DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatched . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
+			self::$certFailed = true;
+			return false;
 			exit(1);
 		}
 
@@ -1407,8 +1408,13 @@ class module_controller extends ctrl_module {
 			
 		}
 		catch (\Exception $e) {
-			$logger->error($e->getMessage());
+			$errorCatched = $e->getMessage();
 			$logger->error($e->getTraceAsString());
+			$logger->error($e->getMessage());
+			# Throw error and log to file
+			error_log( date('Y-m-d H:i:s') . " - PANEL DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatched . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
+			self::$certFailed = true;
+			return false;
 			exit(1);
 		}
 
@@ -1773,40 +1779,15 @@ class module_controller extends ctrl_module {
 	
     static function getCopyright() {
 		
-        $copyright = '<font face="ariel" size="2">'.ui_module::GetModuleName().' v2.0.0 &copy; 2016-'.date("Y").' by <a target="_blank" href="#">TGates, Jettaman & Diablo</a> for <a target="_blank" href="http://sentora.org">Sentora Control Panel</a>&nbsp;&#8212;&nbsp;Help support future development of this module and donate today!</font>';
+        $copyright = '<font face="ariel" size="2">'.ui_module::GetModuleName().' v3.0.0 &copy; 2016-'.date("Y").' by <a target="_blank" href="#">TGates, Jettaman & Diablo</a> for <a target="_blank" href="http://sentora.org">Sentora Control Panel</a>&nbsp;&#8212;&nbsp;Help support future development of this module and donate today!</font>';
 		
         return $copyright;
     }
 
-    static function getPortWarning() {
+    //static function getPortWarning() {
 		
-		return '<font face="ariel" size="4">' . ui_language::translate("ZADMIN ALERT: Make sure port 443 is OPEN before adding any SSL certificates!") . '</font>';
-    }
-
-
-
-/*
-	static function checkDNSIsLive ($domain, $ipStatus, $querydata, $server_ip) { 
-		# Check DNS for domain is live and public before continuing
-		if(checkdnsrr($domain,"A")) {
-			
-			# Check domains DNS IP matches/points to this server IP for Letsencryp API to continue.
-			//$server_ip = file_get_contents('http://api.sentora.org/ip.txt');
-			//$ip_response = file_get_contents('http://ip-api.com/json/'.$domain);
-			//$ip_array = json_decode($ip_response);
-			//$ipStatus = $ip_array->status;
-			//$querydata = $ip_array->query;
-			# Make sure domain points to this server IP.
-			if (($ipStatus == "success") && ($querydata == $server_ip)) {
-				return true;		
-			}
-		} else {
-			return false;
-		}
-	}
-	
-	
-	*/
+		//return '<font face="ariel" size="4">' . ui_language::translate("ZADMIN ALERT: Make sure port 443 is OPEN before adding any SSL certificates!") . '</font>';
+    //}
 	
 	static function checkDNSIsLive ($domain, $ipStatus, $querydata, $server_ip) { 
 		# Check DNS for domain is live and public before continuing
@@ -1828,11 +1809,11 @@ class module_controller extends ctrl_module {
 	static function getResult() {
 		if (self::$modReqsError)
 		{
-			return ui_sysmessage::shout(ui_language::translate("You need at least PHP 5.3.0 with OpenSSL and curl extension installed. Contact your admin for help. This Module may not work correctly until the issues are fixed."), "zannounceerror");
+			return ui_sysmessage::shout(ui_language::translate("You need at least PHP 5.3.0+ with OpenSSL and curl extension installed. Contact your admin for help. This Module may not work correctly until the issues are fixed."), "zannounceerror");
 		}
 		if (self::$portReqsError)
 		{
-			return ui_sysmessage::shout(ui_language::translate("ALERT: Port(443) appears to be closed. Sencrypt will not work til port(443) is open. Contact your administator."), "zannounceerror");
+			return ui_sysmessage::shout(ui_language::translate("ALERT: Port (443) appears to be CLOSED. Sencrypt will not work until port (443) is OPEN. Contact your Administator."), "zannounceerror");
 		}
 		if (self::$okletsencrypt)
 		{
@@ -1856,13 +1837,16 @@ class module_controller extends ctrl_module {
 		}
 		if (self::$dnsInvalid)
 		{
-			return ui_sysmessage::shout(ui_language::translate("Your DNS for this domain is not live or pointing to this server yet. Please check DNS and retry again later."), "zannounceerror");
+			return ui_sysmessage::shout(ui_language::translate("Your DNS for this domain is not LIVE or POINTING to this server yet. Please check your DNS and retry again later."), "zannounceerror");
 		}
 		if (self::$revokecert) {
             return ui_sysmessage::shout(ui_language::translate("The Requested Certificate has been revoked"), "zannounceok");
         }
 		if (self::$keyadd) {
             return ui_sysmessage::shout(ui_language::translate("Certificate Signing Request was made and sent to the mail you have entered"), "zannounceok");
+        }
+		if (self::$certFailed) {
+            return ui_sysmessage::shout(ui_language::translate("Oops! Something went wrong. Your Lets Encrypt certificate was not created. Check if your website is LIVE."), "zannounceerror");
         }
 		return;
 	}
