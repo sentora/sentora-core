@@ -42,11 +42,12 @@ echo "END Apache Config Hook." . fs_filehandler::NewLine();
  */
 function BuildVhostPortForward($vhostName, $customPort, $userEmail) {
 		
+	$apache_port = ctrl_options::GetSystemOption('apache_port');
 	$customPort_in = $customPort;
-
+	
     $line = "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
-    $line .= "# PORT FORWARD FROM 80 TO: " . $customPort_in . fs_filehandler::NewLine();
-    $line .= "<Virtualhost *:80>" . fs_filehandler::NewLine();
+    $line .= "# PORT FORWARD FROM ".$apache_port." TO: " . $customPort_in . fs_filehandler::NewLine();
+    $line .= "<Virtualhost *:".$apache_port.">" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
 	if ($vhostName != ctrl_options::GetSystemOption('sentora_domain') ) 
 		$line .= "ServerAlias www." . $vhostName . fs_filehandler::NewLine();
@@ -65,9 +66,12 @@ function BuildVhostPortForward($vhostName, $customPort, $userEmail) {
 
 # vhost SSL ReWrite http to https -tg
 function BuildVhostReWriteSSL($vhostName, $userEmail) {
+	
+	$apache_port = ctrl_options::GetSystemOption('apache_port');
+	
     $line = "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
     $line .= "# SSL REDIRECT" . fs_filehandler::NewLine();
-    $line .= "<Virtualhost *:80>" . fs_filehandler::NewLine();
+    $line .= "<Virtualhost *:".$apache_port.">" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
 	if ($vhostName != ctrl_options::GetSystemOption('sentora_domain') ) 
 		$line .= "ServerAlias www." . $vhostName . fs_filehandler::NewLine();
@@ -92,8 +96,6 @@ function WriteVhostConfigFile() {
 	$smarty = new Smarty;
 	$smarty->setTemplateDir('/etc/sentora/configs/apache/templates/');
 	$smarty->setCompileDir('/etc/sentora/panel/etc/lib/smarty/templates_c/');
-	//$smarty->setConfigDir('smarty/configs/');
-	//$smarty->setCacheDir('smarty/cache/');
 	
 	if ((double) sys_versions::ShowApacheVersion() < 2.4) {
         $apgrant = "0";
@@ -122,13 +124,6 @@ function WriteVhostConfigFile() {
 		}
 	
     $customPortList = array_unique($customPorts);
-	
-	#
-	#***************************
-	# Server values
-	//$server_name = ctrl_options::GetSystemOption('sentora_domain');	
-	//$panel_ssl_txt = ctrl_options::GetSystemOption('panel_ssl_tx');
-
 					
     /*
      * ###########################################################################?###################################
@@ -165,9 +160,17 @@ function WriteVhostConfigFile() {
 		$line .= "ServerName " . ctrl_options::GetSystemOption('sentora_domain') . fs_filehandler::NewLine();
 		
 		# Vhost PHP settings
-		$line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
-		$line .= "php_admin_value open_basedir " . '"/etc/sentora/panel/:/etc/sentora/configs/:/var/sentora/temp/:/var/sentora/hostdata/"' . fs_filehandler::NewLine();
-		$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
+		$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
+		$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
+				. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
+				. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
+				. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
+				
+		# Set Function Blacklist 
+		if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
+				$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
+		}		
+				
 		$line .= "php_admin_value session.save_path " . '"/var/sentora/sessions"' . fs_filehandler::NewLine();
 		
 		$line .= 'ErrorLog "' . ctrl_options::GetSystemOption('log_dir') . 'sentora-error.log" ' . fs_filehandler::NewLine();
@@ -235,9 +238,17 @@ function WriteVhostConfigFile() {
 		$line .= "ServerName " . ctrl_options::GetSystemOption('sentora_domain') . fs_filehandler::NewLine();
 		
 		# Vhost PHP settings
-		$line .= "AddType application/x-httpd-php .php" . fs_filehandler::NewLine();
-		$line .= "php_admin_value open_basedir " . '"/etc/sentora/panel/:/etc/sentora/configs/:/var/sentora/temp/:/var/sentora/hostdata/"' . fs_filehandler::NewLine();
-		$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
+		$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
+		$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
+				. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
+				. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
+				. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
+				
+		# Set Function Blacklist 
+		if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
+				$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
+		}		
+		
 		$line .= "php_admin_value session.save_path " . '"/var/sentora/sessions"' . fs_filehandler::NewLine();
 	
 		$line .= 'ErrorLog "' . ctrl_options::GetSystemOption('log_dir') . 'sentora-error.log" ' . fs_filehandler::NewLine();
@@ -352,69 +363,57 @@ function WriteVhostConfigFile() {
 	#*************************************************
 		  
 	$RootDir =  ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . '/public_html' . $rowvhost['vh_directory_vc'];  
-	$vh_serveralias = ( $rowvhost['vh_type_in'] == 2 ) ? '' : " www." . $rowvhost['vh_name_vc'];
-	$vh_server_root = $RootDir;
-	$vh_server_type = ($packageinfo['pk_enablephp_in'] <> 0) ? ctrl_options::GetSystemOption('php_handler') : '#' . ctrl_options::GetSystemOption('php_handler');
-	$vh_php_open_basedir = ($rowvhost['vh_obasedir_in'] <> 0) ? '"' . $vh_server_root . ctrl_options::GetSystemOption('openbase_seperator') 
-																	. ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . "/tmp" 
-																	. ctrl_options::GetSystemOption('openbase_seperator') 
-																	. ctrl_options::GetSystemOption('openbase_temp') . '"' : '"' . $vh_server_root . ':     ' . '"';
-	
-	$vh_php_upload_dir = '"' . ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . "/tmp" . "\"";
-	$vh_php_session_path = '"' . ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . "/tmp" . "\"";
-	$use_openbase = ctrl_options::GetSystemOption('use_openbase');
-	$use_suhosin = ctrl_options::GetSystemOption('use_suhosin');
-	$obasedir_in = $rowvhost['vh_obasedir_in']; 
-	$suhosin_in = $rowvhost['vh_suhosin_in'];
 	$vh_snuff_path = "/etc/sentora/configs/php/sp/";
 	$vh_vhostuser = $vhostuser['username'];
 	
 	# Start Snuff Protection managemenet HERE. ------- DO NOT EDIT THIS CODE BELOW!!!!!
 	# If Snuff for vhost is DISABLED continue here
-	if($rowvhost['vh_suhosin_in'] == 0) {
-		
-		# Snuff Default rules
-		$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . 'disabled.rules"' : '';	
-		
-		# If not using custom rules. Delete any custom snuff rules if they exist. 
-		if ( file_exists( $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' ) ) {
+	if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
+		if($rowvhost['vh_suhosin_in'] == 0) {
+			# Snuff Default rules
+			$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . 'disabled.rules"' : '';	
 			
-			# Clear/Delete vhost snuff custom rules file
-			//unlink ( $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' );
-			file_put_contents($vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules', "");
-		}
-	} else {
+			# If not using custom rules. Delete any custom snuff rules if they exist. 
+			if ( file_exists( $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' ) ) {
+				
+				# Clear/Delete vhost snuff custom rules file
+				unlink ( $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' );
+				//WriteDataToFile($vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules', "");
+			}
+		} else {
+			# If SNUFF protection is ENABLED continue here
+			
+			# Snuff Default rules
+			$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules"' : '';
 		
-		# If SNUFF protection is ENABLED continue here
-		$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules"' : '';
-	
-		# Check sp user path exists if not make folder for sp vhost configs			
-		if ( !is_dir( $vh_snuff_path . $vh_vhostuser ) ) {
-			fs_director::CreateDirectory( $vh_snuff_path . $vh_vhostuser );
-		}
-	
-		$linesp = "################################################################" . fs_filehandler::NewLine();
-		$linesp .= "# Snuffleupagus configuration file for: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-		$linesp .= "# Automatically generated by Sentora " . sys_versions::ShowSentoraVersion() . fs_filehandler::NewLine();
-		$linesp .= "# Generated on: " . date(ctrl_options::GetSystemOption('sentora_df'), time()) . fs_filehandler::NewLine();
-		$linesp .= "#==== YOU MUST NOT EDIT THIS FILE : IT WILL BE OVERWRITTEN ====" . fs_filehandler::NewLine();
-		$linesp .= "# Use Sentora Menu -> Admin -> Module Admin -> Apache config" . fs_filehandler::NewLine();
-		$linesp .= "################################################################" . fs_filehandler::NewLine();
-		$linesp .= fs_filehandler::NewLine();
+			# Check sp user path exists if not make folder for sp vhost configs			
+			if ( !is_dir( $vh_snuff_path . $vh_vhostuser ) ) {
+				fs_director::CreateDirectory( $vh_snuff_path . $vh_vhostuser );
+			}
 		
-		# If custom Snuff rules. Create vhost rule file here.	
-		if($rowvhost['vh_custom_sp_tx'] != null) {
-			$linesp .= $rowvhost['vh_custom_sp_tx'] . fs_filehandler::NewLine();
+			$linesp = "################################################################" . fs_filehandler::NewLine();
+			$linesp .= "# Snuffleupagus configuration file for: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
+			$linesp .= "# Automatically generated by Sentora " . sys_versions::ShowSentoraVersion() . fs_filehandler::NewLine();
+			$linesp .= "# Generated on: " . date(ctrl_options::GetSystemOption('sentora_df'), time()) . fs_filehandler::NewLine();
+			$linesp .= "#==== YOU MUST NOT EDIT THIS FILE : IT WILL BE OVERWRITTEN ====" . fs_filehandler::NewLine();
+			$linesp .= "# Use Sentora Menu -> Admin -> Module Admin -> Apache config" . fs_filehandler::NewLine();
+			$linesp .= "################################################################" . fs_filehandler::NewLine();
 			$linesp .= fs_filehandler::NewLine();
+			
+			# If custom Snuff rules. Create vhost rule file here.	
+			if($rowvhost['vh_custom_sp_tx'] != null) {
+				$linesp .= $rowvhost['vh_custom_sp_tx'] . fs_filehandler::NewLine();
+				$linesp .= fs_filehandler::NewLine();
+			}
+			
+			# Add SP default rules
+			$linesp .= $smarty->fetch("vhost_sp_rules.tpl") . fs_filehandler::NewLine();
+			
+			#*********Write to file
+			WriteDataToFile($vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules'  , $linesp);
+			#***********
+	
 		}
-		
-		# Add SP default rules
-		$linesp .= $smarty->fetch("vhost_sp_rules.tpl") . fs_filehandler::NewLine();
-		
-		#*********Write to file
-		WriteDataToFile($vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules'  , $linesp);
-		#***********
-
 	}
 	# Stop Snuff Protection managemenet HERE. ------- DO NOT EDIT THIS CODE ABOVE!!!!!
 	
@@ -454,10 +453,6 @@ function WriteVhostConfigFile() {
 				$line .= "</Directory>" . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
-				# Build HTTPS/SSL redirct for HTTP vhosts with Force SSL
-				//if ($forcessl == 1) {
-					//$line .= "Redirect permanent / https://" . $vhostName;	
-				//}
 				// Client custom vh entry
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
@@ -553,10 +548,6 @@ function WriteVhostConfigFile() {
 				$line .= "</Directory>" . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
-				# Build HTTPS/SSL redirct for HTTP vhosts with Force SSL
-				//if ($forcessl == 1) {
-					//$line .= "Redirect permanent / https://" . $vhostName;	
-				//}
 				// Client custom vh entry
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
@@ -650,10 +641,6 @@ function WriteVhostConfigFile() {
 				$line .= "</Directory>" . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
-				# Build HTTPS/SSL redirct for HTTP vhosts with Force SSL
-				//if ($forcessl == 1) {
-					//$line .= "Redirect permanent / https://" . $vhostName;	
-				//}
 				// Global custom global vh entry
 				$line .= "# Custom Global Settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('global_vhcustom') . fs_filehandler::NewLine();
@@ -766,19 +753,18 @@ function WriteVhostConfigFile() {
 							  . ctrl_options::GetSystemOption('openbase_temp') . '"' . fs_filehandler::NewLine();
 					}
 				}
-				//if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
-					//if ($rowvhost['vh_suhosin_in'] <> 0) {
-						//$line .= ctrl_options::GetSystemOption('suhosin_value') . fs_filehandler::NewLine();
-					//}
-				//}
-
+				
 				# Set Function Blacklist 
-				$line .= $func_blklist_sys . fs_filehandler::NewLine();
+				if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
+					if ($rowvhost['vh_suhosin_in'] <> 0) {
+						//$line .= ctrl_options::GetSystemOption('suhosin_value') . fs_filehandler::NewLine();
+						$line .= $func_blklist_sys . fs_filehandler::NewLine();
+					}
+				}
 				
 				# PHP_admin_values
 				$line .= 'php_admin_value upload_tmp_dir ' . '"' . ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . "/tmp/" . "\"" . fs_filehandler::NewLine();
 				$line .= 'php_admin_value session.save_path ' . '"' . ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . "/tmp/" . "\"" . fs_filehandler::NewLine();
-				
 				// Logs
 				if (!is_dir(ctrl_options::GetSystemOption('log_dir') . "domains/" . $vhostuser['username'] . "/")) {
 					fs_director::CreateDirectory(ctrl_options::GetSystemOption('log_dir') . "domains/" . $vhostuser['username'] . "/");
@@ -899,15 +885,13 @@ function WriteVhostConfigFile() {
 				# PHP_admin_values
 				$line .= 'php_admin_value upload_tmp_dir ' . '"' . ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . "/tmp/" . "\"" . fs_filehandler::NewLine();
 				$line .= 'php_admin_value session.save_path ' . '"' . ctrl_options::GetSystemOption('hosted_dir') . $vhostuser['username'] . "/tmp/" . "\"" . fs_filehandler::NewLine();
-				
-				//if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
-					//if ($rowvhost['vh_suhosin_in'] <> 0) {
-						//$line .= ctrl_options::GetSystemOption('suhosin_value') . fs_filehandler::NewLine();
-					//}
-				//}
-				
 				# Set Function Blacklist 
-				$line .= $func_blklist_sys . fs_filehandler::NewLine();
+				if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
+					if ($rowvhost['vh_suhosin_in'] <> 0) {
+						//$line .= ctrl_options::GetSystemOption('suhosin_value') . fs_filehandler::NewLine();
+						$line .= $func_blklist_sys . fs_filehandler::NewLine();
+					}
+				}
 				
 				// Logs
 				if (!is_dir(ctrl_options::GetSystemOption('log_dir') . "domains/" . $vhostuser['username'] . "/")) {
@@ -1026,11 +1010,6 @@ function WriteVhostConfigFile() {
 				$line .= "    Require all granted" . fs_filehandler::NewLine();
 				$line .= "</Directory>" . fs_filehandler::NewLine();
 				$line .= ctrl_options::GetSystemOption('dir_index') . fs_filehandler::NewLine();
-				
-				# Build HTTPS/SSL redirct for HTTP vhosts with Force SSL
-				//if ($forcessl == 1) {
-					//$line .= "Redirect permanent / https://" . $vhostName;	
-				//}
 				// Client custom vh entry
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
@@ -1159,6 +1138,9 @@ function WriteVhostConfigFile() {
 	} else {
 		
 		echo "   Error: Restoring orginal vhost file. Check in Sentora Panel Apache vhost config settings or httpd-vhosts.conf file for errors and retry." . fs_filehandler::NewLine();
+		
+		# Rename to failed _ DEV
+		//rename($vhconfigfile, "/etc/sentora/configs/apache/_failed_" . time() . ".conf");
 		
 		# Restore orginal apache vhosts config file if failed.
 		//copy($BackupFileName, $vhconfigfile);
