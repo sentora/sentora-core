@@ -96,9 +96,6 @@ function renewCertificates() {
 			// Do we need to create or upgrade our cert? Assume no to start with.
 			$needsgen = false;
 			
-			
-		
-			
 			# Set country/state - tg & Jettaman	
 			$user_ip = ctrl_options::GetSystemOption('server_ip');
 			$ip_response = file_get_contents('http://ip-api.com/json/'.$user_ip);
@@ -111,6 +108,7 @@ function renewCertificates() {
 			# Default if API failed
 			//$countryCode = "US";
 			//$state = "NM";
+			//$ipStatus = "sucess";
 			
 			# Check if Domain is LIVE and Pointing to this server
 			# Check DNS before continuing
@@ -173,6 +171,9 @@ function renewCertificates() {
 					echo "ERROR!";
 					$logger->error($e->getMessage());
 					$logger->error($e->getTraceAsString());
+					$errorCatahed = $e->getMessage();
+					# Throw error and log to file
+					error_log( date('Y-m-d H:i:s') . " - DOMAIN: "  . fs_filehandler::NewLine() . $errorCatahed . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
 					// Exit with an error code, something went wrong.
 					exit(1);
 				}
@@ -220,10 +221,6 @@ function renewPanelCertificates() {
 			// Do we need to create or upgrade our cert? Assume no to start with.
 			$needsgen = false;
 			
-			
-			
-			
-			
 			# Set country/state - tg & Jettaman	
 			$user_ip = ctrl_options::GetSystemOption('server_ip');
 			$ip_response = file_get_contents('http://ip-api.com/json/'.$user_ip);
@@ -236,6 +233,7 @@ function renewPanelCertificates() {
 			# Default if API failed
 			//$countryCode = "US";
 			//$state = "NM";
+			//$ipStatus = "sucess";
 			
 			# Check if Domain is LIVE and Pointing to this server
 			# Check DNS before continuing
@@ -326,7 +324,10 @@ function renewPanelCertificates() {
 					echo "ERROR!";
 					$logger->error($e->getMessage());
 					$logger->error($e->getTraceAsString());
-					// Exit with an error code, something went wrong.
+					$errorCatahed = $e->getMessage();
+					# Throw error and log to file
+					error_log( date('Y-m-d H:i:s') . " - PANEL DOMAIN: "  . fs_filehandler::NewLine() . $errorCatahed . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
+					// Exit with an error code, something went wrong. Disable because it stops Daemon from completing.
 					exit(1);
 				}
 			}

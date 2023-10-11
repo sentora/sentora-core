@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Sencrypt SSL</name>
-    <version>210</version>
-	<type>user</type>
+    <version>300</version>
     <defaultcat>Domain Management</defaultcat>
-    <desc>Sencrypt is a SSL module to Add/Manage SSL certificates for Letsencrypt or Third-party SSL Request(s)/Setup for your domains.</desc>
+    <desc>Sencrypt is a SSL module to Add/Manage SSL certificates for Lets Encrypt or Third-Party SSL Request(s)/Setup for your domains.</desc>
     <authorname>TGates</authorname>
     <authoremail>tgates@sentora.org</authoremail>
-    <authorurl>http://sentora.org</authorurl>
-    <updateurl>http://repo.sentora.org/repo/sencrypt.xml</updateurl>
+    <authorurl>sentora.org</authorurl>
+    <updateurl>http://repo.sentora.org/repo/sencrypt.zpp</updateurl>
 </module>

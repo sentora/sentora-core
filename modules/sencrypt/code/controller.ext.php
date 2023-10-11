@@ -29,8 +29,9 @@ class module_controller extends ctrl_module {
 	static $revokecert;
 	static $keyadd;
 	static $certFailed;
-	//static $loggererror;
+	static $senVerFailed;
 	
+# START HERE
 	static function getCheckModReq() {
 		# Post message if PHP requirments are not met 
 		if (!defined("PHP_VERSION_ID") || PHP_VERSION_ID < 50500 || !extension_loaded('openssl') || !extension_loaded('curl')) {
@@ -416,6 +417,13 @@ class module_controller extends ctrl_module {
 
 	static function doMakeCSR() {
 		global $controller;
+		
+		# Check 
+		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
+			self::$senVerFailed = true;
+			return false;	
+		}
+		
 		runtime_csfr::Protect();
 		$currentuser = ctrl_users::GetUserDetail();
 		$formvars = $controller->GetAllControllerRequests('FORM');
@@ -838,6 +846,13 @@ class module_controller extends ctrl_module {
 	static function doMakenew() {
         global $controller;
         runtime_csfr::Protect();
+		
+		# Check 
+		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
+			self::$senVerFailed = true;
+			return false;	
+		}
+		
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
 		if (empty($formvars['inDomain']) || empty($formvars['inName']) || empty($formvars['inAddress']) || empty($formvars['inCity']) || empty($formvars['inCountry']) || empty($formvars['inCompany'])) { 
@@ -1144,6 +1159,12 @@ class module_controller extends ctrl_module {
 	static function doMakeSSL() {
 		global $controller;
 		
+		# Check if Sentora is v2.0.1+. It is required to run sencrypt.
+		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
+			self::$senVerFailed = true;
+			return false;	
+		}
+		
 		$sub_module = "letsencrypt";
 		
 		$currentuser = ctrl_users::GetUserDetail();
@@ -1156,6 +1177,12 @@ class module_controller extends ctrl_module {
 	static function doMakePanelSSL() {
 		global $controller;
 		
+		# Check if Sentora is v2.0.1+. It is required to run sencrypt.
+		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
+			self::$senVerFailed = true;
+			return false;	
+		}
+		
 		$sub_module = "letsencrypt";
 		
 		$currentuser = ctrl_users::GetUserDetail();
@@ -1166,6 +1193,7 @@ class module_controller extends ctrl_module {
 
 # make client	
 	static function ExecuteMakeSSL($domain, $username, $sub_module) {
+				
 		global $zdbh, $controller;
 		$zsudo = ctrl_options::GetOption('zsudo');
 		$currentuser = ctrl_users::GetUserDetail();
@@ -1247,9 +1275,10 @@ class module_controller extends ctrl_module {
 		}
 	
 		catch (\Exception $e) {
-			$errorCatched = $e->getMessage();
 			$logger->error($e->getTraceAsString());
 			$logger->error($e->getMessage());
+			$errorCatched = $e->getMessage();
+
 			# Throw error and log to file
 			error_log( date('Y-m-d H:i:s') . " - DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatched . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
 			self::$certFailed = true;
@@ -1311,6 +1340,7 @@ class module_controller extends ctrl_module {
 	
 	# Make SSL for Panel domain
 	static function ExecuteMakePanelSSL($domain, $username, $sub_module) {
+		
 		global $zdbh, $controller;
 		$zsudo = ctrl_options::GetOption('zsudo');
 		$currentuser = ctrl_users::GetUserDetail();
@@ -1408,9 +1438,10 @@ class module_controller extends ctrl_module {
 			
 		}
 		catch (\Exception $e) {
-			$errorCatched = $e->getMessage();
 			$logger->error($e->getTraceAsString());
 			$logger->error($e->getMessage());
+			$errorCatched = $e->getMessage();
+
 			# Throw error and log to file
 			error_log( date('Y-m-d H:i:s') . " - PANEL DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatched . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
 			self::$certFailed = true;
@@ -1554,6 +1585,7 @@ class module_controller extends ctrl_module {
 	# Delete Panel SSL		
 	# do we need to pass panel domain since panel only uses one domain?
 	static function doDeletePanelSSL() {
+		
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$formvars = $controller->GetAllControllerRequests('FORM');			
@@ -1846,7 +1878,10 @@ class module_controller extends ctrl_module {
             return ui_sysmessage::shout(ui_language::translate("Certificate Signing Request was made and sent to the mail you have entered"), "zannounceok");
         }
 		if (self::$certFailed) {
-            return ui_sysmessage::shout(ui_language::translate("Oops! Something went wrong. Your Lets Encrypt certificate was not created. Check if your website is LIVE."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Oops! Something went wrong. Your Lets Encrypt certificate was not created. Check if your website is LIVE. ERROR! - ".$errorCatched.""), "zannounceerror");
+        }
+		if (self::$senVerFailed) {
+            return ui_sysmessage::shout(ui_language::translate("Oops! You you dont have the right version of Sentora to run this module. Sentora v.2.0.1 is required. Please update to at least v.2.0.1 +."), "zannounceerror");
         }
 		return;
 	}

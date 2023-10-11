@@ -1,10 +1,10 @@
 <?php
 /**
-	* Controller for sencrypt module for sentora version 1.0.3
-	* Version : 300
-	* Author  : TGages, Jettaman, Diablo925, 
-	* Script credits  : TGages, Jettaman, Diablo925, 
-*/
+	* Controller for sencrypt module for sentora version 2.0.0
+	* Version : 3.0.0
+	* Author : TGates
+	* Additional work by Diablo925, Jettaman
+ */
 
 // remove client's certificates, files, and settings if any
 

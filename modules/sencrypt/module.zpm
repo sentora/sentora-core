@@ -130,13 +130,12 @@ body {font-family: Arial;}
     </div>
 
 	<% if Admin %>
-		<div class="alert alert-danger" role="alert">
-			<@ PortWarning @>
-		</div>
+		<!--<div class="alert alert-danger" role="alert">-->
+			<@ CheckPortReq @>
+		<!--</div>-->
 	<% endif %>
 
 	<@ CheckModReq @>
-	
 	
 	<@ Result @>
 
@@ -205,13 +204,14 @@ body {font-family: Arial;}
 						<td>
 							<& Days_AC &>
 						</td>
-						<td>
-							<& Download_AC &>
-						</td> 
+						<!--<td>
+							
+						</td> -->
 						<td>
 							<& Button_AC &>
 						</td>
 						<td>
+							<& Download_AC &>
 							<& Revoke_AC &>
 						</td
 					</tr>
@@ -227,16 +227,14 @@ body {font-family: Arial;}
 	
 	<h4><u><: Please select a tab that best suits your needs below to get started. :></u></h4>
 	<p><: &nbsp; :></p>
-	<p>Select <b>Letsencrypt Tab </b>| For a FREE <b>(90-day)</b> SSL Certificate with <b>Auto-Renewal</b>. No worries here. :-) </p>
-	<p> <b>-OR-</b> </p>
-	<p>Select <b> Third-party Tab </b>| For Request/Setup for a purchased ( Godaddy, Bluehost, Verisign ) SSL Certificates.</p>
+
 	
 	<p><: &nbsp; :></p>
 
 	<div class="tab">
-	  <button class="tablinks <@ ShowLetsencryptActive @>" onclick="openCity(event, 'Letsencrypt')"><img src="modules/sencrypt/assets/icon.png">Letsencrypt</button>
-	  <button class="tablinks <@ ShowThird_partyActive @>" onclick="openCity(event, 'Third-party')"><img src="modules/sencrypt/assets/third_party.png">Third-party</button>
-	  <button style="display:block;float:right;" class="tablinks" onclick="openCity(event, 'Settings')"><img src="modules/sencrypt/assets/settings.png">Settings</button>
+		<button class="tablinks <@ ShowLetsencryptActive @>" onclick="openCity(event, 'Letsencrypt')"><img src="modules/sencrypt/assets/icon.png">Lets Encrypt<br>Free with Auto-renew</button>
+		<button class="tablinks <@ ShowThird_partyActive @>" onclick="openCity(event, 'Third-party')"><img src="modules/sencrypt/assets/third_party.png">Third-Party<br>Self-signed or purchased Certificates</button>
+		<!--<button style="display:block;float:right;" class="tablinks" onclick="openCity(event, 'Settings')"><img src="modules/sencrypt/assets/settings.png">Settings</button>-->
 	</div>
 		
 	<div style="display: <@ ShowLetsencryptTab @>;" id="Letsencrypt" class="tabcontent">
@@ -245,7 +243,7 @@ body {font-family: Arial;}
 		<div class="zgrid_wrapper" >
 			<table class="table">
 				<h3><: Let's Encypt your Sentora Control Panel.  - # Zadmin ONLY # :></h3>
-				<h4><: - Use Letsencrypt to create a SSL for your Sentora Control panel URL for Free. :></h4>
+				<h4><: - Use Lets Encrypt to create a SSL for your Sentora Control panel URL for Free. :></h4>
 				
 				<tr>
 					<th> Domain </th>
@@ -270,7 +268,7 @@ body {font-family: Arial;}
 	<div class="zgrid_wrapper" >
 		<table class="table">
 			<h3><: Let's Encypt your Domains. :></h3>
-			<h4><: - Use Letsencrypt to create a SSL for your Domain(s) for Free. :></h4>
+			<h4><: - Use Lets Encrypt to create a SSL for your Domain(s) for Free. :></h4>
 			
 			<tr>
 				<th> Domains </th>
