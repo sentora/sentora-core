@@ -42,11 +42,10 @@ echo "END Apache Config Hook." . fs_filehandler::NewLine();
  */
 function BuildVhostPortForward($vhostName, $customPort, $userEmail) {
 		
-	$apache_port = ctrl_options::GetSystemOption('apache_port');
 	$customPort_in = $customPort;
 	
     $line = "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
-    $line .= "# PORT FORWARD FROM ".$apache_port." TO: " . $customPort_in . fs_filehandler::NewLine();
+    $line .= "# PORT FORWARD FROM ".ctrl_options::GetSystemOption('apache_port')." TO: " . $customPort_in . fs_filehandler::NewLine();
     $line .= "<Virtualhost *:".$apache_port.">" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
 	if ($vhostName != ctrl_options::GetSystemOption('sentora_domain') ) 
@@ -66,12 +65,10 @@ function BuildVhostPortForward($vhostName, $customPort, $userEmail) {
 
 # vhost SSL ReWrite http to https -tg
 function BuildVhostReWriteSSL($vhostName, $userEmail) {
-	
-	$apache_port = ctrl_options::GetSystemOption('apache_port');
-	
+		
     $line = "# DOMAIN: " . $vhostName . fs_filehandler::NewLine();
     $line .= "# SSL REDIRECT" . fs_filehandler::NewLine();
-    $line .= "<Virtualhost *:".$apache_port.">" . fs_filehandler::NewLine();
+    $line .= "<Virtualhost *:".ctrl_options::GetSystemOption('apache_port').">" . fs_filehandler::NewLine();
     $line .= "ServerName " . $vhostName . fs_filehandler::NewLine();
 	if ($vhostName != ctrl_options::GetSystemOption('sentora_domain') ) 
 		$line .= "ServerAlias www." . $vhostName . fs_filehandler::NewLine();
@@ -143,6 +140,8 @@ function WriteVhostConfigFile() {
     $line .= fs_filehandler::NewLine();
 
     # Listen is mandatory for each port <> 80 (80 is defined in system config)
+	//$line .= "Listen " . ctrl_options::GetSystemOption('apache_port');
+	# For each custom port
     foreach ($customPortList as $port) {
         $line .= "Listen " . $port . fs_filehandler::NewLine();
     }
@@ -152,7 +151,11 @@ function WriteVhostConfigFile() {
 	$line .= "# Configuration for Sentora control panel." . fs_filehandler::NewLine();
 	
 	if (ctrl_options::GetSystemOption('panel_ssl_tx') == null) {
-	
+		
+		##
+		## Sentora Control Panel default vhost entry
+		##
+		
 		//$line .= "# Configuration for Sentora control panel." . fs_filehandler::NewLine();
 		$line .= "<VirtualHost *:" . ctrl_options::GetSystemOption('sentora_port') . ">" . fs_filehandler::NewLine();
 		$line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
@@ -161,10 +164,10 @@ function WriteVhostConfigFile() {
 		
 		# Vhost PHP settings
 		$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
-		$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
-				. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
-				. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
-				. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
+		//$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
+				//. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
+				//. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
+				//. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
 				
 		# Set Function Blacklist 
 		if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
@@ -239,10 +242,10 @@ function WriteVhostConfigFile() {
 		
 		# Vhost PHP settings
 		$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
-		$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
-				. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
-				. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
-				. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
+		//$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
+				//. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
+				//. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
+				//. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
 				
 		# Set Function Blacklist 
 		if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
@@ -1129,8 +1132,13 @@ function WriteVhostConfigFile() {
 	# If Apache config check return 0 or False
 	if ( CheckApacheVhostConfig() == FALSE ) {
 		
-		# Delete vhost backup file
+		# Delete vhost backup file and Failed config if exists
 		unlink($BackupFileName);
+		
+		# Delete httpd-vhost.conf_failed config file after apache config passes syntax check
+		if (!is_file($vhconfigfile . "-failed")) {
+			unlink($vhconfigfile . "-failed");
+		}
 			
 		# Restart Apache service
 		RestartHttpdServices();
@@ -1139,13 +1147,11 @@ function WriteVhostConfigFile() {
 		
 		echo "   Error: Restoring orginal vhost file. Check in Sentora Panel Apache vhost config settings or httpd-vhosts.conf file for errors and retry." . fs_filehandler::NewLine();
 		
-		# Rename to failed _ DEV
-		//rename($vhconfigfile, "/etc/sentora/configs/apache/_failed_" . time() . ".conf");
+		# If config failed. Copy file to (httpd-vhosts.conf_failed)
+		fs_filehandler::CopyFile($vhconfigfile, $vhconfigfile . "-failed");
 		
 		# Restore orginal apache vhosts config file if failed.
-		//copy($BackupFileName, $vhconfigfile);
 		fs_filehandler::CopyFile($BackupFileName, $vhconfigfile);
-		//fs_filehandler::RemoveDirectory($BackupFileName);
 		unlink($BackupFileName);
 		
 	}
