@@ -58,6 +58,7 @@ Thumbs.db
 !/modules/theme_manager/
 !/modules/updates/
 !/modules/usage_viewer/
+!/modules/user_logviewer/
 !/modules/webalizer_stats/
 !/modules/webmail/
 !/modules/zpx_core_module/
