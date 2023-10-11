@@ -31,14 +31,29 @@ if ($_SESSION['zpuid'] == $userid) {
             <link href="../../../etc/styles/<?php echo $currentuser['usertheme']; ?>/css/<?php echo $currentuser['usercss']; ?>.css" rel="stylesheet" type="text/css">
             <script src="../assets/ajaxsbmt.js" type="text/javascript"></script>
             <script src="http://code.jquery.com/jquery-latest.js"></script>
+            <script type="text/javascript"></script>
+            
+			<script>
+             function showHide() {
+               var div = document.getElementById("BackupResult");
+               if (div.style.display == 'none') {
+                 div.style.display = 'block';
+               }
+               else {
+                 div.style.display = 'none';
+               }
+             }
+            </script>
+            
+        </head>
         <body style="background: #F3F3F3;">
             <div style="margin-left:20px;margin-right:20px;">
                 <div class="zform_wrapper">
                     <h2>Backup your hosting account files</h2>
                     <p>Your data is ready to be backed up. This proccess can take a lot of time, depending on your directory size. When finished you will be prompted to download your archive.</p>
-                    <p>Current public directory size: <b><?php echo fs_director::ShowHumanFileSize(dirSize(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html")); ?></b></p>
+                    <p>Current public directory size: <b><?php echo fs_director::ShowHumanFileSize(dirSize(ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . "/public_html/")); ?></b></p>
                     <div id="BackupSubmit" style="height:100%;margin:auto;">
-                        <form name="doBackup" action="response_normal.php" method="post" onsubmit="xmlhttpPost('dobackup.php?id=<?php echo $userid; ?>', 'doBackup', 'BackupResult', 'Compressing your data, please wait...<br><img src=\'../assets/bar.gif\'>'); return false;">
+                        <form name="doBackup" action="response_normal.php" method="post" onsubmit="showHide(); xmlhttpPost('dobackup.php?id=<?php echo $userid; ?>', 'doBackup', 'BackupResult', 'Compressing your data, please wait...<br><img src=\'../assets/bar.gif\'>'); return false;">
                             <table class="zform">
                                 <tr valign="top">
                                     <th nowrap="nowrap"><button class="fg-button ui-state-default ui-corner-all" id="SubmitBackup" type="submit" name="inBackUp" value="">Backup Now</button></th>
@@ -47,7 +62,7 @@ if ($_SESSION['zpuid'] == $userid) {
                             </table>
                         </form>
                     </div>
-                    <div id="BackupResult" style="display:block;height:100%;margin:auto;">
+                    <div id="BackupResult" style="display:none;height:100%;margin:auto;">
                         Compressing your data, please wait...<br><img src='../assets/bar.gif'>
                     </div>
 
