@@ -1,0 +1,91 @@
+<style type="text/css">
+	.logContainer{
+		border: 0;
+		overflow: auto;
+		height: 350px;
+		color: #BBB;
+		font-family: consolas,monaco,Courier New,Courier New,monospace;
+		font-size: 12px;
+		background-color: #000;
+	}
+</style>
+<% if isPreviewLog %>
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+	<div class="panel-heading">
+		<img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
+		<div class="zmodule_title">
+			<@ ModuleName @>
+		</div>
+		<div class="zmodule_desc">Preview of <@ CurrentLogFile @></div>
+	</div>
+	<div class="panel-body">
+		<pre class="logContainer"><@ PreviewBuffer @></pre>
+	</div>
+</div>
+<% endif %>
+<div class="zmodule_content panel" id="zmodule_header_<@ ModuleName @>">
+	<div class="panel-heading">
+		<img src="<@ ModuleIcon @>" width="35" height="35" border="0" alt="<@ ModuleName @>">
+		<div class="zmodule_title">
+			<@ ModuleName @>
+		</div>
+		<div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><@ ModuleDesc @></div>
+	</div>
+	<@ Result @>
+	<div class="zgrid_wrapper">
+		<h2><: Domains Error Log :></h2>
+		<% if LogErrorList %>
+		<form action="./?module=user_logviewer&action=ErrorLogActions" method="post">
+			<table class="table table-striped">
+				<tr>
+					<th><: Domain name :></th>
+					<th><: File :></th>
+					<th><: Size :></th>
+					<th></th>
+					<th></th>
+				</tr>
+				<% loop LogErrorList %>
+				<tr>
+					<td><a href="http://<& name &>/" target="_blank"><& name &></a></td>
+					<td><& filepath &></td>
+					<td><& fsize &></td>
+					<td><button class="btn btn-default" type="submit" id="button" name="inPreview" id="inPreview" value="<& id &>"><: Preview :></button></td>
+					<td><button class="btn btn-primary" type="submit" id="button" name="inDownload" id="inDownload" value="<& id &>"><: Download :></button></td>
+				</tr>
+				<% endloop %>
+			</table>
+			<@ CSFR_Tag @>
+		</form>
+		<% else %>
+		<: You currently do not have any domains configured. :>
+		<% endif %>
+	</div>
+	<div class="zgrid_wrapper">
+		<h2><: Domains Access Log :></h2>
+		<% if LogAccessList %>
+		<form action="./?module=user_logviewer&action=AccessLogActions" method="post">
+			<table class="table table-striped">
+				<tr>
+					<th><: Domain name :></th>
+					<th><: File :></th>
+					<th><: Size :></th>
+					<th></th>
+					<th></th>
+				</tr>
+				<% loop LogAccessList %>
+				<tr>
+					<td><a href="http://<& name &>/" target="_blank"><& name &></a></td>
+					<td><& filepath &></td>
+					<td><& fsize &></td>
+					<td><button class="btn btn-default" type="submit" id="button" name="inPreview" id="inPreview" value="<& id &>"><: Preview :></button></td>
+					<td><button class="btn btn-primary" type="submit" id="button" name="inDownload" id="inDownload" value="<& id &>"><: Download :></button></td>
+				</tr>
+				<% endloop %>
+			</table>
+			<@ CSFR_Tag @>
+		</form>
+		<% else %>
+		<: You currently do not have any domains configured. :>
+		<% endif %>
+	</div>
+</div>

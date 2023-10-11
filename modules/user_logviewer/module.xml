@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+	<name>View Site Logs</name>
+	<version>101</version>
+	<type>user</type>
+	<ostype>all</ostype>
+	<defaultcat>Advanced</defaultcat>
+	<desc>View your website's error and access logs.</desc>
+	<authorname>samt2497 maintained by Sentora team</authorname>
+	<authoremail>samt2497@hotmail.com</authoremail>
+	<authorurl>http://forums.sentora.org/showthread.php?tid=1319</authorurl>
+	<updateurl>http://zppy-repo.mach-hosting.com/repo/user_logviewer.xml</updateurl>
+</module>
