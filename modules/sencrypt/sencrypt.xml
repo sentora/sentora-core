@@ -3,7 +3,7 @@
 	<latestversion>300</latestversion>
 	<downloadurl>http://zppy-repo.mach-hosting.com/repo-deactivated/sencrypt.zpp</downloadurl>
 	<desc>Add, revoke or delete Let's Encrypt FREE! SSL certificates for your domains and sub domains.</desc>
-	<updatedesc>Sencrypt 3.0.0. Fixed bugs and issues with renewals and module</updatedesc>
+	<updatedesc>Still in development - testing renewals</updatedesc>
 	<authorname>TGates</authorname>
 	<authoremail>tgates@sentora.org</authoremail>
 	<authorurl>http://www.sentora.org</authorurl>
