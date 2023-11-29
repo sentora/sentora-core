@@ -15,7 +15,13 @@ Sentora is developed and maintained by the original ZPanel team members ([ballen
 
 To use Sentora in a production environment we recommend you use our automated installers which also take care of the installation of not only Sentora but also Apache, PHP, MySQL, BIND, ProFTPd etc.
 
-To download Sentora please use the links found on [our download page](http://sentora.org/download/).
+To download Sentora please use the links found on [our download page](https://sentora.org/download/).
+
+## Updating Sentora
+
+Update your Sentora installations to the latest release version.
+
+To update Sentora please use the links found on [our update page](https://sentora.org/upgrade/).
 
 ## License agreement
 
