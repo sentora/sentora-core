@@ -26,6 +26,7 @@ class sys_email extends PHPMailer {
         $this->Mailer = ctrl_options::GetSystemOption('mailer_type');
         $this->From = ctrl_options::GetSystemOption('email_from_address');
         $this->FromName = ctrl_options::GetSystemOption('email_from_name');
+        $this->CharSet = "utf8";
         if (ctrl_options::GetSystemOption('email_smtp') <> 'false') {
             $this->IsSMTP();
             if (ctrl_options::GetSystemOption('smtp_auth') <> 'false') {
