@@ -51,10 +51,12 @@ class module_controller extends ctrl_module
         $status = fs_director::CheckForEmptyValue(sys_monitoring::PortStatus($PortNum));
 
         $line .= '<tr><th>HTTP</th><td>'  . module_controller::status_port(80, $iconpath) . '</td></tr>';
+		$line .= '<tr><th>HTTPS</th><td>'  . module_controller::status_port(443, $iconpath) . '</td></tr>';
         $line .= '<tr><th>FTP</th><td>'   . module_controller::status_port(21, $iconpath) . '</td></tr>';
         $line .= '<tr><th>SMTP</th><td>'  . module_controller::status_port(25, $iconpath) . '</td></tr>';
         $line .= '<tr><th>POP3</th><td>'  . module_controller::status_port(110, $iconpath) . '</td></tr>';
         $line .= '<tr><th>IMAP</th><td>'  . module_controller::status_port(143, $iconpath) . '</td></tr>';
+		$line .= '<tr><th>SMTPTLS</th><td>'  . module_controller::status_port(587, $iconpath) . '</td></tr>';
         $line .= '<tr><th>MySQL</th><td>' . module_controller::status_port(3306, $iconpath) . '</td></tr>';
         $line .= '<tr><th>DNS</th><td>'   . module_controller::status_port(53, $iconpath)  . '</td></tr>';
         $line .= '</table>';
@@ -63,9 +65,14 @@ class module_controller extends ctrl_module
         return $line;
     }
 
-    static function getIsWebServerUp()
+    static function getIsHTTPServerUp()
     {
         return sys_monitoring::PortStatus(80);
+    }
+
+    static function getIsHTTPSServerUp()
+    {
+        return sys_monitoring::PortStatus(443);
     }
 
     static function getIsMySQLUp()

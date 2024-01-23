@@ -16,10 +16,12 @@ class webservice extends ws_xmws
 
     static $localports = array(
         'http' => 80,
+		'https' => 443,
         'ftp' => 21,
         'smtp' => 25,
         'pop3' => 110,
         'imap' => 143,
+		'smtptls' => 587,
         'mysql' => 3306,
         'dns' => 53,
     );
