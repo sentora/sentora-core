@@ -29,9 +29,16 @@ class module_controller extends ctrl_module {
 	static $revokecert;
 	static $keyadd;
 	static $certFailed;
-	static $senVerFailed;
-	
-# START HERE
+	//static $loggererror;
+
+    /* Load CSS and JS files */
+    static function getInit() {
+        global $controller;
+		# load module spcific style sheet
+        $line = '<link rel="stylesheet" type="text/css" href="modules/' . $controller->GetControllerRequest('URL', 'module') . '/assets/sencrypt.css">';
+        return $line;
+    }
+
 	static function getCheckModReq() {
 		# Post message if PHP requirments are not met 
 		if (!defined("PHP_VERSION_ID") || PHP_VERSION_ID < 50500 || !extension_loaded('openssl') || !extension_loaded('curl')) {
@@ -40,7 +47,7 @@ class module_controller extends ctrl_module {
 	}
 
 	static function getCheckPortReq() {
-		# Post message if port 443 appears to be not open. Using external source to detect. Sentora check port API.
+		# Post message if port 443 appears to not be open. Using external source to detect. Sentora check port API.
 		$portquery = file_get_contents('http://api.sentora.org/portcheck.txt/?port=443');
 		if ((sys_monitoring::PortStatus(443)) && ($portquery) == false) {
 			self::$portReqsError = true;
@@ -48,6 +55,29 @@ class module_controller extends ctrl_module {
 	}
 
 # Module & Dispaly stuff - START
+	static function getShowViewCerts() {
+		if (isset($_GET['ShowPanel']) == true) {
+			if ($_GET['ShowPanel'] == 'viewcerts') {
+				$showActiveTab = "active";
+				return $showActiveTab;
+			} else {
+				$showActiveTab = "active";
+				return $showActiveTab;
+			}
+		}
+	}
+
+	static function getShowCreateCerts() {
+		if (isset($_GET['ShowPanel']) == true ) {
+			if ($_GET['ShowPanel'] == 'createcerts') {
+				$showActiveTab = "active";
+				return $showActiveTab;
+			} else {
+				$showActiveTab = "none";
+				return $showActiveTab;
+			}
+		}
+	}
 
 	static function getShowLetsEncryptTab() {
 		if (isset($_GET['ShowPanel']) == true ) {
@@ -124,7 +154,7 @@ class module_controller extends ctrl_module {
 		if ( is_file( $panelCertPath . $currentuser["username"] . "/ssl/sencrypt/letsencrypt/" . $panelDomain . "/cert.pem" ) ) {	
 			$panelDeleteButton = '<form action="./?module=sencrypt&ShowPanel=letsencrypt&action=DeletePanelSSL" method="post">
 			<input type="hidden" name="inName" value="'. $panelDomain.'">
-			<button class="button-loader btn btn-warning" type="submit" id="button" name="inDeleteSSL" id="inDeletePanelSSL" value="inDeletePanelSSL">Delete</button>
+			<button class="button-loader btn btn-warning" type="submit" id="button" name="inDeleteSSL" id="inDeletePanelSSL" value="inDeletePanelSSL">' . ui_language::translate("Delete") . '</button>
 			</form>';
 			$certinfo = openssl_x509_parse(file_get_contents(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] . "/ssl/sencrypt/letsencrypt/" . $panelDomain . "/cert.pem"));
 			$validTo = date('Y-m-d', $certinfo["validTo_time_t"]);
@@ -136,15 +166,15 @@ class module_controller extends ctrl_module {
 			$sslvendor = "Lets Encrypt";
 			
 			if($panelday <= "-1700") {
-				$paneldays = "Not initialized yet";
+				$paneldays = ui_language::translate("Not initialized yet");
 				} else {
-				$paneldays = "Expiry in " . $panelday . " days - Auto-renewal in " . $reNewDay . " Days.";
+				$paneldays = ui_language::translate("Expiry in") . ' ' . $panelday . ' ' . ui_language::translate("days") . ' - ' . ui_language::translate("Auto-renewal in") . ' ' . $reNewDay . ' ' . ui_language::translate("days");
 			}
 			
 			# Revoke button just incase its needed
 			$panelRevokeButton = '<form action="./?module=sencrypt&action=RevokePanelSSL" method="post">
 				<input type="hidden" name="inDomain" value="'. $panelDomain.'">
-				<button class="button-loader btn btn-danger" type="submit" id="button" name="inRevokeSSL" id="inRevokePanelSSL" value="inRevokePanelSSL">Revoke</button>
+				<button class="button-loader btn btn-danger" type="submit" id="button" name="inRevokeSSL" id="inRevokePanelSSL" value="inRevokePanelSSL">' . ui_language::translate("Revoke") . '</button>
 			</form>';
 		
 			$panelres[] = array('Active_Panel_Domain' => $panelDomain, 'Active_Panel_Provider' => $sslvendor, 'Active_Panel_Days' =>  $paneldays, 'Active_Panel_Button' => $panelDeleteButton,  'Active_Panel_Revoke' => $panelRevokeButton);
@@ -154,7 +184,7 @@ class module_controller extends ctrl_module {
 						
 			$panelDeleteButton = '<form action="./?module=sencrypt&ShowPanel=third_party&action=TPDelete" method="post">
 			<input type="hidden" name="inName" value="'. $panelDomain.'">
-			<button class="button-loader btn btn-warning" type="submit" id="button" name="inDeleteSSL" id="inDeletePanelSSL" value="inDeletePanelSSL">Delete</button>
+			<button class="button-loader btn btn-warning" type="submit" id="button" name="inDeleteSSL" id="inDeletePanelSSL" value="inDeletePanelSSL">' . ui_language::translate("Delete") . '</button>
 			</form>';
 			$certinfo = openssl_x509_parse(file_get_contents(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] . "/ssl/sencrypt/third_party/" . $panelDomain . "/cert.pem"));
 			$validTo = date('Y-m-d', $certinfo["validTo_time_t"]);
@@ -166,15 +196,16 @@ class module_controller extends ctrl_module {
 			$sslvendor = "Third-Party";
 			
 			if($panelday <= "-1700") {
-				$paneldays = "Not initialized yet"; } else {
-				$paneldays = "Expiry in " . $panelday . " days.";
+				$paneldays = ui_language::translate("Not initialized yet");
+			} else {
+				$paneldays = ui_language::translate("Expiry in") . ' ' . $panelday . ' ' . ui_language::translate("days") . ".";
 			}
 		
 			$panelres[] = array('Active_Panel_Domain' => $panelDomain, 'Active_Panel_Provider' => $sslvendor, 'Active_Panel_Days' =>  $paneldays, 'Active_Panel_Button' => $panelDeleteButton, 'Active_Panel_Revoke' => NULL);
 		
 		} else {
 
-			$panelres[] = array('Active_Panel_Domain' => "No Active Panel Domain Certificates", 'Active_Panel_Provider' => NULL, 'Active_Panel_Days' =>  NULL, 'Active_Panel_Button' => NULL, 'Active_Panel_Revoke' => NULL);
+			$panelres[] = array('Active_Panel_Domain' => ui_language::translate("No Active Panel Domain Certificates"), 'Active_Panel_Provider' => NULL, 'Active_Panel_Days' =>  NULL, 'Active_Panel_Button' => NULL, 'Active_Panel_Revoke' => NULL);
 			
 		}
 		return $panelres;
@@ -192,28 +223,30 @@ class module_controller extends ctrl_module {
 		if (!is_dir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] ."/ssl/sencrypt/letsencrypt/". $panelDomain ."/") ) {
 
 			# Check if ssl exists else where
-			if ( !is_dir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] ."/ssl/sencrypt/third_party/". $panelDomain ."/") ) {
+			if (!is_dir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] ."/ssl/sencrypt/third_party/". $panelDomain ."/") ) {
 				# do nothing cert exists
 				$panelbutton = '<form action="./?module=sencrypt&ShowPanel=letsencrypt&action=MakePanelSSL" method="post">
 				<input type="hidden" name="inDomain" value="'. $panelDomain.'">
-				<button class="button-loader btn btn-primary" type="submit" id="button" name="in" id="inMakePanelSSL" value="inMakePanelSSL">Encrypt</button>
+				<button class="button-loader btn btn-primary" type="submit" id="button" name="in" id="inMakePanelSSL" value="inMakePanelSSL">' . ui_language::translate("Encrypt") . '</button>
 				</form>';
 				$paneldays = "";
 				
 				$panelres[] = array('Panel_Domain' => $panelDomain, 'Panel_Button' => $panelbutton);
 				
+				$panelresult = $panelres;
 			}
-		
+			
 		} else {
 	
-			$panelres[] = array('Panel_Domain' => "<h5 style='color:red;'>All panel domains have active SSL certificates.<h5>", 'Panel_Button' => NULL);			
+			$panelresult = false;
+
 		}
 		
-		return $panelres;
+		return $panelresult;
 	}
 	# panel ssl show - END
 
-	# client ssl show -START
+	# domain ssl show -START
 	static function getList_of_domains() {
 		$currentuser = ctrl_users::GetUserDetail();
 		return self::Show_list_of_domains($currentuser['userid']);
@@ -242,7 +275,7 @@ class module_controller extends ctrl_module {
 				if (!is_dir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] ."/ssl/sencrypt/letsencrypt/". $rowdomains['vh_name_vc'] ."/") ) {
 
 					# Check if ssl exists else where
-					if ( is_dir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] ."/ssl/sencrypt/third_party/". $rowdomains['vh_name_vc'] ."/") ) {
+					if (is_dir(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] ."/ssl/sencrypt/third_party/". $rowdomains['vh_name_vc'] ."/") ) {
 
 						# Do nothing
 
@@ -250,18 +283,21 @@ class module_controller extends ctrl_module {
 
 						$button = '<form action="./?module=sencrypt&ShowPanel=letsencrypt&action=MakeSSL" method="post">
 							<input type="hidden" name="inDomain" value="'.$rowdomains['vh_name_vc'].'">
-							<button class="button-loader btn btn-primary" type="submit" id="button" name="in" id="inMakeSSL" value="inMakeSSL">Encrypt</button>
+							<button class="button-loader btn btn-primary" type="submit" id="button" name="in" id="inMakeSSL" value="inMakeSSL">' . ui_language::translate("Encrypt") . '</button>
 						</form>';
 						
 						$res[] = array('Vh_Domain' => $rowdomains['vh_name_vc'], 'Vh_Button' => $button);
-						
 					}
-				} 	
+				}
 			}
-			
+
+			if (!$res) {
+				$res[] = array('Vh_Domain' => ui_language::translate("All domains have certificates."), 'Vh_Button' => NULL);
+			}
+
 		} else {	
 		
-			$res[] = array('Vh_Domain' => "No Active Domains. Create One to Continue.", 'Vh_Button' => NULL);
+			$res = array('Vh_Domain' => ui_language::translate("You have no available domains. Add one to continue."), 'Vh_Button' => NULL);
 	
 		}
 		return $res;
@@ -298,13 +334,13 @@ class module_controller extends ctrl_module {
 	
 					$button = '<form action="./?module=sencrypt&ShowPanel=third-party&action=TPDelete" method="post">
 						<input type="hidden" name="inName" value="'. $rowdomains['vh_name_vc'] .'">
-						<button class="btn btn-warning" type="submit" id="button" name="inDelete_'. $currentuser["username"].'" id="inDelete_'. $currentuser["username"].'" value="inDelete_' . $currentuser["username"] . '">Delete</button></td>
+						<button class="btn btn-warning" type="submit" id="button" name="inDelete_'. $currentuser["username"].'" id="inDelete_'. $currentuser["username"].'" value="inDelete_' . $currentuser["username"] . '">' . ui_language::translate("Delete") . '</button></td>
 						 '.runtime_csfr::Token().'
 					</form>';
 					
 					$Downloadbutton = '<form action="./?module=sencrypt&ShowPanel=third-party&action=Download" method="post">
 							<input type="hidden" name="inName" value="'. $rowdomains['vh_name_vc'] .'">
-							<button class="btn btn-primary1" type="submit" id="button" name="inDownload_'. $currentuser["username"].'" id="inDownload_'. $currentuser["username"].'" value="inDownload_'. $currentuser["username"].'">Download</button></td>
+							<button class="btn btn-primary1" type="submit" id="button" name="inDownload_'. $currentuser["username"].'" id="inDownload_'. $currentuser["username"].'" value="inDownload_'. $currentuser["username"].'">' . ui_language::translate("Download") . '</button></td>
 					</form>';
 					
 					$certinfo = openssl_x509_parse(file_get_contents(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] . "/ssl/sencrypt/third_party/" . $rowdomains['vh_name_vc'] . "/cert.pem"));
@@ -318,8 +354,8 @@ class module_controller extends ctrl_module {
 					$reNewDay = $day - 30;
 					
 					if($day <= "-1700") {
-						$days = "Not initialized yet"; } else {
-						$days = "Expiry in " . $day . " days ";
+						$days = ui_language::translate("Not initialized yet"); } else {
+						$days = ui_language::translate("Expiry in") . ' ' . $day . ' ' . ui_language::translate("days") . ".";
 					}
 							
 					$res[] = array('Domain_AC' => $rowdomains['vh_name_vc'], 'Button_AC' => $button, 'Vendor_AC' => $sslvendor, 'Days_AC' =>  $days, 'Download_AC' => $Downloadbutton, 'Revoke_AC' => NULL );
@@ -329,13 +365,13 @@ class module_controller extends ctrl_module {
 					
 					$button = '<form action="./?module=sencrypt&ShowPanel=letsencrypt&action=Delete" method="post">
 						<input type="hidden" name="inDomain" value="'. $rowdomains['vh_name_vc'].'">
-						<button class="button-loader btn btn-warning" type="submit" id="button" name="inDeleteSSL" id="inDeleteSSL" value="inDeleteSSL">Delete</button>
+						<button class="button-loader btn btn-warning" type="submit" id="button" name="inDeleteSSL" id="inDeleteSSL" value="inDeleteSSL">' . ui_language::translate("Delete") . '</button>
 					</form>';
 					
 					# Revoke button just incase its needed
 					$RevokeButton = '<form action="./?module=sencrypt&action=RevokeSSL" method="post">
 						<input type="hidden" name="inDomain" value="'. $rowdomains['vh_name_vc'].'">
-						<button class="button-loader btn btn btn-danger" type="submit" id="button" name="inRevokeSSL" id="inRevokeSSL" value="inRevokeSSL" > Revoke </button>
+						<button class="button-loader btn btn btn-danger" type="submit" id="button" name="inRevokeSSL" id="inRevokeSSL" value="inRevokeSSL">' . ui_language::translate("Revoke") . '</button>
 					</form>';
 					
 					$certinfo = openssl_x509_parse(file_get_contents(ctrl_options::GetSystemOption('hosted_dir') . $currentuser["username"] . "/ssl/sencrypt/letsencrypt/" . $rowdomains['vh_name_vc'] . "/cert.pem"));
@@ -347,22 +383,24 @@ class module_controller extends ctrl_module {
 					$sslvendor = "Lets Encrypt";
 
 					$reNewDay = $day - 30;
-					
+
 					if($day <= "-1700") {
-						$days = "Not initialized yet"; } else {
-						$days = "Expiry in " . $day . " days - Auto-renewal in " . $reNewDay . " Days.";
+						$days = ui_language::translate("Not initialized yet"); } else {
+						$days = ui_language::translate("Expiry in") . ' ' . $day . ' ' . ui_language::translate("days") . ' - ' . ui_language::translate("Auto-renewal in") . ' ' . $reNewDay . ' ' . ui_language::translate("days") . '.';
 					}
 					
 					$res[] = array('Domain_AC' => $rowdomains['vh_name_vc'], 'Button_AC' => $button, 'Vendor_AC' => $sslvendor, 'Days_AC' =>  $days, 'Download_AC' => NULL, 'Revoke_AC' => $RevokeButton);
 					
 				}
 			}
+			if (!$res)
+			{
+				$res[] = array('Domain_AC' => ui_language::translate("No Active Domain Certificates"), 'Button_AC' => NULL, 'Vendor_AC' => NULL, 'Days_AC' =>  NULL, 'Download_AC' => NULL, 'Revoke_AC' => NULL);
+			}
 
-			//$res[] = array('Domain_AC' => "No Active Domain Certificates", 'Button_AC' => NULL, 'Vendor_AC' => NULL, 'Days_AC' =>  NULL, 'Download_AC' => NULL, 'Revoke_AC' => NULL);
-			
 		} else {		
 								
-			$res[] = array('Domain_AC' => "No Active Domain Certificates", 'Button_AC' => NULL, 'Vendor_AC' => NULL, 'Days_AC' =>  NULL, 'Download_AC' => NULL, 'Revoke_AC' => NULL);
+			$res[] = array('Domain_AC' => ui_language::translate("No Active Domain Certificates"), 'Button_AC' => NULL, 'Vendor_AC' => NULL, 'Days_AC' =>  NULL, 'Download_AC' => NULL, 'Revoke_AC' => NULL);
 			
 		}
 		
@@ -417,13 +455,6 @@ class module_controller extends ctrl_module {
 
 	static function doMakeCSR() {
 		global $controller;
-		
-		# Check 
-		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
-			self::$senVerFailed = true;
-			return false;	
-		}
-		
 		runtime_csfr::Protect();
 		$currentuser = ctrl_users::GetUserDetail();
 		$formvars = $controller->GetAllControllerRequests('FORM');
@@ -846,13 +877,6 @@ class module_controller extends ctrl_module {
 	static function doMakenew() {
         global $controller;
         runtime_csfr::Protect();
-		
-		# Check 
-		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
-			self::$senVerFailed = true;
-			return false;	
-		}
-		
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
 		if (empty($formvars['inDomain']) || empty($formvars['inName']) || empty($formvars['inAddress']) || empty($formvars['inCity']) || empty($formvars['inCountry']) || empty($formvars['inCompany'])) { 
@@ -1159,16 +1183,11 @@ class module_controller extends ctrl_module {
 	static function doMakeSSL() {
 		global $controller;
 		
-		# Check if Sentora is v2.0.1+. It is required to run sencrypt.
-		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
-			self::$senVerFailed = true;
-			return false;	
-		}
-		
 		$sub_module = "letsencrypt";
 		
 		$currentuser = ctrl_users::GetUserDetail();
 		$formvars = $controller->GetAllControllerRequests('FORM');
+
 		if (self::ExecuteMakeSSL($formvars['inDomain'], $currentuser["username"], $sub_module))
 		return true;
 	}
@@ -1176,12 +1195,6 @@ class module_controller extends ctrl_module {
 # Panel		
 	static function doMakePanelSSL() {
 		global $controller;
-		
-		# Check if Sentora is v2.0.1+. It is required to run sencrypt.
-		if (ctrl_options::GetSystemOption('dbversion') <= "2.0.0") {
-			self::$senVerFailed = true;
-			return false;	
-		}
 		
 		$sub_module = "letsencrypt";
 		
@@ -1193,8 +1206,8 @@ class module_controller extends ctrl_module {
 
 # make client	
 	static function ExecuteMakeSSL($domain, $username, $sub_module) {
-				
 		global $zdbh, $controller;
+
 		$zsudo = ctrl_options::GetOption('zsudo');
 		$currentuser = ctrl_users::GetUserDetail();
 		$username = $currentuser["username"];
@@ -1245,14 +1258,14 @@ class module_controller extends ctrl_module {
 			
 			# NEW CODE - start - tg
 			# Check if domain has a shared hostdata dir
-			$sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_directory_vc=:dom_directory";
+			$sql = "SELECT COUNT(*) FROM x_vhosts WHERE vh_acc_fk = :userid AND vh_directory_vc = :dom_directory";
 				$query = $zdbh->prepare($sql);
 				$query->bindParam(':userid', $currentuser['userid']);
 				$query->bindParam(':dom_directory', $domain_folder);
 				$query->execute();
 			$count = $query->fetchColumn();
 			# NEW CODE - end - tg
-			
+	
 			# Check if domain is a subdomain
 			$sql = "SELECT vh_type_in FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_name_vc=:domain AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";
 				$query = $zdbh->prepare($sql);
@@ -1261,26 +1274,25 @@ class module_controller extends ctrl_module {
 				$query->execute();
 		
 			while ($row = $query->fetch()) {
-				
-				if (($row['vh_type_in'] == 2 ) ||  ($count != 1 )) {
+
+				if (($row['vh_type_in'] == 2 ) || ($count != 1 )) {
 					# Create domain without www. because its a subdomain
 					$le->signDomains(array($domain));
-					
+
 				} else {
+
 					# Create a SSL for domain and with www. because its a root domain
 					$le->signDomains(array($domain, 'www.'. $domain));
-					
 				}
 			}			
 		}
 	
 		catch (\Exception $e) {
+			$errorCatahed = $e->getMessage();
 			$logger->error($e->getTraceAsString());
 			$logger->error($e->getMessage());
-			$errorCatched = $e->getMessage();
-
 			# Throw error and log to file
-			error_log( date('Y-m-d H:i:s') . " - DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatched . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
+			error_log( date('Y-m-d H:i:s') . " - DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatahed . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
 			self::$certFailed = true;
 			return false;
 			exit(1);
@@ -1340,7 +1352,6 @@ class module_controller extends ctrl_module {
 	
 	# Make SSL for Panel domain
 	static function ExecuteMakePanelSSL($domain, $username, $sub_module) {
-		
 		global $zdbh, $controller;
 		$zsudo = ctrl_options::GetOption('zsudo');
 		$currentuser = ctrl_users::GetUserDetail();
@@ -1438,12 +1449,11 @@ class module_controller extends ctrl_module {
 			
 		}
 		catch (\Exception $e) {
+			$errorCatahed = $e->getMessage();
 			$logger->error($e->getTraceAsString());
 			$logger->error($e->getMessage());
-			$errorCatched = $e->getMessage();
-
 			# Throw error and log to file
-			error_log( date('Y-m-d H:i:s') . " - PANEL DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatched . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
+			error_log( date('Y-m-d H:i:s') . " - PANEL DOMAIN: " . $domain . fs_filehandler::NewLine() . $errorCatahed . fs_filehandler::NewLine(), 3, ctrl_options::GetSystemOption('sentora_root') . 'modules/sencrypt/sencrypt.log');
 			self::$certFailed = true;
 			return false;
 			exit(1);
@@ -1585,7 +1595,6 @@ class module_controller extends ctrl_module {
 	# Delete Panel SSL		
 	# do we need to pass panel domain since panel only uses one domain?
 	static function doDeletePanelSSL() {
-		
 		global $controller;
 		$currentuser = ctrl_users::GetUserDetail();
 		$formvars = $controller->GetAllControllerRequests('FORM');			
@@ -1799,23 +1808,6 @@ class module_controller extends ctrl_module {
 		$sql->execute();
 	}
 
-    static function getDonation() {
-        $donation = '<form action="https://www.paypal.com/donate" method="post" target="_top">
-<input type="hidden" name="hosted_button_id" value="MCDRPGAZFNEMY" />
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" height="25" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-</form>';
-		
-        return $donation;
-    }
-	
-    static function getCopyright() {
-		
-        $copyright = '<font face="ariel" size="2">'.ui_module::GetModuleName().' v3.0.0 &copy; 2016-'.date("Y").' by <a target="_blank" href="#">TGates, Jettaman & Diablo</a> for <a target="_blank" href="http://sentora.org">Sentora Control Panel</a>&nbsp;&#8212;&nbsp;Help support future development of this module and donate today!</font>';
-		
-        return $copyright;
-    }
-
     //static function getPortWarning() {
 		
 		//return '<font face="ariel" size="4">' . ui_language::translate("ZADMIN ALERT: Make sure port 443 is OPEN before adding any SSL certificates!") . '</font>';
@@ -1878,10 +1870,7 @@ class module_controller extends ctrl_module {
             return ui_sysmessage::shout(ui_language::translate("Certificate Signing Request was made and sent to the mail you have entered"), "zannounceok");
         }
 		if (self::$certFailed) {
-            return ui_sysmessage::shout(ui_language::translate("Oops! Something went wrong. Your Lets Encrypt certificate was not created. Check if your website is LIVE. ERROR! - ".$errorCatched.""), "zannounceerror");
-        }
-		if (self::$senVerFailed) {
-            return ui_sysmessage::shout(ui_language::translate("Oops! You you dont have the right version of Sentora to run this module. Sentora v.2.0.1 is required. Please update to at least v.2.0.1 +."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Oops! Something went wrong. Your Lets Encrypt certificate was not created. Check if your website is LIVE."), "zannounceerror");
         }
 		return;
 	}
