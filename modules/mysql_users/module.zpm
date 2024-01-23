@@ -1,6 +1,5 @@
 <style>
 
-
 /* Style all input fields */
 input {
   width: 100%;
@@ -16,6 +15,11 @@ input {
 input[type=submit] {
   background-color: #4CAF50;
   color: white;
+}
+
+/* tg - input field overflow fix */
+#inUserName {
+  width: 85%;
 }
 
 /* Style the container for inputs */
@@ -224,8 +228,14 @@ input[type=submit] {
                     <form action="./?module=mysql_users&action=CreateUser" method="post">
                         <table class="table table-striped">
                             <tr>
-                                <th nowrap="nowrap"><: User name :>:</th>
-                                <td nowrap="nowrap"><input type="text" size="30" name="inUserName" id="inUserName" /></td>
+								<!-- TG - Added username prefix and available user name characters -->
+                                <th nowrap="nowrap">
+									<: User name :>:<br />
+									(<@ MaxCharAllowed @> <: Characters max :>)
+								</th>
+								<td nowrap="nowrap">
+									<@ CurrentUserName @>_<input maxlength="<@ MaxCharAllowed @>" name="inUserName" type="text" id="inUserName" size="30" />
+								</td>
                             </tr>
                             <tr>
                                 <th nowrap="nowrap"><: Map Database :>:</th>
