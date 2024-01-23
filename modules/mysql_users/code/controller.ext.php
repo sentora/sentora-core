@@ -43,6 +43,26 @@ class module_controller extends ctrl_module
     /**
      * The 'worker' methods.
      */
+	# tg - Set user name input max characters minus prefix
+    static function getMaxCharAllowed()
+    {
+        global $zdbh;
+        global $controller;
+		
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        if ($username < 33)
+		{
+			$username = $currentuser['username'] . "_";
+			$prefixsize = strlen($username);
+			$maxChar = 32-$prefixsize;
+
+            return $maxChar;
+        } else {
+            return false;
+        }
+    }
+
     static function CleanOrphanDatabases($uid)
     {
         global $zdbh;
@@ -195,6 +215,8 @@ class module_controller extends ctrl_module
         $currentuser = ctrl_users::GetUserDetail($uid);
         // Check for spaces and remove if found...
         $username = strtolower(str_replace(' ', '', $username));
+		// tg - Add prefix to DB user name
+		$username = $currentuser['username'] . "_" . $username;
         // If errors are found, then exit before creating user...
         if (fs_director::CheckForEmptyValue(self::CheckCreateForErrors($username, $database, $access))) {
             return false;
@@ -540,10 +562,12 @@ class module_controller extends ctrl_module
 
     static function IsValidUserName($username)
     {
-        if (!preg_match('/^[a-z\d][a-z\d-]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
+		# tg - Added regx [a-z\d_] to allow underscore
+        if (!preg_match('/^[a-z\d][a-z\d-][a-z\d_]{0,62}$/i', $username) || preg_match('/-$/', $username)) {
             return false;
         } else {
-            if (strlen($username) < 17) {
+			# tg - Updated user name max size check
+            if (strlen($username) < 33) {
                 // Enforce the MySQL username limit! (http://dev.mysql.com/doc/refman/4.1/en/user-names.html)
                 return true;
             }
