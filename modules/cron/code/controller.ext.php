@@ -271,7 +271,7 @@ class module_controller extends ctrl_module
         $line .= "# NEVER MANUALLY REMOVE OR EDIT ANY OF THE CRON ENTRIES FROM THIS FILE,          " . fs_filehandler::NewLine();
         $line .= "#  -> USE SENTORA INSTEAD! (Menu -> Advanced -> Cron Manager)                    " . fs_filehandler::NewLine();
         $line .= "#################################################################################" . fs_filehandler::NewLine();
-
+        $line .= "MAILTO=\"\"" . fs_filehandler::NewLine();
         //Write command lines in crontab, if any
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
