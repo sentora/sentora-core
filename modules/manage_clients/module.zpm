@@ -204,6 +204,10 @@ input[type=submit] {
             <table class="table table-striped">
                 <tr>
                     <th><: Username :></th>
+                    <% if ShadowEnabled %>
+                    <th>Shadow</th>
+                    <% endif %>
+                    <th><: Created :></th>
                     <th><: Package :></th>
                     <th><: Group :></th>
                     <th><: Clients :></th>
@@ -214,6 +218,10 @@ input[type=submit] {
                 <% loop ClientList %>
                 <tr>
                     <td><& username &></td>
+                    <% if ShadowEnabled %>
+                    <td><button class="button-loader btn btn-primary" type="submit" name="inShadow_<& userid &>" id="inShadow_<& userid &>" value="inShadow_<& userid &>" formaction="./?module=shadowing&action=ShadowUser"><: Shadow :></button></td>
+                    <% endif %>
+                    <td><& created &></td>
                     <td><& packagename &></td>
                     <td><& usergroup &></td>
                     <td><& numclients &></td>
