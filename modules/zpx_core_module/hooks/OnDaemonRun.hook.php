@@ -3,13 +3,27 @@
 global $zdbh;
 
 /*
- * Calculate the home directory size for each 'active' user account on the server.
+ * Calculate the home and vmail directory size for each 'active' user account on the server.
  */
 $userssql = $zdbh->query("SELECT ac_id_pk, ac_user_vc FROM x_accounts WHERE ac_deleted_ts IS NULL");
 echo fs_filehandler::NewLine() . "START Calculating disk Usage for all client accounts.." . fs_filehandler::NewLine();
 while ($userdir = $userssql->fetch()) {
     $homedirectory = ctrl_options::GetSystemOption('hosted_dir') . $userdir['ac_user_vc'];
     if (fs_director::CheckFolderExists($homedirectory)) {
+		# START - tg - Include vmail folder size in total disk space used
+		# https://github.com/sentora/sentora-core/pull/308
+        $sumzero = 0;
+        $idmail = $userdir['ac_id_pk'];
+        $usersmail = $zdbh->prepare("SELECT DISTINCT vh_acc_fk,vh_name_vc FROM x_vhosts WHERE vh_acc_fk=:idmail");
+        $usersmail->bindParam(':idmail', $idmail);
+        $usersmail->execute();
+        while ($usermaildir = $usersmail->fetch()) {
+          $maildirectory = "/var/sentora/vmail/" . $usermaildir['vh_name_vc'];
+          if (fs_director::CheckFolderExists($maildirectory)) {
+            $sumzero = $sumzero + fs_director::GetDirectorySize($maildirectory);
+          }
+        };
+		# END
         $size = fs_director::GetDirectorySize($homedirectory);
     } else {
         $size = 0;
