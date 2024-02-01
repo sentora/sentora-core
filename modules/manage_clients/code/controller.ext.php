@@ -84,6 +84,7 @@ class module_controller extends ctrl_module
                     $numrowclients = $numrows->fetch();
 
                     $currentuser = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
+                    $currentuser['created'] = date("m/d/Y", $rowclients['ac_created_ts']);
                     $currentuser['diskspacereadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $currentuser['userid']));
                     $currentuser['diskspacequotareadable'] = fs_director::ShowHumanFileSize($currentuser['diskquota']);
                     $currentuser['bandwidthreadable'] = fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $currentuser['userid']));
@@ -757,6 +758,27 @@ class module_controller extends ctrl_module
         $uniqueuser->bindValue(':username', strtolower($username));
         if ($uniqueuser->execute()) {
             if ($uniqueuser->fetchColumn() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Check if the Shadowing module is enabled/exists.
+     * @global type $zdbh The ZPanelX database handle.
+     * @return boolean
+     */
+    static function getShadowEnabled()
+    {
+        global $zdbh;
+        $sql = "SELECT COUNT(*) FROM x_modules WHERE mo_folder_vc='shadowing' AND mo_enabled_en='true'";
+        $shadowEnabled = $zdbh->prepare($sql);
+        if ($shadowEnabled->execute()) {
+            if ($shadowEnabled->fetchColumn() > 0) {
                 return true;
             } else {
                 return false;
