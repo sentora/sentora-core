@@ -18,6 +18,7 @@
             <table class="table table-striped">
                 <tr>
                     <th><: Username :></th>
+                    <th><: Reseller :> <: (ID) :></th>
                     <th><: Package :></th>
                     <th><: Group :></th>
                     <th><: Current Disk :></th>
@@ -27,6 +28,7 @@
                 <% loop ShadowAccounts %>
                 <tr>
                     <td><& clientusername &></td>
+                    <td><& resellername &> (<& resellerid &>)</td>
                     <td><& packagename &></td>
                     <td><& usergroup &></td>
                     <td><& currentdisk &></td>
