@@ -7,5 +7,5 @@
     <authorname>TGates</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>https://sentora.org/</authorurl>
-    <updateurl>https://store.sentora.org/version.xml</updateurl>
+    <updateurl>http://store.sentora.org/version.xml</updateurl>
 </module>
