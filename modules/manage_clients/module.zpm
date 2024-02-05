@@ -205,7 +205,7 @@ input[type=submit] {
                 <tr>
                     <th><: Username :></th>
                     <% if ShadowEnabled %>
-                    <th>Shadow</th>
+                    <th><: Shadow :></th>
                     <% endif %>
                     <th><: Created :></th>
                     <th><: Package :></th>
@@ -228,8 +228,8 @@ input[type=submit] {
                     <td><& diskspacereadable &> / <& diskspacequotareadable &></td>
                     <td><& bandwidthreadable &> / <& bandwidthquotareadable &></td>
                     <td>
-                        <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>">Edit</button>
-                        <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>">Delete</button>
+                        <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>"><: Delete :></button>
                     </td>
                 </tr>
                 <% endloop %>
@@ -266,8 +266,8 @@ input[type=submit] {
                     <td><& diskspacereadable &> / <& diskspacequotareadable &></td>
                     <td><& bandwidthreadable &> / <& bandwidthquotareadable &></td>
                     <td>
-                        <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>">Edit</button>
-                        <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>">Delete</button>
+                        <button class="button-loader btn btn-default" type="submit" id="button" name="inEdit_<& userid &>" value="<& userid &>"><: Edit :></button>
+                        <button class="button-loader delete btn btn-danger" type="submit" id="button" name="inDelete_<& userid &>" value="<& userid &>"><: Delete :></button>
                     </td>
                 </tr>
                 <% endloop %>
@@ -296,7 +296,7 @@ input[type=submit] {
 						
 				<div class="check_container">
 					<div id="message">
-						<h4>Password must contain the following:</h4>
+						<h4><: Password must contain the following: :></h4>
 						<p id="letter" class="invalid">A <b>lowercase</b> letter</p>
 						<p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
 						<p id="number" class="invalid">A <b>number</b></p>
