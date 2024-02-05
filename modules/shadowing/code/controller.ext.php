@@ -28,7 +28,6 @@
  */
 class module_controller extends ctrl_module
 {
-
     static $shout;
 
     static function getShadowAccounts()
@@ -51,7 +50,7 @@ class module_controller extends ctrl_module
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
             if ($currentuser['username'] == 'zadmin') {
-                //noi bind needed
+                // no bind needed
             } else {
                 //bind the username
                 $sql->bindParam(':userid', $currentuser['userid']);
@@ -60,13 +59,23 @@ class module_controller extends ctrl_module
             $sql->execute();
             while ($rowclients = $sql->fetch()) {
                 if ($rowclients['ac_id_pk'] != $currentuser['userid']) {
+                    # tg - added code to get reseller's name
+                    $grn_sql = "SELECT ac_user_vc FROM x_accounts WHERE ac_id_pk=:resellerid AND ac_deleted_ts IS NULL";
+                    $grn = $zdbh->prepare($grn_sql);
+                    $grn->bindParam(':resellerid', $rowclients['ac_reseller_fk']);
+                    $grn->execute();
+                    $rn = $grn->fetch();
+                    $resellerName = $rn['ac_user_vc'];
+					
                     $clientdetail = ctrl_users::GetUserDetail($rowclients['ac_id_pk']);
                     array_push($res, array('clientusername' => $clientdetail['username'],
                         'clientid' => $rowclients['ac_id_pk'],
                         'packagename' => $clientdetail['packagename'],
                         'usergroup' => $clientdetail['usergroup'],
                         'currentdisk' => fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('diskspace', $rowclients['ac_id_pk'])),
-                        'currentbandwidth' => fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk']))));
+                        'currentbandwidth' => fs_director::ShowHumanFileSize(ctrl_users::GetQuotaUsages('bandwidth', $rowclients['ac_id_pk'])),
+                        'resellerid' => $rowclients['ac_reseller_fk'],
+                        'resellername' => $resellerName)); # tg - added code to get reseller's name
                 }
             }
             return $res;
