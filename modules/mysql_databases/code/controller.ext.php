@@ -37,6 +37,26 @@ class module_controller extends ctrl_module
     /**
      * The 'worker' methods.
      */
+	# tg - Set user name input max characters minus prefix
+    static function getMaxCharAllowed()
+    {
+        global $zdbh;
+        global $controller;
+		
+        $currentuser = ctrl_users::GetUserDetail($uid);
+
+        if ($username < 33)
+		{
+			$username = $currentuser['username'] . "_";
+			$prefixsize = strlen($username);
+			$maxChar = 32-$prefixsize;
+
+            return $maxChar;
+        } else {
+            return false;
+        }
+    }
+	
     static function ListDatabases($uid)
     {
         global $zdbh;
