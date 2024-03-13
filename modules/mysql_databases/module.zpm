@@ -68,7 +68,10 @@
                     <form action="./?module=mysql_databases&action=CreateDatabase" method="post">
                         <table class="table table-striped">
                             <tr>
-                                <th nowrap="nowrap"><: Database name :>:</th>
+                                <th nowrap="nowrap">
+									<: Database name :>:<br />
+									(<@ MaxCharAllowed @> <: Characters max :>)
+								</th>
                                 <td nowrap="nowrap"><@ CurrentUserName @>_<input name="inDatabase" type="text" id="inDatabase" size="30" /></td>
                             </tr>
                             <tr>
