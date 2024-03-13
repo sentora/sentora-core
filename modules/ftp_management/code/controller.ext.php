@@ -45,6 +45,13 @@ class module_controller extends ctrl_module
     /**
      * The 'worker' methods.
      */
+    static function getCurrentUserName()
+    {
+        global $controller;
+        $currentuser = ctrl_users::GetUserDetail();
+        return $currentuser['username'];
+    }
+	
     static function ListClients($uid)
     {
         global $zdbh;
