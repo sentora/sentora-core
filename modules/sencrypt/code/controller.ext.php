@@ -1837,7 +1837,7 @@ class module_controller extends ctrl_module {
 		}
 		if (self::$portReqsError)
 		{
-			return ui_sysmessage::shout(ui_language::translate("ALERT: Port (443) appears to be CLOSED. Sencrypt will not work until port (443) is OPEN. Contact your Administator."), "zannounceerror");
+			return ui_sysmessage::shout(ui_language::translate("ALERT: Port (443) appears to be CLOSED. Sencrypt will not work until port (443) is OPEN. Contact your Administrator."), "zannounceerror");
 		}
 		if (self::$okletsencrypt)
 		{
@@ -1859,9 +1859,8 @@ class module_controller extends ctrl_module {
 		{
 			return ui_sysmessage::shout(ui_language::translate("A certificate with that name already exists."), "zannounceerror");
 		}
-		if (self::$dnsInvalid)
-		{
-			return ui_sysmessage::shout(ui_language::translate("Your DNS for this domain is not LIVE or POINTING to this server yet. Please check your DNS and retry again later."), "zannounceerror");
+		if (self::$dnsInvalid){
+			return ui_sysmessage::shout(ui_language::translate("Your DNS for this domain has not Propagated yet. Takes (24 to 48/hrs) or DNS is not POINTING to this server yet. Please check your DNS and retry again later."), "zannounceerror");
 		}
 		if (self::$revokecert) {
             return ui_sysmessage::shout(ui_language::translate("The Requested Certificate has been revoked"), "zannounceok");
@@ -1870,7 +1869,7 @@ class module_controller extends ctrl_module {
             return ui_sysmessage::shout(ui_language::translate("Certificate Signing Request was made and sent to the mail you have entered"), "zannounceok");
         }
 		if (self::$certFailed) {
-            return ui_sysmessage::shout(ui_language::translate("Oops! Something went wrong. Your Lets Encrypt certificate was not created. Check if your website is LIVE."), "zannounceerror");
+            return ui_sysmessage::shout(ui_language::translate("Oops! Something went wrong! Your Lets Encrypt certificate was not created. Please check if your DNS Propagated. Takes (24 to 48/hrs) or DNS is not POINTING to this server yet. Please check your DNS and retry again later. If this error continues after 72 hours, contact your administrator."), "zannounceerror");
         }
 		return;
 	}
