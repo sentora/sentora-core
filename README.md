@@ -1,6 +1,6 @@
 # Sentora
 
-* Version: 2.0.2 - In Development
+* Version: 2.1.0 - In Development
 * [Website](http://sentora.org/)
 * [Forums](https://forums.sentora.org/) for comments, discussion and community support.
 * [Bug Tracker](https://github.com/sentora/sentora-core/issues) for any bugs or security related issues.
