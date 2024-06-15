@@ -1,6 +1,6 @@
-# Dryden Framework for ZPanelX
+# Dryden Framework for ZPanelX/Sentora
 
-*Dryden* is the name of the custom framework for ZPanelX, the framework was built with simplicity in mind for novice developers to enable the rapid development of third-party modules.
+*Dryden* is the name of the custom framework for ZPanelX/Sentora, the framework was built with simplicity in mind for novice developers to enable the rapid development of third-party modules.
 
 Directory structure:
 --------------------
@@ -13,7 +13,7 @@ Directory structure:
 * ``sys``          - System monitoring, versions and tasks
 * ``ui``           - User interface classes
 * ``ws``           - Web services classes
-* ``xml`          - XML classes
+* ``xml``          - XML classes
 
 Developers resources:
 ---------------------
