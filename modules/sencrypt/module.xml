@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>Sencrypt SSL</name>
-    <version>300</version>
+    <version>301</version>
     <defaultcat>Domain Management</defaultcat>
     <desc>Increase your site's security. Manage SSL certificates with Let's Encrypt (Free!), create self-signed certificates, or install third-party purchased SSL certificates for your domains.</desc>
     <authorname>TGates</authorname>
     <authoremail>info@sentora.org</authoremail>
     <authorurl>https://sentora.org/</authorurl>
-    <updateurl>http://store.sentora.org/version.xml</updateurl>
+    <updateurl>http://repo.sentora.org/version.xml</updateurl>
 </module>
