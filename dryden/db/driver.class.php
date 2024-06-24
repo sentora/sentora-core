@@ -120,9 +120,9 @@ class db_driver extends PDO {
      * @param String $query
      * @return type
      */
-    public function query($query) {
+    public function runQuery($query) {
         try {
-            $result = parent::query($query);
+            $result = parent::runQuery($query);
             return($result);
         } catch (PDOException $e) {
             $errormessage = $this->errorInfo();

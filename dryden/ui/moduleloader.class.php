@@ -30,17 +30,17 @@ class ui_moduleloader {
             $sql = 'SELECT * FROM `x_modcats`ORDER BY FIELD(`mc_id_pk`, '.$order.')';
         } else if($catname != ''){
             $sql = 'SELECT * FROM x_modcats WHERE mc_name_vc = :catname';
+            $numrows->bindParam(':catname', $catname);
         }else{
             $sql = 'SELECT * FROM x_modcats';
         }
 
         $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':catname', $catname);
         $numrows->execute();
 
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':uid', $uid);
+            //$sql->bindParam(':uid', $uid);
             $res = array();
             $sql->execute();
             $has_icons = false;
@@ -61,7 +61,8 @@ class ui_moduleloader {
             }
             return $res;
         } else {
-            return false;
+            //return false;
+            return array();
         }
     }
 

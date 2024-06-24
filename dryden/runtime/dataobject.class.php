@@ -37,7 +37,8 @@ class runtime_dataobject {
             if (is_array($arg)) {
                 foreach ($arg as $key => $value) {
                     $arr[$key] = $value;
-                    $this->object++;
+                    //$this->object++;
+                    $this->object+=$this->object;
                 }
             } else {
                 $arr[$arg] = "";
