@@ -1,6 +1,7 @@
 # Sentora
 
-* Version: 2.1.0 - In Development
+* Version: 2.0.2 - Current stable release version (2.0.2 branch or v2.0.2 tag release) (PHP 7.4)
+* Version: 2.1.0 - Development version (master branch - NOT for production use!) (PHP 8.2)
 * [Website](http://sentora.org/)
 * [Forums](https://forums.sentora.org/) for comments, discussion and community support.
 * [Bug Tracker](https://github.com/sentora/sentora-core/issues) for any bugs or security related issues.
