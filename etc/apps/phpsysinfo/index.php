@@ -17,6 +17,17 @@
  * define the application root path on the webserver
  * @var string
  */
+ 
+/**
+ * Only allow authenticated Sentora users
+ * Please ensure this code is added when updating phpSysInfo
+ */
+session_start();
+if (!isset($_SESSION['zpuid'])) {
+    header('HTTP/1.0 403 Forbidden');
+    die('<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>Forbidden</title></head><body><h1>Forbidden</h1><p>You don\'t have permission to access phpSysInfo on this server.</p></body></html>');
+} 
+ 
 define('PSI_APP_ROOT', dirname(__FILE__));
 
 if (version_compare("5.1.3", PHP_VERSION, ">")) {
