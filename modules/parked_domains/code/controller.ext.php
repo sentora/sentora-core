@@ -126,7 +126,7 @@ class module_controller extends ctrl_module
         return $retval;
     }
 
-    public function ExecuteAddParkedDomain($uid, $domain)
+    static function ExecuteAddParkedDomain($uid, $domain)
     {
         global $zdbh;
         $retval = FALSE;

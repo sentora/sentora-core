@@ -146,7 +146,7 @@ class module_controller extends ctrl_module
         return $retval;
     }
 
-    public function ExecuteAddSubDomain($uid, $domain, $destination, $autohome)
+    static function ExecuteAddSubDomain($uid, $domain, $destination, $autohome)
     {
         global $zdbh;
         $retval = FALSE;
