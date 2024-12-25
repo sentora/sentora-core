@@ -15,7 +15,17 @@ class Constants
     const VALID_FOR_B32_SCRAMBLED = '234567QWERTYUIOPASDFGHJKLZXCVBNM';
 
     /**
-     * Argument not set constant.
+     * SHA1 algorithm.
      */
-    const ARGUMENT_NOT_SET = '__not_set__';
+    const SHA1 = 'sha1';
+
+    /**
+     * SHA256 algorithm.
+     */
+    const SHA256 = 'sha256';
+
+    /**
+     * SHA512 algorithm.
+     */
+    const SHA512 = 'sha512';
 }

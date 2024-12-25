@@ -1,5 +1,47 @@
 ## Change Log
 
+## [8.0.0] - 2020-05-05
+### Added
+- PHP 8 Support
+- Tests
+- Extract som test helpers
+- PHPStan checks
+### Changed
+- PHP required version bumped to >= 7.1
+- Exception interfaces extending Throwable  
+
+## [7.0.0] - 2019-09-21
+### Added
+- PHPStan checks
+### Removed
+- Constants::ARGUMENT_NOT_SET - This is a BC break
+
+## [6.1.3] - 2019-09-21
+### Drafted
+- To fix inserted BC break
+ 
+## [6.1.2] - 2019-09-21 
+### DELETED
+- To fix inserted BC break
+
+## [6.1.1] - 2019-09-21
+### DELETED
+- To fix inserted BC break
+
+## [6.0.0] - 2019-09-11
+### Added
+- Base exception class and interfaces 
+### Removed
+- Support for PHP 5.4 to 7.0, will keep supporting PHP 7.1, 7.2, 7.3 & 7.4 
+
+## [5.0.0] - 2019-05-19
+### Changed
+- Remove dead Google Charts API 
+
+## [4.0.0] - 2018-10-06
+### Changed
+- Bacon QRCode package removed
+
 ## [3.0.1] - 2018-03-15
 ### Changed
 - Relicensed to MIT

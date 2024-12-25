@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 namespace ParagonIE\ConstantTime;
 
 /**
- *  Copyright (c) 2016 - 2017 Paragon Initiative Enterprises.
+ *  Copyright (c) 2016 - 2022 Paragon Initiative Enterprises.
  *  Copyright (c) 2014 Steve "Sc00bz" Thomas (steve at tobtu dot com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,8 +26,8 @@ namespace ParagonIE\ConstantTime;
  */
 
 /**
- * Class Base64DotSlash
- * ./[A-Z][a-z][0-9]
+ * Class Base64UrlSafe
+ * [A-Z][a-z][0-9]\-_
  *
  * @package ParagonIE\ConstantTime
  */
@@ -44,7 +45,7 @@ abstract class Base64UrlSafe extends Base64
      * @param int $src
      * @return int
      */
-    protected static function decode6Bits($src)
+    protected static function decode6Bits(int $src): int
     {
         $ret = -1;
 
@@ -73,7 +74,7 @@ abstract class Base64UrlSafe extends Base64
      * @param int $src
      * @return string
      */
-    protected static function encode6Bits($src)
+    protected static function encode6Bits(int $src): string
     {
         $diff = 0x41;
 

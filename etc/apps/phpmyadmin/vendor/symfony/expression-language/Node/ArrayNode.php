@@ -41,14 +41,14 @@ class ArrayNode extends Node
      */
     public function compile(Compiler $compiler)
     {
-        $compiler->raw('array(');
+        $compiler->raw('[');
         $this->compileArguments($compiler);
-        $compiler->raw(')');
+        $compiler->raw(']');
     }
 
-    public function evaluate($functions, $values)
+    public function evaluate(array $functions, array $values)
     {
-        $result = array();
+        $result = [];
         foreach ($this->getKeyValuePairs() as $pair) {
             $result[$pair['key']->evaluate($functions, $values)] = $pair['value']->evaluate($functions, $values);
         }
@@ -56,17 +56,47 @@ class ArrayNode extends Node
         return $result;
     }
 
+    public function toArray()
+    {
+        $value = [];
+        foreach ($this->getKeyValuePairs() as $pair) {
+            $value[$pair['key']->attributes['value']] = $pair['value'];
+        }
+
+        $array = [];
+
+        if ($this->isHash($value)) {
+            foreach ($value as $k => $v) {
+                $array[] = ', ';
+                $array[] = new ConstantNode($k);
+                $array[] = ': ';
+                $array[] = $v;
+            }
+            $array[0] = '{';
+            $array[] = '}';
+        } else {
+            foreach ($value as $v) {
+                $array[] = ', ';
+                $array[] = $v;
+            }
+            $array[0] = '[';
+            $array[] = ']';
+        }
+
+        return $array;
+    }
+
     protected function getKeyValuePairs()
     {
-        $pairs = array();
+        $pairs = [];
         foreach (array_chunk($this->nodes, 2) as $pair) {
-            $pairs[] = array('key' => $pair[0], 'value' => $pair[1]);
+            $pairs[] = ['key' => $pair[0], 'value' => $pair[1]];
         }
 
         return $pairs;
     }
 
-    protected function compileArguments(Compiler $compiler, $withKeys = true)
+    protected function compileArguments(Compiler $compiler, bool $withKeys = true)
     {
         $first = true;
         foreach ($this->getKeyValuePairs() as $pair) {

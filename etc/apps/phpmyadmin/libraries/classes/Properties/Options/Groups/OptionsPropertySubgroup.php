@@ -1,27 +1,23 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * Holds the PhpMyAdmin\Properties\Options\Groups\OptionsPropertySubgroup class
- *
- * @package PhpMyAdmin
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Properties\Options\Groups;
 
 use PhpMyAdmin\Properties\Options\OptionsPropertyGroup;
+use PhpMyAdmin\Properties\PropertyItem;
 
 /**
  * Group property item class of type subgroup
- *
- * @package PhpMyAdmin
  */
 class OptionsPropertySubgroup extends OptionsPropertyGroup
 {
     /**
      * Subgroup Header
      *
-     * @var string
+     * @var PropertyItem|null
      */
-    private $_subgroupHeader;
+    private $subgroupHeader;
     /* ~~~~~~~~~~~~~~~~~~~~ Getters and Setters ~~~~~~~~~~~~~~~~~~~~ */
 
     /**
@@ -36,28 +32,26 @@ class OptionsPropertySubgroup extends OptionsPropertyGroup
      */
     public function getItemType()
     {
-        return "subgroup";
+        return 'subgroup';
     }
 
     /**
      * Gets the subgroup header
      *
-     * @return \PhpMyAdmin\Properties\PropertyItem
+     * @return PropertyItem|null
      */
     public function getSubgroupHeader()
     {
-        return $this->_subgroupHeader;
+        return $this->subgroupHeader;
     }
 
     /**
      * Sets the subgroup header
      *
-     * @param \PhpMyAdmin\Properties\PropertyItem $subgroupHeader subgroup header
-     *
-     * @return void
+     * @param PropertyItem $subgroupHeader subgroup header
      */
-    public function setSubgroupHeader($subgroupHeader)
+    public function setSubgroupHeader($subgroupHeader): void
     {
-        $this->_subgroupHeader = $subgroupHeader;
+        $this->subgroupHeader = $subgroupHeader;
     }
 }

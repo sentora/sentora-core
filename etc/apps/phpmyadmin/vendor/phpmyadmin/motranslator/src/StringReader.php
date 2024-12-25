@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
     Copyright (c) 2003, 2005, 2006, 2009 Danilo Segan <danilo@kvota.net>.
     Copyright (c) 2016 Michal Čihař <michal@cihar.com>
@@ -22,24 +25,31 @@
 
 namespace PhpMyAdmin\MoTranslator;
 
+use function file_get_contents;
+use function strlen;
+use function substr;
+use function unpack;
+
+use const PHP_INT_MAX;
+
 /**
  * Simple wrapper around string buffer for
  * random access and values parsing.
  */
 class StringReader
 {
-    private $_str;
-    private $_len;
+    /** @var string */
+    private $string;
+    /** @var int */
+    private $length;
 
     /**
-     * Constructor.
-     *
      * @param string $filename Name of file to load
      */
-    public function __construct($filename)
+    public function __construct(string $filename)
     {
-        $this->_str = file_get_contents($filename);
-        $this->_len = strlen($this->_str);
+        $this->string = (string) file_get_contents($filename);
+        $this->length = strlen($this->string);
     }
 
     /**
@@ -47,16 +57,16 @@ class StringReader
      *
      * @param int $pos   Offset
      * @param int $bytes Number of bytes to read
-     *
-     * @return string
      */
-    public function read($pos, $bytes)
+    public function read(int $pos, int $bytes): string
     {
-        if ($pos + $bytes > $this->_len) {
+        if ($pos + $bytes > $this->length) {
             throw new ReaderException('Not enough bytes!');
         }
 
-        return substr($this->_str, $pos, $bytes);
+        $data = substr($this->string, $pos, $bytes);
+
+        return $data === false ? '' : $data;
     }
 
     /**
@@ -65,11 +75,15 @@ class StringReader
      * @param string $unpack Unpack string
      * @param int    $pos    Position
      *
-     * @return int Ingerer from the stream
+     * @return int Integer from the stream
      */
-    public function readint($unpack, $pos)
+    public function readint(string $unpack, int $pos): int
     {
         $data = unpack($unpack, $this->read($pos, 4));
+        if ($data === false) {
+            return PHP_INT_MAX;
+        }
+
         $result = $data[1];
 
         /* We're reading unsigned int, but PHP will happily
@@ -88,10 +102,15 @@ class StringReader
      * @param int    $pos    Position
      * @param int    $count  How many elements should be read
      *
-     * @return array Array of Integers
+     * @return int[] Array of Integers
      */
-    public function readintarray($unpack, $pos, $count)
+    public function readintarray(string $unpack, int $pos, int $count): array
     {
-        return unpack($unpack . $count, $this->read($pos, 4 * $count));
+        $data = unpack($unpack . $count, $this->read($pos, 4 * $count));
+        if ($data === false) {
+            return [];
+        }
+
+        return $data;
     }
 }

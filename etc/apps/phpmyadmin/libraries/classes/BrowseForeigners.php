@@ -1,119 +1,123 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Contains functions used by browse_foreigners.php
- *
- * @package PhpMyAdmin
+ * Contains functions used by browse foreigners
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin;
 
-use PhpMyAdmin\Template;
-use PhpMyAdmin\Url;
-use PhpMyAdmin\Util;
+use function __;
+use function array_keys;
+use function asort;
+use function ceil;
+use function floor;
+use function htmlspecialchars;
+use function is_array;
+use function mb_strlen;
+use function mb_substr;
 
 /**
  * PhpMyAdmin\BrowseForeigners class
- *
- * @package PhpMyAdmin
  */
 class BrowseForeigners
 {
+    /** @var int */
     private $limitChars;
+    /** @var int */
     private $maxRows;
+    /** @var int */
     private $repeatCells;
+    /** @var bool */
     private $showAll;
-    private $themeImage;
+
+    /** @var Template */
+    public $template;
 
     /**
-     * Constructor
-     *
-     * @param int     $limitChars  Maximum number of characters to show
-     * @param int     $maxRows     Number of rows to display
-     * @param int     $repeatCells Repeat the headers every X cells, or 0 to deactivate
-     * @param boolean $showAll     Shows the 'Show all' button or not
-     * @param string  $themeImage  Theme image path
+     * @param Template $template Template object
      */
-    public function __construct(
-        $limitChars,
-        $maxRows,
-        $repeatCells,
-        $showAll,
-        $themeImage
-    ) {
-        $this->limitChars = (int) $limitChars;
-        $this->maxRows = (int) $maxRows;
-        $this->repeatCells = (int) $repeatCells;
-        $this->showAll = (bool) $showAll;
-        $this->themeImage = $themeImage;
+    public function __construct(Template $template)
+    {
+        global $cfg;
+
+        $this->template = $template;
+
+        $this->limitChars = (int) $cfg['LimitChars'];
+        $this->maxRows = (int) $cfg['MaxRows'];
+        $this->repeatCells = (int) $cfg['RepeatCells'];
+        $this->showAll = (bool) $cfg['ShowAll'];
     }
 
     /**
      * Function to get html for one relational key
      *
-     * @param integer $horizontal_count   the current horizontal count
-     * @param string  $header             table header
-     * @param array   $keys               all the keys
-     * @param integer $indexByKeyname     index by keyname
-     * @param array   $descriptions       descriptions
-     * @param integer $indexByDescription index by description
-     * @param string  $current_value      current value on the edit form
+     * @param int    $horizontalCount    the current horizontal count
+     * @param string $header             table header
+     * @param array  $keys               all the keys
+     * @param int    $indexByKeyname     index by keyname
+     * @param array  $descriptions       descriptions
+     * @param int    $indexByDescription index by description
+     * @param string $currentValue       current value on the edit form
      *
-     * @return string $html the generated html
+     * @return array the generated html
      */
     private function getHtmlForOneKey(
-        $horizontal_count,
-        $header,
+        int $horizontalCount,
+        string $header,
         array $keys,
-        $indexByKeyname,
+        int $indexByKeyname,
         array $descriptions,
-        $indexByDescription,
-        $current_value
-    ) {
-        $horizontal_count++;
+        int $indexByDescription,
+        string $currentValue
+    ): array {
+        global $theme;
+
+        $horizontalCount++;
         $output = '';
 
         // whether the key name corresponds to the selected value in the form
         $rightKeynameIsSelected = false;
         $leftKeynameIsSelected = false;
 
-        if ($this->repeatCells > 0 && $horizontal_count > $this->repeatCells) {
+        if ($this->repeatCells > 0 && $horizontalCount > $this->repeatCells) {
             $output .= $header;
-            $horizontal_count = 0;
+            $horizontalCount = 0;
         }
 
         // key names and descriptions for the left section,
         // sorted by key names
         $leftKeyname = $keys[$indexByKeyname];
-        list(
+        [
             $leftDescription,
-            $leftDescriptionTitle
-        ) = $this->getDescriptionAndTitle($descriptions[$indexByKeyname]);
+            $leftDescriptionTitle,
+        ] = $this->getDescriptionAndTitle($descriptions[$indexByKeyname]);
 
         // key names and descriptions for the right section,
         // sorted by descriptions
         $rightKeyname = $keys[$indexByDescription];
-        list(
+        [
             $rightDescription,
-            $rightDescriptionTitle
-        ) = $this->getDescriptionAndTitle($descriptions[$indexByDescription]);
+            $rightDescriptionTitle,
+        ] = $this->getDescriptionAndTitle($descriptions[$indexByDescription]);
 
         $indexByDescription++;
 
-        if (! empty($current_value)) {
-            $rightKeynameIsSelected = $rightKeyname == $current_value;
-            $leftKeynameIsSelected = $leftKeyname == $current_value;
+        if (! empty($currentValue)) {
+            $rightKeynameIsSelected = $rightKeyname == $currentValue;
+            $leftKeynameIsSelected = $leftKeyname == $currentValue;
         }
 
         $output .= '<tr class="noclick">';
 
-        $output .= Template::get('table/browse_foreigners/column_element')->render([
+        $output .= $this->template->render('table/browse_foreigners/column_element', [
             'keyname' => $leftKeyname,
             'description' => $leftDescription,
             'title' => $leftDescriptionTitle,
             'is_selected' => $leftKeynameIsSelected,
             'nowrap' => true,
         ]);
-        $output .= Template::get('table/browse_foreigners/column_element')->render([
+        $output .= $this->template->render('table/browse_foreigners/column_element', [
             'keyname' => $leftKeyname,
             'description' => $leftDescription,
             'title' => $leftDescriptionTitle,
@@ -121,18 +125,18 @@ class BrowseForeigners
             'nowrap' => false,
         ]);
 
-        $output .= '<td width="20%">'
-            . '<img src="' . $this->themeImage . 'spacer.png" alt=""'
-            . ' width="1" height="1" /></td>';
+        $output .= '<td width="20%"><img src="'
+            . ($theme instanceof Theme ? $theme->getImgPath('spacer.png') : '')
+            . '" alt="" width="1" height="1"></td>';
 
-        $output .= Template::get('table/browse_foreigners/column_element')->render([
+        $output .= $this->template->render('table/browse_foreigners/column_element', [
             'keyname' => $rightKeyname,
             'description' => $rightDescription,
             'title' => $rightDescriptionTitle,
             'is_selected' => $rightKeynameIsSelected,
             'nowrap' => false,
         ]);
-        $output .= Template::get('table/browse_foreigners/column_element')->render([
+        $output .= $this->template->render('table/browse_foreigners/column_element', [
             'keyname' => $rightKeyname,
             'description' => $rightDescription,
             'title' => $rightDescriptionTitle,
@@ -142,74 +146,75 @@ class BrowseForeigners
 
         $output .= '</tr>';
 
-        return array($output, $horizontal_count, $indexByDescription);
+        return [
+            $output,
+            $horizontalCount,
+            $indexByDescription,
+        ];
     }
 
     /**
      * Function to get html for relational field selection
      *
-     * @param string $db            current database
-     * @param string $table         current table
-     * @param string $field         field
-     * @param array  $foreignData   foreign column data
-     * @param string $fieldkey      field key
-     * @param string $current_value current columns's value
-     *
-     * @return string
+     * @param string      $db           current database
+     * @param string      $table        current table
+     * @param string      $field        field
+     * @param array       $foreignData  foreign column data
+     * @param string|null $fieldKey     field key
+     * @param string      $currentValue current columns's value
      */
     public function getHtmlForRelationalFieldSelection(
-        $db,
-        $table,
-        $field,
+        string $db,
+        string $table,
+        string $field,
         array $foreignData,
-        $fieldkey,
-        $current_value
-    ) {
-        $gotopage = $this->getHtmlForGotoPage($foreignData);
-        $foreignShowAll = Template::get('table/browse_foreigners/show_all')->render([
+        ?string $fieldKey,
+        string $currentValue
+    ): string {
+        $gotoPage = $this->getHtmlForGotoPage($foreignData);
+        $foreignShowAll = $this->template->render('table/browse_foreigners/show_all', [
             'foreign_data' => $foreignData,
             'show_all' => $this->showAll,
             'max_rows' => $this->maxRows,
         ]);
 
         $output = '<form class="ajax" '
-            . 'id="browse_foreign_form" name="browse_foreign_from" '
-            . 'action="browse_foreigners.php" method="post">'
-            . '<fieldset>'
+            . 'id="browse_foreign_form" name="browse_foreign_from" action="'
+            . Url::getFromRoute('/browse-foreigners')
+            . '" method="post"><fieldset class="row g-3 align-items-center mb-3">'
             . Url::getHiddenInputs($db, $table)
             . '<input type="hidden" name="field" value="' . htmlspecialchars($field)
-            . '" />'
+            . '">'
             . '<input type="hidden" name="fieldkey" value="'
-            . (isset($fieldkey) ? htmlspecialchars($fieldkey) : '') . '" />';
+            . (isset($fieldKey) ? htmlspecialchars($fieldKey) : '') . '">';
 
         if (isset($_POST['rownumber'])) {
             $output .= '<input type="hidden" name="rownumber" value="'
-                . htmlspecialchars($_POST['rownumber']) . '" />';
+                . htmlspecialchars((string) $_POST['rownumber']) . '">';
         }
-        $filter_value = (isset($_POST['foreign_filter'])
+
+        $filterValue = (isset($_POST['foreign_filter'])
             ? htmlspecialchars($_POST['foreign_filter'])
             : '');
-        $output .= '<span class="formelement">'
-            . '<label for="input_foreign_filter">' . __('Search:') . '</label>'
-            . '<input type="text" name="foreign_filter" '
+        $output .= '<div class="col-auto">'
+            . '<label class="form-label" for="input_foreign_filter">' . __('Search:') . '</label></div>'
+            . '<div class="col-auto"><input class="form-control" type="text" name="foreign_filter" '
             . 'id="input_foreign_filter" '
-            . 'value="' . $filter_value . '" data-old="' . $filter_value . '" '
-            . '/>'
-            . '<input type="submit" name="submit_foreign_filter" value="'
-            .  __('Go') . '" />'
-            . '</span>'
-            . '<span class="formelement">' . $gotopage . '</span>'
-            . '<span class="formelement">' . $foreignShowAll . '</span>'
+            . 'value="' . $filterValue . '" data-old="' . $filterValue . '">'
+            . '</div><div class="col-auto">'
+            . '<input class="btn btn-primary" type="submit" name="submit_foreign_filter" value="'
+            . __('Go') . '">'
+            . '</div>'
+            . '<div class="col-auto">' . $gotoPage . '</div>'
+            . '<div class="col-auto">' . $foreignShowAll . '</div>'
             . '</fieldset>'
             . '</form>';
 
-        $output .= '<table width="100%" id="browse_foreign_table">';
+        $output .= '<table class="table table-striped table-hover" id="browse_foreign_table">';
 
-        if (!is_array($foreignData['disp_row'])) {
-            $output .= '</tbody>'
+        if (! is_array($foreignData['disp_row'])) {
+            return $output . '</tbody>'
                 . '</table>';
-
-            return $output;
         }
 
         $header = '<tr>
@@ -224,11 +229,11 @@ class BrowseForeigners
             . '<tfoot>' . $header . '</tfoot>' . "\n"
             . '<tbody>' . "\n";
 
-        $descriptions = array();
-        $keys   = array();
+        $descriptions = [];
+        $keys = [];
         foreach ($foreignData['disp_row'] as $relrow) {
             if ($foreignData['foreign_display'] != false) {
-                $descriptions[] = $relrow[$foreignData['foreign_display']];
+                $descriptions[] = $relrow[$foreignData['foreign_display']] ?? '';
             } else {
                 $descriptions[] = '';
             }
@@ -238,28 +243,27 @@ class BrowseForeigners
 
         asort($keys);
 
-        $horizontal_count = 0;
+        $horizontalCount = 0;
         $indexByDescription = 0;
 
-        foreach ($keys as $indexByKeyname => $value) {
-            list(
+        foreach (array_keys($keys) as $indexByKeyname) {
+            [
                 $html,
-                $horizontal_count,
-                $indexByDescription
-            ) = $this->getHtmlForOneKey(
-                $horizontal_count,
+                $horizontalCount,
+                $indexByDescription,
+            ] = $this->getHtmlForOneKey(
+                $horizontalCount,
                 $header,
                 $keys,
                 $indexByKeyname,
                 $descriptions,
                 $indexByDescription,
-                $current_value
+                $currentValue
             );
             $output .= $html;
         }
 
-        $output .= '</tbody>'
-            . '</table>';
+        $output .= '</tbody></table>';
 
         return $output;
     }
@@ -271,47 +275,40 @@ class BrowseForeigners
      *
      * @return array the new description and title
      */
-    private function getDescriptionAndTitle($description)
+    private function getDescriptionAndTitle(string $description): array
     {
         if (mb_strlen($description) <= $this->limitChars) {
-            $description = htmlspecialchars(
-                $description
-            );
             $descriptionTitle = '';
         } else {
-            $descriptionTitle = htmlspecialchars(
-                $description
-            );
-            $description = htmlspecialchars(
-                mb_substr(
-                    $description, 0, $this->limitChars
-                )
-                . '...'
-            );
+            $descriptionTitle = $description;
+            $description = mb_substr($description, 0, $this->limitChars)
+            . '...';
         }
-        return array($description, $descriptionTitle);
+
+        return [
+            $description,
+            $descriptionTitle,
+        ];
     }
 
     /**
      * Function to get html for the goto page option
      *
      * @param array|null $foreignData foreign data
-     *
-     * @return string
      */
-    private function getHtmlForGotoPage($foreignData)
+    private function getHtmlForGotoPage(?array $foreignData): string
     {
-        $gotopage = '';
+        $gotoPage = '';
         isset($_POST['pos']) ? $pos = $_POST['pos'] : $pos = 0;
         if ($foreignData === null || ! is_array($foreignData['disp_row'])) {
-            return $gotopage;
+            return $gotoPage;
         }
 
-        $pageNow = @floor($pos / $this->maxRows) + 1;
-        $nbTotalPage = @ceil($foreignData['the_total'] / $this->maxRows);
+        $pageNow = (int) floor($pos / $this->maxRows) + 1;
+        $nbTotalPage = (int) ceil($foreignData['the_total'] / $this->maxRows);
 
         if ($foreignData['the_total'] > $this->maxRows) {
-            $gotopage = Util::pageselector(
+            $gotoPage = Util::pageselector(
                 'pos',
                 $this->maxRows,
                 $pageNow,
@@ -325,22 +322,22 @@ class BrowseForeigners
             );
         }
 
-        return $gotopage;
+        return $gotoPage;
     }
 
     /**
      * Function to get foreign limit
      *
-     * @param string $foreignShowAll foreign navigation
-     *
-     * @return string
+     * @param string|null $foreignShowAll foreign navigation
      */
-    public function getForeignLimit($foreignShowAll)
+    public function getForeignLimit(?string $foreignShowAll): ?string
     {
         if (isset($foreignShowAll) && $foreignShowAll == __('Show all')) {
             return null;
         }
+
         isset($_POST['pos']) ? $pos = $_POST['pos'] : $pos = 0;
+
         return 'LIMIT ' . $pos . ', ' . $this->maxRows . ' ';
     }
 }

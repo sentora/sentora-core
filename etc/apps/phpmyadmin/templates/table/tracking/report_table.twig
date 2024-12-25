@@ -1,4 +1,4 @@
-<table id="{{ table_id }}" class="data">
+<table id="{{ table_id }}" class="table table-striped table-hover">
     <thead>
         <tr>
             <th>{% trans %}#{% context %}Number{% endtrans %}</th>
@@ -11,12 +11,12 @@
     <tbody>
         {% for entry in entries %}
             <tr class="noclick">
-                <td class="right"><small>{{ entry.line_number }}</small></td>
+                <td class="text-end"><small>{{ entry.line_number }}</small></td>
                 <td><small>{{ entry.date }}</small></td>
                 <td><small>{{ entry.username }}</small></td>
                 <td>{{ entry.formated_statement|raw }}</td>
-                <td class="nowrap">
-                    <a class="delete_entry_anchor ajax" href="tbl_tracking.php" data-post="
+                <td class="text-nowrap">
+                    <a class="delete_entry_anchor ajax" href="{{ url('/table/tracking') }}" data-post="
                         {{- entry.url_params|raw }}">
                         {{ drop_image_or_text|raw }}
                     </a>

@@ -14,11 +14,11 @@
         table_name_url="{{ designerTable.getTableName()|escape('url') }}"
         cellpadding="0"
         cellspacing="0"
-        class="designer_tab"
-        style="position:absolute; left:
+        class="table table-sm table-striped table-hover w-auto designer_tab"
+        style="position:absolute; {{ text_dir == 'rtl' ? 'right' : 'left' }}:
             {{- tab_pos[t_n] is defined ? tab_pos[t_n]['X'] : random(range(20, 700)) }}px; top:
             {{- tab_pos[t_n] is defined ? tab_pos[t_n]['Y'] : random(range(20, 550)) }}px; display:
-            {{- tab_pos[t_n] is defined or display_page == -1 ? 'block' : 'none' }}; z-index: 1;">
+            {{- tab_pos[t_n] is defined or display_page == -1 ? 'block' : 'none' }}; z-index: 1;"> <!--"-->
         <thead>
             <tr class="header">
                 {% if has_query %}
@@ -42,11 +42,11 @@
                     db_url="{{ designerTable.getDatabaseName()|escape('url') }}"
                     table_name="{{ designerTable.getTableName() }}"
                     table_name_url="{{ designerTable.getTableName()|escape('url') }}">
-                    <img src="{{ theme.getImgPath('designer/exec_small.png') }}"
-                        title="{% trans 'See table structure' %}" />
+                    <img src="{{ image('designer/exec_small.png') }}"
+                        title="{% trans 'See table structure' %}">
                 </td>
                 <td id="id_zag_{{ t_n_url }}"
-                    class="tab_zag nowrap tab_zag_noquery"
+                    class="tab_zag text-nowrap tab_zag_noquery"
                     table_name="{{ t_n_url }}"
                     query_set="{{ has_query ? 1 : 0 }}">
                     <span class="owner">{{ designerTable.getDatabaseName() }}</span>
@@ -97,26 +97,9 @@
                     {% endif %}
                     <td width="10px" colspan="3" id="{{ t_n_url }}.
                         {{- tab_column[t_n]['COLUMN_NAME'][j]|url_encode }}">
-                        <div class="nowrap">
-                            {% if tables_pk_or_unique_keys[t_n ~ '.' ~ tab_column[t_n]['COLUMN_NAME'][j]] is defined %}
-                                <img src="{{ theme.getImgPath('designer/FieldKey_small.png') }}" alt="*" />
-                            {% else %}
-                                {% set type = 'designer/Field_small' %}
-                                {% if strstr(tab_column[t_n]['TYPE'][j], 'char')
-                                    or strstr(tab_column[t_n]['TYPE'][j], 'text') %}
-                                    {% set type = type ~ '_char' %}
-                                {% elseif strstr(tab_column[t_n]['TYPE'][j], 'int')
-                                    or strstr(tab_column[t_n]['TYPE'][j], 'float')
-                                    or strstr(tab_column[t_n]['TYPE'][j], 'double')
-                                    or strstr(tab_column[t_n]['TYPE'][j], 'decimal') %}
-                                    {% set type = type ~ '_int' %}
-                                {% elseif strstr(tab_column[t_n]['TYPE'][j], 'date')
-                                    or strstr(tab_column[t_n]['TYPE'][j], 'time')
-                                    or strstr(tab_column[t_n]['TYPE'][j], 'year') %}
-                                    {% set type = type ~ '_date' %}
-                                {% endif %}
-                                <img src="{{ theme.getImgPath(type) }}.png" alt="*" />
-                            {% endif %}
+                        <div class="text-nowrap">
+                            {% set type = columns_type[t_n ~ '.' ~ tab_column[t_n]['COLUMN_NAME'][j]] %}
+                            <img src="{{ image(type) }}.png" alt="*">
                             {{ tab_column[t_n]['COLUMN_NAME'][j] }} : {{ tab_column[t_n]['TYPE'][j] }}
                         </div>
                     </td>
@@ -128,7 +111,7 @@
                             table_name="{{ table_name }}"
                             col_name="{{ col_name }}"
                             db_table_name_url="{{ t_n_url }}">
-                            <img src="{{ theme.getImgPath('designer/exec_small.png') }}" title="{% trans 'Options'  %}" />
+                            <img src="{{ image('designer/exec_small.png') }}" title="{% trans 'Options'  %}" />
                         </td>
                     {% endif %}
                 </tr>

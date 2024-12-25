@@ -1,32 +1,41 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * This class is responsible for creating Node objects
- *
- * @package PhpMyAdmin-navigation
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Navigation;
 
 use PhpMyAdmin\Navigation\Nodes\Node;
 
+use function __;
+use function class_exists;
+use function preg_match;
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_ERROR;
+
 /**
  * Node factory - instantiates Node objects or objects derived from the Node class
- *
- * @package PhpMyAdmin-Navigation
  */
 class NodeFactory
 {
-    protected static $_namespace = 'PhpMyAdmin\\Navigation\\Nodes\\%s';
+    /** @var string */
+    protected static $namespace = 'PhpMyAdmin\\Navigation\\Nodes\\%s';
+
     /**
      * Sanitizes the name of a Node class
      *
      * @param string $class The class name to be sanitized
      *
      * @return string
+     * @psalm-return class-string
      */
-    private static function _sanitizeClass($class)
+    private static function sanitizeClass($class)
     {
-        if (!preg_match('@^Node\w*$@', $class)) {
+        if (! preg_match('@^Node\w*$@', $class)) {
             $class = 'Node';
             trigger_error(
                 sprintf(
@@ -38,7 +47,7 @@ class NodeFactory
             );
         }
 
-        return self::_checkClass($class);
+        return self::checkClass($class);
     }
 
     /**
@@ -49,13 +58,16 @@ class NodeFactory
      * @param string $class The class name to check
      *
      * @return string
+     * @psalm-return class-string
      */
-    private static function _checkClass($class)
+    private static function checkClass($class)
     {
-        $class = sprintf(self::$_namespace, $class);
+        /** @var class-string $class */
+        $class = sprintf(self::$namespace, $class);
 
         if (! class_exists($class)) {
-            $class = sprintf(self::$_namespace, 'Node');
+            /** @var class-string $class */
+            $class = sprintf(self::$namespace, 'Node');
             trigger_error(
                 sprintf(
                     __('Could not load class "%1$s"'),
@@ -71,21 +83,40 @@ class NodeFactory
     /**
      * Instantiates a Node object
      *
-     * @param string $class    The name of the class to instantiate
-     * @param string $name     An identifier for the new node
-     * @param int    $type     Type of node, may be one of CONTAINER or OBJECT
-     * @param bool   $is_group Whether this object has been created
-     *                         while grouping nodes
-     *
-     * @return mixed
+     * @param string       $class   The name of the class to instantiate
+     * @param string|array $name    An identifier for the new node
+     * @param int          $type    Type of node, may be one of CONTAINER or OBJECT
+     * @param bool         $isGroup Whether this object has been created while grouping nodes
      */
     public static function getInstance(
         $class = 'Node',
         $name = 'default',
         $type = Node::OBJECT,
-        $is_group = false
-    ) {
-        $class = self::_sanitizeClass($class);
-        return new $class($name, $type, $is_group);
+        $isGroup = false
+    ): Node {
+        $class = self::sanitizeClass($class);
+
+        /** @var Node $node */
+        $node = new $class($name, $type, $isGroup);
+
+        return $node;
+    }
+
+    /**
+     * Instantiates a Node object that will be used only for "New db/table/etc.." objects
+     *
+     * @param string $name    An identifier for the new node
+     * @param string $classes Extra CSS classes for the node
+     */
+    public static function getInstanceForNewNode(
+        string $name,
+        string $classes
+    ): Node {
+        $node = new Node($name, Node::OBJECT, false);
+        $node->title = $name;
+        $node->isNew = true;
+        $node->classes = $classes;
+
+        return $node;
     }
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
     Copyright (c) 2003, 2005, 2006, 2009 Danilo Segan <danilo@kvota.net>.
     Copyright (c) 2016 Michal Čihař <michal@cihar.com>
@@ -22,9 +25,11 @@
 
 namespace PhpMyAdmin\MoTranslator;
 
+use Exception;
+
 /**
  * Exception thrown when file can not be read.
  */
-class ReaderException extends \Exception
+class ReaderException extends Exception
 {
 }

@@ -1,20 +1,13 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * hold PhpMyAdmin\Twig\TrackerExtension class
- *
- * @package PhpMyAdmin\Twig
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Twig;
 
+use PhpMyAdmin\Tracker;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-/**
- * Class TrackerExtension
- *
- * @package PhpMyAdmin\Twig
- */
 class TrackerExtension extends AbstractExtension
 {
     /**
@@ -24,11 +17,11 @@ class TrackerExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        return array(
+        return [
             new TwigFunction(
-                'Tracker_getVersion',
-                'PhpMyAdmin\Tracker::getVersion'
+                'get_tracker_version',
+                [Tracker::class, 'getVersion']
             ),
-        );
+        ];
     }
 }

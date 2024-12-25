@@ -1,19 +1,19 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Functionality for the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
-use PhpMyAdmin\Util;
+
+use function __;
+use function _pgettext;
 
 /**
  * Represents a container for procedure nodes in the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
 class NodeProcedureContainer extends NodeDatabaseChildContainer
 {
@@ -23,29 +23,20 @@ class NodeProcedureContainer extends NodeDatabaseChildContainer
     public function __construct()
     {
         parent::__construct(__('Procedures'), Node::CONTAINER);
-        $this->icon = Util::getImage('b_routines', __('Procedures'));
-        $this->links = array(
-            'text' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s&amp;type=PROCEDURE',
-            'icon' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s&amp;type=PROCEDURE',
-        );
-        $this->real_name = 'procedures';
+        $this->icon = ['image' => 'b_routines', 'title' => __('Procedures')];
+        $this->links = [
+            'text' => ['route' => '/database/routines', 'params' => ['type' => 'PROCEDURE', 'db' => null]],
+            'icon' => ['route' => '/database/routines', 'params' => ['type' => 'PROCEDURE', 'db' => null]],
+        ];
+        $this->realName = 'procedures';
 
-        $new_label = _pgettext('Create new procedure', 'New');
-        $new = NodeFactory::getInstance(
-            'Node',
-            $new_label
-        );
-        $new->isNew = true;
-        $new->icon = Util::getImage('b_routine_add', $new_label);
-        $new->links = array(
-            'text' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s&add_item=1',
-            'icon' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s&add_item=1',
-        );
-        $new->classes = 'new_procedure italics';
+        $newLabel = _pgettext('Create new procedure', 'New');
+        $new = NodeFactory::getInstanceForNewNode($newLabel, 'new_procedure italics');
+        $new->icon = ['image' => 'b_routine_add', 'title' => $newLabel];
+        $new->links = [
+            'text' => ['route' => '/database/routines', 'params' => ['add_item' => 1, 'db' => null]],
+            'icon' => ['route' => '/database/routines', 'params' => ['add_item' => 1, 'db' => null]],
+        ];
         $this->addChild($new);
     }
 }

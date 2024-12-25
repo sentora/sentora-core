@@ -1,30 +1,15 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * Holds the PhpMyAdmin\Controllers\DatabaseController
- *
- * @package PhpMyAdmin\Controllers
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Controllers;
 
-/**
- * Handles database related logic
- *
- * @package PhpMyAdmin\Controllers
- */
-abstract class DatabaseController extends Controller
+final class DatabaseController extends AbstractController
 {
-    /**
-     * @var string $db
-     */
-    protected $db;
-
-    /**
-     * Constructor
-     */
-    public function __construct($response, $dbi, $db)
+    public function __invoke(): void
     {
-        parent::__construct($response, $dbi);
-        $this->db = $db;
+        global $dblist;
+
+        $this->response->addJSON(['databases' => $dblist->databases]);
     }
 }

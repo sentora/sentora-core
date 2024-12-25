@@ -22,19 +22,19 @@ class Token
     public $type;
     public $cursor;
 
-    const EOF_TYPE = 'end of expression';
-    const NAME_TYPE = 'name';
-    const NUMBER_TYPE = 'number';
-    const STRING_TYPE = 'string';
-    const OPERATOR_TYPE = 'operator';
-    const PUNCTUATION_TYPE = 'punctuation';
+    public const EOF_TYPE = 'end of expression';
+    public const NAME_TYPE = 'name';
+    public const NUMBER_TYPE = 'number';
+    public const STRING_TYPE = 'string';
+    public const OPERATOR_TYPE = 'operator';
+    public const PUNCTUATION_TYPE = 'punctuation';
 
     /**
      * @param string                $type   The type of the token (self::*_TYPE)
      * @param string|int|float|null $value  The token value
      * @param int                   $cursor The cursor position in the source
      */
-    public function __construct($type, $value, $cursor)
+    public function __construct(string $type, $value, ?int $cursor)
     {
         $this->type = $type;
         $this->value = $value;
@@ -44,7 +44,7 @@ class Token
     /**
      * Returns a string representation of the token.
      *
-     * @return string A string representation of the token
+     * @return string
      */
     public function __toString()
     {
@@ -54,12 +54,9 @@ class Token
     /**
      * Tests the current token for a type and/or a value.
      *
-     * @param array|int   $type  The type to test
-     * @param string|null $value The token value
-     *
      * @return bool
      */
-    public function test($type, $value = null)
+    public function test(string $type, string $value = null)
     {
         return $this->type === $type && (null === $value || $this->value == $value);
     }

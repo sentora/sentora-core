@@ -1,7 +1,7 @@
 # shapefile
 ShapeFile library for PHP
 
-[![Build Status](https://travis-ci.org/phpmyadmin/shapefile.svg?branch=master)](https://travis-ci.org/phpmyadmin/shapefile)
+![Test-suite](https://github.com/phpmyadmin/shapefile/workflows/Run%20tests/badge.svg?branch=master)
 [![codecov.io](https://codecov.io/github/phpmyadmin/shapefile/coverage.svg?branch=master)](https://codecov.io/github/phpmyadmin/shapefile?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phpmyadmin/shapefile/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phpmyadmin/shapefile/?branch=master)
 [![Packagist](https://img.shields.io/packagist/dt/phpmyadmin/shapefile.svg)](https://packagist.org/packages/phpmyadmin/shapefile)
@@ -18,22 +18,22 @@ making translations or offering new ideas please contact us.
 ## Installation
 
 Please use [Composer][1] to install:
-    
-``` 
+
+```sh
 composer require phpmyadmin/shapefile
-``` 
+```
 
 To be able to read and write the associated DBF file, you need ``dbase``
 extension:
 
-```
+```sh
 pecl install dbase
-echo "extension=dbase.so" > /etc/php5/conf.d/dbase.ini
+echo "extension=dbase.so" > /etc/php7/conf.d/dbase.ini
 ```
 
 ## Documentation
 
-The API documentation is available at 
+The API documentation is available at
 <https://develdocs.phpmyadmin.net/shapefile/>.
 
 ## Usage

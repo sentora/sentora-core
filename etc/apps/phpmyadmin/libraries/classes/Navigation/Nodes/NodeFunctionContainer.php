@@ -1,19 +1,19 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Functionality for the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
-use PhpMyAdmin\Util;
+
+use function __;
+use function _pgettext;
 
 /**
  * Represents a container for functions nodes in the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
 class NodeFunctionContainer extends NodeDatabaseChildContainer
 {
@@ -23,29 +23,26 @@ class NodeFunctionContainer extends NodeDatabaseChildContainer
     public function __construct()
     {
         parent::__construct(__('Functions'), Node::CONTAINER);
-        $this->icon = Util::getImage('b_routines', __('Functions'));
-        $this->links = array(
-            'text' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s&amp;type=FUNCTION',
-            'icon' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s&amp;type=FUNCTION',
-        );
-        $this->real_name = 'functions';
+        $this->icon = ['image' => 'b_routines', 'title' => __('Functions')];
+        $this->links = [
+            'text' => ['route' => '/database/routines', 'params' => ['type' => 'FUNCTION', 'db' => null]],
+            'icon' => ['route' => '/database/routines', 'params' => ['type' => 'FUNCTION', 'db' => null]],
+        ];
+        $this->realName = 'functions';
 
-        $new_label = _pgettext('Create new function', 'New');
-        $new = NodeFactory::getInstance(
-            'Node',
-            $new_label
-        );
-        $new->isNew = true;
-        $new->icon = Util::getImage('b_routine_add', $new_label);
-        $new->links = array(
-            'text' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s&add_item=1&amp;item_type=FUNCTION',
-            'icon' => 'db_routines.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s&add_item=1&amp;item_type=FUNCTION',
-        );
-        $new->classes = 'new_function italics';
+        $newLabel = _pgettext('Create new function', 'New');
+        $new = NodeFactory::getInstanceForNewNode($newLabel, 'new_function italics');
+        $new->icon = ['image' => 'b_routine_add', 'title' => $newLabel];
+        $new->links = [
+            'text' => [
+                'route' => '/database/routines',
+                'params' => ['item_type' => 'FUNCTION', 'add_item' => 1, 'db' => null],
+            ],
+            'icon' => [
+                'route' => '/database/routines',
+                'params' => ['item_type' => 'FUNCTION', 'add_item' => 1, 'db' => null],
+            ],
+        ];
         $this->addChild($new);
     }
 }

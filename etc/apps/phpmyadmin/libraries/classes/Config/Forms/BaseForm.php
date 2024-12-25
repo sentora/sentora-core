@@ -1,14 +1,16 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Base class for preferences.
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Config\Forms;
 
 use PhpMyAdmin\Config\ConfigFile;
 use PhpMyAdmin\Config\FormDisplay;
+
+use function is_int;
 
 /**
  * Base form for user preferences
@@ -16,16 +18,14 @@ use PhpMyAdmin\Config\FormDisplay;
 abstract class BaseForm extends FormDisplay
 {
     /**
-     * Constructor
-     *
-     * @param ConfigFile $cf        Config file instance
-     * @param int|null   $server_id 0 if new server, validation; >= 1 if editing a server
+     * @param ConfigFile $cf       Config file instance
+     * @param int|null   $serverId 0 if new server, validation; >= 1 if editing a server
      */
-    public function __construct(ConfigFile $cf, $server_id = null)
+    final public function __construct(ConfigFile $cf, $serverId = null)
     {
         parent::__construct($cf);
-        foreach (static::getForms() as $form_name => $form) {
-            $this->registerForm($form_name, $form, $server_id);
+        foreach (static::getForms() as $formName => $form) {
+            $this->registerForm($formName, $form, $serverId);
         }
     }
 
@@ -46,13 +46,13 @@ abstract class BaseForm extends FormDisplay
      * End group blocks with:
      * ':group:end'
      *
-     * @todo This should be abstract, but that does not work in PHP 5
-     *
      * @return array
+     *
+     * @todo This should be abstract, but that does not work in PHP 5
      */
     public static function getForms()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -68,15 +68,16 @@ abstract class BaseForm extends FormDisplay
                 $names[] = is_int($k) ? $v : $k;
             }
         }
+
         return $names;
     }
 
     /**
      * Returns name of the form
      *
-     * @todo This should be abstract, but that does not work in PHP 5
-     *
      * @return string
+     *
+     * @todo This should be abstract, but that does not work in PHP 5
      */
     public static function getName()
     {

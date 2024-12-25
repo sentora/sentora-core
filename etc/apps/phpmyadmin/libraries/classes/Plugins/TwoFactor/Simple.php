@@ -1,14 +1,15 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Second authentication factor handling
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Plugins\TwoFactor;
 
 use PhpMyAdmin\Plugins\TwoFactorPlugin;
-use PhpMyAdmin\Template;
+
+use function __;
 
 /**
  * Simple two-factor authentication auth asking just for confirmation.
@@ -17,17 +18,13 @@ use PhpMyAdmin\Template;
  */
 class Simple extends TwoFactorPlugin
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public static $id = 'simple';
 
     /**
      * Checks authentication, returns true on success
-     *
-     * @return boolean
      */
-    public function check()
+    public function check(): bool
     {
         return isset($_POST['2fa_confirm']);
     }
@@ -39,7 +36,7 @@ class Simple extends TwoFactorPlugin
      */
     public function render()
     {
-        return Template::get('login/twofactor/simple')->render();
+        return $this->template->render('login/twofactor/simple');
     }
 
     /**

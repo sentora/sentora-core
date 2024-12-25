@@ -1,11 +1,14 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Contains PhpMyAdmin\Plugins\Schema\Dia\RelationStatsDia class
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Plugins\Schema\Dia;
+
+use function array_search;
+use function shuffle;
 
 /**
  * Relation preferences/statistics
@@ -14,44 +17,58 @@ namespace PhpMyAdmin\Plugins\Schema\Dia;
  * and helps in generating the Table references and then connects
  * master table's master field to foreign table's foreign key
  * in dia XML document.
- *
- * @package PhpMyAdmin
- * @name    Relation_Stats_Dia
- * @see     PMA_DIA
  */
 class RelationStatsDia
 {
+    /** @var Dia */
     protected $diagram;
-    /**
-     * Defines properties
-     */
+
+    /** @var mixed */
     public $srcConnPointsRight;
+
+    /** @var mixed */
     public $srcConnPointsLeft;
+
+    /** @var mixed */
     public $destConnPointsRight;
+
+    /** @var mixed */
     public $destConnPointsLeft;
+
+    /** @var int */
     public $masterTableId;
+
+    /** @var int */
     public $foreignTableId;
+
+    /** @var mixed */
     public $masterTablePos;
+
+    /** @var mixed */
     public $foreignTablePos;
-    public $referenceColor;
+
+    /** @var string */
+    public $referenceColor = '#000000';
 
     /**
-     * The "PhpMyAdmin\Plugins\Schema\Dia\RelationStatsDia" constructor
+     * @see Relation_Stats_Dia::getXy
      *
-     * @param object $diagram       The DIA diagram
-     * @param string $master_table  The master table name
-     * @param string $master_field  The relation field in the master table
-     * @param string $foreign_table The foreign table name
-     * @param string $foreign_field The relation field in the foreign table
-     *
-     * @see Relation_Stats_Dia::_getXy
+     * @param Dia           $diagram       The DIA diagram
+     * @param TableStatsDia $master_table  The master table name
+     * @param string        $master_field  The relation field in the master table
+     * @param TableStatsDia $foreign_table The foreign table name
+     * @param string        $foreign_field The relation field in the foreign table
      */
     public function __construct(
-        $diagram, $master_table, $master_field, $foreign_table, $foreign_field
+        $diagram,
+        $master_table,
+        $master_field,
+        $foreign_table,
+        $foreign_field
     ) {
         $this->diagram = $diagram;
-        $src_pos  = $this->_getXy($master_table, $master_field);
-        $dest_pos = $this->_getXy($foreign_table, $foreign_field);
+        $src_pos = $this->getXy($master_table, $master_field);
+        $dest_pos = $this->getXy($foreign_table, $foreign_field);
         $this->srcConnPointsLeft = $src_pos[0];
         $this->srcConnPointsRight = $src_pos[1];
         $this->destConnPointsLeft = $dest_pos[0];
@@ -69,22 +86,29 @@ class RelationStatsDia
      * then determines its left and right connection
      * points.
      *
-     * @param string $table  The current table name
-     * @param string $column The relation column name
+     * @param TableStatsDia $table  The current table name
+     * @param string        $column The relation column name
      *
      * @return array Table right,left connection points and key position
-     *
-     * @access private
      */
-    private function _getXy($table, $column)
+    private function getXy($table, $column)
     {
         $pos = array_search($column, $table->fields);
         // left, right, position
         $value = 12;
         if ($pos != 0) {
-            return array($pos + $value + $pos, $pos + $value + $pos + 1, $pos);
+            return [
+                $pos + $value + $pos,
+                $pos + $value + $pos + 1,
+                $pos,
+            ];
         }
-        return array($pos + $value , $pos + $value + 1, $pos);
+
+        return [
+            $pos + $value,
+            $pos + $value + 1,
+            $pos,
+        ];
     }
 
     /**
@@ -96,16 +120,15 @@ class RelationStatsDia
      * Database reference Object and their attributes are involved
      * in the combination of displaying Database - reference on Dia Document.
      *
-     * @param boolean $showColor Whether to use one color per relation or not
-     *                           if showColor is true then an array of $listOfColors
-     *                           will be used to choose the random colors for
-     *                           references lines. we can change/add more colors to
-     *                           this
-     *
-     * @return boolean|void
-     *
-     * @access public
      * @see    PDF
+     *
+     * @param bool $showColor Whether to use one color per relation or not
+     *                        if showColor is true then an array of $listOfColors
+     *                        will be used to choose the random colors for
+     *                        references lines. we can change/add more colors to
+     *                        this
+     *
+     * @return bool|void
      */
     public function relationDraw($showColor)
     {
@@ -122,11 +145,11 @@ class RelationStatsDia
         }
 
         if ($showColor) {
-            $listOfColors = array(
+            $listOfColors = [
                 'FF0000',
                 '000099',
                 '00FF00',
-            );
+            ];
             shuffle($listOfColors);
             $this->referenceColor = '#' . $listOfColors[0] . '';
         } else {

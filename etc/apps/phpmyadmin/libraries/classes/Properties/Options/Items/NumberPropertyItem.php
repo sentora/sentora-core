@@ -1,18 +1,13 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * Holds the PhpMyAdmin\Properties\Options\Items\TextPropertyItem class
- *
- * @package PhpMyAdmin
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Properties\Options\Items;
 
 use PhpMyAdmin\Properties\Options\OptionsPropertyOneItem;
 
 /**
  * Single property item class of type number
- *
- * @package PhpMyAdmin
  */
 class NumberPropertyItem extends OptionsPropertyOneItem
 {
@@ -28,6 +23,6 @@ class NumberPropertyItem extends OptionsPropertyOneItem
      */
     public function getItemType()
     {
-        return "number";
+        return 'number';
     }
 }

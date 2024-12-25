@@ -1,20 +1,25 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * User preferences form
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Config\Forms\User;
 
 use PhpMyAdmin\Config\Forms\BaseForm;
 
+use function __;
+
 class SqlForm extends BaseForm
 {
+    /**
+     * @return array
+     */
     public static function getForms()
     {
-        return array(
-            'Sql_queries' => array(
+        return [
+            'Sql_queries' => [
                 'ShowSQL',
                 'Confirm',
                 'QueryHistoryMax',
@@ -25,16 +30,19 @@ class SqlForm extends BaseForm
                 'LintEnable',
                 'EnableAutocompleteForTablesAndColumns',
                 'DefaultForeignKeyChecks',
-            ),
-            'Sql_box' => array(
+            ],
+            'Sql_box' => [
                 'SQLQuery/Edit',
                 'SQLQuery/Explain',
                 'SQLQuery/ShowAsPHP',
                 'SQLQuery/Refresh',
-            ),
-        );
+            ],
+        ];
     }
 
+    /**
+     * @return string
+     */
     public static function getName()
     {
         return __('SQL queries');

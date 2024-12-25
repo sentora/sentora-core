@@ -1,32 +1,34 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Classes to create relation schema in Dia format.
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Plugins\Schema\Dia;
 
 use PhpMyAdmin\Core;
-use PhpMyAdmin\Response;
+use PhpMyAdmin\ResponseRenderer;
 use XMLWriter;
+
+use function ob_end_clean;
+use function ob_get_clean;
+use function strlen;
 
 /**
  * This Class inherits the XMLwriter class and
  * helps in developing structure of DIA Schema Export
  *
- * @package PhpMyAdmin
- * @access  public
- * @see     https://secure.php.net/manual/en/book.xmlwriter.php
+ * @see     https://www.php.net/manual/en/book.xmlwriter.php
  */
 class Dia extends XMLWriter
 {
     /**
-     * The "Dia" constructor
-     *
      * Upon instantiation This starts writing the Dia XML document
      *
-     * @see XMLWriter::openMemory(),XMLWriter::setIndent(),XMLWriter::startDocument()
+     * @see XMLWriter::openMemory()
+     * @see XMLWriter::setIndent()
+     * @see XMLWriter::startDocument()
      */
     public function __construct()
     {
@@ -51,18 +53,16 @@ class Dia extends XMLWriter
      * to define the document, then finally a Layer starts which
      * holds all the objects.
      *
+     * @see XMLWriter::startElement()
+     * @see XMLWriter::writeAttribute()
+     * @see XMLWriter::writeRaw()
+     *
      * @param string $paper        the size of the paper/document
      * @param float  $topMargin    top margin of the paper/document in cm
      * @param float  $bottomMargin bottom margin of the paper/document in cm
      * @param float  $leftMargin   left margin of the paper/document in cm
      * @param float  $rightMargin  right margin of the paper/document in cm
      * @param string $orientation  orientation of the document, portrait or landscape
-     *
-     * @return void
-     *
-     * @access public
-     * @see    XMLWriter::startElement(),XMLWriter::writeAttribute(),
-     *      XMLWriter::writeRaw()
      */
     public function startDiaDoc(
         $paper,
@@ -71,12 +71,13 @@ class Dia extends XMLWriter
         $leftMargin,
         $rightMargin,
         $orientation
-    ) {
-        if ($orientation == 'P') {
+    ): void {
+        $isPortrait = 'false';
+
+        if ($orientation === 'P') {
             $isPortrait = 'true';
-        } else {
-            $isPortrait = 'false';
         }
+
         $this->startElement('dia:diagram');
         $this->writeAttribute('xmlns:dia', 'http://www.lysator.liu.se/~alla/dia/');
         $this->startElement('dia:diagramdata');
@@ -152,11 +153,10 @@ class Dia extends XMLWriter
     /**
      * Ends Dia Document
      *
-     * @return void
-     * @access public
-     * @see    XMLWriter::endElement(),XMLWriter::endDocument()
+     * @see XMLWriter::endElement()
+     * @see XMLWriter::endDocument()
      */
-    public function endDiaDoc()
+    public function endDiaDoc(): void
     {
         $this->endElement();
         $this->endDocument();
@@ -165,19 +165,18 @@ class Dia extends XMLWriter
     /**
      * Output Dia Document for download
      *
-     * @param string $fileName name of the dia document
-     *
-     * @return void
-     * @access public
      * @see    XMLWriter::flush()
+     *
+     * @param string $fileName name of the dia document
      */
-    public function showOutput($fileName)
+    public function showOutput($fileName): void
     {
         if (ob_get_clean()) {
             ob_end_clean();
         }
+
         $output = $this->flush();
-        Response::getInstance()->disable();
+        ResponseRenderer::getInstance()->disable();
         Core::downloadHeader(
             $fileName,
             'application/x-dia-diagram',

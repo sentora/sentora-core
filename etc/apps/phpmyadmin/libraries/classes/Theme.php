@@ -1,15 +1,27 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * hold Theme class
- *
- * @package PhpMyAdmin
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin;
 
-use PhpMyAdmin\Template;
-use PhpMyAdmin\ThemeManager;
-use PhpMyAdmin\Url;
+use function __;
+use function file_exists;
+use function file_get_contents;
+use function filemtime;
+use function filesize;
+use function in_array;
+use function is_array;
+use function is_dir;
+use function is_readable;
+use function json_decode;
+use function sprintf;
+use function trigger_error;
+use function trim;
+use function version_compare;
+
+use const DIRECTORY_SEPARATOR;
+
+use const E_USER_ERROR;
 
 /**
  * handles theme
@@ -17,100 +29,73 @@ use PhpMyAdmin\Url;
  * @todo add the possibility to make a theme depend on another theme
  * and by default on original
  * @todo make all components optional - get missing components from 'parent' theme
- *
- * @package PhpMyAdmin
  */
 class Theme
 {
-    /**
-     * @var string theme version
-     * @access  protected
-     */
-    var $version = '0.0.0.0';
+    /** @var string theme version */
+    public $version = '0.0.0.0';
 
-    /**
-     * @var string theme name
-     * @access  protected
-     */
-    var $name = '';
+    /** @var string theme name */
+    public $name = '';
 
-    /**
-     * @var string theme id
-     * @access  protected
-     */
-    var $id = '';
+    /** @var string theme id */
+    public $id = '';
 
-    /**
-     * @var string theme path
-     * @access  protected
-     */
-    var $path = '';
+    /** @var string theme path */
+    public $path = '';
 
-    /**
-     * @var string image path
-     * @access  protected
-     */
-    var $img_path = '';
+    /** @var string file system theme path */
+    private $fsPath = '';
 
-    /**
-     * @var integer last modification time for info file
-     * @access  protected
-     */
-    var $mtime_info = 0;
+    /** @var string image path as an URL */
+    public $imgPath = '';
+
+    /** @var string image path on the file-system */
+    public $imgPathFs = '';
+
+    /** @var int last modification time for info file */
+    public $mtimeInfo = 0;
 
     /**
      * needed because sometimes, the mtime for different themes
      * is identical
-     * @var integer filesize for info file
-     * @access  protected
+     *
+     * @var int filesize for info file
      */
-    var $filesize_info = 0;
-
-    /**
-     * @var array List of css files to load
-     * @access private
-     */
-    private $_cssFiles = array(
-        'common',
-        'enum_editor',
-        'gis',
-        'navigation',
-        'designer',
-        'rte',
-        'codemirror',
-        'jqplot',
-        'resizable-menu',
-        'icons',
-    );
+    public $filesizeInfo = 0;
 
     /**
      * Loads theme information
-     *
-     * @return boolean whether loading them info was successful or not
-     * @access  public
      */
-    function loadInfo()
+    public function loadInfo(): bool
     {
-        $infofile = $this->getPath() . '/theme.json';
+        $infofile = $this->getFsPath() . 'theme.json';
         if (! @file_exists($infofile)) {
             return false;
         }
 
-        if ($this->mtime_info === filemtime($infofile)) {
+        if ($this->mtimeInfo === filemtime($infofile)) {
             return true;
         }
+
         $content = @file_get_contents($infofile);
         if ($content === false) {
             return false;
         }
+
         $data = json_decode($content, true);
 
         // Did we get expected data?
         if (! is_array($data)) {
             return false;
         }
+
         // Check that all required data are there
-        $members = array('name', 'version', 'supports');
+        $members = [
+            'name',
+            'version',
+            'supports',
+        ];
         foreach ($members as $member) {
             if (! isset($data[$member])) {
                 return false;
@@ -121,12 +106,13 @@ class Theme
         if (! is_array($data['supports'])) {
             return false;
         }
-        if (! in_array(PMA_MAJOR_VERSION, $data['supports'])) {
+
+        if (! in_array(Version::SERIES, $data['supports'])) {
             return false;
         }
 
-        $this->mtime_info = filemtime($infofile);
-        $this->filesize_info = filesize($infofile);
+        $this->mtimeInfo = filemtime($infofile);
+        $this->filesizeInfo = filesize($infofile);
 
         $this->setVersion($data['version']);
         $this->setName($data['name']);
@@ -134,49 +120,45 @@ class Theme
         return true;
     }
 
-    /**
-     * returns theme object loaded from given folder
-     * or false if theme is invalid
-     *
-     * @param string $folder path to theme
-     *
-     * @return Theme|false
-     * @static
-     * @access public
-     */
-    static public function load($folder)
+    public static function load(string $themeUrl, string $themeFsPath, string $themeName): ?self
     {
-        $theme = new Theme();
+        $theme = new self();
 
-        $theme->setPath($folder);
+        $theme->setPath($themeUrl);
+        $theme->setFsPath($themeFsPath);
 
         if (! $theme->loadInfo()) {
-            return false;
+            return null;
         }
 
         $theme->checkImgPath();
+        $theme->setId($themeName);
 
         return $theme;
     }
 
     /**
      * checks image path for existence - if not found use img from fallback theme
-     *
-     * @access public
-     * @return bool
      */
-    public function checkImgPath()
+    public function checkImgPath(): bool
     {
         // try current theme first
-        if (is_dir($this->getPath() . '/img/')) {
+        if (is_dir($this->getFsPath() . 'img' . DIRECTORY_SEPARATOR)) {
             $this->setImgPath($this->getPath() . '/img/');
+            $this->setImgPathFs($this->getFsPath() . 'img' . DIRECTORY_SEPARATOR);
+
             return true;
         }
 
         // try fallback theme
-        $fallback = './themes/' . ThemeManager::FALLBACK_THEME . '/img/';
-        if (is_dir($fallback)) {
-            $this->setImgPath($fallback);
+        $fallbackFsPathThemeDir = ThemeManager::getThemesFsDir() . ThemeManager::FALLBACK_THEME
+                                  . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
+        if (is_dir($fallbackFsPathThemeDir)) {
+            $fallbackUrl = ThemeManager::getThemesDir() . ThemeManager::FALLBACK_THEME
+                        . '/img/';
+            $this->setImgPath($fallbackUrl);
+            $this->setImgPathFs($fallbackFsPathThemeDir);
+
             return true;
         }
 
@@ -188,13 +170,13 @@ class Theme
             ),
             E_USER_ERROR
         );
+
         return false;
     }
 
     /**
      * returns path to theme
      *
-     * @access public
      * @return string path to theme
      */
     public function getPath()
@@ -203,38 +185,41 @@ class Theme
     }
 
     /**
-     * returns layout file
+     * returns file system path to the theme
      *
-     * @access public
-     * @return string layout file
+     * @return string file system path to theme
      */
-    public function getLayoutFile()
+    public function getFsPath(): string
     {
-        return $this->getPath() . '/layout.inc.php';
+        return $this->fsPath;
     }
 
     /**
      * set path to theme
      *
      * @param string $path path to theme
-     *
-     * @return void
-     * @access public
      */
-    public function setPath($path)
+    public function setPath($path): void
     {
         $this->path = trim($path);
+    }
+
+    /**
+     * set file system path to the theme
+     *
+     * @param string $path path to theme
+     */
+    public function setFsPath(string $path): void
+    {
+        $this->fsPath = trim($path);
     }
 
     /**
      * sets version
      *
      * @param string $version version to set
-     *
-     * @return void
-     * @access public
      */
-    public function setVersion($version)
+    public function setVersion($version): void
     {
         $this->version = trim($version);
     }
@@ -243,7 +228,6 @@ class Theme
      * returns version
      *
      * @return string version
-     * @access public
      */
     public function getVersion()
     {
@@ -255,11 +239,8 @@ class Theme
      * returns true if theme version is equal or higher to $version
      *
      * @param string $version version to compare to
-     *
-     * @return boolean true if theme version is equal or higher to $version
-     * @access public
      */
-    public function checkVersion($version)
+    public function checkVersion($version): bool
     {
         return version_compare($this->getVersion(), $version, 'lt');
     }
@@ -268,11 +249,8 @@ class Theme
      * sets name
      *
      * @param string $name name to set
-     *
-     * @return void
-     * @access public
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = trim($name);
     }
@@ -280,7 +258,6 @@ class Theme
     /**
      * returns name
      *
-     * @access  public
      * @return string name
      */
     public function getName()
@@ -292,11 +269,8 @@ class Theme
      * sets id
      *
      * @param string $id new id
-     *
-     * @return void
-     * @access public
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = trim($id);
     }
@@ -305,7 +279,6 @@ class Theme
      * returns id
      *
      * @return string id
-     * @access public
      */
     public function getId()
     {
@@ -315,14 +288,21 @@ class Theme
     /**
      * Sets path to images for the theme
      *
-     * @param string $path path to images for this theme
-     *
-     * @return void
-     * @access public
+     * @param string $path path to images for this theme as an URL path
      */
-    public function setImgPath($path)
+    public function setImgPath($path): void
     {
-        $this->img_path = $path;
+        $this->imgPath = $path;
+    }
+
+    /**
+     * Sets path to images for the theme
+     *
+     * @param string $path file-system path to images for this theme
+     */
+    public function setImgPathFs(string $path): void
+    {
+        $this->imgPathFs = $path;
     }
 
     /**
@@ -333,133 +313,22 @@ class Theme
      * @param string $file     file name for image
      * @param string $fallback fallback image
      *
-     * @access public
      * @return string image path for this theme
      */
     public function getImgPath($file = null, $fallback = null)
     {
-        if (is_null($file)) {
-            return $this->img_path;
+        if ($file === null) {
+            return $this->imgPath;
         }
 
-        if (is_readable($this->img_path . $file)) {
-            return $this->img_path . $file;
+        if (is_readable($this->imgPathFs . $file)) {
+            return $this->imgPath . $file;
         }
 
-        if (! is_null($fallback)) {
+        if ($fallback !== null) {
             return $this->getImgPath($fallback);
         }
 
         return './themes/' . ThemeManager::FALLBACK_THEME . '/img/' . $file;
-    }
-
-    /**
-     * load css (send to stdout, normally the browser)
-     *
-     * @return bool
-     * @access  public
-     */
-    public function loadCss()
-    {
-        $success = true;
-
-        /* Variables to be used by the themes: */
-        $theme = $this;
-        if ($GLOBALS['text_dir'] === 'ltr') {
-            $right = 'right';
-            $left = 'left';
-        } else {
-            $right = 'left';
-            $left = 'right';
-        }
-
-        foreach ($this->_cssFiles as $file) {
-            $path = $this->getPath() . "/css/$file.css.php";
-            $fallback = "./themes/"
-                . ThemeManager::FALLBACK_THEME .  "/css/$file.css.php";
-
-            if (is_readable($path)) {
-                echo "\n/* FILE: " , $file , ".css.php */\n";
-                include $path;
-            } elseif (is_readable($fallback)) {
-                echo "\n/* FILE: " , $file , ".css.php */\n";
-                include $fallback;
-            } else {
-                $success = false;
-            }
-        }
-        return $success;
-    }
-
-    /**
-     * Renders the preview for this theme
-     *
-     * @return string
-     * @access public
-     */
-    public function getPrintPreview()
-    {
-        $url_params = ['set_theme' => $this->getId()];
-        $screen = null;
-        $path = $this->getPath() . '/screen.png';
-        if (@file_exists($path)) {
-            $screen = $path;
-        }
-
-        return Template::get('theme_preview')->render([
-            'url_params' => $url_params,
-            'name' => $this->getName(),
-            'version' => $this->getVersion(),
-            'id' => $this->getId(),
-            'screen' => $screen,
-        ]);
-    }
-
-    /**
-     * Gets currently configured font size.
-     *
-     * @return String with font size.
-     */
-    function getFontSize()
-    {
-        $fs = $GLOBALS['PMA_Config']->get('FontSize');
-        if (!is_null($fs)) {
-            return $fs;
-        }
-        return '82%';
-    }
-
-    /**
-     * Generates code for CSS gradient using various browser extensions.
-     *
-     * @param string $start_color Color of gradient start, hex value without #
-     * @param string $end_color   Color of gradient end, hex value without #
-     *
-     * @return string CSS code.
-     */
-    function getCssGradient($start_color, $end_color)
-    {
-        $result = array();
-        // Opera 9.5+, IE 9
-        $result[] = 'background-image: url(./themes/svg_gradient.php?from='
-            . $start_color . '&to=' . $end_color . ');';
-        $result[] = 'background-size: 100% 100%;';
-        // Safari 4-5, Chrome 1-9
-        $result[] = 'background: '
-            . '-webkit-gradient(linear, left top, left bottom, from(#'
-            . $start_color . '), to(#' . $end_color . '));';
-        // Safari 5.1, Chrome 10+
-        $result[] = 'background: -webkit-linear-gradient(top, #'
-            . $start_color . ', #' . $end_color . ');';
-        // Firefox 3.6+
-        $result[] = 'background: -moz-linear-gradient(top, #'
-            . $start_color . ', #' . $end_color . ');';
-        // IE 10
-        $result[] = 'background: -ms-linear-gradient(top, #'
-            . $start_color . ', #' . $end_color . ');';
-        // Opera 11.10
-        $result[] = 'background: -o-linear-gradient(top, #'
-            . $start_color . ', #' . $end_color . ');';
-        return implode("\n", $result);
     }
 }

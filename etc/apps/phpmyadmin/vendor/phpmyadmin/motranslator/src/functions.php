@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
     Copyright (c) 2005 Steven Armstrong <sa at c-area dot ch>
     Copyright (c) 2009 Danilo Segan <danilo@kvota.net>
@@ -31,7 +34,7 @@ use PhpMyAdmin\MoTranslator\Loader;
  *
  * @return string Set or current locale
  */
-function _setlocale($category, $locale)
+function _setlocale(int $category, string $locale): string
 {
     return Loader::getInstance()->setlocale($locale);
 }
@@ -42,7 +45,7 @@ function _setlocale($category, $locale)
  * @param string $domain Domain name
  * @param string $path   Path where to find locales
  */
-function _bindtextdomain($domain, $path)
+function _bindtextdomain(string $domain, string $path): void
 {
     Loader::getInstance()->bindtextdomain($domain, $path);
 }
@@ -55,10 +58,10 @@ function _bindtextdomain($domain, $path)
  * Generally it is wise to output in UTF-8 and have
  * mo files in UTF-8.
  *
- * @param mixed $domain  Domain where to set character set
- * @param mixed $codeset Character set to set
+ * @param string $domain  Domain where to set character set
+ * @param string $codeset Character set to set
  */
-function _bind_textdomain_codeset($domain, $codeset)
+function _bind_textdomain_codeset($domain, $codeset): void
 {
 }
 
@@ -67,7 +70,7 @@ function _bind_textdomain_codeset($domain, $codeset)
  *
  * @param string $domain Domain name
  */
-function _textdomain($domain)
+function _textdomain(string $domain): void
 {
     Loader::getInstance()->textdomain($domain);
 }
@@ -79,11 +82,9 @@ function _textdomain($domain)
  *
  * @return string translated string (or original, if not found)
  */
-function _gettext($msgid)
+function _gettext(string $msgid): string
 {
-    return Loader::getInstance()->getTranslator()->gettext(
-        $msgid
-    );
+    return Loader::getInstance()->getTranslator()->gettext($msgid);
 }
 
 /**
@@ -93,11 +94,9 @@ function _gettext($msgid)
  *
  * @return string translated string (or original, if not found)
  */
-function __($msgid)
+function __(string $msgid): string
 {
-    return Loader::getInstance()->getTranslator()->gettext(
-        $msgid
-    );
+    return Loader::getInstance()->getTranslator()->gettext($msgid);
 }
 
 /**
@@ -109,11 +108,9 @@ function __($msgid)
  *
  * @return string translated plural form
  */
-function _ngettext($msgid, $msgidPlural, $number)
+function _ngettext(string $msgid, string $msgidPlural, int $number): string
 {
-    return Loader::getInstance()->getTranslator()->ngettext(
-        $msgid, $msgidPlural, $number
-    );
+    return Loader::getInstance()->getTranslator()->ngettext($msgid, $msgidPlural, $number);
 }
 
 /**
@@ -124,11 +121,9 @@ function _ngettext($msgid, $msgidPlural, $number)
  *
  * @return string translated plural form
  */
-function _pgettext($msgctxt, $msgid)
+function _pgettext(string $msgctxt, string $msgid): string
 {
-    return Loader::getInstance()->getTranslator()->pgettext(
-        $msgctxt, $msgid
-    );
+    return Loader::getInstance()->getTranslator()->pgettext($msgctxt, $msgid);
 }
 
 /**
@@ -141,11 +136,9 @@ function _pgettext($msgctxt, $msgid)
  *
  * @return string translated plural form
  */
-function _npgettext($msgctxt, $msgid, $msgidPlural, $number)
+function _npgettext(string $msgctxt, string $msgid, string $msgidPlural, int $number): string
 {
-    return Loader::getInstance()->getTranslator()->npgettext(
-        $msgctxt, $msgid, $msgidPlural, $number
-    );
+    return Loader::getInstance()->getTranslator()->npgettext($msgctxt, $msgid, $msgidPlural, $number);
 }
 
 /**
@@ -156,11 +149,9 @@ function _npgettext($msgctxt, $msgid, $msgidPlural, $number)
  *
  * @return string translated string (or original, if not found)
  */
-function _dgettext($domain, $msgid)
+function _dgettext(string $domain, string $msgid): string
 {
-    return Loader::getInstance()->getTranslator($domain)->gettext(
-        $msgid
-    );
+    return Loader::getInstance()->getTranslator($domain)->gettext($msgid);
 }
 
 /**
@@ -173,11 +164,9 @@ function _dgettext($domain, $msgid)
  *
  * @return string translated plural form
  */
-function _dngettext($domain, $msgid, $msgidPlural, $number)
+function _dngettext(string $domain, string $msgid, string $msgidPlural, int $number): string
 {
-    return Loader::getInstance()->getTranslator($domain)->ngettext(
-        $msgid, $msgidPlural, $number
-    );
+    return Loader::getInstance()->getTranslator($domain)->ngettext($msgid, $msgidPlural, $number);
 }
 
 /**
@@ -189,11 +178,9 @@ function _dngettext($domain, $msgid, $msgidPlural, $number)
  *
  * @return string translated plural form
  */
-function _dpgettext($domain, $msgctxt, $msgid)
+function _dpgettext(string $domain, string $msgctxt, string $msgid): string
 {
-    return Loader::getInstance()->getTranslator($domain)->pgettext(
-        $msgctxt, $msgid
-    );
+    return Loader::getInstance()->getTranslator($domain)->pgettext($msgctxt, $msgid);
 }
 
 /**
@@ -207,9 +194,7 @@ function _dpgettext($domain, $msgctxt, $msgid)
  *
  * @return string translated plural form
  */
-function _dnpgettext($domain, $msgctxt, $msgid, $msgidPlural, $number)
+function _dnpgettext(string $domain, string $msgctxt, string $msgid, string $msgidPlural, int $number): string
 {
-    return Loader::getInstance()->getTranslator($domain)->npgettext(
-        $msgctxt, $msgid, $msgidPlural, $number
-    );
+    return Loader::getInstance()->getTranslator($domain)->npgettext($msgctxt, $msgid, $msgidPlural, $number);
 }

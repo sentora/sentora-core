@@ -1,6 +1,10 @@
 # Constant-Time Encoding
 
-[![Build Status](https://travis-ci.org/paragonie/constant_time_encoding.svg?branch=v1.x)](https://travis-ci.org/paragonie/constant_time_encoding)
+[![Build Status](https://github.com/paragonie/constant_time_encoding/actions/workflows/ci.yml/badge.svg)](https://github.com/paragonie/constant_time_encoding/actions)
+[![Latest Stable Version](https://poser.pugx.org/paragonie/constant_time_encoding/v/stable)](https://packagist.org/packages/paragonie/constant_time_encoding)
+[![Latest Unstable Version](https://poser.pugx.org/paragonie/constant_time_encoding/v/unstable)](https://packagist.org/packages/paragonie/constant_time_encoding)
+[![License](https://poser.pugx.org/paragonie/constant_time_encoding/license)](https://packagist.org/packages/paragonie/constant_time_encoding)
+[![Downloads](https://img.shields.io/packagist/dt/paragonie/constant_time_encoding.svg)](https://packagist.org/packages/paragonie/constant_time_encoding)
 
 Based on the [constant-time base64 implementation made by Steve "Sc00bz" Thomas](https://github.com/Sc00bz/ConstTimeEncoding),
 this library aims to offer character encoding functions that do not leak
@@ -18,9 +22,10 @@ Our fork offers the following enchancements:
 
 ## PHP Version Requirements
 
-This library should work on any [supported version of PHP](https://secure.php.net/supported-versions.php).
-It *may* work on earlier versions, but we **do not** guarantee it. If it
-doesn't, we **will not** fix it to work on earlier versions of PHP.
+Version 2 of this library should work on **PHP 7** or newer. For PHP 5
+support, see [the v1.x branch](https://github.com/paragonie/constant_time_encoding/tree/v1.x).
+
+If you are adding this as a dependency to a project intended to work on both PHP 5 and PHP 7, please set the required version to `^1|^2` instead of just `^1` or `^2`.
 
 ## How to Install
 
@@ -31,7 +36,7 @@ composer require paragonie/constant_time_encoding
 ## How to Use
 
 ```php
-use \ParagonIE\ConstantTime\Encoding;
+use ParagonIE\ConstantTime\Encoding;
 
 // possibly (if applicable): 
 // require 'vendor/autoload.php';
@@ -58,8 +63,8 @@ If you only need a particular variant, you can just reference the
 required class like so:
 
 ```php
-use \ParagonIE\ConstantTime\Base64;
-use \ParagonIE\ConstantTime\Base32;
+use ParagonIE\ConstantTime\Base64;
+use ParagonIE\ConstantTime\Base32;
 
 $data = random_bytes(32);
 echo Base64::encode($data), "\n";
@@ -72,3 +77,8 @@ Example output:
 1VilPkeVqirlPifk5scbzcTTbMT2clp+Zkyv9VFFasE=
 2vmkkpshswvcvzj6e7sonry3zxcng3ge6zzfu7tgjsx7kukfnlaq====
 ```
+
+## Support Contracts
+
+If your company uses this library in their products or services, you may be
+interested in [purchasing a support contract from Paragon Initiative Enterprises](https://paragonie.com/enterprise).

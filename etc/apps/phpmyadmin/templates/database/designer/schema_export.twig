@@ -1,9 +1,18 @@
-<form method="post" action="schema_export.php" class="disableAjax" id="id_export_pages">
-    <fieldset>
-        {{ Url_getHiddenInputs(db) }}
-        <label>{% trans 'Select Export Relational Type' %}</label>
-        {{ Plugins_getChoice('Schema', 'export_type', export_list, 'format') }}
-        <input type="hidden" name="page_number" value="{{ page }}" />
-        {{ Plugins_getOptions('Schema', export_list) }}
+<form method="post" action="{{ url('/schema-export') }}" class="disableAjax" id="id_export_pages">
+    <fieldset class="pma-fieldset">
+        {{ get_hidden_inputs(db) }}
+        <label for="plugins">{% trans 'Select Export Relational Type' %}</label>
+        <select id="plugins" name="export_type">
+          {% for option in plugins_choice %}
+            <option value="{{ option.name }}"{{ option.is_selected ? ' selected' }}>{{ option.text }}</option>
+          {% endfor %}
+        </select>
+
+        {% for option in plugins_choice %}
+          <input type="hidden" id="force_file_{{ option.name }}" value="true">
+        {% endfor %}
+
+        <input type="hidden" name="page_number" value="{{ page }}">
+        {{ options|raw }}
     </fieldset>
 </form>

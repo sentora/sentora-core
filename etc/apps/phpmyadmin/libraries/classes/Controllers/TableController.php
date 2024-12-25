@@ -1,40 +1,34 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * Holds the PhpMyAdmin\Controllers\TableController
- *
- * @package PhpMyAdmin\Controllers
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Controllers;
 
-/**
- * Handles table related logic
- *
- * @package PhpMyAdmin\Controllers
- */
-abstract class TableController extends Controller
+use PhpMyAdmin\DatabaseInterface;
+use PhpMyAdmin\Message;
+use PhpMyAdmin\ResponseRenderer;
+use PhpMyAdmin\Template;
+
+final class TableController extends AbstractController
 {
-    /**
-     * @var string $db
-     */
-    protected $db;
+    /** @var DatabaseInterface */
+    private $dbi;
 
-    /**
-     * @var string $table
-     */
-    protected $table;
+    public function __construct(ResponseRenderer $response, Template $template, DatabaseInterface $dbi)
+    {
+        parent::__construct($response, $template);
+        $this->dbi = $dbi;
+    }
 
-    /**
-     * Constructor
-     */
-    public function __construct(
-        $response,
-        $dbi,
-        $db,
-        $table
-    ) {
-        parent::__construct($response, $dbi);
-        $this->db = $db;
-        $this->table = $table;
+    public function __invoke(): void
+    {
+        if (! isset($_POST['db'])) {
+            $this->response->setRequestStatus(false);
+            $this->response->addJSON(['message' => Message::error()]);
+
+            return;
+        }
+
+        $this->response->addJSON(['tables' => $this->dbi->getTables($_POST['db'])]);
     }
 }

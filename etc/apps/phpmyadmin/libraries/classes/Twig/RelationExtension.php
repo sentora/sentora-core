@@ -1,21 +1,13 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * hold PhpMyAdmin\Twig\RelationExtension class
- *
- * @package PhpMyAdmin\Twig
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Twig;
 
-use PhpMyAdmin\Relation;
+use PhpMyAdmin\ConfigStorage\Relation;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-/**
- * Class RelationExtension
- *
- * @package PhpMyAdmin\Twig
- */
 class RelationExtension extends AbstractExtension
 {
     /**
@@ -25,30 +17,33 @@ class RelationExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        $relation = new Relation();
-        return array(
+        global $dbi;
+
+        $relation = new Relation($dbi);
+
+        return [
             new TwigFunction(
-                'Relation_foreignDropdown',
+                'foreign_dropdown',
                 [$relation, 'foreignDropdown'],
-                array('is_safe' => array('html'))
+                ['is_safe' => ['html']]
             ),
             new TwigFunction(
-                'Relation_getDisplayField',
+                'get_display_field',
                 [$relation, 'getDisplayField'],
-                array('is_safe' => array('html'))
+                ['is_safe' => ['html']]
             ),
             new TwigFunction(
-                'Relation_getForeignData',
+                'get_foreign_data',
                 [$relation, 'getForeignData']
             ),
             new TwigFunction(
-                'Relation_getTables',
+                'get_tables',
                 [$relation, 'getTables']
             ),
             new TwigFunction(
-                'Relation_searchColumnInForeigners',
+                'search_column_in_foreigners',
                 [$relation, 'searchColumnInForeigners']
             ),
-        );
+        ];
     }
 }

@@ -1,20 +1,20 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Abstract class for the SQL transformations plugins
- *
- * @package    PhpMyAdmin-Transformations
- * @subpackage SQL
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Plugins\Transformations\Abs;
 
+use PhpMyAdmin\FieldMetadata;
+use PhpMyAdmin\Html\Generator;
 use PhpMyAdmin\Plugins\TransformationsPlugin;
-use PhpMyAdmin\Util;
+
+use function __;
 
 /**
  * Provides common methods for all of the SQL transformations plugins.
- *
- * @package PhpMyAdmin
  */
 abstract class SQLTransformationsPlugin extends TransformationsPlugin
 {
@@ -25,28 +25,22 @@ abstract class SQLTransformationsPlugin extends TransformationsPlugin
      */
     public static function getInfo()
     {
-        return __(
-            'Formats text as SQL query with syntax highlighting.'
-        );
+        return __('Formats text as SQL query with syntax highlighting.');
     }
 
     /**
      * Does the actual work of each specific transformations plugin.
      *
-     * @param string $buffer  text to be transformed
-     * @param array  $options transformation options
-     * @param string $meta    meta information
+     * @param string             $buffer  text to be transformed
+     * @param array              $options transformation options
+     * @param FieldMetadata|null $meta    meta information
      *
      * @return string
      */
-    public function applyTransformation($buffer, array $options = array(), $meta = '')
+    public function applyTransformation($buffer, array $options = [], ?FieldMetadata $meta = null)
     {
-        // see PMA_highlightSQL()
-        $result = Util::formatSql($buffer);
-
-        return $result;
+        return Generator::formatSql($buffer);
     }
-
 
     /* ~~~~~~~~~~~~~~~~~~~~ Getters and Setters ~~~~~~~~~~~~~~~~~~~~ */
 
@@ -57,6 +51,6 @@ abstract class SQLTransformationsPlugin extends TransformationsPlugin
      */
     public static function getName()
     {
-        return "SQL";
+        return 'SQL';
     }
 }

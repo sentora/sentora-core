@@ -1,25 +1,40 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * Hold the PhpMyAdmin\Language class
- *
- * @package PhpMyAdmin
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin;
 
-use PhpMyAdmin\LanguageManager;
+use function __;
+use function _bindtextdomain;
+use function _setlocale;
+use function _textdomain;
+use function addcslashes;
+use function function_exists;
+use function in_array;
+use function preg_match;
+use function setlocale;
+use function str_contains;
+use function str_replace;
+use function strcmp;
 
 /**
  * Language object
- *
- * @package PhpMyAdmin
  */
 class Language
 {
+    /** @var string */
     protected $code;
+
+    /** @var string */
     protected $name;
+
+    /** @var string */
     protected $native;
+
+    /** @var string */
     protected $regex;
+
+    /** @var string */
     protected $mysql;
 
     /**
@@ -28,18 +43,18 @@ class Language
      * @param string $code   Language code
      * @param string $name   English name
      * @param string $native Native name
-     * @param string $regex  Match regullar expression
+     * @param string $regex  Match regular expression
      * @param string $mysql  MySQL locale code
-     *
      */
     public function __construct($code, $name, $native, $regex, $mysql)
     {
         $this->code = $code;
         $this->name = $name;
         $this->native = $native;
-        if (strpos($regex, '[-_]') === false) {
+        if (! str_contains($regex, '[-_]')) {
             $regex = str_replace('|', '([-_][[:alpha:]]{2,3})?|', $regex);
         }
+
         $this->regex = $regex;
         $this->mysql = $mysql;
     }
@@ -105,17 +120,15 @@ class Language
      *
      * @return int same as strcmp
      */
-    public function cmp($other)
+    public function cmp(Language $other): int
     {
         return strcmp($this->name, $other->name);
     }
 
     /**
      * Checks whether language is currently active.
-     *
-     * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $GLOBALS['lang'] == $this->code;
     }
@@ -124,48 +137,42 @@ class Language
      * Checks whether language matches HTTP header Accept-Language.
      *
      * @param string $header Header content
-     *
-     * @return bool
      */
-    public function matchesAcceptLanguage($header)
+    public function matchesAcceptLanguage($header): bool
     {
         $pattern = '/^('
             . addcslashes($this->regex, '/')
             . ')(;q=[0-9]\\.[0-9])?$/i';
-        return preg_match($pattern, $header);
+
+        return (bool) preg_match($pattern, $header);
     }
 
     /**
      * Checks whether language matches HTTP header User-Agent
      *
      * @param string $header Header content
-     *
-     * @return bool
      */
-    public function matchesUserAgent($header)
+    public function matchesUserAgent($header): bool
     {
         $pattern = '/(\(|\[|;[[:space:]])('
             . addcslashes($this->regex, '/')
             . ')(;|\]|\))/i';
-        return preg_match($pattern, $header);
+
+        return (bool) preg_match($pattern, $header);
     }
 
     /**
      * Checks whether language is RTL
-     *
-     * @return bool
      */
-    public function isRTL()
+    public function isRTL(): bool
     {
-        return in_array($this->code, array('ar', 'fa', 'he', 'ur'));
+        return in_array($this->code, ['ar', 'fa', 'he', 'ur']);
     }
 
     /**
      * Activates given translation
-     *
-     * @return bool
      */
-    public function activate()
+    public function activate(): void
     {
         $GLOBALS['lang'] = $this->code;
 
@@ -186,7 +193,7 @@ class Language
         }
 
         /* TCPDF */
-        $GLOBALS['l'] = array();
+        $GLOBALS['l'] = [];
 
         /* TCPDF settings */
         $GLOBALS['l']['a_meta_charset'] = 'UTF-8';

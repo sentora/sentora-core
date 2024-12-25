@@ -15,14 +15,25 @@
         "issues": "https://github.com/phpmyadmin/motranslator/issues",
         "source": "https://github.com/phpmyadmin/motranslator"
     },
+    "scripts": {
+        "phpcbf": "@php phpcbf",
+        "phpcs": "@php phpcs",
+        "phpstan": "@php phpstan",
+        "phpunit": "@php phpunit",
+        "test": [
+            "@phpcs",
+            "@phpstan",
+            "@phpunit"
+        ]
+    },
     "require": {
-        "php": ">=5.3.0",
-        "symfony/expression-language": "^4.0 || ^3.2 || ^2.8"
+        "php": "^7.1 || ^8.0",
+        "symfony/expression-language": "^4.0 || ^5.0 || ^6.0"
     },
     "require-dev": {
-        "apigen/apigen": "^4.1",
-        "phpunit/php-code-coverage": "*",
-        "phpunit/phpunit": "~4.8 || ~5.7 || ~6.5"
+        "phpunit/phpunit": "^7.4 || ^8 || ^9",
+        "phpmyadmin/coding-standard": "^3.0.0",
+        "phpstan/phpstan": "^1.4.6"
     },
     "autoload": {
         "psr-4": {
@@ -33,5 +44,13 @@
         "psr-4": {
             "PhpMyAdmin\\MoTranslator\\Tests\\": "tests"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "suggest": {
+        "ext-apcu": "Needed for ACPu-backed translation cache"
     }
 }

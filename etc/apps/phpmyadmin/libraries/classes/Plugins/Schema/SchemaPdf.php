@@ -1,43 +1,41 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * PDF schema export code
- *
- * @package    PhpMyAdmin-Schema
- * @subpackage PDF
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Plugins\Schema;
 
-use PhpMyAdmin\Properties\Options\Items\BoolPropertyItem;
-use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyMainGroup;
-use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyRootGroup;
 use PhpMyAdmin\Plugins\Schema\Pdf\PdfRelationSchema;
 use PhpMyAdmin\Plugins\SchemaPlugin;
-use PhpMyAdmin\Properties\Plugins\SchemaPluginProperties;
+use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyMainGroup;
+use PhpMyAdmin\Properties\Options\Groups\OptionsPropertyRootGroup;
+use PhpMyAdmin\Properties\Options\Items\BoolPropertyItem;
 use PhpMyAdmin\Properties\Options\Items\SelectPropertyItem;
+use PhpMyAdmin\Properties\Plugins\SchemaPluginProperties;
+use TCPDF;
+
+use function __;
+use function class_exists;
 
 /**
  * Handles the schema export for the PDF format
- *
- * @package    PhpMyAdmin-Schema
- * @subpackage PDF
  */
 class SchemaPdf extends SchemaPlugin
 {
     /**
-     * Constructor
+     * @psalm-return non-empty-lowercase-string
      */
-    public function __construct()
+    public function getName(): string
     {
-        $this->setProperties();
+        return 'pdf';
     }
 
     /**
      * Sets the schema export PDF properties
-     *
-     * @return void
      */
-    protected function setProperties()
+    protected function setProperties(): SchemaPluginProperties
     {
         $schemaPluginProperties = new SchemaPluginProperties();
         $schemaPluginProperties->setText('PDF');
@@ -47,12 +45,10 @@ class SchemaPdf extends SchemaPlugin
         // create the root group that will be the options field for
         // $schemaPluginProperties
         // this will be shown as "Format specific options"
-        $exportSpecificOptions = new OptionsPropertyRootGroup(
-            "Format Specific Options"
-        );
+        $exportSpecificOptions = new OptionsPropertyRootGroup('Format Specific Options');
 
         // specific options main group
-        $specificOptions = new OptionsPropertyMainGroup("general_opts");
+        $specificOptions = new OptionsPropertyMainGroup('general_opts');
         // add options common to all plugins
         $this->addCommonOptions($specificOptions);
 
@@ -64,19 +60,19 @@ class SchemaPdf extends SchemaPlugin
         $specificOptions->addProperty($leaf);
 
         $leaf = new SelectPropertyItem(
-            "orientation",
+            'orientation',
             __('Orientation')
         );
         $leaf->setValues(
-            array(
+            [
                 'L' => __('Landscape'),
                 'P' => __('Portrait'),
-            )
+            ]
         );
         $specificOptions->addProperty($leaf);
 
         $leaf = new SelectPropertyItem(
-            "paper",
+            'paper',
             __('Paper size')
         );
         $leaf->setValues($this->getPaperSizeArray());
@@ -95,15 +91,15 @@ class SchemaPdf extends SchemaPlugin
         $specificOptions->addProperty($leaf);
 
         $leaf = new SelectPropertyItem(
-            "table_order",
+            'table_order',
             __('Order of the tables')
         );
         $leaf->setValues(
-            array(
-                ''          => __('None'),
-                'name_asc'  => __('Name (Ascending)'),
+            [
+                '' => __('None'),
+                'name_asc' => __('Name (Ascending)'),
                 'name_desc' => __('Name (Descending)'),
-            )
+            ]
         );
         $specificOptions->addProperty($leaf);
 
@@ -112,19 +108,25 @@ class SchemaPdf extends SchemaPlugin
 
         // set the options for the schema export plugin property item
         $schemaPluginProperties->setOptions($exportSpecificOptions);
-        $this->properties = $schemaPluginProperties;
+
+        return $schemaPluginProperties;
     }
 
     /**
      * Exports the schema into PDF format.
      *
      * @param string $db database name
-     *
-     * @return bool Whether it succeeded
      */
-    public function exportSchema($db)
+    public function exportSchema($db): bool
     {
         $export = new PdfRelationSchema($db);
         $export->showOutput();
+
+        return true;
+    }
+
+    public static function isAvailable(): bool
+    {
+        return class_exists(TCPDF::class);
     }
 }

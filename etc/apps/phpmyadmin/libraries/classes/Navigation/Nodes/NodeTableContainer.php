@@ -1,19 +1,19 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Functionality for the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
-use PhpMyAdmin\Util;
+
+use function __;
+use function _pgettext;
 
 /**
  * Represents a container for table nodes in the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
 class NodeTableContainer extends NodeDatabaseChildContainer
 {
@@ -23,30 +23,21 @@ class NodeTableContainer extends NodeDatabaseChildContainer
     public function __construct()
     {
         parent::__construct(__('Tables'), Node::CONTAINER);
-        $this->icon = Util::getImage('b_browse', __('Tables'));
-        $this->links = array(
-            'text' => 'db_structure.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s&amp;tbl_type=table',
-            'icon' => 'db_structure.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s&amp;tbl_type=table',
-        );
-        $this->real_name = 'tables';
+        $this->icon = ['image' => 'b_browse', 'title' => __('Tables')];
+        $this->links = [
+            'text' => ['route' => '/database/structure', 'params' => ['tbl_type' => 'table', 'db' => null]],
+            'icon' => ['route' => '/database/structure', 'params' => ['tbl_type' => 'table', 'db' => null]],
+        ];
+        $this->realName = 'tables';
         $this->classes = 'tableContainer subContainer';
 
-        $new_label = _pgettext('Create new table', 'New');
-        $new = NodeFactory::getInstance(
-            'Node',
-            $new_label
-        );
-        $new->isNew = true;
-        $new->icon = Util::getImage('b_table_add', $new_label);
-        $new->links = array(
-            'text' => 'tbl_create.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s',
-            'icon' => 'tbl_create.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s',
-        );
-        $new->classes = 'new_table italics';
+        $newLabel = _pgettext('Create new table', 'New');
+        $new = NodeFactory::getInstanceForNewNode($newLabel, 'new_table italics');
+        $new->icon = ['image' => 'b_table_add', 'title' => $newLabel];
+        $new->links = [
+            'text' => ['route' => '/table/create', 'params' => ['db' => null]],
+            'icon' => ['route' => '/table/create', 'params' => ['db' => null]],
+        ];
         $this->addChild($new);
     }
 }

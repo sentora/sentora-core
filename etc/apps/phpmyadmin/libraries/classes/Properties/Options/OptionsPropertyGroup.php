@@ -1,44 +1,46 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Superclass for the Property Group classes.
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Properties\Options;
+
+use Countable;
+
+use function array_diff;
+use function count;
+use function in_array;
 
 /**
  * Parents group property items and provides methods to manage groups of
  * properties.
  *
  * @todo    modify descriptions if needed, when the options are integrated
- * @package PhpMyAdmin
  */
-abstract class OptionsPropertyGroup extends OptionsPropertyItem implements \Countable
+abstract class OptionsPropertyGroup extends OptionsPropertyItem implements Countable
 {
     /**
      * Holds a group of properties (PhpMyAdmin\Properties\Options\OptionsPropertyItem instances)
      *
      * @var array
      */
-    private $_properties;
+    private $properties;
 
     /**
      * Adds a property to the group of properties
      *
      * @param OptionsPropertyItem $property the property instance to be added
      *                                      to the group
-     *
-     * @return void
      */
-    public function addProperty($property)
+    public function addProperty($property): void
     {
-        if (!$this->getProperties() == null
-            && in_array($property, $this->getProperties(), true)
-        ) {
+        if (! $this->getProperties() == null && in_array($property, $this->getProperties(), true)) {
             return;
         }
-        $this->_properties [] = $property;
+
+        $this->properties[] = $property;
     }
 
     /**
@@ -46,24 +48,21 @@ abstract class OptionsPropertyGroup extends OptionsPropertyItem implements \Coun
      *
      * @param OptionsPropertyItem $property the property instance to be removed
      *                                      from the group
-     *
-     * @return void
      */
-    public function removeProperty($property)
+    public function removeProperty($property): void
     {
-        $this->_properties = array_diff(
+        $this->properties = array_diff(
             $this->getProperties(),
-            array($property)
+            [$property]
         );
     }
-
 
     /* ~~~~~~~~~~~~~~~~~~~~ Getters and Setters ~~~~~~~~~~~~~~~~~~~~ */
 
     /**
      * Gets the instance of the class
      *
-     * @return array
+     * @return OptionsPropertyGroup
      */
     public function getGroup()
     {
@@ -77,28 +76,26 @@ abstract class OptionsPropertyGroup extends OptionsPropertyItem implements \Coun
      */
     public function getProperties()
     {
-        return $this->_properties;
+        return $this->properties;
     }
 
     /**
      * Gets the number of properties
-     *
-     * @return int
      */
-    public function getNrOfProperties()
+    public function getNrOfProperties(): int
     {
-        if (is_null($this->_properties)) {
+        if ($this->properties === null) {
             return 0;
         }
-        return count($this->_properties);
+
+        return count($this->properties);
     }
 
     /**
      * Countable interface implementation.
-     *
-     * @return int
      */
-    public function count() {
+    public function count(): int
+    {
         return $this->getNrOfProperties();
     }
 }

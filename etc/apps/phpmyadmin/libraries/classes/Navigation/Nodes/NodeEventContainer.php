@@ -1,19 +1,19 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Functionality for the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Navigation\Nodes;
 
 use PhpMyAdmin\Navigation\NodeFactory;
-use PhpMyAdmin\Util;
+
+use function __;
+use function _pgettext;
 
 /**
  * Represents a container for events nodes in the navigation tree
- *
- * @package PhpMyAdmin-Navigation
  */
 class NodeEventContainer extends NodeDatabaseChildContainer
 {
@@ -23,28 +23,20 @@ class NodeEventContainer extends NodeDatabaseChildContainer
     public function __construct()
     {
         parent::__construct(__('Events'), Node::CONTAINER);
-        $this->icon = Util::getImage('b_events', '');
-        $this->links = array(
-            'text' => 'db_events.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s',
-            'icon' => 'db_events.php?server=' . $GLOBALS['server']
-                . '&amp;db=%1$s',
-        );
-        $this->real_name = 'events';
+        $this->icon = ['image' => 'b_events', 'title' => __('Events')];
+        $this->links = [
+            'text' => ['route' => '/database/events', 'params' => ['db' => null]],
+            'icon' => ['route' => '/database/events', 'params' => ['db' => null]],
+        ];
+        $this->realName = 'events';
 
-        $new = NodeFactory::getInstance(
-            'Node',
-            _pgettext('Create new event', 'New')
-        );
-        $new->isNew = true;
-        $new->icon = Util::getImage('b_event_add', '');
-        $new->links = array(
-            'text' => 'db_events.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s&add_item=1',
-            'icon' => 'db_events.php?server=' . $GLOBALS['server']
-                . '&amp;db=%2$s&add_item=1',
-        );
-        $new->classes = 'new_event italics';
+        $newLabel = _pgettext('Create new event', 'New');
+        $new = NodeFactory::getInstanceForNewNode($newLabel, 'new_event italics');
+        $new->icon = ['image' => 'b_event_add', 'title' => $newLabel];
+        $new->links = [
+            'text' => ['route' => '/database/events', 'params' => ['add_item' => 1, 'db' => null]],
+            'icon' => ['route' => '/database/events', 'params' => ['add_item' => 1, 'db' => null]],
+        ];
         $this->addChild($new);
     }
 }

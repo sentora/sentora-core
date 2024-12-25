@@ -1,19 +1,21 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * Provides upload functionalities for the import plugins
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Plugins\Import\Upload;
 
-use PhpMyAdmin\Display\ImportAjax;
+use PhpMyAdmin\Import\Ajax;
 use PhpMyAdmin\Plugins\UploadInterface;
+
+use function array_key_exists;
+use function ini_get;
+use function trim;
 
 /**
  * Implementation for session
- *
- * @package PhpMyAdmin
  */
 class UploadSession implements UploadInterface
 {
@@ -24,7 +26,7 @@ class UploadSession implements UploadInterface
      */
     public static function getIdKey()
     {
-        return ini_get('session.upload_progress.name');
+        return (string) ini_get('session.upload_progress.name');
     }
 
     /**
@@ -44,19 +46,20 @@ class UploadSession implements UploadInterface
             return null;
         }
 
-        if (!array_key_exists($id, $_SESSION[$SESSION_KEY])) {
-            $_SESSION[$SESSION_KEY][$id] = array(
-                'id'       => $id,
+        if (! array_key_exists($id, $_SESSION[$SESSION_KEY])) {
+            $_SESSION[$SESSION_KEY][$id] = [
+                'id' => $id,
                 'finished' => false,
-                'percent'  => 0,
-                'total'    => 0,
+                'percent' => 0,
+                'total' => 0,
                 'complete' => 0,
-                'plugin'   => UploadSession::getIdKey(),
-            );
+                'plugin' => self::getIdKey(),
+            ];
         }
+
         $ret = $_SESSION[$SESSION_KEY][$id];
 
-        if (!ImportAjax::sessionCheck() || $ret['finished']) {
+        if (! Ajax::sessionCheck() || $ret['finished']) {
             return $ret;
         }
 
@@ -76,14 +79,14 @@ class UploadSession implements UploadInterface
                 $ret['percent'] = $ret['complete'] / $ret['total'] * 100;
             }
         } else {
-            $ret = array(
-                'id'       => $id,
+            $ret = [
+                'id' => $id,
                 'finished' => true,
-                'percent'  => 100,
-                'total'    => $ret['total'],
+                'percent' => 100,
+                'total' => $ret['total'],
                 'complete' => $ret['total'],
-                'plugin'   => UploadSession::getIdKey(),
-            );
+                'plugin' => self::getIdKey(),
+            ];
         }
 
         $_SESSION[$SESSION_KEY][$id] = $ret;

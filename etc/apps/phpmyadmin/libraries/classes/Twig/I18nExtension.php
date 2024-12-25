@@ -1,31 +1,19 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
-/**
- * hold PhpMyAdmin\Twig\I18nExtension class
- *
- * @package PhpMyAdmin\Twig
- */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Twig;
 
-use PhpMyAdmin\Twig\I18n\TokenParserTrans;
-use Twig\Extensions\I18nExtension as TwigI18nExtension;
+use PhpMyAdmin\Twig\Extensions\I18nExtension as TwigI18nExtension;
+use PhpMyAdmin\Twig\Extensions\Node\TransNode;
 use Twig\TwigFilter;
 
-/**
- * Class I18nExtension
- *
- * @package PhpMyAdmin\Twig
- */
 class I18nExtension extends TwigI18nExtension
 {
-    /**
-     * Returns the token parser instances to add to the existing list.
-     *
-     * @return \Twig\TokenParser\TokenParserInterface[]
-     */
-    public function getTokenParsers()
+    public function __construct()
     {
-        return array(new TokenParserTrans());
+        TransNode::$notesLabel = '// l10n: ';
+        TransNode::$enableMoTranslator = true;
     }
 
     /**
@@ -35,8 +23,9 @@ class I18nExtension extends TwigI18nExtension
      */
     public function getFilters()
     {
-        return array(
-             new TwigFilter('trans', '_gettext'),
-        );
+        return [
+            // This is just a performance override
+            new TwigFilter('trans', '_gettext'),
+        ];
     }
 }

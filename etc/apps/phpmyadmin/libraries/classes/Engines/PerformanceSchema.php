@@ -1,18 +1,16 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * The performance schema storage engine
- *
- * @package PhpMyAdmin-Engines
  */
+
+declare(strict_types=1);
+
 namespace PhpMyAdmin\Engines;
 
 use PhpMyAdmin\StorageEngine;
 
 /**
  * The performance schema storage engine
- *
- * @package PhpMyAdmin-Engines
  */
 class PerformanceSchema extends StorageEngine
 {

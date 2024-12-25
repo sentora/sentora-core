@@ -1,80 +1,77 @@
 <?php
-/* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * File for vendor customisation, you can change here paths or some behaviour,
+ * File for vendor customization, you can change here paths or some behaviour,
  * which vendors such as Linux distributions might want to change.
  *
  * For changing this file you should know what you are doing. For this reason
  * options here are not part of normal configuration.
- *
- * @package PhpMyAdmin
  */
+
+declare(strict_types=1);
+
 if (! defined('PHPMYADMIN')) {
     exit;
 }
 
-/**
- * Path to vendor autoload file. Useful when you want to
- * have have vendor dependencies somewhere else.
- */
-define('AUTOLOAD_FILE', './vendor/autoload.php');
+return [
+    /**
+     * Path to vendor autoload file. Useful when you want to have vendor dependencies somewhere else.
+     */
+    'autoloadFile' => ROOT_PATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php',
 
-/**
- * Directory where cache files are stored.
- */
-define('TEMP_DIR', './tmp/');
+    /**
+     * Directory where cache files are stored.
+     */
+    'tempDir' => ROOT_PATH . 'tmp' . DIRECTORY_SEPARATOR,
 
-/**
- * Path to changelog file, can be gzip compressed. Useful when you want to
- * have documentation somewhere else, eg. /usr/share/doc.
- */
-define('CHANGELOG_FILE', './ChangeLog');
+    /**
+     * Path to changelog file, can be gzip compressed.
+     * Useful when you want to have documentation somewhere else, e.g. /usr/share/doc.
+     */
+    'changeLogFile' => ROOT_PATH . 'ChangeLog',
 
-/**
- * Path to license file. Useful when you want to have documentation somewhere
- * else, eg. /usr/share/doc.
- */
-define('LICENSE_FILE', './LICENSE');
+    /**
+     * Path to license file. Useful when you want to have documentation somewhere else, e.g. /usr/share/doc.
+     */
+    'licenseFile' => ROOT_PATH . 'LICENSE',
 
-/**
- * Directory where SQL scripts to create/upgrade configuration storage reside.
- */
-define('SQL_DIR', './sql/');
+    /**
+     * Directory where SQL scripts to create/upgrade configuration storage reside.
+     */
+    'sqlDir' => ROOT_PATH . 'sql' . DIRECTORY_SEPARATOR,
 
-/**
- * Directory where configuration files are stored.
- * It is not used directly in code, just a convenient
- * define used further in this file.
- */
-define('CONFIG_DIR', '');
+    /**
+     * Filename of a configuration file.
+     */
+    'configFile' => ROOT_PATH . 'config.inc.php',
 
-/**
- * Filename of a configuration file.
- */
-define('CONFIG_FILE', CONFIG_DIR . 'config.inc.php');
+    /**
+     * Filename of custom header file.
+     */
+    'customHeaderFile' => ROOT_PATH . 'config.header.inc.php',
 
-/**
- * Filename of custom header file.
- */
-define('CUSTOM_HEADER_FILE', CONFIG_DIR . 'config.header.inc.php');
+    /**
+     * Filename of custom footer file.
+     */
+    'customFooterFile' => ROOT_PATH . 'config.footer.inc.php',
 
-/**
- * Filename of custom footer file.
- */
-define('CUSTOM_FOOTER_FILE', CONFIG_DIR . 'config.footer.inc.php');
+    /**
+     * Default value for check for version upgrades.
+     */
+    'versionCheckDefault' => true,
 
-/**
- * Default value for check for version upgrades.
- */
-define('VERSION_CHECK_DEFAULT', true);
+    /**
+     * Path to files with compiled locales (*.mo)
+     */
+    'localePath' => ROOT_PATH . 'locale' . DIRECTORY_SEPARATOR,
 
-/**
- * Path to files with compiled locales (*.mo)
- */
-define('LOCALE_PATH', './locale/');
+    /**
+     * Define the cache directory for routing cache and other cache files
+     */
+    'cacheDir' => ROOT_PATH . 'libraries' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR,
 
-/**
- * Avoid referring to nonexistent files (causes warnings when open_basedir
- * is used)
- */
-define('K_PATH_IMAGES', '');
+    /**
+     * Suffix to add to the phpMyAdmin version
+     */
+    'versionSuffix' => '',
+];
