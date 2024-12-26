@@ -22,11 +22,16 @@ class enigma_ui
     private $css_loaded;
     private $js_loaded;
     private $data;
-    private $keys_parts  = array();
-    private $keys_bodies = array();
+    private $keys_parts  = [];
+    private $keys_bodies = [];
 
-
-    function __construct($enigma_plugin, $home='')
+    /**
+     * Object constructor
+     *
+     * @param enigma $enigma_plugin The plugin instance
+     * @param string $home          Home directory
+     */
+    function __construct($enigma_plugin, $home = '')
     {
         $this->enigma = $enigma_plugin;
         $this->rc     = $enigma_plugin->rc;
@@ -35,14 +40,12 @@ class enigma_ui
 
     /**
      * UI initialization and requests handlers.
-     *
-     * @param string Preferences section
      */
     function init()
     {
         $this->add_js();
 
-        $action = rcube_utils::get_input_value('_a', rcube_utils::INPUT_GPC);
+        $action = rcube_utils::get_input_string('_a', rcube_utils::INPUT_GPC);
 
         if ($this->rc->action == 'plugin.enigmakeys') {
             switch ($action) {
@@ -84,11 +87,11 @@ class enigma_ui
                     break;
             }
 
-            $this->rc->output->add_handlers(array(
-                    'keyslist'     => array($this, 'tpl_keys_list'),
-                    'countdisplay' => array($this, 'tpl_keys_rowcount'),
-                    'searchform'   => array($this->rc->output, 'search_form'),
-            ));
+            $this->rc->output->add_handlers([
+                    'keyslist'     => [$this, 'tpl_keys_list'],
+                    'countdisplay' => [$this, 'tpl_keys_rowcount'],
+                    'searchform'   => [$this->rc->output, 'search_form'],
+            ]);
 
             $this->rc->output->set_pagetitle($this->enigma->gettext('enigmakeys'));
             $this->rc->output->send('enigma.keys');
@@ -96,15 +99,15 @@ class enigma_ui
 /*
         // Preferences UI
         else if ($this->rc->action == 'plugin.enigmacerts') {
-            $this->rc->output->add_handlers(array(
-                    'keyslist'     => array($this, 'tpl_certs_list'),
-                    'keyframe'     => array($this, 'tpl_cert_frame'),
-                    'countdisplay' => array($this, 'tpl_certs_rowcount'),
-                    'searchform'   => array($this->rc->output, 'search_form'),
-            ));
+            $this->rc->output->add_handlers([
+                    'keyslist'     => [$this, 'tpl_certs_list'],
+                    'keyframe'     => [$this, 'tpl_cert_frame'],
+                    'countdisplay' => [$this, 'tpl_certs_rowcount'],
+                    'searchform'   => [$this->rc->output, 'search_form'],
+            ]);
 
             $this->rc->output->set_pagetitle($this->enigma->gettext('enigmacerts'));
-            $this->rc->output->send('enigma.certs'); 
+            $this->rc->output->send('enigma.certs');
         }
 */
         // Message composing UI
@@ -149,28 +152,27 @@ class enigma_ui
      * @param enigma_error $status Error object with key info
      * @param array        $params Optional prompt parameters
      */
-    function password_prompt($status, $params = array())
+    function password_prompt($status, $params = [])
     {
-        $data = $status->getData('missing');
+        $data = array_merge($status->getData('missing') ?: [], $status->getData('bad') ?: []);
 
-        if (empty($data)) {
-            $data = $status->getData('bad');
-        }
+        // A message can be encrypted with multiple private keys,
+        // find the one that exists in the keyring
+        foreach ($data as $keyid => $username) {
+            $key = $this->enigma->engine->get_key($keyid);
+            if ($key && $key->is_private()) {
+                if ($key->name && strpos($username, $keyid) !== false) {
+                    $data[$keyid] = $key->name;
+                }
 
-        $keyid = key($data);
-        $data  = array(
-            'keyid' => $params['keyid'] ?: $keyid,
-            'user'  => $data[$keyid]
-        );
-
-        // With GnuPG 2.1 user name may not be specified (e.g. on private
-        // key export), we'll get the key information and set the name appropriately
-        if ($keyid && $params['keyid'] && strpos($data['user'], $keyid) !== false) {
-            $key = $this->enigma->engine->get_key($params['keyid']);
-            if ($key && $key->name) {
-                $data['user'] = $key->name;
+                break;
             }
         }
+
+        $data  = [
+            'keyid' => $keyid,
+            'user'  => $data[$keyid]
+        ];
 
         if (!empty($params)) {
             $data = array_merge($params, $data);
@@ -194,22 +196,22 @@ class enigma_ui
     /**
      * Template object for list of keys.
      *
-     * @param array Object attributes
+     * @param array $attrib Object attributes
      *
      * @return string HTML content
      */
     function tpl_keys_list($attrib)
     {
         // add id to message list table if not specified
-        if (!strlen($attrib['id'])) {
+        if (empty($attrib['id'])) {
             $attrib['id'] = 'rcmenigmakeyslist';
         }
 
         // define list of cols to be displayed
-        $a_show_cols = array('name');
+        $a_show_cols = ['name'];
 
         // create XHTML table
-        $out = $this->rc->table_output($attrib, array(), $a_show_cols, 'id');
+        $out = rcmail_action::table_output($attrib, [], $a_show_cols, 'id');
 
         // set client env
         $this->rc->output->add_gui_object('keyslist', $attrib['id']);
@@ -233,22 +235,26 @@ class enigma_ui
         $this->enigma->load_engine();
 
         $pagesize = $this->rc->config->get('pagesize', 100);
-        $page     = max(intval(rcube_utils::get_input_value('_p', rcube_utils::INPUT_GPC)), 1);
-        $search   = rcube_utils::get_input_value('_q', rcube_utils::INPUT_GPC);
+        $page     = max(intval(rcube_utils::get_input_string('_p', rcube_utils::INPUT_GPC)), 1);
+        $search   = rcube_utils::get_input_string('_q', rcube_utils::INPUT_GPC);
 
         // Get the list
-        $list = $this->enigma->engine->list_keys($search);
+        $list     = $this->enigma->engine->list_keys($search);
+        $size     = 0;
+        $listsize = 0;
 
-        if ($list && ($list instanceof enigma_error))
+        if (!is_array($list)) {
             $this->rc->output->show_message('enigma.keylisterror', 'error');
-        else if (empty($list))
+        }
+        else if (empty($list)) {
             $this->rc->output->show_message('enigma.nokeysfound', 'notice');
-        else if (is_array($list)) {
+        }
+        else {
             // Save the size
             $listsize = count($list);
 
             // Sort the list by key (user) name
-            usort($list, array('enigma_key', 'cmp'));
+            usort($list, ['enigma_key', 'cmp']);
 
             // Slice current page
             $list = array_slice($list, ($page - 1) * $pagesize, $pagesize);
@@ -256,11 +262,11 @@ class enigma_ui
 
             // Add rows
             foreach ($list as $key) {
-                $this->rc->output->command('enigma_add_list_row', array(
+                $this->rc->output->command('enigma_add_list_row', [
                         'name'  => rcube::Q($key->name),
                         'id'    => $key->id,
                         'flags' => $key->is_private() ? 'p' : ''
-                ));
+                ]);
             }
         }
 
@@ -268,8 +274,7 @@ class enigma_ui
         $this->rc->output->set_env('search_request', $search);
         $this->rc->output->set_env('pagecount', ceil($listsize/$pagesize));
         $this->rc->output->set_env('current_page', $page);
-        $this->rc->output->command('set_rowcount',
-            $this->get_rowcount_text($listsize, $size, $page));
+        $this->rc->output->command('set_rowcount', $this->get_rowcount_text($listsize, $size, $page));
 
         $this->rc->output->send();
     }
@@ -277,14 +282,15 @@ class enigma_ui
     /**
      * Template object for list records counter.
      *
-     * @param array Object attributes
+     * @param array $attrib Object attributes
      *
      * @return string HTML output
      */
     function tpl_keys_rowcount($attrib)
     {
-        if (!$attrib['id'])
+        if (empty($attrib['id'])) {
             $attrib['id'] = 'rcmcountdisplay';
+        }
 
         $this->rc->output->add_gui_object('countdisplay', $attrib['id']);
 
@@ -294,7 +300,7 @@ class enigma_ui
     /**
      * Returns text representation of list records counter
      */
-    private function get_rowcount_text($all=0, $curr_count=0, $page=1)
+    private function get_rowcount_text($all = 0, $curr_count = 0, $page = 1)
     {
         if (!$curr_count) {
             $out = $this->enigma->gettext('nokeysfound');
@@ -303,13 +309,10 @@ class enigma_ui
             $pagesize = $this->rc->config->get('pagesize', 100);
             $first    = ($page - 1) * $pagesize;
 
-            $out = $this->enigma->gettext(array(
-                'name' => 'keysfromto',
-                'vars' => array(
-                    'from'  => $first + 1,
-                    'to'    => $first + $curr_count,
-                    'count' => $all)
-            ));
+            $out = $this->enigma->gettext([
+                    'name' => 'keysfromto',
+                    'vars' => ['from' => $first + 1, 'to' => $first + $curr_count, 'count' => $all]
+            ]);
         }
 
         return $out;
@@ -322,7 +325,7 @@ class enigma_ui
     {
         $this->enigma->load_engine();
 
-        $id  = rcube_utils::get_input_value('_id', rcube_utils::INPUT_GET);
+        $id  = rcube_utils::get_input_string('_id', rcube_utils::INPUT_GET);
         $res = $this->enigma->engine->get_key($id);
 
         if ($res instanceof enigma_key) {
@@ -334,10 +337,10 @@ class enigma_ui
             $this->rc->output->send('iframe');
         }
 
-        $this->rc->output->add_handlers(array(
-            'keyname' => array($this, 'tpl_key_name'),
-            'keydata' => array($this, 'tpl_key_data'),
-        ));
+        $this->rc->output->add_handlers([
+            'keyname' => [$this, 'tpl_key_name'],
+            'keydata' => [$this, 'tpl_key_data'],
+        ]);
 
         $this->rc->output->set_pagetitle($this->enigma->gettext('keyinfo'));
         $this->rc->output->send('enigma.keyinfo');
@@ -345,6 +348,10 @@ class enigma_ui
 
     /**
      * Template object for key name
+     *
+     * @param array $attrib Object attributes
+     *
+     * @return string HTML output
      */
     function tpl_key_name($attrib)
     {
@@ -353,11 +360,15 @@ class enigma_ui
 
     /**
      * Template object for key information page content
+     *
+     * @param array $attrib Object attributes
+     *
+     * @return string HTML output
      */
     function tpl_key_data($attrib)
     {
         $out   = '';
-        $table = new html_table(array('cols' => 2));
+        $table = new html_table(['cols' => 2]);
 
         // Key user ID
         $table->add('title', html::label(null, $this->enigma->gettext('keyuserid')));
@@ -369,12 +380,14 @@ class enigma_ui
 
         // Key type
         $keytype = $this->data->get_type();
+        $type    = null;
         if ($keytype == enigma_key::TYPE_KEYPAIR) {
             $type = $this->enigma->gettext('typekeypair');
         }
         else if ($keytype == enigma_key::TYPE_PUBLIC) {
             $type = $this->enigma->gettext('typepublickey');
         }
+
         $table->add('title', html::label(null, $this->enigma->gettext('keytype')));
         $table->add(null, $type);
 
@@ -383,11 +396,11 @@ class enigma_ui
         $table->add(null, $this->data->subkeys[0]->get_fingerprint());
 
         $out .= html::tag('fieldset', null,
-            html::tag('legend', null,
-                $this->enigma->gettext('basicinfo')) . $table->show($attrib));
+            html::tag('legend', null, $this->enigma->gettext('basicinfo')) . $table->show($attrib)
+        );
 
         // Subkeys
-        $table = new html_table(array('cols' => 5, 'id' => 'enigmasubkeytable', 'class' => 'records-table'));
+        $table = new html_table(['cols' => 5, 'id' => 'enigmasubkeytable', 'class' => 'records-table']);
 
         $table->add_header('id', $this->enigma->gettext('subkeyid'));
         $table->add_header('algo', $this->enigma->gettext('subkeyalgo'));
@@ -395,14 +408,12 @@ class enigma_ui
         $table->add_header('expires', $this->enigma->gettext('subkeyexpires'));
         $table->add_header('usage', $this->enigma->gettext('subkeyusage'));
 
-        $now         = time();
-        $date_format = $this->rc->config->get('date_format', 'Y-m-d');
-        $usage_map   = array(
+        $usage_map = [
             enigma_key::CAN_ENCRYPT      => $this->enigma->gettext('typeencrypt'),
             enigma_key::CAN_SIGN         => $this->enigma->gettext('typesign'),
             enigma_key::CAN_CERTIFY      => $this->enigma->gettext('typecert'),
             enigma_key::CAN_AUTHENTICATE => $this->enigma->gettext('typeauth'),
-        );
+        ];
 
         foreach ($this->data->subkeys as $subkey) {
             $algo = $subkey->get_algorithm();
@@ -410,27 +421,27 @@ class enigma_ui
                 $algo .= ' (' . $subkey->length . ')';
             }
 
-            $usage = array();
+            $usage = [];
             foreach ($usage_map as $key => $text) {
                 if ($subkey->usage & $key) {
                     $usage[] = $text;
                 }
             }
 
-            $table->set_row_attribs($subkey->revoked || ($subkey->expires && $subkey->expires < $now) ? 'deleted' : '');
+            $table->set_row_attribs($subkey->revoked || $subkey->is_expired() ? 'deleted' : '');
             $table->add('id', $subkey->get_short_id());
             $table->add('algo', $algo);
-            $table->add('created', $subkey->created ? $this->rc->format_date($subkey->created, $date_format, false) : '');
-            $table->add('expires', $subkey->expires ? $this->rc->format_date($subkey->expires, $date_format, false) : $this->enigma->gettext('expiresnever'));
+            $table->add('created', $subkey->get_creation_date());
+            $table->add('expires', $subkey->get_expiration_date() ?: $this->enigma->gettext('expiresnever'));
             $table->add('usage', implode(',', $usage));
         }
 
         $out .= html::tag('fieldset', null,
-            html::tag('legend', null,
-                $this->enigma->gettext('subkeys')) . $table->show());
+            html::tag('legend', null, $this->enigma->gettext('subkeys')) . $table->show()
+        );
 
         // Additional user IDs
-        $table = new html_table(array('cols' => 2, 'id' => 'enigmausertable', 'class' => 'records-table'));
+        $table = new html_table(['cols' => 2, 'id' => 'enigmausertable', 'class' => 'records-table']);
 
         $table->add_header('id', $this->enigma->gettext('userid'));
         $table->add_header('valid', $this->enigma->gettext('uservalid'));
@@ -442,7 +453,7 @@ class enigma_ui
             }
 
             $username = $user->name;
-            if ($user->comment) {
+            if (!empty($user->comment)) {
                 $username .= ' (' . $user->comment . ')';
             }
             $username .= ' <' . $user->email . '>';
@@ -453,8 +464,8 @@ class enigma_ui
         }
 
         $out .= html::tag('fieldset', null,
-            html::tag('legend', null,
-                $this->enigma->gettext('userids')) . $table->show());
+            html::tag('legend', null, $this->enigma->gettext('userids')) . $table->show()
+        );
 
         return $out;
     }
@@ -464,8 +475,8 @@ class enigma_ui
      */
     private function key_export()
     {
-        $keys   = rcube_utils::get_input_value('_keys', rcube_utils::INPUT_POST);
-        $priv   = rcube_utils::get_input_value('_priv', rcube_utils::INPUT_POST);
+        $keys   = rcube_utils::get_input_string('_keys', rcube_utils::INPUT_POST);
+        $priv   = rcube_utils::get_input_string('_priv', rcube_utils::INPUT_POST);
         $engine = $this->enigma->load_engine();
         $list   = $keys == '*' ? $engine->list_keys() : explode(',', $keys);
 
@@ -484,7 +495,7 @@ class enigma_ui
                     $code = $status->getCode();
 
                     if ($code == enigma_error::BADPASS) {
-                        $this->password_prompt($status, array(
+                        $this->password_prompt($status, [
                                 'input_keys'   => $keys,
                                 'input_priv'   => 1,
                                 'input_task'   => 'settings',
@@ -493,15 +504,14 @@ class enigma_ui
                                 'action'       => '?',
                                 'iframe'       => true,
                                 'nolock'       => true,
-                                'keyid'        => $keyid,
-                        ));
+                        ]);
                         fclose($fp);
                         $this->rc->output->send('iframe');
                     }
                 }
             }
 
-            // send downlaod headers
+            // send download headers
             header('Content-Type: application/pgp-keys');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
 
@@ -521,7 +531,7 @@ class enigma_ui
     private function key_import()
     {
         // Import process
-        if ($data = rcube_utils::get_input_value('_keys', rcube_utils::INPUT_POST)) {
+        if ($data = rcube_utils::get_input_string('_keys', rcube_utils::INPUT_POST)) {
             $this->enigma->load_engine();
             $this->enigma->engine->password_handler();
 
@@ -534,7 +544,7 @@ class enigma_ui
                 }
                 else {
                     $this->rc->output->show_message('enigma.keysimportsuccess', 'confirmation',
-                        array('new' => $result['imported'], 'old' => $result['unchanged']));
+                        ['new' => $result['imported'], 'old' => $result['unchanged']]);
 
                     if ($result['imported'] && !empty($_POST['_refresh'])) {
                         $this->rc->output->command('enigma_list', 1, false);
@@ -547,7 +557,7 @@ class enigma_ui
 
             $this->rc->output->send();
         }
-        else if ($_FILES['_file']['tmp_name'] && is_uploaded_file($_FILES['_file']['tmp_name'])) {
+        else if (!empty($_FILES['_file']['tmp_name']) && is_uploaded_file($_FILES['_file']['tmp_name'])) {
             $this->enigma->load_engine();
             $result = $this->enigma->engine->import_key($_FILES['_file']['tmp_name'], true);
 
@@ -558,7 +568,7 @@ class enigma_ui
                 }
 
                 $this->rc->output->show_message('enigma.keysimportsuccess', 'confirmation',
-                    array('new' => $result['imported'], 'old' => $result['unchanged']));
+                    ['new' => $result['imported'], 'old' => $result['unchanged']]);
 
                 $this->rc->output->command('parent.enigma_import_success');
             }
@@ -570,20 +580,14 @@ class enigma_ui
             }
             $this->rc->output->send('iframe');
         }
-        else if ($err = $_FILES['_file']['error']) {
-            if ($err == UPLOAD_ERR_INI_SIZE || $err == UPLOAD_ERR_FORM_SIZE) {
-                $this->rc->output->show_message('filesizeerror', 'error',
-                    array('size' => $this->rc->show_bytes(rcube_utils::max_upload_size())));
-            } else {
-                $this->rc->output->show_message('fileuploaderror', 'error');
-            }
-
+        else if (!empty($_FILES['_file']['error'])) {
+            rcmail_action::upload_error($_FILES['_file']['error']);
             $this->rc->output->send('iframe');
         }
 
-        $this->rc->output->add_handlers(array(
-            'importform' => array($this, 'tpl_key_import_form'),
-        ));
+        $this->rc->output->add_handlers([
+                'importform' => [$this, 'tpl_key_import_form'],
+        ]);
 
         $this->rc->output->send('enigma.keyimport');
     }
@@ -593,34 +597,43 @@ class enigma_ui
      */
     private function key_import_search()
     {
-        $this->rc->output->add_handlers(array(
-            'importform' => array($this, 'tpl_key_import_form'),
-        ));
+        $this->rc->output->add_handlers([
+                'importform' => [$this, 'tpl_key_import_form'],
+        ]);
 
         $this->rc->output->send('enigma.keysearch');
     }
 
     /**
      * Template object for key import (upload) form
+     *
+     * @param array $attrib Object attributes
+     *
+     * @return string HTML output
      */
     function tpl_key_import_form($attrib)
     {
-        $attrib += array('id' => 'rcmKeyImportForm');
+        $attrib += ['id' => 'rcmKeyImportForm'];
 
         if (empty($attrib['part']) || $attrib['part'] == 'import') {
             $title  = $this->enigma->gettext('keyimportlabel');
-            $upload = new html_inputfield(array('type' => 'file', 'name' => '_file',
-                'id' => 'rcmimportfile', 'size' => 30));
+            $upload = new html_inputfield([
+                    'type'  => 'file',
+                    'name'  => '_file',
+                    'id'    => 'rcmimportfile',
+                    'size'  => 30,
+                    'class' => 'form-control'
+            ]);
 
-            $max_filesize  = $this->rc->upload_init();
-            $upload_button = new html_button(array(
+            $max_filesize  = rcmail_action::upload_init();
+            $upload_button = new html_button([
                     'class'   => 'button import',
                     'onclick' => "return rcmail.command('plugin.enigma-import','',this,event)",
-            ));
+            ]);
 
             $form = html::div(null, html::p(null, rcube::Q($this->enigma->gettext('keyimporttext'), 'show'))
                 . $upload->show()
-                . html::div('hint', $this->rc->gettext(array('id' => 'importfile', 'name' => 'maxuploadsize', 'vars' => array('size' => $max_filesize))))
+                . html::div('hint', $this->rc->gettext(['id' => 'importfile', 'name' => 'maxuploadsize', 'vars' => ['size' => $max_filesize]]))
                 . (empty($attrib['part']) ? html::br() . html::br() . $upload_button->show($this->rc->gettext('import')) : '')
             );
 
@@ -630,17 +643,22 @@ class enigma_ui
             else {
                 $this->rc->output->set_pagetitle($title);
             }
+
+            $warning = $this->enigma->gettext('keystoragenotice');
+            $warning = html::div(['class' => 'boxinformation mb-3', 'id' => 'key-notice'], $warning);
+
+            $form = $warning . $form;
         }
 
         if (empty($attrib['part']) || $attrib['part'] == 'search') {
             $title  = $this->enigma->gettext('keyimportsearchlabel');
-            $search = new html_inputfield(array('type' => 'text', 'name' => '_search',
-                'id' => 'rcmimportsearch', 'size' => 30));
+            $search = new html_inputfield(['type' => 'text', 'name' => '_search',
+                'id' => 'rcmimportsearch', 'size' => 30, 'class' => 'form-control']);
 
-            $search_button = new html_button(array(
+            $search_button = new html_button([
                     'class'   => 'button search',
                     'onclick' => "return rcmail.command('plugin.enigma-import-search','',this,event)",
-            ));
+            ]);
 
             $form = html::div(null,
                 rcube::Q($this->enigma->gettext('keyimportsearchtext'), 'show')
@@ -665,11 +683,12 @@ class enigma_ui
 
         $this->rc->output->add_gui_object('importform', $attrib['id']);
 
-        $out = $this->rc->output->form_tag(array(
-            'action'  => $this->rc->url(array('action' => $this->rc->action, 'a' => 'import')),
-            'method'  => 'post',
-            'enctype' => 'multipart/form-data') + $attrib,
-            $form
+        $out = $this->rc->output->form_tag([
+                'action'  => $this->rc->url(['action' => $this->rc->action, 'a' => 'import']),
+                'method'  => 'post',
+                'enctype' => 'multipart/form-data'
+            ] + $attrib,
+            $form ?? ''
         );
 
         return $out;
@@ -686,8 +705,8 @@ class enigma_ui
         // That's why we use only OpenPGP.js method of key generation
         return;
 
-        $user = rcube_utils::get_input_value('_user', rcube_utils::INPUT_POST, true);
-        $pass = rcube_utils::get_input_value('_password', rcube_utils::INPUT_POST, true);
+        $user = rcube_utils::get_input_string('_user', rcube_utils::INPUT_POST, true);
+        $pass = rcube_utils::get_input_string('_password', rcube_utils::INPUT_POST, true);
         $size = (int) rcube_utils::get_input_value('_size', rcube_utils::INPUT_POST);
 
         if ($size > 4096) {
@@ -702,12 +721,12 @@ class enigma_ui
         }
 
         $this->enigma->load_engine();
-        $result = $this->enigma->engine->generate_key(array(
-            'user'     => $ident[1]['name'],
-            'email'    => $ident[1]['mailto'],
-            'password' => $pass,
-            'size'     => $size,
-        ));
+        $result = $this->enigma->engine->generate_key([
+                'user'     => $ident[1]['name'],
+                'email'    => $ident[1]['mailto'],
+                'password' => $pass,
+                'size'     => $size,
+        ]);
 
         if ($result instanceof enigma_key) {
             $this->rc->output->command('enigma_key_create_success');
@@ -727,9 +746,9 @@ class enigma_ui
     {
         $this->enigma->include_script('openpgp.min.js');
 
-        $this->rc->output->add_handlers(array(
-            'keyform' => array($this, 'tpl_key_create_form'),
-        ));
+        $this->rc->output->add_handlers([
+            'keyform' => [$this, 'tpl_key_create_form'],
+        ]);
 
         $this->rc->output->set_pagetitle($this->enigma->gettext('keygenerate'));
         $this->rc->output->send('enigma.keycreate');
@@ -737,22 +756,27 @@ class enigma_ui
 
     /**
      * Template object for key generation form
+     *
+     * @param array $attrib Object attributes
+     *
+     * @return string HTML output
      */
     function tpl_key_create_form($attrib)
     {
-        $attrib += array('id' => 'rcmKeyCreateForm');
-        $table  = new html_table(array('cols' => 2));
+        $attrib += ['id' => 'rcmKeyCreateForm'];
+        $table  = new html_table(['cols' => 2]);
 
         // get user's identities
         $identities = $this->rc->user->list_identities(null, true);
-        $checkbox   = new html_checkbox(array('name' => 'identity[]'));
+        $checkbox   = new html_checkbox(['name' => 'identity[]']);
 
-        $plugin     = $this->rc->plugins->exec_hook('enigma_user_identities', array('identities' => $identities));
+        $plugin     = $this->rc->plugins->exec_hook('enigma_user_identities', ['identities' => $identities]);
         $identities = $plugin['identities'];
+        $engine     = $this->enigma->load_engine();
 
         foreach ($identities as $idx => $ident) {
             $name = format_email_recipient($ident['email'], $ident['name']);
-            $attr = array('value' => $idx, 'data-name' => $ident['name'], 'data-email' => $ident['email_ascii']);
+            $attr = ['value' => $idx, 'data-name' => $ident['name'], 'data-email' => $ident['email_ascii']];
             $identities[$idx] = html::tag('li', null, html::label(null, $checkbox->show($idx, $attr) . rcube::Q($name)));
         }
 
@@ -760,38 +784,47 @@ class enigma_ui
         $table->add(null, html::tag('ul', 'proplist', implode("\n", $identities)));
 
         // Key size
-        $select = new html_select(array('name' => 'size', 'id' => 'key-size'));
-        $select->add($this->enigma->gettext('key2048'), '2048');
-        $select->add($this->enigma->gettext('key4096'), '4096');
+        $select = new html_select(['name' => 'type', 'id' => 'key-type', 'class' => 'custom-select']);
+        $select->add($this->enigma->gettext('rsa2048'), 'rsa2048');
+        $select->add($this->enigma->gettext('rsa4096'), 'rsa4096');
 
-        $table->add('title', html::label('key-size', rcube::Q($this->enigma->gettext('newkeysize'))));
+        if ($engine->is_supported(enigma_driver::SUPPORT_ECC)) {
+            $select->add($this->enigma->gettext('ecckeypair'), 'ecc');
+        }
+
+        $table->add('title', html::label('key-type', rcube::Q($this->enigma->gettext('newkeytype'))));
         $table->add(null, $select->show());
 
         // Password and confirm password
         $table->add('title', html::label('key-pass', rcube::Q($this->enigma->gettext('newkeypass'))));
-        $table->add(null, rcube_output::get_edit_field('password', '', array(
+        $table->add(null, rcube_output::get_edit_field('password', '', [
                 'id'           => 'key-pass',
-                'size'         => $attrib['size'],
+                'size'         => isset($attrib['size']) ? $attrib['size'] : null,
                 'required'     => true,
                 'autocomplete' => 'new-password',
                 'oninput'      => "this.type = this.value.length ? 'password' : 'text'",
-            ), 'text'));
+            ], 'text')
+        );
 
         $table->add('title', html::label('key-pass-confirm', rcube::Q($this->enigma->gettext('newkeypassconfirm'))));
-        $table->add(null, rcube_output::get_edit_field('password-confirm', '', array(
+        $table->add(null, rcube_output::get_edit_field('password-confirm', '', [
                 'id'           => 'key-pass-confirm',
-                'size'         => $attrib['size'],
+                'size'         => isset($attrib['size']) ? $attrib['size'] : null,
                 'required'     => true,
                 'autocomplete' => 'new-password',
                 'oninput'      => "this.type = this.value.length ? 'password' : 'text'",
-            ), 'text'));
+            ], 'text')
+        );
+
+        $warning = $this->enigma->gettext('keystoragenotice');
+        $warning = html::div(['class' => 'boxinformation mb-3', 'id' => 'key-notice'], $warning);
 
         $this->rc->output->add_gui_object('keyform', $attrib['id']);
         $this->rc->output->add_label('enigma.keygenerating', 'enigma.formerror',
             'enigma.passwordsdiffer', 'enigma.keygenerateerror', 'enigma.noidentselected',
             'enigma.keygennosupport');
 
-        return $this->rc->output->form_tag(array(), $table->show($attrib));
+        return $this->rc->output->form_tag([], $warning . $table->show($attrib));
     }
 
     /**
@@ -802,7 +835,7 @@ class enigma_ui
         $keys   = rcube_utils::get_input_value('_keys', rcube_utils::INPUT_POST);
         $engine = $this->enigma->load_engine();
 
-        foreach ((array)$keys as $key) {
+        foreach ((array) $keys as $key) {
             $res = $engine->delete_key($key);
 
             if ($res !== true) {
@@ -832,20 +865,21 @@ class enigma_ui
         // other skins
         else {
             // Options menu button
-            $this->enigma->add_button(array(
-                'type'     => 'link',
-                'command'  => 'plugin.enigma',
-                'onclick'  => "rcmail.command('menu-open', 'enigmamenu', event.target, event)",
-                'class'    => 'button enigma',
-                'title'    => 'encryptionoptions',
-                'label'    => 'encryption',
-                'domain'   => $this->enigma->ID,
-                'width'    => 32,
-                'height'   => 32,
-                'aria-owns'     => 'enigmamenu',
-                'aria-haspopup' => 'true',
-                'aria-expanded' => 'false',
-                ), 'toolbar');
+            $this->enigma->add_button([
+                    'type'     => 'link',
+                    'command'  => 'plugin.enigma',
+                    'onclick'  => "rcmail.command('menu-open', 'enigmamenu', event.target, event)",
+                    'class'    => 'button enigma',
+                    'title'    => 'encryptionoptions',
+                    'label'    => 'encryption',
+                    'domain'   => $this->enigma->ID,
+                    'width'    => 32,
+                    'height'   => 32,
+                    'aria-owns'     => 'enigmamenu',
+                    'aria-haspopup' => 'true',
+                    'aria-expanded' => 'false',
+                ], 'toolbar'
+            );
 
             // Options menu contents
             $this->rc->output->add_footer($this->compose_ui_options(true));
@@ -858,46 +892,55 @@ class enigma_ui
     private function compose_ui_options($wrap = false)
     {
         $locks = (array) $this->rc->config->get('enigma_options_lock');
-        $chbox = new html_checkbox(array('value' => 1));
+        $chbox = new html_checkbox(['value' => 1]);
 
         $out = html::div('form-group form-check row',
-            html::label(array('for' => 'enigmasignopt', 'class' => 'col-form-label col-6'),
-                rcube::Q($this->enigma->gettext('signmsg')))
+            html::label(['for' => 'enigmasignopt', 'class' => 'col-form-label col-6'],
+                rcube::Q($this->enigma->gettext('signmsg'))
+            )
             . html::div('form-check col-6',
-                $chbox->show($this->rc->config->get('enigma_sign_all') ? 1 : 0, array(
+                $chbox->show($this->rc->config->get('enigma_sign_all') ? 1 : 0, [
                         'name'     => '_enigma_sign',
                         'id'       => 'enigmasignopt',
                         'class'    => 'form-check-input',
                         'disabled' => in_array('sign', $locks),
-                ))));
+                ])
+            )
+        );
 
         $out .= html::div('form-group form-check row',
-            html::label(array('for' => 'enigmaencryptopt', 'class' => 'col-form-label col-6'),
-                rcube::Q($this->enigma->gettext('encryptmsg')))
+            html::label(['for' => 'enigmaencryptopt', 'class' => 'col-form-label col-6'],
+                rcube::Q($this->enigma->gettext('encryptmsg'))
+            )
             . html::div('form-check col-6',
-                $chbox->show($this->rc->config->get('enigma_encrypt_all') ? 1 : 0, array(
+                $chbox->show($this->rc->config->get('enigma_encrypt_all') ? 1 : 0, [
                         'name'     => '_enigma_encrypt',
                         'id'       => 'enigmaencryptopt',
                         'class'    => 'form-check-input',
                         'disabled' => in_array('encrypt', $locks),
-                ))));
+                ])
+            )
+        );
 
         $out .= html::div('form-group form-check row',
-            html::label(array('for' => 'enigmaattachpubkeyopt', 'class' => 'col-form-label col-6'),
-                rcube::Q($this->enigma->gettext('attachpubkeymsg')))
+            html::label(['for' => 'enigmaattachpubkeyopt', 'class' => 'col-form-label col-6'],
+                rcube::Q($this->enigma->gettext('attachpubkeymsg'))
+            )
             . html::div('form-check col-6',
-                $chbox->show($this->rc->config->get('enigma_attach_pubkey') ? 1 : 0, array(
+                $chbox->show($this->rc->config->get('enigma_attach_pubkey') ? 1 : 0, [
                         'name'     => '_enigma_attachpubkey',
                         'id'       => 'enigmaattachpubkeyopt',
                         'class'    => 'form-check-input',
                         'disabled' => in_array('pubkey', $locks),
-                ))));
+                ])
+            )
+        );
 
         if (!$wrap) {
             return $out;
         }
 
-        return html::div(array('id' => 'enigmamenu', 'class' => 'popupmenu'), $out);
+        return html::div(['id' => 'enigmamenu', 'class' => 'popupmenu'], $out);
     }
 
     /**
@@ -906,7 +949,7 @@ class enigma_ui
      * Adds infobox about signature verification and/or decryption
      * status above the body.
      *
-     * @param array Original parameters
+     * @param array $p Original parameters
      *
      * @return array Modified parameters
      */
@@ -924,19 +967,20 @@ class enigma_ui
 
         $engine   = $this->enigma->engine;
         $part_id  = $p['part']->mime_id;
-        $messages = array();
+        $messages = [];
 
         // Decryption status
         if (($found = $this->find_part_id($part_id, $engine->decryptions)) !== null
-            && ($status = $engine->decryptions[$found])
+            && !empty($engine->decryptions[$found])
         ) {
+            $status = $engine->decryptions[$found];
             $attach_scripts = true;
 
             // show the message only once
             unset($engine->decryptions[$found]);
 
             // display status info
-            $attrib['id'] = 'enigma-message';
+            $attrib = ['id' => 'enigma-message'];
 
             if ($status instanceof enigma_error) {
                 $attrib['class'] = 'boxerror enigmaerror encrypted';
@@ -974,15 +1018,16 @@ class enigma_ui
 
         // Signature verification status
         if (($found = $this->find_part_id($part_id, $engine->signatures)) !== null
-            && ($sig = $engine->signatures[$found])
+            && !empty($engine->signatures[$found])
         ) {
+            $sig = $engine->signatures[$found];
             $attach_scripts = true;
 
             // show the message only once
             unset($engine->signatures[$found]);
 
             // display status info
-            $attrib['id'] = 'enigma-message';
+            $attrib = ['id' => 'enigma-message'];
 
             if ($sig instanceof enigma_signature) {
                 $sender = $sig->get_sender($engine, $p['message'], $part_id);
@@ -1018,13 +1063,6 @@ class enigma_ui
                 $attrib['class'] = 'boxwarning enigmaerror signed';
                 $msg = rcube::Q($this->enigma->gettext('sigerror'));
             }
-/*
-            $msg .= '&nbsp;' . html::a(array('href' => "#sigdetails",
-                'onclick' => rcmail_output::JS_OBJECT_NAME.".command('enigma-sig-details')"),
-                rcube::Q($this->enigma->gettext('showdetails')));
-*/
-            // test
-//            $msg .= '<br /><pre>'.$sig->body.'</pre>';
 
             $attrib['msg'] = $msg;
             $messages[]    = $attrib;
@@ -1041,7 +1079,7 @@ class enigma_ui
             }
         }
 
-        if ($attach_scripts) {
+        if (!empty($attach_scripts)) {
             // add css and js script
             $this->add_css();
             $this->add_js();
@@ -1096,19 +1134,20 @@ class enigma_ui
             }
 
             // add box above the message body
-            $p['content'] = html::p(array('class' => 'enigmaattachment boxinformation aligned-buttons'),
+            $p['content'] = html::p(['class' => 'enigmaattachment boxinformation aligned-buttons'],
                 html::span(null, rcube::Q($this->enigma->gettext('keyattfound'))) .
-                html::tag('button', array(
+                html::tag('button', [
                         'onclick' => "return ".rcmail_output::JS_OBJECT_NAME.".enigma_import_attachment('".rcube::JQ($part)."')",
                         'title'   => $this->enigma->gettext('keyattimport'),
-                        'class'   => 'import',
-                    ), rcube::Q($this->rc->gettext('import')))
+                        'class'   => 'import btn-sm',
+                    ], rcube::Q($this->rc->gettext('import'))
+                )
             ) . $p['content'];
 
             $attach_scripts = true;
         }
 
-        if ($attach_scripts) {
+        if (!empty($attach_scripts)) {
             // add css and js script
             $this->add_css();
             $this->add_js();
@@ -1123,7 +1162,7 @@ class enigma_ui
     function message_ready($p)
     {
         // The message might have been already encrypted by Mailvelope
-        if (strpos($p['message']->getParam('ctype'), 'multipart/encrypted') === 0) {
+        if (strpos((string) $p['message']->getParam('ctype'), 'multipart/encrypted') === 0) {
             return $p;
         }
 
@@ -1148,6 +1187,9 @@ class enigma_ui
             $engine->attach_public_key($p['message']);
         }
 
+        $mode   = null;
+        $status = null;
+
         if ($encrypt_enable) {
             $engine = $this->enigma->load_engine();
             $mode   = !$savedraft && $sign_enable ? enigma_engine::ENCRYPT_MODE_SIGN : null;
@@ -1162,9 +1204,11 @@ class enigma_ui
 
         if ($mode && ($status instanceof enigma_error)) {
             $code = $status->getCode();
+            $vars = [];
+
             if ($code == enigma_error::KEYNOTFOUND) {
                 if ($email = $status->getData('missing')) {
-                    $vars = array('email' => $email);
+                    $vars = ['email' => $email];
                     $msg  = 'enigma.' . $mode . 'nokey';
                 }
                 else {
@@ -1178,15 +1222,15 @@ class enigma_ui
                 $msg = 'enigma.' . $mode . 'error';
             }
 
-            if ($msg) {
-                if ($vars && $vars['email']) {
-                    $this->rc->output->command('enigma_key_not_found', array(
+            if (!empty($msg)) {
+                if (!empty($vars) && !empty($vars['email'])) {
+                    $this->rc->output->command('enigma_key_not_found', [
                             'email'  => $vars['email'],
-                            'text'   => $this->rc->gettext(array('name' => $msg, 'vars' => $vars)),
+                            'text'   => $this->rc->gettext(['name' => $msg, 'vars' => $vars]),
                             'title'  => $this->enigma->gettext('keynotfound'),
                             'button' => $this->enigma->gettext('findkey'),
                             'mode'   => $mode,
-                    ));
+                    ]);
                 }
                 else {
                     $this->rc->output->show_message($msg, 'error', $vars);
@@ -1221,13 +1265,14 @@ class enigma_ui
             if ($status instanceof enigma_error) {
                 $code = $status->getCode();
 
+                if ($code == enigma_error::BADPASS) {
+                    $this->password_prompt($status, ['compose-init' => true]);
+                    return $p;
+                }
+
                 if ($code == enigma_error::KEYNOTFOUND) {
                     $msg = rcube::Q(str_replace('$keyid', enigma_key::format_id($status->getData('id')),
                         $this->enigma->gettext('decryptnokey')));
-                }
-                else if ($code == enigma_error::BADPASS) {
-                    $this->password_prompt($status, array('compose-init' => true));
-                    return $p;
                 }
                 else {
                     $msg = rcube::Q($this->enigma->gettext('decrypterror'));
@@ -1235,11 +1280,11 @@ class enigma_ui
             }
         }
 
-        if ($msg) {
+        if (!empty($msg)) {
             $this->rc->output->show_message($msg, 'error');
         }
 
-        // Check sign/ecrypt options for signed/encrypted drafts
+        // Check sign/encrypt options for signed/encrypted drafts
         if (!in_array('encrypt', $locks)) {
             $this->rc->output->set_env('enigma_force_encrypt', !empty($engine->decryptions));
         }
@@ -1255,9 +1300,9 @@ class enigma_ui
      */
     function import_file()
     {
-        $uid     = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_POST);
-        $mbox    = rcube_utils::get_input_value('_mbox', rcube_utils::INPUT_POST);
-        $mime_id = rcube_utils::get_input_value('_part', rcube_utils::INPUT_POST);
+        $uid     = rcube_utils::get_input_string('_uid', rcube_utils::INPUT_POST);
+        $mbox    = rcube_utils::get_input_string('_mbox', rcube_utils::INPUT_POST);
+        $mime_id = rcube_utils::get_input_string('_part', rcube_utils::INPUT_POST);
         $engine  = $this->enigma->load_engine();
 
         if ($uid && $mime_id) {
@@ -1269,7 +1314,7 @@ class enigma_ui
             foreach ($engine->decryptions as $status) {
                 if ($status instanceof enigma_error) {
                     if ($status->getCode() == enigma_error::BADPASS) {
-                        $this->password_prompt($status, array(
+                        $this->password_prompt($status, [
                                 'input_uid'    => $uid,
                                 'input_mbox'   => $mbox,
                                 'input_part'   => $mime_id,
@@ -1277,7 +1322,7 @@ class enigma_ui
                                 'input_action' => 'plugin.enigmaimport',
                                 'action'       => '?',
                                 'iframe'       => true,
-                        ));
+                        ]);
                         $this->rc->output->send($this->rc->output->type == 'html' ? 'iframe' : null);
                         return;
                     }
@@ -1289,9 +1334,9 @@ class enigma_ui
             }
         }
 
-        if ($part && is_array($result = $engine->import_key($part))) {
+        if (!empty($part) && is_array($result = $engine->import_key($part))) {
             $this->rc->output->show_message('enigma.keysimportsuccess', 'confirmation',
-                array('new' => $result['imported'], 'old' => $result['unchanged']));
+                ['new' => $result['imported'], 'old' => $result['unchanged']]);
         }
         else {
             $this->rc->output->show_message('enigma.keysimportfailed', 'error');

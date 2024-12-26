@@ -38,7 +38,7 @@ class rcube_sql_password
         $rcmail = rcmail::get_instance();
 
         if (!($sql = $rcmail->config->get('password_query'))) {
-            $sql = 'SELECT update_passwd(%c, %u)';
+            $sql = 'SELECT update_passwd(%P, %u)';
         }
 
         if ($dsn = $rcmail->config->get('password_db_dsn')) {
@@ -75,52 +75,8 @@ class rcube_sql_password
             $sql = str_replace('%O',  $db->quote($password), $sql);
         }
 
-        // crypted password (deprecated, use %P)
-        if (strpos($sql, '%c') !== false) {
-            $password = password::hash_password($passwd, 'crypt', false);
-
-            if ($password === false) {
-                return PASSWORD_CRYPT_ERROR;
-            }
-
-            $sql = str_replace('%c',  $db->quote($password), $sql);
-        }
-
-        // dovecotpw (deprecated, use %P)
-        if (strpos($sql, '%D') !== false) {
-            $password = password::hash_password($passwd, 'dovecot', false);
-
-            if ($password === false) {
-                return PASSWORD_CRYPT_ERROR;
-            }
-
-            $sql = str_replace('%D', $db->quote($password), $sql);
-        }
-
-        // hashed passwords (deprecated, use %P)
-        if (strpos($sql, '%n') !== false) {
-            $password = password::hash_password($passwd, 'hash', false);
-
-            if ($password === false) {
-                return PASSWORD_CRYPT_ERROR;
-            }
-
-            $sql = str_replace('%n', $db->quote($password, 'text'), $sql);
-        }
-
-        // hashed passwords (deprecated, use %P)
-        if (strpos($sql, '%q') !== false) {
-            $password = password::hash_password($curpass, 'hash', false);
-
-            if ($password === false) {
-                return PASSWORD_CRYPT_ERROR;
-            }
-
-            $sql = str_replace('%q', $db->quote($password, 'text'), $sql);
-        }
-
         // Handle clear text passwords securely (#1487034)
-        $sql_vars = array();
+        $sql_vars = [];
         if (preg_match_all('/%[p|o]/', $sql, $m)) {
             foreach ($m[0] as $var) {
                 if ($var == '%p') {
@@ -139,7 +95,7 @@ class rcube_sql_password
         $username    = $_SESSION['username'];
         $host        = $_SESSION['imap_host'];
 
-        // convert domains to/from punnycode
+        // convert domains to/from punycode
         if ($rcmail->config->get('password_idn_ascii')) {
             $domain_part = rcube_utils::idn_to_ascii($domain_part);
             $username    = rcube_utils::idn_to_ascii($username);

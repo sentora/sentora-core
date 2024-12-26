@@ -28,8 +28,12 @@
  */
 class rcube_session_db extends rcube_session
 {
+    /** @var rcube_db Database handler */
     private $db;
+
+    /** @var string Session table name (quoted) */
     private $table_name;
+
 
     /**
      * Object constructor
@@ -50,7 +54,7 @@ class rcube_session_db extends rcube_session
         $this->register_session_handler();
 
         // register db gc handler
-        $this->register_gc_handler(array($this, 'gc_db'));
+        $this->register_gc_handler([$this, 'gc_db']);
     }
 
     /**
@@ -101,13 +105,27 @@ class rcube_session_db extends rcube_session
      */
     public function read($key)
     {
+        if ($this->lifetime) {
+            $expire_time  = $this->db->now(-$this->lifetime);
+            $expire_check = "CASE WHEN `changed` < $expire_time THEN 1 ELSE 0 END AS expired";
+        }
+
         $sql_result = $this->db->query(
             "SELECT `vars`, `ip`, `changed`, " . $this->db->now() . " AS ts"
-            . " FROM {$this->table_name} WHERE `sess_id` = ?", $key);
+            . (isset($expire_check) ? ", $expire_check" : '')
+            . " FROM {$this->table_name} WHERE `sess_id` = ?", $key
+        );
 
         if ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result))) {
-            $this->time_diff = time() - strtotime($sql_arr['ts']);
-            $this->changed   = strtotime($sql_arr['changed']);
+            // Remove expired sessions (we use gc, but it may not be precise enough or disabled)
+            if (!empty($sql_arr['expired'])) {
+                $this->destroy($key);
+                return '';
+            }
+
+            $time_diff = time() - strtotime($sql_arr['ts']);
+
+            $this->changed   = strtotime($sql_arr['changed']) + $time_diff; // local (PHP) time
             $this->ip        = $sql_arr['ip'];
             $this->vars      = base64_decode($sql_arr['vars']);
             $this->key       = $key;
@@ -139,7 +157,8 @@ class rcube_session_db extends rcube_session
         $this->db->query("INSERT INTO {$this->table_name}"
             . " (`sess_id`, `vars`, `ip`, `changed`)"
             . " VALUES (?, ?, ?, $now)",
-            $key, base64_encode($vars), (string)$this->ip);
+            $key, base64_encode($vars), (string)$this->ip
+        );
 
         return true;
     }
@@ -165,7 +184,7 @@ class rcube_session_db extends rcube_session
                 . "SET `changed` = $now, `vars` = ? WHERE `sess_id` = ?",
                 base64_encode($newvars), $key);
         }
-        else if ($ts - $this->changed + $this->time_diff > $this->lifetime / 2) {
+        else if ($ts - $this->changed > $this->lifetime / 2) {
             $this->db->query("UPDATE {$this->table_name} SET `changed` = $now"
                 . " WHERE `sess_id` = ?", $key);
         }
@@ -180,7 +199,7 @@ class rcube_session_db extends rcube_session
     {
         // just clean all old sessions when this GC is called
         $this->db->query("DELETE FROM " . $this->db->table_name('session')
-            . " WHERE changed < " . $this->db->now(-$this->gc_enabled));
+            . " WHERE `changed` < " . $this->db->now(-$this->gc_enabled));
 
         $this->log("Session GC (DB): remove records < "
             . date('Y-m-d H:i:s', time() - $this->gc_enabled)

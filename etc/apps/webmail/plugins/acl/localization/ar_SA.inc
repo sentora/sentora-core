@@ -82,6 +82,7 @@ $labels['longaclwrite'] = 'لا يمكن وضع علامة على الرسائل
 $labels['longacldelete'] = 'لا يمكن حذف الرسائل';
 $labels['longaclother'] = 'حقوق الوصول الأخرى';
 $labels['ariasummaryacltable'] = 'قائمة حقوق الوصول';
+$labels['arialabelaclactions'] = 'قائمة الإجراءات';
 $labels['arialabelaclform'] = 'نموذج حقوق الوصول';
 $messages['deleting'] = 'جاري حذف حقوق الوصول...';
 $messages['saving'] = 'جاري حفظ حقوق الوصول...';
@@ -94,4 +95,3 @@ $messages['createerror'] = 'لا يمكن اضافة حقوق الوصول';
 $messages['deleteconfirm'] = 'هل تريد فعلاً حذف حقوق الوصول لـ المستخدمين المحددين ؟';
 $messages['norights'] = 'لم يتم تحديد حقوق وصول!';
 $messages['nouser'] = 'لم يتم تحديد اسم مستخدم!';
-?>

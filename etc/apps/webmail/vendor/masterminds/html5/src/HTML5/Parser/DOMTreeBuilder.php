@@ -175,7 +175,8 @@ class DOMTreeBuilder implements EventHandler
             // documents, and attempting to up-convert any older DTDs to HTML5.
             $dt = $impl->createDocumentType('html');
             // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-            $this->doc = $impl->createDocument(null, null, $dt);
+            $this->doc = $impl->createDocument(null, '', $dt);
+            $this->doc->encoding = !empty($options['encoding']) ? $options['encoding'] : 'UTF-8';
         }
 
         $this->errors = array();
@@ -391,11 +392,6 @@ class DOMTreeBuilder implements EventHandler
             // to avoid spl_object_hash collisions whe have to avoid garbage collection of $ele storing it into $pushes
             // see https://bugs.php.net/bug.php?id=67459
             $this->pushes[spl_object_hash($ele)] = array($pushes, $ele);
-
-            // SEE https://github.com/facebook/hhvm/issues/2962
-            if (defined('HHVM_VERSION')) {
-                $ele->setAttribute('html5-php-fake-id-attribute', spl_object_hash($ele));
-            }
         }
 
         foreach ($attributes as $aName => $aVal) {
@@ -409,6 +405,8 @@ class DOMTreeBuilder implements EventHandler
             } elseif ($this->insertMode === static::IM_IN_MATHML) {
                 $aName = Elements::normalizeMathMlAttribute($aName);
             }
+
+            $aVal = (string) $aVal;
 
             try {
                 $prefix = ($pos = strpos($aName, ':')) ? substr($aName, 0, $pos) : false;
@@ -478,8 +476,14 @@ class DOMTreeBuilder implements EventHandler
     {
         $lname = $this->normalizeTagName($name);
 
-        // Ignore closing tags for unary elements.
-        if (Elements::isA($name, Elements::VOID_TAG)) {
+        // Special case within 12.2.6.4.7: An end tag whose tag name is "br" should be treated as an opening tag
+        if ('br' === $name) {
+            $this->parseError('Closing tag encountered for void element br.');
+
+            $this->startTag('br');
+        }
+        // Ignore closing tags for other unary elements.
+        elseif (Elements::isA($name, Elements::VOID_TAG)) {
             return;
         }
 
@@ -509,12 +513,7 @@ class DOMTreeBuilder implements EventHandler
             $lname = Elements::normalizeSvgElement($lname);
         }
 
-        // See https://github.com/facebook/hhvm/issues/2962
-        if (defined('HHVM_VERSION') && ($cid = $this->current->getAttribute('html5-php-fake-id-attribute'))) {
-            $this->current->removeAttribute('html5-php-fake-id-attribute');
-        } else {
-            $cid = spl_object_hash($this->current);
-        }
+        $cid = spl_object_hash($this->current);
 
         // XXX: HTML has no parent. What do we do, though,
         // if this element appears in the wrong place?

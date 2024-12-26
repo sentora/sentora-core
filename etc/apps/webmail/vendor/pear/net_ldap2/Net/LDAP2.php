@@ -824,7 +824,7 @@ class Net_LDAP2 extends PEAR
                 if ((Net_LDAP2::errorMessage($error_code) === 'LDAP_OPERATIONS_ERROR') &&
                     ($this->_config['auto_reconnect'])) {
                     // The server has become disconnected before trying the
-                    // operation.  We should try again, possibly with a 
+                    // operation.  We should try again, possibly with a
                     // different server.
                     $this->_link = false;
                     $this->performReconnect();
@@ -1319,10 +1319,11 @@ class Net_LDAP2 extends PEAR
     * @param string|Net_LDAP2_Entry $entry       Entry DN or Entry object
     * @param string                 $newdn       New location
     * @param Net_LDAP2              $target_ldap (optional) Target directory for cross server move; should be passed via reference
+    * @param boolean                $deleteoldrdn (optional) if false the old RDN value(s) is retained as non-distinguishided values of the entry.
     *
     * @return Net_LDAP2_Error|true
     */
-    public function move($entry, $newdn, $target_ldap = null)
+    public function move($entry, $newdn, $target_ldap = null, $deleteoldrdn = true)
     {
         if (is_string($entry)) {
             $entry_o = $this->getEntry($entry);
@@ -1363,7 +1364,7 @@ class Net_LDAP2 extends PEAR
             // local move
             $entry_o->dn($newdn);
             $entry_o->setLDAP($this);
-            return $entry_o->update();
+            return $entry_o->update($deleteoldrdn);
         }
     }
 
@@ -1744,7 +1745,7 @@ class Net_LDAP2 extends PEAR
     * auto_reconnect has been turned on (see the _config array documentation).
     *
     * @access public
-    * @return resource LDAP link
+    * @return resource|\LDAP\Connection LDAP link (resource on PHP < 8.1)
     */
     public function getLink()
     {

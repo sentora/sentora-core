@@ -31,15 +31,17 @@ abstract class rcube_spellchecker_engine
     protected $lang;
     protected $error;
     protected $dictionary;
+    protected $options = [];
     protected $separator = '/[\s\r\n\t\(\)\/\[\]{}<>\\"]+|[:;?!,\.](?=\W|$)/';
 
     /**
      * Default constructor
      */
-    public function __construct($dict, $lang)
+    public function __construct($dict, $lang, $options = [])
     {
         $this->dictionary = $dict;
         $this->lang = $lang;
+        $this->options = $options;
     }
 
     /**
@@ -52,9 +54,9 @@ abstract class rcube_spellchecker_engine
     /**
      * Set content and check spelling
      *
-     * @param string $text    Text content for spellchecking
+     * @param string $text Text content for spellchecking
      *
-     * @return bool True when no mispelling found, otherwise false
+     * @return bool True when no misspelling found, otherwise false
      */
     abstract function check($text);
 

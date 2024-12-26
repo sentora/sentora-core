@@ -11,14 +11,14 @@
  | See the README file for a full license statement.                     |
  |                                                                       |
  | PURPOSE:                                                              |
- |   Utility class providing HTML sanityzer (based on Washtml class)     |
+ |   Utility class providing HTML sanitizer (based on Washtml class)     |
  +-----------------------------------------------------------------------+
  | Author: Thomas Bruederli <roundcube@gmail.com>                        |
  | Author: Aleksander Machniak <alec@alec.pl>                            |
  | Author: Frederic Motte <fmotte@ubixis.com>                            |
  +-----------------------------------------------------------------------+
 
-                Washtml, a HTML sanityzer.
+                Washtml, a HTML sanitizer.
 
  Copyright (c) 2007 Frederic Motte <fmotte@ubixis.com>
  All rights reserved.
@@ -45,7 +45,7 @@
 */
 
 /**
- * Utility class providing HTML sanityzer
+ * Utility class providing HTML sanitizer
  *
  * @package    Framework
  * @subpackage Utils
@@ -55,7 +55,7 @@ class rcube_washtml
     /**
      * @var array Allowed HTML elements (default)
      */
-    static $html_elements = array('a', 'abbr', 'acronym', 'address', 'area', 'b',
+    static $html_elements = ['a', 'abbr', 'acronym', 'address', 'area', 'b',
         'basefont', 'bdo', 'big', 'blockquote', 'br', 'caption', 'center',
         'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl',
         'dt', 'em', 'fieldset', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i',
@@ -87,23 +87,23 @@ class rcube_washtml
         'infinity', 'matrix', 'matrixrow', 'ci', 'cn', 'sep', 'apply',
         'plus', 'minus', 'eq', 'power', 'times', 'divide', 'csymbol', 'root',
         'bvar', 'lowlimit', 'uplimit',
-    );
+    ];
 
     /**
      * @var array Ignore these HTML tags and their content
      */
-    static $ignore_elements = array('script', 'applet', 'embed', 'object', 'style');
+    static $ignore_elements = ['script', 'applet', 'embed', 'style'];
 
     /**
      * @var array Allowed HTML attributes
      */
-    static $html_attribs = array('name', 'class', 'title', 'alt', 'width', 'height',
+    static $html_attribs = ['name', 'class', 'title', 'alt', 'width', 'height',
         'align', 'nowrap', 'col', 'row', 'id', 'rowspan', 'colspan', 'cellspacing',
         'cellpadding', 'valign', 'bgcolor', 'color', 'border', 'bordercolorlight',
         'bordercolordark', 'face', 'marginwidth', 'marginheight', 'axis', 'border',
         'abbr', 'char', 'charoff', 'clear', 'compact', 'coords', 'vspace', 'hspace',
         'cellborder', 'size', 'lang', 'dir', 'usemap', 'shape', 'media',
-        'background', 'src', 'poster', 'href', 'headers',
+        'background', 'src', 'poster', 'href', 'headers', 'start', 'reversed',
         // attributes of form elements
         'type', 'rows', 'cols', 'disabled', 'readonly', 'checked', 'multiple', 'value', 'for',
         // SVG
@@ -143,49 +143,59 @@ class rcube_washtml
         'scriptminsize', 'scriptsizemultiplier', 'selection', 'separator',
         'separators', 'stretchy', 'subscriptshift', 'supscriptshift', 'symmetric', 'voffset',
         'fontsize', 'fontweight', 'fontstyle', 'fontfamily', 'groupalign', 'edge', 'side',
-    );
+    ];
 
     /**
      * @var array Elements which could be empty and be returned in short form (<tag />)
      */
-    static $void_elements = array('area', 'base', 'br', 'col', 'command', 'embed', 'hr',
+    static $void_elements = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr',
         'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr',
         // MathML
         'sep', 'infinity', 'in', 'plus', 'eq', 'power', 'times', 'divide', 'root',
         'maligngroup', 'none', 'mprescripts',
-    );
+    ];
 
     /**
      * @var array Additional allowed attributes of body element
      */
-    static $body_attribs = array('alink', 'background', 'bgcolor', 'link', 'text', 'vlink');
+    static $body_attribs = ['alink', 'background', 'bgcolor', 'link', 'text', 'vlink'];
 
     /** @var bool State indicating existence of linked objects in HTML */
     public $extlinks = false;
 
     /** @var array Current settings */
-    private $config = array();
+    private $config = [
+        'add_comments' => true,
+        'allow_remote' => false,
+        'base_url' => '',
+        'charset' => RCUBE_CHARSET,
+        'cid_map' => [],
+        'show_washed' => true,
+    ];
 
     /** @var array Registered callback functions for tags */
-    private $handlers = array();
+    private $handlers = [];
 
     /** @var array Allowed HTML elements */
-    private $_html_elements = array();
+    private $_html_elements = [];
 
     /** @var array Ignore these HTML tags but process their content */
-    private $_ignore_elements = array();
+    private $_ignore_elements = [];
 
     /** @var array Elements which could be empty and be returned in short form (<tag />) */
-    private $_void_elements = array();
+    private $_void_elements = [];
 
     /** @var array Allowed HTML attributes */
-    private $_html_attribs = array();
+    private $_html_attribs = [];
 
     /** @var string A prefix to be added to id/class/for attribute values */
     private $_css_prefix;
 
     /** @var int Max nesting level */
     private $max_nesting_level;
+
+    /** @var bool Indicates that a nesting level error was logged */
+    private $max_nesting_level_error = false;
 
     /** @var bool True if current document is XML */
     private $is_xml = false;
@@ -207,24 +217,29 @@ class rcube_washtml
      *         html_attribs: Additional allowed HTML attributes
      *         void_elements: Elements which could be empty and be returned in short form (<tag />)
      */
-    public function __construct($p = array())
+    public function __construct($p = [])
     {
-        $this->_html_elements   = array_flip((array)$p['html_elements']) + array_flip(self::$html_elements);
-        $this->_html_attribs    = array_flip((array)$p['html_attribs']) + array_flip(self::$html_attribs);
-        $this->_ignore_elements = array_flip((array)$p['ignore_elements']) + array_flip(self::$ignore_elements);
-        $this->_void_elements   = array_flip((array)$p['void_elements']) + array_flip(self::$void_elements);
-        $this->_css_prefix      = is_string($p['css_prefix']) && strlen($p['css_prefix']) ? $p['css_prefix'] : null;
+        $p['html_elements']   = isset($p['html_elements']) ? (array) $p['html_elements'] : [];
+        $p['html_attribs']    = isset($p['html_attribs']) ? (array) $p['html_attribs'] : [];
+        $p['ignore_elements'] = isset($p['ignore_elements']) ? (array) $p['ignore_elements'] : [];
+        $p['void_elements']   = isset($p['void_elements']) ? (array) $p['void_elements'] : [];
+
+        $this->_html_elements   = array_flip($p['html_elements']) + array_flip(self::$html_elements);
+        $this->_html_attribs    = array_flip($p['html_attribs']) + array_flip(self::$html_attribs);
+        $this->_ignore_elements = array_flip($p['ignore_elements']) + array_flip(self::$ignore_elements);
+        $this->_void_elements   = array_flip($p['void_elements']) + array_flip(self::$void_elements);
+        $this->_css_prefix      = isset($p['css_prefix']) && strlen($p['css_prefix']) ? $p['css_prefix'] : null;
 
         unset($p['html_elements'], $p['html_attribs'], $p['ignore_elements'], $p['void_elements'], $p['css_prefix']);
 
-        $this->config = $p + array('show_washed' => true, 'allow_remote' => false, 'cid_map' => array());
+        $this->config = array_merge($this->config, $p);
     }
 
     /**
      * Register a callback function for a certain tag
      *
      * @param string   $tag      HTML tag name
-     * @param callback $callback Callback function
+     * @param callable $callback Callback function
      */
     public function add_callback($tag, $callback)
     {
@@ -240,53 +255,21 @@ class rcube_washtml
      */
     private function wash_style($style)
     {
-        $result = array();
-
-        // Remove unwanted white-space characters so regular expressions below work better
-        $style = preg_replace('/[\n\r\s\t]+/', ' ', $style);
+        $result = [];
 
         // Decode insecure character sequences
         $style = rcube_utils::xss_entity_decode($style);
 
-        foreach (explode(';', $style) as $declaration) {
-            if (preg_match('/^\s*([a-z\\\-]+)\s*:\s*(.*)\s*$/i', $declaration, $match)) {
-                $cssid = $match[1];
-                $str   = $match[2];
-                $value = '';
+        // Remove unwanted white-space characters
+        $style = preg_replace('/[\n\r\t]+/', ' ', $style);
 
-                foreach ($this->explode_style($str) as $val) {
-                    if (preg_match('/^url\(/i', $val)) {
-                        if (preg_match('/^url\(\s*[\'"]?([^\'"\)]*)[\'"]?\s*\)/iu', $val, $match)) {
-                            if ($url = $this->wash_uri($match[1])) {
-                                $value .= ' url(' . htmlspecialchars($url, ENT_QUOTES, $this->config['charset']) . ')';
-                            }
-                        }
-                    }
-                    else if (!preg_match('/^(behavior|expression)/i', $val)) {
-                        // Set position:fixed to position:absolute for security (#5264)
-                        if (!strcasecmp($cssid, 'position') && !strcasecmp($val, 'fixed')) {
-                            $val = 'absolute';
-                        }
-
-                        // whitelist ?
-                        $value .= ' ' . $val;
-
-                        // #1488535: Fix size units, so width:800 would be changed to width:800px
-                        if (preg_match('/^(left|right|top|bottom|width|height)/i', $cssid)
-                            && preg_match('/^[0-9]+$/', $val)
-                        ) {
-                            $value .= 'px';
-                        }
-                    }
-                }
-
-                if (isset($value[0])) {
-                    $result[] = $cssid . ':' . $value;
-                }
+        $uri_callback = function ($uri) {
+            if ($uri = $this->wash_uri($uri)) {
+                return htmlspecialchars($uri, \ENT_QUOTES, $this->config['charset']);
             }
-        }
-
-        return implode('; ', $result);
+        };
+ 
+        return rtrim(rcube_utils::sanitize_css_block($style, $uri_callback), ';');
     }
 
     /**
@@ -299,8 +282,8 @@ class rcube_washtml
     private function wash_attribs($node)
     {
         $result = '';
-        $washed = array();
-        $additional_attribs = array();
+        $washed = [];
+        $additional_attribs = [];
 
         if ($node->nodeName == 'body') {
             $additional_attribs = self::$body_attribs;
@@ -330,19 +313,15 @@ class rcube_washtml
                     $out = $this->wash_uri($value, true);
                 }
                 else if ($this->is_link_attribute($node->nodeName, $key)) {
-                    if (!preg_match('!^(javascript|vbscript|data:)!i', $value)
-                        && preg_match('!^([a-z][a-z0-9.+-]+:|//|#).+!i', $value)
-                    ) {
-                        $out = $value;
-                    }
+                    $out = $this->wash_link($value);
                 }
                 else if ($this->is_funciri_attribute($node->nodeName, $key)) {
-                    if (preg_match('/^[a-z:]*url\(/i', $val)) {
+                    if (preg_match('/^[a-z:]*url\(/i', $value)) {
                         if (preg_match('/^([a-z:]*url)\(\s*[\'"]?([^\'"\)]*)[\'"]?\s*\)/iu', $value, $match)) {
                             if ($url = $this->wash_uri($match[2])) {
                                 $result .= ' ' . $attr->nodeName . '="' . $match[1]
                                     . '(' . htmlspecialchars($url, ENT_QUOTES, $this->config['charset']) . ')'
-                                    . substr($val, strlen($match[0])) . '"';
+                                    . htmlspecialchars(substr($value, strlen($match[0])), ENT_QUOTES, $this->config['charset']) . '"';
                                 continue;
                             }
                         }
@@ -354,7 +333,9 @@ class rcube_washtml
                         $out = $value;
                     }
                 }
-                else if ($this->_css_prefix !== null && in_array($key, array('id', 'class', 'for'))) {
+                else if ($this->_css_prefix !== null
+                    && (in_array($key, ['id', 'class', 'for']) || ($key == 'name' && $node->nodeName == 'a'))
+                ) {
                     $out = preg_replace('/(\S+)/', $this->_css_prefix . '\1', $value);
                 }
                 else if ($key) {
@@ -362,7 +343,8 @@ class rcube_washtml
                 }
 
                 if ($out !== null && $out !== '') {
-                    $result .= ' ' . $attr->nodeName . '="' . htmlspecialchars($out, ENT_QUOTES | ENT_SUBSTITUTE, $this->config['charset']) . '"';
+                    $v = htmlspecialchars($out, ENT_QUOTES | ENT_SUBSTITUTE, $this->config['charset']);
+                    $result .= " {$attr->nodeName}=\"{$v}\"";
                 }
                 else if ($value) {
                     $washed[] = htmlspecialchars($attr->nodeName, ENT_QUOTES, $this->config['charset']);
@@ -391,29 +373,84 @@ class rcube_washtml
      */
     private function wash_uri($uri, $blocked_source = false, $is_image = true)
     {
-        if (($src = $this->config['cid_map'][$uri])
-            || ($src = $this->config['cid_map'][$this->config['base_url'].$uri])
-        ) {
-            return $src;
+        if (!empty($this->config['cid_map'][$uri])) {
+            return $this->config['cid_map'][$uri];
+        }
+
+        $key = $this->config['base_url'] . $uri;
+        if (!empty($this->config['cid_map'][$key])) {
+            return $this->config['cid_map'][$key];
         }
 
         // allow url(#id) used in SVG
-        if ($uri[0] == '#') {
+        if (isset($uri[0]) && $uri[0] == '#') {
+            if ($this->_css_prefix !== null) {
+                $uri = '#' . $this->_css_prefix . substr($uri, 1);
+            }
+
             return $uri;
         }
 
         if (preg_match('/^(http|https|ftp):.+/i', $uri)) {
-            if ($this->config['allow_remote']) {
+            if (!empty($this->config['allow_remote'])) {
                 return $uri;
             }
 
             $this->extlinks = true;
-            if ($is_image && $blocked_source && $this->config['blocked_src']) {
+            if ($is_image && !empty($this->config['blocked_src'])) {
                 return $this->config['blocked_src'];
             }
         }
-        else if ($is_image && preg_match('/^data:image.+/i', $uri)) { // RFC2397
+        else if ($is_image && preg_match('/^data:image\/([^,]+),(.+)$/is', $uri, $matches)) { // RFC2397
+            $type = preg_replace('/\s/', '', $matches[1]);
+
+            // svg images can be insecure, we'll sanitize them
+            if (stripos($type, 'svg') !== false) {
+                $svg = $matches[2];
+
+                if (stripos($type, ';base64') !== false) {
+                    $svg = base64_decode($svg);
+                }
+                else {
+                    $type .= ';base64';
+                }
+
+                $washer = new self($this->config);
+                $svg    = $washer->wash($svg);
+
+                // Invalid svg content
+                if (empty($svg)) {
+                    return null;
+                }
+
+                return 'data:image/' . $type . ',' . base64_encode($svg);
+            }
+
             return $uri;
+        }
+    }
+
+    /**
+     * Wash Href value
+     *
+     * @param string $href Href attribute value (link)
+     *
+     * @return string Washed href
+     */
+    private function wash_link($href)
+    {
+        if (strlen($href) && !preg_match('!^(javascript|vbscript|data:)!i', $href)) {
+            if ($href[0] == '#' && $this->_css_prefix !== null) {
+                return '#' . $this->_css_prefix . substr($href, 1);
+            }
+
+            if (preg_match('!^[a-zA-Z._-]+$!', $href)) {
+                return 'http://' . $href;
+            }
+
+            if (preg_match('!^([a-z][a-z0-9.+-]+:|//|#).+!i', $href)) {
+                return $href;
+            }
         }
     }
 
@@ -427,7 +464,7 @@ class rcube_washtml
      */
     private function is_link_attribute($tag, $attr)
     {
-        return ($tag == 'a' || $tag == 'area') && $attr == 'href';
+        return $attr === 'href';
     }
 
     /**
@@ -444,6 +481,7 @@ class rcube_washtml
             || $attr == 'color-profile' // SVG
             || ($attr == 'poster' && $tag == 'video')
             || ($attr == 'src' && preg_match('/^(img|image|source|input|video|audio)$/i', $tag))
+            || ($tag == 'use' && $attr == 'href') // SVG
             || ($tag == 'image' && $attr == 'href'); // SVG
     }
 
@@ -457,8 +495,33 @@ class rcube_washtml
      */
     private function is_funciri_attribute($tag, $attr)
     {
-        return in_array($attr, array('fill', 'filter', 'stroke', 'marker-start',
-            'marker-end', 'marker-mid', 'clip-path', 'mask', 'cursor'));
+        return in_array($attr, ['fill', 'filter', 'stroke', 'marker-start',
+            'marker-end', 'marker-mid', 'clip-path', 'mask', 'cursor']);
+    }
+
+    /**
+     * Check if a specified element has an attribute with specified value.
+     * Do it in case-insensitive manner.
+     *
+     * @param DOMElement $node       The element
+     * @param string     $attr_name  The attribute name
+     * @param string     $attr_value The attribute value to find
+     *
+     * @return bool True if the specified attribute exists and has the expected value
+     */
+    private static function attribute_value($node, $attr_name, $attr_value)
+    {
+        $attr_name = strtolower($attr_name);
+
+        foreach ($node->attributes as $name => $attr) {
+            if (strtolower($name) === $attr_name) {
+                if (strtolower($attr_value) === strtolower(trim($attr->nodeValue))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -480,15 +543,17 @@ class rcube_washtml
 
         if ($this->max_nesting_level > 0 && $level == $this->max_nesting_level - 1) {
             // log error message once
-            if (!$this->max_nesting_level_error) {
+            if (empty($this->max_nesting_level_error)) {
                 $this->max_nesting_level_error = true;
-                rcube::raise_error(array('code' => 500, 'type' => 'php',
-                    'line' => __LINE__, 'file' => __FILE__,
-                    'message' => "Maximum nesting level exceeded (xdebug.max_nesting_level={$this->max_nesting_level})"),
-                    true, false);
+                rcube::raise_error([
+                        'code' => 500, 'line' => __LINE__, 'file' => __FILE__,
+                        'message' => "Maximum nesting level exceeded (xdebug.max_nesting_level={$this->max_nesting_level})"
+                    ],
+                    true, false
+                );
             }
 
-            return '<!-- ignored -->';
+            return $this->config['add_comments'] ? '<!-- ignored -->' : '';
         }
 
         $node = $node->firstChild;
@@ -502,26 +567,41 @@ class rcube_washtml
                 if ($tagName == 'link') {
                     $uri = $this->wash_uri($node->getAttribute('href'), false, false);
                     if (!$uri) {
-                        $dump .= '<!-- link ignored -->';
+                        if ($this->config['add_comments']) {
+                            $dump .= '<!-- link ignored -->';
+                        }
                         break;
                     }
 
                     $node->setAttribute('href', (string) $uri);
                 }
+                else if (in_array($tagName, ['animate', 'animatecolor', 'set', 'animatetransform'])
+                    && self::attribute_value($node, 'attributename', 'href')
+                ) {
+                    // Insecure svg tags
+                    if ($this->config['add_comments']) {
+                        $dump .= "<!-- {$tagName} blocked -->";
+                    }
+                    break;
+                }
 
-                if ($callback = $this->handlers[$tagName]) {
+                if (!empty($this->handlers[$tagName])) {
+                    $callback = $this->handlers[$tagName];
                     $dump .= call_user_func($callback, $tagName,
                         $this->wash_attribs($node), $this->dumpHtml($node, $level), $this);
                 }
                 else if (isset($this->_html_elements[$tagName])) {
                     $content = $this->dumpHtml($node, $level);
-                    $dump .= '<' . $node->nodeName;
+                    $tag = '<' . $node->nodeName;
 
                     if ($tagName == 'svg') {
                         $xpath = new DOMXPath($node->ownerDocument);
                         foreach ($xpath->query('namespace::*') as $ns) {
                             if ($ns->nodeName != 'xmlns:xml') {
-                                $dump .= ' ' . $ns->nodeName . '="' . $ns->nodeValue . '"';
+                                $tag .= sprintf(' %s="%s"',
+                                    $ns->nodeName,
+                                    htmlspecialchars($ns->nodeValue, ENT_QUOTES, $this->config['charset'])
+                                );
                             }
                         }
                     }
@@ -529,20 +609,25 @@ class rcube_washtml
                         $content = htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, $this->config['charset']);
                     }
 
-                    $dump .= $this->wash_attribs($node);
+                    $tag .= $this->wash_attribs($node);
 
-                    if ($content === '' && ($this->is_xml || isset($this->_void_elements[$tagName]))) {
-                        $dump .= ' />';
-                    }
-                    else {
-                        $dump .= '>' . $content . '</' . $node->nodeName . '>';
+                    if (isset($this->_ignore_elements[$tagName])) {
+                        $dump .= $content;
+                    } elseif ($content === '' && ($this->is_xml || isset($this->_void_elements[$tagName]))) {
+                         $dump .= $tag . ' />';
+                    } else {
+                         $dump .= $tag . '>' . $content . '</' . $node->nodeName . '>';
                     }
                 }
                 else if (isset($this->_ignore_elements[$tagName])) {
-                    $dump .= '<!-- ' . htmlspecialchars($node->nodeName, ENT_QUOTES, $this->config['charset']) . ' not allowed -->';
+                    if ($this->config['add_comments']) {
+                        $dump .= '<!-- ' . htmlspecialchars($node->nodeName, ENT_QUOTES, $this->config['charset']) . ' not allowed -->';
+                    }
                 }
                 else {
-                    $dump .= '<!-- ' . htmlspecialchars($node->nodeName, ENT_QUOTES, $this->config['charset']) . ' ignored -->';
+                    if ($this->config['add_comments']) {
+                        $dump .= '<!-- ' . htmlspecialchars($node->nodeName, ENT_QUOTES, $this->config['charset']) . ' ignored -->';
+                    }
                     $dump .= $this->dumpHtml($node, $level); // ignore tags not its content
                 }
                 break;
@@ -588,17 +673,15 @@ class rcube_washtml
         $this->max_nesting_level = (int) @ini_get('xdebug.max_nesting_level');
 
         // SVG need to be parsed as XML
-        $this->is_xml = stripos($html, '<html') === false && stripos($html, '<svg') !== false;
+        $this->is_xml = !preg_match('/<(html|head|body)/i', $html) && stripos($html, '<svg') !== false;
         $method       = $this->is_xml ? 'loadXML' : 'loadHTML';
 
         // DOMDocument does not support HTML5, try Masterminds parser if available
-        if (!$this->is_xml && class_exists('Masterminds\HTML5')
-            // HTML5 parser is slow with content that contains a lot of tags
-            // disable it for such cases (https://github.com/Masterminds/html5-php/issues/181)
-            && substr_count($html, '<') < 10000
-        ) {
+        if (!$this->is_xml && class_exists('Masterminds\HTML5')) {
             try {
-                $html5 = new Masterminds\HTML5();
+                // disabled_html_ns=true is a workaround for the performance issue
+                // https://github.com/Masterminds/html5-php/issues/181
+                $html5 = new Masterminds\HTML5(['disable_html_ns' => true]);
                 $node  = $html5->loadHTML($this->fix_html5($html));
             }
             catch (Exception $e) {
@@ -612,6 +695,8 @@ class rcube_washtml
             @$node->{$method}($html, LIBXML_PARSEHUGE | LIBXML_COMPACT | LIBXML_NONET);
         }
 
+        unset($html); // release some memory
+
         return $this->dumpHtml($node);
     }
 
@@ -624,7 +709,13 @@ class rcube_washtml
      */
     public function get_config($prop)
     {
-        return $this->config[$prop];
+        $config_props = ['html_elements', 'html_attribs', 'ignore_elements', 'void_elements', 'css_prefix'];
+
+        if (in_array($prop, $config_props)) {
+            return $this->{"_{$prop}"};
+        }
+
+        return $this->config[$prop] ?? null;
     }
 
     /**
@@ -639,11 +730,11 @@ class rcube_washtml
         $html = trim($html);
 
         // special replacements (not properly handled by washtml class)
-        $html_search = array(
+        $html_search = [
             // space(s) between <NOBR>
             '/(<\/nobr>)(\s+)(<nobr>)/i',
             // PHP bug #32547 workaround: remove title tag
-            '/<title[^>]*>[^<]*<\/title>/i',
+            '/<title[^>]*>.*<\/title>/iU',
             // remove <!doctype> before BOM (#1490291)
             '/<\!doctype[^>]+>[^<]*/im',
             // byte-order mark (only outlook?)
@@ -651,43 +742,44 @@ class rcube_washtml
             // washtml/DOMDocument cannot handle xml namespaces
             '/<html\s[^>]+>/i',
             // washtml/DOMDocument cannot handle xml namespaces
-            '/<\?xml:namespace\s[^>]+>/i',
-        );
+            // HTML5 parser cannot handler <?xml
+            '/<\?xml[^>]*>/i',
+        ];
 
-        $html_replace = array(
+        $html_replace = [
             '\\1'.' &nbsp; '.'\\3',
             '',
             '',
             '',
             '<html>',
             '',
-        );
+        ];
 
         $html = preg_replace($html_search, $html_replace, $html);
 
-        $err = array('line' => __LINE__, 'file' => __FILE__, 'message' => "Could not clean up HTML!");
+        $err = ['line' => __LINE__, 'file' => __FILE__, 'message' => "Could not clean up HTML!"];
         if ($html === null && rcube_utils::preg_error($err)) {
             return '';
         }
 
         // Replace all of those weird MS Word quotes and other high characters
-        $badwordchars = array(
+        $badwordchars = [
             "\xe2\x80\x98", // left single quote
             "\xe2\x80\x99", // right single quote
             "\xe2\x80\x9c", // left double quote
             "\xe2\x80\x9d", // right double quote
             "\xe2\x80\x94", // em dash
-            "\xe2\x80\xa6"  // elipses
-        );
+            "\xe2\x80\xa6"  // ellipses
+        ];
 
-        $fixedwordchars = array(
+        $fixedwordchars = [
             "'",
             "'",
             '"',
             '"',
             '&mdash;',
             '...'
-        );
+        ];
 
         $html = str_replace($badwordchars, $fixedwordchars, $html);
 
@@ -695,7 +787,7 @@ class rcube_washtml
         //        we should probably do not modify content inside comments at all.
 
         // fix (unknown/malformed) HTML tags before "wash"
-        $html = preg_replace_callback('/(<(?!\!)[\/]*)([^\s>]+)([^>]*)/', array($this, 'html_tag_callback'), $html);
+        $html = preg_replace_callback('/(<(?!\!)[\/]*)([^\s>]+)([^>]*)/', [$this, 'html_tag_callback'], $html);
 
         // Remove invalid HTML comments (#1487759)
         // Note: We don't want to remove valid comments, conditional comments
@@ -727,10 +819,11 @@ class rcube_washtml
         }
 
         $tagname = $matches[2];
-        $tagname = preg_replace(array(
-            '/:.*$/',                // Microsoft's Smart Tags <st1:xxxx>
-            '/[^a-z0-9_\[\]\!?-]/i', // forbidden characters
-        ), '', $tagname);
+        $tagname = preg_replace([
+                '/:.*$/',                // Microsoft's Smart Tags <st1:xxxx>
+                '/[^a-z0-9_\[\]\!?-]/i', // forbidden characters
+            ], '', $tagname
+        );
 
         // fix invalid closing tags - remove any attributes (#1489446)
         if ($matches[1] == '</') {
@@ -766,13 +859,13 @@ class rcube_washtml
     public static function fix_broken_lists(&$html)
     {
         // do two rounds, one for <ol>, one for <ul>
-        foreach (array('ol', 'ul') as $tag) {
+        foreach (['ol', 'ul'] as $tag) {
             $pos = 0;
             while (($pos = stripos($html, '<' . $tag, $pos)) !== false) {
                 $pos++;
 
                 // make sure this is an ol/ul tag
-                if (!in_array($html[$pos+2], array(' ', '>'))) {
+                if (!in_array($html[$pos+2], [' ', '>'])) {
                     continue;
                 }
 
@@ -789,13 +882,13 @@ class rcube_washtml
                         $p += 4;
                     }
                     // li close tag
-                    else if ($tt == '</li' && in_array($html[$p+4], array(' ', '>'))) {
+                    else if ($tt == '</li' && in_array($html[$p+4], [' ', '>'])) {
                         $li_pos = $p;
                         $in_li  = false;
                         $p += 4;
                     }
                     // ul/ol closing tag
-                    else if ($tt == '</' . $tag && in_array($html[$p+4], array(' ', '>'))) {
+                    else if ($tt == '</' . $tag && in_array($html[$p+4], [' ', '>'])) {
                         break;
                     }
                     // nested ol/ul element out of li
@@ -844,6 +937,7 @@ class rcube_washtml
     {
         // There might be content before html/body tag, we'll move it to the body
         // We'll wrap it by a div container, it's an invalid HTML anyway
+        $prefix = '';
         if (strpos($html, '<')) {
             $pos     = stripos($html, '<!DOCTYPE') ?: stripos($html, '<html') ?: stripos($html, '<body');
             $prefix  = '<div>' . substr($html, 0, $pos) . '</div>';
@@ -852,7 +946,7 @@ class rcube_washtml
 
         // HTML5 requires <head> or <body> (#6713)
         // https://github.com/Masterminds/html5-php/issues/166
-        if (isset($prefix) || !preg_match('/<(head|body)/i', $html)) {
+        if (strlen($prefix) > 0 || !preg_match('/<(head|body)/i', $html)) {
             $body_pos = stripos($html, '<body');
             $pos      = $body_pos !== false ? $body_pos : stripos($html, '<html');
 
@@ -867,55 +961,10 @@ class rcube_washtml
             }
         }
 
+        // Workaround for HTML5 issue with "invalid" table structure (#7356)
+        $html = preg_replace('|<tr>\s*<tr>|', '<tr>', $html);
+        $html = preg_replace('|</tr>\s*</tr>|', '</tr>', $html);
+
         return $html;
-    }
-
-    /**
-     * Explode css style value
-     *
-     * @param string $style CSS style
-     *
-     * @return array List of CSS rules
-     */
-    protected function explode_style($style)
-    {
-        $pos = 0;
-
-        // first remove comments
-        while (($pos = strpos($style, '/*', $pos)) !== false) {
-            $end = strpos($style, '*/', $pos+2);
-
-            if ($end === false) {
-                $style = substr($style, 0, $pos);
-            }
-            else {
-                $style = substr_replace($style, '', $pos, $end - $pos + 2);
-            }
-        }
-
-        $style  = trim($style);
-        $strlen = strlen($style);
-        $result = array();
-
-        // explode value
-        for ($p=$i=0; $i < $strlen; $i++) {
-            if (($style[$i] == "\"" || $style[$i] == "'") && $style[$i-1] != "\\") {
-                if ($q == $style[$i]) {
-                    $q = false;
-                }
-                else if (!$q) {
-                    $q = $style[$i];
-                }
-            }
-
-            if (!$q && $style[$i] == ' ' && !preg_match('/[,\(]/', $style[$i-1])) {
-                $result[] = substr($style, $p, $i - $p);
-                $p = $i + 1;
-            }
-        }
-
-        $result[] = (string) substr($style, $p);
-
-        return $result;
     }
 }

@@ -26,9 +26,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
     </lead>
 
     <!-- Information for this release -->
-    <date>2015-10-30</date>
+    <date>2023-10-12</date>
     <version>
-        <release>2.2.0</release>
+        <release>2.3.0</release>
         <api>2.2.0</api>
     </version>
     <stability>
@@ -37,9 +37,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
     </stability>
     <license>LGPLv3 License</license>
     <notes>
-     * Fix bug #20969: Fatal error with PEAR 1.10.0 / constructor visiblity
-     * Add support for PHP 7
-     * Improve unit tests
+     * Support PHP 8.1
+     * Fix unit tests on PHP 8.0.29
+     * Make tests compatible with PHPUnit 9
     </notes>
     <contents>
         <dir name="/">
@@ -100,7 +100,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <dependencies>
         <required>
             <php>
-                <min>5.4</min>
+                <min>7.4</min>
             </php>
             <pearinstaller>
                 <min>1.10.1</min>
@@ -529,7 +529,7 @@ some directory
 * New constructor factory for Entry objects: createExisting()
 * Several small improvements
 * New method Entry-&gt;isNew()
-* Net_LDAP2-&gt;search() and Net_LDAP2-&gt;dnExists() can handle entry objects now 
+* Net_LDAP2-&gt;search() and Net_LDAP2-&gt;dnExists() can handle entry objects now
 * Added &quot;present&quot; matching rule as stated by RFC 2254 (is an alias of the former &quot;any&quot;)
 * Bugfix in filter class for approx matching and not combination
 * Bugfix for Schema-&gt;isBinary() bug if unknown attribute type is requested
@@ -858,5 +858,39 @@ debug information.
      * Improve unit tests
     </notes>
   </release>
+  <release>
+      <date>2015-10-30</date>
+    <version>
+        <release>2.2.0</release>
+        <api>2.2.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+     * Fix bug #20969: Fatal error with PEAR 1.10.0 / constructor visiblity
+     * Add support for PHP 7
+     * Improve unit tests
+    </notes>
+  </release>
+
+  <release>
+    <date>2023-02-23</date>
+    <version>
+        <release>2.2.1</release>
+        <api>2.2.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>LGPLv3 License</license>
+    <notes>
+     * Fix: remove unused $ber property
+    </notes>
+  </release>
+
  </changelog>
 </package>

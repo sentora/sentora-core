@@ -29,7 +29,7 @@
     }
 
     tbody td {
-        .overflow-ellipsis;
+        .overflow-ellipsis();
         outline: none;
 
         a {
@@ -65,7 +65,7 @@
     }
 
     td.name {
-        .overflow-ellipsis;
+        .overflow-ellipsis();
     }
 
     td.action {
@@ -151,7 +151,7 @@ ul.listing {
     }
 
     li {
-        .overflow-ellipsis;
+        .overflow-ellipsis();
         white-space: nowrap;
         position: relative;
         list-style: none;
@@ -279,6 +279,7 @@ html.touch {
     &.enigma.keys > a:before {
         content: @fa-var-key;
     }
+    &.info > a:before,
     &.userinfo > a:before {
         content: @fa-var-info-circle;
     }
@@ -343,7 +344,7 @@ html.ie11 .listing.iconized li a:before {
     &.server > td.section:before {
         content: @fa-var-server;
     }
-    &.enigma > td.section:before {
+    &.encryption > td.section:before {
         content: @fa-var-lock;
     }
     &.calendar > td.section:before {
@@ -354,7 +355,7 @@ html.ie11 .listing.iconized li a:before {
     }
 }
 
-/* selecatable list: e.g. spellcheck language selection */
+/* selectable list: e.g. spellcheck language selection */
 .listing.iconized.selectable li {
     a:before {
         &:extend(.font-icon-class);
@@ -381,7 +382,7 @@ html.ie11 .listing.iconized li a:before {
     }
 
     td {
-        .overflow-ellipsis;
+        .overflow-ellipsis();
     }
 }
 
@@ -408,7 +409,7 @@ ul.treelist {
         }
 
         & > a {
-            .overflow-ellipsis;
+            .overflow-ellipsis();
             padding-left: @listing-treetoggle-width;
         }
 
@@ -484,7 +485,7 @@ ul.treelist {
                 right: 0;
                 min-width: 2em;
                 line-height: 1.4rem;
-                margin: (@listing-line-height - 1.4 * @page-font-size) / 2;
+                margin: ((@listing-line-height - 1.4 * @page-font-size) / 2);
                 padding: 0 .3em;
                 border-radius: .4em;
                 background: @color-list-badge-background;
@@ -494,7 +495,7 @@ ul.treelist {
 
                 html.touch & {
                     line-height: 2rem;
-                    margin: (@listing-touch-line-height - 2 * @page-font-size) / 2;
+                    margin: ((@listing-touch-line-height - 2 * @page-font-size) / 2);
                 }
             }
 
@@ -542,6 +543,12 @@ ul.treelist {
         &.archive > a:before {
             .font-icon-solid(@fa-var-archive);
         }
+        &.ns-shared > a:before {
+            .font-icon-solid(@fa-var-share-alt);
+        }
+        &.ns-other > a:before {
+            .font-icon-solid(@fa-var-user-friends);
+        }
     }
 
     // folder-selector fix for left padding
@@ -581,13 +588,14 @@ table.fixedcopy {
         span {
             line-height: 2em;
 
+            &.size,
             &.date {
                 font-size: 90%;
                 color: @color-list-secondary;
             }
 
             &.fromto {
-                .overflow-ellipsis;
+                .overflow-ellipsis();
                 flex: 1;
                 font-size: 90%;
                 color: @color-list-secondary;
@@ -596,8 +604,9 @@ table.fixedcopy {
             }
 
             &.subject {
-                .overflow-ellipsis;
+                .overflow-ellipsis();
                 width: 100%;
+                user-select: none
             }
         }
     }
@@ -687,13 +696,27 @@ table.fixedcopy {
         }
 
         &.replied.forwarded:before {
-            .font-icon-solid(@fa-var-reply); // TODO
+            .font-icon-solid(@fa-var-reply);
             font-size: 1rem;
         }
 
-        tr.deleted &:before {
-            .font-icon-solid(@fa-var-ban);
+        &.replied.forwarded:after {
+            &:extend(.font-icon-class);
+            .font-icon-solid(@fa-var-share);
             font-size: 1rem;
+            opacity: .5;
+            margin: 0 -0.1em 0 -1.25em;
+        }
+    }
+
+    tr.deleted td.subject span.msgicon.status {
+        &:before {
+            .font-icon-solid(@fa-var-ban) !important;
+            font-size: 1rem;
+        }
+
+        &:after {
+            display: none !important;
         }
     }
 
@@ -721,9 +744,46 @@ table.fixedcopy {
         content: @fa-var-flag;
     }
 
+    tr.flaggedroot:not(:hover) span.unflagged:before {
+        &:extend(.font-icon-class);
+        content: @fa-var-flag;
+        color: @color-list-icon;
+    }
+
     tr:hover span.unflagged:before {
         &:extend(.font-icon-class);
         .font-icon-regular(@fa-var-flag);
+    }
+
+    span.size {
+        display: none;
+    }
+
+    tr:hover {
+        span.date {
+            display: none;
+        }
+        span.size {
+            display: inline;
+        }
+    }
+
+    &.sort-size {
+        span.date {
+            display: none;
+        }
+        span.size {
+            display: inline;
+        }
+
+        tr:hover {
+            span.date {
+                display: inline;
+            }
+            span.size {
+                display: none;
+            }
+        }
     }
 }
 
@@ -734,16 +794,26 @@ html.touch {
     .messagelist {
         tr {
             position: relative;
+            display: flex; // Safari fix (#8433)
         }
+
+        td.selection,
+        td.threads {
+            line-height: 3.8em; // because of display:flex above
+        }
+
         td.flags {
+            position: absolute;
             top: .25rem;
             right: 0;
             bottom: 0;
+            background-color: transparent;
 
             .flag {
                 visibility: hidden;
             }
         }
+
         td.subject {
             padding-right: .5em;
 
@@ -943,7 +1013,7 @@ html.touch {
         }
 
         &.uploading:before {
-            .animated-icon-class;
+            .animated-icon-class();
             .font-icon-solid(@fa-var-circle-notch);
         }
 
@@ -954,7 +1024,7 @@ html.touch {
         }
 
         .attachment-name {
-            .overflow-ellipsis;
+            .overflow-ellipsis();
             color: @color-font;
         }
 

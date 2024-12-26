@@ -41,7 +41,7 @@ abstract class rcube_plugin
     public $api;
 
     /**
-     * Regular expression defining task(s) to bind with 
+     * Regular expression defining task(s) to bind with
      *
      * @var string
      */
@@ -50,14 +50,14 @@ abstract class rcube_plugin
     /**
      * Disables plugin in AJAX requests
      *
-     * @var boolean
+     * @var bool
      */
     public $noajax = false;
 
     /**
      * Disables plugin in framed mode
      *
-     * @var boolean
+     * @var bool
      */
     public $noframe = false;
 
@@ -79,7 +79,7 @@ abstract class rcube_plugin
     private $mytask;
 
     /** @var array List of plugin configuration files already loaded */
-    private $loaded_config = array();
+    private $loaded_config = [];
 
 
     /**
@@ -121,8 +121,9 @@ abstract class rcube_plugin
     /**
      * Attempt to load the given plugin which is required for the current plugin
      *
-     * @param string Plugin name
-     * @return boolean True on success, false on failure
+     * @param string $plugin_name Plugin name
+     *
+     * @return bool True on success, false on failure
      */
     public function require_plugin($plugin_name)
     {
@@ -132,8 +133,9 @@ abstract class rcube_plugin
     /**
      * Attempt to load the given plugin which is optional for the current plugin
      *
-     * @param string Plugin name
-     * @return boolean True on success, false on failure
+     * @param string $plugin_name Plugin name
+     *
+     * @return bool True on success, false on failure
      */
     public function include_plugin($plugin_name)
     {
@@ -146,7 +148,7 @@ abstract class rcube_plugin
      *
      * @param string $fname Config file name relative to the plugin's folder
      *
-     * @return boolean True on success, false on failure
+     * @return bool True on success, false on failure
      */
     public function load_config($fname = 'config.inc.php')
     {
@@ -156,14 +158,15 @@ abstract class rcube_plugin
 
         $this->loaded_config[] = $fname;
 
-        $fpath = $this->home.'/'.$fname;
+        $fpath = slashify($this->home) . $fname;
         $rcube = rcube::get_instance();
 
         if (($is_local = is_file($fpath)) && !$rcube->config->load_from_file($fpath)) {
-            rcube::raise_error(array(
-                'code' => 527, 'type' => 'php',
-                'file' => __FILE__, 'line' => __LINE__,
-                'message' => "Failed to load config from $fpath"), true, false);
+            rcube::raise_error([
+                    'code' => 527, 'file' => __FILE__, 'line' => __LINE__,
+                    'message' => "Failed to load config from $fpath"
+                ], true, false
+            );
             return false;
         }
         else if (!$is_local) {
@@ -213,7 +216,7 @@ abstract class rcube_plugin
         // prepend domain to text keys and add to the application texts repository
         if (!empty($texts)) {
             $domain = $this->ID;
-            $add    = array();
+            $add    = [];
 
             foreach ($texts as $key => $value) {
                 $add[$domain.'.'.$key] = $value;
@@ -224,7 +227,7 @@ abstract class rcube_plugin
             // add labels to client
             if ($add2client && method_exists($rcube->output, 'add_label')) {
                 if (is_array($add2client)) {
-                    $js_labels = array_map(array($this, 'label_map_callback'), $add2client);
+                    $js_labels = array_map([$this, 'label_map_callback'], $add2client);
                 }
                 else {
                     $js_labels = array_keys($add);
@@ -238,17 +241,16 @@ abstract class rcube_plugin
     /**
      * Wrapper for add_label() adding the plugin ID as domain
      */
-    public function add_label()
+    public function add_label(...$args)
     {
         $rcube = rcube::get_instance();
 
         if (method_exists($rcube->output, 'add_label')) {
-            $args = func_get_args();
             if (count($args) == 1 && is_array($args[0])) {
                 $args = $args[0];
             }
 
-            $args = array_map(array($this, 'label_map_callback'), $args);
+            $args = array_map([$this, 'label_map_callback'], $args);
             $rcube->output->add_label($args);
         }
     }
@@ -256,7 +258,7 @@ abstract class rcube_plugin
     /**
      * Wrapper for rcube::gettext() adding the plugin ID as domain
      *
-     * @param string $p Message identifier
+     * @param string|array $p Named parameters array or label name
      *
      * @return string Localized text
      * @see rcube::gettext()
@@ -283,9 +285,9 @@ abstract class rcube_plugin
      *
      * The callback will be executed upon a request like /?_task=mail&_action=plugin.myaction
      *
-     * @param string $action  Action name (should be unique)
-     * @param mixed $callback Callback function as string
-     *                        or array with object reference and method name
+     * @param string $action   Action name (should be unique)
+     * @param mixed  $callback Callback function as string
+     *                         or array with object reference and method name
      */
     public function register_action($action, $callback)
     {
@@ -308,7 +310,7 @@ abstract class rcube_plugin
     }
 
     /**
-     * Make this javascipt file available on the client
+     * Make this javascript file available on the client
      *
      * @param string $fn File path; absolute or relative to the plugin directory
      */
@@ -330,17 +332,17 @@ abstract class rcube_plugin
     /**
      * Append a button to a certain container
      *
-     * @param array $p Hash array with named parameters (as used in skin templates)
+     * @param array  $p         Hash array with named parameters (as used in skin templates)
      * @param string $container Container name where the buttons should be added to
      *
-     * @see rcube_remplate::button()
+     * @see rcube_template::button()
      */
     public function add_button($p, $container)
     {
         if ($this->api->output->type == 'html') {
             // fix relative paths
-            foreach (array('imagepas', 'imageact', 'imagesel') as $key) {
-                if ($p[$key]) {
+            foreach (['imagepas', 'imageact', 'imagesel'] as $key) {
+                if (!empty($p[$key])) {
                     $p[$key] = $this->api->url . $this->resource_url($p[$key]);
                 }
             }
@@ -369,7 +371,8 @@ abstract class rcube_plugin
      */
     private function resource_url($fn)
     {
-        if ($fn[0] != '/' && !preg_match('|^https?://|i', $fn)) {
+        // pattern "skins/[a-z0-9-_]+/plugins/$this->ID/" used to identify plugin resources loaded from the core skin folder
+        if ($fn[0] != '/' && !preg_match("#^(https?://|skins/[a-z0-9-_]+/plugins/$this->ID/)#i", $fn)) {
             return $this->ID . '/' . $fn;
         }
         else {
@@ -381,21 +384,44 @@ abstract class rcube_plugin
      * Provide path to the currently selected skin folder within the plugin directory
      * with a fallback to the default skin folder.
      *
-     * @return string Skin path relative to plugins directory
+     * @param  string $extra_dir Additional directory to search in (optional)
+     * @param  mixed  $skin_name Specific skin name(s) to look for, string or array (optional)
+     * @return string            Skin path relative to plugins directory
      */
-    public function local_skin_path()
+    public function local_skin_path($extra_dir = null, $skin_name = null)
     {
-        $rcube = rcube::get_instance();
-        $skins = array_keys((array)$rcube->output->skins);
+        $rcube     = rcube::get_instance();
+        $skins     = array_keys((array)$rcube->output->skins);
+        $skin_path = '';
 
         if (empty($skins)) {
             $skins = (array) $rcube->config->get('skin');
         }
 
+        $dirs = ['skins'];
+        if (!empty($extra_dir)) {
+            array_unshift($dirs, $extra_dir);
+        }
+
+        if (!empty($skin_name)) {
+            $skins = (array) $skin_name;
+        }
+
         foreach ($skins as $skin) {
-            $skin_path = 'skins/' . $skin;
-            if (is_dir(realpath(slashify($this->home) . $skin_path))) {
-                break;
+            foreach ($dirs as $dir) {
+                // skins folder in the plugins dir
+                $skin_path = $dir . '/' . $skin;
+
+                if (!is_dir(realpath(slashify($this->home) . $skin_path))) {
+                    // plugins folder in the skins dir
+                    $skin_path .= '/plugins/' . $this->ID;
+                    if (is_dir(realpath(slashify(RCUBE_INSTALL_PATH) . $skin_path))) {
+                        break 2;
+                    }
+                }
+                else {
+                    break 2;
+                }
             }
         }
 
@@ -406,6 +432,7 @@ abstract class rcube_plugin
      * Callback function for array_map
      *
      * @param string $key Array key.
+     *
      * @return string
      */
     private function label_map_callback($key)

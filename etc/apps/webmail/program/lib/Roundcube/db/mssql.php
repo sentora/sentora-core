@@ -30,11 +30,7 @@ class rcube_db_mssql extends rcube_db
     public $db_provider = 'mssql';
 
     /**
-     * Object constructor
-     *
-     * @param string $db_dsnw DSN for read/write operations
-     * @param string $db_dsnr Optional DSN for read only operations
-     * @param bool   $pconn   Enables persistent connections
+     * {@inheritdoc}
      */
     public function __construct($db_dsnw, $db_dsnr = '', $pconn = false)
     {
@@ -89,13 +85,11 @@ class rcube_db_mssql extends rcube_db
     /**
      * Abstract SQL statement for value concatenation
      *
-     * @return string SQL statement to be used in query
+     * @return string ...$args Values to concatenate
      */
-    public function concat(/* col1, col2, ... */)
+    public function concat(...$args)
     {
-        $args = func_get_args();
-
-        if (is_array($args[0])) {
+        if (count($args) == 1 && is_array($args[0])) {
             $args = $args[0];
         }
 
@@ -147,18 +141,18 @@ class rcube_db_mssql extends rcube_db
      */
     protected function dsn_string($dsn)
     {
-        $params = array();
+        $params = [];
         $result = $dsn['phptype'] . ':';
 
-        if ($dsn['hostspec']) {
+        if (isset($dsn['hostspec'])) {
             $host = $dsn['hostspec'];
-            if ($dsn['port']) {
+            if (isset($dsn['port'])) {
                 $host .= ',' . $dsn['port'];
             }
             $params[] = 'host=' . $host;
         }
 
-        if ($dsn['database']) {
+        if (isset($dsn['database'])) {
             $params[] = 'dbname=' . $dsn['database'];
         }
 
@@ -182,7 +176,7 @@ class rcube_db_mssql extends rcube_db
         $sql = preg_replace_callback(
             '/((TABLE|(?<!ON )UPDATE|INSERT INTO|FROM(?! deleted)| ON(?! (DELETE|UPDATE|\[PRIMARY\]))'
             . '|REFERENCES|CONSTRAINT|TRIGGER|INDEX)\s+(\[dbo\]\.)?[\[\]]*)([^\[\]\( \r\n]+)/',
-            array($this, 'fix_table_names_callback'),
+            [$this, 'fix_table_names_callback'],
             $sql
         );
 

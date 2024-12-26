@@ -43,7 +43,7 @@ class rcube_ldap_simple_password
         $smbpwattr    = $rcmail->config->get('password_ldap_samba_pwattr');
         $smblchattr   = $rcmail->config->get('password_ldap_samba_lchattr');
         $samba        = $rcmail->config->get('password_ldap_samba');
-        $pass_mode    = $rcmail->config->get('password_ldap_encodage', 'crypt');
+        $pass_mode    = $rcmail->config->get('password_ldap_encodage', 'md5-crypt');
         $crypted_pass = password::hash_password($passwd, $pass_mode);
 
         // Support password_ldap_samba option for backward compat.
@@ -119,19 +119,21 @@ class rcube_ldap_simple_password
         $this->debug = $rcmail->config->get('ldap_debug');
         $ldap_host   = $rcmail->config->get('password_ldap_host', 'localhost');
         $ldap_port   = $rcmail->config->get('password_ldap_port', '389');
+        $ldap_uri    = $this->_host2uri($ldap_host, $ldap_port);
 
-        $this->_debug("C: Connect to $ldap_host:$ldap_port");
+        $this->_debug("C: Connect [{$ldap_uri}]");
 
         // Connect
-        if (!$ds = ldap_connect($ldap_host, $ldap_port)) {
+        if (!($ds = ldap_connect($ldap_uri))) {
             $this->_debug("S: NOT OK");
 
-            rcube::raise_error(array(
+            rcube::raise_error([
                     'code' => 100, 'type' => 'ldap',
                     'file' => __FILE__, 'line' => __LINE__,
                     'message' => "Could not connect to LDAP server"
-                ),
-                true);
+                ],
+                true
+            );
 
             return PASSWORD_CONNECT_ERROR;
         }
@@ -151,8 +153,9 @@ class rcube_ldap_simple_password
         }
 
         // other plugins might want to modify user DN
-        $plugin = $rcmail->plugins->exec_hook('password_ldap_bind', array(
-            'user_dn' => '', 'conn' => $ds));
+        $plugin = $rcmail->plugins->exec_hook('password_ldap_bind',
+            ['user_dn' => '', 'conn' => $ds]
+        );
 
         // Build user DN
         if (!empty($plugin['user_dn'])) {
@@ -234,7 +237,7 @@ class rcube_ldap_simple_password
         $this->_debug("C: Search $search_base for $search_filter");
 
         // Search for the DN
-        if (!$sr = ldap_search($ds, $search_base, $search_filter)) {
+        if (!($sr = ldap_search($ds, $search_base, $search_filter))) {
             $this->_debug("S: ".ldap_error($ds));
             return false;
         }
@@ -263,7 +266,7 @@ class rcube_ldap_simple_password
         $parts = explode('@', $_SESSION['username']);
 
         if (count($parts) == 2) {
-            $dc = 'dc='.strtr($parts[1], array('.' => ',dc=')); // hierarchal domain string
+            $dc = 'dc='.strtr($parts[1], ['.' => ',dc=']); // hierarchal domain string
 
             $str = str_replace('%name', $parts[0], $str);
             $str = str_replace('%n', $parts[0], $str);
@@ -271,7 +274,7 @@ class rcube_ldap_simple_password
             $str = str_replace('%domain', $parts[1], $str);
             $str = str_replace('%d', $parts[1], $str);
         }
-        else if ( count($parts) == 1) {
+        else if (count($parts) == 1) {
             $str = str_replace('%name', $parts[0], $str);
             $str = str_replace('%n', $parts[0], $str);
         }
@@ -287,5 +290,25 @@ class rcube_ldap_simple_password
         if ($this->debug) {
             rcube::write_log('ldap', $str);
         }
+    }
+
+    /**
+     * Convert LDAP host/port into URI
+     */
+    private static function _host2uri($host, $port = null)
+    {
+        if (stripos($host, 'ldapi://') === 0) {
+            return $host;
+        }
+
+        if (strpos($host, '://') === false) {
+            $host = ($port == 636 ? 'ldaps' : 'ldap') . '://' . $host;
+        }
+
+        if ($port && !preg_match('/:[0-9]+$/', $host)) {
+            $host .= ':' . $port;
+        }
+
+        return $host;
     }
 }

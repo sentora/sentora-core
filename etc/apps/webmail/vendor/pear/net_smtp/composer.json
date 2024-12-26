@@ -10,6 +10,11 @@
             "email": "chuck@horde.org",
             "name": "Chuck Hagenbuch",
             "role": "Lead"
+        },
+        {
+            "email": "schengawegga@gmail.com",
+            "name": "Armin Graefe",
+            "role": "Lead"
         }
     ],
     "autoload": {

@@ -409,7 +409,7 @@ class Net_LDAP2_Util extends PEAR
 
                     // escaping of dn-value
                     $val = self::escape_dn_value(array($val));
-                    $val = str_replace('/', '\/', $val[0]);
+                    $val = str_replace('/', '\\2f', $val[0]);
 
                     $dn[$pos] = $ocl.'='.$val;
                 }

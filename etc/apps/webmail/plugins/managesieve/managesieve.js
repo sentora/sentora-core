@@ -56,7 +56,7 @@ if (window.rcmail) {
         sieve_raw_editor_init();
       }
       else {
-        rcmail.enable_command('plugin.managesieve-add', !rcmail.env.sieveconnerror && $.inArray('new_rule', rcmail.env.managesieve_disabled_actions) == -1);
+        rcmail.enable_command('plugin.managesieve-add', !rcmail.env.sieveconnerror && $.inArray('new_filter', rcmail.env.managesieve_disabled_actions) == -1);
         rcmail.enable_command('plugin.managesieve-setadd', !rcmail.env.sieveconnerror && $.inArray('new_set', rcmail.env.managesieve_disabled_actions) == -1);
       }
 
@@ -149,7 +149,7 @@ rcube_webmail.prototype.managesieve_select = function(list)
   var has_id = typeof(id) != 'undefined' && id != null;
 
   this.enable_command('plugin.managesieve-act', has_id);
-  this.enable_command('plugin.managesieve-del', has_id && $.inArray('delete_rule', rcmail.env.managesieve_disabled_actions) == -1);
+  this.enable_command('plugin.managesieve-del', has_id && $.inArray('delete_filter', rcmail.env.managesieve_disabled_actions) == -1);
 };
 
 // Set selection
@@ -343,7 +343,7 @@ rcube_webmail.prototype.managesieve_updatelist = function(action, o)
 
       break;
 
-    // Sactivate/deactivate set
+    // Activate/Deactivate the set
     case 'setact':
       var id = this.managesieve_setid(o.name), row = $('#rcmrow' + id);
       if (o.active) {
@@ -486,7 +486,7 @@ rcube_webmail.prototype.managesieve_unfocus_filter = function(row)
 /*********          Filter Form methods          *********/
 /*********************************************************/
 
-// Form submition
+// Form submission
 rcube_webmail.prototype.managesieve_save = function()
 {
   if (this.env.action == 'plugin.managesieve-vacation') {
@@ -628,6 +628,7 @@ function rule_header_select(id)
   var is_header,
     obj = document.getElementById('header' + id),
     size = document.getElementById('rule_size' + id),
+    spamtest = document.getElementById('rule_spamtest' + id),
     msg = document.getElementById('rule_message' + id),
     op = document.getElementById('rule_op' + id),
     header = document.getElementById('custom_header' + id + '_list'),
@@ -646,7 +647,16 @@ function rule_header_select(id)
   if (h == 'size') {
     if (msg) set.push(msg);
     $.each(set, function() { if (this != window) this.style.display = 'none'; });
+    if (spamtest)
+      spamtest.style.display = 'none';
     size.style.display = '';
+  }
+  else if (h == 'spamtest') {
+    if (msg) set.push(msg);
+    $.each(set, function() { if (this != window) this.style.display = 'none'; });
+    if (spamtest)
+      spamtest.style.display = '';
+    size.style.display = 'none';
   }
   else if (h == 'message' && msg) {
     $.each(set, function() { if (this != window)  this.style.display = 'none'; });
@@ -661,6 +671,8 @@ function rule_header_select(id)
     comp.style.display = '';
     mod.style.display = is_header ? '' : 'none';
     trans.style.display = h == 'body' ? '' : 'none';
+    if (spamtest)
+      spamtest.style.display = 'none';
     if (mime)
       mime.style.display =  is_header ? '' : 'none';
     if (mime_part)
@@ -681,6 +693,8 @@ function rule_header_select(id)
   rule_op_select(op, id, h);
   rule_mod_select(id, h, !is_header);
   rule_mime_select(id);
+  if (spamtest)
+    rule_spamtest_select(id);
 
   obj.style.width = h == '...' ? '40px' : '';
 };
@@ -692,7 +706,7 @@ function rule_op_select(obj, id, header)
   if (!header)
     header = document.getElementById('header' + id).value;
 
-  target.style.display = obj.value.match(/^(exists|notexists)$/) || header.match(/^(size|message)$/) ? 'none' : '';
+  target.style.display = obj.value.match(/^(exists|notexists)$/) || header.match(/^(size|spamtest|message)$/) ? 'none' : '';
 };
 
 function rule_trans_select(id)
@@ -719,10 +733,19 @@ function rule_mod_select(id, header, reset)
   target.style.display = obj.value != 'address' && obj.value != 'envelope' ? 'none' : '';
 
   if (index)
-    index.style.display = !header.match(/^(body|currentdate|size|message|string)$/) && obj.value != 'envelope'  ? '' : 'none';
+    index.style.display = !header.match(/^(body|currentdate|size|spamtest|message|string)$/) && obj.value != 'envelope'  ? '' : 'none';
 
   if (duplicate)
     duplicate.style.display = header == 'message' ? '' : 'none';
+};
+
+function rule_spamtest_select(id)
+{
+  var obj = document.getElementById('rule_spamtest_op' + id),
+    target = document.getElementById('rule_spamtest_target' + id);
+
+  target.style.display = obj.value ? '' : 'none';
+  $(obj)[obj.value ? 'removeClass' : 'addClass']('rounded-right');
 };
 
 function rule_join_radio(value)
@@ -788,7 +811,7 @@ function action_type_select(id)
 
   for (var x in elems) {
     if (elems[x])
-      elems[x].style.display = !enabled[x] ? 'none' : 'inline';
+      elems[x].style.display = !enabled[x] ? 'none' : '';
   }
 };
 
@@ -799,7 +822,7 @@ function vacation_action_select()
   $('#action_target_span')[selected == 'discard' || selected == 'keep' ? 'hide' : 'show']();
 };
 
-// Inititalizes smart list input
+// Initializes smart list input
 function smart_field_init(field)
 {
   if (window.UI && UI.smart_field_init)
@@ -814,7 +837,7 @@ function smart_field_init(field)
 
   // add input rows
   $.each(list, function(i, v) {
-    area.append(smart_field_row(v, field.name, i, $(field).data('size')));
+    area.append(smart_field_row(v, i, field));
   });
 
   area.attr('id', id);
@@ -837,25 +860,26 @@ function smart_field_init(field)
   }
 };
 
-function smart_field_row(value, name, idx, size)
+function smart_field_row(value, idx, field)
 {
   // build row element content
   var input, content = '<span class="listelement">'
       + '<span class="reset"></span><input type="text"></span>',
     elem = $(content),
-    attrs = {value: value, name: name + '[]'};
+    attrs = {
+      value: value,
+      name: field.name + '[]',
+      size: $(field).data('size'),
+      title: field.title,
+      placeholder: $(field).attr('placeholder')
+    };
 
-  if (size)
-    attrs.size = size;
-
-  input = $('input', elem).attr(attrs).keydown(function(e) {
+  input = elem.find('input').attr(attrs).keydown(function(e) {
     var input = $(this);
 
     // element creation event (on Enter)
     if (e.which == 13) {
-      var name = input.attr('name').replace(/\[\]$/, ''),
-        dt = (new Date()).getTime(),
-        elem = smart_field_row('', name, dt, size);
+      var elem = smart_field_row('', (new Date()).getTime(), field);
 
       input.parent().after(elem);
       $('input', elem).focus();
@@ -904,7 +928,7 @@ function smart_field_reset(field, data)
 
   // add input rows
   $.each(list, function(i, v) {
-    area.append(smart_field_row(v, field.name, i, $(field).data('size')));
+    area.append(smart_field_row(v, i, field));
   });
 }
 

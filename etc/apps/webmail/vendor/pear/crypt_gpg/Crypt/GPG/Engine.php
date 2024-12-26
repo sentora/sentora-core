@@ -8,8 +8,6 @@
  * This file contains an engine that handles GPG subprocess control and I/O.
  * PHP's process manipulation functions are used to handle the GPG subprocess.
  *
- * PHP version 5
- *
  * LICENSE:
  *
  * This library is free software; you can redistribute it and/or modify
@@ -66,8 +64,6 @@ require_once 'Crypt/GPG/SignatureCreationInfo.php';
  */
 require_once 'PEAR/Exception.php';
 
-// {{{ class Crypt_GPG_Engine
-
 /**
  * Native PHP Crypt_GPG I/O engine
  *
@@ -91,8 +87,6 @@ require_once 'PEAR/Exception.php';
  */
 class Crypt_GPG_Engine
 {
-    // {{{ constants
-
     /**
      * Size of data chunks that are sent to and retrieved from the IPC pipes.
      *
@@ -147,9 +141,6 @@ class Crypt_GPG_Engine
      */
     const MIN_VERSION = '1.0.2';
 
-    // }}}
-    // {{{ private class properties
-
     /**
      * Whether or not to use strict mode
      *
@@ -158,7 +149,7 @@ class Crypt_GPG_Engine
      *
      * Strict mode is disabled by default.
      *
-     * @var boolean
+     * @var bool
      * @see Crypt_GPG_Engine::__construct()
      */
     private $_strict = false;
@@ -206,7 +197,7 @@ class Crypt_GPG_Engine
      *
      * Only used for GnuPG 2.1.x
      *
-     * @var string
+     * @var string|false|null
      * @see Crypt_GPG_Engine::__construct()
      * @see Crypt_GPG_Engine::_getGPGConf()
      */
@@ -302,28 +293,28 @@ class Crypt_GPG_Engine
     /**
      * A handle for the GPG process
      *
-     * @var resource
+     * @var resource|null
      */
     private $_process = null;
 
     /**
      * A handle for the gpg-agent process
      *
-     * @var resource
+     * @var resource|null
      */
     private $_agentProcess = null;
 
     /**
      * GPG agent daemon socket and PID for running gpg-agent
      *
-     * @var string
+     * @var string|null
      */
     private $_agentInfo = null;
 
     /**
      * Whether or not the operating system is Darwin (OS X)
      *
-     * @var boolean
+     * @var bool
      */
     private $_isDarwin = false;
 
@@ -366,7 +357,7 @@ class Crypt_GPG_Engine
     /**
      * A status/error handler
      *
-     * @var Crypt_GPG_ProcessHanler
+     * @var Crypt_GPG_ProcessHandler|null
      */
     private $_processHandler = null;
 
@@ -391,7 +382,7 @@ class Crypt_GPG_Engine
      *
      * This is data to send to GPG. Either a string or a stream resource.
      *
-     * @var string|resource
+     * @var string|resource|null
      * @see Crypt_GPG_Engine::setInput()
      */
     private $_input = null;
@@ -401,7 +392,7 @@ class Crypt_GPG_Engine
      *
      * Either a string or a stream resource.
      *
-     * @var string|resource
+     * @var string|resource|null
      * @see Crypt_GPG_Engine::setMessage()
      */
     private $_message = null;
@@ -440,9 +431,6 @@ class Crypt_GPG_Engine
      * @see Crypt_GPG_Engine::getVersion()
      */
     private $_version = '';
-
-    // }}}
-    // {{{ __construct()
 
     /**
      * Creates a new GPG engine
@@ -656,9 +644,6 @@ class Crypt_GPG_Engine
         }
     }
 
-    // }}}
-    // {{{ __destruct()
-
     /**
      * Closes open GPG subprocesses when this object is destroyed
      *
@@ -671,9 +656,6 @@ class Crypt_GPG_Engine
         $this->_closeIdleAgents();
     }
 
-    // }}}
-    // {{{ addErrorHandler()
-
     /**
      * Adds an error handler method
      *
@@ -681,7 +663,7 @@ class Crypt_GPG_Engine
      * subprocess. The handler method must accept the error line to be handled
      * as its first parameter.
      *
-     * @param callback $callback the callback method to use.
+     * @param callable $callback the callback method to use.
      * @param array    $args     optional. Additional arguments to pass as
      *                           parameters to the callback method.
      *
@@ -695,9 +677,6 @@ class Crypt_GPG_Engine
         );
     }
 
-    // }}}
-    // {{{ addStatusHandler()
-
     /**
      * Adds a status handler method
      *
@@ -705,7 +684,7 @@ class Crypt_GPG_Engine
      * GPG subprocess. The handler method must accept the status line to be
      * handled as its first parameter.
      *
-     * @param callback $callback the callback method to use.
+     * @param callable $callback the callback method to use.
      * @param array    $args     optional. Additional arguments to pass as
      *                           parameters to the callback method.
      *
@@ -718,9 +697,6 @@ class Crypt_GPG_Engine
             'args'     => $args
         );
     }
-
-    // }}}
-    // {{{ sendCommand()
 
     /**
      * Sends a command to the GPG subprocess over the command file-descriptor
@@ -738,9 +714,6 @@ class Crypt_GPG_Engine
             $this->_commandBuffer .= $command . PHP_EOL;
         }
     }
-
-    // }}}
-    // {{{ reset()
 
     /**
      * Resets the GPG engine, preparing it for a new operation
@@ -773,9 +746,6 @@ class Crypt_GPG_Engine
         $this->addErrorHandler(array($this->_processHandler, 'handleError'));
     }
 
-    // }}}
-    // {{{ run()
-
     /**
      * Runs the current GPG operation.
      *
@@ -807,16 +777,12 @@ class Crypt_GPG_Engine
         $this->_closeSubprocess();
     }
 
-    // }}}
-    // {{{ setInput()
-
     /**
      * Sets the input source for the current GPG operation
      *
-     * @param string|resource &$input either a reference to the string
+     * @param string|resource &$input Either a reference to the string
      *                                containing the input data or an open
-     *                                stream resource containing the input
-     *                                data.
+     *                                stream resource containing the input data
      *
      * @return void
      */
@@ -825,18 +791,14 @@ class Crypt_GPG_Engine
         $this->_input =& $input;
     }
 
-    // }}}
-    // {{{ setMessage()
-
     /**
      * Sets the message source for the current GPG operation
      *
      * Detached signature data should be specified here.
      *
-     * @param string|resource &$message either a reference to the string
+     * @param string|resource &$message Either a reference to the string
      *                                  containing the message data or an open
-     *                                  stream resource containing the message
-     *                                  data.
+     *                                  stream resource containing the message data
      *
      * @return void
      */
@@ -845,16 +807,13 @@ class Crypt_GPG_Engine
         $this->_message =& $message;
     }
 
-    // }}}
-    // {{{ setOutput()
-
     /**
      * Sets the output destination for the current GPG operation
      *
-     * @param string|resource &$output either a reference to the string in
+     * @param string|resource &$output Either a reference to the string in
      *                                 which to store GPG output or an open
      *                                 stream resource to which the output data
-     *                                 should be written.
+     *                                 should be written
      *
      * @return void
      */
@@ -862,9 +821,6 @@ class Crypt_GPG_Engine
     {
         $this->_output =& $output;
     }
-
-    // }}}
-    // {{{ setOperation()
 
     /**
      * Sets the operation to perform
@@ -896,9 +852,6 @@ class Crypt_GPG_Engine
         $this->_processHandler->setOperation($operation);
     }
 
-    // }}}
-    // {{{ setPins()
-
     /**
      * Sets the PINENTRY_USER_DATA environment variable with the currently
      * added keys and passphrases
@@ -924,9 +877,6 @@ class Crypt_GPG_Engine
         $_ENV['PINENTRY_USER_DATA'] = json_encode($envKeys);
     }
 
-    // }}}
-    // {{{ setOptions()
-
     /**
      * Sets per-command additional arguments
      *
@@ -945,9 +895,6 @@ class Crypt_GPG_Engine
         $this->_options = $options;
     }
 
-    // }}}
-    // {{{ getVersion()
-
     /**
      * Gets the version of the GnuPG binary
      *
@@ -959,7 +906,7 @@ class Crypt_GPG_Engine
      *         Use the <kbd>debug</kbd> option and file a bug report if these
      *         exceptions occur.
      *
-     * @throws Crypt_GPG_UnsupportedException if the provided binary is not
+     * @throws Crypt_GPG_Exception if the provided binary is not
      *         GnuPG or if the GnuPG version is less than 1.0.2.
      */
     public function getVersion()
@@ -1009,9 +956,6 @@ class Crypt_GPG_Engine
         return $this->_version;
     }
 
-    // }}}
-    // {{{ getProcessData()
-
     /**
      * Get data from the last process execution.
      *
@@ -1040,9 +984,6 @@ class Crypt_GPG_Engine
         }
     }
 
-    // }}}
-    // {{{ setProcessData()
-
     /**
      * Set some data for the process execution.
      *
@@ -1058,9 +999,6 @@ class Crypt_GPG_Engine
         }
     }
 
-    // }}}
-    // {{{ _handleDebugStatus()
-
     /**
      * Displays debug output for status lines
      *
@@ -1073,9 +1011,6 @@ class Crypt_GPG_Engine
         $this->_debug('STATUS: ' . $line);
     }
 
-    // }}}
-    // {{{ _handleDebugError()
-
     /**
      * Displays debug output for error lines
      *
@@ -1087,9 +1022,6 @@ class Crypt_GPG_Engine
     {
         $this->_debug('ERROR: ' . $line);
     }
-
-    // }}}
-    // {{{ _process()
 
     /**
      * Performs internal streaming operations for the subprocess using either
@@ -1254,7 +1186,7 @@ class Crypt_GPG_Engine
                 );
 
                 $length = fwrite($fdInput, $chunk, $length);
-                if ($length === 0) {
+                if ($length === 0 || $length === false) {
                     // If we wrote 0 bytes it was either EAGAIN or EPIPE. Since
                     // the pipe was seleted for writing, we assume it was EPIPE.
                     // There's no way to get the actual error code in PHP. See
@@ -1305,7 +1237,8 @@ class Crypt_GPG_Engine
                 );
 
                 $length = fwrite($fdMessage, $chunk, $length);
-                if ($length === 0) {
+
+                if ($length === 0 || $length === false) {
                     // If we wrote 0 bytes it was either EAGAIN or EPIPE. Since
                     // the pipe was seleted for writing, we assume it was EPIPE.
                     // There's no way to get the actual error code in PHP. See
@@ -1360,10 +1293,20 @@ class Crypt_GPG_Engine
                     '=> about to write ' . $length . ' bytes to output stream'
                 );
 
-                $length       = fwrite($this->_output, $chunk, $length);
-                $outputBuffer = mb_substr($outputBuffer, $length, null, '8bit');
+                $length = fwrite($this->_output, $chunk, $length);
 
-                $this->_debug('=> wrote ' . $length . ' bytes');
+                if ($length === 0 || $length === false) {
+                    // If we wrote 0 bytes it was either EAGAIN or EPIPE. Since
+                    // the pipe was seleted for writing, we assume it was EPIPE.
+                    // There's no way to get the actual error code in PHP. See
+                    // PHP Bug #39598. https://bugs.php.net/bug.php?id=39598
+                    $this->_debug('=> broken pipe on output stream');
+                    $this->_debug('=> closing pipe output stream');
+                    $this->_closePipe(self::FD_OUTPUT);
+                } else {
+                    $this->_debug('=> wrote ' . $length . ' bytes');
+                    $outputBuffer = mb_substr($outputBuffer, $length, null, '8bit');
+                }
             }
 
             // read error (from GPG)
@@ -1445,7 +1388,8 @@ class Crypt_GPG_Engine
                 );
 
                 $length = fwrite($fdCommand, $chunk, $length);
-                if ($length === 0) {
+
+                if ($length === 0 || $length === false) {
                     // If we wrote 0 bytes it was either EAGAIN or EPIPE. Since
                     // the pipe was seleted for writing, we assume it was EPIPE.
                     // There's no way to get the actual error code in PHP. See
@@ -1477,9 +1421,6 @@ class Crypt_GPG_Engine
 
         $this->_debug('END PROCESSING');
     }
-
-    // }}}
-    // {{{ _openSubprocess()
 
     /**
      * Opens an internal GPG subprocess for the current operation
@@ -1743,9 +1684,6 @@ class Crypt_GPG_Engine
         $this->_openPipes = $this->_pipes;
     }
 
-    // }}}
-    // {{{ _closeSubprocess()
-
     /**
      * Closes the internal GPG subprocess
      *
@@ -1775,7 +1713,7 @@ class Crypt_GPG_Engine
 
             // proc_close() can return -1 in some cases,
             // get the real exit code from the process status
-            if ($exitCode < 0 && $status && !$status['running']) {
+            if ($exitCode < 0 && !$status['running']) {
                 $exitCode = $status['exitcode'];
             }
 
@@ -1826,9 +1764,6 @@ class Crypt_GPG_Engine
         }
     }
 
-    // }}}
-    // {{{ _closeAgentLaunchProcess()
-
     /**
      * Closes a the internal GPG-AGENT subprocess
      *
@@ -1861,17 +1796,13 @@ class Crypt_GPG_Engine
         }
     }
 
-    // }}}
-    // {{{ _closePipe()
-
     /**
      * Closes an opened pipe used to communicate with the GPG subprocess
      *
      * If the pipe is already closed, it is ignored. If the pipe is open, it
      * is flushed and then closed.
      *
-     * @param integer $pipeNumber the file descriptor number of the pipe to
-     *                            close.
+     * @param int $pipeNumber The file descriptor number of the pipe to close
      *
      * @return void
      */
@@ -1884,9 +1815,6 @@ class Crypt_GPG_Engine
             unset($this->_openPipes[$pipeNumber]);
         }
     }
-
-    // }}}
-    // {{{ _closeIdleAgents()
 
     /**
      * Forces automatically started gpg-agent process to cleanup and exit
@@ -1910,9 +1838,6 @@ class Crypt_GPG_Engine
         }
     }
 
-    // }}}
-    // {{{ _getBinary()
-
     /**
      * Gets the name of the GPG binary for the current operating system
      *
@@ -1932,9 +1857,6 @@ class Crypt_GPG_Engine
         return $this->_findBinary('gpg2');
     }
 
-    // }}}
-    // {{{ _getAgent()
-
     /**
      * Gets the name of the GPG-AGENT binary for the current operating system
      *
@@ -1947,9 +1869,6 @@ class Crypt_GPG_Engine
         return $this->_findBinary('gpg-agent');
     }
 
-    // }}}
-    // {{{ _getGPGConf()
-
     /**
      * Gets the name of the GPGCONF binary for the current operating system
      *
@@ -1961,9 +1880,6 @@ class Crypt_GPG_Engine
     {
         return $this->_findBinary('gpgconf');
     }
-
-    // }}}
-    // {{{ _findBinary()
 
     /**
      * Gets the location of a binary for the current operating system
@@ -2003,13 +1919,10 @@ class Crypt_GPG_Engine
         return $binary;
     }
 
-    // }}}
-    // {{{ _getPinEntry()
-
     /**
      * Gets the location of the PinEntry script
      *
-     * @return string the location of the PinEntry script.
+     * @return string|null the location of the PinEntry script.
      */
     private function _getPinEntry()
     {
@@ -2027,10 +1940,9 @@ class Crypt_GPG_Engine
                 return $path . $ds . 'crypt-gpg-pinentry';
             }
         }
-    }
 
-    // }}}
-    // {{{ _debug()
+        return null;
+    }
 
     /**
      * Displays debug text if debugging is turned on
@@ -2044,12 +1956,12 @@ class Crypt_GPG_Engine
     private function _debug($text)
     {
         if ($this->_debug) {
-            if (php_sapi_name() === 'cli') {
+            if (is_callable($this->_debug)) {
+                call_user_func($this->_debug, $text);
+            } elseif (php_sapi_name() === 'cli') {
                 foreach (explode(PHP_EOL, $text) as $line) {
                     echo "Crypt_GPG DEBUG: ", $line, PHP_EOL;
                 }
-            } else if (is_callable($this->_debug)) {
-                call_user_func($this->_debug, $text);
             } else {
                 // running on a web server, format debug output nicely
                 foreach (explode(PHP_EOL, $text) as $line) {
@@ -2059,10 +1971,4 @@ class Crypt_GPG_Engine
             }
         }
     }
-
-    // }}}
 }
-
-// }}}
-
-?>

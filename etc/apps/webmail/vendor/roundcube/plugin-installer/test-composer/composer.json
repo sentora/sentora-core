@@ -1,0 +1,23 @@
+{
+    "name": "roundcube/plugin-installer-test",
+    "require": {
+        "roundcube/carddav": "^4 || ^5"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/roundcube/roundcubemail.git"
+        },
+        {
+            "type": "path",
+            "url": ".."
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "roundcube/plugin-installer": true
+        }
+    }
+}

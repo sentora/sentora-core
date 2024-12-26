@@ -35,7 +35,7 @@ font.bold {
 
     div {
         line-height: 1.6em;
-        .overflow-ellipsis;
+        .overflow-ellipsis();
     }
 }
 
@@ -145,7 +145,7 @@ p.image-attachment {
     }
 
     .image-filename {
-        .overflow-ellipsis;
+        .overflow-ellipsis();
         left: 0;
         top: 0;
         right: 0;
@@ -285,7 +285,6 @@ fieldset.image-attachment {
     }
 
     .count {
-        color: @color-quota-text;
         font-size: 80%;
         order: 2;
     }
@@ -397,7 +396,7 @@ fieldset.image-attachment {
     }
 
     .nav-link {
-        .overflow-ellipsis;
+        .overflow-ellipsis();
     }
 }
 
@@ -430,7 +429,7 @@ fieldset.image-attachment {
 
         a {
             padding: .2rem .45rem !important;
-            height: 3.5rem !important;
+            height: ~"calc(3.5rem - 1px)" !important;
         }
     }
 
@@ -447,7 +446,7 @@ fieldset.image-attachment {
             vertical-align: middle;
 
             &:first-child {
-                .overflow-ellipsis;
+                .overflow-ellipsis();
                 text-align: left;
             }
         }

@@ -14,8 +14,6 @@
  * This file contains an abstract implementation of a user of the
  * {@link Crypt_GPG_Engine} class.
  *
- * PHP version 5
- *
  * LICENSE:
  *
  * This library is free software; you can redistribute it and/or modify
@@ -63,8 +61,6 @@ require_once 'Crypt/GPG/UserId.php';
  */
 require_once 'Crypt/GPG/Engine.php';
 
-// {{{ class Crypt_GPGAbstract
-
 /**
  * Base class for implementing a user of {@link Crypt_GPG_Engine}
  *
@@ -79,8 +75,6 @@ require_once 'Crypt/GPG/Engine.php';
  */
 abstract class Crypt_GPGAbstract
 {
-    // {{{ class error constants
-
     /**
      * Error code returned when there is no error.
      */
@@ -158,16 +152,10 @@ abstract class Crypt_GPGAbstract
      */
     const ERROR_BAD_KEY_PARAMS = 13;
 
-    // }}}
-    // {{{ other class constants
-
     /**
      * URI at which package bugs may be reported.
      */
     const BUG_URI = 'http://pear.php.net/bugs/report.php?package=Crypt_GPG';
-
-    // }}}
-    // {{{ protected class properties
 
     /**
      * Engine used to control the GPG subprocess
@@ -177,9 +165,6 @@ abstract class Crypt_GPGAbstract
      * @see Crypt_GPGAbstract::setEngine()
      */
     protected $engine = null;
-
-    // }}}
-    // {{{ __construct()
 
     /**
      * Creates a new GPG object
@@ -229,7 +214,7 @@ abstract class Crypt_GPGAbstract
      * - <kbd>string digest-algo</kbd> - Sets the message digest algorithm.
      * - <kbd>string cipher-algo</kbd> - Sets the symmetric cipher.
      * - <kbd>string compress-algo</kbd> - Sets the compression algorithm.
-     * - <kbd>boolean strict</kbd> - In strict mode clock problems on subkeys
+     * - <kbd>bool   strict</kbd> - In strict mode clock problems on subkeys
      *                      and signatures are not ignored (--ignore-time-conflict
      *                      and --ignore-valid-from options).
      * - <kbd>mixed debug</kbd> - whether or not to use debug mode.
@@ -271,9 +256,6 @@ abstract class Crypt_GPGAbstract
         $this->setEngine(new Crypt_GPG_Engine($options));
     }
 
-    // }}}
-    // {{{ setEngine()
-
     /**
      * Sets the I/O engine to use for GnuPG operations
      *
@@ -290,9 +272,6 @@ abstract class Crypt_GPGAbstract
         return $this;
     }
 
-    // }}}
-    // {{{ setEngineOptions()
-
     /**
      * Sets per-command additional arguments
      *
@@ -304,15 +283,13 @@ abstract class Crypt_GPGAbstract
      *                       added to the related command. For example:
      *                       array('sign' => '--emit-version').
      *
+     * @return Crypt_GPGAbstract the current object, for fluent interface.
      */
     public function setEngineOptions(array $options)
     {
         $this->engine->setOptions($options);
         return $this;
     }
-
-    // }}}
-    // {{{ getVersion()
 
     /**
      * Returns version of the engine (GnuPG) used for operation.
@@ -327,9 +304,6 @@ abstract class Crypt_GPGAbstract
     {
         return $this->engine->getVersion();
     }
-
-    // }}}
-    // {{{ _getKeys()
 
     /**
      * Gets the available keys in the keyring
@@ -360,7 +334,7 @@ abstract class Crypt_GPGAbstract
         if ($keyId == '') {
             $operation = '--list-secret-keys';
         } else {
-            $operation = '--utf8-strings --list-secret-keys ' . escapeshellarg($keyId);
+            $operation = '--utf8-strings --list-secret-keys -- ' . escapeshellarg($keyId);
         }
 
         // According to The file 'doc/DETAILS' in the GnuPG distribution, using
@@ -392,7 +366,7 @@ abstract class Crypt_GPGAbstract
         if ($keyId == '') {
             $operation = '--list-public-keys';
         } else {
-            $operation = '--utf8-strings --list-public-keys ' . escapeshellarg($keyId);
+            $operation = '--utf8-strings --list-public-keys -- ' . escapeshellarg($keyId);
         }
 
         $output = '';
@@ -459,10 +433,4 @@ abstract class Crypt_GPGAbstract
 
         return $keys;
     }
-
-    // }}}
 }
-
-// }}}
-
-?>

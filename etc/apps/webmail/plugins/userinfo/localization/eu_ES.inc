@@ -15,6 +15,8 @@
 */
 
 $labels['userinfo'] = 'Erabiltzailearen informazioa';
+$labels['infoforuser'] = '$Erabiltzailearentzako informazioa';
 $labels['created'] = 'Sortua';
 $labels['lastlogin'] = 'Azken saioa';
 $labels['defaultidentity'] = 'Lehenetsitako identitatea';
+$labels['userid'] = 'ID';

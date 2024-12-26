@@ -27,4 +27,3 @@ $labels['archivetypemonth'] = 'Month (e.g. Archive/2012/06)';
 $labels['archivetypefolder'] = 'Original folder';
 $labels['archivetypesender'] = 'Sender email';
 $labels['unkownsender'] = 'unknown';
-?>

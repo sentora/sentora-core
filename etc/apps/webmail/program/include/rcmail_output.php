@@ -34,14 +34,14 @@ abstract class rcmail_output extends rcube_output
     public $framed    = false;
 
     protected $pagetitle       = '';
-    protected $object_handlers = array();
+    protected $object_handlers = [];
     protected $devel_mode      = false;
 
 
     /**
      * Object constructor
      */
-    public function __construct($task = null, $framed = false)
+    public function __construct()
     {
         parent::__construct();
 
@@ -73,28 +73,30 @@ abstract class rcmail_output extends rcube_output
     {
         parent::reset();
 
-        $this->object_handlers = array();
+        $this->object_handlers = [];
         $this->pagetitle = '';
     }
 
     /**
      * Call a client method
      *
-     * @param string Method to call
-     * @param ... Additional arguments
+     * @param string $cmd     Method to call
+     * @param mixed  ...$args Method arguments
      */
-    abstract function command();
+    abstract function command($cmd, ...$args);
 
     /**
-     * Add a localized label to the client environment
+     * Add a localized label(s) to the client environment
+     *
+     * @param mixed ...$args Labels (an array of strings, or many string arguments)
      */
-    abstract function add_label();
+    abstract function add_label(...$args);
 
     /**
      * Register a template object handler
      *
      * @param string $name Object name
-     * @param string $func Function name to call
+     * @param callable $func Function name to call
      *
      * @return void
      */
@@ -113,5 +115,50 @@ abstract class rcmail_output extends rcube_output
     public function add_handlers($handlers)
     {
         $this->object_handlers = array_merge($this->object_handlers, $handlers);
+    }
+
+    /**
+     * A wrapper for header() function, so it can be replaced for automated tests
+     *
+     * @param string $header  The header string
+     * @param bool   $replace Replace previously set header?
+     *
+     * @return void
+     */
+    public function header($header, $replace = true)
+    {
+        header($header, $replace);
+    }
+
+    /**
+     * A helper to send output to the browser and exit
+     *
+     * @param string $body    The output body
+     * @param array  $headers Headers
+     *
+     * @return void
+     */
+    public function sendExit($body = '', $headers = [])
+    {
+        foreach ($headers as $header) {
+            header($header);
+        }
+
+        print $body;
+        exit;
+    }
+
+    /**
+     * A helper to send HTTP error code and message to the browser, and exit.
+     *
+     * @param int    $code    The HTTP error code
+     * @param string $message The HTTP error message
+     *
+     * @return void
+     */
+    public function sendExitError($code, $message = '')
+    {
+        http_response_code($code);
+        exit($message);
     }
 }

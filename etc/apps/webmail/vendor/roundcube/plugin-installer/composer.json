@@ -1,8 +1,8 @@
 {
     "name": "roundcube/plugin-installer",
-    "description": "A composer-installer for Roundcube plugins.",
-    "type": "composer-installer",
-    "license": "GPL-3.0+",
+    "description": "A composer-installer for Roundcube plugins and skins.",
+    "license": "GPL-3.0-or-later",
+    "type": "composer-plugin",
     "authors": [
         {
             "name": "Thomas Bruederli",
@@ -11,23 +11,48 @@
         {
             "name": "Till Klampaeckel",
             "email": "till@php.net"
+        },
+        {
+            "name": "Philip Weir",
+            "email": "roundcube@tehinterweb.co.uk"
         }
     ],
+    "require": {
+        "php": ">=7.3 <=8.4",
+        "composer-plugin-api": "^2.1",
+        "roundcube/roundcubemail": "*"
+    },
+    "require-dev": {
+        "composer/composer": "^2.1",
+        "ergebnis/composer-normalize": "^2.13",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.2",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.3"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/roundcube/roundcubemail.git"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
-        "psr-0": {
-            "Roundcube\\Composer": "src/"
+        "psr-4": {
+            "Roundcube\\Composer\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {
-        "class": "Roundcube\\Composer\\PluginInstaller"
-    },
-    "bin": [
-        "src/bin/rcubeinitdb.sh"
-    ],
-    "require": {
-        "php": ">=5.3.0"
-    },
-    "require-dev": {
-        "composer/composer": "*"
+        "class": [
+            "Roundcube\\Composer\\RoundcubeInstaller"
+        ]
     }
 }

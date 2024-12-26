@@ -43,11 +43,12 @@
         "./"
     ],
     "support": {
-        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Crypt_GPG",
+        "issues": "https://pear.php.net/bugs/search.php?cmd=display&package_name[]=Crypt_GPG",
         "source": "https://github.com/pear/Crypt_GPG"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8.36 || ^5.7.21 || ^6 || ^7"
+        "phpstan/phpstan": "^1.2",
+        "phpunit/phpunit": "^9"
     },
     "archive": {
         "exclude": ["tools", "package.php"]

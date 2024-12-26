@@ -1,0 +1,10 @@
+<phpunit>
+ <testsuites>
+  <testsuite name="tests">
+   <directory suffix=".phpt">tests/</directory>
+  </testsuite>
+ </testsuites>
+ <php>
+  <env name="XDEBUG_MODE" value="off"/>
+ </php>
+</phpunit>

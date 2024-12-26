@@ -16,7 +16,7 @@
 // These must be original texts used in Outlook/Thunderbird exported csv files
 // Encoding UTF-8
 
-$map = array();
+$map = [];
 
 // MS Outlook 2010
 $map['anniversary'] = "Anniversary";
@@ -80,7 +80,7 @@ $map['home_zipcode'] = "Home ZipCode";
 $map['mobile_number'] = "Mobile Number";
 $map['nickname'] = "Nickname";
 $map['organization'] = "Organization";
-$map['pager_number'] = "Pager Namber";
+$map['pager_number'] = "Pager Number";
 $map['primary_email'] = "Primary Email";
 $map['secondary_email'] = "Secondary Email";
 $map['web_page_1'] = "Web Page 1";

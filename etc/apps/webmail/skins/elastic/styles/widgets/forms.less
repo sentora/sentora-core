@@ -151,7 +151,7 @@ input.smart-upload {
         }
     }
 
-    &.groupped {
+    &.grouped {
         &.readonly {
             legend {
                 margin: 0;
@@ -175,7 +175,7 @@ input.smart-upload {
             flex-wrap: nowrap;
 
             & > *:first-child {
-                .overflow-ellipsis;
+                .overflow-ellipsis();
                 min-width: 8rem;
 
                 &:not(select) {
@@ -214,6 +214,7 @@ input.smart-upload {
                 display: flex;
                 flex-wrap: wrap;
                 border-radius: 0;
+                border-left-color: transparent;
 
                 input {
                     border-radius: 0;
@@ -471,7 +472,7 @@ html.ms .propform {
     }
 
     .row {
-        margin-right: 0; // without these the form is too wide causing horizontal scrollbar appearence
+        margin-right: 0; // without these the form is too wide causing horizontal scrollbar appearance
         margin-left: 0;
 
         // Note: We never use odd numbers here
@@ -505,7 +506,7 @@ html.ms .propform {
         display: flex; // https://github.com/twbs/bootstrap/issues/22348
         flex-wrap: nowrap;
 
-        // alignment fixes needed because we do not stick precissely to Bootstrap's form structure
+        // alignment fixes needed because we do not stick precisely to Bootstrap's form structure
         @media screen and (max-width: @screen-width-bs-phone) {
             .col-6 {
                 max-width: 100%;
@@ -696,6 +697,28 @@ html.ms .propform {
             width: auto;
             display: inline;
         }
+
+        &.with-sublist {
+            flex-wrap: wrap;
+            position: relative;
+
+            & > :first-child {
+                width: 100%;
+                margin-right: 2em;
+            }
+
+            & > .proplist {
+                margin-left: 2.5rem;
+            }
+
+            & > a.dropdown {
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 2em;
+                color: @color-font;
+            }
+        }
     }
 }
 
@@ -774,7 +797,7 @@ html.ms .propform {
         border: 1px solid @color-input-border;
 
         &.focused {
-            .style-input-focus;
+            .style-input-focus();
         }
 
         // TODO: style button focus
@@ -933,30 +956,57 @@ html.ms .propform {
     height: auto; // reset .form-control height
 
     &.focus {
-        .style-input-focus;
+        .style-input-focus();
     }
 
-    .recipient {
-        display: flex;
-        position: relative;
-        max-width: 50%;
-        border: 1px solid @color-recipient-input-border;
-        background-color: @color-recipient-input-background;
-        border-radius: .25em;
-        padding: 0 .25em;
-        margin-top: @recipient-input-margin-fix;
-        margin-right: .2em;
-        white-space: nowrap;
-        cursor: default;
+    li {
+        max-width: 100%;
 
-        @media screen and (max-width: 450px) {
-            width: 100%;
-            max-width: 100%;
+        &:not(.recipient) {
+            user-select: text;
+        }
+
+        &.input {
+            flex: 1;
+            min-width: 100px;
         }
     }
 
+    input {
+        width: 100%;
+        background: transparent !important;
+        border: 0 !important;
+        margin-top: @recipient-input-margin-fix;
+        outline: 0;
+        line-height: 1.5;
+
+        &::-ms-clear {
+            display: none; // removes clear icon in IE11
+        }
+    }
+}
+
+.recipient-input li.recipient,
+body > li.recipient.ui-sortable-helper {
+    display: flex;
+    position: relative;
+    max-width: ~"calc(50% - 3px)";
+    border: 1px solid @color-recipient-input-border;
+    background-color: @color-recipient-input-background;
+    border-radius: .25rem;
+    padding: 0 .25rem;
+    margin-top: @recipient-input-margin-fix;
+    margin-right: .2em;
+    white-space: nowrap;
+    cursor: default;
+
+    @media screen and (max-width: 450px) {
+        width: 100%;
+        max-width: 100%;
+    }
+
     .name {
-        .overflow-ellipsis;
+        .overflow-ellipsis();
         flex-grow: 1;
         line-height: 1.1;
         padding: floor(.25 * @page-font-size);
@@ -976,38 +1026,21 @@ html.ms .propform {
     }
 
     a.button.icon {
-        font-size: .8em;
+        font-size: .75em;
         cursor: pointer;
         padding: 0;
+        color: @color-font;
 
         &:before {
-            float: none;
             display: inline-block;
             width: 1em;
-            line-height: 1.5;
+            line-height: 1.6;
         }
     }
 
-    li {
-        max-width: 100%;
-
-        &:not(.recipient) {
-            user-select: text;
-        }
-    }
-
-    input {
-        width: 40px;
-        max-width: 100%;
-        background: transparent !important;
-        border: 0 !important;
-        margin-top: @recipient-input-margin-fix;
-        outline: 0;
-        line-height: 1.5;
-
-        &::-ms-clear {
-            display: none; // removes clear icon in IE11
-        }
+    &.ui-sortable-helper {
+        // fix element width while dragging
+        padding: 0 0 0 .25rem !important;
     }
 }
 
@@ -1026,7 +1059,7 @@ html.ms .propform {
     }
 
     &[tabindex="-1"] {
-        .style-input-focus;
+        .style-input-focus();
     }
 
     li.tagedit-listelement-new {
@@ -1074,7 +1107,7 @@ html.ms .propform {
         }
 
         span {
-            .overflow-ellipsis;
+            .overflow-ellipsis();
             flex-grow: 1;
             display: inline-block;
             line-height: 1.4;
@@ -1267,6 +1300,13 @@ html.ms .propform {
     margin-bottom: .5rem;
 }
 
+// This one is to fix height of an input-group child that usually we put
+// in between inputs, e.g. in managesieve forms it is '@' in email input
+// with a separate local part and domain selector.
+.input-group-append.input-group-prepend {
+    display: inline;
+}
+
 .input-group-text {
     color: @color-input;
     background-color: @color-input-addon-background;
@@ -1283,6 +1323,7 @@ html.ms .propform {
 
     .custom-control-input {
         left: 0;
+        opacity: 0 !important; // fixes input in dark mode
 
         &:focus ~ .custom-control-label:before {
             box-shadow: 0 0 0 .2rem @color-checkbox-focus-shadow;
@@ -1373,9 +1414,8 @@ html.ms .propform {
 
     .custom-file-label {
         white-space: nowrap;
-        .overflow-ellipsis;
+        .overflow-ellipsis();
         padding-right: 100px;
-        line-height: 1.5 !important;
     }
 
     & + .hint {

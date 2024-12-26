@@ -24,10 +24,14 @@
  * @package    Framework
  * @subpackage Core
  */
-class rcube_session_redis extends rcube_session {
-
+class rcube_session_redis extends rcube_session
+{
+    /** @var Redis The redis engine */
     private $redis;
+
+    /** @var bool Debug state */
     private $debug;
+
 
     /**
      * Object constructor
@@ -42,10 +46,11 @@ class rcube_session_redis extends rcube_session {
         $this->debug = $config->get('redis_debug');
 
         if (!$this->redis) {
-            rcube::raise_error(array(
+            rcube::raise_error([
                     'code' => 604, 'type' => 'redis',
                     'line' => __LINE__, 'file' => __FILE__,
-                    'message' => "Failed to connect to redis. Please check configuration"),
+                    'message' => "Failed to connect to redis. Please check configuration"
+                ],
                 true, true);
         }
 
@@ -95,7 +100,7 @@ class rcube_session_redis extends rcube_session {
             }
 
             if ($this->debug) {
-                $this->debug('delete', $key, null, $result);
+                $this->debug('delete', $key, null, $result ?? false);
             }
         }
 
@@ -111,6 +116,8 @@ class rcube_session_redis extends rcube_session {
      */
     public function read($key)
     {
+        $value = null;
+
         try {
             $value = $this->redis->get($key);
         }
@@ -147,7 +154,8 @@ class rcube_session_redis extends rcube_session {
         $ts = microtime(true);
 
         if ($newvars !== $oldvars || $ts - $this->changed > $this->lifetime / 3) {
-            $data = serialize(array('changed' => time(), 'ip' => $this->ip, 'vars' => $newvars));
+            $data   = serialize(['changed' => time(), 'ip' => $this->ip, 'vars' => $newvars]);
+            $result = false;
 
             try {
                 $result = $this->redis->setex($key, $this->lifetime + 60, $data);
@@ -180,8 +188,11 @@ class rcube_session_redis extends rcube_session {
             return true;
         }
 
+        $result = false;
+        $data   = null;
+
         try {
-            $data   = serialize(array('changed' => time(), 'ip' => $this->ip, 'vars' => $vars));
+            $data   = serialize(['changed' => time(), 'ip' => $this->ip, 'vars' => $vars]);
             $result = $this->redis->setex($key, $this->lifetime + 60, $data);
         }
         catch (Exception $e) {
@@ -201,7 +212,7 @@ class rcube_session_redis extends rcube_session {
      * @param string $type   Operation type
      * @param string $key    Session identifier
      * @param string $data   Data to log
-     * @param bool   $result Opearation result
+     * @param bool   $result Operation result
      */
     protected function debug($type, $key, $data = null, $result = null)
     {

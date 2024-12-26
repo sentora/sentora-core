@@ -4,45 +4,96 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitecc49da10a2fc3e01e642d9416354950
+class ComposerStaticInit1ee7bcc35032a95753d32790aa8aaecb
 {
+    public static $files = array (
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
+        'R' => 
+        array (
+            'RtfHtmlPhp\\' => 11,
+            'Roundcube\\Composer\\' => 19,
+        ),
+        'P' => 
+        array (
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
+        ),
         'M' => 
         array (
             'Masterminds\\' => 12,
         ),
-        'E' => 
+        'G' => 
         array (
-            'Endroid\\QrCode\\' => 15,
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
+        ),
+        'D' => 
+        array (
+            'DASPRiD\\Enum\\' => 13,
+        ),
+        'B' => 
+        array (
+            'BaconQrCode\\' => 12,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'RtfHtmlPhp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/roundcube/rtf-html-php/src',
+        ),
+        'Roundcube\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/roundcube/plugin-installer/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+        ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
         'Masterminds\\' => 
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
-        'Endroid\\QrCode\\' => 
+        'GuzzleHttp\\Psr7\\' => 
         array (
-            0 => __DIR__ . '/..' . '/endroid/qr-code/src',
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'DASPRiD\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dasprid/enum/src',
+        ),
+        'BaconQrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'R' => 
-        array (
-            'Roundcube\\Composer' => 
-            array (
-                0 => __DIR__ . '/..' . '/roundcube/plugin-installer/src',
-            ),
-        ),
         'N' => 
         array (
             'Net' => 
             array (
-                0 => __DIR__ . '/..' . '/pear/net_idna2',
+                0 => __DIR__ . '/..' . '/pear/net_socket',
                 1 => __DIR__ . '/..' . '/pear/net_smtp',
-                2 => __DIR__ . '/..' . '/pear/net_socket',
             ),
         ),
         'M' => 
@@ -56,8 +107,8 @@ class ComposerStaticInitecc49da10a2fc3e01e642d9416354950
         array (
             'Console' => 
             array (
-                0 => __DIR__ . '/..' . '/pear/console_commandline',
-                1 => __DIR__ . '/..' . '/pear/console_getopt',
+                0 => __DIR__ . '/..' . '/pear/console_getopt',
+                1 => __DIR__ . '/..' . '/pear/console_commandline',
             ),
         ),
         'A' => 
@@ -69,11 +120,8 @@ class ComposerStaticInitecc49da10a2fc3e01e642d9416354950
         ),
     );
 
-    public static $fallbackDirsPsr0 = array (
-        0 => __DIR__ . '/..' . '/pear/pear-core-minimal/src',
-    );
-
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Crypt_GPG' => __DIR__ . '/..' . '/pear/crypt_gpg/Crypt/GPG.php',
         'Crypt_GPGAbstract' => __DIR__ . '/..' . '/pear/crypt_gpg/Crypt/GPGAbstract.php',
         'Crypt_GPG_BadPassphraseException' => __DIR__ . '/..' . '/pear/crypt_gpg/Crypt/GPG/Exceptions.php',
@@ -110,18 +158,21 @@ class ComposerStaticInitecc49da10a2fc3e01e642d9416354950
         'Net_LDAP3' => __DIR__ . '/..' . '/kolab/net_ldap3/lib/Net/LDAP3.php',
         'Net_LDAP3_Result' => __DIR__ . '/..' . '/kolab/net_ldap3/lib/Net/LDAP3/Result.php',
         'Net_Sieve' => __DIR__ . '/..' . '/pear/net_sieve/Sieve.php',
+        'OS_Guess' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/OS/Guess.php',
+        'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_Error' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
-        'SieveTest' => __DIR__ . '/..' . '/pear/net_sieve/tests/SieveTest.php',
+        'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitecc49da10a2fc3e01e642d9416354950::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitecc49da10a2fc3e01e642d9416354950::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitecc49da10a2fc3e01e642d9416354950::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitecc49da10a2fc3e01e642d9416354950::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInitecc49da10a2fc3e01e642d9416354950::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1ee7bcc35032a95753d32790aa8aaecb::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1ee7bcc35032a95753d32790aa8aaecb::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit1ee7bcc35032a95753d32790aa8aaecb::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit1ee7bcc35032a95753d32790aa8aaecb::$classMap;
 
         }, null, ClassLoader::class);
     }

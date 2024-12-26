@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Crypt_GPG' => $vendorDir . '/pear/crypt_gpg/Crypt/GPG.php',
     'Crypt_GPGAbstract' => $vendorDir . '/pear/crypt_gpg/Crypt/GPGAbstract.php',
     'Crypt_GPG_BadPassphraseException' => $vendorDir . '/pear/crypt_gpg/Crypt/GPG/Exceptions.php',
@@ -42,6 +43,10 @@ return array(
     'Net_LDAP3' => $vendorDir . '/kolab/net_ldap3/lib/Net/LDAP3.php',
     'Net_LDAP3_Result' => $vendorDir . '/kolab/net_ldap3/lib/Net/LDAP3/Result.php',
     'Net_Sieve' => $vendorDir . '/pear/net_sieve/Sieve.php',
+    'OS_Guess' => $vendorDir . '/pear/pear-core-minimal/src/OS/Guess.php',
+    'PEAR' => $vendorDir . '/pear/pear-core-minimal/src/PEAR.php',
+    'PEAR_Error' => $vendorDir . '/pear/pear-core-minimal/src/PEAR.php',
+    'PEAR_ErrorStack' => $vendorDir . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
     'PEAR_Exception' => $vendorDir . '/pear/pear_exception/PEAR/Exception.php',
-    'SieveTest' => $vendorDir . '/pear/net_sieve/tests/SieveTest.php',
+    'System' => $vendorDir . '/pear/pear-core-minimal/src/System.php',
 );

@@ -21,5 +21,8 @@
         "classmap": [
             "Net/"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9 || ^10.3"
     }
 }

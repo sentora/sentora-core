@@ -26,8 +26,8 @@ class rcube_sieve
 {
     private $sieve;                 // Net_Sieve object
     private $error      = false;    // error flag
-    private $errorLines = array();  // array of line numbers within sieve script which raised an error
-    private $list       = array();  // scripts list
+    private $errorLines = [];       // array of line numbers within sieve script which raised an error
+    private $list       = [];       // scripts list
     private $exts;                  // array of supported extensions
     private $active;                // active script name
 
@@ -48,27 +48,27 @@ class rcube_sieve
     /**
      * Object constructor
      *
-     * @param string  Username (for managesieve login)
-     * @param string  Password (for managesieve login)
-     * @param string  Managesieve server hostname/address
-     * @param string  Managesieve server port number
-     * @param string  Managesieve authentication method 
-     * @param boolean Enable/disable TLS use
-     * @param array   Disabled extensions
-     * @param boolean Enable/disable debugging
-     * @param string  Proxy authentication identifier
-     * @param string  Proxy authentication password
-     * @param array   List of options to pass to stream_context_create().
+     * @param string $username  Username (for managesieve login)
+     * @param string $password  Password (for managesieve login)
+     * @param string $host      Managesieve server hostname/address
+     * @param string $port      Managesieve server port number
+     * @param string $auth_type Managesieve authentication method
+     * @param bool   $usetls    Enable/disable TLS use
+     * @param array  $disabled  Disabled extensions
+     * @param bool   $debug     Enable/disable debugging
+     * @param string $auth_cid  Proxy authentication identifier
+     * @param string $auth_pw   Proxy authentication password
+     * @param array  $options   List of options to pass to stream_context_create().
      */
-    public function __construct($username, $password='', $host='localhost', $port=2000,
-        $auth_type=null, $usetls=true, $disabled=array(), $debug=false,
-        $auth_cid=null, $auth_pw=null, $options=array(), $gssapi_principal=null,
-        $gssapi_cname=null)
+    public function __construct($username, $password = '', $host = 'localhost', $port = 4190,
+        $auth_type = null, $usetls = true, $disabled = [], $debug = false,
+        $auth_cid = null, $auth_pw = null, $options = [], $gssapi_principal = null,
+        $gssapi_cname = null)
     {
         $this->sieve = new Net_Sieve();
 
         if ($debug) {
-            $this->sieve->setDebug(true, array($this, 'debug_handler'));
+            $this->sieve->setDebug(true, [$this, 'debug_handler']);
         }
 
         if (isset($gssapi_principal)) {
@@ -85,10 +85,13 @@ class rcube_sieve
             return $this->_set_error(self::ERROR_CONNECTION);
         }
 
+        $authz = null;
+
         if (!empty($auth_cid)) {
             $authz    = $username;
             $username = $auth_cid;
         }
+
         if (!empty($auth_pw)) {
             $password = $auth_pw;
         }
@@ -178,15 +181,14 @@ class rcube_sieve
 
             if (count($errMessages) > 0) {
                 foreach ($errMessages as $singleError) {
-                    $matches = array();
                     $res = preg_match('/line (\d+):(.*)/i', $singleError, $matches);
 
                     if ($res === 1 ) {
                         if (count($matches) > 2) {
-                            $this->errorLines[] = array("line" => $matches[1], "msg" => $matches[2]);
+                            $this->errorLines[] = ['line' => $matches[1], 'msg' => $matches[2]];
                         }
                         else {
-                            $this->errorLines[] = array("line" => $matches[1], "msg" => null);
+                            $this->errorLines[] = ['line' => $matches[1], 'msg' => null];
                         }
                     }
                 }
@@ -305,7 +307,7 @@ class rcube_sieve
         $ext = $this->sieve->getExtensions();
 
         if (is_a($ext, 'PEAR_Error')) {
-            return array();
+            return [];
         }
 
         // we're working on lower-cased names
@@ -329,7 +331,8 @@ class rcube_sieve
                 return $this->_set_error(self::ERROR_INTERNAL);
             }
 
-            $list = $this->sieve->listScripts($active);
+            $active = null;
+            $list   = $this->sieve->listScripts($active);
 
             if (is_a($list, 'PEAR_Error')) {
                 return $this->_set_error(self::ERROR_OTHER);
@@ -420,7 +423,7 @@ class rcube_sieve
                 }
 
                 if (!empty($script->content[$idx+1]) && $script->content[$idx+1]['type'] != 'if') {
-                    $script->content[$idx]['actions'][] = array('type' => 'stop');
+                    $script->content[$idx]['actions'][] = ['type' => 'stop'];
                 }
             }
         }
@@ -447,13 +450,15 @@ class rcube_sieve
     }
 
     /**
-     * Creates empty script or copy of other script
+     * Creates empty script or a copy of another script
      */
     public function copy($name, $copy)
     {
         if (!$this->sieve) {
             return $this->_set_error(self::ERROR_INTERNAL);
         }
+
+        $content = '';
 
         if ($copy) {
             $content = $this->sieve->getScript($copy);
@@ -462,7 +467,6 @@ class rcube_sieve
                 return $this->_set_error(self::ERROR_OTHER);
             }
         }
-
 
         return $this->save_script($name, $content);
     }
@@ -476,7 +480,7 @@ class rcube_sieve
     /**
      * This is our own debug handler for connection
      */
-    public function debug_handler(&$sieve, $message)
+    public function debug_handler($sieve, $message)
     {
         rcube::write_log('sieve', preg_replace('/\r\n$/', '', $message));
     }

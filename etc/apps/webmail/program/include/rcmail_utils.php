@@ -61,9 +61,10 @@ class rcmail_utils
      */
     public static function db_init($dir)
     {
-        $db = self::db();
+        $db    = self::db();
+        $error = null;
+        $file  = $dir . '/' . $db->db_provider . '.initial.sql';
 
-        $file = $dir . '/' . $db->db_provider . '.initial.sql';
         if (!file_exists($file)) {
             rcube::raise_error("DDL file $file not found", false, true);
         }
@@ -96,13 +97,13 @@ class rcmail_utils
      * @param string $ver     Optional current version number
      * @param array  $opts    Parameters (errors, quiet)
      *
-     * @return True on success, False on failure
+     * @return bool True on success, False on failure
      */
-    public static function db_update($dir, $package, $ver = null, $opts = array())
+    public static function db_update($dir, $package, $ver = null, $opts = [])
     {
         // Check if directory exists
         if (!file_exists($dir)) {
-            if ($opts['errors']) {
+            if (!empty($opts['errors'])) {
                 rcube::raise_error("Specified database schema directory doesn't exist.", false, true);
             }
             return false;
@@ -116,10 +117,10 @@ class rcmail_utils
         }
 
         // DB version not found, but release version is specified
-        if (!$version && $ver) {
+        if (empty($version) && $ver) {
             // Map old release version string to DB schema version
             // Note: This is for backward compat. only, do not need to be updated
-            $map = array(
+            $map = [
                 '0.1-stable' => 1,
                 '0.1.1'      => 2008030300,
                 '0.2-alpha'  => 2008040500,
@@ -157,7 +158,7 @@ class rcmail_utils
                 '0.8.5'      => 2011121400,
                 '0.8.6'      => 2011121400,
                 '0.9-beta'   => 2012080700,
-            );
+            ];
 
             $version = $map[$ver];
         }
@@ -169,14 +170,14 @@ class rcmail_utils
 
         $dir .= '/' . $db->db_provider;
         if (!file_exists($dir)) {
-            if ($opts['errors']) {
+            if (!empty($opts['errors'])) {
                 rcube::raise_error("DDL Upgrade files for " . $db->db_provider . " driver not found.", false, true);
             }
             return false;
         }
 
         $dh     = opendir($dir);
-        $result = array();
+        $result = [];
 
         while ($file = readdir($dh)) {
             if (preg_match('/^([0-9]+)\.sql$/', $file, $m) && $m[1] > $version) {
@@ -186,7 +187,7 @@ class rcmail_utils
         sort($result, SORT_NUMERIC);
 
         foreach ($result as $v) {
-            if (!$opts['quiet']) {
+            if (empty($opts['quiet'])) {
                 echo "Updating database schema ($v)... ";
             }
 
@@ -196,15 +197,15 @@ class rcmail_utils
             $db->set_option('ignore_errors', false);
 
             if ($error) {
-                if (!$opts['quiet']) {
+                if (empty($opts['quiet'])) {
                     echo "[FAILED]\n";
                 }
-                if ($opts['errors']) {
+                if (!empty($opts['errors'])) {
                     rcube::raise_error("Error in DDL upgrade $v: $error", false, true);
                 }
                 return false;
             }
-            else if (!$opts['quiet']) {
+            else if (empty($opts['quiet'])) {
                 echo "[OK]\n";
             }
         }
@@ -252,7 +253,7 @@ class rcmail_utils
      *
      * @param string $package Package name
      *
-     * @return string Version string
+     * @return null|string Version string
      */
     public static function db_version($package = 'roundcube')
     {
@@ -264,6 +265,9 @@ class rcmail_utils
             $package . '-version');
 
         $row     = $db->fetch_array();
+        if ($row === false) {
+            return null;
+        }
         $version = preg_replace('/[^0-9]/', '', $row[0]);
 
         return $version;
@@ -276,35 +280,17 @@ class rcmail_utils
      */
     public static function db_clean($days)
     {
-        // mapping for table name => primary key
-        $primary_keys = array(
-            'contacts'      => 'contact_id',
-            'contactgroups' => 'contactgroup_id',
-        );
-
-        $db = self::db();
-
+        $db        = self::db();
         $threshold = date('Y-m-d 00:00:00', time() - $days * 86400);
+        $tables    = [
+            'contacts',
+            'contactgroups',
+            'identities',
+            'responses',
+        ];
 
-        foreach (array('contacts','contactgroups','identities') as $table) {
+        foreach ($tables as $table) {
             $sqltable = $db->table_name($table, true);
-
-            // also delete linked records
-            // could be skipped for databases which respect foreign key constraints
-            if ($db->db_provider == 'sqlite' && ($table == 'contacts' || $table == 'contactgroups')) {
-                $pk           = $primary_keys[$table];
-                $memberstable = $db->table_name('contactgroupmembers');
-
-                $db->query(
-                    "DELETE FROM " . $db->quote_identifier($memberstable)
-                    . " WHERE `$pk` IN ("
-                        . "SELECT `$pk` FROM $sqltable"
-                        . " WHERE `del` = 1 AND `changed` < ?"
-                    . ")",
-                    $threshold);
-
-                echo $db->affected_rows() . " records deleted from '$memberstable'\n";
-            }
 
             // delete outdated records
             $db->query("DELETE FROM $sqltable WHERE `del` = 1 AND `changed` < ?", $threshold);

@@ -20,3 +20,5 @@ $labels['attachvcard'] = 'Hengja við vCard';
 $labels['vcardattached'] = 'vCard-skrá í viðhengi.';
 $labels['vcard'] = 'vCard';
 $labels['forwardvcard'] = 'Áframsenda vCard';
+$labels['contactsattached'] = 'Það eru $num tengiliðir tengdir þessum skilaboðum.';
+$labels['importedsuccessfully'] = 'Tókst að flytja tengiliði inn í nafnaskrána.';

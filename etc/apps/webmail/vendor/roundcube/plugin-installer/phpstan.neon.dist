@@ -1,0 +1,20 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+
+parameters:
+    level: 4
+    checkMissingOverrideMethodAttribute: true
+    paths:
+        - .
+    excludePaths:
+        - vendor
+
+    ignoreErrors:
+        # relax strict rules
+        - '~^Only booleans are allowed in .+, .+ given( on the (left|right) side)?\.~'
+        - '~^Construct empty\(\) is not allowed\. Use more strict comparison\.~'
+
+        -
+            message: '~^Constant RCMAIL_VERSION not found\.$~'
+            path: 'src/ExtensionInstaller.php'
+            count: 1

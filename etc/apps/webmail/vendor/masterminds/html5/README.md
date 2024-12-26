@@ -1,3 +1,19 @@
+> # UKRAINE NEEDS YOUR HELP NOW!
+>
+> On 24 February 2022, Russian [President Vladimir Putin ordered an invasion of Ukraine by Russian Armed Forces](https://www.bbc.com/news/world-europe-60504334).
+>
+> Your support is urgently needed.
+>
+> - Donate to the volunteers. Here is the volunteer fund helping the Ukrainian army to provide all the necessary equipment:
+>  https://bank.gov.ua/en/news/all/natsionalniy-bank-vidkriv-spetsrahunok-dlya-zboru-koshtiv-na-potrebi-armiyi or https://savelife.in.ua/en/donate/
+> - Triple-check social media sources. Russian disinformation is attempting to coverup and distort the reality in Ukraine.
+> - Help Ukrainian refugees who are fleeing Russian attacks and shellings: https://www.globalcitizen.org/en/content/ways-to-help-ukraine-conflict/
+> -  Put pressure on your political representatives to provide help to Ukraine.
+> -  Believe in the Ukrainian people, they will not surrender, they don't have another Ukraine.
+>
+> THANK YOU!
+----
+
 # HTML5-PHP
 
 HTML5 is a standards-compliant HTML5 parser and writer written entirely in PHP.
@@ -12,7 +28,7 @@ HTML5 provides the following features.
 - Event-based (SAX-like) parser
 - A DOM tree builder
 - Interoperability with [QueryPath](https://github.com/technosophos/querypath)
-- Runs on **PHP** 5.3.0 or newer and **HHVM** 3.2 or newer
+- Runs on **PHP** 5.3.0 or newer
 
 [![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
 [![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5)

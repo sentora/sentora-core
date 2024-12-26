@@ -12,6 +12,8 @@
 @import (reference) "fontawesome";
 @import (reference) "colors";
 
+@dark-mode-enabled:     true; // on change also have to change dark_mode_support in meta.json
+
 @screen-width-large:    1200px;
 @screen-width-medium:   1024px;
 @screen-width-small:    768px;
@@ -51,8 +53,11 @@
 
 @mail-header-photo-height:              4rem;
 
+// Scrollbars
+@scrollbar-width:       thin; // 'auto' or 'thin' or 'unset'
+
 // Additional icons
 @icon-resize-corner:    data-uri("image/svg+xml;charset=utf-8", "../images/corner-handle.svg"); // size: 16x16
 @icon-file-drop:        data-uri("image/svg+xml;charset=utf-8", "../images/download.svg");
 
-@import (reference) "_variables";
+@import (reference, optional) "_variables";

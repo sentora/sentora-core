@@ -189,6 +189,11 @@ class Net_LDAP2_Search extends PEAR implements Iterator
             }
             $entry = Net_LDAP2_Entry::createConnected($this->_ldap, $this->_entry);
             if ($entry instanceof PEAR_Error) $entry = false;
+
+        } else if ($this->_entry === false) {
+            //no more results
+            return false;
+
         } else {
             if (!$this->_entry = @ldap_next_entry($this->_link, $this->_entry)) {
                 $false = false;
@@ -498,7 +503,9 @@ class Net_LDAP2_Search extends PEAR implements Iterator
     */
     public function _Net_LDAP2_Search()
     {
-        @ldap_free_result($this->_search);
+        if ($this->_search !== false) {
+            @ldap_free_result($this->_search);
+        }
     }
 
     /**

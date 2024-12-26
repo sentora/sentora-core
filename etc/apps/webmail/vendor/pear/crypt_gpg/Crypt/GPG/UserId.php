@@ -5,8 +5,6 @@
 /**
  * Contains a data class representing a GPG user id
  *
- * PHP version 5
- *
  * LICENSE:
  *
  * This library is free software; you can redistribute it and/or modify
@@ -31,8 +29,6 @@
  * @link      http://pear.php.net/package/Crypt_GPG
  */
 
-// {{{ class Crypt_GPG_UserId
-
 /**
  * A class for GPG user id information
  *
@@ -50,8 +46,6 @@
  */
 class Crypt_GPG_UserId
 {
-    // {{{ class properties
-
     /**
      * The name field of this user id
      *
@@ -76,19 +70,16 @@ class Crypt_GPG_UserId
     /**
      * Whether or not this user id is revoked
      *
-     * @var boolean
+     * @var bool
      */
     private $_isRevoked = false;
 
     /**
      * Whether or not this user id is valid
      *
-     * @var boolean
+     * @var bool
      */
     private $_isValid = true;
-
-    // }}}
-    // {{{ __construct()
 
     /**
      * Creates a new user id
@@ -99,12 +90,13 @@ class Crypt_GPG_UserId
      * - <kbd>string  name</kbd>    - the name field of the user id.
      * - <kbd>string  comment</kbd> - the comment field of the user id.
      * - <kbd>string  email</kbd>   - the email field of the user id.
-     * - <kbd>boolean valid</kbd>   - whether or not the user id is valid.
-     * - <kbd>boolean revoked</kbd> - whether or not the user id is revoked.
+     * - <kbd>bool    valid</kbd>   - whether or not the user id is valid.
+     * - <kbd>bool    revoked</kbd> - whether or not the user id is revoked.
      *
-     * @param Crypt_GPG_UserId|string|array $userId optional. Either an
-     *        existing user id object, which is copied; a user id string, which
-     *        is parsed; or an array of initial values.
+     * @param Crypt_GPG_UserId|string|array|null $userId Either an existing user id object,
+     *                                                   which is copied; a user id string,
+     *                                                   which is parsed; or an array of
+     *                                                   initial values.
      */
     public function __construct($userId = null)
     {
@@ -146,9 +138,6 @@ class Crypt_GPG_UserId
         }
     }
 
-    // }}}
-    // {{{ getName()
-
     /**
      * Gets the name field of this user id
      *
@@ -158,9 +147,6 @@ class Crypt_GPG_UserId
     {
         return $this->_name;
     }
-
-    // }}}
-    // {{{ getComment()
 
     /**
      * Gets the comments field of this user id
@@ -172,9 +158,6 @@ class Crypt_GPG_UserId
         return $this->_comment;
     }
 
-    // }}}
-    // {{{ getEmail()
-
     /**
      * Gets the email field of this user id
      *
@@ -185,34 +168,25 @@ class Crypt_GPG_UserId
         return $this->_email;
     }
 
-    // }}}
-    // {{{ isRevoked()
-
     /**
      * Gets whether or not this user id is revoked
      *
-     * @return boolean true if this user id is revoked and false if it is not.
+     * @return bool True if this user id is revoked and false if it is not.
      */
     public function isRevoked()
     {
         return $this->_isRevoked;
     }
 
-    // }}}
-    // {{{ isValid()
-
     /**
      * Gets whether or not this user id is valid
      *
-     * @return boolean true if this user id is valid and false if it is not.
+     * @return bool True if this user id is valid and false if it is not.
      */
     public function isValid()
     {
         return $this->_isValid;
     }
-
-    // }}}
-    // {{{ __toString()
 
     /**
      * Gets a string representation of this user id
@@ -241,9 +215,6 @@ class Crypt_GPG_UserId
         return implode(' ', $components);
     }
 
-    // }}}
-    // {{{ setName()
-
     /**
      * Sets the name field of this user id
      *
@@ -256,9 +227,6 @@ class Crypt_GPG_UserId
         $this->_name = strval($name);
         return $this;
     }
-
-    // }}}
-    // {{{ setComment()
 
     /**
      * Sets the comment field of this user id
@@ -273,9 +241,6 @@ class Crypt_GPG_UserId
         return $this;
     }
 
-    // }}}
-    // {{{ setEmail()
-
     /**
      * Sets the email field of this user id
      *
@@ -289,15 +254,12 @@ class Crypt_GPG_UserId
         return $this;
     }
 
-    // }}}
-    // {{{ setRevoked()
-
     /**
      * Sets whether or not this user id is revoked
      *
-     * @param boolean $isRevoked whether or not this user id is revoked.
+     * @param bool $isRevoked Whether or not this user id is revoked.
      *
-     * @return Crypt_GPG_UserId the current object, for fluent interface.
+     * @return Crypt_GPG_UserId The current object, for fluent interface.
      */
     public function setRevoked($isRevoked)
     {
@@ -305,24 +267,18 @@ class Crypt_GPG_UserId
         return $this;
     }
 
-    // }}}
-    // {{{ setValid()
-
     /**
      * Sets whether or not this user id is valid
      *
-     * @param boolean $isValid whether or not this user id is valid.
+     * @param bool $isValid Whether or not this user id is valid.
      *
-     * @return Crypt_GPG_UserId the current object, for fluent interface.
+     * @return Crypt_GPG_UserId The current object, for fluent interface.
      */
     public function setValid($isValid)
     {
         $this->_isValid = ($isValid) ? true : false;
         return $this;
     }
-
-    // }}}
-    // {{{ parse()
 
     /**
      * Parses a user id object from a user id string
@@ -369,10 +325,4 @@ class Crypt_GPG_UserId
 
         return $userId;
     }
-
-    // }}}
 }
-
-// }}}
-
-?>

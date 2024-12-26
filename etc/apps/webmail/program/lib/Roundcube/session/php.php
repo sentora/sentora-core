@@ -26,8 +26,8 @@
  * @package    Framework
  * @subpackage Core
  */
-class rcube_session_php extends rcube_session {
-
+class rcube_session_php extends rcube_session
+{
     /**
      * Native php sessions don't need a save handler.
      * We do need to define abstract function implementations but they are not used.
@@ -69,8 +69,7 @@ class rcube_session_php extends rcube_session {
         parent::start();
 
         $this->key     = session_id();
-        $this->ip      = $_SESSION['__IP'];
-        $this->changed = $_SESSION['__MTIME'];
-
+        $this->ip      = $_SESSION['__IP'] ?? null;
+        $this->changed = $_SESSION['__MTIME'] ?? null;
     }
 }

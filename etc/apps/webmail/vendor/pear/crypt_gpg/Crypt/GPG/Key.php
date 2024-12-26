@@ -5,8 +5,6 @@
 /**
  * Contains a class representing GPG keys
  *
- * PHP version 5
- *
  * LICENSE:
  *
  * This library is free software; you can redistribute it and/or modify
@@ -41,8 +39,6 @@ require_once 'Crypt/GPG/SubKey.php';
  */
 require_once 'Crypt/GPG/UserId.php';
 
-// {{{ class Crypt_GPG_Key
-
 /**
  * A data class for GPG key information
  *
@@ -59,14 +55,12 @@ require_once 'Crypt/GPG/UserId.php';
  */
 class Crypt_GPG_Key
 {
-    // {{{ class properties
-
     /**
      * The user ids associated with this key
      *
      * This is an array of {@link Crypt_GPG_UserId} objects.
      *
-     * @var array
+     * @var array<Crypt_GPG_UserId>
      *
      * @see Crypt_GPG_Key::addUserId()
      * @see Crypt_GPG_Key::getUserIds()
@@ -78,20 +72,17 @@ class Crypt_GPG_Key
      *
      * This is an array of {@link Crypt_GPG_SubKey} objects.
      *
-     * @var array
+     * @var array<Crypt_GPG_SubKey>
      *
      * @see Crypt_GPG_Key::addSubKey()
      * @see Crypt_GPG_Key::getSubKeys()
      */
     private $_subKeys = array();
 
-    // }}}
-    // {{{ getSubKeys()
-
     /**
      * Gets the sub-keys of this key
      *
-     * @return array the sub-keys of this key.
+     * @return array<Crypt_GPG_SubKey> the sub-keys of this key.
      *
      * @see Crypt_GPG_Key::addSubKey()
      */
@@ -100,13 +91,10 @@ class Crypt_GPG_Key
         return $this->_subKeys;
     }
 
-    // }}}
-    // {{{ getUserIds()
-
     /**
      * Gets the user ids of this key
      *
-     * @return array the user ids of this key.
+     * @return array<Crypt_GPG_UserId> the user ids of this key.
      *
      * @see Crypt_GPG_Key::addUserId()
      */
@@ -114,9 +102,6 @@ class Crypt_GPG_Key
     {
         return $this->_userIds;
     }
-
-    // }}}
-    // {{{ getPrimaryKey()
 
     /**
      * Gets the primary sub-key of this key
@@ -134,16 +119,13 @@ class Crypt_GPG_Key
         return $primary_key;
     }
 
-    // }}}
-    // {{{ canSign()
-
     /**
      * Gets whether or not this key can sign data
      *
      * This key can sign data if any sub-key of this key can sign data.
      *
-     * @return boolean true if this key can sign data and false if this key
-     *                 cannot sign data.
+     * @return bool True if this key can sign data and false if this key
+     *              cannot sign data.
      */
     public function canSign()
     {
@@ -157,16 +139,13 @@ class Crypt_GPG_Key
         return $canSign;
     }
 
-    // }}}
-    // {{{ canEncrypt()
-
     /**
      * Gets whether or not this key can encrypt data
      *
      * This key can encrypt data if any sub-key of this key can encrypt data.
      *
-     * @return boolean true if this key can encrypt data and false if this
-     *                 key cannot encrypt data.
+     * @return bool True if this key can encrypt data and false if this
+     *              key cannot encrypt data.
      */
     public function canEncrypt()
     {
@@ -179,9 +158,6 @@ class Crypt_GPG_Key
         }
         return $canEncrypt;
     }
-
-    // }}}
-    // {{{ addSubKey()
 
     /**
      * Adds a sub-key to this key
@@ -198,9 +174,6 @@ class Crypt_GPG_Key
         return $this;
     }
 
-    // }}}
-    // {{{ addUserId()
-
     /**
      * Adds a user id to this key
      *
@@ -213,9 +186,6 @@ class Crypt_GPG_Key
         $this->_userIds[] = $userId;
         return $this;
     }
-
-    // }}}
-    // {{{ __toString()
 
     /**
      * String representation of the key
@@ -232,10 +202,4 @@ class Crypt_GPG_Key
 
         return '';
     }
-
-    // }}}
 }
-
-// }}}
-
-?>
