@@ -1,11 +1,5 @@
 <?php
-
-# Start smarty template engine
-require '/etc/sentora/panel/etc/lib/smarty/libs/Smarty.class.php';
 	
-#** un-comment the following line to show the debug console
-//$smarty->debugging = false;
-
 echo fs_filehandler::NewLine() . "START Apache Config Hook." . fs_filehandler::NewLine();
 if (ui_module::CheckModuleEnabled('Apache Config')) {
     echo "Apache Admin module ENABLED..." . fs_filehandler::NewLine();
@@ -24,7 +18,6 @@ if (ui_module::CheckModuleEnabled('Apache Config')) {
 				BackupVhostConfigFile();
 			}
 		}
-
     } else {
         echo "Apache Config has NOT changed...nothing to do." . fs_filehandler::NewLine();
     }
@@ -55,8 +48,6 @@ function BuildVhostPortForward($vhostName, $customPort, $userEmail) {
     $line .= "ReWriteCond %{SERVER_PORT} !^" . $customPort_in . "$" . fs_filehandler::NewLine();
     $line .= ( $customPort_in === "443" ) ? "RewriteRule ^/(.*) https://%{HTTP_HOST}/$1 [NC,R,L] " . fs_filehandler::NewLine() : "RewriteRule ^/(.*) http://%{HTTP_HOST}:" . $customPort . "/$1 [NC,R,L] " . fs_filehandler::NewLine();
     $line .= "</virtualhost>" . fs_filehandler::NewLine();
-    //$line .= "# END DOMAIN: " . $vhostName . fs_filehandler::NewLine() . fs_filehandler::NewLine();
-	//$line .= "################################################################" . fs_filehandler::NewLine();
 	$line .= "##-------" . fs_filehandler::NewLine();
 	$line .= fs_filehandler::NewLine();
 		
@@ -77,8 +68,6 @@ function BuildVhostReWriteSSL($vhostName, $userEmail) {
 	$line .= "RewriteCond %{HTTPS} !=on" . fs_filehandler::NewLine();
 	$line .= "RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]" . fs_filehandler::NewLine();
     $line .= "</virtualhost>" . fs_filehandler::NewLine();
-    //$line .= "# END DOMAIN: " . $vhostName . fs_filehandler::NewLine() . fs_filehandler::NewLine();
-	//$line .= "################################################################" . fs_filehandler::NewLine();
 	$line .= fs_filehandler::NewLine();
 	$line .= "##-------" . fs_filehandler::NewLine();
 	$line .= fs_filehandler::NewLine();
@@ -88,12 +77,7 @@ function BuildVhostReWriteSSL($vhostName, $userEmail) {
 
 function WriteVhostConfigFile() {
     global $zdbh;
-	
-	# Start Smarty Session
-	$smarty = new Smarty;
-	$smarty->setTemplateDir('/etc/sentora/configs/apache/templates/');
-	$smarty->setCompileDir('/etc/sentora/panel/etc/lib/smarty/templates_c/');
-	
+		
 	if ((double) sys_versions::ShowApacheVersion() < 2.4) {
         $apgrant = "0";
     } else {
@@ -140,23 +124,19 @@ function WriteVhostConfigFile() {
     $line .= fs_filehandler::NewLine();
 
     # Listen is mandatory for each port <> 80 (80 is defined in system config)
-	//$line .= "Listen " . ctrl_options::GetSystemOption('apache_port');
 	# For each custom port
     foreach ($customPortList as $port) {
         $line .= "Listen " . $port . fs_filehandler::NewLine();
     }
 	
 	$line .= fs_filehandler::NewLine();
-
 	$line .= "# Configuration for Sentora control panel." . fs_filehandler::NewLine();
-	
 	if (ctrl_options::GetSystemOption('panel_ssl_tx') == null) {
 		
 		##
 		## Sentora Control Panel default vhost entry
 		##
 		
-		//$line .= "# Configuration for Sentora control panel." . fs_filehandler::NewLine();
 		$line .= "<VirtualHost *:" . ctrl_options::GetSystemOption('sentora_port') . ">" . fs_filehandler::NewLine();
 		$line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
 		$line .= 'DocumentRoot "' . ctrl_options::GetSystemOption('sentora_root') . '"' . fs_filehandler::NewLine();
@@ -164,14 +144,14 @@ function WriteVhostConfigFile() {
 		
 		# Vhost PHP settings
 		$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
-		//$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
-				//. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
-				//. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
-				//. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
+		$line .= "#php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
+				. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
+				. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
+				. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
 				
 		# Set Function Blacklist 
 		if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
-				$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
+				$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/default_cp_sentora.rules"' . fs_filehandler::NewLine();
 		}		
 				
 		$line .= "php_admin_value session.save_path " . '"/var/sentora/sessions"' . fs_filehandler::NewLine();
@@ -207,22 +187,16 @@ function WriteVhostConfigFile() {
 		}
 	
 		$line .= "</Directory>" . fs_filehandler::NewLine();
-		$line .= fs_filehandler::NewLine();
 		$line .= "# Custom settings (if any exist)" . fs_filehandler::NewLine();
 	
 		// Global custom Sentora entry
 		$line .= ctrl_options::GetSystemOption('global_zpcustom') . fs_filehandler::NewLine();
-		$line .= fs_filehandler::NewLine();
 	
 		$line .= "</VirtualHost>" . fs_filehandler::NewLine();
-		$line .= fs_filehandler::NewLine();
 		
 		$line .= "# END PANEL DOMAIN: " . ctrl_options::GetSystemOption('sentora_domain') . fs_filehandler::NewLine();
 		$line .= fs_filehandler::NewLine();
-	
-		# Load template file into vhost cofig to save
-		//$line .= $smarty->fetch("vhost_cp.tpl") . fs_filehandler::NewLine();
-	
+		
 	# Forwrd Sentora Panel if SSL is in use
 	# If vhost SSL_TX not null create spearate <virtualhost>
 	# Build Vhost SSL section
@@ -230,10 +204,6 @@ function WriteVhostConfigFile() {
 		
 		# Build HTTP to HTTPS Redirect
 		$line .= BuildVhostReWriteSSL(ctrl_options::GetSystemOption('sentora_domain'), $serveremail);
-		
-		//$line .= "################################################################" . fs_filehandler::NewLine();
-		//$line .= fs_filehandler::NewLine();
-		//$line .= "# Configuration for Sentora control panel SSL." . fs_filehandler::NewLine();
 		$line .= "# PANEL HAS SSL ENABLED" . fs_filehandler::NewLine();
 		$line .= "<VirtualHost *:" . ctrl_options::GetSystemOption('sentora_port') . ">" . fs_filehandler::NewLine();
 		$line .= "ServerAdmin " . $serveremail . fs_filehandler::NewLine();
@@ -242,14 +212,14 @@ function WriteVhostConfigFile() {
 		
 		# Vhost PHP settings
 		$line .= ctrl_options::GetSystemOption('php_handler') . fs_filehandler::NewLine();
-		//$line .= "php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
-				//. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
-				//. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
-				//. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
+		$line .= "#php_admin_value open_basedir " . '"' . ctrl_options::GetSystemOption('sentora_root') . ctrl_options::GetSystemOption('openbase_seperator') 
+				. '/etc/sentora/configs/' . ctrl_options::GetSystemOption('openbase_seperator')
+				. ctrl_options::GetSystemOption('temp_dir') . ctrl_options::GetSystemOption('openbase_seperator')  
+				. ctrl_options::GetSystemOption('hosted_dir') . '"' . fs_filehandler::NewLine();
 				
 		# Set Function Blacklist 
 		if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
-				$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/sentora.rules"' . fs_filehandler::NewLine();
+				$line .= "php_admin_value sp.configuration_file " . '"/etc/sentora/configs/php/sp/default_cp_sentora.rules"' . fs_filehandler::NewLine();
 		}		
 		
 		$line .= "php_admin_value session.save_path " . '"/var/sentora/sessions"' . fs_filehandler::NewLine();
@@ -298,21 +268,12 @@ function WriteVhostConfigFile() {
 		$line .= fs_filehandler::NewLine();
 		
 		$line .= "</VirtualHost>" . fs_filehandler::NewLine();
-		//$line .= fs_filehandler::NewLine();
 		
 		$line .= "# END PANEL DOMAIN: " . ctrl_options::GetSystemOption('sentora_domain') . fs_filehandler::NewLine();
 		$line .= fs_filehandler::NewLine();
-		
-		############################## add back old code
-		//$line .= $smarty->fetch("vhost_cp_ssl.tpl") . fs_filehandler::NewLine();
-		
+				
 	}
-	
-	#*********Write to file
-	//writetofile($server_panel . "sentora-cp.conf", $line);
-	#***********
-	
-	//$line .= fs_filehandler::NewLine();
+		
     $line .= "################################################################" . fs_filehandler::NewLine();
     $line .= "# Sentora generated VHOST configurations below....." . fs_filehandler::NewLine();
     $line .= "################################################################" . fs_filehandler::NewLine();
@@ -349,12 +310,8 @@ function WriteVhostConfigFile() {
 	$serveralias = ( $rowvhost['vh_type_in'] == 2 ) ? '' : " www." . $rowvhost['vh_name_vc'];
 	
 	# Check if site is ssl enabled to pevent duplicate Port 443
-	//if ($rowvhost['vh_ssl_tx'] == !null) {
-		//$vhostPort = $VHostDefaultPort;
-	//} else {
-		$vhostPort = ( fs_director::CheckForEmptyValue($rowvhost['vh_custom_port_in']) ) ? $VHostDefaultPort : $rowvhost['vh_custom_port_in'];
-	//};
-	
+	$vhostPort = ( fs_director::CheckForEmptyValue($rowvhost['vh_custom_port_in']) ) ? $VHostDefaultPort : $rowvhost['vh_custom_port_in'];
+
 	$vhostIp = ( fs_director::CheckForEmptyValue($rowvhost['vh_custom_ip_vc']) ) ? "*" : $rowvhost['vh_custom_ip_vc'];
 	
 	# Get Package php and cgi enabled options
@@ -369,56 +326,76 @@ function WriteVhostConfigFile() {
 	$vh_snuff_path = "/etc/sentora/configs/php/sp/";
 	$vh_vhostuser = $vhostuser['username'];
 	
-	# Start Snuff Protection managemenet HERE. ------- DO NOT EDIT THIS CODE BELOW!!!!!
-	# If Snuff for vhost is DISABLED continue here
-	if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
-		if($rowvhost['vh_suhosin_in'] == 0) {
-			# Snuff Default rules
-			$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . 'disabled.rules"' : '';	
-			
-			# If not using custom rules. Delete any custom snuff rules if they exist. 
-			if ( file_exists( $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' ) ) {
-				
-				# Clear/Delete vhost snuff custom rules file
-				unlink ( $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' );
-				//WriteDataToFile($vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules', "");
-			}
-		} else {
-			# If SNUFF protection is ENABLED continue here
-			
-			# Snuff Default rules
-			$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules"' : '';
-		
-			# Check sp user path exists if not make folder for sp vhost configs			
-			if ( !is_dir( $vh_snuff_path . $vh_vhostuser ) ) {
-				fs_director::CreateDirectory( $vh_snuff_path . $vh_vhostuser );
-			}
-		
-			$linesp = "################################################################" . fs_filehandler::NewLine();
-			$linesp .= "# Snuffleupagus configuration file for: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-			$linesp .= "# Automatically generated by Sentora " . sys_versions::ShowSentoraVersion() . fs_filehandler::NewLine();
-			$linesp .= "# Generated on: " . date(ctrl_options::GetSystemOption('sentora_df'), time()) . fs_filehandler::NewLine();
-			$linesp .= "#==== YOU MUST NOT EDIT THIS FILE : IT WILL BE OVERWRITTEN ====" . fs_filehandler::NewLine();
-			$linesp .= "# Use Sentora Menu -> Admin -> Module Admin -> Apache config" . fs_filehandler::NewLine();
-			$linesp .= "################################################################" . fs_filehandler::NewLine();
-			$linesp .= fs_filehandler::NewLine();
-			
-			# If custom Snuff rules. Create vhost rule file here.	
-			if($rowvhost['vh_custom_sp_tx'] != null) {
-				$linesp .= $rowvhost['vh_custom_sp_tx'] . fs_filehandler::NewLine();
-				$linesp .= fs_filehandler::NewLine();
-			}
-			
-			# Add SP default rules
-			$linesp .= $smarty->fetch("vhost_sp_rules.tpl") . fs_filehandler::NewLine();
-			
-			#*********Write to file
-			WriteDataToFile($vh_snuff_path . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules'  , $linesp);
-			#***********
+	##
+	### Start Snuff Protection managemenet HERE. ------- DO NOT EDIT THIS CODE BELOW!!!!!
+	##
 	
+		##
+		# If Snuff protection for SYSTEM is ENABLED continue here...
+		##
+		if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
+			##
+			# If Snuff protection for VHOST is DISABLED continue here...
+			##
+			if ($rowvhost['vh_suhosin_in'] == 0) {
+				# Snuff Default DISABLED rules..
+				# $func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . 'disabled.rules"' : '';
+				$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . 'default_vh_disabled.rules"' : '#';
+			
+			} elseif ($rowvhost['vh_suhosin_in'] == 1 && $rowvhost['vh_custom_sp_tx'] == null) {
+				##
+				# If Snuff protection for VHOST is ENABLED continue here......
+				##		
+						
+				# Snuff Default rules
+				$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . 'default_vh_enabled.rules"' : '#';
+				
+				# Clean up SP vh custom files if not used...
+				# If not using SP VH custom rules. Delete any VH custom snuff rules if they exist. 			
+				if ( file_exists( $vh_snuff_path . "custom" . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' ) ) {
+					# Clear/Delete vhost snuff custom rules file
+					unlink ( $vh_snuff_path . "custom" . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules' );				
+				}
+						
+			} elseif ($rowvhost['vh_suhosin_in'] == 1 && $rowvhost['vh_custom_sp_tx'] != null) {			
+			# New code here...............	
+			# Snuff vhost Custom code...
+			
+				# Start Snuff Custom vhost code here.
+				//$linesp .= fs_filehandler::NewLine();
+				$linesp = include ($vh_snuff_path. "default_vh_enabled.rules");
+				$linesp .= fs_filehandler::NewLine();
+				$linesp .= "Start Snuff custom VHOST CODE HERE.." . fs_filehandler::NewLine();
+				$linesp .= fs_filehandler::NewLine();
+				
+				# If custom Snuff rules. Create vhost rule file here.	
+				if($rowvhost['vh_custom_sp_tx'] != null) {			
+					$linesp .= $rowvhost['vh_custom_sp_tx'] . fs_filehandler::NewLine();
+					$linesp .= fs_filehandler::NewLine();
+				}
+				$linesp .= "Stop Snuff custom VHOST CODE HERE.." . fs_filehandler::NewLine();
+				
+				# Check if SP custom folder exists. If not make custom folder.		
+				if ( !is_dir( $vh_snuff_path . "custom") ) {
+					fs_director::CreateDirectory( $vh_snuff_path . "custom");
+				}
+				
+				# Check if SP user VH folder exists. If not make folder for SP user VH configs			
+				if ( !is_dir( $vh_snuff_path . "custom" . $vh_vhostuser ) ) {
+					fs_director::CreateDirectory( $vh_snuff_path . "custom" . $vh_vhostuser );
+				}
+				
+				#*********Write to file
+				WriteDataToFile($vh_snuff_path . "custom" . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules'  , $linesp);
+				#***********
+				
+				# Set function blacklist path to file
+				$func_blklist_sys = ($rowvhost['vh_suhosin_in'] <> 0) ? 'php_admin_value sp.configuration_file "' . $vh_snuff_path . "custom" . $vh_vhostuser . "/" . $rowvhost['vh_name_vc'] . '.rules"' : '#';
+			}		
 		}
-	}
-	# Stop Snuff Protection managemenet HERE. ------- DO NOT EDIT THIS CODE ABOVE!!!!!
+	##
+	### Stop Snuff Protection managemenet HERE. ------- DO NOT EDIT THIS CODE ABOVE!!!!!
+	##
 	
 	# Domain is enabled
 	# Line1: Domain enabled & Client also is enabled.
@@ -444,7 +421,6 @@ function WriteVhostConfigFile() {
 				$line .= "# THIS DOMAIN HAS BEEN DISABLED FOR DISK QUOTA OVERAGE" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -460,10 +436,7 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-		
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_disk_quota.tpl") . fs_filehandler::NewLine();
-				
+					
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 				
@@ -481,11 +454,9 @@ function WriteVhostConfigFile() {
 				# Build Vhost SSL section
 				$line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "# THIS DOMAIN HAS BEEN DISABLED FOR DISK QUOTA OVERAGE & HAS SSL ENABLED" . fs_filehandler::NewLine();
-				//$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $rowvhost['vh_ssl_port_in'] . ">" . fs_filehandler::NewLine();
 				
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -507,20 +478,12 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_disk_quota_ssl.tpl") . fs_filehandler::NewLine();
-				
+								
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 			}
 			$line .= fs_filehandler::NewLine();
-			
-			
-			#*********Write to file
-			//writetofile($vh_path . $rowvhost['vh_name_vc']. ".conf"  , $line);
-			#***********	
-			
+						
 		/*
 		 * ##################################################
 		 * #
@@ -539,7 +502,6 @@ function WriteVhostConfigFile() {
 				$line .= "# THIS DOMAIN HAS BEEN DISABLED FOR BANDWIDTH OVERAGE" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -555,10 +517,7 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_bandwidth.tpl") . fs_filehandler::NewLine();
-				
+								
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 				
@@ -576,10 +535,8 @@ function WriteVhostConfigFile() {
 				# Build Vhost SSL section
 				$line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "# THIS DOMAIN HAS BEEN DISABLED FOR BANDWIDTH OVERAGE & HAS SSL ENABLED" . fs_filehandler::NewLine();
-				//$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $rowvhost['vh_ssl_port_in'] . ">" . fs_filehandler::NewLine();
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -601,18 +558,11 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_bandwidth_ssl.tpl") . fs_filehandler::NewLine();
-				
+							
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 			}
-			$line .= fs_filehandler::NewLine();
-			
-			# Write to file
-			//writetofile($vh_path . $rowvhost['vh_name_vc']. ".conf"  , $line);
-			#***********				
+			$line .= fs_filehandler::NewLine();	
 			
 		/*
 		 * ##################################################
@@ -632,7 +582,6 @@ function WriteVhostConfigFile() {
 				$line .= "# THIS DOMAIN HAS BEEN PARKED" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -651,10 +600,7 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_parked.tpl") . fs_filehandler::NewLine();
-				
+							
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 				
@@ -672,12 +618,10 @@ function WriteVhostConfigFile() {
 				# Build Vhost SSL section
 				$line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "# THIS DOMAIN IS PARKED & HAS SSL ENABLED" . fs_filehandler::NewLine();
-				//$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $rowvhost['vh_ssl_port_in'] . ">" . fs_filehandler::NewLine();
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
 				$line .= 'DocumentRoot "' . ctrl_options::GetSystemOption('parking_path') . '"' . fs_filehandler::NewLine();
 				$line .= '<Directory "' . ctrl_options::GetSystemOption('parking_path') . '">' . fs_filehandler::NewLine();
@@ -700,19 +644,12 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_parked_ssl.tpl") . fs_filehandler::NewLine();
-				
+								
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 			}
 			$line .= fs_filehandler::NewLine();
-							
-			# Write to file
-			//writetofile($vh_path . $rowvhost['vh_name_vc']. ".conf"  , $line);
-			#***********
-			
+										
 		/*
 		 * ##################################################
 		 * #
@@ -721,8 +658,8 @@ function WriteVhostConfigFile() {
 		 * ##################################################
 		 */
 	
-		#check
-		#Domain is a regular domain or a subdomain with PHP MOD.
+		# Check
+		# Domain is a regular domain or a subdomain with PHP MOD.
 		} else {
 		   
 		    if ($rowvhost['vh_ssl_tx'] == null) {
@@ -840,10 +777,7 @@ function WriteVhostConfigFile() {
 		
 				// End Virtual Host Settings
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				# Load template file into vhost config to save
-				//$line .= $smarty->fetch("vhost_domain.tpl") . fs_filehandler::NewLine();
-				
+								
 				# End Virtual Host Settings
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
@@ -865,7 +799,6 @@ function WriteVhostConfigFile() {
 				$line .= "# THIS DOMAIN HAS SSL ENABLED" . fs_filehandler::NewLine();
 				
 				#START HERE
-				//$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $rowvhost['vh_ssl_port_in'] . ">" . fs_filehandler::NewLine();
 		
 				// Server name, alias, email settings
@@ -891,7 +824,6 @@ function WriteVhostConfigFile() {
 				# Set Function Blacklist 
 				if (ctrl_options::GetSystemOption('use_suhosin') == "true") {
 					if ($rowvhost['vh_suhosin_in'] <> 0) {
-						//$line .= ctrl_options::GetSystemOption('suhosin_value') . fs_filehandler::NewLine();
 						$line .= $func_blklist_sys . fs_filehandler::NewLine();
 					}
 				}
@@ -971,18 +903,12 @@ function WriteVhostConfigFile() {
 		
 				// End Virtual Host Settings
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_domain_ssl.tpl") . fs_filehandler::NewLine();
-				
+								
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 			}
 			$line .= fs_filehandler::NewLine();
 			
-			#*********Write to file
-			//writetofile($vh_path . $rowvhost['vh_name_vc']. ".conf"  , $line);
-			#***********
 		}
 	
 		/*
@@ -1002,7 +928,6 @@ function WriteVhostConfigFile() {
 				$line .= "# THIS DOMAIN HAS BEEN DISABLED" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -1017,10 +942,7 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_disabled.tpl") . fs_filehandler::NewLine();
-				
+								
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 				$line .= fs_filehandler::NewLine();
@@ -1034,11 +956,9 @@ function WriteVhostConfigFile() {
 				# Build Vhost SSL section
 				$line .= "# DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "# THIS DOMAIN HAS BEEN DISABLED & HAS SSL ENABLED" . fs_filehandler::NewLine();
-				//$line .= "<virtualhost " . $vhostIp . ":" . $vhostPort . ">" . fs_filehandler::NewLine();
 				$line .= "<virtualhost " . $vhostIp . ":" . $rowvhost['vh_ssl_port_in'] . ">" . fs_filehandler::NewLine();
 				
 				$line .= "ServerName " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
-				//$line .= "ServerAlias www." . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				if (!empty($serveralias))
 					$line .= "ServerAlias " . $serveralias . fs_filehandler::NewLine();
 				$line .= "ServerAdmin " . $useremail . fs_filehandler::NewLine();
@@ -1059,21 +979,12 @@ function WriteVhostConfigFile() {
 				$line .= "# Custom VH settings (if any exist)" . fs_filehandler::NewLine();
 				$line .= $rowvhost['vh_custom_tx'] . fs_filehandler::NewLine();
 				$line .= "</virtualhost>" . fs_filehandler::NewLine();
-				
-				############################## add back old code
-				//$line .= $smarty->fetch("vhost_disabled_ssl.tpl") . fs_filehandler::NewLine();
-				
+								
 				$line .= "# END DOMAIN: " . $rowvhost['vh_name_vc'] . fs_filehandler::NewLine();
 				$line .= "################################################################" . fs_filehandler::NewLine();
 				$line .= fs_filehandler::NewLine();
 			}
-		
-		#*********Write to file
-		//writetofile($vh_path . $rowvhost['vh_name_vc']. ".conf"  , $line);
-		#***********
 		}
-//}
-		
 	}
 	
     /*
@@ -1268,43 +1179,6 @@ function BackupVhostConfigFile() {
         echo "Purging old backups complete..." . fs_filehandler::NewLine();
     }
     echo "Apache backups complete..." . fs_filehandler::NewLine();
-}
-	   	   
-#
-# Error fucntion for all sites - Smarty template
-#
-function is_errorpages($type, $vhUser, $vhDir) {
-	global $zdbh;
-	
-	# Set error pages location
-	if ($type == 'cp') {
-		# Return CP error pages				
-		$errorpages = ctrl_options::GetSystemOption('sentora_root') . "/etc/static/errorpages";
-	} elseif ($type == 'vh') {
-		# Return VH error pages
-		$errorpages = ctrl_options::GetSystemOption('hosted_dir') . $vhUser . '/public_html' . $vhDir . '/_errorpages';
-	}
-	
-	if (is_dir($errorpages)) {
-		if ($handle = opendir($errorpages)) {
-			while (($file = readdir($handle)) !== false) {
-				if ($file != "." && $file != "..") {
-					$page = explode(".", $file);
-					if (!fs_director::CheckForEmptyValue(CheckErrorDocument($page[0]))) {
-						
-						if ($type == 'cp') {				
-							$loaderrorpages[] = "ErrorDocument " . $page[0] . " /etc/static/errorpages/" . $page[0] . ".html";
-						} elseif ($type == 'vh') {
-							$loaderrorpages[] = "ErrorDocument " . $page[0] . " /_errorpages/" . $page[0] . ".html";
-						}
-						
-					}
-				}
-			}
-			closedir($handle);
-			return $loaderrorpages;				
-		}
-	}
 }
 	
 function TriggerApacheQuotaUsage() {
