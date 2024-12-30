@@ -1,5 +1,9 @@
 # This is a sample with suggested security and performance options
 
+# Max file size upload to standard email specs (20M). Sentora maybe (10M).
+php_value post_max_size 10M
+php_value upload_max_filesize 10M
+
 <IfModule mod_rewrite.c>
 Options +SymLinksIfOwnerMatch
 RewriteEngine On
