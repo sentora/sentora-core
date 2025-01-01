@@ -245,6 +245,8 @@
                     </div><!-- END STATSDATA-WRAPPER -->
                     <!-- END STATS -->
 
+					<# ui_tpl_sysnotice #>
+
                     <# ui_tpl_notice #>
 
                     <# ui_tpl_breadcrumbs #>
