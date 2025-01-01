@@ -19,23 +19,17 @@ class ui_tpl_sysnotice {
 		$installed = ctrl_options::GetSystemOption('dbversion');
         $lastest = ctrl_options::GetSystemOption('latestzpversion');
 		$lastest_tagged = ' (<strong>' . $lastest . '</strong>)';
-		
-		
-		//static function getAdmin() {
-			$user = ctrl_users::GetUserDetail();
-			//return ($user['usergroup'] == 'Administrators');
-		//}
+		$user = ctrl_users::GetUserDetail();
 		
 		# Check if admin
 		if ( $user['usergroup'] == 'Administrators') {
-		
 			# Check version and load message here
 			# If NEW version
 			if ($installed < $lastest) {
 				# Set message
 				$msg = ('There are currently new updates for your Sentora installation, please download the latest release')
 				. $lastest_tagged . ' from <a href="http://www.sentora.org/">http://www.sentora.org/</a>.';
-				
+				# Return mesagge
 				return ui_sysmessage::shout(
 					$msg,
 					'Notice',
@@ -47,17 +41,15 @@ class ui_tpl_sysnotice {
 				# Set message
 				$msg = 'You are running a <b>BETA</b> release (<strong>' . $installed . '</strong>). Thank you and report what you observed.<br>'
 				.'<b>Do not use it for production.</b>';
-				
+				# Return mesagge
 				return ui_sysmessage::shout(
 					$msg,
 					'zannounceerror',
 					'Sentora <b>BETA</b> System Notice:',
 					false
 				);
-	
 			} else {
 				# Do/show nothing
-	
 			}	
 		# If not admin do nothing
 		}
