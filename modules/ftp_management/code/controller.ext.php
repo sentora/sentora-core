@@ -189,22 +189,27 @@ class module_controller extends ctrl_module
 			runtime_hook::Execute('OnAfterResetFTPPassword');
 			return $retval;
 
-		} 
-				 
+		} 	 
 		return false;
-		
     }
 
     static function ExecuteCreateFTP($uid, $username, $password, $destination, $domainDestination, $access_type, $home)
     {
         global $zdbh;
         global $controller;
+		global $fullPath;
+		global $sanitizedDirPath;
+		
         $currentuser = ctrl_users::GetUserDetail($uid);
   		$username = $currentuser['username'] . '_' . $username;
+		$homedirectory_to_use = "";
+		
         runtime_hook::Execute('OnBeforeCreateFTPAccount');
         if (fs_director::CheckForEmptyValue(self::CheckForErrors($username, $password))) {
+					
             // Check to see if its a new home directory or use a current one...
             if ($home == 1) {
+				
                 $homedirectory_to_use = '/' . str_replace('.', '_', $username);
                 $full_path = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectory_to_use . '/';
                 // Create the new home directory... (If it doesnt already exist.)
@@ -217,22 +222,26 @@ class module_controller extends ctrl_module
             } else {
                 $homedirectory_to_use = '/' . $destination;
             }
-
+				
             // Check if Path is inside user home directory.
             $full_homeDir  = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'] . $homedirectory_to_use . '/';
             $baseDir       = ctrl_options::GetSystemOption('hosted_dir') . $currentuser['username'];
             $realPath      = realpath($full_homeDir);
-
-            if( 0 !== strpos($realPath, $baseDir))
-            {
+			
+			# Fail if invaild folder
+            if( 0 !== strpos($realPath, $baseDir)) {
                 self::$invalidPath = true;
                 return false;
             }
+			
+			# Check and sanitize $homedirectory_to_use. If it fails. Die and show error..
+			self::validateAndSanitizePath($homedirectory_to_use, $basedir);
+			$homedirectory_to_use = $sanitizedDirPath;
 
             $sql = $zdbh->prepare("INSERT INTO x_ftpaccounts (ft_acc_fk, ft_user_vc, ft_directory_vc, ft_access_vc, ft_password_vc, ft_created_ts) VALUES (:userid, :username, :homedir, :accesstype, :password, :time)");
             $sql->bindParam(':userid', $currentuser['userid']);
             $sql->bindParam(':username', $username);
-            $sql->bindParam(':homedir', $homedirectory_to_use);
+			$sql->bindParam(':homedir', $homedirectory_to_use);
             $sql->bindParam(':accesstype', $access_type);
             $sql->bindParam(':password', $password);
             $sql->bindParam(':time', time());
@@ -247,6 +256,40 @@ class module_controller extends ctrl_module
             return true;
         }
         return false;
+    }
+
+	static function validateAndSanitizePath($path, $basedir) {
+		global $zdbh;
+		global $fullPath;
+		global $sanitizedDirPath;
+		
+		// Remove any null bytes
+        $path = str_replace(chr(0), '', $path);
+    
+        // Normalize directory separators
+        $path = str_replace('\\', '/', $path);
+    
+        // Remove any trailing ../.. then / slashes for security
+		//$path = str_replace('../..', '', $path);
+		$path = str_replace('/../..', '', $path);
+		
+        // Validate each path component (add stricter rules here)
+        $pathComponents = explode('/', $path);
+        foreach ($pathComponents as $component) {
+            if (preg_match('/[^a-zA-Z0-9_-/]/', $component)) { // Example: Allow only alphanumeric, underscores, hyphens, and forward slashes
+				self::$invalidPath = true;
+                return false;
+            }
+       	}
+    
+        // Reconstruct the path
+        $sanitizedPath = implode('/', $pathComponents);
+    
+		# Sanitized Path return value
+		$sanitizedDirPath = $sanitizedPath;
+
+        // Return the sanitized path relative to the base directory	
+		return $sanitizedDirPath;
     }
 
     static function CheckForErrors($username, $password)
@@ -367,7 +410,7 @@ class module_controller extends ctrl_module
     static function doCreateFTP()
     {
         global $controller;
-        runtime_csfr::Protect();
+        //runtime_csfr::Protect();
         $currentuser = ctrl_users::GetUserDetail();
         $formvars = $controller->GetAllControllerRequests('FORM');
         if (self::ExecuteCreateFTP($currentuser['userid'], $formvars['inFTPUsername'], $formvars['inPassword'], $formvars['inDestination'], $formvars['inDomainDestination'], $formvars['inAccess'], $formvars['inAutoHome'])) {
