@@ -10,15 +10,24 @@
         <div class="zmodule_desc" id="zmodule_desc_<@ ModuleName @>"><: This module enables you to set a notice banner that will appear when any of your clients access ZPanel.  :></p></div>
 
     </div>
-
+	
     <div class="zform_wrapper">
         <h2><: Client message :></h2>
         <form action="./?module=client_notices&action=UpdateMessage" method="post">
             <table class="table table-striped">
                 <tr>
-                    <th><: Notice message :>:</th>
-                    <td><textarea name="inNotice" id="inNotice" rows="3" cols="80" /><@ CurrentNoticeText @></textarea></td>
+                    <th>
+						<: Current notice :>:
+					</th>
+                    <td>
+						<: Add line break using: :> [br] or &#60;br&#62;<br>
+						<textarea name="inNotice" id="inNotice" rows="7" cols="80" /><@ CurrentNoticeText @></textarea>
+					</td>
                 </tr>
+				<tr>
+					<th><: Leave blank for default message: :></th>
+					<td><@ DefaultNotice @></td>
+				</tr>
                 <tr>
                     <th colspan="2" align="right">
                         <button class="button-loader add-row btn btn-primary" type="submit" ><: Save changes :></button>
@@ -29,3 +38,4 @@
         </form>
     </div>
 </div>
+<@ PostInit @>

@@ -26,36 +26,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 class module_controller extends ctrl_module
 {
-
+	/* Set default notice text here */
+	static $defaultText = "Please keep your contact information up to date. Thank You!";
+	
     /**
      * The 'worker' methods.
      */
     /* Load CSS and JS files */
     static function getInit() {
         global $controller;
-		// TinyMCE JS
-		$line = '<script type="text/javascript" src="modules/'.$controller->GetControllerRequest('URL', 'module').'/code/tinymce/tinymce.min.js"></script>
-';
-		$line .= '<script type="text/javascript">
-			tinymce.init({
-				selector: "textarea",
-				plugins: [
-					"advlist autolink lists link charmap",
-					"searchreplace visualblocks code",
-					"insertdatetime media table contextmenu paste"
-				],
-				toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-			});
-			</script>
-			';
+		// SCEditor 'header' CSS/JS
+		$line = '<link rel="stylesheet" href="modules/'.$controller->GetControllerRequest('URL', 'module').'/code/SCEditor/minified/themes/default.min.css" />';
+		$line .= '<script src="modules/'.$controller->GetControllerRequest('URL', 'module').'/code/SCEditor/minified/sceditor.min.js"></script>';
+		$line .= '<script src="modules/'.$controller->GetControllerRequest('URL', 'module').'/code/SCEditor/minified/formats/bbcode.js"></script>';
+		$line .= '<script src="modules/'.$controller->GetControllerRequest('URL', 'module').'/code/SCEditor/minified/formats/xhtml.js"></script>';
         return $line;
     }
-	
+
+    static function getPostInit() {
+        global $controller;
+		// SCEditor 'footer' JS
+		$line = "
+			<script>
+				var textarea = document.getElementById('inNotice');
+				sceditor.create(textarea, {
+					format: 'bbcode',
+					icons: 'monocons',
+					toolbar: 'bold,italic,font,size,underline,color,removeformat|cut,copy,paste|bulletlist,orderedlist|email,link,unlink|date,time|source',
+					style: 'modules/".$controller->GetControllerRequest('URL', 'module')."/code/SCEditor/minified/themes/content/default.min.css'
+				});
+			</script>";
+        return $line;
+    }
+
     static function ExectuteUpdateNotice($uid, $notice)
     {
-        global $zdbh;
+        global $controller, $zdbh;
+		$notice = strip_tags($notice, '<br>');
+		if ($notice == '') { $notice = self::$defaultText; }
         $sql = $zdbh->prepare("
             UPDATE x_accounts
             SET ac_notice_tx = :notice
@@ -89,6 +100,12 @@ class module_controller extends ctrl_module
     /**
      * Webinterface sudo methods.
      */
+
+	static function getDefaultNotice() {
+        global $controller;
+        return self::$defaultText;
+    }
+
     static function getCurrentNoticeText()
     {
         global $controller;
